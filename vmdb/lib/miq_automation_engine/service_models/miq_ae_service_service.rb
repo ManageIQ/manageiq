@@ -1,6 +1,17 @@
 module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
+    require_relative "mixins/miq_ae_service_retirement_mixin"
+    include MiqAeServiceRetirementMixin
+
     expose :retire_now
+    expose :retire_service_resources
+    expose :service_resources
+    expose :automate_retirement_entrypoint
+    expose :start_retirement
+    expose :finish_retirement
+    expose :retiring?
+    expose :error_retiring?
+    expose :retired?
     expose :start
     expose :stop
     expose :suspend
@@ -72,20 +83,6 @@ module MiqAeMethodService
         else
           @object.service = nil
         end
-        @object.save
-      end
-    end
-
-    def retires_on=(date)
-      ar_method do
-        @object.retires_on = date
-        @object.save
-      end
-    end
-
-    def retirement_warn=(seconds)
-      ar_method do
-        @object.retirement_warn = seconds
         @object.save
       end
     end

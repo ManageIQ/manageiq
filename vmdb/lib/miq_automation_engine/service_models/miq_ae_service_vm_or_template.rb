@@ -2,6 +2,8 @@ module MiqAeMethodService
   class MiqAeServiceVmOrTemplate < MiqAeServiceModelBase
     require_relative "mixins/miq_ae_service_ems_operations_mixin"
     include MiqAeServiceEmsOperationsMixin
+    require_relative "mixins/miq_ae_service_retirement_mixin"
+    include MiqAeServiceRetirementMixin
 
     expose :ext_management_system, :association => true
     expose :storage,               :association => true
@@ -28,6 +30,13 @@ module MiqAeMethodService
     expose :retire_now
     expose :files,                 :association => true
     expose :directories,           :association => true
+    expose :start_retirement
+    expose :finish_retirement
+    expose :retiring?
+    expose :error_retiring?
+    expose :retired?
+    expose :files
+    expose :directories
     expose :refresh, :method => :refresh_ems
 
     METHODS_WITH_NO_ARGS = %w{start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest}
@@ -138,22 +147,6 @@ module MiqAeMethodService
         @object.save
       end
       value
-    end
-
-    def retires_on=(date)
-      $log.info "MIQ(#{self.class.name}#retires_on=) Setting Retirement Date on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{date.inspect}"
-      ar_method do
-        @object.retires_on = date
-        @object.save
-      end
-    end
-
-    def retirement_warn=(seconds)
-      $log.info "MIQ(#{self.class.name}#retirement_warn=) Setting Retirement Warning on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{seconds.inspect}"
-      ar_method do
-        @object.retirement_warn = seconds
-        @object.save
-      end
     end
 
     def owner=(owner)
