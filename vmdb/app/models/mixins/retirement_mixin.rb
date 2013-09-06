@@ -95,24 +95,35 @@ module RetirementMixin
 
   def retire_now
     log_prefix = "MIQ(#{retirement_object_title}#retire_now)"
-    unless self.retired
-      $log.info("#{log_prefix} Retiring [#{self.name}]")
-      before_retirement
-      self.retires_on = Date.today
-      self.retired    = true
-      self.save
-      message = "#{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], has been retired"
-      $log.info("#{log_prefix} #{message}")
-      raise_audit_event(retired_event_name, message)
-    else
+    if retired
       return if retired_validated?
-      $log.info("#{log_prefix} #{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
+      $log.info("#{log_prefix} [#{name}], Retires On Date: [#{retires_on_date}] was previously retired")
+    else
+      event_name = "request_#{retirement_event_prefix}_retire"
+      $log.info("#{log_prefix} calling #{event_name}")
+      begin
+        raise_retirement_event(event_name)
+      rescue => err
+        $log.log_backtrace(err)
+      end
     end
+  end
 
-    begin
-      raise_retirement_event(retired_event_name)
-    rescue => err
-      $log.log_backtrace(err)
+  def finish_retirement
+    if !self.retired?
+      $log.info("Finishing Retirement for [#{name}]")
+      update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
+      message = "#{self.class.base_model.name}: [#{self.name}], Retires On Date: [#{self.retires_on}], has been retired"
+      $log.info("Calling audit event for: #{message} ")
+      raise_audit_event(retired_event_name, message)
+      $log.info("Called audit event for: #{message} ")
+    end
+  end
+
+  def start_retirement
+    if  !self.retired?
+      $log.info("Starting Retirement for [#{name}]")
+      update_attributes(:retirement_state => "retiring")
     end
   end
 
@@ -144,14 +155,13 @@ module RetirementMixin
     @retired_event_name ||= "#{retirement_event_prefix}_retired".freeze
   end
 
-  def before_retirement
-  end
-
   def raise_retirement_event(event_name)
     event_hash = {}
     event_hash[retirement_base_model_name.underscore.to_sym] = self
     event_hash[:host] = self.host if self.respond_to?(:host)
-    MiqEvent.raise_evm_event(self, event_name, event_hash)
+    $log.info("Raising EVM Retirement Event (not checking policy) for [#{name}]")
+    event_hash[:type] ||= self.class.name
+    MiqAeEvent.raise_evm_event(event_name, self, event_hash)
   end
 
   def raise_audit_event(event_name, message)
@@ -162,5 +172,9 @@ module RetirementMixin
       :message      => message
     }
     AuditEvent.success(event_hash)
+  end
+
+  def is_or_being_retired?
+    retired || !retirement_state.blank?
   end
 end
