@@ -1,7 +1,13 @@
 module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
     expose :retire_now
+    expose :retire_service_resources
+    expose :automate_retirement_entrypoint
+    expose :start_retirement
+    expose :finish_retirement
+    expose :is_or_being_retired?
     expose :start
+    expose :retired?
     expose :stop
     expose :suspend
     expose :shutdown_guest
@@ -16,6 +22,7 @@ module MiqAeMethodService
     expose :custom_keys,               :method => :miq_custom_keys
     expose :custom_get,                :method => :miq_custom_get
     expose :custom_set,                :method => :miq_custom_set, :override_return => true
+    expose :service_resources
 
     CREATE_ATTRIBUTES = [:name, :description, :service_template]
 
@@ -48,6 +55,13 @@ module MiqAeMethodService
     def name=(new_name)
       ar_method do
         @object.name = new_name
+        @object.save
+      end
+    end
+
+    def retirement_state=(state)
+      ar_method do
+        @object.retirement_state = state
         @object.save
       end
     end
