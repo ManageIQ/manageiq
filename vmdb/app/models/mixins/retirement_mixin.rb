@@ -93,28 +93,58 @@ module RetirementMixin
     self.retire_now if self.retirement_due?
   end
 
+  def retiredx=(retired_state)
+    case retired_state
+    when false
+      self.retires_on = nil
+      write_attribute(:retired, false)
+    when true
+      unless self.retired?
+        self.retires_on = Date.today
+        write_attribute(:retired, true)
+      end
+    else
+    end
+  end
+
   def retire_now
     log_prefix = "MIQ(#{retirement_object_title}#retire_now)"
     unless self.retired
-      $log.info("#{log_prefix} Retiring [#{self.name}]")
-      before_retirement
-      self.retires_on = Date.today
-      self.retired    = true
-      self.save
-      message = "#{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], has been retired"
-      $log.info("#{log_prefix} #{message}")
-      raise_audit_event(retired_event_name, message)
+      event_name = "request_#{retirement_event_prefix}_retire"
+      $log.info("#{log_prefix} calling #{event_name}")
+      begin
+        raise_retirement_event(event_name)
+      rescue => err
+        $log.log_backtrace(err)
+      end
     else
       return if retired_validated?
       $log.info("#{log_prefix} #{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
     end
+  end
 
-    begin
-      raise_retirement_event(retired_event_name)
-    rescue => err
-      $log.log_backtrace(err)
+  def finish_retirement
+    unless self.retired?
+      $log.info("Finishing Retirement for [#{self.name}]")
+      self.retires_on = Date.today
+      self.retired    = true
+      self.retirement_state = 'retired'
+      self.save
+      message = "#{self.class.base_model.name}: [#{self.name}], Retires On Date: [#{self.retires_on}], has been retired"
+      $log.info("Calling audit event for: #{message} ")
+      raise_audit_event(retired_event_name, message)
+      $log.info("Called audit event for: #{message} ")
     end
   end
+
+  def start_retirement
+    unless self.retired?
+      $log.info("Starting Retirement for [#{self.name}]")
+      self.retirement_state = 'retiring'
+      self.save
+    end
+  end
+
 
   def retired_validated?
     true
@@ -144,9 +174,6 @@ module RetirementMixin
     @retired_event_name ||= "#{retirement_event_prefix}_retired".freeze
   end
 
-  def before_retirement
-  end
-
   def raise_retirement_event(event_name)
     event_hash = {}
     event_hash[retirement_base_model_name.underscore.to_sym] = self
@@ -163,4 +190,13 @@ module RetirementMixin
     }
     AuditEvent.success(event_hash)
   end
+
+  def is_or_being_retired?
+    self.retired || !self.retirement_state.blank?
+  end
+
+  def unretire
+    self.update_attributes(:retired => false, :retirement_state => nil)
+  end
+
 end

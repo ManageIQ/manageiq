@@ -1,6 +1,11 @@
 module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
     expose :retire_now
+    expose :retire_service_resources
+    expose :automate_retirement_entrypoint
+    expose :start_retirement
+    expose :finish_retirement
+    expose :is_or_being_retired?
     expose :start
     expose :stop
     expose :suspend
@@ -48,6 +53,13 @@ module MiqAeMethodService
     def name=(new_name)
       ar_method do
         @object.name = new_name
+        @object.save
+      end
+    end
+
+    def retirement_state=(state)
+      ar_method do
+        @object.retirement_state = state
         @object.save
       end
     end

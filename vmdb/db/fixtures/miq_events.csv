@@ -83,6 +83,7 @@ request_vm_destroy,VM Delete (from Disk) Request,Default,vm_configurational
 #
 vm_discover,VM Discovery,Default,vm_process
 vm_retired,VM Retired,Default,vm_process
+request_vm_retire,VM Retire Request,Default,vm_process
 vm_retire_warn,VM Retirement Warning,Default,vm_process
 vm_provisioned,VM Provision Complete,Default,vm_process
 #
@@ -131,6 +132,7 @@ storage_scan_complete,Datastore Analysis Complete,Default,storage_operational
 # Service lifecycle
 #
 service_retired,Service Retired,Default,service_process
+request_service_retire,Service Retire Request,Default,service_process
 service_retire_warn,Service Retirement Warning,Default,service_process
 service_provisioned,Service Provision Complete,Default,service_process
 request_service_start,Service Start Request,Default,service_process
