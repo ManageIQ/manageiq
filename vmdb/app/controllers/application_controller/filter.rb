@@ -1784,29 +1784,23 @@ module ApplicationController::Filter
   def process_datetime_selector(param_key_suffix, exp_key = nil)
     param_date_key  = "miq_date_#{param_key_suffix}".to_sym
     param_time_key  = "miq_time_#{param_key_suffix}".to_sym
+    return unless params[param_date_key] || params[param_time_key]
+
     exp_value_index = param_key_suffix[-1].to_i
     value_key       = "val#{param_key_suffix[0]}".to_sym
     exp_value_key   = param_key_suffix.starts_with?("1") ? :exp_value : :exp_cvalue
     exp             = @edit[@expkey]
 
-    if params[param_date_key]
-      if exp[exp_value_key][exp_value_index].to_s.include?(":")   # Already has a time, just swap in the date
-        time_suffix = " #{exp[exp_value_key][exp_value_index].split(" ").last}"
-      else                                                  # No time already, add in midnight if needed
-        if exp[value_key][:type] == :datetime && exp[exp_key] != EXP_IS
-          time_suffix = " 00:00"
-        else
-          time_suffix = ""
-        end
-      end
+    date = params[param_date_key] || exp[exp_value_key][exp_value_index].split(' ').first
+    time = params[param_time_key] || exp[exp_value_key][exp_value_index].split(' ').last
 
-      exp[exp_value_key][exp_value_index] = "#{params[param_date_key]}#{time_suffix}"
+    if time.to_s.blank? && exp[value_key][:type] == :datetime && exp[exp_key] != EXP_IS
+      time = "00:00" # If time is blank, add in midnight if needed
     end
 
-    if params[param_time_key]
-      exp[exp_value_key][exp_value_index] =
-        "#{exp[exp_value_key][exp_value_index].split(' ').first} #{params[param_time_key]}"
-    end
+    time = " #{time}" unless time.to_s.blank? # Prepend a blank, if time is non-blank
+
+    exp[exp_value_key][exp_value_index] = "#{date}#{time}"
   end
   private :process_datetime_selector
 
