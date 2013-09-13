@@ -356,10 +356,10 @@ module ApplicationController::Filter
       # Check incoming date and time values
       # Copy FIND exp_skey to exp_key so following IFs work properly
       @edit[@expkey][:exp_key] = @edit[@expkey][:exp_skey] if @edit[@expkey][:exp_typ] == "FIND"
-      process_datetime_selector("1_0", :val1, :exp_key,  :exp_value)  # First date selector
-      process_datetime_selector("1_1", :val1, nil,       :exp_value)  # 2nd date selector, only on FROM
-      process_datetime_selector("2_0", :val2, :exp_ckey, :exp_cvalue) # First date selector in FIND/CHECK
-      process_datetime_selector("2_1", :val2, nil,       :exp_cvalue) # 2nd date selector, only on FROM
+      process_datetime_selector("1_0", :val1, :exp_key)  # First date selector
+      process_datetime_selector("1_1", :val1)            # 2nd date selector, only on FROM
+      process_datetime_selector("2_0", :val2, :exp_ckey) # First date selector in FIND/CHECK
+      process_datetime_selector("2_1", :val2)            # 2nd date selector, only on FROM
 
       # Check incoming FROM/THROUGH date/time choice values
       if params[:chosen_from_1]
@@ -1781,10 +1781,11 @@ module ApplicationController::Filter
   end
   private :process_datetime_expression_field
 
-  def process_datetime_selector(param_key_suffix, value_key, exp_key, exp_value_key)
+  def process_datetime_selector(param_key_suffix, value_key, exp_key = nil)
     param_date_key  = "miq_date_#{param_key_suffix}".to_sym
     param_time_key  = "miq_time_#{param_key_suffix}".to_sym
     exp_value_index = param_key_suffix[-1].to_i
+    exp_value_key   = param_key_suffix.starts_with?("1") ? :exp_value : :exp_cvalue
     exp             = @edit[@expkey]
 
     if params[param_date_key]
