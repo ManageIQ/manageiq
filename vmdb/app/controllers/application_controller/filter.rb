@@ -1785,24 +1785,25 @@ module ApplicationController::Filter
     param_date_key  = "miq_date_#{param_key_suffix}".to_sym
     param_time_key  = "miq_time_#{param_key_suffix}".to_sym
     exp_value_index = param_key_suffix[-1].to_i
+    exp             = @edit[@expkey]
 
     if params[param_date_key]
-      if @edit[@expkey][exp_value_key][exp_value_index].to_s.include?(":")   # Already has a time, just swap in the date
-        time_suffix = " #{@edit[@expkey][exp_value_key][exp_value_index].split(" ").last}"
+      if exp[exp_value_key][exp_value_index].to_s.include?(":")   # Already has a time, just swap in the date
+        time_suffix = " #{exp[exp_value_key][exp_value_index].split(" ").last}"
       else                                                  # No time already, add in midnight if needed
-        if @edit[@expkey][value_key][:type] == :datetime && @edit[@expkey][exp_key] != EXP_IS
+        if exp[value_key][:type] == :datetime && exp[exp_key] != EXP_IS
           time_suffix = " 00:00"
         else
           time_suffix = ""
         end
       end
 
-      @edit[@expkey][exp_value_key][exp_value_index] = "#{params[param_date_key]}#{time_suffix}"
+      exp[exp_value_key][exp_value_index] = "#{params[param_date_key]}#{time_suffix}"
     end
 
     if params[param_time_key]
-      @edit[@expkey][exp_value_key][exp_value_index] =
-        "#{@edit[@expkey][exp_value_key][exp_value_index].split(' ').first} #{params[param_time_key]}"
+      exp[exp_value_key][exp_value_index] =
+        "#{exp[exp_value_key][exp_value_index].split(' ').first} #{params[param_time_key]}"
     end
   end
   private :process_datetime_selector
