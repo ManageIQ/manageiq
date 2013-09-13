@@ -1784,7 +1784,7 @@ module ApplicationController::Filter
   def process_datetime_selector(param_key_suffix, value_key, exp_key, exp_value_key)
     param_date_key  = "miq_date_#{param_key_suffix}".to_sym
     param_time_key  = "miq_time_#{param_key_suffix}".to_sym
-    exp_value_index = param_key_suffix[param_key_suffix.length - 1].to_i
+    exp_value_index = param_key_suffix[-1].to_i
 
     if params[param_date_key]
       if @edit[@expkey][exp_value_key][exp_value_index].to_s.include?(":")   # Already has a time, just swap in the date
