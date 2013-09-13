@@ -1790,11 +1790,10 @@ module ApplicationController::Filter
       if @edit[@expkey][exp_value_key][exp_value_index].to_s.include?(":")   # Already has a time, just swap in the date
         time_suffix = " #{@edit[@expkey][exp_value_key][exp_value_index].split(" ").last}"
       else                                                  # No time already, add in midnight if needed
-        time_suffix = ""
-        if @edit[@expkey][value_key][:type] == :datetime
-          if exp_key.nil? || @edit[@expkey][exp_key] != EXP_IS
-            time_suffix = " 00:00"
-          end
+        if @edit[@expkey][value_key][:type] == :datetime && @edit[@expkey][exp_key] != EXP_IS
+          time_suffix = " 00:00"
+        else
+          time_suffix = ""
         end
       end
 
