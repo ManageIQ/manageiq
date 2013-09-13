@@ -1806,5 +1806,6 @@ module ApplicationController::Filter
         "#{@edit[@expkey][exp_value_key][exp_value_index].split(' ').first} #{params[param_time_key]}"
     end
   end
+  private :process_datetime_selector
 
 end
