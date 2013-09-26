@@ -2,6 +2,10 @@ require "spec_helper"
 
 module MiqAeServiceVmSpec
   describe MiqAeMethodService::MiqAeServiceVm do
+
+    let(:vm)         { FactoryGirl.create(:vm_vmware, :name => "template1", :location => "abc/abc.vmx") }
+    let(:service_vm) { MiqAeMethodService::MiqAeServiceVmVmware.find(vm.id) }
+
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
@@ -100,6 +104,109 @@ module MiqAeServiceVmSpec
           invoke_ae.root(@ae_result_key).should be_kind_of(MiqAeMethodService::MiqAeServiceServiceResource)
         end
       end
+    end
+
+    it "#start_retirement" do
+      expect(service_vm.retirement_state).to be_nil
+      service_vm.start_retirement
+      expect(service_vm.retirement_state).to eq("retiring")
+    end
+
+    it "#retire_now" do
+      expect(MiqAeEvent).to receive(:raise_evm_event).once
+
+      service_vm.retire_now
+    end
+
+    it "#finish_retirement" do
+      expect(service_vm.retired).to be_nil
+      expect(service_vm.retirement_state).to be_nil
+      expect(service_vm.retires_on).to be_nil
+
+      service_vm.finish_retirement
+
+      expect(service_vm.retired).to be_true
+      expect(service_vm.retires_on).to eq(Date.today)
+      expect(service_vm.retirement_state).to eq("retired")
+    end
+
+    it "#is_or_being_retired - false" do
+      expect(service_vm.is_or_being_retired?).to be_false
+    end
+
+    it "#is_or_being_retired - true" do
+      service_vm.retirement_state = 'retiring'
+
+      expect(service_vm.is_or_being_retired?).to be_true
+    end
+
+    it "#retires_on - today" do
+      service_vm.retires_on = Date.today
+      vm.reload
+
+      expect(vm.retirement_due?).to be_true
+    end
+
+    it "#retires_on - tomorrow" do
+      service_vm.retires_on = Date.today + 1
+      vm.reload
+
+      expect(vm.retirement_due?).to be_false
+    end
+
+    it "#retirement_warn" do
+      expect(service_vm.retirement_warn).to be_nil
+      vm.retirement_last_warn = Date.today
+      service_vm.retirement_warn = 60
+
+      vm.reload
+
+      expect(service_vm.retirement_warn).to eq(60)
+      expect(vm.retirement_last_warn).to be_nil
+    end
+
+
+    pending "Not yet implemented: 41 specs" do
+      it "#ext_management_system"
+      it "#storage"
+      it "#host"
+      it "#hardware"
+      it "#operating_system"
+      it "#guest_applications"
+      it "#miq_provision"
+      it "#ems_cluster"
+      it "#ems_folder"
+      it "#ems_blue_folder"
+      it "#resource_pool"
+      it "#datacenter"
+      it "#remove_from_disk"
+      it "#registered?"
+      it "#to_s"
+      it "#event_threshold?"
+      it "#event_log_threshold?"
+      it "#performances_maintains_value_for_duration?"
+      it "#reconfigured_hardware_value?"
+      it "#changed_vm_value?"
+      it "#retire_now"
+      it "#files"
+      it "#directories"
+      it "#refresh"
+      it "#start"
+      it "#stop"
+      it "#suspend"
+      it "#unregister"
+      it "#collect_running_processes"
+      it "#shutdown_guest"
+      it "#standby_guest"
+      it "#reboot_guest"
+      it "#migrate"
+      it "#owner"
+      it "#scan"
+      it "#unlink_storage"
+      it "#ems_custom_set"
+      it "#custom_keys"
+      it "#custom_get"
+      it "#custom_set"
     end
   end
 end
