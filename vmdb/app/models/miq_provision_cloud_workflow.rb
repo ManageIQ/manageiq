@@ -21,6 +21,21 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
     load_ar_obj(src[:ems]).cloud_networks.each_with_object({}) { |cn, hash| hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})" }
   end
 
+  def allowed_cloud_subnets(_options = {})
+    src = resources_for_ui
+    return {} if src[:cloud_network_id].nil?
+
+    az_id = src[:availability_zone_id].to_i
+    if (cn = CloudNetwork.where(:id => src[:cloud_network_id]).first)
+      cn.cloud_subnets.each_with_object({}) do |cs, hash|
+        next if !az_id.zero? && az_id != cs.availability_zone_id
+        hash[cs.id] = "#{cs.name} (#{cs.cidr}) | #{cs.availability_zone.try(:name)}"
+      end
+    else
+      {}
+    end
+  end
+
   def allowed_guest_access_key_pairs(options={})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)

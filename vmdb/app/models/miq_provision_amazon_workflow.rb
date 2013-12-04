@@ -37,18 +37,6 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     allowed_ci(:availability_zones, [:cloud_network, :cloud_subnet, :security_group])
   end
 
-  def allowed_cloud_subnets(options={})
-    src = resources_for_ui
-    return {} if src[:cloud_network_id].nil?
-
-    az_id = src[:availability_zone_id].to_i
-    cn = CloudNetwork.where(:id => src[:cloud_network_id]).first
-    cn.cloud_subnets.each_with_object({}) do |cs, hash|
-      next if !az_id.zero? && az_id != cs.availability_zone_id
-      hash[cs.id] = "#{cs.name} (#{cs.cidr}) | #{cs.availability_zone.try(:name)}"
-    end
-  end
-
   def validate_cloud_subnet(field, values, dlg, fld, value)
     return nil unless value.blank?
     return nil if get_value(values[:cloud_network]).to_i.zero?
