@@ -1,10 +1,25 @@
-cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'storageTable', function($http, $scope, storageTable) {
-  $scope.action_type = 'vm';
-  $scope.filter_type = 'all';
-  $scope.filterValuesEmpty = true;
+cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'storageTable', 'scheduleFormId', 'oneMonthAgo', 'miqService', function($http, $scope, storageTable, scheduleFormId, oneMonthAgo, miqService) {
+  var buildFilterList = function(data) {
+    $scope.filterList = [];
+    angular.forEach(data.filtered_item_list, function(filteredItem) {
+      var tempObj = {};
+
+      if (Object.prototype.toString.call(filteredItem) === '[object Array]') {
+        tempObj.text = filteredItem[1];
+        tempObj.value = filteredItem[0];
+      } else {
+        tempObj.text = filteredItem;
+        tempObj.value = filteredItem;
+      }
+
+      $scope.filterList.push(tempObj);
+    });
+  }
+
+  var oldScheduleFormValues = {};
 
   var testType = function(type) {
-    return type.test($scope.action_type);
+    return type.test($scope.actionType);
   }
 
   var isVmType = function() {
@@ -22,13 +37,13 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       type = 'VM';
     } else if (isHostType()) {
       type = 'Host';
-    } else if ($scope.action_type == 'miq_template') {
+    } else if ($scope.actionType == 'miq_template') {
       type = 'Template';
-    } else if ($scope.action_type == 'emscluster') {
+    } else if ($scope.actionType == 'emscluster') {
       type = 'Cluster';
-    } else if ($scope.action_type == 'storage') {
+    } else if ($scope.actionType == 'storage') {
       type = storageTable;
-    } else if ($scope.action_type == 'db_backup') {
+    } else if ($scope.actionType == 'db_backup') {
       type = 'Database Backup';
     }
 
@@ -41,41 +56,86 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else if (isHostType()) {
       return 'host';
     } else {
-      return $scope.action_type;
+      return $scope.actionType;
     }
   }
 
   $scope.sambaBackup = function() {
-    return $scope.action_type === 'db_backup' && $scope.log_protocol === 'Samba';
+    return $scope.actionType === 'db_backup' && $scope.logProtocol === 'Samba';
   }
 
   $scope.actionTypeChanged = function() {
-    if ($scope.action_type === 'db_backup') {
-      $scope.log_protocol = 'Network File System';
+    if ($scope.actionType === 'db_backup') {
+      $scope.logProtocol = 'Network File System';
     } else {
-      $scope.filter_type = 'all';
+      $scope.filterType = 'all';
       $scope.filterValuesEmpty = true;
     }
   }
 
   $scope.filterTypeChanged = function() {
-    if ($scope.filter_type != 'all') {
-      $http.put('/ops/schedule_form_field_change', {filter_type: $scope.filter_type}).success(function(data) {
-        if (Object.prototype.toString.call(data.filtered_item_list[0]) === '[object Array]') {
-          $scope.filterList = data.filtered_item_list;
-        } else {
-          $scope.filterList = [];
-
-          for (index in data.filtered_item_list) {
-            $scope.filterList[index] = [];
-            $scope.filterList[index][0] = data.filtered_item_list[index];
-            $scope.filterList[index][1] = data.filtered_item_list[index];
-          }
-        }
+    if ($scope.filterType != 'all') {
+      $http.put('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.filterType}).success(function(data) {
+        buildFilterList(data);
         $scope.filterValuesEmpty = false;
       });
     } else {
       $scope.filterValuesEmpty = true;
     }
   }
+
+  $scope.filterValueChanged = function() {
+    if ($scope.formAltered) {
+      miqService.showButtons();
+    } else {
+      miqService.hideButtons();
+    }
+  }
+
+  $scope.scheduleTimerTypeChanged = function() {
+    if ($scope.scheduleTimerType === 'Once') {
+      $scope.scheduleTimerValue = null;
+    } else {
+      $scope.scheduleTimerValue = '1';
+    }
+  }
+
+  miqService.sparkleOn();
+
+  if (scheduleFormId == 'new') {
+    $scope.actionType = 'vm';
+    $scope.filterType = 'all';
+    $scope.scheduleEnabled = '1';
+    $scope.filterValuesEmpty = true;
+    $scope.scheduleTimerType = 'Once';
+    $scope.scheduleTimeZone = 'UTC';
+    $scope.scheduleStartHour = '0';
+    $scope.scheduleStartMinute = '0';
+  } else {
+    $http.get('/ops/schedule_form_fields/' + scheduleFormId).success(function(data) {
+      $scope.actionType = data.action_type;
+      $scope.filterType = data.filter_type;
+      $scope.scheduleDescription = data.schedule_description;
+      $scope.scheduleEnabled = data.schedule_enabled;
+      $scope.scheduleName = data.schedule_name;
+      $scope.scheduleTimerType = data.schedule_timer_type;
+      $scope.scheduleTimerValue = data.schedule_timer_value;
+      $scope.scheduleDate = data.schedule_start_date;
+      $scope.scheduleStartHour = data.schedule_start_hour;
+      $scope.scheduleStartMinute = data.schedule_start_min;
+      $scope.scheduleTimeZone = data.schedule_time_zone;
+
+      if (data.filter_type === 'all') {
+        $scope.filterValuesEmpty = true;
+      } else {
+        buildFilterList(data);
+
+        $scope.filterValuesEmpty = false;
+        $scope.filterValue = data.filter_value;
+      }
+    });
+  }
+
+  miqService.buildCalendar(oneMonthAgo.year, oneMonthAgo.month, oneMonthAgo.date);
+  miqService.sparkleOff();
 }]);

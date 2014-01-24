@@ -14,8 +14,8 @@ src_files:
   - javascripts/vendor/angular.js
   - javascripts/vendor/angular-mocks.js
   - javascripts/jquery.js
-  - javascripts/dollar_j.js
   - javascripts/prototype.js
+  - javascripts/dollar_j.js
   - javascripts/cfme_application.js
   - javascripts/cfme_angular_application.js
   - javascripts/services/miq_service.js
