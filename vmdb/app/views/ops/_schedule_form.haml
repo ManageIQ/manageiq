@@ -9,33 +9,21 @@
         %tr
           %td.key Name
           %td
-            = text_field_tag("name",
-              @edit[:new][:name],
-              :maxlength=>MAX_NAME_LEN,
-              "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
+            %input(type="text" name="name" ng-model="scheduleName" maxlength="#{MAX_NAME_LEN}")
         %tr
           %td.key Description
           %td
-            = text_field_tag("description",
-              @edit[:new][:description],
-              :maxlength=>MAX_DESC_LEN,
-              "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
+            %input(type="text" name="description" ng-model="scheduleDescription" maxlength="#{MAX_DESC_LEN}")
 
         %tr
           %td.key Active
           %td
-            = check_box_tag("enabled",
-              value="1",
-              checked=@edit[:new][:enabled],
-              "data-miq_observe_checkbox" => {:url=>url}.to_json)
+            %input(type="checkbox" name="enabled" ng-model="scheduleEnabled" ng-true-value="1" ng-false-value="0")
 
         %tr
           %td.key Action
           %td
-            = select_tag('action_typ',
-              options_for_select(@edit[:action_types], @edit[:new][:action]),
-              "ng-model" => "action_type",
-              "ng-change" => "actionTypeChanged()")
+            = select_tag('action_typ', options_for_select(@action_type_options_for_select), "ng-model" => "actionType", "ng-change" => "actionTypeChanged()")
 
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
@@ -44,4 +32,6 @@
   jQuery('#name').focus();
 
   cfmeAngularApplication.value('storageTable', '#{ui_lookup(:table => "storages")}');
+  cfmeAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');
+  cfmeAngularApplication.value('oneMonthAgo', {year: '#{@one_month_ago[:year]}', month: '#{@one_month_ago[:month]}', date: '#{@one_month_ago[:date]}'});
   angular.bootstrap(jQuery('#form_div'), ['cfmeAngularApplication']);

@@ -1,16 +1,30 @@
 require "spec_helper"
+require "debugger"
 
 describe OpsController do
   let(:params) { {} }
+  let(:session) { {} }
 
   before do
     #TODO: Change to shared context 'valid session' when merged
     set_user_privileges
   end
 
-  describe "#schedule_form_field_change" do
+  describe "#schedule_form_fields" do
+    pending
+  end
+
+  describe "#schedule_form_filter_type_field_changed" do
     before do
       params[:filter_type] = filter_type
+      params[:id] = "123"
+      session[:edit] = {:new => {:filter_type => "test"}, :key => "schedule_edit__123"}
+    end
+
+    shared_examples_for "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed" do
+      it "assigns the filter type" do
+        assigns(:edit)[:new][:filter].should == filter_type
+      end
     end
 
     context "when the filter_type is 'vm'" do
@@ -19,10 +33,12 @@ describe OpsController do
 
       before do
         Vm.stub(:find).with(:all, {}).and_return([vm])
+        put :schedule_form_filter_type_field_changed, params, session
       end
 
+      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
+
       it "responds with a filtered vm list" do
-        put :schedule_form_field_change, params
         json = JSON.parse(response.body)
         json["filtered_item_list"].should == ["vmtest"]
       end
@@ -34,10 +50,12 @@ describe OpsController do
 
       before do
         ExtManagementSystem.stub(:find).with(:all, {}).and_return([ext_management_system])
+        put :schedule_form_filter_type_field_changed, params, session
       end
 
+      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
+
       it "responds with a filtered ext management system list" do
-        put :schedule_form_field_change, params
         json = JSON.parse(response.body)
         json["filtered_item_list"].should == ["emstest"]
       end
@@ -50,11 +68,12 @@ describe OpsController do
       before do
         bypass_rescue
         EmsCluster.stub(:find).with(:all, {}).and_return([cluster])
-        # ems_cluster = EmsCluster.create!(:name => "lol")
+        put :schedule_form_filter_type_field_changed, params, session
       end
 
+      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
+
       it "responds with a filtered cluster list" do
-        put :schedule_form_field_change, params
         json = JSON.parse(response.body)
         json["filtered_item_list"].should == [["clustertest__datacenter", "desc"]]
       end
@@ -66,10 +85,12 @@ describe OpsController do
 
       before do
         Host.stub(:find).with(:all, {}).and_return([host])
+        put :schedule_form_filter_type_field_changed, params, session
       end
 
+      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
+
       it "responds with a filtered host list" do
-        put :schedule_form_field_change, params
         json = JSON.parse(response.body)
         json["filtered_item_list"].should == ["hosttest"]
       end
@@ -78,6 +99,10 @@ describe OpsController do
     context "when the filter_type is 'global'" do
       let(:filter_type) { "global" }
 
+      before do
+        put :schedule_form_filter_type_field_changed, params, session
+      end
+
       it "responds with a filtered global filter list" do
         pending
       end
@@ -85,6 +110,10 @@ describe OpsController do
 
     context "when the filter_type is 'my'" do
       let(:filter_type) { "my" }
+
+      before do
+        put :schedule_form_filter_type_field_changed, params, session
+      end
 
       it "responds with a filtered my_filter list" do
         pending

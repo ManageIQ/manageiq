@@ -1,6 +1,4 @@
--# Copyright © 2006 - 2013 ManageIQ, Inc. All Rights Reserved
-
-- url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
+-# Copyright © 2006 - 2014 ManageIQ, Inc. All Rights Reserved
 
 #form_filter_div
   %fieldset
@@ -9,42 +7,41 @@
       %tr(ng-switch on="determineActionType()")
         %td.key Filter
         %td
-          = select_tag('filter_typ', options_for_select(@vm_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "vm", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@template_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "miq_template", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@host_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "host", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@cluster_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "emscluster", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@storage_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "storage", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
-          = select_tag('log_protocol', options_for_select(@database_backup_options_for_select, @edit[:protocol]), "ng-switch-when" => "db_backup", "ng-model" => "$parent.log_protocol")
+          = select_tag('filter_typ', options_for_select(@vm_options_for_select), "ng-switch-when" => "vm", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@template_options_for_select), "ng-switch-when" => "miq_template", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@host_options_for_select), "ng-switch-when" => "host", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@cluster_options_for_select), "ng-switch-when" => "emscluster", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@storage_options_for_select), "ng-switch-when" => "storage", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
+          = select_tag('log_protocol', options_for_select(@database_backup_options_for_select), "ng-switch-when" => "db_backup", "ng-model" => "$parent.logProtocol")
 
-          %select#filter_value(ng-hide="filterValuesEmpty")
-            %option &lt;Choose&gt;
-            %option(ng-repeat="filteredItem in filterList" value="{{filteredItem[0]}}")
-              {{filteredItem[1]}}
+          %select#filter_value(ng-change="filterValueChanged()" ng-model="filterValue" ng-options="filteredItem.value as filteredItem.text for filteredItem in filterList" ng-hide="filterValuesEmpty")
+            %option(value="") &lt;Choose&gt;
+          %input(type="hidden" name="filter_value" value="{{filterValue}}")
 
       %tr(ng-show="determineActionType() == 'db_backup'")
         %td.key URI
         %td.wide
-          = "#{@edit[:new][:uri_prefix]}://"
-          = text_field_tag("uri", @edit[:new][:uri], :maxlength => 100)
+          = "#{@uri_prefix}://"
+          = text_field_tag("uri", @uri, :maxlength => 100)
         = javascript_tag("$('uri').focus()")
 
       %tr(ng-show="sambaBackup()")
         %td.key
           User ID
         %td
-          = text_field_tag("log_userid", @edit[:new]["log_userid".to_sym], :maxlength => 50)
+          = text_field_tag("log_userid", @log_userid, :maxlength => 50)
 
       %tr(ng-show="sambaBackup()")
         %td.key
           Password
         %td
-          = password_field_tag("log_password", @edit[:new]["log_password".to_sym], :maxlength => 50)
+          = password_field_tag("log_password", @log_password, :maxlength => 50)
 
       %tr(ng-show="sambaBackup()")
         %td.key
           Verify Password
         %td
-          = password_field_tag("log_verify", @edit[:new]["log_verify".to_sym], :maxlength => 50)
+          = password_field_tag("log_verify", @log_verify, :maxlength => 50)
 
       %tr(ng-show="sambaBackup()")
         %td

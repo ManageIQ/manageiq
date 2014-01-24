@@ -1,0 +1,38 @@
+-# Copyright © 2006 - 2014 ManageIQ, Inc. All Rights Reserved
+
+- url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
+#form_timer_div
+  %fieldset
+    %p.legend Timer
+    %table.style1
+      %tr
+        %td.key Run
+        %td(ng-switch on="scheduleTimerType")
+          = select_tag("timer_typ", options_for_select(["Once","Hourly","Daily","Weekly","Monthly"]), "ng-model" => "scheduleTimerType", "ng-change" => "scheduleTimerTypeChanged()")
+          %span(ng-show="scheduleTimerType !== 'Once'") every
+          = select_tag("timer_value", options_for_select(TIMER_HOURS), "ng-switch-when" => "Hourly", "ng-model" => "scheduleTimerValue")
+          = select_tag("timer_value", options_for_select(TIMER_DAYS), "ng-switch-when" => "Daily", "ng-model" => "scheduleTimerValue")
+          = select_tag("timer_value", options_for_select(TIMER_WEEKS), "ng-switch-when" => "Weekly", "ng-model" => "scheduleTimerValue")
+          = select_tag("timer_value", options_for_select(TIMER_MONTHS), "ng-switch-when" => "Monthly", "ng-model" => "scheduleTimerValue")
+
+      %tr
+        %td.key Time Zone
+        %td
+          = select_tag("time_zone", options_for_select(ALL_TIMEZONES), "ng-model" => "scheduleTimeZone")
+          &nbsp;&nbsp;* Changing the Time Zone will reset the Starting Date and Time fields below
+
+      %tr
+        %td.key Starting Date
+        %td#start_date
+          %input#miq_date_1.css1(readonly="true" ng-model="scheduleDate" name="miq_date_1")
+
+      %tr
+        %td.key
+          Starting Time (
+          %span#tz_span {{scheduleTimeZone}}
+          )
+        %td
+          = select_tag("start_hour", options_for_select(Array.new(24) {|i| i}), :class => "threedigit", "ng-model" => "scheduleStartHour")
+          %span h
+          = select_tag("start_min", options_for_select(Array.new(12) {|i| i*5}), :class => "threedigit", "ng-model" => "scheduleStartMinute")
+          %span m
