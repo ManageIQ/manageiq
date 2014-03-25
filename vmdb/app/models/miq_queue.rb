@@ -1,6 +1,22 @@
 require 'timeout'
 require 'digest'
 
+# Message Queue entry to run a method on any server
+#   zone
+#     This states the subset of miq_servers in this region that can perform this job.
+#     put: Defaults to the zone of the current caller ("MyZone")
+#          Pass in nil to have this performed in any zone.
+#     get: Fetches jobs both for the caller's zone and for any zone.
+#   role
+#     This states the role necessary for a miq_server to perform this job.
+#     put: Defaults to nil (no role required).
+#          Typically this is passed in to require a role.
+#     get: Fetches jobs both for the caller's roles and for no role required.
+#   queue_name
+#     This states the worker queue that will perform this job.
+#     put: Default to "generic" to be performed by the generic worker.
+#     get: Defaults to "generic" but is typically overridden by the caller (a worker)
+#
 class MiqQueue < ActiveRecord::Base
 
   belongs_to :handler, :polymorphic => true
@@ -189,10 +205,7 @@ class MiqQueue < ActiveRecord::Base
 
   def unget(options = {})
     log_prefix = LOG_PREFIX[:unget]
-    ar_options = options.dup
-    ar_options[:state]   = 'ready'
-    ar_options[:handler] = nil
-    self.update_attributes!(ar_options)
+    update_attributes!(options.merge(:state => STATE_READY, :handler => nil))
     @delivered_on = nil
     $log.info("#{log_prefix} #{MiqQueue.format_full_log_msg(self)}, Requeued")
   end
