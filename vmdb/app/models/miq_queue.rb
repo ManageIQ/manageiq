@@ -110,11 +110,12 @@ class MiqQueue < ActiveRecord::Base
       :server_guid  => nil,
       :msg_timeout  => TIMEOUT,
       :deliver_on   => nil
+    ).merge(
+      :zone         => Zone.determine_queue_zone(options),
+      :state        => STATE_READY,
+      :handler_type => nil,
+      :handler_id   => nil,
     )
-    options[:zone]         = Zone.determine_queue_zone(options)
-    options[:state]        = STATE_READY
-    options[:handler_type] = nil
-    options[:handler_id]   = nil
     options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.has_key?(:task_id)
     options[:role]         = options[:role].to_s unless options[:role].nil?
 
