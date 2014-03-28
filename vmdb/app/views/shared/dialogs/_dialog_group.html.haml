@@ -7,4 +7,4 @@
           %tbody
           - group.dialog_fields.each_with_index do |field, i|
             = render :partial => "shared/dialogs/dialog_field", 
-                     :locals  => {:field => field}
+                     :locals  => {:wf => wf, :field => field}

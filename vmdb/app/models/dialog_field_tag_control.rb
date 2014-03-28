@@ -41,6 +41,11 @@ class DialogFieldTagControl < DialogFieldSortedItem
     self.new(:category => category_id).values
   end
 
+  def value_from_dialog_fields(dialog_values)
+    value = dialog_values[automate_key_name]
+    value.gsub(/Classification::/, '') if value
+  end
+
   def values
     category = Classification.where(:id => self.category).first
     return [] if category.nil?

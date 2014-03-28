@@ -42,6 +42,19 @@ describe DialogFieldTagControl do
     it "#automate_key_name" do
       @df.automate_key_name.should == "Array::dialog_#{@df.name}"
     end
+
+    describe "#initialize_with_values" do
+      it "uses #automate_key_name for extracting initial dialog values" do
+        dialog_value = "dummy dialog value"
+        @df.initialize_with_values(@df.automate_key_name => dialog_value)
+        @df.value.should == dialog_value
+      end
+
+      it "converts automate dialog value to Classification ids" do
+        @df.initialize_with_values(@df.automate_key_name => "Classification::123,Classification::234")
+        @df.value.should == "123,234"
+      end
+    end
   end
 
   context "dialog field tag control with with options hash and category" do

@@ -1,4 +1,6 @@
-- url = url_for(:action => 'dialog_field_changed', :id => "#{@edit[:rec_id] || "new"}")
+- if @edit
+  - url = url_for(:action => 'dialog_field_changed', :id => "#{@edit[:rec_id] || "new"}")
+- wf = @edit[:wf] if @edit
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
 = render :partial => "layouts/flash_msg"
 %dl.col1
@@ -6,20 +8,13 @@
     #dialog_tabs{:style         => 'display:none;width:100%;height:100%;overflow:auto;',
                  'data-miq_url' => '_none_'}
       %ul.tab
-        - @edit[:wf].dialog.dialog_tabs.each do |tab|
+        - wf.dialog.dialog_tabs.each do |tab|
           %li
             %a{:href => "##{tab.id}_tab", :title => tab.description}
               = tab.label
-      - @edit[:wf].dialog.dialog_tabs.each do |tab|
-        = render :partial => "shared/dialogs/dialog_tab", :locals => {:tab => tab}
-- if !@edit[:explorer]
-  -# show form buttons on non-explorer views
-  %dl
-    %dd.col1
-      %table{:width => '100%'}
-        %tr
-          %td{:align => 'right'}
-            = render :partial => "layouts/x_dialog_buttons", :locals => {:action_url =>"dialog_form_button_pressed", :record_id => @edit[:rec_id]}
+      - wf.dialog.dialog_tabs.each do |tab|
+        = render :partial => "shared/dialogs/dialog_tab", 
+                 :locals => {:wf => wf, :tab => tab}
 -# Initialize jQuery UI tabs based on tabs ul
 %script
   /method takes hash that can have 4 keys: tabs div id, active tab label,

@@ -16,6 +16,14 @@ describe DialogFieldTextBox do
       @df.should be_protected
     end
 
+    describe "#initialize_with_values" do
+      it "decrypts protected automate dialog values" do
+        password = "test"
+        @df.protected = true
+        @df.initialize_with_values(@df.automate_key_name => MiqPassword.encrypt(password))
+        @df.value.should == password
+      end
+    end
   end
 
   context "dialog field text box without protected field" do

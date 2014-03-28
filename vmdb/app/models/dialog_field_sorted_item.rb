@@ -36,7 +36,11 @@ class DialogFieldSortedItem < DialogField
   end
 
   def get_default_value
-    result = self.values.detect {|v| v.first == self.default_value}
-    result.nil? ? nil : result.first
+    values_data = values
+    if values_data.count == 1
+      values_data.first.first
+    elsif values_data.detect { |v| v.first == default_value }
+      default_value
+    end
   end
 end
