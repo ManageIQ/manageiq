@@ -18,15 +18,13 @@ class Compliance < ActiveRecord::Base
     targets.to_miq_a.each do |target|
       if target.kind_of?(Host)
         # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
-        zone = target.ext_management_system ? target.ext_management_system.my_zone : nil
-
         MiqQueue.put(
           :class_name  => self.name,
           :method_name => 'scan_and_check_compliance',
           :args        => [[target.class.name, target.id], inputs],
           :task_id     => 'vc-refresher',
           :role        => "ems_inventory",
-          :zone        => zone
+          :zone        => target.ext_management_system.try(:my_zone)
         )
       end
     end

@@ -3,11 +3,7 @@ require "spec_helper"
 describe Compliance do
   context "A small virtual infrastructure" do
     before(:each) do
-      @zone  = FactoryGirl.create(:zone)
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid)
-      MiqServer.my_server_clear_cache
+      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems   = FactoryGirl.create(:ems_vmware,    :name => "Test EMS", :zone => @zone)
       @host1 = FactoryGirl.create(:host,      :name => "Host1", :ext_management_system => @ems)
       @host2 = FactoryGirl.create(:host,      :name => "Host2")
