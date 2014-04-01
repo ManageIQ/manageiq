@@ -27,6 +27,11 @@
       :image: ownership
       :text: "Set Ownership"
       :title: "Set Ownership for this Service"
+    - :separator:
+    - :button: service_reconfigure
+      :image: reconfigure
+      :text: "Reconfigure this Service"
+      :title: "Reconfigure the options of this Service"
 - :name: service_policy
   :items:
   - :buttonSelect: service_policy_choice

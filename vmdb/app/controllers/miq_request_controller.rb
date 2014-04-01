@@ -212,6 +212,7 @@ class MiqRequestController < ApplicationController
     else  # First time in, set up @edit hash
       identify_request
       @edit = Hash.new
+      @edit[:dialog_mode] = :review
       @edit[:request] = @miq_request
       @edit[:key] = "stamp_edit__#{@miq_request.id}"
       @edit[:stamp_typ] = params[:typ]

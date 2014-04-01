@@ -801,6 +801,8 @@ Vmdb::Application.routes.draw do
       ),
       :post => %w(
         button
+        dialog_field_changed
+        dynamic_list_refresh
         post_install_callback
         pre_prov
         prov_button

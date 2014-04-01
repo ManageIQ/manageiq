@@ -1,11 +1,19 @@
 - url = url_for(:action => 'dialog_field_changed', :id => "#{@edit[:rec_id] || "new"}") if @edit
+- dialog_mode = @edit[:dialog_mode] if @edit
+- case dialog_mode 
+- when :reconfigure
+  - edit = field.reconfigurable 
+- when :review
+  - edit = false
+- else
+  - edit = !@edit.nil?
 %tr{:id => "field_#{field.id}_tr"}
   %td.key{:title => field.description}<
     = field.label
   %td{:title => field.description}<
     - case field.type
       - when 'DialogFieldTextBox'
-        - if @edit
+        - if edit
           - if field.protected?
             = password_field_tag(field.name + "__protected", wf.value(field.name),
                                  :maxlength         => 50,
@@ -21,7 +29,7 @@
             = h(wf.value(field.name))
 
       - when 'DialogFieldTextAreaBox'
-        - if @edit
+        - if edit
           = text_area_tag(field.name,
                           wf.value(field.name),
                           :maxlength         => 8192,
@@ -32,8 +40,8 @@
 
       - when 'DialogFieldCheckBox'
         - checked = ['1', 't'].include?(wf.value(field.name))
-        = check_box_tag(field.name, value="1", checked=checked,
-                        :disabled                   => @edit.nil?,
+        = check_box_tag(field.name, "1", checked,
+                        :disabled                   => !edit,
                         "data-miq_sparkle_on"       => true, 
                         "data-miq_sparkle_off"      => true,
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -41,7 +49,7 @@
       - when 'DialogFieldDateControl', 'DialogFieldDateTimeControl'
         - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
         - date_val = wf.value(field.name) ? wf.value(field.name).split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
-        - if @edit
+        - if edit
           = text_field_tag("miq_date__#{field.name}",
                            date_val[0],
                            :class                  => "css1",
@@ -54,7 +62,7 @@
           &nbsp;at&nbsp;
           - start_hour = date_val.length >= 2 ? date_val[1].split(":").first : '0'
           - start_min = date_val.length >= 2 ? date_val[1].split(":").last : '0'
-          - if @edit
+          - if edit
             = select_tag("start_hour",
                          options_for_select(Array.new(24) {|i| i}, start_hour.to_i),
                          "data-miq_observe" => {:url => url}.to_json)
@@ -68,7 +76,7 @@
           = session[:user_tz]
 
       - when 'DialogFieldDynamicList'
-        - if @edit
+        - if edit
           = select_tag(field.name,
                        options_for_select(field.values.collect(&:reverse), wf.value(field.name)),
                        'data-miq_sparkle_on'  => true,
@@ -81,10 +89,10 @@
                                                       :loading  => "miqSparkle(true);",
                                                       :complete => "miqSparkle(false);"))
         - else
-          = h(field.values.each_with_object({}) { |(v,k),h| h[k] = v }[wf.value(field.name)] || wf.value(field.name))
+          = h(field.values.detect { |_v, k| k == wf.value(field.name) }.try(:first) || wf.value(field.name))
 
       - when 'DialogFieldDropDownList', 'DialogFieldRadioButton'
-        - if @edit
+        - if edit
           - if field.values.length > 1
             - if field.type == "DialogFieldDropDownList"
               - select_values = dialog_dropdown_select_values(field, wf.value(field.name))
@@ -112,16 +120,16 @@
           - else
             = h(field.values[0].last) if !field.values.empty?
         - else
-          = h(Hash[*field.values.flatten][wf.value(field.name)] || wf.value(field.name))
+          = h(field.values.detect { |_v, k| k == wf.value(field.name) }.try(:first) || wf.value(field.name))
 
       - when 'DialogFieldButton'
         = image_tag("/images/formbuttons/save.png", 
-                    :class => @edit ? 'button' : 'dimmed',
+                    :class => edit ? 'button' : 'dimmed',
                     :style => "width: 80px; height: 30px")
 
       - when 'DialogFieldTagControl'
         - category_tags = DialogFieldTagControl.category_tags(field.category).map { |cat| [cat[:description], cat[:id]] }
-        - if @edit
+        - if edit
           - if field.single_value?
             - select_values = dialog_dropdown_select_values(field, wf.value(field.name), category_tags)
             = select_tag(field.name, options_for_select(select_values, wf.value(field.name)), 

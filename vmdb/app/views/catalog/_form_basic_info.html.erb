@@ -91,6 +91,36 @@
           </td>
         </tr>
         <tr>
+          <td class="key" title="Reconfigure Entry Point (NameSpace/Class/Instance)">Reconfigure Entry Point <br>(NS/Cls/Inst)</td>
+          <td class="wider" title="<%=@edit[:new][:reconfigure_fqname]%>">
+            <table>
+              <tr>
+                <td>
+                <%= text_field_tag("reconfigure_fqname",
+                                   @edit[:new][:reconfigure_fqname],
+                                   :onFocus           => 'miqShowAE_Tree("reconfigure")',
+                                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                </td>
+                <td>
+                <% display = @edit[:new][:reconfigure_fqname] != "" ? "" : "display:none" %>
+                <div id="reconfigure_fqname_div" style="<%=display%>">
+                  <%= link_to(image_tag('/images/toolbars/discard.png',
+                                        :class => "rollover small",
+                                        :alt   => "Remove this Reconfigure Entry Point"),
+                              {:action => 'ae_tree_select_discard', :typ => "reconfigure"},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              "data-confirm"         => "Are you sure you want to remove this Reconfigure Entry Point?",
+                              :remote                => true,
+                              :title                 => "Remove this Reconfigure Entry Point")
+                  %>
+                </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
           <td class="key" title="Retirement Entry Point (NameSpace/Class/Instance)">Retirement Entry Point <br>(NS/Cls/Inst)</td>
           <td class="wider" title="<%=@edit[:new][:retire_fqname]%>">
             <table>

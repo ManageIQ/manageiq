@@ -1,6 +1,6 @@
 - if @edit
   - url = url_for(:action => 'dialog_field_changed', :id => "#{@edit[:rec_id] || "new"}")
-- wf = @edit[:wf] if @edit
+- wf = @edit[:wf] if @edit && @edit[:wf]
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
 = render :partial => "layouts/flash_msg"
 %dl.col1

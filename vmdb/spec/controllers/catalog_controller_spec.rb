@@ -36,20 +36,25 @@ describe CatalogController do
       st = FactoryGirl.create(:service_template)
       retire_fqname = "ns/cls/inst"
       provision_fqname = "ns1/cls1/inst1"
+      recon_fqname = "ns2/cls2/inst2"
       edit = {
-                :new => {:name => "New Name", :description => "New Description", :retire_fqname => retire_fqname, :fqname => provision_fqname},
-                :key => "prov_edit__new",
-                :rec_id => st.id,
-                :st_prov_type => "generic"
-              }
+        :new          => {
+          :name               => "New Name",
+          :description        => "New Description",
+          :reconfigure_fqname => recon_fqname,
+          :retire_fqname      => retire_fqname,
+          :fqname             => provision_fqname},
+        :key          => "prov_edit__new",
+        :rec_id       => st.id,
+        :st_prov_type => "generic"
+      }
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
       controller.stub(:replace_right_cell)
       controller.send(:atomic_st_edit)
-      retirement_st_action = st.resource_actions.find_by_action("Retirement")
-      provision_st_action = st.resource_actions.find_by_action("Provision")
-      retirement_st_action.fqname.should == "/#{retire_fqname}"
-      provision_st_action.fqname.should == "/#{provision_fqname}"
+      {'Provision' => provision_fqname, 'Reconfigure' => recon_fqname, 'Retirement' => retire_fqname}.each do |k, v|
+        st.resource_actions.find_by_action(k).fqname.should == "/#{v}"
+      end
     end
   end
 

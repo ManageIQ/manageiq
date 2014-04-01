@@ -30,22 +30,21 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     return result unless result[:errors].blank?
 
     values = create_values_hash
-    ra = load_resource_action(values)
-    rsc = ra.resource
-
-    values[:src_id] = rsc.id
+    values[:src_id] = @target.id
 
     if has_request_class?
-      event_message = "Request by [#{requester_id}] for #{rsc.class.name}:#{rsc.id}"
-      result[:request] = create_request(values, requester_id, rsc.class.name, 'resource_action_request_created', event_message, auto_approve)
+      event_message = "Request by [#{requester_id}] for #{@target.class.name}:#{@target.id}"
+      result[:request] = create_request(values, requester_id, @target.class.name,
+                                        'resource_action_request_created', event_message, auto_approve)
     else
+      ra = load_resource_action(values)
       ra.deliver_to_automate_from_dialog(values, @target)
     end
     return result
   end
 
   def request_class
-    load_resource_action.resource.request_class
+    @target.request_class
   end
 
   def has_request_class?
@@ -53,7 +52,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def request_type
-    load_resource_action.resource.request_type
+    @target.request_type
   end
 
   def load_resource_action(values=nil)
