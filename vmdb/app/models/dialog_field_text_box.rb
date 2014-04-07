@@ -18,4 +18,11 @@ class DialogFieldTextBox < DialogField
     super
   end
 
+  def validate(dialog_tab, dialog_group)
+    case validator_type
+    when 'regex'
+      return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{validator_rule}/)
+    end
+    super
+  end
 end

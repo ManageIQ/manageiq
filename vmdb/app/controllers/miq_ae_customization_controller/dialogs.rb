@@ -50,7 +50,8 @@ module MiqAeCustomizationController::Dialogs
 
         #refresh fields div incase select type was DialogFieldDropDownList/DialogFieldRadionButton or
         page.replace("dialog_field_div", :partial=>"dialog_field_form") if params[:field_typ] ||
-            params[:field_sort_by] || params[:field_protected] || params[:field_category] || params[:field_show_refresh_button]
+            params[:field_sort_by] || params[:field_protected] || params[:field_category] ||
+            params[:field_show_refresh_button] || params[:field_validator_type]
 
         unless @edit[:field_typ] && @edit[:field_typ].include?("TagControl")
           page.replace("field_values_div", :partial=>"field_values", :locals=>{ :entry=>nil}) if params[:field_data_typ] ||
@@ -905,9 +906,13 @@ module MiqAeCustomizationController::Dialogs
       end
 
       if @edit[:field_typ] != params[:field_typ]
+        if params[:field_typ].include?("TextBox")
+          @edit[:field_protected]      = key[:protected] = false
+          @edit[:field_validator_type] = key[:validator_type] = nil
+          @edit[:field_validator_rule] = key[:validator_rule] = nil
+        end
         if params[:field_typ] =~ /Text/
           @edit[:field_default_value] = key[:default_value] = ''
-          @edit[:field_protected]     = key[:protected] = false if params[:field_typ].include?("TextBox")
           @edit[:field_required]      = key[:required]  = false
         elsif params[:field_typ] =~ /Drop|Radio/
           @edit[:field_default_value] = key[:default_value] = nil
@@ -956,6 +961,10 @@ module MiqAeCustomizationController::Dialogs
         else
           @edit[:field_protected] ||= false
           key[:protected] ||= false
+        end
+        [:validator_type, :validator_rule].each do |name|
+          field_name = "field_#{name}".to_sym
+          @edit[field_name] = key[name] = params[field_name] if params[field_name]
         end
       end
 
@@ -1033,7 +1042,11 @@ module MiqAeCustomizationController::Dialogs
         :field_default_value => field[:default_value]
       )
 
-      @edit[:field_protected] = field[:protected] if field[:typ].include?('TextBox')
+      if field[:typ].include?('TextBox')
+        @edit[:field_protected]      = field[:protected]
+        @edit[:field_validator_type] = field[:validator_type]
+        @edit[:field_validator_rule] = field[:validator_rule]
+      end
       @edit[:field_required]  = field[:required]  if field[:typ].include?('Text')
 
       if field[:typ].include?("TagControl")
@@ -1158,7 +1171,11 @@ module MiqAeCustomizationController::Dialogs
               fld[:default_value] = f.default_value.to_s != "f"
 
             elsif f.type.include?("Text")
-              fld[:protected]     = f.protected? if f.type.include?('TextBox')
+              if f.type.include?('TextBox')
+                fld[:protected]      = f.protected?
+                fld[:validator_type] = f.validator_type
+                fld[:validator_rule] = f.validator_rule
+              end
               fld[:required]      = f.required
               fld[:default_value] = f.default_value.nil? ? "": f.default_value
 
@@ -1250,7 +1267,11 @@ module MiqAeCustomizationController::Dialogs
                     fld[:default_value] = field[:default_value]
 
                   elsif field[:typ] =~ /Text/
-                    fld[:protected]     = field[:protected] if field[:typ].include?('TextBox')
+                    if field[:typ].include?('TextBox')
+                      fld[:protected]      = field[:protected]
+                      fld[:validator_type] = field[:validator_type]
+                      fld[:validator_rule] = field[:validator_rule]
+                    end
                     fld[:required]      = field[:required]  if field[:typ].include?('Text')
                     fld[:default_value] = field[:default_value].to_s
 
