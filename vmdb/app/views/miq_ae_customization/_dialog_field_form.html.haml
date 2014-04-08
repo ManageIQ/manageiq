@@ -203,5 +203,17 @@
     = render :partial => 'field_values', :locals=>{:entry=>nil}
   - elsif @edit[:field_typ] && @edit[:field_typ].include?("TagControl") && @edit[:field_category]
     = render :partial => 'tag_field_values', :locals=>{:entry=>nil}
+
+  - unless @edit[:field_typ].nil?
+    %fieldset
+      %p.legend Advanced
+      %table.style1
+        %tr
+          %td.key Reconfigurable
+          %td 
+            = check_box_tag('field_reconfigurable', '1',
+                            @edit[:field_reconfigurable],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+
 %script
   miqObserveCheckboxes();

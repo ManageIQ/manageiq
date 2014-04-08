@@ -888,6 +888,7 @@ module MiqAeCustomizationController::Dialogs
     copy_checkbox_field_param.call(:load_on_init)
     copy_checkbox_field_param.call(:show_refresh_button)
     copy_checkbox_field_param.call(:past_dates)
+    copy_checkbox_field_param.call(:reconfigurable)
 
     [:data_typ, :required, :sort_by, :sort_by, :sort_order].each { |key| copy_field_param.call(key) }
 
@@ -1035,11 +1036,12 @@ module MiqAeCustomizationController::Dialogs
       get_field_types
       field = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields][ids.last.to_i]
       @edit.update(
-        :field_label         => field[:label],
-        :field_name          => field[:name],
-        :field_description   => field[:description],
-        :field_typ           => field[:typ],
-        :field_default_value => field[:default_value]
+        :field_label          => field[:label],
+        :field_name           => field[:name],
+        :field_description    => field[:description],
+        :field_typ            => field[:typ],
+        :field_default_value  => field[:default_value],
+        :field_reconfigurable => field[:reconfigurable]
       )
 
       if field[:typ].include?('TextBox')
@@ -1140,14 +1142,15 @@ module MiqAeCustomizationController::Dialogs
           g.ordered_dialog_resources.each do |field|
             f = field.resource
             fld = {
-              :id          => f.id,
-              :label       => f.label,
-              :description => f.description,
-              :typ         => f.type,
-              :tab_id      => t.id,
-              :group_id    => g.id,
-              :order       => field.order,
-              :name        => f.name,
+              :id             => f.id,
+              :label          => f.label,
+              :description    => f.description,
+              :typ            => f.type,
+              :tab_id         => t.id,
+              :group_id       => g.id,
+              :order          => field.order,
+              :name           => f.name,
+              :reconfigurable => f.reconfigurable
             }
 
             if f.type == 'DialogFieldDynamicList'
@@ -1242,10 +1245,11 @@ module MiqAeCustomizationController::Dialogs
               if group[:fields]
                 group[:fields].each_with_index do |field,k|
                   fld = {
-                    :label       => field[:label],
-                    :description => field[:description],
-                    :name        => field[:name],
-                    :display     => :edit,
+                    :label          => field[:label],
+                    :description    => field[:description],
+                    :name           => field[:name],
+                    :reconfigurable => field[:reconfigurable],
+                    :display        => :edit
                   }
 
                   if field[:typ] =~ /Drop|Radio/
