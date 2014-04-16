@@ -39,6 +39,7 @@ gem 'outfielding-jqplot-rails',       "= 1.0.8"
 gem 'secure_headers'
 # Needed by the REST API
 gem "jbuilder",                       "~>2.0.7"
+gem "active_hash",                    "~>1.3.0"
 
 # Not vendored and not required
 gem "ancestry",                       "~>1.2.4",      :require => false

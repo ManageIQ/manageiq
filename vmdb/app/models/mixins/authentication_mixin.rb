@@ -231,6 +231,25 @@ module AuthenticationMixin
     return result
   end
 
+  # The list of extensions available for this object by authentication type.
+  #
+  # Only extensions that have been already provided a value are saved.  This
+  # list includes the extensions that have values, as well as any extensions
+  # that can be provided for this authentication's type.
+  #
+  # The returned extensions are a list of AuthenticationExtension objects.
+  # Those that have been saved have an id.  While extensions that have never
+  # been provided have a +nil+ id.
+  def authentication_extensions(authtype)
+    authtype = authtype.to_sym
+    auth = self.authentication_type(authtype.to_sym)
+    extensions = auth ? auth.extensions : []
+
+    authext_map = extensions.each_with_object({}) { |e,h| h[e.authentication_extension_type.id] = e }
+    ext_types = AuthenticationExtensionType.where(:authtype => authtype)
+    ext_types.map { |type| authext_map[type.id] || AuthenticationExtension.new({:authentication => auth, :authentication_extension_type => type}) }
+  end
+
   private
 
   def authentication_component_or_nil(type, class_name, method)

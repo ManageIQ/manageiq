@@ -15,6 +15,10 @@ class EmsOpenstack < EmsCloud
     @description ||= "OpenStack".freeze
   end
 
+  def self.additional_authentication_types
+    @additional_authentication_types ||= [:amqp].freeze
+  end
+
   #
   # OpenStack interactions
   #

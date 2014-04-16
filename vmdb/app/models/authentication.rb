@@ -5,6 +5,8 @@ class Authentication < ActiveRecord::Base
 
   belongs_to :resource, :polymorphic => true
 
+  has_many :extensions, :class_name => "AuthenticationExtension"
+
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 

@@ -19,6 +19,10 @@ class EmsRedhat < EmsInfra
     @description ||= "Red Hat Enterprise Virtualization Manager".freeze
   end
 
+  def self.additional_authentication_types
+    @additional_authentication_types ||= [:metrics].freeze
+  end
+
   def self.raw_connect(server, port, username, password, service = "Service")
     require 'RedHatEnterpriseVirtualizationManagerAPI/rhevm_api'
     params = {
