@@ -625,7 +625,7 @@ module EmsCommon
   end
 
   def set_form_vars_auth_extensions
-    authtypes = @ems.class.additional_authentication_types.each do |authtype|
+    @ems.class.additional_authentication_types.each do |authtype|
       @ems.authentication_extensions(authtype).each do |ext|
         # TODO: provide a shared way to create this fieldname ... it's also used
         # in the layouts/_auth_extension.html.erb view
