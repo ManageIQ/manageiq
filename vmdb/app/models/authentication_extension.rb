@@ -6,16 +6,15 @@ class AuthenticationExtension < ActiveRecord::Base
   validate :value_contains_correct_data_type
   validates_uniqueness_of :id, :scope => [:authentication_id, :authentication_extension_type_id]
 
+  delegate :authtype, :name, :key, :data_type, :options, :to => :authentication_extension_type
+
   def value
     @value ||= fetch_value
   end
 
   def value=(a_value)
-    if data_type == "text"
-      self.value_text = a_value.to_s
-    else
-      self.value_string = a_value.to_s
-    end
+    # TODO: need to provide 2-way encryption for password values
+    self.value_string = a_value.to_s
     # cache the provided value as-is
     @value = a_value
   end
@@ -24,23 +23,8 @@ class AuthenticationExtension < ActiveRecord::Base
     if data_type == "text"
     else
       # make sure the raw value converts back to the same string
-      if fetch_value.to_s != value_string
-        errors.add(:value, "must be #{data_type} value")
-      end
-
-      options = authentication_extension_type.options
-      unless options.empty? || options.keys.include?(fetch_value)
-        errors.add(:value, "must be one of #{options.values}")
-      end
-    end
-  end
-
-  def method_missing(method, *args, &block)
-    if !method.to_s.end_with?("=") && authentication_extension_type && authentication_extension_type.respond_to?(method)
-      # don't allow setters to be delegated to auth_ext_type
-      authentication_extension_type.send(method, *args, &block)
-    else
-      super
+      errors.add(:value, "must be #{data_type} value") if fetch_value.to_s != value_string
+      errors.add(:value, "must be one of #{options.values}") if data_type == "select"
     end
   end
 
@@ -57,8 +41,17 @@ class AuthenticationExtension < ActiveRecord::Base
     with_value_string {|s| s.to_sym }
   end
 
+  def fetch_value_select
+    fetch_value_symbol
+  end
+
+  def fetch_value_password
+    # TODO: need to provide 2-way encryption for password values
+    fetch_value_string
+  end
+
   def fetch_value_text
-    value_text
+    fetch_value_string
   end
 
   def fetch_value_int
@@ -81,9 +74,5 @@ class AuthenticationExtension < ActiveRecord::Base
     if value_string && !value_string.empty?
       yield(value_string)
     end
-  end
-
-  def delegate_to_type(method)
-    authentication_extension_type.send(method) if authentication_extension_type && authentication_extension_type.respond_to?(method)
   end
 end

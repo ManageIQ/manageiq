@@ -8,10 +8,11 @@ class AuthenticationExtensionType < ActiveHash::Base
   # readable name for the extension type
   field :name
   # supported data_types:
+  # * string
   # * symbol
+  # * select (implies symbol, requires options)
   # * password
   # * text (long string)
-  # * string
   # * int
   # * float
   # * date
@@ -26,5 +27,5 @@ class AuthenticationExtensionType < ActiveHash::Base
 
   add :authtype => :amqp, :key => "ssl", :name => "Require SSL?", :data_type => "boolean"
   add :authtype => :amqp, :key => "alt_ip", :name => "Alternate IP Address", :data_type => "string"
-  add :authtype => :amqp, :key => "impl", :name => "AMQP Implementation", :data_type => "symbol", :options => {:rabbit => "Rabbit", :qpid => "QPid"}.freeze
+  add :authtype => :amqp, :key => "impl", :name => "AMQP Implementation", :data_type => "select", :options => {:rabbit => "Rabbit", :qpid => "QPid"}.freeze
 end
