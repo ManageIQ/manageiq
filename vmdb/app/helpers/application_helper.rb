@@ -26,23 +26,21 @@ module ApplicationHelper
 
   # Create a hidden div area based on a condition (using for hiding nav panes)
   def hidden_div_if(condition, options = {}, &block)
-    options[:style] = "display: none" if condition
-    if block_given?
-      content_tag(:div, options, &block)
-    else
-      # TODO: Remove this old open-tag-only way in favor of block style
-      tag(:div, options, true)
-    end
+    hidden_tag_if(:div, condition, options, &block)
   end
 
   # Create a hidden span tag based on a condition (using for hiding nav panes)
   def hidden_span_if(condition, options = {}, &block)
+    hidden_tag_if(:span, condition, options, &block)
+  end
+
+  def hidden_tag_if(tag, condition, options = {}, &block)
     options[:style] = "display: none" if condition
     if block_given?
-      content_tag(:span, options, &block)
+      content_tag(tag, options, &block)
     else
       # TODO: Remove this old open-tag-only way in favor of block style
-      tag(:span, options, true)
+      tag(tag, options, true)
     end
   end
 
