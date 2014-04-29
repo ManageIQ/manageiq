@@ -43,17 +43,14 @@ module WindowsBundler
 
   def self.check_all
     check_postgres
-    # check_rmagick
   end
 
   def self.prepare_all
     prepare_postgres
-    # prepare_rmagick
   end
 
   def self.cleanup_all
     # Cleanup in reverse order.
-    # begin; cleanup_rmagick;  rescue Exception; end
     begin; cleanup_postgres; rescue Exception; end
   end
 
@@ -88,48 +85,6 @@ module WindowsBundler
 
   def self.cleanup_postgres
     `subst /D X:`
-  end
-
-  #
-  # RMagick
-  #
-
-  def self.check_rmagick
-    if File.exists?("Y:")
-      puts "ERROR: Y: drive is already mapped, please unmap it."
-      exit 1
-    end
-
-    rm_dir = which("imdisplay")
-    if rm_dir.empty?
-      puts "ERROR: ImageMagick is not installed or is not in the PATH."
-      puts
-      puts "You can get the installer here:"
-      puts "  http://www.imagemagick.org/script/binary-releases.php#windows"
-      puts "Be sure to install the version that matches your Ruby architecture."
-      exit 1
-    end
-    rm_dir = File.dirname(rm_dir)
-
-    # Check for the issue where Windows has a system command called convert, which
-    #   clashes during one of the internal rmagick checks.
-    unless which("convert").include?(rm_dir)
-      puts "ERROR: ImageMagick is in the PATH, but must be ahead of the system"
-      puts "  directories so that the rmagick gem can be installed."
-      puts
-      puts "Run the following command line to set the PATH properly:"
-      puts "  set PATH=#{rm_dir};%PATH%"
-      exit 1
-    end
-  end
-
-  def self.prepare_rmagick
-    `subst Y: "#{File.dirname(which("imdisplay"))}"`
-    `bundle config build.rmagick --with-opt-dir=Y:`
-  end
-
-  def self.cleanup_rmagick
-    `subst /D Y:`
   end
 end
 
