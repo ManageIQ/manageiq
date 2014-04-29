@@ -633,9 +633,10 @@ module ApplicationHelper
     # TODO: extend .is_available? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
 
-    # hide edit button for MiqRequest instances of type ServiceTemplateProvisionRequest
+    # hide edit button for MiqRequest instances of type ServiceReconfigureRequest/ServiceTemplateProvisionRequest
     # TODO: extend .is_available? support via refactoring task to cover this scenario
-    return true if id == 'miq_request_edit' && @miq_request.try(:type) == 'ServiceTemplateProvisionRequest'
+    return true if id == 'miq_request_edit' &&
+                   ['ServiceReconfigureRequest', 'ServiceTemplateProvisionRequest'].include?(@miq_request.try(:type))
 
     # only hide gtl button if they are not in @temp
     return @temp[:gtl_buttons].include?(id) ? false : true if @temp &&
@@ -896,7 +897,8 @@ module ApplicationHelper
         return true if !@record.host.smart? || params[:action] == "log_viewer"
       end
     when "MiqProvisionRequest", "MiqHostProvisionRequest", "VmReconfigureRequest",
-        "VmMigrateRequest", "AutomationRequest", "ServiceTemplateProvisionRequest"
+        "VmMigrateRequest", "AutomationRequest",
+        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest"
 
       # Don't hide certain buttons on AutomationRequest screen
       return true if @record.resource_type == "AutomationRequest" &&

@@ -116,6 +116,8 @@
     = render :partial => "prov_wf", :locals => {:wf => @miq_request.workflow_class.new({:src_vm_id => @miq_request.source_id},session[:userid]), :show => true}
   - elsif @miq_request.type == 'ServiceTemplateProvisionRequest'
     = render :partial => "st_prov_show"
+  - elsif @miq_request.type == 'ServiceReconfigureRequest'
+    = render :partial => "service_reconfigure_show"
   - elsif @miq_request.type == "AutomationRequest"
     = render :partial => "ae_prov_show"
   - else

@@ -38,6 +38,14 @@ class Service < ActiveRecord::Base
   end
   alias has_parent has_parent?
 
+  def request_class
+    ServiceReconfigureRequest
+  end
+
+  def request_type
+    'service_reconfigure'
+  end
+
   def root_service
     result = self
     until result.parent_service.nil?
