@@ -4,11 +4,11 @@ require 'ffi'
 class VixDiskLibFFI
   extend FFI::Library
 
-  def enum(*args)
-    super.tab do |e|
-      # Expose enums as constants
-      e.symbols.each { |s| const_set(s, e[s]) }
-    end
+  def self.enum(*args)
+    s = super
+    # Expose enums as constants
+    s.symbols.each { |sym| self.const_set(sym, s[sym]) }
+    s
   end
 
   def attach_function(*args)

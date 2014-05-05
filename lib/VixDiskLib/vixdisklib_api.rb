@@ -451,7 +451,7 @@ class SafeConnectParams < VixDiskLibFFI
     # Increment structure pointer to credType
     cred_type = in_connect_parms[:credType]
     conn_parms = conn_parms_start + ConnectParams.offset_of(:credType)
-    conn_parms.write_int(CredType[cred_type]) unless in_connect_parms[:credType].nil?
+    conn_parms.write_int(cred_type) unless cred_type.nil?
     get_safe_creds(cred_type, in_connect_parms, conn_parms_start + ConnectParams.offset_of(:creds))
     conn_parms = conn_parms_start + ConnectParams.offset_of(:port)
     conn_parms.write_uint32(in_connect_parms[:port]) unless in_connect_parms[:port].nil?
@@ -545,7 +545,7 @@ class SafeConnectParams < VixDiskLibFFI
   end
 
   def get_safe_creds(cred_type, in_creds, out_cred_ptr)
-    if cred_type == :VIXDISKLIB_CRED_UID
+    if cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_UID
       # Increment structure pointer to creds field's username
       # This should take care of any padding necessary for the Union.
       conn_parms = out_cred_ptr + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:userName)
@@ -553,19 +553,19 @@ class SafeConnectParams < VixDiskLibFFI
       # Increment structure pointer to creds field's password
       conn_parms = out_cred_ptr + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:password)
       write_safe_str_2_mem(in_creds[:password], conn_parms)
-    elsif cred_type == :VIXDISKLIB_CRED_SESSIONID
+    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_SESSIONID
       conn_parms = out_cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:cookie)
       write_safe_str_2_mem(in_creds[:cookie], conn_parms)
       conn_parms = out_cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:sessionUserName)
       write_safe_str_2_mem(in_creds[:sessionUserName], conn_parms)
       conn_parms = out_cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:key)
       write_safe_str_2_mem(in_creds[:key], conn_parms)
-    elsif cred_type == :VIXDISKLIB_CRED_TICKETID
+    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_TICKETID
       conn_parms = out_cred_ptr + Creds.offset_of(:ticketId) + SessionIdCreds.offset_of(:dummy)
       write_safe_str_2_mem(in_creds[:dummy], conn_parms)
-    elsif cred_type == :VIXDISKLIB_CRED_SSPI
+    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_SSPI
       puts "VixDiskLibApi.connect - Connection Parameters Credentials Type SSPI"
-    elsif cred_type == :VIXDISKLIB_CRED_UNKNOWN
+    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_UNKNOWN
       puts "VixDiskLibApi.connect - unknown Connection Parameters Credentials Type"
     end
   end

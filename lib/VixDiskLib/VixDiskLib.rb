@@ -1,5 +1,9 @@
 require 'drb/drb'
 require 'vixdisklib_ffi'
+#
+# Alias the New FFI Binding Class Name to the old C Binding Class Name
+#
+VixDiskLib_raw = VixDiskLibFFI
 
 #
 # The URI to connect to will be constructed from the prefix and have the port number appended.
