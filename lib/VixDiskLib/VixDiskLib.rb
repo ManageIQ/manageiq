@@ -1,9 +1,9 @@
 require 'drb/drb'
-require 'vixdisklib_ffi'
+require 'VixDiskLib_FFI/const'
 #
 # Alias the New FFI Binding Class Name to the old C Binding Class Name
 #
-VixDiskLib_raw = VixDiskLibFFI
+VixDiskLib_raw = FFI::VixDiskLib::API
 
 #
 # The URI to connect to will be constructed from the prefix and have the port number appended.
@@ -19,7 +19,7 @@ DRb.start_service
 # class VixDiskLibClient
 class VixDiskLib
   @vix_disk_lib_service = nil
-  VIXDISKLIB_FLAG_OPEN_READ_ONLY = VixDiskLibFFI::VIXDISKLIB_FLAG_OPEN_READ_ONLY
+  VIXDISKLIB_FLAG_OPEN_READ_ONLY = FFI::VixDiskLib::API::VIXDISKLIB_FLAG_OPEN_READ_ONLY
 
   def self.init(info_logger = nil, warn_logger = nil, error_logger = nil, lib_dir = nil)
     if @vix_disk_lib_service.nil?
