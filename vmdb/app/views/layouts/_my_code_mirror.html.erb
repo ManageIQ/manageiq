@@ -35,11 +35,11 @@
 				lineNumbers: <%= line_numbers %>,
 				matchBrackets: true,
 				theme: '<%= theme %>',
-				readOnly: <%= read_only ? "'nocursor'".html_safe : false %>,
-				onChange: function(){miqSendOneTrans('<%= url %>')},
-				onBlur: function(){miqEditor.save()}
+				readOnly: <%= read_only ? "'nocursor'".html_safe : false %>
 			}
 		);
+    miqEditor.on("change", function(cm, change) {miqSendOneTrans('<%= url %>')}),
+    miqEditor.on("blur", function(cm) {miqEditor.save()}),
 		$j('.CodeMirror-scroll')[0].style.height = '<%= height %>px';
 		$j('.CodeMirror-scroll')[0].style.width = '<%= width %>px';
 		miqEditor.focus();
