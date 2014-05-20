@@ -2,7 +2,6 @@
 <% url_one_trans = url_for(:action=>'template_form_field_changed', :id=>"#{@ct.id || "new"}", :transOne=>'1') %>
 <div id="form_div">
 	<%= render :partial => "layouts/flash_msg" %>
-  <fieldset>
     <p class="legend">Basic Information</p>
     <table class="style1">
         <tr>
@@ -42,13 +41,9 @@
                            "data-miq_observe"=>{:url=>url}.to_json) %>
           </td>
         </tr>
-        <tr>
-          <td class="key">Script</td>
-          <td class="wide">
+          </table>
+          <hr>
+          <p class="legend">Script</p>
             <%= render :partial => "template_script_data" %>
-          </td>
-        </tr>
-    </table>
-  </fieldset>
 </div>
 

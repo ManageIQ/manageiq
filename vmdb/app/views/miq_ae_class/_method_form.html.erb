@@ -1,6 +1,5 @@
 <% if @sb[:active_tab] == "methods" %>
   <% url = url_for(:action=>'form_method_field_changed', :id=>"#{@ae_method.id || "new"}") %>
-  <fieldset>
     <p class="legend">Main Info</p>
     <table class="style1">
         <tr>
@@ -42,16 +41,11 @@
             </td>
           </tr>
         <% end %>
-        <tr>
-          <td class="key">Data</td>
-          <td class="wide">
-            <%= render :partial => "method_data", :locals=>{:field_name=>"#{prefix}method"} %>
-          </td>
-        </tr>
-    </table>
-  </fieldset>
-
-  <fieldset>
+        </table> 
+        <hr>
+        <p class="legend">Data</p>
+        <%= render :partial => "method_data", :locals=>{:field_name=>"#{prefix}method"} %>
+        <hr>
     <p class="legend">Input Parameters</p>
     <table class="noshow">
       <% if @sb[:squash_state] %>

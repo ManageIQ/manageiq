@@ -1,25 +1,11 @@
 <% action = @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed" %>
 <% url = url_for(:action=>action, :id=>"#{@edit[:rec_id] || "new"}") %>
 <% url_one_trans = url_for(:action=>action, :id=>"#{@edit[:rec_id] || "new"}", :transOne=>'1') %>
-<fieldset>
-  <p class="legend">Basic Info</p>
-  <table class="style1">
-    <tr>
-      <td class="key">Long Description</td>
-      <td>
-        <%= text_area_tag("long_description",
-                          @edit[:new][:long_description],
-                          :size=>"350x600",
-                          :style=>"display:none;") %>
-        <%#= text_area("long","description",
-                      :value=>@edit[:new][:long_description],
+  <p class="legend">Long Description</p>
+    <%= text_area_tag("long_description",
+                      @edit[:new][:long_description],
                       :size=>"350x600",
-                      :disabled=>true,
                       :style=>"display:none;") %>
-      </td>
-    </tr>
-  </table>
-</fieldset>
 <script>
   miqOneTrans = 0;
 </script>
@@ -28,9 +14,7 @@
            :locals=>{:text_area_id=>"long_description",
                      :mode=>"htmlmixed",
                      :line_numbers=>true,
-                     :url=>url_one_trans,
-                     :height=>350,
-                     :width=>600} %>
+                     :url=>url_one_trans} %>
 <script>
   miqEditor.refresh();
 </script>
