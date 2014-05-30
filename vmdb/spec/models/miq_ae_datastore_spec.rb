@@ -72,18 +72,22 @@ describe MiqAeDatastore do
     lambda { MiqAeDatastore.import(@ver_fname) }.should raise_error(RuntimeError)
   end
 
-#   it "should test import" do
-#     base_name = File.join(File.dirname(__FILE__), "base.xml")
-#     MiqAeDatastore.import(base_name)
-#
-#     namespaces = MiqAeNamespace.find(:all)
-# #    namespaces.each { |ns| puts "Namespace: #{ns.name}" }
-#     namespaces.length.should == 13
-#
-#     classes = MiqAeClass.find(:all)
-# #    classes.each { |c| puts "Class: #{c.name}" }
-#     classes.length.should == 189
-#   end
+  it ".backup" do
+    MiqAeYamlExportZipfs.any_instance.should_receive(:export).once
+    MiqAeDatastore.backup('zip_file'  => 'dummy', 'overwrite' => true)
+  end
+
+  it ".restore" do
+    MiqAeYamlImport.any_instance.should_receive(:import).once
+    MiqAeDatastore.restore(nil)
+  end
+
+  it ".upload" do
+    fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
+    import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
+    MiqAeDatastore.should_receive(:import_yaml_zip).with(import_file, "*").once
+    MiqAeDatastore.upload(fd, "dummy.zip")
+  end
 
   it "should test export" do
     pending("XML Export has been deprecated in favor of YAML export")
@@ -353,39 +357,19 @@ describe MiqAeDatastore do
 #    e_xml.should == expected
   end
 
-  it "should test cleanup of temporary file after an import error" do
-    xml = <<-XML
-    <MiqAeDatastore version='1.0'>
-      <MiqAeClass name="AUTOMATE" namespace="EVM">
-        <MiqAeInstance name="test1"/>
-      </MiqAeClass>
-         </MiqAeDatastore>
-    XML
-
-    MiqAeDatastore::Import.load_xml(xml, "FRED")
-    import_filename = "temporary.xml"
-    filename = File.join(MiqAeDatastore::TMP_DIR, import_filename)
-    fd = mock
-    fd.stub(:original_filename => import_filename, :read => xml, :eof => true, :close => true)
-    expect { MiqAeDatastore.upload(fd, nil, "FRED") }.to raise_error
-    File.exist?(filename).should be_false
+  it "should test cleanup of temporary file after an unsuccessful import" do
+    fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
+    import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
+    expect { MiqAeDatastore.upload(fd, "dummy.zip") }.to raise_error
+    File.exist?(import_file).should be_false
   end
 
   it "should test cleanup of temporary file after a successful import" do
-    xml = <<-XML
-    <MiqAeDatastore version='1.0'>
-      <MiqAeClass name="AUTOMATE" namespace="EVM">
-        <MiqAeInstance name="test1"/>
-      </MiqAeClass>
-         </MiqAeDatastore>
-    XML
-
-    import_filename = "temporary.xml"
-    filename = File.join(MiqAeDatastore::TMP_DIR, import_filename)
-    fd = mock
-    fd.stub(:original_filename => import_filename, :read => xml, :eof => true, :close => true)
-    expect { MiqAeDatastore.upload(fd) }.not_to raise_error
-    File.exist?(filename).should be_false
+    fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
+    import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
+    MiqAeDatastore.should_receive(:import_yaml_zip).with(import_file, "*").once
+    MiqAeDatastore.upload(fd, "dummy.zip")
+    File.exist?(import_file).should be_false
   end
 
   it "#reset_default_namespace" do

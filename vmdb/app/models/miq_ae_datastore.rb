@@ -47,12 +47,11 @@ module MiqAeDatastore
     end
   end
 
-  def self.upload(fd, name = nil, domain_name = temp_domain)
-    xml_deprecated_warning
+  def self.upload(fd, name = nil, domain_name = ALL_DOMAINS)
     name     ||= fd.original_filename
     ext        = File.extname(name)
     basename   = File.basename(name, ext)
-    name       = "#{basename}.xml"
+    name       = "#{basename}.zip"
     block_size = 65_536
     FileUtils.mkdir_p(TMP_DIR) unless File.directory?(TMP_DIR)
     filename = File.join(TMP_DIR, name)
@@ -72,7 +71,7 @@ module MiqAeDatastore
     $log.info("MIQ(MiqAeDatastore) Upload complete (size=#{File.size(filename)})") if $log
 
     begin
-      import(filename, domain_name)
+      import_yaml_zip(filename, domain_name)
     ensure
       File.delete(filename)
     end
@@ -83,9 +82,16 @@ module MiqAeDatastore
     $log.info("MIQ(MiqAeDatastore.import) Import #{fname}...Complete - Benchmark: #{t.inspect}")
   end
 
+  def self.restore(fname)
+    $log.info("MIQ(MiqAeDatastore.restore) Restore from #{fname}...Starting")
+    MiqAeDatastore.reset
+    MiqAeImport.new(ALL_DOMAINS, 'zip_file' => fname, 'preview' => false).import
+    $log.info("MIQ(MiqAeDatastore.restore) Restore from #{fname}...Complete")
+  end
+
   def self.import_yaml_zip(fname, domain)
     t = Benchmark.realtime_block(:total_time) do
-      import_options = {'zip_file' => fname, 'preview' => false, 'replace' => false}
+      import_options = {'zip_file' => fname, 'preview' => false, 'mode' => 'add'}
       MiqAeImport.new(domain, import_options).import
     end
     $log.info("MIQ(MiqAeDatastore.import) Import #{fname}...Complete - Benchmark: #{t.inspect}")
@@ -93,7 +99,7 @@ module MiqAeDatastore
 
   def self.import_yaml_dir(dirname, domain)
     t = Benchmark.realtime_block(:total_time) do
-      import_options = {'import_dir' => dirname, 'preview' => false, 'replace' => false}
+      import_options = {'import_dir' => dirname, 'preview' => false, 'mode' => 'add'}
       MiqAeImport.new(domain, import_options).import
     end
     $log.info("MIQ(MiqAeDatastore.import) Import from #{dirname}...Complete - Benchmark: #{t.inspect}")

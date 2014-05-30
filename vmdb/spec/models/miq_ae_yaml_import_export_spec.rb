@@ -141,7 +141,6 @@ describe MiqAeDatastore do
       it "import single domain, from zip" do
         export_model(ALL_DOMAINS, true)
         reset_options = {}
-        puts "importing domain: #{@customer_domain.name}"
         reset_and_import(@export_dir, @customer_domain.name, reset_options, true)
         check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
                      'meth' => 3, 'field' => 8, 'value' => 6)
