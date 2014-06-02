@@ -20,12 +20,9 @@ class AuthenticationExtension < ActiveRecord::Base
   end
 
   def value_contains_correct_data_type
-    if data_type == "text"
-    else
-      # make sure the raw value converts back to the same string
-      errors.add(:value, "must be #{data_type} value") if fetch_value.to_s != value_string
-      errors.add(:value, "must be one of #{options.values}") if data_type == "select"
-    end
+    # make sure the raw value converts back to the same string
+    errors.add(:value, "must be #{data_type} value") if fetch_value.to_s != value_string
+    errors.add(:value, "must be one of #{options.values}") if data_type == "select"
   end
 
   private
