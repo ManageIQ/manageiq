@@ -34,12 +34,8 @@ class AuthenticationExtension < ActiveRecord::Base
     value_string
   end
 
-  def fetch_value_symbol
-    with_value_string {|s| s.to_sym }
-  end
-
   def fetch_value_select
-    fetch_value_symbol
+    with_value_string {|s| s.to_sym }
   end
 
   def fetch_value_password

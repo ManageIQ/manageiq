@@ -9,7 +9,6 @@ class AuthenticationExtensionType < ActiveHash::Base
   field :name
   # supported data_types:
   # * string
-  # * symbol
   # * select (implies symbol, requires options)
   # * password
   # * text (long string)
