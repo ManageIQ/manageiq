@@ -6,7 +6,7 @@
 <% url = url_for(:action=>change_url, :id=>"#{rec_id}") %>
 
 <% auth_extensions.each do |ext| %>
-  <%= render(:partial=>"/layouts/auth_extension",
+  <%= render(:partial=>"/layouts/auth_extensions/#{auth_partial_for(ext)}",
                       :locals=>{:authtype=>authtype,
                                 :change_url=>change_url,
                                 :record=>record,

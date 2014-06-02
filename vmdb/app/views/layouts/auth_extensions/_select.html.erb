@@ -1,0 +1,19 @@
+<% change_url ||= "form_field_changed" %>
+<% authtype ||= "" %>
+<% record ||= nil %>
+<% authext ||= nil %>
+<% fieldname ||= nil %>
+<% rec_id = record && record.id ? "#{record.id}" : "new" %>
+<% url = url_for(:action=>change_url, :id=>"#{rec_id}") %>
+<% fieldname = "#{authtype}_ext_#{authext.key}" %>
+
+  <tr>
+      <td class="key"><%= authext.name %></td>
+      <td>
+        <%= select_tag(fieldname,
+                       options_for_select(authext.options.invert, authext.value),
+                       :prompt => "Select one",
+                       "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+        %>
+      </td>
+  </tr>

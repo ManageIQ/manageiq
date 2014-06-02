@@ -1,6 +1,8 @@
 class EmsCloudController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud controllers
 
+  helper :auth_extension
+
   before_filter :check_privileges
   before_filter :get_session_data
   after_filter :cleanup_action
