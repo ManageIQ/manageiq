@@ -28,9 +28,13 @@ class VdiUserController < VdiBaseController
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
-    render :update do |page|      # Use RJS to update the display
+    render :update do |page|
       if params[:pressed] == "vdi_user_miq_request_new"
-        page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :org_controller=>@org_controller, :vdi_users=>params[:vdi_users]
+        page.redirect_to :controller     => @redirect_controller,
+                         :action         => @refresh_partial,
+                         :id             => @redirect_id,
+                         :org_controller => @org_controller,
+                         :vdi_users      => @vdi_users
       elsif @refresh_div == "flash_msg_div"
         page.replace(@refresh_div, :partial=>@refresh_partial)
       end

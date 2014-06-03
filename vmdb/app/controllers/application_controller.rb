@@ -2284,7 +2284,7 @@ class ApplicationController < ActionController::Base
     end
     if request.parameters[:controller] == "vdi_user"
       vdi_users = params[:id] ? [params[:id]] : find_checked_items
-      @_params[:vdi_users] = vdi_users.join('_')
+      @vdi_users = vdi_users.join('_')
     end
     if typ
       vms = find_checked_items
