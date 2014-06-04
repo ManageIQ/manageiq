@@ -153,10 +153,13 @@ class VdiDesktopPoolController < VdiBaseController
     return unless load_edit("dp_edit__#{params[:id]}")
     manage_desktops_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
       page << javascript_for_miq_button_visibility(@changed)
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg") if @flash_array
-      page.replace("form", :partial=>"manage_desktops") if !@flash_array
+      if @flash_array
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      else
+        page.replace("form", :partial => "manage_desktops")
+      end
       page << "miqSparkle(false);"
     end
   end
@@ -164,12 +167,12 @@ class VdiDesktopPoolController < VdiBaseController
   def vdi_desktop_pool_manage_desktops
     assert_privileges("vdi_desktop_pool_manage_desktops")
     render :update do |page|
-      page.redirect_to :controller =>request.parameters[:controller], :action => 'manage_desktops', :id=>params[:id]      # redirect to build the retire screen
+      page.redirect_to :controller => controller_name, :action => 'manage_desktops', :id => params[:id]
     end
   end
   hide_action :vdi_desktop_pool_manage_desktops
 
-  private ########
+  private
 
   def create_update
     return unless load_edit("vdp_edit__#{params[:id] ? params[:id] : "new"}")
