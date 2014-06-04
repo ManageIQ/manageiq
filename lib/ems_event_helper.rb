@@ -11,7 +11,6 @@ class EmsEventHelper
 
     handle_event
     handle_alert_event
-    handle_alarm_event
     handle_automation_event
 
     after_handle
@@ -139,31 +138,5 @@ class EmsEventHelper
 
   def handle_alert_event
     handle_step("policy" => ["src_vm", @event.event_type]) if MiqAlert.event_alertable?(@event.event_type)
-  end
-
-  def handle_alarm_event
-    # TODO:
-    # => Figure out the target - ems, custer, host, vm for event
-    # => Get alarm MOR and EMS
-    # => Find alerts that match EMS and alarm MOR - Not sure if this should be done here or in alert model from queue
-    return unless @event.event_type == "AlarmStatusChangedEvent"
-    return unless @event.full_data && @event.full_data["to"] = "red"
-
-    _log.info("event: [#{@event.attributes.inspect}]")
-    _log.info("event.full_data: [#{@event.full_data.inspect}]")
-    ems_id = @event.ems_id
-    target = nil
-    [:vm, :host].each do |name|
-      target = @event.send(name)
-      break if target
-    end
-    alarm_mor = @event.full_data.fetch_path("alarm", "alarm") unless @event.full_data.nil?
-
-    if alarm_mor.nil? || target.nil? || ems_id.nil?
-      _log.warn "Alarm Event missing data required for evaluating Alerts, skipping. Full data: [#{@event.full_data.inspect}]"
-      return
-    end
-    alarm_event = "#{@event.event_type}_#{ems_id}_#{alarm_mor}"
-    MiqEvent.raise_evm_alert_event_queue(target, alarm_event)
   end
 end
