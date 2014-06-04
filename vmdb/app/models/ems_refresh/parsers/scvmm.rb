@@ -64,12 +64,12 @@ module EmsRefresh::Parsers
     end
 
     def parse_datastore(datastore)
-      volume = datastore[:Properties][:Props]
+      volume = datastore[:Props]
       uid = volume[:ID]
 
       new_result = {
         :ems_ref                     => uid,
-        :name                        => volume[:VolumeLabel],
+        :name                        => File.path_to_uri(volume[:Name], volume[:VMHost][:ToString]),
         :store_type                  => volume[:FileSystem],
         :total_space                 => volume[:Capacity],
         :free_space                  => volume[:FreeSpace],
@@ -77,6 +77,7 @@ module EmsRefresh::Parsers
         :thin_provisioning_supported => true,
         :location                    => uid,   # HACK: get around save_inventory issues by reusing uid.
       }
+
       return uid, new_result
     end
 
@@ -137,7 +138,7 @@ module EmsRefresh::Parsers
         :type             => 'VmMicrosoft',
         :vendor           => vendor,
         :power_state      => lookup_power_state(p[:VirtualMachineState][:ToString]),
-        :location         => p[:Location],
+        :location         => p[:VMCPath].sub(drive_letter_regex, "").strip,
         :operating_system => os_hash,
         :connection_state => lookup_connected_state(connection_state),
         :tools_status     => process_tools_status(p),
@@ -149,7 +150,6 @@ module EmsRefresh::Parsers
         :storage          => process_vm_storage(p[:VMCPath], host),
         :storages         => process_vm_storages(p),
       }
-
       return uid, new_result
     end
 
@@ -209,7 +209,8 @@ module EmsRefresh::Parsers
 
     def map_mount_point_to_datastore(properties)
       properties[:DiskVolumes].each.with_object({}) do |dv, h|
-        mount_point    = dv[:Props][:Name].downcase.chomp('\\')
+        mount_point    = dv[:Props][:Name].match(drive_letter_regex).to_s
+        next if mount_point.blank?
         storage        = @data_index.fetch_path(:storages, dv[:Props][:ID])
         h[mount_point] = storage
       end
@@ -380,7 +381,7 @@ module EmsRefresh::Parsers
     def process_vm_storage(vmcpath, host)
       return nil if vmcpath.nil? || host.nil?
 
-      mount_point  = vmcpath.downcase.match(/\A[a-z][:]/).to_s
+      mount_point  = vmcpath.match(drive_letter_regex).to_s
       return nil if mount_point.nil?
 
       mapping = @data_index.fetch_path(:host_uid_to_datastore_mount_point_mapping, host[:uid_ems])
@@ -503,6 +504,10 @@ module EmsRefresh::Parsers
       else
         "unknown"
       end
+    end
+
+    def drive_letter_regex
+      /\A[a-z][:]/i
     end
 
     #

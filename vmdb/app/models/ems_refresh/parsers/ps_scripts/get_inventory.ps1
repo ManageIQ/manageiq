@@ -1,4 +1,6 @@
 import-module virtualmachinemanager
+$diskvols = @{}
+
 function get_vm_temps {
  $vms = $args[0]
  $type = $args[1]
@@ -20,29 +22,18 @@ function get_vm_temps {
 
 function get_host_inventory {
  $results = @{}
-
  $hosts = $args[0]
  $hosts | ForEach-Object {
   $host_hash = @{}
   $host_hash["NetworkAdapters"] = @(Get-VMHostNetworkAdapter -VMHost $_)
   $host_hash["Properties"] = $_
   $results[$_.ID] = $host_hash
+  $_.DiskVolumes | where-object VolumeLabel -ne "System Reserved" | ForEach-Object {
+    $diskvols[$_.ID]=$_
+  }
  }
  return $results
 }
-
-function get_datastores {
- $results = @{}
-
- $d = $args[0]
- $d | ForEach-Object {
-  $d_hash = @{}
-  $d_hash["Properties"] = $_
-  $results[$_.ID] = $d_hash
- }
- return $results
-}
-
 
 function get_clusters {
  $results = @{}
@@ -67,9 +58,7 @@ $r["images"] = get_vm_temps ($i) ("image")
 
 $h = Get-SCVMHost -VMMServer "localhost"
 $r["hosts"] = get_host_inventory($h)
-
-$d = Get-SCStoragePool -VMMServer "localhost" | Select-Object -ExpandProperty StorageLogicalUnits | Select-Object -ExpandProperty HostDisks  | Select-Object -ExpandProperty DiskVolumes
-$r["datastores"] = get_datastores($d)
+$r["datastores"] = $diskvols
 
 $c = Get-SCVMHostCluster -VMMServer "localhost"
 $r["clusters"] = get_clusters($c)
