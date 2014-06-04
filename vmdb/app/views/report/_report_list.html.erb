@@ -25,7 +25,10 @@
       <% end %>
     <% elsif x_active_tree == :reports_tree && x_node.split('-').length <= 4  %>
       <% nodes = x_node.split('-') %>
-      <% if (nodes.length == 1 && @sb[:rpt_menu].blank?) || (nodes.length == 2 && @sb[:rpt_menu][nodes[1].to_i][1].blank?) || (nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].blank?) %>
+      <% if (nodes.length == 1 && @sb[:rpt_menu].blank?) ||
+            (nodes.length == 2 && @sb[:rpt_menu][nodes[1].to_i][1].blank?) ||
+            (nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present? &&
+              @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].blank?) %>
         <div class="alert alert-info">
           <span class="pficon pficon-info"></span>
           <strong>No Reports available.</strong>
@@ -99,7 +102,7 @@
                 </tr>
               <% end %>
               </tbody>
-            <% elsif nodes.length == 4 %>
+            <% elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present? %>
               <%# reports list%>
               <% @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].each_with_index do |rep,i| %>
                 <% if i == 0 %>
