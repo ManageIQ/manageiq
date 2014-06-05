@@ -92,6 +92,9 @@ module OpsController::Settings::Common
           verb = @edit[:new][:authentication][:mode] == 'amazon' ? 'show' : 'hide'
           page << "$('amazon_div').#{verb}();"
           page << "$('amazon_role_div').#{verb}();"
+
+          verb = @edit[:new][:authentication][:mode] == 'httpd' ? 'show' : 'hide'
+          page << "$('httpd_role_div').#{verb}();"
         end
         if @authusertype_changed
           if @edit[:new][:authentication][:user_type] == "dn-cn"
@@ -654,6 +657,7 @@ module OpsController::Settings::Common
       @edit[:new][:session][:timeout] = @sb[:form_vars][:session_timeout_hours].to_i * 3600 + @sb[:form_vars][:session_timeout_mins].to_i * 60 if params[:session_timeout_hours] || params[:session_timeout_mins]
       @sb[:newrole] = (params[:ldap_role].to_s == "1") if params[:ldap_role]
       @sb[:new_amazon_role] = (params[:amazon_role].to_s == "1") if params[:amazon_role]
+      @sb[:new_httpd_role] = (params[:httpd_role].to_s == "1") if params[:httpd_role]
       if params[:authentication_user_type] && params[:authentication_user_type] != @edit[:new][:authentication][:user_type]
         @authusertype_changed = true
       end
@@ -664,6 +668,9 @@ module OpsController::Settings::Common
       end
       if @sb[:new_amazon_role] != @edit[:new][:authentication][:amazon_role]
         @edit[:new][:authentication][:amazon_role] = @sb[:new_amazon_role]
+      end
+      if @sb[:new_httpd_role] != @edit[:new][:authentication][:httpd_role]
+        @edit[:new][:authentication][:httpd_role] = @sb[:new_httpd_role]
       end
       if params[:authentication_mode] && params[:authentication_mode] != @edit[:new][:authentication][:mode]
         if params[:authentication_mode] == "ldap"
@@ -883,8 +890,10 @@ module OpsController::Settings::Common
       @edit[:current] = Hash.new
       @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
       @edit[:current] = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
-      @edit[:current].config[:authentication][:ldap_role] = false if @edit[:current].config[:authentication][:ldap_role] == nil # Avoid thinking ldap role changed when not yet set
-      @edit[:current].config[:authentication][:amazon_role] = false if @edit[:current].config[:authentication][:amazon_role] == nil # Avoid thinking ldap role changed when not yet set
+      # Avoid thinking roles change when not yet set
+      @edit[:current].config[:authentication][:ldap_role]   ||= false
+      @edit[:current].config[:authentication][:amazon_role] ||= false
+      @edit[:current].config[:authentication][:httpd_role]  ||= false
       @sb[:form_vars] = Hash.new
       @sb[:form_vars][:session_timeout_hours] = @edit[:current].config[:session][:timeout]/3600
       @sb[:form_vars][:session_timeout_mins] = (@edit[:current].config[:session][:timeout]%3600)/60
@@ -893,6 +902,7 @@ module OpsController::Settings::Common
       @edit[:current].config[:authentication][:follow_referrals] ||= false
       @sb[:newrole] = @edit[:current].config[:authentication][:ldap_role]
       @sb[:new_amazon_role] = @edit[:current].config[:authentication][:amazon_role]
+      @sb[:new_httpd_role] = @edit[:current].config[:authentication][:httpd_role]
       @in_a_form = true
     when "settings_smartproxy_affinity"                                 #SmartProxy Affinity tab
       smartproxy_affinity_set_form_vars

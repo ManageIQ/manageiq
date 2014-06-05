@@ -18,7 +18,9 @@
         <td class="key">Mode</td>
         <td class="wide">
           <%= select_tag('authentication_mode',
-                          options_for_select([["Database","database"],["LDAP","ldap"],["LDAPS","ldaps"],["Amazon","amazon"]],
+                         options_for_select(
+                            [["Database", "database"], ["LDAP", "ldap"], ["LDAPS", "ldaps"],
+                             ["Amazon", "amazon"], ["External (httpd)", "httpd"]],
                             @edit[:new][:authentication][:mode]),
                           "data-miq_observe"=>{:url=>url}.to_json) %>
 
@@ -202,7 +204,7 @@
     </table>
      </div>
   </div>
-  <hr>
+
   <%= hidden_div_if(!@edit[:new][:authentication][:ldap_role], :id=>"user_proxies_div") %>
     <%= render :partial => 'ldap_forest_entries', :locals=>{:entry=>nil,:edit=>false} %>
   </div>
@@ -230,6 +232,22 @@
       </tr>
     </table>
   </div>
+
+  <%= hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_role_div") do %>
+    <p class="legend">Role Settings</p>
+    <table class="style1">
+      <tr>
+        <td class="key">Get User Groups from External Authentication (https)</td>
+        <td>
+          <%= check_box_tag("httpd_role", "1",
+                              @edit[:new][:authentication][:httpd_role],
+                              "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+
+  <hr>
   <%# Need this to bind checkbox observers when under DHTMLX tabs %>
   <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
   <script>miqObserveCheckboxes();</script>
