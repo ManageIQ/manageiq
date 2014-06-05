@@ -340,25 +340,10 @@ class User < ActiveRecord::Base
         return nil
       end
 
-      matching_groups = self.match_iam_groups(amazon_auth, amazon_user)
-      if matching_groups.empty?
-        msg = "Authentication failed for userid #{username}, unable to match user's group membership to an EVM role"
-        $log.warn("#{log_prefix}: #{msg}")
-        AuditEvent.failure(audit.merge(:message => msg))
-        task.error(msg)
-        task.state_finished
-        return nil
-      end
-
+      matching_groups = match_groups(amazon_auth.get_memberships(amazon_user))
       user   = self.find_by_userid(username) || self.new(:userid => username)
       user.update_attrs_from_iam(amazon_auth, amazon_user, username)
-      user.miq_groups = matching_groups
-      user.lastlogon  = Time.now.utc
-      user.save!
-      $log.info("#{log_prefix}: Authorized User: [#{username}]")
-
-      task.userid = user.userid
-      task.update_status("Finished", "Ok", "User authorized successfully")
+      user.save_successful_logon(matching_groups, audit, task)
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
@@ -455,26 +440,11 @@ class User < ActiveRecord::Base
         return nil
       end
 
-      matching_groups = self.match_ldap_groups(ldap, lobj)
-      if matching_groups.empty?
-        msg = "Authentication failed for userid #{fq_user}, unable to match user's group membership to an EVM role"
-        $log.warn("#{log_prefix}: #{msg}")
-        AuditEvent.failure(audit.merge(:message => msg))
-        task.error(msg)
-        task.state_finished
-        return nil
-      end
-
+      matching_groups = match_groups(getUserMembership(ldap, lobj))
       userid = ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || fq_user)
       user   = self.find_by_userid(userid) || self.new(:userid => userid)
       user.update_attrs_from_ldap(ldap, lobj)
-      user.miq_groups = matching_groups
-      user.lastlogon  = Time.now.utc
-      user.save!
-      $log.info("#{log_prefix}: Authorized User FQDN: [#{fq_user}]")
-
-      task.userid = user.userid
-      task.update_status("Finished", "Ok", "User authorized successfully")
+      user.save_successful_logon(matching_groups, audit, task)
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
@@ -559,7 +529,7 @@ class User < ActiveRecord::Base
     uobj = ldap.get_user_object(value, attr)
     raise "Unable to auto-create user because LDAP search returned no data for user with #{attr}: [#{value}]" if uobj.nil?
 
-    matching_groups = self.match_ldap_groups(ldap, uobj)
+    matching_groups = match_groups(getUserMembership(ldap, uobj))
     raise "Unable to auto-create user because unable to match user's group membership to an EVM role" if matching_groups.empty?
 
     user = self.new
@@ -584,6 +554,30 @@ class User < ActiveRecord::Base
   def update_attrs_from_iam(amazon_auth, amazon_user, username)
     self.userid     = username
     self.name       = amazon_user.name
+  end
+
+  def save_successful_logon(matching_groups, audit = nil, task = nil)
+    log_prefix = "MIQ(User#save_successful_logon) User: [#{userid}]"
+    if matching_groups.empty?
+      msg = "Authentication failed for userid #{userid}, unable to match user's group membership to an EVM role"
+      AuditEvent.failure(audit.merge(:message => msg)) if audit
+      if task
+        $log.warn("#{log_prefix}: #{msg}")
+        task.error(msg)
+        task.state_finished
+      end
+      return nil
+    end
+
+    self.miq_groups = matching_groups
+    self.lastlogon = Time.now.utc unless task.nil?
+    save!
+    if task
+      $log.info("#{log_prefix}: Authorized User: [#{userid}]")
+      task.userid = userid
+      task.update_status("Finished", "Ok", "User authorized successfully")
+    end
+    self
   end
 
   def current_group=(group)
@@ -732,31 +726,18 @@ class User < ActiveRecord::Base
     groups.uniq
   end
 
-  def self.match_ldap_groups(ldap, obj)
-    log_prefix  = "MIQ(User#match_ldap_groups)"
-    groups      = self.getUserMembership(ldap, obj).collect {|g| g.downcase}
+  def self.match_groups(groups)
+    log_prefix  = "MIQ(User#match_groups)"
+
+    return [] if groups.empty?
+    groups = groups.collect { |g| g.downcase }
+
     miq_groups  = MiqServer.my_server.miq_groups
     miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
     miq_groups  = MiqGroup.find(:all, :conditions => {:resource_id => nil, :resource_type => nil}) if miq_groups.empty?
-    miq_groups.sort!  { |a,b| a.sequence <=> b.sequence }
-    groups.each       { |g| $log.debug("#{log_prefix} Group from LDAP: #{g.downcase}") }
-    miq_groups.each   { |g| $log.debug("#{log_prefix} Group from EVM: #{g.description.downcase}") }
-    miq_groups.select { |g| groups.include?(g.description.downcase) }
-  end
-
-  def self.get_iam_user_membership(amazon_auth, amazon_user)
-    amazon_auth.get_memberships(amazon_user)
-  end
-
-  def self.match_iam_groups(amazon_auth, amazon_user)
-    log_prefix  = "MIQ(User#match_iam_groups)"
-    groups      = self.get_iam_user_membership(amazon_auth, amazon_user).collect {|g| g.downcase}
-    miq_groups  = MiqServer.my_server.miq_groups
-    miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
-    miq_groups  = MiqGroup.find(:all, :conditions => {:resource_id => nil, :resource_type => nil}) if miq_groups.empty?
-    miq_groups.sort!  { |a,b| a.sequence <=> b.sequence }
-    groups.each       { |g| $log.debug("#{log_prefix} Group from Amazon IAM: #{g.downcase}") }
-    miq_groups.each   { |g| $log.debug("#{log_prefix} Group from EVM: #{g.description.downcase}") }
+    miq_groups.sort!  { |a, b| a.sequence <=> b.sequence }
+    groups.each       { |g| $log.debug("#{log_prefix} External Group: #{g}") }
+    miq_groups.each   { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }
     miq_groups.select { |g| groups.include?(g.description.downcase) }
   end
 
