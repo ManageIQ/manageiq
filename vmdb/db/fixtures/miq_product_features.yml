@@ -931,6 +931,43 @@
       :feature_type: control
       :identifier: availability_zone_tag
 
+# CloudTenant
+- :name: Cloud Tenants
+  :description: Everything under Cloud Tenants
+  :feature_type: node
+  :identifier: cloud_tenant
+  :children:
+  - :name: View
+    :description: View Tenants
+    :feature_type: view
+    :identifier: cloud_tenant_view
+    :children:
+    - :name: List
+      :description: Display Lists of Tenants
+      :feature_type: view
+      :identifier: cloud_tenant_show_list
+    - :name: Show
+      :description: Display Individual Tenants
+      :feature_type: view
+      :identifier: cloud_tenant_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Tenants
+      :feature_type: view
+      :identifier: cloud_tenant_perf
+    - :name: Timeline
+      :description: Display Timelines for Tenants
+      :feature_type: view
+      :identifier: cloud_tenant_timeline
+  - :name: Operate
+    :description: Perform Operations on Tenants
+    :feature_type: control
+    :identifier: cloud_tenant_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Tenants
+      :feature_type: control
+      :identifier: cloud_tenant_tag
+
 # Security Group
 - :name: Security Groups
   :description: Everything under Security Groups

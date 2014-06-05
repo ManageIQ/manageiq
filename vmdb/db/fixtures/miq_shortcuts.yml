@@ -59,6 +59,11 @@
   :url: /availabilty_zone/show_list
   :rbac_feature_name: availability_zone_show_list
   :startup: true
+- :name: cloud_tenants
+  :description: Clouds / Tenants
+  :url: /cloud_tenant/show_list
+  :rbac_feature_name: cloud_tenant_show_list
+  :startup: true
 - :name: flavors
   :description: Clouds / Flavors
   :url: /flavor/show_list

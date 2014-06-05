@@ -65,6 +65,10 @@
             %li(class="#{secondary_nav_class('availability_zone')}")
               %a{:href=>'/availability_zone'}Availability Zones
 
+          -if role_allows(:feature => 'cloud_tenant_show_list')
+            %li(class="#{secondary_nav_class('cloud_tenant')}")
+              %a{:href=>'/cloud_tenant'}Tenants
+
           -if role_allows(:feature => 'flavor_show_list')
             %li(class="#{secondary_nav_class('flavor')}")
               %a{:href=>'/flavor'}Flavors
