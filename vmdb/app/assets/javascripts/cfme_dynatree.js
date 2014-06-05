@@ -73,7 +73,7 @@ function cfme_bind_hover_event(tree_name) {
 // OnClick handler to run tree_select server method
 function cfmeOnClick_SelectTreeNode(id) {
   rec_id = id.split('__')
-  new Ajax.Request(encodeURI("tree_select/?id=" + rec_id[0]),
+  new Ajax.Request(encodeURI("/" + miq_controller + "/tree_select/?id=" + rec_id[0]),
     {asynchronous:true, evalScripts:true,
       onLoading:function(request){miqSparkle(true);}}
   );

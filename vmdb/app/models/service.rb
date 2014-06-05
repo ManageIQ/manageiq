@@ -1,10 +1,10 @@
 class Service < ActiveRecord::Base
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
-  belongs_to      :service_template  # Template this service was cloned from
-  belongs_to      :service           # Parent Service
-  has_many        :services          # Child services
-  has_many        :ems_events
+  belongs_to :service_template               # Template this service was cloned from
+  belongs_to :service                        # Parent Service
+  has_many :services, :dependent => :destroy # Child services
+  has_many :ems_events
 
   virtual_belongs_to :parent_service
   virtual_has_many   :direct_service_children
@@ -19,6 +19,8 @@ class Service < ActiveRecord::Base
   include_concern 'Aggregation'
 
   virtual_column :has_parent,                               :type => :boolean
+
+  validates_presence_of :name
 
   def add_resource(rsc, options={})
     raise MiqException::Error, "Vm <#{rsc.name}> is already connected to a service." if rsc.kind_of?(Vm) && !rsc.service.nil?

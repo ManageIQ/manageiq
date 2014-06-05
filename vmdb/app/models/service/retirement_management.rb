@@ -10,6 +10,9 @@ module Service::RetirementManagement
   end
 
   def before_retirement
+    services.each do |s|
+      s.retire_now
+    end
     self.service_resources.each do |sr|
       sr.resource.retire_now if sr.resource.respond_to?(:retire_now)
     end

@@ -1344,6 +1344,7 @@ Vmdb::Application.routes.draw do
         service_form_field_changed
         service_tag
         tag_edit_form_field_changed
+        tree_autoload_dynatree
         tree_select
         x_button
         x_history
