@@ -1,0 +1,12 @@
+-#
+-# Parameters:
+-#    widget: MiqWidget object
+-#
+%div.modboxin.rss_widget
+  - style =  @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display:none' : ''
+  %div.mc{:id => "dd_w#{widget.id}_box", :style => style}
+    - if widget.contents_for_user(session[:userid]).contents.blank?
+      No RSS Feed data found . . .
+    - else
+      = widget.contents_for_user(session[:userid]).contents.gsub("https://localhost:3000",
+          "#{request.protocol}://#{request.host}:#{request.port}").html_safe
