@@ -214,7 +214,7 @@ class User < ActiveRecord::Base
     raise MiqException::MiqEVMLoginError, "authentication failed" unless ldap.bind(fq_user, password)
   end
 
-  def self.authenticate(username, password)
+  def self.authenticate(username, password, request = nil)
     fail_message = "Authentication failed"
     mode = self.mode
 
@@ -225,6 +225,8 @@ class User < ActiveRecord::Base
         self.authenticate_ldap(username, password)
       elsif mode == "amazon"
         self.authenticate_amazon(username, password)
+      elsif mode == "httpd"
+        authenticate_httpd(username, request)
       end
 
       raise MiqException::MiqEVMLoginError, fail_message if user_or_taskid.nil?
@@ -454,6 +456,94 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.authenticate_httpd(username, request)
+    audit = {:event => "authenticate_httpd", :userid => username}
+    if request.nil?
+      AuditEvent.failure(audit.merge(:message => "Authentication failed for user #{username}, request missing"))
+      nil
+    elsif request.headers['X_REMOTE_USER'].present?
+      AuditEvent.success(audit.merge(:message => "User #{username} successfully validated by httpd"))
+
+      if VMDB::Config.new("vmdb").config[:authentication][:httpd_role] == true
+        user = authorize_httpd_queue(username, request)
+      else
+        # If role_mode == database we will only use httpd for authentication. Also, the user must exist in our database
+        # otherwise we will fail authentication
+        unless (user = find_by_userid(username))
+          AuditEvent.failure(audit.merge(:message => "User #{username} authenticated but not defined in EVM"))
+          raise MiqException::MiqEVMLoginError,
+                "User authenticated but not defined in EVM, please contact your EVM administrator"
+        end
+      end
+
+      AuditEvent.success(audit.merge(:message => "Authentication successful for user #{username}"))
+      user
+    else
+      external_auth_error = request.headers['HTTP_X_EXTERNAL_AUTH_ERROR']
+      AuditEvent.failure(audit.merge(:message => "Authentication failed for userid #{username} #{external_auth_error}"))
+      nil
+    end
+  end
+
+  def self.authorize_httpd_queue(username, request)
+    task = MiqTask.create(:name => "External httpd User Authorization of '#{username}'", :userid => username)
+    user_attrs = {:username  => username,
+                  :fullname  => request.headers['X_REMOTE_USER_FULLNAME'],
+                  :firstname => request.headers['X_REMOTE_USER_FIRSTNAME'],
+                  :lastname  => request.headers['X_REMOTE_USER_LASTNAME'],
+                  :email     => request.headers['X_REMOTE_USER_EMAIL']}
+    membership_list = (request.headers['X_REMOTE_USER_GROUPS'] || '').split(":")
+
+    if !MiqEnvironment::Process.is_ui_worker_via_command_line?
+      authorize_httpd(task.id, username, user_attrs, membership_list)
+    else
+      MiqQueue.put(
+        :queue_name   => "generic",
+        :class_name   => to_s,
+        :method_name  => "authorize_httpd",
+        :args         => [task.id, username, user_attrs, membership_list],
+        :server_guid  => MiqServer.my_guid,
+        :priority     => MiqQueue::HIGH_PRIORITY,
+        :miq_callback => {
+          :class_name  => task.class.name,
+          :instance_id => task.id,
+          :method_name => :queue_callback_on_exceptions,
+          :args        => ['Finished']
+        })
+    end
+
+    task.id
+  end
+
+  def self.authorize_httpd(taskid, username, user_attrs, membership_list)
+    log_prefix = "MIQ(User.authorize_httpd):"
+    audit = {:event => "authorize_httpd", :userid => username}
+
+    task = MiqTask.find_by_id(taskid)
+    if task.nil?
+      message = "#{log_prefix} Unable to find task with id: [#{taskid}]"
+      $log.error(message)
+      raise message
+    end
+    task.update_status("Active", "Ok", "Authorizing")
+
+    begin
+      VMDB::Config.new("vmdb").config[:authentication]
+      $log.info("#{log_prefix}  User: [#{username}]")
+
+      matching_groups = match_groups(membership_list)
+      user = find_by_userid(username) || new(:userid => username)
+      user.update_attrs_from_httpd(user_attrs)
+      user.save_successful_logon(matching_groups, audit, task)
+    rescue err
+      $log.log_backtrace(err)
+      task.error(err.message)
+      AuditEvent.failure(audit.merge(:message => err.message))
+      task.state_finished
+      raise
+    end
+  end
+
   def self.authenticate_with_http_basic(username, password)
     u = username.dup
     user = User.find_by_userid(u)
@@ -549,6 +639,14 @@ class User < ActiveRecord::Base
     self.last_name  = ldap.get_attr(obj, :sn)
     email           = ldap.get_attr(obj, :mail)
     self.email      = email unless email.blank?
+  end
+
+  def update_attrs_from_httpd(user_attrs)
+    self.userid     = user_attrs[:username]
+    self.name       = user_attrs[:fullname]
+    self.first_name = user_attrs[:firstname]
+    self.last_name  = user_attrs[:lastname]
+    self.email      = user_attrs[:email] unless user_attrs[:email].blank?
   end
 
   def update_attrs_from_iam(amazon_auth, amazon_user, username)
