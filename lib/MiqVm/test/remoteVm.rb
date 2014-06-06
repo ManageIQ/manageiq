@@ -40,7 +40,7 @@ begin
         exit
     end
     
-	vmx = vimVm.dsPath
+	vmx = vimVm.dsPath.to_s
     puts "Found target VM: #{TARGET_VM}, VMX = #{vmx}"
     
     ost = OpenStruct.new
@@ -55,11 +55,13 @@ begin
         puts
     end
     
-    # wte = "software"
-    # puts "Extracting: #{wte}:"
-    # xml = vm.extract(wte)
-    # xml.write($stdout, 4)
-    # puts
+     CATEGORIES	= ["accounts", "services", "software", "system"]
+     CATEGORIES.each do |cat|
+       puts "Extracting: #{cat}:"
+       xml = vm.extract(cat)
+       xml.write($stdout, 4)
+       puts
+     end
     
     vm.unmount
     

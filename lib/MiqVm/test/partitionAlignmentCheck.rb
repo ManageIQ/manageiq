@@ -1,8 +1,9 @@
 
 $:.push("#{File.dirname(__FILE__)}/..")
+$:.push("#{File.dirname(__FILE__)}/../..")
 $:.push("#{File.dirname(__FILE__)}/../../VmwareWebService")
 
-require 'rubygems'
+require_relative '../../bundler_setup'
 require 'ostruct'
 require 'log4r'
 require 'MiqVm'

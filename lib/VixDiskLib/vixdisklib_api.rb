@@ -1,10 +1,11 @@
-require_relative './libc'
 require 'vixdisklib_ffi'
 
 class VixDiskLibError < RuntimeError
 end
 
-class VixDiskLibApi < VixDiskLibFFI
+class VixDiskLibApi
+  extend FFI::VixDiskLib::API
+  VixDiskLib = FFI::VixDiskLib::API
   attr_reader :info_logger, :warn_logger, :error_logger
 
   def self.attach(parent_disk_handle, child_disk_handle)
@@ -31,7 +32,6 @@ class VixDiskLibApi < VixDiskLibFFI
     cleaned_up = FFI::MemoryPointer.new :pointer
     remaining = FFI::MemoryPointer.new :pointer
     vix_error = super(safe_parms.connect_params, cleaned_up, remaining)
-    safe_parms.free_parms
     num_cleaned_up = cleaned_up.get_uint32(0) unless cleaned_up.nil?
     num_remaining = remaining.get_uint32(0) unless remaining.nil?
     check_error(vix_error, __method__)
@@ -68,13 +68,8 @@ class VixDiskLibApi < VixDiskLibFFI
     safe_parms = SafeConnectParams.new(connect_parms)
     vix_error = super(safe_parms.connect_params, connection)
     connection = connection.get_pointer(0)
-    safe_parms.free_parms
     check_error(vix_error, __method__)
     connection
-    rescue Exception => err
-      puts "Exception in connect: #{err.to_s}"
-      puts err.class.name
-      puts err.backtrace.join("\n")
   end
 
   #
@@ -87,7 +82,6 @@ class VixDiskLibApi < VixDiskLibFFI
     modes_ptr = transport_modes.nil? ? nil : FFI::MemoryPointer.from_string(transport_modes)
     vix_error = super(safe_parms.connect_params, read_only, snapshot_ptr, modes_ptr, connection)
     connection = connection.get_pointer(0)
-    safe_parms.free_parms
     check_error(vix_error, __method__)
     connection
   end
@@ -99,7 +93,6 @@ class VixDiskLibApi < VixDiskLibFFI
     safe_parms = SafeCreateParams.new(create_parms)
     path_ptr = FFI::MemoryPointer.from_string(path)
     vix_error = super(connection, path_ptr, safe_parms.create_params, prog_func, prog_callback_data)
-    safe_parms.free_parms
     check_error(vix_error, __method)
     nil
   end
@@ -139,7 +132,6 @@ class VixDiskLibApi < VixDiskLibFFI
     safe_parms = SafeConnectParams.new(connect_parms)
     identity_ptr = FFI::MemoryPointer.from_string(identity)
     vix_error = super(safe_parms.connect_params, identity_ptr)
-    safe_parms.free_parms
     check_error(vix_error, __method__)
     nil
   end
@@ -168,7 +160,6 @@ class VixDiskLibApi < VixDiskLibFFI
     check_error(vix_error, __method__)
     ffi_connect_params = params_ptr.get_pointer(0)
     safe_connect_params = SafeConnectParams.read(ffi_connect_params)
-    free_connect_params(ffi_connect_params)
     safe_connect_params
   end
 
@@ -189,7 +180,8 @@ class VixDiskLibApi < VixDiskLibFFI
     #
     len_ptr = FFI::MemoryPointer.new :pointer
     vix_error = super(disk_handle, nil, 0, len_ptr)
-    if vix_error != VixErrorType[:VIX_OK] && vix_error != VixErrorType[:VIX_E_BUFFER_TOOSMALL]
+    if vix_error != VixDiskLib::VixErrorType[:VIX_OK] &&
+       vix_error != VixDiskLib::VixErrorType[:VIX_E_BUFFER_TOOSMALL]
       check_error(vix_error, __method__)
     end
     #
@@ -227,7 +219,8 @@ class VixDiskLibApi < VixDiskLibFFI
   def self.init(info_logger = nil, warn_logger = nil, error_logger = nil, libDir = nil)
     @info_logger, @warn_logger, @error_logger = info_logger, warn_logger, error_logger
 
-    vix_error = super(VERSION_MAJOR, VERSION_MINOR, logger_for("info"), logger_for("warn"), logger_for("error"), libDir)
+    vix_error = super(FFI::VixDiskLib::API::VERSION_MAJOR, FFI::VixDiskLib::API::VERSION_MINOR,
+                      logger_for("info"), logger_for("warn"), logger_for("error"), libDir)
     check_error(vix_error, __method__)
     nil
   end
@@ -238,7 +231,7 @@ class VixDiskLibApi < VixDiskLibFFI
   def self.init_ex(info_logger = nil, warn_logger = nil, error_logger = nil, libDir = nil, configFile = nil)
     @info_logger, @warn_logger, @error_logger = info_logger, warn_logger, error_logger
 
-    vix_error = super(VERSION_MAJOR, VERSION_MINOR,
+    vix_error = super(FFI::VixDiskLib::API::VERSION_MAJOR, FFI::VixDiskLib::API::VERSION_MINOR,
                       logger_for("info"), logger_for("warn"), logger_for("error"), libDir, configFile)
     check_error(vix_error, __method__)
     nil
@@ -249,7 +242,7 @@ class VixDiskLibApi < VixDiskLibFFI
   #
   def self.is_attach_possible(parent_disk_handle, child_disk_handle)
     vix_error = super(parent_disk_handle, child_disk_handle)
-    VIX_SUCCEEDED(vix_error)
+    VixDiskLib::VIX_SUCCEEDED(vix_error)
   end
 
   #
@@ -278,7 +271,6 @@ class VixDiskLibApi < VixDiskLibFFI
     safe_parms = SafeConnectParams.new(connect_parms)
     identity_ptr = FFI::MemoryPointer.from_string(identity)
     vix_error = super(safe_parms.connect_params, identity_ptr)
-    safe_parms.free_parms
     check_error(vix_error, __method__)
     nil
   end
@@ -287,7 +279,7 @@ class VixDiskLibApi < VixDiskLibFFI
   # The VixDiskLib_Read method
   #
   def self.read(disk_handle, start_sector, num_sectors)
-    buf_size = num_sectors * VixDiskLibFFI::VIXDISKLIB_SECTOR_SIZE
+    buf_size = num_sectors * FFI::VixDiskLib::API::VIXDISKLIB_SECTOR_SIZE
     read_buf = FFI::MemoryPointer.new(buf_size)
     read_buf.clear
     vix_error = super(disk_handle, start_sector, num_sectors, read_buf)
@@ -305,7 +297,8 @@ class VixDiskLibApi < VixDiskLibFFI
     #
     len_ptr = FFI::MemoryPointer.new :pointer
     vix_error = super(disk_handle, key_ptr, nil, 0, len_ptr)
-    if vix_error != VixErrorType[:VIX_OK] && vix_error != VixErrorType[:VIX_E_BUFFER_TOOSMALL]
+    if vix_error != VixDiskLib::VixErrorType[:VIX_OK] &&
+       vix_error != VixDiskLib::VixErrorType[:VIX_E_BUFFER_TOOSMALL]
       check_error(vix_error, __method__)
     end
     #
@@ -384,18 +377,15 @@ class VixDiskLibApi < VixDiskLibFFI
   private
 
   INFO_LOGGER = proc do |fmt, args|
-    # @info_logger.call(process_log_args(fmt, args)) unless @info_logger.nil?
-    process_log_args(fmt, args)
+    @info_logger.nil? ? process_log_args(fmt, args) : @info_logger.call(process_log_args(fmt, args))
   end
 
   WARN_LOGGER = proc do |fmt, args|
-    # @warn_logger.call(process_log_args(fmt, args)) unless @warn_logger.nil?
-    process_log_args(fmt, args)
+    @warn_logger.nil? ? process_log_args(fmt, args) : @warn_logger.call(process_log_args(fmt, args))
   end
 
   ERROR_LOGGER = proc do |fmt, args|
-    # @error_logger.call(process_log_args(fmt, args)) unless @error_logger.nil?
-    process_log_args(fmt, args)
+    @error_logger.nil? ? process_log_args(fmt, args) : @error_logger.call(process_log_args(fmt, args))
   end
 
   def self.logger_for(level)
@@ -404,17 +394,17 @@ class VixDiskLibApi < VixDiskLibFFI
 
   def self.process_log_args(fmt, args)
     buf = FFI::MemoryPointer.new(:char, 1024, true)
-    VixDiskLibLibC.vsnprintf(buf, 1024, fmt, args)
+    VixDiskLib.vsnprintf(buf, 1024, fmt, args)
     real_buf = buf.read_string
     puts real_buf
     real_buf
   end
 
   def self.check_error(err, method)
-    if VIX_FAILED(err)
+    if VixDiskLib::VIX_FAILED(err)
       err_msg = getErrorText(err, nil)
-      err_code = VIX_ERROR_CODE(err)
-      err_name = VixErrorType[err_code]
+      err_code = VixDiskLib::VIX_ERROR_CODE(err)
+      err_name = VixDiskLib::VixErrorType[err_code]
       if err_msg.nil? || err_msg.null?
         err_msg = "Error retrieving text of error message for errcode."
         msg = "#{name}##{method} (errcode=#{err_code} - #{err_name}): #{err_msg}"
@@ -425,37 +415,42 @@ class VixDiskLibApi < VixDiskLibFFI
       raise VixDiskLibError, "#{msg}"
     end
   end
-end
+end # class VixDiskLibApi
 
-class SafeConnectParams < VixDiskLibFFI
+class SafeConnectParams
+  extend FFI::VixDiskLib::API
+  VixDiskLib = FFI::VixDiskLib::API
   #
   # Read the contents of a ConnectParams structure
   # into FFI memory for use when calling out to VixDiskLib
   #
   attr_reader :connect_params
   def initialize(in_connect_parms)
-    conn_parms = FFI::MemoryPointer.new(ConnectParams, 1, true)
-    conn_parms_start = conn_parms
-    conn_parms = conn_parms_start + ConnectParams.offset_of(:vmxSpec)
+    conn_parms = FFI::MemoryPointer.new(VixDiskLib::ConnectParams, 1, true)
+    @conn_parms_start = conn_parms
+    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:vmxSpec)
     # Structure pointer (conn_parms) starts with vmxSpec
-    write_safe_str_2_mem(in_connect_parms[:vmxSpec], conn_parms)
+    @vmx_spec = FFI::MemoryPointer.from_string(in_connect_parms[:vmxSpec]) unless in_connect_parms[:vmxSpec].nil?
+    conn_parms.put_pointer(0, @vmx_spec)
     # Increment structure pointer to server_name
-    conn_parms = conn_parms_start + ConnectParams.offset_of(:serverName)
-    write_safe_str_2_mem(in_connect_parms[:serverName], conn_parms)
+    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:serverName)
+    @server_name = FFI::MemoryPointer.from_string(in_connect_parms[:serverName]) unless in_connect_parms[:serverName].nil?
+    conn_parms.put_pointer(0, @server_name)
     # Increment structure pointer to thumbPrint
-    conn_parms = conn_parms_start + ConnectParams.offset_of(:thumbPrint)
-    write_safe_str_2_mem(in_connect_parms[:thumbPrint], conn_parms)
+    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:thumbPrint)
+    @thumb_print = FFI::MemoryPointer.from_string(in_connect_parms[:thumbPrint]) unless in_connect_parms[:thumbPrint].nil?
+    conn_parms.put_pointer(0, @thumb_print)
     # Increment structure pointer to privateUse
-    conn_parms = conn_parms_start + ConnectParams.offset_of(:privateUse)
+    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:privateUse)
     conn_parms.write_long(in_connect_parms[:privateUse]) unless in_connect_parms[:privateUse].nil?
     # Increment structure pointer to credType
     cred_type = in_connect_parms[:credType]
-    conn_parms = conn_parms_start + ConnectParams.offset_of(:credType)
+    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:credType)
     conn_parms.write_int(cred_type) unless cred_type.nil?
-    get_safe_creds(cred_type, in_connect_parms, conn_parms_start + ConnectParams.offset_of(:creds))
-    conn_parms = conn_parms_start + ConnectParams.offset_of(:port)
+    get_safe_creds(cred_type, in_connect_parms, @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:creds))
+    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:port)
     conn_parms.write_uint32(in_connect_parms[:port]) unless in_connect_parms[:port].nil?
-    @connect_params = conn_parms_start
+    @connect_params = @conn_parms_start
   end
 
   #
@@ -464,16 +459,16 @@ class SafeConnectParams < VixDiskLibFFI
   #
   def self.read(ffi_connect_parms)
     out_connect_parms = {}
-    spec_ptr = ffi_connect_parms.get_pointer(ConnectParams.offset_of(:vmxSpec))
+    spec_ptr = ffi_connect_parms.get_pointer(VixDiskLib::ConnectParams.offset_of(:vmxSpec))
     out_connect_parms[:vmxSpec] = spec_ptr.read_string unless spec_ptr.null?
-    serv_ptr = ffi_connect_parms.get_pointer(ConnectParams.offset_of(:serverName))
+    serv_ptr = ffi_connect_parms.get_pointer(VixDiskLib::ConnectParams.offset_of(:serverName))
     out_connect_parms[:serverName] = serv_ptr.read_string unless serv_ptr.null?
-    thumb_ptr = ffi_connect_parms.get_pointer(ConnectParams.offset_of(:thumbPrint))
+    thumb_ptr = ffi_connect_parms.get_pointer(VixDiskLib::ConnectParams.offset_of(:thumbPrint))
     out_connect_parms[:thumbPrint] = thumb_ptr.read_string unless thumb_ptr.null?
-    out_connect_parms[:privateUse] = ffi_connect_parms.get_long(ConnectParams.offset_of(:privateUse))
-    out_connect_parms[:credType] = ffi_connect_parms.get_long(ConnectParams.offset_of(:credType))
+    out_connect_parms[:privateUse] = ffi_connect_parms.get_long(VixDiskLib::ConnectParams.offset_of(:privateUse))
+    out_connect_parms[:credType] = ffi_connect_parms.get_long(VixDiskLib::ConnectParams.offset_of(:credType))
     cred_type = out_connect_parms[:credType]
-    read_creds(cred_type, out_connect_parms, ffi_connect_parms + ConnectParams.offset_of(:creds))
+    read_creds(cred_type, out_connect_parms, ffi_connect_parms + VixDiskLib::ConnectParams.offset_of(:creds))
     out_connect_parms
   end
 
@@ -482,58 +477,22 @@ class SafeConnectParams < VixDiskLibFFI
   # into a ruby hash.
   #
   def self.read_creds(cred_type, conn_parms, ffi_creds)
-    if cred_type == CredType[:VIXDISKLIB_CRED_UID]
-      user_ptr = ffi_creds + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:userName)
+    if cred_type == VixDiskLib::CredType[:VIXDISKLIB_CRED_UID]
+      user_ptr = ffi_creds + VixDiskLib::Creds.offset_of(:uid) + VixDiskLib::UidPasswdCreds.offset_of(:userName)
       conn_parms[:userName] = read_safe_str_from_mem(user_ptr)
-      pass_ptr = ffi_creds + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:password)
+      pass_ptr = ffi_creds + VixDiskLib::Creds.offset_of(:uid) + VixDiskLib::UidPasswdCreds.offset_of(:password)
       conn_parms[:password] = read_safe_str_from_mem(pass_ptr)
-    elsif cred_type == CredType[:VIXDISKLIB_CRED_SESSIONID]
-      cookie_ptr = ffi_creds + Creds.offset_of(:sessionId) + UidPasswdCreds.offset_of(:cookie)
+    elsif cred_type == VixDiskLib::CredType[:VIXDISKLIB_CRED_SESSIONID]
+      cookie_ptr = ffi_creds + VixDiskLib::Creds.offset_of(:sessionId) + VixDiskLib::UidPasswdCreds.offset_of(:cookie)
       conn_parms[:cookie] = read_safe_str_from_mem(cookie_ptr)
-      user_ptr = ffi_creds + Creds.offset_of(:sessionId) + UidPasswdCreds.offset_of(:sessionUserName)
+      user_ptr = ffi_creds + VixDiskLib::Creds.offset_of(:sessionId) +
+                             VixDiskLib::UidPasswdCreds.offset_of(:sessionUserName)
       conn_parms[:sessionUserName] = read_safe_str_from_mem(user_ptr)
-      key_ptr = ffi_creds + Creds.offset_of(:sessionId) + UidPasswdCreds.offset_of(:key)
+      key_ptr = ffi_creds + VixDiskLib::Creds.offset_of(:sessionId) + VixDiskLib::UidPasswdCreds.offset_of(:key)
       conn_parms[:key] = read_safe_str_from_mem(key_ptr)
-    elsif cred_type == CredType[:VIXDISKLIB_CRED_TICKETID]
-      dummy_ptr = ffi_creds + Creds.offset_of(:ticketId) + UidPasswdCreds.offset_of(:dummy)
+    elsif cred_type == VixDiskLib::CredType[:VIXDISKLIB_CRED_TICKETID]
+      dummy_ptr = ffi_creds + VixDiskLib::Creds.offset_of(:ticketId) + VixDiskLib::UidPasswdCreds.offset_of(:dummy)
       conn_parms[:dummy] = read_safe_str_from_mem(dummy_ptr)
-    end
-  end
-
-  #
-  # Free the contents of a ConnectParams structure previously allocated
-  # via the initialize method.
-  #
-  def free_parms
-    conn_parms = @connect_params + ConnectParams.offset_of(:vmxSpec)
-    free_safe_str(conn_parms)
-    conn_parms = @connect_params + ConnectParams.offset_of(:serverName)
-    free_safe_str(conn_parms)
-    conn_parms = @connect_params + ConnectParams.offset_of(:thumbPrint)
-    cred_type = conn_parms.read_int
-    free_safe_str(conn_parms)
-    free_creds(cred_type, @connect_params + ConnectParams.offset_of(:creds))
-    # Now get rid of the structure itself
-    @connect_params.free
-    @connect_params = nil
-  end
-
-  #
-  # Free the contents of the ConnectParams Creds sub-structure.
-  #
-  def free_creds(cred_type, cred_ptr)
-    if cred_type == CredType[:VIXDISKLIB_CRED_UID]
-      conn_parms = cred_ptr + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:userName)
-      free_safe_str(conn_parms)
-      conn_parms = cred_ptr + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:password)
-      free_safe_str(conn_parms)
-    elsif cred_type == CredType[:VIXDISKLIB_CRED_SESSIONID]
-      conn_parms = cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:cookie)
-      free_safe_str(conn_parms)
-      conn_parms = cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:sessionUserName)
-      free_safe_str(conn_parms)
-      conn_parms = cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:key)
-      free_safe_str(conn_parms)
     end
   end
 
@@ -545,57 +504,46 @@ class SafeConnectParams < VixDiskLibFFI
   end
 
   def get_safe_creds(cred_type, in_creds, out_cred_ptr)
-    if cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_UID
+    if cred_type == FFI::VixDiskLib::API::VIXDISKLIB_CRED_UID
       # Increment structure pointer to creds field's username
       # This should take care of any padding necessary for the Union.
-      conn_parms = out_cred_ptr + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:userName)
-      write_safe_str_2_mem(in_creds[:userName], conn_parms)
+      conn_parms = out_cred_ptr + VixDiskLib::Creds.offset_of(:uid) +
+                                  VixDiskLib::UidPasswdCreds.offset_of(:userName)
+      @user_name = in_creds[:userName].nil? ? nil : FFI::MemoryPointer.from_string(in_creds[:userName])
+      conn_parms.put_pointer(0, @user_name)
       # Increment structure pointer to creds field's password
-      conn_parms = out_cred_ptr + Creds.offset_of(:uid) + UidPasswdCreds.offset_of(:password)
-      write_safe_str_2_mem(in_creds[:password], conn_parms)
-    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_SESSIONID
-      conn_parms = out_cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:cookie)
-      write_safe_str_2_mem(in_creds[:cookie], conn_parms)
-      conn_parms = out_cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:sessionUserName)
-      write_safe_str_2_mem(in_creds[:sessionUserName], conn_parms)
-      conn_parms = out_cred_ptr + Creds.offset_of(:sessionId) + SessionIdCreds.offset_of(:key)
-      write_safe_str_2_mem(in_creds[:key], conn_parms)
-    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_TICKETID
-      conn_parms = out_cred_ptr + Creds.offset_of(:ticketId) + SessionIdCreds.offset_of(:dummy)
-      write_safe_str_2_mem(in_creds[:dummy], conn_parms)
-    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_SSPI
-      puts "VixDiskLibApi.connect - Connection Parameters Credentials Type SSPI"
-    elsif cred_type == VixDiskLibFFI::VIXDISKLIB_CRED_UNKNOWN
-      puts "VixDiskLibApi.connect - unknown Connection Parameters Credentials Type"
+      conn_parms = out_cred_ptr + VixDiskLib::Creds.offset_of(:uid) +
+                                  VixDiskLib::UidPasswdCreds.offset_of(:password)
+      @password = in_creds[:password].nil? ? nil : FFI::MemoryPointer.from_string(in_creds[:password])
+      conn_parms.put_pointer(0, @password)
+    elsif cred_type == FFI::VixDiskLib::API::VIXDISKLIB_CRED_SESSIONID
+      conn_parms = out_cred_ptr + VixDiskLib::Creds.offset_of(:sessionId) +
+                                  VixDiskLib::SessionIdCreds.offset_of(:cookie)
+      @cookie = in_creds[:cookie].nil? ? nil : FFI::MemoryPointer.from_string(in_creds[:cookie])
+      conn_parms.put_pointer(0, @cookie)
+      conn_parms = out_cred_ptr + VixDiskLib::Creds.offset_of(:sessionId) +
+                                  VixDiskLib::SessionIdCreds.offset_of(:sessionUserName)
+      @session_user_name = in_creds[:session_user_name].nil? ? nil :
+                           FFI::MemoryPointer.from_string(in_creds[:sessionUserName])
+      conn_parms.put_pointer(0, @session_user_name)
+      conn_parms = out_cred_ptr + VixDiskLib::Creds.offset_of(:sessionId) +
+                                  VixDiskLib::SessionIdCreds.offset_of(:key)
+      @key = in_creds[:key].nil? ? nil : FFI::MemoryPointer.from_string(in_creds[:key])
+      conn_parms.put_pointer(0, @key)
+    elsif cred_type == FFI::VixDiskLib::API::VIXDISKLIB_CRED_TICKETID
+      conn_parms = out_cred_ptr + VixDiskLib::Creds.offset_of(:ticketId) + VixDiskLib::SessionIdCreds.offset_of(:dummy)
+      @dummy = in_creds[:dummy].nil? ? nil : FFI::MemoryPointer.from_string(in_creds[:dummy])
+      conn_parms.put_pointer(0, @dummy)
+    elsif cred_type == FFI::VixDiskLib::API::VIXDISKLIB_CRED_SSPI
+      $vim_log.error "VixDiskLibApi.connect - Connection Parameters Credentials Type SSPI"
+    elsif cred_type == FFI::VixDiskLib::API::VIXDISKLIB_CRED_UNKNOWN
+      $vim_log.error "VixDiskLibApi.connect - unknown Connection Parameters Credentials Type"
     end
   end
-  #
-  # Allocate a new pointer in memory.
-  # Copy the input string to that new pointer.
-  # Write the pointer to the string to the allocated structure location.
-  # If the string is nil write the empty string.
-  #
-  def write_safe_str_2_mem(input, mem_ptr)
-    # tmp_ptr = FFI::MemoryPointer.new :pointer
-    if input.nil?
-      tmp_ptr = nil
-    else
-      tmp_ptr = VixDiskLibLibC.calloc(input.size + 1)
-      tmp_ptr.write_string(input, input.size)
-    end
-    mem_ptr.put_pointer(0, tmp_ptr)
-  end
-  #
-  # Free a string in memory previously allocated via write_safe_str_2_mem
-  #
-  def free_safe_str(mem_ptr)
-    return if mem_ptr.nil?
-    str_ptr = mem_ptr.get_pointer(0)
-    VixDiskLibLibC.free(str_ptr) unless str_ptr.null?
-  end
-end
+end # class SafeConnectParams
 
-class SafeCreateParams < VixDiskLibFFI
+class SafeCreateParams
+  extend FFI::VixDiskLib::API
   #
   # Read the contents of a CreateParams structure passed as an argument
   # into FFI memory which will be allocated to be used when calling out to
@@ -603,29 +551,21 @@ class SafeCreateParams < VixDiskLibFFI
   #
   attr_reader :create_params
   def initialize(in_create_parms)
-    create_parms = FFI::MemoryPointer.new(CreateParams, 1, true)
+    create_parms = FFI::MemoryPointer.new(VixDiskLib::CreateParams, 1, true)
     create_parms_start = create_parms
     disk_type = in_create_parms[:diskType]
-    create_parms = create_parms_start + CreateParams.offset_of(:diskType)
+    create_parms = create_parms_start + VixDiskLib::CreateParams.offset_of(:diskType)
     create_parms.write_int(DiskType[disk_type]) unless in_create_parms[:diskType].nil?
     adapter_type = in_create_parms[:adapterType]
-    create_parms = create_parms_start + CreateParams.offset_of(:adapterType)
+    create_parms = create_parms_start + VixDiskLib::CreateParams.offset_of(:adapterType)
     create_parms.write_int(AdapterType[adapter_type]) unless in_create_parms[:adapterType].nil?
-    create_parms = create_parms_start + CreateParams.offset_of(:hwVersion)
+    create_parms = create_parms_start + VixDiskLib::CreateParams.offset_of(:hwVersion)
     create_parms.write_uint16(in_create_parms[:hwVersion]) unless in_create_parms[:hwVersion].nil?
-    create_parms = create_parms_start + CreateParams.offset_of(:capacity)
+    create_parms = create_parms_start + VixDiskLib::CreateParams.offset_of(:capacity)
     create_parms.write_uint64(in_create_parms[:capacity]) unless in_create_parms[:capacity].nil?
     @create_params = create_parms_start
   end
-  #
-  # Free the contents of a CreateParams structure previously allocated
-  # via the initialize method.
-  #
-  def free_parms
-    @create_params.free
-    @create_params = nil
-  end
-end
+end # class SafeCreateParams
 
 #
 # Initialize a hash with the disk info for the specified handle
@@ -633,33 +573,36 @@ end
 # This is a helper class for the VixDiskLibApi::get_info method.
 #
 class DiskInfo < VixDiskLibApi
+  VixDiskLib = FFI::VixDiskLib::API
+  extend VixDiskLib
   attr_reader :info
   def initialize(disk_handle)
     ruby_info = {}
     info = FFI::MemoryPointer.new :pointer
-    vix_error = getinfo(disk_handle, info)
+    vix_error = VixDiskLib.getinfo(disk_handle, info)
     self.class.check_error(vix_error, __method__)
     real_info = info.get_pointer(0)
-    # num_sectors = sector_ptr.read_uint64
+
     ruby_info[:biosGeo]             = {}
     ruby_info[:physGeo]             = {}
-    ruby_info[:biosGeo][:cylinders] = real_info.get_uint32(Info.offset_of(:biosGeo) + Geometry.offset_of(:cylinders))
-    ruby_info[:biosGeo][:heads]     = real_info.get_uint32(Info.offset_of(:biosGeo) + Geometry.offset_of(:heads))
-    ruby_info[:biosGeo][:sectors]   = real_info.get_uint32(Info.offset_of(:biosGeo) + Geometry.offset_of(:sectors))
-    ruby_info[:physGeo][:cylinders] = real_info.get_uint32(Info.offset_of(:physGeo) + Geometry.offset_of(:cylinders))
-    ruby_info[:physGeo][:heads]     = real_info.get_uint32(Info.offset_of(:physGeo) + Geometry.offset_of(:heads))
-    ruby_info[:physGeo][:sectors]   = real_info.get_uint32(Info.offset_of(:physGeo) + Geometry.offset_of(:sectors))
-    ruby_info[:capacity]            = real_info.get_uint64(Info.offset_of(:capacity))
-    ruby_info[:adapterType]         = real_info.get_int(Info.offset_of(:adapterType))
-    ruby_info[:numLinks]            = real_info.get_int(Info.offset_of(:numLinks))
+    bios_offset = VixDiskLib::Info.offset_of(:biosGeo)
+    phys_offset = VixDiskLib::Info.offset_of(:biosGeo)
+    ruby_info[:biosGeo][:cylinders] = real_info.get_uint32(bios_offset + VixDiskLib::Geometry.offset_of(:cylinders))
+    ruby_info[:biosGeo][:heads]     = real_info.get_uint32(bios_offset + VixDiskLib::Geometry.offset_of(:heads))
+    ruby_info[:biosGeo][:sectors]   = real_info.get_uint32(bios_offset + VixDiskLib::Geometry.offset_of(:sectors))
+    ruby_info[:physGeo][:cylinders] = real_info.get_uint32(phys_offset + VixDiskLib::Geometry.offset_of(:cylinders))
+    ruby_info[:physGeo][:heads]     = real_info.get_uint32(phys_offset + VixDiskLib::Geometry.offset_of(:heads))
+    ruby_info[:physGeo][:sectors]   = real_info.get_uint32(phys_offset + VixDiskLib::Geometry.offset_of(:sectors))
+    ruby_info[:capacity]            = real_info.get_uint64(VixDiskLib::Info.offset_of(:capacity))
+    ruby_info[:adapterType]         = real_info.get_int(VixDiskLib::Info.offset_of(:adapterType))
+    ruby_info[:numLinks]            = real_info.get_int(VixDiskLib::Info.offset_of(:numLinks))
 
-    parent_info = real_info + Info.offset_of(:parentFileNameHint)
+    parent_info = real_info + VixDiskLib::Info.offset_of(:parentFileNameHint)
     parent_info_str = parent_info.read_pointer
     ruby_info[:parentFileNameHint]  = parent_info_str.read_string unless parent_info_str.null?
-    uuid_info = real_info + Info.offset_of(:uuid)
-    uuid_info_str = uuid_info.read_pointer
+    uuid_info_str = (real_info + VixDiskLib::Info.offset_of(:uuid)).read_pointer
     ruby_info[:uuid]                = uuid_info_str.read_string unless uuid_info_str.null?
-    freeinfo(real_info)
+    # VixDiskLib.freeinfo(real_info)
     @info = ruby_info
   end
 end # class DiskInfo
