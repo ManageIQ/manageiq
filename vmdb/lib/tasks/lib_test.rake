@@ -3,7 +3,6 @@ namespace :test do
     t.libs << "lib"
     t.libs << "test"
     t.pattern = 'test/lib/**/*_test.rb'
-    t.verbose = true
   end
   Rake::Task['test:lib'].comment = "Run the tests in test/lib"
 end

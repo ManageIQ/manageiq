@@ -9,7 +9,6 @@ desc 'Test the resource_feed plugin.'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
   t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
 end
 
 desc 'Generate documentation for the resource_feed plugin.'

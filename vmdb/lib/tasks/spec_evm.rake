@@ -27,7 +27,6 @@ namespace :spec do
     def initialize_task(t, rspec_opts = [])
       rspec_opts_file = ".rspec#{"_cc" if ENV['CC_BUILD_ARTIFACTS']}"
       t.rspec_opts = ['--options', "\"#{Rails.root.join(rspec_opts_file)}\""] + rspec_opts
-      t.verbose = true
     end
 
     desc "Run the backend code examples"
