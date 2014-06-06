@@ -10,11 +10,12 @@ describe MiqAeDatastore do
                            'max_retries' => "10",
                            'collect'     => "dinosaurs",
                            'max_time'    => "100"}
-
+    @clear_default_password = 'little_secret'
+    @clear_password = 'secret'
     @relations_value = "bedrock relations"
     create_factory_data("manageiq", 0)
-    set_manageiq_values
     setup_export_dir
+    set_manageiq_values
   end
 
   context "yaml export" do
@@ -74,7 +75,7 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name, false, 'overwrite' => true)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 8, 'value' => 6)
+                   'meth' => 3, 'field' => 12, 'value' => 8)
     end
   end
 
@@ -119,7 +120,7 @@ describe MiqAeDatastore do
         export_model(ALL_DOMAINS)
         reset_and_import(@export_dir, ALL_DOMAINS)
         check_counts('ns'   => 8, 'class' => 8, 'inst'  => 20,
-                     'meth' => 6, 'field' => 16, 'value' => 12)
+                     'meth' => 6, 'field' => 24, 'value' => 16)
       end
 
       it "import all domains, from zip" do
@@ -128,14 +129,14 @@ describe MiqAeDatastore do
         reset_options = {}
         reset_and_import(@export_dir, ALL_DOMAINS, reset_options, true)
         check_counts('ns'   => 8, 'class' => 8, 'inst'  => 20,
-                     'meth' => 6, 'field' => 16, 'value' => 12)
+                     'meth' => 6, 'field' => 24, 'value' => 16)
       end
 
       it "import single domain, from directory" do
         export_model(ALL_DOMAINS)
         reset_and_import(@export_dir, @customer_domain.name)
         check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                     'meth' => 3, 'field' => 8, 'value' => 6)
+                     'meth' => 3, 'field' => 12, 'value' => 8)
       end
 
       it "import single domain, from zip" do
@@ -144,7 +145,7 @@ describe MiqAeDatastore do
         puts "importing domain: #{@customer_domain.name}"
         reset_and_import(@export_dir, @customer_domain.name, reset_options, true)
         check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                     'meth' => 3, 'field' => 8, 'value' => 6)
+                     'meth' => 3, 'field' => 12, 'value' => 8)
       end
     end
 
@@ -152,7 +153,21 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 8, 'value' => 6)
+                   'meth' => 3, 'field' => 12, 'value' => 8)
+    end
+
+    it "domain, check password field is not in clear text" do
+      export_model(@manageiq_domain.name)
+      data = YAML.load_file(@instance_file)
+      password_field_hash = data.fetch_path('object', 'fields').detect { |h| h.keys[0] == 'password_field' }
+      password_field_hash.fetch_path('password_field', 'value').should eq(MiqAePassword.encrypt(@clear_password))
+    end
+
+    it "domain, check default password field is not in clear text" do
+      export_model(@manageiq_domain.name)
+      data = YAML.load_file(@class_file)
+      password_field_hash = data.fetch_path('object', 'schema').detect { |h| h['field']['name'] == 'default_password_field' }
+      password_field_hash.fetch_path('field', 'default_value').should eq(MiqAePassword.encrypt(@clear_default_password))
     end
 
     it "domain, as zip" do
@@ -161,7 +176,7 @@ describe MiqAeDatastore do
       reset_options = {}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options, true)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 8, 'value' => 6)
+                   'meth' => 3, 'field' => 12, 'value' => 8)
     end
 
     it "domain, priority 0 should change priority to 1" do
@@ -169,7 +184,7 @@ describe MiqAeDatastore do
       @manageiq_domain.priority.should equal(0)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 8, 'value' => 6)
+                   'meth' => 3, 'field' => 12, 'value' => 8)
 
       ns = MiqAeNamespace.find_by_name(@manageiq_domain.name)
       ns.priority.should equal(1)
@@ -180,7 +195,7 @@ describe MiqAeDatastore do
       reset_options = {'import_as' => 'fred'}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options)
       check_counts('ns'   => 8, 'class' => 8,  'inst'  => 20,
-                   'meth' => 6, 'field' => 16, 'value' => 12)
+                   'meth' => 6, 'field' => 24, 'value' => 16)
     end
 
     it "domain, using import_as (new domain name), as zip" do
@@ -189,7 +204,7 @@ describe MiqAeDatastore do
       reset_options = {'import_as' => 'fred'}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options, true)
       check_counts('ns'   => 8, 'class' => 8,  'inst'  => 20,
-                   'meth' => 6, 'field' => 16, 'value' => 12)
+                   'meth' => 6, 'field' => 24, 'value' => 16)
     end
 
     it "domain, using export_as (new domain name), to directory" do
@@ -199,7 +214,7 @@ describe MiqAeDatastore do
       reset_options = {}
       reset_and_import(@export_dir, @export_as, reset_options, false)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 8, 'value' => 6)
+                   'meth' => 3, 'field' => 12, 'value' => 8)
       MiqAeDomain.all.include?(@export_as)
     end
 
@@ -210,7 +225,7 @@ describe MiqAeDatastore do
       reset_options = {}
       reset_and_import(@export_dir, @export_as, reset_options, true)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 8, 'value' => 6)
+                   'meth' => 3, 'field' => 12, 'value' => 8)
       MiqAeDomain.all.include?(@export_as)
     end
 
@@ -219,7 +234,7 @@ describe MiqAeDatastore do
       reset_options = {'namespace' => @aen1.name}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options)
       check_counts('ns'   => 3, 'class' => 3, 'inst'  => 6,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
     it "domain, import only multi-part namespace, to directory" do
@@ -235,7 +250,7 @@ describe MiqAeDatastore do
       reset_options = {'namespace' => @aen1.name, 'class_name' => @aen1_aec1.name}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options)
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
     it "namespace, to directory" do
@@ -243,7 +258,7 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name, false, options)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 3, 'class' => 3, 'inst'  => 6,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
     it "namespace, as zip" do
@@ -252,7 +267,7 @@ describe MiqAeDatastore do
       reset_options = {}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options, true)
       check_counts('ns'   => 3, 'class' => 3, 'inst'  => 6,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
     it "namespace, multi-part, to directory" do
@@ -277,14 +292,14 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name, false, options)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
       @aen1_aec1_aei2   = FactoryGirl.create(:miq_ae_instance,  :name => 'test_instance2', :class_id => @aen1_aec1.id)
 
       setup_export_dir
       export_model(@manageiq_domain.name, false, options)
       MiqAeImport.new(@manageiq_domain.name, 'preview' => false, 'import_dir' => @export_dir).import
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 3,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
     it "class, with methods, to directory" do
@@ -292,7 +307,7 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name, false, options)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
     it "class, with builtin methods, as zip" do
@@ -306,7 +321,7 @@ describe MiqAeDatastore do
       reset_options = {}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options, true)
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
       aen1_aec1  = MiqAeClass.find_by_name('manageiq_test_class_1')
       builtin_method = aen1_aec1.ae_methods.first
       builtin_method.location.should eql 'builtin'
@@ -319,7 +334,7 @@ describe MiqAeDatastore do
       reset_options = {}
       reset_and_import(@export_dir, @manageiq_domain.name, reset_options, true)
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
-                   'meth' => 2, 'field' => 4, 'value' => 3)
+                   'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
     it "class, without methods, to directory" do
@@ -373,17 +388,20 @@ describe MiqAeDatastore do
   def create_field(class_obj, instance_obj, method_obj, options)
     if method_obj.nil?
       field = FactoryGirl.create(:miq_ae_field,
-                                 :class_id   => class_obj.id,
-                                 :name       => options['name'],
-                                 :aetype     => options['type'],
-                                 :priority   => 1,
-                                 :substitute => true)
+                                 :class_id      => class_obj.id,
+                                 :name          => options['name'],
+                                 :aetype        => options['type'],
+                                 :datatype      => options['datatype'],
+                                 :priority      => 1,
+                                 :substitute    => true,
+                                 :default_value => options['default_value'])
       create_field_value(instance_obj, field, options) unless options['value'].nil?
     else
       FactoryGirl.create(:miq_ae_field,
                          :method_id     => method_obj.id,
                          :name          => options['name'],
                          :aetype        => options['type'],
+                         :datatype      => options['datatype'],
                          :priority      => 1,
                          :substitute    => true,
                          :default_value => options['value'])
@@ -401,21 +419,41 @@ describe MiqAeDatastore do
 
   def create_fields(class_obj, instance_obj, method_obj)
     create_field(class_obj, instance_obj, nil,
-                 'name'  => 'test_field1',
-                 'type'  => 'attribute',
-                 'value' => 'test_attribute_value')
+                 'name'          => 'test_field1',
+                 'type'          => 'attribute',
+                 'datatype'      => 'string',
+                 'default_value' => 'test_attribute_value',
+                 'value'         => 'test_attribute_value')
     create_field(class_obj, instance_obj, nil,
-                 'name'  => 'test_field2',
-                 'type'  => 'relationship',
-                 'value' => @relations_value)
+                 'name'          => 'test_field2',
+                 'type'          => 'relationship',
+                 'datatype'      => 'string',
+                 'default_value' => 'test_relationship_value',
+                 'value'         => @relations_value)
     create_field(class_obj, instance_obj, nil,
-                 'name'  => 'test_field3',
-                 'type'  => 'relationship',
-                 'value' => 'test_relationship_value')
+                 'name'          => 'test_field3',
+                 'type'          => 'relationship',
+                 'datatype'      => 'string',
+                 'default_value' => 'test_relationship_value',
+                 'value'         => 'test_relationship_value')
+    create_field(class_obj, instance_obj, nil,
+                 'name'          => 'password_field',
+                 'type'          => 'attribute',
+                 'datatype'      => 'password',
+                 'default_value' => 'test_relationship_value',
+                 'value'         => @clear_password)
+    create_field(class_obj, instance_obj, nil,
+                 'name'          => 'default_password_field',
+                 'type'          => 'attribute',
+                 'datatype'      => 'password',
+                 'default_value' => @clear_default_password,
+                 'value'         => nil)
     create_field(class_obj, instance_obj, method_obj,
-                 'name'  => 'test_method_input',
-                 'type'  => 'attribute',
-                 'value' => 'test_input_value')
+                 'name'          => 'test_method_input',
+                 'type'          => 'attribute',
+                 'datatype'      => 'string',
+                 'default_value' => 'test_input_value',
+                 'value'         => 'test_input_value')
   end
 
   def create_factory_data(domain_name, priority)
@@ -465,7 +503,11 @@ describe MiqAeDatastore do
     @aen1_1          = MiqAeNamespace.find_by_name('manageiq_namespace_1_1')
     @aen1_aec1       = MiqAeClass.find_by_name('manageiq_test_class_1')
     @aen1_aec2       = MiqAeClass.find_by_name('manageiq_test_class_2')
-    @class_name       = @aen1_aec1.name
+    @aen1_aec2       = MiqAeClass.find_by_name('manageiq_test_class_2')
+    @class_dir       = "#{@aen1_aec1.fqname}.class"
+    @class_file      = File.join(@export_dir, @class_dir, '__class__.yaml')
+    @instance_file   = File.join(@export_dir, @class_dir, 'manageiq_test_instance1.yaml')
+    @class_name      = @aen1_aec1.name
   end
 
   def set_customer_values
