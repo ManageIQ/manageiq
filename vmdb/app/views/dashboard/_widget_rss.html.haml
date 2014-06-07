@@ -3,8 +3,7 @@
 -#    widget: MiqWidget object
 -#
 %div.modboxin.rss_widget
-  - style =  @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display:none' : ''
-  %div.mc{:id => "dd_w#{widget.id}_box", :style => style}
+  = hidden_div_if(@sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id), :id => "dd_w#{widget.id}_box") do
     - if widget.contents_for_user(session[:userid]).contents.blank?
       No RSS Feed data found . . .
     - else
