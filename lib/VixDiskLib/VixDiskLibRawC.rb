@@ -1,6 +1,3 @@
-#
-# Copyright 2008 ManageIQ, Inc.  All rights reserved.
-#
 
 $:.push("#{File.dirname(__FILE__)}")
 

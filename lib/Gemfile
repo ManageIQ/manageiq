@@ -17,7 +17,7 @@ gem "binary_struct",        "~> 1.0.1",  :require => false
 gem "excon",                "~>0.31.0",  :require => false
 gem "ezcrypto",             "=0.7",      :require => false
 gem "facade",               "~>1.0.5",   :require => false  # Used by util/pathname2.rb
-gem "ffi",                  "~>1.9.3",   :require => false  # Used by util/pathname2.rb
+gem "ffi",                  "~>1.9.3",   :require => false
 gem "fog",                  "~>1.19.0",  :require => false, :git => "git://github.com/ManageIQ/fog.git", :tag => "v1.19.0-1"
 gem "httpclient",           "~>2.2.4",   :require => false
 gem "io-extra",             "=1.2.6",    :require => false

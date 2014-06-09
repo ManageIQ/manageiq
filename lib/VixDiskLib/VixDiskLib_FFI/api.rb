@@ -21,7 +21,7 @@ module FFI
       version_load_order.each do |version|
         begin
           loaded_library = ffi_lib ["vixDiskLib.so.#{version}"]
-          VERSION_MAJOR, VERSION_MINOR = loaded_library.first.name.split(".")[2, 2].map(&:to_i)
+          VERSION_MAJOR, VERSION_MINOR = loaded_library.first.name.split(".")[2, 2].collect(&:to_i)
           break
         rescue LoadError => err
           load_errors << "ffi-vixdisklib: failed to load #{version} version with error: #{err.message}."
@@ -41,15 +41,15 @@ module FFI
       # significant bits may or may not be set to various values, depending on
       # the errors.
 
-      def self.VIX_ERROR_CODE(err)
+      def self.vix_error_code(err)
         err & 0xFFFF
       end
 
-      def self.VIX_SUCCEEDED(err)
+      def self.vix_succeeded?(err)
         err == VixErrorType[:VIX_OK]
       end
 
-      def self.VIX_FAILED(err)
+      def self.vix_failed?(err)
         err != VixErrorType[:VIX_OK]
       end
 

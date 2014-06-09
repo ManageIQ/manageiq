@@ -15,13 +15,11 @@
 class VixDiskLibError < RuntimeError
 end
 
-binding = ENV['VIXDISKLIB_BINDING']
-binding = "FFI" if binding.nil?
-puts "VixDiskLib: Binding set to #{binding}"
+binding = ENV['VIXDISKLIB_BINDING'] || "FFI"
 if binding.downcase == "c"
-    require 'VixDiskLibRawC'
+  require 'VixDiskLibRawC'
 elsif binding.downcase == "ffi"
-    require 'VixDiskLibClient'
+  require 'VixDiskLibClient'
 else
-    raise VixDiskLibError, "VixDiskLib() failed: Invalid VIXDISKLIB_BINDING Environment variable #{binding}"
+  raise VixDiskLibError, "VixDiskLib() failed: Invalid VIXDISKLIB_BINDING Environment variable #{binding}"
 end

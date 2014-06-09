@@ -11,18 +11,18 @@ require 'MiqCustomFieldsManager'
 require 'MiqVimAlarmManager'
 require 'MiqVimCustomizationSpecManager'
 
-begin
-	require 'VixDiskLib'
-	class VdlConnection
-		alias :release :disconnect
-	end
-rescue LoadError
-	# Ignore on systems that don't have VixDiskLib
-	class VdlConnection
-		def release
-		end
-	end
-end
+#begin
+	#require 'VixDiskLib'
+	#class VdlConnection
+		#alias :release :disconnect
+	#end
+#rescue LoadError
+	## Ignore on systems that don't have VixDiskLib
+	#class VdlConnection
+		#def release
+		#end
+	#end
+#end
 
 require 'drb'
 
@@ -98,11 +98,11 @@ module MiqBrokerVimConnectionCheck
 	end
 end
 
-class VdlConnection
-	alias :release_orig :release
-	remove_method :release
-	include MiqBrokerObjRegistry
-end
+#class VdlConnection
+	#alias :release_orig :release
+	#remove_method :release
+	#include MiqBrokerObjRegistry
+#end
 
 class MiqVimVm
 	alias :release_orig :release
