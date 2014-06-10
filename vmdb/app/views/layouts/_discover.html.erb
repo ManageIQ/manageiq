@@ -1,7 +1,7 @@
 <% url = url_for(:action=>'discover_field_changed') %>
 <%= render :partial => "layouts/flash_msg" %>
 <%= form_tag( {:action => 'discover'}, {:id => "discover_form"}) do %>
-  <fieldset>
+
     <p class="legend">Discover</p>
     <table class="style1">
       <% i = 0 %>
@@ -26,13 +26,13 @@
           <%#= javascript_tag("$('from_first').focus()") %>
         <% end %>
     </table>
-  </fieldset>
+    <hr>
   <%# need to show the box if coming back with error after pressing start button %>
   <% display = @discover_type_checked.include?("ipmi") ? "" : "display:none" %>
   <div id="discover_credentials" style=<%=display%>>
     <%= render :partial => "layouts/discover_credentials", :locals => {:label => "IPMI Credentials"} %>
   </div>
-  <fieldset>
+
     <p class="legend">Subnet Range</p>
     <table class="style1">
         <tr>
@@ -75,7 +75,7 @@
           </td>
         </tr>
     </table>
-  </fieldset>
+
   <div id="formbuttonplacement">
     <%= image_submit_tag("/images/formbuttons/start.png", :name=>"start", :class=>"button", :alt=>"Start the Host Discovery", :title=>"Start the Host Discovery") %>
     <%= image_submit_tag("/images/formbuttons/cancel.png", :name=>"cancel", :class=>"button", :alt=>"Cancel", :title=>"Cancel") %>
