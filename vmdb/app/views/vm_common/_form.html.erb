@@ -1,7 +1,7 @@
 <% url = url_for(:action=>'form_field_changed', :id=>"#{@record.id || "new"}") %>
 <%= form_tag({:action => 'edit_vm', :id => @record}, {:id => "vm_form"}) do %>
 	<%= render :partial => "layouts/flash_msg" %>
-	<fieldset>
+
 		<p class="legend">Basic Information</p>
 		<table class="style1">
 				<tr>
@@ -16,7 +16,7 @@
 					<td class="key">Description (<span id="description_count"><%= @edit[:new][:description] ? @edit[:new][:description].length : 0 %></span> / 100)</td>
 					<td>
 						<div>
-							<%= text_area_tag("description", @edit[:new][:description], :rows=>4, :style=>"width:100%",
+							<%= text_area_tag("description", @edit[:new][:description], :rows=>4,
 																:maxlength=>"100", :counter=>"description_count",
 																"data-miq_check_max_length"=>true,
 																"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
@@ -24,8 +24,8 @@
 					</td>
 				</tr>
 		</table>
-	</fieldset>
-	<fieldset>
+	  <hr>
+
 		<p class="legend">Parent VM Selection</p>
 		<table class="style1">
 				<tr>
@@ -39,15 +39,12 @@
           </td>
 				</tr>
 		</table>
-	</fieldset>
+	  <hr>
 
-	<fieldset>
+
 		<p class="legend">Child VM Selection</p>
-		<table class="form" cellspacing="1">
-			<tbody>
-				<tr>
-					<td >
-						<table width="100%" class="form">
+
+						<table>
 						<tr>
 							<td align="left" class="widthed">Child VMs:</td>
 							<td></td>
@@ -100,11 +97,8 @@
 										{ :multiple=> true, :style=>"width:auto; min-width:375px; background-color:#fff; border: 0px;", :size=>15, :style=>"width: 400px", :id=>"choices_chosen" } ) %></div>
 							</td>
 						</tr></div>
-					</table></td>
-			</tr>
-			</tbody>
-		</table>
-	</fieldset>
+					</table>
+
 	<% if !@edit[:explorer] %>
     <%= render :partial => '/layouts/edit_form_buttons',
                :locals  => {:action_url   => "edit_vm",
