@@ -14,6 +14,7 @@ class Service < ActiveRecord::Base
 
   include ServiceMixin
   include OwnershipMixin
+  include CustomAttributeMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
