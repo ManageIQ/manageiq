@@ -1,25 +1,35 @@
-<% url = url_for(:action=>'discover_field_changed') %>
+<% url = url_for(:action => 'discover_field_changed') %>
 <%= render :partial => "layouts/flash_msg" %>
 <%= form_tag( {:action => 'discover'}, {:id => "discover_form"}) do %>
-
     <p class="legend">Discover</p>
     <table class="style1">
       <% i = 0 %>
       <% while i < @discover_type.length %>
         <tr>
           <% if @discover_type.length == 1 %>
-            <td class="key"><%= check_box_tag("discover_type_#{@discover_type[i]}", value="1", checked=true, :id=>"discover_type_#{@discover_type[i]}", :disabled=>"disabled") %></td>
+            <td class="key">
+              <%= check_box_tag("discover_type_#{@discover_type[i]}",
+                                value="1", 
+                                checked=true, 
+                                :id       => "discover_type_#{@discover_type[i]}", 
+                                :disabled => "disabled")
+              %>
+            </td>
           <% else %>
             <%# to keep track, if item was checked when start button was pressed %>
             <% check = @discover_type_checked.include?(@discover_type[i]) ? true : false %>
             <td class="key">
-              <%= check_box_tag("discover_type_#{@discover_type[i]}", value="1",
-                                  checked=check,
-                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+              <%= check_box_tag("discover_type_#{@discover_type[i]}",
+                                value="1",
+                                checked=check,
+                                "data-miq_observe_checkbox" => {:url => url}.to_json)
+              %>
             </td>
           <% end %>
           <td>
-             <%= h(Dictionary::gettext(@discover_type[i], :type=>:discover_types, :notfound=>:titleize)) %>
+             <%= h(Dictionary::gettext(@discover_type[i], :type     => :discover_types, 
+                                                          :notfound => :titleize))
+             %>
           </td>
         </tr>
         <% i += 1 %>
@@ -30,55 +40,99 @@
   <%# need to show the box if coming back with error after pressing start button %>
   <% display = @discover_type_checked.include?("ipmi") ? "" : "display:none" %>
   <div id="discover_credentials" style=<%=display%>>
-    <%= render :partial => "layouts/discover_credentials", :locals => {:label => "IPMI Credentials"} %>
+    <%= render :partial => "layouts/discover_credentials", 
+               :locals  => {:label => "IPMI Credentials"} %>
   </div>
-
-    <p class="legend">Subnet Range</p>
-    <table class="style1">
-        <tr>
-          <td class="key">From Address</td>
-          <td>
-            <%= text_field_tag("from_first",
-                                  @from[:first],
-                                  :size=>"3",
-                                  :maxlength=>3,
-                                  "data-miq_focus"=>true,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %> .
-            <%= text_field_tag("from_second",
-                                  @from[:second],
-                                  :size=>"3",
-                                  :maxlength=>3,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %> .
-            <%= text_field_tag("from_third",
-                                  @from[:third],
-                                  :size=>"3",
-                                  :maxlength=>3,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %> .
-            <%= text_field_tag("from_fourth",
-                                  @from[:fourth],
-                                  :size=>"3",
-                                  :maxlength=>3,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-          </td>
-        </tr>
-        <tr>
-          <td class="key">To Address</td>
-          <td>
-            <%= text_field 'to', 'first', :readonly=>"readonly", :size=>"3", :maxlength=>"3", :value=>@to[:first], :disabled=>"disabled" %> .
-            <%= text_field 'to', 'second', :readonly=>"readonly", :size=>"3", :maxlength=>"3", :value=>@to[:second], :disabled=>"disabled" %> .
-            <%= text_field 'to', 'third', :readonly=>"readonly", :size=>"3", :maxlength=>"3", :value=>@to[:third], :disabled=>"disabled" %> .
-            <%= text_field_tag("to_fourth",
-                                  @to[:fourth],
-                                  :size=>"3",
-                                  :maxlength=>3,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-          </td>
-        </tr>
-    </table>
+  <p class="legend">Subnet Range</p>
+  <table class="style1">
+      <tr>
+        <td class="key">From Address</td>
+        <td>
+          <%= text_field_tag("from_first",
+                                @from[:first],
+                                :size              => "3",
+                                :maxlength         => 3,
+                                "data-miq_focus"   => true,
+                                "data-miq_observe" => {:interval => '.5',
+                                                       :url      => url}.to_json)
+          %>
+           .
+          <%= text_field_tag("from_second",
+                                @from[:second],
+                                :size              => "3",
+                                :maxlength         => 3,
+                                "data-miq_observe" => {:interval => '.5',
+                                                       :url      => url}.to_json) 
+          %>
+           .
+          <%= text_field_tag("from_third",
+                                @from[:third],
+                                :size              => "3",
+                                :maxlength         => 3,
+                                "data-miq_observe" => {:interval => '.5',
+                                                       :url      => url}.to_json)
+          %>
+           .
+          <%= text_field_tag("from_fourth",
+                                @from[:fourth],
+                                :size              => "3",
+                                :maxlength         => 3,
+                                "data-miq_observe" => {:interval => '.5',
+                                                       :url      => url}.to_json)
+          %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">To Address</td>
+        <td>
+          <%= text_field 'to','first', 
+                         :readonly  => "readonly",
+                         :size      => "3", 
+                         :maxlength => "3", 
+                         :value     => @to[:first], 
+                         :disabled  => "disabled" 
+          %>
+           .
+          <%= text_field 'to', 'second', 
+                         :readonly  => "readonly",
+                         :size      => "3", 
+                         :maxlength => "3", 
+                         :value     => @to[:second], 
+                         :disabled  => "disabled" 
+          %>
+           .
+          <%= text_field 'to', 'third',
+                         :readonly => "readonly",
+                         :size     => "3",
+                         :maxlength=>"3", 
+                         :value=>@to[:third], 
+                         :disabled=>"disabled"
+          %>
+           .
+          <%= text_field_tag("to_fourth",
+                             @to[:fourth],
+                             :size              => "3",
+                             :maxlength         => 3,
+                             "data-miq_observe" => {:interval => '.5',
+                                                    :url      => url}.to_json)
+          %>
+        </td>
+      </tr>
+  </table>
 
   <div id="formbuttonplacement">
-    <%= image_submit_tag("/images/formbuttons/start.png", :name=>"start", :class=>"button", :alt=>"Start the Host Discovery", :title=>"Start the Host Discovery") %>
-    <%= image_submit_tag("/images/formbuttons/cancel.png", :name=>"cancel", :class=>"button", :alt=>"Cancel", :title=>"Cancel") %>
+    <%= image_submit_tag("/images/formbuttons/start.png", 
+                         :name  => "start",
+                         :class => "button", 
+                         :alt   => "Start the Host Discovery", 
+                         :title => "Start the Host Discovery")
+    %>
+    <%= image_submit_tag("/images/formbuttons/cancel.png",
+                         :name  => "cancel", 
+                         :class => "button", 
+                         :alt   => "Cancel", 
+                         :title => "Cancel")
+    %>
   </div>
 <% end %>
 <%# Need this to bind checkbox observers when under DHTMLX tabs %>
