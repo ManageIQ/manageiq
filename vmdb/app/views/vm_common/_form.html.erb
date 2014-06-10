@@ -1,109 +1,162 @@
-<% url = url_for(:action=>'form_field_changed', :id=>"#{@record.id || "new"}") %>
-<%= form_tag({:action => 'edit_vm', :id => @record}, {:id => "vm_form"}) do %>
-	<%= render :partial => "layouts/flash_msg" %>
+<% url = url_for(:action => 'form_field_changed',
+                 :id     => "#{@record.id || "new"}")
+%>
+  <%= form_tag({:action => 'edit_vm', 
+                :id     => @record}, 
+               {:id => "vm_form"}) do 
+  %>
+    <%= render :partial => "layouts/flash_msg" %>
+    <p class="legend">Basic Information</p>
+    <table class="style1">
+      <tr>
+        <td class="key">Custom Identifier</td>
+        <td class="wide">
+          <%= text_field_tag("custom_1", 
+                             @edit[:new][:custom_1],
+                             :maxlength         => 50,
+                             "data-miq_focus"   => true,
+                             "data-miq_observe" => {:interval => '.5',
+                             :url=>url}.to_json)
+          %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">
+          Description (<span id="description_count"><%= @edit[:new][:description] ? @edit[:new][:description].length : 0 %></span> / 100)</td>
+        <td>
+          <div>
+            <%= text_area_tag("description",
+                              @edit[:new][:description],
+                              :rows                       => 4,
+                              :maxlength                  => "100",
+                              :counter                    => "description_count",
+                              "data-miq_check_max_length" => true,
+                              "data-miq_observe"          => {:interval => '.5', 
+                                                              :url => url}.to_json)
+            %>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <hr>
 
-		<p class="legend">Basic Information</p>
-		<table class="style1">
-				<tr>
-					<td class="key">Custom Identifier</td>
-					<td class="wide">
-						<%= text_field_tag("custom_1", @edit[:new][:custom_1], :maxlength=>50,
-															"data-miq_focus"=>true,
-															"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-					</td>
-				</tr>
-				<tr>
-					<td class="key">Description (<span id="description_count"><%= @edit[:new][:description] ? @edit[:new][:description].length : 0 %></span> / 100)</td>
-					<td>
-						<div>
-							<%= text_area_tag("description", @edit[:new][:description], :rows=>4,
-																:maxlength=>"100", :counter=>"description_count",
-																"data-miq_check_max_length"=>true,
-																"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-						</div>
-					</td>
-				</tr>
-		</table>
-	  <hr>
-
-		<p class="legend">Parent VM Selection</p>
-		<table class="style1">
-				<tr>
-					<td class="key">Parent VM</td>
-					<td>
+    <p class="legend">Parent VM Selection</p>
+    <table class="style1">
+        <tr>
+          <td class="key">Parent VM</td>
+          <td>
             <%= select_tag("chosen_parent",
-                              options_for_select(@edit[:pchoices].sort, @edit[:new][:parent]),
-                              :multiple=> false, :class=>"widthed",
-                              "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(@edit[:pchoices].sort, 
+                           @edit[:new][:parent]),
+                           :multiple              =>  false,
+                           :class                 => "widthed",
+                           "data-miq_sparkle_on"  => true,
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => url}.to_json) %>
           </td>
-				</tr>
-		</table>
-	  <hr>
+        </tr>
+    </table>
+    <hr>
 
+    <p class="legend">Child VM Selection</p>
+    <table>
+    <tr>
+      <td align="left" class="widthed">Child VMs:</td>
+      <td></td>
+      <td align="left">Available VMs:</td>
+    </tr>
+    <tr>
+      <td align="right" valign="top">
+        <div style="
+              overflow: auto;
+              width: 400px;
+              border: 1px solid #999999;"
+              >
+          <%= select_tag('kids_chosen[]',
+                         options_for_select( @edit[:new][:kids].sort ),
+                         {:multiple => true,
+                          :style    => "width:auto; min-width:375px; border: 0px;",
+                          :size     => 15, 
+                          :style    => "width: 400px", 
+                          :id       => "kids_chosen" } ) 
+          %>
+        </div>
+      </td>
+      <td width="20">
+        <% if !@edit[:explorer] %>
+          <%= image_submit_tag("/images/toolbars/right.png", 
+                               :name  => "right", 
+                               :class => "rollover small")
+          %>
+          <%= image_submit_tag("/images/toolbars/allright.png", 
+                               :name  => "allright", 
+                               :class => "rollover small")
+          %>
+          <%= image_submit_tag("/images/toolbars/left.png", 
+                               :name  => "left", 
+                               :class => "rollover small")
+          %>
+        <% else %>
+          <%= link_to(image_tag("/images/toolbars/right.png", 
+                                :class => "rollover small",
+                                :style => "width: 28px; height: 28px",
+                                :alt   => "Move selected VMs to right"),
+                      {:action => 'form_field_changed', 
+                       :button => 'right', 
+                       :id     => "#{@record.id || "new"}"},
+                      "data-submit" => 'main_div',
+                      :remote       => true,
+                      :title        => 'Move selected VMs to right')
+          %>
+          <%= link_to(image_tag("/images/toolbars/allright.png", 
+                                :class => "rollover small",
+                                :style => "width: 28px; height: 28px", 
+                                :alt   => "Move all VMs to right"),
+                      {:action => 'form_field_changed', 
+                       :button => 'allright', 
+                       :id     => "#{@record.id || "new"}"},
+                      "data-submit" => 'main_div',
+                      :remote       => true,
+                      :title        => 'Move all VMs to right')
+          %>
+          <%= link_to(image_tag("/images/toolbars/left.png",
+                                :class => "rollover small",
+                                :style => "width: 28px; height: 28px",
+                                :alt   => "Move selected VMs to left"),
+                      {:action => 'form_field_changed', 
+                       :button => 'left', 
+                       :id     => "#{@record.id || "new"}"},
+                      "data-submit" => 'main_div',
+                      :remote       => true,
+                      :title        => 'Move all selected VMs to left')
+          %>
+        <% end %>
+      </td>
+      <td align="left" valign="top">
+        <div style="
+              overflow: auto;
+              width: 400px;
+              border: 1px solid #999999;"
+              >
+          <%= select_tag('choices_chosen[]',
+                         options_for_select( @edit[:choices].sort ),
+                         {:multiple => true,
+                          :style    => "width:auto; min-width:375px; border: 0px;",
+                          :size     => 15,
+                          :style    => "width: 400px",
+                          :id       => "choices_chosen" })
+          %>
+        </div>
+      </td>
+    </tr>
+    </div>
+  </table>
 
-		<p class="legend">Child VM Selection</p>
-
-						<table>
-						<tr>
-							<td align="left" class="widthed">Child VMs:</td>
-							<td></td>
-							<td align="left">Available VMs:</td>
-						</tr>
-						<tr>
-							<td align="right" valign="top">
-								<div style="
-											overflow: auto;
-											width: 400px;
-											border: 1px solid #999999;"
-											>
-									<%= select_tag('kids_chosen[]', options_for_select( @edit[:new][:kids].sort ),
-										{ :multiple=> true, :style=>"width:auto; min-width:375px; background-color:#fff; border: 0px;", :size=>15, :style=>"width: 400px", :id=>"kids_chosen" } ) %>
-								</div>
-							</td>
-							<td width="20">
-								<% if !@edit[:explorer] %>
-									<%= image_submit_tag("/images/toolbars/right.png", :name=>"right", :class=>"rollover small" ) %>
-									<%= image_submit_tag("/images/toolbars/allright.png", :name=>"allright", :class=>"rollover small" ) %>
-									<%= image_submit_tag("/images/toolbars/left.png", :name=>"left", :class=>"rollover small" ) %>
-								<% else %>
-									<%= link_to(image_tag("/images/toolbars/right.png", :class=>"rollover small", :style=>"width: 28px; height: 28px", :alt=>"Move selected VMs to right"),
-												{:action=>'form_field_changed', :button=>'right', :id=>"#{@record.id || "new"}"},
-												"data-submit"=>'main_div',
-												:remote=>true,
-												:title=>'Move selected VMs to right')
-									%>
-									<%= link_to(image_tag("/images/toolbars/allright.png", :class=>"rollover small", :style=>"width: 28px; height: 28px", :alt=>"Move all VMs to right"),
-												{:action=>'form_field_changed', :button=>'allright', :id=>"#{@record.id || "new"}"},
-												"data-submit"=>'main_div',
-												:remote=>true,
-												:title=>'Move all VMs to right')
-									%>
-									<%= link_to(image_tag("/images/toolbars/left.png", :class=>"rollover small", :style=>"width: 28px; height: 28px", :alt=>"Move selected VMs to left"),
-												{:action=>'form_field_changed', :button=>'left', :id=>"#{@record.id || "new"}"},
-												"data-submit"=>'main_div',
-												:remote=>true,
-												:title=>'Move all selected VMs to left')
-									%>
-								<% end %>
-							</td>
-							<td align="left" valign="top">
-								<div style="
-											overflow: auto;
-											width: 400px;
-											border: 1px solid #999999;"
-											>
-									<%= select_tag('choices_chosen[]', options_for_select( @edit[:choices].sort ),
-										{ :multiple=> true, :style=>"width:auto; min-width:375px; background-color:#fff; border: 0px;", :size=>15, :style=>"width: 400px", :id=>"choices_chosen" } ) %></div>
-							</td>
-						</tr></div>
-					</table>
-
-	<% if !@edit[:explorer] %>
-    <%= render :partial => '/layouts/edit_form_buttons',
-               :locals  => {:action_url   => "edit_vm",
-                            :ajax_buttons => true,
-                            :record_id    => @record.id
-               } %>
-	<% end %>
+    <% if !@edit[:explorer] %>
+      <%= render :partial => '/layouts/edit_form_buttons',
+                 :locals  => {:action_url   => "edit_vm",
+                              :ajax_buttons => true,
+                              :record_id    => @record.id
+                 } %>
+    <% end %>
 <% end %>
