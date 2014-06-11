@@ -42,8 +42,8 @@ class VixDiskLibServer < VixDiskLibApi
     @vddk = server
   end
 
-  @info_log  = ->(s) { $vim_log.info  "VMware(VixDiskLib): #{s}" }
-  @warn_log  = ->(s) { $vim_log.warn  "VMware(VixDiskLib): #{s}" }
+  @info_log  = ->(s) { $vim_log.info "VMware(VixDiskLib): #{s}" }
+  @warn_log  = ->(s) { $vim_log.warn "VMware(VixDiskLib): #{s}" }
   @error_log = ->(s) { $vim_log.error "VMware(VixDiskLib): #{s}" }
   def self.init(info_logger = @info_log, warn_logger = @warn_log, error_logger = @error_log, libDir = nil)
     return if @initialized
@@ -75,6 +75,7 @@ class VixDiskLibServer < VixDiskLibApi
   def self.connect(connect_parms)
     $vim_log.info "VixDiskLibServer.connect: #{connect_parms[:server_name]}" if $vim_log
     raise VixDiskLibError, "VixDiskLib is not initialized" unless @initialized
+    raise VixDiskLibError, "Already connected to #{@connection.serverName}" if @connection
     @connection = VdlConnection.new(connect_parms, @vddk)
     @connection
   end
@@ -95,8 +96,7 @@ class VixDiskLibServer < VixDiskLibApi
     # the DRb service (this process) to segfault during the exit sequence.
     #
     # super
-    t = Time.now.utc.iso8601
-    $vim_log.info "[#{t}] (#{Process.pid}) VixDiskLib has exited cleanly"
+    $vim_log.info "VixDiskLib has exited cleanly"
     @vddk.running = true
     @vddk.shutdown = true
     @initialized = nil
@@ -348,8 +348,7 @@ class VDDKFactory
     thr = DRb.thread
     DRb.stop_service
     thr.join unless thr.nil?
-    timenow = Time.now.utc.iso8601
-    $vim_log.info "[#{timenow}] (#{Process.pid}) Finished shutting down DRb"
+    $vim_log.info "Finished shutting down DRb"
   end
 
   def shut_down_service(msg)
@@ -357,8 +356,7 @@ class VDDKFactory
     $vim_log.info "[#{t}] (#{Process.pid}) #{msg}"
     VixDiskLibServer.__exit__ if @started
     @running = true
-    t = Time.now.utc.iso8601
-    $vim_log.info "[#{t}] (#{Process.pid}) VixDiskLibServer.__exit__ finished"
+    $vim_log.info "VixDiskLibServer.__exit__ finished"
     shut_down_drb
   end
 
@@ -409,8 +407,7 @@ begin
   DRb.primary_server.verbose = true
   uri_used = DRb.uri
   Thread.abort_on_exception = true
-  t = Time.now.utc.iso8601
-  $vim_log.info "[#{t}] (#{Process.pid}) Started DRb service on URI #{uri_used}"
+  $vim_log.info "Started DRb service on URI #{uri_used}"
   #
   # Now write the URI used back to the parent (client) process to let it know which port was selected.
   #
@@ -427,11 +424,9 @@ begin
   # If we haven't been marked as started yet, wait for it.
   # We may return immediately because startup (and more) has already happened.
   #
-  t = Time.now.utc.iso8601
-  $vim_log.info "[#{t}] (#{Process.pid}) calling watchdog for startup"
+  $vim_log.info "calling watchdog for startup"
   vddk.wait_for_status("started", 1800)
-  t = Time.now.utc.iso8601
-  $vim_log.info "[#{t}] (#{Process.pid}) startup has happened, shutdown flag is #{vddk.shutdown}"
+  $vim_log.info "startup has happened, shutdown flag is #{vddk.shutdown}"
   #
   # Wait for the DRb server thread to finish before exiting.
   #
@@ -444,8 +439,7 @@ begin
   end
 
   vddk.shut_down_service("Shutting Down VixDiskLibServer")
-  t = Time.now.utc.iso8601
-  $vim_log.info "[#{t}] (#{Process.pid}) Service has stopped"
+  $vim_log.info "Service has stopped"
 rescue => err
   $vim_log.error "VixDiskLibServer ERROR: [#{err}]"
   $vim_log.debug "VixDiskLibServer ERROR: [#{err.backtrace.join("\n")}]"

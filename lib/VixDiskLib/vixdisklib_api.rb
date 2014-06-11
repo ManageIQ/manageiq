@@ -427,30 +427,30 @@ class SafeConnectParams
   attr_reader :connect_params
   def initialize(in_conn_parms)
     conn_parms = FFI::MemoryPointer.new(VixDiskLib::ConnectParams, 1, true)
-    @conn_parms_start = conn_parms
-    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:vmxSpec)
+    @connect_params = conn_parms
+    conn_parms = @connect_params + VixDiskLib::ConnectParams.offset_of(:vmxSpec)
     # Structure pointer (conn_parms) starts with vmxSpec
     @vmx_spec = get_mem_ptr_from_str(in_conn_parms[:vmxSpec])
     conn_parms.put_pointer(0, @vmx_spec)
     # Increment structure pointer to server_name
-    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:serverName)
+    conn_parms = @connect_params + VixDiskLib::ConnectParams.offset_of(:serverName)
     @server_name = get_mem_ptr_from_str(in_conn_parms[:serverName])
     conn_parms.put_pointer(0, @server_name)
     # Increment structure pointer to thumbPrint
-    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:thumbPrint)
+    conn_parms = @connect_params + VixDiskLib::ConnectParams.offset_of(:thumbPrint)
     @thumb_print = get_mem_ptr_from_str(in_conn_parms[:thumbPrint])
     conn_parms.put_pointer(0, @thumb_print)
     # Increment structure pointer to privateUse
-    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:privateUse)
+    conn_parms = @connect_params + VixDiskLib::ConnectParams.offset_of(:privateUse)
     conn_parms.write_long(in_conn_parms[:privateUse]) unless in_conn_parms[:privateUse].nil?
     # Increment structure pointer to credType
     cred_type = in_conn_parms[:credType]
-    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:credType)
+    conn_parms = @connect_params + VixDiskLib::ConnectParams.offset_of(:credType)
     conn_parms.write_int(cred_type) unless cred_type.nil?
-    get_safe_creds(cred_type, in_conn_parms, @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:creds))
-    conn_parms = @conn_parms_start + VixDiskLib::ConnectParams.offset_of(:port)
+    get_safe_creds(cred_type, in_conn_parms, @connect_params + VixDiskLib::ConnectParams.offset_of(:creds))
+    conn_parms = @connect_params + VixDiskLib::ConnectParams.offset_of(:port)
     conn_parms.write_uint32(in_conn_parms[:port]) unless in_conn_parms[:port].nil?
-    @connect_params = @conn_parms_start
+    @connect_params
   end
 
   #

@@ -1,6 +1,6 @@
 
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
+$LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
+$LOAD_PATH.push("#{File.dirname(__FILE__)}/../..")
 
 require_relative '../../bundler_setup'
 require 'ostruct'
