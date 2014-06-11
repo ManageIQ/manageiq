@@ -1,5 +1,5 @@
 --- 
 options: 
   :from: ""
-  :to: ""
+  :to: []
 action_type: email
