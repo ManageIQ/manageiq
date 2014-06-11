@@ -5,6 +5,8 @@ class FileDepot < ActiveRecord::Base
   validate              :validate_credentials
   validates_presence_of :uri
 
+  attr_accessor         :file
+
   SUPPORTED_DEPOTS = {
     'smb' => 'Samba',
     'nfs' => 'Network File System'}.freeze
@@ -40,5 +42,9 @@ class FileDepot < ActiveRecord::Base
 
   def verify_credentials(auth_type=nil)
     self.class.verify_depot_hash(self.depot_hash)
+  end
+
+  def upload_file(file)
+    @file = file
   end
 end
