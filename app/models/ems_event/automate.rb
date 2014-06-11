@@ -12,7 +12,7 @@ class EmsEvent
       EmsRefresh.queue_refresh(refresh_targets)
     end
 
-    def policy(target_str, policy_event, param)
+    def policy(target_str, policy_event, param = nil)
       _log.debug("ems: [#{ems_id}]")
       return if ems_id.nil?
 
