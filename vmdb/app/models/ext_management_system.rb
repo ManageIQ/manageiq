@@ -178,6 +178,12 @@ class ExtManagementSystem < ActiveRecord::Base
     self.class.description || self.emstype.titleize
   end
 
+  def with_provider_connection(options = {})
+    raise "no block given" unless block_given?
+    $log.info("MIQ(#{self.class.name}.with_provider_connection) Connecting through #{self.class.name}: [#{self.name}]")
+    yield connect(options)
+  end
+
   def self.refresh_all_ems_timer
     ems_ids = []
 

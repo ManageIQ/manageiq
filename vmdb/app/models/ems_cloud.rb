@@ -26,12 +26,6 @@ class EmsCloud < ExtManagementSystem
   has_many :cloud_volume_snapshots, :foreign_key => :ems_id, :dependent => :destroy
   has_many :key_pairs,              :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
 
-  def with_provider_connection(options = {})
-    raise "no block given" unless block_given?
-    $log.info("MIQ(#{self.class.name}.with_provider_connection) Connecting through #{self.class.name}: [#{self.name}]")
-    yield connect(options)
-  end
-
   # Development helper method for Rails console for opening a browser to the EMS.
   #
   # This method is NOT meant to be called from production code.

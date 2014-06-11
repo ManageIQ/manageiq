@@ -56,11 +56,49 @@ class EmsMicrosoft < EmsInfra
     raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(options[:auth_type])
 
     begin
-      connect.run_cmd("uname -a")
+      run_dos_command("uname -a")
     rescue WinRM::WinRMHTTPTransportError # Error 401
       raise MiqException::MiqHostError, "Login failed due to a bad username or password."
     end
 
     true
+  end
+
+  def vm_start(vm, _options = {})
+    execute_power_operation("Start", vm.name)
+  end
+
+  def vm_stop(vm, _options = {})
+    execute_power_operation("Stop", vm.name, "-Force")
+  end
+
+  def vm_shutdown_guest(vm, _options = {})
+    execute_power_operation("Stop", vm.name, "-Shutdown")
+  end
+
+  def vm_reset(vm, _options = {})
+    execute_power_operation("Reset", vm.name)
+  end
+
+  def vm_reboot_guest(vm, _options = {})
+    execute_power_operation("Stop", vm.name, "-Shutdown")
+    execute_power_operation("Start", vm.name)
+  end
+
+  def vm_suspend(vm, _options = {})
+    execute_power_operation("Suspend", vm.name)
+  end
+
+  def vm_resume(vm, _options = {})
+    execute_power_operation("Resume", vm.name)
+  end
+
+  private
+
+  def execute_power_operation(cmdlet, vm_name, *parameters)
+    # escape spaces -  in the MIQ powershell utiity.
+    params = parameters.join(" ")
+    command = "powershell #{cmdlet}-SCVirtualMachine -VM (Get-SCVirtualMachine -Name #{vm_name}) #{params}"
+    results = run_dos_command(command)
   end
 end
