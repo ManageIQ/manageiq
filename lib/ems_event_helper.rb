@@ -138,7 +138,7 @@ class EmsEventHelper
   end
 
   def handle_alert_event
-    handle_step("policy" => ["src_vm", @event.event_type]) if MiqAlert.event_alertable?(@event.event_type)
+    @event.policy("src_vm", @event.event_type) if MiqAlert.event_alertable?(@event.event_type)
   end
 
   def handle_alarm_event
