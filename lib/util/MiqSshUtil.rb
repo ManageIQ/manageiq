@@ -11,9 +11,7 @@ require 'MiqSockUtil'
 # puts "SSH Version: #{Net::SSH::Version::STRING}"
 # puts "SFTP Version: #{Net::SFTP::Version::STRING}"
 
-if Net::SSH::Version::MAJOR == 1
-  require 'MiqSshUtilV1'
-elsif Net::SSH::Version::MAJOR == 2
+if Net::SSH::Version::MAJOR == 2
   require 'MiqSshUtilV2'
 else
   raise "MiqSshUtil does not support version #{Net::SSH::Version::STRING} of Net::SSH"
@@ -52,30 +50,19 @@ if __FILE__ == $0
   local_file    = "/Users/myuser/.bash_profile"
   remote_file   = "/tmp/.bash_profile"
   
-  if Net::SSH::Version::MAJOR == 1
-    MiqSshUtil.shell_with_su(host, userid, password, root_user, root_password) do |ssu, shell|
-      puts shell.suexec("id")
-      puts ssu.shell_exec("id")
-      puts ssu.shell_exec("esxupdate query")
-      puts ssu.shell_exec("chkconfig --list")
-      puts ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'")
-      puts ssu.shell_exec("grep PermitRootLogin /etc/ssh/sshd_config")
-    end
-  else
-    s = MiqSshUtil.new(host, userid, password, :su_user => root_user, :su_password => root_password)
-    puts s.exec("ls -l /")
-    puts s.suexec("id") if userid && root_user && userid != root_user
-    puts s.suexec("ls -l /") if userid && root_user && userid != root_user
-    s.cp(local_file, remote_file)
-    s.get_file(remote_file, "#{local_file}.via_sftp")
-    
-     MiqSshUtil.shell_with_su(host, userid, password, root_user, root_password) do |ssu, shell|
-      puts ssu.suexec("id") if userid && root_user && userid != root_user
-      puts ssu.shell_exec("id")
-      puts ssu.shell_exec("esxupdate query")
-      puts ssu.shell_exec("chkconfig --list")
-      puts ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'")
-      puts ssu.shell_exec("grep PermitRootLogin /etc/ssh/sshd_config")
-     end
-  end  
+  s = MiqSshUtil.new(host, userid, password, :su_user => root_user, :su_password => root_password)
+  puts s.exec("ls -l /")
+  puts s.suexec("id") if userid && root_user && userid != root_user
+  puts s.suexec("ls -l /") if userid && root_user && userid != root_user
+  s.cp(local_file, remote_file)
+  s.get_file(remote_file, "#{local_file}.via_sftp")
+
+  MiqSshUtil.shell_with_su(host, userid, password, root_user, root_password) do |ssu, shell|
+    puts ssu.suexec("id") if userid && root_user && userid != root_user
+    puts ssu.shell_exec("id")
+    puts ssu.shell_exec("esxupdate query")
+    puts ssu.shell_exec("chkconfig --list")
+    puts ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'")
+    puts ssu.shell_exec("grep PermitRootLogin /etc/ssh/sshd_config")
+  end
 end
