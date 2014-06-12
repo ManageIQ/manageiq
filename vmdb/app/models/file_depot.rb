@@ -30,7 +30,7 @@ class FileDepot < ActiveRecord::Base
   end
 
   def validate_credentials
-    errors.add(:file_depot, "is missing credentials") if self.requires_credentials? && self.authentication_invalid?
+    errors.add(:file_depot, "is missing credentials") if requires_credentials? && authentication_invalid?
   end
 
   def self.verify_depot_hash(hsh)
