@@ -265,5 +265,9 @@ export LC_ALL=en_US.UTF-8
 sysctl -p "/etc/sysctl.conf"
 
 [[ -s /etc/default/evm ]] && source /etc/default/evm
+pushd ./build
+  rake build:build_file
+popd
+
 appliance_console_cli --region 0 --internal --key
 %end
