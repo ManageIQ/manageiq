@@ -80,6 +80,7 @@ Vmdb::Application.routes.draw do
         atomic_st_edit
         automate_button_field_changed
         button_create
+        button_update
         dialog_field_changed
         dialog_form_button_pressed
         dynamic_list_refresh
@@ -1652,6 +1653,7 @@ Vmdb::Application.routes.draw do
         show
         snap_pressed
         snap_vm
+        sort_vm_grid
         squash_toggle
         tagging_edit
         tag_edit_form_field_changed

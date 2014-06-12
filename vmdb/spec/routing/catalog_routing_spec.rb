@@ -52,7 +52,14 @@ describe 'routes for CatalogController' do
   describe '#button_create' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/button_create"))
-      .to route_to("#{controller_name}#button_create")
+        .to route_to("#{controller_name}#button_create")
+    end
+  end
+
+  describe '#button_update' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/button_update"))
+      .to route_to("#{controller_name}#button_update")
     end
   end
 
