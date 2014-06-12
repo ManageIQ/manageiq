@@ -71,10 +71,7 @@ module MiqServer::LogManagement
           :miq_task_id        => task.id
         )
 
-        uri = logfile.upload
-        File.delete(local_file) if File.exist?(local_file)
-
-        logfile.update_attributes(:state => "available", :log_uri => uri)
+        logfile.upload
       rescue StandardError, TimeoutError => err
         logfile.update_attributes(:state => "error" )
         $log.error("#{log_prefix} Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err.to_s}]")
@@ -177,10 +174,7 @@ module MiqServer::LogManagement
         :miq_task_id        => task.id
       )
 
-      uri = logfile.upload
-      File.delete(local_file) if File.exist?(local_file)
-
-      logfile.update_attributes(:state => "available", :log_uri => uri)
+      logfile.upload
     rescue StandardError, TimeoutError => err
       $log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err.to_s}]")
       logfile.update_attributes(:state => "error")

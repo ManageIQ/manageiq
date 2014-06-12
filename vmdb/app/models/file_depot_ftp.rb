@@ -2,31 +2,42 @@ require 'net/ftp'
 
 class FileDepotFtp < FileDepot
   def upload_file(file)
-    super
     log_header = "MIQ(#{self.class.name}##{__method__})"
+    super
+    with_connection do |ftp|
+      begin
+        return if destination_file_exists?(ftp, destination_file)
 
-    begin
-      ftp = connect
-      create_directory_structure(ftp)
-
-      if destination_file_exists?(ftp, destination_file)
-        $log.info("#{log_header} Found file: #{file} on server... skipping")
-      else
-        $log.info("#{log_header} Uploading file: #{file} to File Depot: #{name}...")
+        create_directory_structure(ftp)
+        $log.info("#{log_header} Uploading file: #{file.name} to File Depot: #{name}...")
         ftp.putbinaryfile(file.local_file, destination_file)
-        file.update_attributes(:log_uri => destination_file)
-        $log.info("#{log_header} Uploading file: #{file}... Complete")
+      rescue => err
+        msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
+        $log.error("#{log_header} #{msg}")
+        raise msg
+      else
+        file.update_attributes(
+          :state   => "available",
+          :log_uri => destination_file
+        )
+        $log.info("#{log_header} Uploading file: #{file.name}... Complete")
+        file.post_upload_tasks
       end
-    rescue => err
-      msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
-      $log.error("#{log_header} #{msg}")
-      raise msg
-    ensure
-      ftp.try(:close)
     end
   end
 
   private
+
+  def with_connection
+    raise "no block given" unless block_given?
+    $log.info("MIQ(#{self.class.name}##{__method__}) Connecting through #{self.class.name}: [#{name}]")
+    begin
+      connection = connect
+      yield connection
+    ensure
+      connection.try(:close)
+    end
+  end
 
   def connect
     log_header = "MIQ(#{self.class.name}##{__method__})"
@@ -48,7 +59,6 @@ class FileDepotFtp < FileDepot
     else
       ftp
     end
-
   end
 
   def create_directory_structure(ftp)
