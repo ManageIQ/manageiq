@@ -40,15 +40,15 @@ class MiqQueue < ActiveRecord::Base
     priority = which.send(dir == :higher ? "-" : "+", by)
     priority = MIN_PRIORITY if priority > MIN_PRIORITY
     priority = MAX_PRIORITY if priority < MAX_PRIORITY
-    return priority
+    priority
   end
 
   def self.higher_priority(*priorities)
-    return priorities.min
+    priorities.min
   end
 
   def self.lower_priority(*priorities)
-    return priorities.max
+    priorities.max
   end
 
   def self.higher_priority?(p1, p2)
@@ -96,8 +96,7 @@ class MiqQueue < ActiveRecord::Base
   }
 
   def data
-    return nil if self.msg_data.nil?
-    Marshal.load(self.msg_data)
+    msg_data && Marshal.load(msg_data)
   end
 
   def data=(value)
@@ -138,7 +137,7 @@ class MiqQueue < ActiveRecord::Base
     msg = MiqQueue.create!(options)
     msg.warn_if_large_payload
     $log.info("#{log_prefix} #{MiqQueue.format_full_log_msg(msg)}")
-    return msg
+    msg
   end
 
   cache_with_timeout(:vmdb_config) { VMDB::Config.new("vmdb") }
@@ -200,7 +199,7 @@ class MiqQueue < ActiveRecord::Base
     else
       $log.info("#{log_prefix} #{MiqQueue.format_full_log_msg(result)}, Dequeued in: [#{Time.now - result.created_on}] seconds")
     end
-    return result
+    result
   end
 
   def unget(options = {})
@@ -305,7 +304,7 @@ class MiqQueue < ActiveRecord::Base
         raise RuntimeError, "#{log_prefix} \"#{err}\" attempting merge next message", err.backtrace
       end
     end
-    return msg
+    msg
   end
   class << self
     alias_method :merge, :put_or_update
@@ -531,13 +530,11 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def get_worker
-    self.handler.kind_of?(MiqWorker) ? self.handler : nil
+    handler if handler.kind_of?(MiqWorker)
   end
 
   def self.get_worker(task_id)
-    msg = self.where(:task_id => task_id).first
-    return nil if msg.nil?
-    msg.get_worker
+    where(:task_id => task_id).first.try(:get_worker)
   end
 
   private

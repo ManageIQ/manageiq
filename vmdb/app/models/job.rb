@@ -85,8 +85,7 @@ class Job < ActiveRecord::Base
     return unless self.is_active?
 
     # Update worker heartbeat
-    worker = MiqQueue.get_worker(self.guid)
-    worker.update_heartbeat unless worker.nil?
+    MiqQueue.get_worker(guid).try(:update_heartbeat)
   end
 
   def self.signal_by_taskid(guid, signal, *args)
