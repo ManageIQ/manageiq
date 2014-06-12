@@ -204,10 +204,16 @@ class MiqSshUtil
   end # suexec
 
   def temp_cmd_file(cmd)
-    temp_remote_script = "/var/tmp/miq-#{Time.now.to_i}.sh"
-    self.exec("echo \"#{cmd}\" > #{temp_remote_script}")
-    remote_cmd = "chmod 700 #{temp_remote_script}; #{temp_remote_script}; rm -f #{temp_remote_script}"
-    yield(remote_cmd)
+    temp_remote_script = Tempfile.new(["miq-", ".sh"], "/var/tmp")
+    temp_file          = temp_remote_script.path
+    begin
+      temp_remote_script.write(cmd)
+      temp_remote_script.close
+      remote_cmd = "chmod 700 #{temp_file}; #{temp_file}; rm -f #{temp_file}"
+      yield(remote_cmd)
+    ensure
+      temp_remote_script.close!
+    end
   end
 
   def self.shell_with_su(host, remote_user, remote_password, su_user, su_password, options={})
