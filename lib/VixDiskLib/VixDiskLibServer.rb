@@ -14,7 +14,7 @@ require 'vmdb-logger'
 class VixDiskLibError < RuntimeError
 end
 
-MIQ_ROOT    = "/var/www/miq/"
+MIQ_ROOT    = "#{File.dirname(__FILE__)}/../../"
 SERVER_PATH = MIQ_ROOT + "lib/VixDiskLib/"
 LOG_DIR     = MIQ_ROOT + "vmdb/log/"
 LOG_FILE    = LOG_DIR + "vim.log"

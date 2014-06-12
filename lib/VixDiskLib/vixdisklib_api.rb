@@ -375,15 +375,42 @@ class VixDiskLibApi
   end
 
   INFO_LOGGER = proc do |fmt, args|
-    @info_logger.nil? ? process_log_args(fmt, args) : @info_logger.call(process_log_args(fmt, args))
+    if @info_logger.nil?
+      if $vim_log
+        $vim_log.info "VMware(VixDiskLib): #{process_log_args(fmt, args)}"
+      else
+        puts "INFO: VMware(VixDiskLib): #{process_log_args(fmt, args)}"
+      end
+    else
+      @info_logger.call(process_log_args(fmt, args))
+    end
+    # @info_logger.nil? ? process_log_args(fmt, args) : @info_logger.call(process_log_args(fmt, args))
   end
 
   WARN_LOGGER = proc do |fmt, args|
-    @warn_logger.nil? ? process_log_args(fmt, args) : @warn_logger.call(process_log_args(fmt, args))
+    if @warn_logger.nil?
+      if $vim_log
+        $vim_log.warn "VMware(VixDiskLib): #{process_log_args(fmt, args)}"
+      else
+        puts "WARN: VMware(VixDiskLib): #{process_log_args(fmt, args)}"
+      end
+    else
+      @warn_logger.call(process_log_args(fmt, args))
+    end
+    # @warn_logger.nil? ? process_log_args(fmt, args) : @warn_logger.call(process_log_args(fmt, args))
   end
 
   ERROR_LOGGER = proc do |fmt, args|
-    @error_logger.nil? ? process_log_args(fmt, args) : @error_logger.call(process_log_args(fmt, args))
+    if @error_logger.nil?
+      if $vim_log
+        $vim_log.error "VMware(VixDiskLib): #{process_log_args(fmt, args)}"
+      else
+        puts "ERROR: VMware(VixDiskLib): #{process_log_args(fmt, args)}"
+      end
+    else
+      @error_logger.call(process_log_args(fmt, args))
+    end
+    # @error_logger.nil? ? process_log_args(fmt, args) : @error_logger.call(process_log_args(fmt, args))
   end
 
   def self.logger_for(level)
@@ -393,9 +420,7 @@ class VixDiskLibApi
   def self.process_log_args(fmt, args)
     buf = FFI::MemoryPointer.new(:char, 1024, true)
     VixDiskLib.vsnprintf(buf, 1024, fmt, args)
-    real_buf = buf.read_string
-    puts real_buf
-    real_buf
+    buf.read_string.chomp
   end
 
   def self.check_error(err, method)
