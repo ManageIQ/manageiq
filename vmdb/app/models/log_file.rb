@@ -331,35 +331,6 @@ class LogFile < ActiveRecord::Base
 
   private
 
-  def build_path_ftp(ftp, path)
-    current = nil
-    path.split("/").each do |p|
-      # Do not attempt to change to a blank directory
-      next if p.blank?
-      current = current.nil? ? p : [current, p].join("/")
-      begin
-        # Keep track of where we were before changing the directory
-        pwd = ftp.pwd
-        $log.info("Checking Directory: [#{current}] from [#{pwd}]")
-        ftp.chdir(current)
-      rescue Net::FTPPermError => err
-        # directory does not exist
-      rescue => err
-        raise "#{err.message}, changing to remote directory '#{current}' from '#{pwd}'" unless code.to_i == 550 # The system cannot find the path specified.
-      else
-        $log.info("Directory: [#{current}] exists")
-
-        # Change back to the original directory
-        ftp.chdir(pwd)
-        next # directory already exists
-      end
-
-      $log.info("Creating Directory: [#{current}] from [#{ftp.pwd}]")
-      ftp.mkdir(current)
-    end
-    current
-  end
-
   def self._request_logs(options)
     taskid = options[:taskid]
     klass  = options.delete(:klass).to_s
