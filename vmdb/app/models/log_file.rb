@@ -230,48 +230,6 @@ class LogFile < ActiveRecord::Base
     @@do_ping ||= @@ping_depot_options[:ping_depot] == true ? true : false
   end
 
-  def self.connect_ftp(settings)
-    log_header = "MIQ(#{self.name}-connect_ftp)"
-    begin
-      scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(settings[:uri]))
-
-      # Only try the tcp ping if enabled
-      if self.do_ping?
-        $log.info("#{log_header} pinging: #{host} on #{21} with timeout: #{self.ping_timeout}")
-
-        # Added here until ftp is refactored into a separate class
-        require 'net/ping'
-        begin
-          # To prevent "no route to host" type issues, assume refused connection indicates the host is reachable
-          before = Net::Ping::TCP.econnrefused
-          Net::Ping::TCP.econnrefused = true
-
-          # Try to ping the host on port 21 before connecting
-          tcp_conn = Net::Ping::TCP.new(host, 21, self.ping_timeout)
-        ensure
-          Net::Ping::TCP.econnrefused = before
-        end
-        res = tcp_conn.ping
-        $log.info("#{log_header} pinging: #{host} on #{21} with timeout: #{self.ping_timeout}...result: #{res}")
-        raise "Connect: Cannot communicate with: #{host} - verify the URI host value and your DNS settings" unless res
-      end
-      $log.info("#{log_header} Connecting to [#{settings[:uri]}]...")
-      ftp = Net::FTP.new(host)
-
-      # Use passive mode to avoid firewall issues with the ftp server initiating connections to the client's data port
-      # see http://slacksite.com/other/ftp.html#passive
-      ftp.passive = true
-      ftp.debug_mode = true if settings[:debug]
-      ftp.login(settings[:username], settings[:password])
-    rescue => err
-      msg = "#{err.message}, connecting to FTP: [#{settings[:uri]}], Username: [#{settings[:username]}]"
-      $log.error("#{log_header} #{msg}")
-      raise msg
-    end
-    $log.info("#{log_header} Connecting to [#{settings[:uri]}]...Complete")
-    return ftp
-  end
-
   def upload_log_file_db
     log_header       = "MIQ(#{self.class.name}-upload_log_file_db)"
     self.binary_blob = BinaryBlob.new(:name => "logs", :data_type => "zip")
