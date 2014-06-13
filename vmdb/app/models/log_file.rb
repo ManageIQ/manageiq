@@ -307,6 +307,10 @@ class LogFile < ActiveRecord::Base
     post_upload_tasks
   end
 
+  def remove_log_file_ftp
+    file_depot.remove_file(self)
+  end
+
   def destination_directory
     File.join("#{resource.zone.name}_#{resource.zone.id}", "#{resource.name}_#{resource.id}")
   end
@@ -319,28 +323,6 @@ class LogFile < ActiveRecord::Base
 
   def post_upload_tasks
     FileUtils.rm_f(local_file) if File.exist?(local_file)
-  end
-
-  def remove_log_file_ftp
-    log_header = "MIQ(#{self.class.name}-remove_log_file_ftp)"
-    $log.info("#{log_header} Removing log file [#{self.log_uri}]...")
-
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(self.log_uri))
-    path = URI.decode(path)
-
-    ftp = self.class.connect_ftp(file_depot.depot_hash.merge(:uri => log_uri))
-
-    begin
-      $log.info("#{log_header} Deleting file [#{path}]...")
-      ftp.delete(path)
-    rescue => err
-      msg = "#{err.message}', deleting [#{path}] on FTP: [#{file_depot.uri}], Username: [#{file_depot.authentication_userid}]"
-      $log.error("#{log_header} #{msg}")
-      raise msg
-    ensure
-      ftp.close
-    end
-    $log.info("#{log_header} Deleting file [#{path}]...Complete")
   end
 
   def file_exists_ftp?(existing_ftp = nil)
