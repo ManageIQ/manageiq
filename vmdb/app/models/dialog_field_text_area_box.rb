@@ -1,0 +1,3 @@
+class DialogFieldTextAreaBox < DialogFieldTextBox
+
+end

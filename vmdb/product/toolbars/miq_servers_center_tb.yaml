@@ -1,0 +1,31 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqServer
+:button_groups:
+- :name: task_editing
+  :items:
+  - :button: server_delete
+    :image: delete
+    :title: 'Delete Server #{session[:tree_selection].name} [#{session[:tree_selection].id}]'
+    :url_parms: 'main_div'
+    :confirm: 'Do you want to delete Server #{session[:tree_selection].name} [#{session[:tree_selection].id}]?'
+  - :button: role_suspend
+    :image: suspend
+    :title: 'Suspend the Role on Server'
+    :url_parms: 'main_div'
+    :confirm: 'Suspend the Role on Server?'
+  - :button: role_start
+    :image: start
+    :title: 'Start the Role on Server'
+    :url_parms: 'main_div'
+    :confirm: 'Start the Role on Server?'
+  - :button: promote_server
+    :image: set_master
+    :title: 'Promote Server for Role'
+    :url_parms: 'main_div'
+  - :button: demote_server
+    :image: remove_master
+    :title: 'Demote Server for Role'
+    :url_parms: 'main_div'

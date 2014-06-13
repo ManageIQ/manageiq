@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: best_fit_inline
+    inherits: 
+    description: 
+  fields:
+  - vm:
+      value: ${#source_vm}
+  - meth5:
+      value: least_utilized()

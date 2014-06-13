@@ -1,0 +1,2 @@
+class FlavorAmazon < Flavor
+end

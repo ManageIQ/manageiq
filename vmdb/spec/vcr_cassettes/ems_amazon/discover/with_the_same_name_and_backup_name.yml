@@ -1,0 +1,1624 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://ec2.us-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeRegions&Signature=IrgMYuCFHoJ%2BDTUPyX5Za96QpYc1j8T4B5thW85%2BE1E%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A13Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '219'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:19 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeRegionsResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>3b726522-cace-49a3-a0e7-e638f70e7d82</requestId>\n
+        \   <regionInfo>\n        <item>\n            <regionName>eu-west-1</regionName>\n
+        \           <regionEndpoint>ec2.eu-west-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>sa-east-1</regionName>\n
+        \           <regionEndpoint>ec2.sa-east-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>us-east-1</regionName>\n
+        \           <regionEndpoint>ec2.us-east-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>ap-northeast-1</regionName>\n
+        \           <regionEndpoint>ec2.ap-northeast-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>us-west-2</regionName>\n
+        \           <regionEndpoint>ec2.us-west-2.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>us-west-1</regionName>\n
+        \           <regionEndpoint>ec2.us-west-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>ap-southeast-1</regionName>\n
+        \           <regionEndpoint>ec2.ap-southeast-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>ap-southeast-2</regionName>\n
+        \           <regionEndpoint>ec2.ap-southeast-2.amazonaws.com</regionEndpoint>\n
+        \       </item>\n    </regionInfo>\n</DescribeRegionsResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:13 GMT
+- request:
+    method: post
+    uri: https://ec2.eu-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=%2B%2BDRXB0FTub7gYusJYJrmlntLzdmEPttfVje167HpWI%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A13Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '221'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:19 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>158b072e-5122-4aae-a5ff-1e419cdd3cd7</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:14 GMT
+- request:
+    method: post
+    uri: https://ec2.eu-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=ROXViTJrGruhsibWoMSW4q3X7WmAygtMPmBcHl92bvw%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A14Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '227'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:20 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>a45ad078-cbd4-4649-9e24-6295899a0937</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:15 GMT
+- request:
+    method: post
+    uri: https://ec2.eu-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=9sNGlWIkzokEInH%2BAWJK22dBMUYgRkPU4efM0RW9jpA%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A15Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '236'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:21 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>72f9dd87-9de1-4903-bf83-facbabf2f4d5</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:15 GMT
+- request:
+    method: post
+    uri: https://ec2.sa-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=IwE9zegVAn5p39QTcqDkxTAguk2QA%2BcJVZmLsxcP5vM%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A15Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '219'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:22 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>4464338b-8719-4804-821b-99e562cdd96c</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:16 GMT
+- request:
+    method: post
+    uri: https://ec2.sa-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=oCdPe430kG5cYisshK8gnbExmBJE6QJkRdsxgOrj9HI%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A16Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '227'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:24 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>58ace5cc-6d50-4c69-91ba-08b1be666e70</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:18 GMT
+- request:
+    method: post
+    uri: https://ec2.sa-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=y%2FPO9qtowMoi613TmTGgpmRVVHzUvnDqwcS%2B49a5Zc8%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A18Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '238'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:25 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>00b64dac-b7d4-4735-a2c5-c07519a4baf7</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:19 GMT
+- request:
+    method: post
+    uri: https://ec2.us-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=UIXQJqyTThxI7qPkx5%2FNCdOQHeUijqMcZLeo9%2FNZGaM%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A19Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '221'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:25 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>aa25cb7f-30cd-4d23-a59e-a5247201ad47</requestId>\n
+        \   <reservationSet>\n        <item>\n            <reservationId>r-1842f370</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet/>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-8b5739f2</instanceId>\n
+        \                   <imageId>ami-5769193e</imageId>\n                    <instanceState>\n
+        \                       <code>16</code>\n                        <name>running</name>\n
+        \                   </instanceState>\n                    <privateDnsName>ip-10-0-0-254.ec2.internal</privateDnsName>\n
+        \                   <dnsName/>\n                    <reason/>\n                    <keyName>EmsRefreshSpec-KeyPair</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-09-23T20:11:52.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1e</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-1eceaf77</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <subnetId>subnet-f849ff96</subnetId>\n
+        \                   <vpcId>vpc-ff49ff91</vpcId>\n                    <privateIpAddress>10.0.0.254</privateIpAddress>\n
+        \                   <sourceDestCheck>true</sourceDestCheck>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-80f755ef</groupId>\n
+        \                           <groupName>EmsRefreshSpec-SecurityGroup-VPC</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-67606d2d</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-09-23T20:11:57.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>aPCzL1379967112359</clientToken>\n                    <tagSet>\n
+        \                       <item>\n                            <key>Name</key>\n
+        \                           <value>EmsRefreshSpec-PoweredOn-VPC</value>\n
+        \                       </item>\n                    </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet>\n                        <item>\n
+        \                           <networkInterfaceId>eni-ad25f7cc</networkInterfaceId>\n
+        \                           <subnetId>subnet-f849ff96</subnetId>\n                            <vpcId>vpc-ff49ff91</vpcId>\n
+        \                           <description>Primary network interface</description>\n
+        \                           <ownerId>123456789012</ownerId>\n                            <status>in-use</status>\n
+        \                           <macAddress>22:d8:dc:13:0c:ca</macAddress>\n                            <privateIpAddress>10.0.0.254</privateIpAddress>\n
+        \                           <sourceDestCheck>true</sourceDestCheck>\n                            <groupSet>\n
+        \                               <item>\n                                    <groupId>sg-80f755ef</groupId>\n
+        \                                   <groupName>EmsRefreshSpec-SecurityGroup-VPC</groupName>\n
+        \                               </item>\n                            </groupSet>\n
+        \                           <attachment>\n                                <attachmentId>eni-attach-05fac66f</attachmentId>\n
+        \                               <deviceIndex>0</deviceIndex>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-09-23T20:11:52.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </attachment>\n                            <privateIpAddressesSet>\n
+        \                               <item>\n                                    <privateIpAddress>10.0.0.254</privateIpAddress>\n
+        \                                   <primary>true</primary>\n                                </item>\n
+        \                           </privateIpAddressesSet>\n                        </item>\n
+        \                   </networkInterfaceSet>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-1405097e</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-fe4eb794</instanceId>\n                    <imageId>ami-67bc0b0e</imageId>\n
+        \                   <instanceState>\n                        <code>80</code>\n
+        \                       <name>stopped</name>\n                    </instanceState>\n
+        \                   <privateDnsName/>\n                    <dnsName/>\n                    <reason>User
+        initiated (2013-08-27 20:24:50 GMT)</reason>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2013-08-27T20:22:57.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1b</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-825ea7eb</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-347f9b5d</groupId>\n                            <groupName>default</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.UserInitiatedShutdown</code>\n                        <message>Client.UserInitiatedShutdown:
+        User initiated shutdown</message>\n                    </stateReason>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-965d9ccd</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-05-28T19:50:10.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>ca8c2648-c7cf-11e2-b186-000c29d7786f</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>JHTESTEC2</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-4a660b26</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-9eba0af5</groupId>\n
+        \                   <groupName>quicklaunch-1</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-1cb54b70</instanceId>\n                    <imageId>ami-7d0c6314</imageId>\n
+        \                   <instanceState>\n                        <code>80</code>\n
+        \                       <name>stopped</name>\n                    </instanceState>\n
+        \                   <privateDnsName/>\n                    <dnsName/>\n                    <reason>User
+        initiated (2013-08-06 15:09:22 GMT)</reason>\n                    <keyName>jf</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2013-08-06T14:41:01.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-1eceaf77</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-9eba0af5</groupId>\n                            <groupName>quicklaunch-1</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.UserInitiatedShutdown</code>\n                        <message>Client.UserInitiatedShutdown:
+        User initiated shutdown</message>\n                    </stateReason>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-bbc8ebfb</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-08-03T01:37:08.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>IzdyW1375493826051</clientToken>\n                    <tagSet>\n
+        \                       <item>\n                            <key>Name</key>\n
+        \                           <value>CloudFormsVNCPlugin-Build-Linux</value>\n
+        \                       </item>\n                    </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-b71de6d7</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-cf9b0ea4</groupId>\n
+        \                   <groupName>EmsRefreshSpec-SecurityGroup2</groupName>\n
+        \               </item>\n                <item>\n                    <groupId>sg-88af19e3</groupId>\n
+        \                   <groupName>EmsRefreshSpec-SecurityGroup</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-7ab3c301</instanceId>\n
+        \                   <imageId>ami-5769193e</imageId>\n                    <instanceState>\n
+        \                       <code>16</code>\n                        <name>running</name>\n
+        \                   </instanceState>\n                    <privateDnsName>ip-10-46-222-159.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-54-221-202-53.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>EmsRefreshSpec-KeyPair</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-09-03T21:28:55.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1b</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-1eceaf77</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.46.222.159</privateIpAddress>\n
+        \                   <ipAddress>54.221.202.53</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-cf9b0ea4</groupId>\n
+        \                           <groupName>EmsRefreshSpec-SecurityGroup2</groupName>\n
+        \                       </item>\n                        <item>\n                            <groupId>sg-88af19e3</groupId>\n
+        \                           <groupName>EmsRefreshSpec-SecurityGroup</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-8e53a4f9</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-09-03T21:28:58.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                        <item>\n
+        \                           <deviceName>/dev/sdf</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-b2f00ac5</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-09-12T01:04:50.000Z</attachTime>\n
+        \                               <deleteOnTermination>false</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>ISJix1378243734879</clientToken>\n                    <tagSet>\n
+        \                       <item>\n                            <key>Name</key>\n
+        \                           <value>EmsRefreshSpec-PoweredOn-Basic</value>\n
+        \                       </item>\n                    </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-1ceca77e</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-302eb55a</instanceId>\n                    <imageId>ami-edaa1f84</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-165-0-134.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-54-227-61-232.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.medium</instanceType>\n                    <launchTime>2013-08-26T16:40:15.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-a71cf9ce</kernelId>\n
+        \                   <ramdiskId>ari-a51cf9cc</ramdiskId>\n                    <monitoring>\n
+        \                       <state>disabled</state>\n                    </monitoring>\n
+        \                   <privateIpAddress>10.165.0.134</privateIpAddress>\n                    <ipAddress>54.227.61.232</ipAddress>\n
+        \                   <groupSet>\n                        <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>instance-store</rootDeviceType>\n                    <blockDeviceMapping/>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>2e674906-0e6e-11e3-995c-001d09b066bf</clientToken>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-17b64272</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-347f9b5d</groupId>\n                    <groupName>default</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-8ff1e8f6</instanceId>\n
+        \                   <imageId>ami-bda014d4</imageId>\n                    <instanceState>\n
+        \                       <code>16</code>\n                        <name>running</name>\n
+        \                   </instanceState>\n                    <privateDnsName>ip-10-147-226-179.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-54-226-104-85.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-09-21T20:53:41.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-08ed0761</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.147.226.179</privateIpAddress>\n
+        \                   <ipAddress>54.226.104.85</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-8a768cc9</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-09-21T20:53:45.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>e56a4ad6-22ff-11e3-bb5b-005056b25643</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>WordPress_DB_0008</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-a1d047c4</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-ca216ba3</instanceId>\n                    <imageId>ami-bda014d4</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-179-10-125.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-107-21-194-200.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-08-27T21:30:48.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-08ed0761</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.179.10.125</privateIpAddress>\n
+        \                   <ipAddress>107.21.194.200</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-27a9a367</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-08-27T21:30:52.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>f056a092-0f5f-11e3-bb5b-005056b25643</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>WordPress_WEB_0004</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-62476206</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-cd2a56b6</instanceId>\n                    <imageId>ami-edaa1f84</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-46-141-122.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-50-17-158-185.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>rpo</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2012-08-16T20:28:06.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1b</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-a71cf9ce</kernelId>\n
+        \                   <ramdiskId>ari-a51cf9cc</ramdiskId>\n                    <monitoring>\n
+        \                       <state>enabled</state>\n                    </monitoring>\n
+        \                   <privateIpAddress>10.46.141.122</privateIpAddress>\n                    <ipAddress>50.17.158.185</ipAddress>\n
+        \                   <groupSet>\n                        <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>instance-store</rootDeviceType>\n                    <blockDeviceMapping/>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>e2496d10-e7e0-11e1-9d05-005056b25af6</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>Test-Xav</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-1eab967a</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-8f84dbf4</instanceId>\n                    <imageId>ami-20e90e49</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-190-85-52.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-23-22-242-93.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>rpo</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2012-08-20T17:18:01.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1b</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-a71cf9ce</kernelId>\n
+        \                   <ramdiskId>ari-a51cf9cc</ramdiskId>\n                    <monitoring>\n
+        \                       <state>enabled</state>\n                    </monitoring>\n
+        \                   <privateIpAddress>10.190.85.52</privateIpAddress>\n                    <ipAddress>23.22.242.93</ipAddress>\n
+        \                   <groupSet>\n                        <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>instance-store</rootDeviceType>\n                    <blockDeviceMapping/>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>fe53055e-eaea-11e1-8aab-3c0754fffed3</clientToken>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-a64546c2</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-347f9b5d</groupId>\n                    <groupName>default</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-f9e9c082</instanceId>\n
+        \                   <imageId>ami-59863230</imageId>\n                    <instanceState>\n
+        \                       <code>80</code>\n                        <name>stopped</name>\n
+        \                   </instanceState>\n                    <privateDnsName/>\n
+        \                   <dnsName/>\n                    <reason/>\n                    <amiLaunchIndex>0</amiLaunchIndex>\n
+        \                   <productCodes/>\n                    <instanceType>m1.small</instanceType>\n
+        \                   <launchTime>2012-08-22T15:12:46.000Z</launchTime>\n                    <placement>\n
+        \                       <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <platform>windows</platform>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-347f9b5d</groupId>\n                            <groupName>default</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.InstanceInitiatedShutdown</code>\n                        <message>Client.InstanceInitiatedShutdown:
+        Instance initiated shutdown</message>\n                    </stateReason>\n
+        \                   <architecture>i386</architecture>\n                    <rootDeviceType>ebs</rootDeviceType>\n
+        \                   <rootDeviceName>/dev/sda1</rootDeviceName>\n                    <blockDeviceMapping>\n
+        \                       <item>\n                            <deviceName>/dev/sda1</deviceName>\n
+        \                           <ebs>\n                                <volumeId>vol-c2c72fb9</volumeId>\n
+        \                               <status>attached</status>\n                                <attachTime>2012-08-22T11:33:49.000Z</attachTime>\n
+        \                               <deleteOnTermination>false</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>hvm</virtualizationType>\n                    <clientToken/>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>POCTEST1</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-38c0cd5c</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-cf7144b4</instanceId>\n                    <imageId>ami-edaa1f84</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-141-134-252.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-174-129-183-120.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>bill</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2012-08-22T18:33:01.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1b</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-a71cf9ce</kernelId>\n
+        \                   <ramdiskId>ari-a51cf9cc</ramdiskId>\n                    <monitoring>\n
+        \                       <state>disabled</state>\n                    </monitoring>\n
+        \                   <privateIpAddress>10.141.134.252</privateIpAddress>\n
+        \                   <ipAddress>174.129.183.120</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>instance-store</rootDeviceType>\n                    <blockDeviceMapping/>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>cd854056-ec87-11e1-853b-005056b25af6</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>VMWorld_001</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-40171f24</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-2fd8eb54</instanceId>\n                    <imageId>ami-0d6fdb64</imageId>\n
+        \                   <instanceState>\n                        <code>80</code>\n
+        \                       <name>stopped</name>\n                    </instanceState>\n
+        \                   <privateDnsName/>\n                    <dnsName/>\n                    <reason/>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2012-08-23T11:43:56.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <platform>windows</platform>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-347f9b5d</groupId>\n                            <groupName>default</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.InstanceInitiatedShutdown</code>\n                        <message>Client.InstanceInitiatedShutdown:
+        Instance initiated shutdown</message>\n                    </stateReason>\n
+        \                   <architecture>i386</architecture>\n                    <rootDeviceType>ebs</rootDeviceType>\n
+        \                   <rootDeviceName>/dev/sda1</rootDeviceName>\n                    <blockDeviceMapping>\n
+        \                       <item>\n                            <deviceName>/dev/sda1</deviceName>\n
+        \                           <ebs>\n                                <volumeId>vol-48cc3d33</volumeId>\n
+        \                               <status>attached</status>\n                                <attachTime>2012-08-23T09:15:14.000Z</attachTime>\n
+        \                               <deleteOnTermination>false</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>hvm</virtualizationType>\n                    <clientToken/>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>POCTEST2</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-be9787da</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-25d0d75e</instanceId>\n                    <imageId>ami-cd3a8ea4</imageId>\n
+        \                   <instanceState>\n                        <code>80</code>\n
+        \                       <name>stopped</name>\n                    </instanceState>\n
+        \                   <privateDnsName/>\n                    <dnsName/>\n                    <reason>Server.InternalError</reason>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2012-08-24T10:12:41.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <platform>windows</platform>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-347f9b5d</groupId>\n                            <groupName>default</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.CreatedStopped</code>\n                        <message>Client.CreatedStopped:
+        Instance created in the stopped state</message>\n                    </stateReason>\n
+        \                   <architecture>i386</architecture>\n                    <rootDeviceType>ebs</rootDeviceType>\n
+        \                   <rootDeviceName>/dev/sda1</rootDeviceName>\n                    <blockDeviceMapping>\n
+        \                       <item>\n                            <deviceName>/dev/sda1</deviceName>\n
+        \                           <ebs>\n                                <volumeId>vol-2e48b055</volumeId>\n
+        \                               <status>attached</status>\n                                <attachTime>2012-08-24T10:42:34.000Z</attachTime>\n
+        \                               <deleteOnTermination>false</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>hvm</virtualizationType>\n                    <clientToken/>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-4c5a4828</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-347f9b5d</groupId>\n                    <groupName>default</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-43111038</instanceId>\n
+        \                   <imageId>ami-5d209434</imageId>\n                    <instanceState>\n
+        \                       <code>80</code>\n                        <name>stopped</name>\n
+        \                   </instanceState>\n                    <privateDnsName/>\n
+        \                   <dnsName/>\n                    <reason>User initiated
+        (2012-09-03 10:37:43 GMT)</reason>\n                    <amiLaunchIndex>0</amiLaunchIndex>\n
+        \                   <productCodes/>\n                    <instanceType>m1.small</instanceType>\n
+        \                   <launchTime>2012-09-03T10:08:41.000Z</launchTime>\n                    <placement>\n
+        \                       <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <platform>windows</platform>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-347f9b5d</groupId>\n                            <groupName>default</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.UserInitiatedShutdown</code>\n                        <message>Client.UserInitiatedShutdown:
+        User initiated shutdown</message>\n                    </stateReason>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-e6a3599d</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2012-08-24T14:35:14.000Z</attachTime>\n
+        \                               <deleteOnTermination>false</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>hvm</virtualizationType>\n                    <clientToken/>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-14392470</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-347f9b5d</groupId>\n                    <groupName>default</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-9f5c5fe4</instanceId>\n
+        \                   <imageId>ami-edaa1f84</imageId>\n                    <instanceState>\n
+        \                       <code>16</code>\n                        <name>running</name>\n
+        \                   </instanceState>\n                    <privateDnsName>ip-10-4-218-222.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-50-17-128-56.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2012-08-24T17:51:07.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1b</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-a71cf9ce</kernelId>\n
+        \                   <ramdiskId>ari-a51cf9cc</ramdiskId>\n                    <monitoring>\n
+        \                       <state>disabled</state>\n                    </monitoring>\n
+        \                   <privateIpAddress>10.4.218.222</privateIpAddress>\n                    <ipAddress>50.17.128.56</ipAddress>\n
+        \                   <groupSet>\n                        <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>instance-store</rootDeviceType>\n                    <blockDeviceMapping/>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>47cca8c6-ee14-11e1-8ff0-001a4a0a0103</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>VMWorld_Test_003</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-6aaa680d</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-175f6b7a</instanceId>\n                    <imageId>ami-bda014d4</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-242-227-96.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-107-21-135-54.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-08-27T21:30:59.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-08ed0761</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.242.227.96</privateIpAddress>\n
+        \                   <ipAddress>107.21.135.54</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-cba9a38b</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-08-27T21:31:03.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>f709e872-0f5f-11e3-8038-005056b25643</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>WordPress_DB_0006</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-5cf8593b</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-c0e4c0a3</instanceId>\n                    <imageId>ami-edaa1f84</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-164-54-172.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-54-211-179-213.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.medium</instanceType>\n                    <launchTime>2013-08-26T16:50:32.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-a71cf9ce</kernelId>\n
+        \                   <ramdiskId>ari-a51cf9cc</ramdiskId>\n                    <monitoring>\n
+        \                       <state>disabled</state>\n                    </monitoring>\n
+        \                   <privateIpAddress>10.164.54.172</privateIpAddress>\n                    <ipAddress>54.211.179.213</ipAddress>\n
+        \                   <groupSet>\n                        <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>instance-store</rootDeviceType>\n                    <blockDeviceMapping/>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>9ecab93e-0e6f-11e3-9bcc-001d09b066bf</clientToken>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-37ab0a50</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-347f9b5d</groupId>\n                    <groupName>default</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-06359e7c</instanceId>\n
+        \                   <imageId>ami-67bc0b0e</imageId>\n                    <instanceState>\n
+        \                       <code>80</code>\n                        <name>stopped</name>\n
+        \                   </instanceState>\n                    <privateDnsName/>\n
+        \                   <dnsName/>\n                    <reason>User initiated
+        (2012-10-11 18:45:53 GMT)</reason>\n                    <keyName>rpo</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.large</instanceType>\n                    <launchTime>2012-10-10T17:51:21.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1b</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-825ea7eb</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-347f9b5d</groupId>\n                            <groupName>default</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.UserInitiatedShutdown</code>\n                        <message>Client.UserInitiatedShutdown:
+        User initiated shutdown</message>\n                    </stateReason>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-109ff86b</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2012-09-05T00:27:47.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>tgwIr1346804863504</clientToken>\n                    <tagSet>\n
+        \                       <item>\n                            <key>Name</key>\n
+        \                           <value>rpo-dev</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-243f0343</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-acfb19cb</instanceId>\n                    <imageId>ami-bda014d4</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-212-181-183.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-54-226-13-190.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-09-21T20:53:41.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-08ed0761</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.212.181.183</privateIpAddress>\n
+        \                   <ipAddress>54.226.13.190</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-cc768c8f</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-09-21T20:53:43.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>e4ff31e2-22ff-11e3-b781-005056b25643</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>WordPress_WEB_0005</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-aafdabcc</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-3345e45e</instanceId>\n                    <imageId>ami-bda014d4</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-179-47-36.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-54-242-233-138.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-08-25T06:37:27.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-08ed0761</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.179.47.36</privateIpAddress>\n
+        \                   <ipAddress>54.242.233.138</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-61d3dd21</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-08-25T06:37:30.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>cf083db2-0d50-11e3-b315-005056b25643</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>WordPress_DB_0005</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-d3bbe9b5</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-1b48f567</instanceId>\n                    <imageId>ami-feaa1297</imageId>\n
+        \                   <instanceState>\n                        <code>80</code>\n
+        \                       <name>stopped</name>\n                    </instanceState>\n
+        \                   <privateDnsName/>\n                    <dnsName/>\n                    <reason>Server.InternalError</reason>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>m1.small</instanceType>\n                    <launchTime>2012-10-25T19:32:04.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <platform>windows</platform>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-347f9b5d</groupId>\n                            <groupName>default</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.CreatedStopped</code>\n                        <message>Client.CreatedStopped:
+        Instance created in the stopped state</message>\n                    </stateReason>\n
+        \                   <architecture>i386</architecture>\n                    <rootDeviceType>ebs</rootDeviceType>\n
+        \                   <rootDeviceName>/dev/sda1</rootDeviceName>\n                    <blockDeviceMapping>\n
+        \                       <item>\n                            <deviceName>/dev/sda1</deviceName>\n
+        \                           <ebs>\n                                <volumeId>vol-3aa3cf47</volumeId>\n
+        \                               <status>attached</status>\n                                <attachTime>2012-10-25T20:00:11.000Z</attachTime>\n
+        \                               <deleteOnTermination>false</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>hvm</virtualizationType>\n                    <clientToken/>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-a0fec6c6</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-88af19e3</groupId>\n                    <groupName>EmsRefreshSpec-SecurityGroup</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-79188d11</instanceId>\n
+        \                   <imageId>ami-5769193e</imageId>\n                    <instanceState>\n
+        \                       <code>80</code>\n                        <name>stopped</name>\n
+        \                   </instanceState>\n                    <privateDnsName/>\n
+        \                   <dnsName/>\n                    <reason>User initiated
+        (2013-08-31 00:21:28 GMT)</reason>\n                    <keyName>EmsRefreshSpec-KeyPair</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-08-31T00:20:34.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-1eceaf77</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <groupSet>\n                        <item>\n
+        \                           <groupId>sg-88af19e3</groupId>\n                            <groupName>EmsRefreshSpec-SecurityGroup</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <stateReason>\n
+        \                       <code>Client.UserInitiatedShutdown</code>\n                        <message>Client.UserInitiatedShutdown:
+        User initiated shutdown</message>\n                    </stateReason>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-b76172f7</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-08-31T00:20:37.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>jltmq1377908434067</clientToken>\n                    <tagSet>\n
+        \                       <item>\n                            <key>Name</key>\n
+        \                           <value>EmsRefreshSpec-PoweredOff</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-cb9b18b2</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-347f9b5d</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-6eed600f</instanceId>\n                    <imageId>ami-bda014d4</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-164-69-41.ec2.internal</privateDnsName>\n
+        \                   <dnsName>ec2-54-234-163-168.compute-1.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>miq</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-08-25T06:37:29.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-east-1d</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-08ed0761</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.164.69.41</privateIpAddress>\n
+        \                   <ipAddress>54.234.163.168</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-347f9b5d</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-63d3dd23</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-08-25T06:37:32.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>d0032394-0d50-11e3-b315-005056b25643</clientToken>\n
+        \                   <tagSet>\n                        <item>\n                            <key>Name</key>\n
+        \                           <value>WordPress_WEB_0003</value>\n                        </item>\n
+        \                   </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n    </reservationSet>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:19 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-northeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=AMDQzASnr3fLlPHTRh10FXmXAiAUXn461cQTPyqa8VQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A19Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '217'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:26 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>d07a86f4-3769-4975-aa70-6f98866bf0d8</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:20 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-northeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=xUEkXAl7797PR2GdLbAWesP3SyjXJamXe%2BbTE4RhxnE%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A20Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '229'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:28 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>fa33c30d-69b4-4ed3-8605-a2104d927374</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:21 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-northeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=734yLgMZsa8W%2FjsH2nNTRzTcj64kTciB3PeFLWtgGg8%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A21Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '236'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:29 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>3a14badb-95b9-49c3-8156-4cbad55f70a1</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:22 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=WGv0eMX48HQy4oXNaqtpsmH%2FEjrCUg5TcP%2Bcu8qU%2BBc%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A22Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '223'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:29 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>23784764-de0d-4acf-bc1c-a0dae0b738cd</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:23 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=lG9FlSuYreBPX9jLaBYsHyIOka%2FjOCQySN4198RzmOo%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A23Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '229'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:30 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>43668131-6c4d-4cdc-8b8d-763a355f0037</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:24 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=PDMyVS1P5zksXGsC0UheLCYKsheDqFbRmO5xPRDFw3o%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A24Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '234'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:31 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>a25b70e8-3f03-48e3-adc9-02a5a4ade71a</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:25 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=EQuTsvyvHV3zXxlamb%2F2qp9LEvmlh3CGFq2JwS8hc4M%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A25Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '219'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:31 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>ecb3deed-55e2-43c6-80ca-d828c358ed20</requestId>\n
+        \   <reservationSet>\n        <item>\n            <reservationId>r-18afd25e</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-e94055ac</groupId>\n                    <groupName>default</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-fdd815a4</instanceId>\n
+        \                   <imageId>ami-3bc9997e</imageId>\n                    <instanceState>\n
+        \                       <code>16</code>\n                        <name>running</name>\n
+        \                   </instanceState>\n                    <privateDnsName>ip-10-160-177-126.us-west-1.compute.internal</privateDnsName>\n
+        \                   <dnsName>ec2-184-169-243-31.us-west-1.compute.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <amiLaunchIndex>0</amiLaunchIndex>\n
+        \                   <productCodes/>\n                    <instanceType>m1.small</instanceType>\n
+        \                   <launchTime>2012-10-01T18:11:04.000Z</launchTime>\n                    <placement>\n
+        \                       <availabilityZone>us-west-1a</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-99a0f1dc</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.160.177.126</privateIpAddress>\n
+        \                   <ipAddress>184.169.243.31</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-e94055ac</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-93f7b6bd</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2012-10-01T18:11:08.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>5bfd4308-0bf3-11e2-96b9-a4b197fffe9a</clientToken>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-9fde5ac4</reservationId>\n
+        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
+        \                   <groupId>sg-2b87746f</groupId>\n                    <groupName>EmsRefreshSpec-SecurityGroup-OtherRegion</groupName>\n
+        \               </item>\n            </groupSet>\n            <instancesSet>\n
+        \               <item>\n                    <instanceId>i-dc1ee486</instanceId>\n
+        \                   <imageId>ami-183e175d</imageId>\n                    <instanceState>\n
+        \                       <code>16</code>\n                        <name>running</name>\n
+        \                   </instanceState>\n                    <privateDnsName>ip-10-191-129-95.us-west-1.compute.internal</privateDnsName>\n
+        \                   <dnsName>ec2-204-236-137-154.us-west-1.compute.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <keyName>EmsRefreshSpec-KeyPair-OtherRegion</keyName>\n
+        \                   <amiLaunchIndex>0</amiLaunchIndex>\n                    <productCodes/>\n
+        \                   <instanceType>t1.micro</instanceType>\n                    <launchTime>2013-08-31T00:12:43.000Z</launchTime>\n
+        \                   <placement>\n                        <availabilityZone>us-west-1a</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-36b79b73</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.191.129.95</privateIpAddress>\n
+        \                   <ipAddress>204.236.137.154</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-2b87746f</groupId>\n
+        \                           <groupName>EmsRefreshSpec-SecurityGroup-OtherRegion</groupName>\n
+        \                       </item>\n                    </groupSet>\n                    <architecture>x86_64</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-e2d90ab6</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2013-08-31T00:12:46.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>TYBNt1377907963036</clientToken>\n                    <tagSet>\n
+        \                       <item>\n                            <key>Name</key>\n
+        \                           <value>EmsRefreshSpec-PoweredOn-OtherRegion</value>\n
+        \                       </item>\n                    </tagSet>\n                    <hypervisor>xen</hypervisor>\n
+        \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
+        \               </item>\n            </instancesSet>\n        </item>\n    </reservationSet>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:25 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=9V3Hsx6Bjzo1OnqXwzffc5lGTDIZLtZ1vbrrpemO3kk%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A25Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '217'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:32 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>73b74a51-9dd6-404f-93be-2590ff6169b6</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:27 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=AnKBDO0QTJe6uln4VEiZPgsxLvpomvv9bRd4Xfbq0Mg%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A27Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '227'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:34 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>cd5f78d1-588b-4775-ab57-f6f3f3748951</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:28 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=LB1jJVsS2wOp8cdU92SHi0BpESQ9lXjdJAfVKnZ0Mxc%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A28Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '234'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:35 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>6127428e-cfc7-4614-9080-f6c4cc8de38d</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:30 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=B%2FohtAzWn45%2BQ6NSvl%2BKBiIP%2FLffvrGj%2FMeszmozpAI%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A30Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '227'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:37 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>50aab9c7-f214-410d-a0df-09a2208589d0</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:31 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=7c1iSFwE%2FpLBGUCksNi%2B6rMHsPPdu1eCGrZDhDapP6A%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A31Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '231'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:37 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>83387c78-43d3-48ae-870f-568ec215ed4f</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:32 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=vVwC5c7oADSMCyQ5cp%2BbyhdJetu66P3Ku39s3BCmb0Q%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A57%3A32Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '236'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:57:39 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>d36ba5f0-ea0c-4336-acf1-1187ffc73963</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:57:33 GMT
+recorded_with: VCR 2.4.0

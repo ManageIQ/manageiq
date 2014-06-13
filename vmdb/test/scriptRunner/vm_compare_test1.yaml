@@ -1,0 +1,61 @@
+--- !ruby/object:MIQ_Report 
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "VM Compare Template"
+
+# Menu name
+menu_name: "VMs: Compare Template"
+
+# Main DB table report is based on
+db: Vm
+
+# Columns to fetch from the main table
+cols:
+- name
+- vendor
+- location
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  hardware:
+    columns:
+    - guest_os
+    - numvcpus
+    include:
+      guest_devices:
+        columns:
+        - mode
+        - location
+        - address
+        - _exists_
+        key:
+        - location
+
+# Order of columns (from all tables)
+col_order: 
+- hardware.numvcpus
+- hardware.guest_os
+- hardware.guest_devices.address
+- hardware.guest_devices.mode
+- location
+- vendor
+- name
+
+# Column titles, in order
+headers:
+- CPUs
+- Guest OS
+- Address
+- Mode
+- Location
+- Vendor
+- Name

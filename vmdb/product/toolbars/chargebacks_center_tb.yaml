@@ -1,0 +1,39 @@
+#
+# Toolbar config file
+#
+---
+:model: Chargeback
+:button_groups:
+- :name: chargeback_vmdb
+  :items:
+  - :buttonSelect: chargeback_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: chargeback_rates_new
+      :image: new
+      :text: "Add a new Chargeback Rate"
+      :title: "Add a new Chargeback Rate"
+    - :button: chargeback_rates_edit
+      :image: edit
+      :text: Edit the selected Chargeback Rate
+      :title: Edit the selected Chargeback Rate
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: chargeback_rates_copy
+      :image: copy
+      :title: "Copy the selected Chargeback Rate to a new Chargeback Rate"
+      :text: "Copy the selected Chargeback Rate to a new Chargeback Rate"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: chargeback_rates_delete
+      :image: remove
+      :text: Remove selected Chargeback Rates from the VMDB
+      :title: Remove selected Chargeback Rates from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Chargeback Rate will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Chargeback Rates?"
+      :enabled: 'false'
+      :onwhen: '1+'

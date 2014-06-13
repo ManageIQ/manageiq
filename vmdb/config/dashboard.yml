@@ -1,0 +1,58 @@
+---
+:approver:
+  :col_1:
+  - rss1
+  - rss2
+  :col_2:
+  - apprss1
+  - apprss2
+  :col_3:
+  - report1
+  - report2
+  - rss3
+:auditor:
+  :col_1:
+  - audrss1
+  - audrss2
+  :col_2:
+  - audrss3
+  - audrss4
+  :col_3:
+  - auditchart1
+  - report1
+  - report2
+  - rss3
+:operator:
+  :col_1:
+  - report1
+  - report2
+  - rss2
+  :col_2:
+  - oprss1
+  - oprss2
+  :col_3:
+  - opchart1
+  - rss1
+  - rss3
+:security:
+  :col_1:
+  - rss1
+  - rss2
+  :col_2:
+  - secrss1
+  - secrss2
+  :col_3:
+  - report1
+  - report2
+  - rss3
+:super_administrator:
+  :col_1:
+  - rss1
+  - chart1
+  :col_2:
+  - chart2
+  - rss2
+  :col_3:
+  - report1
+  - report2
+  - rss3

@@ -1,0 +1,30 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAlert
+:button_groups:
+- :name: miq_alert_vmdb
+  :items:
+  - :buttonSelect: miq_alert_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: alert_edit
+      :image: edit
+      :text: 'Edit this Alert'
+      :title: 'Edit this Alert'
+      :url_parms: 'main_div'
+    - :button: alert_copy
+      :image: copy
+      :text: 'Copy this Alert'
+      :title: 'Copy this Alert'
+      :confirm: "Are you sure you want to copy this Alert?"
+      :url_parms: '?copy=true'
+    - :button: alert_delete
+      :image: delete
+      :text: 'Delete this Alert'
+      :title: 'Delete this Alert'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to delete this Alert?'

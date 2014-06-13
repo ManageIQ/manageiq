@@ -1,0 +1,9 @@
+<div id="add_class_props_div">
+<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_class_props"}  %>
+<%# if x_node.split('-')[0] == "aec" || x_node.split('-')[0] == "aen" || params[:pressed] || ["field_select","field_accept","field_delete"].include?(params[:action]) %>
+<% if @in_a_form_fields && x_node.split('-')[0] == "aec" || params[:pressed] || ["field_select","field_accept","field_delete"].include?(params[:action]) %>
+	<div id="form_div">
+		<%= render :partial => "class_form" %>
+	</div>
+<% end %>
+</div>

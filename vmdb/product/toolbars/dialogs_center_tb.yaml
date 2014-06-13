@@ -1,0 +1,39 @@
+#
+# Toolbar config file
+#
+---
+:model: Dialog
+:button_groups:
+- :name: dialog_vmdb
+  :items:
+  - :buttonSelect: dialog_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: dialog_new
+      :image: new
+      :text: "Add a new Dialog"
+      :title: "Add a new Dialog"
+    - :button: dialog_edit
+      :image: edit
+      :text: Edit the selected Dialog
+      :title: Edit the selected Dialog
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: dialog_copy
+      :image: copy
+      :title: "Copy the selected Dialog to a new Dialog"
+      :text: "Copy the selected Dialog to a new Dialog"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: dialog_delete
+      :image: remove
+      :text: Remove selected Dialogs from the VMDB
+      :title: Remove selected Dialogs from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Dialogs?"
+      :enabled: 'false'
+      :onwhen: '1+'

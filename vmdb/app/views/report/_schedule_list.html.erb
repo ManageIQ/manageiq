@@ -1,0 +1,22 @@
+<% action ||= "view" %>
+<% if @sb[:active_accord] == :schedules || params[:pressed] == "miq_report_schedules" %>
+  <% if @in_a_form %>
+    <%= render :partial => 'schedule_form' %>
+	<% elsif @schedule && !@in_a_form %>
+		<%= render :partial => "show_schedule" %>
+	<% elsif @temp[:schedules] && @view %>
+		<% if @view.table.data.empty? %>
+		<div class="alert alert-info">
+	  	<span class="pficon pficon-info"></span>
+	  	<strong>No Schedules available.</strong>
+		</div>
+		<% else %>
+			<%= render :partial => 'layouts/x_gtl'%>
+		<% end %>
+	<% else %>
+		<div class="alert alert-info">
+			<span class="pficon pficon-info"></span>
+			<strong>Choose a Schedule to view from the menus on the left.</strong>
+		</div>
+	<% end %>
+<% end %>

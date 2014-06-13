@@ -1,0 +1,40 @@
+<div id="report_status_div">
+  <fieldset>
+    <p class="legend"><%=@temp[:report_result].name%></p>
+    <table class="style1">
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">Queued At</td>
+        <td><%= h(format_timezone(@temp[:report_result].created_on, Time.zone,"view")) %></td>
+      </tr>
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">Run At</td>
+        <% run_on = @temp[:report_result].last_run_on %>
+        <td><%= h(run_on ? format_timezone(run_on, Time.zone,"view") : "" )%></td>
+      </tr>
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">Name</td>
+        <td><%= h(@temp[:report_result].name) %></td>
+      </tr>
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">Source</td>
+        <td><%= h(@temp[:report_result].report_source) %></td>
+      </tr>
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">User ID</td>
+        <td><%= h(@temp[:report_result].userid) %></td>
+      </tr>
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">Group</td>
+        <td><%= h(@temp[:report_result].miq_group_description) %></td>
+      </tr>
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">Status</td>
+        <td><%= h(@temp[:report_result].status) %></td>
+      </tr>
+      <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+        <td class="key">Message</td>
+        <td><%= h(@temp[:report_result].status_message) %></td>
+      </tr>
+    </table>
+  </fieldset>
+</div>

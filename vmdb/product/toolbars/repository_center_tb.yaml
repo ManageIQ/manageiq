@@ -1,0 +1,45 @@
+#
+# Toolbar config file
+#
+---
+:model: Repository
+:button_groups:
+- :name: repository_vmdb
+  :items:
+  - :buttonSelect: repository_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: repository_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power States"
+      :title: "Refresh relationships and power states for all items related to this Repository"
+      :confirm: "Refresh relationships and power states for all items related to this Repository?"
+    - :separator:
+    - :button: repository_edit
+      :image: edit
+      :text: "Edit this Repository"
+      :title: "Edit this Repository"
+      :url: '/edit'
+    - :button: repository_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this Repository from the VMDB"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Repository and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Repository?"
+- :name: repository_policy
+  :items:
+  - :buttonSelect: repository_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: repository_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for this Repository"
+    - :button: repository_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Repository"

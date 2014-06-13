@@ -1,0 +1,16 @@
+<div style="padding-top:10px;"></div>
+<% if @sb[:active_tab] == "diagnostics_servers_roles" %>
+	<%= render(:partial=>"layouts/flash_msg") %>
+	<% if @temp[:server_tree] %>
+			<dl class="col2">
+				<dd>
+					<%= render :partial => "zone_tree" %>
+				</dd>
+				<dd>
+					<%= render :partial => "selected" %>
+				</dd>
+			</dl>
+	<% else %>
+		No Servers found
+	<% end %>
+<% end %>

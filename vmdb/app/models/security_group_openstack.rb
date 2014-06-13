@@ -1,0 +1,2 @@
+class SecurityGroupOpenstack < SecurityGroup
+end

@@ -1,0 +1,28 @@
+# This is the config file for setup_automation.rb
+
+:browser:
+  :ie:           false #If you want to use IE, change this to true, otherwise it will default to Firefox
+:server:
+  :address:      http://localhost:3000 #Change this to the address of your appliance
+#  :address:      https://192.168.217.132
+  :username:     admin                 #Login credientials on the main page
+  :password:     smartvm
+  :licenseloc:   C:\work\license.yml   #Where your license file is stored. Be sure to use '\' for directories
+:ems:
+  :discovery:
+    :firstip:    192              #First octet of the ip of the EMS you want to discover
+    :secondip:   168              #Second octet of the ip of the EMS you want to discover
+    :thirdip:    252              #Third octet of the ip of the EMS you want to discover
+    :fourthip:   117              #Fourth octect of the ip of the EMS you want to discover
+    :fourthtoip: 117              #The range you want to go from, in this case from 117-117
+  :username:     administrator    #Credentials for the EMS
+  :password:     smartvm
+:host:
+  :numhosts: 2              #This is how many hosts the EMS has. This lets the setup know when to stop looking for more hosts
+  :username: root           #Login credentials for the hosts
+  :password: smartvm
+:settings:
+  :loglevel:       debug    #Change this to fatal, error, warn, info, or debug
+  :timeouthours:   24       #Timeout in hours, range from 0-24
+  :timeoutminutes: 55       #Timeout in minutes, range from 0-55 by multiples of 5
+  :wraptime:       1        #Wrap time in days

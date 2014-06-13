@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: memory_limit
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: memory_limit
+  - value1:
+      value: /EVMApplications/Provisioning/Dialog/hardware_fields_memorylimit/*

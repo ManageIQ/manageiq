@@ -1,0 +1,18 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqPolicy
+:button_groups:
+- :name: policy_vmdb
+  :items:
+  - :buttonSelect: policy_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: policy_new
+      :image: new
+      :text: 'Add a New #{ui_lookup(:model=>@sb[:nodeid])} #{@sb[:mode].capitalize} Policy'
+      :title: 'Add a New #{ui_lookup(:model=>@sb[:nodeid])} #{@sb[:mode].capitalize} Policy'
+      :url_parms: '?typ=basic'

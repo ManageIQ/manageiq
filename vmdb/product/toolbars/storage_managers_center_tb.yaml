@@ -1,0 +1,75 @@
+#
+# Toolbar config file
+#
+---
+:model: StorageManager
+:button_groups:
+- :name: storage_manager_vmdb
+  :items:
+  - :buttonSelect: storage_manager_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: storage_manager_refresh_inventory
+      :image: refresh
+      :text: 'Refresh Inventory'
+      :title: 'Refresh Inventory for all Storage CIs known to the selected Storage Managers'
+      :url_parms: 'main_div'
+      :confirm: 'Refresh Inventory for all Storage CIs known to the selected Storage Managers?'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: storage_manager_refresh_status
+      :image: refresh
+      :text: 'Refresh Status'
+      :title: 'Refresh Status for all Storage CIs known to the selected Storage Managers'
+      :url_parms: 'main_div'
+      :confirm: 'Refresh Status for all Storage CIs known to the selected Storage Managers?'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: storage_manager_new
+      :image: new
+      :url: '/new'
+      :text: 'Add a New Storage Manager'
+      :title: 'Add a New Storage Manager'
+    - :button: storage_manager_edit
+      :image: edit
+      :text: 'Edit Selected Storage Manager'
+      :title: 'Select a single Storage Manager to edit'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: storage_manager_delete
+      :image: remove
+      :text: 'Remove Storage Managers from the VMDB'
+      :title: 'Remove selected Storage Managers from the VMDB'
+      :url_parms: 'main_div'
+      :confirm: 'Warning: The selected Storage Managers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Storage Managers?'
+      :enabled: 'false'
+      :onwhen: '1+'
+#- :name: storage_manager_scans
+#  :items:
+#- :name: storage_manager_policy
+#  :items:
+#  - :buttonSelect: storage_manager_policy_choice
+#    :image: policy
+#    :title: Policy
+#    :text: Policy
+#    :enabled: 'false'
+#    :onwhen: '1+'
+#    :items:
+#    - :button: storage_manager_protect
+#      :image: protect
+#      :text: 'Manage Policies'
+#      :title: 'Manage Policies for the selected Storage Managers'
+#      :url_parms: 'main_div'
+#      :enabled: 'false'
+#      :onwhen: '1+'
+#    - :button: storage_manager_tag
+#      :image: tag
+#      :text: 'Edit Tags'
+#      :title: 'Edit Tags for the selected Storage Managers'
+#      :url_parms: 'main_div'
+#      :enabled: 'false'
+#      :onwhen: '1+'

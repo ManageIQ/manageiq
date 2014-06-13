@@ -1,0 +1,161 @@
+<% url = url_for(:action =>'form_field_changed', :id=>"#{@sm.id || "new"}") %>
+<% validate_url ||= ["new", "create"].include?(controller.action_name) ? "create" : "update" %>
+
+<div id="form_div">
+	<%= render :partial => "layouts/flash_msg" %>
+
+		<dl class="col2">
+			<dd>
+				<fieldset>
+					<p class="legend">Basic Information</p>
+					<table class="style1">
+							<tr>
+								<td class="key">Name</td>
+								<td class="wide">
+                  <%= text_field_tag("name",
+                                      @edit[:new][:name],
+                                      :maxlength=>MAX_NAME_LEN,
+																			"data-miq_focus"=>true,
+                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							</tr>
+							<tr>
+								<td class="key">Type</td>
+								<td class="wide">
+									<% if @sm.id %>
+										<%= h(@edit[:new][:sm_type]) %>
+									<% else %>
+                    <%= select_tag("sm_type",
+                                      options_for_select([["<Choose>",nil]] + @edit[:sm_types].invert.sort, @edit[:new][:sm_type]),
+                                      "data-miq_observe"=>{:url=>url}.to_json) %>
+									<% end %>
+								</td>
+							</tr>
+							<tr>
+								<td class="key">Host Name</td>
+								<td class="wide">
+                  <%= text_field_tag("hostname",
+                                      @edit[:new][:hostname],
+                                      :maxlength=>MAX_NAME_LEN,
+                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							</tr>
+							<tr>
+								<td class="key">IP Address</td>
+								<td class="wide">
+                  <%= text_field_tag("ipaddress",
+                                      @edit[:new][:ipaddress],
+                                      :maxlength=>15,
+                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							</tr>
+							<tr>
+								<td class="key">Port</td>
+								<td class="wide">
+                  <%= text_field_tag("port",
+                                      @edit[:new][:port],
+                                      :maxlength=>15,
+                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							</tr>
+							<% if false %>
+								<tr>
+									<td class="key">Type</td>
+									<td class="wide">
+                    <%= select_tag("agent_typ",
+                                      options_for_select(["<Choose>"] + Array(StorageManager::AGENT_TYPES.invert).sort{|a,b|a[0]<=>b[0]},
+                                        @edit[:new][:agent_type]),
+                                      "data-miq_observe"=>{:url=>url}.to_json) %>
+									</td>
+								</tr>
+							<% end %>
+							<tr>
+								<td class="key">Zone</td>
+								<td class="wide">
+									<% if @edit[:server_zones].length <= 1 %>
+                    <%= text_field_tag("server_zone",
+                                        @edit[:new][:zone],
+                                        :disabled =>true,
+                                        :maxlength=>15,
+                                        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+									<% else %>
+                    <%= select_tag("server_zone",
+                                      options_for_select(@edit[:server_zones].sort, @edit[:new][:zone]),
+                                      "data-miq_observe"=>{:url=>url}.to_json) %>
+									<% end %>
+								</td>
+							</tr>
+					</table>
+				</fieldset>
+			</dd>
+			<dd>
+				<fieldset>
+					<p class="legend">Credentials</p>
+					<table class="style1">
+							<tr>
+								<td class="key">User ID</td>
+								<td class="wide">
+                  <%= text_field_tag("userid",
+                                        @edit[:new][:userid],
+                                        :maxlength=>50,
+                                        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							</tr>
+							<tr>
+								<td class="key">Password</td>
+								<td class="wide">
+                  <%= password_field_tag("password",
+                                        @edit[:new][:password],
+                                        :maxlength=>50,
+                                        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							</tr>
+							<tr>
+								<td class="key">Verify Password</td>
+								<td class="wide">
+                  <%= password_field_tag("verify",
+                                        @edit[:new][:verify],
+                                        :maxlength=>50,
+                                        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							</tr>
+							<tr>
+								<td></td>
+								<td align="right">
+									<%#= render :partial => '/layouts/form_buttons_verify' %>
+									<%= render	:partial=>"/layouts/form_buttons_verify",
+															:locals=>{:validate_url=>validate_url, :record=>@sm}
+									%>
+								</td>
+							</tr>
+					</table>
+				</fieldset>
+			</dd>
+	<% if ["new", "create"].include?(controller.action_name) %>
+	<table width="100%">
+		<tr>
+			<td align="right">
+				<div id="buttons_on">
+					<%= image_tag('/images/formbuttons/add.png', :border=>"0", :class=>"button",
+									:alt=>"Add this Storage Manager", :title=>"Add this Storage Manager",
+									:onclick=>"miqAjaxButton('#{url_for(:action=>"create",
+																											:id=>"new",
+																											:button=>"add")}');")
+					%>
+					<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+												:alt=>"Cancel", :title=>"Cancel",
+												:onclick=>"miqAjaxButton('#{url_for(:action=>"create",
+																														:id=>"new",
+																														:button=>"cancel")}');")
+					%>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<% else %>
+	<%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:record_id=>@sm.id, :ajax_buttons=>true})%>
+	<% end %>
+	</dl>
+</div>
+
+

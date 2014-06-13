@@ -1,0 +1,161 @@
+<% icon_image ||= nil %><%# Clear if not passed in %>
+  <% if @scan_history %>
+    <img src="/images/icons/new/<%= h(@listicon.downcase) %>.png" valign="middle" border="0" width="20"  height="20" />
+  <% elsif @vm && @listicon == "registry_items" %>
+    <% ri = @targets_hash[@id] if @targets_hash %>
+      <img src="/images/icons/new/<%= h(ri.image_name.downcase) %>.png" valign="middle" border="0" width="20"  height="20" />
+  <% elsif @vm && @listicon == "filesystems" %>
+    <% fs = @targets_hash[@id] if @targets_hash %>
+      <img src="/images/icons/ico/win/<%= h(fs.image_name.downcase) %>.ico" valign="middle" border="0" width="20" height="20" >
+  <% elsif @vm && @listicon != nil %>
+    <img src="/images/icons/new/<%= h(@listicon.downcase) %>.png" valign="middle" border="0" width="20" height="20" />
+  <% elsif @host && @listicon != nil %>
+    <img src="/images/icons/new/<%= h(@listicon.downcase) %>.png" valign="middle"  border="0" width="20" height="20" />
+  <% elsif db == "Job" || db == "MiqTask" %>
+    <% if row["state"] && row["state"].downcase == "finished" %>
+      <% strsearch = row["message"].gsub!("cancel","cancel")%>
+        <% if row["status"] && row["status"].downcase == "ok" && strsearch.nil? %>
+          <img src="/images/icons/new/checkmark.png" valign="middle" width="16"  height="16" title="Status = <%= row["status"].capitalize %>" />
+        <% elsif row["status"] && row["status"].downcase == "error" || !strsearch.nil? %>
+          <img src="/images/icons/new/x.png" valign="middle" width="16"  height="16" title="Status = <%= row["status"].capitalize %>" />
+        <% elsif row["status"] && row["status"].downcase == "warn" || !strsearch.nil? %>
+          <img src="/images/icons/16/warning.png" valign="middle" width="16"  height="16" title="Status = <%= row["status"].capitalize %>" />
+        <% end %>
+    <% elsif row["state"] && (row["state"].downcase == "waiting_to_start" || row["state"].downcase == "queued") %>
+      <img src="/images/icons/16/job-queued.png" valign="middle" width="16"  height="16" title="Status = Queued" />
+    <% elsif row["state"] && row["state"].downcase != "finished" && row["state"].downcase != "waiting_to_start" && row["state"].downcase != "queued" %><%# if state is not finished or waiting_to_start %>
+      <img src="/images/icons/16/job-running.png" valign="middle" width="16"  height="16" title="Status = Running" />
+    <% end %>
+  <% elsif db == "ScanHistory" %>
+    <img src="/images/icons/new/vendor-<%=h(db.downcase)%>.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif ["Vm", "VmOrTemplate"].include?(db) %>
+      <% vm = @targets_hash[from_cid(@id)] if @targets_hash %>
+      <% vendor = vm ? vm.vendor.downcase : "unknown" %>
+        <img src="/images/icons/new/vendor-<%=h(vendor)%>.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "Host" %>
+    <% host = @targets_hash[@id] if @targets_hash %>
+    <% vendor = host ? host.vmm_vendor.downcase : "unknown" %>
+      <img src="/images/icons/new/vendor-<%=h(vendor)%>.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "Service" %>
+    <img src="/images/icons/new/service.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "MiqProxy" %>
+    <img src="/images/icons/new/miqproxy.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "Storage" %>
+    <img src="/images/icons/new/storage.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "MiqEvent" %>
+    <img src="/images/icons/new/event-<%= h(row['name'].downcase) %>.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "Condition" %>
+    <img src="/images/icons/new/miq_condition.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "MiqPolicySet" %>
+    <img src="/images/icons/new/policy_profile.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "MiqPolicy" %>
+    <img src="/images/icons/new/miq_policy_<%=h(@sb[:nodeid].downcase + (row.active ? "" : "_inactive"))%>.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "MiqServer" %>
+    <img src="/images/icons/new/miq_server.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "MiqAction" %>
+    <% action = @targets_hash[@id.to_i] if @targets_hash %>
+    <% icon_image = action && action.action_type != "default" ? "miq_action_#{action.action_type}" : "miq_action" %>
+      <img src="/images/icons/new/<%=icon_image%>.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "MiqAlert" %>
+    <img src="/images/icons/new/<%= icon_image == nil ? 'miq_alert' : icon_image %>.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "ExtManagementSystem" %>
+      <% ems = @targets_hash[from_cid(@id)] if @targets_hash %>
+        <img src="/images/icons/new/vendor-<%=h(ems.emstype.downcase) %>.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "LdapServer" %>
+    <img src="/images/icons/new/ldap_server.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "MiqSchedule" %>
+    <img src="/images/icons/new/miq_schedule.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "MiqGroup" %>
+    <img src="/images/icons/new/miq_group.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "MiqReportResult" %>
+    <%
+      case row['status'].downcase
+      when "error"
+        glyph = "fa fa-warning"
+      when "finished"
+        glyph = "pficon pficon-ok"
+      when "running"
+        glyph = "fa fa-play"
+      when "queued"
+        glyph = "fa fa-pause"
+      else
+        glyph = "product product-arrow-right"
+      end
+    %>
+    <ul class="icons">
+      <li>
+        <span class="<%=glyph%>">
+      </li>
+    </ul>
+  <% elsif db == "MiqUserRole" %>
+    <ul class="icons">
+      <li>
+        <span class="product product-role"></span>
+      </li>
+    </ul>
+  <% elsif db == "MiqWidget" %>
+    <img src="/images/icons/new/<%=row.content_type%>_widget.png" valign="middle" border="0" height="20" width="20"  />
+    <%
+      status = row.status
+      case status.downcase
+      when "complete"
+        img = "complete"
+      when "queued"
+        img = "queued"
+      when "running"
+        img = "running"
+      when "error"
+        img = "error"
+      end
+    %>
+    <% if status.downcase != "none" %>
+      <img src="/images/icons/new/status_<%=img%>.png" valign="middle" border="0" height="20" width="20"  />
+    <% end %>
+  <% elsif db == "MiqWorker" %>
+    <% worker = @targets_hash[from_cid(@id)] if @targets_hash %>
+      <img src="/images/icons/new/processmanager-<%=worker.normalized_type%>.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "ScanItemSet" %>
+    <img src="/images/icons/new/scan_item_set.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "ChargebackRate" %>
+    <img src="/images/icons/new/chargeback_rates.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "MiqProxyBuild" %>
+    <%= link_to(image_tag("/images/toolbars/download.png", 
+                          :class=>"rollover small", 
+                          :type=>"application/txt",
+                          :alt=>"Download SmartProxy Build"),
+                          {:action=>'fetch_build', :id=>@id},
+                          {:title=>"Download SmartProxy Build"})
+    %>
+    <%= link_to(image_tag("/images/toolbars/delete.png",
+                          :class=>"rollover small",
+                          :alt=>"Click to delete this build"),
+                          {:action=>"delete_build", :id=>@id},
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          :confirm=>"Are you sure you want to delete build #{row.build} for #{row.platform.capitalize}?",
+                          :remote=>true,
+                          :title=>"Click to delete this build")
+    %>
+  <% elsif db == "ServerBuild" %>
+    <%= link_to(image_tag("/images/toolbars/delete.png", 
+                          :class=>"rollover small", :alt=>"Click to delete this build"),
+                          {:action=>"delete_build", :id=>@id},
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          :confirm=>"Are you sure you want to delete build #{row.build}?",
+                          :remote=>true,
+                          :title=>"Click to delete this build")
+    %>
+  <% elsif db == "MiqProvision" %>
+    <img src="/images/icons/new/miq_request.png" valign="middle" border="0" height="20" width="20" />
+  <% elsif db == "VdiSession" %>
+    <img src="/images/icons/new/vdi_session.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif ["CimBaseStorageExtent","LdapRegion","OntapStorageSystem","OntapLogicalDisk","OntapStorageVolume","OntapFileShare","SniaLocalFileSystem"].include?(db) %>
+    <img src="/images/icons/new/<%=h(db.underscore)%>.png" valign="middle" border="0" height="20" width="20"  />
+  <% elsif db == "ServiceTemplate" %>
+    <% st = @targets_hash[from_cid(@id)] if @targets_hash %>
+    <% img = st.respond_to?(:picture) && st.picture ? "../../../pictures/#{st.picture.basename}" : "/images/icons/new/service_template.png" %>
+      <img src="<%=img%>" valign="middle" border="0" height="20" width="20"  />
+  <% else %>
+      <img src="/images/icons/new/<%= h(db.downcase) %>.png" valign="middle" border="0" height="20" width="20" />
+  <% end %>

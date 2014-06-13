@@ -1,0 +1,16 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: test_inter_method_get_set_get
+    inherits: 
+    description: 
+  fields:
+  - testmeth1:
+      value: test_evmget
+  - testmeth2:
+      value: test_evmset
+  - testmeth3:
+      value: test_evmget

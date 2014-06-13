@@ -1,0 +1,12 @@
+--- 
+:item_type: file
+:definition: 
+  stats: 
+  - target: c:/windows/system32/*.scr
+  - target: c:/windows/system32/msi*.*
+  - target: /etc/*.conf
+  - target: /etc/hosts
+  - target: c:/windows/system32/netapi32.dll
+:name: sample_file
+:description: Sample File Scan
+:mode: Vm

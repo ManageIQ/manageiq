@@ -1,0 +1,2 @@
+class VmKvm < VmInfra
+end

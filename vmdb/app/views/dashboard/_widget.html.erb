@@ -1,0 +1,44 @@
+<%
+# Parameters:
+#		widget			MiqWidget object
+%>
+<div id="w_<%= widget.id %>">
+	<div class="modbox" id="test">
+
+		<h2 class="modtitle" style="cursor:move">
+			<a class="<%= widget.content_type %>box"></a>
+			<% if role_allows(:feature=>"dashboard_add") %>
+				<%= render(:partial=>'button_close', :locals=>{:widget=>widget}) %>
+			<% end %>
+			<%= render(:partial=>'button_minmax', :locals=>{:widget=>widget}) %>
+			<% if ["report","chart"].include?(widget.content_type) &&
+						!widget.contents_for_user(session[:userid]).blank? %>
+				<%= render(:partial=>'button_fullscreen', :locals=>{:widget=>widget}) %>
+				<%= render(:partial=>'button_pdf', :locals=>{:widget=>widget}) %>
+			<% end %>
+			<% if ["chart"].include?(widget.content_type) &&
+						!widget.contents_for_user(session[:userid]).blank? %>
+				<%= render(:partial=>'button_zoom', :locals=>{:widget=>widget}) %>
+			<% end %>
+			<div>
+				<span class="modtitle_text"><%= h(widget.title) %></span>
+			</div>
+		</h2>
+
+    <% if widget.content_type == "menu" %>
+      <%= render :partial=>'widget_menu', :locals=>{:widget=>widget} %>
+
+    <% elsif widget.contents_for_user(session[:userid]).blank? %>
+      <%= render(:partial=>'widget_blank', :locals=>{:widget=>widget}) %>
+
+		<% elsif ["report", "chart", "rss"].include?(widget.content_type) %>
+			<%= render :partial=>"widget_#{widget.content_type}", :locals=>{:widget=>widget} %>
+
+		<% end %>
+
+    <% unless widget.content_type == "menu" %>
+  		<%= render(:partial=>'widget_footer', :locals=>{:widget=>widget}) %>
+    <% end %>
+
+	</div>
+</div>

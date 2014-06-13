@@ -1,0 +1,52 @@
+#
+# Toolbar config file
+#
+---
+:model: ServiceTemplate
+:button_groups:
+- :name: catalogitem_vmdb
+  :items:
+  - :buttonSelect: catalogitem_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: atomic_catalogitem_new
+      :image: new_vmprofile
+      :text: "Add a New Catalog Item"
+      :title: "Add a New Catalog Item"
+    - :button: catalogitem_new
+      :image: new
+      :text: "Add a New Catalog Bundle"
+      :title: "Add a New Catalog Bundle"
+    - :button: catalogitem_edit
+      :image: edit
+      :text: Edit Selected Item
+      :title: Select a single Item to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: catalogitem_delete
+      :image: remove
+      :text: Remove Items from the VMDB
+      :title: Remove selected Items from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: catalogitem_policy
+  :items:
+  - :buttonSelect: catalogitem_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: catalogitem_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit tags for the selected Items"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

@@ -1,0 +1,426 @@
+# Report title
+title: "VM Compare Template"
+
+# Menu name
+menu_name: "VMs: Compare Template"
+
+# Main DB table report is based on
+db: VmOrTemplate
+
+# Columns to fetch from the main table
+cols:
+- name
+- vendor
+- location
+- last_scan_on
+- retires_on
+- boot_time
+- tools_status
+- vmsafe_enable
+- vmsafe_agent_address
+- vmsafe_agent_port
+- vmsafe_fail_open
+- vmsafe_immutable_vm
+- vmsafe_timeout_ms
+- cpu_affinity
+- cpu_shares
+- cpu_shares_level
+- cpu_reserve
+- cpu_reserve_expand
+- cpu_limit
+- memory_shares
+- memory_shares_level
+- memory_reserve
+- memory_reserve_expand
+- memory_limit
+- last_compliance_status
+- last_compliance_timestamp
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  hardware:
+    group: Properties
+    columns:
+    - guest_os_full_name
+    - guest_os
+    - numvcpus
+    - memory_cpu
+    - bios
+    - config_version
+    - annotation
+    include:
+      disks:
+        group: Properties
+        columns:
+        - location
+        - device_name
+        - filename
+        - present
+        - start_connected
+        - size
+        - unallocated_space
+        - allocated_space
+        - size_on_disk
+        key:
+        - 
+      cdroms:
+        group: Properties
+        columns:
+        - device_type
+        - location
+        - device_name
+        - filename
+        - present
+        - start_connected
+        key:
+        - 
+      floppies:
+        group: Properties
+        columns:
+        - location
+        - device_name
+        - filename
+        - present
+        - start_connected
+        key:
+        - 
+      nics:
+        group: Properties
+        columns:
+        - location
+        - present
+        - start_connected
+        - address
+        key:
+        - 
+      volumes:
+        group: Properties
+        columns:
+        - name
+        - typ
+        - filesystem
+        - size
+        - free_space
+        - used_space
+        key:
+        - name
+  users:
+    group: Security
+    columns:
+    - name
+    - enabled
+    - last_logon
+    key:
+    - name
+  groups:
+    group: Security
+    columns:
+    - name
+    key:
+    - name
+  guest_applications:
+    group: Configuration
+    columns:
+    - v_unique_name
+    - version
+    - release
+    - vendor
+    - arch
+    key:
+    - v_unique_name
+  win32_services:
+    group: Configuration
+    columns:
+    - display_name
+    - start
+    key:
+    - name
+  linux_initprocesses:
+    group: Configuration
+    columns:
+    - image_path
+    key:
+    - name
+  kernel_drivers:
+    group: Configuration
+    columns:
+    - display_name
+    - start
+    key:
+    - name
+  filesystem_drivers:
+    group: Configuration
+    columns:
+    - display_name
+    - start
+    key:
+    - name
+  patches:
+    group: Configuration
+    columns:
+    - name
+    - vendor
+    - v_install_date
+    key:
+    - name
+  files:
+    group: Configuration
+    columns:
+    - name
+    - base_name
+    - size
+    - mtime
+    - ctime
+    - atime
+    key:
+    - name
+  registry_items:
+    group: Configuration
+    columns:
+    - name
+    - value_name
+    - format
+    - data
+    key:
+    - name
+  categories:
+    group: Categories
+    columns:
+    - department
+    - customer
+    - environment
+    - function
+    - location
+    - owner
+    - service_level
+
+# Order of columns (from all tables)
+col_order: 
+- name
+- vendor
+- location
+- last_scan_on
+- retires_on
+- boot_time
+- tools_status
+- vmsafe_enable
+- vmsafe_agent_address
+- vmsafe_agent_port
+- vmsafe_fail_open
+- vmsafe_immutable_vm
+- vmsafe_timeout_ms
+- cpu_affinity
+- cpu_shares
+- cpu_shares_level
+- cpu_reserve
+- cpu_reserve_expand
+- cpu_limit
+- memory_shares
+- memory_shares_level
+- memory_reserve
+- memory_reserve_expand
+- memory_limit
+- last_compliance_status
+- last_compliance_timestamp
+- hardware.guest_os_full_name
+- hardware.guest_os
+- hardware.numvcpus
+- hardware.memory_cpu
+- hardware.bios
+- hardware.config_version
+- hardware.annotation
+- hardware.disks.location
+- hardware.disks.device_name
+- hardware.disks.filename
+- hardware.disks.present
+- hardware.disks.start_connected
+- hardware.disks.size
+- hardware.disks.unallocated_space
+- hardware.disks.allocated_space
+- hardware.disks.size_on_disk
+- hardware.cdroms.device_type
+- hardware.cdroms.location
+- hardware.cdroms.device_name
+- hardware.cdroms.filename
+- hardware.cdroms.present
+- hardware.cdroms.start_connected
+- hardware.floppies.location
+- hardware.floppies.device_name
+- hardware.floppies.filename
+- hardware.floppies.present
+- hardware.floppies.start_connected
+- hardware.nics.location
+- hardware.nics.present
+- hardware.nics.start_connected
+- hardware.nics.address
+- hardware.volumes.typ
+- hardware.volumes.filesystem
+- hardware.volumes.size
+- hardware.volumes.free_space
+- hardware.volumes.used_space
+- users.name
+- users.enabled
+- users.last_logon
+- groups.name
+- guest_applications.v_unique_name
+- guest_applications.version
+- guest_applications.vendor
+- guest_applications.release
+- guest_applications.arch
+- win32_services.display_name
+- win32_services.start
+- linux_initprocesses.image_path
+- kernel_drivers.display_name
+- kernel_drivers.start
+- filesystem_drivers.display_name
+- filesystem_drivers.start
+- patches.name
+- patches.vendor
+- patches.v_install_date
+- files.name
+- files.base_name
+- files.size
+- files.mtime
+- files.ctime
+- files.atime
+- registry_items.name
+- registry_items.value_name
+- registry_items.format
+- registry_items.data
+- categories.department
+- categories.customer
+- categories.environment
+- categories.function
+- categories.location
+- categories.owner
+- categories.service_level
+
+# Column titles, in order
+headers:
+- Name
+- Vendor
+- Location
+- Last Analysis
+- Retires On
+- Boot Time
+- VMware Tools Status
+- VMsafe Enable
+- VMsafe Agent Address
+- VMsafe Agent Port
+- VMsafe Fail Open
+- VMsafe Immutable VM
+- VMsafe Timeout (ms)
+- CPU Affinity
+- CPU Shares
+- CPU Shares Level
+- CPU Reserve
+- CPU Reserve Expand
+- CPU Limit
+- Memory Shares
+- Memory Shares Level
+- Memory Reserve
+- Memory Reserve Expand
+- Memory Limit
+- Last Compliance Status
+- Last Compliance Timestamp
+- Guest OS
+- Guest OS Id
+- CPUs
+- Memory
+- BIOS
+- Config Version
+- Notes
+- Location
+- Device Name
+- Filename
+- Present
+- Start Connected
+- Size
+- Unallocated Space
+- Allocated Space
+- Size On Disk
+- Device Type
+- Location
+- Device Name
+- Filename
+- Present
+- Start Connected
+- Location
+- Device Name
+- Filename
+- Present
+- Start Connected
+- Location
+- Present
+- Start Connected
+- Address
+- Type
+- File System
+- Size
+- Free Space
+- Used Space
+- Name
+- Enabled
+- Last Logon
+- Name
+- Name
+- Version
+- Vendor
+- Release
+- Architecture
+- Display Name
+- Start
+- Image Path
+- Display Name
+- Start
+- Display Name
+- Start
+- Name
+- Vendor
+- Installed On
+- Name
+- Base Name
+- Size
+- Modify Time
+- Create Time
+- Access Time
+- Name
+- Value Name
+- Format
+- Data
+- Department
+- Customer
+- Environment
+- Function
+- Location
+- Owner
+- Service Level
+
+# Condition(s) string for the SQL query
+conditions: 
+
+# Order string for the SQL query
+order:
+
+# Columns to sort the report on, in order
+sortby: 
+
+# Group rows (y=yes,n=no,c=count)
+group:
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:

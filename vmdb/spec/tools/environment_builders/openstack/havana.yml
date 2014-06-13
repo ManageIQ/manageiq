@@ -1,0 +1,128 @@
+---
+:connection:
+  :ems_ip: "10.8.96.4"
+  :ems_password: "8b32f0adc73e4062"
+:network:
+  :network:
+    :public:
+      :router_external: true
+    :private:
+      :router_external: false
+  :subnet:
+    :public:
+      :cidr: "10.8.96.0/22"
+      :gateway_ip: "10.8.99.254"
+      :ip_version: "4"
+      :enable_dhcp: false
+      :allocation_pools:
+      - start: "10.8.97.1"
+        end: "10.8.97.9"
+    :private:
+      :cidr: "192.168.0.0/24"
+      :gateway_ip: "192.168.0.1"
+      :ip_version: "4"
+  :floating_ip:
+    :floating_ip_address: "10.8.97.2"
+  :security_group_rules:
+  - :direction: ingress
+    :protocol: icmp
+    :ethertype: IPv4
+    :remote_ip_prefix: 0.0.0.0/0
+  - :direction: ingress
+    :protocol: icmp
+    :ethertype: IPv4
+    :remote_ip_prefix: 1.2.3.4/30
+  - :direction: ingress
+    :protocol: icmp
+    :ethertype: IPv4
+    :remote_group_id: security_group
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv4
+    :port_range_min: 1
+    :port_range_max: 65535
+    :remote_ip_prefix: 0.0.0.0/0
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv4
+    :port_range_min: 1
+    :port_range_max: 2
+    :remote_ip_prefix: 1.2.3.4/30
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv4
+    :port_range_min: 3
+    :port_range_max: 4
+    :remote_group_id: security_group
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv4
+    :port_range_min: 80
+    :port_range_max: 80
+    :remote_ip_prefix: 0.0.0.0/0
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv4
+    :port_range_min: 80
+    :port_range_max: 80
+    :remote_ip_prefix: 1.2.3.4/30
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv4
+    :port_range_min: 80
+    :port_range_max: 80
+    :remote_group_id: security_group
+  - :direction: ingress
+    :protocol: udp
+    :ethertype: IPv4
+    :port_range_min: 1
+    :port_range_max: 65535
+    :remote_ip_prefix: 0.0.0.0/0
+  - :direction: ingress
+    :protocol: udp
+    :ethertype: IPv4
+    :port_range_min: 1
+    :port_range_max: 2
+    :remote_ip_prefix: 1.2.3.4/30
+  - :direction: ingress
+    :protocol: udp
+    :ethertype: IPv4
+    :port_range_min: 3
+    :port_range_max: 4
+    :remote_group_id: security_group
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv6
+    :port_range_min: 443
+    :port_range_max: 443
+    :remote_ip_prefix: '::/0'
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv6
+    :port_range_min: 443
+    :port_range_max: 443
+    :remote_ip_prefix: 0001:0002:0003:0004:0005:0006:0007:abc8/128
+  - :direction: ingress
+    :protocol: tcp
+    :ethertype: IPv6
+    :port_range_min: 443
+    :port_range_max: 443
+    :remote_group_id: security_group
+  - :direction: egress
+    :protocol: tcp
+    :ethertype: IPv6
+    :port_range_min: 443
+    :port_range_max: 443
+    :remote_ip_prefix: '::/0'
+  - :direction: egress
+    :protocol: tcp
+    :ethertype: IPv4
+    :port_range_min: 443
+    :port_range_max: 443
+    :remote_ip_prefix: 1.2.3.4/30
+  - :direction: egress
+    :protocol: tcp
+    :ethertype: IPv6
+    :port_range_min: 443
+    :port_range_max: 443
+    :remote_group_id: security_group

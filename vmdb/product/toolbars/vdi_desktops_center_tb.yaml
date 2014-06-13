@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: VdiDesktop
+:button_groups:
+- :name: vdi_desktop_vmdb
+  :items:
+  - :buttonSelect: vdi_desktop_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: vdi_desktop_unmark_vdi
+      :image: unmark_vdi
+      :text: "Unmark selected items as VDI Desktops"
+      :title: "Unmark selected items as VDI Desktops"
+      :url_parms: 'main_div'
+      :confirm: "Are you sure you want to unmark the selected Desktops as VDI?  This will delete the VDI Desktops and change the associated VMs to non-VDI."
+      :enabled: 'false'
+      :onwhen: '1+'

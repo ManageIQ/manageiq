@@ -1,0 +1,97 @@
+<% if @record && @record.name != nil %>
+	<div id="accordion">
+		<div class="panel">
+			<div class="topbar">
+				<%= link_to(h(@record.name.length < trunc_at ? @record.name : @record.name[0...trunc_to] + "..."),
+													{:action=>'panel_control', :panel=>'icon'},
+                          :remote=>true,
+													:title=>"#{h(@record.name)}") %>
+			</div>
+			<%= hidden_div_if(@panels["icon"] == nil || @panels["icon"] == false, :id=>"icon") %>
+				<div class="panecontent">
+					<%= render(:partial=>"layouts/quadicon",
+											:locals=>{:mode=>:icon,
+																:item=>@record,
+																:size=>72,
+																:typ=>:listnav} )
+					%>
+				</div>
+			</div>
+			<div class="topbar">
+				<%= link_to("Properties", {:action=>'panel_control', :panel=>'vdi_desktop_prop'}, :remote=>true) %>
+			</div>
+			<%= hidden_div_if(@panels["vdi_desktop_prop"] == nil || @panels["vdi_desktop_prop"] == false, :id=>"vdi_desktop_prop") %>
+				<div class="panecontent">
+          <%= link_to_with_icon('Summary', {:action=>'show', :id=>@record, :display=>'main'},
+                                :title=>"Show Summary") %>
+				</div>
+			</div>
+
+			<div class="topbar">
+				<%= link_to("Relationships", {:action=>'panel_control', :panel=>'vdi_desktop_rel'}, :remote=>true) %>
+			</div>
+				<%= hidden_div_if(@panels["vdi_desktop_rel"] == nil || @panels["vdi_desktop_rel"] == false, :id=>"vdi_desktop_rel") %>
+				<div class="panecontent">
+					<% if role_allows(:feature=>"vdi_farm_show") %>
+                      <%= link_if_condition(
+                                  :cond          => !@record.vdi_farm.nil?,
+                                  :record_id     => @record.vdi_farm.id,
+                                  :table         => 'vdi_farm',
+                                  :controller    => 'vdi_farm',
+                                  :action        => 'show',
+                                  :image_path    => '/images/icons/16/link_external.gif',
+                                  :link_text     => "#{ui_lookup(:table=>'vdi_farm')}: #{@record.vdi_farm.name}",
+                          ) %>
+						<p/>
+					<% end %>
+
+					<% if role_allows(:feature=>"vdi_desktop_pool_show") %>
+                      <%= link_if_condition(
+                                  :cond          => !@record.vdi_desktop_pool.nil?,
+                                  :record_id     => @record.vdi_desktop_pool.id,
+                                  :table         => 'vdi_desktop_pool',
+                                  :controller    => 'vdi_desktop_pool',
+                                  :action        => 'show',
+                                  :image_path    => '/images/icons/16/link_external.gif',
+                                  :link_text     => "{ui_lookup(:table=>'vdi_desktop_pool')}: #{@record.vdi_desktop_pool.name}",
+                          ) %>
+						</p>
+					<% end %>
+
+					<% if role_allows(:feature=>"vdi_user_show") %>
+                      <%= link_if_condition(
+                                  :cond          => !@record.vdi_user.nil?,
+                                  :record_id     => @record.vdi_user.id,
+                                  :table         => 'vdi_user',
+                                  :controller    => 'vdi_user',
+                                  :action        => 'show',
+                                  :image_path    => '/images/icons/16/link_external.gif',
+                                  :link_text     => "#{ui_lookup(:table=>'vdi_user')}: #{@record.vdi_user.name}",
+                          ) %>
+						</p>
+					<% end %>
+
+					<% if role_allows(:feature=>"vm_vdi_show") %>
+                      <%= link_if_condition(
+                                  :cond          => !@record.vm_or_template.nil?,
+                                  :record_id     => @record.vm_or_template.id,
+                                  :table         => 'vm',
+                                  :controller    => 'vm',
+                                  :action        => 'show',
+                                  :image_path    => '/images/icons/16/link_external.gif',
+                                  :link_text     => "#{ui_lookup(:table=>'vm')}: #{@record.vm_or_template.name}",
+                          ) %>
+						<p/>
+					<% end %>
+          <% link_if_nonzero(
+            :count     => @record.vdi_sessions.count,
+            :record_id => @record.id,
+            :tables    => 'vdi_session',
+            :controller=> 'vdi_desktop',
+            :action    => 'vdi_sessions',
+            :db        => 'vdi_desktop',
+            :image_path=> '/images/icons/16/link_external.gif'
+          )%>
+				</div>
+      </div>
+<% end %>

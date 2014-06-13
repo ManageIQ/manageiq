@@ -1,0 +1,16 @@
+<div id="results_tree_div">
+  <% if @temp[:results] %>
+    <br/>
+    <div id="treebox" style="width:auto"></div>
+    <%= render(:partial => "layouts/dynatree",
+               :locals  => {:tree_id                      => "treebox",
+                            :json_tree                    => @temp[:json_tree],
+                            :multi_lines                  => true,
+                            :exp_tree                     => true,
+                            :open_close_all_on_dbl_click  => true
+                           }) %>
+
+  <% else %>
+    <br/>&nbsp<strong>* Enter Automation Simulation options on the left and press Submit</strong>
+  <% end %>
+</div>

@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: '7'
+    inherits: 
+    description: 
+  fields:
+  - ttl_warning:
+      value: '7'
+  - ttl_friendly:
+      value: 1 Week

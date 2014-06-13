@@ -1,0 +1,39 @@
+#
+# Toolbar config file
+#
+---
+:model: UserRole
+:button_groups:
+- :name: rbac_role_vmdb
+  :items:
+  - :buttonSelect: rbac_role_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: rbac_role_add
+      :image: new
+      :text: "Add a new Role"
+      :title: "Add a new Role"
+    - :button: rbac_role_edit
+      :image: edit
+      :text: Edit the selected Role
+      :title: Select a single Role to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: rbac_role_copy
+      :image: copy
+      :text: Copy the selected Role to a new Role
+      :title: Select a single Role to copy
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: rbac_role_delete
+      :image: delete
+      :text: Delete selected Roles
+      :title: Delete the selected Roles from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Delete all selected Roles?"
+      :enabled: 'false'
+      :onwhen: '1+'

@@ -1,0 +1,50 @@
+
+The Windows version of this build currently does not work.
+The following refers to the 64-bit Linux version.
+
+Library dependancies:
+	libz
+	
+The extconf.rb file for this extension assumes the extension is being built from the source tree, and that
+the required NetApp headers and libraries are available in their directory of that tree.
+
+If the extension is in:
+	miq/lib/NetappManageabilityAPI/NmaCore/NmaCore_raw
+	
+Then the base directory for the NetApp headers and libraries must be:
+	netapp-manageability-sdk/netapp-manageability-sdk-4.0P1
+	
+Where miq and netapp-manageability-sdk have the same parent directory.
+
+To build the extension from this directory:
+
+	ruby extconf.rb
+	make
+	
+NOTE: In order to build an extension that will run on an appliance, the ruby used to run the extconf.rb should be ree for ruby1.8.7 or ruby 1.9.3.
+	
+This should generate NmaCore_raw.so in this directory. This shared object should be moved to the appropriate directory based on the platform/ruby.
+For example: NmaCore/lib/x86_64-linux/ruby1.9.3/NmaCore_raw.so.  This library is loaded via the NmaCore_raw.rb based on the platform and directory.
+
+NOTE: The current version of the extension is checked into the source tree and should run on all target
+Linux appliances.
+
+On the runtime system, the NetApp libraries need to be made available. Assuming the system is 64-bit Linux,
+the libraries are in:
+
+	netapp-manageability-sdk/netapp-manageability-sdk-4.0P1/lib/linux-64
+	
+On the runtime system:
+
+	mkdir -p /usr/local/netapp-manageability-sdk/lib
+	cp netapp-manageability-sdk/netapp-manageability-sdk-4.0P1/lib/linux-64/* /usr/local/netapp-manageability-sdk/lib
+	export LD_LIBRARY_PATH=/usr/local/netapp-manageability-sdk/lib
+	
+On RedHat and CentOS, the following is required:
+
+	ln -s /lib/libcrypto.so.0.9.8e /lib/libcrypto.so.0.9.8
+	ln -s /lib64/libcrypto.so.0.9.8e /lib64/libcrypto.so.0.9.8
+
+	ln -s /lib/libssl.so.0.9.8e /lib/libssl.so.0.9.8
+	ln -s /lib64/libssl.so.0.9.8e /lib64/libssl.so.0.9.8
+	

@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM - Retirement Warning
+    name: vm_retire_warn
+    inherits: 
+    description: 
+  fields:
+  - logical_event:
+      value: vm_retire_warn
+  - rel5:
+      value: /Alert/EmailNotifications/vm_retirement_emails

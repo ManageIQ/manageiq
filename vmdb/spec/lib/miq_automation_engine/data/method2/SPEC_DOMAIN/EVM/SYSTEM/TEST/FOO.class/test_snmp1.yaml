@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: test_snmp1
+    inherits: 
+    description: 
+  fields:
+  - snmp_parms:
+      value: /EVM/SYSTEM/TEST/SNMP_TRAP_PARMS/snmp1_*
+  - testmeth:
+      value: snmp_trap_v1(host=>"192.168.254.15", specific_trap=>17)

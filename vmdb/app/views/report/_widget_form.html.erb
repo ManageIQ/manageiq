@@ -1,0 +1,49 @@
+<% url = url_for(:action=>'widget_form_field_changed', :id=>"#{@widget.id || "new"}") %>
+<div id="form_div">
+  <%= render :partial => "layouts/flash_msg" %>
+  <p class="legend">Basic Information</p>
+  <table class="style1">
+    <tr>
+      <td class="key"><% if @edit[:read_only] %>* <% end %>Title</td>
+      <td class="wider">
+         <%= text_field_tag("title",
+                            @edit[:new][:title],
+                            :disabled=>@edit[:read_only],
+                            :maxlength=>40,
+                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+        <% unless @edit[:read_only] %>
+          <%= javascript_tag("$('title').focus()") %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td class="key"><% if @edit[:read_only] %>* <% end %>Description</td>
+      <td class="wider">
+        <%= text_field_tag("description",
+                            @edit[:new][:description],
+                            :disabled=>@edit[:read_only],
+                            :maxlength=>MAX_DESC_LEN,
+                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+      </td>
+    </tr>
+    <tr>
+      <td class="key">Active</td>
+      <td>
+        <%= check_box_tag("enabled", value="1",
+                          checked=@edit[:new][:enabled],
+                          "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+      </td>
+    </tr>
+  </table>
+<hr>
+<%= render :partial => "widget_form_filter", :locals=>{:read_only=>@edit[:read_only]} %>
+<% unless @sb[:wtype] == "m" %>
+  <%= render :partial => "schedule_form_timer", :locals=>{:action_url=>"widget_form_field_changed", :record=>@widget} %>
+<% end %>
+<%= render :partial => "layouts/role_visibility", :locals=>{:rec_id=>"#{@widget.id || "new"}", :action=>"widget_form_field_changed"} %>
+
+  <% if @edit[:read_only] %> * Fields are read only for default Widgets<% end %>
+</div>
+<%# Need this to bind checkbox observers when under DHTMLX tabs %>
+<%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+<script>miqObserveCheckboxes();</script>

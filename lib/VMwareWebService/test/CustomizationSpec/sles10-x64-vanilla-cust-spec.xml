@@ -1,0 +1,56 @@
+<ConfigRoot>
+  <_type>vim.CustomizationSpecItem</_type>
+  <info>
+    <_type>vim.CustomizationSpecInfo</_type>
+    <changeVersion>1274141568</changeVersion>
+    <description>This should be used with the SLES10-Vanilla-Template in the vCloud POC</description>
+    <lastUpdateTime>2010-05-18T00:12:48Z</lastUpdateTime>
+    <name>sles10-vanilla-template-vcloud</name>
+    <type>Linux</type>
+  </info>
+  <spec>
+    <_type>vim.vm.customization.Specification</_type>
+    <globalIPSettings>
+      <_type>vim.vm.customization.GlobalIPSettings</_type>
+      <dnsServerList>
+        <_length>2</_length>
+        <_type>string[]</_type>
+        <e id="0">153.64.251.200</e>
+        <e id="1">153.64.8.10</e>
+      </dnsServerList>
+      <dnsSuffixList>
+        <_length>4</_length>
+        <_type>string[]</_type>
+        <e id="0">vlab.company.com</e>
+        <e id="1">vlab1.company.com</e>
+        <e id="2">vlab2.company.com</e>
+        <e id="3">company.com</e>
+      </dnsSuffixList>
+    </globalIPSettings>
+    <identity>
+      <_type>vim.vm.customization.LinuxPrep</_type>
+      <domain>vlab.company.com</domain>
+      <hostName>
+        <_type>vim.vm.customization.VirtualMachineNameGenerator</_type>
+      </hostName>
+      <hwClockUTC>true</hwClockUTC>
+      <timeZone>US/Pacific</timeZone>
+    </identity>
+    <nicSettingMap>
+      <_length>1</_length>
+      <_type>vim.vm.customization.AdapterMapping[]</_type>
+      <e id="0">
+        <_type>vim.vm.customization.AdapterMapping</_type>
+        <adapter>
+          <_type>vim.vm.customization.IPSettings</_type>
+          <ip>
+            <_type>vim.vm.customization.DhcpIpGenerator</_type>
+          </ip>
+        </adapter>
+      </e>
+    </nicSettingMap>
+    <options>
+      <_type>vim.vm.customization.LinuxOptions</_type>
+    </options>
+  </spec>
+</ConfigRoot>

@@ -1,0 +1,57 @@
+--- 
+dims: 
+created_on: 2008-08-11 16:27:50.925753 Z
+title: "Hardware information for Hosts"
+conditions: 
+updated_on: 2008-08-11 16:41:24.006921 Z
+order: Ascending
+graph: 
+menu_name: "Hardware Information"
+rpt_group: Custom
+priority: 10
+col_order: 
+- name
+- ipaddress
+- hardware.manufacturer
+- hardware.cpu_type
+- hardware.model
+- hardware.cpu_speed
+- hardware.logical_cpus
+- hardware.cores_per_socket
+- hardware.memory_cpu
+- hardware.number_of_nics
+timeline: 
+id: 70
+file_mtime: 
+categories: 
+rpt_type: Custom
+filename: 
+include: 
+  hardware: 
+    columns: 
+    - manufacturer
+    - cpu_type
+    - model
+    - cpu_speed
+    - logical_cpus
+    - cores_per_socket
+    - memory_cpu
+    - number_of_nics
+db: Host
+cols: 
+- name
+- ipaddress
+template_type: report
+group: 
+sortby: 
+headers: 
+- Host Name
+- IP Address
+- Hardware Manufacturer
+- Hardware CPU Type
+- Hardware Model
+- Hardware CPU Speed
+- Hardware Logical Cpus
+- Hardware Cores Per Socket
+- Hardware RAM
+- Hardware Number Of Nics

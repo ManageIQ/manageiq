@@ -1,0 +1,10 @@
+<div id="assignments_tabs_div" style="width:100%;height:100%;">
+	<%#  Toplevel Tabbar %>
+	<% if x_active_tree == :cb_assignments_tree %>
+		<% if x_node == "root" %>
+			<%= render :partial => "assignments_list" %>
+		<% else %>
+			<%= render :partial => "cb_assignments" %>
+		<% end %>
+	<% end %>
+</div>

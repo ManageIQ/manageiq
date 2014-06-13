@@ -1,0 +1,386 @@
+--- 
+:name: miq_provision_amazon_dialogs_template
+:description: Sample Amazon Instance Provisioning Dialog
+:dialog_type: MiqProvisionWorkflow
+:content: 
+  :buttons: 
+  - :submit
+  - :cancel
+  :dialogs: 
+    :requester: 
+      :description: Request
+      :fields: 
+        :owner_phone: 
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_country: 
+          :description: Country/Region
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_phone_mobile: 
+          :description: Mobile
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_title: 
+          :description: Title
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_first_name: 
+          :description: First Name
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :owner_manager: 
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_address: 
+          :description: Address
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_company: 
+          :description: Company
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_last_name: 
+          :description: Last Name
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :owner_manager_mail: 
+          :description: E-Mail
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_city: 
+          :description: City
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_department: 
+          :description: Department
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_load_ldap: 
+          :pressed: 
+            :method: :retrieve_ldap
+          :description: Look Up LDAP Email
+          :required: false
+          :display: :show
+          :data_type: :button
+        :owner_manager_phone: 
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_state: 
+          :description: State
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_office: 
+          :description: Office
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_zip: 
+          :description: Zip code
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_email: 
+          :description: E-Mail
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :request_notes:
+          :description: Notes
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
+      :field_order: 
+    :purpose: 
+      :description: Purpose
+      :fields: 
+        :vm_tags: 
+          :required_method: :validate_tags
+          :description: Tags
+          :required: false
+          :options: 
+            :include: []
+
+            :order: []
+
+            :single_select: []
+
+            :exclude: []
+
+          :display: :edit
+          :required_tags: []
+
+          :data_type: :integer
+      :display: :show
+      :field_order: 
+    :environment: 
+      :description: Environment
+      :fields:
+        :placement_auto: 
+          :values: 
+            false: 0
+            true: 1
+          :description: Choose Automatically
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
+        :placement_availability_zone: 
+          :values_from: 
+            :method: :allowed_availability_zones
+          :description: Availability Zone
+          :required_method: :validate_placement
+          :required: true
+          :display: :edit
+          :data_type: :integer
+          :required_description: Availability Zone Name
+        :cloud_network:
+          :values_from:
+            :method: :allowed_cloud_networks
+          :description: Virtual Private Cloud
+          :auto_select_single: false
+          :default: nil
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :cloud_subnet:
+          :values_from:
+            :method: :allowed_cloud_subnets
+          :description: Cloud Subnet
+          :required: true
+          :required_method: :validate_cloud_subnet
+          :display: :edit
+          :data_type: :integer
+        :security_groups:
+          :values_from:
+            :method: :allowed_security_groups
+          :description: Security Groups
+          :required: true
+          :display: :edit
+          :data_type: :integer
+        :floating_ip_address:
+          :values_from:
+            :method: :allowed_floating_ip_addresses
+          :description: Elastic IP Address
+          :auto_select_single: false
+          :default: nil
+          :required: false
+          :display: :edit
+          :data_type: :integer
+      :display: :show
+    :service: 
+      :description: Catalog
+      :fields: 
+        :number_of_vms: 
+          :values_from: 
+            :options: 
+              :max: 50
+            :method: :allowed_number_of_vms
+          :description: Count
+          :required: false
+          :display: :edit
+          :default: 1
+          :data_type: :integer
+        :vm_description: 
+          :description: Instance Description
+          :required: false
+          :display: :edit
+          :data_type: :string
+          :min_length: 
+          :max_length: 100
+        :vm_prefix: 
+          :description: Instance Name Prefix/Suffix
+          :required_method: :validate_vm_name
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :src_vm_id:
+          :values_from:
+            :options:
+              :tag_filters: []
+
+            :method: :allowed_templates
+          :description: Name
+          :required: true
+          :notes: 
+          :display: :edit
+          :data_type: :integer
+          :notes_display: :show
+        :vm_name: 
+          :description: Instance Name
+          :required_method: :validate_vm_name
+          :required: true
+          :notes: 
+          :display: :edit
+          :data_type: :string
+          :notes_display: :show
+          :min_length: 
+          :max_length:
+      :display: :show
+    :schedule: 
+      :description: Schedule
+      :fields: 
+        :schedule_type: 
+          :values: 
+            schedule: Schedule
+            immediately: Immediately on Approval
+          :description: When to Provision
+          :required: false
+          :display: :edit
+          :default: immediately
+          :data_type: :string
+        :schedule_time: 
+          :values_from: 
+            :options: 
+              :offset: 1.day
+            :method: :default_schedule_time
+          :description: Provision on
+          :required: false
+          :display: :edit
+          :data_type: :time
+        :retirement: 
+          :values: 
+            0: Indefinite
+            1.month: 1 Month
+            3.months: 3 Months
+            6.months: 6 Months
+          :description: Time until Retirement
+          :required: false
+          :display: :edit
+          :default: 0
+          :data_type: :integer
+        :retirement_warn: 
+          :values_from: 
+            :options: 
+              :values: 
+                1.week: 1 Week
+                2.weeks: 2 Weeks
+                30.days: 30 Days
+              :include_equals: false
+              :field: :retirement
+            :method: :values_less_then
+          :description: Retirement Warning
+          :required: true
+          :display: :edit
+          :default: 1.week
+          :data_type: :integer
+      :display: :show
+    :hardware: 
+      :description: Properties
+      :fields: 
+        :instance_type:
+          :values_from:
+            :method: :allowed_instance_types
+          :description: Instance Type
+          :required: true
+          :display: :edit
+          :data_type: :integer
+        :guest_access_key_pair: 
+          :values_from:
+            :method: :allowed_guest_access_key_pairs
+          :description: Guest Access Key Pair
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :monitoring: 
+          :values:
+            basic: Basic
+            advanced: Advanced
+          :description: CloudWatch
+          :required: true
+          :default: basic
+          :display: :edit
+          :data_type: :string
+      :display: :show
+    :customize:
+      :description: Customize
+      :fields:
+        :dns_servers:
+          :description: DNS Server list
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :dns_suffixes:
+          :description: DNS Suffix List
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :addr_mode:
+          :values:
+            static: Static
+            dhcp: DHCP
+          :description: Address Mode
+          :required: false
+          :display: :edit
+          :default: dhcp
+          :data_type: :string
+        :linux_host_name:
+          :description: Computer Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :gateway:
+          :description: Gateway
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :linux_domain_name:
+          :description: Domain Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :subnet_mask:
+          :description: Subnet Mask
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :customization_template_id:
+          :values_from:
+            :method: :allowed_customization_templates
+          :auto_select_single: false
+          :description: Script Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :customization_template_script:
+          :description: Script Text
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :root_password:
+          :description: Root Password
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :hostname:
+          :description: Host Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
+  :dialog_order: 
+  - :requester
+  - :purpose
+  - :service
+  - :environment
+  - :hardware
+  - :customize
+  - :schedule

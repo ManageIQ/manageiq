@@ -1,0 +1,112 @@
+##########
+This is a temporary doc file describing the changes needed to implement UJS in EVM.
+This file will be removed once the changes are completed
+##########
+
+<%# Change link_to_remote to link_to with :remote option: %>
+
+Before:
+	<%= link_to_remote(image_tag("#{image_pfx}new.png",
+															:border=>"0", :alt=>"Add a new Report"),
+										{:loading=>"miqSparkle(true);", :complete=>"miqSparkle(false);",
+										:url=>{:action=>'new'}},
+										{:title=>"Add a new Report"})
+						%>
+After:
+	<%= link_to(image_tag("#{image_pfx}new.png",
+												:border=>"0", :alt=>"Add a new Report"),
+							{:action=>'new'},
+							"data-miq_sparkle_on" => true,
+							"data-miq_sparkle_off" => true,
+							"data-submit"=>'column_lists',
+							:confirm=>'Are you sure?',								# Use this for normal confirm
+
+							"data-miq_confirm"=>'Are you sure?',			# Use this to confirm link opening in new window
+							:onclick=>"return miqClickAndPop(this);",	# Along with this to process it
+
+							:remote=>true,
+							:title=>"Add a new Report")
+						%>
+
+Changes:
+1 - remove "_remote" from helper call
+2 - second parameter is now a simple hash of the URL parms (remove miqSparkle calls and :url=> syntax)
+3 - third parameter is a hash of options, so can remove the {} from around title parm
+4 - add in "data-miq_sparkle_on/off" parms (to match what the original had)
+5 - add in :remote=>true option
+6 - Optional :confirm key to display confirmation
+7 - Optional "data-miq_confirm" and :onclick keys to display confirmation for opening in new window
+8 - Optional "data-submit" to specify the ID of the container element to submit with the link
+
+
+<%# Remove observe helper calls for text/password_field_tag, text_area_tag, and check_box_tag: %>
+
+Before:
+	<%= text_field_tag("name",
+										h(@edit[:new][:name]),
+										:maxlength=>MAX_NAME_LEN) %>
+	<%= observe_field('name', :frequency=>0.5, :with=>"name",
+										:url=>{:action=>'form_field_changed', :id=>"#{@host.id || "new"}"}) %>
+
+After:
+	Add this line to the top of the view for use by all observers:
+	<% url = url_for(:action=>'form_field_changed', :id=>"#{@host.id || "new"}") %>
+
+	<%= text_field_tag("name",
+										h(@edit[:new][:name]),
+										:maxlength=>MAX_NAME_LEN,
+										"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+
+Changes:
+1 - Remove observe_field call
+2 - Add line to set url var at the top of the view (after copyright)
+3 - Add "data-miq_observe" parameter to the xxx_tag call
+4 - For text_area_tag, replace :onkeyup=>"return miqCheckMaxLength(this);" with "data-miq_check_max_length"=>true
+		:interval should only be set for text and text_area tags, not check_box tags
+
+<%# Remove observe helper calls for miq_date fields using DHTMLX calendar control %>
+
+Before:
+	<%= text_field_tag("miq_date_1",
+										(@edit[:new][:start_date]),
+											:readonly=>"true") %>
+	<%= observe_field("miq_date_1", :frequency=>0.5, :with=>"miq_date_1",
+										:loading=>"miqSparkle(true);",
+										:url=>{:action=>'cu_repair_field_changed'}) %>
+
+After:
+	<%= text_field_tag("miq_date_1",
+										(@edit[:new][:start_date]),
+										:readonly=>"true",
+										"data-miq_observe_date"=>{:url=>url}.to_json) %>
+
+<%# Remove observe helper calls for select_tag (convert select helpers to select_tag first): %>
+
+Changes:
+1 - Remove observe_field call
+2 - Add "data-miq_observe_date" parameter to the text_field_tag call (field id must be miq_date_x)
+
+Before:
+	<%= select_tag('chosen_model',
+								options_for_select(@edit[:models].sort, @edit[:new][:model]),
+								{:multiple=>false, :class=>"widthed"}) %>
+	<%= observe_field 'chosen_model', :with=>'chosen_model',
+										:loading=>"miqSparkle(true);", :complete=>"miqSparkle(false);",
+										:url => { :action => 'form_field_changed', :id=>"#{@rpt.id || "new"}" } %>
+
+After:
+	Add this line to the top of the view for use by all observers:
+	<% url = url_for(:action =>'form_field_changed', :id=>"#{@rpt.id || "new"}") %>
+
+	<%= select_tag('chosen_model',
+								options_for_select(@edit[:models].sort, @edit[:new][:model]),
+								:multiple=> false, :class=>"widthed",
+								"data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+								"data-miq_observe"=>{:url=>url}.to_json) %>
+
+Changes:
+1 - Remove observe_field call
+2 - Add line to set url var at the top of the view (after copyright), customized for the particular view
+3 - third select_tag parameter is a hash of options, so can remove the {} from around existing parms
+4 - add "data-miq_sparkle_on/off" parms (to match what the original had)
+5 - Add "data-miq_observe" parameter (with NO :interval parm)

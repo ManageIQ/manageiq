@@ -1,0 +1,12 @@
+--- 
+patches_048: 
+  created_on: 2007-07-27 18:43:11
+  name: KB923694
+  vm_id: "1"
+  updated_on: 2007-07-27 18:43:11
+  installed: "1"
+  id: "49"
+  is_valid: "1"
+  description: Security Update for Windows Server 2003 (KB923694)
+  service_pack: "2"
+  vendor: Microsoft Corporation

@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: placement_host_name
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: placement_host_name
+  - value:
+      value: /EVMApplications/Provisioning/Dialog/environment_fields_placementhostname/*

@@ -1,0 +1,201 @@
+<% if @record && @record.name != nil %>
+	<div id="accordion">
+		<div class="panel">
+				<div class="topbar">
+					<%= link_to(h(@record.name.length < trunc_at ? @record.name : @record.name[0...trunc_to] + "..."),
+														{:action=>'panel_control', :panel=>'icon'},
+                            :remote=>true,
+														:title=>"#{h(@record.name)}") %>
+				</div>
+
+				<%= hidden_div_if(@panels["icon"] == nil || @panels["icon"] == false, :id=>"icon" ) %>
+					<div class="panecontent">
+
+						<%= render(:partial=>"layouts/quadicon",
+												:locals=>{:mode=>:icon,
+																	:item=>@record,
+																	:size=>72,
+																	:typ=>:listnav} )
+						%>
+
+				</div>
+
+			</div>
+    <div class="topbar">
+				<%= link_to("Properties", {:action=>'panel_control', :panel=>'storage_prop'}, :remote=>true) %>
+			</div>
+
+			<%= hidden_div_if(@panels["storage_prop"] == nil || @panels["storage_prop"] == false, :id=>"storage_prop") %>
+				<div class="panecontent">
+                    <%= link_to_with_icon('Summary', {:action=>'show', :id=>@record, :display=>'main'},
+                                          :title=>"Show Summary") %>
+						<% if @record.has_perf_data? %>
+                            <%= link_to_with_icon('Capacity & Utilization',
+                                                  {:action=>'show', :id=>@record, :display=>'performance'},
+                                                :title=>"Show Capacity & Utilization") %>
+						<% else %>
+              <img src="/images/icons/16/link_none.gif" title="Capacity & Utilization Data Not Available">
+              Capacity & Utilization
+						<% end %>
+        </div>
+      </div>
+		<div class="topbar">
+		<%= link_to("Relationships", {:action=>'panel_control', :panel=>'storage_rel'}, :remote=>true) %>
+		</div>
+
+		<%= hidden_div_if(@panels["storage_rel"] == nil || @panels["storage_rel"] == false, :id=>"storage_rel") %>
+			<div class="panecontent">
+
+<% if false %>
+			<% if role_allows(:feature=>"ems_infra_show") %>
+				<% if @record.ext_management_system != nil %>
+                            <%= link_to_with_icon("#{ui_lookup(:table=>"ext_management_systems")}: #{@record.ext_management_system.name}",
+                                                  {:controller=>"ems_infra", :action=>'show',
+                                                   :id=>@record.ext_management_system.id.to_s},
+                                                  {:title=>"Show this #{ui_lookup(:tables=>"storages")}'s parent #{ui_lookup(:table=>"ems_infra")}"},
+                                                  '/images/icons/16/link_external.gif') %>
+				<% end %>
+			<% end %>
+<% end %>
+				<% if role_allows(:feature=>"host_show_list") %>
+					<% unless @record.number_of(:hosts) == 0 %>
+                        <%= link_to_with_icon("Hosts (#{@record.number_of(:hosts)})",
+                                              {:action=>'show', :id=>@record, :display=>'hosts'},
+                                              :title=>"Show all registered Hosts") %>
+					<% else %>
+						<img src="/images/icons/16/link_none.gif"/>
+						Hosts (<%= @record.number_of(:hosts) %>)<br/>
+					<% end %>
+					<p>
+				<% end %>
+
+				<% if role_allows(:feature=>"vm_show_list") %>
+					<% unless @record.number_of(:all_vms) == 0 %>
+                        <%= link_to_with_icon("VMs (#{@record.number_of(:all_vms)})",
+                                              {:action=>'show', :id=>@record, :display=>'all_vms'},
+                                              :title=>"Show registered VMs") %>
+					<% else %>
+						<img src="/images/icons/16/link_none.gif"/>
+						VMs (<%= @record.number_of(:all_vms) %>)<br/>
+					<% end %>
+					<p>
+				<% end %>
+			</div>
+		</div>
+
+    <% if get_vmdb_config[:product][:storage] %>
+      <div class="topbar">
+        <%= link_to("Storage Relationships", {:action=>'panel_control', :panel=>'storage_inf_rel'}, :remote=>true) %>
+      </div>
+
+      <%= hidden_div_if(@panels["storage_inf_rel"] == nil || @panels["storage_inf_rel"] == false, :id=>"storage_inf_rel") %>
+        <div class="panecontent">
+          <% if role_allows(:feature=>"ontap_storage_system_show_list") %>
+            <%= link_if_nonzero(
+              :count     => @record.storage_systems_size,
+              :record_id => @record.id,
+              :tables    => 'ontap_storage_system',
+              :display   => 'storage_systems',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"ontap_storage_system")}",
+            )%>
+          <% end %>
+
+          <% if !@record.file_share.nil? %>
+            <% if role_allows(:feature=>"ontap_file_share_show") %>
+              <% fs = @record.file_share %>
+              <%= link_to_with_icon("#{ui_lookup(:table=>"ontap_file_share")}: #{fs.name}",
+                                    {:controller=>"ontap_file_share", :action=>'show', :id=>fs.id.to_s},
+                                    {:title=>"Show #{ui_lookup(:table=>"ontap_file_share")}"}, '/images/icons/16/link_external.gif') %>
+              <% end %>
+            <% else %>
+              <% if role_allows(:feature=>"ontap_storage_volume_show_list") %>
+              <%= link_if_nonzero(
+                :count     => @record.storage_volumes_size,
+                :record_id => @record.id,
+                :tables    => 'ontap_storage_volume',
+                :display   => 'ontap_storage_volumes',
+                :action    => 'show',
+                :title     => "Show all #{ui_lookup(:tables=>"ontap_storage_volume")}",
+              )%>
+            <% end %>
+          <% end %>
+
+          <% if role_allows(:feature=>"cim_base_storage_volume_show_list") %>
+            <%= link_if_nonzero(
+              :count     => @record.base_storage_extents_size,
+              :record_id => @record.id,
+              :tables    => 'cim_base_storage_extent',
+              :display   => 'storage_extents',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"cim_base_storage_extent")}",
+            )%>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+		<div class="topbar">
+			<%= link_to("Content", {:action=>'panel_control', :panel=>'storage_content'}, :remote=>true) %>
+		</div>
+
+		<%= hidden_div_if(@panels["storage_content"] == nil || @panels["storage_content"] == false, :id=>"storage_content") %>
+			<div class="panecontent">
+        <%= link_if_nonzero(
+          :count     => @storage.number_of(:files),
+          :record_id => @storage.id,
+          :table    => 'storages',
+          :action    => 'files',
+          :title     => "Show all files on this #{ui_lookup(:table=>"storages")}",
+          :link_text => 'All Files'
+        )%>
+				<p>
+        <%= link_if_nonzero(
+          :count     => @storage.number_of(:disk_files),
+          :record_id => @storage.id,
+          :table    => 'storages',
+          :action    => 'disk_files',
+          :title     => "Show VM Provisioned Disk Files on this #{ui_lookup(:table=>"storages")}",
+          :link_text => 'VM Provisioned Disk Files'
+        )%>
+				<p>
+        <%= link_if_nonzero(
+          :count     => @storage.number_of(:snapshot_files),
+          :record_id => @storage.id,
+          :table    => 'storages',
+          :action    => 'snapshot_files',
+          :title     => "Show VM snapshot files on this #{ui_lookup(:table=>"storages")}",
+          :link_text => 'VM Snapshot Files'
+        )%>
+				<p>
+        <%= link_if_nonzero(
+          :count     => @storage.number_of(:vm_ram_files),
+          :record_id => @storage.id,
+          :table    => 'storages',
+          :action    => 'vm_ram_files',
+          :title     => "Show VM memory files on this #{ui_lookup(:table=>"storages")}",
+          :link_text => 'VM Memory Files'
+        )%>
+				<p>
+        <%= link_if_nonzero(
+          :count     => @storage.number_of(:vm_misc_files),
+          :record_id => @storage.id,
+          :table    => 'storages',
+          :action    => 'vm_misc_files',
+          :title     => "Show Other VM files on this #{ui_lookup(:table=>"storages")}",
+          :link_text => 'Other VM Files'
+        )%>
+				<p>
+        <%= link_if_nonzero(
+          :count     => @storage.number_of(:debris_files),
+          :record_id => @storage.id,
+          :table    => 'storages',
+          :action    => 'debris_files',
+          :title     => "Show non-VM files on this #{ui_lookup(:table=>"storages")}",
+          :link_text => 'Non-VM Files'
+        )%>
+				<p>
+			</div>
+		</div>
+	</div>
+<% end %>

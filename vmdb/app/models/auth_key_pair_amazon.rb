@@ -1,0 +1,2 @@
+class AuthKeyPairAmazon < AuthKeyPairCloud
+end

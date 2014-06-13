@@ -1,0 +1,16 @@
+<template>
+  <name>CentOS-6.5</name>
+  <os>
+    <rootpw>ozrootpw</rootpw>
+    <name>CentOS-6</name>
+    <version>5</version>
+    <arch>x86_64</arch>
+    <install type="url">
+      <url>http://mirror.centos.org/centos/6/os/x86_64/</url>
+    </install>
+  </os>
+  <description>CentOS65 TDL meant to be used with custom kickstart for manageiq.</description>
+  <disk>
+    <size>40G</size>
+  </disk>
+</template>

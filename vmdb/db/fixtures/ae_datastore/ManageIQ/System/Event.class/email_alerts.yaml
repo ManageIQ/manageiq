@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: General Email Alerts
+    name: Email_Alerts
+    inherits: 
+    description: Emails for VM, Host, Cluster, Storage, EMS, MIQ Server
+  fields:
+  - rel1:
+      value: /Alert/Email_Alerts/Parse_Alerts
+  - rel2:
+      value: /Alert/Email_Alerts/${/#object_type}_Alert

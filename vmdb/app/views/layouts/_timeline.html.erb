@@ -1,0 +1,139 @@
+<% tl_json ||= nil %>
+<script type="text/javascript">
+	<%# commented this to, for a workaround to close any open bubble from previous timeline when switching between timelines%>
+	//var tl;
+	<% load_tl_now ||= false %>
+	<% if @timeline_filter %>
+			//highlighting filtered events
+			var miq_timeline_filter = true
+	<% else %>
+			var miq_timeline_filter = false
+	<% end %>
+		function miqLoadTL() {
+		var eventSource = new Timeline.DefaultEventSource();
+		<%# Following works around a issue that causes timeline to not show any events in IE %>
+		<%	if !is_browser_ie? && tl_json %>
+				var miq_tl_data = <%= tl_json.html_safe %>;
+		<% end %>
+		<% if bands[0][:decorate] %>
+				//var theme = Timeline.ClassicTheme.create();
+				var theme = Timeline.getDefaultTheme();
+				// changing timeline outer band color to be dark and inner to be lighter
+				theme.ether.backgroundColors.unshift("#c9c9c9");
+				theme.ether.backgroundColors[1] = theme.ether.backgroundColors[0];
+				var d = Timeline.DateTime.parseGregorianDateTime("<%= bands[0][:center_position] %>")
+		<% end %>
+		var bandInfos = [
+			<%# Create the bandInfos array elements from the bands array %>
+			<% bands.each_with_index do |band, idx| %>
+				Timeline.createBandInfo({
+						showEventText:  <%= band[:text].to_s %>,
+						<% if band[:height] %>
+							trackHeight:    <%= band[:height]%>,
+						<% end %>
+						<% if band[:decorate] %>
+								date:           d,
+								theme:          theme,
+						<% end %>
+							// START of TIMELINE TIMEZONE Code
+							// commented/uncomment line 241 elmt.appendChild(divTime); in bundle.js to remove/show timestamp at the bottom of timeline bubble
+							// END of TIMELINE TIMEZONE Code
+
+						<% if band[:gap] %>
+							trackGap:		   <%= band[:gap]%>,
+						<% end %>
+
+						eventSource:    eventSource,
+						width:          "<%= band[:width]%>%",
+						intervalUnit:   Timeline.DateTime.<%= band[:unit].upcase %>,
+						intervalPixels: <%= band[:pixels]%>
+				<% if idx == bands.length-1%>
+					})
+				<% else %>
+					}),
+				<% end %>
+			<% end %>
+		];
+		<%# For each band, set up the sync with the band above %>
+		<% bands.each_index do |idx| %>
+			<% if idx > 0 %>
+				bandInfos[<%= idx %>].syncWith = <%= idx-1 %>;
+				bandInfos[<%= idx %>].highlight = true;
+				bandInfos[<%= idx %>].eventPainter.setLayout(bandInfos[<%= idx-1 %>].eventPainter.getLayout());
+			<% end %>
+		<% end %>
+		<% if bands[0][:decorate] %>
+				// highlighting filtered events text in specified color
+				bandInfos[0].eventPainter = new Timeline.ThumbnailEventPainter({
+							theme:              theme,
+							trackHeight:        1,
+							trackOffset:        10,
+							labelWidth:         140,
+							thumbnailWidth:     26,
+							thumbnailHeight:    20
+				});
+				// highlighting band in diff color for specified timeframe
+				bandInfos[0].decorators = [
+					new Timeline.SpanHighlightDecorator({
+							startDate:  "<%= bands[0][:st_time]%>",
+							endDate:    "<%= bands[0][:end_time]%>",
+							startLabel: "=>",
+							endLabel:   "<=",
+							color:      "#FFFEDE",
+							opacity:    70,
+							theme:      theme
+					})
+				 ];
+				bandInfos[1].decorators = [
+					new Timeline.SpanHighlightDecorator({
+							startDate:  "<%= bands[0][:st_time]%>",
+							endDate:    "<%= bands[0][:end_time]%>",
+							startLabel: "=>",
+							endLabel:   "<=",
+							color:      "#FFFEDE",
+							opacity:    70,
+							theme:      theme
+					})
+				 ];
+		<% end  %>
+			<%# workaround to close any open bubble from previous timeline when switching between timelines%>
+			if (typeof tl != 'undefined'){
+				for (var i = 0; i < tl.getBandCount(); i++) {
+					tl.getBand(i).closeBubble();
+				}
+			}
+			tl = Timeline.create($('miq_timeline'), bandInfos, Timeline.HORIZONTAL);
+			<% if bands[0][:center_position]		%><%# to align daily/hourly timeline in center %>
+				tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime("<%= bands[0][:center_position] %>"));
+			<% else %>
+				tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime("<%= position_time %>"));
+			<% end %>
+			<%# Following works around a issue that causes timeline to not show any events in IE %>
+			<% if is_browser_ie? || !tl_json %>
+					Timeline.loadXML('<%= url_for(:action=>data_action) %>', function(xml, url) { eventSource.loadXML(xml, url); });
+			<% else %>
+					eventSource.loadJSON(miq_tl_data, document.location.href);
+			<% end %>
+     }
+
+		var resizeTimerID = null;
+		function miqResizeTL() {
+				if (resizeTimerID == null) {
+						resizeTimerID = window.setTimeout(function() {
+								resizeTimerID = null;
+								tl.layout();
+						}, 500);
+				}
+		}
+	<% if load_tl_now %>
+			miqLoadTL();
+	<% elsif request.xml_http_request?	%><%# Is this an Ajax request? %>
+			miqLoadTL();							//# Executing this method from application.js to fix IE initial load issue
+			<% if @timeline_filter %>
+				performFiltering(tl, [0,1]);
+			<% end %>
+	<% end %>
+</script>
+<%#=   START of TIMELINE TIMEZONE Code %>
+<%#= "* Times displayed are in #{get_timezone_offset("user",true)} #{get_timezone_abbr("user")} time" %>
+<%#=   END of TIMELINE TIMEZONE Code %>

@@ -1,0 +1,45 @@
+#
+# Toolbar config file
+#
+---
+:model: ServiceTemplate
+:button_groups:
+- :name: catalogitem_vmdb
+  :items:
+  - :buttonSelect: catalogitem_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :onwhen: '1+'
+    :items:
+    - :button: ab_group_new
+      :image: new
+      :text: "Add a new Button Group"
+      :title: "Add a new Button Group"
+    - :button: ab_button_new
+      :image: new
+      :text: "Add a new Button"
+      :title: "Add a new Button"
+    - :button: catalogitem_edit
+      :image: edit
+      :text: Edit this Item
+      :title: Edit this Item
+      :url_parms: 'main_div'
+    - :button: catalogitem_delete
+      :image: remove
+      :text: Remove Item from the VMDB
+      :title: Remove this Item from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: This Catalog Items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Catalog Item?"
+- :name: catalogitem_policy
+  :items:
+  - :buttonSelect: catalogitem_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: catalogitem_tag
+      :image: tag
+      :text: "Edit Tags"
+      :url_parms: 'main_div'
+      :title: "Edit Tags for this Catalog Item"

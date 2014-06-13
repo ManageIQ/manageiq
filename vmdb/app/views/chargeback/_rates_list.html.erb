@@ -1,0 +1,16 @@
+<div class ="ops_details">
+	<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+		<fieldset>
+			<div onclick="cfmeDynatree_activateNode('<%= x_active_tree %>', 'xx-Compute');"
+				onmouseover="this.style.cursor='pointer'" title="View Compute Rates">
+					<img src="/images/icons/new/hardware-processor.png"/>Compute
+			</div>
+		</fieldset>
+		<fieldset>
+			<div onclick="cfmeDynatree_activateNode('<%= x_active_tree %>', 'xx-Storage');"
+				onmouseover="this.style.cursor='pointer'" title="View Storage Rates">
+					<img src="/images/icons/new/hardware-disk.png"/>Storage
+			</div>
+		</fieldset>
+</div>
+

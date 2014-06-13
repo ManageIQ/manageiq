@@ -1,0 +1,23 @@
+<div id="bottlenecks_report_div">
+  <% if x_node != "" %>
+
+        <%= render(:partial =>"layouts/flash_msg", :locals=>{:div_num=>"2"}) %>
+
+        <%= render(:partial => 'bottlenecks_options', :locals=>{:typ=>"report"}) %>
+
+    <% if @sb[:bottlenecks] && @sb[:bottlenecks][:report] %>
+
+        <fieldset>
+          <p class="legend">Bottleneck Event Details</p>
+          <%= @sb[:bottlenecks][:report].to_html.html_safe %>
+        </fieldset>
+
+    <% end %>
+    </table>
+  <% else %>
+    <div style="padding-left: 20px; padding-top: 20px; width: 700px"></div>
+    <h3><fielset>
+      Select a node on the left to view Bottlenecks report.
+    </fieldset></h3>
+  <% end %>
+</div>

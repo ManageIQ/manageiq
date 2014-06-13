@@ -1,0 +1,3 @@
+class DialogFieldCheckBox < DialogField
+
+end

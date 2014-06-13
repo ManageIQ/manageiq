@@ -1,0 +1,13 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: common_drift_history
+  :items:
+  - :button: common_drift
+    :image: drift
+    :title: "Select up to 10 timestamps for Drift Analysis"
+    :url_parms: 'main_div'
+    :enabled: 'false'
+    :onwhen: '2+'

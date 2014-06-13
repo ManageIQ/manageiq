@@ -1,0 +1,27 @@
+-# Parameters:
+-#   widget -- MiqWidget instance
+- width  ||= 350
+- height ||= 250
+%div.modboxin.chart_widget{:style => "text-align: center"}
+  %div.mc{:id => "dd_w#{widget.id}_box",
+    :style => @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display:none' : ''}
+
+    - if widget.contents_for_user(session[:userid]).contents.blank?
+      No chart data found . . .
+    - datum = widget.contents_for_user(session[:userid]).contents
+    - if Charting.data_ok?(datum)
+      -# we need to count all charts to be able to display multiple
+      -# charts on a dashboard screen
+
+      - datum = widget.contents_for_user(session[:userid]).contents
+      - @chart_data ||= []
+      - @chart_data.push(:xml => datum)
+      - chart_index = @chart_data.length - 1
+      - chart_data = YAML.load(datum) if Charting::backend == :jqplot
+
+      = chart_local(chart_data,
+                    :id     => "miq_widgetchart_#{chart_index}".html_safe,
+                    :width  => width,
+                    :height => height)
+    - else
+      Invalid chart data. Try regenerating the widgets.

@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: register_dhcp
+    display_name: Register DHCP
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []

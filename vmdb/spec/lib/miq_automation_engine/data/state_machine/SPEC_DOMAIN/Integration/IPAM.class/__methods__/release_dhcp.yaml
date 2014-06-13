@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: release_dhcp
+    display_name: Release DHCP
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []

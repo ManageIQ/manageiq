@@ -1,0 +1,23 @@
+<% if @folders %>
+	<%= render(:partial=>"layouts/flash_msg") %>
+		<table class="style3">
+			<thead>
+				<th class="icon"></th><th></th>
+			</thead>
+			<tbody>
+			<% @folders.each do |f| %>
+				<tr class="<%= cycle('row0', 'row1') %>"
+					onclick="cfmeDynatree_activateNode('old_dialogs_tree', 'xx-MiqDialog_<%= f[1] %>');"
+					onmouseover="this.style.cursor='pointer'" title="View '<%= f[0] %>' Folder">
+					<td  nowrap>
+							<img src="/images/icons/new/folder.png" valign="middle" border="0" />
+					</td>
+					<td>
+						<%= h(f[0]) %>
+					</td>
+				</tr>
+			<% end %>
+			</tbody>
+		</table>
+<% end %>
+

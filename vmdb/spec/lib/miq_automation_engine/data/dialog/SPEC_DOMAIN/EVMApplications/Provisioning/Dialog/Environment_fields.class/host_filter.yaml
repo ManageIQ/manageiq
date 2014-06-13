@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: host_filter
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: host_filter
+  - value:
+      value: /EVMApplications/Provisioning/Dialog/environment_fields_hostfilter/*

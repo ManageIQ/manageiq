@@ -1,0 +1,32 @@
+<% url = url_for(:action => 'tag_edit_form_field_changed', 
+                 :id     => @sb[:rec_id] || @edit[:object_ids][0])
+%>
+<div id="tab_div">
+  <p class="legend">Tag Assignment<%= @tagitems.length > 1 ? " (Tags common to all selected items)" : "" %></p>
+  <table class="style3" style="margin-bottom: 0">
+    <thead>
+    <tr>
+      <th class="special" colspan="3">
+        <strong>Select a customer tag to assign:</strong>
+        <%
+          @categories.each do | cat_key, cat_val |
+            if session[:assigned_filters].include?(cat_val.downcase)
+              @categories.delete(cat_key)
+            end
+          end
+        %>
+        <%= select_tag("tag_cat",
+                       options_for_select(@categories.sort, @edit[:cat].name),
+                       "data-miq_sparkle_on"  => true, 
+                       "data-miq_sparkle_off" => true,
+                       "data-miq_observe"     => {:url => url}.to_json) 
+        %>
+        <%= render :partial => "layouts/tag_edit_cat_tags" %>
+      </th>
+    </tr>
+  </table>
+  <%= render :partial => 'layouts/tag_edit_assignments', 
+             :locals  => {:entry => nil} 
+  %>
+  <br/>* Only a single value can be assigned from these categories
+</div>

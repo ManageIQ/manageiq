@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqWidget
+:button_groups:
+- :name: widget_reloading
+  :items:
+  # Roles by Servers tab
+  - :button: widget_refresh
+    :image: reload
+    :title: 'Reload Widgets'
+- :name: widget_vmdb
+  :items:
+  - :buttonSelect: widget_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: widget_new
+      :image: new
+      :text: "Add a new Widget"
+      :title: "Add a new Widget"

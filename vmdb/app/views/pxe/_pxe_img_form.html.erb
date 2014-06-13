@@ -1,0 +1,35 @@
+<% url = url_for(:action=>'pxe_img_form_field_changed', :id=>"#{@img.id || "new"}") %>
+<div id="form_div">
+	<%= render :partial => "layouts/flash_msg" %>
+
+  <fieldset>
+    <p class="legend">Basic Information</p>
+    <table class="style1">
+      <tbody>
+        <tr>
+          <td class="key">Type</td>
+          <td class="wide">
+            <% img_types = [["<Unkown>",nil]] + @edit[:pxe_image_types] %>
+            <%= select_tag("image_typ",
+                              options_for_select(img_types,
+                                @edit[:new][:img_type]),
+                              "data-miq_observe"=>{:url=>url}.to_json) %>
+            </td>
+        </tr>
+        <tr>
+          <td class="key">Windows Boot Environment</td>
+          <td>
+            <%= check_box_tag("default_for_windows", value="1",
+                              checked=@edit[:new][:default_for_windows],
+                              "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+            &nbsp;&nbsp; * Checking this box will remove this setting from all other PXE Images on this PXE Server
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+
+<%# Need this to bind checkbox observers when under DHTMLX tabs %>
+<%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+<script>miqObserveCheckboxes();</script>

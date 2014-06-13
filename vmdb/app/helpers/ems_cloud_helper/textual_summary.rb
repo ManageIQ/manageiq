@@ -1,0 +1,140 @@
+module EmsCloudHelper::TextualSummary
+  #
+  # Groups
+  #
+
+  def textual_group_properties
+    items = %w{hostname ipaddress type port guid}
+    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+  end
+
+  def textual_group_relationships
+    items = %w{availability_zones flavors security_groups instances images}
+    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+  end
+
+  def textual_group_authentications
+    items = %w{authentications}
+    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+  end
+
+  def textual_group_tags
+    items = %w{zone tags}
+    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+  end
+
+  #
+  # Items
+  #
+  def textual_hostname
+    label = @ems.kind_of?(EmsAmazon) ? "Region" : "Hostname"
+    value = @ems.kind_of?(EmsAmazon) ? @ems.description : @ems.hostname
+    {:label => label, :value => value }
+  end
+
+  def textual_ipaddress
+    return nil if @ems.kind_of?(EmsAmazon)
+    {:label => "IP Address", :value => @ems.ipaddress}
+  end
+  
+  def textual_type
+    {:label => "Type", :value => @ems.emstype_description}
+  end
+
+  def textual_port
+    ["openstack", "rhevm"].include?(@ems.emstype) ? {:label => "API Port", :value => @ems.port} : nil
+  end
+
+  def textual_guid
+    {:label => "Management Engine GUID", :value => @ems.guid}
+  end
+
+  def textual_instances
+    label = ui_lookup(:tables=>"vm_cloud")
+    num   = @ems.number_of(:vms)
+    h     = {:label => label, :image => "vm", :value => num}
+    if num > 0 && role_allows(:feature => "vm_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'instances')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_images
+    label = ui_lookup(:tables=>"template_cloud")
+    num = @ems.number_of(:miq_templates)
+    h = {:label => label, :image => "vm", :value => num}
+    if num > 0 && role_allows(:feature => "miq_template_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'images')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_availability_zones
+    label = ui_lookup(:tables=>"availability_zone")
+    num   = @record.number_of(:availability_zones)
+    h     = {:label => label, :image => "availability_zone", :value => num}
+    if num > 0 && role_allows(:feature => "availability_zone_show_list")
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'availability_zones')
+    end
+    h
+  end
+
+  def textual_flavors
+    label = ui_lookup(:tables=>"flavors")
+    num   = @record.number_of(:flavors)
+    h     = {:label => label, :image => "flavor", :value => num}
+    if num > 0 && role_allows(:feature => "flavor_show_list")
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'flavors')
+    end
+    h
+  end
+
+  def textual_security_groups
+    label = ui_lookup(:tables=>"security_groups")
+    num   = @record.number_of(:security_groups)
+    h     = {:label => label, :image => "security_group", :value => num}
+    if num > 0
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'security_groups')
+    end
+    h
+  end
+
+  def textual_authentications
+    authentications = @ems.authentications
+    return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
+
+    authentications.collect do |auth|
+      label =
+        case auth.authtype
+        when "default"; "Default"
+        when "metrics"; "C & U Database"
+        else;           "<Unknown>"
+        end
+
+      {:label => "#{label} Credentials", :value => auth.status || "None", :title => auth.status_details}
+    end
+  end
+
+  def textual_zone
+    {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
+  end
+
+  def textual_tags
+    label = "#{session[:customer_name]} Tags"
+    h = {:label => label}
+    tags = session[:assigned_filters]
+    if tags.empty?
+      h[:image] = "smarttag"
+      h[:value] = "No #{label} have been assigned"
+    else
+      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
+    end
+    h
+  end
+
+end

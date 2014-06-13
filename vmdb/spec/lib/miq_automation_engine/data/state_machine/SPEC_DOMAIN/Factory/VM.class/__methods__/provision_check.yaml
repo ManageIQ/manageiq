@@ -1,0 +1,32 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: provision_check
+    display_name: ProvisionCheck
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs:
+  - field:
+      aetype: 
+      name: result
+      display_name: 
+      datatype: 
+      priority: 1
+      owner: 
+      default_value: ok
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 

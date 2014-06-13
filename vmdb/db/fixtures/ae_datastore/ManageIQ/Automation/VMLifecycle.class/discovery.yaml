@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM Discovery
+    name: Discovery
+    inherits: 
+    description: 
+  fields:
+  - Relationship1:
+      value: /Factory/Method/vm_allowed?vm_id=${process#vm_id}

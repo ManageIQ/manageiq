@@ -1,0 +1,55 @@
+#
+# History toolbar config file
+#
+---
+:button_groups:
+- :name: history_main
+  :items:
+  - :buttonSelect: history_choice
+    :image: history
+    :title: "History"
+    :items:
+    - :button: history_1
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=1'
+    - :button: history_2
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=2'
+    - :button: history_3
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=3'
+    - :button: history_4
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=4'
+    - :button: history_5
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=5'
+    - :button: history_6
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=6'
+    - :button: history_7
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=7'
+    - :button: history_8
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=8'
+    - :button: history_9
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=9'
+    - :button: history_10
+      :image: history
+      :title: "Go to this item"
+      :url: 'x_history?item=10'
+  - :button: summary_reload
+    :image: reload
+    :title: "Reload current display"
+    :url: 'reload'

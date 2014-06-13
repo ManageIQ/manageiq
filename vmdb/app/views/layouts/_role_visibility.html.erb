@@ -1,0 +1,76 @@
+<% url = url_for(:action => action, :id=>rec_id) %>
+<div id="form_role_visibility">
+  <p class="legend">Visibility</p>
+  <table class="style1">
+      <tr>
+        <td class="key">Show</td>
+        <td>
+          <%= select_tag("visibility_typ",
+                            options_for_select(@edit[:visibility_types], @edit[:new][:visibility_typ]),
+                            "data-miq_observe"=>{:url=>url}.to_json) %>
+        </td>
+      </tr>
+      <% if @edit[:new][:visibility_typ] == "role" %>
+        <tr>
+          <td class="key">User Roles</td>
+          <td>
+            <table>
+              <% j = 0 %>
+              <% for i in 0...@edit[:sorted_user_roles].length  %>
+                <% if j == 0 || j >= 3 %>
+                  <% j = 0 %>
+                  <tr>
+                <% end %>
+                <% @edit[:sorted_user_roles][i].each do |role| %>
+                  <% checked = !@edit[:new][:roles].nil? && @edit[:new][:roles].include?(role[1].to_s) ? true : false %>
+                  <td align="left" valign="top" nowrap>
+                    <%= check_box_tag("roles_#{role[1]}", value="1",
+                                          checked=checked,
+                                          "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+                    <%= h(role[0]) %>
+                  </td>
+                <% end %>
+                <% j += 1 %>
+                <% if j >= 3 %>
+                  </tr>
+                <% end %>
+                <% i +=1 %>
+              <% end %><%# end of for%>
+            </table>
+          </td>
+        </tr>
+      <% elsif @edit[:new][:visibility_typ] == "group" %>
+        <tr>
+          <td class="key">Groups</td>
+          <td>
+            <table>
+              <% j = 0 %>
+              <% for i in 0...@edit[:sorted_groups].length  %>
+                <% if j == 0 || j >= 3 %>
+                  <% j = 0 %>
+                  <tr>
+                <% end %>
+                <% @edit[:sorted_groups][i].each do |group| %>
+                  <% checked = !@edit[:new][:groups].nil? && @edit[:new][:groups].include?(group[1]) ? true : false %>
+                  <td align="left" valign="top" nowrap>
+                    <%= check_box_tag("groups_#{group[1]}", value="1",
+                                      checked=checked,
+                                      "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+                    <%= h(group[0]) %>
+                  </td>
+                <% end %>
+                <% j += 1 %>
+                <% if j >= 3 %>
+                  </tr>
+                <% end %>
+                <% i +=1 %>
+              <% end %><%# end of for%>
+            </table>
+          </td>
+        </tr>
+      <% end %>
+  </table>
+  <%# Need this to bind checkbox observers when under DHTMLX tabs %>
+  <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+  <script>miqObserveCheckboxes();</script>
+</div>

@@ -1,0 +1,51 @@
+#
+# Toolbar config file
+#
+---
+:model: StorageManager
+:button_groups:
+- :name: storage_manager_vmdb
+  :items:
+  - :buttonSelect: storage_manager_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: storage_manager_refresh_inventory
+      :image: refresh
+      :text: 'Refresh Inventory'
+      :title: 'Refresh Inventory for all Storage CIs known to this Storage Manager'
+      :confirm: 'Refresh Inventory for all Storage CIs known to this Storage Manager?'
+    - :button: storage_manager_refresh_status
+      :image: refresh
+      :text: 'Refresh Status'
+      :title: 'Refresh Status for all Storage CIs known to this Storage Manager'
+      :confirm: 'Refresh Status for all Storage CIs known to this Storage Manager?'
+    - :separator:
+    - :button: storage_manager_edit
+      :image: edit
+      :text: 'Edit this Storage Manager'
+      :title: 'Edit this Storage Manager'
+      :url: '/edit'
+    - :button: storage_manager_delete
+      :image: delete
+      :text: 'Remove this Storage Manager from the VMDB'
+      :title: 'Remove this Storage Manager from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This Storage Manager and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Storage Manager?'
+#- :name: storage_manager_policy
+#  :items:
+#  - :buttonSelect: storage_manager_policy_choice
+#    :image: policy
+#    :title: Policy
+#    :text: Policy
+#    :items:
+#    - :button: storage_manager_protect
+#      :image: protect
+#      :text: 'Manage Policies'
+#      :title: 'Manage Policies for this Storage Manager'
+#    - :button: storage_manager_tag
+#      :image: tag
+#      :text: 'Edit Tags'
+#      :title: 'Edit Tags for this Storage Manager'
+

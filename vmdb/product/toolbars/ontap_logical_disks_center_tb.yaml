@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: OntapLogicalDisk
+:button_groups:
+- :name: ontap_logical_disk_policy
+  :items:
+  - :buttonSelect: ontap_logical_disk_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: ontap_logical_disk_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit tags for the selected Logical Disks"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'  
+

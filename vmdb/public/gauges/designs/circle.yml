@@ -1,0 +1,18 @@
+<%= gauge :base %>
+  <%= dial :circle, :circle_1 %>
+      x:              10
+      y:              20
+      radius:         30
+      fill_alpha:      0
+      line_thickness:  5
+      
+  <%= dial :text, :title %>
+      rotation: -90
+      size:      78
+      alpha:     10
+      x:        -15
+      y:        300
+      color:    ffffff
+      width:    300
+      text:     Hello World
+      

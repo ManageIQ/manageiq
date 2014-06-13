@@ -1,0 +1,79 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: Miq Widgets
+
+# Menu name
+name: Miq Widgets
+
+# Main DB table report is based on
+db: MiqWidget
+
+# Columns to fetch from the main table
+cols:
+- queued_at
+- last_run_on
+- title
+- enabled
+- read_only
+- content_type
+- status
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order:
+- queued_at
+- last_run_on
+- title
+- enabled
+- read_only
+- status
+
+# Column titles, in order
+headers:
+- Queued At
+- Run At
+- Title
+- Active
+- Default
+- Status
+
+# Condition(s) string for the SQL query
+conditions: 
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+- queued_at
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 

@@ -1,0 +1,17 @@
+<div id="tl_sample_div">
+	<% if @tl_field != NOTHING_STRING %>
+	<fieldset>
+		<p class="legend">Sample Timeline</p>
+		<style type="text/css">
+		.default_timeline { width: 400px; height: 250px; }
+		</style>
+		<div id="miq_timeline" style="height: 500px; border: 1px solid #aaa"></div>
+	</fieldset>
+
+	<%= render(:partial=>"layouts/timeline",
+						:locals=>{:bands=>@edit[:new][:tl_bands],
+											:load_tl_now=>true,
+											:data_action=>"sample_timeline",
+											:position_time=>@position_time}) %>
+	<% end %>
+</div>

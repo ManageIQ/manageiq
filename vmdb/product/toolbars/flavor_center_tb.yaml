@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: Flavor
+:button_groups:
+- :name: flavor_policy
+  :items:
+  - :buttonSelect: flavor_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: flavor_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Flavor"

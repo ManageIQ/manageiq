@@ -1,0 +1,14 @@
+--- 
+system_services_341: 
+  object_name: LocalSystem
+  name: SENS
+  vm_id: "1"
+  svc_type: "32"
+  id: "586"
+  description: Monitors system events and notifies subscribers to COM+ Event System of these events. If this service is stopped, COM+ Event System subscribers will not receive system event notifications. If this service is disabled, any services that explicitly depend on it will fail to start.
+  start: "2"
+  depend_on_group: 
+  depend_on_service: EventSystem
+  display_name: System Event Notification
+  image_path: \Windows\system32\svchost.exe -k netsvcs
+  typename: win32_service

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+echo $PATH
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin
+export PATH
+
+VERSION_DIR="ec2-ami-tools-1.4.0.7"
+COMMON_DIR="ec2-ami-tools"
+INST_DIR="/usr/local"
+
+SKIP=`awk '/^__ARCHIVE_START__/ { print NR + 1; exit 0; }' $0`
+
+echo "*** Removing contents of ${INST_DIR}/${VERSION_DIR}"
+rm -rf ${INST_DIR}/${VERSION_DIR}
+rm -f ${INST_DIR}/${COMMON_DIR}
+
+echo "*** Extracting archive..."
+tail -n +$SKIP $0 | tar xvz -C $INST_DIR
+echo "*** Archive extraction complete"
+
+set -x
+
+ln -s ${INST_DIR}/${VERSION_DIR} ${INST_DIR}/${COMMON_DIR}
+
+exit 0
+
+__ARCHIVE_START__

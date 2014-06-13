@@ -1,0 +1,43 @@
+<% width = size == 150 ? 54 : 35 %>
+<% height = width %>
+<% if @settings[:quadicons][:ems] %>
+	<div class="flobj" ><img src="/images/icons/<%= size %>/base.png" width="<%= size %>" height="<%= size %>"/></div>
+	<% a_count = item.is_a?(EmsCloud) ? item.total_vms : item.hosts.size %>  <%# Get the VM or Host count %>
+	<div class="flobj a<%= size %>"><p><%= a_count %></p></div>
+  <% if item.is_a?(EmsCloud) %>
+    <div class="flobj b<%= size %>"><p><%= item.total_miq_templates %></p></div>
+  <% end %>
+	<div class="flobj c<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.emstype.downcase) %>.png"/></div>
+	<div class="flobj d<%= size %>">
+		<%
+			case item.authentication_status
+			when "Invalid"
+				auth_status = "x"
+			when "Valid"
+				auth_status = "checkmark"
+			when "None"
+				auth_status = "unknown"
+			else
+				auth_status = "exclamationpoint"
+			end
+		%>
+		<img src="/images/icons/new/<%= h(auth_status) %>.png"/>
+	</div>
+	<% if item.get_policies.length > 0 %>
+		<div class="flobj g<%= size %>" ><img src="/images/icons/new/shield.png"></div>
+	<% end %>
+<% else %>
+	<div class="flobj" ><img src="/images/icons/<%= size %>/base-single.png"></div>
+	<div class="flobj e<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.emstype.downcase) %>.png" width="<%= width * 1.8 %>" height="<%= height * 1.8 %>"></div>
+
+<% end %>
+<% if typ == :listnav %><%# Listnav, no href needed %>
+		<div class="flobj"><img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/></div>
+<% else %>
+	<div class="flobj">
+		<a href="<%= url_for_record(item) %>" title="<%= "Name: "+h(item.name)+" | Host Name: "+h(item.hostname)+" | IP Address: "+h(item.ipaddress) %>">
+		<img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/>
+		</a>
+	</div>
+<% end %>
+

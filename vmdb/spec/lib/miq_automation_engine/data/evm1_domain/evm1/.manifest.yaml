@@ -1,0 +1,35 @@
+---
+__domain__.yaml:
+  classes: 1
+  instances: 1
+  method_files: 1
+  method_instances: 1
+  created_on: 2014-05-19 19:38:58.507830000 Z
+  updated_on: 2014-05-19 19:38:58.507830000 Z
+  size: 156
+  sha1: G2VqPb1/acF2QLaG5D/lx8J2pxw=
+test/__namespace__.yaml:
+  created_on: 2014-05-19 19:38:58.621127000 Z
+  updated_on: 2014-05-19 19:38:58.621127000 Z
+  size: 156
+  sha1: BycJ+oOIr4pkFVz5mF3tVC3CIL8=
+test/AUTOMATE.class/__class__.yaml:
+  created_on: 2014-05-19 19:38:58.704584000 Z
+  updated_on: 2014-05-19 19:38:58.704584000 Z
+  size: 949
+  sha1: I1rcCYksURWFdA70yLl68+uwtHE=
+test/AUTOMATE.class/_missing.yaml:
+  created_on: 2014-05-19 19:38:58.783348000 Z
+  updated_on: 2014-05-19 19:38:58.783348000 Z
+  size: 195
+  sha1: sfwTZDbl0NRX0RV7earN2RUe/7o=
+test/AUTOMATE.class/__methods__/evm1_missing_method.rb:
+  created_on: 2014-05-19 19:38:58.817677000 Z
+  updated_on: 2014-05-19 19:38:58.817677000 Z
+  size: 54
+  sha1: OLaNrLxBDHKUSHI0rqQkW9FO8i8=
+test/AUTOMATE.class/__methods__/evm1_missing_method.yaml:
+  created_on: 2014-05-19 19:38:58.817677000 Z
+  updated_on: 2014-05-19 19:38:58.817677000 Z
+  size: 199
+  sha1: XFJAqUk0kgQM/a6fgPfLbYP4KK8=

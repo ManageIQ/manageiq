@@ -1,0 +1,32 @@
+<% url = url_for(:action=>'assign_form_field_changed') %>
+
+<%= render :partial => "layouts/flash_msg" %>
+
+<fieldset>
+	<p class="legend">Assign Users to Desktop Pools</p>
+	<table class="style1">
+    <tr>
+      <td  colspan="2">
+        <%= render :partial => "shared/views/vdi_common/column_lists" %>
+      </td>
+    </tr>
+	</table>
+</fieldset>
+<%= render(:partial => '/layouts/edit_form_buttons', :locals=>{:action_url=>"assign"}) %>
+
+
+<fieldset>
+	<p class="legend"><%= "New setting will affect #{pluralize(@assignitems.length,"#{(request.parameters[:controller] == "vdi_user" && (!@display || @display == "main")) && @display != "vdi_desktop_pool" ? "VDI User" : "Desktop Pool"}")}" %></p>
+	<table class="admintable" height="75">
+		<tbody>
+			<tr>
+				<td>
+					<% if @assignitems %>
+						<% @embedded = true %>
+						<%= render(:partial=>"layouts/gtl") %>
+					<% end %>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>

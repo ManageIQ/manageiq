@@ -1,0 +1,222 @@
+#
+# Toolbar config file
+#
+---
+:model: Vm
+:button_groups:
+- :name: vm_vdi_vmdb
+  :items:
+  - :buttonSelect: vm_vdi_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: vm_vdi_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power States"
+      :title: "Refresh relationships and power states for all items related to the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Refresh relationships and power states for all items related to the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Perform SmartState Analysis on the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_collect_running_processes
+      :image: vm_collect_running_processes
+      :text: "Extract Running Processes"
+      :title: "Extract Running Processes for the selected VMs"
+      :confirm: "Extract Running Processes for the selected VMs?"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_compare
+      :image: compare
+      :text: "Compare Selected VMs"
+      :title: "Select two or more VMs to compare"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '2+'
+    - :separator:
+    - :button: vm_vdi_edit
+      :image: edit
+      :text: Edit Selected VM
+      :title: Select a single VM to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: vm_vdi_ownership
+      :image: ownership
+      :text: "Set Ownership"
+      :title: "Set Ownership for the selected VMs"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_delete
+      :image: remove
+      :text: Remove VMs from the VMDB
+      :title: Remove selected VMs from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected VMs and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: vm_vdi_policy
+  :items:
+  - :buttonSelect: vm_vdi_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: vm_vdi_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for the selected VMs"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_policy_sim
+      :image: vm_policy_sim
+      :text: "Policy Simulation"
+      :title: "View Policy Simulation for the selected VMs"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit tags for the selected VMs"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_check_compliance
+      :image: compliance
+      :text: "Check Compliance of Last Known Configuration"
+      :title: "Check Compliance of the last known configuration for the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Initiate Check Compliance of the last known configuration for the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: vm_vdi_lifecycle
+  :items:
+  - :buttonSelect: vm_vdi_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :items:
+    - :button: vm_vdi_miq_request_new
+      :image: new
+      :url_parms: 'main_div'
+      :text: "Provision VMs"
+      :title: "Request to Provision VMs"
+    - :button: vm_vdi_clone
+      :image: clone
+      :text: "Clone selected VM"
+      :title: "Clone this VM"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: vm_vdi_publish
+      :image: publish
+      :text: "Publish selected VM to a Template"
+      :title: "Publish selected VM to a Template"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: vm_vdi_retire
+      :image: retire
+      :text: "Set Retirement Dates"
+      :title: "Set Retirement Dates for the selected VMs"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_retire_now
+      :image: retire_now
+      :text: "Retire selected VMs"
+      :title: "Retire the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Retire the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: vm_vdi_operations
+  :items:
+  - :buttonSelect: vm_vdi_power_choice
+    :image: power_choice
+    :title: Power Operations
+    :text: Power
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: vm_vdi_start
+      :image: power_on
+      :text: "Power On"
+      :title: "Power On the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Power On the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_stop
+      :image: power_off
+      :text: "Power Off"
+      :title: "Power Off the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Power Off the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_suspend
+      :image: power_suspend
+      :text: "Suspend"
+      :title: "Suspend the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Suspend the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vm_vdi_reset
+      :image: power_reset
+      :text: "Reset"
+      :title: "Reset the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Reset the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+#    - :button: vm_vdi_guest_startup
+#      :image: guest_startup
+#      :text: "Start Up Guest"
+#			 :title: "Start Up the Guest OS on the selected VMs"
+#      :url_parms: 'main_div'
+#      :confirm: "Start Up the Guest OS on the selected VMs?"
+#      :enabled: 'false'
+#      :onwhen: '1+'
+    - :button: vm_vdi_guest_shutdown
+      :image: guest_shutdown
+      :text: "Shutdown Guest"
+      :title: "Shutdown the Guest OS on the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Shutdown the Guest OS on the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'
+#    - :button: vm_vdi_guest_standby
+#      :image: suspend
+#      :text: "Suspend Guest"
+#      :text: "Suspend the Guest OS on the selected VMs"
+#      :url_parms: 'main_div'
+#      :confirm: "Suspend the Guest OS on the selected VMs?"
+#      :enabled: 'false'
+#      :onwhen: '1+'
+    - :button: vm_vdi_guest_restart
+      :image: guest_restart
+      :text: "Restart Guest"
+      :title: "Restart the Guest OS on the selected VMs"
+      :url_parms: 'main_div'
+      :confirm: "Restart the Guest OS on the selected VMs?"
+      :enabled: 'false'
+      :onwhen: '1+'

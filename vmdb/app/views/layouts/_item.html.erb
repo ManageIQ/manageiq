@@ -1,0 +1,105 @@
+<%= render :partial => "layouts/flash_msg" %>
+<table class="style1">
+
+<% if @item && ["CimStorageExtent","SniaLocalFileSystem"].include?(@item.class.to_s) %>
+	<% if @item.class.to_s == "CimStorageExtent" %>
+		<%  cols = [["Name","evm_display_name"], ["Vendor", "vendor"], ["Zone","zone_name"],["Description","description"], ["Operational Status","operational_status_str"],
+								["Health State","health_state_str"], ["Enabled","enabled_state"],	["System","system_name"], ["Number of Blocks","number_of_blocks"],
+								["Block Size","block_size"],["Consumable Blocks","consumable_blocks"], ["Device ID","device_id"], ["Extent Status","extent_status"],
+								["Primordial","primordial?"], ["Last Update Status","last_update_status_str"]]
+		%>
+	<% else %>
+		<%  cols = [["Name","evm_display_name"], ["Caption", "caption"], ["Zone","zone_name"],["Operational Status","operational_status_str"],
+								["Root","root"], ["CS Name","cs_name"],	["File System Type","file_system_type"], ["Path Name Separator String","path_name_separator_string"],
+								["Resize Increment","resize_increment"],["Cluster Size","cluster_size"], ["Block Size","block_size"], ["File System Size","file_system_size"],
+								["Available Space","available_space"], ["Max File Name Length","max_file_name_length"],["Read Only","read_only?"],["Case Sensitive","case_sensitive?"],
+								["Case Preserved","case_preserved?"],["Last Update Status","last_update_status_str"]
+								]
+		%>
+	<% end %>
+
+	<% cols.each do |title,val| %>
+		<tr class="<%= cycle('row0', 'row1') %>">
+			<td class="key">
+				<%= title %>
+			</td>
+			<td>
+				<% if ["consumable_blocks","number_of_blocks"].include?(val) %>
+					<%= h(number_with_delimiter(@item.send(val.to_sym),:delimiter=>',')) %>
+				<% elsif ["file_system_size","available_size"].include?(val) %>
+					<%= h(number_to_human_size(@item.send(val.to_sym),:precision=>1)) %>
+				<% else %>
+					<%= h(@item.send(val.to_sym)) %>
+				<% end %>
+			</td>
+		</tr>
+	<% end %>
+
+<% else %>
+	<% if @lastaction == "scan_histories" || @lastaction == "registry_items" || @lastaction == "filesystems"%>
+		<% j = 0 %>
+	<% else %>
+		<% j = 1 %>
+	<% end %>
+	<% for i in j...@view.col_order.length %>
+		<tr class="<%= cycle('row0', 'row1') %>">
+			<td class="key">
+				<%= @view.headers[i] %>
+			</td>
+			<td>
+				<% item_data = @item.send(@view.col_order[i]) %>
+				<% if @view.headers[i].downcase == "data" ||  @view.headers[i].downcase == "name" %>
+					<% if !item_data.nil? %>
+						<% item_data.scan(/.{1,125}/).each do |data_part| %>
+							<%= h(data_part)%>
+						<% end %>
+					<% end %>
+				<% elsif @view.headers[i].downcase == "size" %>
+					<%#= h(number_to_human_size(eval("@item.#{@view.col_order[i]}"), 2)) %>
+					<%= h(number_with_delimiter(item_data)) %>
+				<% else %>
+					<% if item_data.is_a?(Time) %>
+						<%=h(format_timezone(item_data)) %>
+					<% else %>
+						<%=h(item_data) %>
+					<% end %>
+				<% end %>
+			</td>
+		</tr>
+	<% end %>
+	<% if @lastaction == "users" %>
+		<tr class="<%= cycle('row0', 'row1') %>">
+				<td class="key">Groups</td>
+				<td>
+					<% groups = Array.new %>
+					<% @group_names.sort_by{ | m| m[:name]}.each {|group| groups.push(group.name)} %>
+					<%= h(groups.join(", ")) %>
+				</td>
+			</tr>
+	<% elsif @lastaction == "groups" %>
+		<tr class="<%= cycle('row0', 'row1') %>">
+				<td class="key">Users</td>
+				<td>
+					<% users = Array.new %>
+					<% @user_names.sort_by{ | m| m[:name]}.each {|user| users.push(user.name)} %>
+					<%= h(users.join(", ")) %>
+				</td>
+			</tr>
+	<% elsif @lastaction == "filesystems" %>
+		<tr class="<%= cycle('row0', 'row1') %>">
+				<td class="key">Contents</td>
+				<td>
+					<% if @item.has_contents? %>
+						<%= text_area_tag("item_contents", @item.contents, :readonly=>"readonly", :style=>"overflow:auto;width:600px;height:400px;") %>
+					<% else %>
+						Not Available
+					<% end %>
+				</td>
+			</tr>
+	<% end  %>
+		<tr>
+			<th colspan="3" class="footer">
+			</th>
+		</tr>
+<% end%>
+</table>

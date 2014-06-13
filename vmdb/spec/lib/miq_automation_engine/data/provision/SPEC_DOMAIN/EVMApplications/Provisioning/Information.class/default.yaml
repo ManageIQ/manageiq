@@ -1,0 +1,26 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: Default
+    inherits: 
+    description: 
+  fields:
+  - where:
+      value: /EVMApplications/Provisioning/Where/best_fit#create
+  - container:
+      value: /EVMApplications/Provisioning/Container/${#environment}#create
+  - max_vms:
+      value: /EVMApplications/Provisioning/UI_Choices/Max_VMS/${#environment}#create
+  - ttl_warnings:
+      value: /EVMApplications/Provisioning/UI_Choices/TTL_Warnings/*#create
+  - lease_times:
+      value: /EVMApplications/Provisioning/UI_Choices/TTL/*#create
+  - customization:
+      value: /EVMApplications/Provisioning/Customization/Default#create
+  - domains:
+      value: /EVMApplications/Provisioning/Domain/*#create
+  - networks:
+      value: /EVMApplications/Provisioning/Network/*#create

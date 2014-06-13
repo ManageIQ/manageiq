@@ -1,0 +1,96 @@
+<% url = url_for(:action=>'cu_collection_field_changed') %>
+<% if @sb[:active_tab] == "settings_cu_collection" %>
+		<%#  Enterprise level C & U Collection tab %>
+		<%= form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do %>
+		<%= render :partial => "layouts/flash_msg" %>
+			<dl class="col2">
+				<dd>
+					<fieldset>
+						<p class="legend">Clusters</p>
+							<table class="style1">
+								<tr>
+									<td class="key">Collect for All Clusters</td>
+									<td>
+										<%= check_box_tag("all_clusters", value="1",
+																				checked=@edit[:new][:all_clusters],
+																				"data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+																				"data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+									</td>
+								</tr>
+							</table>
+            <div class="note">Note: <b>Collect for All Clusters</b> must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2</div>
+            <div id="clusters_div" style="display:<%= @edit[:new][:all_clusters] ? "none" : "" %>">
+								<%# if @temp[:clhosts_tree].blank? %>
+								<% if @edit[:new][:clusters].blank? && @edit[:new][:non_cl_hosts].blank? %>
+									No Clusters found in the current region.
+								<% else %>
+									<br/>
+									<b>Enable Collection by Cluster</b>
+									<br/>
+									<input id="cl_toggle" type="checkbox" name="cl_toggle" onclick="miqCheck_CU_All(this,'<%=session[:tree_name]%>');">
+									(Check All)
+                  <div id="clhosts_treebox" style="color:#000" ></div>
+                  <%= render(:partial => "layouts/dynatree",
+                              :locals => {:tree_id => "clhosts_treebox",
+                                          :tree_name => "clhosts_tree",
+                                          :json_tree => @temp[:clhosts_tree],
+                                          :onselect => "miqOnCheck_CU_Filters",
+                                          :check_url => "/ops/cu_collection_field_changed/",
+                                          :three_checks => true,
+                                          :exp_tree => true,
+                                          :checkboxes => true
+                                          }
+                            )
+                  %>
+									<br/>
+									<div class="note">VM data will be collected for VMs under selected Hosts only. Data is collected for a Cluster and all of its Hosts when at least one Host is selected.</div>
+								<% end %>
+							</div>
+						</fieldset>
+				</dd>
+				<dd>
+						<fieldset>
+							<p class="legend"><%= ui_lookup(:tables=>"storages") %></p>
+							<table class="style1">
+								<tr>
+									<td class="key">Collect for All Datastores</td>
+									<td>
+										<%= check_box_tag("all_storages", value="1",
+																				checked=@edit[:new][:all_storages],
+																				"data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+																				"data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+									</td>
+								</tr>
+							</table>
+							<div id="storages_div" style="display:<%= @edit[:new][:all_storages] ? "none" : "" %>">
+								<% if @edit[:new][:storages].blank? %>
+									No Datastores found in the current region.
+								<% else %>
+									<br/>
+									<b>Enable Collection by Datastore</b>
+									<br/>
+									<input id="ds_toggle" type="checkbox" name="ds_toggle" onclick="miqCheck_CU_All(this,'<%=session[:ds_tree_name]%>');">
+									(Check All)
+                  <div id="cu_datastore_treebox" style="color:#000" ></div>
+                  <%= render(:partial => "layouts/dynatree",
+                              :locals => {:tree_id => "cu_datastore_treebox",
+                                          :tree_name => "cu_datastore_tree",
+                                          :json_tree => @temp[:cu_datastore_tree],
+                                          :onselect => "miqOnCheck_CU_Filters",
+                                          :check_url => "/ops/cu_collection_field_changed/",
+                                          :exp_tree => false,
+                                          :checkboxes => true
+                                          }
+                            )
+                  %>
+								<% end %>
+							</div>
+						</fieldset>
+				</dd>
+			</dl>
+		<% end %>
+	<div style="padding-bottom:20px;"></div>
+ 	<%# Need this to bind checkbox observers when under DHTMLX tabs %>
+ 	<%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+ 	<script>miqObserveCheckboxes();</script>
+<% end %>

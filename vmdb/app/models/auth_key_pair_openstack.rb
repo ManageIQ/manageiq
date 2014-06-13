@@ -1,0 +1,2 @@
+class AuthKeyPairOpenstack < AuthKeyPairCloud
+end

@@ -1,0 +1,1 @@
+Vm.find(:all).each { |vm| vm.classify_with_parent_folder_path }

@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: register_dns
+    display_name: Register DNS
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []

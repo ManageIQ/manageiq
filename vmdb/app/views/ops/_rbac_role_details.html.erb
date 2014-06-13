@@ -1,0 +1,85 @@
+<% if @edit %>
+  <% url = url_for(:action=>'rbac_role_field_changed', :id=>"#{@edit[:role_id] || "new"}") %>
+<% end %>
+<%= render :partial => "layouts/flash_msg" %>
+<div id='main_div'>
+	<dl class="col2">
+		<dd>
+      <fieldset>
+        <p class="legend">Role Information</p>
+        <table class="style1">
+          <tr>
+            <td class="key">Name</td>
+            <td>
+              <% unless @edit %>
+                <%= h(@role.name)  %>
+              <% else %>
+                <%= text_field_tag("name",
+                                  @edit[:new][:name],
+                                  :maxlength=>50,
+                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                <%= javascript_tag("$('name').focus()") %>
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">VM & Template Access Restriction</td>
+            <td>
+              <% unless @edit %>
+                <% if @role.settings.kind_of?(Hash) && @role.settings.fetch_path(:restrictions, :vms) %>
+                  <%= h(MiqUserRole::RESTRICTIONS[@role.settings.fetch_path(:restrictions, :vms)]) %>
+                <% else %>
+                  None
+                <% end %>
+              <% else %>
+                <%= select_tag('vm_restriction',
+                                options_for_select([["None", "none"]] + MiqUserRole::RESTRICTIONS.invert.sort{|a,b| a[0].downcase <=> b[0].downcase},
+                                  @edit[:new][:vm_restriction].to_sym),
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+              <% end %>
+            </td>
+          </tr>
+          <% unless @edit %>
+            <tr>
+              <td class="key">Groups Using this Role</td>
+              <td style="padding: 0px">
+                <table cellpadding="0" cellspacing="0">
+                  <% @role.miq_groups.collect{|g| g}.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |g| %>
+                    <tr
+                      onclick="cfmeDynatree_activateNode('rbac_tree', 'g-<%= to_cid(g.id) %>');"
+                      onmouseover="this.style.cursor='pointer'" title="View this Group">
+                      <td class="image">
+                          <img src="/images/icons/new/miq_group.png"/>
+                      </td>
+                      <td>
+                        <%= h(g.description) %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </fieldset>
+    </dd>
+    <dd>
+      <fieldset>
+        <p class="legend"><%= "Product Features (#{@edit ? "Editing" : "Read Only"})" %></p>
+        <div id="features_treebox" style="width:100%;height:<%= @winH - 435 %>px;color:#000"></div>
+        <%= render(:partial => "layouts/dynatree",
+                  :locals => {:tree_id => "features_treebox",
+                            :tree_name => "features_tree",
+                            :json_tree => @temp[:features_tree],
+                            :checkboxes => true,
+                            :three_checks => true,
+                            :check_url => "/ops/rbac_role_field_changed/",
+                            :disable_checks => @edit.nil?,
+                            :oncheck => @edit.nil? ? nil : "cfmeOnClick_RoleFeatureCheck",
+                            :open_close_all_on_dbl_click => true
+                            }) %>
+      </fieldset>
+        &nbsp;&nbsp;* Double click a feature to open/close all children.
+      </dd>
+  </dl>
+</div>

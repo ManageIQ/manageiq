@@ -1,0 +1,15 @@
+#
+# Toolbar config file
+#
+---
+:model: Logs
+:button_groups:
+- :name: log_reloading
+  :items:
+  - :button: refresh_log
+    :image: reload
+    :title: 'Reload the #{@msg_title} Log Display'
+  - :button: fetch_log
+    :image: download
+    :title: 'Download the Entire #{@msg_title} Log File'
+    :url: '/fetch_log'

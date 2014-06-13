@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: SUBNET_MASK
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: subnetMask
+  - value:
+      value: 255.255.255.0

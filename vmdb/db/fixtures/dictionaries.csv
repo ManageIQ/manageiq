@@ -1,0 +1,958 @@
+typ, name, text, locale
+#
+# Model entries
+#
+model,AuditEvent,EVM Audit Event,en
+model,AvailabilityZone,Availability Zone,en
+model,Compliance,Compliance History,en
+model,Compliances,Compliance History,en
+model,Chargeback,Chargeback,en
+model,ChargebackRate,Chargeback Rate,en
+model,CimStorageExtent,Storage - Extent,en
+model,Classification,Category,en
+model,Condition,Condition,en
+model,CustomButton,Button,en
+model,CustomButtonSet,Buttons Group,en
+model,EmsCloud,Cloud Provider,en
+model,EmsCluster,Cluster,en
+model,EmsClusterPerformance,Performance - Cluster,en
+model,EmsEvent,Management Event,en
+model,EmsFolder,Folder,en
+model,EmsInfra,Infrastructure Provider,en
+model,ExtManagementSystem,Provider,en
+model,Filesystem,File,en
+model,Flavor, Flavor,en
+model,HostPerformance,Performance - Host,en
+model,IsoDatastore,ISO Datastore,en
+model,IsoImage,ISO Image,en
+model,LdapRegion,LDAP Region,en
+model,LdapDomain,LDAP Domain,en
+model,LdapServer,LDAP Server,en
+model,MiqAction,Action,en
+model,MiqAeClass,Automate Class,en
+model,MiqAeDomain,Automate Domain,en
+model,MiqAeInstance,Automate Instance,en
+model,MiqAeMethod,Automate Method,en
+model,MiqAeNamespace,Automate Namespace,en
+model,MiqAlert,Alert,en
+model,MiqAlertSet,Alert Profile,en
+model,MiqDialog,Dialog,en
+model,MiqEnterprise,Enterprise,en
+model,MiqGroup,EVM Group,en
+model,MiqPolicySet,Policy Profile,en
+model,MiqPolicy,Policy,en
+model,MiqProvision,Provision,en
+model,MiqProxy,SmartProxy,en
+model,MiqRegion,Region,en
+model,MiqReport,Report,en
+model,MiqRequest,Request,en
+model,MiqSchedule,Schedule,en
+model,MiqSearch,Search,en
+model,MiqServer,Server,en
+model,MiqSmisAgent,SMI-S Agent,en
+model,MiqTemplate,VM Template and Image,en
+model,MiqUserRole,Role,en
+model,MiqWidget,Widget,en
+model,MiqWorker,EVM Worker,en
+model,NetappRemoteService,NetApp Remote Service,en
+model,OntapConcreteExtent,Storage - Aggregate,en
+model,OntapFileShare,Storage - File Share,en
+model,OntapLogicalDisk,Storage - Volume,en
+model,OntapPlexExtent,Storage - Plex,en
+model,OntapRaidGroupExtent,Storage - Raid Group,en
+model,OntapStorageSystem,Storage - Filer,en
+model,OntapStorageVolume,Storage - LUN,en
+model,OntapVolumeMetricsRollup,Storage Performance - Volumes, en
+model,ProductUpdate,Product Update,en
+model,PxeCustomizationTemplate,Customization Template,en
+model,PxeImage,PXE Image,en
+model,PxeImageType,System Image Type,en
+model,PxeServer,PXE Server,en
+model,ResourcePool,Resource Pool,en
+model,ScanItem,Scan Item,en
+model,ScanItemSet,Analysis Profile,en
+model,Service,Service,en
+model,ServiceTemplate,Service Catalog Item,en
+model,ServiceTemplateCatalog,Catalog,en
+model,SniaLocalFileSystem,Storage - Local File System,en
+model,Storage,Datastore,en
+model,StorageFile,Datastore File,en
+model,StorageManager,Storage Manager,en
+model,StoragePerformance,Performance - Datastore,en
+model,TemplateCloud,Image,en
+model,TemplateInfra,Template,en
+model,TimeProfile,Time Profile,en
+model,User,EVM User,en
+model,VdiController,VDI - Controller,en
+model,VdiDesktop,VDI - Desktop,en
+model,VdiDesktopPool,VDI - Desktop Pool,en
+model,VdiEndpointDevice,VDI - Endpoint Device,en
+model,VdiFarm,VDI - Farm,en
+model,VdiSession,VDI - Session,en
+model,VdiUser,VDI - User,en
+model,VimPerformanceTrend,Performance Trend,en
+model,VmdbTable,VMDB Table,en
+model,VmCloud,Instance,en
+model,VmInfra,Virtual Machine,en
+model,VmOrTemplate,VM or Template,en
+model,VmPerformance,Performance - VM,en
+model,Vm,VM and Instance,en
+model,VmVdi,VDI - VM,en
+model,Zone,Zone,en
+
+#
+# Table entries
+#
+table,availability_zone,Availability Zone,en
+table,cdroms,CD/DVD Drives,en
+table,ontap_storage_system,Filers,en
+table,ontap_storage_volume,LUNs,en
+table,ontap_file_share,File Shares,en
+table,snia_local_file_system,Local File Systems,en
+table,ontap_logical_disk,Volumes,en
+table,cim_base_storage_extent,Base Extents,en
+table,compliances,Compliance History,en
+table,compliance_details,Details,en
+table,custom_button,Button,en
+table,custom_button_set,Buttons Group,en
+table,ems_cloud,Cloud Provider,en
+table,ems_clouds,Cloud Providers,en
+table,ems_clusters,Clusters,en
+table,ems_cluster,Cluster,en
+table,ems_custom_attributes,VC Custom Attributes,en
+table,ems_custom_attribute,VC Custom Attribute,en
+table,ems_events,Management Events,en
+table,ems_event,Management Event,en
+table,ems_folder,Folder,en
+table,ems_folders,Folders,en
+table,ems_infra,Infrastructure Provider,en
+table,ems_infras,Infrastructure Providers,en
+table,ext_management_systems,Cloud/Infrastructure Providers,en
+table,ext_management_system,Cloud/Infrastructure Provider,en
+table,evm_owner,EVM Owner,en
+table,filesystem_drivers,File System Drivers,en
+table,filesystems,Files,en
+table,flavor,Flavor,en
+table,flavors,Flavors,en
+table,floppies,Floppy Drives,en
+table,guest_devices,Devices,en
+table,iso_datastore,ISO Datastore,en
+table,iso_image,ISO Image,en
+table,lans,vLANs,en
+table,last_compliance,Last Compliance History,en
+table,ldap,LDAP,en
+table,linux_initprocesses,Linux Init Processes,en
+table,ldap_domain,LDAP Domain,en
+table,ldap_region,LDAP Region,en
+table,ldap_server,LDAP Server,en
+table,miq_approval_stamps,Stamped Approvals,en
+table,miq_approvals,Approvals,en
+table,miq_custom_attributes,EVM Custom Attributes,en
+table,miq_custom_attribute,EVM Custom Attribute,en
+table,miq_event,Event,en
+table,miq_provisions,Provisions,en
+table,miq_provision,Provision,en
+table,miq_provision_template,Provisioned From Template,en
+table,miq_provision_vms,Provisioned VMs,en
+table,miq_proxy,SmartProxy,en
+table,miq_proxy_builds,SmartProxy Builds,en
+table,miq_regions,Regions,en
+table,miq_region,Region,en
+table,miq_requests,Requests,en
+table,miq_request,Request,en
+table,miq_schedules,Schedules,en
+table,miq_scsi_luns,SCSI LUNs,en
+table,miq_servers,Servers, en
+table,miq_server,Server, en
+table,miq_task,Task, en
+table,miq_template,VM Template,en
+table,miq_worker,EVM Worker,en
+table,miq_workers,EVM Workers,en
+table,nics,Network Adapters,en
+table,ontap_concrete_extents,Storage - Aggregates,en
+table,ontap_file_shares,Storage - File Shares,en
+table,ontap_logical_disks,Storage - Volumes,en
+table,ontap_plex_extents,Storage - Plexes,en
+table,ontap_raid_group_extents,Storage - Raid Groups,en
+table,ontap_storage_systems,Storage - Filers,en
+table,ontap_storage_volumes,Storage - LUNs,en
+table,ontap_volume_metrics_rollup,Storage Performance - Volumes, en
+table,operating_system,OS,en
+table,registry_items,Registry,en
+table,resource_pools,Resource Pools,en
+table,server_builds,EVM Builds,en
+table,service_template,Catalog Item,en
+table,service_template_catalog,Catalog,en
+table,snia_local_file_system,Storage - Local File Systems,en
+table,storages,Datastores,en
+table,storage,Datastore,en
+table,storage_files,Datastore Files,en
+table,storage_file,Datastore File,en
+table,switches,vSwitches,en
+table,host_services,Services,en
+table,template_cloud,Image,en
+table,template_infra,Template,en
+table,vdi_controller,Broker,en
+table,vdi_desktop,Desktop,en
+table,vdi_desktop_pool,Desktop Pool,en
+table,vdi_endpoint_device,Endpoint Device,en
+table,vdi_farm,Farm,en
+table,vdi_session,VDI Session,en
+table,vdi_user,VDI User,en
+table,vms,VMs,en
+table,vm_vdi,VDI VM,en
+table,vm,VM and Instance,en
+table,vm_cloud,Instance,en
+table,vm_infra,Virtual Machine,en
+table,vm_or_template,Virtual Machine,en
+table,zone,Zone,en
+table,zones,Zones,en
+#
+# Column entries
+# - Model specific entries follow the generic entry for each column
+#
+# Characters not allowed in column descriptions: ":" and "."
+#
+column,abs_max_cpu_usage_rate_average_timestamp,CPU - Absolute Max Usage Rate (Timestamp),en
+column,abs_max_cpu_usage_rate_average_value,CPU - Absolute Max Usage Rate (%),en
+column,abs_max_disk_usage_rate_average_timestamp,Disk I/O - Absolute Max Usage Rate (Timestamp),en
+column,abs_max_disk_usage_rate_average_value,Disk I/O - Absolute Max Usage Rate (KBps),en
+column,abs_max_mem_usage_absolute_average_timestamp,Memory - Absolute Max Usage Rate (Timestamp),en
+column,abs_max_mem_usage_absolute_average_value,Memory - Absolute Max Usage Rate (%),en
+column,abs_max_net_usage_rate_average_timestamp,Network I/O - Absolute Max Usage Rate (Timestamp),en
+column,abs_max_net_usage_rate_average_value,Network I/O - Absolute Max Usage Rate (KBps),en
+column,abs_min_cpu_usage_rate_average_timestamp,CPU - Absolute Min Usage Rate (Timestamp),en
+column,abs_min_cpu_usage_rate_average_value,CPU - Absolute Min Usage Rate (%),en
+column,abs_min_disk_usage_rate_average_timestamp,Disk I/O - Absolute Min Usage Rate (Timestamp),en
+column,abs_min_disk_usage_rate_average_value,Disk I/O - Absolute Min Usage Rate (KBps),en
+column,abs_min_mem_usage_absolute_average_timestamp,Memory - Absolute Min Usage Rate (Timestamp),en
+column,abs_min_mem_usage_absolute_average_value,Memory - Absolute Min Usage Rate (%),en
+column,abs_min_net_usage_rate_average_timestamp,Network I/O - Absolute Min Usage Rate (Timestamp),en
+column,abs_min_net_usage_rate_average_value,Network I/O - Absolute Min Usage Rate (KBps),en
+column,acctid,Account ID,en
+column,accttype,Account Type,en
+column,action_type_description,Type,en
+column,active,Active,en
+column,admin_disabled,Lockdown Mode,en
+column,aggregate_cpu_speed,Total CPU Speed,en
+column,aggregate_logical_cpus,Total Number of Logical CPUs,en
+column,aggregate_physical_cpus,Total Number of Physical CPUs,en
+column,aggregate_memory,Total Memory,en
+column,allocated_memory,Allocated Memory,en
+column,allocated_vcpu,Allocated vCPU,en
+column,allocated_storage,Allocated Storage,en
+column,avg_latency,Usage (All) - Latency in MicroSeconds for All Operations Avg,en
+column,avg_latency_max,Usage (All) - Latency in MicroSeconds for All Operations Avg Max,en
+column,avg_latency_min,Usage (All) - Latency in MicroSeconds for All Operations Avg Min,en
+column,bios,BIOS,en
+column,bios_location,BIOS Location,en
+
+column,chain_id,Chain ID,en
+
+column,cifs_other_latency,Usage (CIFS) - Time for Other Operations Avg,en
+column,cifs_other_latency_max,Usage (CIFS) - Time for Other Operations Avg Max,en
+column,cifs_other_latency_min,Usage (CIFS) - Time for Other Operations Avg Min,en
+column,cifs_other_ops,Usage (CIFS) - Number of Other Operations per Second,en
+column,cifs_other_ops_max,Usage (CIFS) - Number of Other Operations per Second Max,en
+column,cifs_other_ops_min,Usage (CIFS) - Number of Other Operations per Second Min,en
+column,cifs_read_data,Usage (CIFS) - Bytes Read per Second,en
+column,cifs_read_data_max,Usage (CIFS) - Bytes Read per Second Max,en
+column,cifs_read_data_min,Usage (CIFS) - Bytes Read per Second Min,en
+column,cifs_read_latency,Usage (CIFS) - Time for Reads Avg,en
+column,cifs_read_latency_max,Usage (CIFS) - Time for Reads Avg Max,en
+column,cifs_read_latency_min,Usage (CIFS) - Time for Reads Avg Min,en
+column,cifs_read_ops,Usage (CIFS) - Number of Reads per Second,en
+column,cifs_read_ops_max,Usage (CIFS) - Number of Reads per Second Max,en
+column,cifs_read_ops_min,Usage (CIFS) - Number of Reads per Second Min,en
+column,cifs_write_data,Usage (CIFS) - Bytes Written per Second,en
+column,cifs_write_data_max,Usage (CIFS) - Bytes Written per Second Max,en
+column,cifs_write_data_min,Usage (CIFS) - Bytes Written per Second Min,en
+column,cifs_write_latency,Usage (CIFS) - Time for Writes Avg,en
+column,cifs_write_latency_max,Usage (CIFS) - Time for Writes Avg Max,en
+column,cifs_write_latency_min,Usage (CIFS) - Time for Writes Avg Min,en
+column,cifs_write_ops,Usage (CIFS) - Number of Writes per Second,en
+column,cifs_write_ops_max,Usage (CIFS) - Number of Writes per Second Max,en
+column,cifs_write_ops_min,Usage (CIFS) - Number of Writes per Second Min,en
+
+column,config_xml,Configuration XML,en
+column,count_of_trend,Data Points,en
+column,cpu_affinity,CPU Affinity,en
+column,cpu_limit,CPU Limit,en
+column,cpu_reserve,CPU Reserve,en
+column,cpu_reserve_expand,CPU Reserve Expand,en
+column,cpu_shares,CPU Shares,en
+column,cpu_shares_level,CPU Shares Level,en
+column,cpu_time,CPU Time,en
+
+column,cpu_ready_delta_summation,CPU - Aggregate Time Child VMs Spent in Ready State (ms),en
+column,VmPerformance.cpu_ready_delta_summation,CPU - Time Spent In Ready State (ms),en
+
+column,cpu_speed,CPU Speed,en
+
+column,cpu_system_delta_summation,CPU - Aggregate Time Child VMs Spent in System State (ms),en
+column,VmPerformance.cpu_system_delta_summation,CPU - Time Spent in System State (ms),en
+
+column,cpu_type,CPU Type,en
+
+column,cpu_usage_rate_average,CPU - Usage Rate for Collected Intervals (%),en
+column,EmsClusterPerformance.cpu_usage_rate_average,CPU - Aggregate Usage Rate for Child Hosts for Collected Intervals (%),en
+
+column,cpu_usagemhz_rate_average,CPU - Aggregate Usage Rate for Child VMs for Collected Intervals (MHz),en
+column,cpu_usagemhz_rate_average_avg_over_time_period,CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Avg (MHz),en
+column,cpu_usagemhz_rate_average_low_over_time_period,CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Low Avg (MHz),en
+column,cpu_usagemhz_rate_average_high_over_time_period,CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day High Avg (MHz),en
+column,cpu_usagemhz_rate_average_max_over_time_period,CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Max (MHz),en
+column,VmPerformance.cpu_usagemhz_rate_average,CPU - Usage Rate for Collected Intervals (MHz),en
+column,Vm.cpu_usagemhz_rate_average_avg_over_time_period,CPU - Usage Rate for Collected Intervals 30 Day Avg (MHz),en
+column,Vm.cpu_usagemhz_rate_average_low_over_time_period,CPU - Usage Rate for Collected Intervals 30 Day Low Avg (MHz),en
+column,Vm.cpu_usagemhz_rate_average_high_over_time_period,CPU - Usage Rate for Collected Intervals 30 Day High Avg (MHz),en
+
+column,cpu_used_delta_summation,CPU - Aggregate Time Used for Child VMs (ms),en
+column,VmPerformance.cpu_used_delta_summation,CPU - Time Used (ms),en
+
+column,cpu_wait_delta_summation,CPU - Aggregate Time Spent in Wait State for Child VMs (ms),en
+column,VmPerformance.cpu_wait_delta_summation,CPU - Time Spent in Wait State (ms),en
+
+column,created_at,Date Created,en
+column,created_on,Date Created,en
+column,depend_on_group,Depends on Group,en
+column,depend_on_service,Depends on Service,en
+
+column,derived_cpu_available,CPU Total Installed,en
+column,EmsClusterPerformance.derived_cpu_available,CPU - Total Installed - Sum of Child Hosts (MHz),en
+column,HostPerformance.derived_cpu_available,CPU - Total Installed - from Host Analysis (MHz),en
+column,VmPerformance.derived_cpu_available,CPU - Total - from VM Analysis (MHz),en
+
+column,derived_cpu_reserved,CPU - Available (MHz),en
+column,VmPerformance.derived_cpu_reserved,CPU - Reserved (MHz),en
+
+column,v_derived_cpu_reserved_pct,CPU - Available (%),en
+column,VmPerformance.v_derived_cpu_reserved_pct,CPU - Reserved (%),en
+
+column,derived_memory_available,Memory - Total Allocated for Child VMs (MB),en
+column,VmPerformance.derived_memory_available,Memory - Total Allocated (MB),en
+
+column,derived_memory_used,Memory - Aggregate Used for Child VMs for Collected Intervals (MB),en
+column,derived_memory_used_avg_over_time_period,Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Avg (MB),en
+column,derived_memory_used_low_over_time_period,Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Low Avg (MB),en
+column,derived_memory_used_high_over_time_period,Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day High Avg (MB),en
+column,derived_memory_used_max_over_time_period,Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Max (MB),en
+column,VmPerformance.derived_memory_used,Memory - Avg Used for Collected Intervals (MB),en
+column,Vm.derived_memory_used_avg_over_time_period,Memory - Avg Used for Collected Intervals 30 Day Avg (MB),en
+column,Vm.derived_memory_used_low_over_time_period,Memory - Avg Used for Collected Intervals 30 Day Low Avg (MB),en
+column,Vm.derived_memory_used_high_over_time_period,Memory - Avg Used for Collected Intervals 30 Day High Avg (MB),en
+
+column,derived_memory_reserved,Memory - Available (MB),en
+column,VmPerformance.derived_memory_reserved,Memory - Reserved (MB),en
+
+column,v_derived_memory_reserved_pct,Memory - Available (%),en
+column,VmPerformance.v_derived_memory_reserved_pct,Memory - Reserved (%),en
+
+column,v_derived_host_count,State - Number of Hosts  - Hourly Count / Daily Avg,en
+column,derived_host_count_off,State - Number of Hosts Powered Off  - Hourly Count / Daily Avg,en
+column,derived_host_count_on,State - Number of Hosts Powered On  - Hourly Count / Daily Avg,en
+column,derived_storage_disk_managed,Content - Avg of Total Size of Managed VMs Disk Files (B),en
+column,derived_storage_disk_registered,Content - Avg of Total Size of Registered VMs Disk Files (B),en
+column,derived_storage_disk_unmanaged,Content - Avg of Total Size of Unmanaged VMs Disk Files (B),en
+column,derived_storage_disk_unregistered,Content - Avg of Total Size of Unregistered VMs Disk Files (B),en
+column,derived_storage_free,Capacity - Avg Free Space for Collected Intervals (B),en
+column,derived_storage_mem_managed,Content - Avg of Total Size of Managed VMs Memory Files (B),en
+column,derived_storage_mem_registered,Content - Avg of Total Size of Registered VMs Memory Files (B),en
+column,derived_storage_mem_unmanaged,Content - Avg of Total Size of Unmanaged VMs Memory Files (B),en
+column,derived_storage_mem_unregistered,Content - Avg of Total Size of Unregistered VMs Memory Files (B),en
+column,derived_storage_snapshot_managed,Content - Avg of Total Size of Managed VMs Snapshot Files (B),en
+column,derived_storage_snapshot_registered,Content - Avg of Total Size of Registered VMs Snapshot Files (B),en
+column,derived_storage_snapshot_unmanaged,Content - Avg of Total Size of Unmanaged VMs Snapshot Files (B),en
+column,derived_storage_snapshot_unregistered,Content - Avg of Total Size of Unregistered VMs Snapshot Files (B),en
+column,derived_storage_total,Capacity - Total Space (B),en
+column,derived_storage_used_managed,Content - Avg Space Used by Managed VMs for Collected Intervals (B),en
+column,derived_storage_used_registered,Content - Avg Space Used by Registered VMs for Collected Intervals (B),en
+column,derived_storage_used_unmanaged,Content - Avg Space Used by Unmanaged VMs for Collected Intervals (B),en
+column,derived_storage_used_unregistered,Content - Avg Space Used by Unregistered VMs for Collected Intervals (B),en
+column,derived_storage_vm_count_managed,Content - Avg Count of Managed VMs,en
+column,derived_storage_vm_count_registered,Content - Avg Count of Registered VMs,en
+column,derived_storage_vm_count_unmanaged,Content - Avg Count of Unmanaged VMs,en
+column,derived_storage_vm_count_unregistered,Content - Avg Count of Unregistered VMs,en
+column,v_derived_vm_count,State - Peak Avg VMs - Hourly Count / Daily Avg,en
+column,derived_vm_count_off,State - Peak Avg VMs Powered-off - Hourly Count / Daily Avg,en
+column,derived_vm_count_on,State - Peak Avg VMs Powered-On - Hourly Count / Daily Avg,en
+column,dest_host_name,Destination Host Name,en
+column,dest_vm_location,Destination VM Location,en
+column,dest_vm_name,Destination VM Name,en
+column,dhcp_enabled,DHCP Enabled,en
+column,dhcp_server,DHCP Server,en
+
+column,direction_of_trend,Trend,en
+
+column,disk_usage_rate_average,Disk I/O - Avg (KBps),en
+column,disk_devicelatency_absolute_average,Disk Latency - Avg (ms),en
+column,disk_kernellatency_absolute_average,Disk Kernel Latency - Avg (ms),en
+column,disk_queuelatency_absolute_average,Disk Queue Latency - Avg (ms),en
+column,EmsClusterPerformance.disk_usage_rate_average,Disk I/O - Aggregate of Avg for Child Hosts (KBps),en
+
+column,disks_aligned,Disks Aligned,en
+column,dns_server,DNS Server,en
+column,emstype_description,Type,en
+column,ems_cluster_name,Cluster,en
+column,enabled,Active,en
+column,end_trend_value,End,en
+column,event_src,Event Source,en
+column,evaluation_description,What is evaluated,en
+column,effective_cpu,CPU - Effective,en
+column,effective_memory,Memory - Effective,en
+column,filename,File Name,en
+column,fqname,Fully Qualified Name,en
+column,guest_os,Guest OS,en
+column,guid,EVM Unique ID (Guid),en
+column,has_rdm_disk,Has an RDM Disk?,en
+column,homedir,Home Directory,en
+column,host_name,Parent Host,en
+column,hostnames,Host Names,en
+column,ipaddress,IP Address,en
+column,ip_address,IP Address,en
+column,ipaddresses,IP Addresses,en
+column,ip_addresses,IP Addresses,en
+column,ipmi_address,IPMI IP Address,en
+column,ipmi_enabled,IPMI Enabled,en
+column,is_evm_appliance,Is an EVM Appliance?,en
+column,last_scan_attempt_on,Last Analysis Attempt On,en
+column,last_scan_on,Last Analysis Time,en
+column,last_sync_on,Last Sync Time,en
+column,last_update_status_str,Last Update Status,en
+column,logical_cpus,Number of CPU Cores,en
+column,macaddress,MAC Address,en
+column,mac_address,MAC Address,en
+column,macaddresses,MAC Addresses,en
+column,mac_addresses,MAC Addresses,en
+
+column,max_cpu_usagemhz_rate_average,CPU - Peak Usage Rate for Collected Intervals (MHz),en
+column,EmsClusterPerformance.max_cpu_usagemhz_rate_average,CPU - Peak Usage Rate Avg for Child Hosts for Collected intervals (MHz),en
+
+column,max_cpu_usage_rate_average,CPU - Peak Usage Rate Avg for Collected Intervals (%),en
+column,max_cpu_usage_rate_average_low_over_time_period,CPU - Peak Usage Rate Avg for Collected Intervals 30 Day Low Avg (%),en
+column,max_cpu_usage_rate_average_low_over_time_period_without_overhead,CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day Low Avg (%),en
+column,max_cpu_usage_rate_average_avg_over_time_period,CPU - Peak Usage Rate Avg for Collected Intervals 30 Day Avg (%),en
+column,max_cpu_usage_rate_average_avg_over_time_period_without_overhead,CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day Avg (%),en
+column,max_cpu_usage_rate_average_high_over_time_period,CPU - Peak Usage Rate Avg for Collected Intervals 30 Day High Avg (%),en
+column,max_cpu_usage_rate_average_high_over_time_period_without_overhead,CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day High Avg (%),en
+column,max_cpu_usage_rate_average_max_over_time_period,CPU - Peak Usage Rate for Collected Intervals 30 Day Max (%),en
+column,max_cpu_usage_rate_average_max_over_time_period_without_overhead,CPU - Peak Usage Rate for Collected Intervals Without Host Overhead 30 Day Max (%),en
+column,EmsClusterPerformance.max_cpu_usage_rate_average,CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals (%),en
+column,EmsClusterPerformance.max_cpu_usage_rate_average_low_over_time_period,CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day Low Avg (%),en
+column,EmsClusterPerformance.max_cpu_usage_rate_average_low_over_time_period_without_overhead,CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host Overhead 30 Day Low Avg (%),en
+column,EmsClusterPerformance.max_cpu_usage_rate_average_avg_over_time_period,CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day Avg (%),en
+column,EmsClusterPerformance.max_cpu_usage_rate_average_avg_over_time_period_without_overhead,CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host Overhead 30 Day Avg (%),en
+column,EmsClusterPerformance.max_cpu_usage_rate_average_high_over_time_period,CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day High Avg (%),en
+column,EmsClusterPerformance.max_cpu_usage_rate_average_high_over_time_period_without_overhead,CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host Overhead 30 Day High Avg (%),en
+
+column,max_derived_cpu_available,CPU Max Total MHz,en
+column,max_derived_cpu_reserved,CPU Max Available MHz,en
+column,VmPerformance.max_derived_cpu_reserved,CPU Max Reserved MHz,en
+column,max_derived_host_count_on,State - Peak Number of Hosts Powered On  - Hourly Count / Daily Avg,en
+column,max_derived_host_count_off,State - Peak Number of Hosts Powered Off  - Hourly Count / Daily Avg,en
+column,max_derived_memory_available,Memory Max Total,en
+column,VmPerformance.max_derived_memory_available,Memory Max Allocated,en
+column,max_derived_memory_reserved,Memory Max Available,en
+column,VmPerformance.max_derived_memory_reserved,Memory Max Reserved,en
+
+column,max_derived_memory_used,Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB),en
+column,VmPerformance.max_derived_memory_used,Memory - Peak Avg Used for Collected Intervals (MB),en
+
+column,max_derived_storage_free,Disk Space Max Free,en
+column,max_derived_storage_total,Disk Space Max Total,en
+column,StoragePerformance.max_derived_storage_total,Disk Space Max Total,en
+column,max_derived_vm_count_on,State - Peak Number of VMs Powered On  - Hourly Count / Daily Avg,en
+column,max_derived_vm_count_off,State - Peak Number of VMs Powered Off  - Hourly Count / Daily Avg,en
+
+column,max_disk_usage_rate_average,Disk I/O - Peak Avg for Collected Intervals (KBps),en
+column,EmsClusterPerformance.max_disk_usage_rate_average,Disk I/O - Peak Avg for Child Hosts  for Collected Intervals (KBps),en
+
+column,max_mem_usage_absolute_average,Memory - Peak Usage of Allocated for Collected Intervals (%),en
+column,max_mem_usage_absolute_average_avg_over_time_period,Memory - Peak Usage of Allocated for Collected Intervals 30 Day Avg (%),en
+column,max_mem_usage_absolute_average_avg_over_time_period_without_overhead,Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day Avg (%),en
+column,max_mem_usage_absolute_average_low_over_time_period,Memory - Peak Usage of Allocated for Collected Intervals 30 Day Low Avg (%),en
+column,max_mem_usage_absolute_average_low_over_time_period_without_overhead,Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day Low Avg (%),en
+column,max_mem_usage_absolute_average_high_over_time_period,Memory - Peak Usage of Allocated for Collected Intervals 30 Day High Avg (%),en
+column,max_mem_usage_absolute_average_high_over_time_period_without_overhead,Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day High Avg (%),en
+column,max_mem_usage_absolute_average_max_over_time_period,Memory - Peak Usage of Allocated for Collected Intervals 30 Day Max (%),en
+column,max_mem_usage_absolute_average_max_over_time_period_without_overhead,Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day Max (%),en
+column,EmsClusterPerformance.max_mem_usage_absolute_average,Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals (%),en
+column,EmsClusterPerformance.max_mem_usage_absolute_average_avg_over_time_period,Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals 30 Day Avg (%),en
+column,EmsClusterPerformance.max_mem_usage_absolute_average_avg_over_time_period_without_overhead,Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals Without Host Overhead 30 Day Avg (%),en
+column,EmsClusterPerformance.max_mem_usage_absolute_average_low_over_time_period,Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals 30 Day Low Avg (%),en
+column,EmsClusterPerformance.max_mem_usage_absolute_average_low_over_time_period_without_overhead,Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals Without Host Overhead 30 Day Low Avg (%),en
+column,EmsClusterPerformance.max_mem_usage_absolute_average_high_over_time_period,Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals 30 Day High Avg (%),en
+column,EmsClusterPerformance.max_mem_usage_absolute_average_high_over_time_period_without_overhead,Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals Without Host Overhead 30 Day High Avg (%),en
+
+column,max_net_usage_rate_average,Network I/O - Peak Avg for Collected Intervals (KBps),en
+column,EmsClusterPerformance.max_net_usage_rate_average,Network I/O - Peak Avg for Child Hosts for Collected Intervals (KBps),en
+
+column,max_sys_uptime_absolute_latest,Uptime - Peak Uptime for Collected Intervals (Seconds),en
+column,max_trend_value,Max,en
+column,max_v_derived_storage_used,Disk Space Max Used,en
+column,memory_cpu,RAM,en
+column,mem_cpu,Memory,en
+column,memory_size,Memory Usage,en
+
+column,min_mem_vmmemctl_absolute_average,Memory - Balloon Min Average,en
+column,min_mem_vmmemctltarget_absolute_average,Memory - Balloon Target Min Average,en
+column,min_mem_swapin_absolute_average,Memory - Swap In Min Average,en
+column,min_mem_swapout_absolute_average,Memory - Swap Out Min Average,en
+column,min_mem_swapped_absolute_average,Memory - Swapped Min Average,en
+column,min_mem_swaptarget_absolute_average,Memory - Swap Min Target Average,en
+column,mem_vmmemctl_absolute_average,Memory - Balloon Average,en
+column,mem_vmmemctltarget_absolute_average,Memory - Balloon Target Average,en
+column,mem_swapin_absolute_average,Memory - Swap In Average,en
+column,mem_swapout_absolute_average,Memory - Swap Out Average,en
+column,mem_swapped_absolute_average,Memory - Swapped Average,en
+column,mem_swaptarget_absolute_average,Memory - Swap Target Average,en
+column,max_mem_vmmemctl_absolute_average,Memory - Balloon Max Average,en
+column,max_mem_vmmemctltarget_absolute_average,Memory - Balloon Target Max Average,en
+column,max_mem_swapin_absolute_average,Memory - Swap In Max Average,en
+column,max_mem_swapout_absolute_average,Memory - Swap Out Max Average,en
+column,max_mem_swapped_absolute_average,Memory - Swapped Max Average,en
+column,max_mem_swaptarget_absolute_average,Memory - Swap Target Max Average,en
+
+column,mem_usage_absolute_average,Memory - Usage of Total Allocated (%),en
+column,EmsClusterPerformance.mem_usage_absolute_average,Memory - Avg Usage of Total Allocated for Collected Intervals (%),en
+
+column,min_cpu_usagemhz_rate_average,CPU - Min Usage for Collected Intervals (MHz),en
+column,EmsClusterPerformance.min_cpu_usagemhz_rate_average,CPU - Min Usage Rate Avg for Child Hosts for Collected Intervals (MHz),en
+
+column,min_cpu_usage_rate_average,CPU - Min Usage Rate for Collected Intervals (%),en
+column,EmsClusterPerformance.min_cpu_usage_rate_average,CPU - Min Usage Rate Avg for Child Hosts for Collected Intervals (%),en
+
+column,min_derived_host_count_off,State - Min Number of Hosts Powered Off  - Hourly Count / Daily Avg,en
+column,min_derived_host_count_on,State - Min Number of Hosts Powered On  - Hourly Count / Daily Avg,en
+
+column,min_derived_memory_used,Memory - Minimum Aggregate Avg Used for Child VMs for Collected Intervals (MB),en
+column,VmPerformance.min_derived_memory_used,Memory - Minimum Avg Used for Collected Intervals (MB),en
+
+column,min_derived_storage_free,Disk Space Min Free,en
+column,min_derived_vm_count_off,State - Min Number of VMs Powered Off  - Hourly Count / Daily Avg,en
+column,min_derived_vm_count_on,State - Min Number of VMs Powered On  - Hourly Count / Daily Avg,en
+column,min_trend_value,Min,en
+column,min_v_derived_storage_used,Disk Space Min Used,en
+
+column,min_disk_usage_rate_average,Disk I/O - Min Avg for Collected Intervals (KBps),en
+column,EmsClusterPerformance.min_disk_usage_rate_average,Disk I/O - Min Avg for Child Hosts for Collected Intervals (KBps),en
+
+column,min_mem_usage_absolute_average,Memory - Min Usage of Allocated for Collected Intervals (%),en
+column,EmsClusterPerformance.min_mem_usage_absolute_average,Memory - Min Aggregate Usage of Allocated for Child Hosts for Collected Intervals (%),en
+
+column,min_net_usage_rate_average,Network I/O - Min Avg for Collected Intervals (KBps),en
+column,EmsClusterPerformance.min_net_usage_rate_average,Network I/O - Min Avg for Child Hosts for Collected Intervals (KBps),en
+
+column,min_sys_uptime_absolute_latest,Uptime - Minimum Time Between Startups for Collected Intervals (Seconds),en
+column,multiplehostaccess,Multiple Host Access,en
+
+column,net_usage_rate_average,Network I/O - Avg (KBps),en
+column,EmsClusterPerformance.net_usage_rate_average,Network I/O - Aggregate of Avg for Child Hosts (KBps),en
+column,mode,Type,en
+
+column,nfs_other_latency,Usage (NFS) - Time for Other Operations Avg,en
+column,nfs_other_latency_max,Usage (NFS) - Time for Other Operations Avg Max,en
+column,nfs_other_latency_min,Usage (NFS) - Time for Other Operations Avg Min,en
+column,nfs_other_ops,Usage (NFS) - Number of Other Operations per Second,en
+column,nfs_other_ops_max,Usage (NFS) - Number of Other Operations per Second Max,en
+column,nfs_other_ops_min,Usage (NFS) - Number of Other Operations per Second Min,en
+column,nfs_read_data,Usage (NFS) - Bytes Read per Second,en
+column,nfs_read_data_max,Usage (NFS) - Bytes Read per Second Max,en
+column,nfs_read_data_min,Usage (NFS) - Bytes Read per Second Min,en
+column,nfs_read_latency,Usage (NFS) - Time for Reads Avg,en
+column,nfs_read_latency_max,Usage (NFS) - Time for Reads Avg Max,en
+column,nfs_read_latency_min,Usage (NFS) - Time for Reads Avg Min,en
+column,nfs_read_ops,Usage (NFS) - Number of Reads per Second,en
+column,nfs_read_ops_max,Usage (NFS) - Number of Reads per Second Max,en
+column,nfs_read_ops_min,Usage (NFS) - Number of Reads per Second Min,en
+column,nfs_write_data,Usage (NFS) - Bytes Written per Second,en
+column,nfs_write_data_max,Usage (NFS) - Bytes Written per Second Max,en
+column,nfs_write_data_min,Usage (NFS) - Bytes Written per Second Min,en
+column,nfs_write_latency,Usage (NFS) - Time for Writes Avg,en
+column,nfs_write_latency_max,Usage (NFS) - Time for Writes Avg Max,en
+column,nfs_write_latency_min,Usage (NFS) - Time for Writes Avg Min,en
+column,nfs_write_ops,Usage (NFS) - Number of Writes per Second,en
+column,nfs_write_ops_max,Usage (NFS) - Number of Writes per Second Max,en
+column,nfs_write_ops_min,Usage (NFS) - Number of Writes per Second Min,en
+
+column,notify_automate,Management Event Raised,en
+column,notify_email,Email,en
+column,notify_evm_event,Event on Timeline,en
+column,notify_snmp,SNMP,en
+column,num_cpu,Number of CPUs,en
+column,num_hard_disks,Number of Hard Disks,en
+column,num_disks,Number of Disks,en
+column,numvcpus,Number of CPUs,en
+column,ldap_group,LDAP Group,en
+
+column,os_image_name,OS Name,en
+column,other_latency,Usage (Other) - Time for Other Operations Avg,en
+column,other_latency_max,Usage (Other) - Time for Other Operations Avg Max,en
+column,other_latency_min,Usage (Other) - Time for Other Operations Avg Min,en
+column,other_ops,Usage (Other) - Number of Other Operations per Second,en
+column,other_ops_max,Usage (Other) - Number of Other Operations per Second Max,en
+column,other_ops_min,Usage (Other) - Number of Other Operations per Second Miin,en
+column,overallocated_vcpus_pct,CPU - % Overallocated,en
+column,overallocated_mem_pct,Memory - % Overallocated,en
+column,owned_by_current_user,Owned by Me?,en
+column,owned_by_current_ldap_group,In My LDAP Group?,en
+column,owning_ldap_group,LDAP Group,en
+column,parent_blue_folder_1_name,Folder Name (VMs & Templates) 1,en
+column,parent_blue_folder_2_name,Folder Name (VMs & Templates) 2,en
+column,parent_blue_folder_3_name,Folder Name (VMs & Templates) 3,en
+column,parent_blue_folder_4_name,Folder Name (VMs & Templates) 4,en
+column,parent_blue_folder_5_name,Folder Name (VMs & Templates) 5,en
+column,parent_blue_folder_6_name,Folder Name (VMs & Templates) 6,en
+column,parent_blue_folder_7_name,Folder Name (VMs & Templates) 7,en
+column,parent_blue_folder_8_name,Folder Name (VMs & Templates) 8,en
+column,parent_blue_folder_9_name,Folder Name (VMs & Templates) 9,en
+column,partitions_aligned,Partitions Aligned,en
+column,percent_cpu,CPU %,en
+column,percent_memory,Memory %,en
+column,pid,PID,en
+column,provisioned_storage,Total Provisioned Space,en
+column,ram_size,RAM Size (MB),en
+column,read_data,Usage (Other) - Bytes Read per Second,en
+column,read_data_max,Usage (Other) - Bytes Read per Second Max,en
+column,read_data_min,Usage (Other) - Bytes Read per Second Min,en
+column,read_latency,Usage (Other) - Time for Reads Avg,en
+column,read_latency_max,Usage (Other) - Time for Reads Avg Max,en
+column,read_latency_min,Usage (Other) - Time for Reads Avg Min,en
+column,read_ops,Usage (Other) - Number of Reads per Second,en
+column,read_ops_max,Usage (Other) - Number of Reads per Second Max,en
+column,read_ops_min,Usage (Other) - Number of Reads per Second Min,en
+column,resource_name,Asset Name,en
+column,ems_cloud.total_miq_templates,Total Images,en
+column,availability_zone.total_vms,Total Instances,en
+column,ems_cloud.total_vms,Total Instances,en
+column,flavor.total_vms,Total Instances,en
+column,total_vms_on,Total VMs Powered On,en
+column,total_vms_off,Total VMs Powered Off,en
+column,total_vms_unknown,Total VMs Powered Unknown,en
+column,total_vms_never,Total VMs Powered Never,en
+column,total_vms_suspended,Total VMs Power Suspended,en
+
+#
+# Right-Sizing Recommendations
+#
+column,recommended_mem,Memory - Recommendation,en
+column,recommended_vcpus,CPU - Recommendation,en
+
+column,aggressive_recommended_mem,Memory - Aggressive Recommendation,en
+column,aggressive_recommended_vcpus,CPU - Aggressive Recommendation,en
+column,aggressive_vcpus_recommended_change,CPU - Aggressive Recommendation Savings,en
+column,aggressive_vcpus_recommended_change_pct,CPU - Aggressive Recommendation Savings (%),en
+column,aggressive_mem_recommended_change,Memory - Aggressive Recommendation Savings,en
+column,aggressive_mem_recommended_change_pct,Memory - Aggressive Recommendation Savings (%),en
+
+column,moderate_recommended_mem,Memory - Moderate Recommendation,en
+column,moderate_recommended_vcpus,CPU - Moderate Recommendation,en
+column,moderate_vcpus_recommended_change,CPU - Moderate Recommendation Savings,en
+column,moderate_vcpus_recommended_change_pct,CPU - Moderate Recommendation Savings (%),en
+column,moderate_mem_recommended_change,Memory - Moderate Recommendation Savings,en
+column,moderate_mem_recommended_change_pct,Memory - Moderate Recommendation Savings (%),en
+
+column,conservative_recommended_mem,Memory - Conservative Recommendation,en
+column,conservative_recommended_vcpus,CPU - Conservative Recommendation,en
+column,conservative_vcpus_recommended_change,CPU - Conservative Recommendation Savings,en
+column,conservative_vcpus_recommended_change_pct,CPU - Conservative Recommendation Savings (%),en
+column,conservative_mem_recommended_change,Memory - Conservative Recommendation Savings,en
+column,conservative_mem_recommended_change_pct,Memory - Conservative Recommendation Savings (%),en
+
+column,san_other_latency,Usage (Other) - Time for Other Block Protocol Operations Avg,en
+column,san_other_latency_max,Usage (Other) - Time for Other Block Protocol Operations Avg Max,en
+column,san_other_latency_min,Usage (Other) - Time for Other Block Protocol Operations Avg Min,en
+column,san_other_ops,Usage (Block Protocol) - Number of Other Operations per Second,en
+column,san_other_ops_max,Usage (Block Protocol) - Number of Other Operations per Second Max,en
+column,san_other_ops_min,Usage (Block Protocol) - Number of Other Operations per Second Min,en
+column,san_read_data,Usage (Block Protocol) - Bytes Read per Second,en
+column,san_read_data_max,Usage (Block Protocol) - Bytes Read per Second Max,en
+column,san_read_data_min,Usage (Block Protocol) - Bytes Read per Second Min,en
+column,san_read_latency,Usage (Block Protocol) - Time for Reads Avg,en
+column,san_read_latency_max,Usage (Block Protocol) - Time for Reads Avg Max,en
+column,san_read_latency_min,Usage (Block Protocol) - Time for Reads Avg Min,en
+column,san_read_ops,Usage (Block Protocol) - Number of Reads per Second,en
+column,san_read_ops_max,Usage (Block Protocol) - Number of Reads per Second Max,en
+column,san_read_ops_min,Usage (Block Protocol) - Number of Reads per Second Min,en
+column,san_write_data,Usage (Block Protocol) - Bytes Written per Second,en
+column,san_write_data_max,Usage (Block Protocol) - Bytes Written per Second Max,en
+column,san_write_data_min,Usage (Block Protocol) - Bytes Written per Second Min,en
+column,san_write_latency,Usage (Block Protocol) - Time for Writes Avg,en
+column,san_write_latency_max,Usage (Block Protocol) - Time for Writes Avg Max,en
+column,san_write_latency_min,Usage (Block Protocol) - Time for Writes Avg Min,en
+column,san_write_ops,Usage (Block Protocol) - Number of Writes per Second,en
+column,san_write_ops_max,Usage (Block Protocol) - Number of Writes per Second Max,en
+column,san_write_ops_min,Usage (Block Protocol) - Number of Writes per Second Min,en
+
+column,column,slope,Slope,en
+column,src_host_name,Source Host Name,en
+column,src_vm_location,Source VM Location,en
+column,src_vm_name,Source VM Name,en
+column,ssh_permit_root_login,SSH Root Access,en
+column,start_trend_value,Start,en
+column,svc_type,Service Type,en
+column,sys_uptime_absolute_latest,Asset - Uptime (Seconds),en
+column,thin_provisioned,Thin Provisioned,en
+column,timestamp,Activity Sample - Timestamp (Day/Time),en
+column,total_ops,Usage (All) - Number of Operations per Second,en
+column,total_ops_max,Usage (All) - Number of Operations per Second Max,en
+column,total_ops_min,Usage (All) - Number of Operations per Second Min,en
+
+column,trend_cpu_usagemhz_rate_average,CPU Average Used MHz Trend,en
+column,trend_max_cpu_usagemhz_rate_average,CPU Max Used MHz Trend,en
+column,trend_derived_memory_used,Memory Average Used Trend,en
+column,trend_max_derived_memory_used,Memory Max Used Trend,en
+column,trend_max_disk_usage_rate_average,Disk I/O Max Trend,en
+column,trend_max_net_usage_rate_average,Network I/O Max Trend,en
+column,trend_v_derived_storage_used,Disk Space Average Trend,en
+column,trend_max_v_derived_storage_used,Disk Space Max Trend,en
+
+column,typename,Type Name,en
+column,uid,UID,en
+column,uncommitted_storage,Uncommitted Space,en
+column,updated_at,Date Updated,en
+column,updated_on,Date Updated,en
+column,used_disk_storage,Total Used Disk Space,en
+column,used_percent_of_provisioned,Percent Used Provisioned Space,en
+column,used_storage_by_state,Currently Used Space,en
+column,v_arch,Architecture,en
+column,v_cpu_vr_ratio,CPU Cores Virtual to Real Ratio,en
+column,v_datastore_path,Datastore Path,en
+column,v_date,Activity Sample - Day (MM DD YY),en
+column,v_debris_percent_of_used,Non-VM Files Percent of Used,en
+column,v_derived_storage_used,Capacity - Used Space (B),en
+column,v_direct_vms,Direct VMs,en
+column,v_disk_percent_of_used,Disk Files Percent of Used,en
+column,v_free_space_percent_of_total,Free Space Percent of Total,en
+column,v_host_vmm_product,Parent Host Platform,en
+column,v_is_a_template,Is a Template,en
+column,v_memory_percent_of_used,VM Memory Files Percent of Used,en
+column,v_message,Message,en
+column,v_owning_cluster,Parent Cluster,en
+column,v_owning_datacenter,Parent Datacenter,en
+column,v_owning_folder,Parent Folder (Hosts & Clusters),en
+column,v_owning_folder_path,Parent Folder Path (Hosts & Clusters),en
+column,v_owning_blue_folder,Parent Folder (VMs & Templates),en
+column,v_owning_blue_folder_path,Parent Folder Path (VMs & Templates),en
+column,v_owning_resource_pool,Parent Resource Pool,en
+column,v_parent_cluster,Parent Cluster,en
+column,v_parent_host,Parent Host,en
+column,v_parent_folder,Parent Folder,en
+column,v_parent_datacenter,Parent Datacenter,en
+column,v_parent_resource_pool,Parent Resource Pool,en
+column,v_pct_cpu_ready_delta_summation,CPU - % Ready,en
+column,v_pct_cpu_used_delta_summation,CPU - % Used,en
+column,v_pct_cpu_wait_delta_summation,CPU - % Wait,en
+
+column,capacity_profile_1_vcpu_method,Capacity - Profile 1 - vCPU Calculation Method,en
+column,capacity_profile_1_memory_method,Capacity - Profile 1 - Memory Calculation Method,en
+column,capacity_profile_1_vcpu_commitment_ratio,Capacity - Profile 1 - vCPU Commitment Ratio,en
+column,capacity_profile_1_memory_commitment_ratio,Capacity - Profile 1 - Memory Commitment Ratio,en
+column,capacity_profile_1_vcpu_maximum,Capacity - Profile 1 - Maximum vCPU per VM,en
+column,capacity_profile_1_vcpu_minimum,Capacity - Profile 1 - Minimum vCPU per VM,en
+column,capacity_profile_1_memory_maximum,Capacity - Profile 1 - Maximum Memory per VM,en
+column,capacity_profile_1_memory_minimum,Capacity - Profile 1 - Minimum Memory per VM,en
+column,capacity_profile_1_available_host_vcpu,Capacity - Profile 1 - Total CPU with HA,en
+column,capacity_profile_1_available_host_memory,Capacity - Profile 1 - Total Memory with HA,en
+column,capacity_profile_1_remaining_host_vcpu,Capacity - Profile 1 - Available vCPUs for New VMs,en
+column,capacity_profile_1_remaining_host_memory,Capacity - Profile 1 - Available Memory for New VMs,en
+column,capacity_profile_1_vcpu_per_vm,Capacity - Profile 1 - Number of vCPUs per VM,en
+column,capacity_profile_1_memory_per_vm,Capacity - Profile 1 - Memory per VM,en
+column,capacity_profile_1_vcpu_per_vm_with_min_max,Capacity - Profile 1 - Number of vCPUs per VM Used in Calculation,en
+column,capacity_profile_1_memory_per_vm_with_min_max,Capacity - Profile 1 - Memory per VM Used in Calculation,en
+column,capacity_profile_1_projected_vm_count_based_on_vcpu,Capacity - Profile 1 - VM Count based on vCPU,en
+column,capacity_profile_1_projected_vm_count_based_on_memory,Capacity - Profile 1 - VM Count based on Memory,en
+column,capacity_profile_1_projected_vm_count_based_on_all,Capacity - Profile 1 - VM Count (combined),en
+column,capacity_profile_1_remaining_vm_count_based_on_vcpu,Capacity - Profile 1 - Available VM Count based on vCPU,en
+column,capacity_profile_1_remaining_vm_count_based_on_memory,Capacity - Profile 1 - Available VM Count based on Memory,en
+column,capacity_profile_1_remaining_vm_count_based_on_all,Capacity - Profile 1 - Available VM Count (combined),en
+
+column,capacity_profile_2_vcpu_method,Capacity - Profile 2 - vCPU Calculation Method,en
+column,capacity_profile_2_memory_method,Capacity - Profile 2 - Memory Calculation Method,en
+column,capacity_profile_2_vcpu_commitment_ratio,Capacity - Profile 2 - vCPU Commitment Ratio,en
+column,capacity_profile_2_memory_commitment_ratio,Capacity - Profile 2 - Memory Commitment Ratio,en
+column,capacity_profile_2_vcpu_maximum,Capacity - Profile 2 - Maximum vCPU per VM (Mhz),en
+column,capacity_profile_2_vcpu_minimum,Capacity - Profile 2 - Minimum vCPU per VM (Mhz),en
+column,capacity_profile_2_memory_maximum,Capacity - Profile 2 - Maximum Memory per VM,en
+column,capacity_profile_2_memory_minimum,Capacity - Profile 2 - Minimum Memory per VM,en
+column,capacity_profile_2_available_host_vcpu,Capacity - Profile 2 - CPU Effective with HA (Mhz),en
+column,capacity_profile_2_available_host_memory,Capacity - Profile 2 - Memory Effective with HA,en
+column,capacity_profile_2_remaining_host_vcpu,Capacity - Profile 2 - Available vCPUs for New VMs (Mhz),en
+column,capacity_profile_2_remaining_host_memory,Capacity - Profile 2 - Available Memory for New VMs,en
+column,capacity_profile_2_vcpu_per_vm,Capacity - Profile 2 - CPU Peak Avg per VM (Mhz),en
+column,capacity_profile_2_memory_per_vm,Capacity - Profile 2 - Memory per VM,en
+column,capacity_profile_2_vcpu_per_vm_with_min_max,Capacity - Profile 2 - CPU Peak Avg per VM Used in Calculation (Mhz),en
+column,capacity_profile_2_memory_per_vm_with_min_max,Capacity - Profile 2 - Memory per VM Used in Calculation,en
+column,capacity_profile_2_projected_vm_count_based_on_vcpu,Capacity - Profile 2 - VM Count based on vCPU,en
+column,capacity_profile_2_projected_vm_count_based_on_memory,Capacity - Profile 2 - VM Count based on Memory,en
+column,capacity_profile_2_projected_vm_count_based_on_all,Capacity - Profile 2 - VM Count (combined),en
+column,capacity_profile_2_remaining_vm_count_based_on_vcpu,Capacity - Profile 2 - Available VM Count based on vCPU,en
+column,capacity_profile_2_remaining_vm_count_based_on_memory,Capacity - Profile 2 - Available VM Count based on Memory,en
+column,capacity_profile_2_remaining_vm_count_based_on_all,Capacity - Profile 2 - Available VM Count (combined),en
+
+column,v_qualified_desc,Cluster in Datacenter,en
+column,v_size_numeric,Size,en
+column,v_ram_vr_ratio,Memory Virtual to Real Ratio,en
+column,v_snapshot_percent_of_used,Snapshot Files Percent of Used,en
+column,v_time,Activity Sample - Time (HH MM SS),en
+column,v_total_debris_size,Size of Non-VM Files,en
+column,v_total_disk_size,Size of VM Provisioned Disk Files,en
+column,v_total_hosts,Total Hosts,en
+column,v_total_memory_size,Size of VM Memory Files,en
+column,v_total_snapshot_size,Size of VM Snapshot Files,en
+column,v_total_snapshots,Total Snapshots,en
+column,v_total_storages,Total Datastores,en
+column,v_total_vm_misc_size,Size of Other VM Files,en
+column,v_total_vm_ram_size,Size of VM Memory Files,en
+column,v_total_vms,Total VMs,en
+column,v_used_space,Used Space,en
+column,v_used_space_percent_of_total,Used Space Percent of Total,en
+column,v_vm_misc_percent_of_used,Other VM Files Percent of Used,en
+column,v_memory_percent_of_used,VM Memory Files Percent of Used,en
+column,v_pct_free_disk_space,Pct Free Disk,en
+column,v_total_provisioned,Total Provisioned Space,en
+column,v_provisioned_percent_of_total,Provisioned Space Percent of Total,en
+column,virtual_hw_version,Virtual Hardware Version,en
+column,vmsafe_enable,VMsafe Enable,en
+column,vmsafe_agent_address,VMsafe Agent Address,en
+column,vmsafe_agent_port,VMsafe Agent Port,en
+column,vmsafe_fail_open,VMsafe Fail Open,en
+column,vmsafe_immutable_vm,VMsafe Immutable VM,en
+column,vmsafe_timeout_ms,VMsafe Timeout (ms),en
+column,vmm_buildnumber,VMM Build Number,en
+column,vmm_product,VMM Platform,en
+column,vmm_vendor,VMM Vendor,en
+column,vmm_version,VMM Version,en
+column,write_data,Usage (All) - Bytes Written per Second,en
+column,write_data_max,Usage (All) - Bytes Written per Second Max,en
+column,write_data_min,Usage (All) - Bytes Written per Second Min,en
+column,write_latency,Usage (All) - Time for Writes Avg,en
+column,write_latency_max,Usage (All) - Time for Writes Avg Max,en
+column,write_latency_min,Usage (All) - Time for Writes Avg Min,en
+column,write_ops,Usage (All) - Number of Writes per Second,en
+column,write_ops_max,Usage (All) - Number of Writes per Second Max,en
+column,write_ops_min,Usage (All) - Number of Writes per Second Min,en
+column,ws_port,Web Services Port,en
+column,ems_created_on,Created on Time,en
+column,zone_name,EVM Zone,en
+#
+# Chargeback
+#
+column,vm_name,VM Name,en
+column,display_range,Date Range,en
+column,owner_name,Owner,en
+column,cpu_allocated_cost,vCPUs Allocated Cost,en
+column,cpu_allocated_metric,vCPUs Allocated over Time Period,en
+column,cpu_used_cost,CPU Used Cost,en
+column,cpu_used_metric,CPU Used,en
+column,cpu_cost,CPU Total Cost,en
+column,cpu_metric,CPU Total,en
+column,memory_allocated_cost,Memory Allocated Cost,en
+column,memory_allocated_metric,Memory Allocated over Time Period,en
+column,memory_used_cost,Memory Used Cost,en
+column,memory_used_metric,Memory Used,en
+column,memory_cost,Memory Total Cost,en
+column,memory_metric,Memory Total,en
+column,storage_allocated_cost,Storage Allocated Cost,en
+column,storage_allocated_metric,Storage Allocated,en
+column,storage_used_cost,Storage Used Cost,en
+column,storage_used_metric,Storage Used,en
+column,storage_cost,Storage Total Cost,en
+column,storage_metric,Storage Total,en
+column,disk_io_used_cost,Disk I/O Used Cost,en
+column,disk_io_used_metric,Disk I/O Used,en
+column,disk_io_cost,Disk I/O Total Cost,en
+column,disk_io_metric,Disk I/O Total,en
+column,net_io_used_cost,Network I/O Used Cost,en
+column,net_io_used_metric,Network I/O Used,en
+column,net_io_cost,Network I/O Total Cost,en
+column,net_io_metric,Network I/O Total,en
+column,fixed_compute_1_cost,Fixed Compute Cost 1,en
+column,fixed_compute_2_cost,Fixed Compute Cost 2,en
+column,fixed_storage_1_cost,Fixed Storage Cost 1,en
+column,fixed_storage_2_cost,Fixed Storage Cost 2,en
+column,fixed_cost,Fixed Total Cost,en
+column,total_cost,Total Cost,en
+#
+# Storage derived statistic columns
+#
+column,statistic_time,Activity Sample - Timestamp (Day/Time),en
+column,v_statistic_date,Activity Sample - Day (MM DD YY),en
+column,v_statistic_time,Activity Sample - Time (HH MM SS),en
+column,interval,Interval,en
+column,k_bytes_read_per_sec,Read (KBps),en
+column,k_bytes_written_per_sec,Written (KBps),en
+column,k_bytes_transferred_per_sec,Transferred (KBps),en
+column,read_ios_per_sec,Read (IOPS),en
+column,read_hit_ios_per_sec,Read Hit (IOPS),en
+column,write_ios_per_sec,Write (IOPS),en
+column,write_hit_ios_per_sec,Write Hit (IOPS),en
+column,total_ios_per_sec,Total (IOPS),en
+column,avg_read_size,Average Read Size,en
+column,avg_write_size,Average Write Size,en
+column,pct_read,Read %,en
+column,pct_write,Write %,en
+column,pct_hit,Hit %,en
+column,utilization,Utilization %,en
+column,response_time_sec,Response Time (Seconds),en
+column,queue_depth,Queue Depth,en
+column,service_time_sec,Service Time (Seconds),en
+column,wait_time_sec,Wait Time (Seconds),en
+#
+# Misc entries
+#
+option,email,E-Mail,en
+option,name_prefix,VM Name/Prefix,en
+option,number_of_vms,Number of VMs,en
+option,source_vm_id,Source VM,en
+option,storage,Datastore,en
+option,time_to_live,Time until Retirement,en
+option,ttl_warning,Retirement Warning,en
+option,vm_description,VM Description,en
+host_os_type,windows_generic,Windows,en
+host_os_type,linux_generic,Linux,en
+discover_types,msvirtualserver,MS vCenter,en
+discover_types,virtualcenter,VMware vCenter,en
+discover_types,esx,ESX,en
+discover_types,scvmm,Microsoft System Center VMM,en
+discover_types,vmwareserver,VMware Server,en
+discover_types,hyperv,Hyper-V,en
+discover_types,kvm,KVM,en
+discover_types,ipmi,IPMI,en
+discover_types,rhevm,Red Hat Enterprise Virtualization Manager,en
+compare,Vm,VM Properties,en
+compare,VmOrTemplate,Workload,en
+compare,Host,Host Properties,en
+rate_detail_group,cpu,CPU,en
+rate_detail_group,disk_io,Disk I/O,en
+rate_detail_group,fixed,Fixed,en
+rate_detail_group,memory,Memory,en
+rate_detail_group,net_io,Network I/O,en
+rate_detail_group,storage,Storage,en
+task,destroy,delete,en
+task,retire_now,retirement,en
+task,scan,analysis,en
+task,check_compliance_queue,check compliance,en
+task,reboot_guest,restart guest,en
+ui_action,advanced_settings,Advanced Settings,en
+ui_action,hv_info,Container,en
+ui_action,disks,Number of Disks,en
+ui_action,drift_history,Drift History,en
+ui_action,event_logs,Event Logs,en
+ui_action,linux_initprocesses,Init Processes,en
+ui_action,groups,Groups,en
+ui_action,guest_applications,Guest Applications,en
+ui_action,filesystems,Filesystems,en
+ui_action,filesystem_drivers,Filesystem Drivers,en
+ui_action,kernel_drivers,Kernel Drivers,en
+ui_action,parent_vm,Parent VM,en
+ui_action,patches,Patches,en
+ui_action,processes,Running Processes,en
+ui_action,os_info,OS Info,en
+ui_action,registry_items,Registry Items,en
+ui_action,resources_info,Resources,en
+ui_action,scan_history,Scan History,en
+ui_action,snapshot_info,Snapshots,en
+ui_action,users,Users,en
+ui_action,vmtree_info,Genealogy,en
+ui_action,win32_services,Win32 Services,en

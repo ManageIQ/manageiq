@@ -1,0 +1,197 @@
+<% button_div ||= "center_tb" %>
+<% if action_url.include?("/") %>
+	<% action_method = action_url.split("/").first %>
+	<% action_id = action_url.split("/").last %>
+	<% db ||= nil %>
+<% end %>
+<% url = action_id ? url_for(:action=>action_method, :id=>action_id) : url_for(:action=>action_url) %>
+<% @pc_occ ||= 0; @pc_occ+=1 %>
+
+<div id='pc_div_<%= @pc_occ.to_s %>'>
+
+	<table border="0" cellpadding="0" cellspacing="0" width="100%"
+		style="
+				height: 30px;
+				border: 1px solid #BAB9BA;
+				border-width: 0px 1px 0px 1px;
+				background: url(/images/layout/teaserbarlg.png) repeat-x left bottom;
+				">
+
+		<tr>
+			<% if @pc_occ == 1 %>
+				<% if ! @no_checkall && ! @no_checkboxes %>
+					<td width="4%" nowrap  style="padding: 4px 2px 4px 2px;">
+						<input  id='masterToggle' type='checkbox' name='masterToggle' onclick="miqUpdateAllCheckboxes('<%= button_div%>', null);"/>
+							(Check All)
+					</td>
+				<% end %>
+				<% if @gtl_type != "list" && @view %>
+					<td width="4%" nowrap style="padding: 4px 2px 4px 2px;">
+						<%= select_tag("sort_choice",
+                                options_for_select(["Sort by:"] + @view.headers),
+                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+					</td>
+				<% end %>
+			<% else %>
+				<% if @bottom_msg %>
+					<%= h(@bottom_msg) %>
+				<% end %>
+			<% end %>
+			<%
+				unless db.blank?
+					if db == "EmsInfra"
+						db = "ems_infra"
+          elsif db == "EmsCloud"
+            db = "ems_cloud"
+					elsif db == "EmsCluster"
+						db = "ems_cluster"
+					elsif db == "ResourcePool"
+						db = "resource_pool"
+					elsif db == "OntapStorageSystem"
+						db = "ontap_storage_system"
+					elsif db == "OntapLogicalDisk"
+						db = "ontap_logical_disk"
+					elsif db == "CimBaseStorageExtent"
+						db = "cim_base_storage_extent"
+					elsif db == "OntapStorageVolume"
+						db = "ontap_storage_volume"
+					elsif db == "StorageManager"
+						db = "storage_manager"
+					elsif db == "OntapFileShare"
+						db = "ontap_file_share"
+					elsif db == "SniaLocalFileSystem"
+						db = "snia_local_file_system"
+					elsif db == "VdiController"
+						db = "vdi_controller"
+					elsif db == "VdiDesktop"
+						db = "vdi_desktop"
+					elsif db == "VdiDesktopPool"
+						db = "vdi_desktop_pool"
+					elsif db == "VdiEndpointDevice"
+						db = "vdi_endpoint_device"
+					elsif db == "VdiFarm"
+						db = "vdi_farm"
+					elsif db == "VdiUser"
+						db = "vdi_user"
+					elsif db == "VmVdi"
+						db = "vm_vdi"
+					end
+					@db = db
+				end
+			%>
+			<% if @pc_occ == 1 %>
+				<td nowrap  style="padding: 4px 2px 4px 2px;">
+					<% unless @embedded %>
+								<% if @sortdir == "ASC" %>
+									Asc. by:
+								<% else %>
+									Desc. by:
+								<% end %>
+								<%= @view.headers[@sortcol] %>
+					<% end %>
+				</td>
+			<% end %>
+			<td align="right" valign="middle">
+				<table border="0" cellpadding="0" cellspacing="0" align="right">
+					<tr>
+						<td style="padding: 4px 2px 4px 2px;" nowrap>Per page:</td>
+						<td style="padding: 4px 2px 4px 2px;">
+							<%= select_tag("perpage_setting#{@pc_occ}",
+                                options_for_select(@pp_choices, pages[:perpage]),
+                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+						</td>
+						<td nowrap>
+								<!-- first button -->
+								<% if pages[:current] > 1 %>
+									<% if @ajax_paging_buttons %>
+
+											<%= link_to(image_tag('/images/toolbars/first.png', :border=>"0", :class=>"rollover small"),
+															{:action=>action_url, :id=>action_id, :page=>1},
+															"data-miq_sparkle_on" => true,
+															"data-miq_sparkle_off" => true,
+															:remote=>true,
+															:title=>"") %>
+
+											<%= link_to(image_tag('/images/toolbars/previous.png', :border=>"0", :class=>"rollover small"),
+															{:action=>action_url, :id=>action_id, :page=>pages[:current] - 1},
+															"data-miq_sparkle_on" => true,
+															"data-miq_sparkle_off" => true,
+															:remote=>true,
+															:title=>"") %>
+
+									<% elsif action_id %>
+
+											<%= link_to(image_tag('/images/toolbars/first.png', :border=>"0",:class=>"rollover small"),
+																	{:action=>action_method, :id=>action_id, :page=>1}) %>
+
+											<%= link_to(image_tag('/images/toolbars/previous.png', :border=>"0", :class=>"rollover small"),
+																	{:action=>action_method, :id=>action_id, :page=>pages[:current] - 1}) %>
+
+									<% else %>
+											<%= link_to(image_tag('/images/toolbars/first.png', :border=>"0", :class=>"rollover small"),
+																	{:action=>action_url, :page=>1}) %>
+
+											<%= link_to(image_tag('/images/toolbars/previous.png', :border=>"0", :class=>"rollover small"),
+																	{:action=>action_url, :page=>pages[:current] - 1}) %>
+
+									<% end %>
+								<% else %>
+											<%= image_tag('/images/toolbars/first.png',  :class=>"dimmed small") %>
+											<%= image_tag('/images/toolbars/previous.png', :class=>"dimmed small")	%>
+								<% end %>
+
+								<% if pages[:current] < pages[:total] %>
+									<% if @ajax_paging_buttons %>
+											<%= link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
+															{:action=>action_url, :id=>action_id, :page=>pages[:current] + 1},
+															"data-miq_sparkle_on" => true,
+															"data-miq_sparkle_off" => true,
+															:remote=>true,
+															:title=>"") %>
+
+											<%= link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
+															{:action=>action_url, :id=>action_id, :page=>pages[:total]},
+															"data-miq_sparkle_on" => true,
+															"data-miq_sparkle_off" => true,
+															:remote=>true,
+															:title=>"") %>
+									<% elsif action_id %>
+											<%= link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
+																	{:action=>action_method, :id=>action_id, :page=>pages[:current] + 1}) %>
+
+											<%= link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
+																	{:action=>action_method, :id=>action_id, :page=>pages[:total]}) %>
+
+									<% else %>
+											<%= link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
+																	{:action=>action_url, :page=>pages[:current] + 1}) %>
+											<%= link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
+																	{:action=>action_url, :page=>pages[:total]}) %>
+									<% end %>
+								<% else %>
+											<%= image_tag('/images/toolbars/next.png', :class=>"dimmed small") %>
+											<%= image_tag('/images/toolbars/last.png', :class=>"dimmed small") %>
+								<% end %>
+						</td>
+						<td valign="middle"  style="padding: 4px">
+							<% start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1 %>
+							<% end_number = pages[:perpage] * pages[:current] %>
+							<% if start_number == pages[:items] %>
+								<%= "(Item #{start_number} of #{pages[:items]})" %>
+							<% else %>
+								<% if end_number > pages[:items] %>
+									<%= "(Items #{start_number}-#{pages[:items]} of #{pages[:items]})" %>
+								<% else %>
+									<%= "(Items #{start_number}-#{end_number} of #{pages[:items]})" %>
+								<% end %>
+							<% end %>
+							<input type='hidden' name='limitstart' value='0' />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,17 @@
+---
+states_001: 
+  resource_type: Vm
+  created_on: 2007-07-25 17:57:46
+  timestamp: 2007-07-25 17:57:39
+  name: vmconfig
+  stats: |
+    --- 
+    created_on: "1185386259"
+    version: "1.1"
+    vender: VMware
+    original_filename: vmconfig
+    display_time: "2007-07-25T17:57:39Z"
+
+  resource_id: "1"
+  scantype: full
+  id: "5"

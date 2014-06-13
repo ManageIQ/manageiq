@@ -1,0 +1,272 @@
+# Report title
+title: "Host Compare Template"
+
+# Menu name
+menu_name: "Hosts: Compare Template"
+
+# Main DB table report is based on
+db: Host
+
+# Columns to fetch from the main table
+cols:
+- name
+- vmm_vendor
+- vmm_version
+- vmm_product
+- vmm_buildnumber
+- v_total_vms
+- ssh_permit_root_login
+- last_compliance_status
+- last_compliance_timestamp
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  vms:
+    columns:
+    - id
+  hardware:
+    group: Properties
+    columns:
+    - numvcpus
+    - memory_cpu
+    - memory_console
+    - bios
+    include:
+      nics:
+        group: Properties
+        columns:
+        - location
+        - address
+        key:
+        -
+  users:
+    group: Security
+    columns:
+    - name
+    - enabled
+    - last_logon
+    key:
+    - name
+  groups:
+    group: Security
+    columns:
+    - name
+    key:
+    - name
+  operating_system:
+    group: Configuration
+    columns:
+    - product_name
+    - version
+    - distribution
+    - build_number
+    - product_type
+    include:
+      firewall_rules:
+        group: Security
+        columns:
+        - display_name
+        - enabled
+        - host_protocol
+        - direction
+        - port
+        - end_port
+        key:
+        - display_name
+  guest_applications:
+    group: Configuration
+    columns:
+    - v_unique_name
+    - version
+    - release
+    - vendor
+    - arch
+    key:
+    - v_unique_name
+  system_services:
+    group: Configuration
+    columns:
+    - display_name
+    - running
+    key:
+    - name
+  patches:
+    group: Configuration
+    columns:
+    - name
+    - vendor
+    - v_install_date
+    key:
+    - name
+  switches:
+    group: Configuration
+    columns:
+    - name
+    - ports
+    key:
+    - name
+  lans:
+    group: Configuration
+    columns:
+    - name
+    - tag
+    key:
+    - name
+  advanced_settings:
+    group: Configuration
+    columns:
+    - name
+    - value
+    key:
+    - name
+  categories:
+    group: Categories
+    columns:
+    - department
+    - customer
+    - environment
+    - function
+    - location
+    - owner
+    - service_level
+
+# Order of columns (from all tables)
+col_order:
+- name
+- vmm_vendor
+- vmm_version
+- vmm_product
+- vmm_buildnumber
+- v_total_vms
+- ssh_permit_root_login
+- last_compliance_status
+- last_compliance_timestamp
+- hardware.numvcpus
+- hardware.memory_cpu
+- hardware.memory_console
+- hardware.bios
+- hardware.nics.location
+- hardware.nics.address
+- users.name
+- users.enabled
+- users.last_logon
+- groups.name
+- operating_system.firewall_rules.display_name
+- operating_system.firewall_rules.enabled
+- operating_system.firewall_rules.host_protocol
+- operating_system.firewall_rules.direction
+- operating_system.firewall_rules.port
+- operating_system.firewall_rules.end_port
+- operating_system.product_name
+- operating_system.version
+- operating_system.distribution
+- operating_system.build_number
+- operating_system.product_type
+- guest_applications.v_unique_name
+- guest_applications.version
+- guest_applications.vendor
+- guest_applications.release
+- guest_applications.arch
+- system_services.display_name
+- system_services.running
+- patches.name
+- patches.vendor
+- patches.v_install_date
+- switches.name
+- switches.ports
+- lans.name
+- lans.tag
+- advanced_settings.name
+- advanced_settings.value
+- categories.department
+- categories.customer
+- categories.environment
+- categories.function
+- categories.location
+- categories.owner
+- categories.service_level
+
+# Column titles, in order
+headers:
+- Name
+- Vendor
+- Version
+- Platform
+- Build Number
+- Number Of VMs
+- SSH Root Access
+- Last Compliance Status
+- Last Compliance Timestamp
+- CPUs
+- Memory
+- Console Memory
+- BIOS
+- Location
+- Address
+- Name
+- Enabled
+- Last Logon
+- Name
+- Name
+- Enabled
+- Protocol
+- Direction
+- Port
+- End Port
+- Operating System
+- Version
+- Distribution
+- Build
+- Platform Type
+- Name
+- Version
+- Vendor
+- Release
+- Architecture
+- Display Name
+- Running
+- Name
+- Vendor
+- Installed On
+- Name
+- Ports
+- Name
+- Tag
+- Key
+- Value
+- Department
+- Customer
+- Environment
+- Function
+- Location
+- Owner
+- Service Level
+
+# Condition(s) string for the SQL query
+conditions: 
+
+# Order string for the SQL query
+order:
+
+# Columns to sort the report on, in order
+sortby: 
+
+# Group rows (y=yes,n=no,c=count)
+group:
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:

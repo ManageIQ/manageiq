@@ -1,0 +1,24 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqPolicySet
+:button_groups:
+- :name: policy_profile_vmdb
+  :items:
+  - :buttonSelect: policy_profile_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: profile_edit
+      :image: edit
+      :text: 'Edit this Policy Profile'
+      :title: 'Edit this Policy Profile'
+      :url_parms: 'main_div'
+    - :button: profile_delete
+      :image: delete
+      :text: 'Remove this Policy Profile'
+      :title: 'Remove this Policy Profile'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to remove this Policy Profile?'

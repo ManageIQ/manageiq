@@ -1,0 +1,81 @@
+#
+# Toolbar config file
+#
+---
+:model: Diagnostics
+:button_groups:
+- :name: support_reloading
+  :items:
+  # Summary tab
+  - :button: refresh_server_summary
+    :image: reload
+    :title: 'Reload Current Display'
+  # workers tab
+  - :button: refresh_workers
+    :image: reload
+    :title: 'Reload current workers display'
+  # audit log
+  - :button: refresh_audit_log
+    :image: reload
+    :title: 'Reload the Audit Log Display'
+  - :button: fetch_audit_log
+    :url: '/fetch_audit_log'
+    :image: download
+    :title: 'Download the Entire Audit Log File'
+  # evm log
+  - :button: refresh_log
+    :image: reload
+    :title: 'Reload the EVM Log Display'
+  - :button: fetch_log
+    :url: '/fetch_log'
+    :image: download
+    :title: 'Download the Entire EVM Log File'
+  # production log
+  - :button: refresh_production_log
+    :image: reload
+    :title: 'Reload the #{@sb[:rails_log]} Log Display'
+  - :button: fetch_production_log
+    :url: '/fetch_production_log'
+    :image: download
+    :title: 'Download the Entire #{@sb[:rails_log]} Log File'
+- :name: ldap_domain_vmdb
+  :items:
+  # collect logs tab
+  - :buttonSelect: support_vmdb_choice
+    :image: collect_current
+    :title: 'Collect Logs'
+    :text: Collect
+    :items:
+    - :button: collect_current_logs
+      :image: collect_current
+      :text: 'Collect current logs'
+      :title: 'Collect the current logs from the selected #{ui_lookup(:table=>"miq_servers")}'
+    - :button: collect_logs
+      :image: collect_all
+      :text: 'Collect all logs'
+      :title: 'Collect all logs from the selected #{ui_lookup(:table=>"miq_servers")}'
+  - :button: log_depot_edit
+    :image: edit
+    :text: 'Edit'
+    :title: 'Edit the Log Depot settings for the selected #{ui_lookup(:table=>"miq_servers")}'
+  - :buttonSelect: support_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    # Summary tab
+    - :button: restart_server
+      :image: restart
+      :text: 'Restart server'
+      :title: 'Restart server'
+      :confirm: 'Warning: Server will be restarted, do you want to continue?'
+    # workers tab
+    - :button: restart_workers
+      :image: restart
+      :text: 'Restart selected worker'
+      :title: 'Select a worker to restart'
+      :confirm: 'Warning: Selected node will be restarted, do you want to continue?'
+
+
+
+

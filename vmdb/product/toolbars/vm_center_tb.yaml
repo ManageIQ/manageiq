@@ -1,0 +1,239 @@
+#
+# Toolbar config file
+#
+---
+:model: Vm
+:button_groups:
+- :name: vm_vmdb
+  :items:
+  - :buttonSelect: vm_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: vm_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power States"
+      :title: "Refresh relationships and power states for all items related to this VM"
+      :confirm: "Refresh relationships and power states for all items related to this VM?"
+    - :button: vm_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on this VM"
+      :confirm: "Perform SmartState Analysis on this VM?"
+    - :button: vm_collect_running_processes
+      :text: "Extract Running Processes"
+      :title: "Extract Running Processes for this VM"
+      :confirm: "Extract Running Processes for this VM?"
+    - :separator:
+    - :button: vm_edit
+      :image: edit
+      :text: "Edit this VM"
+      :title: "Edit this VM"
+      :url: '/edit'
+    - :button: vm_ownership
+      :image: ownership
+      :text: "Set Ownership"
+      :title: "Set Ownership for this VM"
+    - :button: vm_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this VM from the VMDB"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This VM and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this VM?"
+    - :button: vm_evm_relationship
+      :image: vm_evm_relationship
+      :text: "Edit Management Engine Relationship"
+      :title: "Edit Management Engine Relationship"
+      :url: '/evm_relationship'
+    - :separator:
+    - :button: vm_right_size
+      :image: right_size
+      :text: "Right-Size Recommendations"
+      :title: "CPU/Memory Recommendations of this VM"
+    - :button: vm_reconfigure
+      :image: reconfigure
+      :text: "Reconfigure this VM"
+      :title: "Reconfigure the Memory/CPU of this VM"
+#      :url: '/reconfigure'	# Uncomment if we use a url
+- :name: vm_policy
+  :items:
+  - :buttonSelect: vm_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: vm_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for this VM"
+    - :button: vm_policy_sim
+      :text: "Policy Simulation"
+      :title: "View Policy Simulation for this VM"
+    - :button: vm_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this VM"
+    - :button: vm_check_compliance
+      :image: compliance
+      :text: "Check Compliance of Last Known Configuration"
+      :title: "Check Compliance of the last known configuration for this VM"
+      :confirm: "Initiate Check Compliance of the last known configuration for this VM?"
+- :name: vm_lifecycle
+  :items:
+  - :buttonSelect: vm_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+#    :enabled: 'false'
+#    :onwhen: '1+'
+    :items:
+    - :button: vm_clone
+      :image: clone
+      :text: "Clone this VM"
+      :title: "Clone this VM"
+    - :button: vm_publish
+      :image: publish
+      :text: "Publish this VM to a Template"
+      :title: "Publish this VM to a Template"
+    - :button: vm_migrate
+      :image: migrate
+      :text: "Migrate this VM"
+      :title: "Migrate this VM to another Host/Datastore"
+    - :button: vm_retire
+      :image: retire
+      :text: "Set Retirement Date"
+      :title: "Set Retirement Dates for this VM"
+    - :button: vm_retire_now
+      :image: retire_now
+      :text: "Retire this VM"
+      :title: "Retire this VM"
+      :confirm: "Retire this VM?"
+- :name: vm_monitoring
+  :items:
+  - :buttonSelect: vm_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: vm_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this VM"
+      :url: '/show'
+      :url_parms: '?display=performance'
+    - :button: vm_timeline
+      :image: timeline
+      :text: "Timelines"
+      :title: "Show Timelines for this VM"
+      :url: '/show'
+      :url_parms: '?display=timeline'
+- :name: vm_operations
+  :items:
+  - :buttonSelect: vm_power_choice
+    :image: power_choice
+    :title: "VM Power Functions"
+    :text: Power
+    :items:
+#    - :button: vm_guest_startup
+#      :image: guest_startup
+#      :text: "Start Up Guest"
+#      :confirm: "Start Up the Guest OS on this VM?"
+    - :button: vm_guest_shutdown
+      :image: guest_shutdown
+      :text: "Shutdown Guest"
+      :title: "Shutdown the Guest OS on this VM"
+      :confirm: "Shutdown the Guest OS on this VM?"
+#    - :button: vm_guest_standby
+#      :image: suspend
+#      :text: "Suspend Guest"
+#      :confirm: "Suspend the Guest OS on this VM?"
+    - :button: vm_guest_restart
+      :image: guest_restart
+      :text: "Restart Guest"
+      :title: "Restart the Guest OS on this VM"
+      :confirm: "Restart the Guest OS on this VM?"
+    - :separator:
+    - :button: vm_start
+      :image: power_on
+      :text: "Power On"
+      :title: "Power On this VM"
+      :confirm: "Power On this VM?"
+    - :button: vm_stop
+      :image: power_off
+      :text: "Power Off"
+      :title: "Power Off this VM"
+      :confirm: "Power Off this VM?"
+    - :button: vm_suspend
+      :image: power_suspend
+      :text: "Suspend"
+      :title: "Suspend this VM"
+      :confirm: "Suspend this VM?"
+    - :button: vm_reset
+      :image: power_reset
+      :text: "Reset"
+      :title: "Reset this VM"
+      :confirm: "Reset this VM?"
+  - :button: vm_console
+    :image: console
+    :url: '/console'
+    :popup: true
+    :title: "Open a web-based console for this VM"
+    :confirm: "Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?"
+#  - :button: vm_vnc_console
+#    :image: console
+#    :url: 'vnc_console'
+#    :popup: true
+#    :title: "Open a web-based VNC console for this VM"
+#    :confirm: "Opening a VM web-based VNC console requires that VNC is pre-configured to work in your browser.  Are you sure?"
+  - :button: vm_vnc_console
+    :image: console
+    :url: 'vnc_console'
+    :title: "Open a VNC console for this VM"
+    :confirm: "Opening a VM VNC console requires that the MIQ VNC plugin is pre-configured to work in your browser.  Are you sure?"
+  - :button: vm_vmrc_console
+    :image: console
+    :url: '/vmrc_console'
+    :popup: true
+    :title: "Open a web-based VMRC console for this VM"
+    :confirm: "Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?"
+- :name: snapshot_tasks
+  :items:
+  - :button: vm_snapshot_add
+    :image: new
+    :title: "Create a new snapshot for this VM"
+    :url: '/snap'
+    :onwhen: '1'
+  - :buttonSelect: vm_delete_snap_choice
+    :image: delete_group
+    :title: "Delete Snapshots"
+    :items:
+    - :button: vm_snapshot_delete
+      :image: delete
+      :text: "Delete Selected Snapshot"
+      :title: "Delete Selected Snapshot"
+      :confirm: 'The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?'
+      :url_parms: 'main_div'
+      :onwhen: '1'
+    - :button: vm_snapshot_delete_all
+      :image: delete
+      :text: "Delete All Existing Snapshots"
+      :title: "Delete All Existing Snapshots"
+      :confirm: 'Delete all of this VMs existing snapshots?'
+  - :button: vm_snapshot_revert
+    :image: revert
+    :title: "Revert to selected snapshot"
+    :confirm: 'This VM will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?'
+    :onwhen: '1'
+- :name: vmtree_tasks
+  :items:
+  - :button: vm_tag
+    :image: tag
+    :title: "Edit Tags for this VM"
+  - :button: vm_compare
+    :image: compare
+    :title: "Compare selected VMs"
+    :url_parms: 'main_div'
+    :enabled: 'false'
+    :onwhen: '2+'
+  

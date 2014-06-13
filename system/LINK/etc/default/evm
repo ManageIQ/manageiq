@@ -1,0 +1,28 @@
+#!/bin/bash
+# Description: Sets the environment for scripts and console users
+#
+
+export RAILS_ENV=production
+export HOME=${HOME:-/root}
+export ORACLE_HOME=/usr/lib/oracle/11.2/client64/lib
+# workaround for virtual memory spike observed with RHEL6
+export MALLOC_ARENA_MAX=1
+export MALLOC_MMAP_THRESHOLD=131072
+
+# Environment variables required to enable SSL for the Qpid C++ client.  This
+# allows CFME to collect OpenStack events from Qpid over SSL.
+# - location of the QPID SSL module
+# - in versions of qpid earlier than 0.24, this requires the qpid-cpp-client-ssl
+# package to be installed
+export QPID_LOAD_MODULE=/usr/lib64/qpid/client/sslconnector.so
+# - location of the SSL cert db
+# - the certdb should contain the qpid broker server certificate
+# - the common name (CN) in the certificate should be the IP address of the
+# OpenStack server
+# - CFME does not currently support client ssl certificate for authentication
+export QPID_SSL_CERT_DB=/etc/qpid/certs
+
+[[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
+[[ -s /opt/rh/ruby193/enable ]] && source /opt/rh/ruby193/enable
+[[ -s /opt/rh/postgresql92/enable ]] && source /opt/rh/postgresql92/enable
+[[ -s /opt/rh/nodejs010/enable ]] && source /opt/rh/nodejs010/enable

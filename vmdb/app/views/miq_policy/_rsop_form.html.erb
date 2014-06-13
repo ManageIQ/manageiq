@@ -1,0 +1,69 @@
+<% url = url_for(:action=>'rsop_option_changed') %>
+<div id="rsop_form_div">
+  <table>
+    <tbody>
+    <tr>
+      <td>
+        <fieldset>
+          <p class="legend">Event Selection</p>
+          <strong style="color: #4b4b4b">Type:</strong><br/>
+          <%= select_tag('event_typ',
+                         options_for_select(["<Choose>"] + @temp[:rsop_events],
+                                            @sb[:rsop][:event]),
+                         "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% if @sb[:rsop][:event] != nil %>
+            <br/><strong style="color: #4b4b4b">Event:</strong><br/>
+            <%= select_tag('event_value',
+                           options_for_select(["<Choose>"] + @temp[:rsop_event_sets],
+                                              @sb[:rsop][:event_value]),
+                           "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% end %>
+        </fieldset>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <fieldset>
+          <p class="legend">VM Selection</p>
+          <%= select_tag('filter_typ',
+                         options_for_select(
+                           [
+                             ["<Choose>"],
+                             ["By #{ui_lookup(:table=>"ext_management_systems")}","ems"],
+                             ["By #{ui_lookup(:table=>"ems_clusters")}","cluster"],
+                             ["By Host","host"],
+                             ["Single VM","vm"]
+                           ],
+                           @sb[:rsop][:filter]),
+                         "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% if @sb[:rsop][:filter] == "host" %>
+            <br/><br/>
+            <%= select_tag('filter_value',
+                           options_for_select(["<Choose>"] + Array(@sb[:rsop][:hosts].invert).sort,
+                                              @sb[:rsop][:filter_value]),
+                           "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% elsif @sb[:rsop][:filter] == "cluster" %>
+            <br/><br/>
+            <%= select_tag('filter_value',
+                           options_for_select(["<Choose>"] + Array(@sb[:rsop][:clusters].invert).sort,
+                                              @sb[:rsop][:filter_value]),
+                           "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% elsif @sb[:rsop][:filter] == "ems" %>
+            <br/><br/>
+            <%= select_tag('filter_value',
+                           options_for_select(["<Choose>"] + Array(@sb[:rsop][:emss].invert).sort,
+                                              @sb[:rsop][:filter_value]),
+                           "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% elsif @sb[:rsop][:filter] == "vm" %>
+            <br/><br/>
+            <%= select_tag('filter_value',
+                           options_for_select(["<Choose>"] + Array(@sb[:rsop][:vms].invert).sort,
+                                              @sb[:rsop][:filter_value]),
+                           "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% end %>
+        </fieldset>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

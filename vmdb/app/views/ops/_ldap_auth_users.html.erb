@@ -1,0 +1,17 @@
+<div id="ldap_user_div">
+  <% url = url_for(:action =>'rbac_group_field_changed', :id=>"#{@edit[:group_id] || "new"}") %>
+	<% if !@edit[:ldap_groups_by_user].empty? %>
+		<table class="style1">
+				<tr>
+					<td class="key">LDAP Groups for User</td>
+					<td>
+            <%= select_tag('ldap_groups_user',
+								options_for_select(["<Choose>"] + @edit[:ldap_groups_by_user].uniq.sort,
+                  @edit[:selected_ldap_groups_by_user]),
+								"data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+								"data-miq_observe"=>{:url=>url}.to_json) %>
+					</td>
+				</tr>
+		</table>
+	<% end %>
+</div>

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+export PATH
+
+SCRIPT_PATH=/miq/vmAutomate
+
+case "$1" in
+	start)
+		$SCRIPT_PATH > /miq.log 2>&1
+		shutdown -h -t0 now
+	;;
+	*)
+	;;
+esac
+
+exit 0

@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: host_and_storage_least_utilized
+    display_name: 
+    description: 
+    scope: instance
+    language: ruby
+    location: builtin
+  inputs: []

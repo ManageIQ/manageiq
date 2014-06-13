@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MiqAeDatastore version='1.0'>
+  <MiqAeClass namespace="EVM" name="PROVISION">
+    <MiqAeSchema>
+      <MiqAeField name="clouds"        aetype="relationship" message="get_clouds"          collect="environment"      />
+      <MiqAeField name="hosts"         aetype="relationship" message="get_hosts"           collect="host"             />
+      <MiqAeField name="storages"      aetype="relationship" message="get_storages"        collect="storage"          />
+      <MiqAeField name="max_vms"       aetype="relationship" message="get_allowed_num_vms" collect="allowed"          />
+      <MiqAeField name="ttl_warnings"  aetype="relationship" message="get_ttl_warnings"    collect="warnings = {ttl_warning => ttl_friendly } " />
+      <MiqAeField name="lease_times"   aetype="relationship" message="get_lease_times"     collect="ttls = {ttl => ttl_friendly } " />
+    </MiqAeSchema>
+    <MiqAeInstance name="INFO">
+      <MiqAeField name="lease_times">/EVM/TTL/*</MiqAeField>
+      <MiqAeField name="ttl_warnings">/EVM/TTL_WARNINGS/*</MiqAeField>
+      <MiqAeField name="max_vms">/EVM/MAX_VMS/${#environment}</MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+  
+  <MiqAeClass namespace="EVM" name="MAX_VMS">
+    <MiqAeSchema>
+      <MiqAeField name="allowed"   aetype="attribute" default_value="0" datatype="integer"/>
+    </MiqAeSchema>
+    <MiqAeInstance name="dev">
+      <MiqAeField name="allowed">3</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="test">
+      <MiqAeField name="allowed">5</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name=".missing">
+      <MiqAeField name="allowed">1</MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+  
+  <MiqAeClass namespace="EVM" name="TTL_WARNINGS">
+    <MiqAeSchema>
+      <MiqAeField name="ttl_warning"   aetype="attribute" datatype="integer"/>
+      <MiqAeField name="ttl_friendly"  aetype="attribute"/>
+    </MiqAeSchema>
+    <MiqAeInstance name="7">
+      <MiqAeField name="ttl_warning">7</MiqAeField>
+      <MiqAeField name="ttl_friendly">1 Week</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="14">
+      <MiqAeField name="ttl_warning">14</MiqAeField>
+      <MiqAeField name="ttl_friendly">2 Weeks</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="30">
+      <MiqAeField name="ttl_warning">30</MiqAeField>
+      <MiqAeField name="ttl_friendly">30 Days</MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+  
+  <MiqAeClass namespace="EVM" name="TTL">
+    <MiqAeSchema>
+      <MiqAeField name="ttl"           aetype="attribute" datatype="integer"/>
+      <MiqAeField name="ttl_friendly"  aetype="attribute"/>
+    </MiqAeSchema>
+    <MiqAeInstance name="3">
+      <MiqAeField name="ttl">3</MiqAeField>
+      <MiqAeField name="ttl_friendly">3 Months</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="6">
+      <MiqAeField name="ttl">6</MiqAeField>
+      <MiqAeField name="ttl_friendly">6 Months</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="9">
+      <MiqAeField name="ttl">9</MiqAeField>
+      <MiqAeField name="ttl_friendly">9 Months</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="12">
+      <MiqAeField name="ttl">12</MiqAeField>
+      <MiqAeField name="ttl_friendly">1 Year</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="0">
+      <MiqAeField name="ttl">0</MiqAeField>
+      <MiqAeField name="ttl_friendly">Indefinite</MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+
+</MiqAeDatastore>

@@ -1,0 +1,13 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqRequest
+:button_groups:
+- :name: miq_request_reloading
+  :items:
+    - :button: miq_request_reload
+      :image: reload
+      :text: "Reload"
+      :title: Reload the current display
+      :url_parms: 'main_div'

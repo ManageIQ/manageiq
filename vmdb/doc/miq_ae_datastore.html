@@ -1,0 +1,166 @@
+<h1>ManageIQ Automation Engine Datastore Layout</h1>
+
+<h2>MIQ_AE_CLASSES Table</h2>
+	<h3>Each row defines an AE Class in the System</h3>
+	
+	<table border="1">
+		<tr>
+			<th>Column</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td>display_name</td>
+			<td>Display Name of the Class</td>
+		</tr>
+		<tr>
+			<td>description</td>
+			<td>Class Description</td>
+		</tr>
+		<tr>
+			<td>namespace</td>
+			<td>Class Namespace</td>
+		</tr>
+		<tr>
+			<td>class_name</td>
+			<td>Class Name</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>Class Type (abstract ==> No Instances Allowed, ...)</td>
+		</tr>
+		<tr>
+			<td>visibility</td>
+			<td>Private ==> only visible within Resolution; Public ==> accessible to caller of Resolution</td>
+		</tr>
+		<tr>
+			<td>parent_id</td>
+			<td>Row ID of Parent Class (NULL if no inheritance)</td>
+		</tr>
+	</table>
+
+<h2>Abstract MIQ_AE_SCHEMA Table</h2> 
+	<h3>Each row defines a Column in the associated Instances Table</h3>
+	<h3>Real Schema Classes/Tables are derived from this one</h3>
+	<h3>Derived Table Name is ==> miq_ae_schema_xxxx, where xxxx is the row id of the class</h3>
+		
+	<table border="1">
+		<tr>
+			<th>Column</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>Name of the Instance Column</td>
+		</tr>
+		<tr>
+			<td>display_name</td>
+			<td>Display Name of the Instance Column</td>
+		</tr>
+		<tr>
+			<td>description</td>
+			<td>Description of the Instance Column</td>
+		</tr>
+		<tr>
+			<td>aetype</td>
+			<td>AE Type of the Column (Assertion, Attribute, Relation, Behavior)</td>
+		</tr>
+		<tr>
+			<td>datatype</td>
+			<td>Data Type of the Column (string, integer)</td>
+		</tr>
+		<tr>
+			<td>priority</td>
+			<td>Priority processing of the Column</td>
+		</tr>
+		<tr>
+			<td>visibility</td>
+			<td>Private ==> only visible within DIP; Public ==> accessible to caller of DIP</td>
+		</tr>
+		<tr>
+			<td>owner</td>
+			<td>System (changed ONLY by system) vs User (updates allowed by user)</td>
+		</tr>
+		<tr>
+			<td>default_value</td>
+			<td>Default Value</td>
+		</tr>
+		<tr>
+			<td>flags</td>
+			<td>To Be Determined</td>
+		</tr>
+	</table>
+	
+<h2>Abstract MIQ_AE_INSTANCES Table</h2> 
+	<h3>Each row defines an AE Instance of a specific AE Class</h3>
+	<h3>Real Instances Classes/Tables are derived from this one</h3>
+	<h3>Derived Table Name is ==> miq_ae_instances_xxxx, where xxxx is the row id of the class</h3>
+		
+	<table border="1">
+		<tr>
+			<th>Column</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>Name of the Instance</td>
+		</tr>
+		<tr>
+			<td>display_name</td>
+			<td>Display Name of the Instance</td>
+		</tr>
+		<tr>
+			<td>methods_table</td>
+			<td>Name of the Override Methods Table for this Instance (if there is one)</td>
+		</tr>
+	</table>
+
+	<h3>ALL other columns are defined in the AE Schema table for this AE Class</h3>
+
+<h2>Abstract MIQ_AE_METHODS Table</h2> 
+	<h3>Each row defines a method for this AE Class or AE Instance</h3>
+	<h3>Real Methods Classes/Tables are derived from this one</h3>
+	<h3>Derived Table Name is ==> miq_ae_methods_xxxx, where xxxx is the row id of the class</h3>
+		
+	<table border="1">
+		<tr>
+			<th>Column</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>Name of the Method</td>
+		</tr>
+		<tr>
+			<td>display_name</td>
+			<td>Display Name of the Method</td>
+		</tr>
+		<tr>
+			<td>description</td>
+			<td>Description of the Method</td>
+		</tr>
+		<tr>
+			<td>location</td>
+			<td>Location of the Method</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>Type of the Method (Ruby, Perl, Python, Java, ... )</td>
+		</tr>
+		<tr>
+			<td>input</td>
+			<td>Input Parameters (in some language -- XML?)</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td>Output Parameters (in some language -- XML?)</td>
+		</tr>
+		<tr>
+			<td>execution</td>
+			<td>Execution (Server, Client or somewhere else)</td>
+		</tr>
+	</table>
+		
+<h2>MIQ_AE_RESOLUTIONS Table</h2> (to keep memory footprint low)
+		Needs to represent a derived tree
+
+

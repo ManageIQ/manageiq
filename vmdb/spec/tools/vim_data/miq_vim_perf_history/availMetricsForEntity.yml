@@ -1,0 +1,910 @@
+--- 
+? !str:VimString
+  str: vm-578855
+  "@vimType": :VirtualMachine
+  "@xsiType": :ManagedObjectReference
+: 
+  "20": !seq:VimArray 
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "120"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000020000000D834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "100"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "156"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "97"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "98"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3434373136626663
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "106"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "4000"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "120"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3730393663333635
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "96"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3434373136626663
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "108"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "151"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "2"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "264"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "0"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "153"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "69"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "105"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "97"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000030000000E834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "6"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "81"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "152"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "149"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "154"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "97"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000020000000D834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "13"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "0"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "150"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "107"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "77"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "73"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "119"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3730393663333635
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "98"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000030000000E834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "97"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3434373136626663
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "118"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3434373136626663
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "11"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "16"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "118"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000030000000E834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "95"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3730393663333635
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "88"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "120"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000030000000E834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "157"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "96"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000020000000D834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "142"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "143"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "146"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "147"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "32"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "95"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000030000000E834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "98"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3730393663333635
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "95"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000020000000D834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "155"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "92"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "96"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3730393663333635
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "120"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3434373136626663
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "168"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "24"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "106"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "28"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "20"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "264"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "85"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "104"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "4000"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "11"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "0"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "9"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "0"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "98"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "97"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3730393663333635
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "158"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "141"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "103"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "4000"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "118"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3730393663333635
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "6"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "0"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "144"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "65"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "119"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3434373136626663
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "96"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000030000000E834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "105"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "4000"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "98"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000020000000D834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "61"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "148"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "95"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: eui.3434373136626663
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "119"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000030000000E834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "119"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000020000000D834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "118"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: t10.E4143500000000000000000020000000D834000000000100
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "169"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: ""
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+    - !map:VimHash 
+      counterId: !str:VimString 
+        str: "10"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      instance: !str:VimString 
+        str: "0"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :PerfMetricId
+

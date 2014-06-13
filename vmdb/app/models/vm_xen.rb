@@ -1,0 +1,2 @@
+class VmXen < VmInfra
+end

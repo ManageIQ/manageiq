@@ -1,0 +1,39 @@
+#
+# Toolbar config file
+#
+---
+:model: Zone
+:button_groups:
+- :name: support_reloading
+  :items:
+  - :button: db_refresh
+    :image: reload
+    :title: 'Reload Current Display'
+# commenting these buttons until we have model support for them
+#- :name: zone_vmdb
+#  :items:
+#  - :buttonSelect: zone_vmdb_choice
+#    :image: vmdb
+#    :title: Configuration
+#    :text: Configuration
+#    :items:
+#    - :button: db_table_export
+#      :image: export
+#      :text: "Export this table"
+#      :title: "Export this table"
+#    - :button: db_table_analyze
+#      :image: db_analyze
+#      :text: "Analyze this table"
+#      :title: "Analyze this table"
+#    - :button: db_table_reindex
+#      :image: db_reindex
+#      :text: "Reindex this table"
+#      :title: "Reindex this table"
+#    - :button: db_table_vacuum
+#      :image: db_vacuum
+#      :text: "Vacuum this table"
+#      :title: "Vacuum this table"
+#    - :button: db_table_vacuum_full
+#      :image: db_vacuum_full
+#      :text: "Vacuum Full this table"
+#      :title: "Vacuum Full this table"

@@ -1,0 +1,30 @@
+<% if items %>
+  <table class="style3">
+    <thead>
+      <tr><th colspan="2" align="left"><%= title %></th></tr>
+    </thead>
+    <% items.each do |item| %>
+      <tr class="<%= cycle('row0', 'row1', :name => title) %>
+        <%= "no-hover" unless item[:link] %>"<% if item[:title] %> title="<%= item[:title] %>"<% end %>
+        <% if item[:link] %> onclick="
+          <% if @explorer && item[:explorer] %>
+            <% if item[:spinner] %>
+              <%= remote_function(:url=>item[:link], :loading=>"miqSparkle(true);") %>
+            <% else %>
+              <%= remote_function(:url=>item[:link]) %>
+            <% end %>
+          <% else %>
+            DoNav('<%= item[:link] %>');
+          <% end %>"
+        <% end %>>
+        <td class="label"><%= item[:label] %></td>
+        <td>
+          <% if item[:image] %>
+            <img src="/images/icons/new/<%= item[:image] %>.png" />
+          <% end %>
+          <%= !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]}) %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

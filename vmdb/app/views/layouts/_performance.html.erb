@@ -1,0 +1,9 @@
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"menu"} %>
+
+<div id="context_div"></div>	<%# Div to refer context menu to %>
+
+<%= render(:partial => "layouts/flash_msg") %>
+<%= render(:partial => "layouts/perf_options") %>
+<%= render(:partial =>"layouts/perf_charts",
+					 :locals=>{:chart_data=>@temp[:chart_data], :chart_set=>"candu"}) %>

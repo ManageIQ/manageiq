@@ -1,0 +1,46 @@
+#
+# Toolbar config file
+#
+---
+:model: ResourcePool
+:button_groups:
+- :name: resource_pool_vmdb
+  :items:
+  - :buttonSelect: resource_pool_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: resource_pool_delete
+      :image: remove
+      :text: Remove Resource Pools from the VMDB
+      :title: "Remove selected Resource Pools from the VMDB"
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Resource Pools and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Resource Pools?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: resource_pool_policy
+  :items:
+  - :buttonSelect: resource_pool_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: resource_pool_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for the selected Resource Pools"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: resource_pool_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for the selected Resource Pools"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

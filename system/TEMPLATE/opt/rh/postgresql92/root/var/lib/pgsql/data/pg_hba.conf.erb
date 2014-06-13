@@ -1,0 +1,5 @@
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local    all             postgres,root                           trust
+<% if ssl -%>
+hostssl  all             all            all                      cert map=sslmap
+<% end -%>

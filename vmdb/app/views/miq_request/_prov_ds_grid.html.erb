@@ -1,0 +1,60 @@
+<div id="prov_ds_div" style="height:150px;overflow:auto">
+	<table class="style3">
+		<thead>
+			<tr>
+				<% id = @edit[:req_id] || "new" %>
+				<% @edit[:ds_columns].each_with_index do |h,i| %>
+					<th nowrap>
+						<%#  Replaced to exclude non-view table fields from sorting %>
+							<%= link_to(h(@edit[:ds_headers][h]),
+																{:action=>"sort_ds_grid", :sort_choice =>h, :field_id=>field_id, :id=>id.to_s},
+																"data-miq_sparkle_on" => true,
+																"data-miq_sparkle_off" => true,
+																:remote=>true
+																) %>
+							<% if @edit[:ds_columns][i] == @edit[:ds_sortcol] %>
+								<% if @edit[:ds_sortdir] == "ASC" %>
+									<img src="/images/icons/16/sort_up.png">
+								<% else %>
+									<img src="/images/icons/16/sort_down.png">
+								<% end %>
+							<% end %>
+					</th>
+				<% end %>
+			</tr>
+		</thead>
+		<tbody>
+			<% if ["miq_template","vm"].include?(@edit[:org_controller]) %>
+				<% cls = @edit[:new][:placement_ds_name] && @edit[:new][:placement_ds_name][0] == nil ? "row3" : cycle('row0', 'row1') %>
+			<% else %>
+				<% cls = @edit[:new][:attached_ds] && @edit[:new][:attached_ds].empty? ? "row3" : cycle('row0', 'row1') %>
+			<% end %>
+			<tr class="<%= cls %>" onclick="miqAjax('<%= "/miq_request/prov_field_changed/?" << field_id << "=__DS__NONE__" << "&id=" << id.to_s  %>');"	nowrap>
+				<td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+						&lt;None&gt;
+				</td><td></td><td></td>
+			</tr>
+			<% @temp[:datastores].each_with_index do |row,i| %>
+				<% @id = row.id %>
+				<% if ["miq_template","service_template","vm"].include?(@edit[:org_controller]) %>
+					<% cls = @edit[:new][:placement_ds_name] && @edit[:new][:placement_ds_name][0] == @id ? "row3" : cycle('row0', 'row1') %>
+				<% else %>
+					<% cls = @edit[:new][:attached_ds] && @edit[:new][:attached_ds].include?(@id.to_i) ? "row3" : cycle('row0', 'row1') %>
+				<% end %>
+				<tr class="<%= cls %>" onclick="miqAjax('<%= "/miq_request/prov_field_changed/?" << field_id << "=" << @id.to_s << "&id=" << id.to_s  %>');"	nowrap>
+					<% @edit[:ds_columns].each do |col| %>
+						<% align = ["free_space","total_space"].include?(col) ? "right" : "left" %>
+						<td align=<%=align%> onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+							<% if ["free_space","total_space"].include?(col) %>
+								<%= h(number_to_human_size(row.send(col),:precision=>1)) %>
+							<% else %>
+								<%= h(row.send(col)) %>
+							<% end %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+		</tbody>
+		<tfoot><tr><td colspan="40"></td></tr></tfoot>
+	</table>
+</div>

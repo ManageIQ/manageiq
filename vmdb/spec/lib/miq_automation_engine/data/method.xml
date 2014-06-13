@@ -1,0 +1,49 @@
+<MiqAeDatastore version='1.0'>
+	<MiqAeClass name="AUTOMATE" namespace="EVM">
+		<MiqAeSchema>
+			<MiqAeField name="attr1"   aetype="attribute"    display_name="Sample Attribute">frank</MiqAeField>
+			<MiqAeField name="method1" aetype="method"       display_name="Sample Method">
+				$evm.log("info", "Default Method")
+				exit MIQ_OK
+			</MiqAeField>
+			<MiqAeField name="rel1"    aetype="relationship" display_name="Sample Relationship"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="test1"/>
+		<MiqAeInstance name="test2">
+			<MiqAeField name="attr1">CHILD</MiqAeField>
+			<MiqAeField name="method1">
+				$evm.log("info", "Hello World from INLINE")
+
+				$evm.log("info", "Args:    #{MIQ_ARGS.inspect}")
+				$evm.log("info", "Message: #{MIQ_MESSAGE}")
+								
+				obj = $evm.object
+				$evm.log("info", "1 Current is #{obj["attr1"]}")
+				$evm.log("info", "2 Current Attributes are #{obj.attributes.inspect}")
+				
+				obj["attr1"] = "FRANK"
+				# obj.attributes = {"attr1" => "GREGG"}
+				$evm.log("info", "2 Current Attributes are #{obj.attributes.inspect}")
+				
+				foo = $evm.object
+				$evm.log("info", "1 Current is #{foo["attr1"]}")
+				
+				par = $evm.object("..")
+				$evm.log("info", "3 Parent  is #{par["attr1"]}")
+				
+				exit MIQ_STOP
+			</MiqAeField>
+		</MiqAeInstance>
+		<MiqAeInstance name="test3">
+			<MiqAeField name="method1">exit MIQ_OK</MiqAeField>
+		</MiqAeInstance>
+		<MiqAeInstance name="test4">
+			<MiqAeField name="attr1">PARENT</MiqAeField>
+			<MiqAeField name="rel1">miqaedb:///EVM/AUTOMATE/test2?arg1=foo&arg2=bar</MiqAeField>
+			<MiqAeField name="method1">
+				$evm.instantiate("miqaedb:///EVM/AUTOMATE/test3")
+				exit MIQ_OK
+			</MiqAeField>
+		</MiqAeInstance>
+	</MiqAeClass>
+</MiqAeDatastore>

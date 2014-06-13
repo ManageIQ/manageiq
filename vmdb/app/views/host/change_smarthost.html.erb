@@ -1,0 +1,33 @@
+<%= form_tag( {:action => 'update_agent', :id=>@host}, {:id => "host_form"}) do %>
+	<div id="form_div">
+<%= render :partial => "layouts/flash_msg" %>
+			<dl class="col2">
+				<dd>
+					<fieldset>
+						<p class="legend">Current</p>
+						<table class="style1">
+								<tr>
+									<td class="key">Build Number</td>
+									<td><%= @he[:current_build] %></td>
+								</tr>
+						</table>
+					</fieldset>
+				</dd>
+				<dd>
+					<fieldset>
+						<p class="legend">New</p>
+						<table class="style1">
+								<tr>
+									<td class="key">Update To Build Number</td>
+									<td><%= select_tag('new_build', options_for_select(@agent_choices.sort, "<choose>"), "data-miq_focus"=>true,) %></td>
+								</tr>
+						</table>
+					</fieldset>
+				</dd>
+			</dl>
+		<%= "Pressing 'Save' will update the SmartProxy to the chosen build" %>
+	</div>
+
+	<%= observe_form 'host_form', :update=>{}, :url => { :action => 'agent_build_changed' } %>
+	<%= render :partial => '/layouts/form_buttons' %>
+<% end %>

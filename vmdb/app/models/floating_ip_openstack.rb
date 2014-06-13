@@ -1,0 +1,2 @@
+class FloatingIpOpenstack < FloatingIp
+end

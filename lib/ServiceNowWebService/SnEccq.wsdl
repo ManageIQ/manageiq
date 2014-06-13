@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://www.service-now.com" xmlns:tns="http://www.service-now.com/ecc_queue" xmlns:sncns="http://www.service-now.com" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://www.service-now.com/ecc_queue"><xsd:element name="getKeys"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_mod_count" type="xsd:integer"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__use_view" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__encoded_query" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__limit" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__first_row" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__last_row" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="getKeysResponse"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="unbounded" minOccurs="0" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="count" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="get"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="1" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__use_view" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="getResponse"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_mod_count" type="xsd:integer"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="getRecords"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_mod_count" type="xsd:integer"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__use_view" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__encoded_query" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__limit" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__first_row" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__last_row" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__order_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__order_by_desc" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="__exclude_columns" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="getRecordsResponse"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="unbounded" minOccurs="0" name="getRecordsResult"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_mod_count" type="xsd:integer"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="update"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="1" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="updateResponse"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="sys_id" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="insert"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="insertResponse"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="deleteMultiple"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_mod_count" type="xsd:integer"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="deleteMultipleResponse"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="count" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="deleteRecord"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="agent" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="agent_correlator" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="error_string" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_host" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="from_sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="payload" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="processed" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="queue" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="response_to" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sequence" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="source" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="state" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_created_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_id" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_mod_count" type="xsd:integer"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_by" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="sys_updated_on" type="xsd:string"/><xsd:element maxOccurs="1" minOccurs="0" name="topic" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="deleteRecordResponse"><xsd:complexType><xsd:sequence><xsd:element maxOccurs="1" minOccurs="0" name="count" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="insertSoapOut">
+    <wsdl:part name="ecc_queue" element="tns:insertResponse"/>
+  </wsdl:message>
+  <wsdl:message name="updateSoapOut">
+    <wsdl:part name="ecc_queue" element="tns:updateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getRecordsSoapIn">
+    <wsdl:part name="ecc_queue" element="tns:getRecords"/>
+  </wsdl:message>
+  <wsdl:message name="deleteRecordSoapOut">
+    <wsdl:part name="ecc_queue" element="tns:deleteRecordResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteMultipleSoapOut">
+    <wsdl:part name="ecc_queue" element="tns:deleteMultipleResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteRecordSoapIn">
+    <wsdl:part name="ecc_queue" element="tns:deleteRecord"/>
+  </wsdl:message>
+  <wsdl:message name="deleteMultipleSoapIn">
+    <wsdl:part name="ecc_queue" element="tns:deleteMultiple"/>
+  </wsdl:message>
+  <wsdl:message name="getRecordsSoapOut">
+    <wsdl:part name="ecc_queue" element="tns:getRecordsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getSoapIn">
+    <wsdl:part name="ecc_queue" element="tns:get"/>
+  </wsdl:message>
+  <wsdl:message name="getSoapOut">
+    <wsdl:part name="ecc_queue" element="tns:getResponse"/>
+  </wsdl:message>
+  <wsdl:message name="updateSoapIn">
+    <wsdl:part name="ecc_queue" element="tns:update"/>
+  </wsdl:message>
+  <wsdl:message name="getKeysSoapIn">
+    <wsdl:part name="ecc_queue" element="tns:getKeys"/>
+  </wsdl:message>
+  <wsdl:message name="insertSoapIn">
+    <wsdl:part name="ecc_queue" element="tns:insert"/>
+  </wsdl:message>
+  <wsdl:message name="getKeysSoapOut">
+    <wsdl:part name="ecc_queue" element="tns:getKeysResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="ServiceNowSoap">
+    <wsdl:operation name="insert">
+      <wsdl:input message="sncns:insertSoapIn"/>
+      <wsdl:output message="sncns:insertSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="update">
+      <wsdl:input message="sncns:updateSoapIn"/>
+      <wsdl:output message="sncns:updateSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteMultiple">
+      <wsdl:input message="sncns:deleteMultipleSoapIn"/>
+      <wsdl:output message="sncns:deleteMultipleSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getKeys">
+      <wsdl:input message="sncns:getKeysSoapIn"/>
+      <wsdl:output message="sncns:getKeysSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteRecord">
+      <wsdl:input message="sncns:deleteRecordSoapIn"/>
+      <wsdl:output message="sncns:deleteRecordSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="get">
+      <wsdl:input message="sncns:getSoapIn"/>
+      <wsdl:output message="sncns:getSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getRecords">
+      <wsdl:input message="sncns:getRecordsSoapIn"/>
+      <wsdl:output message="sncns:getRecordsSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceNowSoap" type="sncns:ServiceNowSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="insert">
+      <soap:operation soapAction="http://www.service-now.com/ecc_queue/insert" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="update">
+      <soap:operation soapAction="http://www.service-now.com/ecc_queue/update" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteMultiple">
+      <soap:operation soapAction="http://www.service-now.com/ecc_queue/deleteMultiple" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getKeys">
+      <soap:operation soapAction="http://www.service-now.com/ecc_queue/getKeys" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteRecord">
+      <soap:operation soapAction="http://www.service-now.com/ecc_queue/deleteRecord" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get">
+      <soap:operation soapAction="http://www.service-now.com/ecc_queue/get" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRecords">
+      <soap:operation soapAction="http://www.service-now.com/ecc_queue/getRecords" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServiceNow_ecc_queue">
+    <wsdl:port name="ServiceNowSoap" binding="sncns:ServiceNowSoap">
+      <soap:address location="https://manageiqdev.service-now.com/ecc_queue.do?SOAP"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

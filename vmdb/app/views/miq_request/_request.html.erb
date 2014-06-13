@@ -1,0 +1,143 @@
+<% if @edit && @edit[:stamp_typ] %>
+<% url = url_for(:action => 'stamp_field_changed', :id=>@edit[:request].id) %>
+<% end %>
+<div id='request_div'>
+  <fieldset>
+    <p class="legend">Request Details</p>
+    <dl class="col3">
+      <dd>
+        <table class="style1">
+          <tr>
+            <td class="key">Requested by</td>
+            <td class="wide" nowrap>
+              <% if @miq_request.requester %>
+                <%= h(@miq_request.requester_name) %>
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Submitted On</td>
+            <td class="wide" nowrap><%= h(format_timezone(@miq_request.created_on)) %></td>
+          </tr>
+          <tr>
+            <td class="key">Last Update</td>
+            <td class="wide" nowrap><%= h(format_timezone(@miq_request.updated_on)) %></td>
+          </tr>
+        </table>
+      </dd>
+      <dd>
+        <table class="style1">
+          <tr>
+            <td class="key">Last Message</td>
+            <td class="wide"><%= h(@miq_request.message) %></td>
+          </tr>
+          <tr>
+            <td class="key">Completed</td>
+            <td class="wide" nowrap>
+              <% if @miq_request.fulfilled_on %>
+                <%= h(format_timezone(@miq_request.fulfilled_on)) %>
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Status</td>
+            <td class="wide" nowrap><%= h(@miq_request.state.titleize) %></td>
+          </tr>
+          <!-- <tr>
+            <td class="key">Approver</td>
+            <td>
+              <% if false && @miq_request.approver %>
+                <%= h(@miq_request.approver + (@temp[:user] == nil ? nil : " (#{@temp[:user].name})")) %>
+              <% end %>
+            </td>
+          </tr> -->
+        </table>
+      </dd>
+      <dd>
+        <table class="style1">
+          <tr>
+            <td class="key">Approved/Denied by</td>
+            <td class="wide" nowrap>
+              <% if @miq_request.stamped_by %>
+                <%= h(@miq_request.stamped_by + (@temp[:user] == nil ? nil : " (#{@temp[:user].name})")) %>
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Date Approved/Denied</td>
+            <td class="wide" nowrap><%= h(format_timezone(@miq_request.stamped_on)) %></td>
+          </tr>
+          <tr>
+            <td class="key">Reason</td>
+            <% if @edit && @edit[:stamp_typ] %>
+              <td class="wide" nowrap>
+                   <%= text_field_tag("reason",
+                                 @edit[:reason],
+                                 :maxlength=>MAX_NAME_LEN,
+                              "data-miq_focus"=>true,
+                                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                 </td>
+            <% else %>
+              <td><%= h(@miq_request.reason) %></td>
+            <% end %>
+          </tr>
+          <% if !@edit && @miq_request.approval_state.downcase == "approved" %>
+            <% if @miq_request.resource_type == "MiqProvisionRequest" &&  @miq_request.resource.miq_provisions.length > 0 %>
+              <tr>
+                <td class="key">Provisioned VMs</td>
+                <td class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onclick="DoNav('<%= "/miq_request/show/" << @miq_request.id.to_s << "?display=miq_provisions"%>');" onmouseover="this.style.cursor='pointer'" title="Click to view details"><%= h(@miq_request.resource.miq_provisions.length) %></td>
+              </tr>
+            <% end %>
+            <% if @miq_request.resource_type == "MiqHostProvisionRequest" &&  @miq_request.resource.miq_host_provisions.length > 0 %>
+              <tr>
+                <td class="key">Provisioned Hosts</td>
+                <td class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onclick="DoNav('<%= "/miq_request/show/" << @miq_request.id.to_s << "?display=miq_provisions"%>');" onmouseover="this.style.cursor='pointer'" title="Click to view details"><%= h(@miq_request.resource.miq_host_provisions.length) %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </table>
+      </dd>
+    </dl>
+  </fieldset>
+  <% if @edit && @edit[:stamp_typ] %>
+    <table width="100%">
+      <tr>
+        <td align="left">
+          <b><%= "* Enter a reason for this #{@edit[:stamp_typ] == "a" ? "approval" : "denial"} and press Submit" %></b>
+        </td>
+        <td align="right">
+          <span id="buttons_on" style="display:none">
+            <%= link_to(image_tag('/images/formbuttons/submit.png',
+                                      :border=>"0", :class=>"button", :alt=>"Submit"),
+                                    {:action=>'stamp', :button=>"submit", :disabled=>true},
+                                    "data-miq_sparkle_on" => true,
+                                    "data-miq_sparkle_off" => true,
+                                    :remote=>true,
+                                    :title=>"Submit")
+            %>
+          </span>
+          <span id="buttons_off">
+            <%= image_tag("/images/formbuttons/submit.png", :class=>"dimmed") %>
+          </span>
+            <%= link_to(image_tag('/images/formbuttons/cancel.png',
+                            :border=>"0", :class=>"button", :alt=>"Cancel"),
+                          {:action=>'stamp', :button=>"cancel"},
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote=>true,
+                          :title=>"Cancel")
+            %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+
+  <br/>
+  <% if @miq_request.workflow_class %>
+    <%= render :partial => "prov_wf", :locals=>{:wf=>@miq_request.workflow_class.new({:src_vm_id => @miq_request.source_id},session[:userid]), :show=>true} %>
+  <% elsif @miq_request.type == "AutomationRequest" %>
+    <%= render :partial => "ae_prov_show" %>
+  <% else %>
+    <%= render :partial => "reconfigure_show" %>
+  <% end %>
+</div>

@@ -1,0 +1,165 @@
+<%# if dialogs is selected %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
+<dl class="col1">
+  <dd>
+    <div id="dialog_tabs" style="display:none;width:100%;height:100%;overflow:auto;" data-miq_url="_none_">
+      <ul class="tab">
+        <% @record.ordered_dialog_resources.each do |dt| %>
+          <li><a href="#<%=dt.resource.id%>_tab" title="<%= dt.resource.description %>"><%= dt.resource.label %></a></li>
+        <% end %>
+      </ul>
+      <% @record.ordered_dialog_resources.each do |dt| %>
+        <%# dialog tabs %>
+        <% tab = dt.resource %>
+        <div id="<%=tab.id%>_tab" name="<%=tab.id%>_tab" width="80px">
+          <% tab.ordered_dialog_resources.each do |tg| %>
+          <%# dialog groups/fields %>
+            <% group = tg.resource %>
+            <fieldset>
+              <p class="legend" title="<%= group.description %>"><%= group.label %></p>
+              <% group.ordered_dialog_resources.each_with_index do |g,i|  %>
+                <% field = g.resource %>
+                <% if i == 0 %>
+                  <table class="style1">
+                    <tbody>
+                <% end %>
+                    <tr>
+                      <td class="key" title="<%= field.description %>"><%= field.label %></td>
+                      <td title="<%= field.description %>">
+                        <% case field.type %>
+                        <% when "DialogFieldTextBox" %>
+                          <% if field.protected? %>
+                            <%= password_field_tag('field.id', field.default_value, :maxlength => 20, :disabled => true) %>
+                          <% else %>
+                            <%= text_field_tag('field.id', field.default_value, :maxlength=>20, :disabled=>true) %>
+                          <% end %>
+                        <% when "DialogFieldTextAreaBox" %>
+                          <%= text_area_tag(field.id,
+                                            field.default_value,
+                                            :size=>"50x6", :disabled=>true) %>
+                        <% when "DialogFieldCheckBox" %>
+                          <% checked = field.default_value == "f" ? false : true  %>
+                          <%= check_box_tag("field.id", value="1",checked=checked, :disabled=>true) %>
+                        <% when "DialogFieldDateControl", "DialogFieldDateTimeControl" %>
+                          <% if field.show_past_dates %>
+                            <script>
+                              miq_cal_dateFrom = undefined ;
+                            </script>
+                          <% else %>
+                            <script>
+                              miq_cal_dateFrom = new Date("<%=Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")%>");
+                            </script>
+                          <% end %>
+                          <% t = Time.now.in_time_zone(session[:user_tz]) + 1.day %>
+                          <% date_val = field.value ? field.value.split(" ") : "#{t.month}/#{t.day}/#{t.year}" %>
+                          <%= text_field_tag("miq_date_1",
+                                             h(date_val),
+                                             :class=>"css1",
+                                             :readonly=>"true") %>
+                          <% if field.type == "DialogFieldDateTimeControl" %>
+                            &nbsp;at&nbsp;
+                            <%= select_tag("start_hour",
+                                           options_for_select(Array.new(24) {|i| i},0)) %>
+                            :
+                            <%= select_tag("start_min",
+                                           options_for_select(Array.new(12) {|i| i*5},0)) %>
+                          <% end %>
+                        <% when 'DialogFieldDynamicList' %>
+                          <%= select_tag('field.id', options_for_select(['Option 1', 'Option 2'], field.default_value)) %>
+                          <% if field.show_refresh_button? %>
+                            <%= button_tag('Refresh', :disabled=>true) %>
+                          <% end %>
+												<% when "DialogFieldDropDownList", "DialogFieldRadioButton" %>
+                          <% if field.values.length > 1 %>
+                            <% if field.sort_by.to_s != "none" %>
+                              <% if field.data_type == "integer" %>
+                                <% val = field.values.sort_by {|d| field.sort_by == :value ? d.first.to_i : d.last.to_i} %>
+                                <% val = val.reverse if field.sort_order == :descending %>
+                              <% else %>
+                                <% val =  field.values.sort_by {|d| field.sort_by == :value ? d.first : d.last} %>
+                                <% val = val.reverse if field.sort_order == :descending %>
+                              <% end %>
+                            <% else %>
+                              <% val = copy_array(field.values) %>
+                            <% end %>
+
+                            <% if field.type == "DialogFieldDropDownList" %>
+                              <% if field.required %>
+                                <% if field.default_value != nil %>
+                                  <%= select_tag('field.id',options_for_select(val.collect{|v| v.reverse}, field.default_value )) %>
+                                <% else %>
+                                  <%= select_tag('field.id',options_for_select([["<Choose>",nil]] + val.collect{|v| v.reverse}, field.default_value )) %>
+                                <% end %>
+
+                              <%# NOT REQUIRED %>
+                              <% else %>
+                                <%= select_tag('field.id',options_for_select([['None',nil]] + val.collect{|v| v.reverse}, field.default_value )) %>
+                              <% end %>
+
+                            <% else %>
+                              <% val.each_with_index do |rb,i| %>
+                                 <% if field.required %>
+                                   <% if field.default_value != nil %>
+                                     <% if rb[0] == field.default_value %>
+                                       <input type="radio" id="<%=rb[0]%>" value="<%= rb[1] %>" name="<%=rb[0]%>" disabled checked>&nbsp;<%= rb[1] %>&nbsp;
+                                     <% else %>
+                                       <input type="radio" id="<%=rb[0]%>" value="<%= rb[1] %>" name="<%=rb[0]%>" disabled>&nbsp;<%= rb[1] %>&nbsp;
+                                     <% end %>
+                                   <% else %>
+                                     <input type="radio" id="<%=rb[0]%>" value="<%= rb[1] %>" name="<%=rb[0]%>" disabled>&nbsp;<%= rb[1] %>&nbsp;
+                                   <% end %>
+
+                                 <%# NOT REQUIRED %>
+                                 <% else %>
+                                   <% if field.default_value != nil %>
+                                     <% if i == 0 %>
+                                       <input type="radio" id="None" value="nil" name="None" disabled>&nbsp;&lt;None&gt;&nbsp;
+                                     <% end %>
+                                     <% if rb[0] == field.default_value %>
+                                       <input type="radio" id="<%=rb[0]%>" value="<%= rb[1] %>" name="<%=rb[0]%>" disabled checked>&nbsp;<%= rb[1] %>&nbsp;
+                                     <% else %>
+                                       <input type="radio" id="<%=rb[0]%>" value="<%= rb[1] %>" name="<%=rb[0]%>" disabled>&nbsp;<%= rb[1] %>&nbsp;
+                                     <% end %>
+                                   <% else %>
+                                     <% if i == 0 %>
+                                       <input type="radio" id="None" value="nil" name="None" disabled checked>&nbsp;&lt;None&gt;&nbsp;
+                                     <% end %>
+                                     <input type="radio" id="<%=rb[0]%>" value="1" name="<%=rb[0]%>" disabled>&nbsp;<%= rb[1] %>&nbsp;
+                                   <% end %>
+                                 <% end %>
+                              <% end %>
+                            <% end %>
+                          <% else %>
+                            <%=  h(field.values[0].last) if !field.values.empty? %>
+                          <% end %>
+                        <% when "DialogFieldButton" %>
+                          <%= button_tag('Save', :disabled=>true) %>
+                        <% when "DialogFieldTagControl" %>
+                          <% category_tags = DialogFieldTagControl.category_tags(field.category).map {|cat| [cat[:description], cat[:id]]} %>
+                          <% if field.single_value? %>
+                            <%= select_tag('field.id',options_for_select(category_tags), {:prompt => field.required? ? "<Choose>" : "<None>"}) %>
+                          <% else %>
+                            <%= select_tag('field.id',options_for_select(category_tags), {:multiple => true}) %>
+                          <% end %>
+                        <% end %>
+                      </td>
+                    </tr>
+                <% if i == group.ordered_dialog_resources.length-1 %>
+                    </tbody>
+                  </table>
+                <% end %>
+              <% end %>
+            </fieldset>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </dd>
+</dl>
+<%# Initialize jQuery UI tabs based on tabs ul %>
+<script>
+  //method takes hash that can have 4 keys: tabs div id, active tab label,
+  //url to go to when tab is changed, and whether to check for abandon changes or not
+  miq_jquery_tabs_init({tabs_div: "dialog_tabs"})
+</script>
+

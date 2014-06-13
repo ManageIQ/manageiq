@@ -1,0 +1,22 @@
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"menu"} %>
+
+<div id="context_div"></div>	<%# Div to refer context menu to %>
+
+<script type="text/javascript">
+	<%# Create from/to date JS vars to limit calendar selection range %>
+	var miq_cal_dateFrom = new Date(<%= @perf_options[:sdate] %>);
+	var miq_cal_dateTo = new Date(<%= @perf_options[:edate] %>);
+
+	<%# Populate miq_chart_data with XML %>
+	<% if @chart_data %>
+		miq_chart_data = <%= @chart_data.to_json %>;
+	<% end %>
+
+</script>
+
+<%= render(:partial => "layouts/flash_msg") %>
+
+<%= render(:partial => "layouts/perf_options") %>
+
+<%= render(:partial => "layouts/perf_charts") %>

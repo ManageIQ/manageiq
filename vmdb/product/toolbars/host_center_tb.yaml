@@ -1,0 +1,138 @@
+#
+# Toolbar config file
+#
+---
+:model: Host
+:button_groups:
+- :name: host_vmdb
+  :items:
+  - :buttonSelect: host_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: host_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power States"
+      :title: "Refresh relationships and power states for all items related to this Host"
+      :confirm: "Refresh relationships and power states for all items related to this Host?"
+    - :button: host_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on this Host"
+      :confirm: "Perform SmartState Analysis on this Host?"
+    - :separator:
+    - :button: host_edit
+      :image: edit
+      :text: "Edit this Host"
+      :title: "Edit this Host"
+      :url: '/edit'
+    - :button: host_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this Host from the VMDB"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Host and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Host?"
+- :name: host_policy
+  :items:
+  - :buttonSelect: host_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: host_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for this Host"
+    - :button: host_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Host"
+    - :button: host_check_compliance
+      :image: compliance
+      :text: "Check Compliance of Last Known Configuration"
+      :title: "Check Compliance of the last known configuration for this Host"
+      :confirm: "Initiate Check Compliance of the last known configuration for this Host?"
+    - :button: host_analyze_check_compliance
+      :image: analyze_compliance
+      :text: "Analyze then Check Compliance"
+      :title: "Analyze then Check Compliance for this Host"
+      :confirm: "Analyze then Check Compliance for this Host?"
+- :name: host_lifecycle
+  :items:
+  - :buttonSelect: host_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :items:
+    - :button: host_miq_request_new
+      :image: provision
+      :text: "Provision this Host"
+      :title: "Provision this Host"
+- :name: host_monitoring
+  :items:
+  - :buttonSelect: host_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: host_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Host"
+      :url: '/show'
+      :url_parms: '?display=performance'
+    - :button: host_timeline
+      :image: timeline
+      :text: "Timelines"
+      :title: "Show Timelines for this Host"
+      :url: '/show'
+      :url_parms: '?display=timeline'
+- :name: host_operations
+  :items:
+  - :buttonSelect: host_power_choice
+    :image: power_choice
+    :title: "Host Power Functions"
+    :text: Power
+    :items:
+    - :button: host_enter_maint_mode
+      :image: enter_maint_mode
+      :text: "Enter Maintenance Mode"
+      :title: "Put this Host into Maintenance Mode"
+      :confirm: "Put this Host into Maintenance Mode?"
+    - :button: host_exit_maint_mode
+      :image: exit_maint_mode
+      :text: "Exit Maintenance Mode"
+      :title: "Take this Host out of Maintenance Mode"
+      :confirm: "Take this Host out of Maintenance Mode?"
+    - :button: host_standby
+      :image: standby
+      :text: "Enter Standby Mode"
+      :title: "Shutdown this Host to Standby Mode"
+      :confirm: "Shutdown this Host to Standby Mode?"
+    - :button: host_shutdown
+      :image: guest_shutdown
+      :text: "Shutdown"
+      :title: "Shutdown this Host"
+      :confirm: "Shutdown this Host?"
+    - :button: host_reboot
+      :image: guest_restart
+      :text: "Restart"
+      :title: "Restart this Host"
+      :confirm: "Restart this Host?"
+    - :separator:
+    - :button: host_start
+      :image: power_on
+      :text: "Power On"
+      :title: "Power On this Host"
+      :confirm: "Power On this Host?"
+    - :button: host_stop
+      :image: power_off
+      :text: "Power Off"
+      :title: "Power Off this Host"
+      :confirm: "Power Off this Host?"
+    - :button: host_reset
+      :image: power_reset
+      :text: "Reset"
+      :title: "Reset this Host"
+      :confirm: "Reset this Host?"

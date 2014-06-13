@@ -1,0 +1,40 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqSchedule
+:button_groups:
+- :name: miq_schedule_vmdb
+  :items:
+  - :buttonSelect: miq_schedule_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: timeprofile_new
+      :image: new
+      :text: "Add a new Time Profile"
+      :title: "Add a new Time Profile"
+      :url: "/timeprofile_new"
+    - :button: tp_edit
+      :image: edit
+      :text: Edit selected Time Profile
+      :title: Select a single Time Profile to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: tp_copy
+      :image: copy
+      :title: "Select a single Time Profile to copy"
+      :text: "Copy selected Time Profile"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: tp_delete
+      :image: delete
+      :text: Delete selected Time Profiles
+      :title: Delete selected Time Profiles
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Time Profiles will be permanently removed from the VMDB. Are you sure you want to delete the selected Time Profiles?"
+      :enabled: 'false'
+      :onwhen: '1+'

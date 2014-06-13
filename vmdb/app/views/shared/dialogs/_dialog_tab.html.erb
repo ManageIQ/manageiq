@@ -1,0 +1,10 @@
+<%# dialog tabs %>
+<div id="tab_<%=tab.id%>_div" style="">
+  <div id="<%=tab.id%>_tab" name="<%=tab.id%>_tab" width="80px">
+    <% tab.dialog_groups.each do |group| %>
+      <%= render :partial => "shared/dialogs/dialog_group", :locals => {:group => group} %>
+    <% end %>
+  </div>
+</div>
+
+

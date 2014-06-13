@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: SecurityGroup
+:button_groups:
+- :name: security_group_policy
+  :items:
+  - :buttonSelect: security_group_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: security_group_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Security Group"

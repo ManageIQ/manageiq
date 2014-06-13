@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: Condition
+:button_groups:
+- :name: condition_vmdb
+  :items:
+  - :buttonSelect: condition_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: condition_new
+      :image: new
+      :text: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Condition'
+      :title: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Condition'

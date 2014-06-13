@@ -1,0 +1,28 @@
+<div id="profile_folders_div" style="width:100%;height:100%;overflow:auto;">
+	<% if @folders %>
+		<%= render(:partial=>"layouts/flash_msg") %>
+		<table class="style3">
+			<thead>
+				<th class="icon"></th><th></th>
+			</thead>
+			<tbody>
+			<% @folders.each do |f| %>
+				<tr class="<%= cycle('row0', 'row1') %>"
+					<% if ["Compliance","Control"].include?(f) %>
+						onclick="profile_tree.selectItem('<%= PROROOT %>-f_<%= f %>', true);"
+					<% else %>
+						onclick="profile_tree.selectItem('<%= PROROOT %>-f_<%= f.split[1] %>-f_<%= f.split.first %>', true);"
+					<% end %>
+					onmouseover="this.style.cursor='pointer'" title="Open Folder">
+					<td  nowrap>
+							<img src="/images/icons/new/<%= f.split.first.downcase %>.png" valign="middle" border="0" />
+					</td>
+					<td>
+						<%= h(f) %> Policy Profiles
+					</td>
+				</tr>
+			<% end %>
+			</tbody>
+		</table>
+	<% end %>
+</div>

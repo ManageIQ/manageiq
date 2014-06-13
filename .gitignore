@@ -1,0 +1,15 @@
+# /
+.bundle/
+.idea/
+.loadpath
+.project
+.redcar/
+*.sublime-project
+*.sublime-workspace
+*.sln
+*.suo
+*.swp
+nbproject/
+private_test
+
+ca/root

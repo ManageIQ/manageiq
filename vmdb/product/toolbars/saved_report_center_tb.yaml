@@ -1,0 +1,27 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqReportResult
+:button_groups:
+- :name: saved_report_vmdb
+  :items:
+  - :buttonSelect: saved_report_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: report_only
+      :image: reportonly
+      :text: "Show full screen report"
+      :title: "Show full screen report"
+      :url: "/report_only"
+      :url_parms: 'popup_only'
+      :popup: true
+      :confirm: 'This will show the entire report (all rows) in your browser.  Do you want to proceed?'
+    - :button: saved_report_delete
+      :image: delete
+      :text: "Delete this Saved Report from the Database"
+      :title: "Delete this Saved Report from the Database"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Saved Report and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Saved Report?"

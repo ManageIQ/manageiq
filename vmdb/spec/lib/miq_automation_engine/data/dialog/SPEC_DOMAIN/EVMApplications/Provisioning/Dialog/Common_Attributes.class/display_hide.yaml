@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: display_hide
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: display
+  - value:
+      value: hide

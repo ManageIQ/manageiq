@@ -1,0 +1,40 @@
+#!/bin/bash
+
+echo $PATH
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin
+export PATH
+
+INST_DIR="/miq"
+
+INIT_NAME=miqec2
+INIT_DIR=/etc/init.d
+INIT_SRC=${INST_DIR}/lib/ec2Extract/etc/init.d
+INIT_LINK=/etc/rc2.d/S99miqec2
+
+SKIP=`awk '/^__ARCHIVE_START__/ { print NR + 1; exit 0; }' $0`
+
+echo "*** Removing contents of ${INST_DIR}"
+rm -rf ${INST_DIR}
+mkdir -p ${INST_DIR}
+
+echo "*** Contents of ${INST_DIR}:"
+ls -l ${INST_DIR}
+mount
+echo "*** End of ${INST_DIR} contents."
+
+echo "*** Extracting archive..."
+tail -n +$SKIP $0 | tar xvz -C $INST_DIR
+echo "*** Archive extraction complete"
+
+set -x
+
+rm -f ${INIT_DIR}/${INIT_NAME}
+rm -f ${INIT_LINK}
+cp ${INIT_SRC}/${INIT_NAME} ${INIT_DIR}/${INIT_NAME}
+chmod 755 ${INIT_DIR}/${INIT_NAME}
+ln -s ${INIT_DIR}/${INIT_NAME} ${INIT_LINK}
+
+exit 0
+
+__ARCHIVE_START__

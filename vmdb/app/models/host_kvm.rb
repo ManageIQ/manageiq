@@ -1,0 +1,2 @@
+class HostKvm < Host
+end

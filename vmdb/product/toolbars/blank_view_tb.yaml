@@ -1,0 +1,10 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: blank_buttons
+  :items:
+  - :button: blank_button
+    :enabled: 'false'
+

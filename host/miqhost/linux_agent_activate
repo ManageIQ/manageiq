@@ -1,0 +1,14 @@
+#!/bin/sh
+
+date
+echo "  Outgoing:"
+echo "    File: $1"
+echo "    `$1 build`"
+echo "  Incoming:"
+echo "    File: $2"
+echo "    `$2 build`"
+
+/etc/init.d/miqhostd stop
+$1 agentout
+$2 agentin
+/etc/init.d/miqhostd start

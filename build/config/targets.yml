@@ -1,0 +1,9 @@
+---
+name: manageiq
+directory: upstream
+targets:
+  # Format:
+  #   target: img_fac_target
+  vsphere: vsphere
+  ovirt: rhevm
+  openstack: openstack-kvm

@@ -1,0 +1,416 @@
+<div id="ops_tabs" style="display:none;">
+
+	<% if x_active_tree == :settings_tree %>
+
+	<%# tabs for Settings accordion %>
+		<% if x_node.split("-")[0] == "z" %>
+			<ul class="tab">
+				<li><a href="#settings_evm_servers">Zone</a></li>
+				<li><a href="#settings_smartproxy_affinity">SmartProxy Affinity</a></li>
+			</ul>
+			<div id="settings_evm_servers" name="settings_evm_servers" width="80px">
+				<%= render :partial => "settings_evm_servers_tab" %>
+			</div>
+			<div id="settings_smartproxy_affinity" name="settings_smartproxy_affinity" width="80px">
+				<%= render :partial => "settings_smartproxy_affinity_tab" %>
+			</div>
+		<% elsif x_node.split("-")[0] == "svr" %>
+			<% cur_svr_id = from_cid(x_node.split("-").last).to_i %>
+			<ul class="tab">
+				<li><a href="#settings_server">Server</a></li>
+				<li><a href="#settings_authentication">Authentication</a></li>
+				<li><a href="#settings_workers">Workers</a></li>
+				<% if cur_svr_id == @sb[:my_server_id] %>
+					<li><a href="#settings_database">Database</a></li>
+					<li><a href="#settings_custom_logos">Custom Logos</a></li>
+				<% end %>
+				<li><a href="#settings_maintenance">Maintenance</a></li>
+				<% if cur_svr_id == @sb[:my_server_id] %>
+					<li><a href="#settings_smartproxy">SmartProxy</a></li>
+					<li><a href="#settings_advanced">Advanced</a></li>
+				<% end %>
+			</ul>
+			<div id="settings_server" name="settings_server" width="80px">
+				<% if @sb[:active_tab] == "settings_server" %>
+					<%= render :partial => "settings_server_tab" %>
+				<% end %>
+			</div>
+			<div id="settings_authentication" name="settings_authentication" width="80px">
+				<% if @sb[:active_tab] == "settings_authentication" %>
+					<%= render :partial => "settings_authentication_tab" %>
+				<% end %>
+			</div>
+			<div id="settings_workers" name="settings_workers" width="80px">
+				<% if @sb[:active_tab] == "settings_workers" %>
+					<%= render :partial => "settings_workers_tab" %>
+				<% end %>
+			</div>
+			<% if cur_svr_id == @sb[:my_server_id] %>
+				<div id="settings_database" name="settings_server" width="80px">
+					<% if @sb[:active_tab] == "settings_database" %>
+						<%= render :partial => "settings_database_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_custom_logos" name="settings_custom_logos" width="80px">
+					<% if @sb[:active_tab] == "settings_custom_logos" %>
+						<%= render :partial => "settings_custom_logos_tab" %>
+					<% end %>
+				</div>
+			<% end %>
+			<div id="settings_maintenance" name="settings_maintenance" width="80px">
+				<% if @sb[:active_tab] == "settings_maintenance" %>
+					<%= render :partial => "settings_maintenance_tab" %>
+				<% end %>
+			</div>
+			<% if cur_svr_id == @sb[:my_server_id] %>
+				<div id="settings_smartproxy" name="settings_smartproxy" width="80px">
+					<% if @sb[:active_tab] == "settings_smartproxy" %>
+						<%= render :partial => "settings_smartproxy_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_advanced" name="settings_advanced" width="80px">
+          <% if @sb[:active_tab] == "settings_advanced" %>
+					  <%= render :partial => "settings_advanced_tab" %>
+          <% end %>
+				</div>
+			<% end %>
+		<% else %>
+      <% tree_node = x_node %>
+			<%  if tree_node == "xx-l" ||
+              tree_node  == "xx-msc" ||
+              tree_node  == "xx-sis" ||
+              tree_node == "xx-z" ||
+              tree_node.split("-").first == "msc" ||
+              tree_node.split("-").first == "sis" ||
+              tree_node.split("-").first == "l" ||
+              tree_node.split("-").first == "ld" ||
+              tree_node.split("-").first == "lr"
+			%>
+				<% if tree_node == "xx-msc" %>
+					<% label = "Schedules"%>
+        <% elsif tree_node == "xx-l" %>
+          <% label = "LDAP Regions" %>
+				<% elsif tree_node == "xx-z" %>
+					<% label = ui_lookup(:models=>'Zone') %>
+				<% elsif tree_node.split("-").first == "sis" %>
+					<% label = escape_javascript(@selected_scan.name) %>
+				<% elsif tree_node.split("-").first == "msc" %>
+					<% label = escape_javascript(@selected_schedule.name) %>
+        <% elsif tree_node.split("-").first == "lr" || tree_node.split("-").first == "ld"%>
+          <% label = escape_javascript(@selected_lr ? @selected_lr.name : @selected_ld.name) %>
+				<% else %>
+					<% label = "Analysis Profiles"%>
+				<% end %>
+				
+				<div id="settings_list" name="settings_list" width="80px">
+					<% if @sb[:active_tab] == "settings_list" %>
+						<%= render :partial => "settings_list_tab" %>
+					<% end %>
+				</div>
+			<% else %><%# Settings Region node %>
+				<ul class="tab">
+					<li><a href="#settings_details">Details</a></li>
+					<li><a href="#settings_cu_collection">C & U Collection</a></li>
+					<li><a href="#settings_co_categories"><%= escape_javascript(session[:customer_name]) %> Categories</a></li>
+					<li><a href="#settings_co_tags"><%= escape_javascript(session[:customer_name]) %> Tags</a></li>
+					<li><a href="#settings_import_tags">Import Tags</a></li>
+					<li><a href="#settings_import">Import</a></li>
+					<li><a href="#settings_rhn">Red Hat Updates</a></li>
+				</ul>
+				<div id="settings_details" name="settings_details" width="80px">
+					<% if @sb[:active_tab] == "settings_details" %>
+						<%= render :partial => "settings_details_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_cu_collection" name="settings_cu_collection" width="80px">
+					<% if @sb[:active_tab] == "settings_cu_collection" %>
+						<%= render :partial => "settings_cu_collection_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_co_categories" name="settings_co_categories" width="80px">
+					<% if @sb[:active_tab] == "settings_co_categories" %>
+						<%= render :partial => "settings_co_categories_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_co_tags" name="settings_co_tags" width="80px">
+					<% if @sb[:active_tab] == "settings_co_tags" %>
+						<%= render :partial => "settings_co_tags_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_import_tags" name="settings_import_tags" width="80px">
+					<% if @sb[:active_tab] == "settings_import_tags" %>
+						<%= render :partial => "settings_import_tags_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_import" name="settings_import" width="80px">
+					<% if @sb[:active_tab] == "settings_import" %>
+						<%= render :partial => "settings_import_tab" %>
+					<% end %>
+				</div>
+				<div id="settings_rhn" name="settings_rhn" width="80px">
+					<% if @sb[:active_tab] == "settings_rhn" %>
+						<%= render :partial => "settings_rhn_tab" %>
+					<% end %>
+				</div>
+			<% end %>
+		<% end %>
+
+	<% elsif x_active_tree == :diagnostics_tree %>
+
+	<%# tabs for Diagnostics accordion %>
+		<% if x_node.split("__").last.split("-")[0] == "z" %>
+			<ul class="tab">
+					<li><a href="#diagnostics_roles_servers">Roles by Servers</a></li>
+					<li><a href="#diagnostics_servers_roles">Servers by Roles</a></li>
+					<li><a href="#diagnostics_server_list">Servers</a></li>
+					<li><a href="#diagnostics_collect_logs">Collect Logs</a></li>
+					<li><a href="#diagnostics_cu_repair">C & U Gap Collection</a></li>
+				</ul>
+				<div id="diagnostics_roles_servers" name="diagnostics_roles_servers" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_roles_servers" %>
+						<%= render :partial => "diagnostics_roles_servers_tab" %>
+					<% end %>
+				</div>
+				<div id="diagnostics_servers_roles" name="diagnostics_servers_roles" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_servers_roles" %>
+						<%= render :partial => "diagnostics_servers_roles_tab" %>
+					<% end %>
+				</div>
+				<div id="diagnostics_server_list" name="diagnostics_server_list" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_server_list" %>
+						<%= render :partial => "diagnostics_server_list_tab" %>
+					<% end %>
+				</div>
+				<div id="diagnostics_collect_logs" name="diagnostics_collect_logs" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_collect_logs" %>
+						<%= render :partial => "diagnostics_collect_logs_tab" %>
+					<% end %>
+				</div>
+				<div id="diagnostics_cu_repair" name="diagnostics_cu_repair" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_cu_repair" %>
+						<%= render :partial => "diagnostics_cu_repair_tab" %>
+					<% end %>
+				</div>
+		<% elsif x_node.split("__").last.split("-")[0] == "svr" %>
+				<ul class="tab">
+					<% if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started? %>
+            <li><a href="#diagnostics_summary">Summary</a></li>
+						<li><a href="#diagnostics_workers">Workers</a></li>
+					<% end %>
+					<li><a href="#diagnostics_collect_logs">Collect Logs</a></li>
+					<% if @sb[:selected_server_id] == @sb[:my_server_id] %>
+						<li><a href="#diagnostics_evm_log">CFME Log</a></li>
+						<li><a href="#diagnostics_audit_log">Audit Log</a></li>
+            <li><a href="#diagnostics_production_log"><%= @sb[:rails_log]%> Log</a></li>
+					<% end %>
+					<li><a href="#diagnostics_utilization">Utilization</a></li>
+					<li><a href="#diagnostics_timelines">Timelines</a></li>
+				</ul>
+				<% if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started? %>
+          <div id="diagnostics_summary" name="diagnostics_summary" width="80px">
+            <% if @sb[:active_tab] == "diagnostics_summary" %>
+              <%= render :partial => "diagnostics_summary_tab" %>
+            <% end %>
+          </div>
+					<div id="diagnostics_workers" name="diagnostics_workers" width="80px">
+						<% if @sb[:active_tab] == "diagnostics_workers" %>
+							<%= render :partial => "diagnostics_workers_tab" %>
+						<% end %>
+					</div>
+				<% end %>
+				<div id="diagnostics_collect_logs" name="diagnostics_collect_logs" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_collect_logs" %>
+						<%= render :partial => "diagnostics_collect_logs_tab" %>
+					<% end %>
+				</div>
+				<% if @sb[:selected_server_id] == @sb[:my_server_id] %>
+					<div id="diagnostics_evm_log" name="diagnostics_evm_log" width="80px">
+						<% if @sb[:active_tab] == "diagnostics_evm_log" %>
+							<%= render :partial => "diagnostics_evm_log_tab" %>
+						<% end %>
+					</div>
+					<div id="diagnostics_audit_log" name="diagnostics_audit_log" width="80px">
+						<% if @sb[:active_tab] == "diagnostics_audit_log" %>
+							<%= render :partial => "diagnostics_audit_log_tab" %>
+						<% end %>
+					</div>
+          <div id="diagnostics_production_log" name="diagnostics_production_log" width="80px">
+            <% if @sb[:active_tab] == "diagnostics_production_log" %>
+              <%= render :partial => "diagnostics_production_log_tab" %>
+            <% end %>
+          </div>
+				<% end %>
+				<div id="diagnostics_utilization" name="diagnostics_utilization" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_utilization" %>
+						<%= render :partial => "diagnostics_utilization_tab" %>
+					<% end %>
+				</div>
+				<div id="diagnostics_timelines" name="diagnostics_timelines" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_timelines" %>
+						<%= render :partial => "diagnostics_timelines_tab" %>
+					<% end %>
+				</div>
+		<% else %><%# Region node ("root") %>
+
+			<ul class="tab">
+				<li><a href="#diagnostics_zones"><%=ui_lookup(:models=>'Zone')%></a></li>
+				<% if session[:userrole] == "super_administrator" %>
+					<li><a href="#diagnostics_roles_servers">Roles by Servers</a></li>
+					<li><a href="#diagnostics_servers_roles">Servers by Roles</a></li>
+				<% end %>
+				<li><a href="#diagnostics_server_list">Servers</a></li>
+				<% if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator" %>
+					<%# not Enterprise region and visible to super admin role %>
+					<li><a href="#diagnostics_replication">Replication</a></li>
+				<% end %>
+				<% if session[:userrole] == "super_administrator" %>
+					<li><a href="#diagnostics_database">Database</a></li>
+					<li><a href="#diagnostics_orphaned_data">Orphaned Data</a></li>
+				<% end %>
+			</ul>
+
+			<div id="diagnostics_zones" name="diagnostics_zones" width="80px">
+				<% if @sb[:active_tab] == "diagnostics_zones" %>
+					<%= render :partial => "diagnostics_zones_tab" %>
+				<% end %>
+			</div>
+
+			<% if session[:userrole] == "super_administrator" %>
+				<div id="diagnostics_roles_servers" name="diagnostics_roles_servers" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_roles_servers" %>
+						<%= render :partial => "diagnostics_roles_servers_tab" %>
+					<% end %>
+				</div>
+				<div id="diagnostics_servers_roles" name="diagnostics_servers_roles" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_servers_roles" %>
+						<%= render :partial => "diagnostics_servers_roles_tab" %>
+					<% end %>
+				</div>
+			<% end %>
+
+			<div id="diagnostics_server_list" name="diagnostics_server_list" width="80px">
+				<% if @sb[:active_tab] == "diagnostics_server_list" %>
+					<%= render :partial => "diagnostics_server_list_tab" %>
+				<% end %>
+			</div>
+			<% if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator" %>
+				<%# not Enterprise region and visible to super admin role %>
+				<div id="diagnostics_replication" name="diagnostics_replication" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_replication" %>
+						<%= render :partial => "diagnostics_replication_tab" %>
+					<% end %>
+				</div>
+			<% end %>
+			<% if session[:userrole] == "super_administrator" %>
+				<div id="diagnostics_database" name="diagnostics_database" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_database" %>
+						<%= render :partial => "diagnostics_database_tab" %>
+					<% end %>
+				</div>
+				<div id="diagnostics_orphaned_data" name="diagnostics_orphaned_data" width="80px">
+					<% if @sb[:active_tab] == "diagnostics_orphaned_data" %>
+						<%= render :partial => "diagnostics_orphaned_data_tab" %>
+					<% end %>
+				</div>
+			<% end %>
+		<% end %>
+
+	<% elsif x_active_tree == :rbac_tree %>
+
+		<%# tabs for Access Control accordion %>
+		<ul>
+			<li><a href="#rbac_details"><%=@sb[:tab_label]%></a></li>
+		</ul>
+
+		<div id="rbac_details" name="rbac_details" width="80px">
+			<% if @sb[:active_tab] == "rbac_details" %>
+				<%= render :partial => "rbac_details_tab" %>
+			<% end %>
+		</div>
+
+	<% elsif x_active_tree == :vmdb_tree %>
+
+	<%# tabs for Database accordion %>
+		<ul class="tab">
+      <% tree_node = x_node %>
+			<% if tree_node == "root" %>
+				<li><a href="#db_summary">Summary</a></li>
+			<% end %>
+
+			<li><a href="#db_details"><%=@tab_text%></a></li>
+
+			<% if tree_node == "root" %>
+				<li><a href="#db_indexes">Indexes</a></li>
+				<li><a href="#db_settings">Settings</a></li>
+				<li><a href="#db_connections">Client Connections</a></li>
+			<% end %>
+			<% if tree_node == "root" ||
+        tree_node.split("-").first == X_TREE_NODE_PREFIXES.invert["VmdbTable"] %>
+				<li><a href="#db_utilization">Utilization</a></li>
+			<% end %>
+		</ul>
+
+		<% if tree_node == "root" %>
+			<div id="db_summary" name="db_summary" width="80px">
+				<% if @sb[:active_tab] == "db_summary" %>
+					<%= render :partial => "db_summary" %>
+				<% end %>
+			</div>
+		<% end %>
+
+		<div id="db_details" name="db_details" width="80px">
+			<% if @sb[:active_tab] == "db_details" || (@sb[:active_tab] == "db_indexes" && (@temp[:vmdb_index]) || @temp[:indexes]) %>
+				<%= render :partial => "db_details_tab" %>
+			<% end %>
+		</div>
+
+		<% if tree_node == "root" %>
+			<div id="db_indexes" name="db_indexes" width="80px">
+				<% if @sb[:active_tab] == "db_indexes" %>
+					<%= render :partial => "db_details_tab" %>
+				<% end %>
+			</div>
+
+			<div id="db_settings" name="db_settings" width="80px">
+				<% if @sb[:active_tab] == "db_settings" %>
+					<%= render :partial => "db_details_tab" %>
+				<% end %>
+			</div>
+
+			<div id="db_connections" name="db_connections" width="80px">
+				<% if @sb[:active_tab] == "db_connections" %>
+					<%= render :partial => "db_details_tab" %>
+				<% end %>
+			</div>
+		<% end %>
+
+		<% if tree_node == "root" ||
+      tree_node.split("-").first == X_TREE_NODE_PREFIXES.invert["VmdbTable"] %>
+			<div id="db_utilization" name="db_utilization" width="80px">
+				<% if @sb[:active_tab] == "db_utilization" %>
+					<%= render(:partial => "layouts/performance") %>
+				<% end %>
+			</div>
+		<% end %>
+
+	<% elsif x_active_tree == :analytics_tree && get_vmdb_config[:product][:analytics] %>
+
+	<%# tabs for Analytics accordion %>
+		<ul class="tab">
+			<li><a href="#analytics_details">Analytics Report</a></li>
+		</ul>
+
+		<div id="analytics_details" name="analytics_details" width="80px">
+			<% if @sb[:active_tab] == "analytics_details" %>
+				<%= render :partial => "analytics_details_tab" %>
+			<% end %>
+		</div>
+
+	<% end %>
+</div>
+
+<script>
+	// Method takes hash that can have 4 keys: tabs div id, active_tab label,
+	//   url to go to when tab is changed, and whether to check for abandon changes or not
+	miq_jquery_tabs_init({tabs_div: "ops_tabs", active_tab: "<%=@sb[:active_tab]%>", url: "/ops/change_tab/", tab_changes: true});
+</script>

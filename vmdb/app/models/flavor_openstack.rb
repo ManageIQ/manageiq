@@ -1,0 +1,2 @@
+class FlavorOpenstack < Flavor
+end

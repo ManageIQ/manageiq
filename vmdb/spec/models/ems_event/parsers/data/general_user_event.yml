@@ -1,0 +1,70 @@
+--- !map:VimHash 
+message: !str:VimString 
+  str: EVM SmartState Analysis completed for VM [tch-UBUNTU-904-LTS-DESKTOP]
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+userName: !str:VimString 
+  str: MANAGEIQ\thennessy
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+vm: !map:VimHash 
+  name: !str:VimString 
+    str: tch-UBUNTU-904-LTS-DESKTOP
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+  vm: !str:VimString 
+    str: vm-106741
+    "@vimType": VirtualMachine
+    "@xsiType": ManagedObjectReference
+  path: !str:VimString 
+    str: "[msan2] tch-UBUNTU-904-LTS-DESKTOP/tch-UBUNTU-904-LTS-DESKTOP.vmx"
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+eventType: GeneralUserEvent
+datacenter: !map:VimHash 
+  name: !str:VimString 
+    str: MIQ-Mahwah
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+  datacenter: !str:VimString 
+    str: datacenter-2
+    "@vimType": Datacenter
+    "@xsiType": ManagedObjectReference
+createdTime: !str:VimString 
+  str: "2010-08-24T01:08:10.396636Z"
+  "@vimType": 
+  "@xsiType": SOAP::SOAPDateTime
+fullFormattedMessage: !str:VimString 
+  str: "User logged event: EVM SmartState Analysis completed for VM [tch-UBUNTU-904-LTS-DESKTOP]"
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+host: !map:VimHash 
+  name: !str:VimString 
+    str: yoda.manageiq.com
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+  host: !str:VimString 
+    str: host-106569
+    "@vimType": HostSystem
+    "@xsiType": ManagedObjectReference
+computeResource: !map:VimHash 
+  name: !str:VimString 
+    str: yoda cluster
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+  computeResource: !str:VimString 
+    str: domain-c8402
+    "@vimType": ClusterComputeResource
+    "@xsiType": ManagedObjectReference
+key: !str:VimString 
+  str: "5361104"
+  "@vimType": 
+  "@xsiType": SOAP::SOAPInt
+changeTag: !str:VimString 
+  str: ""
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+chainId: !str:VimString 
+  str: "5361104"
+  "@vimType": 
+  "@xsiType": SOAP::SOAPInt

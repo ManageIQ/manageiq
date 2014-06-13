@@ -1,0 +1,17 @@
+<div id="templates_images_filter_tree_div" style="width:100%;height:100%;">
+	<div id="templates_images_filter_treebox" style="width:100%;height:100%;color:#000; overflow: hidden"></div>
+  <%= render(:partial => "layouts/dynatree",
+             :locals => {:tree_id => "templates_images_filter_treebox",
+                         :tree_name => "templates_images_filter_tree",
+                         :id_prefix => "tf_",
+                         :json_tree => @temp[:templates_images_filter_tree],
+                         :onclick => "cfmeOnClick_SelectTreeNode",
+                         :select_node=>"#{x_node(:templates_images_filter_tree)}",
+                         :base_id => "root",
+                         :no_base_exp => true,
+                         :exp_tree => false,
+                         :highlighting => true,
+                         :tree_state => true,
+                         :autoload => false
+                         }) %>
+</div>

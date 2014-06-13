@@ -1,0 +1,2 @@
+class OntapVolumeDerivedMetricMetadata < StorageMetricsMetadata
+end

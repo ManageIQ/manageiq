@@ -1,0 +1,68 @@
+- if @record && @record.name != nil
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.name.length < trunc_at ? @record.name : @record.name[0...trunc_to] + "..."),
+          {:action=>'panel_control', :panel=>'icon'},
+          :remote=>true,
+          :title=>"#{h(@record.name)}")
+      #icon{:style => "display:#{@panels["icon"] ? '' : 'none'}"}
+        .panecontent
+          = render(:partial=>"layouts/quadicon",
+            :locals=>{:mode=>:icon,
+            :item=>@record,
+            :size=>72,
+            :typ=>:listnav} )
+      .topbar
+        = link_to("Properties", {:action=>'panel_control', :panel=>'ems_prop'}, :remote=>true)
+      #ems_prop{:style => "display:#{@panels["ems_prop"] ? '' : 'none'}"}
+        .panecontent
+          = link_to_with_icon('Summary', {:action=>'show', :id=>@record, :display=>'main'},
+            :title=>"Show Summary")
+          - if @record.has_events? || @record.has_events?(:policy_events)
+            - if @record.has_events?
+              = link_to_with_icon('Timelines', {:action=>'show', :id => @record, :display=>'timeline'},
+                :title=>"Show Timelines")
+            - elsif @record.has_events?(:policy_events)
+              = link_to_with_icon('Timelines', {:action=>'show', :id => @record, :display=>'timeline'},
+                :title=>"Show Timelines")
+          - else
+            %img{:src => "/images/icons/16/link_none.gif", :title => "Timelines Not Available"}/
+            Timelines
+            %br/
+      .topbar
+        = link_to("Relationships", {:action=>'panel_control', :panel=>'ems_rel'}, :remote=>true)
+      #ems_rel{:style => "display:#{@panels["ems_rel"] ? '' : 'none'}"}
+        .panecontent
+          - if role_allows(:feature=>"availability_zone_show_list")
+            = link_if_nonzero(:count     => @record.number_of(:availability_zones),
+                              :record_id => @record.id,
+                              :display   => 'availability_zones',
+                              :tables    => 'availability_zone',
+                              :controller=> 'ems_cloud')
+
+          - if role_allows(:feature=>"flavor_show_list")
+            = link_if_nonzero(:count     => @record.number_of(:flavors),
+                              :record_id => @record.id,
+                              :display   => 'flavors',
+                              :tables    => 'flavor',
+                              :controller=> 'ems_cloud')
+
+          - if role_allows(:feature=>"security_group_show_list")
+            = link_if_nonzero(:count     => @record.number_of(:security_groups),
+                              :record_id => @record.id,
+                              :display   => 'security_groups',
+                              :tables    => 'security_group',
+                              :controller=> 'ems_cloud')
+
+          - if role_allows(:feature=>"vm_show_list")
+            = link_if_nonzero(:count     => @record.number_of(:vms),
+                              :record_id => @record.id,
+                              :display   => 'instances',
+                              :tables    => 'instances')
+
+          - if role_allows(:feature=>"miq_template_show_list")
+            = link_if_nonzero(:count     => @record.number_of(:miq_templates),
+                              :record_id => @record.id,
+                              :display   => 'images',
+                              :tables    => 'images')

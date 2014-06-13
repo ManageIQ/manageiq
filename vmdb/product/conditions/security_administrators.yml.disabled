@@ -1,0 +1,14 @@
+old_name: "security_administrators"
+name: "Sample: Secure administrator account"
+description: "VM has the Administrator account"
+policy_description: "Allow VM to start only if it has the Administrator account"
+modifier: "allow"
+who: "system"
+what: "start"
+rule: 
+    mode: "tag_expr_v2"
+    expr: 
+      CONTAINS: 
+        field: Vm.users-name
+        value: Administrator
+towhat: "Vm"

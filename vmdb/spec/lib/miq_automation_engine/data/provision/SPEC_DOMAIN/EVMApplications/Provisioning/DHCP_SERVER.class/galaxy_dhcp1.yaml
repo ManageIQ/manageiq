@@ -1,0 +1,16 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: GALAXY_dhcp1
+    inherits: 
+    description: 
+  fields:
+  - name:
+      value: galaxy.local_dhcp1
+  - ip:
+      value: 192.168.254.16
+  - domain:
+      value: /EVMApplications/Provisioning/DOMAIN/GALAXY

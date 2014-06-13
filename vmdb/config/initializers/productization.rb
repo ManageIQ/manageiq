@@ -1,0 +1,1 @@
+Vmdb::Productization.new.prepare

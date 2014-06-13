@@ -1,0 +1,7 @@
+<% if @assignitems %>
+  <%= render(:partial=>"shared/views/vdi_common/assign") %>
+<% elsif @user_import %>
+  <%= render(:partial=>"user_import") %>
+<% else %>
+  <%= render(:partial=>"shared/views/vdi_common/show") %>
+<% end %>

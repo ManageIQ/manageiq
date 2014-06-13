@@ -1,0 +1,32 @@
+<% width = size == 150 ? 54 : 35 %>
+<% height = width %>
+<% if @settings[:quadicons][:storage] %>
+	<div class="flobj"><img src="/images/icons/<%= size %>/base.png" width="<%= size %>" height="<%= size %>"/></div>
+	<div class="flobj a<%= size %>"><img src="/images/icons/new/storagetype-<%= h(item.store_type.downcase)%>.png"/></div>
+	<% hcount = item.v_total_hosts	%><%# Get the Host count %>
+	<% vcount = item.v_total_vms	%><%# Get the VM count %>
+		<div class="flobj b<%= size %>"><p><%= vcount %></p></div>
+		<div class="flobj c<%= size %>"><p><%= hcount %></p></div>
+		<% space_percent = item.free_space_percent_of_total == 100 ? 20 : ((item.free_space_percent_of_total.to_i + 2)/5.25).round %>
+		<div class="flobj d<%= size %>"><img src="/images/icons/new/piecharts/datastore/<%= h(space_percent)%>.png"/></div>
+<% else %>
+	<% space_percent = (item.used_space_percent_of_total.to_i + 9) / 10 %>
+	<div class="flobj" ><img src="/images/icons/<%= size %>/base-single.png" width="<%= size %>" height="<%= size %>"/></div>
+	<div class="flobj e<%= size %>"><img src="/images/icons/new/datastore-<%= h(space_percent)%>.png"/></div>
+<% end %>
+<% if typ == :listnav %><%# Listnav, no clear image needed %>
+	<div class="flobj" ><img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/></div>
+<% else %>
+	<div class="flobj">
+		<% if ! @embedded || @showlinks %>
+			<a href="<%= url_for_record(item) %>" title="<%= "Name: "+h(item.name)+" | " + ui_lookup(:table=>"storages") + " Type: "+h(item.store_type) %>">
+				<img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/>
+			</a>
+		<% else %>
+			<a title="<%= "Name: "+h(item.name)+" | " + ui_lookup(:table=>"storages") + " Type: "+h(item.store_type) %>">
+				<img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/>
+			</a>
+		<% end %>
+	</div>
+<% end %>
+

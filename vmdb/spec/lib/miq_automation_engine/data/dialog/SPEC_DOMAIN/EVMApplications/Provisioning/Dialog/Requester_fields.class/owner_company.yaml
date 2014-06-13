@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: owner_company
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: owner_company
+  - value1:
+      value: /EVMApplications/Provisioning/Dialog/requester_fields_ownercompany/*

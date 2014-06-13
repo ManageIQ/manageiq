@@ -1,0 +1,11 @@
+---
+object_type: domain
+version: 1.0
+object:
+  attributes:
+    name: inert
+    description: 
+    display_name: 
+    system: 
+    priority: 100
+    enabled: 

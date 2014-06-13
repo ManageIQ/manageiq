@@ -1,0 +1,13 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: eccq_insert
+    inherits: 
+    description: 
+  fields:
+  - meth:
+      value: service_now_eccq_insert(server=>server, username =>username, password=>password,
+        agent =>agent, queue=>queue, topic=>topic, name=>name, source=>source, payload=>payload)

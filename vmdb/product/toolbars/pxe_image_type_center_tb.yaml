@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: PxeImageType
+:button_groups:
+- :name: pxe_image_type_vmdb
+  :items:
+  - :buttonSelect: pxe_image_type_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: pxe_image_type_edit
+      :image: edit
+      :text: 'Edit this System Image Type'
+      :title: 'Edit this System Image Type'
+    - :button: pxe_image_type_delete
+      :image: delete
+      :text: 'Remove this System Image Type from the VMDB'
+      :title: 'Remove this System Image Type from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This System Image Type will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this System Image Type?'

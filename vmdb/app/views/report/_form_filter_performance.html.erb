@@ -1,0 +1,34 @@
+<% url = url_for(:action=>'form_field_changed', :id=>"#{@edit[:rpt_id] || "new"}") %>
+<fieldset>
+	<p class="legend">Performance Timeframe</p>
+	<table class="style1">
+			<tr>
+				<td class="key">Show <%= @edit[:new][:perf_interval] == "hourly" ? "Hourly" : "Daily" %> data from:</td>
+				<td>
+					<%= select_tag('chosen_end', options_for_select(@edit[:end_array], @edit[:new][:perf_end]),
+												:multiple=>false, :class=>"widthed",
+												"data-miq_observe"=>{:url=>url}.to_json) %>
+					going back
+					<%= select_tag('chosen_start', options_for_select(@edit[:start_array], @edit[:new][:perf_start]),
+												:multiple=>false, :class=>"widthed",
+												"data-miq_observe"=>{:url=>url}.to_json) %>
+				</td>
+			</tr>
+			<tr>
+        <td class="key" style="width:100px">Time Profile</td>
+        <td class="wide" style="padding-right: 5px" valign="top">
+          <% if session[:time_profiles].blank? %>
+            No Time Profiles found
+          <% elsif session[:time_profiles].length == 1 %>   <%# Only 1 choice, show the value %>
+            <%= session[:time_profiles][@edit[:new][:time_profile].to_i] %>
+          <% else %>
+            <%= select_tag('chosen_time_profile',
+                         options_for_select(Array(session[:time_profiles].invert).sort_by(&:first),
+                                            @edit[:new][:time_profile]),
+                         "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% end %>
+        </td>
+			</tr>
+	</table>
+  <%= "Note: Only Time Profiles with 'Roll Up Performance' set are shown." %>
+</fieldset>

@@ -1,0 +1,4 @@
+#!ipxe
+kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:50:56:91:79:d5
+initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
+boot

@@ -1,0 +1,18 @@
+<%# Div to hold the actual tree %>
+<div id="utilization_tree_div" style="width:100%;height:100%;">
+<div id="utilization_treebox" style="width:100%;height:100%;color:#000; overflow: hidden"></div>
+  <%= render(:partial => "layouts/dynatree",
+             :locals  => {:tree_id       => "utilization_treebox",
+                          :tree_name     => "utilization_tree",
+                          :json_tree     => @temp[:utilization_tree],
+                          :onclick       => "cfmeOnClick_SelectOptimizeTreeNode",
+                          :select_node   => "#{x_node(:utilization_tree)}",
+                          :no_base_exp   => true,
+                          :exp_tree      => false,
+                          :highlighting  => true,
+                          :no_tree_lines => false,
+                          :tree_state    => true,
+                          :autoload      => true,
+                          :multi_lines   => true
+                        }) %>
+</div>

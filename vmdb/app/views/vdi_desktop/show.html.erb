@@ -1,0 +1,5 @@
+<% if @manage_users %>
+  <%= render(:partial=>"manage_users") %>
+<% else %>
+  <%= render(:partial=>"shared/views/vdi_common/show") %>
+<% end %>

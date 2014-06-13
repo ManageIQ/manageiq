@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: sysprep_delete_accounts
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: sysprep_delete_accounts
+  - value1:
+      value: /EVMApplications/Provisioning/Dialog/customize_fields_sysprepdeleteaccounts/*

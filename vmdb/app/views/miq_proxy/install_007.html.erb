@@ -1,0 +1,67 @@
+<% url = url_for(:action =>'credential_field_changed') %>
+<%= form_tag( {:action => 'install_007', :id=>@miq_proxy}, {:id => "007_form"}) do %>
+	<div id="form_div">
+<%= render :partial => "layouts/flash_msg" %>
+		<dl class="col2">
+			<dd>
+					<fieldset>
+						<p class="legend">Version Info</p>
+						<table class="style1">
+								<tr>
+									<td class="key">Current Version</td>
+									<td>
+										<% unless @miq_proxy.version.blank? %>
+											<%= @miq_proxy.version %>
+										<% else %>
+											N/A
+										<% end %>
+									</td>
+								</tr>
+								<tr>
+									<td class="key">Version to Deploy</td>
+									<td>
+                    <%= select_tag("install_build",
+                                      options_for_select(["<choose>"] + @edit[:proxy_choices].sort{|a,b| a[0]<=>b[0]},
+                                        @edit[:install_build]),
+																			"data-miq_focus"=>true,
+                                      "data-miq_observe"=>{:url=>url}.to_json) %>
+									</td>
+								</tr>
+						</table>
+					</fieldset>
+				</dd>
+				<dd>
+
+					<% if @miq_proxy.state == "on" %>
+						<fieldset>
+							<p class="legend">Credentials</p>
+							<span style="color:black">
+								Credentials are not required because this SmartProxy is currently active.
+							</span>
+						</fieldset>
+					<% else %>
+						<%= render	:partial=>"/layouts/multi_auth_credentials",
+												:locals=>{:record=>@miq_proxy,
+																	:legendtext=>"Credentials for Host '#{@miq_proxy.host.name}'",
+																	:validate_url=>"install_007",
+																	:change_url=>"credential_field_changed"}
+						%>
+					<% end %>
+			</dd>
+		</dl>
+
+		<% if @miq_proxy.state == "on" %>
+			<%= "Pressing 'Save' will deploy the selected SmartProxy build to the Host." %>
+		<% else %>
+			<%= "Pressing 'Save' will save any Host credential changes and deploy the selected SmartProxy build to the Host." %>
+		<% end %>
+	</div>
+
+<% if false %>
+	<%= image_submit_tag("/images/formbuttons/save.png", :id=> "save", :name=>"save",
+											:alt=>"Install Selected SmartProxy Build",
+											:title=>"Install Selected SmartProxy Build", :class=>"button") %>
+	<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
+<% end %>
+	<%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:record_id=>@miq_proxy.id, :action_url=>"install_007", :align=>"left"})%>
+<% end %>

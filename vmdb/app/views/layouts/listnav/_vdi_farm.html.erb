@@ -1,0 +1,107 @@
+<% if @record && @record.name != nil %>
+	<div id="accordion">
+		<div class="panel">
+			<div class="topbar">
+				<%= link_to(h(@record.name.length < trunc_at ? @record.name : @record.name[0...trunc_to] + "..."),
+													{:action=>'panel_control', :panel=>'icon'},
+                          :remote=>true,
+													:title=>"#{h(@record.name)}") %>
+			</div>
+			<%= hidden_div_if(@panels["icon"] == nil || @panels["icon"] == false, :id=>"icon") %>
+				<div class="panecontent">
+					<%= render(:partial=>"layouts/quadicon",
+											:locals=>{:mode=>:icon,
+																:item=>@record,
+																:size=>72,
+																:typ=>:listnav} )
+					%>
+				</div>
+			</div>
+			<div class="topbar">
+				<%= link_to("Properties", {:action=>'panel_control', :panel=>'vdi_farm_prop'}, :remote=>true) %>
+			</div>
+			<%= hidden_div_if(@panels["vdi_farm_prop"] == nil || @panels["vdi_farm_prop"] == false, :id=>"vdi_farm_prop") %>
+				<div class="panecontent">
+          <%= link_to_with_icon('Summary',
+                                {:action=>'show', :id=>@record, :display=>'main'},
+                                :title=>"Show Summary") %>
+				</div>
+			</div>
+
+			<div class="topbar">
+				<%= link_to("Relationships", {:action=>'panel_control', :panel=>'vdi_farm_rel'}, :remote=>true) %>
+			</div>
+				<%= hidden_div_if(@panels["vdi_farm_rel"] == nil || @panels["vdi_farm_rel"] == false, :id=>"vdi_farm_rel") %>
+				<div class="panecontent">
+					<% if role_allows(:feature=>"vdi_controller_show_list") %>
+            <%= link_if_nonzero(
+              :count     => @record.vdi_controllers.count,
+              :record_id => @record.id,
+              :tables    => 'vdi_controller',
+              :display   => 'vdi_controller',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"vdi_controller")}",
+            )%>
+						<p/>
+					<% end %>
+
+					<% if role_allows(:feature=>"vdi_desktop_pool_show_list") %>
+            <%= link_if_nonzero(
+              :count     => @record.vdi_desktop_pools.count,
+              :record_id => @record.id,
+              :tables    => 'vdi_desktop_pool',
+              :display   => 'vdi_desktop_pool',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"vdi_desktop_pool")}",
+            )%>
+						<p/>
+					<% end %>
+
+					<% if role_allows(:feature=>"vdi_desktop_show_list") %>
+            <%= link_if_nonzero(
+              :count     => @record.vdi_desktops.count,
+              :record_id => @record.id,
+              :tables    => 'vdi_desktop',
+              :display   => 'vdi_desktop',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"vdi_desktop")}",
+            )%>
+						<p/>
+					<% end %>
+
+					<% if role_allows(:feature=>"vdi_user_show_list") %>
+            <%= link_if_nonzero(
+              :count     => @record.vdi_users.count,
+              :record_id => @record.id,
+              :tables    => 'vdi_user',
+              :display   => 'vdi_user',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"vdi_user")}",
+            )%>
+						<p/>
+					<% end %>
+
+          <%= link_if_nonzero(
+            :count     => @record.vdi_sessions.count,
+            :record_id => @record.id,
+            :tables    => 'vdi_session',
+            :controller=> 'vdi_farm',
+            :action    => 'vdi_sessions',
+            :db        => 'vdi_farm',
+            :image_path=> '/images/icons/16/link_external.gif',
+          )%>
+					<p/>
+					<% if role_allows(:feature=>"miq_proxy_show_list") %>
+						<% miq_proxies = @record.miq_proxies.count %>
+						<% unless miq_proxies == 0 %>
+              <%= link_to_with_icon("SmartProxies (#{miq_proxies})",
+                                    {:action=>'show', :display=>"miq_proxies", :id=>@record.id.to_s},
+                                    :title=>"Show all SmartProxies") %>
+						<% else %>
+							<img src="/images/icons/16/link_none.gif"/>
+							SmartProxies (0)<br/>
+						<% end %>
+					<% end %>
+				</div>
+      </div>
+<% end %>

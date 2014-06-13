@@ -1,0 +1,101 @@
+<% url = url_for(:action => 'quick_search') %>
+<div id="quicksearchbox" style="display:none;">
+  <% if @edit %>
+    <p><strong>&nbsp;&nbsp;&nbsp;<%= @edit.fetch_path(@expkey, :selected, :description) %></strong>
+    <table width="100%">
+      <tr>
+        <td>
+          <fieldset>
+            <% if @qs_exp_table %>
+              <% @qs_exp_table.each do |part| %>
+                <% unless ["AND", "OR", "NOT", "(", ")"].include?([part].flatten.first) %>
+                  <% if part.is_a?(Array) && part.first == :user_input %>
+                    <% token = part.last %>
+
+                    <% if @edit[:qs_tokens][token].has_key?(:field) %>
+                      <% if @edit[:qs_tokens][token][:value_type] == :boolean %>
+                        <% values = [["<Choose>",""],["true","true"],["false","false"]] %>
+                        <%= select_tag("value_#{token}", options_for_select(values, nil),
+                                       :multiple=>false, :class=>"widthed",
+                                       "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                       "data-miq_observe"=>{:url=>url}.to_json) %>
+                      <% else %>  <%# String input value %>
+                        <%= text_field_tag("value_#{token}", nil, :maxlength=>500,
+                                           :onkeyup=>"miqQsEnterEscape(event);", # Check for enter/escape keys
+                                           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                        <% if @edit[:qs_tokens][token][:value_type] == :percent %>
+                          %
+                        <% elsif @edit[:qs_tokens][token][:value_type] == :megabytes %>
+                            MB
+                        <% elsif FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units] %>
+                          <%= select_tag("suffix_#{token}",
+                                         options_for_select(FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units], nil),
+                                         :multiple=>false, :class=>"widthed",
+                                         "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                         "data-miq_observe"=>{:url=>url}.to_json) %>
+                        <% end %>
+                      <% end %>
+
+                    <% elsif @edit[:qs_tokens][token].has_key?(:tag) %>
+                      <%= select_tag("value_#{token}",
+                                     options_for_select(["<Choose>"] + MiqExpression.get_entry_details(@edit[:qs_tokens][token][:tag]).sort{|a,b| a.first.downcase<=>b.first.downcase},
+                                                        nil),
+                                     :multiple=>false, :class=>"widthed",
+                                     "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                     "data-miq_observe"=>{:url=>url}.to_json) %>
+
+                    <% elsif @edit[:qs_tokens][token].has_key?(:count) %>
+                      <%= text_field_tag("value_#{token}", nil, :maxlength=>500,
+                                         :onkeyup=>"miqQsEnterEscape(event);", # Check for enter/escape keys
+                                         "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                    <% end %>
+                  <% else %>
+                    <%= h([part].flatten.first) %>
+                  <% end %>
+                <% else %>
+                  <font color="red"><b><%= h([part].flatten.first) %></b></font>
+                <% end %>
+              <% end %>
+            <% end %>
+          </fieldset>
+        </td>
+      </tr>
+      <tr>
+        <td align="right">
+          <div id="buttons">
+            <ul id="form_buttons">
+              <li>
+                <span id="buttons_off">
+                  <%= image_tag("/images/formbuttons/apply.png",	:class=>"dimmed") %>
+                </span>
+                <span id="buttons_on" style="display:none;">
+                  <%= link_to(image_tag('/images/formbuttons/apply.png', :border => 0,
+                                        :class => "button", :alt => 'Apply the current filter (Enter)'),
+                              {:action => "quick_search", :button => "apply"},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote => true,
+                              :method => :post,
+                              :id     => "apply_button",
+                              :title  => "Apply the current filter (Enter)") %>
+                </span>
+              </li>
+              <li>
+                <%= link_to(image_tag('/images/formbuttons/cancel.png', :border => 0,
+                                      :class => "button", :alt => 'Cancel (Esc)'),
+                            {:action => "quick_search", :button => "cancel"},
+                            :remote  => true,
+                            :method => :post,
+                            :id      => "cancel_button",
+                            :title   => "Cancel (Esc)") %>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <script type="text/javascript">
+      if ($('value_1')) $('value_1').focus();
+    </script>
+  <% end %>
+</div>

@@ -1,0 +1,282 @@
+/*base*/
+
+* {
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "OpenSansRegular", sans-serif;
+}
+
+html, body {
+  min-height: 800px;
+  min-width: 850px;
+  font-size: 13.5px;
+  height: 100%;
+}
+
+@font-face{
+  font-weight:normal;
+  font-style:normal;font-family:'OpenSansRegular';
+  src:url('<%= asset_path("OpenSans-Regular-webfont.eot") %>');
+  src:url('<%= asset_path("OpenSans-Regular-webfont.eot?#iefix") %>') 
+    format('embedded-opentype'),url('<%= asset_path("OpenSans-Regular-webfont.woff") %>')
+    format('woff'),url('<%= asset_path("OpenSans-Regular-webfont.ttf") %>')
+    format('truetype'),url('<%= asset_path("OpenSans-Regular-webfont.svg#OpenSansRegular") %>')
+    format('svg');}
+
+@font-face{
+  font-weight:normal;
+  font-style:normal;
+  font-family:'OpenSansSemibold';
+  src:url('<%= asset_path("OpenSans-Semibold-webfont.eot") %>');
+  src:url('<%= asset_path("OpenSans-Semibold-webfont.eot?#iefix") %>')
+    format('embedded-opentype'),url('<%= asset_path("OpenSans-Semibold-webfont.woff") %>') 
+    format('woff'),url('<%= asset_path("OpenSans-Semibold-webfont.ttf") %>') 
+    format('truetype'),url('<%= asset_path("OpenSans-Semibold-webfont.svg#OpenSansSemibold") %>') 
+    format('svg');}
+
+a {
+  color: #0099d3;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#login-screen {
+  width: 100%;
+  min-width: 850px;
+  height: 100%;
+  background-color: #1D2226;
+  background-image: url('<%= image_path("layout/login-screen-background.jpg") %>');
+  background-position: top left;
+  background-size: auto;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+#login-screen.whitelabel {background-image: url('/upload/custom_login_logo.png')}
+
+@media (min-width: 1280px) {
+    #login-screen {
+      background-size: 100% auto;
+    }
+}
+/* @media replacement for IE 8 */
+
+.ie8 #login-screen {
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= image_path("layout/login-screen-background.jpg") %>', sizingMethod='scale');
+  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= image_path("layout/login-screen-background.jpg") %>', sizingMethod='scale')"
+}
+.ie8 #login-screen.whitelabel{
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./upload/custom_login_logo.png', sizingMethod='scale');
+  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/upload/custom_login_logo.png', sizingMethod='scale')";
+}
+
+/*Forms*/
+
+fieldset {
+  border: none;
+}
+
+input[type="text"],
+input[type="password"] {
+  margin: 4px;
+  padding: 3px 6px;
+  min-width: 200px;
+  height: 26px;
+  border: 1px #b6b6b6 solid;
+  border-radius: 2px;
+  background: #fff !important;
+}
+
+input[type="text"]:hover,
+input[type="password"]:hover {
+  border-color: #62afdb;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #62afdb;
+  box-shadow: #62afdb 0 0 5px;
+}
+
+ul {
+  display: inline;
+  list-style: none;
+  }
+
+a {
+  float:left;
+  margin: 10px 0 0 113px;
+  font: normal 11px OpenSansRegular,Arial,Helvetica,sans-serif;
+}
+
+a.button {
+  float: right;
+  margin-left:5px;
+  margin-top:15px;
+  padding: 4px 14px;
+  border: 1px #21799e solid;
+  border-radius: 2px;
+  background-color: #009BD3;
+  background-image: linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -o-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -moz-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -webkit-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -ms-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0.0, #00A9EC),color-stop(1,0, #009BD3));
+  color: #fff;
+  font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;
+  letter-spacing: 0.6px;
+}
+
+a.button:hover,
+a.button:focus {
+  background-color: #009BD3;
+  background-image: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a.button:active {
+  background-color: #0099d4;
+  background-image: none;
+  cursor: pointer;
+  box-shadow: inset 0 0 5px 3px #0074ae;
+}
+
+input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+#login-screen img#logo {
+  position: absolute;
+  top: 50px;
+  right: 64px;
+}
+
+#login-screen .form {
+  position: absolute;
+  bottom: 15%;
+  padding-left: 100px;
+  width: 100%;
+  min-width: 850px;
+  background-color: rgba(255, 255, 255, 0.055);
+}
+
+.ie8 #login-screen .form {
+  background-image: url(/images/layout/overlay_dark.png);
+}
+
+#login-screen .form aside {
+  margin: 40px;
+  margin-left:500px;
+}
+
+#login-screen .form aside p {
+  margin-bottom: 8px;
+  font: normal 100% OpenSansSemibold,Arial,Helvetica,sans-serif;
+}
+
+#login-screen .form aside p span {
+  margin-bottom: 8px;
+  font: normal 100% OpenSansRegular,,Arial,Helvetica,sans-serif;
+}
+
+#login-screen .form aside p.message {
+  padding-top: 10px;
+  font: normal 11px/16px OpenSansRegular,Arial,Helvetica,sans-serif;
+  color: #999;
+}
+
+#login-screen fieldset {
+  float: left;
+  margin: 30px 0;
+  padding: 10px;
+  padding-right: 44px;
+  width: 451px;
+  border-right: 1px rgba(255, 255, 255, 0.15) solid;
+}
+
+.ie8 #login-screen fieldset {
+  border-right: 1px #454a4d solid;
+}
+
+#login-screen fieldset legend {
+  position: absolute;
+  top: -54px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 200;
+  font-size: 22px;
+  font-size: 22px;
+}
+
+#login-screen fieldset legend strong {
+  margin-right: 4px;
+  font-weight: 700;
+}
+
+#login-screen fieldset label {
+  display: inline-block;
+  width: 110px;
+  padding-right:5px;
+  text-align:right;
+  white-space: nowrap
+}
+
+#login-screen fieldset input[type="text"],
+#login-screen fieldset input[type="password"] {
+  margin: 4px 0;
+  width: 282px;
+  font-size: 13.5px;
+}
+
+#login-screen fieldset input[type="button"] {
+  float: right;
+  margin-top: 16px;
+}
+
+#login-screen fieldset small {
+  line-height: 22px;
+  margin-left: 87px;
+  margin-top: 10px;
+  display: block;
+  float: left;
+}
+
+#flash_div{
+  margin: 30px 0 0 0;
+  padding: 0 0 0 10px;
+  color: #f6e49a;
+}
+
+#notification { 
+  position:absolute;
+  left:0;
+  bottom:0;
+  z-index:1000;
+  display: block;
+  margin:0;
+  padding:0;
+  width: 100%; 
+  height:100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ie8 #notification {
+  background-image: url(/images/layout/overlay_dark.png);
+}
+
+#spinner_div {
+  position: absolute;
+  top: 20px;
+  left:0;
+  width:100%;
+  height: 180px;
+  z-index:1;
+  }

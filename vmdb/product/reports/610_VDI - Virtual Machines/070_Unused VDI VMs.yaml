@@ -1,0 +1,62 @@
+--- 
+where_clause: 
+dims: 
+created_on: 2009-01-12 15:50:19.544489 Z
+title: Unused VDI VMs
+conditions: !ruby/object:MiqExpression 
+  exp: 
+    and: 
+    - IS NOT NULL: 
+        field: Vm.hardware-size_on_disk
+        value: ""
+    - CONTAINS: 
+        tag: Vm.managed-function
+        value: desktop
+    - IS NULL: 
+        field: Vm-boot_time
+updated_on: 2009-01-12 15:51:45.287492 Z
+order: Ascending
+graph: 
+menu_name: Unused VDI VMs
+rpt_group: Custom
+priority: 10
+col_order: 
+- name
+- host.name
+- v_datastore_path
+- hardware.disk_capacity
+- hardware.disk_free_space
+- v_pct_free_disk_space
+- v_pct_used_disk_space
+timeline: 
+id: 166
+file_mtime: 
+categories: 
+rpt_type: Custom
+filename: 
+include: 
+  hardware: 
+    columns: 
+    - disk_capacity
+    - disk_free_space
+  host: 
+    columns: 
+    - name
+db: Vm
+cols: 
+- name
+- v_datastore_path
+- v_pct_free_disk_space
+- v_pct_used_disk_space
+template_type: report
+group: 
+sortby: 
+- hardware.disk_free_space
+headers: 
+- VM Name
+- Host Name
+- Datastore Path
+- Total Disk
+- Free Disk
+- Pct Free Disk
+- Pct Used Disk

@@ -1,0 +1,23 @@
+<% if @edit[:new][:authentication][:amazon_key] != nil && @edit[:new][:authentication][:amazon_secret] != nil %>
+  <div id="amazon_verify_button_on">
+<% else %>
+  <div id="amazon_verify_button_on" style="display:none">
+<% end %>
+  <%#= image_submit_tag("/images/formbuttons/verify.png", :width=>"80", :height=>"35", :id=> "amazon_verify", :name=>"amazon_verify", :alt=>"Validate", :title=>"Validate the Amazon Settings", :class=>"button") %>
+  <%= link_to(image_tag('/images/formbuttons/verify.png',
+                        :border=>"0", :class=>"formbutton",:alt=>"Validate the Amazon Settings"),
+                      {:action=>"settings_update", :button=>"amazon_verify", :id=>id},
+                        "data-miq_sparkle_on" => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote=>true,
+                        :title=>"Validate the Amazon Settings")
+              %>
+</div>
+
+<% if @edit[:new][:authentication][:amazon_key] != nil && @edit[:new][:authentication][:amazon_secret] != nil %>
+  <div id="amazon_verify_button_off" style="display:none">
+<% else %>
+  <div id="amazon_verify_button_off">
+<% end %>
+  <%= image_tag("/images/formbuttons/verify.png", :width=>"80", :height=>"35", :class=>"dimmed formbutton", :title=> "Amazon access key and secret are needed to validate Amazon Settings", :style=>"opacity: 0.5") %>
+</div>

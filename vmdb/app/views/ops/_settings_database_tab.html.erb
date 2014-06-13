@@ -1,0 +1,78 @@
+<% url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}") %>
+<% if @sb[:active_tab] == "settings_database" %>
+  <%= render :partial => "layouts/flash_msg" %>
+  <div class="alert alert-danger">
+    <span class="pficon-layered">
+      <span class="pficon pficon-error-octagon"></span>
+      <span class="pficon pficon-error-exclamation"></span>
+    </span>
+    <strong>Caution: Changing the Database settings could make the Server unstartable!</strong>
+  </div>
+  <p class="legend">Database</p>
+  <table class="style1">
+    <tr>
+      <td class="key">Type</td>
+      <td>
+        <%= select_tag('production_dbtype',
+                        options_for_select(MiqDbConfig.get_db_types.invert.sort, @edit[:new][:name]),
+                        "data-miq_focus"=>true,
+                        "data-miq_observe"=>{:url=>url}.to_json) %>
+      </td>
+    </tr>
+    <% @options.each do |option| %>
+      <tr>
+        <td class="key"><%= option[:description]%></td>
+        <td>
+          <% if option[:name].to_s == "password" %>
+            <%= password_field_tag("production_#{option[:name]}",
+                                h(@edit[:new][option[:name]]),
+                                :maxlength=>50,
+                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          <% else %>
+            <%= text_field_tag("production_#{option[:name]}",
+                                h(@edit[:new][option[:name]]),
+                                :maxlength=>50,
+                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          <% end %>
+        </td>
+      </tr>
+      <% if option[:name].to_s == "password" %>
+        <tr>
+          <td class="key">Verify Password</td>
+          <td>
+            <%= password_field_tag("production_verify",
+                                h(@edit[:new][:verify]),
+                                :maxlength=>50,
+                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+    <tr>
+      <td></td>
+      <td align="right">
+        <div id="validate_button_on" style="display:<%= @edit[:new][:password] == @edit[:new][:verify] ? "display" : "none" %>;">
+          <ul id="form_buttons">
+            <li>
+              <%= image_tag('/images/formbuttons/verify.png', :border=>"0", :class=>"button", :style=>"width: 80px; height: 30px",
+                            :alt=>"Validate Database Configuration", :title=>"Validate Database Configuration",
+                            :onclick=>"miqAjaxButton('#{url_for(:action=>"settings_update",
+                                                                :id=>@sb[:active_tab].split('_').last,
+                                                                :button=>"db_verify")}');")
+              %>
+            </li>
+          </ul>
+        </div>
+        <div id="validate_button_off" style="display:<%= @edit[:new][:password] != @edit[:new][:verify] ? "display" : "none" %>;">
+          <ul id="form_buttons">
+            <li>
+              <%= image_tag("/images/formbuttons/verify.png", :class=>"dimmed", :style=>"width: 80px; height: 30px",
+                            :alt=>"Password fields must match to Validate Database Configuration", :title=>"Password fields must match to Validate Database Configuration",) %>
+            </li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div style="padding-bottom:20px;"></div>
+<% end %>

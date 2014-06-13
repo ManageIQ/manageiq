@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: acquire_ip_address
+    display_name: Acquire IP Address
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []

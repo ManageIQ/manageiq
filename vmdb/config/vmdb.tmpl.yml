@@ -1,0 +1,517 @@
+# NOTE: Please do not hand edit this file.
+#
+# Accepted values for some settings:
+#   authentication:
+#     mode: ldap, database, none
+#   log:
+#     level: fatal, error, warn, info, debug
+#   server:
+#     session_store: cache, memory, sql
+#   web_services:
+#     mode: invoke, disable
+#
+# Explanations for some settings:
+#   session:
+#     interval: Time interval for checking for inactive sessions, in seconds
+#     timeout: Time period in which inactive console sessions are deleted, in seconds
+#   server:
+#     listening_port: Tells vmdb the port number on which the web server is listening.
+#                     NOTE: This does not assign the listen_port.
+#
+---
+api:
+  token_ttl: 10.minutes
+  token_cleanup_interval: 2.minutes
+authentication:
+  basedn:
+  bind_dn:
+  bind_pwd:
+  get_direct_groups: true
+  group_memberships_max_depth: 2
+  ldaphost:
+  ldapport: '389'
+  mode: database
+  user_suffix:
+  user_type: userprincipalname
+  amazon_key:
+  amazon_secret:
+coresident_miqproxy:
+  concurrent_per_ems: 1
+  concurrent_per_host: 1
+  scan_via_host: true
+  use_vim_broker: true
+database:
+  metrics_collection:
+    :collection_schedule: "1 * * * *"
+    :daily_rollup_schedule: "23 0 * * *"
+  metrics_history:
+    :keep_daily_metrics: 6.months
+    :keep_hourly_metrics: 6.months
+    :purge_schedule: "50 * * * *"
+    :purge_window_size: 100000
+ldap_synchronization:
+  ldap_synchronization_schedule: "0 2 * * *"
+drift_states:
+  history:
+    :keep_drift_states: 6.months
+    :purge_window_size: 10000
+ems:
+  ems_redhat:
+    :service:
+      :read_timeout: 1.hour
+ems_events:
+  history:
+    :keep_ems_events: 6.months
+    :purge_window_size: 1000
+ems_refresh:
+  capture_vm_created_on_date: false
+  ec2:
+    get_private_images: true
+    get_shared_images: true
+    get_public_images: false
+    ignore_terminated_instances: true
+  full_refresh_threshold: 100
+  raise_vm_snapshot_complete_if_created_within: 15.minutes
+  refresh_interval: 24.hours
+host_scan:
+  queue_timeout: 20.minutes
+http_proxy:
+  :host:
+  :password:
+  :port:
+  :user:
+log:
+  collection:
+    :archive:
+      :pattern:
+    :current:
+      :pattern:
+      - log/*.log
+      - log/apache/*.log
+      - log/*.txt
+      - config/*
+      - /opt/rh/postgresql92/root/var/lib/pgsql/data/*.conf
+      - /opt/rh/postgresql92/root/var/lib/pgsql/data/pg_log/*
+      - /var/log/syslog*
+      - /var/log/daemon.log*
+      - /etc/default/ntp*
+      - /var/log/messages*
+      - /var/log/cron*
+      - BUILD
+      - GUID
+      - VERSION
+    :ping_depot: true
+    :ping_depot_timeout: 20
+  level: info
+  level_rails: info
+  level_aws: info
+  level_aws_in_evm: error
+  level_api: info
+  level_api_in_evm: error
+  level_fog: info
+  level_fog_in_evm: error
+  level_rhevm: info
+  level_rhevm_in_evm: error
+  level_vim: warn
+  level_vim_in_evm: error
+  line_limit: 0
+  path:
+log_depot:
+  password:
+  uri:
+  username:
+management_system:
+  power_operation_expiration: 10.minutes
+performance:
+  capture_threshold:
+    :ems_cluster: 50.minutes
+    :host: 50.minutes
+    :storage: 120.minutes
+    :vm: 50.minutes
+  capture_threshold_with_alerts:
+    :host: 20.minutes
+    :vm: 20.minutes
+  concurrent_requests:
+    :hourly: 1
+    :realtime: 20
+  history:
+    :initial_capture_days: 0
+    :keep_daily_performances: 6.months
+    :keep_hourly_performances: 6.months
+    :keep_realtime_performances: 4.hours
+    :purge_window_size: 1000
+  host_overhead:
+    :memory: 2.01.percent
+    :cpu: 0.15.percent
+product:
+  maindb: ExtManagementSystem
+reporting:
+  format_by_class:
+    :Fixnum:
+      :function:
+        :name: number_with_delimiter
+    :Float:
+      :function:
+        :name: number_with_delimiter
+  format_by_column: {}
+  history:
+    :keep_reports: 6.months
+    :purge_window_size: 100
+  precision:
+    :default: 2
+  precision_by_column:
+    :slope: 4
+  queue_timeout: 1.hour
+repository_scanning:
+  defaultsmartproxy:
+server:
+  case_sensitive_name_search: false
+  company: My Company
+  custom_logo: false
+  events:
+    :disk_usage_gt_percent: 80
+  host:
+  listening_port: '443'
+  log_network_address: any
+  mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
+  mks_version: 2.1.0.0
+  name: EVM
+  remote_console_type: VMRC
+  role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,web_services
+  session_store: cache
+  startup_timeout: 300
+  timezone: UTC
+  :worker_monitor:
+    :kill_algorithm:
+      :name: :used_swap_percent_gt_value
+      :value: 80
+    :miq_server_time_threshold: 2.minutes
+    :nice_delta: 1
+    :poll: 2.seconds
+    :start_algorithm:
+      :name: :used_swap_percent_lt_value
+      :value: 60
+    :sync_interval: 30.minutes
+    :wait_for_started_timeout: 10.minutes
+  zone: default
+session:
+  interval: 60
+  memcache_server: 127.0.0.1:11211
+  memcache_server_opts:
+  show_login_info: true
+  timeout: 3600
+smartproxy_deploy:
+  queue_timeout: 30.minutes
+smtp:
+  authentication: login
+  domain: mydomain.com
+  from: cfadmin@cfserver.com
+  host: localhost
+  password: ''
+  port: '25'
+  user_name: evmadmin
+snapshots:
+  :create_free_percent: 100
+  :remove_free_percent: 100
+storage:
+  inventory:
+    :full_refresh_schedule: "38 * * * *"
+  metrics_collection:
+    :collection_schedule: "0,15,30,45  * * * *"
+    :hourly_rollup_schedule: "8 * * * *"
+    :daily_rollup_schedule: "23 0 * * *"
+    :collection_interval: 15.minutes
+    :max_gap_to_fill: 6.hours
+  metrics_history:
+    :purge_schedule: "50 * * * *"
+    :keep_daily_metrics: 6.months
+    :keep_hourly_metrics: 6.months
+    :keep_realtime_metrics: 4.hours
+    :purge_window_size: 1000
+webservices:
+  consume_protocol: https
+  contactwith: ipaddress
+  integrate:
+    :security: basic
+  mode: invoke
+  nameresolution: false
+  provide_protocol: https
+  security: none
+  timeout: 120
+  use_vim_broker: true
+workers:
+  worker_base:
+    :defaults:
+      :count: 1
+      :gc_interval: 15.minutes
+      :heartbeat_freq: 60.seconds
+      :heartbeat_timeout: 2.minutes
+      :memory_threshold: 200.megabytes
+      :nice_delta: 10
+      :parent_time_threshold: 3.minutes
+      :poll: 3.seconds
+      :poll_escalate_max: 30.seconds
+      :poll_method: :normal
+      :restart_interval: 0.hours
+      :starting_timeout: 10.minutes
+    :ems_refresh_core_worker:
+      :poll: 1.seconds
+      :memory_threshold: 400.megabytes
+      :nice_delta: 1
+      :thread_shutdown_timeout: 10.seconds
+    :event_catcher:
+      :defaults:
+        :ems_event_page_size: 100
+        :ems_event_thread_shutdown_timeout: 10.seconds
+        :memory_threshold: 2.gigabytes
+        :nice_delta: 1
+        :poll: 1.seconds
+      :event_catcher_redhat:
+        :poll: 15.seconds
+      :event_catcher_vmware:
+        :poll: 1.seconds
+      :event_catcher_openstack:
+        :poll: 15.seconds
+        :topics:
+          :nova: "notifications.*"
+          :cinder: "notifications.*"
+          :glance: "notifications.*"
+          :quantum: "notifications.*"
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5671
+    :queue_worker_base:
+      :defaults:
+        :cpu_usage_threshold: 100.percent
+        :dequeue_method: :drb
+        :memory_threshold: 400.megabytes
+        :poll_method: :normal
+        :queue_timeout: 10.minutes
+      :ems_metrics_collector_worker:
+        :defaults:
+          :count: 2
+          :nice_delta: 3
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_amazon:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_redhat:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_vmware:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_openstack:
+          :poll_method: :escalate
+      :ems_metrics_processor_worker:
+        :count: 2
+        :memory_threshold: 400.megabytes
+        :nice_delta: 7
+        :poll_method: :escalate
+      :ems_refresh_worker:
+        :defaults:
+          :memory_threshold: 2.gigabytes
+          :nice_delta: 7
+          :poll: 10.seconds
+          :queue_timeout: 120.minutes
+          :restart_interval: 2.hours
+        :ems_refresh_worker_amazon:
+          :poll_method: :normal
+        :ems_refresh_worker_kvm:
+          :poll_method: :normal
+        :ems_refresh_worker_microsoft:
+          :poll_method: :normal
+        :ems_refresh_worker_redhat:
+          :poll_method: :normal
+        :ems_refresh_worker_openstack:
+          :poll_method: :normal
+        :ems_refresh_worker_vmware:
+          :poll_method: :normal
+      :event_handler:
+        :cpu_usage_threshold: 0.percent
+        :nice_delta: 7
+      :generic_worker:
+        :count: 2
+      :netapp_refresh_worker:
+        :memory_threshold: 2.gigabytes
+        :nice_delta: 7
+        :poll: 10.seconds
+        :poll_method: :normal
+        :queue_timeout: 60.minutes
+      :priority_worker:
+        :count: 2
+        :nice_delta: 1
+        :poll: 1.seconds
+      :reporting_worker:
+        :count: 2
+        :nice_delta: 7
+      :smart_proxy_worker:
+        :count: 2
+        :memory_threshold: 600.megabytes
+        :queue_timeout: 20.minutes
+        :restart_interval: 2.hours
+      :storage_metrics_collector_worker:
+        :count: 2
+        :nice_delta: 3
+        :poll_method: :escalate
+      :vmdb_storage_bridge_worker:
+        :memory_threshold: 2.gigabytes
+        :nice_delta: 7
+        :poll: 10.seconds
+        :poll_method: :normal
+        :queue_timeout: 120.minutes
+    :replication_worker:
+      :connection_pool_size: 5
+      :poll: 1.seconds
+      :replication:
+        :destination:
+          :database: vmdb_production
+          :username: root
+        :exclude_tables:
+        - assigned_server_roles
+        - audit_events
+        - binary_blobs
+        - binary_blob_parts
+        - chargeback_rate_details
+        - chargeback_rates
+        - conditions
+        - conditions_miq_policies
+        - configurations
+        - custom_buttons
+        - customization_specs
+        - database_backups
+        - event_logs
+        - file_depots
+        - jobs
+        - log_files
+        - metrics
+        - metrics_00
+        - metrics_01
+        - metrics_02
+        - metrics_03
+        - metrics_04
+        - metrics_05
+        - metrics_06
+        - metrics_07
+        - metrics_08
+        - metrics_09
+        - metrics_10
+        - metrics_11
+        - metrics_12
+        - metrics_13
+        - metrics_14
+        - metrics_15
+        - metrics_16
+        - metrics_17
+        - metrics_18
+        - metrics_19
+        - metrics_20
+        - metrics_21
+        - metrics_22
+        - metrics_23
+        - metric_rollups
+        - miq_actions
+        - miq_ae_classes
+        - miq_ae_fields
+        - miq_ae_instances
+        - miq_ae_methods
+        - miq_ae_namespaces
+        - miq_ae_values
+        - miq_ae_workspaces
+        - miq_alert_statuses
+        - miq_alerts
+        - miq_databases
+        - miq_enterprises
+        - miq_events
+        - miq_globals
+        - miq_groups
+        - miq_license_contents
+        - miq_policies
+        - miq_policy_contents
+        - miq_product_features
+        - miq_proxies_product_updates
+        - miq_proxies
+        - miq_queue
+        - miq_roles_features
+        - miq_report_result_details
+        - miq_report_results
+        - miq_reports
+        - miq_searches
+        - miq_servers_product_updates
+        - miq_sets
+        - miq_schedules
+        - miq_tasks
+        - miq_user_roles
+        - miq_widgets
+        - miq_widget_contents
+        - miq_workers
+        - product_updates
+        - proxy_tasks
+        - rss_feeds
+        - schema_migrations
+        - server_roles
+        - sessions
+        - ui_tasks
+        - vim_performances
+        - vim_performance_states
+        - vim_performance_tag_values
+        - vmdb_database_metrics
+        - vmdb_databases
+        - vmdb_indexes
+        - vmdb_metrics
+        - vmdb_tables
+        :options:
+          :replication_trace: false
+    :schedule_worker:
+      :authentication_check_interval: 1.day
+      :db_diagnostics_interval: 30.minutes
+      :ems_events_purge_interval: 1.day
+      :evm_snapshot_delete_delay_for_job_not_found: 1.hour
+      :evm_snapshot_interval: 1.hour
+      :job_proxy_dispatcher_interval: 15.seconds
+      :job_proxy_dispatcher_stale_message_check_interval: 60.seconds
+      :job_proxy_dispatcher_stale_message_timeout: 2.minutes
+      :job_timeout_interval: 60.seconds
+      :log_active_configuration_interval: 1.days
+      :log_database_statistics_interval: 1.days
+      :memory_threshold: 250.megabytes
+      :nice_delta: 3
+      :performance_collection_interval: 3.minutes
+      :performance_collection_start_delay: 5.minutes
+      :performance_realtime_purging_interval: 15.minutes
+      :performance_realtime_purging_start_delay: 5.minutes
+      :performance_rollup_purging_interval: 4.hours
+      :performance_rollup_purging_start_delay: 5.minutes
+      :poll: 15.seconds
+      :server_log_stats_interval: 5.minutes
+      :server_stats_interval: 60.seconds
+      :service_retired_interval: 10.minutes
+      :session_timeout_interval: 30.seconds
+      :storage_file_collection_interval: 1.days
+      :storage_file_collection_time_utc: 06:00
+      :vdi_refresh_interval: 20.minutes
+      :vm_retired_interval: 10.minutes
+      :vm_scan_interval: 10.minutes
+    :smis_refresh_worker:
+      :connection_pool_size: 5
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 3
+      :poll: 15.seconds
+      :smis_update_period: 1.hours
+      :stats_update_period: 10.minutes
+      :status_update_period: 5.minutes
+    :ui_worker:
+      :connection_pool_size: 5
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 1
+      :poll: 60.seconds
+    :vim_broker_worker:
+      :heartbeat_freq: 15.seconds
+      :memory_threshold: 2.gigabytes
+      :nice_delta: 3
+      :poll: 1.seconds
+      :reconnect_retry_interval: 5.minutes
+      :vim_broker_status_interval: 15.minutes
+      :vim_broker_update_interval: 0.seconds
+    :web_service_worker:
+      :connection_pool_size: 5
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 1
+      :poll: 60.seconds

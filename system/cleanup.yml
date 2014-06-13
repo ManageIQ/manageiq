@@ -1,0 +1,11 @@
+---
+- /etc/init.d/evm_watchdog
+- /etc/logrotate.d/miq_apache
+- /etc/logrotate.d/miq_evm
+- /etc/logrotate.d/miq_postgres
+- /var/www/miq/vmdb/Gemfile18.lock
+- /var/www/miq/vmdb/Gemfile19.lock
+- /var/www/miq/system/LINK/var/www/miq/vmdb/Gemfile18.lock
+- /var/www/miq/system/LINK/var/www/miq/vmdb/Gemfile19.lock
+- /var/www/miq/lib/handsoap/handsoap/
+- /var/www/miq/lib/wbem/wbem/

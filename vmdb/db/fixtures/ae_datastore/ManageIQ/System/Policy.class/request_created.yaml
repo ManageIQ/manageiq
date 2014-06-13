@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Request Created
+    name: request_created
+    inherits: 
+    description: 
+  fields:
+  - on_entry:
+      value: get_request_type
+  - rel5:
+      value: /System/Policy/${#request_type}_created

@@ -1,0 +1,15 @@
+old_name: "security_services"
+name: "Sample: Secure services" 
+description: "VM does not include Fast User Switching Compatibility Service"
+policy_description: "Allow VM to start only if it does not have the Fast User Swtiching Compatibility service"
+modifier: "allow"
+who: "system"
+what: "start"
+rule: 
+    mode: "tag_expr_v2"
+    expr:
+      not:
+        CONTAINS: 
+          field: Vm.win32_services-name
+          value: FastUserSwitchingCompatibility
+towhat: "Vm"

@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAlertProfile
+:button_groups:
+- :name: miq_alert_profile_vmdb
+  :items:
+  - :buttonSelect: miq_alert_profile_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: alert_profile_new
+      :image: new
+      :text: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Alert Profile'
+      :title: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Alert Profile'

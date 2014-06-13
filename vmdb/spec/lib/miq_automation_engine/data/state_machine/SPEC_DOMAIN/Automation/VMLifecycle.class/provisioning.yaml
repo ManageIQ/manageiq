@@ -1,0 +1,52 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM Provisioning
+    name: Provisioning
+    inherits: 
+    description: 
+  fields:
+  - on_entry:
+      value: provision_state_machine
+  - Relationship1:
+      value: /Integration/IPAM/AcquireIPAddress#${#ae_message}
+  - Method1:
+      value: provision_state_machine
+  - Relationship2:
+      value: /Integration/IPAM/AcquireMACAddress#${#ae_message}
+  - Method2:
+      value: provision_state_machine
+  - Relationship3:
+      value: /Integration/IPAM/RegisterDNS#${#ae_message}
+  - Method3:
+      value: provision_state_machine
+  - Relationship4:
+      value: /Integration/CMDB/Register#${#ae_message}
+  - Method4:
+      value: provision_state_machine
+  - Relationship5:
+      value: /Integration/IPAM/RegisterAD#${#ae_message}
+  - Method5:
+      value: provision_state_machine
+  - Relationship6:
+      value: /Factory/VM/Provision#${#ae_message}
+  - Method6:
+      value: provision_state_machine
+  - Relationship7:
+      value: /Factory/VM/ProvisionCheck#${#ae_message}
+  - Method7:
+      value: provision_state_machine
+  - Relationship8:
+      value: /Integration/IPAM/RegisterDHCP#${#ae_message}
+  - Method8:
+      value: provision_state_machine
+  - Relationship9:
+      value: /Integration/CMDB/Activate#${#ae_message}
+  - Method9:
+      value: provision_state_machine
+  - Relationship10:
+      value: /Factory/Method/vm_email_owner?event=vm_provisioned#${#ae_message}
+  - on_exit:
+      value: provision_state_machine

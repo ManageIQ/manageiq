@@ -1,0 +1,84 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: Desktops
+
+# Menu name
+name: VdiDesktop
+
+# Main DB table report is based on
+db: VdiDesktop
+
+# Columns to fetch from the main table
+cols:
+- name
+- agent_version
+- connection_state
+- power_state
+- assigned_username
+- updated_at
+- region_description
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Included tables and columns for query performance
+include_for_find:
+  
+# Order of columns (from all tables)
+col_order: 
+- name
+- agent_version
+- connection_state
+- power_state
+- assigned_username
+- updated_at
+- region_description
+
+# Column titles, in order
+headers:
+- Name
+- Agent Version
+- Connection
+- Power
+- Assigned Username
+- Updated On
+- Region
+
+# Condition(s) string for the SQL query
+conditions: 
+
+# Order string for the SQL query
+order: Ascending
+
+# Columns to sort the report on, in order
+sortby:
+- name
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 

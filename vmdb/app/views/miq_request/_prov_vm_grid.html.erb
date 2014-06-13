@@ -1,0 +1,111 @@
+<div id="prov_vm_div">
+  <% if @temp[:vms] %>
+    <table class="style3">
+      <thead>
+        <tr>
+          <% id = @edit[:req_id] || "new" %>
+          <% @edit[:vm_columns].each_with_index do |h,i| %>
+            <th nowrap>
+              <% if ![:clone_to_template,:clone_to_vm].include?(@edit[:wf].request_type) %>
+                <%#  Replaced to exclude non-view table fields from sorting %>
+                <%= link_to(h(@edit[:vm_headers][h]),
+                                  {:action=>"sort_vm_grid", :sort_choice => h, :field_id=>field_id, :id=>id.to_s},
+                                  "data-miq_sparkle_on" => true,
+                                  "data-miq_sparkle_off" => true,
+                                  :remote=>true
+                                ) %>
+                <% if @edit[:vm_columns][i] == @edit[:vm_sortcol] %>
+                  <% if @edit[:vm_sortdir] == "ASC" %>
+                    <img src="/images/icons/16/sort_up.png">
+                  <% else %>
+                    <img src="/images/icons/16/sort_down.png">
+                  <% end %>
+                <% end %>
+              <% else %>
+                <%= h(@edit[:vm_headers][h]) %>
+              <% end %>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% if ![:clone_to_template,:clone_to_vm].include?(@edit[:wf].request_type) %>
+          <% cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0] == nil ? "row3" : cycle('row0', 'row1') %>
+          <tr class="<%= cls %>" onclick="miqAjax('<%= "/miq_request/prov_field_changed/?" << field_id << "=__VM__NONE__" << "&id=" << id.to_s %>');"	nowrap>
+            <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+                &lt;None&gt;
+            </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+        <% end %>
+        <% @temp[:vms].each_with_index do |row,i| %>
+          <% @id = row.id %>
+          <% cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0] == @id ? "#{cycle('row0', 'row1')} row3" : cycle('row0', 'row1') %>
+          <% if ![:clone_to_template,:clone_to_vm].include?(@edit[:wf].request_type) %>
+            <tr class="<%= cls %>" onclick="miqAjax('<%= "/miq_request/prov_field_changed/?" << field_id << "=" << @id.to_s  << "&id=" << id.to_s %>');"	nowrap>
+          <% else %>
+            <tr class="<%= cls %>"nowrap>
+          <% end %>
+            <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <%= h(row.name) %>
+            </td>
+            <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <%= h(row.operating_system.try(:product_name)) %>
+            </td>
+            <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <%= h(row.platform) %>
+            </td>
+            <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <%= h(row.num_cpu) %>
+            </td>
+            <td align="right" onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <%= h(number_to_human_size(row.mem_cpu.to_i*1024*1024)) %>
+            </td>
+            <td align="right" onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <%= h(number_to_human_size(row.allocated_disk_storage)) %>
+            </td>
+            <td align="right" onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <% if row.ext_management_system %>
+                <%= h(row.ext_management_system.name) %>
+              <% end %>
+            </td>
+            <td align="right" onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+              <%= h(row.v_total_snapshots) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot><tr><td colspan="40"></td></tr></tfoot>
+    </table>
+  <% elsif @temp[:vm] %>
+  <%# grid with only one record for Redhat provisioning %>
+    <table class="style3">
+      <thead>
+      <tr>
+        <% id = @edit[:req_id] || "new" %>
+        <% @edit[:vm_columns].each_with_index do |h,i| %>
+          <th nowrap>
+            <%= h(@edit[:vm_headers][h]) %>
+          </th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+        <tr class="row3" nowrap>
+          <td><%= h(@temp[:vm].name) %></td>
+          <td><%= h(@temp[:vm].operating_system.try(:product_name)) %></td>
+          <td><%= h(@temp[:vm].platform) %></td>
+          <td><%= h(@temp[:vm].num_cpu) %></td>
+          <td align="right"><%= h(number_to_human_size(@temp[:vm].mem_cpu.to_i*1024*1024)) %></td>
+          <td align="right"><%= h(number_to_human_size(@temp[:vm].allocated_disk_storage)) %></td>
+          <td align="right">
+            <% if @temp[:vm].ext_management_system %>
+              <%= h(@temp[:vm].ext_management_system.name) %>
+            <% end %>
+          </td>
+          <td align="right"><%= h(@temp[:vm].v_total_snapshots) %></td>
+        </tr>
+      </tbody>
+      <tfoot><tr><td colspan="40"></td></tr></tfoot>
+    </table>
+  <% end %>
+</div>

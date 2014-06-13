@@ -1,0 +1,291 @@
+--- 
+:name: miq_host_provision_dialogs
+:description: Sample Host Provisioning Dialog
+:dialog_type: MiqHostProvisionWorkflow
+:content: 
+  :buttons: 
+  - :submit
+  - :cancel
+  :dialogs: 
+    :requester: 
+      :description: Request
+      :fields: 
+        :owner_phone: 
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_country: 
+          :description: Country/Region
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_phone_mobile: 
+          :description: Mobile
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_title: 
+          :description: Title
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_first_name: 
+          :description: First Name
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :owner_manager: 
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_address: 
+          :description: Address
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_company: 
+          :description: Company
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_last_name: 
+          :description: Last Name
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :owner_manager_mail: 
+          :description: E-Mail
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_city: 
+          :description: City
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_department: 
+          :description: Department
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_load_ldap: 
+          :pressed: 
+            :method: :retrieve_ldap
+          :description: Look Up LDAP Email
+          :required: false
+          :display: :show
+          :data_type: :button
+        :owner_manager_phone: 
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_state: 
+          :description: State
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_office: 
+          :description: Office
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_zip: 
+          :description: Zip code
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_email: 
+          :description: E-Mail
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :request_notes:
+          :description: Notes
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
+      :field_order: 
+    :purpose: 
+      :description: Purpose
+      :fields: 
+        :vm_tags: 
+          :required_method: :validate_tags
+          :description: Tags
+          :required: false
+          :options: 
+            :include: []
+
+            :order: []
+
+            :single_select: []
+
+            :exclude: []
+
+          :display: :edit
+          :required_tags: []
+
+          :data_type: :integer
+      :display: :show
+      :field_order: 
+    :customize: 
+      :description: Customize
+      :fields: 
+        :dns_servers: 
+          :description: DNS Server list
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :dns_suffixes: 
+          :description: DNS Suffix list
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :root_password: 
+          :description: Root Password
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :customization_template_id: 
+          :values_from: 
+            :method: :allowed_customization_templates
+          :auto_select_single: false
+          :description: Script Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :addr_mode: 
+          :values: 
+            static: Static
+            dhcp: DHCP
+          :description: Address Mode
+          :required: false
+          :display: :hide
+          :default: static
+          :data_type: :string
+        :gateway: 
+          :description: Gateway
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :hostname: 
+          :description: Host Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :ip_addr: 
+          :description: IP Address
+          :required: false
+          :notes: (Enter starting IP address)
+          :display: :edit
+          :data_type: :string
+          :notes_display: :hide
+        :customization_template_script: 
+          :description: Script Text
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :subnet_mask: 
+          :description: Subnet Mask
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
+    :environment: 
+      :description: Environment
+      :fields: 
+        :placement_cluster_name: 
+          :values_from: 
+            :method: :allowed_clusters
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :placement_ems_name: 
+          :values_from: 
+            :method: :allowed_ems
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :attached_ds: 
+          :values_from: 
+            :method: :allowed_storages
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+      :display: :show
+    :service: 
+      :description: Catalog
+      :fields: 
+        :pxe_image_id: 
+          :values_from: 
+            :method: :allowed_images
+          :auto_select_single: false
+          :description: Image
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :pxe_server_id: 
+          :values_from: 
+            :method: :allowed_pxe_servers
+          :auto_select_single: false
+          :description: Server
+          :required: true
+          :display: :edit
+          :data_type: :integer
+        :src_host_ids: 
+          :values_from: 
+            :method: :allowed_hosts
+          :description: Name
+          :required: true
+          :notes: 
+          :display: :show
+          :data_type: :integer
+          :notes_display: :show
+      :display: :show
+    :schedule: 
+      :description: Schedule
+      :fields: 
+        :schedule_type: 
+          :values: 
+            schedule: Schedule
+            immediately: Immediately on Approval
+          :description: When to Provision
+          :required: false
+          :display: :edit
+          :default: immediately
+          :data_type: :string
+        :schedule_time: 
+          :values_from: 
+            :options: 
+              :offset: 1.day
+            :method: :default_schedule_time
+          :description: Provision on
+          :required: false
+          :display: :edit
+          :data_type: :time
+        :stateless:
+          :values:
+            false: 0
+            true: 1
+          :description: Stateless
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
+      :display: :show
+  :dialog_order: 
+  - :requester
+  - :purpose
+  - :service
+  - :environment
+  - :customize
+  - :schedule

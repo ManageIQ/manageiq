@@ -1,0 +1,18 @@
+---
+:alignment:
+  :boundary: 4.kilobytes
+:collection:
+  :timeout: 1800
+:debris:
+  :filters:
+    :ext_name:
+    - log
+    - nvram
+    - vmdk
+    - vmsn
+    - vmx
+    - vmsd
+    - vmxf
+    - vmtx
+    - vswp
+    - ! '%redo%'

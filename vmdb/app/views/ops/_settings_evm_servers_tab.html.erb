@@ -1,0 +1,59 @@
+<% if @sb[:active_tab] == "settings_evm_servers" %>
+	<% if @servers %>
+    <%= render(:partial=>"layouts/flash_msg") %>
+    <p class="legend">Relationships</p>
+    <table class="style1">
+      <tr>
+        <td class="key">Servers</td>
+        <td class="wide"><%= @selected_zone.miq_servers.count %></td>
+      </tr>
+      <tr>
+        <td class="key"><%= ui_lookup(:tables => "ext_management_system")%></td>
+        <td class="wide"><%= @selected_zone.ext_management_systems.count %></td>
+      </tr>
+      <tr>
+        <td class="key">Storage Managers</td>
+        <td class="wide"><%= @selected_zone.storage_managers.count %></td>
+      </tr>
+      <% if get_vmdb_config[:product][:vdi] %>
+        <tr>
+          <td class="key">VDI Farms</td>
+          <td class="wide"><%= @selected_zone.vdi_farms.count %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td class="key">Schedules</td>
+        <td class="wide"><%= @selected_zone.miq_schedules.count %></td>
+      </tr>
+    </table>
+    <hr>
+    <p class="legend">Servers</p>
+    <% if @servers.empty? %>
+      <br/><strong>* No Servers Found.</strong>
+    <% else %>
+      <table class="style3">
+        <thead>
+          <th class="icon"></th><th></th>
+        </thead>
+        <tbody>
+          <% @servers.sort{|a,b| a.id <=> b.id}.each do |s| %>
+            <tr class="<%= cycle('row0', 'row1') %>"
+              onclick="cfmeDynatree_activateNode('settings_tree', 'svr-<%= to_cid(s.id) %>');"
+              onmouseover="this.style.cursor='pointer'" title="View this MiqServer">
+              <td  nowrap>
+                  <img src="/images/icons/new/miq_server.png" valign="middle" border="0" height="20" width="20" />
+              </td>
+              <td>
+                <% if @sb[:my_server_id] == s.id %>
+                  <b><%= h(ui_lookup(:model=>s.class.to_s)) %>: <%= h(s.name) %> [<%=h(s.id)%>] (current)</b>
+                <% else %>
+                  <%= h(ui_lookup(:model=>s.class.to_s)) %>: <%= h(s.name) %> [<%=h(s.id)%>]
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+		<% end %>
+	<% end %>
+<% end %>

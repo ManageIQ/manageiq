@@ -1,0 +1,32 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAeInstance
+:button_groups:
+- :name: miq_ae_instance_vmdb
+  :items:
+  - :buttonSelect: miq_ae_instance_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: miq_ae_instance_new
+      :image: new_instance
+      :text: 'Add a New Instance'
+      :title: 'Add a New Instance'
+    - :button: miq_ae_instance_edit
+      :image: edit
+      :text: 'Edit Selected Instance'
+      :title: 'Select a single Instance to edit'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: miq_ae_instance_delete
+      :image: remove
+      :text: 'Remove Instances'
+      :title: 'Remove selected Instances'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to remove the selected Instances?'
+      :enabled: 'false'
+      :onwhen: '1+'

@@ -1,0 +1,179 @@
+<div id="report_list_div"><%# Added position:relative so dhtmlxcombo boxes scroll properly in IE7 %>
+  <% if @sb[:active_accord] == :reports %>
+    <% if @in_a_form %>
+    <%= render :partial => 'form' %>
+    <% elsif @report && !@temp[:report_result] %>
+      <%= render(:partial => "layouts/flash_msg", :locals => {:top_pad => 10, :div_num => "_report_list"}) %>
+
+      <% if @zgraph
+           width, height = @html ? [350, 250] : [700, 500] %>
+
+        <%= chart_remote('report',
+              :width   => width,
+              :height  => height,
+              :bgcolor => "#f2f2f2",
+              :id      => 'my_chart') %>
+
+        <% if !@html && @report.filter_summary %>
+          <%= @report.filter_summary %>
+        <% end %>
+        <p>
+      <% end %>
+
+      <% if @html %>
+        <%= render(:partial => 'layouts/report_html') %>
+      <% end %>
+    <% elsif x_active_tree == :reports_tree && x_node.split('-').length <= 4  %>
+      <% nodes = x_node.split('-') %>
+      <% if (nodes.length == 1 && @sb[:rpt_menu].blank?) || (nodes.length == 2 && @sb[:rpt_menu][nodes[1].to_i][1].blank?) || (nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].blank?) %>
+        <div class="alert alert-info">
+          <span class="pficon pficon-info"></span>
+          <strong>No Reports available.</strong>
+        </div>
+      <% else %>
+        <%= render :partial => "layouts/flash_msg", :locals=>{:top_pad=>10, :div_num=>"_report_list"} %>
+          <table class="style3">
+            <% if nodes.length == 1 %>
+              <%# level1 folders list%>
+              <% @sb[:rpt_menu].each_with_index do |folder,i| %>
+                <% if i == 0 %>
+                  <thead>
+                      <th class="icon"></th>
+                      <th>Name</th>
+                  </thead>
+                  <tbody>
+                <% end %>
+                <tr class="<%= cycle('row0', 'row1') %>"
+                  onclick="cfmeDynatree_activateNode('reports_tree','xx-<%= i %>');"
+                  onmouseover="this.style.cursor='pointer'" title="Click to view details">
+                  <td class="icon" nowrap>
+                      <% if folder[0]	== @sb[:grp_title] %>
+                        <% img_name = "folder-close-blue" %>
+                      <% else %>
+                        <% img_name = "folder-close" %>
+                      <% end %>
+                      <ul class="icons">
+                        <li>
+                          <span class="pficon pficon-<%=img_name%>"></span>
+                        </li>
+                      </ul>
+                  </td>
+                  <td>
+                    <%# removing :::#{@sb[:count]} that was added at the end of report name to make id's unique in the dhtmlxtree %>
+                    <%# custom reports will be shown in assigned folders and custom folder both %>
+                    <%= folder[0] %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            <% elsif nodes.length == 2 %>
+              <%# level2 folders list%>
+              <% @sb[:rpt_menu][nodes[1].to_i][1].each_with_index do |folder,i| %>
+                <% if i == 0 %>
+                  <thead>
+                    <th class="icon"></th>
+                    <th>Name</th>
+                  </thead>
+                  <tbody>
+                <% end %>
+                <tr class="<%= cycle('row0', 'row1') %>"
+                  onclick="cfmeDynatree_activateNode('reports_tree','xx-<%= nodes[1].to_i %>_xx-<%= nodes[1].to_i %>-<%=i%>');"
+                  onmouseover="this.style.cursor='pointer'" title="Click to view details">
+                  <td class="icon" nowrap>
+                    <% if @sb[:rpt_menu][nodes[1].to_i][0]	== @sb[:grp_title] %>
+                      <% img_name = "folder-close-blue" %>
+                    <% else %>
+                      <% img_name = "folder-close" %>
+                    <% end %>
+                      <ul class="icons">
+                        <li>
+                          <span class="pficon pficon-<%=img_name%>"></span>
+                        </li>
+                      </ul>
+                  </td>
+                  <td>
+                    <%# removing :::#{@sb[:count]} that was added at the end of report name to make id's unique in the dhtmlxtree %>
+                    <%# custom reports will be shown in assigned folders and custom folder both %>
+                    <%= folder[0] %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            <% elsif nodes.length == 4 %>
+              <%# reports list%>
+              <% @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].each_with_index do |rep,i| %>
+                <% if i == 0 %>
+                  <thead>
+                    <%#  had to move <th> inside loop to show following columns only when report node is selected in tree %>
+                    <th class="icon"></th>
+                    <th>Name</th>
+                    <th>Primary (Record) Filter</th>
+                    <th>Secondary (Display) Filter</th>
+                    <th>Sort By</th>
+                    <th>Chart</th>
+                    <th>User</th>
+                    <th><%=Dictionary::gettext("MiqGroup", :type=>:model, :notfound=>:titleize)%></th>
+                  </thead>
+                  <tbody>
+                <% end %>
+                <% if @sb[:rep_details][rep] %>
+                  <tr class="<%= cycle('row0', 'row1') %>"
+                    onclick="cfmeDynatree_activateNode('reports_tree','xx-<%= nodes[1].to_i %>_xx-<%=  nodes[2].to_i %>-<%= nodes[3].to_i %>_rep-<%= to_cid(@sb[:rep_details][rep]["id"]) %>');"
+                    onmouseover="this.style.cursor='pointer'" title="Click to view details">
+                    <td class="icon" nowrap>
+                      <ul class="icons">
+                        <li>
+                          <span class="product product-report"></span>
+                        </li>
+                      </ul>
+                    </td>
+                    <td>
+                      <%# removing :::#{@sb[:count]} that was added at the end of report name to make id's unique in the dhtmlxtree %>
+                      <%# custom reports will be shown in assigned folders and custom folder both %>
+                      <%= rep %>
+                    </td>
+                    <% txt = @sb[:rep_details][rep]["filters"] ? "Yes" : "No"%>
+                    <td><%=txt%></td>
+                    <% txt = @sb[:rep_details][rep]["display_filters"] ? "Yes" : "No"%>
+                    <td><%=txt%></td>
+                    <% txt = @sb[:rep_details][rep]["sortby"] ? "Yes" : "No"%>
+                    <td><%=txt%></td>
+                    <% txt = @sb[:rep_details][rep]["charts"] ? "Yes" : "No"%>
+                    <td><%=txt%></td>
+                    <td><%=@sb[:rep_details][rep]["user"]%></td>
+                    <td><%=@sb[:rep_details][rep]["group"]%></td>
+                  </tr>
+                <% end %>
+              <% end %>
+              </tbody>
+            <% end %>
+          </table>
+      <% end %>
+    <% elsif x_active_tree == :reports_tree %>
+      <div id="rep_tabs" style="display:none;">
+        <ul class="tab">
+          <li><a href="#report_info">Report Info</a></li>
+          <li><a href="#saved_reports">Saved Reports</a></li>
+        </ul>
+        <div id="report_info" name="report_info" width="80px">
+          <%= render(:partial=>"report_info") %>
+        </div>
+        <div id="saved_reports" name="saved_reports" width="80px">
+          <%= render(:partial=>"report_saved_reports") %>
+        </div>
+      </div>
+      <script type="text/javascript">
+        //method takes hash that can have 4 keys: tabs div id, active_tab label,
+        //url to go to when tab is changed, and whether to check for abandon changes or not
+        miq_jquery_tabs_init({tabs_div: "rep_tabs", url: "/report/rep_change_tab/", active_tab: "<%=@sb[:active_tab]%>", tab_changes: true})
+      </script>
+    <% elsif !@report && @temp[:report_result] %>
+      <%= render(:partial=>"report_status") %>
+    <% else %>
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+        <strong>Choose a Report to view from the menus on the left.</strong>
+      </div>
+    <% end %>
+  <% end %>
+</div>

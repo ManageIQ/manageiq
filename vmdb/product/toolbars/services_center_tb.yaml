@@ -1,0 +1,78 @@
+#
+# Toolbar config file
+#
+---
+:model: Service
+:button_groups:
+- :name: service_vmdb
+  :items:
+  - :buttonSelect: service_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: service_edit
+      :image: edit
+      :text: Edit Selected Service
+      :title: Select a single service to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: service_delete
+      :image: remove
+      :text: Remove Services from the VMDB
+      :title: Remove selected Services from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Services and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Services?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: service_ownership
+      :image: ownership
+      :text: "Set Ownership"
+      :title: "Set Ownership for the selected Services"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: service_policy
+  :items:
+  - :buttonSelect: service_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: service_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit tags for the selected Items"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: service_lifecycle
+  :items:
+  - :buttonSelect: service_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: service_retire
+      :image: retire
+      :text: "Set Retirement Dates"
+      :title: "Set Retirement Dates for the selected items"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: service_retire_now
+      :image: retire_now
+      :text: "Retire selected items"
+      :title: "Retire the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Retire the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'

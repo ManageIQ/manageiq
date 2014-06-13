@@ -1,0 +1,30 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM Provisioning
+    name: Provisioning
+    inherits: 
+    description: 
+  fields:
+  - AcquireIPAddress:
+      value: /Integration/IPAM/AcquireIPAddress
+  - AcquireMACAddress:
+      value: /Integration/IPAM/AcquireMACAddress
+  - RegisterDNS:
+      value: /Integration/IPAM/RegisterDNS
+  - RegisterCMDB:
+      value: /Integration/CMDB/Register
+  - RegisterAD:
+      value: /Integration/IPAM/RegisterAD
+  - Provision:
+      value: /Factory/VM/Provision
+  - ProvisionCheck:
+      value: /Factory/VM/ProvisionCheck
+  - RegisterDHCP:
+      value: /Integration/IPAM/RegisterDHCP
+  - ActivateCMDB:
+      value: /Integration/CMDB/Activate
+  - EmailOwner:
+      value: /Factory/Method/vm_email_owner?event=vm_provisioned

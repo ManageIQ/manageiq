@@ -1,0 +1,85 @@
+--- 
+? !str:VimString 
+  str: datacenter-672
+  "@vimType": :Datacenter
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: New Datacenter
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  hostFolder: !str:VimString 
+    str: group-h674
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  parent: !str:VimString 
+    str: group-d1
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: datacenter-672
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  vmFolder: !str:VimString 
+    str: group-v673
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datacenter-641
+  "@vimType": :Datacenter
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Dev
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  hostFolder: !str:VimString 
+    str: group-h643
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  parent: !str:VimString 
+    str: group-d1
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: datacenter-641
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  vmFolder: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datacenter-2
+  "@vimType": :Datacenter
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Prod
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  hostFolder: !str:VimString 
+    str: group-h4
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  parent: !str:VimString 
+    str: group-d1
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: datacenter-2
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  vmFolder: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+

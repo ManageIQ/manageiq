@@ -1,0 +1,38 @@
+<% url = url_for(:action=>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}") %>
+<div id="schedule_email_options_div">
+	<% if @edit[:new][:send_email] %>
+		<fieldset>
+			<p class="legend">E-mail Options</p>
+			<table class="style1">
+					<tr>
+						<td class="key">Send if Report is Empty</td>
+						<td>
+              <%= check_box_tag("send_if_empty", value="1",
+                                  checked=@edit[:new][:email][:send_if_empty],
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+						</td>
+					</tr>
+					<tr>
+						<td class="key">Attachments</td>
+						<td>
+              <%= check_box_tag("send_txt", value="1",
+                                  checked=@edit[:new][:email][:attach] && @edit[:new][:email][:attach].include?(:txt),
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+							Text &nbsp;&nbsp;
+              <%= check_box_tag("send_csv", value="1",
+                                  checked=@edit[:new][:email][:attach] && @edit[:new][:email][:attach].include?(:csv),
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+							CSV&nbsp;&nbsp;
+              <%= check_box_tag("send_pdf", value="1",
+                                  checked=@edit[:new][:email][:attach] && @edit[:new][:email][:attach].include?(:pdf),
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+							PDF
+						</td>
+					</tr>
+			</table>
+		</fieldset>
+    <%# Need this to bind checkbox observers when under DHTMLX tabs %>
+    <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+    <script>miqObserveCheckboxes();</script>
+	<% end %>
+</div>

@@ -1,0 +1,25 @@
+#
+# Toolbar config file
+#
+---
+:model: CustomButtonSet
+:button_groups:
+- :name: custom_button_set_vmdb
+  :items:
+  - :buttonSelect: custom_button_set_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ab_group_new
+      :image: new
+      :text: "Add a new Button Group"
+      :title: "Add a new Button Group"
+    - :button: ab_button_new
+      :image: new
+      :text: "Add a new Button"
+      :title: "Add a new Button"
+    - :button: ab_group_reorder
+      :image: edit-assign
+      :text: 'Reorder'
+      :title: 'Reorder #{x_active_tree == :ab_tree ? "Buttons Groups" : "Buttons and Groups"}'

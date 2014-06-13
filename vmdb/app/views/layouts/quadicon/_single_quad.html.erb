@@ -1,0 +1,53 @@
+<% if @listicon != nil %>
+<% width = size == 150 ? 54 : 35 %>
+<% height = width %>
+	<div class="flobj" ><img src="/images/icons/<%= size %>/base-single.png" border="0" width="<%= size %>" height="<%= size %>"></div>
+	<div class="flobj e<%= size %>"><img src="/images/icons/new/<%= @listicon %>.png"  width="<%= width * 1.8 %>" border="0"></div>
+	<% unless typ == :listnav %><%# Listnav, no clear image needed %>
+		<div class="flobj">
+			<% if ! @embedded || @showlinks %>
+				<% name = @listicon == "scan_history" ? item.started_on : item.name %>
+					<a href= "<%= url_for(:controller=>@parent.class.base_class.to_s.underscore, :action=>@lastaction, :id=>@parent.id, :show=>item.id) %>" title="<%= h(name) %>">
+						<img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/>
+					</a>
+			<% else %>
+				<a title="<%= h(item.name) %>">
+						<img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/>
+				</a>
+			<% end %>
+		</div>
+	<% end %>
+<%# ############# All other models that only need single large icon and use name for hover text ############## %>
+<% else %>
+	<% img =  ["miq_cim_instance"].include?(item.class.base_class.to_s.underscore) ? (item.class.to_s.underscore == "cim_storage_extent" ? "cim_base_storage_extent" : item.class.to_s.underscore) : item.class.base_class.to_s.underscore %>
+	<div class="flobj"><img src="/images/icons/<%= size %>/base-single.png"  width="<%= size %>" height="<%= size %>" border="0"/></div>
+	<div class="flobj e<%= size %>"><img src="/images/icons/new/<%= img %>.png" border="0"></div>
+	<% unless typ == :listnav %><%# Listnav, no clear image needed %>
+		<div class="flobj">
+			<% if ! @embedded || @showlinks %>
+				<% case item.class.base_class.to_s %>
+				<% when "MiqCimInstance" %>
+					<% name = item.evm_display_name %>
+				<% else %>
+					<% name = item.name %>
+				<% end %>
+				<% if @explorer %>
+					<%= link_to(image_tag("/images/icons/#{size}/reflection.png",
+															:width=>"#{size}",:height=>"#{size}", :title=>"#{h(name)}"),
+										{:action=>'x_show', :id=>to_cid(item.id)},
+                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+										:remote=>true) %>
+				<% else %>
+					<a href= "<%= url_for_record(item) %>" title="<%= h(name) %>">
+						<img src="/images/clearpix.gif" width="<%= size %>" height="<%= size %>"/>
+					</a>
+				<% end %>
+			<% else %>
+				<% name = item.class.base_class.to_s == "MiqCimInstance" ? item.evm_display_name : item.name %>
+				<a title="<%= h(name) %>">
+						<img src="/images/clearpix.gif" width="<%= size %>" height="<%= size %>"/>
+				</a>
+			<% end %>
+		</div>
+	<% end %>
+<% end %>

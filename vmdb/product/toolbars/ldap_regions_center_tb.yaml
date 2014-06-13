@@ -1,0 +1,32 @@
+#
+# Toolbar config file
+#
+---
+:model: LdapRegion
+:button_groups:
+- :name: ldap_region_vmdb
+  :items:
+  - :buttonSelect: ldap_region_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ldap_region_add
+      :image: new
+      :text: "Add a new LDAP Region"
+      :title: "Add a new LDAP Region"
+    - :button: ldap_region_edit
+      :image: edit
+      :text: Edit the selected LDAP Region
+      :title: Select a single LDAP Region to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: ldap_region_delete
+      :image: delete
+      :text: Delete selected LDAP Regions
+      :title: Select one or more LDAP Regions to delete
+      :url_parms: 'main_div'
+      :confirm: "Delete all selected LDAP Regions?"
+      :enabled: 'false'
+      :onwhen: '1+'

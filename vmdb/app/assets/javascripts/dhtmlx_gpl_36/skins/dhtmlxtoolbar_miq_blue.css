@@ -1,0 +1,327 @@
+/* DHTMLX TOOLBAR, DHX BLUE, 2009 */
+/* base */
+
+
+.dhx_toolbar_base_18_miq_blue {
+    white-space: nowrap;
+    overflow: hidden;
+    height: 30px;
+    position: relative;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 2px;
+    cursor: default;
+}
+
+/* skin lines */
+.dhx_toolbar_base_18_miq_blue div.dhxtoolbar_hdrline_l,
+.dhx_toolbar_base_18_miq_blue div.dhxtoolbar_hdrline_r {
+    display: none;
+}
+
+/* align/rtl feature */
+.dhx_toolbar_base_18_miq_blue div.float_left {
+    float: left;
+}
+.dhx_toolbar_base_18_miq_blue div.float_right {
+    float: right;
+}
+
+/* BUTTON, BUTTON SELECT */
+
+/* button default */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn {
+  position: relative; /* needed for slider's pen */
+  float: left;
+  margin: 1px 1px 0 5px;
+  padding: 0 2px 0 4px;
+  border: 1px solid #7e7e7e;
+  border-right: 0;
+  -moz-user-select: none;
+  background: url(/images/layout/buttonbackground.png) top center repeat-x;
+}
+
+#miq_alone {border: 1px solid #7e7e7e;}
+#miq_alone.over, #miq_alone.press, #miq_alone.pres_dis {background: #aeaeae;}
+#miq_alone.dhx_toolbar_sep {width: 1px; height: 25px; border: 0; background: #7e7e7e}
+
+/* button disabled */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.dis, .dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.pres {
+  color: #999999 !important;
+  opacity:.4; /* css standard */
+  filter:alpha(opacity=40); /* IE patch */
+}
+
+/* button over */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.over,
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.press {background: #aeaeae;}
+
+/* item icon */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn img {
+  float: left;
+  width: 24px;
+  height: 24px;
+  margin: 0 1px 0 1px;
+  padding-right: 2px;
+  -moz-user-select: none;
+}
+
+/* item text */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn div {
+  float: left;
+  height: 17px;
+  padding-top: 2px;
+  padding-right: 3px;
+  margin: 2px 2px 0 0;
+  font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;
+  color:#4b4b4b;
+  -moz-user-select: none;
+}
+
+/* BUTTON SELECT ARROW */
+
+/* arrow obj */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_arw {
+  float: left;
+  padding: 0px 6px 5px 0;
+  margin-left: -1px;
+  margin-top: 1px;
+  border: 1px solid #7e7e7e;
+  border-left: 0;
+  background: url(/images/layout/buttonbackground.png) top center repeat-x;
+}
+
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_arw.over,
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_arw.pres {background: #aeaeae;}
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_arw.dis  {opacity:.4; filter:alpha(opacity=40);}
+
+/* arrow image */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_arw div.arwimg {
+  float: left;
+  height: 17px;
+  width: 9px;
+  margin: 2px 0px 0px 0px;
+  background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_btnarrow.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  font-size: 11px;
+  font-family: Tahoma;
+}
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_arw.dis div.arwimg {
+  background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_btnarrow.png");
+}
+
+/* BUTTON SELECT POLYGON */
+
+/* polygon obj */
+div.dhx_toolbar_poly_18_miq_blue {
+	background: url(/images/layout/dashbackground.png) repeat-x left top;
+	border: 1px solid #999;
+    position: absolute;
+    margin-top: 3px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    overflow: hidden;
+    cursor: default;
+    -moz-user-select: none;
+}
+/* row */
+div.dhx_toolbar_poly_18_miq_blue table.buttons_cont {
+
+}
+div.dhx_toolbar_poly_18_miq_blue table.buttons_cont tr.tr_btn {
+    height: 19px;
+}
+div.dhx_toolbar_poly_18_miq_blue table.buttons_cont tr.tr_btn.tr_btn_over {
+    background-color: #d9d9d9 !important;
+}
+div.dhx_toolbar_poly_18_miq_blue table.buttons_cont tr.tr_btn.tr_btn_selected {
+    background-color: #d9d9d9 !important;
+}
+/* separator */
+div.dhx_toolbar_poly_18_miq_blue table.buttons_cont td.td_btn_sep {
+    font-size: 1px;
+    height: 3px;
+    vertical-align: top;
+}
+div.dhx_toolbar_poly_18_miq_blue td.td_btn_sep div.btn_sep {
+    font-size: 1px;
+    cursor: default;
+    border-top: #FFFFFF 1px solid;
+    background-color: #ccc;
+    padding-top: 1px;
+    -moz-user-select: none;
+}
+/* image */
+div.dhx_toolbar_poly_18_miq_blue table.buttons_cont td.td_btn_img {
+    font-size: 1px;
+    width: 22px;
+    text-align: center;
+    vertical-align: middle;
+}
+div.dhx_toolbar_poly_18_miq_blue td.td_btn_img img.btn_sel_img {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    margin-left: 3px;
+    margin-right: 3px;
+    -moz-user-select: none;
+}
+
+.tr_btn.tr_btn_disabled {
+    opacity:.4
+; /* css standard */
+    filter:alpha(opacity=40); /* IE patch */
+    background-color: #f0f0f0;
+
+}
+
+
+/* text */
+div.dhx_toolbar_poly_18_miq_blue table.buttons_cont td.td_btn_txt {
+    font-size: 1px;
+    vertical-align: middle;
+    padding-left: 1px;
+    padding-right: 10px;
+}
+
+div.dhx_toolbar_poly_18_miq_blue td.td_btn_txt div.btn_sel_text {
+    float: left;
+    font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+    color: #333;
+    white-space: nowrap;
+}
+div.dhx_toolbar_poly_18_miq_blue tr.tr_btn_disabled td.td_btn_txt div.btn_sel_text {
+    color: #999999 !important;
+}
+
+/* ITEM: SEPARATOR */
+
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_sep {
+    float: left;
+    height: 23px;
+    width: 1px;
+    margin-top: 1px;
+    font-size: 1px;
+    margin-right: 1px;
+    margin-left: 5px;
+    background-color: #c2d5dc;
+    -moz-user-select: none;
+}
+
+/* ITEM: TEXT */
+
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_text {
+    float: left;
+    vertical-align: middle;
+    font-family: Tahoma;
+    font-size: 11px;
+    color: #000000;
+    margin-top: 5px;
+    margin-right: 1px;
+    margin-left: 0px;
+    padding: 0px 2px;
+    -moz-user-select: none;
+}
+/* ITEM: INPUT */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn .inp {
+    position: relative;
+    float: left;
+    border: #a4bed4 1px solid;
+    font-family: Tahoma;
+    font-size: 11px;
+    padding: 1px;
+    margin: 0px;
+}
+
+/* SLIDER */
+
+/* bg left */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn div.sl_bg_l {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_left.gif");
+    background-position: right;
+    background-repeat: no-repeat;
+    width: 2px;
+    font-size: 1px;
+    margin-right: 0px;
+}
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.dis div.sl_bg_l {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_left_dis.gif");
+}
+/* bg middle */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn div.sl_bg_m {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_middle.gif");
+    background-position: center;
+    background-repeat: repeat-x;
+    font-size: 1px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.dis div.sl_bg_m {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_middle_dis.gif");
+}
+/* bg right */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn div.sl_bg_r {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_right.gif");
+    background-position: left;
+    background-repeat: no-repeat;
+    width: 2px;
+    font-size: 1px;
+    margin-left: 0px;
+}
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.dis div.sl_bg_r {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_right_dis.gif");
+}
+/* pen */
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn div.sl_pen {
+    position: absolute;
+    top: 2px;
+    width: 7px;
+    height: 15px;
+    background-repeat: no-repeat;
+    -moz-user-select: none;
+    cursor: default;
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_pen_def.gif");
+    border: none;
+}
+
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn div.sl_pen.over {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_pen_over.gif") !important;
+}
+.dhx_toolbar_base_18_miq_blue div.dhx_toolbar_btn.dis div.sl_pen {
+    background-image: url("../imgs/dhxtoolbar_miq_blue/dhxtoolbar_slider_pen_dis.gif") !important;
+}
+/* label */
+div.dhx_toolbar_slider_label_miq_blue {
+    position: absolute;
+    border: #ffb052 1px solid;
+    background-color: #ffe5ad;
+    font-family: Tahoma;
+    font-size: 10px;
+    color: #000000;
+    font-weight: normal;
+    padding: 0px 2px 0px 2px;
+    cursor: default;
+    -moz-user-select: none;
+    z-index: 8422;
+}
+
+
+
+
+/* maxopen test */
+.dhxtoolbar_maxopen_test {
+    position: absolute;
+    width: 200px;
+    height: 50px;
+    overflow-x: none;
+    overflow-y: auto;
+    left: -300px;
+    top: 100px;
+    border: 1px solid white;
+    visibility: hidden;
+}
+.dhxtoolbar_maxopen_test2 {
+    height: 200px;
+}

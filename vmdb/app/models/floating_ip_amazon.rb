@@ -1,0 +1,2 @@
+class FloatingIpAmazon < FloatingIp
+end

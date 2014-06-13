@@ -1,0 +1,14 @@
+MANAGEIQ.SCENARIO:
+  schema:
+    column1:
+  methods:
+  instances:
+    discover:
+      column1:    "Real-Time"
+    policy:
+
+MANAGEIQ.DISCOVER:
+
+MANAGEIQ.VM:
+    
+MANAGEIQ.HOST:            

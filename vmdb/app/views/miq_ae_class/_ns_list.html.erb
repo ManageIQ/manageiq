@@ -1,0 +1,60 @@
+<% if @in_a_form %>
+  <% url = url_for(:action=>'form_ns_field_changed', :id=>"#{@ae_ns.id || "new"}") %>
+<% end %>
+<div id="ns_list_div">
+  <% if !@in_a_form %>
+    <%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_ns_list"} %>
+    <fieldset>
+      <div class="checkall">
+        <input  id='Toggle1' type='checkbox' name='masterToggle' onclick="miqCheck_AE_All('center_tb', 'ns_list_grid');"/>
+        (Check All)
+      </div>
+      <%= render :partial => 'layouts/dhtmlxgrid',
+                      :locals=>{:options=>{:grid_id=>"ns_list_grid_div",
+                                :grid_name=>"ns_list_grid",
+                                :grid_url=>"/miq_ae_class/tree_select/",
+                                :grid_xml=>@temp[:grid_xml],
+                                :autosize=>true,
+                                :set_sizes=>true,
+                                :no_resize=>true,
+                                :skin=>"style3",
+                                :alt_row=>true,
+                                :div_in_js=>true
+                                }}
+      %>
+    </fieldset>
+  <% else %>
+    <div style="padding-top:10px;"></div>
+    <%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_ns_list"} %>
+    <div id="form_ns_div">
+      <fieldset>
+        <p class="legend">Info</p>
+        <table class="style1">
+          <tr>
+            <td class="key"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize)%></td>
+            <td class="wide"><%= h(@sb[:namespace_path]) %></td>
+          </tr>
+          <tr>
+            <td class="key">Name</td>
+            <td class="wide">
+              <%= text_field_tag("ns_name",
+                                    @edit[:new][:ns_name],
+                                    :maxlength=>MAX_NAME_LEN,
+                                    "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+              <%= javascript_tag("$('ns_name').focus()") %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Description</td>
+            <td class="wide">
+              <%= text_field_tag("ns_description",
+                                    @edit[:new][:ns_description],
+                                    :maxlength=>MAX_NAME_LEN,
+                                    "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+    </div>
+  <% end %>
+</div>

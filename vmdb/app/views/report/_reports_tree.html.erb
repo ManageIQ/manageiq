@@ -1,0 +1,19 @@
+<%# Div to hold the actual tree %>
+<div id="reports_tree_div" style="width:100%;height:100%;">
+  <div id="reports_treebox" style="width:100%;height:100%;color:#000; overflow: hidden"></div>
+                  <%= render(:partial       => 'layouts/dynatree',
+                    :locals=>{:tree_id      => 'reports_treebox',
+                              :tree_name    => 'reports_tree',
+                              :id_prefix    => 'reports_',
+                              :json_tree    => @temp[:reports_tree],
+                              :onclick      => 'cfmeOnClick_SelectTreeNode',
+                              :select_node  => "#{x_node}",
+                              :base_id      => 'root',
+                              :no_base_exp  => true,
+                              :exp_tree     => false,
+                              :highlighting => true,
+                              :tree_state   => true,
+                              :autoload     => true,
+                              :multi_lines  => true
+                              }) %>
+</div>

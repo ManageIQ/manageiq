@@ -1,0 +1,14 @@
+old_name: "win_only"
+name: "Sample: VM Windows OS"    
+description: "VM is running a Windows Operating System"
+policy_description: "Allow VM to start if is running Windows"
+modifier: "allow"
+who: "system"
+what: "start"
+rule: 
+    mode: "tag_expr_v2"
+    expr: 
+        LIKE: 
+          field: Vm-os_image_name
+          value: windows
+towhat: "Vm"

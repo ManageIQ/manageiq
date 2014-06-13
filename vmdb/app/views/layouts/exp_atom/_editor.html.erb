@@ -1,0 +1,103 @@
+<% unless @exp_atom_errors %>
+  <% url = url_for(:action=>'exp_changed') %>
+  <% exp_model = @edit[@expkey][:exp_model] %><%# Grab the model for this expression %>
+
+  <%# Get all of the expression types, then remove the count and/or find based ones if model has none %>
+  <% unless exp_model == "_display_filter_" %><%# Not valid for secondary display filter %>
+    <% exptypes = EXP_TYPES %>
+    <% exptypes -= [EXP_COUNT_TYPE] unless MiqExpression.miq_adv_search_lists(exp_model, :exp_available_counts).length > 0 %>
+    <% exptypes -= [EXP_FIND_TYPE]  unless MiqExpression.miq_adv_search_lists(exp_model, :exp_available_finds).length > 0 %>
+  <% end %>
+  <div id="exp_atom_editor_div">
+    <fieldset style="width:auto; padding-left: 6px; padding-top: 6px">
+		<ul id="searchtoolbar">
+			<li>
+			    <%= link_to(image_tag('/images/toolbars/commit.png',
+		                              :alt=>'Commit expression element changes'),
+		                    {:action=>'exp_button', :pressed=>'commit'},
+		                    "data-miq_sparkle_on" => true,
+		                    "data-miq_sparkle_off" => true,
+		                    :remote=>true,
+		                    :title=>'Commit expression element changes')
+		        %>
+			</li>
+			<li>
+		        <%= link_to(image_tag('/images/toolbars/discard.png',
+		                              :alt=>"Discard expression element changes"),
+		                    {:action=>'exp_button', :pressed => 'discard'},
+		                    "data-miq_sparkle_on" => true,
+		                    "data-miq_sparkle_off" => true,
+		                    :remote=>true,
+		                    :title=>"Discard expression element changes")
+		        %>
+			</li>
+		</ul>
+		<div style="padding: 10px">
+              <% if @edit[@expkey][:exp_key] == "NOT" %>
+                <font color="black">NOT</font>
+              <% else %>
+                <% if exp_model == "Vm" %>
+			
+                  <%= select_tag('chosen_typ', options_for_select(["<Choose>"] + exptypes + VM_EXP_TYPES, @edit[@expkey][:exp_typ]),
+                                :multiple=>false, :class=>"widthed",
+                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+                <% elsif exp_model == "AuditEvent" %>
+                  <%= select_tag('chosen_typ', options_for_select(["<Choose>", ["Field", "field"]], @edit[@expkey][:exp_typ]),
+                                :multiple=>false, :class=>"widthed",
+                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+                <% elsif exp_model == "_display_filter_" %>
+                  <% sel_opts = ["<Choose>"] %>
+                  <% sel_opts.push(["Field", "field"]) unless @edit[@expkey][:exp_available_fields].empty? %>
+                  <% unless @edit[@expkey][:exp_available_tags] && @edit[@expkey][:exp_available_tags].empty? ||
+                            exp_available_tags(exp_model, @edit[@expkey][:use_mytags]).empty? %>
+                    <% sel_opts.push(["Tag", "tag"]) %>
+                  <% end %>
+                  <%= select_tag('chosen_typ', options_for_select(sel_opts, @edit[@expkey][:exp_typ]),
+                                :multiple=>false, :class=>"widthed",
+                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+                <% else %>
+                  <%= select_tag('chosen_typ', options_for_select(["<Choose>"] + exptypes, @edit[@expkey][:exp_typ]),
+                                :multiple=>false, :class=>"widthed",
+                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+                <% end %>
+              <% end %>
+              <br/>
+              <% if @edit[@expkey][:exp_typ] %>
+                <%= render(:partial => "layouts/exp_atom/edit_#{@edit[@expkey][:exp_typ]}",
+                          :locals=>{:exp_model=>exp_model}) %>
+              <% end %>
+              <% if qs_show_user_input_checkbox? %>
+                    <%= check_box_tag("user_input", value="1",
+                                      checked = (@edit[@expkey][:exp_value] == :user_input),
+                                      :style=>"width: 20px",
+                                      "data-miq_sparkle_on" => true,
+                                      "data-miq_sparkle_off" => true,
+                                      "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+                    User will input the value
+              <% end %>
+		</div>
+    </fieldset>
+  </div>
+  <script type="text/javascript">
+    miqExpressionPrefill();		<%# Set the expression value prefill images and hover text %>
+    miq_cal_dateFrom = null;	<%# Clear the date from and to selection limiters %>
+    miq_cal_dateTo = null;
+  </script>
+<% else %>  <%# Errors in this atom, display them instead of the atom %>
+  <fieldset class="adminform">
+    <ul id="message" style="padding-left:30px">
+      <li id="message" class="error">
+        <% @exp_atom_errors.each do |ae| %>
+          <%= ae %><br/>
+        <% end %>
+      </li>
+    </ul>
+  </fieldset>
+<% end %>
+
+<%# Need this to bind checkbox observers %>
+<script>miqObserveCheckboxes();</script>

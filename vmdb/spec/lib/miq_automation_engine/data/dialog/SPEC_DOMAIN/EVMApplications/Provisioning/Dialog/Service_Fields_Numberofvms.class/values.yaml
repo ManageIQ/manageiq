@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: values
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: values_from
+  - valuex:
+      value: /EVMApplications/Provisioning/Dialog/service_fields_numberofvms_values_from/*

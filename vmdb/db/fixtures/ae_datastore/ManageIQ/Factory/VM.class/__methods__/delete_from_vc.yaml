@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: delete_from_vc
+    display_name: DeleteFromVC
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []

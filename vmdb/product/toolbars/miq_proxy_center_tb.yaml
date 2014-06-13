@@ -1,0 +1,18 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqProxy
+:button_groups:
+- :name: miq_proxy_editing
+  :items:
+  - :button: miq_proxy_edit
+    :image: edit
+    :title: "Edit this SmartProxy"
+    :url: '/edit'
+- :name: miq_proxy_deploy
+  :items:
+  - :button: miq_proxy_deploy
+    :image: install007
+    :title: "Deploy to this SmartProxy"
+    :url: '/install_007'

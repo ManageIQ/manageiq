@@ -1,0 +1,1051 @@
+---
+:type: :ems_refresh
+:storages:
+- &51796560
+  :multiplehostaccess: false
+  :name: file://hyperv-h01.manageiq.com/E:/
+  :store_type: NAS
+  :location: file://hyperv-h01.manageiq.com/E:/
+  :free_space: '385466535936'
+  :total_space: '419430395904'
+- &51545960
+  :multiplehostaccess: false
+  :name: file://hyperv-h01.manageiq.com/C:/
+  :store_type: NAS
+  :location: file://hyperv-h01.manageiq.com/C:/
+  :free_space: '23187267584'
+  :total_space: '80570478592'
+:hosts:
+- &51538920
+  :storages:
+  - *51545960
+  - *51796560
+  :hardware:
+    :logical_cpus: 16
+    :number_of_nics: 2
+    :cores_per_socket: 8
+    :memory_cpu: 49139
+    :guest_os_full_name: ! 'Microsoft Windows Server 2008 R2 Enterprise '
+    :cpu_speed: 2394
+    :numvcpus: 2
+    :guest_os: ! 'Microsoft Windows Server 2008 R2 Enterprise '
+    :model: PowerEdge R410
+    :cpu_type: Intel(R) Xeon(R) CPU           E5620  @ 2.40GHz
+    :networks:
+    - :subnet_mask: 255.255.254.0
+      :description: Broadcom BCM5709C NetXtreme II GigE (NDIS VBD Client)
+      :ipaddress:
+      - 192.168.253.2
+      - fe80::1d40:28c2:de35:1531
+      :dhcp_enabled: true
+    - :subnet_mask: 255.255.254.0
+      :description: Broadcom BCM5716C NetXtreme II GigE (NDIS VBD Client)
+      :ipaddress:
+      - 192.168.253.110
+      - fe80::2cf1:6447:1042:4a43
+      :dhcp_enabled: true
+    :guest_devices: []
+    :manufacturer: Dell Inc.
+  :operating_system:
+    :build_number: '7601'
+    :version: 6.1.7601
+    :product_name: ! 'Microsoft Windows Server 2008 R2 Enterprise '
+    :name: Hyperv-h01.manageiq.com
+    :product_type: ServerNT
+  :hostname: Hyperv-h01.manageiq.com
+  :vmm_vendor: microsoft
+  :name: Hyperv-h01.manageiq.com
+  :system_services:
+  - :image_path: C:\Windows\ADWS\Microsoft.ActiveDirectory.WebServices.exe
+    :running: false
+    :description: This service provides a Web Service interface to instances of the
+      directory service (AD DS and AD LDS) that are running locally on this server.
+      If this service is stopped or disabled, client applications, such as Active
+      Directory PowerShell, will not be able to access or manage any directory service
+      instances that are running locally on this server.
+    :name: ADWS
+    :start: Disabled
+    :display_name: Active Directory Web Services
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: Processes application compatibility cache requests for applications
+      as they are launched
+    :name: AeLookupSvc
+    :start: Manual
+    :display_name: Application Experience
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: false
+    :description: Processes installation, removal, and enumeration requests for software
+      deployed through Group Policy. If the service is disabled, users will be unable
+      to install, remove, or enumerate software deployed through Group Policy. If
+      this service is disabled, any services that explicitly depend on it will fail
+      to start.
+    :name: AppMgmt
+    :start: Manual
+    :display_name: Application Management
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalServiceNoNetwork
+    :running: true
+    :description: The Base Filtering Engine (BFE) is a service that manages firewall
+      and Internet Protocol security (IPsec) policies and implements user mode filtering.
+      Stopping or disabling the BFE service will significantly reduce the security
+      of the system. It will also result in unpredictable behavior in IPsec management
+      and firewall applications.
+    :name: BFE
+    :start: Auto
+    :display_name: Base Filtering Engine
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k netsvcs
+    :running: false
+    :description: Transfers files in the background using idle network bandwidth.
+      If the service is disabled, then any applications that depend on BITS, such
+      as Windows Update or MSN Explorer, will be unable to automatically download
+      programs and other information.
+    :name: BITS
+    :start: Manual
+    :display_name: Background Intelligent Transfer Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k netsvcs
+    :running: false
+    :description: Maintains an updated list of computers on the network and supplies
+      this list to computers designated as browsers. If this service is stopped, this
+      list will not be updated or maintained. If this service is disabled, any services
+      that explicitly depend on it will fail to start.
+    :name: Browser
+    :start: Disabled
+    :display_name: Computer Browser
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: Copies user certificates and root certificates from smart cards
+      into the current user's certificate store, detects when a smart card is inserted
+      into a smart card reader, and, if needed, installs the smart card Plug and Play
+      minidriver.
+    :name: CertPropSvc
+    :start: Manual
+    :display_name: Certificate Propagation
+    :svc_type: Share Process
+  - :image_path: C:\Windows\Microsoft.NET\Framework64\v2.0.50727\mscorsvw.exe
+    :running: false
+    :description: Microsoft .NET Framework NGEN
+    :name: clr_optimization_v2.0.50727_64
+    :start: Manual
+    :display_name: Microsoft .NET Framework NGEN v2.0.50727_X64
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\dllhost.exe /Processid:{02D4B3F1-FD88-11D1-960D-00805FC79235}
+    :running: false
+    :description: Manages the configuration and tracking of Component Object Model
+      (COM)+-based components. If the service is stopped, most COM+-based components
+      will not function properly. If this service is disabled, any services that explicitly
+      depend on it will fail to start.
+    :name: COMSysApp
+    :start: Manual
+    :display_name: COM+ System Application
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost.exe -k NetworkService
+    :running: true
+    :description: ! 'Provides four management services: Catalog Database Service,
+      which confirms the signatures of Windows files and allows new programs to be
+      installed; Protected Root Service, which adds and removes Trusted Root Certification
+      Authority certificates from this computer; Automatic Root Certificate Update
+      Service, which retrieves root certificates from Windows Update and enable scenarios
+      such as SSL; and Key Service, which helps enroll this computer for certificates.
+      If this service is stopped, these management services will not function properly.
+      If this service is disabled, any services that explicitly depend on it will
+      fail to start.'
+    :name: CryptSvc
+    :start: Auto
+    :display_name: Cryptographic Services
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k DcomLaunch
+    :running: true
+    :description: The DCOMLAUNCH service launches COM and DCOM servers in response
+      to object activation requests. If this service is stopped or disabled, programs
+      using COM or DCOM will not function properly. It is strongly recommended that
+      you have the DCOMLAUNCH service running.
+    :name: DcomLaunch
+    :start: Auto
+    :display_name: DCOM Server Process Launcher
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k defragsvc
+    :running: false
+    :description: Provides Disk Defragmentation Capabilities.
+    :name: defragsvc
+    :start: Manual
+    :display_name: Disk Defragmenter
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\dfssvc.exe
+    :running: true
+    :description: Enables you to group shared folders located on different servers
+      into one or more logically structured namespaces. Each namespace appears to
+      users as a single shared folder with a series of subfolders.
+    :name: Dfs
+    :start: Auto
+    :display_name: DFS Namespace
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\DFSRs.exe
+    :running: true
+    :description: Enables you to synchronize folders on multiple servers across local
+      or wide area network (WAN) network connections. This service uses the Remote
+      Differential Compression (RDC) protocol to update only the portions of files
+      that have changed since the last replication.
+    :name: DFSR
+    :start: Auto
+    :display_name: DFS Replication
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted
+    :running: true
+    :description: Registers and updates IP addresses and DNS records for this computer.
+      If this service is stopped, this computer will not receive dynamic IP addresses
+      and DNS updates. If this service is disabled, any services that explicitly depend
+      on it will fail to start.
+    :name: Dhcp
+    :start: Auto
+    :display_name: DHCP Client
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k NetworkService
+    :running: true
+    :description: The DNS Client service (dnscache) caches Domain Name System (DNS)
+      names and registers the full computer name for this computer. If the service
+      is stopped, DNS names will continue to be resolved. However, the results of
+      DNS name queries will not be cached and the computer's name will not be registered.
+      If the service is disabled, any services that explicitly depend on it will fail
+      to start.
+    :name: Dnscache
+    :start: Auto
+    :display_name: DNS Client
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalServiceNoNetwork
+    :running: true
+    :description: The Diagnostic Policy Service enables problem detection, troubleshooting
+      and resolution for Windows components.  If this service is stopped, diagnostics
+      will no longer function.
+    :name: DPS
+    :start: Auto
+    :display_name: Diagnostic Policy Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\lsass.exe
+    :running: false
+    :description: Provides the core file encryption technology used to store encrypted
+      files on NTFS file system volumes. If this service is stopped or disabled, applications
+      will be unable to access encrypted files.
+    :name: EFS
+    :start: Manual
+    :display_name: Encrypting File System (EFS)
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted
+    :running: true
+    :description: This service manages events and event logs. It supports logging
+      events, querying events, subscribing to events, archiving event logs, and managing
+      event metadata. It can display events in both XML and plain text format. Stopping
+      this service may compromise security and reliability of the system.
+    :name: eventlog
+    :start: Auto
+    :display_name: Windows Event Log
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalService
+    :running: true
+    :description: Supports System Event Notification Service (SENS), which provides
+      automatic distribution of events to subscribing Component Object Model (COM)
+      components. If the service is stopped, SENS will close and will not be able
+      to provide logon and logoff notifications. If this service is disabled, any
+      services that explicitly depend on it will fail to start.
+    :name: EventSystem
+    :start: Auto
+    :display_name: COM+ Event System
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted
+    :running: false
+    :description: Registers the platform with all available Fibre Channel fabrics,
+      and maintains the registrations.
+    :name: FCRegSvc
+    :start: Manual
+    :display_name: Microsoft Fibre Channel Platform Registration Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: The service is responsible for applying settings configured by administrators
+      for the computer and users through the Group Policy component. If the service
+      is stopped or disabled, the settings will not be applied and applications and
+      components will not be manageable through Group Policy. Any components or applications
+      that depend on the Group Policy component might not be functional if the service
+      is stopped or disabled.
+    :name: gpsvc
+    :start: Auto
+    :display_name: Group Policy Client
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted
+    :running: false
+    :description: Enables generic input access to Human Interface Devices (HID), which
+      activates and maintains the use of predefined hot buttons on keyboards, remote
+      controls, and other multimedia devices. If this service is stopped, hot buttons
+      controlled by this service will no longer function. If this service is disabled,
+      any services that explicitly depend on it will fail to start.
+    :name: hidserv
+    :start: Manual
+    :display_name: Human Interface Device Access
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k netsvcs
+    :running: false
+    :description: Provides X.509 certificate and key management services for the Network
+      Access Protection Agent (NAPAgent). Enforcement technologies that use X.509
+      certificates may not function properly without this service
+    :name: hkmsvc
+    :start: Manual
+    :display_name: Health Key and Certificate Management
+    :svc_type: Share Process
+  - :image_path: ! '"C:\Windows\Microsoft.NET\Framework64\v3.0\Windows Communication
+      Foundation\infocard.exe"'
+    :running: false
+    :description: Securely enables the creation, management, and disclosure of digital
+      identities.
+    :name: idsvc
+    :start: Manual
+    :display_name: Windows CardSpace
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: The IKEEXT service hosts the Internet Key Exchange (IKE) and Authenticated
+      Internet Protocol (AuthIP) keying modules. These keying modules are used for
+      authentication and key exchange in Internet Protocol security (IPsec). Stopping
+      or disabling the IKEEXT service will disable IKE and AuthIP key exchange with
+      peer computers. IPsec is typically configured to use IKE or AuthIP; therefore,
+      stopping or disabling the IKEEXT service might result in an IPsec failure and
+      might compromise the security of the system. It is strongly recommended that
+      you have the IKEEXT service running.
+    :name: IKEEXT
+    :start: Auto
+    :display_name: IKE and AuthIP IPsec Keying Modules
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k NetSvcs
+    :running: true
+    :description: Provides tunnel connectivity using IPv6 transition technologies
+      (6to4, ISATAP, Port Proxy, and Teredo), and IP-HTTPS. If this service is stopped,
+      the computer will not have the enhanced connectivity benefits that these technologies
+      offer.
+    :name: iphlpsvc
+    :start: Auto
+    :display_name: IP Helper
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\ismserv.exe
+    :running: false
+    :description: Enables messages to be exchanged between computers running Windows
+      Server sites. If this service is stopped, messages will not be exchanged, nor
+      will site routing information be calculated for other services.  If this service
+      is disabled, any services that explicitly depend on it will fail to start.
+    :name: IsmServ
+    :start: Disabled
+    :display_name: Intersite Messaging
+    :svc_type: Own Process
+  - :image_path: C:\Windows\System32\lsass.exe
+    :running: false
+    :description: On domain controllers this service enables users to log on to the
+      network using the Kerberos authentication protocol. If this service is stopped
+      on a domain controller, users will be unable to log on to the network. If this
+      service is disabled, any services that explicitly depend on it will fail to
+      start.
+    :name: kdc
+    :start: Disabled
+    :display_name: Kerberos Key Distribution Center
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\lsass.exe
+    :running: true
+    :description: The CNG key isolation service is hosted in the LSA process. The
+      service provides key process isolation to private keys and associated cryptographic
+      operations as required by the Common Criteria. The service stores and uses long-lived
+      keys in a secure process complying with Common Criteria requirements.
+    :name: KeyIso
+    :start: Manual
+    :display_name: CNG Key Isolation
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k NetworkServiceAndNoImpersonation
+    :running: false
+    :description: Coordinates transactions between the Distributed Transaction Coordinator
+      (MSDTC) and the Kernel Transaction Manager (KTM). If it is not needed, it is
+      recommended that this service remain stopped. If it is needed, both MSDTC and
+      KTM will start this service automatically. If this service is disabled, any
+      MSDTC transaction interacting with a Kernel Resource Manager will fail and any
+      services that explicitly depend on it will fail to start.
+    :name: KtmRm
+    :start: Manual
+    :display_name: KtmRm for Distributed Transaction Coordinator
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: Supports file, print, and named-pipe sharing over the network for
+      this computer. If this service is stopped, these functions will be unavailable.
+      If this service is disabled, any services that explicitly depend on it will
+      fail to start.
+    :name: LanmanServer
+    :start: Auto
+    :display_name: Server
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k NetworkService
+    :running: true
+    :description: Creates and maintains client network connections to remote servers
+      using the SMB protocol. If this service is stopped, these connections will be
+      unavailable. If this service is disabled, any services that explicitly depend
+      on it will fail to start.
+    :name: LanmanWorkstation
+    :start: Auto
+    :display_name: Workstation
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalService
+    :running: false
+    :description: Creates a Network Map, consisting of PC and device topology (connectivity)
+      information, and metadata describing each PC and device.  If this service is
+      disabled, the Network Map will not function properly.
+    :name: lltdsvc
+    :start: Manual
+    :display_name: Link-Layer Topology Discovery Mapper
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted
+    :running: true
+    :description: Provides support for the NetBIOS over TCP/IP (NetBT) service and
+      NetBIOS name resolution for clients on the network, therefore enabling users
+      to share files, print, and log on to the network. If this service is stopped,
+      these functions might be unavailable. If this service is disabled, any services
+      that explicitly depend on it will fail to start.
+    :name: lmhosts
+    :start: Auto
+    :display_name: TCP/IP NetBIOS Helper
+    :svc_type: Share Process
+  - :image_path: C:\Program Files (x86)\ManageIQ\bin\miqhost.exe
+    :running: false
+    :description: Provides smart management of virtualized environments.
+    :name: miqhost
+    :start: Auto
+    :display_name: ManageIQ SmartProxy
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalServiceNoNetwork
+    :running: true
+    :description: Windows Firewall helps protect your computer by preventing unauthorized
+      users from gaining access to your computer through the Internet or a network.
+    :name: MpsSvc
+    :start: Auto
+    :display_name: Windows Firewall
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\msdtc.exe
+    :running: true
+    :description: Coordinates transactions that span multiple resource managers, such
+      as databases, message queues, and file systems. If this service is stopped,
+      these transactions will fail. If this service is disabled, any services that
+      explicitly depend on it will fail to start.
+    :name: MSDTC
+    :start: Auto
+    :display_name: Distributed Transaction Coordinator
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: false
+    :description: Manages Internet SCSI (iSCSI) sessions from this computer to remote
+      iSCSI target devices. If this service is stopped, this computer will not be
+      able to login or access iSCSI targets. If this service is disabled, any services
+      that explicitly depend on it will fail to start.
+    :name: MSiSCSI
+    :start: Manual
+    :display_name: Microsoft iSCSI Initiator Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\msiexec.exe /V
+    :running: false
+    :description: Adds, modifies, and removes applications provided as a Windows Installer
+      (*.msi) package. If this service is disabled, any services that explicitly depend
+      on it will fail to start.
+    :name: msiserver
+    :start: Manual
+    :display_name: Windows Installer
+    :svc_type: Own Process
+  - :image_path: C:\Windows\System32\svchost.exe -k NetworkService
+    :running: false
+    :description: The Network Access Protection (NAP) agent service collects and manages
+      health information for client computers on a network. Information collected
+      by NAP agent is used to make sure that the client computer has the required
+      software and settings. If a client computer is not compliant with health policy,
+      it can be provided with restricted network access until its configuration is
+      updated. Depending on the configuration of health policy, client computers might
+      be automatically updated so that users quickly regain full network access without
+      having to manually update their computer.
+    :name: napagent
+    :start: Manual
+    :display_name: Network Access Protection Agent
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\lsass.exe
+    :running: true
+    :description: Maintains a secure channel between this computer and the domain
+      controller for authenticating users and services. If this service is stopped,
+      the computer may not authenticate users and services and the domain controller
+      cannot register DNS records. If this service is disabled, any services that
+      explicitly depend on it will fail to start.
+    :name: Netlogon
+    :start: Auto
+    :display_name: Netlogon
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalService
+    :running: true
+    :description: Identifies the networks to which the computer has connected, collects
+      and stores properties for these networks, and notifies applications when these
+      properties change.
+    :name: netprofm
+    :start: Manual
+    :display_name: Network List Service
+    :svc_type: Share Process
+  - :image_path: ! '"C:\Windows\Microsoft.NET\Framework64\v3.0\Windows Communication
+      Foundation\SMSvcHost.exe"'
+    :running: false
+    :description: Provides ability to share TCP ports over the net.tcp protocol.
+    :name: NetTcpPortSharing
+    :start: Disabled
+    :display_name: Net.Tcp Port Sharing Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k NetworkService
+    :running: true
+    :description: Collects and stores configuration information for the network and
+      notifies programs when this information is modified. If this service is stopped,
+      configuration information might be unavailable. If this service is disabled,
+      any services that explicitly depend on it will fail to start.
+    :name: NlaSvc
+    :start: Auto
+    :display_name: Network Location Awareness
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalService
+    :running: true
+    :description: This service delivers network notifications (e.g. interface addition/deleting
+      etc) to user mode clients. Stopping this service will cause loss of network
+      connectivity. If this service is disabled, any other services that explicitly
+      depend on this service will fail to start.
+    :name: nsi
+    :start: Auto
+    :display_name: Network Store Interface Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\lsass.exe
+    :running: false
+    :description: AD DS Domain Controller service. If this service is stopped, users
+      will be unable to log on to the network. If this service is disabled, any services
+      that explicitly depend on it will fail to start.
+    :name: NTDS
+    :start: Disabled
+    :display_name: Active Directory Domain Services
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\ntfrs.exe
+    :running: false
+    :description: Synchronizes folders with file servers that use File Replication
+      Service (FRS) instead of the newer DFS Replication technology.
+    :name: NtFrs
+    :start: Manual
+    :display_name: File Replication
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost -k nvspwmi
+    :running: true
+    :description: Provides Hyper-V Networking WMI management
+    :name: nvspwmi
+    :start: Auto
+    :display_name: Hyper-V Networking Management Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\SysWow64\perfhost.exe
+    :running: false
+    :description: Enables remote users and 64-bit processes to query performance counters
+      provided by 32-bit DLLs. If this service is stopped, only local users and 32-bit
+      processes will be able to query performance counters provided by 32-bit DLLs.
+    :name: PerfHost
+    :start: Manual
+    :display_name: Performance Counter DLL Host
+    :svc_type: Own Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalServiceNoNetwork
+    :running: false
+    :description: Performance Logs and Alerts Collects performance data from local
+      or remote computers based on preconfigured schedule parameters, then writes
+      the data to a log or triggers an alert. If this service is stopped, performance
+      information will not be collected. If this service is disabled, any services
+      that explicitly depend on it will fail to start.
+    :name: pla
+    :start: Manual
+    :display_name: Performance Logs & Alerts
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k DcomLaunch
+    :running: true
+    :description: Enables a computer to recognize and adapt to hardware changes with
+      little or no user input. Stopping or disabling this service will result in system
+      instability.
+    :name: PlugPlay
+    :start: Auto
+    :display_name: Plug and Play
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k NetworkServiceNetworkRestricted
+    :running: true
+    :description: Internet Protocol security (IPsec) supports network-level peer authentication,
+      data origin authentication, data integrity, data confidentiality (encryption),
+      and replay protection.  This service enforces IPsec policies created through
+      the IP Security Policies snap-in or the command-line tool "netsh ipsec".  If
+      you stop this service, you may experience network connectivity issues if your
+      policy requires that connections use IPsec.  Also,remote management of Windows
+      Firewall is not available when this service is stopped.
+    :name: PolicyAgent
+    :start: Manual
+    :display_name: IPsec Policy Agent
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k DcomLaunch
+    :running: true
+    :description: Manages power policy and power policy notification delivery.
+    :name: Power
+    :start: Auto
+    :display_name: Power
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: This service is responsible for loading and unloading user profiles.
+      If this service is stopped or disabled, users will no longer be able to successfully
+      logon or logoff, applications may have problems getting to users' data, and
+      components registered to receive profile event notifications will not receive
+      them.
+    :name: ProfSvc
+    :start: Auto
+    :display_name: User Profile Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\lsass.exe
+    :running: false
+    :description: Provides protected storage for sensitive data, such as passwords,
+      to prevent access by unauthorized services, processes, or users.
+    :name: ProtectedStorage
+    :start: Manual
+    :display_name: Protected Storage
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k regsvc
+    :running: true
+    :description: Enables remote users to modify registry settings on this computer.
+      If this service is stopped, the registry can be modified only by users on this
+      computer. If this service is disabled, any services that explicitly depend on
+      it will fail to start.
+    :name: RemoteRegistry
+    :start: Auto
+    :display_name: Remote Registry
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k RPCSS
+    :running: true
+    :description: Resolves RPC interfaces identifiers to transport endpoints. If this
+      service is stopped or disabled, programs using Remote Procedure Call (RPC) services
+      will not function properly.
+    :name: RpcEptMapper
+    :start: Auto
+    :display_name: RPC Endpoint Mapper
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k rpcss
+    :running: true
+    :description: The RPCSS service is the Service Control Manager for COM and DCOM
+      servers. It performs object activations requests, object exporter resolutions
+      and distributed garbage collection for COM and DCOM servers. If this service
+      is stopped or disabled, programs using COM or DCOM will not function properly.
+      It is strongly recommended that you have the RPCSS service running
+    :name: RpcSs
+    :start: Auto
+    :display_name: Remote Procedure Call (RPC)
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\RSoPProv.exe
+    :running: false
+    :description: Provides a network service that processes requests to simulate application
+      of Group Policy settings for a target user or computer in various situations
+      and computes the Resultant Set of Policy settings.
+    :name: RSoPProv
+    :start: Manual
+    :display_name: Resultant Set of Policy Provider
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k netsvcs
+    :running: false
+    :description: Allows administrators to remotely access a command prompt using
+      Emergency Management Services.
+    :name: sacsvr
+    :start: Manual
+    :display_name: Special Administration Console Helper
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\lsass.exe
+    :running: true
+    :description: The startup of this service signals other services that the Security
+      Accounts Manager (SAM) is ready to accept requests.  Disabling this service
+      will prevent other services in the system from being notified when the SAM is
+      ready, which may in turn cause those services to fail to start correctly. This
+      service should not be disabled.
+    :name: SamSs
+    :start: Auto
+    :display_name: Security Accounts Manager
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalServiceAndNoImpersonation
+    :running: false
+    :description: Manages access to smart cards read by this computer. If this service
+      is stopped, this computer will be unable to read smart cards. If this service
+      is disabled, any services that explicitly depend on it will fail to start.
+    :name: SCardSvr
+    :start: Manual
+    :display_name: Smart Card
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: Enables a user to configure and schedule automated tasks on this
+      computer. The service also hosts multiple Windows system-critical tasks. If
+      this service is stopped or disabled, these tasks will not be run at their scheduled
+      times. If this service is disabled, any services that explicitly depend on it
+      will fail to start.
+    :name: Schedule
+    :start: Auto
+    :display_name: Task Scheduler
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: false
+    :description: Allows the system to be configured to lock the user desktop upon
+      smart card removal.
+    :name: SCPolicySvc
+    :start: Manual
+    :display_name: Smart Card Removal Policy
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: false
+    :description: Enables starting processes under alternate credentials. If this
+      service is stopped, this type of logon access will be unavailable. If this service
+      is disabled, any services that explicitly depend on it will fail to start.
+    :name: seclogon
+    :start: Manual
+    :display_name: Secondary Logon
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: Monitors system events and notifies subscribers to COM+ Event System
+      of these events.
+    :name: SENS
+    :start: Auto
+    :display_name: System Event Notification Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k netsvcs
+    :running: true
+    :description: Remote Desktop Configuration service (RDCS) is responsible for all
+      Remote Desktop Services and Remote Desktop related configuration and session
+      maintenance activities that require SYSTEM context. These include per-session
+      temporary folders, RD themes, and RD certificates.
+    :name: SessionEnv
+    :start: Manual
+    :display_name: Remote Desktop Configuration
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\snmptrap.exe
+    :running: false
+    :description: Receives trap messages generated by local or remote Simple Network
+      Management Protocol (SNMP) agents and forwards the messages to SNMP management
+      programs running on this computer. If this service is stopped, SNMP-based programs
+      on this computer will not receive SNMP trap messages. If this service is disabled,
+      any services that explicitly depend on it will fail to start.
+    :name: SNMPTRAP
+    :start: Manual
+    :display_name: SNMP Trap
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\sppsvc.exe
+    :running: true
+    :description: Enables the download, installation and enforcement of digital licenses
+      for Windows and Windows applications. If the service is disabled, the operating
+      system and licensed applications may run in a notification mode. It is strongly
+      recommended that you not disable the Software Protection service.
+    :name: sppsvc
+    :start: Auto
+    :display_name: Software Protection
+    :svc_type: Own Process
+  - :image_path: C:\Windows\System32\svchost.exe -k swprv
+    :running: false
+    :description: Manages software-based volume shadow copies taken by the Volume
+      Shadow Copy service. If this service is stopped, software-based volume shadow
+      copies cannot be managed. If this service is disabled, any services that explicitly
+      depend on it will fail to start.
+    :name: swprv
+    :start: Manual
+    :display_name: Microsoft Software Shadow Copy Provider
+    :svc_type: Own Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalServiceAndNoImpersonation
+    :running: false
+    :description: Enables access to the Trusted Platform Module (TPM), which provides
+      hardware-based cryptographic services to system components and applications.  If
+      this service is stopped or disabled, applications will be unable to use keys
+      protected by the TPM.
+    :name: TBS
+    :start: Manual
+    :display_name: TPM Base Services
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k termsvcs
+    :running: true
+    :description: Allows users to connect interactively to a remote computer. Remote
+      Desktop and Remote Desktop Session Host Server depend on this service.  To prevent
+      remote use of this computer, clear the checkboxes on the Remote tab of the System
+      properties control panel item.
+    :name: TermService
+    :start: Manual
+    :display_name: Remote Desktop Services
+    :svc_type: Share Process
+  - :image_path: C:\Windows\servicing\TrustedInstaller.exe
+    :running: true
+    :description: Enables installation, modification, and removal of Windows updates
+      and optional components. If this service is disabled, install or uninstall of
+      Windows updates might fail for this computer.
+    :name: TrustedInstaller
+    :start: Manual
+    :display_name: Windows Modules Installer
+    :svc_type: Own Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted
+    :running: true
+    :description: Allows the redirection of Printers/Drives/Ports for RDP connections
+    :name: UmRdpService
+    :start: Manual
+    :display_name: Remote Desktop Services UserMode Port Redirector
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\lsass.exe
+    :running: false
+    :description: Provides secure storage and retrieval of credentials to users, applications
+      and security service packages.
+    :name: VaultSvc
+    :start: Manual
+    :display_name: Credential Manager
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\vds.exe
+    :running: true
+    :description: Provides management services for disks, volumes, file systems, and
+      storage arrays.
+    :name: vds
+    :start: Manual
+    :display_name: Virtual Disk
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost -k virtsvcs
+    :running: true
+    :description: Provides Image Management servicing for Hyper-V
+    :name: vhdsvc
+    :start: Auto
+    :display_name: Hyper-V Image Management Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\vmms.exe
+    :running: true
+    :description: Management service for Hyper-V, provides service to run multiple
+      virtual machines.
+    :name: vmms
+    :start: Auto
+    :display_name: Hyper-V Virtual Machine Management
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\vssvc.exe
+    :running: false
+    :description: Manages and implements Volume Shadow Copies used for backup and
+      other purposes. If this service is stopped, shadow copies will be unavailable
+      for backup and the backup may fail. If this service is disabled, any services
+      that explicitly depend on it will fail to start.
+    :name: VSS
+    :start: Manual
+    :display_name: Volume Shadow Copy
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalService
+    :running: true
+    :description: Maintains date and time synchronization on all clients and servers
+      in the network. If this service is stopped, date and time synchronization will
+      be unavailable. If this service is disabled, any services that explicitly depend
+      on it will fail to start.
+    :name: W32Time
+    :start: Manual
+    :display_name: Windows Time
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k WbioSvcGroup
+    :running: false
+    :description: The Windows biometric service gives client applications the ability
+      to capture, compare, manipulate, and store biometric data without gaining direct
+      access to any biometric hardware or samples. The service is hosted in a privileged
+      SVCHOST process.
+    :name: WbioSrvc
+    :start: Manual
+    :display_name: Windows Biometric Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k wcssvc
+    :running: false
+    :description: The WcsPlugInService service hosts third-party Windows Color System
+      color device model and gamut map model plug-in modules. These plug-in modules
+      are vendor-specific extensions to the Windows Color System baseline color device
+      and gamut map models. Stopping or disabling the WcsPlugInService service will
+      disable this extensibility feature, and the Windows Color System will use its
+      baseline model processing rather than the vendor's desired processing. This
+      might result in inaccurate color rendering.
+    :name: WcsPlugInService
+    :start: Manual
+    :display_name: Windows Color System
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalService
+    :running: false
+    :description: The Diagnostic Service Host is used by the Diagnostic Policy Service
+      to host diagnostics that need to run in a Local Service context.  If this service
+      is stopped, any diagnostics that depend on it will no longer function.
+    :name: WdiServiceHost
+    :start: Manual
+    :display_name: Diagnostic Service Host
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted
+    :running: false
+    :description: The Diagnostic System Host is used by the Diagnostic Policy Service
+      to host diagnostics that need to run in a Local System context.  If this service
+      is stopped, any diagnostics that depend on it will no longer function.
+    :name: WdiSystemHost
+    :start: Manual
+    :display_name: Diagnostic System Host
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k NetworkService
+    :running: false
+    :description: This service manages persistent subscriptions to events from remote
+      sources that support WS-Management protocol. This includes Windows Vista event
+      logs, hardware and IPMI-enabled event sources. The service stores forwarded
+      events in a local Event Log. If this service is stopped or disabled event subscriptions
+      cannot be created and forwarded events cannot be accepted.
+    :name: Wecsvc
+    :start: Manual
+    :display_name: Windows Event Collector
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalService
+    :running: false
+    :description: WinHTTP implements the client HTTP stack and provides developers
+      with a Win32 API and COM Automation component for sending HTTP requests and
+      receiving responses. In addition, WinHTTP provides support for auto-discovering
+      a proxy configuration via its implementation of the Web Proxy Auto-Discovery
+      (WPAD) protocol.
+    :name: WinHttpAutoProxySvc
+    :start: Manual
+    :display_name: WinHTTP Web Proxy Auto-Discovery Service
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: Provides a common interface and object model to access management
+      information about operating system, devices, applications and services. If this
+      service is stopped, most Windows-based software will not function properly.
+      If this service is disabled, any services that explicitly depend on it will
+      fail to start.
+    :name: Winmgmt
+    :start: Auto
+    :display_name: Windows Management Instrumentation
+    :svc_type: Share Process
+  - :image_path: C:\Windows\System32\svchost.exe -k NetworkService
+    :running: true
+    :description: Windows Remote Management (WinRM) service implements the WS-Management
+      protocol for remote management. WS-Management is a standard web services protocol
+      used for remote software and hardware management. The WinRM service listens
+      on the network for WS-Management requests and processes them. The WinRM Service
+      needs to be configured with a listener using winrm.cmd command line tool or
+      through Group Policy in order for it to listen over the network. The WinRM service
+      provides access to WMI data and enables event collection. Event collection and
+      subscription to events require that the service is running. WinRM messages use
+      HTTP and HTTPS as transports. The WinRM service does not depend on IIS but is
+      preconfigured to share a port with IIS on the same machine.  The WinRM service
+      reserves the /wsman URL prefix. To prevent conflicts with IIS, administrators
+      should ensure that any websites hosted on IIS do not use the /wsman URL prefix.
+    :name: WinRM
+    :start: Auto
+    :display_name: Windows Remote Management (WS-Management)
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\wbem\WmiApSrv.exe
+    :running: false
+    :description: Provides performance library information from Windows Management
+      Instrumentation (WMI) providers to clients on the network. This service only
+      runs when Performance Data Helper is activated.
+    :name: wmiApSrv
+    :start: Manual
+    :display_name: WMI Performance Adapter
+    :svc_type: Own Process
+  - :image_path: C:\Windows\system32\svchost.exe -k netsvcs
+    :running: true
+    :description: Enables the detection, download, and installation of updates for
+      Windows and other programs. If this service is disabled, users of this computer
+      will not be able to use Windows Update or its automatic updating feature, and
+      programs will not be able to use the Windows Update Agent (WUA) API.
+    :name: wuauserv
+    :start: Auto
+    :display_name: Windows Update
+    :svc_type: Share Process
+  - :image_path: C:\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted
+    :running: false
+    :description: Manages user-mode driver host processes.
+    :name: wudfsvc
+    :start: Manual
+    :display_name: Windows Driver Foundation - User-mode Driver Framework
+    :svc_type: Share Process
+  :vmm_version: 6.1.7601
+  :power_state: 'on'
+  :switches: []
+  :vmm_product: Hyper-V Virtual Machine Management
+  :vms: &55313860
+  - &55313820
+    :snapshots: []
+    :hardware:
+      :bios: 253A2519-BE74-487A-8F09-7A49742D3594
+      :memory_cpu: 512
+      :annotation: ''
+      :numvcpus: 1
+      :guest_devices: []
+    :storages:
+    - *51796560
+    :storage: *51796560
+    :operating_system: 
+    :host: *51538920
+    :vendor: microsoft
+    :name: Win7Test
+    :uid_ems: 3c75233f-bd78-4090-8a98-9dd476eb75b7
+    :power_state: 'off'
+    :location: hyper-v/Win7Test/Virtual%20Machines/3C75233F-BD78-4090-8A98-9DD476EB75B7.xml
+  - &57531080
+    :snapshots: []
+    :hardware:
+      :bios: BBA7F0C5-8597-4864-8B32-57BFAD0DAD13
+      :memory_cpu: 4000
+      :annotation: ''
+      :numvcpus: 4
+      :guest_devices: []
+    :storages:
+    - *51796560
+    :storage: *51796560
+    :operating_system: 
+    :host: *51538920
+    :vendor: microsoft
+    :name: Windows_2012_Server
+    :uid_ems: 385f6280-07a7-4f8a-9fe3-d3020d553b6c
+    :power_state: 'off'
+    :location: hyper-v/Windows_2012_Server/Virtual%20Machines/385F6280-07A7-4F8A-9FE3-D3020D553B6C.xml
+  - &57523820
+    :snapshots: []
+    :hardware:
+      :bios: 2CE1916B-68BF-4BFA-9134-D16FCF13FC90
+      :memory_cpu: 2024
+      :guest_os_full_name: 
+      :annotation: ''
+      :numvcpus: 3
+      :guest_os: 
+      :guest_devices: []
+    :storages:
+    - *51796560
+    :storage: *51796560
+    :operating_system: 
+    :host: *51538920
+    :tools_status: No Contact
+    :vendor: microsoft
+    :name: Ubuntu12.04
+    :uid_ems: 8a7628a6-c02a-420d-8c5d-ab2b1da3c47e
+    :boot_time: 2013-09-12 15:27:27.000000000 Z
+    :power_state: 'on'
+    :location: hyper-v/Ubuntu12.04/Virtual%20Machines/8A7628A6-C02A-420D-8C5D-AB2B1DA3C47E.xml
+  :ipaddress: 192.168.253.110
+  :vmm_buildnumber: '17514'
+:vms: *55313860
+:uid_lookup:
+  :storages:
+    HYPERV-H01-E: *51796560
+    :storage_id:
+      Win32_LogicalDisk.DeviceID="C:": *51545960
+      Win32_LogicalDisk.DeviceID="E:": *51796560
+    HYPERV-H01-C: *51545960
+  :scsi_luns: {}
+  :hosts:
+    HYPERV-H01: *51538920
+  :lans:
+    HYPERV-H01: {}
+  :switches:
+    HYPERV-H01:
+      :pnic_id: {}
+  :vms:
+    3c75233f-bd78-4090-8a98-9dd476eb75b7: *55313820
+    385f6280-07a7-4f8a-9fe3-d3020d553b6c: *57531080
+    8a7628a6-c02a-420d-8c5d-ab2b1da3c47e: *57523820
+  :guest_devices:
+    HYPERV-H01:
+      :storage:
+        :adapter_id: {}
+      :pnic: {}

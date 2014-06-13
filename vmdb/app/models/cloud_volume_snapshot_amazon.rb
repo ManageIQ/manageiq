@@ -1,0 +1,2 @@
+class CloudVolumeSnapshotAmazon < CloudVolumeSnapshot
+end

@@ -1,0 +1,76 @@
+--- 
+- 
+  :basedir: "../../.."
+  :todir: /PAYLOAD
+  :include: 
+    # Common
+    - lib/Verbs
+    - lib/metadata
+    - lib/util
+    - lib/disk
+    - lib/fs
+    - lib/fs/MetakitFS/test/init.rb
+    - lib/db
+    - lib/encryption
+    - lib/VMwareWebService
+    - lib/MiqWebService
+    - lib/blackbox
+    - lib/esx_lib_hooks/miq_lib_hooks.so
+    - lib/MiqVm
+    - lib/VolumeManager
+    # miqhost
+    - host/miqhost/etc
+    - host/miqhost/data
+    - host/miqhost/scheduler
+    - host/miqhost/certs
+    - host/miqhost/miqhost.rb
+    - host/miqhost/expose_services.rb
+    - host/miqhost/MiqHostConfig.rb
+    - host/miqhost/process_queue.rb
+    - host/miqhost/heartbeat.rb
+    - host/miqhost/EmsEventMonitor.rb
+    - host/miqhost/InstallWin.rb
+    - host/miqhost/InstallLinux.rb
+    - host/miqhost/PlatformConfig.rb
+    - host/miqhost/UpdateAgent.rb
+    - host/miqhost/MiqTest.rb
+    - host/miqhost/MiqHostWebServer.rb
+    # miq-cmd
+    - host/miq-cmd/main.rb
+  :exclude: 
+    - !ruby/regexp /\/\.svn/
+    - !ruby/regexp /~$/
+    - !ruby/regexp /\/NTFSCPP/
+    - !ruby/regexp /\/TestVm/
+    - !ruby/regexp /\/mk4test/
+    - !ruby/regexp /\.c$/
+    - !ruby/regexp /\.h$/
+    - !ruby/regexp /\.o$/
+    - !ruby/regexp /\.vhd$/
+    - !ruby/regexp /\.vmdk$/
+    - !ruby/regexp /dos_mbr.img$/
+    - !ruby/regexp /test.rb$/
+    - !ruby/regexp /test$/
+    - !ruby/regexp /\/rdoc$/
+    - !ruby/regexp /\/examples$/
+    - !ruby/regexp /\/doc$/
+    - !ruby/regexp /\/miqCryptInit.rb$/
+    - !ruby/regexp /\/miqbb100.zip$/
+    - !ruby/regexp /\/VMwareWebService\/.*\.wsdl$/
+  :encrypt: 
+    - !ruby/regexp /\.rb$/
+  :noencrypt: 
+    - !ruby/regexp /\/encryption\//
+    - !ruby/regexp /\/etc\//
+    - !ruby/regexp /\/MetakitFS.rb$/
+    - !ruby/regexp /\/init.rb$/
+  :compress: 
+    - !ruby/regexp /miq_lib_hooks.so$/
+    - !ruby/regexp /.*$/
+  :nocompress:
+    - !ruby/regexp /\/init.rb$/
+- 
+  :basedir: .
+  :todir: /
+  :include: 
+    - miq_payload.yaml

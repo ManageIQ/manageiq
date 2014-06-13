@@ -1,0 +1,139 @@
+<% if @edit %>
+<% url = url_for(:action => 'condition_field_changed', 
+                 :id     => "#{@condition.id || "new"}")
+%>
+<% end %>
+<% read_only ||= false %>
+<div id="condition_details_div" style="width:100%;height:100%;overflow:auto;">
+  <% if @condition %>
+    <div id="condition_info_div">
+      <%= render(:partial => "layouts/flash_msg") %>
+      <% if @edit %><%# Don't show basic info box with description only unless in edit mode %>
+        <p class="legend">Basic Information</p>
+        <table class="style1">
+            <tr>
+              <td class="key">Description</td>
+              <% unless @edit %>
+                <td><%= h(@condition.description) %></td>
+              <% else %>
+                <td class="wider">
+                  <%= text_field_tag("description",
+                                     @edit[:new][:description],
+                                     :maxlength => MAX_DESC_LEN,
+                                     "data-miq_observe" => {:interval => '.5', 
+                                                            :url      => url}.to_json) 
+                  %>
+                </td>
+                <%= javascript_tag("$('description').focus()") %>
+              <% end %>
+            </tr>
+        </table>
+        <hr>
+      <% end %>
+
+      <% unless @edit %>
+        <p class="legend">Scope</p>
+            <% if @applies_to_exp_table != nil %>
+              <% @applies_to_exp_table.each do |token| %>
+                <% if ! ["AND", "OR", "(", ")"].include?([token].flatten.first) %>
+                  <%= h([token].flatten.first) %>
+                <% else %>
+                  <font color="black"><b><%= h([token].flatten.first) %></b></font>
+                <% end %>
+              <% end %>
+            <% else %>
+              <div class="alert alert-info">
+                <span class="pficon pficon-info"></span>
+                <strong>No scope defined, the scope of this condition includes all elements.</strong>
+              </div>
+            <% end %>
+            <hr>
+      <% else %>
+        <%= render(:partial => "form_scope") %>
+      <% end %>
+
+      <% unless @edit %>
+        <p class="legend">Expression</p>
+            <% if @expression_table != nil %>
+              <% @expression_table.each do |token| %>
+                <% if ! ["AND", "OR", "(", ")"].include?([token].flatten.first) %>
+                  <%= h([token].flatten.first) %>
+                <% else %>
+                  <font color="black"><b><%= h([token].flatten.first) %></b></font>
+                <% end %>
+              <% end %>
+            <% else %>
+              <div class="alert alert-info">
+                <span class="pficon pficon-info"></span>
+                <strong>A condition must contain a valid expression.</strong>
+              </div>  
+            <% end %>
+            <hr>
+      <% else %>
+        <%= render(:partial => "form_expression") %>
+      <% end %>
+
+      <%# Notes field %>
+      <% unless @edit %>
+        <p class="legend">Notes</p>
+        <% if @condition.notes.blank? %>
+          <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+            <strong>No notes have been entered.</strong>
+          </div>
+        <% else %>
+          <%= text_area_tag("notes", 
+                            @condition.notes, 
+                            :readonly => true, 
+                            :rows     => 5) 
+          %>
+        <% end %>
+        <hr>
+      <% else %>
+        <p class="legend">Notes (<span id="notes_count"><%= @edit[:new][:notes] ? @edit[:new][:notes].length : 0 %></span> / 512)</p>
+
+          <%= text_area_tag("notes",
+                            @edit[:new][:notes], 
+                            :rows      => 4,
+                            :maxlength => "512",
+                            :counter   => "notes_count",
+                            "data-miq_check_max_length" => true,
+                            "data-miq_observe"          => {:interval => '.5', 
+                                                            :url      => url}.to_json) 
+          %>
+      <% end %>
+      <% if x_active_tree == :condition_tree && !@edit %>
+        <p class="legend">Assigned to Policies</p>
+        <% if @condition_policies.empty? %>
+          <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+            <strong>This Condition is not assigned to any Policies.</strong>
+          </div>
+        <% else %>
+          <table class="style3">
+            <thead>
+              <tr>
+                <th class="icon"><th>
+              </tr>
+            <thead>
+            <tbody>
+            <% @condition_policies.each do |p| %>
+              <% id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}" %>
+              <tr class="<%= cycle('row0', 'row1') %>"
+                  onclick="<%= remote_function(:url=>"/miq_policy/x_show/#{id}?accord=policy") %>"
+                  onmouseover="this.style.cursor='pointer'" title="Click to view Policy">
+                <td class="icon">
+                  <img src="/images/icons/new/miq_policy_<%= p.towhat.downcase + (p.active ? "" : "_inactive") %>.png"/>
+                </td>
+                <td>
+                  <%= p.description %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

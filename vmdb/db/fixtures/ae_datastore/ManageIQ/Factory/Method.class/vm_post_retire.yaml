@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Stop VM, Unregister and Email Owner
+    name: Vm_Post_Retire
+    inherits: 
+    description: 
+  fields:
+  - meth3:
+      value: vm_stop_and_unregister
+  - meth5:
+      value: vm_email_owner

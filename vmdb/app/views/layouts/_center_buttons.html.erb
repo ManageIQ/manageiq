@@ -1,0 +1,5 @@
+<% if fname = center_toolbar_filename %>  <%# Only create this div if we get back a file name %>
+  <div id="center_buttons_div">
+    <%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"center_tb", :tb_yaml=>fname} %>
+  </div>
+<% end %>

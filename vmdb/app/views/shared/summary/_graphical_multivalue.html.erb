@@ -1,0 +1,13 @@
+<div class="flobj text" style="text-align: left">
+	<% item[:label].each_with_index do |l,i| %>
+		<img src="/images/layout/<%= item[:image][i] %>.png">
+		<%= item[:label][i] %><% if item[:value][i] %>: <%= item[:value][i] %><% end %><br/>
+	<% end %>
+</div>
+<% if item[:space_percent] %>
+	<div class="flobj">
+		<a title="Total:<%= item[:total_space] %>">
+			<img alt="Total:<%= item[:total_space] %>" src="/images/icons/new/piecharts/datastore/<%=item[:space_percent]%>.png" width="48" height="48"/>
+		</a>
+<% end %><%= item[:link] %>
+</div>

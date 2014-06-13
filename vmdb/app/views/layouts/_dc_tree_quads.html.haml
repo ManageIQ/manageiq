@@ -1,0 +1,31 @@
+#dc_tree_quads_div
+  -# Create divs for each Host to display as the mouse hovers over each Host node
+  - @temp[:tree_hosts].each do |h|
+    #outer
+      #inner
+        %div{:id => "h-#{to_cid(h.id)}", :style => 'display:none; z-index:10; width: 72px; height: 72px;'}
+          %div{:style => 'margin-left: -70px;'}
+            = render(:partial => 'layouts/quadicon',
+                     :locals  => {:mode => :icon,
+                                  :item => h,
+                                  :typ  => :listnav,
+                                  :size => 72})
+            %center{:style => 'color:#000;'}
+              = h(h.product_name)
+              %br/
+              = h(h.service_pack)
+  -# Create divs for each VM to display as the mouse hovers over each VM node
+  - @temp[:tree_vms].each do |v|
+    #outer
+      #inner
+        %div{:id => "v-#{to_cid(v.id)}", :style => 'display:none; z-index:10; width: 72px; height: 72px;'}
+          %div{:style => 'margin-left: -70px;'}
+            = render(:partial => 'layouts/quadicon',
+                     :locals  => {:mode => :icon,
+                                 :item => v,
+                                 :typ => :listnav,
+                                 :size => 72})
+            %center{:style => 'color:#000;'}
+              = h(v.product_name)
+              %br/
+              = h(v.service_pack)

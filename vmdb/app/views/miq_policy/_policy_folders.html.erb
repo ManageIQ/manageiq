@@ -1,0 +1,26 @@
+<% if @folders %>
+  <%= render(:partial=>"layouts/flash_msg") %>
+    <table class="style3">
+      <thead>
+        <th class="icon"></th><th></th>
+      </thead>
+      <tbody>
+      <% @folders.each do |f| %>
+        <tr class="<%= cycle('row0', 'row1') %>"
+          <% if ["Compliance","Control"].include?(f) %>
+            onclick="cfmeDynatree_activateNode('policy_tree', 'xx-<%= f.downcase %>');"
+          <% else %>
+            onclick="cfmeDynatree_activateNode('policy_tree', 'xx-<%=f.split.last.downcase%>_xx-<%= f.split[1].downcase %>-<%= f.split[0].downcase %>');"
+          <% end %>
+          onmouseover="this.style.cursor='pointer'" title="Open Folder">
+          <td  nowrap>
+              <img src="/images/icons/new/<%= f.split.first.downcase %>.png" valign="middle" border="0" />
+          </td>
+          <td>
+            <%= h(f == "Vm" ? ui_lookup(:model=>f) : f) %> Policies
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>

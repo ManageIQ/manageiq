@@ -1,0 +1,65 @@
+.timeline-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.timeline-copyright {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.timeline-message-container {
+    position:   absolute;
+    top:        30%;
+    left:       35%;
+    right:      35%;
+    z-index:    1000;
+    display:    none;
+}
+.timeline-message {
+    font-size:      120%;
+    font-weight:    bold;
+    text-align:     center;
+}
+.timeline-message img {
+    vertical-align: middle;
+}
+
+.timeline-band {
+    position:   absolute;
+    background: #eee;
+    z-index:    10;
+}
+
+.timeline-band-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.timeline-band-input {
+    position:   absolute;
+    width:      1em;
+    height:     1em;
+    overflow:   hidden;
+    z-index:    0;
+}
+.timeline-band-input input{
+    width:      0;
+}
+
+.timeline-band-layer {
+    position:   absolute;
+    width:      100%;
+    height:     100%;
+}
+
+.timeline-band-layer-inner {
+    position:   relative;
+    width:      100%;
+    height:     100%;
+}
+

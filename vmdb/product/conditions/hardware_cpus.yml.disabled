@@ -1,0 +1,14 @@
+old_name: "hardware_cpus"
+name: "Sample: VM number of cpus"    
+description: "VM has only 1 cpu"
+policy_description: "Allow VM to start if it has only 1 cpu"
+modifier: "allow"
+who: "system"
+what: "start"
+rule: 
+    mode: "tag_expr_v2"
+    expr:
+        "=":
+            field: Vm.hardware.numvcpus
+            value: 1
+towhat: "Vm"

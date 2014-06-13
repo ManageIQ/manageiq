@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: LdapDomain
+:button_groups:
+- :name: ldap_domain_vmdb
+  :items:
+  - :buttonSelect: scan_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ldap_domain_edit
+      :image: edit
+      :text: Edit this LDAP Domain
+      :title: Edit this LDAP Domain
+    - :button: ldap_domain_delete
+      :image: delete
+      :text: Delete this LDAP Domain
+      :title: Delete this LDAP Domain
+      :url_parms: '&refresh=y'
+      :confirm: "Are you sure you want to delete this LDAP Domain?"

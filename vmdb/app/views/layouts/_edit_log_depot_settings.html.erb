@@ -1,0 +1,58 @@
+<%
+  action  ||= "log_depot_field_changed"
+  div_num ||= ""
+  record    = @schedule || @record
+  url       = url_for(:action => action, :id => (record.try(:id) || "new"))
+%>
+
+<div id="form_filter_div">
+  <%# created div with different name so database validation flash message can be shown in it's own box %>
+  <%= render :partial => "layouts/flash_msg", :locals=> {:div_num => div_num} %>
+  <fieldset>
+    <p class="legend">
+      <%# Used for editing both database backup and log collection depot settings %>
+      <% if @sb[:active_tab] == "diagnostics_database" %>
+        Database Backup Settings
+      <% else %>
+        Editing Log Depot Settings for <%= "#{Dictionary::gettext(record.class.name, :type => :model, :notfound => :titleize)}: #{@record.display_name}" %>
+      <% end %>
+    </p>
+    <table class="style1">
+      <tr>
+        <td class="key">Type</td>
+        <td class="wide">
+          <%= select_tag(
+            "log_protocol",
+            options_for_select([["<No Depot>",nil]] + @edit[:protocols_arr].sort, @edit[:protocol]),
+            "data-miq_observe" => {:url => url}.to_json
+          ) %>
+        </td>
+      </tr>
+      <% if @edit[:new][:uri_prefix] %>
+        <tr>
+          <td class="key">URI</td>
+          <td class="wide"><%= @edit[:new][:uri_prefix] %>://
+            <%= text_field_tag(
+              "uri",
+              @edit[:new][:uri],
+              :maxlength => 100,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json
+            ) %>
+          </td>
+          <%= javascript_tag("$('uri').focus()") %>
+        </tr>
+        <% unless @edit[:new][:uri_prefix] == "nfs" %>
+          <%= render(
+            :partial => "/layouts/auth_credentials",
+            :locals  => {
+              :pfx          => "log",
+              :change_url   => action,
+              :validate_url => "log_depot_validate",
+              :record       => record
+            }
+          ) %>
+        <% end %>
+      <% end %>
+    </table>
+  </fieldset>
+</div>

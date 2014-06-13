@@ -1,0 +1,80 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "VIM Usage for an Hour"
+
+# Menu name
+name: "VIM Usage for an Hour"
+
+# Main DB table report is based on
+db: VimUsage
+
+# Columns to fetch from the main table
+cols:
+- resource_name
+- resource_id
+- derived_vm_used_disk_storage
+- cpu_usagemhz_rate_average
+- derived_memory_used
+- disk_usage_rate_average
+- net_usage_rate_average
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order: 
+- resource_name
+- cpu_usagemhz_rate_average
+- derived_memory_used
+- derived_vm_used_disk_storage
+- disk_usage_rate_average
+- net_usage_rate_average
+
+# Column titles, in order
+headers:
+- VM Name
+- Avg CPU MHz
+- Avg RAM
+- Avg Disk Space
+- Avg Disk I/O KBs (Total Bytes)
+- Avg Net I/O KBs (Total Bytes)
+
+# Condition expression for search filtering
+conditions: 
+
+# Order string for the SQL query
+order: ascending
+
+# Columns to sort the report on, in order
+sortby: cpu_usagemhz_rate_average
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 
+
+template_type: report

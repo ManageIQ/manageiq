@@ -1,0 +1,17 @@
+<%
+# Parameters:
+#		widget			MiqWidget object
+%>
+<div class="modboxin report_widget">
+	<div id="dd_w<%= widget.id %>_box" class="mc"
+		<% if @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) %>
+			 style="display:none;"
+		<% end %>
+	>
+		<% if widget.contents_for_user(session[:userid]).contents.blank? %>
+				No Report data found . . .
+		<% else %>
+			<%= widget.contents_for_user(session[:userid]).contents.html_safe %>
+		<% end %>
+	</div>
+</div>

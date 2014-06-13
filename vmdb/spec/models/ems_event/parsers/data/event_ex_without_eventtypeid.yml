@@ -1,0 +1,96 @@
+--- !map:VimHash 
+eventType: EventEx
+userName: !str:VimString 
+  str: ""
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+createdTime: !str:VimString 
+  str: "2010-11-12T17:15:42.661128Z"
+  "@vimType": 
+  "@xsiType": SOAP::SOAPDateTime
+arguments: !seq:VimArray 
+  - !map:VimHash 
+    value: !str:VimString 
+      str: 4b3ac9e3-c7eeb598-5f1b-000bcd6c5490
+      "@vimType": 
+      "@xsiType": xsd:string
+    key: !str:VimString 
+      str: "1"
+      "@vimType": 
+      "@xsiType": SOAP::SOAPString
+    __iv__@vimType: 
+    __iv__@xsiType: KeyAnyValue
+  - !map:VimHash 
+    value: !str:VimString 
+      str: S1R2-Prod1
+      "@vimType": 
+      "@xsiType": xsd:string
+    key: !str:VimString 
+      str: "2"
+      "@vimType": 
+      "@xsiType": SOAP::SOAPString
+    __iv__@vimType: 
+    __iv__@xsiType: KeyAnyValue
+datacenter: !map:VimHash 
+  name: !str:VimString 
+    str: DataCenter1
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+  datacenter: !str:VimString 
+    str: datacenter-21
+    "@vimType": Datacenter
+    "@xsiType": ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: DatacenterEventArgument
+objectType: !str:VimString 
+  str: HostSystem
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+eventTypeId: !str:VimString 
+  str: ""
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+objectId: !str:VimString 
+  str: ha-eventmgr
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+fullFormattedMessage: !str:VimString 
+  str: ""
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+host: !map:VimHash 
+  name: !str:VimString 
+    str: vi4esx1.galaxy.local
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+  host: !str:VimString 
+    str: host-29
+    "@vimType": HostSystem
+    "@xsiType": ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: HostEventArgument
+severity: !str:VimString 
+  str: warning
+  "@vimType": 
+  "@xsiType": SOAP::SOAPString
+computeResource: !map:VimHash 
+  name: !str:VimString 
+    str: Cluster1
+    "@vimType": 
+    "@xsiType": SOAP::SOAPString
+  computeResource: !str:VimString 
+    str: domain-c26
+    "@vimType": ClusterComputeResource
+    "@xsiType": ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: ComputeResourceEventArgument
+key: !str:VimString 
+  str: "297179"
+  "@vimType": 
+  "@xsiType": SOAP::SOAPInt
+chainId: !str:VimString 
+  str: "297179"
+  "@vimType": 
+  "@xsiType": SOAP::SOAPInt
+__iv__@vimType: 
+__iv__@xsiType: EventEx

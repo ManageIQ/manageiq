@@ -1,0 +1,102 @@
+#!/bin/bash
+
+LOG=/var/www/miq/vmdb/log/miq_ntpdate.log
+EVM_LOG=/var/www/miq/vmdb/log/evm.log
+NTPDATE_CMD=/usr/sbin/ntpdate
+MONGREL_CMD=/etc/init.d/mongrel_cluster
+THRESHOLD=30
+SCHEDULE_WORKER_EXIT_WAIT_TIME=180
+SCHEDULE_WORKER_EXIT_FILE=/var/www/miq/vmdb/data/schedule_worker_exit_file
+
+offset=0
+
+# Read in the ntp.conf, return if the file doesn't exist
+FILE="/etc/ntp.conf"
+
+# Log to $LOG and to one additinal log file if specified.
+function log_msg {
+  msg=$1;
+  extra_log_file=$2
+
+  msg_w_header="`date -u` MIQ(run_ntpdate): ${msg}"
+
+  echo -e "${msg_w_header}" >> $LOG
+
+  if [ $extra_log_file ]; then
+    echo -e "${msg_w_header}" >> $extra_log_file
+  fi
+
+}
+
+if [ ! -r $FILE ]; then
+  log_msg "$FILE does not exist or is not readable!"
+  exit 1
+fi
+
+# If any lines in the ntp.conf begin with server or peer, capture the hostname or ip address... replace new lines with a space
+NTPSERVERS=$(sed -rne 's/^(servers?|peer) ([-_.[:alnum:]]+).*$/\2/p' "$FILE" | grep -v '^127\.127\.' | awk '{ printf "%s ", $0}') || [ $? -le 1 ]
+
+if [ -z "$NTPSERVERS" ]; then
+  log_msg "No ntp servers found in $FILE"
+  exit 1
+fi
+
+# If ruby processes are running, first query ntp, to make sure the time change will not be too large
+ps -A | grep -q ruby
+if [ $? -eq 0 ]; then
+  log_msg "Safeguarding time change since Ruby processes are running"
+  log_msg "Defaulting time offset threshold to: $THRESHOLD"
+
+  # If the offset is within a threhold, perform the ntpdate, otherwise restart mongrel
+
+  # The output of ntpdate -q looks like this:
+  # 24 Mar 10:24:09 ntpdate[28300]: adjust time server 91.189.94.4 offset -0.010484 sec
+  ntp_cmd_result=`$NTPDATE_CMD -q $NTPSERVERS 2>&1`
+  cmd_status=$?
+  if [ $cmd_status -ne 0 ]; then
+    log_msg "ntpdate failed with error:\n $ntp_cmd_result"
+    exit $cmd_status
+  fi
+
+  offset=$(echo "$ntp_cmd_result" | awk '{ $9=="offset" } { printf "%s", $10 }')
+  log_msg "offset: $offset"
+
+  # calculate the absolute value of the offset for comparison purposes
+  abs_value=`echo $offset | awk ' { if($1>=0) { print $1 } else { print $1*-1 } }'`
+  log_msg "abs offset: $abs_value"
+
+  # determine if the offset is greater than the threshold
+  greater_than_threshold=`echo $abs_value $THRESHOLD | awk ' { if($1>$2) { print 1 }  else { print 0 } }'`
+  if [ $greater_than_threshold -eq 1 ] ; then
+    log_msg "$offset is greater than threshold: $THRESHOLD seconds...restarting schedule worker"
+
+    # Create the schedule worker exit file which the worker monitor checks for and requests the schedule worker to exit if the file is found.
+    echo "`date -u`" > $SCHEDULE_WORKER_EXIT_FILE
+    log_msg "Created exit file"
+    # Delay the script until the schedule worker exits or if x seconds has passed, then run ntpdate
+    count=0
+    while [ $count -lt $SCHEDULE_WORKER_EXIT_WAIT_TIME ]; do
+      res=`ps -o pid,command x |grep -E "MiqScheduleWorker" |grep -v grep`
+      if [ $? -ne 0 ]; then
+        log_msg "MiqScheduleWorker has exited, it's now safe to set the time..."
+        break
+      fi
+      sleep 1
+      ((count=$count+1))
+    done
+    log_msg "Waited $count seconds for schedule worker"
+  fi
+fi
+
+log_msg "Setting the time with command: $NTPDATE_CMD $NTPSERVERS" "$EVM_LOG"
+
+# run ntpdate
+ntp_cmd_result=`$NTPDATE_CMD $NTPSERVERS 2>&1`
+cmd_status=$?
+if [ $cmd_status -ne 0 ]; then
+  log_msg "ntpdate failed with error:\n $ntp_cmd_result" "$EVM_LOG"
+  exit $cmd_status
+fi
+
+log_msg "Time has now been set where estimated offset was $offset." "$EVM_LOG"
+

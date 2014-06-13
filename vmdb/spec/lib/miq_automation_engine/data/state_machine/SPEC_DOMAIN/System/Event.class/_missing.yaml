@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Default for Missing Events
+    name: .missing
+    inherits: 
+    description: 
+  fields:
+  - logical_event:
+      value: other

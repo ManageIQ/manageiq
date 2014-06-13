@@ -1,0 +1,14 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAeTools
+:button_groups:
+- :name: miq_ae_tools_vmdb
+  :items:
+  - :button: ae_copy_simulate
+    :image: copy
+    :text: "Copy"
+    :title: "Copy object details for use in a Button"
+    :url: "resolve"
+    :url_parms: '?button=copy'

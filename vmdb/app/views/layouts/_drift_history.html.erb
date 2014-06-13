@@ -1,0 +1,37 @@
+<% if @timestamps.length == 0 %>
+  <div class="alert alert-warning">
+    <span class="pficon-layered">
+      <span class="pficon pficon-warning-triangle"></span>
+      <span class="pficon pficon-warning-exclamation"></span>
+    </span>
+    <strong>No drift history found, an Analysis or Virtual Black Box Synchronization for this VM may need to be run.</strong>
+  </div>
+<% else %>
+  <%= render :partial => "layouts/flash_msg" %>
+  <table class="style3">
+    <thead>
+      <tr>
+        <th class="icon"></th>
+        <th>
+          Timestamp
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rowIndex = 0 %>
+      <% @timestamps.reverse.each_with_index do |ts, idx| %>
+        <tr class="<%= cycle('row0', 'row1') %>">
+          <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);" nowrap>
+            <%= check_box_tag("check_#{(@timestamps.length - 1 - idx)}", value=1, checked=false, :id=>"listcheckbox", :onclick=>"miqUpdateButtons(this,'center_tb');") %>
+          </td>
+          <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);" nowrap>
+            <%= h(format_timezone(ts,Time.zone,"view")) %>
+            <%# %= h(ts.utc.strftime("%m/%d/%y %H:%M GMT")) %>
+            (<%= h(time_ago_in_words(ts.in_time_zone(Time.zone))) %> ago)
+          </td>
+        </tr>
+        <% rowIndex = rowIndex + 1 %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

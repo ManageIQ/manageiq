@@ -1,0 +1,45 @@
+.timeline-duration-event {
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid blue;
+}
+
+.timeline-instant-event2 {
+    position: absolute;
+    overflow: hidden;
+    border-left: 1px solid blue;
+    padding-left: 2px;
+}
+
+.timeline-instant-event {
+    position: absolute;
+    overflow: hidden;
+}
+
+.timeline-event-bubble-title {
+    font-weight: bold;
+    border-bottom: 1px solid #888;
+    margin-bottom: 0.5em;
+}
+
+.timeline-event-bubble-body {
+}
+
+.timeline-event-bubble-wiki {
+    margin:     0.5em;
+    text-align: right;
+    color:      #A0A040;
+}
+.timeline-event-bubble-wiki a {
+    color:      #A0A040;
+}
+
+.timeline-event-bubble-time {
+    color: #aaa;
+}
+
+.timeline-event-bubble-image {
+    float: right;
+    padding-left: 5px;
+    padding-bottom: 5px;
+}

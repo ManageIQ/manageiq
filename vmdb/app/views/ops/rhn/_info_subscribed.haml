@@ -1,0 +1,31 @@
+%tr
+  %td{:colspan => 2} Appliances in this region can be registered with:
+%tr
+  %td{:colspan => 2} &nbsp;
+%tr
+  %td.key Service
+  %td.wide
+    = @customer.subscription
+%tr
+  %td.key Server Address
+  %td.wide
+    = @customer.server
+%tr
+  %td.key Account
+  %td.wide 
+    = @customer.user_name
+%tr
+  %td.key Organization
+  %td.wide 
+    = @customer.company_name
+%tr
+  %td.key Update Repository
+  %td.wide
+    = @customer.update_repo_name
+-# to be enabled later
+-#    %tr
+-#      %td{:class => 'key'} E-mail Address:
+-#      %td{:class => 'wide'}= @customer.email
+-#    %tr
+-#      %td{:class => 'key'} Subscriptions:
+-#      %td{:class => 'wide'}= @customer.subscriptions

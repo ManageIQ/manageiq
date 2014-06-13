@@ -1,0 +1,174 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "Chargeback by Date"
+
+# Menu name
+name: "Chargeback by Date"
+
+# Main DB table report is based on
+db: Chargeback
+
+# Columns to fetch from the main table
+cols:
+- start_date
+- display_range
+- vm_name
+- owner_name
+- cpu_used_cost
+- cpu_allocated_cost
+- cpu_cost
+- memory_used_cost
+- memory_allocated_cost
+- memory_cost
+- storage_used_cost
+- storage_allocated_cost
+- storage_cost
+- disk_io_cost
+- net_io_cost
+- fixed_compute_1_cost
+- fixed_compute_2_cost
+- fixed_storage_1_cost
+- fixed_storage_2_cost
+- fixed_cost
+- total_cost
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order: 
+- display_range
+- vm_name
+- owner_name
+- cpu_used_cost
+- cpu_allocated_cost
+- cpu_cost
+- memory_used_cost
+- memory_allocated_cost
+- memory_cost
+- storage_used_cost
+- storage_allocated_cost
+- storage_cost
+- disk_io_cost
+- net_io_cost
+- fixed_compute_1_cost
+- fixed_compute_2_cost
+- fixed_storage_1_cost
+- fixed_storage_2_cost
+- fixed_cost
+- total_cost
+
+# Column formats, in order
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- :currency_precision_2
+
+# Column titles, in order
+headers:
+- Date Range
+- VM Name
+- Owner
+- CPU Used
+- CPU Allocated
+- CPU
+- Memory Used
+- Memory Allocated
+- Memory
+- Storage Used
+- Storage Allocated
+- Storage
+- Disk I/O
+- Network I/O
+- Fixed Compute Cost 1
+- Fixed Compute Cost 2
+- Fixed Storage Cost 1
+- Fixed Storage Cost 2
+- Fixed Cost
+- Total
+
+# Condition expression for search filtering
+conditions: 
+
+# Order string for the SQL query
+order: ascending
+
+# Columns to sort the report on, in order
+sortby:
+- start_date
+- vm_name
+
+# Group rows (y=yes,n=no,c=count)
+group: y
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 
+
+template_type: report
+
+col_options:
+  cpu_cost:
+    :grouping:
+    - :total
+  memory_cost:
+    :grouping:
+    - :total
+  storage_cost:
+    :grouping:
+    - :total
+  disk_io_cost:
+    :grouping:
+    - :total
+  net_io_cost:
+    :grouping:
+    - :total
+  fixed_cost:
+    :grouping:
+    - :total
+  total_cost:
+    :grouping:
+    - :total
+
+rpt_options:
+  :pdf:
+    :page_size: a3

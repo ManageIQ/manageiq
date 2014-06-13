@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: disk_format
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: disk_format
+  - value1:
+      value: /EVMApplications/Provisioning/Dialog/hardware_fields_diskformat/*

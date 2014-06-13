@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Request Denied
+    name: request_denied
+    inherits: 
+    description: 
+  fields:
+  - rel5:
+      value: /Alert/EmailNotifications/${/#miq_request.type}_Denied

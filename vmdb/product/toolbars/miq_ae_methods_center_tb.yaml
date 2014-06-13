@@ -1,0 +1,32 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAeMethod
+:button_groups:
+- :name: miq_ae_method_vmdb
+  :items:
+  - :buttonSelect: miq_ae_method_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: miq_ae_method_new
+      :image: new_method
+      :text: 'Add a New Method'
+      :title: 'Add a New Method'
+    - :button: miq_ae_method_edit
+      :image: edit
+      :text: 'Edit Selected Method'
+      :title: 'Select a single Method to edit'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: miq_ae_method_delete
+      :image: remove
+      :text: 'Remove Methods'
+      :title: 'Remove selected Methods'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to remove the selected Methods?'
+      :enabled: 'false'
+      :onwhen: '1+'

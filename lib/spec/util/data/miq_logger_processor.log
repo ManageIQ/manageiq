@@ -1,0 +1,9 @@
+[----] I, [2011-02-07T17:30:59.744697 #14909:15aee2c37f0c]  INFO -- : MIQ(SQLServer.apply_connection_config) trans_isolation_level: [], lock_timeout: []
+[----] I, [2011-02-07T17:31:05.282104 #4909:03941abd4fe]  INFO -- : MIQ(EmsRefreshWorker) ID [108482], PID [14909], GUID [0461c4a4-32e0-11e0-89ad-0050569a00bb], Zone [WB], Active Roles
+[----] I, [2011-02-07T17:31:05.282996 #14909:15aee2c37f0c]  INFO -- :   :cpu_usage_threshold: 100
+this
+is a
+multiline
+[----] I, [2011-02-07T07:49:16.719656 #23130:15c945a976fc]  INFO -- : Q-task_id([1753657a-3288-11e0-bd88-0050569a00ba]) MIQ(MiqQueue.get)        Message id: [18261690] stale, retrying...
+[----] I, [2011-02-07T10:41:37.668866 #29614:15a82de14700]  INFO -- : Q-task_id([job_dispatcher]) MIQ(MiqQueue.get)        Message id: [18261690] stale, retrying...
+[1234] I, [2011-02-07T17:30:59.744697 #14909:15aee2c37f0c]  INFO -- : MIQ(SQLServer.apply_connection_config) trans_isolation_level: [], lock_timeout: []

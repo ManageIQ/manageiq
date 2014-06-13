@@ -1,0 +1,87 @@
+--- 
+- :description: Default
+  :guid: b47a0ef0-4335-11df-aba8-001d09066d98
+  :rate_type: Compute
+  :default: true
+  :rates:
+    - :description: Used CPU in MHz
+      :group: cpu
+      :source: used
+      :metric: cpu_usagemhz_rate_average
+      :rate: 0.02
+      :per_time: daily
+      :per_unit: megahertz
+    - :description: Allocated CPU Count
+      :group: cpu
+      :source: allocated
+      :metric: derived_vm_numvcpus
+      :rate: 0
+      :per_time: daily
+      :per_unit: cpu
+    - :description: Used Memory in MB
+      :group: memory
+      :source: used
+      :metric: derived_memory_used
+      :rate: 0.02
+      :per_time: daily
+      :per_unit: megabytes
+    - :description: Allocated Memory in MB
+      :group: memory
+      :source: allocated
+      :metric: derived_memory_available
+      :rate: 0
+      :per_time: daily
+      :per_unit: megabytes
+    - :description: Used Network I/O in KBps
+      :group: net_io
+      :source: used
+      :metric: net_usage_rate_average
+      :rate: 0.005
+      :per_time: hourly
+      :per_unit: kbps
+    - :description: Used Disk I/O in KBps
+      :group: disk_io
+      :source: used
+      :metric: disk_usage_rate_average
+      :rate: 0.005
+      :per_time: hourly
+      :per_unit: kbps
+    - :description: Fixed Compute Cost 1
+      :group: fixed
+      :source: compute_1
+      :rate: 0
+      :per_time: daily
+    - :description: Fixed Compute Cost 2
+      :group: fixed
+      :source: compute_2
+      :rate: 0
+      :per_time: monthly
+- :description: Default
+  :guid: 7d7aaf20-5214-11df-a888-001d09066d98
+  :rate_type: Storage
+  :default: true
+  :rates:
+    - :description: Allocated Disk Storage in Bytes
+      :group: storage
+      :source: allocated
+      :metric: derived_vm_allocated_disk_storage
+      :rate: 0
+      :per_time: monthly
+      :per_unit: gigabytes
+    - :description: Used Disk Storage in Bytes
+      :group: storage
+      :source: used
+      :metric: derived_vm_used_disk_storage
+      :rate: 2.0
+      :per_time: monthly
+      :per_unit: gigabytes
+    - :description: Fixed Storage Cost 1
+      :group: fixed
+      :source: storage_1
+      :rate: 0
+      :per_time: daily
+    - :description: Fixed Storage Cost 2
+      :group: fixed
+      :source: storage_2
+      :rate: 0
+      :per_time: monthly

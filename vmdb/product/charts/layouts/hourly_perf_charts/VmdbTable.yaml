@@ -1,0 +1,24 @@
+# VmdbTable Hourly performance chart layouts
+--- 
+- :title: Size
+  :type: Line
+  :columns:
+  - size
+  - wasted_bytes
+  :menu: 
+  :decimals: 2
+  :units: GB
+
+- :title: Rows
+  :type: Line
+  :columns:
+  - rows
+  :menu: 
+
+- :title: Row Activity
+  :type: Line
+  :columns:
+  - rows_inserted
+  - rows_updated
+  - rows_deleted
+  :menu: 

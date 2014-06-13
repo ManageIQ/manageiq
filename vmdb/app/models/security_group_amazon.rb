@@ -1,0 +1,2 @@
+class SecurityGroupAmazon < SecurityGroup
+end

@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: test4
+    inherits: 
+    description: 
+  fields:
+  - rel1:
+      value: miqaedb:///SYSTEM/EVM/AUTOMATE/test2

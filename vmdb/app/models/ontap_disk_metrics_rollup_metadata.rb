@@ -1,0 +1,2 @@
+class OntapDiskMetricsRollupMetadata < StorageMetricsMetadata
+end

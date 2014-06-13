@@ -1,0 +1,45 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: ght_main
+  :items:
+  - :buttonTwoState: view_graph
+    :image: view-graph
+    :title: "Graph View"
+    :url: 'explorer'
+    :url_parms: '?type=graph'
+  - :buttonTwoState: view_hybrid
+    :image: view-hybrid
+    :title: "Hybrid View"
+    :url: 'explorer'
+    :url_parms: '?type=hybrid'
+  - :buttonTwoState: view_tabular
+    :image: view_textual
+    :title: "Tabular View"
+    :url: 'explorer'
+    :url_parms: '?type=tabular'
+- :name: download_main
+  :items:
+  - :buttonSelect: download_choice
+    :image: download
+    :title: "Download"
+    :items:
+    - :button: render_report_txt
+      :image: txt
+#      :text: "Text Download"
+      :title: "Download this report in text format"
+      :url_parms: '?render_type=txt'
+    - :button: render_report_csv
+      :image: csv
+#      :text: "CSV Download"
+      :title: "Download this report in CSV format"
+      :url_parms: '?render_type=csv'
+    - :button: render_report_pdf
+      :image: pdf
+#      :text: "PDF Download"
+      :title: "Download this report in PDF format"
+      :url_parms: '?render_type=pdf'
+
+

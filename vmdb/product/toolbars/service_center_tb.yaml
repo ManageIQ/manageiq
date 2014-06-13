@@ -1,0 +1,59 @@
+#
+# Toolbar config file
+#
+---
+:model: Service
+:button_groups:
+- :name: service_vmdb
+  :items:
+  - :buttonSelect: service_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :onwhen: '1+'
+    :items:
+    - :button: service_edit
+      :image: edit
+      :text: "Edit this Service"
+      :title: "Edit this Service"
+    - :button: service_delete
+      :image: remove
+      :text: Remove Service from the VMDB
+      :title: Remove this Service from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: This Service and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Service?"
+    - :separator:
+    - :button: service_ownership
+      :image: ownership
+      :text: "Set Ownership"
+      :title: "Set Ownership for this Service"
+- :name: service_policy
+  :items:
+  - :buttonSelect: service_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: service_tag
+      :image: tag
+      :text: "Edit Tags"
+      :url_parms: 'main_div'
+      :title: "Edit Tags for this Service"
+- :name: service_lifecycle
+  :items:
+  - :buttonSelect: service_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+#    :enabled: 'false'
+#    :onwhen: '1+'
+    :items:
+    - :button: service_retire
+      :image: retire
+      :text: "Set Retirement Date"
+      :title: "Set Retirement Dates for this Service"
+    - :button: service_retire_now
+      :image: retire_now
+      :text: "Retire this Service"
+      :title: "Retire this Service"
+      :confirm: "Retire this Service?"

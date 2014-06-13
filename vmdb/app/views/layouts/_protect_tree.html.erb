@@ -1,0 +1,17 @@
+<div id="protect_tree_div" style='overflow: auto;'>
+  <div id="<%=session[:tree_name]%>box" style="color:#000;" ></div>
+    <%= render(:partial => "layouts/dynatree",
+          :locals => {
+            :tree_id                      => "#{session[:tree_name]}box",
+            :tree_name                    => session[:tree_name],
+            :json_tree                    => session[:policy_tree],
+            :icon_size                    => @settings[:views][:treesize].to_i,
+            :cfme_no_click                => true,
+            :oncheck                      => "miqOnCheck_Protect",
+            :check_url                    => "/#{request.parameters["controller"]}/protect/",
+            :checkboxes                   => true,
+            :open_close_all_on_dbl_click  => true
+          }
+        )
+    %>
+</div>

@@ -1,0 +1,32 @@
+<div class="maincontent">
+  <%= render :partial => "layouts/flash_msg" %>
+  <dl class="col2">
+    <dd>
+      <%= render :partial => "shared/summary/textual", :locals => { :title => "Properties", :items => textual_group_properties } %>
+      <%= render :partial => "shared/summary/textual", :locals => { :title => "Lifecycle", :items => textual_group_lifecycle } %>
+      <%= render :partial => "shared/summary/textual", :locals => { :title => "Relationships", :items => textual_group_relationships } %>
+    </dd>
+    <dd>
+      <%= render :partial => "shared/summary/textual", :locals => { :title => "Totals for Service VMs", :items => textual_group_vm_totals } %>
+      <%= render :partial => "shared/summary/textual_tags", :locals => { :title => "Smart Management", :items => textual_group_tags } %>
+    </dd>
+  </dl>
+  <dl class="col1">
+    <dd>
+      <fieldset>
+        <p class="legend">VMs</p>
+        <table class="admintable" height="75">
+          <tbody>
+          <tr>
+            <td>
+              <% if @view %>
+                <%= render :partial=>"layouts/gtl", :locals=>{:view=>@view} %>
+              <% end %>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </dd>
+  </dl>
+</div>

@@ -1,0 +1,56 @@
+# OntapLogicalDisk Daily performance chart layouts
+--- 
+- :title: Average Disk Latency (microseconds)
+  :type: Line
+  :columns:
+  - avg_latency
+  - avg_latency_min
+  - avg_latency_max
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+
+- :title: Disk Read Latency (microseconds)
+  :type: Line
+  :columns:
+  - read_latency
+  - read_latency_min
+  - read_latency_max
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+
+- :title: Disk Write Latency (microseconds)
+  :type: Line
+  :columns:
+  - write_latency
+  - write_latency_min
+  - write_latency_max
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+
+- :title: I/O Operations (per second)
+  :type: Line
+  :columns:
+  - total_ops
+  - total_ops_min
+  - total_ops_max
+  :decimals: 1
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+
+- :title: Read Data (bytes per second)
+  :type: Line
+  :columns:
+  - read_data
+  - read_data_min
+  - read_data_max
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+
+- :title: Write Data (bytes per second)
+  :type: Line
+  :columns:
+  - write_data
+  - write_data_min
+  - write_data_max
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day

@@ -1,0 +1,48 @@
+#
+# Toolbar config file
+#
+---
+:model: VdiDesktopPool
+:button_groups:
+- :name: vdi_desktop_pool_vmdb
+  :items:
+  - :buttonSelect: vdi_dektop_pool_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: vdi_desktop_pool_new
+      :image: new
+      :text: 'Add a new #{ui_lookup(:table=>"vdi_desktop_pool")}'
+      :title: 'Add a new #{ui_lookup(:table=>"vdi_desktop_pool")}'
+    - :button: vdi_desktop_pool_edit
+      :image: edit
+      :text: 'Edit the Selected #{ui_lookup(:table=>"vdi_desktop_pool")}'
+      :title: 'Select a single #{ui_lookup(:table=>"vdi_desktop_pool")} to edit'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: vdi_desktop_pool_delete
+      :image: remove
+      :text: 'Remove #{ui_lookup(:tables=>"vdi_desktop_pool")} from the VMDB'
+      :title: 'Remove Selected #{ui_lookup(:tables=>"vdi_desktop_pool")} from the VMDB'
+      :url_parms: 'main_div'
+      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"vdi_desktop_pool")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"vdi_desktop_pool")}?'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: vdi_desktop_pool_user_assign
+      :image: user_assignment
+      :text: 'Assign #{ui_lookup(:tables=>"vdi_user")} to selected #{ui_lookup(:tables=>"vdi_desktop_pool")}'
+      :title: 'Assign #{ui_lookup(:tables=>"vdi_user")} to selected #{ui_lookup(:tables=>"vdi_desktop_pool")}'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: vdi_desktop_pool_user_unassign
+      :image: user_unassignment
+      :text: 'Un-Assign selected #{ui_lookup(:tables=>"vdi_desktop_pool")}'
+      :title: 'Un-Assign selected #{ui_lookup(:tables=>"vdi_desktop_pool")}'
+      :confirm: 'Warning: Are you sure you want to remove VDI Users from selected #{ui_lookup(:tables=>"vdi_desktop_pool")}?'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

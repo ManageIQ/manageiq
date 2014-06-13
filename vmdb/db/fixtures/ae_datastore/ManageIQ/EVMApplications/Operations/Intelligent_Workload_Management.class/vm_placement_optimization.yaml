@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM_Placement_Optimization
+    name: VM_Placement_Optimization
+    inherits: 
+    description: 
+  fields:
+  - method1:
+      value: VM_Placement_Optimization

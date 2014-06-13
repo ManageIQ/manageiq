@@ -1,0 +1,36 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqRequest
+:button_groups:
+- :name: miq_request_editing
+  :items:
+  - :button: miq_request_copy
+    :image: copy
+    :title: "Copy original Request"
+  - :button: miq_request_edit
+    :image: edit
+    :title: Edit the original Request
+  - :button: miq_request_delete
+    :image: delete
+    :title: "Delete this Request"
+    :url_parms: '&refresh=y'
+    :confirm: "Are you sure you want to delete this Request?"
+  - :button: miq_request_reload
+    :image: reload
+    :text: Reload
+    :title: Reload the current display
+    :url_parms: '&display=miq_provisions'
+- :name: miq_request_approve
+  :items:
+  - :button: miq_request_approve
+    :image: approve
+    :title: "Approve this Request"
+    :url: '/stamp'
+    :url_parms: '?typ=a'
+  - :button: miq_request_deny
+    :image: deny
+    :title: "Deny this Request"
+    :url: '/stamp'
+    :url_parms: '?typ=d'

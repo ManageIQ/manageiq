@@ -1,0 +1,14 @@
+--- 
+relationships_001: 
+  created_on: 2007-07-31 19:38:58
+  operation_type: 
+  child_type: Vm
+  updated_on: 2007-07-31 19:38:58
+  parent_type: Vm
+  id: "1"
+  relationship: genealogy
+  operation: 
+  user_id: system
+  child_id: "3"
+  parent_id: "1"
+

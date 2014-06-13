@@ -1,0 +1,29 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqProxy
+:button_groups:
+- :name: miq_proxy_editing
+  :items:
+  - :button: miq_proxy_new
+    :image: new
+    :url: '/new'
+    :title: "Add a new SmartProxy"
+  - :button: proxy_edit
+    :image: edit
+    :title: Edit the selected SmartProxy
+    :url_parms: 'main_div'
+    :enabled: 'false'
+    :onwhen: '1'
+- :name: miq_proxy_deploy
+  :items:
+  - :button: miq_proxy_deploy
+    :image: install007
+    :title: "Deploy to the selected SmartProxy"
+    :url_parms: 'main_div'
+    :enabled: 'false'
+    :onwhen: '1'
+
+
+

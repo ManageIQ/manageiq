@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Alert Cluster Workload Management
+    name: Alert_Cluster_Workload_Management
+    inherits: 
+    description: 
+  fields:
+  - rel5:
+      value: /EVMApplications/Operations/Intelligent_Workload_Management/Cluster_Workload_Management

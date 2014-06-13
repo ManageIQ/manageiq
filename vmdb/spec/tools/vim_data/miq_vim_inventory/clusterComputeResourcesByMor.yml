@@ -1,0 +1,67 @@
+--- 
+? !str:VimString 
+  str: domain-c871
+  "@vimType": :ClusterComputeResource
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Testing-Production Cluster
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  resourcePool: !str:VimString 
+    str: resgroup-872
+    "@vimType": :ResourcePool
+    "@xsiType": :ManagedObjectReference
+  parent: !str:VimString 
+    str: group-h4
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: domain-c871
+    "@vimType": :ClusterComputeResource
+    "@xsiType": :ManagedObjectReference
+  host: !seq:VimArray 
+    - !str:VimString 
+      str: host-891
+      "@vimType": :HostSystem
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: host-9
+      "@vimType": :HostSystem
+      "@xsiType": :ManagedObjectReference
+  configuration: !map:VimHash 
+    dasConfig: !map:VimHash 
+      enabled: !str:VimString 
+        str: "false"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      admissionControlEnabled: !str:VimString 
+        str: "true"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      failoverLevel: !str:VimString 
+        str: "1"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      __iv__@vimType: 
+      __iv__@xsiType: :ClusterDasConfigInfo
+    drsConfig: !map:VimHash 
+      defaultVmBehavior: !str:VimString 
+        str: fullyAutomated
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      vmotionRate: !str:VimString 
+        str: "3"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      enabled: !str:VimString 
+        str: "true"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      __iv__@vimType: 
+      __iv__@xsiType: :ClusterDrsConfigInfo
+    __iv__@vimType: 
+    __iv__@xsiType: :ClusterConfigInfo
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+

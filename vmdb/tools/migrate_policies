@@ -1,0 +1,110 @@
+CLEAN_ATTRS = [
+  "id", 
+  "guid", 
+  "created_on", 
+  "updated_on", 
+  "filename", 
+  "file_mtime", 
+  "resource_type", 
+  "resource_id", 
+  "policy_id"
+]
+
+def clean_attrs(attrs)
+  CLEAN_ATTRS.each do |a|
+    attrs.delete(a)
+  end
+  return attrs
+end
+
+puts "[#{Time.now}] Policy migration starting..."
+puts
+
+# Cleanup for previous run
+puts "[#{Time.now}] Removing previously migrated policies..."
+MiqPolicy.destroy_all
+MiqPolicySet.destroy_all
+# Remove policy assignments refrencing new models
+Tag.destroy_all(["name like ?", "/miq_policy/assignment/miq_policy_set/%"])
+#
+puts "[#{Time.now}] Removing previously migrated policies... Complete"
+puts
+
+puts "[#{Time.now}] Removing previously migrated conditions..."
+guid_re = /^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/
+Condition.find(:all).each {|c| c.destroy unless (c.name =~ guid_re).nil?}
+puts "[#{Time.now}] Removing previously migrated conditions... Complete"
+puts
+
+puts "[#{Time.now}] Migrating policies..."
+Policy.find(:all).each do |p|
+  puts "[#{Time.now}] Create: MiqPolicy: [#{p.description}]"
+  npolicy = MiqPolicy.create(clean_attrs(p.attributes))
+  
+  # p.conditions.each do |c|
+  #   next if c.name == "Always"
+  #   
+  #   c_attrs = c.attributes
+  #   c_attrs.delete("name")
+  #   puts "[#{Time.now}] Create: Condition: [#{c.description}]"
+  #   ncond = Condition.new(clean_attrs(c_attrs))
+  #   # ncond.name = "#{ncond.name}_for_#{npolicy.name}"
+  #   npolicy.conditions << ncond
+  # end
+  npolicy.conditions = p.conditions.collect {|c| c unless c.name == "Always"}.compact
+
+  event = p.events.first
+  puts "[#{Time.now}] Add:    Event:     [#{event.description}]"
+  p.policy_contents.each do |a|
+    next unless a.resource.kind_of?(MiqAction)
+    
+    puts "[#{Time.now}] Add:    Action:    [#{a.resource.description}]"
+    actions = [a.attributes]
+    if a.qualifier == "both"
+      a.qualifier = "success"
+      actions.push(a.attributes.merge("qualifier" => "failure"))
+    end
+    actions.each do |action|
+      nevent = MiqPolicyContent.new(clean_attrs(a.attributes))
+      nevent.miq_event_id = event.id
+      nevent.miq_action_id = a.resource.id
+      npolicy.miq_policy_contents << nevent
+    end
+ end
+  
+  npolicy.save(:validate => false)
+  
+  puts
+end
+puts "[#{Time.now}] Migrating policies... Complete"
+
+puts
+puts "[#{Time.now}] Migrating policy profiles and assignments..."
+PolicySet.find(:all).each do |ps|
+  ps_attrs = ps.attributes
+  ps_attrs.delete("name")
+  puts "[#{Time.now}] Create: Profile:   [#{ps.description}]"
+  nps = MiqPolicySet.new(clean_attrs(ps_attrs))
+  nps.save!
+  
+  ps.members.each do |m|
+    # puts "Name: #{m.name}"
+    nm = MiqPolicy.find_by_name(m.name)
+    nps.add_member(nm)
+  end
+  
+  tag = Tag.find_by_name("/policy/assignment/policy_set/#{ps.id}")
+  if tag
+    Tagging.find_all_by_tag_id(tag.id).each do |tg|
+      resource = tg.taggable
+      ntag = "miq_policy_set/#{nps.id}"
+
+      resource.tag_with(ntag, :ns => "/miq_policy/assignment")
+      puts "[#{Time.now}] Assign: [#{ps.name}] to [#{resource.class}:#{resource.name}]"
+    end
+  end
+end
+puts "[#{Time.now}] Migrating policy profiles and assignments... Complete"
+
+puts "\n[#{Time.now}] Policy migration starting... Complete"
+

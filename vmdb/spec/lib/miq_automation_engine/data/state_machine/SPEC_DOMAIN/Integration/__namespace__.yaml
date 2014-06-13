@@ -1,0 +1,11 @@
+---
+object_type: namespace
+version: 1.0
+object:
+  attributes:
+    name: Integration
+    description: 
+    display_name: 
+    system: 
+    priority: 
+    enabled: 

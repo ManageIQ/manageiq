@@ -1,0 +1,93 @@
+TODO:
+
+Product
+	Convert Bill's VMworld Automation Demo to use Automation Engine
+	Revamp VM Analysis to be driven by Automation Engine
+	Leverage Automation Engine to derive scanning profiles
+
+Engine
+	Relationships
+		Association
+		Instantiation (Virtual Classes CANNOT have Instances)
+	
+		Edge Conditions
+			Process .default Instance (virtual instance constructed from the schema defaults)
+			Process Missing_Class
+	
+	Workspace
+		Access objects by Name
+			Substitution
+			Method Access --> $evm.object()
+		Object Visibility
+
+	Methods (Synchronous vs. Asynchronous; External vs. Inline)
+		Method Services
+		===============
+	
+		# Logging
+		EVMAUDIT
+	
+		# VMDB Accessors
+		Add VMDB Automation Services (internal objects matching main CIs in VMDB for methods to use)
+		VMDBGET
+		VMDBSET?
+	
+		# Virtual Center Actions (to replace Bill's scripts)
+		Add Automation Services to replace Bill's use of the VMware Perl Library
+		
+		
+Discovery
+
+    Args as Hash
+    Pass Wrapper Objects via URI
+    Method Catalog
+    Bootstrap via PROCESS class
+    Multi-Instance Naming (subst) and Reference
+    Default DisplayName is Ruby Humanized Name
+    Add operation to aggregation attributes
+	
+Datastore
+	Validating Import
+	Import/Export via YAML
+	Add support for system (read-only) fields
+	Add support for Value Types other than String (e.g. boolean, integer, timestamp, date)
+
+
+
+========================================================================================
+
+DONE:
+
+
+Relationships
+	Inheritance
+	Aggregation a.k.a Composition
+	Edge Conditions
+		Process Missing_Instance (done via .missing)
+	
+Methods (Synchronous vs. Asynchronous; External vs. Inline)
+	# Environment (SANDBOX)
+		Initialized Data
+			EVM Server
+			Workspace
+		Separate Process
+			druby
+			web services	
+	
+	# Success/Stop/Abort Indication 
+		0	=> ok
+		4	=> warn
+		8	=> stop
+		16	=> abort
+
+	EVM Services
+	==============
+	
+	# Logging
+	EVMLOG
+	
+	# Workspace Accessors
+	EVMGETOBJECT ==> "pseudo-handle" to an Object in the Workspace
+	EVMGET (from Workspace by Name)
+	EVMSET (set attribute in object in the workspace)
+	

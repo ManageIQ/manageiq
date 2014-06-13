@@ -1,0 +1,29 @@
+#
+# Toolbar config file
+#
+---
+:model: MetricRollup
+:button_groups:
+- :name: usage_downloading
+  :items:
+  - :button: usage_txt
+    :image: txt
+    :title: "Download this report data in text format"
+    :url: '/usage_download'
+    :url_parms: '?typ=txt'
+  - :button: usage_csv
+    :image: csv
+    :title: "Download this report data in CSV format"
+    :url: '/usage_download'
+    :url_parms: '?typ=csv'
+  - :button: usage_pdf
+    :image: pdf
+    :title: "Download this report data in PDF format"
+    :url: '/usage_download'
+    :url_parms: '?typ=pdf'
+  - :button: usage_reportonly
+    :image: reportonly
+    :title: "Show full screen report"
+    :popup: true
+    :url_parms: 'popup_only'
+    :url: '/usage_report_only'

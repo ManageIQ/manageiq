@@ -1,0 +1,53 @@
+<div id="tab_div">
+  <% if @rss_feeds.empty? %>
+    <div class="alert alert-warning">
+      <span class="pficon-layered">
+        <span class="pficon pficon-warning-triangle"></span>
+        <span class="pficon pficon-warning-exclamation"></span>
+      </span>
+      <strong>No RSS Feeds Found</strong>
+    </div>
+  <% else %>
+    <table class="style3">
+      <thead>
+        <tr>
+          <th colspan="4" class="special">
+            Admin Role Filter:
+            <%= select_tag('role',
+              options_for_select(
+                @rss_roles, @rss_role),
+                :multiple                   => false,
+                "data-miq_observe" => {:url => url_for(:action => 'role_selected')}.to_json)
+            %>
+            <%= javascript_tag("$('role').focus()") %>
+          </th>
+        </tr>
+        <tr>
+          <th class="icon"></th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Feed URL</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% rowIndex = 0 %>
+          <% for feed in @rss_feeds %>
+            <tr class="<%= cycle('row0', 'row1') %>">
+              <td class="icon" onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+                <ul class="icons">
+                  <li>
+                    <%= link_to("", feed.link, :title => "Subscribe to this feed", :class => "fa fa-rss") %>
+                  </li>
+                </ul>
+              </td>
+              <td> <%= h(feed.title) %> </td>
+              <td> <%= h(feed.description) %> </td>
+              <td> <%= h(feed.url(request.env["HTTP_HOST"])) %> </td>
+            </tr>
+            <% rowIndex = rowIndex + 1 %>
+          <% end %>
+        </tr>
+      </tbody>
+    </table>
+  <% end %>
+</div>

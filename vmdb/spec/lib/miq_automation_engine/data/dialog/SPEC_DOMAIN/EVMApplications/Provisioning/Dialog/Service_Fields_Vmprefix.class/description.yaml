@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: description
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: description
+  - datatypechange:
+      value: /EVMApplications/Provisioning/Dialog/Descriptions/Vmnameprefixsuffix

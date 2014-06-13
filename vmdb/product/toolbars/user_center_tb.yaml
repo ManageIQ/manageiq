@@ -1,0 +1,38 @@
+#
+# Toolbar config file
+#
+---
+:model: User
+:button_groups:
+- :name: user_vmdb
+  :items:
+  - :buttonSelect: user_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: rbac_user_edit
+      :image: edit
+      :text: "Edit this User"
+      :title: "Edit this User"
+    - :button: rbac_user_copy
+      :image: copy
+      :text: "Copy this User to a new User"
+      :title: "Copy this User to a new User"
+    - :button: rbac_user_delete
+      :image: delete
+      :text: "Delete this User"
+      :title: "Delete this User"
+      :url_parms: '&refresh=y'
+      :confirm: "Are you sure you want to delete this User?"
+- :name: rbac_user_policy
+  :items:
+  - :buttonSelect: rbac_user_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: rbac_user_tags_edit
+      :image: tag
+      :text: "Edit '#{session[:customer_name]}' Tags for this User"
+      :title: "Edit '#{session[:customer_name]}' Tags for this User"

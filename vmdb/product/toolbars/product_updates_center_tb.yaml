@@ -1,0 +1,21 @@
+#
+# Toolbar config file
+#
+---
+:model: ProductUpdate
+:button_groups:
+- :name: host_vmdb
+  :items:
+  - :buttonSelect: host_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: delete_build
+      :image: remove
+      :text: Delete selected Product Updates
+      :title: Select one or more Product Updates to delete
+      :url_parms: 'main_div'
+      :confirm: "Delete all selected Product Updates?"
+      :enabled: 'false'
+      :onwhen: '1+'

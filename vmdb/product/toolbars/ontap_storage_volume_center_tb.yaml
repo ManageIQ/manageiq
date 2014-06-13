@@ -1,0 +1,29 @@
+#
+# Toolbar config file
+#
+---
+:model: OntapStorageVolume
+:button_groups:
+- :name: ontap_storage_volume_policy
+  :items:
+  - :buttonSelect: ontap_storage_volume_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: ontap_storage_volume_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Volume"
+- :name: ontap_storage_volume_monitoring
+  :items:
+  - :buttonSelect: ontap_storage_volume_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: ontap_storage_volume_statistics
+      :image: statistics
+      :text: "Utilization"
+      :title: "Show Utilization for this Storage System"
+      :url: '/show_statistics'

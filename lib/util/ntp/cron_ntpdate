@@ -1,0 +1,41 @@
+#!/bin/bash
+
+RUN_NTPDATE_CMD=/var/www/miq/lib/util/ntp/run_ntpdate
+LOG=/var/www/miq/vmdb/log/miq_ntpdate.log
+EVM_LOG=/var/www/miq/vmdb/log/evm.log
+
+# If no arguments passed, log the usage
+if [ -z "$#" ]; then
+  echo -e "usage:	cron_ntpdate.sh interval\n interval (How often ntpdate should be run in minutes)\n"
+  exit 1
+fi
+
+# temporary files
+OLD_CRONTAB=/tmp/old_crontab
+NEW_CRONTAB=/tmp/new_crontab
+
+# Write the current crontab to a temp file
+`crontab -l > $OLD_CRONTAB`
+if [ "$?" -eq 0 ]; then
+  echo "`date -u` MIQ(cron_ntpdate) crontab before: `cat $OLD_CRONTAB`\n" >> $LOG
+  #   Grep all lines that do not contain the "ntpdate" string into a new file
+  cat $OLD_CRONTAB | grep -v "ntpdate" > $NEW_CRONTAB
+else
+  echo "`date -u` MIQ(cron_ntpdate) No crontab before" >> $LOG
+fi
+
+# We are passed the how often the cron command should run and the time offset threshold
+INTERVAL=$1
+
+#   Add the run_ntpdate.sh line to the new file
+echo "*/$INTERVAL * * * * $RUN_NTPDATE_CMD
+@reboot $RUN_NTPDATE_CMD" >> $NEW_CRONTAB
+
+echo "`date -u` MIQ(cron_ntpdate) NEW_CRONTAB: `cat $NEW_CRONTAB`\n" >> $LOG
+#   Update the crontab with the new crontab
+`crontab $NEW_CRONTAB` >> $LOG 2>&1
+
+rm -f $OLD_CRONTAB
+rm -f $NEW_CRONTAB
+
+echo "`date -u` MIQ(cron_ntpdate) crontab after: `crontab -l`\n" >> $LOG

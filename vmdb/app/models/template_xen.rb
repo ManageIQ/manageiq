@@ -1,0 +1,2 @@
+class TemplateXen < TemplateInfra
+end

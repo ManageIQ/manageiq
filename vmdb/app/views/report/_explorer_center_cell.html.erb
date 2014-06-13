@@ -1,0 +1,14 @@
+<%# These are the initial divs that will go inside center_cell_div %>
+<div id="taskbar_div">
+	<%= render :partial => "layouts/x_taskbar" %>
+</div>
+
+<div id="main_div" style="width:100%;height:100%;overflow:auto;">
+  <% @lists.each do |list| %>
+    <%= render :partial => list %>
+  <% end %>
+</div>
+
+<div id="paging_div">
+  <%= render(:partial => '/layouts/x_pagingcontrols') %>
+</div>

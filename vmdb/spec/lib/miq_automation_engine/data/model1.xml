@@ -1,0 +1,22 @@
+<MiqAeDatastore version='1.0'>
+	<MiqAeClass name="AUTOMATE" namespace="SYSTEM/EVM">
+		<MiqAeSchema>
+			<MiqAeField name="discover" aetype="relationship" default_value="" display_name="Discovery Relationships"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="aevent">
+			<MiqAeField name="discover">//system/evm/discover/${//workspace/aevent/type}</MiqAeField>
+		</MiqAeInstance>
+	</MiqAeClass>
+	<MiqAeClass name="DISCOVER" namespace="SYSTEM/EVM">
+		<MiqAeSchema>
+			<MiqAeField name="os" aetype="attribute" default_value=""/>
+		</MiqAeSchema>
+		<MiqAeInstance name="vm">
+			<MiqAeField name="os">this should be a method to get the OS if it is not in the inbound object</MiqAeField>
+		</MiqAeInstance>
+		<MiqAeInstance name="host">
+			<MiqAeField name="os" value="sometimes"/>
+		</MiqAeInstance>
+	</MiqAeClass>
+</MiqAeDatastore>
+	

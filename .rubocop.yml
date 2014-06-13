@@ -1,0 +1,53 @@
+#
+# Overrides
+#
+AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+CollectionMethods:
+  PreferredMethods:
+    find: detect
+    find_all: select
+    map: collect
+    reduce: inject
+GlobalVars:
+  AllowedVariables:
+  # Loggers
+  - $api_log
+  - $aws_log
+  - $fog_log
+  - $log
+  - $miq_ae_logger
+  - $rails_log
+  - $rhevm_log
+  - $scvmm_log
+  - $vim_log
+  # In Automate methods
+  - $evm
+HashSyntax:
+  EnforcedStyle: hash_rockets
+LineLength:
+  Max: 120
+MethodLength:
+  Max: 25
+RedundantReturn:
+  AllowMultipleReturnValues: true
+SignalException:
+  EnforcedStyle: only_raise
+SingleLineMethods:
+  AllowIfMethodIsEmpty: false
+SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+#
+# Enabled/Disabled
+#
+Documentation:
+  Enabled: false
+Encoding:
+  Enabled: false
+SingleLineBlockParams:
+  Enabled: false
+StringLiterals:
+  Enabled: false
+TrailingComma:
+  Enabled: false

@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: check_unregistered_from_vc
+    display_name: CheckUnregisteredFromVC
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []

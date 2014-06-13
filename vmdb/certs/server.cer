@@ -1,0 +1,62 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1 (0x1)
+        Signature Algorithm: md5WithRSAEncryption
+        Issuer: C=US, O=ManageIQ, OU=Licensing, CN=ca
+        Validity
+            Not Before: Apr 13 21:47:19 2008 GMT
+            Not After : Apr 11 21:47:19 2018 GMT
+        Subject: C=US, O=ManageIQ, OU=Licensing, CN=server
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:bb:cb:a7:6b:1f:49:07:6e:73:38:c4:4c:0c:ec:
+                    b6:e4:31:39:13:0c:5d:c2:78:09:d7:60:d4:38:93:
+                    c8:a5:f3:10:97:54:09:4e:0b:df:70:1d:6c:56:96:
+                    34:7d:89:4f:86:75:8c:3b:38:33:93:98:c6:20:b6:
+                    0b:45:49:eb:a6:bd:5f:26:5b:e8:a2:b7:20:76:f0:
+                    99:4b:60:18:81:f3:80:bf:04:e7:2e:ea:20:37:0b:
+                    71:36:c3:07:6b:04:e1:f9:c3:9d:df:5e:8c:bf:7e:
+                    0c:d2:fa:43:39:92:73:d2:09:95:03:62:4c:2a:b9:
+                    9e:2e:60:ef:06:4f:b4:9c:a7
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                ManageIQ Generated Certificate
+            X509v3 Subject Key Identifier: 
+                FB:F1:0C:9D:7B:C8:AB:10:DF:FB:F4:C0:9F:BC:E5:4D:52:91:E8:B7
+            X509v3 Authority Key Identifier: 
+                keyid:62:17:64:0B:95:FF:25:5D:D8:07:E2:DD:A0:79:DE:B5:F5:A1:33:C0
+                DirName:/C=US/O=ManageIQ/OU=Licensing/CN=ca
+                serial:96:54:81:56:5E:AE:6F:21
+
+    Signature Algorithm: md5WithRSAEncryption
+        18:29:a8:06:57:5b:d0:9d:29:78:9e:2d:12:17:65:3d:d3:10:
+        ce:ff:c7:a9:43:53:85:6c:37:d0:70:56:b1:cc:e6:6e:98:5a:
+        41:54:9c:c1:6b:82:6b:6d:93:36:cc:c7:6e:c5:5e:f8:e9:b2:
+        fe:57:a3:b5:d4:35:07:30:a4:3e:c3:25:4f:df:8c:6a:09:57:
+        35:dc:a9:04:db:7d:99:63:71:db:67:a3:da:94:41:ee:3d:5b:
+        b6:a1:46:23:05:62:3d:77:05:c7:09:ae:58:cc:4f:cd:8c:9e:
+        4c:5d:66:50:70:6a:db:73:cf:85:ee:18:4b:dd:f9:34:e1:c0:
+        4c:0c
+-----BEGIN CERTIFICATE-----
+MIICzDCCAjWgAwIBAgIBATANBgkqhkiG9w0BAQQFADBBMQswCQYDVQQGEwJVUzER
+MA8GA1UEChMITWFuYWdlSVExEjAQBgNVBAsTCUxpY2Vuc2luZzELMAkGA1UEAxMC
+Y2EwHhcNMDgwNDEzMjE0NzE5WhcNMTgwNDExMjE0NzE5WjBFMQswCQYDVQQGEwJV
+UzERMA8GA1UEChMITWFuYWdlSVExEjAQBgNVBAsTCUxpY2Vuc2luZzEPMA0GA1UE
+AxMGc2VydmVyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7y6drH0kHbnM4
+xEwM7LbkMTkTDF3CeAnXYNQ4k8il8xCXVAlOC99wHWxWljR9iU+GdYw7ODOTmMYg
+tgtFSeumvV8mW+iityB28JlLYBiB84C/BOcu6iA3C3E2wwdrBOH5w53fXoy/fgzS
++kM5knPSCZUDYkwquZ4uYO8GT7ScpwIDAQABo4HPMIHMMAkGA1UdEwQCMAAwLQYJ
+YIZIAYb4QgENBCAWHk1hbmFnZUlRIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNV
+HQ4EFgQU+/EMnXvIqxDf+/TAn7zlTVKR6LcwcQYDVR0jBGowaIAUYhdkC5X/JV3Y
+B+LdoHnetfWhM8ChRaRDMEExCzAJBgNVBAYTAlVTMREwDwYDVQQKEwhNYW5hZ2VJ
+UTESMBAGA1UECxMJTGljZW5zaW5nMQswCQYDVQQDEwJjYYIJAJZUgVZerm8hMA0G
+CSqGSIb3DQEBBAUAA4GBABgpqAZXW9CdKXieLRIXZT3TEM7/x6lDU4VsN9BwVrHM
+5m6YWkFUnMFrgmttkzbMx27FXvjpsv5Xo7XUNQcwpD7DJU/fjGoJVzXcqQTbfZlj
+cdtno9qUQe49W7ahRiMFYj13BccJrljMT82MnkxdZlBwattzz4XuGEvd+TThwEwM
+-----END CERTIFICATE-----

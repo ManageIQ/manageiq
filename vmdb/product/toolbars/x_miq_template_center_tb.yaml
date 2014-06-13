@@ -1,0 +1,135 @@
+#
+# Toolbar config file
+#
+---
+:model: Template
+:button_groups:
+- :name: miq_template_vmdb
+  :items:
+  - :buttonSelect: miq_template_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: miq_template_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power States"
+      :title: "Refresh relationships and power states for all items related to this Template"
+      :confirm: "Refresh relationships and power states for all items related to this Template?"
+    - :button: miq_template_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on this Template"
+      :confirm: "Perform SmartState Analysis on this Template?"
+    - :separator:
+    - :button: miq_template_edit
+      :image: edit
+      :text: "Edit this Template"
+      :title: "Edit this Template"
+#      :url: '/edit'
+    - :button: miq_template_ownership
+      :image: ownership
+      :text: "Set Ownership"
+      :title: "Set Ownership for this Template"
+    - :button: miq_template_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this Template from the VMDB"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Template and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Template?"
+- :name: miq_template_policy
+  :items:
+  - :buttonSelect: miq_template_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: miq_template_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for this Template"
+    - :button: miq_template_policy_sim
+      :image: vm_policy_sim
+      :text: "Policy Simulation"
+      :title: "View Policy Simulation for this Template"
+    - :button: miq_template_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Template"
+    - :button: miq_template_check_compliance
+      :image: compliance
+      :text: "Check Compliance of Last Known Configuration"
+      :title: "Check Compliance of the last known configuration for this Template"
+      :confirm: "Initiate Check Compliance of the last known configuration for this Template?"
+- :name: miq_template_lifecycle
+  :items:
+  - :buttonSelect: miq_template_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+#    :enabled: 'false'
+#    :onwhen: '1+'
+    :items:
+    - :button: miq_template_clone
+      :image: clone
+      :text: "Clone this Template"
+      :title: "Clone this Template"
+- :name: miq_template_monitoring
+  :items:
+  - :buttonSelect: miq_template_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: miq_template_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Template"
+#      :url: '/show'
+      :url_parms: '?display=performance'
+    - :button: miq_template_timeline
+      :image: timeline
+      :text: "Timelines"
+      :title: "Show Timelines for this Template"
+#     :url: '/show'
+      :url_parms: '?display=timeline'
+- :name: snapshot_tasks
+  :items:
+  - :button: miq_template_snapshot_add
+    :image: new
+    :title: "Create a new snapshot for this Template"
+#    :url: '/snap'
+    :onwhen: '1'
+  - :buttonSelect: miq_template_delete_snap_choice
+    :image: delete_group
+    :title: "Delete Snapshots"
+    :items:
+    - :button: miq_template_snapshot_delete
+      :image: delete
+      :text: "Delete Selected Snapshot"
+      :title: "Delete Selected Snapshot"
+      :confirm: 'The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?'
+      :url_parms: 'main_div'
+      :onwhen: '1'
+    - :button: miq_template_snapshot_delete_all
+      :image: delete
+      :text: "Delete All Existing Snapshots"
+      :title: "Delete All Existing Snapshots"
+      :confirm: 'Delete all of this Templates existing snapshots?'
+  - :button: miq_template_snapshot_revert
+    :image: revert
+    :title: "Revert to selected snapshot"
+    :confirm: 'This Template will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?'
+    :onwhen: '1'
+- :name: vmtree_tasks
+  :items:
+  - :button: miq_template_tag
+    :image: tag
+    :title: "Edit Tags for this Template"
+  - :button: miq_template_compare
+    :image: compare
+    :title: "Compare selected Templates"
+    :url_parms: 'main_div'
+    :enabled: 'false'
+    :onwhen: '2+'
+  

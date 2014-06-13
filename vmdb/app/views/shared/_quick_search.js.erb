@@ -1,0 +1,23 @@
+<%
+sf_node            = options[:sf_node]
+button_vis         = options[:miq_button_visibility]
+hide_show_elements = options[:hide_show_elements]
+
+unless hide_show_elements.blank?
+  hide_show_elements.each do |el, h_s| %>
+    <%= set_element_visible(el, h_s) %><%
+  end
+end
+
+if sf_node %> <%# Select, and focus node in current tree %>
+  if (typeof <%= x_active_tree %> == 'undefined') {  <%# using dynatree if dhtmlxtree object is undefined %>
+    cfmeDynatree_activateNodeSilently('<%= x_active_tree %>', '<%= sf_node %>');
+  } else {
+    <%= x_active_tree.to_s %>.selectItem('<%= sf_node %>', false);
+    <%= x_active_tree.to_s %>.focusItem('<%= sf_node %>');
+  }
+<% end
+
+unless button_vis.nil? %>
+  <%= javascript_for_miq_button_visibility(button_vis) %>
+<% end %>

@@ -1,0 +1,30 @@
+<%# if dialogs is selected %>
+<% if @dialog %>
+	<% unless @edit %>
+	<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+
+		<fieldset>
+			<p class="legend">Basic Information</p>
+			<table class="style1">
+				<tbody>
+					<tr>
+						<td class="key">Name</td>
+						<td><%= h(@dialog.name) %></td>
+					</tr>
+					<tr>
+						<td class="key">Description</td>
+						<td><%= h(@dialog.description) %></td>
+					</tr>
+					<tr>
+						<td class="key">Content</td>
+						<td><%= text_area_tag("script", h(@dialog.content.to_yaml), :readonly=>"readonly", :style=>"width:600px;height:350px;") %></td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+
+	<% else %>
+		<%= render(:partial=>"old_dialogs_form") %>
+	<% end %>
+<% end %>
+

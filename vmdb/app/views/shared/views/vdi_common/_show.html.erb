@@ -1,0 +1,13 @@
+<div id="main_div">
+	<% if @showtype == "vdi_sessions" %>
+		<%= render(:partial=>"layouts/gtl", :locals=>{:action_url=>@lastaction}) %>
+	<% elsif @showtype == "vdi_session_item"%>
+			<%= render(:partial=>"layouts/#{@showtype}") %>
+	<% elsif @display == "main" %>
+		<%= render(:partial=>@showtype) %>
+	<% elsif @showtype == "download_pdf" %>
+		<%= render(:partial => "layouts/show_pdf") %>
+	<% else %>
+		<%= render(:partial => "layouts/gtl", :locals=>{:action_url=>"show/#{@record.id.to_s}"}) %>
+	<% end %>
+</div>

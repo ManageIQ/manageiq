@@ -1,0 +1,39 @@
+<div id="rsop_options_div" style="width:100%;height:100%;overflow:auto">
+  <%= render :partial => "rsop_form" %>
+</div>
+<div id="left_cell_bottom" align="center">
+  <div id="form_buttons_on" style="display:<%= session[:changed] ? "" : "none" %>;">
+    <ul id="form_buttons">
+      <li>
+        <%= link_to(image_tag("/images/formbuttons/submit.png", :border=>"0", :class=>"button", :alt=>"Submit Policy Simulation for the selected VMs"),
+                    {:action=>"rsop", :button=>"submit"},
+                    "data-miq_sparkle_on" => true,
+                    :remote=>true,
+                    :title=>"Submit Policy Simulation for the selected VMs") %>
+      </li>
+      <li>
+        <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button", :alt=>"Reset all Policy Simulation options"),
+                    {:action=>"rsop", :button=>"reset"},
+                    "data-miq_sparkle_on" => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote=>true,
+                    :title=>"Reset all Policy Simulation options") %>
+      </li>
+    </ul>
+  </div>
+  <div id="form_buttons_off" style="display:<%= session[:changed] ? "none" : "" %>;">
+    <ul id="form_buttons">
+      <li>
+        <%= image_tag("/images/formbuttons/submit.png",	:class=>"dimmed", :title=>"Select a VM to Submit the Simulation Options") %>
+      </li>
+      <li>
+        <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button", :alt=>"Reset all Policy Simulation options"),
+                    {:action=>"rsop", :button=>"reset"},
+                    "data-miq_sparkle_on" => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote=>true,
+                    :title=>"Reset all Policy Simulation options") %>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<% if @sb[:active_tab] == "settings_list" %>
+	<% if @zones %>
+		<%= render(:partial=>"layouts/flash_msg") %>
+	  <% if @zones.empty? %>
+			<br/><strong>* No Zones found.</strong>
+		<% else %>
+			<table class="style3">
+				<thead>
+					<th class="icon"></th><th></th>
+				</thead>
+				<tbody>
+				<% @zones.sort{|a,b| a.name <=> b.name}.each do |z| %>
+					<tr class="<%= cycle('row0', 'row1') %>"
+						onclick="cfmeDynatree_activateNode('settings_tree', 'z-<%= to_cid(z.id) %>');"
+						onmouseover="this.style.cursor='pointer'" title="View this Zone's settings">
+						<td  nowrap>
+								<img src="/images/icons/new/zone.png" valign="middle" border="0" height="20" width="20" />
+						</td>
+						<td>
+							<% if @sb[:my_zone] == z.name %>
+								<b><%= h(ui_lookup(:model=>z.class.to_s)) %>: <%= h(z.description) %> (current)</b>
+							<% else %>
+								<%= h(ui_lookup(:model=>z.class.to_s)) %>: <%= h(z.description) %>
+							<% end %>
+						</td>
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+		<% end %>
+	<% else %>
+    <% tree_node = x_node %>
+    <% if tree_node == "xx-msc" %>
+        <%= render :partial=>"schedules_list" %>
+    <% elsif tree_node == "xx-sis" %>
+        <%= render :partial=>"aps_list" %>
+    <% elsif tree_node == "xx-l" %>
+      <%= render :partial=>"ldap_regions_list" %>
+    <% elsif tree_node.split("-").first == "sis" %>
+        <%= render :partial=>"ap_show" %>
+    <% elsif tree_node.split("-").first == "msc" %>
+        <%= render :partial=>"schedule_show" %>
+    <% elsif tree_node.split("-").first == "lr" %>
+       <%= render :partial=>"ldap_region_show" %>
+    <% elsif tree_node.split("-").first == "ld" %>
+       <%= render :partial=>"ldap_domain_show" %>
+    <% end %>
+		<div style="padding-bottom:20px;"></div>
+	<% end %>
+<% end %>

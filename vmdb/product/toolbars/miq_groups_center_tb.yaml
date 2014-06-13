@@ -1,0 +1,51 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqGroup
+:button_groups:
+- :name: rbac_group_vmdb
+  :items:
+  - :buttonSelect: rbac_group_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: rbac_group_add
+      :image: new
+      :text: "Add a new Group"
+      :title: "Add a new Group"
+    - :button: rbac_group_edit
+      :image: edit
+      :text: Edit the selected Group
+      :title: Select a single Group to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: rbac_group_delete
+      :image: delete
+      :text: Delete selected Groups
+      :title: Select one or more Groups to delete
+      :url_parms: 'main_div'
+      :confirm: "Delete all selected Groups?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: rbac_group_seq_edit
+      :image: edit-assign
+      :text: "Edit Sequence of User Groups for LDAP Look Up"
+      :title: "Edit Sequence of User Groups for LDAP Look Up"
+- :name: rbac_group_policy
+  :items:
+  - :buttonSelect: rbac_group_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: rbac_group_tags_edit
+      :image: tag
+      :text: "Edit '#{session[:customer_name]}' Tags for the selected Groups"
+      :title: "Edit '#{session[:customer_name]}' Tags for the selected Groups"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

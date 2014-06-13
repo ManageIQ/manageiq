@@ -1,0 +1,48 @@
+--- 
+- 
+  :basedir: "../../.."
+  :todir: build_dir_linux
+  :include: 
+    - lib/ec2Extract
+    - lib/disk
+    - lib/encryption
+    - lib/fs
+    - lib/db
+    - lib/VolumeManager
+    - lib/VixDiskLib
+    - lib/util
+    - lib/metadata
+    - lib/blackbox
+    - lib/MiqVm
+    - lib/VMwareWebService
+    - lib/discovery/PortScan.rb
+    - lib/gems
+    - lib/Gemfile
+    - lib/bundler_setup.rb
+  :exclude: 
+    - !ruby/regexp /\/\.svn/
+    - !ruby/regexp /~$/
+    - !ruby/regexp /\/NTFSCPP/
+    - !ruby/regexp /\/TestVm/
+    - !ruby/regexp /\.c$/
+    - !ruby/regexp /\.h$/
+    - !ruby/regexp /\.o$/
+    - !ruby/regexp /\.vmdk$/
+    - !ruby/regexp /dos_mbr.img$/
+    - !ruby/regexp /test.rb$/
+    - !ruby/regexp /\/rdoc$/
+    - !ruby/regexp /\/examples$/
+    - !ruby/regexp /\/test$/
+    - !ruby/regexp /\/miqCryptInit.rb$/
+    - !ruby/regexp /\/VMwareWebService\/.*\.wsdl$/
+    - !ruby/regexp /\/build_.*/
+    - !ruby/regexp /\/image/
+    - !ruby/regexp /\/bundles/
+    - !ruby/regexp /\.pem$/
+  :encrypt: 
+    - !ruby/regexp /^lib\/.*\.rb$/
+  :noencrypt: 
+    - !ruby/regexp /\/encryption\//
+    - !ruby/regexp /\/lib\/gems\//
+    - !ruby/regexp /\/lib\/Gemfile$/
+    - !ruby/regexp /\/lib\/bundler_setup.rb$/

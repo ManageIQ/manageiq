@@ -1,0 +1,5 @@
+<% if @mks %>
+  <%= render :partial=>"vm_common/console" %>
+<% elsif @vmrc %>
+  <%= render :partial=>"vm_common/console_vmrc" %>
+<% end %>

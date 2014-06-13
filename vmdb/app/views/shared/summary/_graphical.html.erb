@@ -1,0 +1,21 @@
+<% if items %>
+	<fieldset class="right">
+		<p class="legend"><%= title %></p>
+		<% items.each_with_index do |item, i| %>
+			<div class="graphical_summary<% if i == 0 %> first<% end %>">
+				<% if item[:value].kind_of?(Array) %>
+					<%= render(:partial => "shared/summary/graphical_multivalue", :locals => {:item => item}) %>
+				<% else %>
+					<div class="flobj text"><%= item[:label] %><% if item[:value] %>:<br/>
+							<%= item[:value] %>
+						<% end %>
+					</div>
+						<% if item[:image] %>
+							<div class="flobj nolink" style="background-image: url('/images/summary_screens/<%= item[:image] %>.png')">
+						<% end %><%= item[:link] %>
+							</div>
+				<% end %>
+			</div>
+		<% end %>
+	</fieldset>
+<% end %>

@@ -1,0 +1,193 @@
+<%
+# View to create a Dynatree tree object for use in CFME
+%>
+<%
+# Parameters:
+#			tree_id												Id of the object (div) where tree is to live
+#			tree_name											Name to give to the JS tree control object (must not equal tree_id)
+#			json_tree											JSON object of tree nodes
+%>
+<% cfme_changes_check ||= false                     %><%# No need to prompt for abandon changes on onclick event in form %>
+<% cfme_no_click ||= false                          %><%# option when no onclick/select/check event is passsed in, for readonly trees %>
+<% click_url ||= false															%><%# URL of the method for node click %>
+<% cookie_id_prefix ||= "treeOpenStatex"            %><%# set a default cookie id prefix %>
+<% check_url ||= false															%><%# URL of the method for node check/uncheck %>
+<% image_file ||= false															%><%# Image file name in /images/dhtmlxtree/, single image or Array %>
+<% select_node ||= false														%><%# Tree node to be selected when tree loads %>
+<% icon_size ||= 20																	%><%# Default icon size to be used for images %>
+<% id_prefix ||= ""                                 %><%# Dynatree element id prefix for this tree %>
+<% font_size ||= icon_size.to_i  == 32 ? 20 : 12		%><%# Default font size to be used for text based on icon size %>
+<% highlighting ||= false														%><%# Passing true highlights nodes when moused over %>
+<% cursor_style ||= false														%><%# Passing true prevents user from selecting nodes and mouse cursor style from changing to hand %>
+<% exp_tree ||= false																%><%#	To control expand/compress buttons %>
+<% enable_tree_images = true if enable_tree_images == nil	%><%# disable tree images %>
+<% checkboxes ||= false															%><%# Allow checkboxes on nodes %>
+<% three_checks ||= false														%><%# Checkboxes have 3 states (needs checkboxes = true) %>
+<% disable_checks ||= false													%><%# Disable checkboxes %>
+<% tree_state ||= false															%><%# tree_state set to false by default to saveopenStates %>
+<% onmousein ||= false															%><%# JS function to call on mouse over %>
+<% onmouseout ||= false															%><%# JS function to call on mouse out %>
+<% onclick ||= false																%><%# JS function to call on node click %>
+<% onselect ||= false																%><%# JS function to call on node select %>
+<% oncheck ||= false																%><%# JS function to call on node check/uncheck %>
+<% multi_lines ||= false														%><%# Disable multilines on tree by default %>
+<% no_base_exp  ||= false														%><%# setting base root for report menus tree, not expandable/collapsable %>
+<% open_close_all_on_dbl_click ||= false						%><%# Set to true to open/close all children on double click %>
+<% no_getitem_alerts ||= false                      %><%# Set to true to disable DHTMLX alerts if getitem fails %>
+<% autoload ||= false																%><%# autoload nodes as they are opened %>
+<% min_expand_level ||= 1														%><%# Dynatree option to hide/show the base node expander %>
+
+<% tree_id ||= "tree_div"														%><%# If no tree id passed in, use "tree_div" %>
+<% tree_name ||= "tree"															%><%# If no tree name passed in, use "tree" %>
+
+<script type="text/javascript">
+  <% if check_url %>
+    check_url = "<%= check_url %>";
+  <% end %>
+  <% if click_url %>
+    click_url = "<%= click_url %>";
+  <% end %>
+
+  <% if click_url %>
+    click_url = "<%= click_url %>";
+  <% end %>
+  cfme_changes_check = <%= cfme_changes_check %>
+  <%# Create the Dynatree object from the passed in options %>
+  $j("#<%= tree_id %>").dynatree({
+    title: "<%= tree_name %>",
+    imagePath: "/images/icons/new/",
+    generateIds: true,
+    idPrefix: "<%= id_prefix %>",
+    children: <%= json_tree.to_s.html_safe %>,
+    cookieId: "<%=cookie_id_prefix%><%= tree_name %>",
+    cookie: {path: "/"},
+
+    <% if no_base_exp %>
+      onDblClick: cfmeOnDblClick_NoBaseExpand,
+    <% end %>
+
+    <% if min_expand_level %>
+      minExpandLevel: <%= min_expand_level %>,
+    <% end %>
+
+    <% if checkboxes %>
+      checkbox: <%= checkboxes %>,
+    <% end %>
+
+    <% if three_checks %>
+      selectMode: 3,
+    <% end %>
+
+    <% if open_close_all_on_dbl_click %>
+      onDblClick: cfmeOnDblClick_Expand,
+    <% end %>
+
+    <%# Remember tree open/closed states %>
+    <% if tree_state %>
+      persist: true,
+    <% end %>
+
+    <% if cfme_no_click %>
+      onClick: function(node, event) {
+        event_type = node.getEventTargetType(event);
+        if (event_type != 'expander') return false; <%# skip clicking on title when no event has been passed in %>
+      },
+    <% end %>
+
+    <% if onselect %>
+      onSelect: function(flag, node) {
+        var selectedNodes = node.tree.getSelectedNodes();
+        var selectedKeys = $j.map(selectedNodes, function(node){
+          return node.data.key;
+        });
+        <%= onselect %>('<%= tree_name %>', node.data.key, flag, selectedKeys);
+        return;
+      },
+    <% end %>
+
+    <%# dynatree handles all node clicks with a single event, so stack them up here %>
+    <% if onclick || disable_checks || oncheck %>
+
+      <% if onclick %>
+        onActivate: function(node) {
+          <%= onclick %>(node.data.key);
+        },
+      <% end %>
+
+      onClick: function(node, event) {
+        event_type = node.getEventTargetType(event);
+        if (event_type != 'expander' && node.data.cfmeNoClick) return false;  <%# Skip nodes marked as no click %>
+
+        <% if onclick %>
+          if (event_type == 'icon' || event_type == 'title' ||
+              event.target.localName == 'img') {  <%# Workaround as dynatree-icon class is not set with custom images %>
+            <% if click_url %> <%# menu roles edit in progress no need to check for abandon changes %>
+               if (node.isActive()) <%= onclick %>(node.data.key); <%# If active, run onclick since onActivate won't run %>
+               return; <%# onActivate will handle this the same as if activated by an event, prevents double ajax transactions %>
+            <% else %>
+              if (miqCheckForChanges() == false) {  <%# See if user pressed cancel while in a changed edit %>
+                this.activeNode.focus();
+                return false;
+              } else {
+                if (node.isActive()) <%= onclick %>(node.data.key); <%# If active, run onclick since onActivate won't run %>
+                return; <%# onActivate will handle this the same as if activated by an event, prevents double ajax transactions %>
+              }
+            <% end %>
+          }
+        <% end %>
+
+        <% if disable_checks || oncheck %>
+          if (event_type == 'checkbox') {
+            <% if disable_checks %>
+              return false; <%# Ignore checkbox clicks %>
+            <% elsif oncheck %>
+              <%= oncheck %>(node, "<%= tree_name %>");
+              return;
+            <% end %>
+          }
+        <% end %>
+
+        if (event_type != 'expander') return false; <%# Node area clicked not handled, ignore %>
+      },
+
+      <% if onmousein || onmouseout %>
+        onExpand: function(node){
+          cfme_bind_hover_event("<%=tree_name%>");
+        },
+      <% end %>
+
+    <% end %>
+
+    <% if autoload %>
+      onLazyRead: function(node) {
+        cfmeOnLazyRead_GetNodeChildren(node, '<%= tree_name %>', '<%= request.parameters[:controller] %>');
+      },
+    <% end %>
+
+    <%# Activate silently (no onActivate event) selected node AFTER the tree is initially loaded or replaced by AJAX %>
+    <% if @explorer && tree_name == x_active_tree.to_s %>
+      onPostInit: function(isReloading, isError) {
+        cfmeDynatree_activateNodeSilently('<%= tree_name %>', '<%= select_node %>');
+      },
+    <% end %>
+
+    debugLevel: 0
+  });
+  <%# exapnd all parent nodes of selected node on initial load %>
+  <% if @expand_parent_nodes %>
+    cfme_expand_parent_nodes("<%=tree_name%>", "<%= @expand_parent_nodes %>");
+  <% end %>
+
+  <% if @add_nodes && @add_nodes[x_active_tree] && tree_name == x_active_tree.to_s %>
+    cfmeAddNodeChildren(
+      '<%= x_active_tree%>',
+      '<%= @add_nodes[x_active_tree][:key] %>',
+      '<%= select_node %>',
+      <%= @add_nodes[x_active_tree][:children].to_json.html_safe %>
+    );
+  <% end %>
+
+  <% if onmousein || onmouseout %>
+    cfme_bind_hover_event("<%=tree_name%>");
+  <% end %>
+</script>

@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: PxeImage
+:button_groups:
+- :name: pxe_image_vmdb
+  :items:
+  - :buttonSelect: pxe_image_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: pxe_image_edit
+      :image: edit
+      :text: 'Edit this PXE Image'
+      :title: 'Edit this PXE Image'

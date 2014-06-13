@@ -1,0 +1,16 @@
+<% content_for :trees do %>
+  <div style="display:none"><%= render :partial =>"planning_options" %></div>
+<% end %>
+
+<% content_for :accords do %>
+  <%# Create the explorer dhtmlx layout/accordion JS objects %>
+  <%= render(:partial => "layouts/dhtmlxlayout_explorer",
+             :locals => {:accords=>@accords,
+                         :left_cell_bottom=>"left_cell_bottom",
+                         :layout_pattern=>"3J"}
+      ) %>
+<% end %>
+
+<div id="main_div" class="main_div">
+  <%= render :partial => "planning_tabs" %>
+</div>

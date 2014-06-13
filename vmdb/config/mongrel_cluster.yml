@@ -1,0 +1,9 @@
+---
+address: 0.0.0.0
+cwd: /var/www/miq/vmdb
+environment: production
+group: root
+pid_file: log/mongrel.pid
+port: '3000'
+servers: 1
+user: root

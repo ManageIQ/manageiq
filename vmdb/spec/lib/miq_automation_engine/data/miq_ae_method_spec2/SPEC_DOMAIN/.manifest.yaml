@@ -1,0 +1,35 @@
+---
+__domain__.yaml:
+  classes: 1
+  instances: 1
+  method_files: 1
+  method_instances: 1
+  created_on: 2014-05-19 18:52:02.933601000 Z
+  updated_on: 2014-05-19 18:52:02.933601000 Z
+  size: 163
+  sha1: 8CUgrwvnaF6Y2LRqmidR9zfd+ns=
+EVM/__namespace__.yaml:
+  created_on: 2014-05-19 18:52:03.049820000 Z
+  updated_on: 2014-05-19 18:52:03.049820000 Z
+  size: 155
+  sha1: sRy02EsdO3HlNqjIjlMq4Hek8YU=
+EVM/AUTOMATE.class/__class__.yaml:
+  created_on: 2014-05-19 18:52:03.133971000 Z
+  updated_on: 2014-05-19 18:52:03.133971000 Z
+  size: 917
+  sha1: QKCZiMGvlVJUn0L7VTaT7peMRhU=
+EVM/AUTOMATE.class/test1.yaml:
+  created_on: 2014-05-19 18:52:03.212194000 Z
+  updated_on: 2014-05-19 18:52:03.212194000 Z
+  size: 227
+  sha1: fqAHtUnGXtRuoDcPljgCHrknh60=
+EVM/AUTOMATE.class/__methods__/test.rb:
+  created_on: 2014-05-19 18:52:03.247731000 Z
+  updated_on: 2014-05-19 18:52:03.247731000 Z
+  size: 158
+  sha1: VF2GR2GLU7ZpIKBlkEbVIQS9OeY=
+EVM/AUTOMATE.class/__methods__/test.yaml:
+  created_on: 2014-05-19 18:52:03.247731000 Z
+  updated_on: 2014-05-19 18:52:03.247731000 Z
+  size: 184
+  sha1: zZYyXxVN2uuri6zRFBaJFOFV0EE=

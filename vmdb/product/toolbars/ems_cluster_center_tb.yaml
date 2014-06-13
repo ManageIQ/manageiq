@@ -1,0 +1,58 @@
+#
+# Toolbar config file
+#
+---
+:model: EmsCluster
+:button_groups:
+- :name: ems_cluster_vmdb
+  :items:
+  - :buttonSelect: cluster_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ems_cluster_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on this Cluster"
+      :confirm: "Perform SmartState Analysis on this Cluster?"
+    - :button: ems_cluster_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this Cluster from the VMDB"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Cluster and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Cluster?"
+- :name: ems_cluster_policy
+  :items:
+  - :buttonSelect: ems_cluster_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: ems_cluster_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for this Cluster"
+    - :button: ems_cluster_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Cluster"
+- :name: ems_cluster_monitoring
+  :items:
+  - :buttonSelect: ems_cluster_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: ems_cluster_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Cluster"
+      :url: '/show'
+      :url_parms: '?display=performance'
+    - :button: ems_cluster_timeline
+      :image: timeline
+      :text: "Timelines"
+      :title: "Show Timelines for this Cluster"
+      :url: '/show'
+      :url_parms: '?display=timeline'

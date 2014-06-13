@@ -1,0 +1,3 @@
+class OntapFileShare < SniaFileShare
+
+end

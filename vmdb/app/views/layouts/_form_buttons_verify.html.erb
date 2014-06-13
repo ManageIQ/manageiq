@@ -1,0 +1,63 @@
+<% valtype ||= "default" %>
+<% statuskey = (valtype + "_verify_status").to_sym %>
+<% record ||= nil %>
+<% record_id ||= nil %>
+<% ujs_button ||= nil %>
+<% id = record ? (record.id.blank? ? "new" : record.id) : (record_id ? record_id : nil) %>
+<% serialize ||= false %>
+
+<% if !session[:host_items].nil? %>
+  <% verify_title_off = "Host to validate against, User ID and matching password fields are needed to perform verification of credentials" %>
+  <% verify_title_on = "Validate the credentials by logging into the selected Host" %>
+<% else %>
+  <% verify_title_off ||= "Server information, User ID and matching password fields are needed to perform verification of credentials" %>
+  <% verify_title_on ||= "Validate the credentials by logging into the Server" %>
+<% end %>
+<% if @edit[statuskey] %>
+  <div id="<%= valtype %>_validate_buttons_on">
+<% else %>
+  <div id="<%= valtype %>_validate_buttons_on" style="display:none">
+<% end %>
+    <ul id="form_buttons" style="float:left">
+      <li>
+        <% if serialize %>
+              <li>
+                  <%= image_tag('/images/formbuttons/verify.png',
+                                :border  => "0", 
+                                :class   => "button formbutton",
+                                :alt     => verify_title_on, 
+                                :title   => verify_title_on,
+                                :onclick => "miqAjaxButton('#{url_for(:action => validate_url,
+                                                                      :id     => id,
+                                                                      :button => "validate")}', true);")
+                  %>
+              </li>
+        <% else %>
+          <%= link_to(image_tag("/images/formbuttons/verify.png",
+                                :border => "0", 
+                                :class  => "button formbutton",
+                                :alt    => verify_title_on),
+                      {:action => validate_url, 
+                       :button => "validate", 
+                       :type   => valtype, 
+                       :id     => id},
+                      :title => verify_title_on, 
+                      :id    => "val",
+                      "data-miq_sparkle_on"  => true, 
+                      "data-miq_sparkle_off" => true,
+                      :remote => true)
+          %>
+          <% end %>
+      </li>
+    </ul>
+</div>
+
+<% if @edit[statuskey] %>
+  <div id="<%= valtype %>_validate_buttons_off" style="display:none">
+<% else %>
+  <div id="<%= valtype %>_validate_buttons_off">
+<% end %>
+    <%= button_tag('Validate', 
+                   :disabled => true) 
+    %>
+</div>

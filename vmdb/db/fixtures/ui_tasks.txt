@@ -1,0 +1,15 @@
+#
+# Documentation for ui_tasks.csv file format
+#
+# Menu rules:
+#   name - uses slashes with actual menu text at each level, i.e. Infrastructure/Host/*
+#   area - text on top level tab
+#   typ  - text on second level tab
+#   task - text on tab in main screen area
+#
+# Transaction rules:
+#   name - uses area, followed by a colon, followed by action, i.e. Host: New
+#   area - controller class name, i.e. MiqServer
+#   typ  - should always be "Action" for action rules
+#   task - the controller method to run or button pressed by the user
+#

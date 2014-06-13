@@ -1,0 +1,16 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqPolicy
+:button_groups:
+- :name: policy_rsop_vmdb
+  :items:
+  - :button: toggle_collapse
+    :image: squashed-all-false
+    :title: 'Collapse All'
+    :url: 'rsop_toggle'
+  - :button: toggle_expand
+    :image: squashed-all-true
+    :title: 'Expand All'
+    :url: 'rsop_toggle'

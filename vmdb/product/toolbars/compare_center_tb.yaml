@@ -1,0 +1,30 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: comapre_tasks
+  :items:
+  - :buttonTwoState: compare_all
+    :image: compare_all
+    :title: "All attributes"
+    :url: 'compare_miq_all'
+    :url_parms: '?id=#{$vms_comp}&compare_task=all'
+  - :buttonTwoState: compare_diff
+    :title: "Attributes with different values"
+    :url: 'compare_miq_differences'
+    :url_parms: '?id=#{$vms_comp}&compare_task=different'
+  - :buttonTwoState: compare_same
+    :title: "Attributes with same values"
+    :url: 'compare_miq_same'
+    :url_parms: '?id=#{$vms_comp}&compare_task=same'
+- :name: compare_mode
+  :items:
+  - :buttonTwoState: comparemode_details
+    :image: view_list
+    :title: "Details Mode"
+    :url: 'compare_mode'
+  - :buttonTwoState: comparemode_exists
+    :image: exists
+    :title: "Exists Mode"
+    :url: 'compare_mode'

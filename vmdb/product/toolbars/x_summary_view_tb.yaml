@@ -1,0 +1,22 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: summary_main
+  :items:
+  - :buttonTwoState: view_graphical
+    :title: "Graphical View"
+    :url: 'toggle_dash'
+    :url_parms: '?type=graphical&explorer=true'
+  - :buttonTwoState: view_textual
+    :title: "Text View"
+    :url: 'toggle_dash'
+    :url_parms: '?type=textual&explorer=true'
+- :name: summary_download
+  :items:
+  - :button: vm_download_pdf
+    :image: pdf
+    :title: "Download summary in PDF format"
+    :url: '/show'
+    :url_parms: '?display=download_pdf'

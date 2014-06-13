@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MiqAeDatastore>
+  <MiqAeClass namespace="EVM" name="AUTOMATE">
+    <MiqAeSchema>
+      <!--<MiqAeField name="create_via" aetype="relationship" substitute="true" display_name="Create VIA Object" />-->
+      <MiqAeField name="create_via" aetype="method" display_name="Create VIA Object" />
+    </MiqAeSchema>
+    <MiqAeInstance name="START">
+      <!-- # Would like to change this to a relationship where values are set dynamically on the uri: -->
+      <!--<MiqAeField name="create_via">/EVM/Process/VIA?name=${/EVM/AUTOMATE/START/event_type}</MiqAeField>-->
+      <MiqAeField name="create_via"><![CDATA[
+        aevent = $evm.object
+        if aevent['event_type'] == "CreateVM_Task"
+          $evm.log("info", "Getting id #{aevent['id']}")
+          ems_event = $evm.vmdb('EmsEvent', aevent['id'])
+
+          # Need way to instatiate with a hash or a way to convert hash2uri
+
+          object = 'VM'
+          raw_event = aevent['event_type']
+          logical_event = 'Registration'
+
+          name = aevent['event_type']
+          $evm.instantiate("miqae:///EVM/Process/VIA?name=#{aevent['event_type']}&object=#{object}&raw_event=#{raw_event}&logical_event=#{logical_event}")
+        end
+      ]]>
+      </MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+
+  <MiqAeClass namespace="EVM" name="Process">
+    <MiqAeSchema>
+      <MiqAeField name="name"              aetype="attribute" display_name="Name" default_value="VIA"/>
+      <MiqAeField name="object"            aetype="attribute" display_name="Object"/>
+      <MiqAeField name="raw_event"         aetype="attribute" display_name="Raw Event"/>
+      <MiqAeField name="logical_event"     aetype="attribute" display_name="Logical Event"/>
+      <MiqAeField name="state"             aetype="attribute" display_name="State"/>
+      <MiqAeField name="obj_name"          aetype="attribute" display_name="Object Name"/>
+      <MiqAeField name="location"          aetype="attribute" display_name="Location"/>
+      <MiqAeField name="size"              aetype="attribute" display_name="Size"/>
+      <MiqAeField name="management_domain" aetype="attribute" display_name="Management Domain"/>
+      <MiqAeField name="vm_os_family"      aetype="attribute" display_name="VM OS Family"/>
+
+      <MiqAeField name="create_obj"        aetype="relationship" display_name="Create Object"/>
+    </MiqAeSchema>
+    <MiqAeInstance name="VIA">
+      <MiqAeField name="create_obj">/EVM/VIA/${./object}</MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+
+  <MiqAeClass namespace="EVM" name="VIA">
+    <MiqAeSchema>
+      <MiqAeField name="log_vm_event" aetype="method" display_name="Log VM Event" />
+    </MiqAeSchema>
+    <MiqAeInstance name="VM">
+      <MiqAeField></MiqAeField>
+      <MiqAeField name="log_vm_event"><![CDATA[
+        $evm.log("info", "VM Discovery for #{${../obj_name}} at #{${../management_domain}} State: #{${../state}} Family: #{${../vm_os_family}}")
+      ]]>
+      </MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+
+  <MiqAeClass namespace="EVM" name="Log">
+    <MiqAeSchema>
+      <MiqAeField name="info" aetype="method" display_name="Write" />
+    </MiqAeSchema>
+    <MiqAeInstance name="log_vm_event">
+      <MiqAeField name="info"><![CDATA[
+        $evm.log("info", "VM Discovery for #{${../obj_name}} at #{${../management_domain}} State: #{${../state}} Family: #{${../vm_os_family}}")
+      ]]>
+      </MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+
+
+</MiqAeDatastore>

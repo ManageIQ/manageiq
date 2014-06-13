@@ -1,0 +1,40 @@
+<%
+# Parameters:
+#			combo_id												Id of the object (div) where combo is to live
+#			combo_name											Name to give to the combo control object (must not equal combo_id)
+#			xml_combo												XML string of combo options
+%>
+<% combo_id ||= "combo_div"		%><%# If no id passed in, use "combo_div" %>
+<% combo_name ||= "combo"			%><%# If no name passed in, use "combo" %>
+<% combo_width ||= 120				%><%# If no width, use 120 %>
+<% combo_max_height ||= 200	  %><%# If no max height, use 200 (about 8 items) %>
+<% combo_url ||= false				%><%# Default to no URL %>
+<% combo_type ||= "image"			%><%# Show 'image' or pass in 'checkbox' %>
+<% combo_onselect ||= false		%><%#show spinning Q if set to true%>
+
+<script type="text/javascript">
+		<%# Set JS vars for some params, if present %>
+		<%= combo_name %>=new dhtmlXCombo("<%= combo_id %>","<%= combo_name %>",<%= combo_width %>, "<%= combo_type %>");
+		<%= combo_name %>.setDefaultImage("/images/icons/new/blank.gif");
+		<%= combo_name %>.readonly(1);
+		<%= combo_name %>.loadXMLString("<%= xml_combo.html_safe %>");
+	//<%= combo_name %>.enableOptionAutoWidth(0);  // enables auto width of combo options
+    <%= combo_name %>.enableOptionAutoHeight(1, <%= combo_max_height %>);  // enables auto height of combo options
+		<%= combo_name %>.enableOptionAutoPositioning(1);
+
+		<% if combo_url %>
+			combo_url = "<%= combo_url %>";
+		<% end %>
+
+		<% if combo_type == "checkbox"  %>
+			<%= combo_name %>.attachEvent("onSelectionChange", miqSelectionIgnore);
+			<%= combo_name %>.attachEvent("onCheck", miqComboOnCheck);
+			<%= combo_name %>.setComboText("Check Options");
+			<%= combo_name %>.DOMelem_checkbox.style.display='none'; <%# Can't use .hide() here because IE can't handle it on AJAX replace dhtmlxcombo %>
+		<% elsif combo_url  %>
+      <%= combo_name %>.attachEvent("onSelectionChange", miqComboChanged);
+		<% end %>
+		<% if combo_onselect %>
+			<%= combo_name %>.attachEvent("onChange", function() { miqSparkle(true); } );
+		<% end %>
+</script>

@@ -1,0 +1,485 @@
+--- 
+CIM_TCPProtocolEndpoint: 
+- CIM_TCPProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_LogicalPort: 
+- CIM_LogicalPort
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_PlexExtent: 
+- ONTAP_PlexExtent
+- CIM_CompositeExtent
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_LogicalElement: 
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_FSSetting: 
+- ONTAP_FSSetting
+- SNIA_FileSystemSetting
+- CIM_FileSystemSetting
+- CIM_SettingData
+- CIM_ManagedElement
+SNIA_LocalFileSystem: 
+- SNIA_LocalFileSystem
+- CIM_LocalFileSystem
+- CIM_FileSystem
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_FileShare: 
+- ONTAP_FileShare
+- SNIA_FileShare
+- CIM_FileShare
+- CIM_Share
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_RemoteServiceAccessPoint: 
+- CIM_RemoteServiceAccessPoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_DiskDrive: 
+- CIM_DiskDrive
+- CIM_MediaAccessDevice
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_ConcreteExtent: 
+- ONTAP_ConcreteExtent
+- CIM_CompositeExtent
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_ManagedElement: 
+- CIM_ManagedElement
+CIM_SettingData: 
+- CIM_SettingData
+- CIM_ManagedElement
+CIM_FileShare: 
+- CIM_FileShare
+- CIM_Share
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_Share: 
+- CIM_Share
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_Snapshot: 
+- ONTAP_Snapshot
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_SCSIFCProtocolEndpoint: 
+- ONTAP_SCSIFCProtocolEndpoint
+- CIM_SCSIProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_NFSProtocolEndpoint: 
+- ONTAP_NFSProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_LANEndpoint: 
+- CIM_LANEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_FCPort: 
+- CIM_FCPort
+- CIM_NetworkPort
+- CIM_LogicalPort
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_iSCSINode: 
+- ONTAP_iSCSINode
+- CIM_SCSIProtocolController
+- CIM_ProtocolController
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_LogicalDisk: 
+- ONTAP_LogicalDisk
+- CIM_LogicalDisk
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_FileSystem: 
+- CIM_FileSystem
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+SNIA_ExportedFileShareSetting: 
+- SNIA_ExportedFileShareSetting
+- CIM_ExportedFileShareSetting
+- CIM_SettingData
+- CIM_ManagedElement
+CIM_IPProtocolEndpoint: 
+- CIM_IPProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_TCPProtocolEndpoint: 
+- ONTAP_TCPProtocolEndpoint
+- CIM_TCPProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_NetworkPort: 
+- CIM_NetworkPort
+- CIM_LogicalPort
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_CompositeExtent: 
+- CIM_CompositeExtent
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_FileSystemSetting: 
+- CIM_FileSystemSetting
+- CIM_SettingData
+- CIM_ManagedElement
+CIM_ExportedFileShareSetting: 
+- CIM_ExportedFileShareSetting
+- CIM_SettingData
+- CIM_ManagedElement
+CIM_iSCSIProtocolEndpoint: 
+- CIM_iSCSIProtocolEndpoint
+- CIM_SCSIProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_SCSIProtocolEndpoint: 
+- CIM_SCSIProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_IPProtocolEndPoint: 
+- ONTAP_IPProtocolEndPoint
+- CIM_IPProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_FCInitiatorPort: 
+- ONTAP_FCInitiatorPort
+- CIM_FCPort
+- CIM_NetworkPort
+- CIM_LogicalPort
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_DiskExtent: 
+- ONTAP_DiskExtent
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_ComputerSystem: 
+- CIM_ComputerSystem
+- CIM_System
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+SNIA_FileSystemSetting: 
+- SNIA_FileSystemSetting
+- CIM_FileSystemSetting
+- CIM_SettingData
+- CIM_ManagedElement
+SNIA_FileShare: 
+- SNIA_FileShare
+- CIM_FileShare
+- CIM_Share
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_iSCSIProtocolEndpoint: 
+- ONTAP_iSCSIProtocolEndpoint
+- CIM_iSCSIProtocolEndpoint
+- CIM_SCSIProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_ProtocolController: 
+- CIM_ProtocolController
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_RemoteServiceAccessPoint: 
+- ONTAP_RemoteServiceAccessPoint
+- CIM_RemoteServiceAccessPoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_LANEndpoint: 
+- ONTAP_LANEndpoint
+- CIM_LANEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_ProtocolController: 
+- ONTAP_ProtocolController
+- CIM_SCSIProtocolController
+- CIM_ProtocolController
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_StorageVolume: 
+- ONTAP_StorageVolume
+- CIM_StorageVolume
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_StorageExtent: 
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_StorageSystem: 
+- ONTAP_StorageSystem
+- CIM_ComputerSystem
+- CIM_System
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_EnabledLogicalElement: 
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_ExportedFileShareSetting: 
+- ONTAP_ExportedFileShareSetting
+- SNIA_ExportedFileShareSetting
+- CIM_ExportedFileShareSetting
+- CIM_SettingData
+- CIM_ManagedElement
+ONTAP_CIFSProtocolEndpoint: 
+- ONTAP_CIFSProtocolEndpoint
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_ProtocolEndpoint: 
+- CIM_ProtocolEndpoint
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_SCSIProtocolController: 
+- CIM_SCSIProtocolController
+- CIM_ProtocolController
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_EthernetPort: 
+- CIM_EthernetPort
+- CIM_NetworkPort
+- CIM_LogicalPort
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_LogicalDisk: 
+- CIM_LogicalDisk
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_LocalFileSystem: 
+- CIM_LocalFileSystem
+- CIM_FileSystem
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_ServiceAccessPoint: 
+- CIM_ServiceAccessPoint
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_RAIDGroupExtent: 
+- ONTAP_RAIDGroupExtent
+- CIM_CompositeExtent
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_ManagedSystemElement: 
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_LocalFS: 
+- ONTAP_LocalFS
+- SNIA_LocalFileSystem
+- CIM_LocalFileSystem
+- CIM_FileSystem
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_DiskDrive: 
+- ONTAP_DiskDrive
+- CIM_DiskDrive
+- CIM_MediaAccessDevice
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_FlexVolExtent: 
+- ONTAP_FlexVolExtent
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_StorageVolume: 
+- CIM_StorageVolume
+- CIM_StorageExtent
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_LogicalDevice: 
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_System: 
+- CIM_System
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+CIM_MediaAccessDevice: 
+- CIM_MediaAccessDevice
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_iSCSIProtocolController: 
+- ONTAP_iSCSIProtocolController
+- CIM_SCSIProtocolController
+- CIM_ProtocolController
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement
+ONTAP_EthernetPort: 
+- ONTAP_EthernetPort
+- CIM_EthernetPort
+- CIM_NetworkPort
+- CIM_LogicalPort
+- CIM_LogicalDevice
+- CIM_EnabledLogicalElement
+- CIM_LogicalElement
+- CIM_ManagedSystemElement
+- CIM_ManagedElement

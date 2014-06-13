@@ -1,0 +1,56 @@
+<%
+	click_remove = true if click_remove == nil
+	div_num ||= ""					# If another flash msg div is needed, pass in div_num
+	top_pad ||= false				# Add padding above the flash msg
+	bottom_pad ||= false			# Add padding after the flash msg
+%>
+
+<div id="flash_msg_div<%= div_num %>"
+	<% unless @flash_array %>
+		style="display: none"
+	<% end %>
+>
+
+	<% if top_pad %>
+		<div style="padding-top:<%= top_pad %>px;"></div>
+	<% end %>
+
+	<%# New (1/15/08) style @flash_array of hashes with :message and :level %>
+	<% if @flash_array %>
+
+		<div id="flash_text_div<%= div_num %>"
+			<% if click_remove == true %>
+				onclick="$('flash_msg_div<%= div_num %>').hide()" title="Click to remove messages"
+			<% end %>
+		>
+			<% @flash_array.each do |fl| %>
+				<% if fl[:level] == :error %>
+					<div class="alert alert-danger">
+						<span class="pficon-layered">
+							<span class="pficon pficon-error-octagon"></span>
+							<span class="pficon pficon-error-exclamation"></span>
+						</span>
+						<strong><%= h(fl[:message]) %></strong>
+					</div>
+				<% elsif fl[:level] == :warning %>
+					<div class="alert alert-warning">
+						<span class="pficon-layered">
+							<span class="pficon pficon-warning-triangle"></span>
+							<span class="pficon pficon-warning-exclamation"></span>
+						</span>
+						<strong><%= h(fl[:message]) %></strong>
+					</div>
+				<% else %>
+					<div class="alert alert-success">
+						<span class="pficon pficon-ok"></span>
+						<strong><%= h(fl[:message]) %></strong>
+					</div>
+ 				<% end %>
+ 			<% end %>
+		</div>
+	<% end %>
+
+	<% if bottom_pad %>
+		<div style="padding-top:<%= bottom_pad %>px;"></div>
+	<% end %>
+</div>

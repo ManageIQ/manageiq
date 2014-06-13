@@ -1,0 +1,10 @@
+--- 
+accounts_021: 
+  local: 
+  name: Guests
+  accttype: group
+  vm_id: "1"
+  homedir: 
+  domain: 
+  id: "72"
+  acctid: 

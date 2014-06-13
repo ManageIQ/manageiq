@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: vm_auto_start
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: vm_auto_start
+  - value1:
+      value: /EVMApplications/Provisioning/Dialog/schedule_fields_vmautostart/*

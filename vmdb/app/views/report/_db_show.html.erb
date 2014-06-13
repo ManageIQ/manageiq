@@ -1,0 +1,21 @@
+<div id="main_div">
+  <p class="legend">Basic Information</p>
+  <table class="style1">
+      <tr>
+        <td class="key">Name</td>
+        <td class="wider"><%= h(widget.name) %></td>
+      </tr>
+      <tr>
+        <td class="key">Tab Title</td>
+        <td class="wider"><%= h(widget.description) %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Locked</td>
+        <td><%= h(widget.set_data[:locked])%>
+        </td>
+      </tr>
+  </table>
+  <hr>
+  <%= render(:partial=>'db_widgets', :locals=>{:widget=>widget}) %>
+</div>

@@ -1,0 +1,14 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: perf_tasks
+  :items:
+  - :button: vm_perf_refresh
+    :image: refresh
+    :title: "Initiate refresh of recent C&U data"
+    :confirm: "Initiate refresh of recent C&U data?"
+  - :button: vm_perf_reload
+    :image: reload
+    :title: "Reload the charts from the most recent C&U data"

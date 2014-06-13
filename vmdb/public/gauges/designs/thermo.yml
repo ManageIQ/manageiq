@@ -1,0 +1,119 @@
+# -----------------------------------------------------------------------------
+# Thermometer design
+# -----------------------------------------------------------------------------  
+<%= gauge :thermo %>
+  # -----------------------------------------------------------------------------
+  # Gauge Title  
+  <%= dial :text, :gauge_title %>
+      rotation: -90
+      size:      75
+      alpha:     10
+      x:        <%= options[:x] - 150 %>
+      y:        <%= options[:y] + 270 %>
+      color:    ffffff
+      width:    300
+      text:     <%= options[:title] %>
+    
+  # -----------------------------------------------------------------------------
+  # Thermo tube
+  <%= dial :rect, :neck %>
+      x:              <%= options[:x] + 20 %>
+      y:              <%= options[:y] + 20 %>
+      height:         150
+      width:          40  
+      fill_alpha:     20
+      fill_color:     <%= options[:gauge_color] %>
+      line_thickness: 8
+
+  # -----------------------------------------------------------------------------
+  # Thermo bottom
+  <%= dial :circle, :vase %>
+      x:              <%= options[:x] + 40  %>
+      y:              <%= options[:y] + 190 %>
+      radius:         48
+      line_thickness: 8
+      fill_color:     <%= options[:gauge_color] %>
+      fill_alpha:     100
+
+  # main
+  <%= dial :circle, :vase_main %>
+      radius:     40
+      x:          <%= options[:x] + 40 %>
+      y:          <%= options[:y] + 190 %>
+      fill_color: <%= options[:gauge_color] %>
+
+  # reflection
+  <%= dial :circle, :vase_reflection_1 %>
+      x:          <%= options[:x] + 40 %>
+      y:          <%= options[:y] + 190 %>
+      radius:     27
+      fill_alpha: 50
+      fill_color: ffff00
+
+  # inside
+  <%= dial :circle, :vase_reflection_2 %>
+      x:          <%= options[:x] + 35 %>
+      y:          <%= options[:y] + 190 %>  
+      radius:      28
+      fill_color: <%= options[:gauge_color] %>
+
+  # -----------------------------------------------------------------------------
+  # Scale Legends
+  <%= dial :text, :legend %>
+      x:     <%= options[:x] %>
+      y:     <%= options[:y] %>
+      size:  14
+      color: cccccc
+      width: 200
+      text:  C               F
+
+  # degree
+  <%= dial :circle, :degrees %>
+      x:              <%= options[:x] %>
+      y:              <%= options[:y] + 5 %>
+      radius:         2
+      fill_alpha:     0
+      line_color:     cccccc
+      line_thickness: 1
+
+  # farenheit
+  <%= dial :circle, :farenheit %>
+      x:              <%= options[:x] + 65 %>
+      y:              <%= options[:y] + 5 %>
+      radius:         2
+      fill_alpha:     0
+      line_color:     cccccc
+      line_thickness: 1
+  
+  # -----------------------------------------------------------------------------
+  # Current Temperature
+  <%= dial :scale, :animation %>
+      x:               <%= options[:x] + 40 %>
+      y:               <%= options[:y] + 133 %>
+      direction:       vertical  
+      step:            5
+      start_scale:     100
+      end_scale:       <%= options[:end_scale] %> 
+      shake_span:      1
+      shake_frequency: 10
+      shadow_alpha:    0
+      <%= dials %>
+        <%= dial :rect, :due_point %>
+            x:      <%= options[:x] + 24 %>
+            y:      <%= options[:y] + 32 %>
+            height: 100
+            width:   32
+            fill_color: <%= options[:gauge_color] %>
+
+  # hides to of thermo base circle
+  <%= dial :rect, :z_patch %>
+      x:       <%= options[:x] + 24 %>
+      y:       <%= options[:y] + 132 %>
+      height:  30
+      width:   32     
+      fill_alpha: 100
+      # fill_color: ff0000
+      fill_color: <%= options[:gauge_color] %>
+      
+<%= draw_celsius_scale( -10, 50 ) %>
+<%= draw_farenheit_scale( 20, 120 ) %>

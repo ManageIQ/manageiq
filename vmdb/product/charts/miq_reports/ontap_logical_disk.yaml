@@ -1,0 +1,121 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "Volume Metrics"
+
+# Menu name
+name: "Volume Metrics"
+
+# Main DB table report is based on
+db: OntapVolumeMetricsRollup
+
+# Columns to fetch from the main table
+cols:
+- statistic_time
+- avg_latency
+- avg_latency_min
+- avg_latency_max
+- read_latency
+- read_latency_min
+- read_latency_max
+- write_latency
+- write_latency_min
+- write_latency_max
+- total_ops
+- total_ops_min
+- total_ops_max
+- read_data
+- read_data_min
+- read_data_max
+- write_data
+- write_data_min
+- write_data_max
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order: 
+- statistic_time
+- avg_latency
+- avg_latency_min
+- avg_latency_max
+- read_latency
+- read_latency_min
+- read_latency_max
+- write_latency
+- write_latency_min
+- write_latency_max
+- total_ops
+- total_ops_min
+- total_ops_max
+- read_data
+- read_data_min
+- read_data_max
+- write_data
+- write_data_min
+- write_data_max
+
+# Column titles, in order
+headers:
+- Date/Time
+- Avg Latency
+- Min Latency
+- Max Latency
+- Avg Latency
+- Min Latency
+- Max Latency
+- Avg Latency
+- Min Latency
+- Max Latency
+- Avg I/O
+- Min I/O
+- Max I/O
+- Avg Data
+- Min Data
+- Max Data
+- Avg Data
+- Min Data
+- Max Data
+
+# Condition expression for search filtering
+conditions: 
+
+# Order string for the SQL query
+order: ascending
+
+# Columns to sort the report on, in order
+sortby: statistic_time
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+  :type: Line
+  :columns:
+    - avg_latency
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 
+
+template_type: report

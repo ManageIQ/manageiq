@@ -1,0 +1,19 @@
+simile_timeline
+
+This plugin allows you to generate Simile Timeline components for pages directly from Rails
+
+It is heavily based on the original acts_as_ferret plugin done by
+Kasper Weibel and a modified version done by Thomas Lockney, which 
+both can be found on http://ferret.davebalmain.com/trac/wiki/FerretOnRails
+
+usage:
+include the following in your model class (specifiying the fields you want to get indexed):
+
+simile_timeline
+
+
+
+Released under the MIT license.
+
+Authors: 
+Duncan Beevers <duncanbeevers@gmail.com>

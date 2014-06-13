@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: should_not_get_used
+    inherits: 
+    description: 
+  fields:
+  - attr1:
+      value: test31

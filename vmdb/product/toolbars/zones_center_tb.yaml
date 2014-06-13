@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: Zone
+:button_groups:
+- :name: scan_vmdb
+  :items:
+  - :buttonSelect: zone_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: zone_new
+      :image: new
+      :text: "Add a new Zone"
+      :title: "Add a new Zone"

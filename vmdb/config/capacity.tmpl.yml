@@ -1,0 +1,17 @@
+profile:
+  1:
+    :vcpu_commitment_ratio: 2.0
+    :vcpu_method: vcpu_average
+    :vcpu_method_description: "Average of Allocated vCPU"
+    :memory_commitment_ratio: 1.2
+    :memory_method: mem_average
+    :memory_method_description: "Average of Allocated Memory"
+  2:
+    :vcpu_commitment_ratio: 1.0
+    :vcpu_method: vcpu_high_norm
+    :vcpu_method_description: "High Normal Range of Allocated vCPU"
+    :memory_commitment_ratio: 1.0
+    :memory_method: mem_high_norm
+    :memory_method_description: "High Normal Range of Allocated Memory"
+failover:
+  :rule: discovered

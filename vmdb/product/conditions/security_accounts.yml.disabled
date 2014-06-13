@@ -1,0 +1,19 @@
+old_name: "security_accounts"
+name: "Sample: Secure accounts" 
+description: "VM has only Guest and Administrator accounts"
+policy_description: "Allow VM to start if it only has Guest and Administrator accounts"
+modifier: "allow"
+rule: 
+    mode: "tag_expr_v2"
+    expr: 
+        and:
+          - equal:
+              count: Vm.users
+              value: 2
+          - contains: 
+              tag:   Vm.users-name
+              value: Administrator
+          - contains: 
+              tag:   Vm.users-name
+              value: Guest
+towhat: "Vm"

@@ -1,0 +1,46 @@
+#!/bin/sh
+# chkconfig: 2345 85 15
+# description: miqtop init.d script - calls miqtop program to start / stop / etc.
+#
+
+### Variables ###
+MIQTOP=/bin/miqtop.sh
+RETVAL=0
+
+start_processes() {
+  $MIQTOP start
+}
+
+stop_processes() {
+  $MIQTOP stop
+}
+
+show_status() {
+  $MIQTOP status
+}
+
+case "$1" in
+  start)
+    start_processes
+    RETVAL=$?
+  ;;
+  stop)
+    stop_processes
+    RETVAL=$?
+  ;;
+  restart)
+    stop_processes
+    start_processes
+    RETVAL=$?
+  ;;
+  status)
+    show_status
+    RETVAL=$?
+  ;;
+  *)
+    echo "Usage: "/etc/init.d/miqtop" {start|stop|restart|status}"
+         exit 1
+  ;;
+esac
+
+exit $RETVAL

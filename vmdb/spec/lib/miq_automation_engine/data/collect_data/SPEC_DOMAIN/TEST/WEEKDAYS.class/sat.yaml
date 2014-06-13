@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: SAT
+    inherits: 
+    description: 
+  fields:
+  - weekday:
+      value: '7'
+  - description:
+      value: Saturday

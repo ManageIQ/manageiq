@@ -1,0 +1,41 @@
+--- 
+dims: 
+created_on: 2008-08-14 18:26:33.010692 Z
+title: "Cluster tp VMs Affinity with Power State"
+conditions: 
+updated_on: 2008-08-14 18:26:33.010692 Z
+order: Ascending
+graph: 
+menu_name: "Cluster VMs Affinity with Power State"
+rpt_group: Custom
+priority: 20
+col_order: 
+- v_owning_cluster
+- name
+- vms.name
+- vms.power_state
+timeline: 
+id: 71
+file_mtime: 
+categories: 
+rpt_type: Custom
+filename: 
+include: 
+  vms: 
+    columns: 
+    - name
+    - power_state
+db: Host
+cols: 
+- v_owning_cluster
+- name
+template_type: report
+group: c
+sortby: 
+- v_owning_cluster
+- power_state
+headers: 
+- Cluster
+- Host Name
+- VM Name
+- VM Power State

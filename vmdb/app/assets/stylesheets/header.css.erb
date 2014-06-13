@@ -1,0 +1,95 @@
+#page_header_div.taskbar {height:131px;margin-top:-2px !important}
+#page_header_div.taskbar.whitelabeled {height:142px;}
+#page_header_div.notaskbar {height:98px;margin-top:-2px !important}
+#page_header_div.notaskbar.whitelabeled {height:110px;}
+
+.header {height: 26px; background: #393f45; }
+.header.whitelabeled {height: 40px;}
+.header .pull-right{float:right; }
+.header .brand { float:left;margin:0 0 0 20px; padding-top: 6px; width:300px;color:#fff;text-shadow:none;}
+.header .brand img{display:block;font-size:11px;}
+.header.whitelabeled .brand { padding-top:11px }
+.header .brand-white-label.whitelabeled {float:right;width:350px; height: 38px;background:url(/upload/custom_logo.png) right top no-repeat;background-size: auto 38px;}
+.ie8 .header .brand-white-label.whitelabeled {
+	background:none;
+ 	-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/upload/custom_logo.png',sizingMethod='scale')";
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/upload/custom_logo.png',sizingMethod='scale');}
+.ie8 .header .brand{background:url('<%= image_path("layout/brand.png") %>') no-repeat 0 50%;}
+.ie8 .header .brand img{width:0;height:20px;}
+.header li.dropdown {float:right;padding: 5px 10px 7px 10px;border-left: solid 1px #56595d;color: #fff; font-size: 11px; font-family: OpenSansRegular,Arial,Helvetica,sans-serif;}
+.header li.dropdown:hover {background-color: #4a5053;}
+.header.whitelabeled li.dropdown {padding: 12px 10px 12px 10px;}
+.header a.dropdown-toggle{margin-top: 5px !important;background: #000;color: #fff; font-size: 11px; font-family: OpenSansRegular,Arial,Helvetica,sans-serif;}
+.header .dropdown-menu{padding-top:12px; padding-bottom: 4px;border: 1px solid #b6b6b6; background: #fff !important; box-shadow: 0pt 3px 7px rgba(0, 0, 0, 0.15);}
+.header ul#user_options_div.dropdown-menu {position: absolute; top: 28px; right: 0px;z-index:100;}		
+.header.whitelabeled ul#user_options_div.dropdown-menu {top: 40px;}
+.header .dropdown-menu li {float:none;margin-right: 10px;padding:0 12px 0 12px;width: auto;height: 20px;color: rgb(51, 51, 51); }
+.header .dropdown-menu li.active{padding-top: 3px}
+.header .dropdown-menu li.active:hover { margin-right: 0;background: #3b9dd4;color: #fff !important;}
+.header .dropdown-menu li.divider { display:block;float:none; margin: 5px 0 5px 0; width: 100%;height: 1px;background:#e5e5e5;}
+.header .dropdown .caret {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+    width: 0;
+    height: 0;
+    border-width: 4px;
+    border-top: 4px solid rgb(0,0,0);
+    border-top-color: #fff;
+    border-right: 4px solid transparent;
+    border-bottom-color: #fff;
+    border-left: 4px solid transparent;
+    content: "";
+    vertical-align: middle;
+}
+.navbar {
+	height: 42px;
+	border-bottom: 32px solid #f6f6f6;
+	background-image: -webkit-linear-gradient(top, rgb(71, 76, 80), rgb(56, 63, 67)); /* For Chrome and Safari */
+	background-image:    -moz-linear-gradient(top, rgb(71, 76, 80), rgb(56, 63, 67)); /* For old Fx (3.6 to 15) */
+	background-image:     -ms-linear-gradient(top, rgb(71, 76, 80), rgb(56, 63, 67)); /* For pre-releases of IE 10*/
+	background-image:      -o-linear-gradient(top, rgb(71, 76, 80), rgb(56, 63, 67)); /* For old Opera (11.1 to 12.0) */ 
+	background-image:         linear-gradient(top, rgb(71, 76, 80), rgb(56, 63, 67)); /* Standard syntax; must be last */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f4349', endColorstr='#464c51',GradientType=0 ); /* IE6-9 */
+}
+
+.navbar-divider {display:block;float:none; margin: 0px 0 0px 0; width: 100%;height: 1px;background:#6a6a6a;}
+
+/*Primary Nav*/
+.navbar > ul {border-top: 1px #53565b solid;}
+.navbar > ul > li.inactive:hover{
+			border-top: 1px #949699 solid; margin-top: -1px;
+			background-image: -webkit-linear-gradient(top, #5c6165, #4b5053); /* For Chrome and Safari */
+			background-image: 	 -moz-linear-gradient(top, #5c6165, #4b5053); /* For old Fx (3.6 to 15) */
+			background-image:     -ms-linear-gradient(top, #5c6165, #4b5053); /* For pre-releases of IE 10*/
+			background-image:      -o-linear-gradient(top, #5c6165, #4b5053); /* For old Opera (11.1 to 12.0) */ 
+			background-image:         linear-gradient(top, #5c6165, #4b5053); /* Standard syntax; must be last */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5c6165', endColorstr='#4b5053',GradientType=0 ); /* IE6-9 */	
+			color: #fff;			
+}
+.navbar > ul > li > a {display: block; padding: 12px 20px 13px 20px;color: #DBDADA;}	
+.navbar > ul > li.active {
+		border-top: 1px #949699 solid; margin-top: -1px;
+		background-image: -webkit-linear-gradient(top, #72757a, #64686C); /* For Chrome and Safari */
+		background-image:    -moz-linear-gradient(top, #72757a, #64686C); /* For old Fx (3.6 to 15) */
+		background-image:     -ms-linear-gradient(top, #72757a, #64686C); /* For pre-releases of IE 10*/
+		background-image:      -o-linear-gradient(top, #72757a, #64686C); /* For old Opera (11.1 to 12.0) */ 
+		background-image:         linear-gradient(top, #72757a, #64686C); /* Standard syntax; must be last */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72757a', endColorstr='#64686C',GradientType=0 ); /* IE6-9 */	
+		color: #FFF;		
+}
+
+/*Secondary Nav*/
+.navbar > ul > li.inactive > ul {display: none;position: absolute; margin-top:-2px !important}
+.navbar > ul > li.inactive:hover > ul {display:block; z-index: 100;border: 1px solid #b6b6b6; border-top: 0px;padding: 5px 0 5px 0; background: #fff; box-shadow: 0pt 3px 7px rgba(0, 0, 0, 0.15);}
+.navbar > ul > li.inactive:hover > ul > li {float:none; padding: 4px 0 0 10px;}
+.navbar > ul > li.inactive:hover > ul > li:hover	{background: #3b9dd4;}
+.navbar > ul > li.inactive:hover > ul > li > a {display: block; width:140px;height: 20px;font-size: 11px;color: rgb(51, 51, 51);}
+.navbar > ul > li.inactive:hover > ul > li:hover a {color: #fff;}
+
+.navbar > ul > li.active:hover > ul {display: none}
+.navbar > ul > li.active > ul.active {display:block; position: absolute; left:0px; padding: 6px;}			
+.navbar > ul > li.active > ul > li {padding: 3px 20px 0 20px;}
+.navbar > ul > li.active > ul > li.active > a{border-bottom: 2px #2289ba solid;	color: #2289ba;}			
+.navbar > ul > li.active > ul > li > a {padding-bottom: 5px; color: #4d5258;font-size: 12px;}
+.navbar > ul > li.active > ul > li > a:hover {border-bottom: 2px #2289ba solid ;color: #000;text-decoration: none;}

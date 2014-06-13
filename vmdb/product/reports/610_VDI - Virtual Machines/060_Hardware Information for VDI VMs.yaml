@@ -1,0 +1,60 @@
+--- 
+where_clause: 
+dims: 
+created_on: 2009-01-12 13:28:03.699398 Z
+title: Hardware Information for VDI VMs
+conditions: !ruby/object:MiqExpression 
+  exp: 
+    CONTAINS: 
+      tag: Vm.managed-function
+      value: desktop
+updated_on: 2009-01-12 13:28:03.699398 Z
+order: Ascending
+graph: 
+menu_name: Hardware Information for VDI VMs
+rpt_group: Custom
+priority: 10
+col_order: 
+- name
+- hardware.memory_cpu
+- hardware.numvcpus
+- disks.controller_type
+- disks.device_type
+- disks.mode
+- disks.start_connected
+- disks.size
+timeline: 
+id: 160
+file_mtime: 
+categories: 
+rpt_type: Custom
+filename: 
+include: 
+  hardware: 
+    columns: 
+    - memory_cpu
+    - numvcpus
+    include: 
+      disks: 
+        columns: 
+        - controller_type
+        - device_type
+        - mode
+        - start_connected
+        - size
+db: Vm
+cols: 
+- name
+template_type: report
+group: y
+sortby: 
+- name
+headers: 
+- Name
+- RAM
+- vCPUs
+- Controller Type
+- Device Type
+- Mode
+- Start Connected?
+- Disk Size

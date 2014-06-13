@@ -1,0 +1,1501 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":""}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '329'
+      Date:
+      - Tue, 22 Apr 2014 19:10:13 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-04-22T19:10:13.293040",
+        "expires": "2014-04-23T19:10:13Z", "id": "30ae3481b0bb41eeb4f570aad18be1d2"},
+        "serviceCatalog": [], "user": {"username": "admin", "roles_links": [], "id":
+        "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [], "name": "admin"}, "metadata":
+        {"is_admin": 0, "roles": []}}}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:58 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:5000/v2.0/tenants
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 30ae3481b0bb41eeb4f570aad18be1d2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '143'
+      Date:
+      - Tue, 22 Apr 2014 19:10:13 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"tenants_links": [], "tenants": [{"description": "admin tenant",
+        "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "admin"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:58 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"token":{"id":"30ae3481b0bb41eeb4f570aad18be1d2"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:13 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-04-22T19:10:13.431341",
+        "expires": "2014-04-23T19:10:13Z", "id": "6c724f6a1b744d6681aa15f84c6cf9a2",
+        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:58 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"admin"},"tenantName":""}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '329'
+      Date:
+      - Tue, 22 Apr 2014 19:10:14 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-04-22T19:10:14.401085",
+        "expires": "2014-04-23T19:10:14Z", "id": "d10ad77077724adc847be19048a88bc8"},
+        "serviceCatalog": [], "user": {"username": "admin", "roles_links": [], "id":
+        "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [], "name": "admin"}, "metadata":
+        {"is_admin": 0, "roles": []}}}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:5000/v2.0/tenants
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - d10ad77077724adc847be19048a88bc8
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '143'
+      Date:
+      - Tue, 22 Apr 2014 19:10:14 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"tenants_links": [], "tenants": [{"description": "admin tenant",
+        "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "admin"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"token":{"id":"d10ad77077724adc847be19048a88bc8"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:14 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-04-22T19:10:14.524073",
+        "expires": "2014-04-23T19:10:14Z", "id": "a42aef23f97e4420bdc3a503e9ee84f7",
+        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"admin"},"tenantName":""}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '329'
+      Date:
+      - Tue, 22 Apr 2014 19:10:14 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-04-22T19:10:14.782554",
+        "expires": "2014-04-23T19:10:14Z", "id": "b8ea971806d64024839376fdc09a8f19"},
+        "serviceCatalog": [], "user": {"username": "admin", "roles_links": [], "id":
+        "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [], "name": "admin"}, "metadata":
+        {"is_admin": 0, "roles": []}}}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:5000/v2.0/tenants
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - b8ea971806d64024839376fdc09a8f19
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '143'
+      Date:
+      - Tue, 22 Apr 2014 19:10:14 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"tenants_links": [], "tenants": [{"description": "admin tenant",
+        "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "admin"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"token":{"id":"b8ea971806d64024839376fdc09a8f19"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:14 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-04-22T19:10:14.909679",
+        "expires": "2014-04-23T19:10:14Z", "id": "4c057c30ebc249f1bbc6f7c69e71095a",
+        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:9292/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 4c057c30ebc249f1bbc6f7c69e71095a
+  response:
+    status:
+      code: 300
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '446'
+      Date:
+      - Tue, 22 Apr 2014 19:10:14 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
+        "http://1.2.3.4:9292/v2/", "rel": "self"}]}, {"status": "SUPPORTED",
+        "id": "v2.0", "links": [{"href": "http://1.2.3.4:9292/v2/", "rel":
+        "self"}]}, {"status": "CURRENT", "id": "v1.1", "links": [{"href": "http://1.2.3.4:9292/v1/",
+        "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
+        "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/detail.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-8a81ed14-fdbe-4bbb-ba14-ca94657adc3f
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2539'
+      Date:
+      - Tue, 22 Apr 2014 19:10:15 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
+        "rel": "bookmark"}], "ram": 512, "OS-FLV-DISABLED:disabled": false, "vcpus":
+        1, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
+        0, "disk": 0, "id": "1"}, {"name": "m1.small", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/2",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/2",
+        "rel": "bookmark"}], "ram": 2048, "OS-FLV-DISABLED:disabled": false, "vcpus":
+        1, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
+        0, "disk": 20, "id": "2"}, {"name": "m1.medium", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/3",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/3",
+        "rel": "bookmark"}], "ram": 4096, "OS-FLV-DISABLED:disabled": false, "vcpus":
+        2, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
+        0, "disk": 40, "id": "3"}, {"name": "m1.large", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/4",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/4",
+        "rel": "bookmark"}], "ram": 8192, "OS-FLV-DISABLED:disabled": false, "vcpus":
+        4, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
+        0, "disk": 80, "id": "4"}, {"name": "m1.xlarge", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/5",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/5",
+        "rel": "bookmark"}], "ram": 16384, "OS-FLV-DISABLED:disabled": false, "vcpus":
+        8, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
+        0, "disk": 160, "id": "5"}, {"name": "m1.ems_refresh_spec", "links": [{"href":
+        "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/6",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/6",
+        "rel": "bookmark"}], "ram": 1024, "OS-FLV-DISABLED:disabled": false, "vcpus":
+        1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
+        1, "disk": 1, "id": "6"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:13:59 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/detail.json?all_tenants=True
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-e8fafcc1-7910-4631-9a65-9c013a2e06f8
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '10938'
+      Date:
+      - Tue, 22 Apr 2014 19:10:15 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"servers": [{"status": "SHUTOFF", "updated": "2014-03-03T15:15:03Z",
+        "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978", "OS-EXT-SRV-ATTR:host":
+        "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
+        "192.168.32.10", "OS-EXT-IPS:type": "fixed"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/365f07e9-a834-447d-9446-cdbe4bb62734",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/365f07e9-a834-447d-9446-cdbe4bb62734",
+        "rel": "bookmark"}], "key_name": "EmsRefreshSpec-KeyPair", "image": {"id":
+        "8e770833-0601-46df-8d94-504ed980cd8f", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/8e770833-0601-46df-8d94-504ed980cd8f",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "stopped", "OS-EXT-SRV-ATTR:instance_name": "instance-00000048", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "4", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/4",
+        "rel": "bookmark"}]}, "id": "365f07e9-a834-447d-9446-cdbe4bb62734", "security_groups":
+        [{"name": "default"}], "OS-EXT-AZ:availability_zone": "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481",
+        "name": "mgfsmoketest1", "created": "2014-03-03T14:44:05Z", "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "OS-DCF:diskConfig": "MANUAL", "accessIPv4": "", "accessIPv6": "", "OS-EXT-STS:power_state":
+        4, "config_drive": "", "metadata": {}}, {"status": "SHUTOFF", "updated": "2014-03-03T15:14:44Z",
+        "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978", "OS-EXT-SRV-ATTR:host":
+        "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
+        "192.168.32.9", "OS-EXT-IPS:type": "fixed"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/e4d3f3c1-d8d9-4875-b175-1ffd3b52633d",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/e4d3f3c1-d8d9-4875-b175-1ffd3b52633d",
+        "rel": "bookmark"}], "key_name": null, "image": {"id": "58ada8cb-f369-49be-8c10-9ef495856854",
+        "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/58ada8cb-f369-49be-8c10-9ef495856854",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "stopped", "OS-EXT-SRV-ATTR:instance_name": "instance-00000047", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "1", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
+        "rel": "bookmark"}]}, "id": "e4d3f3c1-d8d9-4875-b175-1ffd3b52633d", "security_groups":
+        [{"name": "default"}], "OS-EXT-AZ:availability_zone": "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481",
+        "name": "tina_wednesday2", "created": "2014-02-26T17:11:57Z", "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "OS-DCF:diskConfig": "MANUAL", "accessIPv4":
+        "", "accessIPv6": "", "OS-EXT-STS:power_state": 4, "config_drive": "", "metadata":
+        {}}, {"status": "PAUSED", "updated": "2014-04-22T19:09:41Z", "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978",
+        "OS-EXT-SRV-ATTR:host": "rdo1.manageiq.com", "addresses": {"novanetwork":
+        [{"version": 4, "addr": "192.168.32.2", "OS-EXT-IPS:type": "fixed"}]}, "links":
+        [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/7f1c38e5-c5da-417e-a832-c7fe2296edba",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/7f1c38e5-c5da-417e-a832-c7fe2296edba",
+        "rel": "bookmark"}], "key_name": "EmsRefreshSpec-KeyPair", "image": {"id":
+        "a11384ef-a7d1-4c99-b063-dd60a357d3ff", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/a11384ef-a7d1-4c99-b063-dd60a357d3ff",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "paused", "OS-EXT-SRV-ATTR:instance_name": "instance-00000038", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "6", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/6",
+        "rel": "bookmark"}]}, "id": "7f1c38e5-c5da-417e-a832-c7fe2296edba", "security_groups":
+        [{"name": "EmsRefreshSpec-SecurityGroup"}], "OS-EXT-AZ:availability_zone":
+        "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481", "name": "EmsRefreshSpec-Paused",
+        "created": "2014-01-10T19:17:35Z", "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "OS-DCF:diskConfig": "MANUAL", "accessIPv4": "", "accessIPv6": "", "OS-EXT-STS:power_state":
+        3, "config_drive": "", "metadata": {}}, {"status": "SUSPENDED", "updated":
+        "2013-09-11T07:18:29Z", "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978",
+        "OS-EXT-SRV-ATTR:host": "rdo1.manageiq.com", "addresses": {"novanetwork":
+        [{"version": 4, "addr": "192.168.32.8", "OS-EXT-IPS:type": "fixed"}]}, "links":
+        [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/ed1056c3-53b1-4cec-af88-a6e6a6be1d44",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/ed1056c3-53b1-4cec-af88-a6e6a6be1d44",
+        "rel": "bookmark"}], "key_name": "EmsRefreshSpec-KeyPair", "image": {"id":
+        "a11384ef-a7d1-4c99-b063-dd60a357d3ff", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/a11384ef-a7d1-4c99-b063-dd60a357d3ff",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "suspended", "OS-EXT-SRV-ATTR:instance_name": "instance-0000002b", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "6", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/6",
+        "rel": "bookmark"}]}, "id": "ed1056c3-53b1-4cec-af88-a6e6a6be1d44", "security_groups":
+        [{"name": "EmsRefreshSpec-SecurityGroup"}], "OS-EXT-AZ:availability_zone":
+        "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481", "name": "EmsRefreshSpec-Suspended",
+        "created": "2013-09-11T07:17:59Z", "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "OS-DCF:diskConfig": "MANUAL", "accessIPv4": "", "accessIPv6": "", "OS-EXT-STS:power_state":
+        4, "config_drive": "", "metadata": {}}, {"status": "SHUTOFF", "updated": "2014-03-03T15:14:22Z",
+        "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978", "OS-EXT-SRV-ATTR:host":
+        "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
+        "192.168.32.3", "OS-EXT-IPS:type": "fixed"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/b111e7d6-a2c5-485d-9a27-2ce1bb83c2a7",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/b111e7d6-a2c5-485d-9a27-2ce1bb83c2a7",
+        "rel": "bookmark"}], "key_name": "EmsRefreshSpec-KeyPair", "image": {"id":
+        "0a723917-aff6-4297-9444-d142a4aea59b", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/0a723917-aff6-4297-9444-d142a4aea59b",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "stopped", "OS-EXT-SRV-ATTR:instance_name": "instance-00000029", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "6", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/6",
+        "rel": "bookmark"}]}, "id": "b111e7d6-a2c5-485d-9a27-2ce1bb83c2a7", "security_groups":
+        [{"name": "EmsRefreshSpec-SecurityGroup"}], "OS-EXT-AZ:availability_zone":
+        "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481", "name": "EmsRefreshSpec-PoweredOn-FromSnapshot",
+        "created": "2013-09-11T07:00:36Z", "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "OS-DCF:diskConfig": "MANUAL", "accessIPv4": "", "accessIPv6": "", "OS-EXT-STS:power_state":
+        4, "config_drive": "", "metadata": {}}, {"status": "ACTIVE", "updated": "2014-04-22T18:46:02Z",
+        "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978", "OS-EXT-SRV-ATTR:host":
+        "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
+        "192.168.32.6", "OS-EXT-IPS:type": "fixed"}, {"version": 4, "addr": "10.3.4.1",
+        "OS-EXT-IPS:type": "floating"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "rel": "bookmark"}], "key_name": "EmsRefreshSpec-KeyPair", "image": {"id":
+        "a11384ef-a7d1-4c99-b063-dd60a357d3ff", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/a11384ef-a7d1-4c99-b063-dd60a357d3ff",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "active", "OS-EXT-SRV-ATTR:instance_name": "instance-00000028", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "6", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/6",
+        "rel": "bookmark"}]}, "id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8", "security_groups":
+        [{"name": "EmsRefreshSpec-SecurityGroup"}, {"name": "EmsRefreshSpec-SecurityGroup2"}],
+        "OS-EXT-AZ:availability_zone": "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481",
+        "name": "EmsRefreshSpec-PoweredOn", "created": "2013-09-11T06:11:08Z", "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "OS-DCF:diskConfig": "MANUAL", "accessIPv4":
+        "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state": 1, "config_drive":
+        "", "metadata": {}}, {"status": "SHUTOFF", "updated": "2014-02-14T00:50:33Z",
+        "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978", "OS-EXT-SRV-ATTR:host":
+        "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
+        "192.168.32.5", "OS-EXT-IPS:type": "fixed"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/bd356ece-8cdb-4580-952a-362c5844fa07",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/bd356ece-8cdb-4580-952a-362c5844fa07",
+        "rel": "bookmark"}], "key_name": null, "image": {"id": "d3a7f7fd-4642-405a-983c-d84008cf3e8b",
+        "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/d3a7f7fd-4642-405a-983c-d84008cf3e8b",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "stopped", "OS-EXT-SRV-ATTR:instance_name": "instance-0000000e", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "1", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
+        "rel": "bookmark"}]}, "id": "bd356ece-8cdb-4580-952a-362c5844fa07", "security_groups":
+        [{"name": "default"}], "OS-EXT-AZ:availability_zone": "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481",
+        "name": "jf-test-2", "created": "2013-08-22T05:18:28Z", "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "OS-DCF:diskConfig": "MANUAL", "accessIPv4": "", "accessIPv6": "", "OS-EXT-STS:power_state":
+        4, "config_drive": "", "metadata": {}}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:00 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:5000/v2.0/tenants
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '143'
+      Date:
+      - Tue, 22 Apr 2014 19:10:15 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"tenants_links": [], "tenants": [{"description": "admin tenant",
+        "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "admin"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:00 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-keypairs.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-aa4a971e-a0ed-45bb-9d37-ab34b8a14005
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '547'
+      Date:
+      - Tue, 22 Apr 2014 19:10:15 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA190WUrN+04ktr3bwWBq5y2jRRYa1BYMlepBCad1meBPGZxfiR4AFAnKrKYEDN8GlhRouzNifzK99Q3DWAzJm06baR+1pd0r7zWqYW1GK6+epNiuhVzxIxKMbsZcUd4L8nS8/P5MNhlR3JVHz5RPKAKHGk1X4p19a2gyqIdZWwoW1UV+V4gfpoJs4sYtLfiZyiS4s1F0YPVSvonqp1qBiT9GVh7iQUuMVWy7AoMmotfPqLLBYX6JbLZn6oyyJpHZ+rVXkWxR7DT98R5Xxo7AOd52BeLhvUbTX49nqBFCM7CBAG3F2b/rV0mExRoGcmMx/+ujr7LQfmNeaZmsqdPq+Dw==
+        Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "5e:51:73:2d:71:14:94:34:97:4c:e8:e5:92:49:9e:9e"}}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:00 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-9454a79e-ae48-4421-be79-0467ccd7a498
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2584'
+      Date:
+      - Tue, 22 Apr 2014 19:10:15 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+        "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
+        "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
+        "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
+        3, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 3}, {"from_port": 80, "group": {}, "ip_protocol": "tcp", "to_port":
+        80, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 4}, {"from_port":
+        80, "group": {}, "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4,
+        "ip_range": {"cidr": "0.0.0.0/0"}, "id": 5}, {"from_port": 80, "group": {"tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4, "ip_range": {},
+        "id": 6}, {"from_port": 1, "group": {}, "ip_protocol": "udp", "to_port": 2,
+        "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 7}, {"from_port":
+        1, "group": {}, "ip_protocol": "udp", "to_port": 65535, "parent_group_id":
+        4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 8}, {"from_port": 3, "group":
+        {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "udp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 9}, {"from_port": 0, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 10}, {"from_port":
+        -1, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "icmp", "to_port": -1, "parent_group_id": 4, "ip_range": {},
+        "id": 12}, {"from_port": -1, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 13}], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
+        "description": "EmsRefreshSpec-SecurityGroup"}, {"rules": [], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 5, "name": "EmsRefreshSpec-SecurityGroup2",
+        "description": "EmsRefreshSpec-SecurityGroup2"}, {"rules": [], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 1, "name": "default", "description":
+        "default"}, {"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "id": 2, "name": "test", "description": "test"}, {"rules": [], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 3, "name": "test_2", "description":
+        "test_2"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:00 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:9292/v1.1/images/detail
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      X-Auth-Token:
+      - 4c057c30ebc249f1bbc6f7c69e71095a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '4435'
+      X-Openstack-Request-Id:
+      - req-5effebf6-e036-449c-8cc6-efc91bb657e6
+      Date:
+      - Tue, 22 Apr 2014 19:10:16 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"images": [{"status": "active", "name": "mgfsmoketesttest", "deleted":
+        false, "container_format": "bare", "created_at": "2014-03-03T14:38:02", "disk_format":
+        "qcow2", "updated_at": "2014-03-03T14:40:20", "id": "8e770833-0601-46df-8d94-504ed980cd8f",
+        "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "74143c1091360800ccdbf53ba1db3d5a",
+        "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
+        null, "properties": {}, "size": 752943104}, {"status": "active", "name": "5.2.1.6",
+        "deleted": false, "container_format": "bare", "created_at": "2013-12-20T16:46:17",
+        "disk_format": "qcow2", "updated_at": "2013-12-20T16:48:32", "id": "e9951e6a-9814-4e0b-80b9-a8aff4909589",
+        "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "e23247c3fbc4f22a548a96cb987865ac",
+        "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
+        null, "properties": {}, "size": 721682432}, {"status": "active", "name": "EmsRefreshSpec-Snapshot",
+        "deleted": false, "container_format": "bare", "created_at": "2013-09-11T06:56:06",
+        "disk_format": "qcow2", "updated_at": "2013-09-11T06:56:06", "id": "0a723917-aff6-4297-9444-d142a4aea59b",
+        "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "50bdc35edb03a38d91b1b071afb20a3c",
+        "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": false, "deleted_at":
+        null, "properties": {"root_device_name": "/dev/vda", "block_device_mapping":
+        "[{\"instance_uuid\": \"4bb8d624-a3a5-421c-9e14-8a6eaa16aed8\", \"virtual_name\":
+        null, \"deleted_at\": null, \"delete_on_termination\": false, \"no_device\":
+        null, \"deleted\": 0, \"created_at\": \"2013-09-11T06:11:08.000000\", \"snapshot_id\":
+        \"4dac9c48-db35-4a34-b1b5-a18fdce72965\", \"updated_at\": \"2013-09-11T06:11:15.000000\",
+        \"device_name\": \"vda\", \"connection_info\": \"{\\\"driver_volume_type\\\":
+        \\\"iscsi\\\", \\\"serial\\\": \\\"6b01f23f-6840-44d2-b697-20b5287e567a\\\",
+        \\\"data\\\": {\\\"target_discovered\\\": false, \\\"target_iqn\\\": \\\"iqn.2010-10.org.openstack:volume-6b01f23f-6840-44d2-b697-20b5287e567a\\\",
+        \\\"target_portal\\\": \\\"1.2.3.4:3260\\\", \\\"volume_id\\\": \\\"6b01f23f-6840-44d2-b697-20b5287e567a\\\",
+        \\\"target_lun\\\": 1, \\\"auth_password\\\": \\\"V86KwXy7t5SHuyse758Z\\\",
+        \\\"auth_username\\\": \\\"v8vfSTrtvvX9teNEJDeL\\\", \\\"auth_method\\\":
+        \\\"CHAP\\\"}}\", \"volume_id\": null, \"volume_size\": null, \"id\": 6}]"},
+        "size": 0}, {"status": "active", "name": "jf-test-2-snap", "deleted": false,
+        "container_format": "bare", "created_at": "2013-09-11T05:03:46", "disk_format":
+        "qcow2", "updated_at": "2013-09-11T05:03:54", "id": "7280fc50-a691-410e-b491-8d7609790f3d",
+        "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "54c0bf838d378e4c8959493daf7e640f",
+        "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": false, "deleted_at":
+        null, "properties": {"instance_uuid": "bd356ece-8cdb-4580-952a-362c5844fa07",
+        "image_location": "snapshot", "image_state": "available", "instance_type_memory_mb":
+        "512", "instance_type_swap": "0", "instance_type_vcpu_weight": "None", "image_type":
+        "snapshot", "instance_type_id": "2", "ramdisk_id": null, "instance_type_name":
+        "m1.tiny", "instance_type_ephemeral_gb": "0", "instance_type_rxtx_factor":
+        "1", "kernel_id": null, "instance_type_flavorid": "1", "instance_type_vcpus":
+        "1", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481", "instance_type_root_gb":
+        "0", "base_image_ref": "d3a7f7fd-4642-405a-983c-d84008cf3e8b", "owner_id":
+        "cd29f03e4667409fb59d2d93cc527ca2"}, "size": 14221312}, {"status": "active",
+        "name": "EmsRefreshSpec-Image", "deleted": false, "container_format": "bare",
+        "created_at": "2013-08-01T22:30:06", "disk_format": "qcow2", "updated_at":
+        "2013-08-01T22:30:06", "id": "a11384ef-a7d1-4c99-b063-dd60a357d3ff", "min_disk":
+        0, "protected": false, "min_ram": 0, "checksum": "50bdc35edb03a38d91b1b071afb20a3c",
+        "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": false, "deleted_at":
+        null, "properties": {}, "size": 9761280}, {"status": "active", "name": "cirros-0.3.0-x86_64",
+        "deleted": false, "container_format": "bare", "created_at": "2013-08-01T22:14:38",
+        "disk_format": "qcow2", "updated_at": "2013-08-01T22:14:39", "id": "d3a7f7fd-4642-405a-983c-d84008cf3e8b",
+        "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "50bdc35edb03a38d91b1b071afb20a3c",
+        "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": false, "deleted_at":
+        null, "properties": {}, "size": 9761280}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:01 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-679edc87-689c-4bc9-a961-5fd57cbb8280
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:16 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:01 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/365f07e9-a834-447d-9446-cdbe4bb62734/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-ca280fca-3e9b-459f-9884-f8ebc7ab44ec
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '139'
+      Date:
+      - Tue, 22 Apr 2014 19:10:16 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "id": 1, "name": "default", "description": "default"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:01 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-fad0059f-527a-4f8b-b026-0b9e6457a840
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:16 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:01 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/e4d3f3c1-d8d9-4875-b175-1ffd3b52633d/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-f6043912-39c5-4dbd-a50d-e23adbac70a7
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '139'
+      Date:
+      - Tue, 22 Apr 2014 19:10:16 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "id": 1, "name": "default", "description": "default"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:01 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-2fcf7549-3ce0-4143-9168-530351d97d9e
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:17 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:01 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/7f1c38e5-c5da-417e-a832-c7fe2296edba/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-e3e11b3a-5f61-44dd-a061-47c677b61e31
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2076'
+      Date:
+      - Tue, 22 Apr 2014 19:10:17 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+        "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
+        "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
+        "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
+        3, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 3}, {"from_port": 80, "group": {}, "ip_protocol": "tcp", "to_port":
+        80, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 4}, {"from_port":
+        80, "group": {}, "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4,
+        "ip_range": {"cidr": "0.0.0.0/0"}, "id": 5}, {"from_port": 80, "group": {"tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4, "ip_range": {},
+        "id": 6}, {"from_port": 1, "group": {}, "ip_protocol": "udp", "to_port": 2,
+        "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 7}, {"from_port":
+        1, "group": {}, "ip_protocol": "udp", "to_port": 65535, "parent_group_id":
+        4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 8}, {"from_port": 3, "group":
+        {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "udp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 9}, {"from_port": 0, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 10}, {"from_port":
+        -1, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "icmp", "to_port": -1, "parent_group_id": 4, "ip_range": {},
+        "id": 12}, {"from_port": -1, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 13}], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
+        "description": "EmsRefreshSpec-SecurityGroup"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:02 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-4f7bbc9c-22e9-477a-8072-7ff504867ab4
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:17 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:02 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/ed1056c3-53b1-4cec-af88-a6e6a6be1d44/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-04804894-6c93-4ca6-b527-e628b284f167
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2076'
+      Date:
+      - Tue, 22 Apr 2014 19:10:17 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+        "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
+        "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
+        "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
+        3, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 3}, {"from_port": 80, "group": {}, "ip_protocol": "tcp", "to_port":
+        80, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 4}, {"from_port":
+        80, "group": {}, "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4,
+        "ip_range": {"cidr": "0.0.0.0/0"}, "id": 5}, {"from_port": 80, "group": {"tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4, "ip_range": {},
+        "id": 6}, {"from_port": 1, "group": {}, "ip_protocol": "udp", "to_port": 2,
+        "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 7}, {"from_port":
+        1, "group": {}, "ip_protocol": "udp", "to_port": 65535, "parent_group_id":
+        4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 8}, {"from_port": 3, "group":
+        {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "udp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 9}, {"from_port": 0, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 10}, {"from_port":
+        -1, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "icmp", "to_port": -1, "parent_group_id": 4, "ip_range": {},
+        "id": 12}, {"from_port": -1, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 13}], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
+        "description": "EmsRefreshSpec-SecurityGroup"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:02 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-f780d5fb-94ca-4ab1-8454-7f33d90e8f60
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:17 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:02 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/b111e7d6-a2c5-485d-9a27-2ce1bb83c2a7/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-14cad8c7-a4d1-49a3-9bb9-ad1e5799baff
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2076'
+      Date:
+      - Tue, 22 Apr 2014 19:10:18 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+        "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
+        "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
+        "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
+        3, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 3}, {"from_port": 80, "group": {}, "ip_protocol": "tcp", "to_port":
+        80, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 4}, {"from_port":
+        80, "group": {}, "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4,
+        "ip_range": {"cidr": "0.0.0.0/0"}, "id": 5}, {"from_port": 80, "group": {"tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4, "ip_range": {},
+        "id": 6}, {"from_port": 1, "group": {}, "ip_protocol": "udp", "to_port": 2,
+        "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 7}, {"from_port":
+        1, "group": {}, "ip_protocol": "udp", "to_port": 65535, "parent_group_id":
+        4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 8}, {"from_port": 3, "group":
+        {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "udp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 9}, {"from_port": 0, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 10}, {"from_port":
+        -1, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "icmp", "to_port": -1, "parent_group_id": 4, "ip_range": {},
+        "id": 12}, {"from_port": -1, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 13}], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
+        "description": "EmsRefreshSpec-SecurityGroup"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:03 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-b49fa397-a23d-450d-8217-700df1439bd0
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:18 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:03 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/4bb8d624-a3a5-421c-9e14-8a6eaa16aed8/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-b62e43f1-447f-4ed7-916f-1215ec870123
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2238'
+      Date:
+      - Tue, 22 Apr 2014 19:10:18 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+        "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
+        "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
+        "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
+        3, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 3}, {"from_port": 80, "group": {}, "ip_protocol": "tcp", "to_port":
+        80, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 4}, {"from_port":
+        80, "group": {}, "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4,
+        "ip_range": {"cidr": "0.0.0.0/0"}, "id": 5}, {"from_port": 80, "group": {"tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "tcp", "to_port": 80, "parent_group_id": 4, "ip_range": {},
+        "id": 6}, {"from_port": 1, "group": {}, "ip_protocol": "udp", "to_port": 2,
+        "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 7}, {"from_port":
+        1, "group": {}, "ip_protocol": "udp", "to_port": 65535, "parent_group_id":
+        4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 8}, {"from_port": 3, "group":
+        {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "udp", "to_port": 4, "parent_group_id": 4, "ip_range": {},
+        "id": 9}, {"from_port": 0, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"}, "id": 10}, {"from_port":
+        -1, "group": {"tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "name": "EmsRefreshSpec-SecurityGroup"},
+        "ip_protocol": "icmp", "to_port": -1, "parent_group_id": 4, "ip_range": {},
+        "id": 12}, {"from_port": -1, "group": {}, "ip_protocol": "icmp", "to_port":
+        -1, "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 13}], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
+        "description": "EmsRefreshSpec-SecurityGroup"}, {"rules": [], "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "id": 5, "name": "EmsRefreshSpec-SecurityGroup2",
+        "description": "EmsRefreshSpec-SecurityGroup2"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:03 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-2ce67ebf-5dd3-4a99-b925-386597e0a938
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:18 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:03 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/bd356ece-8cdb-4580-952a-362c5844fa07/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-3a7776e1-b098-48c2-8e4d-513d3bd5b515
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '139'
+      Date:
+      - Tue, 22 Apr 2014 19:10:18 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "id": 1, "name": "default", "description": "default"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:03 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 6c724f6a1b744d6681aa15f84c6cf9a2
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-2f0eed35-4d6c-4dfc-9b99-bd877079cad8
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '830'
+      Date:
+      - Tue, 22 Apr 2014 19:10:19 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 22 Apr 2014 19:14:03 GMT
+recorded_with: VCR 2.4.0

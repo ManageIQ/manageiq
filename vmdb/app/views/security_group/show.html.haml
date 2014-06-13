@@ -1,0 +1,5 @@
+#main_div
+  - if ["instances"].include?(@display) && @showtype != "compare"
+    = render :partial => "layouts/gtl", :locals=>{:action_url=>"show/#{@security_group.id}"}
+  - else
+    = render(:partial=>@showtype)

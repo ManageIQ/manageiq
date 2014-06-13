@@ -1,0 +1,58 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqTask
+:button_groups:
+- :name: miq_task_reloading
+  :items:
+    - :button: miq_task_reload
+      :image: reload
+      :text: "Reload"
+      :title: Reload the current display
+      :url_parms: 'main_div'
+- :name: miq_task_delete
+  :items:
+  - :buttonSelect: miq_task_delete_choice
+    :image: delete_group
+    :title: Delete Tasks
+    :enabled: 'true'    
+    :items:
+    - :button: miq_task_delete
+      :image: delete
+      :text: "Delete"
+      :title: Delete selected tasks from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected tasks will be permanently removed from the database. Are you sure you want to delete the selected tasks?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: miq_task_deleteolder
+      :image: delete
+      :text: "Delete Older"
+      :title: Delete tasks older than the selected task
+      :url_parms: 'main_div'
+      :confirm: "Warning: Tasks that are older than selected task will be permanently removed from the database. Are you sure you want to delete older tasks?"
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: miq_task_deleteall
+      :image: delete
+      :text: "Delete All"
+      :title: Delete all finished tasks
+      :url_parms: 'main_div'
+      :confirm: "Warning: Finished tasks will be permanently removed from the database. Are you sure you want to delete all finished tasks?"
+      :enabled: 'true'
+- :name: miq_task_editing
+  :items:
+    - :button: miq_task_canceljob
+      :image: cancel
+      :text: "Cancel Job"
+      :title: Cancel the selected task
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected task will be cancelled. Are you sure you want to cancel the task?"
+      :enabled: 'false'
+      :onwhen: '1'
+
+
+
+
+

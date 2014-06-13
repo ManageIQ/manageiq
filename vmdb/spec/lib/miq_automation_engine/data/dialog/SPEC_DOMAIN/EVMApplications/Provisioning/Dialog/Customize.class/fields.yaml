@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: Fields
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: fields
+  - value1:
+      value: /EVMApplications/Provisioning/Dialog/Customize_fields/*

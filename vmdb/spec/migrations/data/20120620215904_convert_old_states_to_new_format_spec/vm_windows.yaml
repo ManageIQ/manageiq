@@ -1,0 +1,879 @@
+---
+- id: 4
+  name: vm
+  timestamp: 2013-03-21 21:35:53.000000000 Z
+  created_on: 2013-03-21 21:35:59.576283000 Z
+  stats: ! "--- \nname: Vm1\nmemory_shares: \"40960\"\ncpu_reserve_expand:
+    \"false\"\noriginal_filename: vm\nmemory_reserve: \"0\"\nlocation: Vm1/Vm1.vmx\ntools_status:
+    toolsOk\ncpu_shares: \"1000\"\ncreated_on: \"1363901759\"\ncpu_limit: \"-1\"\nid:
+    \"447000000001072\"\nmemory_shares_level: normal\ncpu_shares_level: normal\nlast_scan_on:
+    Thu Mar 21 19:44:24 UTC 2013\nversion: \"2.0\"\nmemory_reserve_expand: \"false\"\nmemory_limit:
+    \"-1\"\ncpu_reserve: \"0\"\nvendor: VMware\nboot_time: Thu Feb 21 00:37:17 UTC
+    2013\n_timestamp_: \"1363901753\"\ndisplay_time: \"2013-03-21T21:35:59Z\"\n"
+  scantype: full
+  resource_id: 447000000001072
+  resource_type: Vm
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><vm cpu_reserve_expand='false' memory_shares='40960'
+    name='Vm1' location='Vm1/Vm1.vmx'
+    memory_reserve='0' original_filename='vm' created_on='1363901759' cpu_shares='1000'
+    tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal'
+    id='447000000001072' version='2.0' last_scan_on='Thu Mar 21 19:44:24 UTC 2013'
+    cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false' boot_time='Thu
+    Feb 21 00:37:17 UTC 2013' vendor='VMware' display_time='2013-03-21T21:35:59Z'
+    _timestamp_='1363901753'><filesystem_drivers _macro_='has_many'><system_service
+    id='447000000010571' start='Manual' display_name='@%systemroot%\system32\browser.dll,-102'
+    image_path='system32\DRIVERS\bowser.sys'/><system_service id='447000000010579'
+    start='Disabled' display_name='CD/DVD File System Reader' image_path='system32\DRIVERS\cdfs.sys'/><system_service
+    id='447000000010599' start='System Start' display_name='@%systemroot%\system32\drivers\dfsc.sys,-101'
+    image_path='System32\Drivers\dfsc.sys'/><system_service id='447000000010617' start='Manual'
+    display_name='exFAT File System Driver'/><system_service id='447000000010618'
+    start='Manual' display_name='FAT12/16/32 File System Driver'/><system_service
+    id='447000000010623' start='Manual' display_name='@%SystemRoot%\system32\drivers\fileinfo.sys,-100'
+    image_path='system32\drivers\fileinfo.sys'/><system_service id='447000000010624'
+    start='Manual' display_name='@%SystemRoot%\system32\drivers\filetrace.sys,-10001'
+    image_path='system32\drivers\filetrace.sys'/><system_service id='447000000010626'
+    start='Boot Start' display_name='@%SystemRoot%\system32\drivers\fltmgr.sys,-10001'
+    image_path='system32\drivers\fltmgr.sys'/><system_service id='447000000010629'
+    start='Manual' display_name='@%SystemRoot%\system32\drivers\fsdepends.sys,-10001'
+    image_path='System32\drivers\FsDepends.sys'/><system_service id='447000000010676'
+    start='Automatic' display_name='@%systemroot%\system32\drivers\luafv.sys,-100'
+    image_path='\SystemRoot\system32\drivers\luafv.sys'/><system_service id='447000000010688'
+    start='Manual' display_name='@%systemroot%\system32\wkssvc.dll,-1002' image_path='system32\DRIVERS\mrxsmb.sys'/><system_service
+    id='447000000010689' start='Manual' display_name='@%systemroot%\system32\wkssvc.dll,-1004'
+    image_path='system32\DRIVERS\mrxsmb10.sys'/><system_service id='447000000010690'
+    start='Manual' display_name='@%systemroot%\system32\wkssvc.dll,-1006' image_path='system32\DRIVERS\mrxsmb20.sys'/><system_service
+    id='447000000010696' start='System Start'/><system_service id='447000000010704'
+    start='Boot Start' display_name='@%systemroot%\system32\drivers\mup.sys,-101'
+    image_path='System32\Drivers\mup.sys'/><system_service id='447000000010712' start='System
+    Start' display_name='NetBIOS Interface' image_path='system32\DRIVERS\netbios.sys'/><system_service
+    id='447000000010723' start='System Start'/><system_service id='447000000010727'
+    start='Manual' display_name=''/><system_service id='447000000010764' start='System
+    Start' display_name='@%systemroot%\system32\wkssvc.dll,-1000' image_path='system32\DRIVERS\rdbss.sys'/><system_service
+    id='447000000010816' start='Manual' display_name='@%systemroot%\system32\srvsvc.dll,-102'
+    image_path='System32\DRIVERS\srv.sys'/><system_service id='447000000010817' start='Manual'
+    display_name='@%systemroot%\system32\srvsvc.dll,-104' image_path='System32\DRIVERS\srv2.sys'/><system_service
+    id='447000000010818' start='Manual' display_name='' image_path='System32\DRIVERS\srvnet.sys'/><system_service
+    id='447000000010848' start='Disabled' display_name='udfs' image_path='system32\DRIVERS\udfs.sys'/><system_service
+    id='447000000010900' start='Manual' display_name='WIMMount' image_path='\??\C:\Program
+    Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Deployment Tools\amd64\DISM\wimmount.sys'/></filesystem_drivers><groups
+    _macro_='has_many'><account name='Administrators' id='447000000006551'/><account
+    name='Backup Operators' id='447000000006552'/><account name='Certificate Service
+    DCOM Access' id='447000000006553'/><account name='Cryptographic Operators' id='447000000006554'/><account
+    name='Distributed COM Users' id='447000000006555'/><account name='Event Log Readers'
+    id='447000000006556'/><account name='Guests' id='447000000006557'/><account name='IIS_IUSRS'
+    id='447000000006558'/><account name='Network Configuration Operators' id='447000000006559'/><account
+    name='Performance Log Users' id='447000000006560'/><account name='Performance
+    Monitor Users' id='447000000006561'/><account name='Power Users' id='447000000006562'/><account
+    name='Print Operators' id='447000000006563'/><account name='Remote Desktop Users'
+    id='447000000006564'/><account name='Replicator' id='447000000006565'/><account
+    name='Users' id='447000000006566'/></groups><guest_applications _macro_='has_many'><guest_application
+    id='447000000034833' version='9.0.30729.4148' vendor='Microsoft Corporation' v_unique_name='Microsoft
+    Visual C++ 2008 Redistributable - x64 9.0.30729.4148'/><guest_application id='447000000034834'
+    version='8.59.25584' vendor='Microsoft' v_unique_name='WPT Redistributables'/><guest_application
+    id='447000000034835' version='8.59.25584' vendor='Microsoft' v_unique_name='Windows
+    PE x86 x64 wims'/><guest_application id='447000000034836' version='6.1.2369.0'
+    vendor='Microsoft Corporation' v_unique_name='Microsoft Deployment Toolkit 2012
+    Update 1 (6.1.2369.0)'/><guest_application id='447000000034837' version='8.59.25584'
+    vendor='Microsoft' v_unique_name='Kits Configuration Installer'/><guest_application
+    id='447000000034838' version='8.59.25584' vendor='Microsoft' v_unique_name='Windows
+    System Image Manager on amd64'/><guest_application id='447000000034839' version='9.0.30729.6161'
+    vendor='Microsoft Corporation' v_unique_name='Microsoft Visual C++ 2008 Redistributable
+    - x64 9.0.30729.6161'/><guest_application id='447000000034840' version='2.0.0.0'
+    vendor='Microsoft Corporation' v_unique_name='Windows Automated Installation Kit'/><guest_application
+    id='447000000034841' version='9.0.30729.6161' vendor='Microsoft Corporation' v_unique_name='Microsoft
+    Visual C++ 2008 Redistributable - x86 9.0.30729.6161'/><guest_application id='447000000034842'
+    version='8.59.25584' vendor='Microsoft' v_unique_name='Toolkit Documentation'/><guest_application
+    id='447000000034843' version='8.6.0.6868' vendor='VMware, Inc.' v_unique_name='VMware
+    Tools'/><guest_application id='447000000034844' version='8.59.25584' vendor='Microsoft'
+    v_unique_name='Windows PE x86 x64'/><guest_application id='447000000034845' version='4.0.30319'
+    vendor='Microsoft Corporation' v_unique_name='Microsoft .NET Framework 4 Extended'/><guest_application
+    id='447000000034846' version='8.59.25584' vendor='Microsoft' v_unique_name='WPTx64'/><guest_application
+    id='447000000034847' version='9.0.30729.4148' vendor='Microsoft Corporation' v_unique_name='Microsoft
+    Visual C++ 2008 Redistributable - x86 9.0.30729.4148'/><guest_application id='447000000034848'
+    version='5.1.10411.0' vendor='Microsoft Corporation' v_unique_name='Microsoft
+    Silverlight'/><guest_application id='447000000034849' version='8.59.25584' vendor='Microsoft'
+    v_unique_name='Windows Deployment Customizations'/><guest_application id='447000000034850'
+    version='4.0.30319' vendor='Microsoft Corporation' v_unique_name='Microsoft .NET
+    Framework 4 Client Profile'/><guest_application id='447000000034851' version='8.59.25584'
+    vendor='Microsoft' v_unique_name='Windows Deployment Tools'/><guest_application
+    id='447000000034852' version='9.00.8112.16446' vendor='Microsoft Corporation'
+    v_unique_name='Internet Explorer'/><guest_application id='447000000034853' version='8.6.0
+    build-446312' vendor='VMware, Inc.' v_unique_name='VMware Tools tray application'/><guest_application
+    id='447000000034854' v_unique_name='Magic ISO Maker v5.5 (build 0281)'/><guest_application
+    id='447000000034855' version='8.59.25584' vendor='Microsoft Corporation' v_unique_name='Assessment
+    and Deployment Kit'/></guest_applications><hardware bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    guest_os='windows7server64' memory_cpu='4096' id='447000000001079' config_version='vmx-08'
+    guest_os_full_name='Microsoft Windows Server 2008 R2 (64-bit)' numvcpus='1'><cdroms
+    _macro_='has_many'><disk location='1:0' start_connected='true' device_type='cdrom-image'
+    id='447000000001979' filename='[Datastore1] Vm1/[]' present='true'
+    device_name='CD/DVD drive 1'/></cdroms><disks _macro_='has_many'><disk size_on_disk='38621151232'
+    location='0:0' size='42949672960' unallocated_space='2097152' start_connected='true'
+    allocated_space='42947575808' device_type='disk' id='447000000001978' filename='[Datastore1]
+    Vm1/Vm1.vmdk' present='true' device_name='Hard disk
+    1'/><disk location='1:0' start_connected='true' device_type='cdrom-image' id='447000000001979'
+    filename='[Datastore1] Vm1/[]' present='true' device_name='CD/DVD
+    drive 1'/><disk location='0' start_connected='false' device_type='floppy' id='447000000003146'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></disks><floppies
+    _macro_='has_many'><disk location='0' start_connected='false' device_type='floppy'
+    id='447000000003146' filename='[Datastore1] Vm1/' present='true'
+    device_name='disk'/></floppies><nics _macro_='has_many'><guest_device address='00:50:56:91:05:9d'
+    location='6' start_connected='true' id='447000000001147' present='true'/></nics><volumes
+    _macro_='has_many'><volume name='' typ='physical' size='104857600' id='447000000000439'/><volume
+    name='C:' typ='physical' free_space='4067311616' size='42842718208' filesystem='NTFS'
+    used_space='38775406592' id='447000000000440'/></volumes></hardware><kernel_drivers
+    _macro_='has_many'><system_service id='447000000010522'/><system_service id='447000000010523'/><system_service
+    id='447000000010524'/><system_service id='447000000010525'/><system_service id='447000000010526'/><system_service
+    id='447000000010527'/><system_service id='447000000010528'/><system_service id='447000000010529'
+    start='Manual' display_name='1394 OHCI Compliant Host Controller' image_path='\SystemRoot\system32\drivers\1394ohci.sys'/><system_service
+    id='447000000010530' start='Boot Start' display_name='Microsoft ACPI Driver' image_path='system32\drivers\ACPI.sys'/><system_service
+    id='447000000010531' start='Manual' display_name='ACPI Power Meter Driver' image_path='\SystemRoot\system32\drivers\acpipmi.sys'/><system_service
+    id='447000000010532' start='Manual' image_path='\SystemRoot\system32\drivers\adp94xx.sys'/><system_service
+    id='447000000010533' start='Manual' image_path='\SystemRoot\system32\drivers\adpahci.sys'/><system_service
+    id='447000000010534' start='Manual' image_path='\SystemRoot\system32\drivers\adpu320.sys'/><system_service
+    id='447000000010535'/><system_service id='447000000010537' start='System Start'
+    display_name='@%systemroot%\system32\drivers\afd.sys,-1000' image_path='\SystemRoot\system32\drivers\afd.sys'/><system_service
+    id='447000000010538' start='Manual' display_name='Intel AGP Bus Filter' image_path='\SystemRoot\system32\drivers\agp440.sys'/><system_service
+    id='447000000010540' start='Manual' image_path='\SystemRoot\system32\drivers\aliide.sys'/><system_service
+    id='447000000010541' start='Manual' image_path='\SystemRoot\system32\drivers\amdide.sys'/><system_service
+    id='447000000010542' start='Manual' display_name='AMD K8 Processor Driver' image_path='\SystemRoot\system32\drivers\amdk8.sys'/><system_service
+    id='447000000010543' start='Manual' display_name='AMD Processor Driver' image_path='\SystemRoot\system32\drivers\amdppm.sys'/><system_service
+    id='447000000010544' start='Manual' image_path='\SystemRoot\system32\drivers\amdsata.sys'/><system_service
+    id='447000000010545' start='Manual' image_path='\SystemRoot\system32\drivers\amdsbs.sys'/><system_service
+    id='447000000010546' start='Boot Start' image_path='system32\drivers\amdxata.sys'/><system_service
+    id='447000000010548' start='Manual' display_name='@%systemroot%\system32\appidsvc.dll,-102'
+    image_path='\SystemRoot\system32\drivers\appid.sys'/><system_service id='447000000010552'
+    start='Manual' image_path='\SystemRoot\system32\drivers\arc.sys'/><system_service
+    id='447000000010553' start='Manual' image_path='\SystemRoot\system32\drivers\arcsas.sys'/><system_service
+    id='447000000010554'/><system_service id='447000000010555'/><system_service id='447000000010556'/><system_service
+    id='447000000010557'/><system_service id='447000000010558'/><system_service id='447000000010560'
+    start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32000' image_path='system32\DRIVERS\asyncmac.sys'/><system_service
+    id='447000000010561' start='Boot Start' display_name='IDE Channel' image_path='system32\drivers\atapi.sys'/><system_service
+    id='447000000010564' start='Manual' display_name='Broadcom NetXtreme II VBD' image_path='\SystemRoot\system32\drivers\bxvbda.sys'/><system_service
+    id='447000000010565' start='Manual' display_name='Broadcom NetXtreme Gigabit Ethernet
+    - NDIS 6.0' image_path='system32\DRIVERS\b57nd60a.sys'/><system_service id='447000000010566'/><system_service
+    id='447000000010567' start='Manual' display_name='Beep'/><system_service id='447000000010570'
+    start='System Start' image_path='system32\DRIVERS\blbdrive.sys'/><system_service
+    id='447000000010572' start='Manual' display_name='Brother USB Mass-Storage Lower
+    Filter Driver' image_path='\SystemRoot\system32\drivers\BrFiltLo.sys'/><system_service
+    id='447000000010573' start='Manual' display_name='Brother USB Mass-Storage Upper
+    Filter Driver' image_path='\SystemRoot\system32\drivers\BrFiltUp.sys'/><system_service
+    id='447000000010575' start='Manual' display_name='Brother MFC Serial Port Interface
+    Driver (WDM)' image_path='\SystemRoot\System32\Drivers\Brserid.sys'/><system_service
+    id='447000000010576' start='Manual' display_name='Brother WDM Serial driver' image_path='\SystemRoot\System32\Drivers\BrSerWdm.sys'/><system_service
+    id='447000000010577' start='Manual' display_name='Brother MFC USB Fax Only Modem'
+    image_path='\SystemRoot\System32\Drivers\BrUsbMdm.sys'/><system_service id='447000000010578'
+    start='Manual' display_name='Brother MFC USB Serial WDM Driver' image_path='\SystemRoot\System32\Drivers\BrUsbSer.sys'/><system_service
+    id='447000000010580' start='System Start' display_name='CD-ROM Driver' image_path='system32\DRIVERS\cdrom.sys'/><system_service
+    id='447000000010582' start='Boot Start' display_name='@%SystemRoot%\system32\clfs.sys,-100'
+    image_path='System32\CLFS.sys'/><system_service id='447000000010587' start='Manual'
+    display_name='Microsoft AC Adapter Driver' image_path='system32\DRIVERS\CmBatt.sys'/><system_service
+    id='447000000010588' start='Manual' image_path='\SystemRoot\system32\drivers\cmdide.sys'/><system_service
+    id='447000000010589' start='Boot Start' display_name='' image_path='System32\Drivers\cng.sys'/><system_service
+    id='447000000010590' start='Boot Start' display_name='Microsoft Composite Battery
+    Driver' image_path='system32\DRIVERS\compbatt.sys'/><system_service id='447000000010591'
+    start='Manual' display_name='Composite Bus Enumerator Driver' image_path='system32\DRIVERS\CompositeBus.sys'/><system_service
+    id='447000000010593' start='Disabled' display_name='Crcdisk Filter Driver' image_path='\SystemRoot\system32\drivers\crcdisk.sys'/><system_service
+    id='447000000010594'/><system_service id='447000000010596'/><system_service id='447000000010601'
+    start='System Start' display_name='@%systemroot%\system32\drivers\discache.sys,-102'
+    image_path='System32\drivers\discache.sys'/><system_service id='447000000010602'
+    start='Boot Start' display_name='Disk Driver' image_path='system32\drivers\disk.sys'/><system_service
+    id='447000000010603' start='Manual' image_path='\SystemRoot\system32\drivers\dmvsc.sys'/><system_service
+    id='447000000010607' start='Manual' display_name='LDDM Graphics Subsystem' image_path='\SystemRoot\System32\drivers\dxgkrnl.sys'/><system_service
+    id='447000000010608' start='Manual' display_name='Intel(R) PRO/1000 NDIS 6 Adapter
+    Driver' image_path='system32\DRIVERS\E1G6032E.sys'/><system_service id='447000000010610'
+    start='Manual' display_name='Broadcom NetXtreme II 10 GigE VBD' image_path='\SystemRoot\system32\drivers\evbda.sys'/><system_service
+    id='447000000010612' start='Manual' image_path='\SystemRoot\system32\drivers\elxstor.sys'/><system_service
+    id='447000000010613' start='Manual' display_name='Microsoft Hardware Error Device
+    Driver' image_path='\SystemRoot\system32\drivers\errdev.sys'/><system_service
+    id='447000000010614'/><system_service id='447000000010620' start='Manual' display_name='Floppy
+    Disk Controller Driver' image_path='system32\DRIVERS\fdc.sys'/><system_service
+    id='447000000010625' start='Manual' display_name='Floppy Disk Driver' image_path='system32\DRIVERS\flpydisk.sys'/><system_service
+    id='447000000010630' start='Boot Start' display_name=''/><system_service id='447000000010631'
+    start='Manual' display_name='Microsoft Generic AGPv3.0 Filter for K8 Processor
+    Platforms' image_path='\SystemRoot\system32\drivers\gagp30kx.sys'/><system_service
+    id='447000000010633' start='Manual' display_name='Microsoft UAA Bus Driver for
+    High Definition Audio' image_path='\SystemRoot\system32\drivers\HDAudBus.sys'/><system_service
+    id='447000000010634' start='Manual' display_name='HID UPS Battery Driver' image_path='\SystemRoot\system32\drivers\HidBatt.sys'/><system_service
+    id='447000000010636' start='Manual' display_name='Microsoft HID Class Driver'
+    image_path='\SystemRoot\system32\drivers\hidusb.sys'/><system_service id='447000000010638'
+    start='Manual' image_path='\SystemRoot\system32\drivers\HpSAMD.sys'/><system_service
+    id='447000000010639' start='Manual' display_name='@%SystemRoot%\system32\drivers\http.sys,-1'
+    image_path='system32\drivers\HTTP.sys'/><system_service id='447000000010640' start='Boot
+    Start' display_name='@%systemroot%\system32\drivers\hwpolicy.sys,-101' image_path='System32\drivers\hwpolicy.sys'/><system_service
+    id='447000000010641' start='Manual' display_name='i8042 Keyboard and PS/2 Mouse
+    Port Driver' image_path='system32\DRIVERS\i8042prt.sys'/><system_service id='447000000010642'
+    start='Manual' display_name='Intel RAID Controller Windows 7' image_path='\SystemRoot\system32\drivers\iaStorV.sys'/><system_service
+    id='447000000010644' start='Manual' image_path='\SystemRoot\system32\drivers\iirsp.sys'/><system_service
+    id='447000000010646'/><system_service id='447000000010647'/><system_service id='447000000010648'
+    start='Boot Start' image_path='system32\drivers\intelide.sys'/><system_service
+    id='447000000010649' start='Manual' display_name='Intel Processor Driver' image_path='system32\DRIVERS\intelppm.sys'/><system_service
+    id='447000000010650' start='Manual' display_name='Intel(R) QuickData Technology
+    Device' image_path='\SystemRoot\System32\Drivers\qd260x64.sys'/><system_service
+    id='447000000010652' start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32013'
+    image_path='system32\DRIVERS\ipfltdrv.sys'/><system_service id='447000000010654'
+    start='Manual' image_path='\SystemRoot\system32\drivers\IPMIDrv.sys'/><system_service
+    id='447000000010655' start='Manual' display_name='IP Network Address Translator'
+    image_path='System32\drivers\ipnat.sys'/><system_service id='447000000010656'
+    start='Manual' image_path='\SystemRoot\system32\drivers\isapnp.sys'/><system_service
+    id='447000000010657' start='Manual' display_name='iScsiPort Driver' image_path='\SystemRoot\system32\drivers\msiscsi.sys'/><system_service
+    id='447000000010658' start='Manual' display_name='Keyboard Class Driver' image_path='system32\DRIVERS\kbdclass.sys'/><system_service
+    id='447000000010659' start='Manual' display_name='Keyboard HID Driver' image_path='\SystemRoot\system32\drivers\kbdhid.sys'/><system_service
+    id='447000000010661' start='Boot Start' display_name='' image_path='System32\Drivers\ksecdd.sys'/><system_service
+    id='447000000010662' start='Boot Start' display_name='' image_path='System32\Drivers\ksecpkg.sys'/><system_service
+    id='447000000010663' start='Manual' display_name='Kernel Streaming Thunks' image_path='\SystemRoot\system32\drivers\ksthunk.sys'/><system_service
+    id='447000000010667'/><system_service id='447000000010668' start='Automatic' display_name='Link-Layer
+    Topology Discovery Mapper I/O Driver' image_path='system32\DRIVERS\lltdio.sys'/><system_service
+    id='447000000010671'/><system_service id='447000000010672' start='Manual' image_path='\SystemRoot\system32\drivers\lsi_fc.sys'/><system_service
+    id='447000000010673' start='Boot Start' image_path='system32\drivers\lsi_sas.sys'/><system_service
+    id='447000000010674' start='Manual' image_path='\SystemRoot\system32\drivers\lsi_sas2.sys'/><system_service
+    id='447000000010675' start='Manual' image_path='\SystemRoot\system32\drivers\lsi_scsi.sys'/><system_service
+    id='447000000010677' start='Manual' image_path='\SystemRoot\system32\drivers\megasas.sys'/><system_service
+    id='447000000010678' start='Manual' image_path='\SystemRoot\system32\drivers\MegaSR.sys'/><system_service
+    id='447000000010680' start='Manual' display_name='' image_path='system32\drivers\modem.sys'/><system_service
+    id='447000000010681' start='Manual' display_name='Microsoft Monitor Class Function
+    Driver Service' image_path='system32\DRIVERS\monitor.sys'/><system_service id='447000000010682'
+    start='Manual' display_name='Mouse Class Driver' image_path='system32\DRIVERS\mouclass.sys'/><system_service
+    id='447000000010683' start='Manual' display_name='Mouse HID Driver' image_path='\SystemRoot\system32\drivers\mouhid.sys'/><system_service
+    id='447000000010684' start='Boot Start' display_name='@%SystemRoot%\system32\drivers\mountmgr.sys,-100'
+    image_path='System32\drivers\mountmgr.sys'/><system_service id='447000000010685'
+    start='Manual' image_path='\SystemRoot\system32\drivers\mpio.sys'/><system_service
+    id='447000000010686' start='Manual' display_name='@%SystemRoot%\system32\FirewallAPI.dll,-23092'
+    image_path='System32\drivers\mpsdrv.sys'/><system_service id='447000000010691'
+    start='Manual' image_path='\SystemRoot\system32\drivers\msahci.sys'/><system_service
+    id='447000000010692' start='Manual' image_path='\SystemRoot\system32\drivers\msdsm.sys'/><system_service
+    id='447000000010694'/><system_service id='447000000010695'/><system_service id='447000000010697'
+    start='Manual' display_name='@%SystemRoot%\system32\drivers\mshidkmdf.sys,-100'
+    image_path='\SystemRoot\System32\drivers\mshidkmdf.sys'/><system_service id='447000000010698'
+    start='Boot Start' image_path='system32\drivers\msisadrv.sys'/><system_service
+    id='447000000010701' start='Manual'/><system_service id='447000000010702' start='System
+    Start' display_name='Microsoft System Management BIOS Driver' image_path='system32\DRIVERS\mssmbios.sys'/><system_service
+    id='447000000010703' start='Manual' display_name='Microsoft Input Configuration
+    Driver' image_path='\SystemRoot\system32\drivers\MTConfig.sys'/><system_service
+    id='447000000010706' start='Boot Start' display_name='@%SystemRoot%\system32\drivers\ndis.sys,-200'
+    image_path='system32\drivers\ndis.sys'/><system_service id='447000000010707' start='Manual'
+    display_name='NDIS Capture LightWeight Filter' image_path='system32\DRIVERS\ndiscap.sys'/><system_service
+    id='447000000010708' start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32001'
+    image_path='system32\DRIVERS\ndistapi.sys'/><system_service id='447000000010709'
+    start='Manual' display_name='NDIS Usermode I/O Protocol' image_path='system32\DRIVERS\ndisuio.sys'/><system_service
+    id='447000000010710' start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32002'
+    image_path='system32\DRIVERS\ndiswan.sys'/><system_service id='447000000010711'
+    start='Manual' display_name='NDIS Proxy'/><system_service id='447000000010713'
+    start='System Start' display_name='@%SystemRoot%\system32\drivers\netbt.sys,-2'
+    image_path='System32\DRIVERS\netbt.sys'/><system_service id='447000000010721'
+    start='Manual' image_path='\SystemRoot\system32\drivers\nfrd960.sys'/><system_service
+    id='447000000010725' start='System Start' display_name='@%SystemRoot%\system32\drivers\nsiproxy.sys,-2'
+    image_path='system32\drivers\nsiproxy.sys'/><system_service id='447000000010726'/><system_service
+    id='447000000010728' start='System Start'/><system_service id='447000000010729'
+    start='Manual' image_path='\SystemRoot\system32\drivers\nvraid.sys'/><system_service
+    id='447000000010730' start='Manual' image_path='\SystemRoot\system32\drivers\nvstor.sys'/><system_service
+    id='447000000010731' start='Manual' display_name='NVIDIA nForce AGP Bus Filter'
+    image_path='\SystemRoot\system32\drivers\nv_agp.sys'/><system_service id='447000000010732'
+    start='Manual' display_name='1394 OHCI Compliant Host Controller (Legacy)' image_path='\SystemRoot\system32\drivers\ohci1394.sys'/><system_service
+    id='447000000010733' start='Manual' display_name='Parallel port driver' image_path='system32\DRIVERS\parport.sys'/><system_service
+    id='447000000010734' start='Boot Start' display_name='@%SystemRoot%\system32\drivers\partmgr.sys,-100'
+    image_path='System32\drivers\partmgr.sys'/><system_service id='447000000010735'
+    start='Boot Start' display_name='PCI Bus Driver' image_path='system32\drivers\pci.sys'/><system_service
+    id='447000000010736' start='Manual' image_path='\SystemRoot\system32\drivers\pciide.sys'/><system_service
+    id='447000000010737' start='Manual' image_path='\SystemRoot\system32\drivers\pcmcia.sys'/><system_service
+    id='447000000010738' start='Boot Start' display_name='Performance Counters for
+    Windows Driver' image_path='System32\drivers\pcw.sys'/><system_service id='447000000010739'
+    start='Automatic' display_name='PEAUTH' image_path='system32\drivers\peauth.sys'/><system_service
+    id='447000000010740'/><system_service id='447000000010742'/><system_service id='447000000010743'/><system_service
+    id='447000000010744'/><system_service id='447000000010748'/><system_service id='447000000010750'
+    start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32006' image_path='system32\DRIVERS\raspptp.sys'/><system_service
+    id='447000000010751' start='Manual' display_name='Processor Driver' image_path='\SystemRoot\system32\drivers\processr.sys'/><system_service
+    id='447000000010754' start='System Start' display_name='@%SystemRoot%\System32\drivers\pacer.sys,-101'
+    image_path='system32\DRIVERS\pacer.sys'/><system_service id='447000000010755'
+    start='Manual' image_path='\SystemRoot\system32\drivers\ql2300.sys'/><system_service
+    id='447000000010756' start='Manual' image_path='\SystemRoot\system32\drivers\ql40xx.sys'/><system_service
+    id='447000000010757' start='Manual' display_name='Remote Access Auto Connection
+    Driver' image_path='System32\DRIVERS\rasacd.sys'/><system_service id='447000000010758'
+    start='Manual' display_name='WAN Miniport (IKEv2)' image_path='system32\DRIVERS\AgileVpn.sys'/><system_service
+    id='447000000010760' start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32005'
+    image_path='system32\DRIVERS\rasl2tp.sys'/><system_service id='447000000010762'
+    start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32007' image_path='system32\DRIVERS\raspppoe.sys'/><system_service
+    id='447000000010763' start='Manual' display_name='@%systemroot%\system32\sstpsvc.dll,-202'
+    image_path='system32\DRIVERS\rassstp.sys'/><system_service id='447000000010765'
+    start='Manual' display_name='Remote Desktop Device Redirector Bus Driver' image_path='system32\DRIVERS\rdpbus.sys'/><system_service
+    id='447000000010766' start='System Start' display_name='@%systemroot%\system32\DRIVERS\RDPCDD.sys,-100'
+    image_path='System32\DRIVERS\RDPCDD.sys'/><system_service id='447000000010767'/><system_service
+    id='447000000010768' start='Manual' display_name='Terminal Server Device Redirector
+    Driver' image_path='System32\drivers\rdpdr.sys'/><system_service id='447000000010769'
+    start='System Start' display_name='@%systemroot%\system32\drivers\RDPENCDD.sys,-101'
+    image_path='system32\drivers\rdpencdd.sys'/><system_service id='447000000010770'
+    display_name='@%systemroot%\system32\drprov.dll,-100'/><system_service id='447000000010771'
+    start='System Start' display_name='@%systemroot%\system32\drivers\RdpRefMp.sys,-101'
+    image_path='system32\drivers\rdprefmp.sys'/><system_service id='447000000010772'
+    start='Manual' display_name='RDP Winstation Driver'/><system_service id='447000000010779'
+    start='Automatic' display_name='Link-Layer Topology Discovery Responder' image_path='system32\DRIVERS\rspndr.sys'/><system_service
+    id='447000000010780' start='Manual' image_path='\SystemRoot\system32\drivers\vms3cap.sys'/><system_service
+    id='447000000010781' start='Boot Start' display_name='sacdrv' image_path='system32\DRIVERS\sacdrv.sys'/><system_service
+    id='447000000010784' start='Manual' image_path='\SystemRoot\system32\drivers\sbp2port.sys'/><system_service
+    id='447000000010786' start='Manual' display_name='@%SystemRoot%\System32\drivers\scfilter.sys,-11'
+    image_path='System32\DRIVERS\scfilter.sys'/><system_service id='447000000010789'
+    start='Automatic' display_name='Security Driver'/><system_service id='447000000010792'
+    start='Manual' display_name='Serenum Filter Driver' image_path='system32\DRIVERS\serenum.sys'/><system_service
+    id='447000000010793' start='System Start' display_name='Serial port driver' image_path='system32\DRIVERS\serial.sys'/><system_service
+    id='447000000010794' start='Manual' display_name='Serial Mouse Driver' image_path='\SystemRoot\system32\drivers\sermouse.sys'/><system_service
+    id='447000000010795'/><system_service id='447000000010796'/><system_service id='447000000010797'/><system_service
+    id='447000000010799' start='Manual' display_name='SFF Storage Class Driver' image_path='\SystemRoot\system32\drivers\sffdisk.sys'/><system_service
+    id='447000000010800' start='Manual' display_name='SFF Storage Protocol Driver
+    for MMC' image_path='\SystemRoot\system32\drivers\sffp_mmc.sys'/><system_service
+    id='447000000010801' start='Manual' display_name='SFF Storage Protocol Driver
+    for SDBus' image_path='\SystemRoot\system32\drivers\sffp_sd.sys'/><system_service
+    id='447000000010802' start='Manual' display_name='High-Capacity Floppy Disk Drive'
+    image_path='\SystemRoot\system32\drivers\sfloppy.sys'/><system_service id='447000000010805'
+    start='Manual' image_path='\SystemRoot\system32\drivers\SiSRaid2.sys'/><system_service
+    id='447000000010806' start='Manual' image_path='\SystemRoot\system32\drivers\sisraid4.sys'/><system_service
+    id='447000000010807' start='Manual' display_name='@%SystemRoot%\system32\tcpipcfg.dll,-50005'
+    image_path='system32\DRIVERS\smb.sys'/><system_service id='447000000010808'/><system_service
+    id='447000000010809'/><system_service id='447000000010810'/><system_service id='447000000010812'
+    start='Boot Start' display_name='Security Processor Loader Driver'/><system_service
+    id='447000000010821' start='Manual' image_path='\SystemRoot\system32\drivers\stexstor.sys'/><system_service
+    id='447000000010822' start='Boot Start' display_name='@%SystemRoot%\system32\vmstorfltres.dll,-1000'
+    image_path='system32\drivers\vmstorfl.sys'/><system_service id='447000000010823'
+    start='Manual' image_path='\SystemRoot\system32\drivers\storvsc.sys'/><system_service
+    id='447000000010824' start='Manual' image_path='\SystemRoot\system32\drivers\storvsp.sys'/><system_service
+    id='447000000010825' start='Manual' display_name='Software Bus Driver' image_path='system32\DRIVERS\swenum.sys'/><system_service
+    id='447000000010829' start='Boot Start' display_name='@%SystemRoot%\system32\tcpipcfg.dll,-50003'
+    image_path='System32\drivers\tcpip.sys'/><system_service id='447000000010830'
+    start='Manual' display_name='Microsoft IPv6 Protocol Driver' image_path='system32\DRIVERS\tcpip.sys'/><system_service
+    id='447000000010831'/><system_service id='447000000010832' start='Automatic' display_name='TCP/IP
+    Registry Compatibility' image_path='System32\drivers\tcpipreg.sys'/><system_service
+    id='447000000010833'/><system_service id='447000000010834' start='Manual' display_name='TDPIPE'
+    image_path='system32\drivers\tdpipe.sys'/><system_service id='447000000010835'
+    start='Manual' display_name='TDTCP' image_path='system32\drivers\tdtcp.sys'/><system_service
+    id='447000000010836' start='System Start' display_name='@%SystemRoot%\system32\tcpipcfg.dll,-50004'
+    image_path='system32\DRIVERS\tdx.sys'/><system_service id='447000000010837' start='System
+    Start' display_name='Terminal Device Driver' image_path='system32\DRIVERS\termdd.sys'/><system_service
+    id='447000000010842'/><system_service id='447000000010843' start='Manual' display_name='@%SystemRoot%\System32\DRIVERS\tssecsrv.sys,-101'
+    image_path='System32\DRIVERS\tssecsrv.sys'/><system_service id='447000000010844'
+    start='Manual' display_name='' image_path='system32\drivers\tsusbflt.sys'/><system_service
+    id='447000000010845' start='Manual' display_name='Remote Desktop Generic USB Device'
+    image_path='\SystemRoot\system32\drivers\TsUsbGD.sys'/><system_service id='447000000010846'
+    start='Manual' display_name='Microsoft Tunnel Miniport Adapter Driver' image_path='system32\DRIVERS\tunnel.sys'/><system_service
+    id='447000000010847' start='Manual' display_name='Microsoft AGPv3.5 Filter' image_path='\SystemRoot\system32\drivers\uagp35.sys'/><system_service
+    id='447000000010850' start='Manual' display_name='Uli AGP Bus Filter' image_path='\SystemRoot\system32\drivers\uliagpkx.sys'/><system_service
+    id='447000000010851' start='Manual' display_name='UMBus Enumerator Driver' image_path='system32\DRIVERS\umbus.sys'/><system_service
+    id='447000000010852' start='Manual' display_name='Microsoft UMPass Driver' image_path='\SystemRoot\system32\drivers\umpass.sys'/><system_service
+    id='447000000010855' start='Manual' display_name='Microsoft USB Generic Parent
+    Driver' image_path='\SystemRoot\system32\drivers\usbccgp.sys'/><system_service
+    id='447000000010856' start='Manual' display_name='Microsoft USB 2.0 Enhanced Host
+    Controller Miniport Driver' image_path='\SystemRoot\system32\drivers\usbehci.sys'/><system_service
+    id='447000000010857' start='Manual' display_name='Microsoft USB Standard Hub Driver'
+    image_path='\SystemRoot\system32\drivers\usbhub.sys'/><system_service id='447000000010858'
+    start='Manual' display_name='Microsoft USB Open Host Controller Miniport Driver'
+    image_path='\SystemRoot\system32\drivers\usbohci.sys'/><system_service id='447000000010859'
+    start='Manual' display_name='Microsoft USB PRINTER Class' image_path='\SystemRoot\system32\drivers\usbprint.sys'/><system_service
+    id='447000000010860' start='Manual' display_name='USB Mass Storage Driver' image_path='\SystemRoot\system32\drivers\USBSTOR.SYS'/><system_service
+    id='447000000010861' start='Manual' display_name='Microsoft USB Universal Host
+    Controller Miniport Driver' image_path='\SystemRoot\system32\drivers\usbuhci.sys'/><system_service
+    id='447000000010864' start='Boot Start' display_name='Microsoft Virtual Drive
+    Enumerator Driver' image_path='system32\drivers\vdrvroot.sys'/><system_service
+    id='447000000010866' start='Manual' image_path='system32\DRIVERS\vgapnp.sys'/><system_service
+    id='447000000010867' start='System Start' display_name='' image_path='\SystemRoot\System32\drivers\vga.sys'/><system_service
+    id='447000000010868' start='Manual' image_path='\SystemRoot\system32\drivers\vhdmp.sys'/><system_service
+    id='447000000010869' start='Manual' image_path='\SystemRoot\system32\drivers\viaide.sys'/><system_service
+    id='447000000010870' start='Manual' image_path='\SystemRoot\system32\drivers\Vid.sys'/><system_service
+    id='447000000010871' start='Manual' image_path='\SystemRoot\system32\drivers\vmbus.sys'/><system_service
+    id='447000000010872' start='Manual' image_path='\SystemRoot\system32\drivers\VMBusHID.sys'/><system_service
+    id='447000000010873' start='Boot Start' display_name='VMware VMCI Bus Driver'
+    image_path='system32\DRIVERS\vmci.sys'/><system_service id='447000000010874' start='System
+    Start' display_name='VMware Replay Debugging Helper' image_path='\??\C:\Windows\system32\Drivers\vmdebug.sys'/><system_service
+    id='447000000010875' start='Automatic' display_name='Memory Control Driver' image_path='\??\C:\Program
+    Files\VMware\VMware Tools\Drivers\memctl\vmmemctl.sys'/><system_service id='447000000010876'
+    start='Manual' display_name='VMware Pointing Device' image_path='system32\DRIVERS\vmmouse.sys'/><system_service
+    id='447000000010877' start='System Start' display_name='VMware Vista Physical
+    Disk Helper' image_path='\??\C:\Program Files\VMware\VMware Tools\vmrawdsk.sys'/><system_service
+    id='447000000010880' start='Boot Start' display_name='Volume Manager Driver' image_path='system32\drivers\volmgr.sys'/><system_service
+    id='447000000010881' start='Boot Start' display_name='@%SystemRoot%\system32\drivers\volmgrx.sys,-100'
+    image_path='System32\drivers\volmgrx.sys'/><system_service id='447000000010882'
+    start='Boot Start' display_name='Storage volumes' image_path='system32\drivers\volsnap.sys'/><system_service
+    id='447000000010883' start='Manual' image_path='\SystemRoot\system32\drivers\vsmraid.sys'/><system_service
+    id='447000000010887' start='Manual' display_name='Wacom Serial Pen HID Driver'
+    image_path='\SystemRoot\system32\drivers\wacompen.sys'/><system_service id='447000000010888'
+    start='Manual' display_name='@%systemroot%\system32\rascfg.dll,-32011' image_path='system32\DRIVERS\wanarp.sys'/><system_service
+    id='447000000010889' start='System Start' display_name='@%systemroot%\system32\rascfg.dll,-32012'
+    image_path='system32\DRIVERS\wanarp.sys'/><system_service id='447000000010892'
+    start='Manual' image_path='\SystemRoot\system32\drivers\wd.sys'/><system_service
+    id='447000000010893' start='Boot Start' display_name='Kernel Mode Driver Frameworks
+    service' image_path='system32\drivers\Wdf01000.sys'/><system_service id='447000000010899'
+    start='System Start' display_name='WFP Lightweight Filter' image_path='system32\DRIVERS\wfplwf.sys'/><system_service
+    id='447000000010901'/><system_service id='447000000010902'/><system_service id='447000000010906'
+    start='Manual'/><system_service id='447000000010907'/><system_service id='447000000010908'
+    start='Manual' display_name='Microsoft Windows Management Interface for ACPI'
+    image_path='\SystemRoot\system32\drivers\wmiacpi.sys'/><system_service id='447000000010909'/><system_service
+    id='447000000010912' start='System Start' display_name='Windows Socket 2.0 Non-IFS
+    Service Provider Support Environment' image_path='\SystemRoot\system32\drivers\ws2ifsl.sys'/><system_service
+    id='447000000010914' start='Manual' display_name='User Mode Driver Frameworks
+    Platform Driver' image_path='system32\drivers\WudfPf.sys'/><system_service id='447000000010916'/><system_service
+    id='447000000010917'/></kernel_drivers><patches _macro_='has_many'><patch name='KB2633952'
+    id='447000000001238' vendor='Microsoft Corporation'/><patch name='KB2676562' id='447000000001239'
+    v_install_date='2012-07-03' vendor='Microsoft Corporation'/><patch name='KB2545698'
+    id='447000000001240' v_install_date='2012-07-03' vendor='Microsoft Corporation'/><patch
+    name='KB982018' id='447000000001241' v_install_date='2012-07-03' vendor='Microsoft
+    Corporation'/><patch name='KB2484033' id='447000000001242' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2488113' id='447000000001243' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2505438' id='447000000001244' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2506928' id='447000000001245' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2511250' id='447000000001246' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2515325' id='447000000001247' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2522422' id='447000000001248' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2529073' id='447000000001249' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2530548' id='447000000001250' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2536275' id='447000000001251' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2541014' id='447000000001252' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2544521' id='447000000001253' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2547666' id='447000000001254' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2570947' id='447000000001255' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2584146' id='447000000001256' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2603229' id='447000000001257' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2604115' id='447000000001258' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2607047' id='447000000001259' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2608658' id='447000000001260' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2618451' id='447000000001261' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2620704' id='447000000001262' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2621440' id='447000000001263' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2631813' id='447000000001264' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2636573' id='447000000001265' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2643719' id='447000000001266' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2656356' id='447000000001267' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2656373' id='447000000001268' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2658846' id='447000000001269' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2660075' id='447000000001270' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2667402' id='447000000001271' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2685939' id='447000000001272' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2686831' id='447000000001273' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2695962' id='447000000001274' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2699779' id='447000000001275' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2709630' id='447000000001276' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2709981' id='447000000001277' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB976902' id='447000000001278' v_install_date='2010-11-21'
+    vendor='Microsoft Corporation'/><patch name='KB2492386' id='447000000001279' vendor='Microsoft
+    Corporation'/><patch name='KB2425227' id='447000000001280' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2506014' id='447000000001281' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2506212' id='447000000001282' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2507618' id='447000000001283' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2509553' id='447000000001284' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2510531' id='447000000001285' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2511455' id='447000000001286' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2533552' id='447000000001287' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2536276' id='447000000001288' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2544893' id='447000000001289' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2552343' id='447000000001290' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2563227' id='447000000001291' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2564958' id='447000000001292' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2567680' id='447000000001293' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2585542' id='447000000001294' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2607576' id='447000000001295' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2620712' id='447000000001296' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2640148' id='447000000001297' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2644615' id='447000000001298' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2645640' id='447000000001299' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2653956' id='447000000001300' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2654428' id='447000000001301' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2659262' id='447000000001302' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2679255' id='447000000001303' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2688338' id='447000000001304' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2690533' id='447000000001305' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2703157' id='447000000001306' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2709162' id='447000000001307' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2709715' id='447000000001308' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2718704' id='447000000001309' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2560656' id='447000000001310' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2699988' id='447000000001311' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB2677070' id='447000000001312' v_install_date='2012-07-03'
+    vendor='Microsoft Corporation'/><patch name='KB976932' id='447000000001313' v_install_date='2010-11-21'
+    vendor='Microsoft Corporation'/><patch name='KB976933' id='447000000001314' v_install_date='2010-11-21'
+    vendor='Microsoft Corporation'/></patches><tags _macro_='has_many'><tag name='/managed/cc/001'
+    entry_id='447000000000058' namespace='managed' category_name='cc' id='447000000000061'
+    category_single_value='true' category_id='447000000000057' entry_name='001' entry_description='Cost
+    Center 001' category_description='Cost Center'/><tag name='/managed/folder_path_yellow/datacenters'
+    entry_id='447000000000127' namespace='managed' category_name='folder_path_yellow'
+    id='447000000000130' category_single_value='true' category_id='447000000000126'
+    entry_name='datacenters' entry_description='Datacenters' category_description='Parent
+    Folder Path (Hosts & Clusters)'/><tag name='/miq_policy/assignment/miq_policy_set/447000000000027'
+    namespace='miq_policy' id='447000000000165'/><tag name='/miq_policy/assignment/miq_policy_set/447000000000029'
+    namespace='miq_policy' id='447000000000166'/><tag name='/managed/folder_path_blue/datacenters:testing_environment:vm'
+    entry_id='447000000000162' namespace='managed' category_name='folder_path_blue'
+    id='447000000000167' category_single_value='true' category_id='447000000000124'
+    entry_name='datacenters:testing_environment:vm' entry_description='Datacenters/Testing
+    Environment/vm' category_description='Parent Folder Path (VMs & Templates)'/></tags><users
+    _macro_='has_many'><account name='Administrator' enabled='true' id='447000000006549'
+    last_logon='Fri Jan 18 14:57:06 UTC 2013'/><account name='Guest' enabled='false'
+    id='447000000006550'/></users><win32_services _macro_='has_many'><system_service
+    id='447000000010536' start='Manual' display_name='@%SystemRoot%\system32\aelupsvc.dll,-1'
+    image_path='%systemroot%\system32\svchost.exe -k netsvcs'/><system_service id='447000000010539'
+    start='Manual' display_name='@%SystemRoot%\system32\Alg.exe,-112' image_path='\Windows\System32\alg.exe'/><system_service
+    id='447000000010547' start='Automatic' display_name='@%windir%\system32\inetsrv\iisres.dll,-30011'
+    image_path='%windir%\system32\svchost.exe -k apphost'/><system_service id='447000000010549'
+    start='Manual' display_name='@%systemroot%\system32\appidsvc.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k LocalServiceAndNoImpersonation'/><system_service id='447000000010550' start='Manual'
+    display_name='@%systemroot%\system32\appinfo.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010551' start='Manual' display_name='@appmgmts.dll,-3250'
+    image_path='\Windows\system32\svchost.exe -k netsvcs'/><system_service id='447000000010559'
+    start='Manual' display_name='ASP.NET State Service' image_path='\Windows\Microsoft.NET\Framework64\v4.0.30319\aspnet_state.exe'/><system_service
+    id='447000000010562' start='Manual' display_name='@%SystemRoot%\system32\audiosrv.dll,-204'
+    image_path='\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted'/><system_service
+    id='447000000010563' start='Manual' display_name='@%SystemRoot%\system32\audiosrv.dll,-200'
+    image_path='\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted'/><system_service
+    id='447000000010568' start='Automatic' display_name='@%SystemRoot%\system32\bfe.dll,-1001'
+    image_path='%systemroot%\system32\svchost.exe -k LocalServiceNoNetwork'/><system_service
+    id='447000000010569' start='Manual' display_name='@%SystemRoot%\system32\qmgr.dll,-1000'
+    image_path='\Windows\System32\svchost.exe -k netsvcs'/><system_service id='447000000010574'
+    start='Disabled' display_name='@%systemroot%\system32\browser.dll,-100' image_path='\Windows\System32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010581' start='Manual' display_name='@%SystemRoot%\System32\certprop.dll,-11'
+    image_path='\Windows\system32\svchost.exe -k netsvcs'/><system_service id='447000000010583'
+    start='Disabled' display_name='Microsoft .NET Framework NGEN v2.0.50727_X86' image_path='%systemroot%\Microsoft.NET\Framework\v2.0.50727\mscorsvw.exe'/><system_service
+    id='447000000010584' start='Disabled' display_name='Microsoft .NET Framework NGEN
+    v2.0.50727_X64' image_path='%systemroot%\Microsoft.NET\Framework64\v2.0.50727\mscorsvw.exe'/><system_service
+    id='447000000010585' start='Automatic' display_name='Microsoft .NET Framework
+    NGEN v4.0.30319_X86' image_path='C:\Windows\Microsoft.NET\Framework\v4.0.30319\mscorsvw.exe'/><system_service
+    id='447000000010586' start='Automatic' display_name='Microsoft .NET Framework
+    NGEN v4.0.30319_X64' image_path='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\mscorsvw.exe'/><system_service
+    id='447000000010592' start='Manual' display_name='@comres.dll,-947' image_path='\Windows\system32\dllhost.exe
+    /Processid:{02D4B3F1-FD88-11D1-960D-00805FC79235}'/><system_service id='447000000010595'
+    start='Automatic' display_name='@%SystemRoot%\system32\cryptsvc.dll,-1001' image_path='\Windows\system32\svchost.exe
+    -k NetworkService'/><system_service id='447000000010597' start='Automatic' display_name='@oleres.dll,-5012'
+    image_path='\Windows\system32\svchost.exe -k DcomLaunch'/><system_service id='447000000010598'
+    start='Manual' display_name='@%SystemRoot%\system32\defragsvc.dll,-101' image_path='\Windows\system32\svchost.exe
+    -k defragsvc'/><system_service id='447000000010600' start='Automatic' display_name='@%SystemRoot%\system32\dhcpcore.dll,-100'
+    image_path='\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted'/><system_service
+    id='447000000010604' start='Automatic' display_name='@%SystemRoot%\System32\dnsapi.dll,-101'
+    image_path='\Windows\system32\svchost.exe -k NetworkService'/><system_service
+    id='447000000010605' start='Manual' display_name='@%systemroot%\system32\dot3svc.dll,-1102'
+    image_path='\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted'/><system_service
+    id='447000000010606' start='Automatic' display_name='@%systemroot%\system32\dps.dll,-500'
+    image_path='\Windows\System32\svchost.exe -k LocalServiceNoNetwork'/><system_service
+    id='447000000010609' start='Manual' display_name='@%systemroot%\system32\eapsvc.dll,-1'
+    image_path='\Windows\System32\svchost.exe -k netsvcs'/><system_service id='447000000010611'
+    start='Manual' display_name='@%SystemRoot%\system32\efssvc.dll,-100' image_path='\Windows\System32\lsass.exe'/><system_service
+    id='447000000010615' start='Automatic' display_name='@%SystemRoot%\system32\wevtsvc.dll,-200'
+    image_path='\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted'/><system_service
+    id='447000000010616' start='Automatic' display_name='@comres.dll,-2450' image_path='\Windows\system32\svchost.exe
+    -k LocalService'/><system_service id='447000000010619' start='Manual' display_name='@%SystemRoot%\system32\FCRegSvc.dll,-5000'
+    image_path='%systemroot%\system32\svchost.exe -k LocalServiceNetworkRestricted'/><system_service
+    id='447000000010621' start='Manual' display_name='@%systemroot%\system32\fdPHost.dll,-100'
+    image_path='\Windows\system32\svchost.exe -k LocalService'/><system_service id='447000000010622'
+    start='Manual' display_name='@%systemroot%\system32\fdrespub.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k LocalServiceAndNoImpersonation'/><system_service id='447000000010627' start='Automatic'
+    display_name='@%systemroot%\system32\FntCache.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k LocalServiceAndNoImpersonation'/><system_service id='447000000010628' start='Manual'
+    display_name='@%SystemRoot%\system32\PresentationHost.exe,-3309' image_path='%systemroot%\Microsoft.Net\Framework64\v3.0\WPF\PresentationFontCache.exe'/><system_service
+    id='447000000010632' start='Automatic' display_name='@gpapi.dll,-112' image_path='%systemroot%\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010635' start='Manual' display_name='@%SystemRoot%\System32\hidserv.dll,-101'
+    image_path='\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted'/><system_service
+    id='447000000010637' start='Manual' display_name='@%SystemRoot%\system32\kmsvc.dll,-6'
+    image_path='\Windows\System32\svchost.exe -k netsvcs'/><system_service id='447000000010643'
+    start='Manual' display_name='@%systemroot%\Microsoft.NET\Framework64\v3.0\Windows
+    Communication Foundation\ServiceModelInstallRC.dll,-8193' image_path='"%systemroot%\Microsoft.NET\Framework64\v3.0\Windows
+    Communication Foundation\infocard.exe"'/><system_service id='447000000010645'
+    start='Manual' display_name='@%SystemRoot%\system32\ikeext.dll,-501' image_path='%systemroot%\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010651' start='Disabled' display_name='@%systemroot%\system32\IPBusEnum.dll,-102'
+    image_path='\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted'/><system_service
+    id='447000000010653' start='Automatic' display_name='@%SystemRoot%\system32\iphlpsvc.dll,-500'
+    image_path='\Windows\System32\svchost.exe -k NetSvcs'/><system_service id='447000000010660'
+    start='Manual' display_name='@keyiso.dll,-100' image_path='\Windows\system32\lsass.exe'/><system_service
+    id='447000000010664' start='Manual' display_name='@comres.dll,-2946' image_path='\Windows\System32\svchost.exe
+    -k NetworkServiceAndNoImpersonation'/><system_service id='447000000010665' start='Automatic'
+    display_name='@%systemroot%\system32\srvsvc.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010666' start='Automatic' display_name='@%systemroot%\system32\wkssvc.dll,-100'
+    image_path='\Windows\System32\svchost.exe -k NetworkService'/><system_service
+    id='447000000010669' start='Manual' display_name='@%SystemRoot%\system32\lltdres.dll,-1'
+    image_path='\Windows\System32\svchost.exe -k LocalService'/><system_service id='447000000010670'
+    start='Automatic' display_name='@%SystemRoot%\system32\lmhsvc.dll,-101' image_path='\Windows\system32\svchost.exe
+    -k LocalServiceNetworkRestricted'/><system_service id='447000000010679' start='Manual'
+    display_name='@%systemroot%\system32\mmcss.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010687' start='Automatic' display_name='@%SystemRoot%\system32\FirewallAPI.dll,-23090'
+    image_path='\Windows\system32\svchost.exe -k LocalServiceNoNetwork'/><system_service
+    id='447000000010693' start='Automatic' display_name='@comres.dll,-2797' image_path='\Windows\System32\msdtc.exe'/><system_service
+    id='447000000010699' start='Manual' display_name='@%SystemRoot%\system32\iscsidsc.dll,-5000'
+    image_path='%systemroot%\system32\svchost.exe -k netsvcs'/><system_service id='447000000010700'
+    start='Manual' display_name='@%SystemRoot%\system32\msimsg.dll,-27' image_path='%systemroot%\system32\msiexec.exe
+    /V'/><system_service id='447000000010705' start='Manual' display_name='@%SystemRoot%\system32\qagentrt.dll,-6'
+    image_path='\Windows\System32\svchost.exe -k NetworkService'/><system_service
+    id='447000000010714' start='Manual' display_name='@%SystemRoot%\System32\netlogon.dll,-102'
+    image_path='%systemroot%\system32\lsass.exe'/><system_service id='447000000010715'
+    start='Manual' display_name='@%SystemRoot%\system32\netman.dll,-109' image_path='\Windows\System32\svchost.exe
+    -k LocalSystemNetworkRestricted'/><system_service id='447000000010716' start='Disabled'
+    display_name='@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8195'
+    image_path='"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe" -NetMsmqActivator'/><system_service
+    id='447000000010717' start='Automatic' display_name='@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8197'
+    image_path='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe'/><system_service
+    id='447000000010718' start='Manual' display_name='@%SystemRoot%\system32\netprofm.dll,-202'
+    image_path='\Windows\System32\svchost.exe -k LocalService'/><system_service id='447000000010719'
+    start='Automatic' display_name='@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8199'
+    image_path='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe'/><system_service
+    id='447000000010720' start='Manual' display_name='@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8201'
+    image_path='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe'/><system_service
+    id='447000000010722' start='Automatic' display_name='@%SystemRoot%\System32\nlasvc.dll,-1'
+    image_path='\Windows\System32\svchost.exe -k NetworkService'/><system_service
+    id='447000000010724' start='Automatic' display_name='@%SystemRoot%\system32\nsisvc.dll,-200'
+    image_path='%systemroot%\system32\svchost.exe -k LocalService'/><system_service
+    id='447000000010741' start='Manual' display_name='@%systemroot%\sysWow64\perfhost.exe,-2'
+    image_path='\Windows\SysWow64\perfhost.exe'/><system_service id='447000000010745'
+    start='Manual' display_name='@%systemroot%\system32\pla.dll,-500' image_path='\Windows\System32\svchost.exe
+    -k LocalServiceNoNetwork'/><system_service id='447000000010746' start='Automatic'
+    display_name='@%SystemRoot%\system32\umpnpmgr.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k DcomLaunch'/><system_service id='447000000010747' start='Manual' display_name='@%SystemRoot%\System32\polstore.dll,-5010'
+    image_path='\Windows\system32\svchost.exe -k NetworkServiceNetworkRestricted'/><system_service
+    id='447000000010749' start='Automatic' display_name='@%SystemRoot%\system32\umpo.dll,-100'
+    image_path='\Windows\system32\svchost.exe -k DcomLaunch'/><system_service id='447000000010752'
+    start='Automatic' display_name='@%systemroot%\system32\profsvc.dll,-300' image_path='%systemroot%\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010753' start='Manual' display_name='@%systemroot%\system32\psbase.dll,-300'
+    image_path='\Windows\system32\lsass.exe'/><system_service id='447000000010759'
+    start='Manual' display_name='@%Systemroot%\system32\rasauto.dll,-200' image_path='\Windows\System32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010761' start='Manual' display_name='@%Systemroot%\system32\rasmans.dll,-200'
+    image_path='\Windows\System32\svchost.exe -k netsvcs'/><system_service id='447000000010773'
+    start='Disabled' display_name='@%Systemroot%\system32\mprdim.dll,-200' image_path='\Windows\System32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010774' start='Automatic' display_name='@regsvc.dll,-1'
+    image_path='\Windows\system32\svchost.exe -k regsvc'/><system_service id='447000000010775'
+    start='Automatic' display_name='@%windir%\system32\RpcEpMap.dll,-1001' image_path='\Windows\system32\svchost.exe
+    -k RPCSS'/><system_service id='447000000010776' start='Manual' display_name='@%systemroot%\system32\Locator.exe,-2'
+    image_path='\Windows\system32\locator.exe'/><system_service id='447000000010777'
+    start='Automatic' display_name='@oleres.dll,-5010' image_path='\Windows\system32\svchost.exe
+    -k rpcss'/><system_service id='447000000010778' start='Manual' display_name='@gpapi.dll,-114'
+    image_path='\Windows\system32\RSoPProv.exe'/><system_service id='447000000010782'
+    start='Manual' display_name='@%systemroot%\system32\sacsvr.dll,-500' image_path='\Windows\System32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010783' start='Automatic' display_name='@%SystemRoot%\system32\samsrv.dll,-1'
+    image_path='\Windows\system32\lsass.exe'/><system_service id='447000000010785'
+    start='Manual' display_name='@%SystemRoot%\System32\SCardSvr.dll,-1' image_path='\Windows\system32\svchost.exe
+    -k LocalServiceAndNoImpersonation'/><system_service id='447000000010787' start='Automatic'
+    display_name='@%SystemRoot%\system32\schedsvc.dll,-100' image_path='%systemroot%\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010788' start='Manual' display_name='@%SystemRoot%\System32\certprop.dll,-13'
+    image_path='\Windows\system32\svchost.exe -k netsvcs'/><system_service id='447000000010790'
+    start='Manual' display_name='@%SystemRoot%\system32\seclogon.dll,-7001' image_path='%windir%\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010791' start='Automatic' display_name='@%SystemRoot%\system32\Sens.dll,-200'
+    image_path='\Windows\system32\svchost.exe -k netsvcs'/><system_service id='447000000010798'
+    start='Manual' display_name='@%SystemRoot%\System32\SessEnv.dll,-1026' image_path='\Windows\System32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010803' start='Disabled' display_name='@%SystemRoot%\system32\ipnathlp.dll,-106'
+    image_path='\Windows\System32\svchost.exe -k netsvcs'/><system_service id='447000000010804'
+    start='Automatic' display_name='@%SystemRoot%\System32\shsvcs.dll,-12288' image_path='\Windows\System32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010811' start='Manual' display_name='@%SystemRoot%\system32\snmptrap.exe,-3'
+    image_path='\Windows\System32\snmptrap.exe'/><system_service id='447000000010813'
+    start='Automatic' display_name='@%systemroot%\system32\spoolsv.exe,-1' image_path='\Windows\System32\spoolsv.exe'/><system_service
+    id='447000000010814' start='Automatic' display_name='@%SystemRoot%\system32\sppsvc.exe,-101'
+    image_path='\Windows\system32\sppsvc.exe'/><system_service id='447000000010815'
+    start='Manual' display_name='@%SystemRoot%\system32\sppuinotify.dll,-103' image_path='\Windows\system32\svchost.exe
+    -k LocalService'/><system_service id='447000000010819' start='Disabled' display_name='@%systemroot%\system32\ssdpsrv.dll,-100'
+    image_path='\Windows\system32\svchost.exe -k LocalServiceAndNoImpersonation'/><system_service
+    id='447000000010820' start='Manual' display_name='@%SystemRoot%\system32\sstpsvc.dll,-200'
+    image_path='\Windows\system32\svchost.exe -k LocalService'/><system_service id='447000000010826'
+    start='Manual' display_name='@%SystemRoot%\System32\swprv.dll,-103' image_path='\Windows\System32\svchost.exe
+    -k swprv'/><system_service id='447000000010827' start='Manual' display_name='@%SystemRoot%\system32\tapisrv.dll,-10100'
+    image_path='\Windows\System32\svchost.exe -k tapisrv'/><system_service id='447000000010828'
+    start='Manual' display_name='@%SystemRoot%\system32\tbssvc.dll,-100' image_path='\Windows\System32\svchost.exe
+    -k LocalServiceAndNoImpersonation'/><system_service id='447000000010838' start='Manual'
+    display_name='@%SystemRoot%\System32\termsrv.dll,-268' image_path='\Windows\System32\svchost.exe
+    -k termsvcs'/><system_service id='447000000010839' start='Manual' display_name='@%systemroot%\system32\mmcss.dll,-102'
+    image_path='\Windows\system32\svchost.exe -k LocalService'/><system_service id='447000000010840'
+    start='Automatic' display_name='@%SystemRoot%\system32\trkwks.dll,-1' image_path='\Windows\System32\svchost.exe
+    -k LocalSystemNetworkRestricted'/><system_service id='447000000010841' start='Manual'
+    display_name='@%SystemRoot%\servicing\TrustedInstaller.exe,-100' image_path='\Windows\servicing\TrustedInstaller.exe'/><system_service
+    id='447000000010849' start='Manual' display_name='@%SystemRoot%\system32\ui0detect.exe,-101'
+    image_path='\Windows\system32\UI0Detect.exe'/><system_service id='447000000010853'
+    start='Manual' display_name='@%SystemRoot%\system32\umrdp.dll,-1000' image_path='\Windows\System32\svchost.exe
+    -k LocalSystemNetworkRestricted'/><system_service id='447000000010854' start='Disabled'
+    display_name='@%systemroot%\system32\upnphost.dll,-213' image_path='\Windows\system32\svchost.exe
+    -k LocalServiceAndNoImpersonation'/><system_service id='447000000010862' start='Automatic'
+    display_name='@%SystemRoot%\system32\dwm.exe,-2000' image_path='\Windows\System32\svchost.exe
+    -k LocalSystemNetworkRestricted'/><system_service id='447000000010863' start='Manual'
+    display_name='@%SystemRoot%\system32\vaultsvc.dll,-1003' image_path='\Windows\system32\lsass.exe'/><system_service
+    id='447000000010865' start='Manual' display_name='@%SystemRoot%\system32\vds.exe,-100'
+    image_path='\Windows\System32\vds.exe'/><system_service id='447000000010878' start='Automatic'
+    display_name='VMware Tools Service' image_path='"C:\Program Files\VMware\VMware
+    Tools\vmtoolsd.exe"'/><system_service id='447000000010879' start='Manual' display_name='VMware
+    Snapshot Provider' image_path='C:\Windows\system32\dllhost.exe /Processid:{050E0EF5-BF8C-47E3-A22A-6158FD35A327}'/><system_service
+    id='447000000010884' start='Manual' display_name='@%systemroot%\system32\vssvc.exe,-102'
+    image_path='%systemroot%\system32\vssvc.exe'/><system_service id='447000000010885'
+    start='Manual' display_name='@%SystemRoot%\system32\w32time.dll,-200' image_path='\Windows\system32\svchost.exe
+    -k LocalService'/><system_service id='447000000010886' start='Automatic' display_name='@%windir%\system32\inetsrv\iisres.dll,-30003'
+    image_path='%windir%\system32\svchost.exe -k iissvcs'/><system_service id='447000000010890'
+    start='Manual' display_name='@%windir%\system32\inetsrv\iisres.dll,-30001' image_path='%windir%\system32\svchost.exe
+    -k iissvcs'/><system_service id='447000000010891' start='Manual' display_name='@%SystemRoot%\system32\WcsPlugInService.dll,-200'
+    image_path='\Windows\system32\svchost.exe -k wcssvc'/><system_service id='447000000010894'
+    start='Manual' display_name='@%systemroot%\system32\wdi.dll,-502' image_path='\Windows\System32\svchost.exe
+    -k LocalService'/><system_service id='447000000010895' start='Manual' display_name='@%systemroot%\system32\wdi.dll,-500'
+    image_path='\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted'/><system_service
+    id='447000000010896' start='Manual' display_name='@%SystemRoot%\system32\wecsvc.dll,-200'
+    image_path='\Windows\system32\svchost.exe -k NetworkService'/><system_service
+    id='447000000010897' start='Manual' display_name='@%SystemRoot%\System32\wercplsupport.dll,-101'
+    image_path='\Windows\System32\svchost.exe -k netsvcs'/><system_service id='447000000010898'
+    start='Manual' display_name='@%SystemRoot%\System32\wersvc.dll,-100' image_path='\Windows\System32\svchost.exe
+    -k WerSvcGroup'/><system_service id='447000000010903' start='Manual' display_name='@%SystemRoot%\system32\winhttp.dll,-100'
+    image_path='\Windows\system32\svchost.exe -k LocalService'/><system_service id='447000000010904'
+    start='Automatic' display_name='@%Systemroot%\system32\wbem\wmisvc.dll,-205' image_path='%systemroot%\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010905' start='Automatic' display_name='@%Systemroot%\system32\wsmsvc.dll,-101'
+    image_path='\Windows\System32\svchost.exe -k NetworkService'/><system_service
+    id='447000000010910' start='Manual' display_name='@%Systemroot%\system32\wbem\wmiapsrv.exe,-110'
+    image_path='%systemroot%\system32\wbem\WmiApSrv.exe'/><system_service id='447000000010911'
+    start='Manual' display_name='@%SystemRoot%\system32\wpdbusenum.dll,-100' image_path='\Windows\system32\svchost.exe
+    -k LocalSystemNetworkRestricted'/><system_service id='447000000010913' start='Automatic'
+    display_name='@%systemroot%\system32\wuaueng.dll,-105' image_path='%systemroot%\system32\svchost.exe
+    -k netsvcs'/><system_service id='447000000010915' start='Manual' display_name='@%SystemRoot%\system32\wudfsvc.dll,-1000'
+    image_path='\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted'/></win32_services></vm>
+  md5: a9b02e016f417db9d86b5a07ed609433
+- id: 5
+  name: vm
+  timestamp: 2013-03-20 07:29:05.000000000 Z
+  created_on: 2013-03-21 21:36:11.758769000 Z
+  stats: ! "--- \nadds: \"2\"\noriginal_filename: vm\ncreated_on: \"1363764545\"\nupdates:
+    \"2\"\nversion: \"2.0\"\ndeletes: \"2\"\ndisplay_time: \"2013-03-20T07:29:21Z\"\n"
+  scantype: diff
+  resource_id: 447000000001072
+  resource_type: Vm
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><xmlDiff adds='2' original_filename='vm'
+    created_on='1363764545' updates='2' version='2.0' display_time='2013-03-20T07:29:21Z'
+    deletes='2'><adds><item><path><vm name='Vm1' memory_shares='40960'
+    cpu_reserve_expand='false' original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsOk' cpu_shares='1000' created_on='1363901759' cpu_limit='-1'
+    id='447000000001072' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Thu
+    Mar 21 19:44:24 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:17 UTC 2013' _timestamp_='1363901753'
+    display_time='2013-03-21T21:35:59Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000003146'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1363901759' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Thu Mar 21
+    19:44:24 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:17 UTC 2013' _timestamp_='1363901753'
+    display_time='2013-03-21T21:35:59Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000003146'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item></adds><deletes><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1363764561' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Wed Mar 20
+    07:25:02 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:20 UTC 2013' _timestamp_='1363764545'
+    display_time='2013-03-20T07:29:21Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000003080'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1363764561' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Wed Mar 20
+    07:25:02 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:20 UTC 2013' _timestamp_='1363764545'
+    display_time='2013-03-20T07:29:21Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000003080'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item></deletes><updates><item><path
+    root='true'/><data><vm name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsOk' cpu_shares='1000' created_on='1363901759' cpu_limit='-1'
+    id='447000000001072' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Thu
+    Mar 21 19:44:24 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:17 UTC 2013' _timestamp_='1363901753'
+    display_time='2013-03-21T21:35:59Z'/></data><data_old><vm name='Vm1'
+    memory_shares='40960' cpu_reserve_expand='false' original_filename='vm' memory_reserve='0'
+    location='Vm1/Vm1.vmx' tools_status='toolsOk' cpu_shares='1000'
+    created_on='1363764561' cpu_limit='-1' id='447000000001072' memory_shares_level='normal'
+    cpu_shares_level='normal' last_scan_on='Wed Mar 20 07:25:02 UTC 2013' version='2.0'
+    memory_reserve_expand='false' memory_limit='-1' cpu_reserve='0' vendor='VMware'
+    boot_time='Thu Feb 21 00:37:20 UTC 2013' _timestamp_='1363764545' display_time='2013-03-20T07:29:21Z'/></data_old></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1363901759' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Thu Mar 21
+    19:44:24 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:17 UTC 2013' _timestamp_='1363901753'
+    display_time='2013-03-21T21:35:59Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><volumes _macro_='has_many'/></hardware></vm></path><data><volume
+    typ='physical' name='C:' size='42842718208' free_space='4067311616' filesystem='NTFS'
+    used_space='38775406592' id='447000000000440'/></data><data_old><volume typ='physical'
+    name='C:' size='42842718208' free_space='4067610624' filesystem='NTFS' used_space='38775107584'
+    id='447000000000440'/></data_old></item></updates></xmlDiff>
+  md5: 8760782187beda581d0a3baae85da354
+- id: 6
+  name: vm
+  timestamp: 2013-03-04 16:16:19.000000000 Z
+  created_on: 2013-03-20 07:29:24.795039000 Z
+  stats: ! "--- \nadds: \"2\"\noriginal_filename: vm\ncreated_on: \"1362413779\"\nupdates:
+    \"2\"\nversion: \"2.0\"\ndeletes: \"2\"\ndisplay_time: \"2013-03-04T16:16:42Z\"\n"
+  scantype: diff
+  resource_id: 447000000001072
+  resource_type: Vm
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><xmlDiff adds='2' original_filename='vm'
+    created_on='1362413779' updates='2' version='2.0' display_time='2013-03-04T16:16:42Z'
+    deletes='2'><adds><item><path><vm name='Vm1' memory_shares='40960'
+    cpu_reserve_expand='false' original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsOk' cpu_shares='1000' created_on='1363764561' cpu_limit='-1'
+    id='447000000001072' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Wed
+    Mar 20 07:25:02 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:20 UTC 2013' _timestamp_='1363764545'
+    display_time='2013-03-20T07:29:21Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000003080'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1363764561' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Wed Mar 20
+    07:25:02 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:20 UTC 2013' _timestamp_='1363764545'
+    display_time='2013-03-20T07:29:21Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000003080'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item></adds><deletes><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1362413802' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon Mar 04
+    16:03:37 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:23 UTC 2013' _timestamp_='1362413779'
+    display_time='2013-03-04T16:16:42Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000002911'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1362413802' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon Mar 04
+    16:03:37 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:23 UTC 2013' _timestamp_='1362413779'
+    display_time='2013-03-04T16:16:42Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='false' device_type='floppy' id='447000000002911'
+    filename='[Datastore1] Vm1/' present='true' device_name='disk'/></data></item></deletes><updates><item><path
+    root='true'/><data><vm name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsOk' cpu_shares='1000' created_on='1363764561' cpu_limit='-1'
+    id='447000000001072' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Wed
+    Mar 20 07:25:02 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:20 UTC 2013' _timestamp_='1363764545'
+    display_time='2013-03-20T07:29:21Z'/></data><data_old><vm name='Vm1'
+    memory_shares='40960' cpu_reserve_expand='false' original_filename='vm' memory_reserve='0'
+    location='Vm1/Vm1.vmx' tools_status='toolsOk' cpu_shares='1000'
+    created_on='1362413802' cpu_limit='-1' id='447000000001072' memory_shares_level='normal'
+    cpu_shares_level='normal' last_scan_on='Mon Mar 04 16:03:37 UTC 2013' version='2.0'
+    memory_reserve_expand='false' memory_limit='-1' cpu_reserve='0' vendor='VMware'
+    boot_time='Thu Feb 21 00:37:23 UTC 2013' _timestamp_='1362413779' display_time='2013-03-04T16:16:42Z'/></data_old></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false' original_filename='vm'
+    memory_reserve='0' location='Vm1/Vm1.vmx' tools_status='toolsOk'
+    cpu_shares='1000' created_on='1363764561' cpu_limit='-1' id='447000000001072'
+    memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Wed Mar 20
+    07:25:02 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' boot_time='Thu Feb 21 00:37:20 UTC 2013' _timestamp_='1363764545'
+    display_time='2013-03-20T07:29:21Z'><hardware guest_os='windows7server64' bios='42110866-eb4b-5bed-2525-6f2e124532b1'
+    memory_cpu='4096' id='447000000001079' config_version='vmx-08' numvcpus='1' guest_os_full_name='Microsoft
+    Windows Server 2008 R2 (64-bit)'><volumes _macro_='has_many'/></hardware></vm></path><data><volume
+    typ='physical' name='C:' size='42842718208' free_space='4067610624' filesystem='NTFS'
+    used_space='38775107584' id='447000000000440'/></data><data_old><volume typ='physical'
+    name='C:' size='42842718208' free_space='4072243200' filesystem='NTFS' used_space='38770475008'
+    id='447000000000440'/></data_old></item></updates></xmlDiff>
+  md5: 385ce3f5466759500ac74bdb64b8ce81

@@ -1,0 +1,48 @@
+<div id="proxy_lists">
+    <table class="admintable">
+      <tbody>
+				<tr>
+					<td align="left" class="widthed">  Available SmartProxies:</td>
+					<td></td>
+					<td align="left">Selected SmartProxies:</td>
+		      </tr>
+		      <tr>
+						<td align="right" valign="top">
+
+			    <%= select_tag('available_proxies[]', options_for_select( @edit[:new][:available_proxies].sort), { :multiple=> true, :style=>"width: 450px", :size=>8, :id=>":available_proxies" } ) %>
+
+			</td>
+			<td width="30" valign="middle">
+				  <% if @edit[:new][:available_proxies].length == 0 %>
+				    <%= image_tag("/images/toolbars/right.png", :class=>"dimmed small") %>
+				  <% else %>
+				    <%= link_to(image_tag("/images/toolbars/right.png", :class=>"rollover small", :alt=>"Move selected SmartProxies right"),
+                          {:action=>'form_field_changed', :button=>'right', :id=>"#{@record.id || "new"}"},
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          "data-submit"=>"proxy_lists",
+                          :remote=>true,
+                          :title=>'Move selected SmartProxies right')
+				    %>
+				  <% end %>
+
+				  <% if @edit[:new][:selected_proxies].length == 0 %>
+				    <%= image_tag("/images/toolbars/left.png", :class=>"dimmed small") %>
+				  <% else %>
+				    <%= link_to(image_tag("/images/toolbars/left.png", :class=>"rollover small", :alt=>"Move selected SmartProxies left"),
+                          {:action=>'form_field_changed', :button=>'left', :id=>"#{@record.id || "new"}"},
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          "data-submit"=>"proxy_lists",
+                          :remote=>true,
+                          :title=>'Move selected SmartProxies left')
+				    %>
+				  <% end %>
+			</td>
+			<td align="left" valign="top">
+			    <%= select_tag('selected_proxies[]', options_for_select( @edit[:new][:selected_proxies], @selected ), { :multiple=> true, :style=>"width: 450px", :size=>8, :id=>"selected_proxies"} ) %>
+			</td>
+		</tr>
+      </tbody>
+    </table>
+</div>

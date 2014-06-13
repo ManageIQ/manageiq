@@ -1,0 +1,62 @@
+#
+# Toolbar config file
+#
+---
+:model: EmsCluster
+:button_groups:
+- :name: ems_cluster_vmdb
+  :items:
+  - :buttonSelect: ems_cluster_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: ems_cluster_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on the selected Clusters"
+      :url_parms: 'main_div'
+      :confirm: "Perform SmartState Analysis on the selected Clusters?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: ems_cluster_compare
+      :image: compare
+      :text: "Compare Selected Clusters"
+      :title: "Select two or more Clusters to compare"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '2+'
+    - :separator:
+    - :button: ems_cluster_delete
+      :image: remove
+      :text: Remove Clusters from the VMDB
+      :title: "Remove selected Clusters from the VMDB"
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Clusters and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Clusters?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: ems_cluster_policy
+  :items:
+  - :buttonSelect: ems_cluster_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: ems_cluster_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for the selected Clusters"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: ems_cluster_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for the selected Clusters"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

@@ -1,0 +1,258 @@
+name, area, typ, task, created_on, updated_on
+Action: *,MiqAction,Action,*
+Action: Add,MiqAction,Action,new
+Action: Delete,MiqAction,Action,delete
+Action: Edit,MiqAction,Action,edit
+Action: List,MiqAction,Action,show_list
+Action: Show,MiqAction,Action,show
+Alert: *,MiqAlert,Action,*
+Alert: Add,MiqAlert,Action,new
+Alert: Delete,MiqAlert,Action,delete
+Alert: Edit,MiqAlert,Action,edit
+Alert: List,MiqAlert,Action,show_list
+Alert: Show,MiqAlert,Action,show
+Assistance/*,Support,*,*
+Assistance/Support/License,Support,Support,License
+Assistance/Diagnostics/*,Support,Diagnostics,*
+Assistance/Diagnostics/All Tasks,Support,Diagnostics,All Tasks
+Assistance/Diagnostics/Audit Log,Support,Diagnostics,Audit Log
+Assistance/Diagnostics/EVM Log,Support,Diagnostics,EVM Log
+Assistance/Diagnostics/Policy Log,Support,Diagnostics,Policy Log
+Automation/*,Automation,*,*
+Chargeback/Rates/*,Chargeback,Rates,*
+Chargeback/Assignments/*,Chargeback,Assignments,*
+Cluster: *,Cluster,Action,*
+Cluster: Compare,Cluster,Action,cluster_compare
+Cluster: Drift,Cluster,Action,cluster_drift
+Cluster: Analyze,Cluster,Action,cluster_scan
+Cluster: Assign CoTags,Cluster,Action,classifying
+Cluster: Assign Policy,Cluster,Action,protect
+Cluster: Delete,Cluster,Action,delete
+Cluster: List,Cluster,Action,show_list
+Cluster: Show,Cluster,Action,show
+Computer System: *,Computer System,Action,*
+Computer System: List,Computer System,Action,show_list
+Computer System: Show,Computer System,Action,show
+Control/*,Control,*,*
+Control/Actions/*,Control,Actions,*
+Control/Alerts/*,Control,Alerts,*
+Control/Conditions/*,Control,Conditions,*
+Control/Events/*,Control,Events,*
+Control/Export,Control,Export,*
+Control/Log,Control,Log,*
+Control/Explorer,Control,Explorer,*
+Control/Simulation,Control,Simulation,*
+Control: *,MiqPolicy,Action,*
+Control: Add,MiqPolicy,Action,new
+Control: Delete,MiqPolicy,Action,delete
+Control: Edit,MiqPolicy,Action,edit
+Control: Import,MiqPolicy,Action,import
+Control: Export,MiqPolicy,Action,export
+Control: List,MiqPolicy,Action,show_list
+Control: Show,MiqPolicy,Action,show
+Condition: *,Condition,Action,*
+Condition: Add,Condition,Action,new
+Condition: Copy,Condition,Action,copy
+Condition: Delete,Condition,Action,delete
+Condition: Edit,Condition,Action,edit
+Condition: List,Condition,Action,show_list
+Condition: Show,Condition,Action,show
+Configuration/Accounts/*,Configuration,Accounts,*
+Configuration/Maintenance/*,Configuration,Maintenance,*
+Configuration/Operations/*,Configuration,Operations,*
+Configuration/SmartHosts/*,Configuration,SmartHosts,*
+Configuration/Tags/*,Configuration,Tags,*
+Configuration/Tags/Import,Configuration,Tags,Import
+Configuration/Tags/My Company Categories,Configuration,Tags,My Company Categories
+Configuration/Tags/My Company Tags,Configuration,Tags,My Company Tags
+Configuration/Tags/MyTags,Configuration,Tags,MyTags
+Configuration: Zones,Configuration,Action,zones
+Configuration: Advanced,Configuration,Action,advanced
+Datastore: *,Datastore,Action,*
+Datastore: Assign CoTags,Datastore,Action,classifying
+Datastore: Delete,Datastore,Action,delete
+Datastore: List,Datastore,Action,show_list
+Datastore: Assign Policy,Datastore,Action,protect
+Datastore: Refresh,Datastore,Action,storage_refresh
+Datastore: Scan,Datastore,Action,storage_scan
+Datastore: Show,Datastore,Action,show
+Event: *,Event,Action,*
+Event: List,Event,Action,show_list
+Everything,*,*,*
+EVM Admin/*,EVM Admin,*,*
+EVM Admin/All Tasks/*,EVM Admin,All Tasks,*
+EVM Admin/Analysis Profiles,EVM Admin,Analysis Profiles,*
+EVM Admin/EVM Servers,EVM Admin,EVM Servers,*
+EVM Admin/My Tasks/*,EVM Admin,My Tasks,*
+EVM Admin/Schedules,EVM Admin,Schedules,*
+EVM Admin/SmartProxies,EVM Admin,SmartProxies,*
+File Share: *,File Share,Action,*
+File Share: List,File Share,Action,show_list
+File Share: Show,File Share,Action,show
+Host: *,Host,Action,*
+Host: Add,Host,Action,new
+Host: Analyze,Host,Action,host_scan
+Host: Assign CoTags,Host,Action,classifying
+Host: Assign Policy,Host,Action,protect
+Host: Compare,Host,Action,host_compare
+Host: Drift,Host,Action,host_drift
+Host: Console,Host,Action,console
+Host: Delete,Host,Action,delete
+Host: Discover,Host,Action,discover
+Host: Edit,Host,Action,edit
+Host: List,Host,Action,show_list
+Host: Refresh,Host,Action,host_refresh
+Host: Analyze Check Compliance,Host,Action,host_analyze_check_compliance
+Host: Show,Host,Action,show
+Infrastructure/*,Infrastructure,*,*
+Infrastructure/Hosts/*,Infrastructure,Hosts,*
+Infrastructure/Management Systems/*,Infrastructure,Management Systems,*
+Infrastructure/Clusters/*,Infrastructure,Clusters,*
+Infrastructure/Resource Pools/*,Infrastructure,Resource Pools,*
+Infrastructure/Repositories/*,Infrastructure,Repositories,*
+Infrastructure/Datastores/*,Infrastructure,Datastores,*
+Local File System: *,Local File System,Action,*
+Local File System: List,Local File System,Action,show_list
+Local File System: Show,Local File System,Action,show
+Logical Disk: *,Logical Disk,Action,*
+Logical Disk: List,Logical Disk,Action,show_list
+Logical Disk: Show,Logical Disk,Action,show
+Management System: *,Management System,Action,*
+Management System: Add,Management System,Action,new
+Management System: Assign CoTags,Management System,Action,classifying
+Management System: Assign Policy,Management System,Action,protect
+Management System: Console,Management System,Action,console
+Management System: Delete,Management System,Action,delete
+Management System: Discover,Management System,Action,discover
+Management System: Edit,Management System,Action,edit
+Management System: List,Management System,Action,show_list
+Management System: Refresh,Management System,Action,refresh
+Management System: Show,Management System,Action,show
+Optimize/*,Optimize,*,*
+Optimize/Bottlenecks,Optimize,Bottlenecks,*
+Optimize/Planning,Optimize,Planning,*
+Optimize/Utilization,Optimize,Utilization,*
+Policy Profile: *,MiqPolicySet,Action,*
+Policy Profile: Add,MiqPolicySet,Action,new
+Policy Profile: Delete,MiqPolicySet,Action,delete
+Policy Profile: Edit,MiqPolicySet,Action,edit
+Policy Profile: List,MiqPolicySet,Action,show_list
+Policy Profile: Show,MiqPolicySet,Action,show
+Report: *,Report,Action,*
+Report: Add,Report,Action,new
+Report: Copy,Report,Action,copy
+Report: Delete,Report,Action,delete
+Report: Edit,Report,Action,edit
+Report: Report Menus,Report,Action,menueditor
+Report: Edit,Report,Action,editreport
+Report: Export,Report,Action,export
+Repository: *,Repository,Action,*
+Repository: Add,Repository,Action,new
+Repository: Assign CoTags,Repository,Action,classifying
+Repository: Assign Policy,Repository,Action,protect
+Repository: Delete,Repository,Action,delete
+Repository: Edit,Repository,Action,edit
+Repository: List,Repository,Action,show_list
+Repository: Refresh,Repository,Action,refresh
+Repository: Show,Repository,Action,show
+Request: *,Request,Action,*
+Request: Approve,Request,Action,approve
+Request: Deny,Request,Action,deny
+Resource Pool: *,Resource Pool,Action,*
+Resource Pool: Assign CoTags,Resource Pool,Action,classifying
+Resource Pool: Assign Policy,Resource Pool,Action,protect
+Resource Pool: Delete,Resource Pool,Action,delete
+Resource Pool: List,Resource Pool,Action,show_list
+Resource Pool: Show,Resource Pool,Action,show
+Schedule: *,MiqSchedule,Action,*
+Schedule: Add,MiqSchedule,Action,new
+Schedule: Delete,MiqSchedule,Action,delete
+Schedule: Edit,MiqSchedule,Action,edit
+Schedule: List,MiqSchedule,Action,show_list
+Schedule: Show,MiqSchedule,Action,show
+Service: *,Service,Action,*
+Service: Add,Service,Action,new
+Service: Assign CoTags,Service,Action,classifying
+Service: Assign Policy,Service,Action,protect
+Service: Delete,Service,Action,delete
+Service: Edit,Service,Action,edit
+Service: List,Service,Action,show_list
+Service: Show,Service,Action,show
+Service: Start,Service,Action,svc_start
+Service: Stop,Service,Action,svc_stop
+Service: Suspend,Service,Action,svc_suspend
+Services/*,Services,*,*
+SmartProxy: *,MiqProxy,Action,*
+SmartProxy: Add,MiqProxy,Action,new
+SmartProxy: Assign Policy,SmartProxy,Action,protect
+SmartProxy: Edit,MiqProxy,Action,edit
+SmartProxy: Deploy SmartProxy Build,MiqProxy,Action,install_007
+SmartProxy: List,MiqProxy,Action,show_list
+SmartProxy: Show,MiqProxy,Action,show
+SMIS Agent: *,SMIS Agent,Action,*
+SMIS Agent: List,SMIS Agent,Action,show_list
+SMIS Agent: Show,SMIS Agent,Action,show
+Storage/*,Storage,*,*
+Storage/Storage Systems/*,Storage,Storage Systems,*
+Storage/File Shares/*,Storage,File Shares,*
+Storage/Local File Systems/*,Storage,Local File Systems,*
+Storage/Logical Disks/*,Storage,Logical Disks,*
+Storage/Base Extents/*,Storage,Base Extents,*
+Storage/Storage Volumes/*,Storage,Storage Volumes,*
+Storage/SMI-S Agents/*,Storage,SMI-S Agents,*
+Support: *,Support,Action,*
+Support: Download Logs,Support,Action,fetch_server_logs
+VDI VM: *,VmVdi,Action,*
+VDI VM: Console,VmVdi,Action,console
+VDI VM: Delete,VmVdi,Action,vm_delete
+VDI VM: Edit,VmVdi,Action,edit
+VDI VM: List,VmVdi,Action,show_list
+VDI VM: Reset,VmVdi,Action,vm_reset
+VDI VM: Restart Guest,VmVdi,Action,guest_restart
+VDI VM: Show,VmVdi,Action,show
+VDI VM: Shutdown Guest,VmVdi,Action,guest_shutdown
+VDI VM: Start,VmVdi,Action,vm_start
+VDI VM: Stop,VmVdi,Action,vm_stop
+VDI VM: Suspend,VmVdi,Action,vm_suspend
+Virtual Intelligence/*,Virtual Intelligence,*,*
+Virtual Intelligence/Chargeback/*,Virtual Intelligence,Chargeback,*
+Virtual Intelligence/Dashboard/*,Virtual Intelligence,Dashboard,*
+Virtual Intelligence/Reports/*,Virtual Intelligence,Reports,*
+Virtual Intelligence/RSS/*,Virtual Intelligence,RSS,*
+Virtual Intelligence/Timelines/*,Virtual Intelligence,Timelines,*
+Virtual Intelligence/Usage/*,Virtual Intelligence,Usage,*
+Virtual Machines/*,Virtual Machines,*,*
+Virtual Machines/Requests/*,Virtual Machines,Requests,*
+Virtual Machines/VMs/*,Virtual Machines,VMs,*
+VM: *,Vm,Action,*
+VM: Analyze,Vm,Action,vm_scan
+VM: Assign CoTags,Vm,Action,classifying
+VM: Assign Policy,Vm,Action,protect
+VM: Check Compliance,Vm,Action,vm_check_compliance
+VM: Collect Running Processes,Vm,Action,vm_collect_running_processes
+VM: Compare,Vm,Action,vm_compare
+VM: Console,Vm,Action,console
+VM: Create BlackBox,Vm,Action,vm_create_bb
+VM: Create Snapshot,Vm,Action,vm_snap
+VM: Delete,Vm,Action,vm_delete
+VM: Delete BlackBox,Vm,Action,vm_delete_bb
+VM: Delete Snapshot,Vm,Action,vm_deletesnaps
+VM: Drift,Vm,Action,vm_drift
+VM: Edit,Vm,Action,edit
+VM: List,Vm,Action,show_list
+VM: Make Smart,Vm,Action,vm_smart
+VM: Ownership,Vm,Action,vm_ownership
+VM: Policy Simulation,Vm,Action,vm_policy_sim
+VM: Provision,Vm,Action,provision
+VM: Refresh,Vm,Action,vm_refresh
+VM: Reset,Vm,Action,vm_reset
+VM: Restart Guest,Vm,Action,guest_restart
+VM: Retire,Vm,Action,vm_retire
+VM: Retire Now,Vm,Action,vm_retire_now
+VM: Revert Snapshot,Vm,Action,vm_revertsnaps
+VM: Show,Vm,Action,show
+VM: Shutdown Guest,Vm,Action,guest_shutdown
+VM: Start,Vm,Action,vm_start
+VM: Stop,Vm,Action,vm_stop
+VM: Suspend,Vm,Action,vm_suspend
+VM: Sync,Vm,Action,vm_sync

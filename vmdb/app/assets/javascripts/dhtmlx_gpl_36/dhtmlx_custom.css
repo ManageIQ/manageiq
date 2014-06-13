@@ -1,0 +1,286 @@
+/*****************************************************************************************************************************************************************
+								"DHX_SKYBLUE" SKIN
+*****************************************************************************************************************************************************************/
+body{
+	background-color: #e3e3e3;
+}
+
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxWindowMainContent {
+	border: #cdeaff 1px solid;
+}
+
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxPolyInfoBar {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_bg.gif");
+	border-left: #cdeaff 1px solid;
+	border-right: #cdeaff 1px solid;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxPolyInfoBar div.dhtmlxInfoBarButtonsFake {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_bg.gif");
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxPolyInfoBar div.dhtmlxInfoBarLabel {
+	color: #0e29a7;
+}
+
+.dhxLayoutButton_dhx_skyblue_ver1t {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+.dhxLayoutButton_dhx_skyblue_ver1b {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+.dhxLayoutButton_dhx_skyblue_hor1l {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+.dhxLayoutButton_dhx_skyblue_hor1r {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+.dhxLayoutButton_dhx_skyblue_ver2t {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+.dhxLayoutButton_dhx_skyblue_ver2b {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxPolyInfoBarCollapsedHor div.dhtmlxInfoBarButtonsFake {
+	border-left: 1px solid #cdeaff;
+	border-right: 1px solid #cdeaff;
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_collapsedhor.gif");
+}
+.dhxLayoutButton_dhx_skyblue_hor2l {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+.dhxLayoutButton_dhx_skyblue_hor2r {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_btns.gif");
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxPolyInfoBarCollapsedVer div.dhtmlxInfoBarButtonsFake {
+	border-top: 1px solid #cdeaff;
+	border-bottom: 1px solid #cdeaff;
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_collapsedver.gif");
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxPolyInfoBarCollapsedVer div.dhtmlxInfoBarButtonsFake2 {
+	border-bottom: 1px solid #cdeaff;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxPolyInnerContainer {
+	color: #0e29a7;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutPolySplitterHor {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_drag_hor.gif") !important;
+	background-color: #e3e3e3;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutPolySplitterHorInactive {
+	background-color: #e3e3e3;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutPolySplitterVer {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_drag_ver.gif") !important;
+	background-color: #e3e3e3;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutPolySplitterVerInactive {
+	background-color: #e3e3e3;
+}
+div.dhxcont_global_layout_area div.dhxcont_sb_container div.dhxcont_statusbar {
+	background-image: url("./imgs/dhxlayout_dhx_skyblue/dhxlayout_bg_sb.gif");
+	border-left: #cdeaff 1px solid;
+	border-right: #cdeaff 1px solid;
+	color: #0e29a7;
+}
+div.dhxcont_global_layout_area div.dhxcont_sb_container_layoutcell div.dhxcont_statusbar {
+	background-image: url(./imgs/dhxlayout_dhx_skyblue/dhxlayout_bg_sb.gif);
+	color: #0e29a7;
+}
+
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhxcont_global_content_area {
+	border: #cdeaff 1px solid;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue div.dhtmlxPolyInfoBar div.dhtmlxLineL {
+	border-left: #ffffff 1px solid;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue div.dhtmlxPolyInfoBarCollapsedHor div.dhtmlxLineL {
+	border-left: #ffffff 1px solid;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue div.dhtmlxPolyInfoBar div.dhtmlxLineR {
+	border-right: #ffffff 1px solid;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue div.dhtmlxPolyInfoBarCollapsedHor div.dhtmlxLineR {
+	border-right: #ffffff 1px solid;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue div.dhtmlxPolyInfoBarCollapsedVer div.dhtmlxLineL {
+	border-top: #ffffff 1px solid;
+}
+table.dhtmlxLayoutPolyContainer_dhx_skyblue div.dhtmlxPolyInfoBarCollapsedVer div.dhtmlxLineR {
+	border-bottom: #ffffff 1px solid;
+}
+
+.dhxlayout_fullscreened {
+	background-color: #e3e3e3;
+}
+
+.dhtmlxcalendar_dhx_skyblue{
+	background: #ffffff;
+	color: #0e29a7;
+	border: 1px solid #cdeaff;
+	font-family: tahoma;
+	font-size: 11px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.dhtmlxcalendar_dhx_skyblue .winHeader {
+	border-color: #ffffff #ffffff #cdeaff #ffffff;
+}
+
+.dhtmlxcalendar_dhx_skyblue .winTitle {
+	font-size: 11px;
+	font-weight: bold;
+	font-family: tahoma;
+	font-style: normal;
+	color: 000000;
+}
+
+.dhtmlxcalendar_dhx_skyblue .dxcalmonth td{
+	font-size: 11px;
+	font-weight: bold;
+	font-family: tahoma;
+	font-style: normal;
+	color: 000000;
+}
+
+.dhtmlxcalendar_dhx_skyblue .dxcaldlabel {
+	font-size: 11px;
+	font-weight: bold;
+	font-family: tahoma;
+	font-style: normal;
+	color: 000000;
+}
+
+.dhtmlxcalendar_dhx_skyblue .dxcaldays td,
+.dhtmlxcalendar_dhx_skyblue .dxcaldays_ie td{
+	color: #0e29a7;
+	font-family: tahoma;
+	font-size: 11px;
+	font-weight: normal;
+	font-style: normal;
+}
+/*
+.dhtmlxcalendar_dhx_skyblue td.current{
+	font-weight: normal !important;
+}
+*/
+
+.dhtmlxcalendar_dhx_skyblue td.othermonth{
+  color: #9fa9dc;
+}
+
+.dhtmlxcalendar_dhx_skyblue td.insensitive{
+  color:#9fa9dc;
+}
+
+.dhtmlxcalendar_dhx_skyblue td.selected{
+  background: url("./imgs/__dhxCal_skin_Skyblue/cell_select.gif") center no-repeat;
+}
+
+.dhtmlxcalendar_dhx_skyblue td.holiday{ 
+	color: #0e29a7;
+	font-family: tahoma;
+	font-size: 11px;
+	font-weight: normal;
+	font-style: normal;
+}
+/*
+.dhtmlxdblcalendar_dhx_skyblue {
+	background: url(_dhx_blue/cal_bg_double.png) no-repeat;
+}
+
+.dhtmlxdblcalendar_dhx_skyblue .dhtmlxcalendar {
+	background-image: url(../../codebase/imgs/blank.gif);
+}
+*/
+.dhtmlxcalendar_dhx_skyblue div.dhtmlxRichSelector {
+	background-color:#ffffff;
+}
+
+.dhtmlxcalendar_dhx_skyblue select.dhtmlxRichSelector {
+	border: 1px solid #9fa9dc;
+}
+
+.dhtmlxcalendar_dhx_skyblue textarea.dhtmlxRichSelector,
+.dhtmlxcalendar_dhx_skyblue select.dhtmlxRichSelector {
+	font-family:  tahoma;
+	font-size: 11px;
+}
+
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr, .dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_days_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell, .dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_days_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell_first, .dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell, .dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_time_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_time_hdr, .dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_time_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_time_hdr div.dhtmlxcalendar_time_label, .dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj div.dhtmlxcalendar_selector_obj_arrow, .dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_middle ul.dhtmlxcalendar_selector_line li.dhtmlxcalendar_selector_cell {
+	background-image: url("imgs/dhtmlxcalendar_dhx_skyblue/bg_days.png");
+}
+
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_left,
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_right {
+	background-color: #f3f3f3;
+}
+
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue {
+	background-image: url("imgs/dhtmlxcalendar_dhx_skyblue/bg_main.png");
+}
+
+.dhtmlxcalendar_container div.dhtmlxcalendar_days_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_day_weekday_cell,
+.dhtmlxcalendar_container div.dhtmlxcalendar_days_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_day_weekday_cell_first,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month_weekend,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month_date_weekend,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month_weekend_hover,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month_date_weekend_hover {
+	color: #329bb1;
+	font-family: tahoma;
+	font-size: 11px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr div.dhtmlxcalendar_month_arrow.dhtmlxcalendar_month_arrow_left,
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_left {
+	background-image: url("imgs/dhtmlxcalendar_dhx_skyblue/arrow_left.png");
+}
+
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr div.dhtmlxcalendar_month_arrow.dhtmlxcalendar_month_arrow_right,
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_right {
+	background-image: url("imgs/dhtmlxcalendar_dhx_skyblue/arrow_right.png");
+}
+
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr div.dhtmlxcalendar_month_arrow.dhtmlxcalendar_month_arrow_left_hover,
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_left.dhtmlxcalendar_selector_cell_left_hover {
+	background-image: url("imgs/dhtmlxcalendar_dhx_skyblue/arrow_left_hover.png");
+}
+
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr div.dhtmlxcalendar_month_arrow.dhtmlxcalendar_month_arrow_right_hover,
+.dhtmlxcalendar_container.dhtmlxcalendar_skin_dhx_skyblue div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_right.dhtmlxcalendar_selector_cell_right_hover {
+	background-image: url("imgs/dhtmlxcalendar_dhx_skyblue/arrow_right_hover.png");
+}
+
+.dhtmlxcalendar_container ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell,
+.dhtmlxcalendar_container ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell_first,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month,
+.dhtmlxcalendar_container div.dhtmlxcalendar_days_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell,
+.dhtmlxcalendar_container div.dhtmlxcalendar_days_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell_first,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month_date,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month_date_hover,
+.dhtmlxcalendar_container div.dhtmlxcalendar_dates_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_cell_month_hover,
+.dhtmlxcalendar_container div.dhtmlxcalendar_time_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_time_hdr,
+.dhtmlxcalendar_container div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_middle ul.dhtmlxcalendar_selector_line li.dhtmlxcalendar_selector_cell{
+	font-family: tahoma;
+	font-size: 11px;
+	color: #0e29a7;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.dhtmlxcalendar_container div.dhtmlxcalendar_selector_obj table.dhtmlxcalendar_selector_table td.dhtmlxcalendar_selector_cell_middle ul.dhtmlxcalendar_selector_line li.dhtmlxcalendar_selector_cell {
+	color: #0e29a7;
+}
+
+.dhtmlxcalendar_container div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr,
+.dhtmlxcalendar_container div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr span.dhtmlxcalendar_month_label_month,
+.dhtmlxcalendar_container div.dhtmlxcalendar_month_cont ul.dhtmlxcalendar_line li.dhtmlxcalendar_cell.dhtmlxcalendar_month_hdr span.dhtmlxcalendar_month_label_year{
+	font-family: tahoma;
+	font-size: 11px;
+	color: #000000;
+	font-weight: bold;
+	font-style: normal;
+}
+
+

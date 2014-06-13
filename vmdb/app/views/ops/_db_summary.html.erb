@@ -1,0 +1,16 @@
+<div class="maincontent">
+
+	<dl class="col2">
+		<dd>
+			<%= render :partial => "shared/summary/textual", :locals => { :title => "Properties", :items => textual_group_vmdb_connection_properties } %>
+      <%= render :partial => "shared/summary/textual", :locals => { :title => "Capacity Data", :items => textual_group_vmdb_connection_capacity_data } %>
+		</dd>
+    <dd>
+      <%= render :partial => "shared/summary/textual_listview", :locals => { :title => "Tables with Most Rows", :items => textual_group_vmdb_tables_most_rows } %>
+      <%= render :partial => "shared/summary/textual_listview", :locals => { :title => "Largest Tables", :items => textual_group_vmdb_tables_largest_size } %>
+      <%= render :partial => "shared/summary/textual_listview", :locals => { :title => "Tables with Most Wasted Space", :items => textual_group_vmdb_tables_most_wasted_space } %>
+    </dd>
+	</dl>
+</div>
+
+

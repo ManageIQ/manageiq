@@ -1,0 +1,2 @@
+class CloudVolumeOpenstack < CloudVolume
+end

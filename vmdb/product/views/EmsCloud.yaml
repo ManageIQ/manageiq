@@ -1,0 +1,86 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: Cloud Providers
+
+# Menu name
+name: EmsCloud
+
+# Main DB table report is based on
+db: EmsCloud
+
+# Columns to fetch from the main table
+cols:
+- name
+- emstype_description
+- port
+- total_vms
+- total_miq_templates
+- region_description
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  zone:
+    columns:
+    - name
+
+# Included tables and columns for query performance
+include_for_find:
+  :zone: {}
+  :tags: {}
+
+# Order of columns (from all tables)
+col_order: 
+- name
+- emstype_description
+- zone.name
+- total_vms
+- total_miq_templates
+- region_description
+
+# Column titles, in order
+headers:
+- Name
+- Type
+- EVM Zone
+- Instances
+- Images
+- Region
+
+# Condition(s) string for the SQL query
+conditions: 
+
+# Order string for the SQL query
+order: Ascending
+
+# Columns to sort the report on, in order
+sortby:
+- name
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 

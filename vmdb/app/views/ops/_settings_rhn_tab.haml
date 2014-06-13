@@ -1,0 +1,34 @@
+-# Display Red Hat customer information and subscriptions
+-#
+-# Inputs:
+-#   @customer   -- customer information
+-#                  also passed to the info_subscribed partial
+-#   @updates[]  -- update information for individual servers
+-#                  passed to the server_table partial
+
+= render :partial => 'layouts/flash_msg'
+
+%fieldset
+  %p{:class => 'legend'}
+    Red Hat Software Updates
+  %table{:class => 'style1'}
+    - if @customer.registered
+      = render :partial => 'ops/rhn/info_subscribed'
+    - else
+      = render :partial => 'ops/rhn/info_unsubscribed'
+    %tr
+      %td{:colspan => 2}
+        =button_tag('Edit Registration',
+                    :id      => 'settings_rhn_edit',
+                    :class   => 'upload',
+                    :onclick => "miqAjaxButton('#{url_for(:action => 'edit_rhn')}');")
+
+- if @customer.registered
+  = render :partial => 'ops/rhn/server_table'
+
+%div{:style => 'padding-bottom:20px;'}
+
+-# Need this to bind checkbox observers when under DHTMLX tabs
+-# TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+%script
+  miqObserveCheckboxes();

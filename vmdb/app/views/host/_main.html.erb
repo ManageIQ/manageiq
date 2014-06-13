@@ -1,0 +1,34 @@
+<div class="maincontent">
+	<%= render :partial => "layouts/flash_msg" %>
+	<%= hidden_div_if(@settings[:views][:dashboards] != "graphical", :id => "graphical_div") do %>
+		<%= render :partial => "shared/summary/graphical", :locals => { :title => "Properties",      :items => graphical_group_properties } %>
+		<%= render :partial => "shared/summary/graphical", :locals => { :title => "Relationships",      :items => graphical_group_relationships } %>
+		<%= render :partial => "shared/summary/graphical", :locals => { :title => "Security",      :items => graphical_group_security} %>
+		<%= render :partial => "shared/summary/graphical", :locals => { :title => "Configuration",      :items => graphical_group_configuration} %>
+		<%= render :partial => "shared/summary/graphical", :locals => { :title => "Diagnostics",      :items => graphical_group_diagnostics} %>
+    <% if get_vmdb_config[:product][:storage] %>
+  		<%= render :partial => "shared/summary/graphical", :locals => { :title => "Storage Relationships", :items => graphical_group_storage_relationships } %>
+    <% end %>
+	<% end %>
+	<%= hidden_div_if(@settings[:views][:dashboards] != "textual", :id => "textual_div") do %>
+		<dl class="col2">
+			<dd>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "Properties",       :items => textual_group_properties } %>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "Relationships",       :items => textual_group_relationships } %>
+			</dd>
+			<dd>
+        <% if get_vmdb_config[:product][:storage] %>
+  				<%= render :partial => "shared/summary/textual", :locals => { :title => "Storage Relationships", :items => textual_group_storage_relationships } %>
+        <% end %>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "Compliance",            :items => textual_group_compliance } %>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "Security",              :items => textual_group_security } %>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "Configuration",         :items => textual_group_configuration } %>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "Diagnostics",      :items => textual_group_diagnostics} %>
+				<%= render :partial => "shared/summary/textual_tags", :locals => { :title => "Smart Management", :items => textual_group_smart_management } %>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "Custom Attributes", :items => textual_group_miq_custom_attributes } %>
+				<%= render :partial => "shared/summary/textual", :locals => { :title => "VC Custom Attributes",  :items => textual_group_ems_custom_attributes } %>
+				<%= render :partial => "shared/summary/textual",      :locals => { :title => "Authentication Status", :items => textual_group_authentications } %>
+			</dd>
+		</dl>
+	<% end %>
+</div>

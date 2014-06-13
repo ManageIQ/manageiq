@@ -1,0 +1,31 @@
+#
+# Toolbar config file
+#
+---
+:model: CustomButton
+:button_groups:
+- :name: custom_button_vmdb
+  :items:
+  - :buttonSelect: custom_button_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ab_button_edit
+      :image: edit
+      :text: "Edit this Button"
+      :title: "Edit this Button"
+      :url_parms: 'main_div'
+    - :button: ab_button_delete
+      :image: remove
+      :text: "Remove this Button"
+      :title: "Remove this Button"
+      :url_parms: 'main_div'
+      :confirm: "Warning: This Button will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Button?"
+    - :separator:
+    - :button: ab_button_simulate
+      :image: simulate
+      :text: "Simulate"
+      :title: "Simulate using Button details"
+      :url: "resolve"
+      :url_parms: '?button=simulate'

@@ -1,0 +1,944 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://ec2.us-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeRegions&Signature=1K%2FXUdYJH%2BV7iJ6%2FbgFybHcIGiixcXr6knOhKKDY%2F9o%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A51Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '223'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:55:57 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeRegionsResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>41e903ff-3e9d-4c6c-93fe-ed25484d4963</requestId>\n
+        \   <regionInfo>\n        <item>\n            <regionName>eu-west-1</regionName>\n
+        \           <regionEndpoint>ec2.eu-west-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>sa-east-1</regionName>\n
+        \           <regionEndpoint>ec2.sa-east-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>us-east-1</regionName>\n
+        \           <regionEndpoint>ec2.us-east-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>ap-northeast-1</regionName>\n
+        \           <regionEndpoint>ec2.ap-northeast-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>us-west-2</regionName>\n
+        \           <regionEndpoint>ec2.us-west-2.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>us-west-1</regionName>\n
+        \           <regionEndpoint>ec2.us-west-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>ap-southeast-1</regionName>\n
+        \           <regionEndpoint>ec2.ap-southeast-1.amazonaws.com</regionEndpoint>\n
+        \       </item>\n        <item>\n            <regionName>ap-southeast-2</regionName>\n
+        \           <regionEndpoint>ec2.ap-southeast-2.amazonaws.com</regionEndpoint>\n
+        \       </item>\n    </regionInfo>\n</DescribeRegionsResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:51 GMT
+- request:
+    method: post
+    uri: https://ec2.eu-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=6VX0RswuHaomc6ZNmnc%2FQEf%2FJcmzni6W0EyxGrTQRaQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A51Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '221'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:55:58 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>a9555cd1-10ea-49e9-bc50-3ff6d7b2ae90</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:52 GMT
+- request:
+    method: post
+    uri: https://ec2.eu-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=aDge%2FE3OXwBv2ys8z%2BvSmFAor12U7PyPsVTiA%2B82kHw%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A52Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '233'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:55:58 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>7c45a6b8-715f-42c2-8b43-ceb2ec664871</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:53 GMT
+- request:
+    method: post
+    uri: https://ec2.eu-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=fLXwTSyRr1nPNqr3NbovNRyEP2GSSdg1Jt49661yNlQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A53Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '234'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:55:59 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>1c725cc0-ec43-429e-802f-9fb269ba7e4f</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:53 GMT
+- request:
+    method: post
+    uri: https://ec2.sa-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=l5H6j7awXYeBfxnYqKDUH0XwUWVTocLU63j3QWQ%2BXdw%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A53Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '219'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:00 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>e1d79520-6fcd-45d0-9c2b-9dedb3fb2e6f</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:54 GMT
+- request:
+    method: post
+    uri: https://ec2.sa-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=ny1fePhxPklWjD2dwINhjLzoMbbEe6hgOiZpoNo%2FrvU%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A54Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '229'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:01 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>e5199bd5-9299-4b1d-b519-20760c1e4d2a</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:55 GMT
+- request:
+    method: post
+    uri: https://ec2.sa-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=NgZW2UVjHsa7UQdbWEbPHKwlpmAU49vxAT1lLce%2BjA0%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A55Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '236'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:02 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>11392b36-c073-41d4-80f3-55460a192a6a</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:57 GMT
+- request:
+    method: post
+    uri: https://ec2.us-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=wf%2BXLEA01CYvcA0SRfobUrXgN53XOjZbaBImRULEfKE%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A57Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '219'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:03 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>7ed12882-aa90-462d-ac4c-56cf861f0939</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:57 GMT
+- request:
+    method: post
+    uri: https://ec2.us-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=ny1fePhxPklWjD2dwINhjLzoMbbEe6hgOiZpoNo%2FrvU%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A54Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '229'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:01 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>f5199bd5-9299-4b1d-b519-20760c1e4d2a</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:55 GMT
+- request:
+    method: post
+    uri: https://ec2.us-east-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=NgZW2UVjHsa7UQdbWEbPHKwlpmAU49vxAT1lLce%2BjA0%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A55Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '236'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:02 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>f1392b36-c073-41d4-80f3-55460a192a6a</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:57 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-northeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=zBkgSW5oTp07v%2FUe6HR4foTSDJqL3IZBJqjfbFBwYhc%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A57Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '219'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:04 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>0825146a-8fc1-41a7-9351-4bdd120c2ba5</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:58 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-northeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=U315m7Bpz5YiGxFLrVvTJle1GDkwzmt4da4pB2zDz8E%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A58Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '227'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:05 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>47b6ebb0-7236-4023-ba7f-cd2b4e4cf92e</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:55:59 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-northeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=IQmrqeUkXFa2ZD%2F7f6qrxi2KyEfOUG%2BVjnF%2FCLugF%2F0%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A55%3A59Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '242'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:06 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>4ca587d1-fe80-474c-adfa-7c9ddcafe80c</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:00 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=XubdKGFv8MG9Kn80uTx1PZSSHf91mVLYkPzULEWuXgw%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A00Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '217'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:07 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>6ac37270-732d-46f1-ba8c-61fcac75fd8f</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:01 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=ZguBDb9KexCh3bdDZqaAv2mcPT4hvWPfVW8V0D0gVDQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A01Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '227'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:07 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>ee6a2784-15ea-4e6a-96b6-3df2c445d813</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:02 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=vawsL05Xa1dXhR4oeCPev38qjDx5xnmFDJLzDQcd7fs%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A02Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '234'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:08 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>f7119357-588e-49c3-b9d1-ee4e407a7ccf</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:02 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=6Laa6RfFB0%2F4UNYuSF65NP3xWX1C3ZVgfvzHGSfJjpA%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A02Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '219'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:09 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>8cd1a6e3-f1ff-4c22-8bcd-090ad42953fa</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:03 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=ZguBDb9KexCh3bdDZqaAv2mcPT4hvWPfVW8V0D0gVDQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A01Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '227'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:07 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>fe6a2784-15ea-4e6a-96b6-3df2c445d813</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:02 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=vawsL05Xa1dXhR4oeCPev38qjDx5xnmFDJLzDQcd7fs%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A02Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '234'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:08 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>a7119357-588e-49c3-b9d1-ee4e407a7ccf</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:02 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=qkfJ1%2BEqBmnMBe2Ww7jaRu%2FbxRVjBiavfD9IkB5js28%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A03Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '221'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:10 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>1258659a-9b1e-454b-a404-16301f0be6e3</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:04 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=xoYHK1TBqKkXSv3OLiMOfh4PllPKRuhH%2FRLSjGDBP0Y%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A04Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '229'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:12 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>4a84c248-dabd-46f2-99ee-9327b1769d8e</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:06 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=UuddjPDhySmnzQkEEGZ08jj3mMfh%2Fu9SbAvNkYxNF44%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A06Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '236'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:13 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>7ef2097c-362b-4b44-a304-f3d58c6294f3</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:07 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=tu0jN33cnNSfJV3Mm1G62UtNq69YKv5UMX64IYlOy48%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A07Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '217'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:14 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>3619ffec-02a2-4e0c-b305-8aeedb395be7</requestId>\n
+        \   <reservationSet/>\n</DescribeInstancesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:09 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Owner.1=self&Signature=PL5tnSQFC%2Fycvq4XtFahuap9QzwGZvwPZrZCyy09%2FSY%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A09Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '231'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:16 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>e355efbd-dd43-4488-a81b-b52855832ae2</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:10 GMT
+- request:
+    method: post
+    uri: https://ec2.ap-southeast-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Signature=kRc5Sd9CNKmer89yn%2BTjveQOTjhrGejL23a9km7UNyI%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-09-24T17%3A56%3A10Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '236'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 24 Sep 2013 17:56:17 GMT
+      Server:
+      - AmazonEC2
+    body:
+      encoding: US-ASCII
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>31dc4ba9-5c03-4637-ad4f-45490a763edb</requestId>\n
+        \   <imagesSet/>\n</DescribeImagesResponse>"
+    http_version: 
+  recorded_at: Tue, 24 Sep 2013 17:56:11 GMT
+recorded_with: VCR 2.4.0

@@ -1,0 +1,40 @@
+#
+# Toolbar config file
+#
+---
+:model: Condition
+:button_groups:
+- :name: condition_vmdb
+  :items:
+  - :buttonSelect: condition_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: condition_edit
+      :image: edit
+      :text: 'Edit this Condition'
+      :title: 'Edit this Condition'
+      :url_parms: '?type=basic'
+    - :button: condition_copy
+      :image: copy
+      :text: 'Copy this Condition to a new Condition'
+      :title: 'Copy this Condition to a new Condition'
+      :url_parms: '?copy=true'
+    - :button: condition_policy_copy
+      :image: copy
+      :text: 'Copy this Condition to a new Condition assigned to Policy [#{@condition_policy.description}]'
+      :title: 'Copy this Condition to a new Condition assigned to Policy [#{@condition_policy.description}]'
+      :url_parms: '?copy=true'
+    - :button: condition_delete
+      :image: delete
+      :text: 'Delete this #{ui_lookup(:model=>@condition.towhat)} Condition'
+      :title: 'Delete this #{ui_lookup(:model=>@condition.towhat)} Condition'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to delete this #{ui_lookup(:model=>@condition.towhat)} Condition?'
+    - :button: condition_remove
+      :image: delete
+      :text: 'Remove this Condition from Policy [#{@condition_policy.description}]'
+      :title: 'Remove this Condition from Policy [#{@condition_policy.description}]'
+      :url_parms: '?policy_id=#{@condition_policy.id}'
+      :confirm: 'Are you sure you want to remove this Condition from Policy [#{@condition_policy.description}]?'

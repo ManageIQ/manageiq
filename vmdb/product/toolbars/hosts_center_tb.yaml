@@ -1,0 +1,169 @@
+#
+# Toolbar config file
+#
+---
+:model: Host
+:button_groups:
+- :name: host_vmdb
+  :items:
+  - :buttonSelect: host_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: host_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power States"
+      :title: "Refresh relationships and power states for all items related to the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Refresh relationships and power states for all items related to the selected Hosts?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Perform SmartState Analysis on the selected Hosts?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_compare
+      :image: compare
+      :text: "Compare Selected Hosts"
+      :title: "Select two or more Hosts to compare"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '2+'    
+    - :button: host_discover
+      :image: discover
+      :text: "Discover Hosts"
+      :title: "Discover Hosts"
+      :url: '/discover'
+      :url_parms: '?discover_type=hosts'
+    - :separator:
+    - :button: host_new
+      :image: new
+      :url: '/new'
+      :text: "Add a New Host"
+      :title: "Add a New Host"
+    - :button: host_edit
+      :image: edit
+      :text: Edit Selected Hosts
+      :title: Edit Selected Hosts
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_delete
+      :image: remove
+      :text: Remove Hosts from the VMDB
+      :title: Remove Selected Hosts from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Hosts and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Hosts?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: host_policy
+  :items:
+  - :buttonSelect: host_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: host_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for the selected Hosts"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for the selected Hosts"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_check_compliance
+      :image: compliance
+      :text: "Check Compliance of Last Known Configuration"
+      :title: "Check Compliance of the last known configuration for the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Initiate Check Compliance of the last known configuration for the selected Hosts?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_analyze_check_compliance
+      :image: analyze_compliance
+      :text: "Analyze then Check Compliance"
+      :title: "Analyze then Check Compliance for the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Analyze then Check Compliance for the selected Hosts?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: host_lifecycle
+  :items:
+  - :buttonSelect: host_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :items:
+    - :button: host_miq_request_new
+      :image: new
+      :url_parms: 'main_div'
+      :text: "Provision Hosts"
+      :title: "Request to Provision Hosts"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: host_operations
+  :items:
+  - :buttonSelect: host_power_choice
+    :image: power_choice
+    :title: Power Operations
+    :text: Power
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: host_standby
+      :image: standby
+      :text: "Enter Standby Mode"
+      :title: "Shutdown the selected Hosts to Standby Mode"
+      :confirm: "Shutdown the selected Hosts to Standby Mode?"
+      :url_parms: 'main_div'
+      :confirm: "Shutdown the selected Hosts to Standy Mode?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_shutdown
+      :image: guest_shutdown
+      :text: "Shutdown"
+      :title: "Shutdown the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Shutdown the selected Hosts?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: host_reboot
+      :image: guest_restart
+      :text: "Restart"
+      :title: "Restart the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Restart the selected Hosts?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: host_start
+      :image: power_on
+      :text: "Power On"
+      :title: "Power On the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Power On the selected Hosts?"
+    - :button: host_stop
+      :image: power_off
+      :text: "Power Off"
+      :title: "Power Off the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Power Off the selected Hosts?"
+    - :button: host_reset
+      :image: power_reset
+      :text: "Reset"
+      :title: "Reset the selected Hosts"
+      :url_parms: 'main_div'
+      :confirm: "Reset the selected Hosts?"

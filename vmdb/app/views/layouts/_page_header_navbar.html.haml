@@ -1,0 +1,276 @@
+.navbar
+  %ul#maintab
+    -if role_allows(:main_tab => MAIN_TABS[:vi])
+      %li(class="#{primary_nav_class(:vi)}")
+        %a{:href => '/dashboard/maintab/?tab=vi'}= h(MAIN_TABS[:vi])
+        %ul(class="#{primary_nav_class(:vi)}")
+
+          -if role_allows(:feature => 'dashboard_view')
+            %li(class="#{secondary_nav_class('dashboard')}")
+              %a{:href=>'/dashboard/'} Dashboard
+
+          -if role_allows(:feature => 'miq_report',:any => true)
+            %li(class="#{secondary_nav_class('report')}")
+              %a{:href=>'/report/explorer'}Reports
+
+          / Hiding usage for now - release 5.2
+          -if false
+            -if role_allows(:feature => 'usage')
+              %li(class="#{secondary_nav_class('usage')}")
+                %a{:href=>'/report/usage/'}Usage
+
+          -if role_allows(:feature => 'chargeback',:any => true)
+            %li(class="#{secondary_nav_class('chargeback')}")
+              %a{:href=>'/chargeback/explorer'}Chargeback
+
+          -if role_allows(:feature => 'timeline')
+            %li(class="#{secondary_nav_class('timeline')}")
+              %a{:href=>'/dashboard/timeline/'}Timelines
+
+          -if role_allows(:feature => 'rss')
+            %li(class="#{secondary_nav_class('rss')}")
+              %a{:href=>'/alert/'}RSS
+
+    -if role_allows(:main_tab => MAIN_TABS[:svc])
+      %li(class="#{primary_nav_class(:svc)}")
+        %a{:href=>'/dashboard/maintab/?tab=svc'}= h(MAIN_TABS[:svc])
+        %ul(class="#{primary_nav_class(:svc)}")
+
+          -if role_allows(:feature => 'service', :any => true)
+            %li(class="#{secondary_nav_class('services')}")
+              %a{:href=>'/service/explorer'}My Services
+
+          -if role_allows(:feature => 'catalog',:any => true)
+            %li(class="#{secondary_nav_class('catalogs')}")
+              %a{:href=>'/catalog/explorer'}Catalogs
+
+          -if role_allows(:feature => 'vm_explorer_accords',:any => true)
+            %li(class="#{secondary_nav_class('vm_or_template')}")
+              %a{:href=>'/vm_or_template/explorer'}Workloads
+
+          -if role_allows(:feature => 'miq_request_show_list')
+            %li(class="#{secondary_nav_class('miq_request_vm')}")
+              %a{:href=>'/miq_request?typ=vm'}Requests
+
+    -if role_allows(:main_tab => MAIN_TABS[:clo])
+      %li(class="#{primary_nav_class(:clo)}")
+        %a{:href=>'/dashboard/maintab/?tab=clo'}= h(MAIN_TABS[:clo])
+        %ul(class="#{primary_nav_class(:clo)}")
+
+          -if role_allows(:feature => 'ems_cloud_show_list')
+            %li(class="#{secondary_nav_class('ems_cloud')}")
+              %a{:href=>'/ems_cloud'}Providers
+
+          -if role_allows(:feature => 'availability_zone_show_list')
+            %li(class="#{secondary_nav_class('availability_zone')}")
+              %a{:href=>'/availability_zone'}Availability Zones
+
+          -if role_allows(:feature => 'flavor_show_list')
+            %li(class="#{secondary_nav_class('flavor')}")
+              %a{:href=>'/flavor'}Flavors
+
+          -if role_allows(:feature => 'security_group_show_list')
+            %li(class="#{secondary_nav_class('security_group')}")
+              %a{:href=>'/security_group'}Security Groups
+
+          -if role_allows(:feature => 'vm_cloud_explorer_accords',:any => true)
+            %li(class="#{secondary_nav_class('vm_cloud')}")
+              %a{:href=>'/vm_cloud/explorer'}Instances
+
+    -if role_allows(:main_tab => MAIN_TABS[:inf])
+      %li(class="#{primary_nav_class(:inf)}")
+        %a{:href=>'/dashboard/maintab/?tab=inf'}= h(MAIN_TABS[:inf])
+        %ul(class="#{primary_nav_class(:inf)}")
+
+          -if role_allows(:feature => 'ems_infra_show_list')
+            %li(class="#{secondary_nav_class('ems_infra')}")
+              %a{:href=>'/ems_infra'}Providers
+
+          -if role_allows(:feature => 'ems_cluster_show_list')
+            %li(class="#{secondary_nav_class('ems_cluster')}")
+              %a{:href=>'/ems_cluster'}Clusters
+
+          -if role_allows(:feature => 'host_show_list')
+            %li(class="#{secondary_nav_class('host')}")
+              %a{:href=>'/host'}Hosts
+
+          -if role_allows(:feature => 'vm_infra_explorer_accords',:any => true)
+            %li(class="#{secondary_nav_class('vm_infra')}")
+              %a{:href=>'/vm_infra/explorer'}Virtual Machines
+
+          -if role_allows(:feature => 'resource_pool_show_list')
+            %li(class="#{secondary_nav_class('resource_pool')}")
+              %a{:href=>'/resource_pool'}Resource Pools
+
+          -if role_allows(:feature => 'storage_show_list')
+            %li(class="#{secondary_nav_class('storage')}")
+              %a{:href=>'/storage'}= ui_lookup(:tables => 'storages')
+
+          -if role_allows(:feature => 'repository_show_list')
+            %li(class="#{secondary_nav_class('repository')}")
+              %a{:href=>'/repository'}Repositories
+
+          -if role_allows(:feature => 'pxe', :any => true)
+            %li(class="#{secondary_nav_class('pxe')}")
+              %a{:href=>'/pxe/explorer'}PXE
+
+          -if role_allows(:feature => 'miq_request_show_list')
+            %li(class="#{secondary_nav_class('miq_request_host')}")
+              %a{:href=>"/miq_request?typ=host"}Requests
+
+    -if get_vmdb_config[:product][:vdi]
+      -if role_allows(:main_tab => MAIN_TABS[:vdi]) 
+        %li(class="#{primary_nav_class(:vdi)}")
+          %a{:href=>'/dashboard/maintab/?tab=vdi'}= h(MAIN_TABS[:vdi])
+          %ul(class="#{primary_nav_class(:vdi)}")
+
+            -if role_allows(:feature => 'vdi_farm_show_list')
+              %li(class="#{secondary_nav_class('vdi_farm')}")
+                %a{:href=>'/vdi_farm'}= ui_lookup(:tables => 'vdi_farm')
+
+            -if role_allows(:feature => 'vdi_controller_show_list')
+              %li(class="#{secondary_nav_class('vdi_controller')}")
+                %a{:href=>'/vdi_controller'}= ui_lookup(:tables => 'vdi_controller')
+
+            -if role_allows(:feature => 'vdi_desktop_pool_show_list')
+              %li(class="#{secondary_nav_class('vdi_desktop_pool')}")
+                %a{:href=>'/vdi_desktop_pool'}= ui_lookup(:tables => 'vdi_desktop_pool')
+
+            -if role_allows(:feature => 'vdi_desktop_show_list')
+              %li(class="#{secondary_nav_class('vdi_desktop')}")
+                %a{:href=>'/vdi_desktop'}= ui_lookup(:tables => 'vdi_desktop')
+
+            -if role_allows(:feature => 'vdi_endpoint_device_show_list')
+              %li(class="#{secondary_nav_class('vdi_endpoint_device')}")
+                %a{:href=>'/vdi_endpoint_device'}= ui_lookup(:tables => 'vdi_endpoint_device')
+
+            -if role_allows(:feature => 'vdi_user_show_list')
+              %li(class="#{secondary_nav_class('vdi_user')}")
+                %a{:href=>'/vdi_user'}= ui_lookup(:tables => 'vdi_user')
+
+            -if role_allows(:feature => 'vm_vdi_show_list')
+              %li(class="#{secondary_nav_class('vm_vdi')}")
+                %a{:href=>'/vm_vdi'}VMs
+
+    -if get_vmdb_config[:product][:storage]
+      -if role_allows(:main_tab => MAIN_TABS[:sto]) 
+        %li(class="#{primary_nav_class(:sto)}")
+          %a{:href=>'/dashboard/maintab/?tab=sto'}= h(MAIN_TABS[:sto])
+          %ul(class="#{primary_nav_class(:sto)}")
+
+            -if role_allows(:feature => 'ontap_storage_system_show_list')
+              %li(class="#{secondary_nav_class('ontap_storage_system')}")
+                %a{:href=>'/ontap_storage_system'}= ui_lookup(:tables => 'ontap_storage_system')
+            
+            -if role_allows(:feature => 'ontap_logical_disk_show_list') 
+              %li(class="#{secondary_nav_class('ontap_logical_disk')}")
+                %a{:href=>'/ontap_logical_disk'}= ui_lookup(:tables => 'ontap_logical_disk')
+
+            -if role_allows(:feature => 'ontap_storage_volume_show_list') 
+              %li(class="#{secondary_nav_class('ontap_storage_volume')}")
+                %a{:href=>'/ontap_storage_volume'}= ui_lookup(:tables => 'ontap_storage_volume')
+            
+            -if role_allows(:feature => 'ontap_file_share_show_list') 
+              %li(class="#{secondary_nav_class('ontap_file_share')}")
+                %a{:href=>'/ontap_file_share'}= ui_lookup(:tables => 'ontap_file_share')
+
+            -if false
+              -if role_allows(:feature => 'cim_base_storage_extent_show_list') 
+                %li(class="#{secondary_nav_class('cim_base_storage_extent')}")
+                  %a{:href=>'/cim_base_storage_extent'}Base Extents
+
+            -if role_allows(:feature => 'storage_manager_show_list')
+              %li(class="#{secondary_nav_class('storage_manager')}")
+                %a{:href=>'/storage_manager'}Storage Managers
+
+    -if role_allows(:main_tab => MAIN_TABS[:con])
+      %li(class="#{primary_nav_class(:con)}")
+        %a{:href=>'/dashboard/maintab/?tab=con'}= h(MAIN_TABS[:con])
+        %ul(class="#{primary_nav_class(:con)}")
+
+          -if role_allows(:feature => 'control_explorer_view')
+            %li(class="#{secondary_nav_class('miq_policy')}")
+              %a{:href=>'/miq_policy/explorer'}Explorer
+
+          -if role_allows(:feature => 'policy_simulation')
+            %li(class="#{secondary_nav_class('miq_policy_rsop')}")
+              %a{:href=>'/miq_policy/rsop'}Simulation
+
+          -if role_allows(:feature => 'policy_import_export')
+            %li(class="#{secondary_nav_class('miq_policy_export')}")
+              %a{:href=>'/miq_policy/export'}Import / Export
+
+          -if role_allows(:feature => 'policy_log')
+            %li(class="#{secondary_nav_class('miq_policy_logs')}")
+              %a{:href=>"/miq_policy/log"}Log
+
+    -if role_allows(:main_tab => MAIN_TABS[:aut])
+      %li(class="#{primary_nav_class(:aut)}")
+        %a{:href=>'/dashboard/maintab/?tab=aut'}= h(MAIN_TABS[:aut])
+        %ul(class="#{primary_nav_class(:aut)}")
+
+          -if role_allows(:feature => 'miq_ae_class_explorer')
+            %li(class="#{secondary_nav_class('miq_ae_class')}")
+              %a{:href=>'/miq_ae_class/explorer'}Explorer
+
+          -if role_allows(:feature => 'miq_ae_class_simulation')
+            %li(class="#{secondary_nav_class('miq_ae_tools')}")
+              %a{:href=>'/miq_ae_tools/resolve'}Simulation
+
+          -if role_allows(:feature => 'miq_ae_customization_explorer')
+            %li(class="#{secondary_nav_class('miq_ae_customization')}")
+              %a{:href=>'/miq_ae_customization/explorer'}Customization
+
+          -if role_allows(:feature => 'miq_ae_class_import_export')
+            %li(class="#{secondary_nav_class('miq_ae_export')}")
+              %a{:href=>'/miq_ae_tools/import_export'}Import / Export
+
+          -if role_allows(:feature => 'miq_ae_class_log')
+            %li(class="#{secondary_nav_class('miq_ae_logs')}")
+              %a{:href=>'/miq_ae_tools/log'}Log
+
+          -if role_allows(:feature => 'miq_request_show_list')
+            %li(class="#{secondary_nav_class('miq_request_ae')}")
+              %a{:href=>"/miq_request?typ=ae"}Requests
+
+    -if role_allows(:main_tab => MAIN_TABS[:opt])
+      %li(class="#{primary_nav_class(:opt)}")
+        %a{:href=>'/dashboard/maintab/?tab=opt'}= h(MAIN_TABS[:opt])
+        %ul(class="#{primary_nav_class(:opt)}")
+
+          -if role_allows(:feature => 'utilization')
+            %li(class="#{secondary_nav_class('miq_capacity_utilization')}")
+              %a{:href=>'/miq_capacity'}Utilization
+
+          -if role_allows(:feature => 'planning')
+            %li(class="#{secondary_nav_class('miq_capacity_planning')}")
+              %a{:href=>'/miq_capacity/planning'}Planning
+
+          -if role_allows(:feature => 'bottlenecks')
+            %li(class="#{secondary_nav_class('miq_capacity_bottlenecks')}")
+              %a{:href=>'/miq_capacity/bottlenecks'}Bottlenecks
+
+    -if role_allows(:main_tab => MAIN_TABS[:set])
+      %li(class="#{primary_nav_class(:set)}")
+        %a{:href=>"/dashboard/maintab/?tab=set"}Configure
+        %ul(class="#{primary_nav_class(:set)}")
+          -if role_allows(:feature => 'about') 
+
+            -if role_allows(:feature => 'my_settings',:any => true)
+              %li(class="#{secondary_nav_class('configuration')}")
+                %a{:href=>'/configuration/index?config_tab=ui'}My Settings
+
+            -if role_allows(:feature => 'tasks',:any => true)
+              %li(class="#{secondary_nav_class(["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(@layout) ? @layout : "my_tasks")}")
+                %a{:href=>'/miq_proxy/index?jobs_tab=tasks'}Tasks
+
+            -if role_allows(:feature => 'ops_explorer',:any => "true")
+              %li(class="#{secondary_nav_class('ops')}")
+                %a{:href=>'/ops/explorer'}Configuration
+
+            -if role_allows(:feature => 'miq_proxy_show_list')
+              %li(class="#{secondary_nav_class('miq_proxy')}")
+                %a{:href=>'/miq_proxy'}SmartProxies
+
+            %li(class="#{secondary_nav_class('about')}")
+              %a{:href=>'/support/index?support_tab=about'}About

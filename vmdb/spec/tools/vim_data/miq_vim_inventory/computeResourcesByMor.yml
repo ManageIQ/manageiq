@@ -1,0 +1,43 @@
+--- 
+? !str:VimString 
+  str: domain-s646
+  "@vimType": :ComputeResource
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  resourcePool: !str:VimString 
+    str: resgroup-647
+    "@vimType": :ResourcePool
+    "@xsiType": :ManagedObjectReference
+  parent: !str:VimString 
+    str: group-h643
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  host: !seq:VimArray 
+    - !str:VimString 
+      str: host-648
+      "@vimType": :HostSystem
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: domain-s12627
+  "@vimType": :ComputeResource
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  resourcePool: !str:VimString 
+    str: resgroup-12628
+    "@vimType": :ResourcePool
+    "@xsiType": :ManagedObjectReference
+  parent: !str:VimString 
+    str: group-h12485
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  host: !seq:VimArray 
+    - !str:VimString 
+      str: host-12629
+      "@vimType": :HostSystem
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+

@@ -1,0 +1,103 @@
+<% save_text ||= "Save Changes" %>
+<% save_confirm_text ||= nil %>
+<% show_validate_button ||= nil %>
+<% ajax_buttons ||= false %>
+<% serialize ||= false %>
+<% action_url ||= "update" %>
+<table width="100%">
+	<tr>
+		<td align="right">
+  <div id="buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
+		<ul id="form_buttons">
+			<% if ajax_buttons %>
+				<% if serialize %>
+					<li>
+						<%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
+													:alt=>save_text, :title=>save_text,
+													:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
+																															:id=>record_id,
+																															:button=>"save")}', true);")
+						%>
+					</li>
+				<% else %>
+					<% if show_validate_button %>
+						<li>
+							<%= image_tag('/images/formbuttons/verify.png', :border=>"0", :class=>"button",
+														:alt=>"Validate", :title=>"Validate",
+														:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
+																																:button=>"db_verify")}');")
+							%>
+						</li>
+					<% end %>
+					<li>
+						<%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
+													:alt=>save_text, :title=>save_text,
+													:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
+																															:button=>"save")}');")
+						%>
+					</li>
+				<% end %>
+			<% else %>
+				<% if show_validate_button %>
+					<li>
+						<%= image_submit_tag("/images/formbuttons/verify.png", :id=> "db_verify", :name=>"db_verify", :alt=>"Validate", :title=>"Validate Database Settings for the Server", :class=>"button") %>
+					</li>
+				<% end %>
+				<% unless save_confirm_text %>
+					<li>
+						<%= image_submit_tag("/images/formbuttons/save.png",  :id=> "save", :name=>"save", :alt=>save_text, :title=>save_text, :class=>"button") %>
+					</li>
+				<% else %>
+					<li>
+						<%= image_submit_tag("/images/formbuttons/save.png", :id=> "save", :name=>"save", :alt=>save_text, :title=>save_text, :class=>"button",
+															:confirm=>save_confirm_text) %>
+					</li>
+				<% end %>
+			<% end %>
+			<% if ajax_buttons %>
+				<li>
+					<%= image_tag('/images/formbuttons/reset.png', :border=>"0", :class=>"button",
+												:alt=>"Reset Changes", :title=>"Reset Changes",
+												:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
+																														:button=>"reset")}');")
+					%>
+				</li>
+			<% else %>
+				<li>
+					<%= image_submit_tag("/images/formbuttons/reset.png", :id=> "reset", :name=>"reset", :alt=>"Reset Changes", :title=>"Reset Changes",	:class=>"button") %>
+				</li>
+			<% end %>
+			<%# if @layout != "configuration" || ["user_edit", "user_update"].include?(controller.action_name) %>
+			<% unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"  %>
+				<li>
+					<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+
+  <div id="buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
+		<ul id="form_buttons">
+			<% if show_validate_button %>
+				<li>
+					<%= image_tag("/images/formbuttons/verify.png",	:class=>"dimmed", :title=> "All fields are needed to perform verification of Database Settings", :style=>"opacity: 0.5") %>
+				</li>
+			<% end %>
+			<li>
+				<%= image_tag("/images/formbuttons/save.png", :class=>"dimmed") %>
+			</li>
+			<li>
+				<%= image_tag("/images/formbuttons/reset.png", :class=>"dimmed") %>
+			</li>
+			<%# if @layout != "configuration" || ["user_edit", "user_update"].include?(controller.action_name) %>
+			 <% unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"  %>
+				<li>
+					<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+		</td>
+	</tr>
+</table>
+

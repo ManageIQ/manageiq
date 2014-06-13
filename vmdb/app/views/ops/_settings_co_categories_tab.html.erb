@@ -1,0 +1,70 @@
+<% if @sb[:active_tab] == "settings_co_categories" %>
+	<%= render :partial => "layouts/flash_msg" %>
+	<table class="style3">
+		<thead>
+			<tr>
+				<th class="icon">&nbsp;</th>
+				<th>Name</th>
+				<th>Display Name</th>
+				<th>Show in Console</th>
+				<th>Single Value</th>
+				<th>Capture C&amp;U Data</th>
+				<th>Default</th>
+			</tr>
+		</thead>
+	<tbody>
+		<tr id="new_tr" class="<%= cycle('row0', 'row1') %>" onclick="<%= remote_function(:url=>{:action=>'category_edit',:id=>nil}) %>" title="Click to add a new category">
+			<td class="icon">
+				<ul class="icons">
+					<li>
+						<span class="glyphicon glyphicon-plus">
+					</li>
+				</ul>
+			</td>
+			<td><%= h("<Click on this row to create a new category>") %>	</td>
+			<td></td><td></td><td></td><td></td><td></td>
+		</tr>
+		<% @categories.each do | cat | %>
+			<tr class="<%= cycle('row0', 'row1') %>">
+					<% if cat[:default] == "t" || cat[:default].to_s == "1" %>
+						<td title="Category '<%=cat[:name]%>' cannot be deleted" class="icon">
+							<ul class="icons">
+								<li>
+									<span class="pficon pficon-delete"></span>
+								</li>
+							</ul>
+						</td>
+					<% else %>
+						<td onclick="<%= remote_function(:url=>{:action=>'category_delete', :id=>cat[:id]}, :confirm=>"Are you sure you want to delete category '#{cat[:name]}'?") %>" title="Click to delete this category" class="icon">
+							<ul class="icons">
+								<li>
+									<span class="pficon pficon-delete"></span>
+								</li>
+							</ul>
+						</td>
+					<% end %>
+				<td onclick="<%= remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}) %>" title="Click to edit this category">
+					<%= h(cat[:name]) %>
+				</td>
+				<td onclick="<%= remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}) %>" title="Click to edit this category">
+						<%= h(cat[:description]) %>
+				</td>
+				<td onclick="<%= remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}) %>" title="Click to edit this category">
+						<%= h(cat[:show]) %>
+				</td>
+				<td onclick="<%= remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}) %>" title="Click to edit this category">
+						<%= h(cat[:single_value] ? true : false) %>
+				</td>
+				<td onclick="<%= remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}) %>" title="Click to edit this category">
+						<%= h(cat[:perf_by_tag] ? true : false) %>
+				</td>
+				<td onclick="<%= remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}) %>" title="Click to edit this category">
+						<% default = cat[:default] ? true : false %>
+						<%= h(default) %>
+				</td>
+			</tr>
+		<% end %>
+		</tr>
+		</tbody>
+	</table>
+<% end %>

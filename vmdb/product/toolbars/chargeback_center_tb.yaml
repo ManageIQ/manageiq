@@ -1,0 +1,55 @@
+#
+# Toolbar config file
+#
+---
+:model: Chargeback
+:button_groups:
+- :name: chargeback_download_main
+  :items:
+  - :buttonSelect: chargeback_download_choice
+    :image: download
+    :title: "Download"
+    :items:
+    - :button: chargeback_download_text
+      :image: txt
+      :title: "Download this report in text format"
+      :url: '/render_txt'
+    - :button: chargeback_download_csv
+      :image: csv
+      :title: "Download this report in CSV format"
+      :url: '/render_csv'
+    - :button: chargeback_download_pdf
+      :image: pdf
+      :title: "Download this report in PDF format"
+      :url: '/render_pdf'
+  - :button: chargeback_report_only
+    :image: reportonly
+    :url: '/report_only'
+    #:url_parms: '?type=#{@ght_type}'
+    :url_parms: 'popup_only'
+    :popup: true
+    :title: "Show full screen report"
+    :confirm: "This will show the entire report (all rows) in your browser.  Do you want to proceed?"
+- :name: chargeback_vmdb
+  :items:
+  - :buttonSelect: chargeback_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: chargeback_rates_edit
+      :image: edit
+      :text: "Edit this Chargeback Rate"
+      :title: "Edit this Chargeback Rate"
+      :url_parms: 'main_div'
+    - :button: chargeback_rates_copy
+      :image: copy
+      :title: "Copy this Chargeback Rate"
+      :text: "Copy this Chargeback Rate"
+      :url_parms: 'main_div'
+    - :button: chargeback_rates_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this Chargeback Rate from the VMDB"
+      :url_parms: 'main_div'
+      :confirm: "Warning: This Chargeback Rate will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Chargeback Rate?"

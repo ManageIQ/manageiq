@@ -1,0 +1,2841 @@
+--- 
+? !str:VimString 
+  str: host-891
+  "@vimType": :HostSystem
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  config: !map:VimHash 
+    adminDisabled: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"xsd:boolean"
+    service: !map:VimHash 
+      service: !seq:VimArray 
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Direct Console UI
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: DCUI
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Local Tech Support
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: TSM
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Remote Tech Support (SSH)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: TSM-SSH
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: lbtd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lbtd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Local Security Authentication Server (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lsassd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: I/O Redirector (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lwiod
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Network Login Server (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: netlogond
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: NTP Daemon
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: ntpd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: VMware vCenter Agent
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: vmware-vpxa
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+      __iv__@vimType: 
+      __iv__@xsiType: :HostServiceInfo
+    network: !map:VimHash 
+      dnsConfig: !map:VimHash 
+        domainName: !str:VimString 
+          str: manageiq.com
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        hostName: !str:VimString 
+          str: vi4esxm2
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostDnsConfig
+      vswitch: !seq:VimArray 
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "128"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          pnic: !seq:VimArray 
+            - !str:VimString 
+              str: key-vim.host.PhysicalNic-vmnic0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "128"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          pnic: !seq:VimArray 
+            - !str:VimString 
+              str: key-vim.host.PhysicalNic-vmnic1
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+      pnic: !seq:VimArray 
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "01:00.0"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "01:00.1"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+      ipRouteConfig: !map:VimHash 
+        defaultGateway: !str:VimString 
+          str: 192.168.252.1
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostIpRouteConfig
+      vnic: !seq:VimArray 
+        - !map:VimHash 
+          device: !str:VimString 
+            str: vmk0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !str:VimString 
+            str: key-vim.host.PortGroup.Port-16777219
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            ip: !map:VimHash 
+              subnetMask: !str:VimString 
+                str: 255.255.254.0
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              ipAddress: !str:VimString 
+                str: 192.168.252.9
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              dhcp: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostIpConfig
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualNicSpec
+          portgroup: !str:VimString 
+            str: Management Network
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualNic
+        - !map:VimHash 
+          device: !str:VimString 
+            str: vmk1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !str:VimString 
+            str: key-vim.host.PortGroup.Port-33554435
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            ip: !map:VimHash 
+              subnetMask: !str:VimString 
+                str: 255.255.255.0
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              ipAddress: !str:VimString 
+                str: 10.1.1.32
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              dhcp: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostIpConfig
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualNicSpec
+          portgroup: !str:VimString 
+            str: VMkernel
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualNic
+      portgroup: !seq:VimArray 
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                allowPromiscuous: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: NetApp PG
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VM Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !seq:VimArray 
+            - !map:VimHash 
+              key: !str:VimString 
+                str: key-vim.host.PortGroup.Port-16777219
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostPortGroupPort
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: Management Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !seq:VimArray 
+            - !map:VimHash 
+              key: !str:VimString 
+                str: key-vim.host.PortGroup.Port-33554435
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostPortGroupPort
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VMkernel
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch1
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+      __iv__@vimType: 
+      __iv__@xsiType: :HostNetworkInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  MOR: !str:VimString 
+    str: host-891
+    "@vimType": :HostSystem
+    "@xsiType": :ManagedObjectReference
+  datastore: !seq:VimArray 
+    - !str:VimString 
+      str: datastore-857
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-798
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12616
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12350
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-80
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-28
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-741
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-805
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-892
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-953
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-958
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-954
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-959
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-960
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-961
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-955
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-956
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-957
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-962
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-967
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-11915
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12281
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12282
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12571
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    config: !map:VimHash 
+      name: !str:VimString 
+        str: vi4esxm2.manageiq.com
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      vmotionEnabled: !str:VimString 
+        str: "true"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      product: !map:VimHash 
+        name: !str:VimString 
+          str: VMware ESXi
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        build: !str:VimString 
+          str: "260247"
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        version: !str:VimString 
+          str: 4.1.0
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        vendor: !str:VimString 
+          str: VMware, Inc.
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        osType: !str:VimString 
+          str: vmnix-x86
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :AboutInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostConfigSummary
+    runtime: !map:VimHash 
+      inMaintenanceMode: !str:VimString 
+        str: "false"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      connectionState: !str:VimString 
+        str: connected
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostRuntimeInfo
+    quickStats: !map:VimHash 
+      overallCpuUsage: !str:VimString 
+        str: "2654"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      overallMemoryUsage: !str:VimString 
+        str: "40477"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostListSummaryQuickStats
+    hardware: !map:VimHash 
+      numCpuPkgs: !str:VimString 
+        str: "2"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      model: !str:VimString 
+        str: PowerEdge R410
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuModel: !str:VimString 
+        str: Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuMhz: !str:VimString 
+        str: "2127"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      memorySize: !str:VimString 
+        str: "60118675456"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPLong"
+      vendor: !str:VimString 
+        str: Dell Inc.
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      numNics: !str:VimString 
+        str: "2"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      numCpuCores: !str:VimString 
+        str: "8"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostHardwareSummary
+    __iv__@vimType: 
+    __iv__@xsiType: :HostListSummary
+  hardware: !map:VimHash 
+    systemInfo: !map:VimHash 
+      otherIdentifyingInfo: !seq:VimArray 
+        - !map:VimHash 
+          identifierType: !map:VimHash 
+            key: !str:VimString 
+              str: AssetTag
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            __iv__@vimType: 
+            __iv__@xsiType: :ElementDescription
+          identifierValue: !str:VimString 
+            str: " unknown"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostSystemIdentificationInfo
+        - !map:VimHash 
+          identifierType: !map:VimHash 
+            key: !str:VimString 
+              str: ServiceTag
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            __iv__@vimType: 
+            __iv__@xsiType: :ElementDescription
+          identifierValue: !str:VimString 
+            str: FC64KN1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostSystemIdentificationInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostSystemInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: host-9
+  "@vimType": :HostSystem
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  config: !map:VimHash 
+    adminDisabled: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"xsd:boolean"
+    service: !map:VimHash 
+      service: !seq:VimArray 
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Direct Console UI
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: DCUI
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Local Tech Support
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: TSM
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Remote Tech Support (SSH)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: TSM-SSH
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: lbtd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lbtd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Local Security Authentication Server (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lsassd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: I/O Redirector (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lwiod
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Network Login Server (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: netlogond
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: NTP Daemon
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: ntpd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: VMware vCenter Agent
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: vmware-vpxa
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+      __iv__@vimType: 
+      __iv__@xsiType: :HostServiceInfo
+    network: !map:VimHash 
+      dnsConfig: !map:VimHash 
+        domainName: !str:VimString 
+          str: manageiq.com
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        hostName: !str:VimString 
+          str: VI4ESXM1
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostDnsConfig
+      vswitch: !seq:VimArray 
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "128"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          pnic: !seq:VimArray 
+            - !str:VimString 
+              str: key-vim.host.PhysicalNic-vmnic0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "128"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          pnic: !seq:VimArray 
+            - !str:VimString 
+              str: key-vim.host.PhysicalNic-vmnic1
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+      pnic: !seq:VimArray 
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "01:00.0"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "01:00.1"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "03:00.0"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic2
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic2
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "03:00.1"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic3
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic3
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+      ipRouteConfig: !map:VimHash 
+        defaultGateway: !str:VimString 
+          str: 192.168.252.1
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostIpRouteConfig
+      vnic: !seq:VimArray 
+        - !map:VimHash 
+          device: !str:VimString 
+            str: vmk0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !str:VimString 
+            str: key-vim.host.PortGroup.Port-16777219
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            ip: !map:VimHash 
+              subnetMask: !str:VimString 
+                str: 255.255.254.0
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              ipAddress: !str:VimString 
+                str: 192.168.252.13
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              dhcp: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostIpConfig
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualNicSpec
+          portgroup: !str:VimString 
+            str: Management Network
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualNic
+        - !map:VimHash 
+          device: !str:VimString 
+            str: vmk1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !str:VimString 
+            str: key-vim.host.PortGroup.Port-33554435
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            ip: !map:VimHash 
+              subnetMask: !str:VimString 
+                str: 255.255.255.0
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              ipAddress: !str:VimString 
+                str: 10.1.1.121
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              dhcp: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostIpConfig
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualNicSpec
+          portgroup: !str:VimString 
+            str: VMkernel
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualNic
+      portgroup: !seq:VimArray 
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                allowPromiscuous: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: NetApp PG
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VM Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !seq:VimArray 
+            - !map:VimHash 
+              key: !str:VimString 
+                str: key-vim.host.PortGroup.Port-16777219
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostPortGroupPort
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: Management Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !seq:VimArray 
+            - !map:VimHash 
+              key: !str:VimString 
+                str: key-vim.host.PortGroup.Port-33554435
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostPortGroupPort
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VMkernel
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch1
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+      __iv__@vimType: 
+      __iv__@xsiType: :HostNetworkInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  MOR: !str:VimString 
+    str: host-9
+    "@vimType": :HostSystem
+    "@xsiType": :ManagedObjectReference
+  datastore: !seq:VimArray 
+    - !str:VimString 
+      str: datastore-857
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-798
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12616
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12609
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12350
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-80
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-14
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-28
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-741
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-805
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-953
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-958
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-954
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-959
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-960
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-961
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-955
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-956
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-957
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-962
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-967
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-11915
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12281
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12282
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12571
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    config: !map:VimHash 
+      name: !str:VimString 
+        str: vi4esxm1.manageiq.com
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      vmotionEnabled: !str:VimString 
+        str: "true"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      product: !map:VimHash 
+        name: !str:VimString 
+          str: VMware ESXi
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        build: !str:VimString 
+          str: "260247"
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        version: !str:VimString 
+          str: 4.1.0
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        vendor: !str:VimString 
+          str: VMware, Inc.
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        osType: !str:VimString 
+          str: vmnix-x86
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :AboutInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostConfigSummary
+    runtime: !map:VimHash 
+      inMaintenanceMode: !str:VimString 
+        str: "false"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      connectionState: !str:VimString 
+        str: connected
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostRuntimeInfo
+    quickStats: !map:VimHash 
+      overallCpuUsage: !str:VimString 
+        str: "6789"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      overallMemoryUsage: !str:VimString 
+        str: "36508"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostListSummaryQuickStats
+    hardware: !map:VimHash 
+      numCpuPkgs: !str:VimString 
+        str: "2"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      model: !str:VimString 
+        str: PowerEdge R410
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuModel: !str:VimString 
+        str: Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuMhz: !str:VimString 
+        str: "2127"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      memorySize: !str:VimString 
+        str: "60118675456"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPLong"
+      vendor: !str:VimString 
+        str: Dell Inc.
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      numNics: !str:VimString 
+        str: "4"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      numCpuCores: !str:VimString 
+        str: "8"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostHardwareSummary
+    __iv__@vimType: 
+    __iv__@xsiType: :HostListSummary
+  hardware: !map:VimHash 
+    systemInfo: !map:VimHash 
+      otherIdentifyingInfo: !seq:VimArray 
+        - !map:VimHash 
+          identifierType: !map:VimHash 
+            key: !str:VimString 
+              str: AssetTag
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            __iv__@vimType: 
+            __iv__@xsiType: :ElementDescription
+          identifierValue: !str:VimString 
+            str: " unknown"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostSystemIdentificationInfo
+        - !map:VimHash 
+          identifierType: !map:VimHash 
+            key: !str:VimString 
+              str: ServiceTag
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            __iv__@vimType: 
+            __iv__@xsiType: :ElementDescription
+          identifierValue: !str:VimString 
+            str: FC65KN1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostSystemIdentificationInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostSystemInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: host-12629
+  "@vimType": :HostSystem
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  config: !map:VimHash 
+    adminDisabled: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"xsd:boolean"
+    service: !map:VimHash 
+      service: !seq:VimArray 
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Direct Console UI
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: DCUI
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Local Tech Support
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: TSM
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Remote Tech Support (SSH)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: TSM-SSH
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: lbtd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lbtd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Local Security Authentication Server (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lsassd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: I/O Redirector (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: lwiod
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: Network Login Server (Active Directory Service)
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "false"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: netlogond
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: NTP Daemon
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: ntpd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: VMware vCenter Agent
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: vmware-vpxa
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+      __iv__@vimType: 
+      __iv__@xsiType: :HostServiceInfo
+    network: !map:VimHash 
+      dnsConfig: !map:VimHash 
+        domainName: !str:VimString 
+          str: ""
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        hostName: !str:VimString 
+          str: localhost
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostDnsConfig
+      vswitch: !seq:VimArray 
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "128"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          pnic: !seq:VimArray 
+            - !str:VimString 
+              str: key-vim.host.PhysicalNic-vmnic0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+      pnic: !seq:VimArray 
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "00:11.0"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+      ipRouteConfig: !map:VimHash 
+        defaultGateway: !str:VimString 
+          str: 192.168.252.1
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostIpRouteConfig
+      vnic: !seq:VimArray 
+        - !map:VimHash 
+          device: !str:VimString 
+            str: vmk0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !str:VimString 
+            str: key-vim.host.PortGroup.Port-16777219
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            ip: !map:VimHash 
+              subnetMask: !str:VimString 
+                str: 255.255.254.0
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              ipAddress: !str:VimString 
+                str: 192.168.252.115
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              dhcp: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostIpConfig
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualNicSpec
+          portgroup: !str:VimString 
+            str: Management Network
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualNic
+      portgroup: !seq:VimArray 
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VM Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !seq:VimArray 
+            - !map:VimHash 
+              key: !str:VimString 
+                str: key-vim.host.PortGroup.Port-16777219
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostPortGroupPort
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: Management Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+      __iv__@vimType: 
+      __iv__@xsiType: :HostNetworkInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  MOR: !str:VimString 
+    str: host-12629
+    "@vimType": :HostSystem
+    "@xsiType": :ManagedObjectReference
+  datastore: !seq:VimArray 
+    - !str:VimString 
+      str: datastore-12630
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    config: !map:VimHash 
+      name: !str:VimString 
+        str: 192.168.252.115
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      vmotionEnabled: !str:VimString 
+        str: "false"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      product: !map:VimHash 
+        name: !str:VimString 
+          str: VMware ESXi
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        build: !str:VimString 
+          str: "260247"
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        version: !str:VimString 
+          str: 4.1.0
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        vendor: !str:VimString 
+          str: VMware, Inc.
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        osType: !str:VimString 
+          str: vmnix-x86
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :AboutInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostConfigSummary
+    runtime: !map:VimHash 
+      inMaintenanceMode: !str:VimString 
+        str: "false"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      connectionState: !str:VimString 
+        str: connected
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostRuntimeInfo
+    quickStats: !map:VimHash 
+      overallCpuUsage: !str:VimString 
+        str: "23"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      overallMemoryUsage: !str:VimString 
+        str: "830"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostListSummaryQuickStats
+    hardware: !map:VimHash 
+      numCpuPkgs: !str:VimString 
+        str: "1"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      model: !str:VimString 
+        str: VMware Virtual Platform
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuModel: !str:VimString 
+        str: Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuMhz: !str:VimString 
+        str: "2119"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      memorySize: !str:VimString 
+        str: "2146775040"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPLong"
+      vendor: !str:VimString 
+        str: VMware, Inc.
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      numNics: !str:VimString 
+        str: "1"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      numCpuCores: !str:VimString 
+        str: "1"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostHardwareSummary
+    __iv__@vimType: 
+    __iv__@xsiType: :HostListSummary
+  hardware: !map:VimHash 
+    systemInfo: !map:VimHash 
+      otherIdentifyingInfo: !seq:VimArray 
+        - !map:VimHash 
+          identifierType: !map:VimHash 
+            key: !str:VimString 
+              str: AssetTag
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            __iv__@vimType: 
+            __iv__@xsiType: :ElementDescription
+          identifierValue: !str:VimString 
+            str: " No Asset Tag"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostSystemIdentificationInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostSystemInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: host-648
+  "@vimType": :HostSystem
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  config: !map:VimHash 
+    adminDisabled: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"xsd:boolean"
+    service: !map:VimHash 
+      service: !seq:VimArray 
+        - !map:VimHash 
+          label: !str:VimString 
+            str: NTP Daemon
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: ntpd
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+        - !map:VimHash 
+          label: !str:VimString 
+            str: VMware vCenter Agent
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          running: !str:VimString 
+            str: "true"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPBoolean"
+          key: !str:VimString 
+            str: vmware-vpxa
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostService
+      __iv__@vimType: 
+      __iv__@xsiType: :HostServiceInfo
+    network: !map:VimHash 
+      dnsConfig: !map:VimHash 
+        domainName: !str:VimString 
+          str: manageiq.com
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        hostName: !str:VimString 
+          str: vi4esxm3
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostDnsConfig
+      vswitch: !seq:VimArray 
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "64"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          pnic: !seq:VimArray 
+            - !str:VimString 
+              str: key-vim.host.PhysicalNic-vmnic0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "64"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          pnic: !seq:VimArray 
+            - !str:VimString 
+              str: key-vim.host.PhysicalNic-vmnic1
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+        - !map:VimHash 
+          name: !str:VimString 
+            str: vSwitch2
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          numPorts: !str:VimString 
+            str: "128"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPInt"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                macChanges: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                forgedTransmits: !str:VimString 
+                  str: "true"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                allowPromiscuous: !str:VimString 
+                  str: "false"
+                  "@vimType": 
+                  "@xsiType": :"SOAP::SOAPBoolean"
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualSwitchSpec
+          key: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch2
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualSwitch
+      pnic: !seq:VimArray 
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "01:00.0"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "01:00.1"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "03:00.0"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic2
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic2
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+        - !map:VimHash 
+          pci: !str:VimString 
+            str: "03:00.1"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          device: !str:VimString 
+            str: vmnic3
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          key: !str:VimString 
+            str: key-vim.host.PhysicalNic-vmnic3
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :PhysicalNic
+      ipRouteConfig: !map:VimHash 
+        defaultGateway: !str:VimString 
+          str: 192.168.252.1
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :HostIpRouteConfig
+      vnic: !seq:VimArray 
+        - !map:VimHash 
+          device: !str:VimString 
+            str: vmk0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !str:VimString 
+            str: key-vim.host.PortGroup.Port-16777219
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            ip: !map:VimHash 
+              subnetMask: !str:VimString 
+                str: 255.255.254.0
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              ipAddress: !str:VimString 
+                str: 192.168.252.10
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              dhcp: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostIpConfig
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualNicSpec
+          portgroup: !str:VimString 
+            str: Management Network
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualNic
+        - !map:VimHash 
+          device: !str:VimString 
+            str: vmk1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !str:VimString 
+            str: key-vim.host.PortGroup.Port-33554435
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            ip: !map:VimHash 
+              subnetMask: !str:VimString 
+                str: 255.255.255.0
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              ipAddress: !str:VimString 
+                str: 10.1.1.33
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              dhcp: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostIpConfig
+            __iv__@vimType: 
+            __iv__@xsiType: :HostVirtualNicSpec
+          portgroup: !str:VimString 
+            str: VMkernel
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostVirtualNic
+      portgroup: !seq:VimArray 
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VM Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch0
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !seq:VimArray 
+            - !map:VimHash 
+              key: !str:VimString 
+                str: key-vim.host.PortGroup.Port-16777219
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostPortGroupPort
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: Management Network
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch0
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          port: !seq:VimArray 
+            - !map:VimHash 
+              key: !str:VimString 
+                str: key-vim.host.PortGroup.Port-33554435
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPString"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostPortGroupPort
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VMkernel
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch1
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+        - !map:VimHash 
+          computedPolicy: !map:VimHash 
+            security: !map:VimHash 
+              macChanges: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              forgedTransmits: !str:VimString 
+                str: "true"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              allowPromiscuous: !str:VimString 
+                str: "false"
+                "@vimType": 
+                "@xsiType": :"SOAP::SOAPBoolean"
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkSecurityPolicy
+            __iv__@vimType: 
+            __iv__@xsiType: :HostNetworkPolicy
+          vswitch: !str:VimString 
+            str: key-vim.host.VirtualSwitch-vSwitch2
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          spec: !map:VimHash 
+            policy: !map:VimHash 
+              security: !map:VimHash 
+                __iv__@vimType: 
+                __iv__@xsiType: :HostNetworkSecurityPolicy
+              __iv__@vimType: 
+              __iv__@xsiType: :HostNetworkPolicy
+            name: !str:VimString 
+              str: VmNoNics
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vswitchName: !str:VimString 
+              str: vSwitch2
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            vlanId: !str:VimString 
+              str: "0"
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPInt"
+            __iv__@vimType: 
+            __iv__@xsiType: :HostPortGroupSpec
+          __iv__@vimType: 
+          __iv__@xsiType: :HostPortGroup
+      __iv__@vimType: 
+      __iv__@xsiType: :HostNetworkInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  MOR: !str:VimString 
+    str: host-648
+    "@vimType": :HostSystem
+    "@xsiType": :ManagedObjectReference
+  datastore: !seq:VimArray 
+    - !str:VimString 
+      str: datastore-997
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-1084
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-651
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-653
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-941
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-942
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-943
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-944
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-945
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-946
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-947
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-948
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-949
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-950
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-951
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-952
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-1006
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-1126
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12348
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datastore-12349
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    config: !map:VimHash 
+      name: !str:VimString 
+        str: vi4esxm3.manageiq.com
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      vmotionEnabled: !str:VimString 
+        str: "true"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      product: !map:VimHash 
+        name: !str:VimString 
+          str: VMware ESXi
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        build: !str:VimString 
+          str: "261974"
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        version: !str:VimString 
+          str: 4.0.0
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        vendor: !str:VimString 
+          str: VMware, Inc.
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        osType: !str:VimString 
+          str: vmnix-x86
+          "@vimType": 
+          "@xsiType": :"SOAP::SOAPString"
+        __iv__@vimType: 
+        __iv__@xsiType: :AboutInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostConfigSummary
+    runtime: !map:VimHash 
+      inMaintenanceMode: !str:VimString 
+        str: "false"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPBoolean"
+      connectionState: !str:VimString 
+        str: connected
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostRuntimeInfo
+    quickStats: !map:VimHash 
+      overallCpuUsage: !str:VimString 
+        str: "2992"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      overallMemoryUsage: !str:VimString 
+        str: "43430"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostListSummaryQuickStats
+    hardware: !map:VimHash 
+      numCpuPkgs: !str:VimString 
+        str: "2"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      model: !str:VimString 
+        str: PowerEdge R410
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuModel: !str:VimString 
+        str: Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      cpuMhz: !str:VimString 
+        str: "2127"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      memorySize: !str:VimString 
+        str: "60116496384"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPLong"
+      vendor: !str:VimString 
+        str: Dell Inc.
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPString"
+      numNics: !str:VimString 
+        str: "4"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPInt"
+      numCpuCores: !str:VimString 
+        str: "8"
+        "@vimType": 
+        "@xsiType": :"SOAP::SOAPShort"
+      __iv__@vimType: 
+      __iv__@xsiType: :HostHardwareSummary
+    __iv__@vimType: 
+    __iv__@xsiType: :HostListSummary
+  hardware: !map:VimHash 
+    systemInfo: !map:VimHash 
+      otherIdentifyingInfo: !seq:VimArray 
+        - !map:VimHash 
+          identifierType: !map:VimHash 
+            key: !str:VimString 
+              str: AssetTag
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            __iv__@vimType: 
+            __iv__@xsiType: :ElementDescription
+          identifierValue: !str:VimString 
+            str: " unknown"
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostSystemIdentificationInfo
+        - !map:VimHash 
+          identifierType: !map:VimHash 
+            key: !str:VimString 
+              str: ServiceTag
+              "@vimType": 
+              "@xsiType": :"SOAP::SOAPString"
+            __iv__@vimType: 
+            __iv__@xsiType: :ElementDescription
+          identifierValue: !str:VimString 
+            str: FC73KN1
+            "@vimType": 
+            "@xsiType": :"SOAP::SOAPString"
+          __iv__@vimType: 
+          __iv__@xsiType: :HostSystemIdentificationInfo
+      __iv__@vimType: 
+      __iv__@xsiType: :HostSystemInfo
+    __iv__@vimType: 
+    __iv__@xsiType: 
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+

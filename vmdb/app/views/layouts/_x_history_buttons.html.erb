@@ -1,0 +1,10 @@
+<div id="history_buttons_div"
+	style ="display:<%= @sb[:active_accord] == :filters ? "none" : "" %>"
+>
+	<% if x_active_tree == :dialogs_tree || ["chargeback","miq_ae_tools","miq_capacity_planning","miq_capacity_utilization",
+                                               "miq_policy_rsop","ops"].include?(@layout) %>
+		<%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"history_tb", :tb_yaml=>"blank_view_tb"} %>
+	<% else %>
+		<%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"history_tb", :tb_yaml=>"x_history_tb"} %>
+	<% end %>
+</div>

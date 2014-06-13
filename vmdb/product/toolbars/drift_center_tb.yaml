@@ -1,0 +1,39 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: record_summary
+  :items:
+  - :button: show_summary
+    :image: summary-blue
+    :title: 'Show #{@record.name} Summary'
+    :url: '/show'
+    :url_parms: '?id=#{@record.id}'
+- :name: comapre_tasks
+  :items:
+  - :buttonTwoState: drift_all
+    :image: compare_all
+    :title: "All attributes"
+    :url: 'drift_all'
+    :url_parms: '?id=#{$vms_comp}&compare_task=all&db=#{@compare_db}&id=#{@drift_obj.id}'
+  - :buttonTwoState: drift_diff
+    :image: compare_diff
+    :title: "Attributes with different values"
+    :url: 'drift_differences'
+    :url_parms: '?id=#{$vms_comp}&compare_task=different&db=#{@compare_db}&id=#{@drift_obj.id}'
+  - :buttonTwoState: drift_same
+    :image: compare_same
+    :title: "Attributes with same values"
+    :url: 'drift_same'
+    :url_parms: '?id=#{$vms_comp}&compare_task=same&db=#{@compare_db}&id=#{@drift_obj.id}'
+- :name: compare_mode
+  :items:
+  - :buttonTwoState: driftmode_details
+    :image: view_list
+    :title: "Details Mode"
+    :url: 'drift_mode'
+  - :buttonTwoState: driftmode_exists
+    :image: exists
+    :title: "Exists Mode"
+    :url: 'drift_mode'

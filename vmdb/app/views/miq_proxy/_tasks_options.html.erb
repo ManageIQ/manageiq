@@ -1,0 +1,137 @@
+<% url = url_for(:action =>'tasks_change_options') %>
+<div id="tasks_options_div">
+  <%= form_tag( {:action => 'tasks_show_option'}, {:id => "tasks_form"}) do %>
+    <p class="legend">Filter By</p>
+    <table class="style1">
+      <tbody>
+        <% if ["my_tasks", "all_tasks"].include?(@layout) %>
+          <tr>
+            <td class="key">Zone:</td>
+            <td>
+              <% my_zone = MiqServer.my_server(true).my_zone %>
+              <%= select_tag("chosen_zone",
+                              options_for_select([["<All Zones>","<all>"]] + @tasks_options[:zones].sort.collect{|a| [a == my_zone ? a + " (current)" : a, a]},
+                                @tasks_options[@tabform][:zone]),
+                              "data-miq_observe"=>{:url=>url}.to_json) %>
+            </td>
+          </tr>
+        <% end %>
+        <% if @lastaction == "all_jobs" || @lastaction == "all_ui_jobs" %>
+          <tr>
+            <td class="key">User:</td>
+            <td>
+              <%= select_tag("user_choice",
+                              options_for_select([["All Users", "all"]] + @user_names.sort,
+                                @tasks_options[@tabform][:user_choice]),
+                              "data-miq_observe"=>{:url=>url}.to_json) %>
+            </td>
+          </tr>
+        <% end %>
+        <tr>
+          <td class="key">24 Hour Time Period:</td>
+          <td>
+            <%= select_tag("time_period",
+                              options_for_select(Array(TASK_TIME_PERIODS.invert).sort{|a,b|a.last<=>b.last},
+                                @tasks_options[@tabform][:time_period]),
+                              "data-miq_observe"=>{:url=>url}.to_json) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Task Status:</td>
+            <td>
+              <%= check_box_tag("queued", value="1",
+                                  checked=@tasks_options[@tabform][:queued],
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>&nbsp;
+              <img src="/images/icons/16/job-queued.png" valign="middle" title="Queued" /> Queued
+              &nbsp;
+              <%= check_box_tag("running", value="1",
+                                  checked=@tasks_options[@tabform][:running],
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>&nbsp;
+              <img src="/images/icons/16/job-running.png" valign="middle"title="Warn" /> Running
+              &nbsp;
+              <%= check_box_tag("ok", value="1",
+                                  checked=@tasks_options[@tabform][:ok],
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>&nbsp;
+              <img src="/images/icons/new/checkmark.png" valign="middle"  title="Ok" /> Ok
+              &nbsp;
+              <%= check_box_tag("error", value="1",
+                                  checked=@tasks_options[@tabform][:error],
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>&nbsp;
+              <img src="/images/icons/new/x.png" valign="middle" title="Error" /> Error
+              &nbsp;
+              <%= check_box_tag("warn", value="1",
+                                  checked=@tasks_options[@tabform][:warn],
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>&nbsp;
+              <img src="/images/icons/16/warning.png" valign="middle" title="Warn" /> Warn
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Task State:</td>
+          <td>
+            <%= select_tag("state_choice",
+                              options_for_select([["All", "all"]] + @tasks_options[@tabform][:states].sort,
+                                @tasks_options[@tabform][:state_choice]),
+                              "data-miq_observe"=>{:url=>url}.to_json) %>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td align="left">
+            <ul id="form_buttons">
+              <div id="buttons_off">
+                <li><%= image_tag("/images/formbuttons/apply.png",  :class=>"dimmed formbutton") %></li>
+                <li><%= image_tag("/images/formbuttons/reset.png",  :class=>"dimmed formbutton") %></li>
+                <li>
+                  <%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
+                                              :alt=>"Set filters to default"),
+                                        {:action=>"tasks_button", :button=>"default"},
+                                        "data-miq_sparkle_on" => true,
+                                        "data-miq_sparkle_off" => true,
+                                        :remote=>true,
+                                        :title=>"Set filters to default")
+                  %>
+                </li>
+              </div>
+              <div id="buttons_on" style="display:none">
+                <li>
+                    <%= link_to(image_tag("/images/formbuttons/apply.png", :border=>"0", :class=>"button formbutton",
+                                                :alt=>"Apply the selected filters"),
+                                          {:action=>"tasks_button", :button=>"apply"},
+                                          "data-miq_sparkle_on" => true,
+                                          "data-miq_sparkle_off" => true,
+                                          :remote=>true,
+                                          :title=>"Apply the selected filters")
+                    %>
+                </li>
+                <li>
+                  <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button formbutton",
+                                              :alt=>"Reset filter changes"),
+                                        {:action=>"tasks_button", :button=>"reset"},
+                                        "data-miq_sparkle_on" => true,
+                                        "data-miq_sparkle_off" => true,
+                                        :remote=>true,
+                                        :title=>"Reset filter changes")
+                  %>
+                </li>
+                <li>
+                  <%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
+                                              :alt=>"Set filters to default"),
+                                          {:action=>"tasks_button", :button=>"default"},
+                                          "data-miq_sparkle_on" => true,
+                                          "data-miq_sparkle_off" => true,
+                                          :remote=>true,
+                                          :title=>"Set filters to default")
+                  %>
+                </li>
+              </div>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr>
+  <%# Need this to bind checkbox observers when under DHTMLX tabs %>
+  <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+  <script>miqObserveCheckboxes();</script>
+  <% end %>
+</div>

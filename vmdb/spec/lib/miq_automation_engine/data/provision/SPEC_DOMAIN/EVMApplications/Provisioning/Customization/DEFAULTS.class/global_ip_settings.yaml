@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: GLOBAL_IP_SETTINGS
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: globalIPSettings
+  - value:
+      value: /EVMApplications/Provisioning/Customization/GLOBAL_IP_SETTINGS/*

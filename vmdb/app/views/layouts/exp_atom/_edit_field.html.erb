@@ -1,0 +1,176 @@
+<% url = url_for(:action=>'exp_changed') %>
+<%
+# Parameters:
+# exp_model    Model in use for this expression
+%>
+<br>
+<% if exp_model == "_display_filter_" %><%# Use list in @edit for reporting display filter %>
+  <%= select_tag('chosen_field',
+                options_for_select(["<Choose>"] + @edit[@expkey][:exp_available_fields], @edit[@expkey][:exp_field]),
+                :multiple=>false, :class=>"widthed",
+                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                "data-miq_observe"=>{:url=>url}.to_json) %>
+<% else %>
+  <%= select_tag('chosen_field',
+                options_for_select(["<Choose>"] +	MiqExpression.miq_adv_search_lists(exp_model, :exp_available_fields),
+                                  @edit[@expkey][:exp_field]),
+                :multiple=>false, :class=>"widthed",
+                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                "data-miq_observe"=>{:url=>url}.to_json) %>
+<% end %>
+
+<% if adv_search_show_alias_checkbox? && !@edit[@expkey][:exp_field].blank? %>
+  <br/>
+  <%= check_box_tag("use_alias", value="1",
+                    checked = (!@edit[@expkey][:alias].blank?),
+                    :style=>"width: 20px",
+                    "data-miq_sparkle_on" => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+  Use Alias
+  <% if !@edit[@expkey][:alias].blank? %>
+    <%= text_field_tag("alias", @edit[@expkey][:alias], :maxlength=>50,
+                       "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+  <% end %>
+<% end %>
+
+<% if @edit[@expkey][:exp_field] %>
+  <br/>
+  <% if @edit[@expkey][:exp_key] == "CONTAINS" %>
+    <font color="black">
+      <%= h(@edit[@expkey][:exp_key]) %>
+    </font>
+  <% else %>
+    <%= select_tag('chosen_key',
+                  options_for_select(MiqExpression.get_col_operators(@edit[@expkey][:exp_field]), @edit[@expkey][:exp_key]),
+                  :multiple=>false, :class=>"widthed",
+                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                  "data-miq_observe"=>{:url=>url}.to_json) %>
+  <% end %>
+  <% unless @edit[@expkey][:exp_key].include?("NULL") || @edit[@expkey][:exp_key].include?("EMPTY") %>
+    <br/>
+    <span id='chosen_value_span'>
+      <% if @edit[@expkey][:exp_key] == "RUBY" %>
+        <br/>
+        <fieldset>
+          <p class="legend">Ruby Script (<span id="ruby_count"><%= @edit[@expkey][:exp_value] ? @edit[@expkey][:exp_value].length : 0 %></span> / 1000)</p>
+          <div style="margin:5px 10px 10px 10px">
+            <%= text_area_tag("chosen_value", @edit[@expkey][:exp_value], :rows=>10, :style=>"width:100%",
+                              :maxlength=>"1000", :counter=>"ruby_count",
+                              "data-miq_check_max_length"=>true,
+                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          </div>
+        </fieldset>
+
+      <% elsif @edit[@expkey][:val1][:type] == :boolean %>
+        <% if @edit[@expkey][:exp_value] == :user_input %>
+          <%= "<user input>" %>
+        <% else %>
+          <% values = [["true","true"],["false","false"]] %>
+          <% values.insert(0, ["<Choose>",""]) if @edit[@expkey][:exp_value].blank? %>
+          <%= select_tag('chosen_value', options_for_select(values, @edit[@expkey][:exp_value]),
+                        :multiple=>false, :class=>"widthed",
+                        "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                        "data-miq_observe"=>{:url=>url}.to_json) %>
+        <% end %>
+
+      <% elsif [:date, :datetime].include?(@edit[@expkey][:val1][:type]) %>
+        <% if @edit[@expkey][:val1][:date_format] == 's' %>
+          <%= text_field_tag("miq_date_1_0",
+                            (@edit[@expkey][:exp_value][0] ? @edit[@expkey][:exp_value][0].split(" ").first : ""),
+                            :readonly=>"true", :size=>10,
+                            "data-miq_observe_date"=>{:interval=>'.5', :url=>url}.to_json) %>
+          <% if @edit[@expkey][:exp_value][0].to_s.include?(":") %>
+            <%= select_tag("miq_time_1_0",
+                          options_for_select(Array.new(24) {|i| ["#{i}:00", "#{i}:15", "#{i}:30", "#{i}:45"]}.flatten,
+                                            @edit[@expkey][:exp_value][0].split(" ").last),
+                          "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                          "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% end %>
+        <% else %>
+          <%= select_tag('chosen_from_1',
+                        options_for_select((@edit[@expkey][:val1][:type] == :datetime ? FROM_HOURS : []) +
+                                            FROM_DAYS +
+                                            FROM_WEEKS +
+                                            FROM_MONTHS +
+                                            FROM_QUARTERS +
+                                            FROM_YEARS,
+                                          @edit[@expkey][:exp_value][0]),
+                        :multiple=>false,
+                        "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                        "data-miq_observe"=>{:url=>url}.to_json) %>
+        <% end %>
+
+        <% if @edit[@expkey][:exp_key] == EXP_FROM && @edit[@expkey][:exp_value][0] %>
+          <br/>
+          THROUGH
+          <br/>
+          <% if @edit[@expkey][:val1][:date_format] == 's' %>
+            <%= text_field_tag("miq_date_1_1",
+                              (@edit[@expkey][:exp_value][1] ? @edit[@expkey][:exp_value][1].split(" ").first : ""),
+                              :readonly=>"true", :size=>10,
+                              "data-miq_observe_date"=>{:interval=>'.5', :url=>url}.to_json) %>
+            <% if @edit[@expkey][:exp_value][1].to_s.include?(":") %>
+              <%= select_tag("miq","time_1_1",
+                            options_for_select(Array.new(24) {|i| ["#{i}:00", "#{i}:15", "#{i}:30", "#{i}:45"]}.flatten,
+                                              @edit[@expkey][:exp_value][1].split(" ").last),
+                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                            "data-miq_observe"=>{:url=>url}.to_json) %>
+            <% end %>
+          <% else %>
+            <% if @edit[@expkey][:val1][:through_choices].length > 1 %>
+              <%= select_tag('chosen_through_1',
+                            options_for_select(@edit[@expkey][:val1][:through_choices],
+                                              @edit[@expkey][:exp_value][1]),
+                            :multiple=>false,
+                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                            "data-miq_observe"=>{:url=>url}.to_json) %>
+            <% else %>
+              <%= h(@edit[@expkey][:exp_value][1]) %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if @edit[@expkey][:val1][:date_format] == 's' %>
+          <%= link_to(image_tag('/images/toolbars/specific_date.png',
+                                :class=>"rollover tiny", :alt=>'Click to change to a relative Date/Time format'),
+                      {:action=>'exp_changed', :date_format_1=>'r'},
+                      "data-miq_sparkle_on" => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote=>true,
+                      :title=>'Click to change to a relative Date/Time format')
+          %>
+        <% else %>
+          <%= link_to(image_tag('/images/toolbars/relative_date.png',
+                                :class=>"rollover tiny", :alt=>'Click to change to a specific Date/Time format'),
+                      {:action=>'exp_changed', :date_format_1=>'s'},
+                      "data-miq_sparkle_on" => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote=>true,
+                      :title=>'Click to change to a specific Date/Time format')
+          %>
+        <% end %>
+
+      <% else %>  <%# String field %>
+        <% if @edit[@expkey][:exp_value] == :user_input %>
+          <%= "<user input>" %>
+        <% else %>
+          <%= text_field_tag("chosen_value", @edit[@expkey][:exp_value], :maxlength=>500,
+                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          <% if @edit[@expkey][:val1][:type] == :percent %>
+            %
+          <% elsif @edit[@expkey][:val1][:type] == :megabytes %>
+              MB
+          <% elsif FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units] %>
+            <%= select_tag('chosen_suffix',
+                          options_for_select(FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units],
+                          @edit[:suffix]),
+                          :multiple=>false, :class=>"widthed",
+                          "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                          "data-miq_observe"=>{:url=>url}.to_json) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </span>
+  <% end %>
+<% end %>

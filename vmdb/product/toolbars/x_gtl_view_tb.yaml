@@ -1,0 +1,43 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: gtl_main
+  :items:
+  - :buttonTwoState: view_grid
+    :title: "Grid View"
+    :url: 'explorer'
+    :url_parms: '?type=grid'
+  - :buttonTwoState: view_tile
+    :title: "Tile View"
+    :url: 'explorer'
+    :url_parms: '?type=tile'
+  - :buttonTwoState: view_list
+    :title: "List View"
+    :url: 'explorer'
+    :url_parms: '?type=list'
+- :name: download_main
+  :items:
+  - :buttonSelect: download_choice
+    :image: download
+    :title: "Download"
+    :items:
+    - :button: download_text
+      :image: txt
+#      :text: "Text Download"
+      :title: "Download these items in text format"
+      :url: '/download_data'
+      :url_parms: '?download_type=text'
+    - :button: download_csv
+      :image: csv
+#      :text: "CSV Download"
+      :title: "Download these items in CSV format"
+      :url: '/download_data'
+      :url_parms: '?download_type=csv'
+    - :button: download_pdf
+      :image: pdf
+#      :text: "PDF Download"
+      :title: "Download these items in PDF format"
+      :url: '/download_data'
+      :url_parms: '?download_type=pdf'

@@ -1,0 +1,36 @@
+<% url = url_for(:action=>"service_form_field_changed", :id=>"#{@edit[:rec_id] || "new"}") %>
+<div id="form_div">
+	<%= render :partial => "layouts/flash_msg" %>
+  <%# show form if Catalog bundle is being added or if it's an edit of existing catalog item, else force user to select type %>
+  <dl class="col1">
+    <dd>
+      <fieldset>
+        <table class="style1">
+          <tr>
+            <td class="key">Name</td>
+            <td class="wider">
+              <div id="name_div">
+                <%= text_field_tag("name",
+                                   @edit[:new][:name].to_s,
+                                   :maxlength=>40,
+                                   "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+              </div>
+            </td>
+          </tr>
+          <%= javascript_tag("$('name').focus()") %>
+          <tr>
+            <td class="key">Description</td>
+            <td class="wider">
+              <div id="title_div">
+                <%= text_field_tag("description",
+                                   @edit[:new][:description],
+                                   :maxlength=>60,
+                                   "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+    </dd>
+  </dl>
+</div>

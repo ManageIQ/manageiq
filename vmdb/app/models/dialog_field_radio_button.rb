@@ -1,0 +1,2 @@
+class DialogFieldRadioButton < DialogFieldSortedItem
+end

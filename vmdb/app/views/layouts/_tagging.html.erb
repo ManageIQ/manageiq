@@ -1,0 +1,56 @@
+<div style="padding-top:10px;"></div>
+<%= render :partial => "layouts/flash_msg" %>
+
+<% if false %>
+  <%# commenting older code that had old way of tagging along with MyTags tab%>
+  <% if @tabs[0][0] == "classifying" %>
+  <fieldset>
+    <% if @tagitems.length == 1 %>
+      <p class="legend">Assignments</p>
+    <% else %>
+      <p class="legend">Common Assignments</p>
+    <% end %>
+    <%= render :partial => "layouts/classify" %>
+  </fieldset>
+
+  <% elsif @tabs[0][0] == "tagging" %>
+    <fieldset>
+      <% if @tagitems.length == 1 %>
+        <p class="legend">Current Assignments</p>
+      <% else %>
+        <p class="legend">Common Assignments</p>
+      <% end %>
+      <%= render :partial => "layouts/mytags" %>
+    </fieldset>
+  <% end %>
+
+  <fieldset>
+    <p class="legend"><%= "#{pluralize(@tagitems.length,Dictionary::gettext(session[:tag_db].to_s, :type=>:model, :notfound=>:titleize))} Being Tagged" %></p>
+    <table class="admintable" height="75">
+      <tbody>
+        <tr>
+          <td>
+            <% if @tagitems %>
+              <% @embedded = true %>
+              <% @gtl_type = @settings[:views][:tagging] %>
+              <%= render :partial=>"layouts/gtl" %>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+
+<% else %>
+  <%= render :partial => "layouts/tag_edit" %>
+  <% unless @explorer %>
+    <%= render(:partial => '/layouts/edit_form_buttons',
+               :locals  => {
+                  :record_id           => @sb[:rec_id] || @edit[:object_ids][0],
+                  :action_url          => 'tagging_edit',
+                  :force_cancel_button => true,
+                  :ajax_buttons        => true}) %>
+  <% end %>
+
+  <%= render :partial => "layouts/tag_edit_items" %>
+<% end %>

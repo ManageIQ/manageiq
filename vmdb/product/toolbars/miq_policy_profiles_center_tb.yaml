@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqPolicySet
+:button_groups:
+- :name: policy_profile_vmdb
+  :items:
+  - :buttonSelect: policy_profile_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: profile_new
+      :image: new
+      :text: 'Add a New Policy Profile'
+      :title: 'Add a New Policy Profile'

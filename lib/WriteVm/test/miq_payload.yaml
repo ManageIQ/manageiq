@@ -1,0 +1,9 @@
+--- 
+- 
+  :basedir: /PAYLOAD
+  :todir: /Payload
+  :include: 
+    - lib
+    - host
+  :delete:
+    - host

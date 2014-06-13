@@ -1,0 +1,22 @@
+<%= form_tag( {:action => 'install_smarthost', :id=>@host}, {:id => "host_form"}) do %>
+	<div id="form_div">
+<%= render :partial => "layouts/flash_msg" %>
+
+			<fieldset>
+				<p class="legend">Available Builds</p>
+				<table class="style1">
+					<tbody>
+						<tr>
+							<td class="key">Install SmartHost Build Number</td>
+							<td class="notwide"><%= select_tag('install_build', options_for_select(@agent_choices.sort, @agent_choices.last), "data-miq_focus"=>true) %></td>
+						</tr>
+					</tbody>
+				</table>
+			</fieldset>
+
+		<%= "Pressing 'Save' will install the chosen SmartHost build on this Host" %>
+	</div>
+	<%= image_submit_tag("/images/formbuttons/save.png", :id=> "save", :name=>"save",
+																	:alt=>"Install Selected SmartHost Build", :title=>"Install Selected SmartHost Build", :class=>"button") %>
+	<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
+<% end %>

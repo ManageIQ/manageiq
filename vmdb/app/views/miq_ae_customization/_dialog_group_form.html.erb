@@ -1,0 +1,25 @@
+<% url = url_for(:action=>'dialog_form_field_changed', :id=>"#{@record.id || "new"}") %>
+<fieldset>
+  <p class="legend">Box Information</p>
+  <table class="style1">
+    <tr>
+      <td class="key">Label</td>
+      <td class="wide">
+        <%= text_field_tag("group_label",
+                            @edit[:group_label],
+                            :maxlength=>MAX_NAME_LEN,
+                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+        <%= javascript_tag("$('group_label').focus()") %>
+      </td>
+    </tr>
+    <tr>
+      <td class="key">Description</td>
+      <td class="wide">
+        <%= text_field_tag("group_description",
+                            @edit[:group_description],
+                            :maxlength=>100,
+                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+      </td>
+    </tr>
+  </table>
+</fieldset>

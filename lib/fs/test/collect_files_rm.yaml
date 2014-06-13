@@ -1,0 +1,6 @@
+--- 
+- 
+  :basedir: "/"
+  :todir: "copy_dst"
+  :remove: 
+   - !ruby/regexp /\.pdf$/

@@ -1,0 +1,11 @@
+*.DS_Store
+*/examples
+*/local-extractor
+*/rdoc
+*/spec
+*/test
+*/VMwareWebService/**/*.wsdl
+*dos_mbr.img
+*Gemfile.appliance_excludes.rb
+*test.rb
+.git

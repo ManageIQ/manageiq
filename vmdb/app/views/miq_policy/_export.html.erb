@@ -1,0 +1,108 @@
+<% url = url_for(:action=>'export_field_changed') %>
+<div id="profile_export_div">
+  <%= render :partial=>"layouts/flash_msg" %>
+  <fieldset>
+    <p class="legend">Import</p>
+    <% if @sb[:hide] %>
+      <table width="100%">
+        <tr>
+          <td align="right">
+            <div id="buttons">
+              <ul id="form_buttons">
+                <li>
+                  <% if @sb[:conflict] %>
+                    <%= image_tag("/images/formbuttons/commit.png", :class=>"dimmed",
+                      :title=>"Resolve conflicts to import the file", :alt=>"Resolve conflicts to import the file") %>
+                  <% else %>
+                    <%= link_to(image_tag('/images/formbuttons/commit.png',
+                            :border=>"0", :alt=>"Commit Import"),
+                            {:action=>"export", :button=>"import", :commit=>true},
+                            "data-miq_sparkle_on" => true,
+                            "data-miq_sparkle_off" => true,
+                            :remote=>true,
+                            :title=>"Commit Import")
+                    %>
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to(image_tag('/images/formbuttons/cancel.png',
+                          :border=>"0", :alt=>"Cancel Changes"),
+                          {:action=>"export", :button=>"cancel_import"},
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote=>true,
+                          :title=>"Cancel Import")
+                  %>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </table>
+    <% else %>
+      <div id="import_div">
+      <%= form_tag({:action=>"upload", :typ=>"import", :dbtype=>@sb[:dbtype]}, :multipart => true) do %>
+        <%= file_field("upload", "file") %>
+        <%= submit_tag("Upload", :id=>"upload_atags", :class => "upload" ) %>
+
+      <% end %>
+      </div>
+    <% end %>
+  </fieldset>
+  <% if @sb[:hide] == false %>
+    <fieldset>
+      <p class="legend">Export</p>
+      <%# title = @sb[:dbtype] == "pp" ? "Profiles" : "Policies" %>
+      <% title = case @sb[:dbtype]
+        when "pp" then "Profiles"
+        when "p"  then "Policies"
+        when "al" then "Alerts"
+      end %>
+      <table class="style1">
+        <tr>
+          <td class="key">Export:</td>
+          <td align="left" valign="top">
+            <%= select_tag('dbtype',
+                options_for_select([["Policy Profiles","pp"],["Policies","p"],["Alerts","al"]], @sb[:dbtype]),
+                "data-miq_observe"=>{:url=>url}.to_json) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key" align="left" valign="top">Available <%= title%>:</td>
+          <td align="left" valign="top">
+            <div style="overflow:auto;width:400px;border:1px solid #999999;">
+              <%= select_tag('choices_chosen[]',
+                options_for_select(@sb[:new][:choices].sort),
+                :style=>"width:auto; min-width:375px; background-color:#fff; border: 0px;",
+                :size=>15,
+                :style=>"width: 400px",
+                :multiple=> true,
+                "data-miq_observe"=>{:url=>url}.to_json) %>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table width="100%">
+        <tr>
+          <td align="right">
+            <div id="buttons">
+              <ul id="form_buttons">
+                <li>
+                  <%= link_to(image_tag('/images/formbuttons/export.png',
+                          :border=>"0", :alt=>"Export Selected #{title}"),
+                          {:action=>"export", :button=>"export"},
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          "data-submit"=>"profile_export_div",
+                          :remote=>true,
+                          :title=>"Export Selected #{title}")
+                  %>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+  <% end %>
+</div>

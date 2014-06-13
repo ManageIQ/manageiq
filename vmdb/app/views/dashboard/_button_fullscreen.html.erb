@@ -1,0 +1,23 @@
+<%
+# Parameters:
+#		widget			MiqWidget object
+%>
+<% if widget.content_type == "chart" %>
+	<%= link_to("",
+							{:action=>'report_only', :type=>"hybrid", :rr_id=>widget.contents_for_user(session[:userid]).miq_report_result_id},
+							:id=>"w_#{widget.id}_fullscreen",
+							:class=>"fullscreenbox",
+							:title=>"Open the chart and full report in a new window",
+							"data-miq_confirm"=>'This will show the chart and the entire report (all rows) in your browser.  Do you want to proceed?',
+							:onclick=>"return miqClickAndPop(this);")
+	%>
+<% else %><%# Report widget %>
+	<%= link_to("",
+							{:action=>'report_only', :type=>"tabular", :rr_id=>widget.contents_for_user(session[:userid]).miq_report_result_id},
+							:id=>"w_#{widget.id}_fullscreen",
+							:class=>"fullscreenbox",
+							:title=>"Open the full report in a new window",
+							"data-miq_confirm"=>'This will show the entire report (all rows) in your browser.  Do you want to proceed?',
+							:onclick=>"return miqClickAndPop(this);")
+	%>
+<% end %>

@@ -1,0 +1,12 @@
+name,description
+evm_operations,CFME Operation
+ems_operations,Provider Operation
+host_operations,Host Operation
+compliance,Compliance
+tags,Company Tag
+vm_operational,VM Operation
+vm_configurational,VM Configuration
+vm_process,VM Lifecycle
+service_process,Service Lifecycle
+storage_operational, Datastore Operation
+auth_validation,Authentication Validation

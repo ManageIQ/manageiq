@@ -1,0 +1,39 @@
+#
+# Toolbar config file
+#
+---
+:model: CustomizationTemplate
+:button_groups:
+- :name: customization_template_vmdb
+  :items:
+  - :buttonSelect: pxe_server_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: customization_template_new
+      :image: new
+      :text: 'Add a New Customization Template'
+      :title: 'Add a New Customization Template'
+    - :button: customization_template_copy
+      :image: copy
+      :text: 'Copy Selected Customization Templates'
+      :title: 'Select a single Customization Templates to copy'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: customization_template_edit
+      :image: edit
+      :text: 'Edit Selected Customization Templates'
+      :title: 'Select a single Customization Templates to edit'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: customization_template_delete
+      :image: remove
+      :text: 'Remove Customization Templates from the VMDB'
+      :title: 'Remove selected Customization Templates from the VMDB'
+      :url_parms: 'main_div'
+      :confirm: 'Warning: The selected Customization Templates will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Customization Templates?'
+      :enabled: 'false'
+      :onwhen: '1+'

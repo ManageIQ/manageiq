@@ -1,0 +1,221 @@
+--- 
+- :name: dashboard_show
+  :description: Cloud Intelligence / Dashboard
+  :url: /dashboard/show
+  :rbac_feature_name: dashboard_view
+  :startup: true
+- :name: report_explorer
+  :description: Cloud Intelligence / Reports
+  :url: /report/explorer
+  :rbac_feature_name: miq_report
+  :startup: true
+- :name: timelines
+  :description: Cloud Intelligence / Timelines
+  :url: /dashboard/timeline
+  :rbac_feature_name: timeline
+  :startup: true
+- :name: rss
+  :description: Cloud Intelligence / RSS
+  :url: /alert
+  :rbac_feature_name: rss
+  :startup: true
+- :name: service_explorer
+  :description: Services / My Services
+  :url: /service/explorer
+  :rbac_feature_name: service
+  :startup: true
+- :name: catalog_explorer
+  :description: Services / Catalogs
+  :url: /catalog/explorer
+  :rbac_feature_name: catalog
+  :startup: true
+- :name: requests
+  :description: Services / Requests
+  :url: /miq_request/show_list
+  :rbac_feature_name: miq_request_show_list
+  :startup: true
+- :name: vms_myvms
+  :description: Services / Workloads / VMs & Instances
+  :url: /vm_or_template/explorer?accordion=vms_instances_filter
+  :rbac_feature_name: vms_instances_filter_accord
+  :startup: true
+- :name: vms_mytemplates
+  :description: Services / Workloads / Templates & Images
+  :url: /vm_or_template/explorer?accordion=templates_images_filter
+  :rbac_feature_name: templates_images_filter_accord
+  :startup: true
+- :name: vms_vmprov
+  :description: Services / Workloads / Provision VMs
+  :url: /vm_or_template/explorer?button=vm_miq_request_new
+  :rbac_feature_name: vm_miq_request_new
+  :startup: false
+- :name: ems_clouds
+  :description: Clouds / Providers
+  :url: /ems_cloud/show_list
+  :rbac_feature_name: ems_cloud_show_list
+  :startup: true
+- :name: availabilty_zones
+  :description: Clouds / Availability Zones
+  :url: /availabilty_zone/show_list
+  :rbac_feature_name: availability_zone_show_list
+  :startup: true
+- :name: flavors
+  :description: Clouds / Flavors
+  :url: /flavor/show_list
+  :rbac_feature_name: flavor_show_list
+  :startup: true
+- :name: vm_cloud_instances_accord
+  :description: Clouds / Instances / Instances By Providers
+  :url: /vm_cloud/explorer?accordion=instances
+  :rbac_feature_name: vm_cloud_explorer
+  :startup: true
+- :name: vm_cloud_images_accord
+  :description: Clouds / Instances / Images By Providers
+  :url: /vm_cloud/explorer?accordion=images
+  :rbac_feature_name: vm_cloud_explorer
+  :startup: true
+- :name: vm_cloud_instances_filter_accord
+  :description: Clouds / Instances / Instances
+  :url: /vm_cloud/explorer?accordion=instances_filter
+  :rbac_feature_name: vm_cloud_explorer
+  :startup: true
+- :name: vm_cloud_images_filter_accord
+  :description: Clouds / Instances / Images
+  :url: /vm_cloud/explorer?accordion=images_filter
+  :rbac_feature_name: vm_cloud_explorer
+  :startup: true
+- :name: ems_infras
+  :description: Infrastructure / Providers
+  :url: /ems_infra/show_list
+  :rbac_feature_name: ems_infra_show_list
+  :startup: true
+- :name: clusters
+  :description: Infrastructure / Clusters
+  :url: /ems_cluster/show_list
+  :rbac_feature_name: ems_cluster_show_list
+  :startup: true
+- :name: hosts
+  :description: Infrastructure / Hosts
+  :url: /host/show_list
+  :rbac_feature_name: host_show_list
+  :startup: true
+- :name: vms_vandt
+  :description: Infrastructure / Virtual Machines / VMs & Templates
+  :url: /vm_infra/explorer?accordion=vandt
+  :rbac_feature_name: vandt_accord
+  :startup: true
+- :name: vms
+  :description: Infrastructure / Virtual Machines / VMs
+  :url: /vm_infra/explorer?accordion=vms_filter
+  :rbac_feature_name: vms_filter_accord
+  :startup: true
+- :name: templates
+  :description: Infrastructure / Virtual Machines / Templates
+  :url: /vm_infra/explorer?accordion=templates_filter
+  :rbac_feature_name: templates_filter_accord
+  :startup: true
+- :name: resource_pools
+  :description: Infrastructure / Resource Pools
+  :url: /resource_pool/show_list
+  :rbac_feature_name: resource_pool_show_list
+  :startup: true
+- :name: datastores
+  :description: Infrastructure / Datastores
+  :url: /storage/show_list
+  :rbac_feature_name: storage_show_list
+  :startup: true
+- :name: repositories
+  :description: Infrastructure / Repositories
+  :url: /repository/show_list
+  :rbac_feature_name: repository_show_list
+  :startup: true
+- :name: storage_systems
+  :description: Storage / Storage Systems
+  :url: /ontap_storage_system/show_list
+  :rbac_feature_name: ontap_storage_system_show_list
+  :startup: true
+- :name: file_shares
+  :description: Storage / File Shares
+  :url: /ontap_file_share/show_list
+  :rbac_feature_name: ontap_file_share_show_list
+  :startup: true
+- :name: logical_disks
+  :description: Storage / Logical Disks
+  :url: /ontap_logical_disk/show_list
+  :rbac_feature_name: ontap_logical_disk_show_list
+  :startup: true
+- :name: base_extents
+  :description: Storage / Base Extents
+  :url: /cim_base_storage_extent/show_list
+  :rbac_feature_name: cim_storage_extent_show_list
+  :startup: true
+- :name: storage_volumes
+  :description: Storage / Storage Volumes
+  :url: /ontap_storage_volume/show_list
+  :rbac_feature_name: ontap_storage_volume_show_list
+  :startup: true
+- :name: storage_managers
+  :description: Storage / Storage Managers
+  :url: /storage_manager/show_list
+  :rbac_feature_name: storage_manager_show_list
+  :startup: true
+- :name: vdi_farms
+  :description: VDI / Farms
+  :url: /vdi_farm/show_list
+  :rbac_feature_name: vdi_farm_show_list
+  :startup: true
+- :name: vdi_brokers
+  :description: VDI / Brokers
+  :url: /vdi_controller/show_list
+  :rbac_feature_name: vdi_controller_show_list
+  :startup: true
+- :name: vdi_desktop_pools
+  :description: VDI / Desktop Pools
+  :url: /vdi_desktop_pool/show_list
+  :rbac_feature_name: vdi_desktop_pool_show_list
+  :startup: true
+- :name: vdi_desktops
+  :description: VDI / Desktops
+  :url: /vdi_desktop/show_list
+  :rbac_feature_name: vdi_desktop_show_list
+  :startup: true
+- :name: vdi_endpoint_devices
+  :description: VDI / Endpoint Devices
+  :url: /vdi_endpoint_device/show_list
+  :rbac_feature_name: vdi_endpoint_device_show_list
+  :startup: true
+- :name: vdi_users
+  :description: VDI / Users
+  :url: /vdi_user/show_list
+  :rbac_feature_name: vdi_user_show_list
+  :startup: true
+- :name: control_explorer
+  :description: Control / Explorer
+  :url: /miq_policy/explorer
+  :rbac_feature_name: control_explorer
+  :startup: true
+- :name: utilization
+  :description: Optimize / Utilization
+  :url: /miq_capacity/utilization
+  :rbac_feature_name: utilization
+  :startup: true
+- :name: capacity_planning
+  :description: Optimize / Planning
+  :url: /miq_capacity/planning
+  :rbac_feature_name: planning
+  :startup: true
+- :name: capacity_bottlenecks
+  :description: Optimize / Bottlenecks
+  :url: /miq_capacity/bottlenecks
+  :rbac_feature_name: bottlenecks
+  :startup: true
+- :name: miq_proxys
+  :description: EVM Admin / SmartProxies
+  :url: /miq_proxy/show_list
+  :rbac_feature_name: miq_proxy_show_list
+  :startup: true
+- :name: miq_proxy_tasks
+  :description: EVM Admin / Tasks
+  :url: /miq_proxy/index?jobs_tab=alltasks
+  :rbac_feature_name: tasks
+  :startup: true

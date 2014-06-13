@@ -1,0 +1,71 @@
+<div id= "desc_content" class="desc_content">
+	<fieldset>
+	<p class="legend"><%= h(@temp[:selected_server]["name"]) %></p>
+		<dl class ="col2">
+			<dd>
+        <table class="style1">
+          <tr>
+            <td rowspan="6" class="keyimage"><img src="/images/icons/new/processmanager-evmserver.png"/></td>
+            <td class="key">Hostname</td>
+            <td class="wide"><%= h(@temp[:selected_server][:hostname]) %></td>
+          </tr>
+          <tr>
+            <td class="key">IP Address</td><td class="wide"><%= h(@temp[:selected_server][:ipaddress]) %></td>
+          </tr>
+          <tr>
+            <td class="key">Status</td><td class="wide"><%= h(@temp[:selected_server][:status]) %></td>
+          </tr>
+          <tr>
+            <td class="key">Started On</td>
+            <td class="wide">
+              <% t = @temp[:selected_server].started_on %>
+              <%= h(t.blank? ? "" : format_timezone(t)) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Stopped On</td>
+            <td class="wide">
+              <% t = @temp[:selected_server].stopped_on %>
+              <%= h(t.blank? ? "" : format_timezone(t)) %>
+            </td>
+          </tr>
+        </table>
+
+			</dd>
+      <dd>
+        <table class="style1">
+          <tr>
+            <td class="key">Memory Usage</td>
+            <td>
+              <%= h(@temp[:selected_server]["memory_usage"]) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Memory Size</td>
+            <td>
+              <%= h(@temp[:selected_server]["memory_size"]) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">CPU Time</td>
+            <td>
+              <%= h(@temp[:selected_server]["cpu_time"]) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">CPU Percent</td>
+            <td>
+              <%= h(@temp[:selected_server]["percent_cpu"]) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Version / Build</td>
+            <td>
+                <%= h(@temp[:selected_server]["version"]) %>
+            </td>
+          </tr>
+        </table>
+      </dd>
+		</dl>
+  </fieldset>
+</div>

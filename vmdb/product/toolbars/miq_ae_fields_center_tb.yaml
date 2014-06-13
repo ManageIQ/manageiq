@@ -1,0 +1,21 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAeField
+:button_groups:
+- :name: miq_ae_field_vmdb
+  :items:
+  - :buttonSelect: miq_ae_field_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: miq_ae_field_edit
+      :image: edit
+      :text: 'Edit selected Schema'
+      :title: 'Edit selected Schema'
+    - :button: miq_ae_field_seq
+      :image: edit-assign
+      :text: 'Edit sequence'
+      :title: 'Edit sequence of Class Schema'

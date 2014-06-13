@@ -1,0 +1,15 @@
+<%= render :partial => "layouts/flash_msg" %>
+<%= form_tag( {:action => 'discover'}, {:id => "discover_form"}) do %>
+  <%= render :partial => "layouts/discover_credentials", :locals => {:label => "Credentials"} %>
+  <table width="100%">
+    <tr>
+      <td align="right">
+        <div id="buttons_on">
+        <%= image_submit_tag("/images/formbuttons/start.png", :name=>"start", :class=>"button", :alt=>"Start the Host Discovery", :title=>"Start the Host Discovery") %>
+        <%= image_submit_tag("/images/formbuttons/cancel.png", :name=>"cancel", :class=>"button", :alt=>"Cancel", :title=>"Cancel") %>
+        </div>
+      </td>
+    </tr>
+  </table>
+<% end %>
+

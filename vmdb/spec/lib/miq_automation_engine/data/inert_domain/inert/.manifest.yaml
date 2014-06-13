@@ -1,0 +1,55 @@
+---
+__domain__.yaml:
+  classes: 1
+  instances: 5
+  method_files: 1
+  method_instances: 1
+  created_on: 2014-05-19 19:40:05.748597000 Z
+  updated_on: 2014-05-19 19:40:05.748597000 Z
+  size: 157
+  sha1: YUFsxVaUKYDhHt7r4baY65iB4Dc=
+evm/__namespace__.yaml:
+  created_on: 2014-05-19 19:40:05.856907000 Z
+  updated_on: 2014-05-19 19:40:05.856907000 Z
+  size: 155
+  sha1: Ugj4UH0RSS4/JizAws9eIjjPH68=
+evm/AUTOMATE.class/__class__.yaml:
+  created_on: 2014-05-19 19:40:05.942999000 Z
+  updated_on: 2014-05-19 19:40:05.942999000 Z
+  size: 1325
+  sha1: 2EYrMxY28Wveyl8dDq1fOYJ+E1w=
+evm/AUTOMATE.class/should_get_used.yaml:
+  created_on: 2014-05-19 19:40:06.024947000 Z
+  updated_on: 2014-05-19 19:40:06.024947000 Z
+  size: 225
+  sha1: eOUCLTCnmxTgi3HJn0WFjAaEMRs=
+evm/AUTOMATE.class/should_not_get_used.yaml:
+  created_on: 2014-05-19 19:40:06.037591000 Z
+  updated_on: 2014-05-19 19:40:06.037591000 Z
+  size: 184
+  sha1: 1Q1N66tdhkVD8bqt/YRSfotgp5U=
+evm/AUTOMATE.class/test1.yaml:
+  created_on: 2014-05-19 19:40:06.046373000 Z
+  updated_on: 2014-05-19 19:40:06.046373000 Z
+  size: 184
+  sha1: FrvUXzmxNaizpZ87ou2llJ5a31s=
+evm/AUTOMATE.class/test2.yaml:
+  created_on: 2014-05-19 19:40:06.054413000 Z
+  updated_on: 2014-05-19 19:40:06.054413000 Z
+  size: 194
+  sha1: Koa/GR7+eWS+rCVaAuQByrJ+8Zc=
+evm/AUTOMATE.class/test_wildcard.yaml:
+  created_on: 2014-05-19 19:40:06.062527000 Z
+  updated_on: 2014-05-19 19:40:06.062527000 Z
+  size: 197
+  sha1: m8v35Y7IPBUKsGELGEyRZrr9Nh8=
+evm/AUTOMATE.class/__methods__/root_method.rb:
+  created_on: 2014-05-19 19:40:06.094292000 Z
+  updated_on: 2014-05-19 19:40:06.094292000 Z
+  size: 40
+  sha1: Mh/FFmC73YL0uGnVWpIO/mrTceU=
+evm/AUTOMATE.class/__methods__/root_method.yaml:
+  created_on: 2014-05-19 19:40:06.094292000 Z
+  updated_on: 2014-05-19 19:40:06.094292000 Z
+  size: 191
+  sha1: JN6zLbHI1Uop5bQJmcWU6jfITzE=

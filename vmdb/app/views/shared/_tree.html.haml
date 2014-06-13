@@ -1,0 +1,4 @@
+%div{:id => "#{name}_div", :style => "width:100%;height:100%;" }
+  %div{:id => "#{name}box", :style => "width:100%;height:100%;color:#000; overflow: hidden" }
+    = render  :partial  => "layouts/dynatree",
+              :locals   => tree.locals_for_render

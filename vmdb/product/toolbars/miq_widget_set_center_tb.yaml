@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqWidgetSet
+:button_groups:
+- :name: db_vmdb
+  :items:
+  - :buttonSelect: db_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: db_edit
+      :image: edit
+      :text: "Edit this Dashboard"
+      :title: "Edit this Dashboard"
+    - :button: db_delete
+      :image: delete
+      :text: "Delete this Dashboard from the Database"
+      :title: "Delete this Dashboard from the Database"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Dashboard and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Dashboard?"

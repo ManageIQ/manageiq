@@ -1,0 +1,18 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqPolicy
+:button_groups:
+- :name: policy_vmdb
+  :items:
+  - :buttonSelect: policy_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: event_edit
+      :image: edit-action
+      :text: "Edit Actions for this Policy Event"
+      :title: "Edit Actions for this Policy Event"
+      :url_parms: 'main_div'

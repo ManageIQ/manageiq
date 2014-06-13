@@ -1,0 +1,28 @@
+#
+# Toolbar config file
+#
+---
+:model: ScanProfile
+:button_groups:
+- :name: scan_vmdb
+  :items:
+  - :buttonSelect: scan_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ap_edit
+      :image: edit
+      :text: "Edit this Analysis Profile"
+      :title: "Edit this Analysis Profile"
+    - :button: ap_copy
+      :image: copy
+      :text: Copy this selected Analysis Profile
+      :title: Copy this selected Analysis Profile
+      :url_parms: '?typ=copy'
+    - :button: ap_delete
+      :image: delete
+      :text: "Delete this Analysis Profile from the VMDB"
+      :title: "Delete this Analysis Profile from the VMDB"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Analysis Profile and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Analysis Profile?"

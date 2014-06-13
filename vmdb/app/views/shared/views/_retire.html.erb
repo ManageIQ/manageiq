@@ -1,0 +1,59 @@
+<% url = url_for(:action=>'retire_date_changed') %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
+
+<%= render :partial => "layouts/flash_msg" %>
+
+<fieldset>
+	<p class="legend">Set/Remove Retirement Date</p>
+	<table class="style1">
+			<tr>
+				<td class="key">Retirement Date</td>
+				<td id="retirement_date">
+          <%= text_field_tag("miq_date_1",
+                                session[:retire_date],
+                                :class=>"css1",
+                                :readonly=>"true",
+                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                "data-miq_observe_date"=>{:url=>url}.to_json) %>
+					<%= hidden_span_if(session[:retire_date] == nil, :id=>"remove_button") %>
+						<%= link_to_function(image_tag('/images/icons/16/clear.png',
+																				:border=>"0", :alt=>"Set to blank"),
+																"$('miq_date_1').value=''")
+						%>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<% disabled = session[:retire_date] == nil ? true : false %>
+				<td class="key">Retirement Warning</td>
+				<td class="wide">
+          <%= select_tag("retirement_warn",
+                          options_for_select([["None",""],["1 Week before retirement",7],["2 Weeks before retirement",14],["30 Days before retirement",30]],
+                            session[:retire_warn]),
+                          "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                          :disabled=>disabled,
+                          "data-miq_observe"=>{:url=>url}.to_json) %>
+        </td>
+			</tr>
+	</table>
+	* Saving a blank date will remove all retirement dates
+</fieldset>
+<% if !@explorer %>
+	<%= render(:partial => '/layouts/edit_form_buttons', :locals=>{:noreset=>true, :action_url=>"retire"}) %>
+<% end %>
+
+<fieldset>
+	<p class="legend"><%= "New setting will affect #{pluralize(@retireitems.length,request.parameters[:controller] == "service" ? 'Service' : 'VM')}" %></p>
+	<table class="admintable" height="75">
+		<tbody>
+			<tr>
+				<td>
+					<% if @retireitems %>
+						<% @embedded = true %>
+						<%= render(:partial=>"layouts/gtl") %>
+					<% end %>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>

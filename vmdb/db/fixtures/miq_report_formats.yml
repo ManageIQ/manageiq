@@ -1,0 +1,834 @@
+---
+:defaults_and_overrides:
+  :formats_by_data_type:
+    :integer:     :general_number_precision_0
+    :decimal:     :general_number_precision_0
+    :fixnum:      :general_number_precision_0
+    :float:       :general_number_precision_2
+    :date:        :date
+    :datetime:    :datetime
+    :timestamp:   :datetime
+    :time:        :datetime
+    :boolean:     :boolean
+    :numeric_set: :basic_set
+    :string_set:  :basic_set
+
+  :formats_by_suffix:
+    :hour:          :date_hour_am_pm
+    :day:           :date
+    :week:          :date_range
+    :month:         :date_range
+    :quarter:       :date_range
+    :year:          :year
+    :hour_of_day:   :hour_am_pm
+    :day_of_week:   :day_full
+    :day_of_month:  :day_of_month
+    :week_of_year:  :week_of_year
+    :month_of_year: :month_full
+
+  :precision_by_column:
+    :slope: 4
+
+  :formats_by_column:
+    :v_date: :date
+    :v_time: :time
+    :v_statistic_date: :date
+    :v_statistic_time: :time
+    :pid:      :_none_
+    :spid:     :_none_
+    :sql_spid: :_none_
+    :chain_id: :_none_
+
+    # Chargeback cost columns
+    :cpu_used_cost: :currency_precision_2
+    :cpu_allocated_cost: :currency_precision_2
+    :cpu_allocated_metric: :general_number_precision_0
+    :cpu_cost: :currency_precision_2
+    :memory_used_cost: :currency_precision_2
+    :memory_allocated_cost: :currency_precision_2
+    :memory_cost: :currency_precision_2
+    :storage_used_cost: :currency_precision_2
+    :storage_allocated_cost: :currency_precision_2
+    :storage_cost: :currency_precision_2
+    :derived_vm_numvcpus: :general_number_precision_0
+    :disk_io_used_cost: :currency_precision_2
+    :disk_io_cost: :currency_precision_2
+    :net_io_used_cost: :currency_precision_2
+    :net_io_cost: :currency_precision_2
+    :fixed_compute_1_cost: :currency_precision_2
+    :fixed_compute_2_cost: :currency_precision_2
+    :fixed_storage_1_cost: :currency_precision_2
+    :fixed_storage_2_cost: :currency_precision_2
+    :fixed_2_cost: :currency_precision_2
+    :fixed_cost: :currency_precision_2
+    :total_cost: :currency_precision_2
+
+  :sub_types_by_column:
+    :aggregate_all_vm_disk_space_allocated: :bytes
+    :aggregate_all_vm_disk_space_used: :bytes
+    :aggregate_direct_vm_disk_space_allocated: :bytes
+    :aggregate_direct_vm_disk_space_used: :bytes
+    :block: :bytes
+    :capacity: :bytes
+    :compressed_data: :bytes
+    :derived_storage_disk_managed: :bytes
+    :derived_storage_disk_registered: :bytes
+    :derived_storage_disk_unmanaged: :bytes
+    :derived_storage_disk_unregistered: :bytes
+    :derived_storage_free: :bytes
+    :derived_storage_mem_managed: :bytes
+    :derived_storage_mem_registered: :bytes
+    :derived_storage_mem_unmanaged: :bytes
+    :derived_storage_mem_unregistered: :bytes
+    :derived_storage_snapshot_managed: :bytes
+    :derived_storage_snapshot_registered: :bytes
+    :derived_storage_snapshot_unmanaged: :bytes
+    :derived_storage_snapshot_unregistered: :bytes
+    :derived_storage_total: :bytes
+    :derived_storage_used_managed: :bytes
+    :derived_storage_used_registered: :bytes
+    :derived_storage_used_unmanaged: :bytes
+    :derived_storage_used_unregistered: :bytes
+    :derived_vm_used_disk_storage: :bytes
+    :derived_vm_allocated_disk_storage: :bytes
+    :disk_capacity: :bytes
+    :disk_free_space: :bytes
+    :disk_size: :bytes
+    :disk_1_size: :bytes
+    :disk_1_size_on_disk: :bytes
+    :disk_2_size: :bytes
+    :disk_2_size_on_disk: :bytes
+    :disk_3_size: :bytes
+    :disk_3_size_on_disk: :bytes
+    :disk_4_size: :bytes
+    :disk_4_size_on_disk: :bytes
+    :disk_5_size: :bytes
+    :disk_5_size_on_disk: :bytes
+    :disk_6_size: :bytes
+    :disk_6_size_on_disk: :bytes
+    :disk_7_size: :bytes
+    :disk_7_size_on_disk: :bytes
+    :disk_8_size: :bytes
+    :disk_8_size_on_disk: :bytes
+    :disk_9_size: :bytes
+    :disk_9_size_on_disk: :bytes
+    :effective_memory: :bytes
+    :free_space: :bytes
+    :max_v_derived_storage_used: :bytes
+    :max_derived_vm_used_disk_storage: :bytes
+    :max_derived_vm_allocated_disk_storage: :bytes
+    :min_derived_vm_used_disk_storage: :bytes
+    :min_derived_vm_allocated_disk_storage: :bytes
+    :size: :bytes
+    :size_available: :bytes
+    :size_total: :bytes
+    :size_used: :bytes
+    :size_on_disk: :bytes
+    :snapshot_size: :bytes
+    :storage_allocated_metric: :bytes
+    :storage_metric: :bytes
+    :storage_used_metric: :bytes
+    :total_space: :bytes
+    :total_size: :bytes
+    :v_derived_storage_used: :bytes
+    :used_space: :bytes
+    :trend_v_derived_storage_used: :bytes
+    :trend_max_v_derived_storage_used: :bytes
+    :allocated_space: :bytes
+    :unallocated_space: :bytes
+    :allocated_disk_storage: :bytes
+    :provisioned_storage: :bytes
+    :used_disk_storage: :bytes
+    :used_storage: :bytes
+    :used_storage_by_state: :bytes
+    :uncommitted_storage: :bytes
+    :allocated_storage: :bytes
+    :allocated_memory: :bytes
+    :v_snapshot_newest_total_size: :bytes
+    :v_snapshot_oldest_total_size: :bytes
+
+    :capacity_profile_1_available_host_memory: :bytes
+    :capacity_profile_2_available_host_memory: :bytes
+    :capacity_profile_2_available_host_vcpu: :mhz
+    :capacity_profile_1_remaining_host_memory: :bytes
+    :capacity_profile_2_remaining_host_memory: :bytes
+    :capacity_profile_2_remaining_host_vcpu: :mhz
+    :capacity_profile_1_memory_per_vm: :bytes
+    :capacity_profile_1_memory_per_vm_with_min_max: :bytes
+    :capacity_profile_2_memory_per_vm: :bytes
+    :capacity_profile_2_memory_per_vm_with_min_max: :bytes
+    :capacity_profile_2_vcpu_per_vm: :mhz_avg
+    :capacity_profile_2_vcpu_per_vm_with_min_max: :mhz_avg
+
+    :v_used_space: :bytes
+    :v_total_debris_size:  :bytes
+    :v_total_snapshot_size: :bytes
+    :v_total_memory_size:  :bytes 
+    :v_total_vm_misc_size:  :bytes
+
+    :aggregate_all_vm_memory_on_disk: :bytes
+    :aggregate_all_vm_memory: :megabytes
+    :aggregate_direct_vm_memory_on_disk: :bytes
+    :aggregate_direct_vm_memory: :megabytes
+    :aggregate_memory: :megabytes
+    :aggregate_vm_memory: :megabytes
+    :derived_memory_available: :megabytes
+    :derived_memory_reserved: :megabytes
+    :derived_memory_used: :megabytes
+    :derived_memory_used_avg_over_time_period: :megabytes
+    :derived_memory_used_high_over_time_period: :megabytes
+    :derived_memory_used_low_over_time_period: :megabytes
+    :max_derived_memory_available: :megabytes
+    :max_derived_memory_reserved: :megabytes
+    :max_derived_memory_used: :megabytes
+    :memory_allocated_metric: :megabytes
+    :memory_metric: :megabytes
+    :memory_used_metric: :megabytes
+    :memory_cpu: :megabytes
+    :mem_cpu: :megabytes
+    :min_derived_memory_used: :megabytes
+    :ram_size: :megabytes
+    :trend_derived_memory_used: :megabytes
+    :trend_max_derived_memory_used: :megabytes
+
+    :abs_max_disk_usage_rate_average_value: :kbps
+    :abs_max_net_usage_rate_average_value: :kbps
+    :abs_min_disk_usage_rate_average_value: :kbps
+    :abs_min_net_usage_rate_average_value: :kbps
+    :disk_io_metric: :kbps
+    :disk_io_used_metric: :kbps
+    :disk_usage_rate_average: :kbps
+    :max_disk_usage_rate_average: :kbps
+    :max_net_usage_rate_average: :kbps
+    :min_disk_usage_rate_average: :kbps
+    :min_net_usage_rate_average: :kbps
+    :net_io_metric: :kbps
+    :net_io_used_metric: :kbps
+    :net_usage_rate_average: :kbps
+    :trend_max_disk_usage_rate_average: :kbps
+    :trend_max_net_usage_rate_average: :kbps
+
+    :aggregate_cpu_speed: :mhz
+    :cpu_metric: :mhz
+    :cpu_used_metric: :mhz
+    :cpu_speed: :mhz
+    :derived_cpu_available: :mhz
+    :derived_cpu_reserved: :mhz
+    :effective_cpu: :mhz
+
+    :max_derived_cpu_available: :mhz
+    :max_derived_cpu_reserved: :mhz
+
+    :cpu_usagemhz_rate_average: :mhz_avg
+    :cpu_usagemhz_rate_average_avg_over_time_period: :mhz_avg
+    :cpu_usagemhz_rate_average_high_over_time_period: :mhz_avg
+    :cpu_usagemhz_rate_average_low_over_time_period: :mhz_avg
+    :max_cpu_usagemhz_rate_average: :mhz_avg
+    :min_cpu_usagemhz_rate_average: :mhz_avg
+    :trend_cpu_usagemhz_rate_average: :mhz_avg
+    :trend_max_cpu_usagemhz_rate_average: :mhz_avg
+
+    :max_sys_uptime_absolute_latest: :elapsed_time
+    :min_sys_uptime_absolute_latest: :elapsed_time
+    :sys_uptime_absolute_latest: :elapsed_time
+
+    :abs_max_cpu_usage_rate_average_value: :percent
+    :abs_max_mem_usage_absolute_average_value: :percent
+    :abs_min_cpu_usage_rate_average_value: :percent
+    :abs_min_mem_usage_absolute_average_value: :percent
+    :compression_saved_percentage: :percent
+    :cpu_usage_rate_average: :percent
+    :disk_1_used_percent_of_provisioned: :percent
+    :disk_2_used_percent_of_provisioned: :percent
+    :disk_3_used_percent_of_provisioned: :percent
+    :disk_4_used_percent_of_provisioned: :percent
+    :disk_5_used_percent_of_provisioned: :percent
+    :disk_6_used_percent_of_provisioned: :percent
+    :disk_7_used_percent_of_provisioned: :percent
+    :disk_8_used_percent_of_provisioned: :percent
+    :disk_9_used_percent_of_provisioned: :percent
+    :free_space_percent: :percent
+    :max_cpu_usage_rate_average: :percent
+    :max_mem_usage_absolute_average: :percent
+    :mem_usage_absolute_average: :percent
+    :min_cpu_usage_rate_average: :percent
+    :min_mem_usage_absolute_average: :percent
+    :percent_cpu: :percent
+    :percent_memory: :percent
+    :used_percent_of_provisioned: :percent
+    :used_space_percent: :percent
+    :v_debris_percent_of_used: :percent
+    :v_derived_cpu_reserved_pct: :percent
+    :v_derived_memory_reserved_pct: :percent
+    :v_disk_percent_of_used: :percent
+    :v_free_space_percent_of_total: :percent
+    :v_memory_percent_of_used: :percent
+    :v_pct_free_disk_space: :percent
+    :v_pct_used_disk_space: :percent
+    :v_snapshot_percent_of_used: :percent
+    :v_used_space_percent_of_total: :percent
+    :v_memory_percent_of_used: :percent
+    :v_pct_cpu_ready_delta_summation: :percent
+    :v_pct_cpu_used_delta_summation: :percent
+    :v_pct_cpu_wait_delta_summation: :percent
+    :v_provisioned_percent_of_total: :percent
+    :v_vm_misc_percent_of_used: :percent
+
+    # Right Sizing
+    :recommended_mem: :megabytes
+    :overallocated_vcpus_pct: :percent
+    :overallocated_mem_pct: :percent
+
+    :conservative_recommended_mem: :megabytes
+    :conservative_vcpus_recommended_change_pct: :percent
+    :conservative_mem_recommended_change_pct: :percent
+    :conservative_mem_recommended_change: :megabytes
+
+    :moderate_recommended_mem: :megabytes
+    :moderate_vcpus_recommended_change_pct: :percent
+    :moderate_mem_recommended_change_pct: :percent
+    :moderate_mem_recommended_change: :megabytes
+
+    :aggressive_recommended_mem: :megabytes
+    :aggressive_vcpus_recommended_change_pct: :percent
+    :aggressive_mem_recommended_change_pct: :percent
+    :aggressive_mem_recommended_change: :megabytes
+
+  :formats_by_sub_type:
+    :bytes:     :bytes_human
+    :kilobytes: :kilobytes_human
+    :megabytes: :megabytes_human
+    :gigabytes: :gigabytes_human
+    :kbps:      :kbps
+    :mhz:       :mhz
+    :mhz_avg:   :mhz_avg
+    :percent: :percent_precision_1
+    :elapsed_time: :elapsed_time_human
+
+:formats:
+
+  :bytes_human:
+    :description: Suffixed Bytes (B, KB, MB, GB)
+    :columns:
+    :sub_types:
+      - :bytes
+    :function:
+      :name: bytes_to_human_size
+    :precision: 1
+
+  :kilobytes_human:
+    :description: Suffixed Kilobytes (KB, MB, GB)
+    :columns:
+# TODO - find columns that have values in KB
+    :sub_types:
+      - :kilobytes
+    :function:
+      :name: kbytes_to_human_size
+    :precision: 1
+
+  :megabytes_human:
+    :description: Suffixed Megabytes (MB, GB)
+    :columns:
+    :sub_types:
+      - :megabytes
+    :function:
+      :name: mbytes_to_human_size
+    :precision: 1
+
+  :gigabytes_human:
+    :description: Suffixed Gigabytes (GB)
+    :columns:
+    :sub_types:
+      - :gigabytes
+    :function:
+      :name: gbytes_to_human_size
+    :precision: 1
+
+  :general_number_precision_0:
+    :description: Number (1,234)
+    :data_types:
+      - :integer
+      - :fixnum
+      - :float
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+    :precision: 0
+
+  :general_number_precision_1:
+    :description: Number (1,234.0)
+    :data_types:
+      - :float
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+    :precision: 1
+
+  :general_number_precision_2:
+    :description: Number, 2 Decimals (1,234.00)
+    :data_types:
+      - :float
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+    :precision: 2
+
+  :currency_precision_2:
+    :description: Currency, 2 Decimals ($1,234.00)
+    :data_types:
+      - :float
+    :function:
+      :name: currency_with_delimiter
+      :delimiter: ","
+    :precision: 2
+
+  :kbps:
+    :description: Kilobytes per Second (10 KBps)
+    :columns:
+    :sub_types:
+      - :kbps
+    :function: 
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: " KBps"
+    :precision: 0
+
+  :mhz:
+    :description: Megahertz (12 Mhz)
+    :columns:
+    :sub_types:
+      - :mhz
+      - :mhz_avg
+    :function: 
+      :name: mhz_to_human_size
+      :delimiter: ","
+    :precision: 0
+
+  :mhz_avg:
+    :description: Megahertz Avg (12.1 Mhz)
+    :columns:
+    :sub_types:
+      - :mhz_avg
+    :function:
+      :name: mhz_to_human_size
+      :delimiter: ","
+    :precision: 1
+
+  :percent_precision_0:
+    :description: Percentage (99%)
+    :columns:
+    :sub_types:
+      - :percent
+      - :percent
+      - :percent
+    :function: 
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: ! '%'
+    :precision: 0
+
+  :percent_precision_1:
+    :description: Percent, 1 Decimal (99.0%)
+    :columns:
+    :sub_types:
+      - :percent
+      - :percent
+      - :percent
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: ! '%'
+    :precision: 1
+
+  :percent_precision_2:
+    :description: Percent, 2 Decimals (99.00%)
+    :columns:
+    :sub_types:
+      - :percent
+      - :percent
+      - :percent
+    :function: 
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: ! '%'
+    :precision: 2
+
+  :boolean:
+    :description: Boolean (True/False)
+    :data_types:
+      - :boolean
+    :function:
+      :name: boolean
+
+  :boolean_t_f:
+    :description: Boolean (T/F)
+    :data_types:
+      - :boolean
+    :function:
+      :name: boolean
+      :format: t_f
+
+  :boolean_yes_no:
+    :description: Boolean (Yes/No)
+    :data_types:
+      - :boolean
+    :function:
+      :name: boolean
+      :format: yes_no
+
+  :boolean_y_n:
+    :description: Boolean (Y/N)
+    :data_types:
+      - :boolean
+    :function:
+      :name: boolean
+      :format: y_n
+
+  :boolean_pass_fail:
+    :description: Boolean (Pass/Fail)
+    :data_types:
+      - :boolean
+    :function:
+      :name: boolean
+      :format: pass_fail
+
+  :date:
+    :description: Date (M/D/YYYY)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+    :function:
+      :name: datetime
+      :format: "%m/%d/%Y"
+
+  :date_yy:
+    :description: Date (M/D/YY)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+    :function:
+      :name: datetime
+      :format: "%m/%d/%y"
+
+
+  :date_range:
+    :description: Date Range (M/D/Y - M/D/Y)
+    :suffixes:
+      - :week
+      - :month
+      - :quarter
+    :function:
+      :name: datetime_range
+      :format: "%m/%d/%y"
+
+  :date_day_range:
+    :description: Day Range (M/D - M/D)
+    :suffixes:
+      - :week
+      - :month
+      - :quarter
+    :function:
+      :name: datetime_range
+      :format: "%m/%d"
+
+  :date_day_range_start_day:
+    :description: Day Range Start (M/D)
+    :suffixes:
+      - :week
+      - :month
+      - :quarter
+    :function:
+      :name: datetime_range
+      :format: "%m/%d"
+
+  :date_day:
+    :description: Date (M/D)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+    :function:
+      :name: datetime
+      :format: "%m/%d"
+
+  :time:
+    :description: Time (H:M:S Z) 
+    :data_types:
+      - :datetime
+      - :timestamp
+    :function:
+      :name: datetime
+      :format: "%H:%M %Z"
+
+  :datetime: 
+    :description: Date/Time (M/D/Y H:M:S Z)
+    :data_types:
+      - :datetime
+      - :timestamp
+    :function:
+      :name: datetime
+      :format: "%m/%d/%y %H:%M:%S %Z"
+
+  :date_hour:
+    :description: Date/Hour (M/D/Y H:00 Z)
+    :data_types:
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :hour
+    :function:
+      :name: datetime
+      :format: "%m/%d/%y %H:00 %Z"
+
+  :date_hour_am_pm:
+    :description: Date/Hour (M/D/Y H AM|PM Z)
+    :data_types:
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :hour
+    :function:
+      :name: datetime
+      :format: "%m/%d/%y %I %p %Z"
+
+  :hour:
+    :description: Hour (H:00 Z)
+    :data_types:
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :hour
+      - :hour_of_day
+    :function:
+      :name: datetime
+      :format: "%H:00 %Z"
+
+  :hour_am_pm:
+    :description: Hour (H AM|PM Z)
+    :data_types:
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :hour
+      - :hour_of_day
+    :function:
+      :name: datetime
+      :format: "%l %p %Z"
+
+  :hour_of_day:
+    :description: Hour of Day (24)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :hour
+      - :hour_of_day
+    :function:
+      :name: datetime
+      :format: "%k"
+
+  :day_full:
+    :description: Day Full (Monday)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+      - :day_of_week
+    :function:
+      :name: datetime
+      :format: "%A"
+
+  :day_short:
+    :description: Day Short (Mon)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+      - :day_of_week
+    :function:
+      :name: datetime
+      :format: "%a"
+
+  :day_number:
+    :description: Day of Week (1)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+      - :day_of_week
+    :function:
+      :name: datetime
+      :format: "%u"
+
+  :day_of_month:
+    :description: Day of Month (27)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+      - :day_of_month
+    :function:
+      :name: datetime
+      :format: "%e"
+
+  :day_of_month_ordinal:
+    :description: Day of Month (27th)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :day
+      - :day_of_month
+    :function:
+      :name: datetime_ordinal
+      :format: "%e"
+
+  :month:
+    :description: Month and Year (January 2011)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :month
+    :function:
+      :name: datetime
+      :format: "%B %Y"
+
+  :month_year_short:
+    :description: Month and Year Short (Jan 11)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :month
+    :function:
+      :name: datetime
+      :format: "%b %y"
+
+  :month_full:
+    :description: Month Full (January)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :month_of_year
+      - :month
+    :function:
+      :name: datetime
+      :format: "%B"
+
+  :month_short:
+    :description: Month Short (Jan)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :month_of_year
+      - :month
+    :function:
+      :name: datetime
+      :format: "%b"
+
+  :month_of_year:
+    :description: Month of Year (12)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :month
+      - :month_of_year
+    :function:
+      :name: datetime
+      :format: "%m"
+
+  :week_of_year:
+    :description: Week of Year (52)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :week
+      - :week_of_year
+    :function:
+      :name: datetime
+      :format: "%W"
+
+  :week_of_year_ordinal:
+    :description: Week of Year (52nd)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :week
+      - :week_of_year
+    :function:
+      :name: datetime_ordinal
+      :format: "%W"
+
+  :year:
+    :description: Year (YYYY)
+    :data_types:
+      - :date
+      - :datetime
+      - :timestamp
+    :suffixes:
+      - :year
+    :function:
+      :name: datetime
+      :format: "%Y"
+
+  :basic_set:
+    :description: Comma seperated list
+    :function:
+      :name: set
+      :delimiter: ", "
+
+  :elapsed_time_human:
+    :description: "Elapsed Time (10 Days, 0 Hours, 1 Minute, 44 Seconds)"
+    :columns:
+    :sub_types:
+      - :elapsed_time
+    :function:
+      :name: elapsed_time_human
+    :precision: 1
+
+  :string_truncate_50:
+    :description: String Truncated to 50 Characters with Elipses (...)
+    :data_types:
+      - :string
+    :function:
+      :name: string_truncate
+      :length: 50
+
+  :large_number_to_exponential_form:
+    :description: Convert Numbers Larger than 1.0e+15 to Exponential Form
+    :data_types:
+      - :float
+    :function:
+      :name: large_number_to_exponential_form
+      :length: 50

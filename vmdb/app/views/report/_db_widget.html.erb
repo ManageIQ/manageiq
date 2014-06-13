@@ -1,0 +1,23 @@
+<%
+# Parameters:
+#   widget      MiqWidget object
+%>
+<% if @edit && @edit[:current] %>
+  <div id="w_<%= widget.id %>" title="Drag/drop Widget <%= '"' + widget.title + '"' %>">
+<% else %>
+  <div onclick="<%= remote_function(:url=>"/report/x_show/xx-#{WIDGET_CONTENT_TYPE.invert[widget.content_type]}_-#{to_cid(widget.id)}?accord=widgets") %>"
+     id="<%= widget.id %>"
+     onmouseover="this.style.cursor='pointer'" title="View this Widget">
+<% end %>
+  <div class="modbox" id="test">
+    <h2 class = "modtitle" style = <%= @edit && @edit[:current] ? "cursor:move" : "" %>>
+      <a class="<%= widget.content_type %>box"></a>
+      <% if role_allows(:feature => "dashboard_add") && @edit && @edit[:current] %>
+        <%= render(:partial=>'db_widget_remove', :locals=>{:widget=>widget}) %>
+      <% end %>
+      <div style="overflow:hidden">
+        <span class="modtitle_text" style="white-space:nowrap;overflow:hidden"><%= widget.title %></span>
+      </div>
+    </h2>
+  </div>
+</div>

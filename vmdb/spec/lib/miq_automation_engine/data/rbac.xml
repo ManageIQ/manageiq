@@ -1,0 +1,87 @@
+<MiqAeDatastore>
+	<MiqAeClass name="AUTOMATE" namespace="EVM">
+		<MiqAeSchema>
+			<MiqAeField name="attr1" aetype="attribute"    default_value=""       display_name="Sample Attribute"/>
+			<MiqAeField name="rel1"  aetype="relationship" default_value=""       display_name="Sample Relationship"/>
+			<MiqAeField name="rel2"  aetype="relationship" default_value=""       display_name="Sample Relationship" message="discover"/>
+			<MiqAeField name="method1" aetype="method"       					  display_name="Sample Method"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="user_logged_into_evm">
+			<MiqAeField name="method1">
+				$evm.log("info", "Args:    #{MIQ_ARGS.inspect}")
+				$evm.log("info", "Message: #{MIQ_MESSAGE}")
+				obj = $evm.object
+				obj.tags.each { |tag| $evm.instantiate("miqaedb:///CLASSIFICATION/#{tag.category}/#{tag.entry}") }
+			</MiqAeField>
+		</MiqAeInstance>
+	</MiqAeClass>
+	
+	<MiqAeClass name="CONTEXT" namespace="CLASSIFICATION">
+		<MiqAeSchema>
+			<MiqAeField name="attr1" aetype="attribute"    default_value=""       display_name="Sample Attribute"/>
+			<MiqAeField name="rel1"  aetype="relationship" default_value=""       display_name="Sample Relationship"/>
+			<MiqAeField name="rel2"  aetype="relationship" default_value=""       display_name="Sample Relationship" message="discover"/>
+			<MiqAeField name="method1" aetype="method"       					  display_name="Sample Method"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="dev">
+		</MiqAeInstance>
+		<MiqAeInstance name="test">
+		</MiqAeInstance>
+		<MiqAeInstance name="prod">
+		</MiqAeInstance>
+	</MiqAeClass>
+	<MiqAeClass name="LOCATION" namespace="CLASSIFICATION">
+		<MiqAeSchema>
+			<MiqAeField name="attr1" aetype="attribute"    default_value=""       display_name="Sample Attribute"/>
+			<MiqAeField name="rel1"  aetype="relationship" default_value=""       display_name="Sample Relationship"/>
+			<MiqAeField name="rel2"  aetype="relationship" default_value=""       display_name="Sample Relationship" message="discover"/>
+			<MiqAeField name="method1" aetype="method"       					  display_name="Sample Method"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="mahwah">
+		</MiqAeInstance>
+		<MiqAeInstance name="boston">
+		</MiqAeInstance>
+		<MiqAeInstance name="cupertino">
+		</MiqAeInstance>
+	</MiqAeClass>
+	<MiqAeClass name="FUNCTION" namespace="CLASSIFICATION">
+		<MiqAeSchema>
+			<MiqAeField name="attr1" aetype="attribute"    default_value=""       display_name="Sample Attribute"/>
+			<MiqAeField name="rel1"  aetype="relationship" default_value=""       display_name="Sample Relationship"/>
+			<MiqAeField name="rel2"  aetype="relationship" default_value=""       display_name="Sample Relationship" message="discover"/>
+			<MiqAeField name="method1" aetype="method"       					  display_name="Sample Method"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="web server">
+		</MiqAeInstance>
+		<MiqAeInstance name="database server">
+		</MiqAeInstance>
+	</MiqAeClass>
+	<MiqAeClass name="ROLE" namespace="CLASSIFICATION">
+		<MiqAeSchema>
+			<MiqAeField name="attr1" aetype="attribute"    default_value=""       display_name="Sample Attribute"/>
+			<MiqAeField name="rel1"  aetype="relationship" default_value=""       display_name="Sample Relationship"/>
+			<MiqAeField name="rel2"  aetype="relationship" default_value=""       display_name="Sample Relationship" message="discover"/>
+			<MiqAeField name="method1" aetype="method"       					  display_name="Sample Method"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="retail">
+		</MiqAeInstance>
+		<MiqAeInstance name="trading">
+		</MiqAeInstance>
+		<MiqAeInstance name="back office">
+		</MiqAeInstance>
+	</MiqAeClass>
+	<MiqAeClass name="OWNER" namespace="CLASSIFICATION">
+		<MiqAeSchema>
+			<MiqAeField name="attr1" aetype="attribute"    default_value=""       display_name="Sample Attribute"/>
+			<MiqAeField name="rel1"  aetype="relationship" default_value=""       display_name="Sample Relationship"/>
+			<MiqAeField name="rel2"  aetype="relationship" default_value=""       display_name="Sample Relationship" message="discover"/>
+			<MiqAeField name="method1" aetype="method"       					  display_name="Sample Method"/>
+		</MiqAeSchema>
+		<MiqAeInstance name="finance">
+		</MiqAeInstance>
+		<MiqAeInstance name="sales">
+		</MiqAeInstance>
+		<MiqAeInstance name="marketing">
+		</MiqAeInstance>
+	</MiqAeClass>
+</MiqAeDatastore>

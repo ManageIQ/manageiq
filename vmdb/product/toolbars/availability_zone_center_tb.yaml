@@ -1,0 +1,36 @@
+#
+# Toolbar config file
+#
+---
+:model: AvailabilityZone
+:button_groups:
+- :name: availability_zone_policy
+  :items:
+  - :buttonSelect: availability_zone_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: availability_zone_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Availability Zone"
+- :name: availability_zone_monitoring
+  :items:
+  - :buttonSelect: availability_zone_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: availability_zone_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Availability Zone"
+      :url: '/show'
+      :url_parms: '?display=performance'
+    - :button: availability_zone_timeline
+      :image: timeline
+      :text: 'Timelines'
+      :title: 'Show Timelines for this #{ui_lookup(:table=>"availability_zone")}'
+      :url: '/show'
+      :url_parms: '?display=timeline'

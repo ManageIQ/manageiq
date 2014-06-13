@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM Migrate
+    name: Migrate
+    inherits: 
+    description: 
+  fields:
+  - Relationship5:
+      value: /EVMApplications/Operations/Profile/VMMigrate/${/#user.normalized_ldap_group}#get_state_machine
+  - Relationship6:
+      value: /Factory/StateMachines/${/#state_machine}/default

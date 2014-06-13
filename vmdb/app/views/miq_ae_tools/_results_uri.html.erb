@@ -1,0 +1,27 @@
+<div id="results_uri_div">
+  <% if @temp[:results] %>
+    <br/>
+    <fieldset>
+      <p class="legend">Object Info</p>
+      <table class="style1">
+        <tr>
+          <td class="key">URI</td>
+          <td class="wide"><%= @resolve[:uri] %></td>
+        </tr>
+        <% if !@resolve[:button_attr_name].blank? && !@resolve[:button_class].blank? %>
+          <tr>
+            <td class="key">Object Attribute Name</td>
+            <td class="wide"><%= @resolve[:button_attr_name] %></td>
+          </tr>
+          <tr>
+            <td class="key">Object Attribute Type</td>
+            <td class="wide"><%= ui_lookup(:model=>@resolve[:button_class]) %></td>
+          </tr>
+        <% end %>
+      </table>
+    </fieldset>
+  <% else %>
+    <br/>&nbsp<strong>* Enter Automation Simulation options on the left and press Submit</strong>
+  <% end %>
+</div>
+

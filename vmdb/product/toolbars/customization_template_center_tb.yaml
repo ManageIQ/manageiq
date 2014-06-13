@@ -1,0 +1,27 @@
+#
+# Toolbar config file
+#
+---
+:model: CustomizationTemplate
+:button_groups:
+- :name: customization_template_vmdb
+  :items:
+  - :buttonSelect: customization_template_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: customization_template_copy
+      :image: copy
+      :text: 'Copy this Customization Template'
+      :title: 'Copy this Customization Template'
+    - :button: customization_template_edit
+      :image: edit
+      :text: 'Edit this Customization Template'
+      :title: 'Edit this Customization Template'
+    - :button: customization_template_delete
+      :image: delete
+      :text: 'Remove this Customization Template from the VMDB'
+      :title: 'Remove this Customization Template from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This Customization Template will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Customization Template?'

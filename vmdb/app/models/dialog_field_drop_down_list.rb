@@ -1,0 +1,2 @@
+class DialogFieldDropDownList < DialogFieldSortedItem
+end

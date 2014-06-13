@@ -1,0 +1,1144 @@
+---
+- id: 7
+  name: host
+  timestamp: 2013-04-12 19:50:50.000000000 Z
+  created_on: 2013-04-12 19:51:01.635862000 Z
+  stats: ! "--- \nname: esxi.example.com\noriginal_filename: host\ncreated_on:
+    \"1365796261\"\nvmm_version: 4.1.0\nid: \"447000000000002\"\nversion: \"2.0\"\nvmm_buildnumber:
+    \"348481\"\nvmm_vendor: VMware\nvmm_product: ESXi\n_timestamp_: \"1365796250\"\ndisplay_time:
+    \"2013-04-12T19:51:01Z\"\n"
+  scantype: full
+  resource_id: 447000000000002
+  resource_type: Host
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><host name='esxi.example.com'
+    original_filename='host' created_on='1365796261' vmm_version='4.1.0' id='447000000000002'
+    version='2.0' vmm_buildnumber='348481' vmm_product='ESXi' vmm_vendor='VMware'
+    display_time='2013-04-12T19:51:01Z' _timestamp_='1365796250'><advanced_settings
+    _macro_='has_many'><advanced_setting name='VMkernel.Boot.com2_baud' id='447000000001757'
+    value='115200'/><advanced_setting name='Net.DVFilterBindIpAddress' id='447000000001758'
+    value=''/><advanced_setting name='Net.NetSchedDefaultResPoolSharesPct' id='447000000001759'
+    value='5'/><advanced_setting name='Net.Vmxnet3SwLRO' id='447000000001760' value='1'/><advanced_setting
+    name='NFS.DiskFileLockUpdateFreq' id='447000000001761' value='10'/><advanced_setting
+    name='Disk.ResetOverdueLogPeriod' id='447000000001762' value='60'/><advanced_setting
+    name='Mem.CtlMaxPercent' id='447000000001763' value='65'/><advanced_setting name='Misc.LogToFile'
+    id='447000000001764' value='1'/><advanced_setting name='Mem.SamplePeriod' id='447000000001765'
+    value='60'/><advanced_setting name='Disk.SectorMaxDiff' id='447000000001766' value='2000'/><advanced_setting
+    name='Misc.HeartbeatPanicTimeout' id='447000000001767' value='1800'/><advanced_setting
+    name='VMkernel.Boot.coresPerPkg' id='447000000001768' value='0'/><advanced_setting
+    name='Scsi.TimeoutTMThreadLatency' id='447000000001769' value='2000'/><advanced_setting
+    name='Net.NetSchedCoalesceTxUsecs' id='447000000001770' value='33'/><advanced_setting
+    name='Net.VmxnetLROUseRatioDenom' id='447000000001771' value='3'/><advanced_setting
+    name='Net.MinEtherLen' id='447000000001772' value='60'/><advanced_setting name='Net.EtherswitchHashSize'
+    id='447000000001773' value='1'/><advanced_setting name='Net.NetTxDontClusterSize'
+    id='447000000001774' value='0'/><advanced_setting name='Misc.UserSocketUnixMaxBufferSize'
+    id='447000000001775' value='12288'/><advanced_setting name='Migrate.MigrateCpuSharesHighPriority'
+    id='447000000001776' value='60000'/><advanced_setting name='Config.Defaults.cpuidMask.val.8000000A.edx'
+    id='447000000001777' value=''/><advanced_setting name='VMkernel.Boot.iovDisableIR'
+    id='447000000001778' value='false'/><advanced_setting name='Net.UseHwTSO6' id='447000000001779'
+    value='1'/><advanced_setting name='Net.NetRmDistMacFilter' id='447000000001780'
+    value='1'/><advanced_setting name='Migrate.NetTimeout' id='447000000001781' value='20'/><advanced_setting
+    name='NFS.LockRenewMaxFailureNumber' id='447000000001782' value='3'/><advanced_setting
+    name='FT.GoodExecLatency' id='447000000001783' value='200'/><advanced_setting
+    name='Net.TcpipRxVmknicWorldletAffinityType' id='447000000001784' value='0'/><advanced_setting
+    name='Net.MaxPortRxQueueLen' id='447000000001785' value='80'/><advanced_setting
+    name='Config.Defaults.cpuidMask.val.80000001.eax' id='447000000001786' value=''/><advanced_setting
+    name='Net.VmxnetCopyTxRunLimit' id='447000000001787' value='16'/><advanced_setting
+    name='Migrate.VASpaceReserveCount' id='447000000001788' value='12'/><advanced_setting
+    name='Mem.SampleMapLargeThreshold' id='447000000001789' value='512'/><advanced_setting
+    name='Net.AllowPT' id='447000000001790' value='0'/><advanced_setting name='Cpu.L3RebalancePeriod'
+    id='447000000001791' value='10'/><advanced_setting name='Mem.ShareScanTime' id='447000000001792'
+    value='60'/><advanced_setting name='Cpu.WakeupMigrateIdlePcpus' id='447000000001793'
+    value='4'/><advanced_setting name='Disk.MaxLUN' id='447000000001794' value='256'/><advanced_setting
+    name='UserVars.TSMTimeOut' id='447000000001795' value='0'/><advanced_setting name='Net.NetSchedInFlightMaxBytesInsane'
+    id='447000000001796' value='1500000'/><advanced_setting name='Mem.ReallocBaseMaxPct'
+    id='447000000001797' value='10'/><advanced_setting name='Disk.DiskReservationThreshold'
+    id='447000000001798' value='45'/><advanced_setting name='Net.VmxnetWinUDPTxFullCopy'
+    id='447000000001799' value='1'/><advanced_setting name='Disk.UseReportLUN' id='447000000001800'
+    value='1'/><advanced_setting name='FT.adjUpInt' id='447000000001801' value='200'/><advanced_setting
+    name='VMkernel.Boot.usbBoot' id='447000000001802' value='true'/><advanced_setting
+    name='VMkernel.Boot.mcaEnableAllErrorSources' id='447000000001803' value='false'/><advanced_setting
+    name='Net.VmklnxLROEnabled' id='447000000001804' value='0'/><advanced_setting
+    name='Net.TcpipHeapMax' id='447000000001805' value='64'/><advanced_setting name='Cpu.L2RebalancePeriod'
+    id='447000000001806' value='5'/><advanced_setting name='FT.FlushSleep' id='447000000001807'
+    value='0'/><advanced_setting name='Migrate.GetPageSysAlertThresholdMS' id='447000000001808'
+    value='10000'/><advanced_setting name='VMkernel.Boot.disableCFOH' id='447000000001809'
+    value='false'/><advanced_setting name='VMkernel.Boot.ACPI' id='447000000001810'
+    value='true'/><advanced_setting name='Net.NetTxCompletionWorldlet' id='447000000001811'
+    value='1'/><advanced_setting name='Net.CoalesceMrqMetricRxOnly' id='447000000001812'
+    value='0'/><advanced_setting name='Migrate.VMotionStreamDisable' id='447000000001813'
+    value='0'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000000.eax'
+    id='447000000001814' value=''/><advanced_setting name='VMkernel.Boot.fakeNUMAnodes'
+    id='447000000001815' value='0'/><advanced_setting name='Net.MaxBeaconsAtOnce'
+    id='447000000001816' value='100'/><advanced_setting name='VMkernel.Boot.maxVCPUs'
+    id='447000000001817' value='0'/><advanced_setting name='Net.UseHwCsumForIPv6Csum'
+    id='447000000001818' value='1'/><advanced_setting name='Disk.RetryUnitAttention'
+    id='447000000001819' value='1'/><advanced_setting name='Mem.ShareCOSBufSize' id='447000000001820'
+    value='3'/><advanced_setting name='VMkernel.Boot.logPort' id='447000000001821'
+    value=''/><advanced_setting name='Mem.TrackUsageHeartbeatPeriod' id='447000000001822'
+    value='30'/><advanced_setting name='VMkernel.Boot.tty2Port' id='447000000001823'
+    value=''/><advanced_setting name='Power.PerfBias' id='447000000001824' value='7'/><advanced_setting
+    name='FT.HeartbeatCount' id='447000000001825' value='10'/><advanced_setting name='Config.Defaults.cpuidMask.val.1.eax'
+    id='447000000001826' value=''/><advanced_setting name='Mem.LPageUpdatePeriod'
+    id='447000000001827' value='20'/><advanced_setting name='Misc.EnableHighDMA' id='447000000001828'
+    value='1'/><advanced_setting name='Net.NetPktAllocTries' id='447000000001829'
+    value='5'/><advanced_setting name='Misc.MinimalPanic' id='447000000001830' value='0'/><advanced_setting
+    name='Misc.WatchdogBacktrace' id='447000000001831' value='0'/><advanced_setting
+    name='FT.TrafficPriority' id='447000000001832' value='0'/><advanced_setting name='VMkernel.Boot.netNumGPBuffers'
+    id='447000000001833' value='1024'/><advanced_setting name='Power.ChargeVMs' id='447000000001834'
+    value='0'/><advanced_setting name='Net.configOption[CONFIG_NET_TRACK_TX_RACE]'
+    id='447000000001835' value='0'/><advanced_setting name='Migrate.PreCopyMinProgressPerc'
+    id='447000000001836' value='130'/><advanced_setting name='Disk.QFullSampleSize'
+    id='447000000001837' value='0'/><advanced_setting name='Misc.WorldletGreedySampleMCycles'
+    id='447000000001838' value='10'/><advanced_setting name='Net.VmxnetWinIntrHints'
+    id='447000000001839' value='0'/><advanced_setting name='Net.Vmxnet2PinRxBuf' id='447000000001840'
+    value='0'/><advanced_setting name='Mem.IdleTaxType' id='447000000001841' value='1'/><advanced_setting
+    name='Cpu.MultiCoreEnhancements' id='447000000001842' value='7'/><advanced_setting
+    name='FT.FillWorldlet' id='447000000001844' value='1'/><advanced_setting name='VMkernel.Boot.sharePerNode'
+    id='447000000001845' value='true'/><advanced_setting name='Net.VmxnetLROThreshold'
+    id='447000000001847' value='4000'/><advanced_setting name='Net.TcpipDefLROEnabled'
+    id='447000000001849' value='1'/><advanced_setting name='Mem.UnresponsiveVmCheckTime'
+    id='447000000001850' value='300'/><advanced_setting name='Misc.SerialBaudRate'
+    id='447000000001852' value='115200'/><advanced_setting name='Misc.LogWldPrefix'
+    id='447000000001853' value='1'/><advanced_setting name='Misc.WorldletWorldOverheadRemote'
+    id='447000000001855' value='10'/><advanced_setting name='Config.Defaults.cpuidMask.mode.8000000A.eax'
+    id='447000000001856' value='disable'/><advanced_setting name='Migrate.VASpaceReserveSize'
+    id='447000000001857' value='512'/><advanced_setting name='NFS.ReceiveBufferSize'
+    id='447000000001859' value='128'/><advanced_setting name='Mem.ReallocChunkType'
+    id='447000000001860' value='1'/><advanced_setting name='Cpu.UseMwait' id='447000000001862'
+    value='2'/><advanced_setting name='Net.vmxnetThroughputWeight' id='447000000001863'
+    value='0'/><advanced_setting name='Net.UplinkTxQueuesDispEnabled' id='447000000001865'
+    value='1'/><advanced_setting name='Mem.HostLocalSwapDirEnabled' id='447000000001867'
+    value='0'/><advanced_setting name='Net.E1000TxTsoZeroCopy' id='447000000001870'
+    value='1'/><advanced_setting name='Net.PortDisableTimeout' id='447000000001872'
+    value='5000'/><advanced_setting name='FT.BackupConnectTimeout' id='447000000001873'
+    value='8000'/><advanced_setting name='Misc.HeapPanicDestroyNonEmpty' id='447000000001874'
+    value='0'/><advanced_setting name='Config.Defaults.cpuidMask.val.0.eax' id='447000000001876'
+    value=''/><advanced_setting name='VMkernel.Boot.fsCheck' id='447000000001877'
+    value='false'/><advanced_setting name='Numa.MigThreshold' id='447000000001879'
+    value='2'/><advanced_setting name='Mem.VMXVisorSharedMB' id='447000000001880'
+    value='12'/><advanced_setting name='FT.FlushReservationMax' id='447000000001883'
+    value='25'/><advanced_setting name='Misc.BHTimeout' id='447000000001884' value='0'/><advanced_setting
+    name='Cpu.HTRebalancePeriod' id='447000000001886' value='2'/><advanced_setting
+    name='Misc.DebugBuddyEnable' id='447000000001887' value='0'/><advanced_setting
+    name='VMkernel.Boot.nmiAction' id='447000000001890' value='3'/><advanced_setting
+    name='Scsi.MaxReserveTime' id='447000000001891' value='200'/><advanced_setting
+    name='Numa.SwapMigrateOnly' id='447000000001893' value='2'/><advanced_setting
+    name='FT.IORetryExtraInterval' id='447000000001895' value='200'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.0.ebx' id='447000000001897' value='disable'/><advanced_setting
+    name='VMkernel.Boot.netDVSSyncEnabled' id='447000000001899' value='true'/><advanced_setting
+    name='Net.AdvertisementDuration' id='447000000001901' value='60'/><advanced_setting
+    name='Disk.UseLunReset' id='447000000001902' value='1'/><advanced_setting name='Cpu.CreditAgePeriod'
+    id='447000000001904' value='3000'/><advanced_setting name='NFS.HeartbeatDelta'
+    id='447000000001905' value='5'/><advanced_setting name='Mem.MemZipMaxRejectionPct'
+    id='447000000001907' value='10'/><advanced_setting name='VMkernel.Boot.com1_port'
+    id='447000000001908' value='0'/><advanced_setting name='VMkernel.Boot.busSpeedMayVary'
+    id='447000000001910' value='false'/><advanced_setting name='Numa.SwapConsiderPeriod'
+    id='447000000001912' value='15'/><advanced_setting name='Config.Defaults.cpuidMask.mode.80000001.ecx'
+    id='447000000001913' value='disable'/><advanced_setting name='Disk.BandwidthCap'
+    id='447000000001915' value='4294967294'/><advanced_setting name='Misc.TimerMinHardPeriod'
+    id='447000000001917' value='100'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000008.eax'
+    id='447000000001919' value=''/><advanced_setting name='BufferCache.SoftMaxDirty'
+    id='447000000001921' value='15'/><advanced_setting name='Config.Defaults.cpuidMask.mode.1.ecx'
+    id='447000000001922' value='disable'/><advanced_setting name='Net.UseHwTSO' id='447000000001924'
+    value='1'/><advanced_setting name='Migrate.DiskOpsChunkSize' id='447000000001927'
+    value='131072'/><advanced_setting name='LPage.LPageMarkLowNodes' id='447000000001928'
+    value='1'/><advanced_setting name='VMkernel.Boot.mcaFindDIMMFromAddr' id='447000000001930'
+    value='false'/><advanced_setting name='VMkernel.Boot.forceCRS' id='447000000001931'
+    value='false'/><advanced_setting name='Numa.PostMigUseActiveMetric' id='447000000001935'
+    value='0'/><advanced_setting name='Mem.MemZipMaxAllocPct' id='447000000001937'
+    value='50'/><advanced_setting name='LPage.LPageDefragEnable' id='447000000001938'
+    value='1'/><advanced_setting name='VMkernel.Boot.storageMaxVMsPerDevice' id='447000000001940'
+    value='32'/><advanced_setting name='Syslog.Remote.Hostname' id='447000000001942'
+    value=''/><advanced_setting name='Net.NetdumpServerGateway' id='447000000001944'
+    value=''/><advanced_setting name='Net.NetRmDistSamplingRate' id='447000000001946'
+    value='0'/><advanced_setting name='Config.Defaults.cpuidMask.val.8000000A.ebx'
+    id='447000000001947' value=''/><advanced_setting name='Mem.SwapDecayPct' id='447000000001948'
+    value='5'/><advanced_setting name='VMkernel.Boot.com2_port' id='447000000001951'
+    value='0'/><advanced_setting name='UserVars.CIMqlogicProviderEnabled' id='447000000001952'
+    value='1'/><advanced_setting name='Net.VmxnetWinCopyTxRunLimit' id='447000000001953'
+    value='65535'/><advanced_setting name='Net.ReversePathFwdCheckPromisc' id='447000000001955'
+    value='0'/><advanced_setting name='Config.HostAgent.plugins.vimsvc.userSearch.maxResults'
+    id='447000000001958' value='100'/><advanced_setting name='Migrate.RcvBufSize'
+    id='447000000001960' value='562140'/><advanced_setting name='VMkernel.Boot.generalCriticalMemory'
+    id='447000000001961' value='0'/><advanced_setting name='Net.LRODefUseRatioNumer'
+    id='447000000001963' value='1'/><advanced_setting name='Net.MaxTxCompDelay' id='447000000001964'
+    value='50'/><advanced_setting name='Misc.PreferredHostName' id='447000000001966'
+    value=''/><advanced_setting name='Mem.MemZipEnable' id='447000000001967' value='1'/><advanced_setting
+    name='VMkernel.Boot.memCheckEveryWord' id='447000000001969' value='false'/><advanced_setting
+    name='UserVars.changeNMIBehavior' id='447000000001971' value='1'/><advanced_setting
+    name='Net.NetBHRxWorkBound' id='447000000001973' value='320'/><advanced_setting
+    name='FT.AckIntervalMax' id='447000000001975' value='1000000'/><advanced_setting
+    name='Mem.SwapAsyncWritePages' id='447000000001977' value='20'/><advanced_setting
+    name='VMkernel.Boot.dumpDiag' id='447000000001979' value='false'/><advanced_setting
+    name='VMFS3.MaxHeapSizeMB' id='447000000001981' value='80'/><advanced_setting
+    name='Misc.HeartbeatAnyPcpuPanic' id='447000000001983' value='0'/><advanced_setting
+    name='Numa.AutoSplitVM' id='447000000001985' value='1'/><advanced_setting name='NFS.LogNfsStat3'
+    id='447000000001986' value='0'/><advanced_setting name='LPage.LPageAlwaysTryForNPT'
+    id='447000000001988' value='1'/><advanced_setting name='Mem.ShareUpdatePeriod'
+    id='447000000001991' value='30'/><advanced_setting name='Misc.NMILint1IntAction'
+    id='447000000001993' value='2'/><advanced_setting name='Migrate.DiskOpsMaxRetries'
+    id='447000000001994' value='20'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000001.edx'
+    id='447000000001996' value=''/><advanced_setting name='Disk.SchedQControlSeqReqs'
+    id='447000000001998' value='128'/><advanced_setting name='FT.FillAffinity' id='447000000002000'
+    value='1'/><advanced_setting name='ScratchConfig.ConfiguredSwapState' id='447000000002001'
+    value='false'/><advanced_setting name='Misc.WorldletHaltSample' id='447000000002004'
+    value='1'/><advanced_setting name='Migrate.TcpTsoDeferTx' id='447000000002006'
+    value='0'/><advanced_setting name='Disk.SchedQuantum' id='447000000002008' value='8'/><advanced_setting
+    name='VMkernel.Boot.netESX2LegacyMode' id='447000000002010' value='false'/><advanced_setting
+    name='Scsi.ReserveBacktrace' id='447000000002013' value='0'/><advanced_setting
+    name='Net.UseHwIPv6Csum' id='447000000002015' value='1'/><advanced_setting name='Net.TcpipHeapSize'
+    id='447000000002017' value='16'/><advanced_setting name='Migrate.DiskOpsStreamChunks'
+    id='447000000002019' value='40'/><advanced_setting name='Misc.LogPort' id='447000000002021'
+    value=''/><advanced_setting name='Migrate.DisableRdpiChecksumming' id='447000000002023'
+    value='0'/><advanced_setting name='Disk.SchedNumReqOutstanding' id='447000000002025'
+    value='32'/><advanced_setting name='COW.COWMaxHeapSizeMB' id='447000000002027'
+    value='192'/><advanced_setting name='Net.NetPagePoolResvPerGB' id='447000000002029'
+    value='4096'/><advanced_setting name='Net.NetVmxnet3Worldlet' id='447000000002032'
+    value='1'/><advanced_setting name='FT.LogBufferStallSleep' id='447000000002033'
+    value='1'/><advanced_setting name='Migrate.TrafficPriority' id='447000000002035'
+    value='0'/><advanced_setting name='Net.GuestTxCopyBreak' id='447000000002037'
+    value='64'/><advanced_setting name='Net.CoalesceDefaultOn' id='447000000002039'
+    value='1'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000000.edx'
+    id='447000000002041' value=''/><advanced_setting name='VMkernel.Boot.timerForceTSC'
+    id='447000000002043' value='false'/><advanced_setting name='VMkernel.Boot.powerManagement'
+    id='447000000002045' value='true'/><advanced_setting name='Numa.MonMigEnable'
+    id='447000000002047' value='1'/><advanced_setting name='FT.adjDownPct' id='447000000002049'
+    value='10'/><advanced_setting name='Scsi.CompareLUNNumber' id='447000000002051'
+    value='1'/><advanced_setting name='Scsi.LogCmdErrors' id='447000000002052' value='1'/><advanced_setting
+    name='Misc.WorldletMigOverheadRemote' id='447000000002054' value='16'/><advanced_setting
+    name='Disk.ResetThreadMax' id='447000000002057' value='16'/><advanced_setting
+    name='FT.Vmknic' id='447000000002059' value=''/><advanced_setting name='VMkernel.Boot.useMemNodes'
+    id='447000000002061' value='false'/><advanced_setting name='UserVars.CIMvmw_lsiProviderEnabled'
+    id='447000000002063' value='1'/><advanced_setting name='Net.FollowHardwareMac'
+    id='447000000002065' value='0'/><advanced_setting name='BufferCache.FlushInterval'
+    id='447000000002067' value='30000'/><advanced_setting name='Mem.BalancePeriod'
+    id='447000000002069' value='15'/><advanced_setting name='Net.NotifySwitch' id='447000000002071'
+    value='1'/><advanced_setting name='VMkernel.Boot.netPktHeapUseHighMem' id='447000000002073'
+    value='true'/><advanced_setting name='VMkernel.Boot.maxPCPUS' id='447000000002075'
+    value='256'/><advanced_setting name='Cpu.PackageRebalancePeriod' id='447000000002077'
+    value='10'/><advanced_setting name='FT.FlushReservationMin' id='447000000002079'
+    value='5'/><advanced_setting name='Migrate.VMotionResolveSwapType' id='447000000002082'
+    value='1'/><advanced_setting name='Config.Defaults.cpuidMask.mode.80000008.ecx'
+    id='447000000002084' value='disable'/><advanced_setting name='VMkernel.Boot.netPanicBadDevOpen'
+    id='447000000002086' value='true'/><advanced_setting name='Numa.MigPreventLTermThresh'
+    id='447000000002088' value='2'/><advanced_setting name='NFS.SyncRetries' id='447000000002090'
+    value='25'/><advanced_setting name='Migrate.PreCopySwitchoverTimeGoal' id='447000000002093'
+    value='500'/><advanced_setting name='Config.Defaults.cpuidMask.val.1.edx' id='447000000002095'
+    value=''/><advanced_setting name='Net.CoalesceMatchedQs' id='447000000002097'
+    value='1'/><advanced_setting name='VMkernel.Boot.realNMI' id='447000000002098'
+    value='false'/><advanced_setting name='VMkernel.Boot.correctBSPMTRRMasks' id='447000000002102'
+    value='true'/><advanced_setting name='Net.TcpipRxDispatchQuota' id='447000000002103'
+    value='100'/><advanced_setting name='Misc.WorldletLoadThreshold' id='447000000002105'
+    value='90'/><advanced_setting name='VMkernel.Boot.debugLogToSerial' id='447000000002106'
+    value='2'/><advanced_setting name='Net.TcpipTxDispatchQuota' id='447000000002109'
+    value='100'/><advanced_setting name='Config.Defaults.security.host.ruissl' id='447000000002111'
+    value='true'/><advanced_setting name='Migrate.NetResPoolsSched' id='447000000002113'
+    value='1'/><advanced_setting name='Mem.ShareScanGHz' id='447000000002115' value='4'/><advanced_setting
+    name='Net.CoalesceLowTxRate' id='447000000002117' value='4'/><advanced_setting
+    name='VMFS3.HardwareAcceleratedLocking' id='447000000002119' value='1'/><advanced_setting
+    name='UserVars.ActiveDirectoryPreferredDomainControllers' id='447000000002121'
+    value=' '/><advanced_setting name='Power.CStatePredictionCoef' id='447000000002123'
+    value='110479'/><advanced_setting name='Numa.RebalanceCoresNode' id='447000000002126'
+    value='2'/><advanced_setting name='Config.Defaults.cpuidMask.mode.8000000A.edx'
+    id='447000000002129' value='disable'/><advanced_setting name='VMkernel.Boot.ipmiEnabled'
+    id='447000000002130' value='true'/><advanced_setting name='Config.Defaults.cpuidMask.val.0.edx'
+    id='447000000002132' value=''/><advanced_setting name='Misc.IntTimeout' id='447000000002134'
+    value='0'/><advanced_setting name='Mem.VMXMinMB' id='447000000002135' value='56'/><advanced_setting
+    name='Power.MaxCpuLoad' id='447000000002138' value='60'/><advanced_setting name='Numa.MigThrashThreshold'
+    id='447000000002140' value='50'/><advanced_setting name='Migrate.PageInPivotFwd'
+    id='447000000002141' value='2'/><advanced_setting name='Mem.VMOverheadGrowthLimit'
+    id='447000000002143' value='0'/><advanced_setting name='VMkernel.Boot.disableC1E'
+    id='447000000002145' value='false'/><advanced_setting name='Net.NetTxWorldlet'
+    id='447000000002147' value='2'/><advanced_setting name='FT.TCPRcvBufSize' id='447000000002148'
+    value='131072'/><advanced_setting name='Misc.TimerTolerance' id='447000000002150'
+    value='2000'/><advanced_setting name='Config.Defaults.cpuidMask.mode.1.eax' id='447000000002152'
+    value='disable'/><advanced_setting name='Migrate.MigrateCpuMinPct10G' id='447000000002154'
+    value='100'/><advanced_setting name='Config.Defaults.cpuidMask.mode.80000001.eax'
+    id='447000000002157' value='disable'/><advanced_setting name='LPage.LPageDefragRateVM'
+    id='447000000002159' value='32'/><advanced_setting name='Disk.ThroughputCap' id='447000000002160'
+    value='4294967294'/><advanced_setting name='FT.HostTimeout' id='447000000002162'
+    value='2000'/><advanced_setting name='FT.FlushWorldlet' id='447000000002178' value='1'/><advanced_setting
+    name='VMkernel.Boot.checkDMAR' id='447000000002179' value='true'/><advanced_setting
+    name='Numa.RebalancePeriod' id='447000000002180' value='2000'/><advanced_setting
+    name='Misc.GuestLibAllowHostInfo' id='447000000002181' value='0'/><advanced_setting
+    name='VMkernel.Boot.noIOMMU' id='447000000002182' value='false'/><advanced_setting
+    name='User.CDROMSenseTimeout' id='447000000002183' value='4'/><advanced_setting
+    name='Mem.SampleDirtiedPctMin' id='447000000002184' value='0'/><advanced_setting
+    name='Config.Defaults.cpuidMask.val.80000008.edx' id='447000000002185' value=''/><advanced_setting
+    name='Cpu.CoschedPollUsec' id='447000000002186' value='1000'/><advanced_setting
+    name='VMkernel.Boot.storageMaxDevices' id='447000000002187' value='256'/><advanced_setting
+    name='VMkernel.Boot.buddyPhysicalMemoryDebugStruct' id='447000000002188' value='false'/><advanced_setting
+    name='Migrate.DiskOpsEnabled' id='447000000002189' value='1'/><advanced_setting
+    name='FT.AckIntervalMin' id='447000000002190' value='0'/><advanced_setting name='Mem.ShareEstimatePeriod'
+    id='447000000002191' value='30000'/><advanced_setting name='FT.ExtraLogTimeout'
+    id='447000000002192' value='10000'/><advanced_setting name='VMFS3.FailVolumeOpenIfAPD'
+    id='447000000002193' value='0'/><advanced_setting name='Config.Defaults.cpuidMask.mode.80000000.ecx'
+    id='447000000002194' value='disable'/><advanced_setting name='LPage.MaxSharedPages'
+    id='447000000002195' value='512'/><advanced_setting name='Net.vNicNumDeferredReset'
+    id='447000000002197' value='12'/><advanced_setting name='Net.LinkStatePollTimeout'
+    id='447000000002198' value='500'/><advanced_setting name='VMkernel.Boot.memmapStressHighBitMPNs'
+    id='447000000002199' value='false'/><advanced_setting name='VMkernel.Boot.gdbPort'
+    id='447000000002200' value=''/><advanced_setting name='Net.VmxnetLROMaxLength'
+    id='447000000002203' value='32000'/><advanced_setting name='Mem.TrackUsageLPageAllowance'
+    id='447000000002204' value='8'/><advanced_setting name='VMkernel.Boot.netMaxPCPUPktCacheSize'
+    id='447000000002206' value='128'/><advanced_setting name='Net.TsoDumpPkt' id='447000000002207'
+    value='0'/><advanced_setting name='VMkernel.Boot.vmkacEnable' id='447000000002209'
+    value='1'/><advanced_setting name='Net.NetBHRxInputBound' id='447000000002210'
+    value='64'/><advanced_setting name='Mem.UseStressLowMemory' id='447000000002211'
+    value='0'/><advanced_setting name='Irq.IRQVcpuConflictWeight' id='447000000002213'
+    value='3'/><advanced_setting name='VMkernel.Boot.netPktHeapMaxSize' id='447000000002215'
+    value='0'/><advanced_setting name='Mem.SwapRepostThreshold' id='447000000002216'
+    value='64'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000001.ebx'
+    id='447000000002218' value=''/><advanced_setting name='Net.IOControlPnicOptOut'
+    id='447000000002219' value=''/><advanced_setting name='Net.IGMPRouterIP' id='447000000002220'
+    value='10.0.0.0'/><advanced_setting name='Net.NoLocalCSum' id='447000000002222'
+    value='0'/><advanced_setting name='Net.CoalesceHandlerPcpu' id='447000000002224'
+    value='1'/><advanced_setting name='Config.HostAgent.plugins.vimsvc.authValidateInterval'
+    id='447000000002225' value='1440'/><advanced_setting name='Misc.ProcVerbose' id='447000000002226'
+    value=''/><advanced_setting name='Numa.LocalityWeightActionAffinity' id='447000000002229'
+    value='130'/><advanced_setting name='Misc.MCEMonitorInterval' id='447000000002230'
+    value='250'/><advanced_setting name='Disk.ResetThreadMin' id='447000000002232'
+    value='1'/><advanced_setting name='Mem.SwapRetryTimeout' id='447000000002234'
+    value='300'/><advanced_setting name='Misc.WorldletPlacementPolicy' id='447000000002236'
+    value='1'/><advanced_setting name='UserVars.CIMlsiProviderEnabled' id='447000000002238'
+    value='1'/><advanced_setting name='Scsi.TimeoutTMThreadExpires' id='447000000002239'
+    value='1800'/><advanced_setting name='Cpu.MoveCurrentRunnerPcpus' id='447000000002240'
+    value='4'/><advanced_setting name='FT.GlobalFlushWorld' id='447000000002242' value='1'/><advanced_setting
+    name='FT.slowdownPctMax' id='447000000002244' value='60'/><advanced_setting name='Disk.ResetPeriod'
+    id='447000000002245' value='30'/><advanced_setting name='VMkernel.Boot.useNUMAInfo'
+    id='447000000002247' value='true'/><advanced_setting name='Syslog.Local.DatastorePath'
+    id='447000000002248' value='[] /scratch/log/messages'/><advanced_setting name='Net.NetSchedInFlightMaxPktsInsane'
+    id='447000000002251' value='1000'/><advanced_setting name='FT.MaxFlushInterval'
+    id='447000000002253' value='0'/><advanced_setting name='Misc.enableTboot' id='447000000002256'
+    value='0'/><advanced_setting name='VMkernel.Boot.netPktHeapHighMemMaxSize' id='447000000002259'
+    value='0'/><advanced_setting name='VMkernel.Boot.clockMultiplierMayVary' id='447000000002261'
+    value='false'/><advanced_setting name='Net.NetForceTxWorldlet' id='447000000002263'
+    value='0'/><advanced_setting name='Net.vmxnetBHNetPoll' id='447000000002265' value='0'/><advanced_setting
+    name='Config.Defaults.cpuidMask.val.80000000.ebx' id='447000000002267' value=''/><advanced_setting
+    name='Misc.HostAgentUpdateLevel' id='447000000002269' value='1'/><advanced_setting
+    name='Net.CoalesceTxAlwaysPoll' id='447000000002270' value='1'/><advanced_setting
+    name='Mem.ShareRateMax' id='447000000002272' value='1024'/><advanced_setting name='Cpu.DisableMicrocodeUpdate'
+    id='447000000002273' value='0'/><advanced_setting name='VMkernel.Boot.executePOST'
+    id='447000000002274' value='false'/><advanced_setting name='Numa.PageMigEnable'
+    id='447000000002277' value='1'/><advanced_setting name='Net.CoalesceFlexMrq' id='447000000002278'
+    value='1'/><advanced_setting name='Cpu.PcpuMigrateIdlePcpus' id='447000000002280'
+    value='4'/><advanced_setting name='NFS.LockUpdateTimeout' id='447000000002281'
+    value='5'/><advanced_setting name='Disk.ResetMaxRetries' id='447000000002283'
+    value='0'/><advanced_setting name='Migrate.TSMaster' id='447000000002284' value='0'/><advanced_setting
+    name='BufferCache.HardMaxDirty' id='447000000002286' value='95'/><advanced_setting
+    name='VMkernel.Boot.tty1Port' id='447000000002287' value=''/><advanced_setting
+    name='RdmFilter.HbaIsShared' id='447000000002289' value='true'/><advanced_setting
+    name='Net.NetOverlayHostKey' id='447000000002291' value='0'/><advanced_setting
+    name='Net.NetVmxnet2Worldlet' id='447000000002293' value='1'/><advanced_setting
+    name='Cpu.HaltingIdleMsecPenalty' id='447000000002295' value='100'/><advanced_setting
+    name='Migrate.RemotePageFaultPages' id='447000000002297' value='1'/><advanced_setting
+    name='Cpu.FairnessRebalancePcpus' id='447000000002299' value='4'/><advanced_setting
+    name='VMkernel.Boot.custom' id='447000000002301' value='true'/><advanced_setting
+    name='User.ReaddirRetries' id='447000000002303' value='10'/><advanced_setting
+    name='Syslog.Remote.Port' id='447000000002304' value='514'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.80000008.eax' id='447000000002306' value='disable'/><advanced_setting
+    name='Net.CoalesceNoVmmVmkTx' id='447000000002308' value='1'/><advanced_setting
+    name='Mem.PrefaultSRBufSize' id='447000000002311' value='32'/><advanced_setting
+    name='VMkernel.Boot.netPktHeapMinSize' id='447000000002313' value='12'/><advanced_setting
+    name='Scsi.UseAdaptiveRetries' id='447000000002315' value='0'/><advanced_setting
+    name='Scsi.TimeoutTMThreadRetry' id='447000000002317' value='2000'/><advanced_setting
+    name='Net.ReversePathFwdCheck' id='447000000002319' value='1'/><advanced_setting
+    name='Config.Defaults.cpuidMask.val.1.ebx' id='447000000002321' value=''/><advanced_setting
+    name='Misc.WorldletLoosePenalty' id='447000000002323' value='30'/><advanced_setting
+    name='FT.ChargeVMXForFlush' id='447000000002325' value='1'/><advanced_setting
+    name='VMkernel.Boot.memLowReservedMB' id='447000000002327' value='0'/><advanced_setting
+    name='Disk.SchedQControlVMSwitches' id='447000000002329' value='6'/><advanced_setting
+    name='Disk.SupportSparseLUN' id='447000000002331' value='1'/><advanced_setting
+    name='Mem.BonusAllocPct' id='447000000002333' value='5'/><advanced_setting name='NFS.HeartbeatFrequency'
+    id='447000000002335' value='9'/><advanced_setting name='VMkernel.Boot.vmkLoadEntry'
+    id='447000000002337' value='0'/><advanced_setting name='VMkernel.Boot.clockMultiplierMayVaryPerNode'
+    id='447000000002339' value='false'/><advanced_setting name='Net.NetPagePoolResvCap'
+    id='447000000002340' value='32786'/><advanced_setting name='Net.configOption[CONFIG_NET_INPUT_FLUSH_MAX_ITER]'
+    id='447000000002341' value='2'/><advanced_setting name='NFS.MaxVolumes' id='447000000002343'
+    value='8'/><advanced_setting name='FT.adjUpPct' id='447000000002344' value='10'/><advanced_setting
+    name='Migrate.LowMemWaitSysAlertThresholdMS' id='447000000002346' value='10000'/><advanced_setting
+    name='Annotations.WelcomeMessage' id='447000000002348' value=''/><advanced_setting
+    name='VMkernel.Boot.NUMACodeRepEnabled' id='447000000002350' value='true'/><advanced_setting
+    name='UserVars.CIMEnabled' id='447000000002352' value='1'/><advanced_setting name='Power.PerfBiasEnable'
+    id='447000000002354' value='1'/><advanced_setting name='Numa.LTermMigThreshold'
+    id='447000000002356' value='10'/><advanced_setting name='Migrate.MigrateCpuMinPct1G'
+    id='447000000002357' value='30'/><advanced_setting name='Cpu.ActionRateThreshold'
+    id='447000000002359' value='1000'/><advanced_setting name='Misc.HeartbeatInterval'
+    id='447000000002362' value='100'/><advanced_setting name='Migrate.PanicOnChecksumMismatch'
+    id='447000000002363' value='0'/><advanced_setting name='Mem.UseLowMemFirst' id='447000000002365'
+    value='0'/><advanced_setting name='Irq.BestVcpuRouting' id='447000000002367' value='0'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.8000000A.ebx' id='447000000002369' value='disable'/><advanced_setting
+    name='VMkernel.Boot.netPktNumSlabSizes' id='447000000002371' value='4'/><advanced_setting
+    name='VMkernel.Boot.fastHzEstimate' id='447000000002374' value='true'/><advanced_setting
+    name='Net.NetSchedInFlightMaxBytesDefault' id='447000000002377' value='20000'/><advanced_setting
+    name='FT.BadExecLatency' id='447000000002379' value='800'/><advanced_setting name='Misc.WorldletActivationsLimit'
+    id='447000000002381' value='8'/><advanced_setting name='VMkernel.Boot.netPktHeapHighMemMinSize'
+    id='447000000002383' value='24'/><advanced_setting name='Power.ChargeMemoryPct'
+    id='447000000002385' value='20'/><advanced_setting name='Net.NetdumpVmkNic' id='447000000002387'
+    value=''/><advanced_setting name='Net.NetSchedInFlightMaxBytesHigh' id='447000000002389'
+    value='50000'/><advanced_setting name='Mem.LogLowMemoryStateUsage' id='447000000002390'
+    value='0'/><advanced_setting name='DataMover.HardwareAcceleratedMove' id='447000000002393'
+    value='1'/><advanced_setting name='Config.Defaults.cpuidMask.val.0.ebx' id='447000000002395'
+    value=''/><advanced_setting name='VMkernel.Boot.serialUntrusted' id='447000000002397'
+    value='true'/><advanced_setting name='VMkernel.Boot.enablePCIErrors' id='447000000002398'
+    value='false'/><advanced_setting name='VMkernel.Boot.debugBreak' id='447000000002400'
+    value='false'/><advanced_setting name='VMkernel.Boot.assumeCommonBusClock' id='447000000002403'
+    value='false'/><advanced_setting name='FT.CoreDumpNoProgressMS' id='447000000002404'
+    value='0'/><advanced_setting name='VMkernel.Boot.acpiDbgLevel' id='447000000002406'
+    value='0'/><advanced_setting name='Scsi.CRTimeoutDuringBoot' id='447000000002408'
+    value='0'/><advanced_setting name='Net.CoalesceMrqOverallStop' id='447000000002410'
+    value='0'/><advanced_setting name='Config.Defaults.cpuidMask.mode.0.ecx' id='447000000002412'
+    value='disable'/><advanced_setting name='FT.PanicNoProgressMS' id='447000000002414'
+    value='0'/><advanced_setting name='FT.maxLowerBound' id='447000000002416' value='20'/><advanced_setting
+    name='Migrate.PageInPivotEnabled' id='447000000002418' value='0'/><advanced_setting
+    name='Mem.TrackUsageHeartbeatEnable' id='447000000002420' value='0'/><advanced_setting
+    name='VMkernel.Boot.mcaEnableScrubber' id='447000000002422' value='false'/><advanced_setting
+    name='Mem.ShareEstimateSamples' id='447000000002424' value='100'/><advanced_setting
+    name='NFS.SendBufferSize' id='447000000002426' value='264'/><advanced_setting
+    name='Cpu.CoschedHandoffSkip' id='447000000002429' value='10'/><advanced_setting
+    name='Net.NetSchedLinkSpeedLow' id='447000000002432' value='500'/><advanced_setting
+    name='Net.TcpipLRONoDelayAck' id='447000000002435' value='1'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.1.edx' id='447000000002437' value='disable'/><advanced_setting
+    name='Cpu.CoschedPreempt' id='447000000002439' value='0'/><advanced_setting name='Disk.MaxResetLatency'
+    id='447000000002442' value='2000'/><advanced_setting name='Config.Defaults.cpuidMask.mode.80000001.edx'
+    id='447000000002444' value='disable'/><advanced_setting name='Migrate.RdpiTransitionTimeMs'
+    id='447000000002446' value='1'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000008.ebx'
+    id='447000000002448' value=''/><advanced_setting name='Migrate.PreCopyMinProgressMB'
+    id='447000000002450' value='16'/><advanced_setting name='Mem.TrackUsageSwapAllowance'
+    id='447000000002453' value='2048'/><advanced_setting name='VMkernel.Boot.netPktBufUseSlab'
+    id='447000000002456' value='true'/><advanced_setting name='ScratchConfig.ConfiguredScratchLocation'
+    id='447000000002458' value='/vmfs/volumes/4f722654-42d30930-beaa-842b2b4d33ce'/><advanced_setting
+    name='Net.NetdumpVmkPG' id='447000000002459' value=''/><advanced_setting name='Net.NetSchedInFlightMaxBytesLow'
+    id='447000000002461' value='10000'/><advanced_setting name='Net.NetBHRxStormThreshold'
+    id='447000000002463' value='320'/><advanced_setting name='Net.TcpipRxDirectDispatchQuota'
+    id='447000000002466' value='0'/><advanced_setting name='FT.IORetryInterval' id='447000000002468'
+    value='10'/><advanced_setting name='Disk.PathEvalTime' id='447000000002469' value='300'/><advanced_setting
+    name='Scsi.SCSITimeout_ReabortTime' id='447000000002471' value='5000'/><advanced_setting
+    name='Net.NcpLlcSap' id='447000000002473' value='0'/><advanced_setting name='Net.UplinkKillAsyncTimeout'
+    id='447000000002475' value='10000'/><advanced_setting name='Config.Defaults.cpuidMask.mode.80000000.eax'
+    id='447000000002477' value='disable'/><advanced_setting name='Cpu.ActionLoadThreshold'
+    id='447000000002479' value='10'/><advanced_setting name='Mem.CptRetryTimeout'
+    id='447000000002482' value='0'/><advanced_setting name='Numa.SwapLoadEnable' id='447000000002484'
+    value='1'/><advanced_setting name='Mem.ShareVmkEnable' id='447000000002485' value='1'/><advanced_setting
+    name='VMkernel.Boot.netNumPortsets' id='447000000002487' value='256'/><advanced_setting
+    name='UserVars.CIMvmw_hdrProviderEnabled' id='447000000002488' value='1'/><advanced_setting
+    name='Power.CStateMaxLatency' id='447000000002491' value='500'/><advanced_setting
+    name='Net.CoalesceMultiRxQCalib' id='447000000002493' value='1'/><advanced_setting
+    name='Config.Defaults.cpuidMask.val.8000000A.ecx' id='447000000002495' value=''/><advanced_setting
+    name='Misc.WorldletGreedySampleRun' id='447000000002497' value='256'/><advanced_setting
+    name='Disk.DiskMaxIOSize' id='447000000002500' value='32767'/><advanced_setting
+    name='DataMover.HardwareAcceleratedInit' id='447000000002503' value='1'/><advanced_setting
+    name='Power.UsePStates' id='447000000002505' value='1'/><advanced_setting name='Cpu.CoschedCostopThreshold'
+    id='447000000002507' value='3000'/><advanced_setting name='Mem.TestOnAlloc' id='447000000002509'
+    value='0'/><advanced_setting name='FT.BindToVmknic' id='447000000002512' value='0'/><advanced_setting
+    name='Scsi.SCSITimeout_ScanTime' id='447000000002514' value='1000'/><advanced_setting
+    name='Net.NetSchedLinkSpeedHigh' id='447000000002516' value='2500'/><advanced_setting
+    name='Net.MaxPageInQueueLen' id='447000000002517' value='75'/><advanced_setting
+    name='Cpu.WakeupMigrateCorunPcpus' id='447000000002519' value='4'/><advanced_setting
+    name='Mem.AllocGuestLargePage' id='447000000002521' value='1'/><advanced_setting
+    name='Net.TcpipDefLROMaxLength' id='447000000002522' value='65535'/><advanced_setting
+    name='Net.vNicTxPollBound' id='447000000002524' value='256'/><advanced_setting
+    name='Disk.DiskPseudoUniqueID' id='447000000002526' value='1'/><advanced_setting
+    name='Irq.IRQActionAffinityWeight' id='447000000002529' value='5'/><advanced_setting
+    name='Disk.ResetLatency' id='447000000002560' value='1000'/><advanced_setting
+    name='VMkernel.Boot.overrideDuplicateImageDetection' id='447000000002563' value='false'/><advanced_setting
+    name='VMkernel.Boot.checkCPUIDLimit' id='447000000002564' value='true'/><advanced_setting
+    name='Misc.SIOControlOptions' id='447000000002565' value=''/><advanced_setting
+    name='Mem.AllocHighThreshold' id='447000000002566' value='1500'/><advanced_setting
+    name='VMFS3.OpenWithoutJournal' id='447000000002567' value='1'/><advanced_setting
+    name='Numa.RebalanceEnable' id='447000000002568' value='1'/><advanced_setting
+    name='Net.CoalesceMrqMetricAllowTxOnly' id='447000000002569' value='1'/><advanced_setting
+    name='Cpu.CoschedCostartThreshold' id='447000000002570' value='2000'/><advanced_setting
+    name='NFS.HeartbeatTimeout' id='447000000002571' value='5'/><advanced_setting
+    name='FT.IORetryTimes' id='447000000002572' value='15'/><advanced_setting name='Net.VmxnetPromDisableLro'
+    id='447000000002573' value='1'/><advanced_setting name='Mem.MemZipBalloonXferPct'
+    id='447000000002574' value='0'/><advanced_setting name='FT.BackupExtraTimeout'
+    id='447000000002575' value='100'/><advanced_setting name='Irq.IRQBHConflictWeight'
+    id='447000000002576' value='5'/><advanced_setting name='VMkernel.Boot.useNHCC'
+    id='447000000002577' value='true'/><advanced_setting name='VMkernel.Boot.measureNUMALatency'
+    id='447000000002578' value='false'/><advanced_setting name='Mem.ReallocBaseChunkSize'
+    id='447000000002579' value='1'/><advanced_setting name='Migrate.DisableResumeDuringPageIn'
+    id='447000000002580' value='0'/><advanced_setting name='Net.CoalesceTxQDepthCap'
+    id='447000000002581' value='40'/><advanced_setting name='Disk.SharesNormal' id='447000000002582'
+    value='1000'/><advanced_setting name='Net.CoalesceFavorNoVmmVmkTx' id='447000000002583'
+    value='1'/><advanced_setting name='Misc.UserDuctDynBufferSize' id='447000000002584'
+    value='4096'/><advanced_setting name='Misc.WorldletMigrateIdle' id='447000000002585'
+    value='1'/><advanced_setting name='Disk.DumpPollDelay' id='447000000002586' value='1000'/><advanced_setting
+    name='Migrate.PageInPivotBack' id='447000000002587' value='1'/><advanced_setting
+    name='VMkernel.Boot.mcaClearBanksOnMCE' id='447000000002589' value='true'/><advanced_setting
+    name='UserVars.CIMvmw_kmoduleProviderEnabled' id='447000000002590' value='1'/><advanced_setting
+    name='Scsi.LogMPCmdErrors' id='447000000002591' value='1'/><advanced_setting name='Numa.LocalityWeightMem'
+    id='447000000002592' value='1'/><advanced_setting name='Numa.RebalanceCoresTotal'
+    id='447000000002593' value='4'/><advanced_setting name='Net.LRODefThreshold' id='447000000002594'
+    value='4000'/><advanced_setting name='Misc.HeartbeatTimeout' id='447000000002595'
+    value='60'/><advanced_setting name='Config.HostAgent.plugins.vimsvc.userSearch.maxTimeSeconds'
+    id='447000000002596' value='20'/><advanced_setting name='Disk.ResetThreadExpires'
+    id='447000000002597' value='1800'/><advanced_setting name='Mem.TrackUsageAllocAllowance'
+    id='447000000002598' value='2048'/><advanced_setting name='Mem.ShareEstimateProbe'
+    id='447000000002599' value='200'/><advanced_setting name='Net.UplinkAbortDisconnectTimeout'
+    id='447000000002600' value='5000'/><advanced_setting name='Net.MaxNetifRxQueueLen'
+    id='447000000002601' value='100'/><advanced_setting name='Power.CStateResidencyCoef'
+    id='447000000002602' value='5'/><advanced_setting name='Net.MaxPktRxListQueue'
+    id='447000000002603' value='3500'/><advanced_setting name='Disk.DiskRetryPeriod'
+    id='447000000002604' value='2000'/><advanced_setting name='Cpu.Quantum' id='447000000002606'
+    value='50'/><advanced_setting name='NFS.VolumeRemountFrequency' id='447000000002609'
+    value='30'/><advanced_setting name='Disk.QFullThreshold' id='447000000002611'
+    value='8'/><advanced_setting name='Migrate.CptCacheMaxSizeMB' id='447000000002612'
+    value='150'/><advanced_setting name='Misc.GDBPort' id='447000000002614' value=''/><advanced_setting
+    name='VMkernel.Boot.timerEnableMPMC' id='447000000002618' value='true'/><advanced_setting
+    name='Net.E1000TxZeroCopy' id='447000000002619' value='0'/><advanced_setting name='Net.TcpipNoBcopyRx'
+    id='447000000002621' value='1'/><advanced_setting name='Net.MaxBeaconVlans' id='447000000002622'
+    value='100'/><advanced_setting name='Mem.SampleActivePctMin' id='447000000002624'
+    value='0'/><advanced_setting name='Migrate.TryToUseDefaultHeap' id='447000000002625'
+    value='1'/><advanced_setting name='FT.MinWriteSize' id='447000000002626' value='0'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.80000008.edx' id='447000000002628' value='disable'/><advanced_setting
+    name='Mem.MemSwapSkipPct' id='447000000002629' value='75'/><advanced_setting name='Mem.MemZipLowMemMaxSwapOut'
+    id='447000000002631' value='25'/><advanced_setting name='Misc.TimerMaxHardPeriod'
+    id='447000000002632' value='100000'/><advanced_setting name='Misc.WorldletRemoteActivateOverhead'
+    id='447000000002634' value='0'/><advanced_setting name='FT.ShortFlushDebugMS'
+    id='447000000002635' value='100'/><advanced_setting name='Scsi.ChangeQErrSetting'
+    id='447000000002637' value='1'/><advanced_setting name='Net.NetPagePoolLimitPerGB'
+    id='447000000002638' value='5120'/><advanced_setting name='Net.LRODefBackoffPeriod'
+    id='447000000002640' value='8'/><advanced_setting name='Migrate.LowBandwidthSysAlertThreshold'
+    id='447000000002641' value='0'/><advanced_setting name='Misc.WorldletMigOverheadLLC'
+    id='447000000002643' value='4'/><advanced_setting name='Mem.LogLowMemoryStateBT'
+    id='447000000002645' value='1'/><advanced_setting name='Numa.PreferHT' id='447000000002647'
+    value='0'/><advanced_setting name='Net.NetSchedInFlightMaxPktsLow' id='447000000002649'
+    value='10'/><advanced_setting name='Irq.IRQRebalancePeriod' id='447000000002651'
+    value='50'/><advanced_setting name='Migrate.PreCopyUseTransmitDirtyRatio' id='447000000002652'
+    value='1'/><advanced_setting name='Misc.WorldletLocalityBonus' id='447000000002654'
+    value='10'/><advanced_setting name='Disk.SharesHigh' id='447000000002655' value='2000'/><advanced_setting
+    name='Migrate.BindToVmknic' id='447000000002657' value='0'/><advanced_setting
+    name='Scsi.ScanOnDriverLoad' id='447000000002659' value='1'/><advanced_setting
+    name='ScratchConfig.CurrentScratchLocation' id='447000000002661' value='/vmfs/volumes/4f722654-42d30930-beaa-842b2b4d33ce'/><advanced_setting
+    name='Net.CoalesceMrqLt' id='447000000002663' value='1'/><advanced_setting name='Cpu.IdleHTRebalancePeriod'
+    id='447000000002665' value='541'/><advanced_setting name='Misc.BhTimeBound' id='447000000002666'
+    value='2000'/><advanced_setting name='FT.PrimaryConnectTimeout' id='447000000002668'
+    value='8000'/><advanced_setting name='VMkernel.Boot.timerEnableTSC' id='447000000002670'
+    value='true'/><advanced_setting name='Numa.LTermFairnessInterval' id='447000000002672'
+    value='5'/><advanced_setting name='Net.LRODefUseRatioDenom' id='447000000002673'
+    value='3'/><advanced_setting name='Net.Vmxnet3HwLRO' id='447000000002675' value='1'/><advanced_setting
+    name='Mem.ConsumedPct' id='447000000002676' value='10'/><advanced_setting name='Net.CoalesceRxQDepthCap'
+    id='447000000002678' value='40'/><advanced_setting name='Config.Defaults.cpuidMask.mode.0.eax'
+    id='447000000002680' value='disable'/><advanced_setting name='NFS.WorldletAffinity'
+    id='447000000002682' value='0'/><advanced_setting name='VMkernel.Boot.uwSwap'
+    id='447000000002684' value='false'/><advanced_setting name='User.PTEDisableNX'
+    id='447000000002685' value='0'/><advanced_setting name='Net.E1000IntrCoalesce'
+    id='447000000002687' value='1'/><advanced_setting name='Misc.WorldletHTSharing'
+    id='447000000002688' value='90'/><advanced_setting name='Mem.SwapInBatchPages'
+    id='447000000002689' value='64'/><advanced_setting name='UserVars.CIMemulexProviderEnabled'
+    id='447000000002691' value='1'/><advanced_setting name='Net.Vmxnet2HwLRO' id='447000000002693'
+    value='1'/><advanced_setting name='Net.MaxNetifTxQueueLen' id='447000000002694'
+    value='500'/><advanced_setting name='Migrate.Vmknic' id='447000000002695' value='vmk1'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.1.ebx' id='447000000002698' value='disable'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.80000001.ebx' id='447000000002700' value='disable'/><advanced_setting
+    name='FT.LongFlushDebugMS' id='447000000002703' value='500'/><advanced_setting
+    name='VMkernel.Boot.hyperthreading' id='447000000002705' value='true'/><advanced_setting
+    name='VMkernel.Boot.com2_irq' id='447000000002707' value='3'/><advanced_setting
+    name='Numa.SwapLocalityEnable' id='447000000002708' value='1'/><advanced_setting
+    name='Net.VmxnetLROUseRatioNumer' id='447000000002710' value='1'/><advanced_setting
+    name='LPage.MaxSwappedPagesInitVal' id='447000000002711' value='10'/><advanced_setting
+    name='FT.NoWaitOnSocket' id='447000000002713' value='0'/><advanced_setting name='Migrate.MigrateCpuSharesRegular'
+    id='447000000002714' value='30000'/><advanced_setting name='VMkernel.Boot.storageMaxPaths'
+    id='447000000002716' value='1024'/><advanced_setting name='Scsi.MaxReserveBacktrace'
+    id='447000000002718' value='0'/><advanced_setting name='Numa.SwapInterval' id='447000000002720'
+    value='3'/><advanced_setting name='Mem.AllocUsePSharePool' id='447000000002721'
+    value='1'/><advanced_setting name='Disk.DumpMaxRetries' id='447000000002723' value='10'/><advanced_setting
+    name='FT.execLatExtra' id='447000000002725' value='500'/><advanced_setting name='Net.VmklnxLROMaxAggr'
+    id='447000000002728' value='6'/><advanced_setting name='VProbes.DaemonEnable'
+    id='447000000002731' value='2952593133'/><advanced_setting name='VMkernel.Boot.vmkLoadSeed'
+    id='447000000002733' value='0'/><advanced_setting name='Net.NetPagePoolLimitCap'
+    id='447000000002735' value='49152'/><advanced_setting name='Config.Defaults.cpuidMask.mode.80000000.edx'
+    id='447000000002736' value='disable'/><advanced_setting name='Config.Defaults.cpuidMask.val.8000000A.eax'
+    id='447000000002738' value=''/><advanced_setting name='VMkernel.Boot.logOnScreen'
+    id='447000000002740' value='false'/><advanced_setting name='Mem.AllocUseGuestPool'
+    id='447000000002742' value='1'/><advanced_setting name='Mem.IdleTax' id='447000000002744'
+    value='75'/><advanced_setting name='Misc.WorldletActivationUS' id='447000000002745'
+    value='500'/><advanced_setting name='Migrate.SndBufSize' id='447000000002747'
+    value='562140'/><advanced_setting name='VMkernel.Boot.com1_irq' id='447000000002749'
+    value='4'/><advanced_setting name='Net.TcpipCopySmallTx' id='447000000002750'
+    value='1'/><advanced_setting name='Net.CoalesceMrqRatioMetric' id='447000000002752'
+    value='1'/><advanced_setting name='Mem.HostLocalSwapDir' id='447000000002754'
+    value=''/><advanced_setting name='VMkernel.Boot.timerEnableHPET' id='447000000002756'
+    value='true'/><advanced_setting name='VMkernel.Boot.pageSharing' id='447000000002757'
+    value='true'/><advanced_setting name='Net.NetdumpVmkIP' id='447000000002759' value=''/><advanced_setting
+    name='Net.GuestIPHack' id='447000000002761' value='0'/><advanced_setting name='FT.adjDownInt'
+    id='447000000002763' value='10'/><advanced_setting name='Mem.AdmitHeapMin' id='447000000002765'
+    value='1024'/><advanced_setting name='Cpu.IdleTopologyRebalancePeriod' id='447000000002767'
+    value='100'/><advanced_setting name='Misc.WorldletWorldOverheadLLC' id='447000000002769'
+    value='0'/><advanced_setting name='FT.slowdownTimeMax' id='447000000002770' value='600'/><advanced_setting
+    name='Net.NetSchedInFlightMaxPktsHigh' id='447000000002772' value='50'/><advanced_setting
+    name='Mem.kernelResvPad' id='447000000002774' value='16'/><advanced_setting name='Misc.HordeEnabled'
+    id='447000000002776' value='0'/><advanced_setting name='Disk.EnableNaviReg' id='447000000002777'
+    value='1'/><advanced_setting name='Scsi.PassthroughLocking' id='447000000002779'
+    value='1'/><advanced_setting name='Net.IGMPVersion' id='447000000002781' value='3'/><advanced_setting
+    name='Irq.RoutingPolicy' id='447000000002783' value='2'/><advanced_setting name='Net.UseLegacyProc'
+    id='447000000002785' value='0'/><advanced_setting name='Misc.WorldletIRQPenalty'
+    id='447000000002787' value='50'/><advanced_setting name='VMkernel.Boot.storageHeapMaxSize'
+    id='447000000002789' value='0'/><advanced_setting name='VMkernel.Boot.busSpeedMayVaryPerNode'
+    id='447000000002790' value='false'/><advanced_setting name='UserVars.CIMvmw_swmgtProviderEnabled'
+    id='447000000002792' value='1'/><advanced_setting name='Scsi.TimeoutTMThreadMax'
+    id='447000000002795' value='16'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000001.ecx'
+    id='447000000002797' value=''/><advanced_setting name='DirentryCache.MaxDentryPerObj'
+    id='447000000002799' value='2500'/><advanced_setting name='Migrate.MonActionWaitSysAlertThresholdMS'
+    id='447000000002801' value='2000'/><advanced_setting name='FT.UseHostMonitor'
+    id='447000000002802' value='1'/><advanced_setting name='Disk.UseDeviceReset' id='447000000002805'
+    value='1'/><advanced_setting name='VMkernel.Boot.disableTurbo' id='447000000002807'
+    value='false'/><advanced_setting name='Net.VmxnetSwLROSL' id='447000000002809'
+    value='1'/><advanced_setting name='Migrate.Enabled' id='447000000002811' value='1'/><advanced_setting
+    name='Power.UseStallCtr' id='447000000002814' value='0'/><advanced_setting name='Net.Vmxnet3RSSHashCache'
+    id='447000000002816' value='1'/><advanced_setting name='Net.configOption[CONFIG_NET_PORT_DSTATS]'
+    id='447000000002818' value='0'/><advanced_setting name='Net.CoalesceRxLtStopCalib'
+    id='447000000002819' value='0'/><advanced_setting name='Misc.PkeiStatsOnly' id='447000000002821'
+    value='0'/><advanced_setting name='Scsi.MaxReserveTotalTime' id='447000000002823'
+    value='250'/><advanced_setting name='Net.MemcpyNT' id='447000000002826' value='2'/><advanced_setting
+    name='Cpu.VMAdmitCheckPerVcpuMin' id='447000000002828' value='1'/><advanced_setting
+    name='Misc.DebugLogToSerial' id='447000000002830' value='0'/><advanced_setting
+    name='Mem.MemZipMaxPct' id='447000000002831' value='10'/><advanced_setting name='VMkernel.Boot.netNetqueueEnabled'
+    id='447000000002833' value='true'/><advanced_setting name='VMkernel.Boot.interleaveFakeNUMAnodes'
+    id='447000000002836' value='false'/><advanced_setting name='Power.UseCStates'
+    id='447000000002838' value='0'/><advanced_setting name='Net.NetInStressTest' id='447000000002841'
+    value='0'/><advanced_setting name='Net.NetE1000Worldlet' id='447000000002843'
+    value='1'/><advanced_setting name='Net.TcpipDefLROStatsEnabled' id='447000000002844'
+    value='0'/><advanced_setting name='Net.configOption[CONFIG_NET_INPUT_FLUSH_MAX_PKTS]'
+    id='447000000002846' value='64'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000000.ecx'
+    id='447000000002848' value=''/><advanced_setting name='FT.TCPPersistTimer' id='447000000002849'
+    value='500'/><advanced_setting name='Scsi.ScsiRestartStalledQueueLatency' id='447000000002852'
+    value='500'/><advanced_setting name='Numa.AutoMemAffinity' id='447000000002856'
+    value='1'/><advanced_setting name='Disk.PreventVMFSOverwrite' id='447000000002858'
+    value='1'/><advanced_setting name='Net.UseProc' id='447000000002860' value='0'/><advanced_setting
+    name='Cpu.BoundLagQuanta' id='447000000002861' value='8'/><advanced_setting name='VMkernel.Boot.timerEnableACPI'
+    id='447000000002864' value='true'/><advanced_setting name='VMkernel.Boot.memmapMaxPhysicalMemMB'
+    id='447000000002867' value='1048576'/><advanced_setting name='VMkernel.Boot.maxRegisteredVMs'
+    id='447000000002870' value='0'/><advanced_setting name='Migrate.VMotionStreamHelpers'
+    id='447000000002872' value='2'/><advanced_setting name='FT.TCPSndBufSize' id='447000000002873'
+    value='131072'/><advanced_setting name='LPage.MapTimeWarnThresholdMS' id='447000000002875'
+    value='5000'/><advanced_setting name='Config.GlobalSettings.guest.commands.sharedPolicyRefCount'
+    id='447000000002877' value='0'/><advanced_setting name='VMkernel.Boot.storageHeapMinSize'
+    id='447000000002878' value='0'/><advanced_setting name='VMkernel.Boot.maxWorlds'
+    id='447000000002880' value='4096'/><advanced_setting name='ScratchConfig.CurrentSwapState'
+    id='447000000002883' value='false'/><advanced_setting name='Numa.MigImbalanceThreshold'
+    id='447000000002884' value='10'/><advanced_setting name='FT.ExecLatencyKill' id='447000000002886'
+    value='0'/><advanced_setting name='FT.LogTimeout' id='447000000002892' value='8000'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.80000008.ebx' id='447000000002894' value='disable'/><advanced_setting
+    name='Net.NetdumpServerIP' id='447000000002898' value=''/><advanced_setting name='Misc.LogToSerial'
+    id='447000000002902' value='1'/><advanced_setting name='Config.Defaults.cpuidMask.val.1.ecx'
+    id='447000000002907' value=''/><advanced_setting name='VProbes.DaemonInterface'
+    id='447000000002911' value=''/><advanced_setting name='UserVars.ProductLockerLocation'
+    id='447000000002913' value='/locker/packages/4.1.0/'/><advanced_setting name='FT.XmitSyncQueueLen'
+    id='447000000002916' value='64'/><advanced_setting name='NFS.HeartbeatMaxFailures'
+    id='447000000002917' value='3'/><advanced_setting name='VMkernel.Boot.assumePerNodeBusClock'
+    id='447000000002919' value='false'/><advanced_setting name='Net.NetNetqRxQueueNoFeat'
+    id='447000000002921' value='0'/><advanced_setting name='Cpu.IntraCoreMigrate'
+    id='447000000002924' value='0'/><advanced_setting name='VMkernel.Boot.oem' id='447000000002928'
+    value='true'/><advanced_setting name='VMkernel.Boot.allowInterleavedNUMAnodes'
+    id='447000000002931' value='false'/><advanced_setting name='Misc.SIOControlLoglevel'
+    id='447000000002934' value='0'/><advanced_setting name='Migrate.PreCopyPagesPerSend'
+    id='447000000002937' value='32'/><advanced_setting name='Config.Defaults.cpuidMask.mode.8000000A.ecx'
+    id='447000000002939' value='disable'/><advanced_setting name='Misc.PkeiEnabled'
+    id='447000000002941' value='1'/><advanced_setting name='VMkernel.Boot.vmkTerminals'
+    id='447000000002943' value='true'/><advanced_setting name='Net.CoalesceTxTimeout'
+    id='447000000002945' value='4000'/><advanced_setting name='Mem.BalloonCheckTime'
+    id='447000000002946' value='6'/><advanced_setting name='Misc.ScreenSaverDelay'
+    id='447000000002948' value='0'/><advanced_setting name='Config.Defaults.cpuidMask.val.0.ecx'
+    id='447000000002950' value=''/><advanced_setting name='FT.TCPNoDelayPrimary' id='447000000002951'
+    value='1'/><advanced_setting name='VProbes.DaemonStrongBind' id='447000000002953'
+    value='0'/><advanced_setting name='Misc.WorldletPreemptOverhead' id='447000000002955'
+    value='30'/><advanced_setting name='Misc.BlueScreenTimeout' id='447000000002958'
+    value='0'/><advanced_setting name='Config.Defaults.cpuidMask.mode.0.edx' id='447000000002960'
+    value='disable'/><advanced_setting name='Net.CoalesceLowRxRate' id='447000000002964'
+    value='4'/><advanced_setting name='FT.CheckFCPathState' id='447000000002966' value='1'/><advanced_setting
+    name='VMkernel.Boot.vmkKeyboard' id='447000000002969' value='true'/><advanced_setting
+    name='VMkernel.Boot.com1_baud' id='447000000002972' value='115200'/><advanced_setting
+    name='Power.TimerHz' id='447000000002974' value='100'/><advanced_setting name='FT.CheckForProgress'
+    id='447000000002978' value='0'/><advanced_setting name='FSS.FSSLightWeightProbe'
+    id='447000000002980' value='1'/><advanced_setting name='LPage.LPageDefragRateTotal'
+    id='447000000002982' value='256'/><advanced_setting name='Mem.SwapFilePersist'
+    id='447000000002984' value='0'/><advanced_setting name='Net.LRODefMaxLength' id='447000000002985'
+    value='32768'/><advanced_setting name='Net.Vmxnet2SwLRO' id='447000000002986'
+    value='1'/><advanced_setting name='Net.CoalesceMrqTriggerReCalib' id='447000000002987'
+    value='1'/><advanced_setting name='Cpu.HostRebalancePeriod' id='447000000002988'
+    value='40'/><advanced_setting name='Disk.DelayOnBusy' id='447000000002989' value='400'/><advanced_setting
+    name='Net.VmxnetTxCopySize' id='447000000002990' value='256'/><advanced_setting
+    name='FT.TCPNoDelayBackup' id='447000000002991' value='1'/><advanced_setting name='Net.IGMPQueries'
+    id='447000000002992' value='2'/><advanced_setting name='Net.VmxnetLROBackoffPeriod'
+    id='447000000002993' value='8'/><advanced_setting name='Config.Defaults.cpuidMask.val.80000008.ecx'
+    id='447000000002994' value=''/><advanced_setting name='Disk.DumpPollMaxRetries'
+    id='447000000002995' value='10000'/><advanced_setting name='Irq.IRQMaxLoadPct'
+    id='447000000002996' value='70'/><advanced_setting name='Cpu.CoschedCrossCall'
+    id='447000000002997' value='1'/><advanced_setting name='Cpu.CoschedHandoffLLC'
+    id='447000000002998' value='1'/><advanced_setting name='Net.NetSchedInFlightMaxPktsDefault'
+    id='447000000002999' value='20'/><advanced_setting name='Disk.SharesLow' id='447000000003000'
+    value='500'/><advanced_setting name='VMkernel.Boot.updateBusIRQ' id='447000000003001'
+    value='false'/><advanced_setting name='VMkernel.Boot.logicalApicId' id='447000000003002'
+    value='false'/><advanced_setting name='Scsi.TimeoutTMThreadMin' id='447000000003003'
+    value='1'/><advanced_setting name='Cpu.HaltingIdleMsecPenaltyMax' id='447000000003004'
+    value='800'/><advanced_setting name='Mem.Prefault' id='447000000003006' value='0'/><advanced_setting
+    name='Config.Defaults.cpuidMask.mode.80000000.ebx' id='447000000003007' value='disable'/></advanced_settings><hardware
+    guest_os='ESXi' memory_cpu='57334' id='447000000000028' guest_os_full_name='ESXi'
+    numvcpus='2'><nics _macro_='has_many'><guest_device address='84:2b:2b:4d:33:cd'
+    location='01:00.0' start_connected='true' id='447000000000038' present='true'/><guest_device
+    address='84:2b:2b:4d:33:ce' location='01:00.1' start_connected='true' id='447000000000039'
+    present='true'/><guest_device address='00:10:18:7f:03:a0' location='03:00.0' start_connected='true'
+    id='447000000000040' present='true'/><guest_device address='00:10:18:7f:03:a2'
+    location='03:00.1' start_connected='true' id='447000000000041' present='true'/></nics></hardware><lans
+    _macro_='has_many'><lan name='Management Network' tag='0' id='447000000000005'/><lan
+    name='NetApp PG' tag='0' id='447000000000006'/><lan name='VM Network' tag='0'
+    id='447000000000007'/><lan name='VMkernel' tag='0' id='447000000000008'/><lan
+    name='atp-portGrp' tag='10' id='447000000000009'/></lans><operating_system product_type='vmnix-x86'
+    id='447000000000028' build_number='348481' version='4.1.0' product_name='ESXi'/><switches
+    _macro_='has_many'><switch name='vSwitch0' id='447000000000003' ports='128'/><switch
+    name='vSwitch1' id='447000000000004' ports='128'/><switch name='test-Switch' id='447000000000005'
+    ports='128'/></switches><system_services _macro_='has_many'><system_service running='true'
+    id='447000000000005' display_name='Direct Console UI'/><system_service running='true'
+    id='447000000000006' display_name='Local Tech Support'/><system_service running='true'
+    id='447000000000007' display_name='Remote Tech Support (SSH)'/><system_service
+    running='true' id='447000000000008' display_name='lbtd'/><system_service running='false'
+    id='447000000000009' display_name='Local Security Authentication Server (Active
+    Directory Service)'/><system_service running='false' id='447000000000010' display_name='I/O
+    Redirector (Active Directory Service)'/><system_service running='false' id='447000000000011'
+    display_name='Network Login Server (Active Directory Service)'/><system_service
+    running='true' id='447000000000012' display_name='NTP Daemon'/><system_service
+    running='true' id='447000000000013' display_name='VMware vCenter Agent'/></system_services><tags
+    _macro_='has_many'><tag name='/performance/capture_enabled' namespace='performance'
+    id='447000000000174'/></tags><vms _macro_='has_many'><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm76' location='Vm76/Vm76.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000033' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='tch-cos64-T-4.0.1.38-sysstat-testing' location='tch-cos64-T-4.0.1.38-sysstat-tes/tch-cos64-T-4.0.1.38-sysstat-tes.vmtx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000035' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm75' location='Vm75/Vm75.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000037' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm42' location='Vm42/Vm42.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000041' cpu_reserve='0' memory_limit='2048'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm2' location='Vm2/Vm2.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000043' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='61440' name='Vm64' location='Vm64/Vm64.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000045' cpu_reserve='0'
+    memory_limit='6144' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm3' location='Vm3/Vm3.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000047' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm14' location='Vm14/Vm14.vmx' memory_reserve='1024'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='260' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000049' cpu_reserve='0' memory_limit='1024'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='5120' name='rpo-clone-src-template' location='rpo-clone-src-template/rpo-clone-src-template.vmtx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000050' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='51200' name='Vm30' location='Vm30/Vm30.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000053' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm77' location='Vm77/Vm77.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000056' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm29' location='Vm29/Vm29.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000057' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm4' location='Vm4/Vm4.vmx' memory_reserve='0'
+    cpu_shares='4000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000058' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm66' location='Vm66/Vm66.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000061' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm70' location='Vm70/Vm70.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000062' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm33' location='Vm33/Vm33.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000063' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='61440' name='Vm63' location='Vm63/Vm63.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000065' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm69' location='Vm69/Vm69.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000068' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm18' location='Vm18/Vm18.vmx' memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning'
+    cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal' id='447000000000070'
+    cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='20480' name='Vm59'
+    location='Vm59/Vm59.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000071' cpu_reserve='0'
+    memory_limit='2048' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm32' location='Vm32/Vm32.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000072' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm8' location='Vm8/Vm8.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000073' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Thu Dec 13 21:54:44 UTC 2012' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm58' location='Vm58/Vm58.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotInstalled' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000074' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='5120' name='Vm21' location='Vm21/Vm21.vmx' memory_reserve='512'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='260' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000076' cpu_reserve='0' memory_limit='512'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm57' location='Vm57/Vm57.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotInstalled' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000077' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm12' location='Vm12/Vm12.vmx' memory_reserve='1024'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='260' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000078' cpu_reserve='0' memory_limit='1024'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='5120' name='Vm9' location='Vm9/Vm9.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000081' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm46' location='Vm46/Vm46.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000083' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Fri Jan 11 18:07:54 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='5120' name='Vm24'
+    location='Vm24/Vm24.vmx'
+    memory_reserve='512' cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='260'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000085' cpu_reserve='0'
+    memory_limit='512' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm5' location='Vm5/Vm5.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000096' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm67' location='Vm67/Vm67.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000099' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' boot_time='Sun Jan 27 16:39:00
+    UTC 2013' vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='40960'
+    name='Vm79' location='Vm79/Vm79.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000100' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm1' location='Vm1/Vm1.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000107' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm60' location='Vm60/Vm60.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000110' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='5120' name='Vm10' location='Vm10/Vm10.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000111' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm62' location='Vm62/Vm62.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000112' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm7'
+    location='Vm7/Vm7.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000113' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm0' location='Vm0/Vm0.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000114' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm19' location='Vm19/Vm19.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000115' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='3840' name='Vm89' location='Vm89/Vm89.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000117' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm38' location='Vm38/Vm38.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000119' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='61440' name='Vm72' location='Vm72/Vm72.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000124' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm17' location='Vm17/Vm17.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000125' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm13' location='Vm13/Vm13.vmx' memory_reserve='1024'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='260' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000126' cpu_reserve='0' memory_limit='1024'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm25' location='Vm25/Vm25.vmx' memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning'
+    cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal' id='447000000000129'
+    cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='61440' name='Vm39' location='Vm39/Vm39.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000130' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm6'
+    location='Vm6/Vm6.vmx'
+    memory_reserve='4096' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='520'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000131' cpu_reserve='0'
+    memory_limit='4096' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm26' location='Vm26/Vm26.vmx' memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning'
+    cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal' id='447000000000137'
+    cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm23' location='Vm23/Vm23.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000140' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm27' location='Vm27/Vm27.vmx' memory_reserve='0' cpu_shares='2000'
+    tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal'
+    id='447000000000142' cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false'
+    vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='40960' name='Vm20'
+    location='Vm20/Vm20.vmx' memory_reserve='0' cpu_shares='2000'
+    tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal'
+    id='447000000000143' cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false'
+    vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='40960' name='Vm48'
+    location='Vm48/Vm48.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000145' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Tue Jan 22 02:18:03 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm81'
+    location='Vm81/Vm81.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000146' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm36' location='Vm36/Vm36.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000148' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm28' location='Vm28/Vm28.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000156' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Wed Nov 21 17:58:53 UTC 2012' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='30720' name='Vm90' location='Vm90/Vm90.vmx' memory_reserve='3072' cpu_shares='1000' tools_status='toolsNotRunning'
+    cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal' id='447000000000160'
+    cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='10240' name='Vm53' location='Vm53/Vm53.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsOld' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000163' cpu_reserve='0' memory_limit='1024'
+    memory_reserve_expand='false' boot_time='Fri Dec 14 23:46:11 UTC 2012' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm78'
+    location='Vm78/Vm78.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000168' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Fri Jan 04 14:35:27 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm71'
+    location='Vm71/Vm71.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000169' cpu_reserve='0' memory_limit='4096'
+    memory_reserve_expand='false' boot_time='Wed Feb 13 20:39:04 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='20480' name='Vm34' location='Vm34/Vm34.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000170' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm73' location='Vm73/Vm73.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000171' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' boot_time='Mon Feb 04 21:52:34
+    UTC 2013' vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='10240'
+    name='Vm54' location='Vm54/Vm54.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000179' cpu_reserve='0' memory_limit='1024'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm37' location='Vm37/Vm37.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000180' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm35' location='Vm35/Vm35.vmx' memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning'
+    cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal' id='447000000000181'
+    cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='20480' name='Vm31'
+    location='Vm31/Vm31.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000183' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm68' location='Vm68/Vm68.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000187' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Tue Feb 26 21:17:44 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm82'
+    location='Vm82/Vm82.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000191' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm55' location='Vm55/Vm55.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000193' cpu_reserve='0'
+    memory_limit='1024' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm74' location='Vm74/Vm74.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000196' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='2560' name='Vm91'
+    location='Vm91/Vm91.vmx'
+    memory_reserve='64' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000197' cpu_reserve='64'
+    memory_limit='256' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm11' location='Vm11/Vm11.vmx' memory_reserve='1024'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='260' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000199' cpu_reserve='0' memory_limit='1024'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm52' location='Vm52/Vm52.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsOld' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000202' cpu_reserve='0' memory_limit='1024'
+    memory_reserve_expand='false' boot_time='Wed Dec 12 19:11:04 UTC 2012' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='xyz' location='xyz/xyz.vmtx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000204' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm61' location='Vm61/Vm61.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000205' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Win7Ultimate' location='Win7Ultimate/Win7Ultimate.vmtx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000207' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm40' location='Vm40/Vm40.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000208' cpu_reserve='0' memory_limit='2048'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm65' location='Vm65/Vm65.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000216' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm45' location='Vm45/Vm45.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000219' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='10240' name='Vm56' location='Vm56/Vm56.vmx'
+    memory_reserve='0' cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000220' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='20480' name='Vm22' location='Vm22/Vm22.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000221' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm43' location='Vm43/Vm43.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000222' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' boot_time='Mon Jan 07 18:50:24
+    UTC 2013' vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='20480'
+    name='Vm41' location='Vm41/Vm41.vmx' memory_reserve='0' cpu_shares='2000'
+    tools_status='toolsNotRunning' cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal'
+    id='447000000000223' cpu_reserve='0' memory_limit='2048' memory_reserve_expand='false'
+    vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='5120' name='Vm16' location='Vm16/Vm16.vmx' memory_reserve='0'
+    cpu_shares='1000' tools_status='toolsNotInstalled' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000000228' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm80' location='Vm80/Vm80.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000000229' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm83' location='Vm83/Vm83.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000001230' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' boot_time='Mon Mar 04 19:15:38
+    UTC 2013' vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='40960'
+    name='Vm84' location='Vm84/Vm84.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000001237' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' boot_time='Thu Mar 07 18:00:26
+    UTC 2013' vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='40960'
+    name='Vm85' location='Vm85/Vm85.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000001247' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Tue Mar 19 20:51:14 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm86'
+    location='Vm86/Vm86.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000001248' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Wed Mar 20 10:13:19 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm15' location='Vm15/Vm15.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000001253' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' vendor='VMware'/><vm cpu_reserve_expand='false'
+    memory_shares='40960' name='Vm87' location='Vm87/Vm87.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000001257' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Sat Apr 06 05:18:06 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm88'
+    location='Vm88/Vm88.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000001258' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Sat Apr 06 04:47:38 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm44' location='Vm44/Vm44.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000001260' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Mon Apr 08 14:46:51 UTC 2013' vendor='VMware'/><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm47' location='Vm47/Vm47.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsNotRunning' cpu_limit='-1'
+    cpu_shares_level='normal' memory_shares_level='normal' id='447000000001261' cpu_reserve='0'
+    memory_limit='-1' memory_reserve_expand='false' boot_time='Mon Apr 08 17:16:38
+    UTC 2013' vendor='VMware'/><vm cpu_reserve_expand='false' memory_shares='40960'
+    name='Vm50' location='Vm50/Vm50.vmx' memory_reserve='0'
+    cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000001262' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Mon Apr 08 18:59:19 UTC 2013' vendor='VMware'/></vms></host>
+  md5: eccc2ae93bf25fd74d245c84a5e8a124
+- id: 8
+  name: host
+  timestamp: 2013-04-11 15:36:39.000000000 Z
+  created_on: 2013-04-12 19:51:04.085708000 Z
+  stats: ! "--- \nadds: \"0\"\noriginal_filename: host\ncreated_on: \"1365694599\"\nupdates:
+    \"1\"\nversion: \"2.0\"\ndeletes: \"2\"\ndisplay_time: \"2013-04-11T15:37:41Z\"\n"
+  scantype: diff
+  resource_id: 447000000000002
+  resource_type: Host
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><xmlDiff adds='0' original_filename='host'
+    created_on='1365694599' updates='1' version='2.0' display_time='2013-04-11T15:37:41Z'
+    deletes='2'><adds/><deletes><item data_count='1'><path><host name='esxi.example.com'
+    original_filename='host' created_on='1365694661' vmm_version='4.1.0' id='447000000000002'
+    version='2.0' vmm_buildnumber='348481' vmm_vendor='VMware' vmm_product='ESXi'
+    _timestamp_='1365694599' display_time='2013-04-11T15:37:41Z'><vms _macro_='has_many'/></host></path><data
+    index='0'><vm cpu_reserve_expand='false' memory_shares='40960' name='Vm49'
+    location='Vm49/Vm49.vmx' memory_reserve='0' cpu_shares='2000'
+    tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal'
+    id='447000000000088' cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false'
+    boot_time='Fri Feb 15 17:24:42 UTC 2013' vendor='VMware'/></data><d1><data index='0'><vm
+    cpu_reserve_expand='false' memory_shares='40960' name='Vm51' location='Vm51/Vm51.vmx'
+    memory_reserve='0' cpu_shares='2000' tools_status='toolsOk' cpu_limit='-1' cpu_shares_level='normal'
+    memory_shares_level='normal' id='447000000001228' cpu_reserve='0' memory_limit='-1'
+    memory_reserve_expand='false' boot_time='Fri Mar 01 20:18:04 UTC 2013' vendor='VMware'/></data></d1></item></deletes><updates><item><path
+    root='true'/><data><host name='esxi.example.com' original_filename='host'
+    created_on='1365796261' vmm_version='4.1.0' id='447000000000002' version='2.0'
+    vmm_buildnumber='348481' vmm_vendor='VMware' vmm_product='ESXi' _timestamp_='1365796250'
+    display_time='2013-04-12T19:51:01Z'/></data><data_old><host name='esxi.example.com'
+    original_filename='host' created_on='1365694661' vmm_version='4.1.0' id='447000000000002'
+    version='2.0' vmm_buildnumber='348481' vmm_vendor='VMware' vmm_product='ESXi'
+    _timestamp_='1365694599' display_time='2013-04-11T15:37:41Z'/></data_old></item></updates></xmlDiff>
+  md5: b0ca98c7674a8c8f7fc660033a591f97
+- id: 9
+  name: host
+  timestamp: 2013-04-11 13:09:06.000000000 Z
+  created_on: 2013-04-11 15:38:00.449790000 Z
+  stats: ! "--- \nadds: \"0\"\noriginal_filename: host\ncreated_on: \"1365685746\"\nupdates:
+    \"1\"\nversion: \"2.0\"\ndeletes: \"0\"\ndisplay_time: \"2013-04-11T13:11:15Z\"\n"
+  scantype: diff
+  resource_id: 447000000000002
+  resource_type: Host
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><xmlDiff adds='0' original_filename='host'
+    created_on='1365685746' updates='1' version='2.0' display_time='2013-04-11T13:11:15Z'
+    deletes='0'><adds/><deletes/><updates><item><path root='true'/><data><host name='esxi.example.com'
+    original_filename='host' created_on='1365694661' vmm_version='4.1.0' id='447000000000002'
+    version='2.0' vmm_buildnumber='348481' vmm_vendor='VMware' vmm_product='ESXi'
+    _timestamp_='1365694599' display_time='2013-04-11T15:37:41Z'/></data><data_old><host
+    name='esxi.example.com' original_filename='host' created_on='1365685875'
+    vmm_version='4.1.0' id='447000000000002' version='2.0' vmm_buildnumber='348481'
+    vmm_vendor='VMware' vmm_product='ESXi' _timestamp_='1365685746' display_time='2013-04-11T13:11:15Z'/></data_old></item></updates></xmlDiff>
+  md5: 79b268ea3006df8ff647ace7fcc4d452

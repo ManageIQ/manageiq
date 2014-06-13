@@ -1,0 +1,17 @@
+<%# Div to hold the actual tree %>
+<div id="alert_tree_div" style="width:100%;height:100%">
+	<div id="alert_treebox" style="width:100%;height:100%;color:#000; overflow: hidden"></div>
+  <%= render(:partial => "layouts/dynatree",
+             :locals => {:tree_id => "alert_treebox",
+                         :tree_name => "alert_tree",
+                         :id_prefix => "al_",
+                         :json_tree => @temp[:alert_tree],
+                         :onclick => "cfmeOnClick_SelectTreeNode",
+                         :select_node => "#{x_node}",
+                         :base_id => "root",
+                         :no_base_exp => true,
+                         :exp_tree => false,
+                         :highlighting => true,
+                         :multi_lines => true
+             }) %>
+</div>

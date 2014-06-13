@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: AvailabilityZone
+:button_groups:
+- :name: availability_zone_policy
+  :items:
+  - :buttonSelect: availability_zone_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: availability_zone_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for the selected Availability Zones"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+

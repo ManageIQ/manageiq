@@ -1,0 +1,45 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqPolicy
+:button_groups:
+- :name: policy_vmdb
+  :items:
+  - :buttonSelect: policy_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: policy_edit
+      :image: edit
+      :text: 'Edit Basic Info, Scope, and Notes'
+      :title: 'Edit Basic Info, Scope, and Notes'
+      :url_parms: '?typ=basic'
+    - :button: policy_copy
+      :image: copy
+      :text: 'Copy this #{ui_lookup(:model=>@policy.towhat)} Policy'
+      :title: 'Copy this Policy to new Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}]'
+      :confirm: 'Are you sure you want to create Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}] from this Policy?'
+      :url_parms: 'main_div'
+    - :button: policy_delete
+      :image: delete
+      :text: 'Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'
+      :title: 'Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to delete this #{ui_lookup(:model=>@policy.towhat)} Policy?'
+    - :button: condition_edit
+      :image: new-condition
+      :text: 'Create a new Condition assigned to this Policy'
+      :title: 'Create a new Condition assigned to this Policy'
+      :url_parms: '?typ=new'
+    - :button: policy_edit_conditions
+      :image: edit-condition
+      :text: "Edit this Policy's Condition assignments"
+      :title: "Edit this Policy's Condition assignments"
+      :url_parms: '?typ=conditions'
+    - :button: policy_edit_events
+      :image: edit-event
+      :text: "Edit this Policy's Event assignments"
+      :title: "Edit this Policy's Event assignments"
+      :url_parms: '?typ=events'

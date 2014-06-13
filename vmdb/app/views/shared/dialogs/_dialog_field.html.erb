@@ -1,0 +1,105 @@
+<% url = url_for(:action => 'dialog_field_changed', :id=>"#{@edit[:rec_id] || "new"}") %>
+<tr id="field_<%=field.id%>_tr">
+  <td class="key" title="<%= field.description %>"><%= field.label %></td>
+  <td title="<%= field.description %>">
+    <% case field.type %>
+    <% when "DialogFieldTextBox" %>
+      <% if field.protected? %>
+        <%= password_field_tag(field.name + "__protected", @edit[:wf].value(field.name), :maxlength => 50,
+                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+      <% else %>
+        <%= text_field_tag(field.name, @edit[:wf].value(field.name),:maxlength=>50,
+                           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+      <% end %>
+    <% when "DialogFieldTextAreaBox" %>
+      <%= text_area_tag(field.name,
+                        @edit[:wf].value(field.name),
+                        :maxlength=>8192,
+                        :size=>"50x6",
+                        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+    <% when "DialogFieldCheckBox" %>
+      <% checked = @edit[:wf].value(field.name) == "f" ? false : true %>
+      <%= check_box_tag(field.name, value="1",checked=checked,
+                          #"data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                          "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+    <% when "DialogFieldDateControl", "DialogFieldDateTimeControl" %>
+      <% t = Time.now.in_time_zone(session[:user_tz]) + 1.day %>
+      <% date_val = @edit[:wf].value(field.name) ? @edit[:wf].value(field.name).split(" ") : ["#{t.month}/#{t.day}/#{t.year}"] %>
+      <%= text_field_tag("miq_date__#{field.name}",
+                         date_val[0],
+                         :class=>"css1",
+                         :readonly=>"true",
+                         "data-miq_observe_date"=>{:url=>url}.to_json) %>
+      <% if field.type == "DialogFieldDateTimeControl" %>
+        &nbsp;at&nbsp;
+        <% start_hour = date_val.length >= 2 ? date_val[1].split(":").first : 0 %>
+        <% start_min = date_val.length >= 2 ? date_val[1].split(":").last : 0 %>
+        <%= select_tag("start_hour",
+                       options_for_select(Array.new(24) {|i| i},start_hour.to_i),
+                       "data-miq_observe"=>{:url=>url}.to_json) %>
+        :
+        <%= select_tag("start_min",
+                       options_for_select(Array.new(12) {|i| i*5},start_min.to_i),
+                       "data-miq_observe"=>{:url=>url}.to_json) %>
+        &nbsp;<%= session[:user_tz] %>
+      <% end %>
+    <% when 'DialogFieldDynamicList' %>
+      <%= select_tag(field.name, options_for_select(field.values, @edit[:wf].value(field.name)),
+                     'data-miq_sparkle_on'  => true,
+                     'data-miq_sparkle_off' => true,
+                     'data-miq_observe'     => { :url => url }.to_json) %>
+      <% if field.show_refresh_button? %>
+        <%= button_tag('Refresh',
+                        :onclick => remote_function(
+                        :url      => { :action => 'dynamic_list_refresh', :id => field.name },
+                        :loading  => "miqSparkle(true);",
+                        :complete => "miqSparkle(false);")) %>
+      <% end %>
+    <% when "DialogFieldDropDownList", "DialogFieldRadioButton" %>
+      <% if field.values.length > 1 %>
+        <% if field.type == "DialogFieldDropDownList" %>
+          <% select_values = dialog_dropdown_select_values(field, @edit[:wf].value(field.name)) %>
+          <%= select_tag(field.name, options_for_select(select_values, @edit[:wf].value(field.name)),
+                         "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                         "data-miq_observe"=>{:url=>url}.to_json) %>
+        <% else %>  <%# DialogFieldRadioButton %>
+          <% field.values.each_with_index do |rb,i| %>
+            <% if !field.required && i == 0 %>
+              <% radio_checked = @edit[:wf].value(field.name).blank? ? "checked" : "" %>
+              <input type="radio" id="<%= field.id %>" value="" name="<%= field.name %>" <%= radio_checked %>
+                     onclick="<%=remote_function(:with => 'Form.Element.serialize(this)',
+                                                 :url => { :action =>'dialog_field_changed', :id=>"#{@edit[:rec_id] || "new"}"},
+                                                 :loading=>"miqSparkle(true);", :complete=>"miqSparkle(false);") %>">
+              &nbsp;&lt;None&gt;&nbsp;
+            <% end %>
+
+            <% radio_checked = rb[0] == @edit[:wf].value(field.name) ? "checked" : "" %>
+            <input type="radio" id="<%= field.id %>" value="<%= rb[0] %>" name="<%= field.name %>" <%= radio_checked %>
+                   onclick="<%=remote_function(:with => 'Form.Element.serialize(this)',
+                                               :url => { :action =>'dialog_field_changed', :id=>"#{@edit[:rec_id] || "new"}"},
+                                               :loading=>"miqSparkle(true);", :complete=>"miqSparkle(false);") %>">
+            &nbsp;<%= rb[1] %>&nbsp;
+          <% end %>
+        <% end %>
+      <% else %>
+        <%=  h(field.values[0].last) if !field.values.empty? %>
+      <% end %>
+    <% when "DialogFieldButton" %>
+      <%= image_tag("/images/formbuttons/save.png", :class=>"button", :style=>"width: 80px; height: 30px") %>
+    <% when "DialogFieldTagControl" %>
+      <% category_tags = DialogFieldTagControl.category_tags(field.category).map {|cat| [cat[:description], cat[:id]]} %>
+      <% if field.single_value? %>
+        <% select_values = dialog_dropdown_select_values(field, @edit[:wf].value(field.name), category_tags) %>
+        <%= select_tag(field.name,options_for_select(select_values, @edit[:wf].value(field.name)), "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                         "data-miq_observe"=>{:url=>url}.to_json) %>
+      <% else %>
+        <%= select_tag(field.name, options_for_select(category_tags, @edit[:wf].value(field.name)), {:multiple => true, "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                         "data-miq_observe"=>{:url=>url}.to_json}) %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>
+<%# Need this to bind checkbox observers when under DHTMLX tabs %>
+<%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+<script>miqObserveCheckboxes();</script>
+

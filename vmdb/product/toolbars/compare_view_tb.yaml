@@ -1,0 +1,34 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: compare_view
+  :items:
+  - :buttonTwoState: compare_expanded
+    :image: view_expanded
+    :title: "Expanded View"
+    :url: 'compare_compress'
+  - :buttonTwoState: compare_compressed
+    :image: view_compressed
+    :title: "Compressed View"
+    :url: 'compare_compress'
+- :name: compare_downloading
+  :items:
+  - :buttonSelect: compare_download_choice
+    :image: download
+    :title: "Download"
+    :items:
+    - :button: compare_download_txt
+      :image: txt
+      :title: "Download comparison report in text format"
+      :url: '/compare_to_txt'
+    - :button: compare_download_csv
+      :image: csv
+      :title: "Download comparison report in CSV format"
+      :url: '/compare_to_csv'
+    - :button: download_pdf
+      :image: pdf
+      :title: "Download comparison report in PDF format"
+      :url: '/compare_to_pdf'
+    

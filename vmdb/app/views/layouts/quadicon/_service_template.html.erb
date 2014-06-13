@@ -1,0 +1,16 @@
+<% width = size == 150 ? 54 : 35 %>
+<% height = width %>
+	<div class="flobj" ><img src="/images/icons/<%= size %>/base-single.png"></div>
+<% fname = item.picture ? item.picture.url_path : "/images/icons/new/service_template.png" %>
+<div class="flobj e<%= size %>">
+	<% if ! @embedded || @showlinks %>
+		<%= link_to(image_tag(fname, :width=>"#{size}",:height=>"#{size}", :title=>"#{h(item.name)}"),
+										{:action=>'x_show', :id=>to_cid(item.id)},
+                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+										:remote=>true) %>
+	<% else %>
+		<a title="<%= h(item.name) %>">
+			<img src=fname border="0"/>
+		</a>
+	<% end %>
+</div>

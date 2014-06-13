@@ -1,0 +1,68 @@
+<% url = url_for(:action=>'widget_form_field_changed', :id=>"#{@widget.id || "new"}") %>
+<fieldset>
+  <p class="legend">Menu Shortcuts</p>
+  <table class="admintable">
+    <tbody>
+    <tr>
+      <td class="wider">
+        <%# combo_url  = "/report/widget_form_field_changed/#{@widget.id || 'new'}" %>
+        <!--<div id="widget_div" style="width: 500px"></div>-->
+        <%#= render :partial => 'layouts/dhtmlxcombo', :locals => { :combo_id =>"widget_div", :combo_name =>"widget",
+                                                                   :xml_combo => @widgets_menu_xml, :combo_url => combo_url, :combo_width => 250, :combo_onchange=>true } %>
+        <%= select_tag("add_shortcut",
+                       options_for_select([["Add a Shortcut",nil]] + @edit[:avail_shortcuts], nil),
+                       :disabled=>@edit[:read_only],
+                       "data-miq_observe"=>{:url=>url}.to_json) %>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div id="modules">
+    <div class="yui-b">
+      <div class="yui-gb">
+        <div class="yui-u first" style="position:relative;min-height:50px;" id="col1">
+          <% @edit[:new][:shortcuts].each do |s_id, s_desc| %> <%# :shortcuts is a hash of s.id => s.miq_widget_shortcut.description %>
+            <div id="s_<%= s_id %>" title="Drag this Shortcut to a new location">
+              <div class="modbox" id="test">
+                <h2 class="modtitle" style=<%= @edit ? "cursor:move" : "" %>>
+                  <a class="<%= @widget.content_type %>box"></a>
+                  <%= link_to("",
+                              {:controller=>"report",
+                               :action=>"widget_shortcut_remove",
+                               :id=>@widget.id || "new",
+                               :shortcut=>s_id},
+                              "data-miq_sparkle_on" => true,
+                              :remote=>true,
+                              :id=>"s_#{s_id}_close",
+                              :title=>"Remove this Shortcut",
+                              :class=>"delbox") %>
+                  <%= link_to("",
+                              {:controller=>"report",
+                               :action=>"widget_shortcut_reset",
+                               :id=>@widget.id || "new",
+                               :shortcut=>s_id},
+                              "data-miq_sparkle_on" => true,
+                              :remote=>true,
+                              :id=>"s_#{s_id}_reset",
+                              :title=>"Reset this Shortcut's text",
+                              :class=>"resetbox") %>
+                  <div>
+                    <span class="modtitle_text">
+                      <%= text_field_tag("shortcut_desc_#{s_id}",
+                                         s_desc,
+                                         :disabled=>@edit[:read_only],
+                                         :maxlength=>50,
+                                         :style=>"width: 250px;",
+                                         "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                    </span>
+                  </div>
+                </h2>
+
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</fieldset>

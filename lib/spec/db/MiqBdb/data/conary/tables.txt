@@ -1,0 +1,297 @@
+    type = table
+    name = DatabaseVersion
+tbl_name = DatabaseVersion
+rootpage = 2
+     sql = CREATE TABLE DatabaseVersion (version INTEGER)
+
+    type = table
+    name = Versions
+tbl_name = Versions
+rootpage = 3
+     sql = CREATE TABLE Versions (
+            versionId INTEGER PRIMARY KEY AUTOINCREMENT,
+            version STRING
+        )
+
+    type = table
+    name = sqlite_sequence
+tbl_name = sqlite_sequence
+rootpage = 4
+     sql = CREATE TABLE sqlite_sequence(name,seq)
+
+    type = index
+    name = Versions_uq
+tbl_name = Versions
+rootpage = 5
+     sql = CREATE UNIQUE INDEX Versions_uq on Versions (version)
+
+    type = table
+    name = Instances
+tbl_name = Instances
+rootpage = 6
+     sql = CREATE TABLE Instances(
+        instanceId      INTEGER PRIMARY KEY AUTOINCREMENT,
+        troveName       STRING,
+        versionId       INTEGER,
+        flavorId        INTEGER,
+        timeStamps      STRING,
+        isPresent       INTEGER,
+        pinned          BOOLEAN
+    )
+
+    type = index
+    name = InstancesNameIdx
+tbl_name = Instances
+rootpage = 7
+     sql = CREATE INDEX InstancesNameIdx ON Instances(troveName)
+
+    type = index
+    name = InstancesIdx
+tbl_name = Instances
+rootpage = 8
+     sql = CREATE UNIQUE INDEX InstancesIdx ON Instances(troveName, versionId, flavorId)
+
+    type = table
+    name = TroveTroves
+tbl_name = TroveTroves
+rootpage = 10
+     sql = CREATE TABLE TroveTroves(
+        instanceId      INTEGER NOT NULL,
+        includedId      INTEGER NOT NULL,
+        flags           INTEGER,
+        inPristine      BOOLEAN
+    )
+
+    type = index
+    name = TroveTrovesIncludedIdx
+tbl_name = TroveTroves
+rootpage = 12
+     sql = CREATE INDEX TroveTrovesIncludedIdx ON TroveTroves(includedId)
+
+    type = index
+    name = TroveTrovesInstanceIncluded_uq
+tbl_name = TroveTroves
+rootpage = 13
+     sql = CREATE UNIQUE INDEX TroveTrovesInstanceIncluded_uq ON TroveTroves(instanceId,includedId)
+
+    type = table
+    name = DBTroveFiles
+tbl_name = DBTroveFiles
+rootpage = 14
+     sql = CREATE TABLE DBTroveFiles(
+        streamId            INTEGER PRIMARY KEY AUTOINCREMENT,
+        pathId              BINARY(16),
+        versionId           INTEGER,
+        path                STRING,
+        fileId              BINARY(20),
+        instanceId          INTEGER,
+        isPresent           INTEGER,
+        stream              BLOB
+    )
+
+    type = index
+    name = DBTroveFilesIdx
+tbl_name = DBTroveFiles
+rootpage = 15
+     sql = CREATE INDEX DBTroveFilesIdx ON DBTroveFiles(fileId)
+
+    type = index
+    name = DBTroveFilesInstanceIdx
+tbl_name = DBTroveFiles
+rootpage = 16
+     sql = CREATE INDEX DBTroveFilesInstanceIdx ON DBTroveFiles(instanceId)
+
+    type = index
+    name = DBTroveFilesPathIdx
+tbl_name = DBTroveFiles
+rootpage = 18
+     sql = CREATE INDEX DBTroveFilesPathIdx ON DBTroveFiles(path)
+
+    type = table
+    name = Tags
+tbl_name = Tags
+rootpage = 19
+     sql = CREATE TABLE Tags (
+            tagId INTEGER PRIMARY KEY AUTOINCREMENT,
+            tag STRING
+        )
+
+    type = index
+    name = Tags_uq
+tbl_name = Tags
+rootpage = 20
+     sql = CREATE UNIQUE INDEX Tags_uq on Tags (tag)
+
+    type = table
+    name = DBFileTags
+tbl_name = DBFileTags
+rootpage = 21
+     sql = CREATE TABLE DBFileTags(
+        streamId            INTEGER,
+        tagId               INTEGER
+    )
+
+    type = table
+    name = Flavors
+tbl_name = Flavors
+rootpage = 22
+     sql = CREATE TABLE Flavors (
+            flavorId INTEGER PRIMARY KEY AUTOINCREMENT,
+            flavor STRING
+        )
+
+    type = index
+    name = Flavors_uq
+tbl_name = Flavors
+rootpage = 23
+     sql = CREATE UNIQUE INDEX Flavors_uq on Flavors (flavor)
+
+    type = table
+    name = DBFlavorMap
+tbl_name = DBFlavorMap
+rootpage = 24
+     sql = CREATE TABLE DBFlavorMap(
+            instanceId INTEGER,
+            flavorId INTEGER
+        )
+
+    type = table
+    name = Dependencies
+tbl_name = Dependencies
+rootpage = 25
+     sql = CREATE TABLE Dependencies(
+        depId           INTEGER PRIMARY KEY AUTOINCREMENT,
+        class           INTEGER NOT NULL,
+        name            VARCHAR(254) NOT NULL,
+        flag            VARCHAR(254) NOT NULL
+    )
+
+    type = index
+    name = DependenciesIdx
+tbl_name = Dependencies
+rootpage = 27
+     sql = CREATE UNIQUE INDEX DependenciesIdx ON Dependencies(class, name, flag)
+
+    type = table
+    name = Requires
+tbl_name = Requires
+rootpage = 28
+     sql = CREATE TABLE Requires(
+        instanceId      INTEGER NOT NULL,
+        depId           INTEGER NOT NULL,
+        depNum          INTEGER,
+        depCount        INTEGER ,
+        CONSTRAINT Requires_instanceId_fk
+            FOREIGN KEY (instanceId) REFERENCES Instances(instanceId)
+            ON DELETE RESTRICT ON UPDATE CASCADE,
+        CONSTRAINT Requires_depId_fk
+            FOREIGN KEY (depId) REFERENCES Dependencies(depId)
+            ON DELETE RESTRICT ON UPDATE CASCADE
+        
+    )
+
+    type = index
+    name = RequiresIdx
+tbl_name = Requires
+rootpage = 29
+     sql = CREATE INDEX RequiresIdx ON Requires(instanceId)
+
+    type = index
+    name = RequiresIdx2
+tbl_name = Requires
+rootpage = 30
+     sql = CREATE INDEX RequiresIdx2 ON Requires(depId)
+
+    type = index
+    name = RequiresIdx3
+tbl_name = Requires
+rootpage = 32
+     sql = CREATE INDEX RequiresIdx3 ON Requires(depNum)
+
+    type = table
+    name = Provides
+tbl_name = Provides
+rootpage = 33
+     sql = CREATE TABLE Provides(
+        instanceId          INTEGER NOT NULL,
+        depId               INTEGER NOT NULL ,
+        CONSTRAINT Provides_instanceId_fk
+            FOREIGN KEY (instanceId) REFERENCES Instances(instanceId)
+            ON DELETE RESTRICT ON UPDATE CASCADE,
+        CONSTRAINT Provides_depId_fk
+            FOREIGN KEY (depId) REFERENCES Dependencies(depId)
+            ON DELETE RESTRICT ON UPDATE CASCADE
+        
+    )
+
+    type = index
+    name = ProvidesIdx
+tbl_name = Provides
+rootpage = 34
+     sql = CREATE INDEX ProvidesIdx ON Provides(instanceId)
+
+    type = index
+    name = ProvidesIdx2
+tbl_name = Provides
+rootpage = 35
+     sql = CREATE INDEX ProvidesIdx2 ON Provides(depId)
+
+    type = table
+    name = TroveInfo
+tbl_name = TroveInfo
+rootpage = 36
+     sql = CREATE TABLE TroveInfo(
+        instanceId      INTEGER NOT NULL,
+        infoType        INTEGER NOT NULL,
+        data            BLOB
+    )
+
+    type = index
+    name = TroveInfoIdx
+tbl_name = TroveInfo
+rootpage = 37
+     sql = CREATE INDEX TroveInfoIdx ON TroveInfo(instanceId)
+
+    type = index
+    name = TroveInfoTypeIdx
+tbl_name = TroveInfo
+rootpage = 39
+     sql = CREATE INDEX TroveInfoTypeIdx ON TroveInfo(infoType, data)
+
+    type = index
+    name = TroveInfoInstTypeIdx
+tbl_name = TroveInfo
+rootpage = 40
+     sql = CREATE INDEX TroveInfoInstTypeIdx ON TroveInfo(instanceId, infoType)
+
+    type = table
+    name = DataStore
+tbl_name = DataStore
+rootpage = 41
+     sql = CREATE TABLE DataStore(
+        hash    BINARY(20) NOT NULL,
+        count   INTEGER,
+        data    BLOB
+    )
+
+    type = index
+    name = DataStoreIdx
+tbl_name = DataStore
+rootpage = 42
+     sql = CREATE INDEX DataStoreIdx ON DataStore(hash)
+
+    type = table
+    name = DatabaseAttributes
+tbl_name = DatabaseAttributes
+rootpage = 43
+     sql = CREATE TABLE DatabaseAttributes(
+        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        name    STRING,
+        value   STRING
+    )
+
+    type = index
+    name = DatabaseAttributesNameIdx
+tbl_name = DatabaseAttributes
+rootpage = 44
+     sql = CREATE UNIQUE INDEX DatabaseAttributesNameIdx ON DatabaseAttributes(name)

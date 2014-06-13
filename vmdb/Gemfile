@@ -1,0 +1,102 @@
+require File.expand_path('Gemfile.global.rb', File.dirname(__FILE__))
+
+# Load the lib Gemfile (includes the source)
+MiqBundler.include_gemfile("../lib/Gemfile", binding)
+
+#
+# VMDB specific gems
+#
+
+gem "prototype-rails", "~>3.2.1"
+# gem 'jquery-rails'
+
+# Vendored and required
+# TODO: Fix AWS tests now that our api specs and the soap4r 1.6.0 specs pass on 1.8.7/1.9.3
+gem "rails",                          "=3.2.17",                         :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-4"
+gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
+
+# Vendored but not required
+gem "actionwebservice",               "=3.1.0",       :require => false, :git => "git://github.com/ManageIQ/actionwebservice.git", :tag => "v3.1.0-1"
+gem "net-ldap",                       "=0.2.20110317223538",  :require => false, :git => "git://github.com/ManageIQ/ruby-net-ldap.git", :tag => "v0.2-1"
+gem "rubyrep",                        "=1.2.0",       :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-2"
+gem "soap4r",                         "=1.6.0",       :require => false, :git => "git://github.com/ManageIQ/soap4r.git", :tag => "v1.6.0-2"
+gem "simple-rss",                     "=1.2.3",       :require => false, :git => "git://github.com/ManageIQ/simple-rss.git", :tag => "v1.2.3-8"
+gem "winrm",                          "=1.1.3",       :require => false, :git => "git://github.com/ManageIQ/WinRM.git", :tag => "v1.1.3-1"
+gem "ziya",                           "=2.3.0",       :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
+
+# Not vendored, but required
+gem "acts_as_list",                   "~>0.1.4"
+gem "acts_as_tree",                   "~>0.1.1"  # acts_as_tree needs to be required so that it loads before ancestry
+# In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
+# american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
+# See miq_expression_spec Date/Time Support examples.
+# https://github.com/jeremyevans/ruby-american_date
+gem "american_date"
+gem "default_value_for",              "~>1.0.7"
+gem "thin",                           "~>1.3.1"  # Used by rails server through rack
+gem "bcrypt-ruby",                    "~> 3.0.1"
+gem 'outfielding-jqplot-rails',       "= 1.0.8"
+gem 'secure_headers'
+# Needed by the REST API
+gem "jbuilder",                       "~>2.0.7"
+
+# Not vendored and not required
+gem "ancestry",                       "~>1.2.4",      :require => false
+gem "aws-sdk",                        "~>1.11.3",     :require => false
+gem 'dalli',                          "~>2.2.1",      :require => false
+gem "elif",                           "=0.1.0",       :require => false
+gem 'haml-rails',                     "~> 0.4",       :require => false
+gem "inifile",                        "~>2.0.2",      :require => false
+gem "logging",                        "~>1.6.1",      :require => false  # Ziya depends on this
+gem "net-ping",                       "~>1.5.3",      :require => false
+gem "net-sftp",                       "~>2.0.5",      :require => false
+gem "net-ssh",                        "~>2.6.5",      :require => false  # fog 1.13 wants net-ssh 2.6.5
+gem "open4",                          "~>1.3.0",      :require => false
+gem "ovirt_metrics",                  "~>1.0.1",      :require => false
+gem "pg",                             "~>0.12.2",     :require => false
+gem "rack",                           "~>1.4.1",      :require => false
+
+# Doesn't compile on ruby 1.9
+#gem "ruby-oci8",                      "=2.0.3",       :require => false if ENV.has_key?('ORACLE_HOME')
+gem "ruby-plsql",                     "=0.4.1",       :require => false
+gem "ruby-progressbar",               "~>0.0.10",     :require => false
+gem "rufus-scheduler",                "~>2.0.19",     :require => false
+gem "savon",                          "~>2.2.0",      :require => false  # Automate uses this for simple SOAP Integration
+gem "snmp",                           "~>1.1.0",      :require => false
+gem "state_machine",                  "~>1.1.2",      :require => false  # Remove :require=>false if running rake state_machine:draw
+gem "uglifier",                       "~>2.4.0",      :require => false
+
+#
+# Platform or Group dependent gems
+#
+
+if RUBY_PLATFORM =~ /mingw/
+  gem "win32-process",                :require => false
+
+  # win32-api (1.4.6 x86-mingw32)
+  # win32-open3 (0.3.2 x86-mingw32)
+  # win32-service (0.7.1 x86-mswin32-60)
+  # windows-api (0.4.0)
+  # windows-pr (1.0.9)
+end
+
+#
+# Custom Gemfile modifications
+#
+
+# Load platform specific Gemfile
+MiqBundler.include_gemfile("Gemfile.mingw.rb", binding) if RUBY_PLATFORM =~ /mingw/
+
+# Gems excluded from the appliance are now in their own file to simplify things
+if File.exists?(File.expand_path("Gemfile.appliance_excludes.rb", File.dirname(__FILE__)))
+  MiqBundler.include_gemfile("Gemfile.appliance_excludes.rb", binding)
+end
+
+# Load developer specific Gemfile
+#   Developers can create a file called Gemfile.dev.rb containing any gems for
+#   their local development.  This can be any gem under evaluation that other
+#   developers may not need or may not easily install, such as rails-dev-boost,
+#   any git based gem, and compiled gems like rbtrace or memprof.
+if File.exists?(File.expand_path("Gemfile.dev.rb", File.dirname(__FILE__)))
+  MiqBundler.include_gemfile("Gemfile.dev.rb", binding)
+end

@@ -1,0 +1,7 @@
+ResourceFeeder
+==============
+
+Simple feeds for resources
+
+NOTE: This plugin depends on the latest version of simply_helpful, available here:
+http://dev.rubyonrails.org/svn/rails/plugins/simply_helpful/

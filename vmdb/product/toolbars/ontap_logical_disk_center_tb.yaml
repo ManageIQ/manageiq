@@ -1,0 +1,35 @@
+#
+# Toolbar config file
+#
+---
+:model: OntapLogicalDisk
+:button_groups:
+- :name: ontap_logical_disk_policy
+  :items:
+  - :buttonSelect: ontap_logical_disk_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: ontap_logical_disk_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Logical Disk"
+- :name: ontap_logical_disk_monitoring
+  :items:
+  - :buttonSelect: ontap_logical_disk_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: ontap_logical_disk_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Logical Disk"
+      :url: '/show'
+      :url_parms: '?display=performance'
+    - :button: ontap_logical_disk_statistics
+      :image: statistics
+      :text: "Statistics"
+      :title: "Show Utilization Statistics for this Logical Disk"
+      :url: '/show_statistics'

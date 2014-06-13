@@ -1,0 +1,27 @@
+<div class="maincontent">
+	<%= render :partial => "layouts/flash_msg" %>
+
+	<% if @display == "config_info" %>
+		<fieldset>
+			<p class="legend">Info</p>
+			<table class="style3">
+				<% if @rp_config.nil? || @rp_config.empty? %>
+					<tr><td  width="495"><strong>Not Available</strong>
+					</td></tr>
+				<% else %>
+					<% @rp_config.each_with_index do |item, idx| %>
+						<% if idx%2 == 0 %>
+							<tr class="<%= cycle('row0', 'row1') %>">
+						<% end %>
+							 <td  width="495"><strong><%= h(item[:field]) %>: </strong><%= h(item[:description]) %>
+								</td>
+					<% end %>
+				<% end %>
+			</table>
+		</fieldset>
+
+	<% elsif @display == "descendant_vms" %>
+		<%= render :partial => "layouts/dc_tree_page" %>
+
+<% end %>
+</div>

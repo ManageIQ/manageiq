@@ -1,0 +1,173 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: VM Provisioning Profile Class
+    display_name: VM Provisioning Profile
+    name: Information
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: relationship
+      name: where
+      display_name: 
+      datatype: 
+      priority: 1
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_host_and_storage
+      visibility: 
+      collect: /host = host; /storage = storage
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: container
+      display_name: 
+      datatype: 
+      priority: 2
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_container_info
+      visibility: 
+      collect: /ncpus = ncpus; /memory = memory; /vlan = vlan
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: max_vms
+      display_name: 
+      datatype: 
+      priority: 3
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_allowed_num_vms
+      visibility: 
+      collect: /allowed = allowed
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: ttl_warnings
+      display_name: 
+      datatype: 
+      priority: 4
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_ttl_warnings
+      visibility: 
+      collect: /warnings = {ttl_warning => ttl_friendly }
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: lease_times
+      display_name: 
+      datatype: 
+      priority: 5
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_lease_times
+      visibility: 
+      collect: /ttls     = {ttl         => ttl_friendly }
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: customization
+      display_name: 
+      datatype: 
+      priority: 6
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_customization
+      visibility: 
+      collect: /customization = customization
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: domains
+      display_name: 
+      datatype: 
+      priority: 7
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_domains
+      visibility: 
+      collect: /domains = domain
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: networks
+      display_name: 
+      datatype: 
+      priority: 8
+      owner: 
+      default_value: 
+      substitute: true
+      message: get_networks
+      visibility: 
+      collect: /networks = network
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 

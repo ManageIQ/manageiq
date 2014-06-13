@@ -1,0 +1,25 @@
+#
+# Toolbar config file
+#
+---
+:model: Zone
+:button_groups:
+- :name: support_reloading
+  :items:
+  - :button: db_refresh
+    :image: reload
+    :title: 'Reload Current Display'
+# commenting these buttons until we have model support for them
+#- :name: scan_vmdb
+#  :items:
+#  - :buttonSelect: zone_vmdb_choice
+#    :image: vmdb
+#    :title: Configuration
+#    :text: Configuration
+#    :items:
+#    - :button: db_table_export
+#      :image: export
+#      :text: "Export selected tables"
+#      :title: "Select one or more tables to Export"
+#      :enabled: 'false'
+#      :onwhen: '1+'

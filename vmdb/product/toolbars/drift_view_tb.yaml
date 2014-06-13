@@ -1,0 +1,34 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: compare_view
+  :items:
+  - :buttonTwoState: drift_expanded
+    :image: view_expanded
+    :title: "Expanded View"
+    :url: 'drift_compress'
+  - :buttonTwoState: drift_compressed
+    :image: view_compressed
+    :title: "Compressed View"
+    :url: 'drift_compress'
+- :name: drift_downloading
+  :items:
+  - :buttonSelect: drift_download_choice
+    :image: download
+    :title: "Download"
+    :items:
+    - :button: drift_download_txt
+      :image: txt
+      :title: "Download comparison report in text format"
+      :url: '/drift_to_txt'
+    - :button: drift_download_csv
+      :image: csv
+      :title: "Download comparison report in CSV format"
+      :url: '/drift_to_csv'
+    - :button: drift_pdf
+      :image: pdf
+      :title: "Download comparison report in PDF format"
+      :url: '/drift_to_pdf'
+    

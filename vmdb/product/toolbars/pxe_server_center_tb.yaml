@@ -1,0 +1,29 @@
+#
+# Toolbar config file
+#
+---
+:model: PxeServer
+:button_groups:
+- :name: pxe_server_vmdb
+  :items:
+  - :buttonSelect: pxe_server_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: pxe_server_edit
+      :image: edit
+      :text: 'Edit this PXE Server'
+      :title: 'Edit this PXE Server'
+    - :button: pxe_server_delete
+      :image: delete
+      :text: 'Remove this PXE Server from the VMDB'
+      :title: 'Remove this PXE Server from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This PXE Server and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this PXE Server?'
+    - :separator:
+    - :button: pxe_server_refresh
+      :image: refresh
+      :text: 'Refresh Relationships'
+      :title: 'Refresh Relationships for this PXE Server'
+      :confirm: 'Refresh Relationships for this PXE Server?'

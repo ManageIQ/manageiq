@@ -1,0 +1,25 @@
+#import_grid {
+  height: 500px;
+  width: 1000px;
+}
+.cell-title {
+
+}
+.cell-effort-driven {
+  text-align: center;
+}
+.toggle {
+  height: 14px;
+  width: 18px;
+  display: inline-block;
+}
+.toggle.expand {
+  background: url(/images/layout/plus.gif) no-repeat center center;
+}
+.toggle.collapse {
+  background: url(/images/layout/minus.gif) no-repeat center center;
+}
+.slick-row {
+  margin-left: 0px;
+}
+.odd {background: #f5f5f5}

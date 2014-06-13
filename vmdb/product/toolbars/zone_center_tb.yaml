@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: Zone
+:button_groups:
+- :name: zone_vmdb
+  :items:
+  - :buttonSelect: zone_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: zone_edit
+      :image: edit
+      :text: "Edit this Zone"
+      :title: "Edit this Zone"
+    - :button: zone_delete
+      :image: delete
+      :text: "Delete this Zone"
+      :title: "Delete this Zone"
+      :url_parms: '&refresh=y'
+      :confirm: "Are you sure you want to delete this Zone?"

@@ -1,0 +1,82 @@
+<% url = url_for(:action =>'planning_option_changed') %>
+<div id="planning_summary_div">
+
+	<%= render(:partial =>"layouts/flash_msg", :locals=>{:div_num=>"1"}) %>
+
+	<% if @perf_record %>
+
+		<fieldset>
+			<p class="legend">Display Options</p>
+			<table class="style1">
+				<tr>
+					<td class="key" style="width:100px; ">Limit Chart to</td>
+					<td>
+						<%= select_tag("display_vms",
+															options_for_select(Array.new(10) {|i| (i+1)*10},
+																@sb[:planning][:options][:display_vms]),
+															"data-miq_sparkle_on"=>true,
+															"data-miq_observe"=>{:url=>url}.to_json) %>
+						VMs
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+
+		<% if @sb[:planning] && @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"] %>
+			<%= render(:partial =>"layouts/perf_charts",
+								:locals=>{:charts=>@sb[:planning][:charts], :chart_set=>"planning",
+													:chart_data=>@sb[:planning][:chart_data]["planning"], :perf_options=>@sb[:planning][:options]}) %>
+		<% else %>
+			&nbsp;No planning data is available for the selected item.
+		<% end %>
+
+		<% if @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"] %>
+
+			<table>
+				<tr><td style="width:100%">
+					<fieldset>
+						<p class="legend">Eligible <%= ui_lookup(:models=>@sb[:planning][:options][:target_typ]) %></p>
+						<table class="style3">
+							<thead>
+								<tr>
+									<th nowrap>
+										Rank
+									</th>
+									<th nowrap>
+										Name
+									</th>
+									<th nowrap>
+										Max VMs
+									</th>
+								</tr>
+							</thead>
+							<% if @sb[:planning][:rpt] %>
+								<% @sb[:planning][:rpt].table.data.each_with_index do |r, r_idx| %>
+									<% break if r_idx > 9 || r[1].to_i == 0  %>
+										<tr class="<%= cycle('row0', 'row1') %>">
+											<td align="center"><%= (r_idx + 1).ordinalize %></td>
+											<td><%= r["name"] %></td>
+											<td align="center"><%= r["total_vm_count"] %></td>
+										</tr>
+								<% end %>
+							<% end %>
+						</table>
+					</fieldset>
+				</td></tr>
+				<% if @sb[:planning][:rpt] && @sb[:planning][:rpt].extras[:vm_profile] %>
+					<tr><td>
+						<%= render(:partial =>"planning_vm_profile") %>
+					</td></tr>
+				<% end %>
+			</table>
+
+		<% end %>
+
+	<% end %>
+
+	<% if @perf_record %>
+		<br/>&nbsp;* Information shown is based on available trend data going back <%= WEEK_CHOICES[@sb[:planning][:options][:days]].downcase %>.<br/><br/>
+	<% else %>
+		<%= render(:partial =>"planning_instructions") %>
+	<% end %>
+</div>

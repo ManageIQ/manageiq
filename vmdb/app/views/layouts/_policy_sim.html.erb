@@ -1,0 +1,64 @@
+<% url = url_for(:action => 'policy_sim_add') %>
+<div id="main_div">
+  <%= render :partial => "layouts/flash_msg" %>
+  <p class="legend">Choose Policies</p>
+  <div id="tab_div">
+    <table class="style3">
+      <thead>
+        <tr>
+          <th class="special" colspan="2">
+            <strong>Select a Policy Profile to add:</strong>
+            <%= select_tag("profile_id",
+                           options_for_select(@temp[:all_profs].invert.sort{|a,b| a.first.downcase<=>b.first.downcase}, "select"),
+                           "data-miq_sparkle_on"  => true, 
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => url}.to_json) %>
+          </th>
+        <tr>
+          <th class="icon"></th>
+          <th>Policy Profiles in Effect</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if session[:policies].length == 0 %>
+          <tr class="<%= cycle('row0', 'row1') %>">
+            <td></td>
+            <td>No policies have been chosen yet</td>
+          </tr>
+        <% else %>
+          <% session[:policies].invert.sort.each do | desc, id | %>
+            <tr id="<%="#{desc}_tr"%>" class="<%= cycle('row0', 'row1') %>">
+              <td onclick="<%= remote_function(:loading  => "miqSparkle(true);",
+                                               :complete => "miqSparkle(false);",
+                                               :url      => {:action  => 'policy_sim_remove', 
+                                                             :del_pol => id}) %>"
+                  title="Click to remove this policy">
+                <%= image_tag("/images/toolbars/delete.png", 
+                              :class => "rollover small", 
+                              :alt   => "Click to remove this policy") 
+                %>
+              </td>
+              <td><%= h(desc) %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <hr>
+  <p class="legend"><%= "Policy Simulation for #{pluralize(@tagitems.length,'Item')}" %></p>
+  <table class="admintable" height="75">
+    <tbody>
+      <tr>
+        <td>
+          <% if @tagitems %>
+            <% @embedded = true; @policy_sim = true %>
+            <%= render :partial => "layouts/gtl", 
+                       :locals  => {:view => @pol_view} 
+            %>
+          <% end %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

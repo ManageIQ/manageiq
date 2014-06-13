@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM Provisioning
+    name: Provisioning2
+    inherits: 
+    description: 
+  fields:
+  - Relationship5:
+      value: /Factory/StateMachine/Provisioning

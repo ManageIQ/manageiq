@@ -1,0 +1,36 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Collections.Hashtable</T>
+      <T>System.Object</T>
+    </TN>
+    <DCT>
+      <En>
+        <S N="Key">ps_time</S>
+        <Obj N="Value" RefId="1">
+          <DT>2012-12-10T14:44:07.0033672-06:00</DT>
+          <MS>
+            <Obj N="DisplayHint" RefId="2">
+              <TN RefId="1">
+                <T>Microsoft.PowerShell.Commands.DisplayHintType</T>
+                <T>System.Enum</T>
+                <T>System.ValueType</T>
+                <T>System.Object</T>
+              </TN>
+              <ToString>DateTime</ToString>
+              <I32>2</I32>
+            </Obj>
+          </MS>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">xen_desktop_time</S>
+        <DT N="Value">2012-12-10T20:43:29.649091</DT>
+      </En>
+      <En>
+        <S N="Key">ps_time_utc</S>
+        <DT N="Value">2012-12-10T20:44:07.0033672Z</DT>
+      </En>
+    </DCT>
+  </Obj>
+</Objs>

@@ -1,0 +1,131 @@
+<% if @record && @record.evm_display_name != nil %>
+	<div id="accordion">
+		<div class="panel">
+			<div class="topbar">
+				<%= link_to(h(@record.evm_display_name.length < trunc_at ? @record.evm_display_name : @record.evm_display_name[0...trunc_to] + "..."),
+													{:action=>'panel_control', :panel=>'icon'},
+                          :remote=>true,
+													:title=>"#{h(@record.evm_display_name)}") %>
+			</div>
+			<%= hidden_div_if(@panels["icon"] == nil || @panels["icon"] == false, :id=>"icon") %>
+				<div class="panecontent">
+					<%= render(:partial=>"layouts/quadicon",
+											:locals=>{:mode=>:icon,
+																:item=>@record,
+																:size=>72,
+																:typ=>:listnav} )
+					%>
+				</div>
+			</div>
+			<div class="topbar">
+				<%= link_to("Properties", {:action=>'panel_control', :panel=>'cim_cs_prop'}, :remote=>true) %>
+			</div>
+			<%= hidden_div_if(@panels["cim_cs_prop"] == nil || @panels["cim_cs_prop"] == false, :id=>"cim_cs_prop") %>
+				<div class="panecontent">
+          <%= link_to_with_icon('Summary',
+                                {:action=>'show', :id=>@record, :display=>'main'},
+                                :title=>"Show Summary") %>
+				</div>
+			</div>
+
+			<div class="topbar">
+				<%= link_to("Relationships", {:action=>'panel_control', :panel=>'cim_cs_rel'}, :remote=>true) %>
+			</div>
+				<%= hidden_div_if(@panels["cim_cs_rel"] == nil || @panels["cim_cs_rel"] == false, :id=>"cim_cs_rel") %>
+				<div class="panecontent">
+					<% if role_allows(:feature=>"ontap_storage_volume_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.storage_volumes_size,
+              :record_id => @record.id,
+              :tables    => 'ontap_storage_volume',
+              :display   => 'ontap_storage_volume',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"ontap_storage_volume")}",
+            )%>
+					<% end %>
+
+					<% if role_allows(:feature=>"ontap_file_share_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.hosted_file_shares_size,
+              :record_id => @record.id,
+              :tables    => 'ontap_file_share',
+              :display   => 'ontap_file_share',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"ontap_file_share")}",
+            )%>
+					<% end %>
+
+					<% if role_allows(:feature=>"snia_local_file_system_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.local_file_systems_size,
+              :record_id => @record.id,
+              :tables    => 'snia_local_file_system',
+              :display   => 'snia_local_file_systems',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"snia_local_file_system")}",
+            )%>
+					<% end %>
+
+					<% if role_allows(:feature=>"ontap_logical_disk_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.logical_disks_size,
+              :record_id => @record.id,
+              :tables    => 'ontap_logical_disk',
+              :display   => 'ontap_logical_disks',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"ontap_logical_disk")}",
+            )%>
+					<% end %>
+
+					<% if role_allows(:feature=>"cim_base_storage_extent_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.base_storage_extents_size,
+              :record_id => @record.id,
+              :tables    => 'cim_base_storage_extent',
+              :display   => 'cim_base_storage_extents',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"cim_base_storage_extent")}",
+            )%>
+					<% end %>
+				</div>
+			</div>
+      <div class="topbar">
+				<%= link_to("Infrastructure Relationships", {:action=>'panel_control', :panel=>'cim_cs_inf_rel'}, :remote=>true) %>
+			</div>
+				<%= hidden_div_if(@panels["cim_cs_inf_rel"] == nil || @panels["cim_cs_inf_rel"] == false, :id=>"cim_cs_inf_rel") %>
+				<div class="panecontent">
+					<% if role_allows(:feature=>"vm_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.vms_size,
+              :record_id => @record.id,
+              :tables    => 'vm',
+              :display   => 'vms',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"vm")}",
+            )%>
+					<% end %>
+
+					<% if role_allows(:feature=>"host_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.hosts_size,
+              :record_id => @record.id,
+              :tables    => 'host',
+              :display   => 'hosts',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"host")}",
+            )%>
+					<% end %>
+
+					<% if role_allows(:feature=>"storage_show_list")  %>
+            <%= link_if_nonzero(
+              :count     => @record.storages_size,
+              :record_id => @record.id,
+              :tables    => 'storage',
+              :display   => 'storages',
+              :action    => 'show',
+              :title     => "Show all #{ui_lookup(:tables=>"storage")}",
+            )%>
+					<% end %>
+				</div>
+		</div>
+<% end %>

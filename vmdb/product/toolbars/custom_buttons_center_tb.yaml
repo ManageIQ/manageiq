@@ -1,0 +1,28 @@
+#
+# Toolbar config file
+#
+---
+:model: CustomButton
+:button_groups:
+- :name: custom_button_vmdb
+  :items:
+  - :buttonSelect: custom_button_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ab_group_edit
+      :image: edit
+      :text: Edit this Button Group
+      :title: Edit this Button Group
+      :url_parms: 'main_div'
+    - :button: ab_button_new
+      :image: new
+      :text: "Add a new Button"
+      :title: "Add a new Button"
+    - :button: ab_group_delete
+      :image: remove
+      :text: Remove this Button Group
+      :title: Remove this Button Group
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Button Group will be permanently removed.  Are you sure you want to remove the selected Button Group?"

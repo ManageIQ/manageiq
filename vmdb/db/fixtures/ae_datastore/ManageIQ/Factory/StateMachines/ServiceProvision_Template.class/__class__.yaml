@@ -1,0 +1,206 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: Service Provision State Machine
+    display_name: Service Provision State Machine
+    name: ServiceProvision_Template
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: state
+      name: pre1
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'pre1',status_state => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'pre1',status_state => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'error in pre1',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre2
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'pre2',status_state => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'pre2',status_state => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'error in pre2',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: configurechilddialog
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: ! '#/Factory/Service/ConfigureChildDialog'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: provision
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: /Factory/Service/Provision
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Creating Service',status_state
+        => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Creating Service',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'error in Cloning Service',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: checkprovisioned
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: /Factory/Service/CheckProvisioned
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: update_serviceprovision_status(status => 'Cloning Service',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => '${/#ae_reason}',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: post1
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Applying Post1 Customizations',status_state
+        => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Applied Post1 Customizations',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'error in Applying Post1
+        Customizations',status_state => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: post2
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: post3
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: EmailOwner
+      display_name: 
+      datatype: string
+      priority: 9
+      owner: 
+      default_value: /Alert/EmailNotifications/ServiceProvision_complete?event=service_provisioned
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Emailing Owner',status_state
+        => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'service_provision_complete',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'error in Emailing Owner',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 

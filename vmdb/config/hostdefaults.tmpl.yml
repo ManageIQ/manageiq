@@ -1,0 +1,31 @@
+# agent: Runtime settings for remote agent (MIQHost)
+# policy: Policy rules for hosts and virtual machines
+#
+---
+agent:
+  :eventing:
+    :enabled: 
+    :frequency: 15
+  forceFleeceDefault: false
+  heartbeat_frequency: 60
+  :log:
+    :level: info
+    :wrap_size: 10485760
+    :wrap_time: 86400
+  :powershell:
+    :timeout: 120
+  readonly: false
+  scan_frequency: 0
+  update_frequency: 0
+  vmstate_refresh_frequency: 0
+  wsListenPort: '1139'
+host:
+  autoscan: false
+  inherit_mgt_tags: false
+  scan_frequency: 0
+policy:
+  autoscan: false
+  autosmart: true
+  inherit_mgt_tags: true
+  start_smart_service: true
+  start_smart_vm: true

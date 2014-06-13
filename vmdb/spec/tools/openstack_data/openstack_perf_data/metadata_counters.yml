@@ -1,0 +1,29 @@
+---
+-
+  user_id: "62992b0399a34653907ded01238a9b2b"
+  name: "network.incoming.bytes"
+  resource_id: "nova-instance-instance-0000001e-fa163ecce5d9"
+  project_id: "3bbc20f34655462d8112ef8db50e5a19"
+  type: "cumulative"
+  unit: "B"
+-
+  user_id: "62992b0399a34653907ded01238a9b2b"
+  name: "network.incoming.packets"
+  resource_id: "nova-instance-instance-0000001e-fa163ecce5d9"
+  project_id: "3bbc20f34655462d8112ef8db50e5a19"
+  type: "cumulative"
+  unit: "packet"
+-
+  user_id: "62992b0399a34653907ded01238a9b2b"
+  name: "network.outgoing.bytes"
+  resource_id: "nova-instance-instance-0000001e-fa163ecce5d9"
+  project_id: "3bbc20f34655462d8112ef8db50e5a19"
+  type: "cumulative"
+  unit: "B"
+-
+  user_id: "62992b0399a34653907ded01238a9b2b"
+  name: "network.outgoing.packets"
+  resource_id: "nova-instance-instance-0000001e-fa163ecce5d9"
+  project_id: "3bbc20f34655462d8112ef8db50e5a19"
+  type: "cumulative"
+  unit: "packet"

@@ -1,0 +1,28 @@
+old_name: "service_level_silver"
+name: "Sample: Service level silver"    
+description: "VM has at least 1 cpu or memory  is less than or equal to 1024"
+policy_description: "Allow VM to start if it is at the Silver level"
+modifier: "allow"
+who: "system"
+what: "start"
+rule: 
+    mode: "tag_expr_v2"
+    expr:
+        and:
+          - >=:
+             field: Vm.hardware-numvcpus
+             value: 1
+          - >=:
+             field: Vm.hardware-memory_cpu
+             value: 512
+          - or:
+             - contains: 
+                 tag:   Vm.managed-service_level
+                 value: platinum
+             - contains: 
+                 tag:   Vm.managed-service_level
+                 value: gold
+             - contains: 
+                     tag:   Vm.managed-service_level
+                     value: silver
+towhat: "Vm"

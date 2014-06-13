@@ -1,0 +1,176 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "Utilization for a Day"
+
+# Menu name
+name: "Utilization for a Day"
+
+# This report is generated from another MiqReport instance
+db: MiqReport
+
+# Columns to fetch from the main table
+cols:
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Generated columns
+generate_cols:
+- gen_name
+- gen_timestamp
+- gen_available_percent
+- gen_reserved_percent
+- gen_max_used_percent
+- gen_avg_used_percent
+- gen_available_percent_tip
+- gen_reserved_percent_tip
+- gen_max_used_percent_tip
+- gen_avg_used_percent_tip
+
+generate_rows:
+- - CPU
+  - :col_name: timestamp
+  - :function: percent_of_col
+    :col_name: max_derived_cpu_available
+    :pct_col_name: max_derived_cpu_available
+  - :function: percent_of_col
+    :col_name: max_derived_cpu_reserved
+    :pct_col_name: max_derived_cpu_available
+  - :function: percent_of_col
+    :col_name: trend_max_cpu_usagemhz_rate_average
+    :pct_col_name: max_derived_cpu_available
+  - :function: percent_of_col
+    :col_name: trend_cpu_usagemhz_rate_average
+    :pct_col_name: max_derived_cpu_available
+  - :col_name: max_derived_cpu_available
+  - :col_name: max_derived_cpu_reserved
+  - :col_name: trend_max_cpu_usagemhz_rate_average
+  - :col_name: trend_cpu_usagemhz_rate_average
+- - Memory
+  - :col_name: timestamp
+  - :function: percent_of_col
+    :col_name: max_derived_memory_available
+    :pct_col_name: max_derived_memory_available
+  - :function: percent_of_col
+    :col_name: max_derived_memory_reserved
+    :pct_col_name: max_derived_memory_available
+  - :function: percent_of_col
+    :col_name: trend_max_derived_memory_used
+    :pct_col_name: max_derived_memory_available
+  - :function: percent_of_col
+    :col_name: trend_derived_memory_used
+    :pct_col_name: max_derived_memory_available
+  - :col_name: max_derived_memory_available
+  - :col_name: max_derived_memory_reserved
+  - :col_name: trend_max_derived_memory_used
+  - :col_name: trend_derived_memory_used
+- - Disk
+  - :col_name: timestamp
+  - :function: percent_of_col
+    :col_name: derived_storage_total
+    :pct_col_name: derived_storage_total
+  - 0
+  - :function: percent_of_col
+    :col_name: trend_max_v_derived_storage_used
+    :pct_col_name: derived_storage_total
+  - :function: percent_of_col
+    :col_name: trend_v_derived_storage_used
+    :pct_col_name: derived_storage_total
+  - :col_name: derived_storage_total
+  - 0
+  - :col_name: trend_max_v_derived_storage_used
+  - :col_name: trend_v_derived_storage_used
+
+# Order of columns (from all tables)
+col_order: 
+- gen_name
+- gen_timestamp
+- gen_available_percent
+- gen_reserved_percent
+- gen_max_used_percent
+- gen_avg_used_percent
+- gen_available_percent_tip
+- gen_reserved_percent_tip
+- gen_max_used_percent_tip
+- gen_avg_used_percent_tip
+
+# Column titles, in order
+headers:
+- Utilization Type
+- Date/Time
+- Total
+- Available
+- Max Used
+- Avg Used
+- Total Value
+- Available Value
+- Max Used Value
+- Avg Used Value
+
+col_formats:
+-
+-
+- :precision: 0
+- :precision: 0
+- :precision: 0
+- :precision: 0
+-
+-
+-
+-
+
+# Some nice sample formats:
+#col_formats:
+#- :precision: 0
+#- :function:
+#    :delimiter: ","
+#    :name: number_with_delimiter
+#    :separator: .
+#    :suffix: " MB"
+#    :prefix: "My Value Is: "
+#  :precision: 2
+#- :function:
+#    :name: bytes_to_human_size
+#    :precision: 1
+#- :function:
+#    :name: number_with_delimiter
+
+# Condition expression for search filtering
+conditions: 
+
+# Order string for the SQL query
+order: ascending
+
+# Columns to sort the report on, in order
+sortby: 
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 
+
+template_type: report

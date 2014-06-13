@@ -1,0 +1,28 @@
+<div id='main_div'>
+<% if @report == nil %>
+	<div class="alert alert-info">
+		<span class="pficon pficon-info"></span>
+		<strong>Choose a Report to edit from the menus on the left.</strong>
+	</div>
+<% else %>
+
+			<fieldset>
+				<p class="legend"><%= @report.name %></p>
+				<table class="style1">
+						<tr>
+							<td class="key">Title:</td>
+							<td class="notwide"><%= @report.title %></td>
+						</tr>
+						<tr>
+							<td class="key">Based On:</td>
+							<td class="notwide"><%= Dictionary::gettext(@report.db, :type=>:model, :notfound=>:titleize) %></td>
+						</tr>
+						<tr>
+							<td class="key">Updated On:</td>
+							<td class="notwide"><%= @report.updated_on %></td>
+						</tr>
+				</table>
+			</fieldset>
+
+<% end  %>
+</div>

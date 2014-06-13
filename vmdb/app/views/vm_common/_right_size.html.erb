@@ -1,0 +1,299 @@
+<div id="tab_div">
+  <%= render :partial => "layouts/flash_msg" %>
+  <dl class="col2">
+    <dd>
+      <fieldset>
+      <p class="legend">Normal Operating Ranges (up to 30 days' data)</p>
+        <table class="style3">
+          <thead><tr><th colspan="2"></th></tr></thead>
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+            <td class="label" valign="middle"> CPU</td>
+            <td>
+              <table style="line-height:5px;white-space: nowrap">
+                <tr>
+                  <td>Max</td>
+                  <td><%= @record.cpu_usagemhz_rate_average_max_over_time_period ?
+                    mhz_to_human_size(@record.cpu_usagemhz_rate_average_max_over_time_period, 2) :
+                    "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>High</td>
+                  <td><%= @record.cpu_usagemhz_rate_average_high_over_time_period ?
+                    mhz_to_human_size(@record.cpu_usagemhz_rate_average_high_over_time_period, 2) :
+                    "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Average</td>
+                  <td><%= @record.cpu_usagemhz_rate_average_avg_over_time_period ?
+                  mhz_to_human_size(@record.cpu_usagemhz_rate_average_avg_over_time_period, 2) :
+                  "Not Available" %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+            <td class="label" valign="middle">CPU Usage</td>
+            <td>
+              <table style="line-height:5px;white-space: nowrap">
+                <tr>
+                  <td>Max</td>
+                  <td><%= @record.max_cpu_usage_rate_average_max_over_time_period ?
+                        "#{number_to_percentage(@record.max_cpu_usage_rate_average_max_over_time_period,:precision=>2)}" :
+                        "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>High</td>
+                  <td><%= @record.max_cpu_usage_rate_average_high_over_time_period ?
+                        "#{number_to_percentage(@record.max_cpu_usage_rate_average_high_over_time_period,:precision=>2)}" :
+                        "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Average</td>
+                  <td><%= @record.max_cpu_usage_rate_average_avg_over_time_period ?
+                    "#{number_to_percentage(@record.max_cpu_usage_rate_average_avg_over_time_period,:precision=>2)}" :
+                    "Not Available" %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+            <td class="label" valign="middle">Memory</td>
+            <td>
+              <table style="line-height:5px;white-space: nowrap">
+                <tr>
+                  <td>Max</td>
+                  <td><%= @record.derived_memory_used_max_over_time_period ?
+                        number_to_human_size(@record.derived_memory_used_max_over_time_period * 1024 * 1024,:precision=>2) :
+                        "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>High</td>
+                  <td><%= @record.derived_memory_used_high_over_time_period ?
+                        number_to_human_size(@record.derived_memory_used_high_over_time_period * 1024 * 1024,:precision=>2) :
+                        "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Average</td>
+                  <td><%= @record.derived_memory_used_avg_over_time_period ?
+                        number_to_human_size(@record.derived_memory_used_avg_over_time_period * 1024 * 1024,:precision=>2) :
+                        "Not Available" %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+            <td class="label" valign="middle">Memory Usage</td>
+            <td>
+              <table style="line-height:5px;white-space: nowrap">
+                <tr>
+                  <td>Max</td>
+                  <td><%= @record.max_mem_usage_absolute_average_max_over_time_period ?
+                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_max_over_time_period,:precision=>2)}" :
+                        "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>High</td>
+                  <td><%= @record.max_mem_usage_absolute_average_high_over_time_period ?
+                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_high_over_time_period,:precision=>2)}" :
+                        "Not Available" %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Average</td>
+                  <td><%= @record.max_mem_usage_absolute_average_avg_over_time_period ?
+                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_avg_over_time_period,:precision=>2)}" :
+                        "Not Available" %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+      <fieldset>
+        <p class="legend">Right-Sizing (Conservative - derived from Absolute Maximum)</p>
+        <table class="style3">
+          <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>Current</th>
+            <th>Recommended</th>
+            <th>% Savings</th>
+            <th>Savings</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
+            <td>
+              Processors
+            </td>
+            <td align="right">
+              <%= @record.num_cpu ? @record.num_cpu : "Not Available" %>
+            </td>
+            <td align="right">
+              <%= @record.conservative_recommended_vcpus ? @record.conservative_recommended_vcpus : "Not Available" %>
+            </td>
+            <td align="right">
+              <%= @record.conservative_vcpus_recommended_change_pct ? "#{@record.conservative_vcpus_recommended_change_pct}%" : "Not Available" %>
+            </td>
+            <td align="right">
+              <%= @record.conservative_vcpus_recommended_change ? @record.conservative_vcpus_recommended_change : "Not Available" %>
+            </td>
+          </tr>
+          <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
+            <td>
+              Memory
+            </td>
+            <td align="right">
+              <%= @record.mem_cpu ? "#{@record.mem_cpu} MB" : "Not Available" %>
+            </td>
+            <td align="right">
+              <%= @record.conservative_recommended_mem ? "#{@record.conservative_recommended_mem} MB" : "Not Available" %>
+            </td>
+            <td align="right">
+              <%= @record.conservative_mem_recommended_change_pct ? "#{@record.conservative_mem_recommended_change_pct}%" : "Not Available" %>
+            </td>
+            <td align="right">
+              <%= @record.conservative_mem_recommended_change ? "#{@record.conservative_mem_recommended_change} MB" : "Not Available" %>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    </dd>
+    <dd>
+      <fieldset>
+      <p class="legend">Right-Sizing (Moderate - derived from High NORM)</p>
+          <table class="style3">
+            <thead>
+              <tr>
+                <th>&nbsp;</th>
+                <th>Current</th>
+                <th>Recommended</th>
+                <th>% Savings</th>
+                <th>Savings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
+                <td>
+                  Processors
+                </td>
+                <td align="right">
+                  <%= @record.num_cpu ? @record.num_cpu : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.moderate_recommended_vcpus ? @record.moderate_recommended_vcpus : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.moderate_vcpus_recommended_change_pct ? "#{@record.moderate_vcpus_recommended_change_pct}%" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.moderate_vcpus_recommended_change ? @record.moderate_vcpus_recommended_change : "Not Available" %>
+                </td>
+              </tr>
+              <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
+                <td>
+                  Memory
+                </td>
+                <td align="right">
+                  <%= @record.mem_cpu ? "#{@record.mem_cpu} MB" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.moderate_recommended_mem ? "#{@record.moderate_recommended_mem} MB" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.moderate_mem_recommended_change_pct ? "#{@record.moderate_mem_recommended_change_pct}%" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.moderate_mem_recommended_change ? "#{@record.moderate_mem_recommended_change} MB" : "Not Available" %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      </fieldset>
+      <fieldset>
+      <p class="legend">Right-Sizing (Aggressive - derived from Average NORM)</p>
+          <table class="style3">
+            <thead>
+              <tr>
+                <th>&nbsp;</th>
+                <th>Current</th>
+                <th>Recommended</th>
+                <th>% Savings</th>
+                <th>Savings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
+                <td>
+                  Processors
+                </td>
+                <td align="right">
+                  <%= @record.num_cpu ? @record.num_cpu : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.aggressive_recommended_vcpus ? @record.aggressive_recommended_vcpus : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.aggressive_vcpus_recommended_change_pct ? "#{@record.aggressive_vcpus_recommended_change_pct}%" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.aggressive_vcpus_recommended_change ? @record.aggressive_vcpus_recommended_change : "Not Available" %>
+                </td>
+              </tr>
+              <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
+                <td>
+                  Memory
+                </td>
+                <td align="right">
+                  <%= @record.mem_cpu ? "#{@record.mem_cpu} MB" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.aggressive_recommended_mem ? "#{@record.aggressive_recommended_mem} MB" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.aggressive_mem_recommended_change_pct ? "#{@record.aggressive_mem_recommended_change_pct}%" : "Not Available" %>
+                </td>
+                <td align="right">
+                  <%= @record.aggressive_mem_recommended_change ? "#{@record.aggressive_mem_recommended_change} MB" : "Not Available" %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      </fieldset>
+      <div class="note">
+        <%= "* Recommendations are subject to minimum of CPU: #{Vm.cpu_recommendation_minimum} and Memory: #{MiqReport.new.format_mbytes_to_human_size(Vm.mem_recommendation_minimum)}." %>
+      </div>
+    </dd>
+  </dl>
+  <% unless @explorer %>
+    <div id="buttons_on">
+      <ul id="form_buttons">
+        <li>
+          <%= image_tag('/images/formbuttons/cancel.png',
+                        :border  => "0",
+                        :class   => "button",
+                        :style   => "width: 80px; height: 30px",
+                        :alt     => "Cancel",
+                        :title   => "Cancel",
+                        :onclick => "miqAjaxButton('#{url_for(:action => "right_size",
+                                                              :id     => @record_id,
+                                                              :button => "cancel")}');")
+          %>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+</div>

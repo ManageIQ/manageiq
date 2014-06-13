@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="" xmlns:typens="urn:ActionWebService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="urn:ActionWebService" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
+      <xsd:complexType name="VmdbWs..PolicyList">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="description" type="xsd:string"/>
+          <xsd:element name="guid" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmSoftware">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="description" type="xsd:string"/>
+          <xsd:element name="vendor" type="xsd:string"/>
+          <xsd:element name="version" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..ConditionListArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..ConditionList[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..PolicyListArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..PolicyList[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="HostArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:Host[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmRsop">
+        <xsd:all>
+          <xsd:element name="result" type="xsd:string"/>
+          <xsd:element name="reason" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..HostListArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..HostList[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Vm">
+        <xsd:all>
+          <xsd:element name="id" type="xsd:int"/>
+          <xsd:element name="vendor" type="xsd:string"/>
+          <xsd:element name="format" type="xsd:string"/>
+          <xsd:element name="version" type="xsd:string"/>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="description" type="xsd:string"/>
+          <xsd:element name="location" type="xsd:string"/>
+          <xsd:element name="config_xml" type="xsd:string"/>
+          <xsd:element name="autostart" type="xsd:string"/>
+          <xsd:element name="host_id" type="xsd:int"/>
+          <xsd:element name="last_sync_on" type="xsd:dateTime"/>
+          <xsd:element name="created_on" type="xsd:dateTime"/>
+          <xsd:element name="updated_on" type="xsd:dateTime"/>
+          <xsd:element name="storage_id" type="xsd:int"/>
+          <xsd:element name="guid" type="xsd:string"/>
+          <xsd:element name="service_id" type="xsd:int"/>
+          <xsd:element name="ems_id" type="xsd:int"/>
+          <xsd:element name="last_scan_on" type="xsd:dateTime"/>
+          <xsd:element name="last_scan_attempt_on" type="xsd:dateTime"/>
+          <xsd:element name="uid_ems" type="xsd:string"/>
+          <xsd:element name="retires_on" type="xsd:date"/>
+          <xsd:element name="retired" type="xsd:boolean"/>
+          <xsd:element name="boot_time" type="xsd:dateTime"/>
+          <xsd:element name="tools_status" type="xsd:string"/>
+          <xsd:element name="standby_action" type="xsd:string"/>
+          <xsd:element name="custom_1" type="xsd:string"/>
+          <xsd:element name="custom_2" type="xsd:string"/>
+          <xsd:element name="custom_3" type="xsd:string"/>
+          <xsd:element name="custom_4" type="xsd:string"/>
+          <xsd:element name="custom_5" type="xsd:string"/>
+          <xsd:element name="custom_6" type="xsd:string"/>
+          <xsd:element name="custom_7" type="xsd:string"/>
+          <xsd:element name="custom_8" type="xsd:string"/>
+          <xsd:element name="custom_9" type="xsd:string"/>
+          <xsd:element name="power_state" type="xsd:string"/>
+          <xsd:element name="state_changed_on" type="xsd:dateTime"/>
+          <xsd:element name="previous_state" type="xsd:string"/>
+          <xsd:element name="connection_state" type="xsd:string"/>
+          <xsd:element name="reserved" type="xsd:string"/>
+          <xsd:element name="last_perf_capture_on" type="xsd:dateTime"/>
+          <xsd:element name="blackbox_exists" type="xsd:boolean"/>
+          <xsd:element name="blackbox_validated" type="xsd:boolean"/>
+          <xsd:element name="registered" type="xsd:boolean"/>
+          <xsd:element name="busy" type="xsd:boolean"/>
+          <xsd:element name="smart" type="xsd:boolean"/>
+          <xsd:element name="owner" type="xsd:string"/>
+          <xsd:element name="retirement" type="xsd:string"/>
+          <xsd:element name="memory_reserve" type="xsd:int"/>
+          <xsd:element name="memory_reserve_expand" type="xsd:boolean"/>
+          <xsd:element name="memory_limit" type="xsd:int"/>
+          <xsd:element name="memory_shares" type="xsd:int"/>
+          <xsd:element name="memory_shares_level" type="xsd:string"/>
+          <xsd:element name="cpu_reserve" type="xsd:int"/>
+          <xsd:element name="cpu_reserve_expand" type="xsd:boolean"/>
+          <xsd:element name="cpu_limit" type="xsd:int"/>
+          <xsd:element name="cpu_shares" type="xsd:int"/>
+          <xsd:element name="cpu_shares_level" type="xsd:string"/>
+          <xsd:element name="cpu_affinity" type="xsd:string"/>
+          <xsd:element name="ems_created_on" type="xsd:dateTime"/>
+          <xsd:element name="template" type="xsd:boolean"/>
+          <xsd:element name="evm_owner_id" type="xsd:int"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmCmdResult">
+        <xsd:all>
+          <xsd:element name="result" type="xsd:string"/>
+          <xsd:element name="reason" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..EventList">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="guid" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..ActionList">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="guid" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..ConditionList">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="guid" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:Vm[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..EventListArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..EventList[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..ActionListArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..ActionList[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..HostList">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="guid" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmAccounts">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="type" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmList">
+        <xsd:all>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="guid" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmListArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..VmList[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmSoftwareArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..VmSoftware[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Host">
+        <xsd:all>
+          <xsd:element name="id" type="xsd:int"/>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="hostname" type="xsd:string"/>
+          <xsd:element name="ipaddress" type="xsd:string"/>
+          <xsd:element name="vmm_vendor" type="xsd:string"/>
+          <xsd:element name="vmm_version" type="xsd:string"/>
+          <xsd:element name="vmm_product" type="xsd:string"/>
+          <xsd:element name="vmm_buildnumber" type="xsd:string"/>
+          <xsd:element name="created_on" type="xsd:dateTime"/>
+          <xsd:element name="updated_on" type="xsd:dateTime"/>
+          <xsd:element name="guid" type="xsd:string"/>
+          <xsd:element name="ems_id" type="xsd:int"/>
+          <xsd:element name="user_assigned_os" type="xsd:string"/>
+          <xsd:element name="power_state" type="xsd:string"/>
+          <xsd:element name="smart" type="xsd:int"/>
+          <xsd:element name="settings" type="xsd:string"/>
+          <xsd:element name="last_perf_capture_on" type="xsd:dateTime"/>
+          <xsd:element name="reserved" type="xsd:string"/>
+          <xsd:element name="uid_ems" type="xsd:string"/>
+          <xsd:element name="connection_state" type="xsd:string"/>
+          <xsd:element name="ssh_permit_root_login" type="xsd:string"/>
+          <xsd:element name="custom_1" type="xsd:string"/>
+          <xsd:element name="custom_2" type="xsd:string"/>
+          <xsd:element name="custom_3" type="xsd:string"/>
+          <xsd:element name="custom_4" type="xsd:string"/>
+          <xsd:element name="custom_5" type="xsd:string"/>
+          <xsd:element name="custom_6" type="xsd:string"/>
+          <xsd:element name="custom_7" type="xsd:string"/>
+          <xsd:element name="custom_8" type="xsd:string"/>
+          <xsd:element name="custom_9" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="MiqPolicy">
+        <xsd:all>
+          <xsd:element name="id" type="xsd:int"/>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="description" type="xsd:string"/>
+          <xsd:element name="created_on" type="xsd:dateTime"/>
+          <xsd:element name="updated_on" type="xsd:dateTime"/>
+          <xsd:element name="expression" type="xsd:string"/>
+          <xsd:element name="towhat" type="xsd:string"/>
+          <xsd:element name="guid" type="xsd:string"/>
+          <xsd:element name="reserved" type="xsd:string"/>
+          <xsd:element name="created_by" type="xsd:string"/>
+          <xsd:element name="updated_by" type="xsd:string"/>
+          <xsd:element name="notes" type="xsd:string"/>
+          <xsd:element name="active" type="xsd:boolean"/>
+          <xsd:element name="mode" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="VmdbWs..VmAccountsArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:VmdbWs..VmAccounts[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="EVMActionList">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMActionListResponse">
+    <part name="return" type="typens:VmdbWs..ActionListArray"/>
+  </message>
+  <message name="EVMGetHosts">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMGetHostsResponse">
+    <part name="return" type="typens:HostArray"/>
+  </message>
+  <message name="EVMSet">
+    <part name="param0" type="xsd:string"/>
+    <part name="param1" type="xsd:string"/>
+    <part name="param2" type="xsd:string"/>
+  </message>
+  <message name="EVMSetResponse">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <message name="EVMProvisionRequest">
+    <part name="param0" type="xsd:string"/>
+    <part name="param1" type="xsd:string"/>
+  </message>
+  <message name="EVMProvisionRequestResponse">
+    <part name="return" type="xsd:boolean"/>
+  </message>
+  <message name="EVMEventList">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMEventListResponse">
+    <part name="return" type="typens:VmdbWs..EventListArray"/>
+  </message>
+  <message name="EVMVmSoftware">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMVmSoftwareResponse">
+    <part name="return" type="typens:VmdbWs..VmSoftwareArray"/>
+  </message>
+  <message name="EVMSmartStop">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMSmartStopResponse">
+    <part name="return" type="typens:VmdbWs..VmCmdResult"/>
+  </message>
+  <message name="EVMPing">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMPingResponse">
+    <part name="return" type="xsd:boolean"/>
+  </message>
+  <message name="EVMGetVm">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMGetVmResponse">
+    <part name="return" type="typens:Vm"/>
+  </message>
+  <message name="EVMSmartSuspend">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMSmartSuspendResponse">
+    <part name="return" type="typens:VmdbWs..VmCmdResult"/>
+  </message>
+  <message name="EVMGetVms">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMGetVmsResponse">
+    <part name="return" type="typens:VmArray"/>
+  </message>
+  <message name="EVMVmList">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMVmListResponse">
+    <part name="return" type="typens:VmdbWs..VmListArray"/>
+  </message>
+  <message name="EVMAssignPolicy">
+    <part name="param0" type="xsd:string"/>
+    <part name="param1" type="xsd:string"/>
+  </message>
+  <message name="EVMAssignPolicyResponse">
+    <part name="return" type="xsd:boolean"/>
+  </message>
+  <message name="EVMAddLifecycleEvent">
+    <part name="param0" type="xsd:string"/>
+    <part name="param1" type="xsd:string"/>
+    <part name="param2" type="xsd:string"/>
+    <part name="param3" type="xsd:string"/>
+    <part name="param4" type="xsd:string"/>
+    <part name="param5" type="xsd:string"/>
+  </message>
+  <message name="EVMAddLifecycleEventResponse">
+    <part name="return" type="xsd:boolean"/>
+  </message>
+  <message name="EVMVmAccounts">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMVmAccountsResponse">
+    <part name="return" type="typens:VmdbWs..VmAccountsArray"/>
+  </message>
+  <message name="EVMPolicyList">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMPolicyListResponse">
+    <part name="return" type="typens:VmdbWs..PolicyListArray"/>
+  </message>
+  <message name="EVMUnassignPolicy">
+    <part name="param0" type="xsd:string"/>
+    <part name="param1" type="xsd:string"/>
+  </message>
+  <message name="EVMUnassignPolicyResponse">
+    <part name="return" type="xsd:boolean"/>
+  </message>
+  <message name="EVMDeleteVmByName">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMDeleteVmByNameResponse">
+    <part name="return" type="xsd:boolean"/>
+  </message>
+  <message name="EVMConditionList">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMConditionListResponse">
+    <part name="return" type="typens:VmdbWs..ConditionListArray"/>
+  </message>
+  <message name="EVMSmartStart">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMSmartStartResponse">
+    <part name="return" type="typens:VmdbWs..VmCmdResult"/>
+  </message>
+  <message name="EVMHostList">
+  </message>
+  <message name="EVMHostListResponse">
+    <part name="return" type="typens:VmdbWs..HostListArray"/>
+  </message>
+  <message name="EVMVmRsop">
+    <part name="param0" type="xsd:string"/>
+    <part name="param1" type="xsd:string"/>
+  </message>
+  <message name="EVMVmRsopResponse">
+    <part name="return" type="typens:VmdbWs..VmRsop"/>
+  </message>
+  <message name="EVMGet">
+    <part name="param0" type="xsd:string"/>
+    <part name="param1" type="xsd:string"/>
+  </message>
+  <message name="EVMGetResponse">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <message name="EVMGetHost">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMGetHostResponse">
+    <part name="return" type="typens:Host"/>
+  </message>
+  <message name="EVMGetPolicy">
+    <part name="param0" type="xsd:string"/>
+  </message>
+  <message name="EVMGetPolicyResponse">
+    <part name="return" type="typens:MiqPolicy"/>
+  </message>
+  <portType name="VmdbwsPort">
+    <operation name="EVMActionList">
+      <input message="typens:EVMActionList"/>
+      <output message="typens:EVMActionListResponse"/>
+    </operation>
+    <operation name="EVMGetHosts">
+      <input message="typens:EVMGetHosts"/>
+      <output message="typens:EVMGetHostsResponse"/>
+    </operation>
+    <operation name="EVMSet">
+      <input message="typens:EVMSet"/>
+      <output message="typens:EVMSetResponse"/>
+    </operation>
+    <operation name="EVMProvisionRequest">
+      <input message="typens:EVMProvisionRequest"/>
+      <output message="typens:EVMProvisionRequestResponse"/>
+    </operation>
+    <operation name="EVMEventList">
+      <input message="typens:EVMEventList"/>
+      <output message="typens:EVMEventListResponse"/>
+    </operation>
+    <operation name="EVMVmSoftware">
+      <input message="typens:EVMVmSoftware"/>
+      <output message="typens:EVMVmSoftwareResponse"/>
+    </operation>
+    <operation name="EVMSmartStop">
+      <input message="typens:EVMSmartStop"/>
+      <output message="typens:EVMSmartStopResponse"/>
+    </operation>
+    <operation name="EVMPing">
+      <input message="typens:EVMPing"/>
+      <output message="typens:EVMPingResponse"/>
+    </operation>
+    <operation name="EVMGetVm">
+      <input message="typens:EVMGetVm"/>
+      <output message="typens:EVMGetVmResponse"/>
+    </operation>
+    <operation name="EVMSmartSuspend">
+      <input message="typens:EVMSmartSuspend"/>
+      <output message="typens:EVMSmartSuspendResponse"/>
+    </operation>
+    <operation name="EVMGetVms">
+      <input message="typens:EVMGetVms"/>
+      <output message="typens:EVMGetVmsResponse"/>
+    </operation>
+    <operation name="EVMVmList">
+      <input message="typens:EVMVmList"/>
+      <output message="typens:EVMVmListResponse"/>
+    </operation>
+    <operation name="EVMAssignPolicy">
+      <input message="typens:EVMAssignPolicy"/>
+      <output message="typens:EVMAssignPolicyResponse"/>
+    </operation>
+    <operation name="EVMAddLifecycleEvent">
+      <input message="typens:EVMAddLifecycleEvent"/>
+      <output message="typens:EVMAddLifecycleEventResponse"/>
+    </operation>
+    <operation name="EVMVmAccounts">
+      <input message="typens:EVMVmAccounts"/>
+      <output message="typens:EVMVmAccountsResponse"/>
+    </operation>
+    <operation name="EVMPolicyList">
+      <input message="typens:EVMPolicyList"/>
+      <output message="typens:EVMPolicyListResponse"/>
+    </operation>
+    <operation name="EVMUnassignPolicy">
+      <input message="typens:EVMUnassignPolicy"/>
+      <output message="typens:EVMUnassignPolicyResponse"/>
+    </operation>
+    <operation name="EVMDeleteVmByName">
+      <input message="typens:EVMDeleteVmByName"/>
+      <output message="typens:EVMDeleteVmByNameResponse"/>
+    </operation>
+    <operation name="EVMConditionList">
+      <input message="typens:EVMConditionList"/>
+      <output message="typens:EVMConditionListResponse"/>
+    </operation>
+    <operation name="EVMSmartStart">
+      <input message="typens:EVMSmartStart"/>
+      <output message="typens:EVMSmartStartResponse"/>
+    </operation>
+    <operation name="EVMHostList">
+      <input message="typens:EVMHostList"/>
+      <output message="typens:EVMHostListResponse"/>
+    </operation>
+    <operation name="EVMVmRsop">
+      <input message="typens:EVMVmRsop"/>
+      <output message="typens:EVMVmRsopResponse"/>
+    </operation>
+    <operation name="EVMGet">
+      <input message="typens:EVMGet"/>
+      <output message="typens:EVMGetResponse"/>
+    </operation>
+    <operation name="EVMGetHost">
+      <input message="typens:EVMGetHost"/>
+      <output message="typens:EVMGetHostResponse"/>
+    </operation>
+    <operation name="EVMGetPolicy">
+      <input message="typens:EVMGetPolicy"/>
+      <output message="typens:EVMGetPolicyResponse"/>
+    </operation>
+  </portType>
+  <binding name="VmdbwsBinding" type="typens:VmdbwsPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+    <operation name="EVMActionList">
+      <soap:operation soapAction="/vmdbws/api/EVMActionList"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMGetHosts">
+      <soap:operation soapAction="/vmdbws/api/EVMGetHosts"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMSet">
+      <soap:operation soapAction="/vmdbws/api/EVMSet"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMProvisionRequest">
+      <soap:operation soapAction="/vmdbws/api/EVMProvisionRequest"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMEventList">
+      <soap:operation soapAction="/vmdbws/api/EVMEventList"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMVmSoftware">
+      <soap:operation soapAction="/vmdbws/api/EVMVmSoftware"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMSmartStop">
+      <soap:operation soapAction="/vmdbws/api/EVMSmartStop"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMPing">
+      <soap:operation soapAction="/vmdbws/api/EVMPing"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMGetVm">
+      <soap:operation soapAction="/vmdbws/api/EVMGetVm"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMSmartSuspend">
+      <soap:operation soapAction="/vmdbws/api/EVMSmartSuspend"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMGetVms">
+      <soap:operation soapAction="/vmdbws/api/EVMGetVms"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMVmList">
+      <soap:operation soapAction="/vmdbws/api/EVMVmList"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMAssignPolicy">
+      <soap:operation soapAction="/vmdbws/api/EVMAssignPolicy"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMAddLifecycleEvent">
+      <soap:operation soapAction="/vmdbws/api/EVMAddLifecycleEvent"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMVmAccounts">
+      <soap:operation soapAction="/vmdbws/api/EVMVmAccounts"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMPolicyList">
+      <soap:operation soapAction="/vmdbws/api/EVMPolicyList"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMUnassignPolicy">
+      <soap:operation soapAction="/vmdbws/api/EVMUnassignPolicy"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMDeleteVmByName">
+      <soap:operation soapAction="/vmdbws/api/EVMDeleteVmByName"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMConditionList">
+      <soap:operation soapAction="/vmdbws/api/EVMConditionList"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMSmartStart">
+      <soap:operation soapAction="/vmdbws/api/EVMSmartStart"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMHostList">
+      <soap:operation soapAction="/vmdbws/api/EVMHostList"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMVmRsop">
+      <soap:operation soapAction="/vmdbws/api/EVMVmRsop"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMGet">
+      <soap:operation soapAction="/vmdbws/api/EVMGet"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMGetHost">
+      <soap:operation soapAction="/vmdbws/api/EVMGetHost"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="EVMGetPolicy">
+      <soap:operation soapAction="/vmdbws/api/EVMGetPolicy"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="Service">
+    <port name="VmdbwsPort" binding="typens:VmdbwsBinding">
+      <soap:address location="https://192.168.252.111/vmdbws/api"/>
+    </port>
+  </service>
+</definitions>

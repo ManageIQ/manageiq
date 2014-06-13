@@ -1,0 +1,21 @@
+<% unless @report_only %>
+	<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
+	<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"menu"} %>
+	<div id="context_div"></div>	<%# Div to refer context menu to %>
+
+	<script type="text/javascript">
+		<%# Create from/to date JS vars to limit calendar selection range %>
+		var miq_cal_dateFrom = new Date(<%= @usage_options[:sdate] %>);
+		var miq_cal_dateTo = new Date(<%= @usage_options[:edate] %>);
+	</script>
+<% end %>
+
+<div id='main_div'>
+	<% unless @report_only %>
+		<%= render :partial => "layouts/flash_msg" %>
+		<% if !@usage_options[:sdate].nil? %>
+			<%= render :partial => "usage_options" %>
+		<% end %>
+	<% end %>
+	<%= render :partial => "usage_report" %>
+</div>

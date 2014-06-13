@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MiqAeDatastore>
+  <MiqAeClass name="METHOD" namespace="SYSTEM">
+		<MiqAeSchema>
+			<MiqAeField name="dump_object" aetype="method"  message="dump_object"  display_name="Dump Object"><![CDATA[
+  				$evm.log("info", "===========================================")
+  				$evm.log("info", "Dumping Object")
+
+  				$evm.log("info", "Args:    #{MIQ_ARGS.inspect}")
+  				$evm.log("info", "Message: #{MIQ_MESSAGE}")
+
+  				obj = $evm.object("..")    # Get Parent Object (the one making the method call) and not /System/Method
+  				$evm.log("info", "Listing Object Attributes:")
+  				obj.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}")}
+  				$evm.log("info", "===========================================")
+
+  				exit MIQ_OK
+  			]]>
+			</MiqAeField>
+		</MiqAeSchema>
+		<MiqAeInstance name=".missing"/>
+	</MiqAeClass>
+	
+  <MiqAeClass namespace="SYSTEM" name="PROCESS">
+    <MiqAeSchema>
+      <MiqAeField name="dump_object"       aetype="relationship" default_value="/SYSTEM/METHOD/#dump_object"/>
+      <MiqAeField name="set_logical_event" aetype="relationship" default_value="/EVM/EVENT/${#raw_event}" collect="logical_event" />
+      <MiqAeField name="create_vm_obj"     aetype="relationship" default_value="/EVM/VIA/VM" />
+    </MiqAeSchema>
+    <MiqAeInstance name="EVENT" />
+  </MiqAeClass>
+
+  <MiqAeClass namespace="EVM" name="EVENT">
+      <MiqAeSchema>
+        <MiqAeField name="logical_event"  aetype="attribute" />
+      </MiqAeSchema>
+      <MiqAeInstance name="CreateVM_Task_Complete">
+        <MiqAeField name="logical_event">discovery</MiqAeField>
+      </MiqAeInstance>
+      <MiqAeInstance name=".missing">
+        <MiqAeField name="logical_event">other</MiqAeField>
+      </MiqAeInstance>
+    </MiqAeClass>
+
+  <MiqAeClass namespace="EVM" name="VIA">
+    <MiqAeSchema>
+      <MiqAeField name="log_vm_event"  aetype="relationship" default_value="/EVM/METHOD/log_vm_event" />
+      <MiqAeField name="logical_event" aetype="relationship" default_value="/EVM/VM/${process#logical_event}" />
+    </MiqAeSchema>
+    <MiqAeInstance name="VM"/>
+  </MiqAeClass>
+  
+  <MiqAeClass namespace="EVM" name="VM">
+    <MiqAeSchema>
+      <MiqAeField name="quit"           aetype="assertion" />
+      <MiqAeField name="source_vm"      aetype="attribute"    default_value="" />
+      <MiqAeField name="os_family"      aetype="attribute"    default_value="vmdb://localhost/" />
+      <MiqAeField name="get_profiles"   aetype="relationship" default_value="/EVM/DISCOVERY/${process#vm_os_family}" />
+      <MiqAeField name="print_profiles" aetype="method" />
+    </MiqAeSchema>
+    <MiqAeInstance name="discovery">
+      <MiqAeField name="print_profiles"><![CDATA[
+        disc = $evm.object.children('get_profiles')
+        $evm.log("info", "Discovery Results: [#{disc['name']}] - #{disc['profile_name'].inspect}")
+      ]]>
+      </MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name=".missing">
+      <MiqAeField name="quit">false</MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+
+  <MiqAeClass namespace="EVM" name="DISCOVERY">
+    <MiqAeSchema>
+      <MiqAeField name="name"    aetype="attribute"/>
+      <MiqAeField name="profile" aetype="relationship" collect="profile_name" />
+    </MiqAeSchema>
+    <MiqAeInstance name="windows">
+      <MiqAeField name="name">Windows</MiqAeField>
+      <MiqAeField name="profile">/EVM/WindowsDiscoveryProfile/*</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="linux"/>
+  </MiqAeClass>
+  
+  <MiqAeClass namespace="EVM" name="WindowsDiscoveryProfile">
+    <MiqAeSchema>
+      <MiqAeField name="profile_name" aetype="attribute" />
+    </MiqAeSchema>
+    <MiqAeInstance name="services">
+      <MiqAeField name="profile_name">Windows Services</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="software">
+      <MiqAeField name="profile_name">Windows Software</MiqAeField>
+    </MiqAeInstance>
+    <MiqAeInstance name="accounts">
+      <MiqAeField name="profile_name">Windows Accounts</MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+
+  <MiqAeClass namespace="EVM" name="METHOD">
+    <MiqAeSchema>
+      <MiqAeField name="info" aetype="method" display_name="Write"/>
+    </MiqAeSchema>
+    <MiqAeInstance name="log_vm_event">
+      <MiqAeField name="info"><![CDATA[
+        obj = $evm.object("process")
+        $evm.log("info", "VM Discovery for #{obj['name']} State: #{obj['vm_state']} Family: #{obj['vm_os_family']}")
+      ]]>
+      </MiqAeField>
+    </MiqAeInstance>
+  </MiqAeClass>
+</MiqAeDatastore>

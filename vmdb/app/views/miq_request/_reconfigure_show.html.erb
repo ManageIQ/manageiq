@@ -1,0 +1,35 @@
+<div id="main_div">
+
+<fieldset>
+	<p class="legend">Options</p>
+	<table class="style1">
+			<% if @options[:vm_memory] %>
+				<tr>
+					<td class="key">Memory</td>
+					<td><%=h(@options[:memory])%> <%=@options[:mem_typ]%></td>
+				</tr>
+			<% end %>
+			<% if @options[:number_of_cpus] %>
+				<tr>
+					<td class="key">Processors</td>
+					<td><%=h(@options[:number_of_cpus])%></td>
+				</tr>
+			<% end %>
+	</table>
+</fieldset>
+
+<fieldset>
+	<p class="legend">Affected VMs</p>
+	<table class="style1" height="75">
+			<tr>
+				<td>
+					<% if @view %>
+						<% @embedded = true %>
+						<% @gtl_type = "list" %>
+						<%= render :partial=>"layouts/gtl" %>
+					<% end %>
+				</td>
+			</tr>
+	</table>
+</fieldset>
+</div>

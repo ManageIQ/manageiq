@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: test_missing
+    inherits: 
+    description: 
+  fields:
+  - rel1:
+      value: miqaemethod:///missing?num1=2&num2=3

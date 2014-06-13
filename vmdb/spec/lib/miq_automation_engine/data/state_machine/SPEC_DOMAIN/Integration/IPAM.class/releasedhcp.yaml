@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Release DHCP
+    name: ReleaseDHCP
+    inherits: 
+    description: 
+  fields:
+  - Method:
+      value: release_dhcp

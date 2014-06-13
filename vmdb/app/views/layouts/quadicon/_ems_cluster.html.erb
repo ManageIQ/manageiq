@@ -1,0 +1,21 @@
+<% width = size == 150 ? 54 : 35 %>
+<% height = width %>
+<div class="flobj"><img src="/images/icons/<%= size %>/base-single.png"  width="<%= size %>" height="<%= size %>" border="0"/></div>
+<div class="flobj e<%= size %>"><img src="/images/icons/new/emscluster.png"  width="<%= width * 1.7 %>" height="<%= height * 1.8 %>" border="0"/></div>
+<% if item.get_policies.length > 0 %>
+	<div class="flobj g<%= size %>" ><img src="/images/icons/new/shield.png"/></div>
+<% end %>
+<% unless typ == :listnav %><%# Listnav, no clear image needed %>
+	<div class="flobj">
+		<% if ! @embedded || @showlinks %>
+			<a href="<%= url_for_record(item) %>" title="<%= h(item.v_qualified_desc) %>">
+				<img src="/images/clearpix.gif" width="<%= size %>" height="<%= size %>"/>
+			</a>
+		<% else %>
+			<a title="<%= h(item.v_qualified_desc) %>">
+				<img src="/images/clearpix.gif" width="<%= size %>" height="<%= size %>"/>
+			</a>
+		<% end %>
+	</div>
+<% end %>
+

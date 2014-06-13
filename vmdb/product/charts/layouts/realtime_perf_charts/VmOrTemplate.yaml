@@ -1,0 +1,57 @@
+# Real time performance chart layouts
+--- 
+- :title: CPU (Mhz)
+  :type: Line
+  :columns:
+  - cpu_usagemhz_rate_average
+#  :menu:
+#  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this VM
+  :applies_to_method: cpu_mhz_available?
+
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  :max_value: 100.4
+  :decimals: 1
+  :applies_to_method: cpu_percent_available?
+
+- :title: Virtual Machine CPU States
+  :type: StackedArea
+  :columns:
+  - v_pct_cpu_ready_delta_summation
+  - v_pct_cpu_used_delta_summation
+#  - v_pct_cpu_wait_delta_summation
+#  :menu:
+#  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this VM
+  :max_value: 100.4
+  :decimals: 1
+  :applies_to_method: cpu_ready_available?
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - derived_memory_available
+#  :menu:
+#  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this VM
+  :applies_to_method: memory_mb_available?
+
+- :title: Disk I/O (KBps)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+#  :menu:
+#  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this VM
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+#  :menu:
+#  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this VM

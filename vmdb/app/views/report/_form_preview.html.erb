@@ -1,0 +1,59 @@
+<div id="form_preview">
+<% if @html %>
+  <% if !@edit[:tl_xml].nil? %>
+    <fieldset>
+      <p class="legend">Timeline Preview (up to 50 rows)</p>
+
+      <div id="miq_timeline" style="height: 500px; border: 1px solid #aaa"></div>
+
+      <%= render(:partial => "layouts/timeline",
+                :locals => {:bands         => @edit[:new][:tl_bands],
+                            :load_tl_now   => true,
+                            :data_action   => "preview_timeline",
+                            :position_time => @edit[:tl_position]
+                }) %>
+    </fieldset>
+  <% end %>
+
+  <% if !@edit[:zgraph_xml].nil? %>
+    <fieldset>
+      <p class="legend">Chart Preview (up to 50 rows)</p>
+      <%=
+        width, height = @html ? [350, 250] : [700, 500]
+        chart_remote('report',
+            :action  => 'preview_chart',
+            :width   => width,
+            :height  => height,
+            :bgcolor => "#f2f2f2",
+            :id      => 'my_chart') %>
+
+    </fieldset>
+  <% end %>
+
+  <% if @html %>
+    <fieldset>
+      <p class="legend">Report Preview (up to 50 rows)</p>
+      <%= @html.html_safe %>
+    </fieldset>
+  <% end %>
+<% else %>
+  <fieldset>
+    <p class="legend">Generate Report Preview</p>
+    <table width="100%">
+      <tr>
+        <td align="right">
+          <ul id="form_buttons">
+            <li>
+            <%= link_to(image_tag("/images/formbuttons/load.png", :border => "0", :class => "button formbuttons",
+                                  :style => "width: 80px", :alt => "Generate Report preview"),
+                      {:action => "show_preview", :id => "#{@edit[:rpt_id] || "new"}"},
+                      "data-miq_sparkle_on" => true, :remote => true,
+                      :title => "Generate Report preview") %>
+           </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </fieldset>
+<% end %>
+</div>

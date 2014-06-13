@@ -1,0 +1,13 @@
+-# Network or Storage Adpater Tree
+%div{:id => "#{session[:tree_name]}box", :style => "width: 100%"}
+  = render(:partial => "layouts/dynatree",
+           :locals  => {:tree_id                     => "#{session[:tree_name]}box",
+                        :tree_name                   => session[:tree_name],
+                        :json_tree                   => @temp[session[:tree_name].to_sym],
+                        :click_url                   => "/vm/show/",
+                        :onmousein                   => "miqOnMouseIn_HostNet",
+                        :onmouseout                  => "miqOnMouseOut_HostNet",
+                        :onclick                     => "miqOnClick_HostNet",
+                        :exp_tree                    => true,
+                        :open_close_all_on_dbl_click => true})
+

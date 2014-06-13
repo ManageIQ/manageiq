@@ -1,0 +1,37 @@
+############################################################################################################
+# PostgreSQL
+############################################################################################################
+# min_messages:
+#   Controls which message levels are sent to the client.
+#   Valid values are DEBUG5, DEBUG4, DEBUG3, DEBUG2, DEBUG1, LOG, NOTICE, WARNING, ERROR, FATAL, and PANIC.
+#   Each level includes all the levels that follow it. The later the level, the fewer messages are sent.
+#   The default is NOTICE. Note that LOG has a different rank here than in log_min_messages.
+#
+#   Example notice message: 'NOTICE:  CREATE TABLE will create...'
+#     This can be silenced with min_messages: warning
+############################################################################################################
+---
+base: &base
+  adapter: postgresql
+  encoding: utf8
+  username: root
+  pool: 1
+  wait_timeout: 5
+  min_messages: warning
+
+development:
+  <<: *base
+  database: vmdb_development
+  min_messages: notice
+
+production:
+  <<: *base
+  database: vmdb_production
+
+test: &test
+  <<: *base
+  pool: 3
+  database: vmdb_test
+
+metric_fu:
+  <<: *test

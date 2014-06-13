@@ -1,0 +1,3 @@
+class DialogFieldButton < DialogField
+
+end

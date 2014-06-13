@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: cluster_filter
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: cluster_filter
+  - value:
+      value: /EVMApplications/Provisioning/Dialog/environment_fields_clusterfilter/*

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+export HOME=/root
+export EC2_AMITOOL_HOME=/usr/local/ec2-ami-tools
+export PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/ec2-ami-tools/bin
+source /usr/local/rvm/scripts/rvm
+
+SCRIPT_PATH=/miq/ec2_extract
+
+case "$1" in
+	start)
+		nohup $SCRIPT_PATH &
+		# shutdown -h -t0 now
+	;;
+	*)
+	;;
+esac
+
+exit 0

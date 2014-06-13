@@ -1,0 +1,27 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqReportResult
+:button_groups:
+- :name: saved_report_reloading
+  :items:
+  # Roles by Servers tab
+  - :button: reload
+    :image: reload
+    :title: 'Reload selected Reports'
+- :name: saved_report_vmdb
+  :items:
+  - :buttonSelect: saved_report_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: saved_report_delete
+      :image: delete
+      :text: Delete selected Saved Reports
+      :title: Delete selected Saved Reports
+      :url_parms: 'main_div'
+      :confirm: "The selected Saved Reports will be permanently removed from the database. Are you sure you want to delete the selected Saved Reports?"
+      :enabled: 'false'
+      :onwhen: '1+'

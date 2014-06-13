@@ -1,0 +1,131 @@
+<% if @record && @record.name != nil%>
+  <div id="accordion">
+    <div class="panel">
+      <div class="topbar">
+        <%= link_to(h(@record.name.length < trunc_at ? @record.name : @record.name[0...trunc_to] + "..."),
+                          {:action=>'panel_control', :panel=>'icon'},
+                          :remote=>true,
+                          :title=>"#{h(@record.name)}") %>
+      </div>
+        <%= hidden_div_if(@panels["icon"] == nil || @panels["icon"] == false, :id=>"icon") %>
+      <div class="panecontent">
+            <%= render(:partial=>"layouts/quadicon",
+                        :locals=>{:mode=>:icon,
+                        :item=>@record,
+                        :size=>72,
+                        :typ=>:listnav} )
+            %>
+      </div>
+    </div>
+  </div>
+    <div class="topbar">
+      <%= link_to("Properties", {:action=>'panel_control', :panel=>'ems_prop'}, :remote=>true) %>
+    </div>
+    <%= hidden_div_if(@panels["ems_prop"] == nil || @panels["ems_prop"] == false, :id=>"ems_prop") %>
+      <div class="panecontent">
+        <%= link_to_with_icon('Summary', {:action=>'show', :id=>@record, :display=>'main'},
+                              :title=>"Show Summary") %>
+        <% unless @record.has_events? || @record.has_events?(:policy_events) %>
+          <img src="/images/icons/16/link_none.gif" title="Timelines Not Available"/>
+          Timelines<br/>
+        <% else %>
+          <% if @record.has_events? %>
+            <%= link_to_with_icon('Timelines', {:action=>'show', :id=>@record, :display=>'timeline'},
+                                  :title=>"Show Timelines") %>
+          <% elsif @record.has_events?(:policy_events) %>
+          <%# wrapping around control if %>
+            <%= link_to_with_icon('Timelines', {:action=>'show', :id=>@record, :display=>'timeline'},
+                                  :title=>"Show Timelines") %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="topbar">
+      <%= link_to("Relationships", {:action=>'panel_control', :panel=>'ems_rel'}, :remote=>true) %>
+    </div>
+    <%= hidden_div_if(@panels["ems_rel"] == nil || @panels["ems_rel"] == false, :id=>"ems_rel") %>
+      <div class="panecontent">
+
+        <% unless @record.number_of(:ems_folders) == 0 || @record.ems_folder_root.nil? %>
+          <%= link_to_with_icon('Hosts & Clusters', {:action=>'show', :id=>@record, :display=>'ems_folders'},
+                                :title=>"Show Hosts & Clusters") %>
+        <% else %>
+          <img src="/images/icons/16/link_none.gif"/>
+          Hosts & Clusters<br/>
+        <% end %>
+
+        <% unless @record.number_of(:ems_folders) == 0 || @record.ems_folder_root.nil? %>
+          <%= link_to_with_icon('VMs & Templates', {:action=>'show', :id=>@record, :display=>'ems_folders', :vat=>true},
+                                :title=>"Show VMs & Templates") %>
+        <% else %>
+          <img src="/images/icons/16/link_none.gif"/>
+          VMs & Templates<br/>
+        <% end %>
+
+        <% if role_allows(:feature=>"ems_cluster_show_list") %>
+          <% unless @record.number_of(:ems_clusters) == 0 %>
+            <%= link_to_with_icon("Clusters (#{@record.number_of(:ems_clusters)})",
+                                  {:action=>'show', :id=>@record, :display=>'ems_clusters'},
+                                  :title=>"Show all managed Clusters") %>
+          <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              Hosts (<%= @record.number_of(:ems_clusters) %>)<br>
+          <% end %>
+        <% end %>
+
+        <% if role_allows(:feature=>"host_show_list") %>
+          <% unless @record.number_of(:hosts) == 0 %>
+            <%= link_to_with_icon("Hosts (#{@record.number_of(:hosts)})",
+                                  {:action=>'show', :id=>@record, :display=>'hosts'},
+                                  :title=>"Show all managed Hosts") %>
+          <% else %>
+                <img src="/images/icons/16/link_none.gif">
+                Hosts (<%= @record.number_of(:hosts) %>)<br/>
+          <% end %>
+        <% end %>
+        <% if role_allows(:feature=>"storage_show_list") %>
+          <%= link_if_nonzero(
+            :count     => @record.number_of(:storages),
+            :record_id => @record.id,
+            :tables    => 'storages',
+            :display   => 'storages',
+            :action    => 'show',
+            :title     => "Show all managed #{ui_lookup(:tables => "storages")}",
+          )%>
+        <% end %>
+
+        <% if role_allows(:feature=>"vm_show_list") %>
+          <% unless @record.number_of(:vms) == 0 %>
+            <%= link_to_with_icon("VMs (#{@record.number_of(:vms)})",
+                                  {:action=>'show', :id=>@record, :display=>'vms'},
+                                  :title=>"Show all VMs") %>
+          <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              VMs (<%= @record.number_of(:vms) %>)<br/>
+          <% end %>
+        <% end %>
+
+        <% if role_allows(:feature=>"miq_template_show_list") %>
+          <% unless @record.number_of(:miq_templates) == 0 %>
+            <%= link_to_with_icon("Templates (#{@record.number_of(:miq_templates)})",
+                                  {:action=>'show', :id=>@record, :display=>'miq_templates'},
+                                :title=>"Show all Templates") %>
+          <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              Templates (<%= @record.number_of(:miq_templates) %>)<br/>
+          <% end %>
+        <% end %>
+
+        <% if role_allows(:feature=>"vdi_desktop_pool_show_list") %>
+          <%= link_if_nonzero(
+            :count     => @record.vdi_desktop_pools.count,
+            :record_id => @record.id,
+            :tables    => 'vdi_desktop_pool',
+            :controller=> 'ems_infra',
+            :action    => 'show',
+          )%>
+        <% end %>
+      </div>
+    </div>
+<% end %>

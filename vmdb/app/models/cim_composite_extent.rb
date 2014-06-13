@@ -1,0 +1,3 @@
+class CimCompositeExtent < CimStorageExtent
+
+end

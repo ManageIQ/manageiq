@@ -1,0 +1,207 @@
+.dhx_combo_img{
+	position:absolute;
+	top:0px;
+	right:0px;
+	width:18px;
+	height:20px;
+}
+
+
+.dhx_combo_option_img{
+	position:relative;
+	top:1px;
+	margin:0px;
+	margin-left:2px;
+	left:0px;
+	width:18px; height:18px;
+	padding:0px;
+}
+.dhx_combo_input{
+	color:#333333;
+	font-family: Arial;
+	font-size: 9pt;
+	border:0px;
+	padding:2px 2px 2px 2px;
+	position:absolute;
+	top:0px;
+    outline: none 0;
+}
+.dhx_combo_box{
+	position:relative;
+	text-align:left;
+	border:1px solid #7F9DB9;
+	height:20px;
+	_height:22px;
+	overflow:hidden;
+    background-color: white;
+	 
+}
+
+.dhx_combo_list{
+   position:absolute;
+   z-index:230;
+   overflow-y:auto;
+   -webkit-overflow-scrolling: touch;
+   overflow-x:hidden;
+   border:1px solid black;
+   height:100px;
+   font-family: Arial;
+   font-size: 9pt;
+   background-color: white;
+	z-index: 12000;
+}
+
+
+.dhx_combo_list div{
+	cursor:default;
+	padding:2px 2px 2px 2px;
+}
+.dhx_selected_option{
+	background-color:navy;
+	color:white;
+}
+
+
+.dhx_combo_img_rtl{
+	position:absolute;
+	top:0px;
+	left:1px;
+	width:17px;
+	height:20px;
+}
+.dhx_combo_option_img_rtl{
+	float:right;
+	margin-right :0px;
+	width:18px; height:18px;
+}
+
+.dhx_combo_list_rtl{
+	direction: rtl;
+   position:absolute;
+   z-index:230;
+   overflow-y:auto;
+   -webkit-overflow-scrolling: touch;
+   overflow-x:hidden;
+   border:1px solid black;
+   height:100px;
+   font-family: Arial;
+   font-size: 9pt;
+   background-color: white;
+}
+.dhx_combo_list_rtl div{
+	direction: rtl;
+
+	padding:2px 2px 2px 2px;
+}
+.dhx_combo_list_rtl div div{
+	float :right !important;
+	cursor:default;
+	
+}
+.dhx_combo_list_rtl div img{
+	float :right !important;
+}
+.dhx_combo_list_rtl div input{
+	float :right !important;
+}
+
+.dhx_combo_input{
+    box-sizing:  border-box;
+}
+
+.dhx_combo_box.dhx_terrace .dhx_combo_img{
+	height:30px;
+    top: -2px;
+}
+.dhx_combo_box.dhx_terrace{
+    height: 25px;
+    line-height: 23px;
+	_height:27px;
+	padding:0px;
+}
+.dhx_combo_box.dhx_terrace .dhx_combo_img_rtl{
+	height:30px;
+}
+.dhx_combo_box.dhx_terrace{
+	border:1px solid #CECECE;
+}
+.combo_dhx_terrace_sel{
+   background:#FFF3A1;
+   color:black;
+}
+.dhx_combo_list.dhx_terrace_list div{
+	cursor:default;
+	padding:6px 4px;
+}
+.dhx_combo_list.dhx_terrace_list{
+	background-color: white;
+	border:1px solid #CECECE;
+	font-family:Arial;
+	font-size: 13px;
+}
+.dhx_combo_list_rtl.dhx_terrace_list{
+   background-color: white;
+	border:1px solid #CECECE;
+	font-family:Arial;
+	font-size: 13px;
+}
+.dhx_combo_box.dhx_terrace .dhx_combo_input {
+    height: 26px;
+    line-height: 24px;
+	font-family:Arial;
+	font-size: 13px;
+	padding:0px 0px 0px 2px;
+	
+}
+
+
+
+
+
+.dhx_combo_box.dhx_skyblue{
+	border:1px solid #a4bed4;
+}
+.dhx_combo_box.dhx_skyblue .dhx_combo_input {
+	font-family:Tahoma;
+	font-size: 11px;
+	/*padding:3px;*/
+	height:20px;
+	line-height:20px;
+	padding:0 0 0 2px;
+}
+.dhx_combo_list.dhx_skyblue_list{
+	background-color: #eaf2fb;
+	border:1px solid #a4bed4;
+	font-family:Tahoma;
+	font-size: 11px;
+}
+.dhx_combo_list.dhx_skyblue_list div{
+	cursor:default;
+	padding:3px 4px;
+}
+.dhx_combo_list_rtl.dhx_skyblue_list{
+   background-color: #eaf2fb;
+	border:1px solid #a4bed4;
+	font-family:Tahoma;
+	font-size: 11px;
+}
+
+.combo_dhx_skyblue_sel{
+   background-image: url("imgs/bg_selection.gif") !important;
+   background-position: bottom;
+   background-repeat: repeat-x;
+   color:black;
+}
+/*dhx_web skin*/
+.combo_dhx_web_sel{
+   background-color: #ACDAF0;
+    color:black;  
+}
+.dhx_combo_box.dhx_web .dhx_combo_input {
+    height:20px;
+	line-height:20px;
+	padding:0 0 0 2px;
+}
+.dhx_combo_box.dhx_web,.dhx_combo_list.dhx_web_list,.dhx_combo_list_rtl.dhx_web_list {
+    border: 1px solid #8B8B8B;
+}

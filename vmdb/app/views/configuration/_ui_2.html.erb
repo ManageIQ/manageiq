@@ -1,0 +1,378 @@
+<%= render :partial => "layouts/flash_msg" %>
+
+<div id="tab_div">
+
+	<%= form_tag( {:action => 'update'}, {:id => "config_form"}) do %>
+
+		<dl class="col2">
+			<dd>
+				<fieldset>
+					<p class="legend">General</p>
+					<table class="style1">
+							<tr>
+								<td class="key">Tagging</td>
+								<td>
+									<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:tagging, :view=>@edit[:new][:views][:tagging]} %>
+								</td>
+							</tr>
+							<tr>
+								<td class="key">Compare</td>
+								<td>
+									<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:compare, :view=>@edit[:new][:views][:compare]} %>
+								</td>
+							</tr>
+							<tr>
+								<td class="key">Compare Mode</td>
+								<td>
+									<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:compare_mode, :view=>@edit[:new][:views][:compare_mode]} %>
+								</td>
+							</tr>
+							<tr>
+								<td class="key">Drift</td>
+								<td>
+									<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:drift, :view=>@edit[:new][:views][:drift]} %>
+								</td>
+							</tr>
+							<tr>
+								<td class="key">Drift Mode</td>
+								<td>
+									<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:drift_mode, :view=>@edit[:new][:views][:drift_mode]} %>
+								</td>
+							</tr>
+							<tr>
+								<td class="key">Summary Screens</td>
+								<td>
+									<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:dashboards, :view=>@edit[:new][:views][:dashboards]} %>
+								</td>
+							</tr>
+              <tr>
+                <td class="key">VM and Instance Items</td>
+                <td>
+                  <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vmitem, :view=>@edit[:new][:views][:vmitem]} %>
+                </td>
+              </tr>
+					</table>
+				</fieldset>
+				<% if role_allows(:feature=>"miq_proxy_show_list")%>
+					<fieldset>
+						<p class="legend">Management Engine</p>
+						<table class="style1" >
+								<tr>
+									<td class="key">SmartProxies</td>
+									<td>
+										<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:miqproxy, :view=>@edit[:new][:views][:miqproxy]} %>
+									</td>
+								</tr>
+						</table>
+					</fieldset>
+				<% end %>
+        <% if get_vmdb_config[:product][:vdi] && role_allows(:main_tab => MAIN_TABS[:vdi]) %>
+          <fieldset>
+            <p class="legend">VDI</p>
+            <table class="style1">
+              <% if role_allows(:feature => 'vdi_controller_show_list') %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"vdi_controller") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdicontroller, :view=>@edit[:new][:views][:vdicontroller]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => 'vdi_desktop_show_list') %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"vdi_desktop") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdidesktop, :view=>@edit[:new][:views][:vdidesktop]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => 'vdi_desktop_pool_show_list') %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"vdi_desktop_pool") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdidesktoppool, :view=>@edit[:new][:views][:vdidesktoppool]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => 'vdi_endpoint_device_show_list') %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"vdi_endpoint_device") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdiendpointdevice, :view=>@edit[:new][:views][:vdiendpointdevice]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => 'vdi_farm_show_list') %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"vdi_farm") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdifarm, :view=>@edit[:new][:views][:vdifarm]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => 'vdi_user_show_list') %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"vdi_user") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdiuser, :view=>@edit[:new][:views][:vdiuser]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => 'vm_vdi_show_list') %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"vm_vdi") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vmvdi, :view=>@edit[:new][:views][:vmvdi]} %>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </fieldset>
+        <% end %>
+        <fieldset>
+          <p class="legend">Services</p>
+          <table class="style1" >
+            <% if role_allows(:feature=>"service") %>
+              <tr>
+                <td class="key">My Services</td>
+                <td>
+                  <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:service, :view=>@edit[:new][:views][:service]} %>
+                </td>
+              </tr>
+            <% end %>
+            <% if role_allows(:feature=>"catalog_items_accord") ||
+              role_allows(:feature=>"catalog_items_view")
+            %>
+              <% if role_allows(:feature=>"catalog_items_accord") %>
+                <tr>
+                  <td class="key">Service Catalogs</td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:catalog, :view=>@edit[:new][:views][:catalog]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature=>"catalog_items_view") %>
+                <tr>
+                  <td class="key">Catalog Items</td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:servicetemplate, :view=>@edit[:new][:views][:servicetemplate]} %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+            <% if role_allows(:feature=>"vms_instances_filter_accord") %>
+              <tr>
+                <td class="key">VMs & Instances</td>
+                <td>
+                  <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vm, :view=>@edit[:new][:views][:vm]} %>
+                </td>
+              </tr>
+            <% end %>
+            <% if role_allows(:feature=>"templates_images_filter_accord") %>
+              <tr>
+                <td class="key">Templates & Images</td>
+                <td>
+                  <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:miqtemplate, :view=>@edit[:new][:views][:miqtemplate]} %>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </fieldset>
+			</dd>
+			<dd>
+        <% if role_allows(:feature=>"ems_cloud_show_list") ||
+          role_allows(:feature=>"availability_zone_show_list") ||
+          role_allows(:feature=>"flavor_show_list") ||
+          role_allows(:feature=>"instances_accord") ||
+          role_allows(:feature=>"instances_filter_accord") ||
+          role_allows(:feature=>"images_filter_accord")
+        %>
+          <fieldset>
+            <p class="legend">Clouds</p>
+            <table class="style1" >
+              <% if role_allows(:feature=>"ems_cloud_show_list") %>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"ems_clouds")%></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:emscloud, :view=>@edit[:new][:views][:emscloud]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => "availability_zone_show_list") %>
+                <tr>
+                  <td class="key">Availability Zones</td>
+                  <td>
+                    <%= render :partial => "ui_1_gtl", :locals => {:resource => :availabilityzone, :view => @edit[:new][:views][:availabilityzone]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => "flavor_show_list") %>
+                <tr>
+                  <td class="key">Flavors</td>
+                  <td>
+                    <%= render :partial => "ui_1_gtl", :locals => {:resource => :flavor, :view => @edit[:new][:views][:flavor]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => "instances_accord") || role_allows(:feature => "instances_filter_accord") %>
+                <tr>
+                  <td class="key">Instances</td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vmcloud, :view=>@edit[:new][:views][:vmcloud]} %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if role_allows(:feature => "images_accord") || role_allows(:feature => "images_filter_accord") %>
+                <tr>
+                  <td class="key">Images</td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:templatecloud, :view=>@edit[:new][:views][:templatecloud]} %>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </fieldset>
+        <% end %>
+				<% if role_allows(:feature=>"ems_infra_show_list") ||
+							role_allows(:feature=>"ems_cluster_show_list") ||
+							role_allows(:feature=>"host_show_list") ||
+							role_allows(:feature=>"resource_pool_show_list") ||
+							role_allows(:feature=>"storage_show_list") ||
+							role_allows(:feature=>"repository_show_list" ||
+              role_allows(:feature=>"vandt_accord") ||
+              role_allows(:feature=>"vms_filter_accord") ||
+              role_allows(:feature=>"templates_filter_accord"))
+				%>
+					<fieldset>
+						<p class="legend">Infrastructure</p>
+						<table class="style1" >
+								<% if role_allows(:feature=>"ems_infra_show_list") %>
+									<tr>
+										<td class="key"><%= ui_lookup(:tables=>"ems_infras")%></td>
+										<td>
+											<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:emsinfra, :view=>@edit[:new][:views][:emsinfra]} %>
+										</td>
+									</tr>
+								<% end %>
+								<% if role_allows(:feature=>"ems_cluster_show_list") %>
+									<tr>
+										<td class="key">Clusters</td>
+										<td>
+											<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:emscluster, :view=>@edit[:new][:views][:emscluster]} %>
+										</td>
+									</tr>
+								<% end %>
+								<% if role_allows(:feature=>"host_show_list") %>
+									<tr>
+										<td class="key">Hosts</td>
+										<td>
+											<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:host, :view=>@edit[:new][:views][:host]} %>
+										</td>
+									</tr>
+								<% end %>
+								<% if role_allows(:feature=>"host_show_list") %>
+									<tr>
+										<td class="key">Host Items</td>
+										<td>
+											<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:hostitem, :view=>@edit[:new][:views][:hostitem]} %>
+										</td>
+									</tr>
+								<% end %>
+                <% if role_allows(:feature=>"vandt_accord") || role_allows(:feature=>"vms_filter_accord") %>
+                  <tr>
+                    <td class="key">VMs</td>
+                    <td>
+                      <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vminfra, :view=>@edit[:new][:views][:vminfra]} %>
+                    </td>
+                  </tr>
+                <% end %>
+                <% if role_allows(:feature=>"vandt_accord") || role_allows(:feature=>"templates_filter_accord") %>
+                  <tr>
+                    <td class="key">Templates</td>
+                    <td>
+                      <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:templateinfra, :view=>@edit[:new][:views][:templateinfra]} %>
+                    </td>
+                  </tr>
+                <% end %>
+								<% if role_allows(:feature=>"resource_pool_show_list") %>
+									<tr>
+										<td class="key">Resource Pools</td>
+										<td>
+											<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:resourcepool, :view=>@edit[:new][:views][:resourcepool]} %>
+										</td>
+									</tr>
+								<% end %>
+								<% if role_allows(:feature=>"storage_show_list") %>
+									<tr>
+										<td class="key"><%= ui_lookup(:tables=>"storages")%></td>
+										<td>
+											<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:storage, :view=>@edit[:new][:views][:storage]} %>
+										</td>
+									</tr>
+								<% end %>
+								<% if role_allows(:feature=>"repository_show_list") %>
+									<tr>
+										<td class="key">Repositories</td>
+										<td>
+											<%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:repo, :view=>@edit[:new][:views][:repo]} %>
+										</td>
+									</tr>
+								<% end %>
+						</table>
+					</fieldset>
+				<% end %>
+        <% if get_vmdb_config[:product][:storage] %>
+          <fieldset>
+            <p class="legend">Storage</p>
+            <table class="style1" >
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"ontap_storage_system") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:ontapstoragesystem, :view=>@edit[:new][:views][:ontapstoragesystem]} %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"ontap_storage_volume") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:ontapstoragevolume, :view=>@edit[:new][:views][:ontapstoragevolume]} %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"ontap_logical_disk") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:ontaplogicaldisk, :view=>@edit[:new][:views][:ontaplogicaldisk]} %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"ontap_file_share") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:ontapfileshare, :view=>@edit[:new][:views][:ontapfileshare]} %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"cim_base_storage_extent") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:cimbasestorageextent, :view=>@edit[:new][:views][:cimbasestorageextent]} %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="key"><%= ui_lookup(:tables=>"snia_local_file_system") %></td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:snialocalfilesystem, :view=>@edit[:new][:views][:snialocalfilesystem]} %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="key">Storage Managers</td>
+                  <td>
+                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:storagemanager, :view=>@edit[:new][:views][:storagemanager]} %>
+                  </td>
+                </tr>
+            </table>
+          </fieldset>
+        <% end %>
+			</dd>
+			<%= render :partial => '/layouts/form_buttons' %>
+		</dl>
+	<% end %>
+
+</div>

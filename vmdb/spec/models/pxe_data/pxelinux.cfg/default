@@ -1,0 +1,34 @@
+default vesamenu.c32
+Menu Title ManageIQ TFTP Boot Menu
+
+label iPXE
+	menu label iPXE Boot
+	menu default
+	kernel ipxe/undionly.0
+
+label gPXE
+	menu label gPXE Boot
+	kernel gpxe/undionly.0
+
+label VMware ESXi 4.1-260247
+   menu label VMware ESXi 4.1-260247
+   menu default
+   kernel VMware-VMvisor-Installer-4.1.0-260247/mboot.c32
+   append VMware-VMvisor-Installer-4.1.0-260247/vmkboot.gz ks=http://192.168.252.60/ks.cfg --- VMware-VMvisor-Installer-4.1.0-260247/vmkernel.gz --- VMware-VMvisor-Installer-4.1.0-260247/sys.vgz --- VMware-VMvisor-Installer-4.1.0-260247/cim.vgz --- VMware-VMvisor-Installer-4.1.0-260247/ienviron.vgz --- VMware-VMvisor-Installer-4.1.0-260247/install.vgz
+
+label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+   menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+   kernel ubuntu-10.10-desktop-i386/vmlinuz
+   append vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 initrd=ubuntu-10.10-desktop-i386/initrd.lz -- quiet
+
+label Ubuntu-10.10-Desktop-amd64-LIVE_BOOT
+   menu label Ubuntu-10.10-Desktop-amd64-LIVE_BOOT
+   kernel ubuntu-10.10-desktop-amd64/vmlinuz
+   append vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-amd64 initrd=ubuntu-10.10-desktop-amd64/initrd.lz -- quiet
+
+label Local_drive
+   localboot 0
+   menu label ^Local Drive
+
+prompt 0
+timeout 600

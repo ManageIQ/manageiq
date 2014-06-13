@@ -1,0 +1,25 @@
+--- 
+? !str:VimString
+  str: vm-578855
+  "@vimType": :VirtualMachine
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  entity: !str:VimString 
+    str: vm-578855
+    "@vimType": :VirtualMachine
+    "@xsiType": :ManagedObjectReference
+  refreshRate: !str:VimString 
+    str: "20"
+    "@vimType": 
+    "@xsiType": :"SOAP::SOAPInt"
+  summarySupported: !str:VimString 
+    str: "true"
+    "@vimType": 
+    "@xsiType": :"SOAP::SOAPBoolean"
+  currentSupported: !str:VimString 
+    str: "true"
+    "@vimType": 
+    "@xsiType": :"SOAP::SOAPBoolean"
+  __iv__@vimType: 
+  __iv__@xsiType: :PerfProviderSummary
+

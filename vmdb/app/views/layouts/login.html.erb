@@ -1,0 +1,50 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title><%= I18n.t('product.name') %>: <%= @layout.titleize %></title>
+    <%= tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico") %>
+    <%# jQuery includes %>
+    <%= javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min' %>
+    <%# jQuery UI CSS %>
+    <%= stylesheet_link_tag "jquery/miq/jquery-ui-1.9.2.custom" %>
+    <!--[if IE 8]>
+      <html class="ie8">
+        <script>
+          document.createElement('header');
+          document.createElement('nav');
+          document.createElement('section');
+          document.createElement('article');
+          document.createElement('aside');
+          document.createElement('footer');
+        </script>
+    <![endif]-->
+    <%= stylesheet_link_tag 'login' %>
+
+    <script type="text/javascript">
+      $j = jQuery;  <%# Override jQuery $ to $j %>
+    </script>
+
+    <%= javascript_include_tag 'jquery.observe_field' %>  <%# Observe field plugin    %>
+    <%= javascript_include_tag 'miq_jquery_ujs' %>        <%# MIQ modified jquery UJS %>
+    <%= javascript_include_tag 'miq_ujs_bindings' %>      <%# MIQ UJS event bindings  %>
+
+    <%= csrf_meta_tag %>
+
+    <%#= javascript_include_tag 'prototype','application' %>
+    <%= javascript_include_tag 'prototype_min', 'application' %>
+    <%= javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcommon.js' %><%# Always include the dhtmlx common JS %>
+    <%= javascript_include_tag 'spin' %>
+  </head>
+
+  <body onload="miqOnLoad();" onresize="miqOnResize();">
+    <% if MiqServer.my_server(true).logon_status == :starting %>
+      <script type="text/javascript">
+        self.setTimeout("miqAjax('/dashboard/login_retry')",10000);
+      </script>
+    <% else %>
+      <%= yield %>
+    <% end %>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+#
+# Toolbar config file
+#
+---
+:model: ScanProfile
+:button_groups:
+- :name: scan_vmdb
+  :items:
+  - :buttonSelect: scan_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ap_host_edit
+      :image: new
+      :text: "Add Host Analysis Profile"
+      :title: "Add a new Host Analysis Profile"
+    - :button: ap_vm_edit
+      :image: new
+      :text: "Add VM Analysis Profile"
+      :title: "Add a new VM Analysis Profile"
+    - :button: ap_edit
+      :image: edit
+      :text: Edit the selected Analysis Profiles
+      :title: Edit the selected Analysis Profiles
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: ap_copy
+      :image: copy
+      :text: Copy the selected Analysis Profiles
+      :title: Copy the selected Analysis Profiles
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: ap_delete
+      :image: delete
+      :text: Delete the selected Analysis Profiles from the VMDB
+      :title: Delete the selected Analysis Profiles from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Analysis Profiles and ALL of their components will be permanently removed from the VMDB.  Are you sure you want to delete the selected Analysis Profiles?"
+      :enabled: 'false'
+      :onwhen: '1+'

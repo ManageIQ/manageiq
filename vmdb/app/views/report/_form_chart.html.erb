@@ -1,0 +1,42 @@
+<% url = url_for(:action=>'form_field_changed', :id=>"#{@edit[:rpt_id] || "new"}") %>
+<div id="chart_div">
+  <p class="legend">Chart Settings</p>
+  <table class="style1">
+    <tr>
+      <td class="key">Choose a chart type</td>
+      <td>
+			  <%= select_tag('chosen_graph', options_for_select(["<No chart>"] + Charting.chart_names_for_select, @edit[:new][:graph_type]),
+                      :multiple=>false, :class=>"widthed",
+                      "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                      "data-miq_observe"=>{:url=>url}.to_json) %>
+      </td>
+    </tr>
+    <% unless @edit[:new][:graph_type].blank? %>
+      <tr>
+        <td class="key">Top values to show</td>
+        <td>
+          <%= select_tag('chosen_count', options_for_select(3..GRAPH_MAX_COUNT, @edit[:new][:graph_count].to_i),
+                        :multiple=>false, :class=>"widthed",
+                        "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                        "data-miq_observe"=>{:url=>url}.to_json) %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Sum 'Other' values</td>
+        <td>
+          <%= check_box_tag("chosen_other", value="1",
+                            checked=@edit[:new][:graph_other],
+                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                            "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <% unless @edit[:new][:graph_type].blank? %>
+    * Some charts my not produce desired results with a single sort field
+  <% end %>
+  <hr>
+</div>
+<%# Need this to bind checkbox observers when under DHTMLX tabs %>
+<%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+<script>miqObserveCheckboxes();</script>

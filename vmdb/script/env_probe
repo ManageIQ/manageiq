@@ -1,0 +1,36 @@
+#!/bin/bash
+
+PWD=`pwd`
+VMDB_DIR="."
+RUNNER="$VMDB_DIR/script/runner"
+LOGDIR="$VMDB_DIR/log"
+
+VCINV_SCRIPT="$VMDB_DIR/script/env_probe_vc_inv.rb"
+EVENT_SCRIPT="$VMDB_DIR/script/env_probe_event_catcher.rb"
+RESULTS_TAR="$VMDB_DIR/env_probe_results_$1.tgz"
+rm $RESULTS_TAR
+
+echo "[`date`] Environment Probe starting"
+
+# invoke VC inventory script
+echo "[`date`] Invoking: $VCINV_SCRIPT"
+$RUNNER $VCINV_SCRIPT $1 $2 $3 $LOGDIR
+RC=$?
+if [ "$RC" -ne "0" ]; then
+  echo "[`date`] ERROR: Script $VCINV_SCRIPT exited in error with RC=$RC, aborting"
+  exit 1
+fi
+
+# invoke event catcher script
+echo "[`date`] Invoking: $EVENT_SCRIPT"
+$RUNNER $EVENT_SCRIPT $1 $2 $3 "$LOGDIR/env_probe_event_catcher.log"
+RC=$?
+if [ "$RC" -ne "0" ]; then
+  echo "[`date`] ERROR: Script $EVENT_SCRIPT exited in error with RC=$RC, aborting"
+  exit 1
+fi
+
+echo "[`date`] Environment Probe complete"
+
+echo "[`date`] Tarring up results"
+tar -czvf $RESULTS_TAR "$LOGDIR/env_probe_event_catcher.log" "$LOGDIR/env_probe_vc_inv.log" "$LOGDIR/env_probe_vc_inv.yml"

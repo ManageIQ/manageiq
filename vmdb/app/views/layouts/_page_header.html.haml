@@ -1,0 +1,39 @@
+%div{:id=>"page_header_div", :class=>"#{taskbar_in_header? ? "taskbar" : "notaskbar"} #{session[:custom_logo] ? "whitelabeled" : ""}"}
+  %div{:class=>"header #{session[:custom_logo] ? "whitelabeled" : ""}"}
+    .brand
+      %img{:src=>image_path("layout/brand.svg"), :alt=>"Red Hat&reg; CloudForms Management Engine"}
+    %ul.pull-right
+      - if session[:userid] 
+        = render :partial => "layouts/user_options" 
+      - else
+        Logging into
+        = "#{session[:vmdb_name]}"
+      - if ["login", "authenticate"].include?(controller.action_name) 
+        = javascript_tag( "$$('#navcontainer a').each(function(a){a.href='#'})" )
+        -# <li class="dropdown">Red Hat Access<b class="caret"></b></li> for later Sprint 
+      %div{:class=>"brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
+
+  = render :partial => "layouts/page_header_navbar"
+  = render :partial => "layouts/spinner"
+
+  - display = @edit == nil || (@edit && @edit[:adv_search_open]) != true ? "none" : ""
+  #blocker_div{:style=>"display: #{display}"}
+
+  -# Exception div to be replaced and attached to miqLayout when exceptions are hit 
+  #exception_div{:style=>"display:none"}
+
+  = render :partial => "layouts/lightbox_panel"
+
+  - if taskbar_in_header?
+    = render :partial => "layouts/taskbar"
+  - else
+    %li.navbar-divider
+
+  - if  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab") 
+    - if @widgets_menu_xml
+      = render :partial => "dashboard/dropdownbar" 
+
+  %script{:type => "text/javascript"}
+    - if @miq_after_onload 
+      -# if set by controller, set up to run as JS after onload is done 
+      "var miq_after_onload = '#{@miq_after_onload.html_safe}'"

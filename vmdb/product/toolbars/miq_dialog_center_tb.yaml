@@ -1,0 +1,29 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqDialog
+:button_groups:
+- :name: miq_dialog_vmdb
+  :items:
+  - :buttonSelect: host_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: old_dialogs_edit
+      :image: edit
+      :text: "Edit this Dialog"
+      :title: "Edit this Dialog"
+      :url_parms: 'main_div'
+    - :button: old_dialogs_copy
+      :image: copy
+      :title: "Copy this Dialog"
+      :text: "Copy this Dialog"
+      :url_parms: 'main_div'
+    - :button: old_dialogs_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this Dialog from the VMDB"
+      :url_parms: 'main_div'
+      :confirm: "Warning: This Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Dialog?"

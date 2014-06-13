@@ -1,0 +1,8 @@
+<div id="usage_report_div">
+	<% if @html %>
+		<fieldset>
+			<p class="legend"><%= @usage_options[:report].title %></p>
+			<%= @html.html_safe %>
+		</fieldset
+	<% end %>
+</div>

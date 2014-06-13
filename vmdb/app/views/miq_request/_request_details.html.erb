@@ -1,0 +1,58 @@
+<% if @edit && @edit[:stamp_typ] %>
+<% url = url_for(:action=>'stamp_field_changed') %>
+<% end %>
+
+			<fieldset>
+				<p class="legend">Request Details</p>
+				<table class="style1">
+					<tbody>
+						<tr>
+							<td class="key">Requested by</td>
+							<td>
+								<% if @miq_request.requester %>
+									<%= h(@miq_request.requester + (@temp[:user] == nil ? nil : " (#{@temp[:user].name})")) %>
+								<% end %>
+							</td>
+						</tr>
+						<tr>
+							<td class="key">Last Update</td>
+							<td><%= h(format_timezone(@miq_request.updated_on)) %></td>
+						</tr>
+						<tr>
+							<td class="key">Status</td>
+							<td><%= h(@miq_request.state.titleize) %></td>
+						</tr>
+						<tr>
+							<td class="key">Approved/Denied by</td>
+							<td>
+								<% if @miq_request.stamped_by %>
+									<%= h(@miq_request.stamped_by + (@temp[:user] == nil ? nil : " (#{@temp[:user].name})")) %>
+								<% end %>
+							</td>
+						</tr>
+						<tr>
+							<td class="key">Date Approved/Denied</td>
+							<td><%= h(format_timezone(@miq_request.stamped_on)) %></td>
+						</tr>
+						<tr>
+							<td class="key">Reason</td>
+							<% if @edit && @edit[:stamp_typ] %>
+								<td class="wide">
+                  <%= text_field_tag("reason",
+                                      @edit[:reason],
+                                      :maxlength=>MAX_NAME_LEN,
+																			"data-miq_focus"=>true,
+                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                </td>
+							<% else %>
+								<td><%= h(@miq_request.reason) %></td>
+							<% end %>
+						</tr>
+						<tr>
+							<td class="key">Last Message</td>
+							<td><%= h(@miq_request.message) %></td>
+						</tr>
+					</tbody>
+				</table>
+			</fieldset>
+

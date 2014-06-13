@@ -1,0 +1,20 @@
+<% unless @edit[:new][:emstype].blank? %>
+<tr>
+  <td class="key">Host Name</td>
+  <td class="wide">
+    <%= text_field_tag("hostname",
+                      @edit[:new][:hostname],
+                      :maxlength=>MAX_HOSTNAME_LEN,
+                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+  </td>
+</tr>
+<tr>
+  <td class="key">IP Address</td>
+  <td class="wide">
+  <%= text_field_tag("ipaddress",
+                    @edit[:new][:ipaddress],
+                    :maxlength=>15,
+                    "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+  </td>
+</tr>
+<% end %>

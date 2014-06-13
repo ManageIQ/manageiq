@@ -1,0 +1,16 @@
+#chart_sample_div
+  - unless @edit[:new][:graph_type].blank?
+    %fieldset
+      - if Charting.backend == :ziya # FIXME: call some charting helper
+        %p.legend Sample Chart
+        %embed{:width => 400, :height => 250, :type => 'application/x-shockwave-flash',
+               :src => '/charts/charts.swf?library_path=/charts/charts_library&xml_source=/report/sample_chart',
+               :wmode => 'opaque', :swliveconnect => true,
+               :quality => 'high', :pluginspage => 'http://www.macromedia.com/go/getflashplayer',
+               :name => 'my_chart', :bgcolor => '#f2f2f2'}
+      - elsif Charting.backend == :jqplot
+        = jqplot_remote(url_for(:controller => 'report', :action => 'sample_chart',
+                        :width  => 400,
+                        :height => 250,
+                        :rand   => "#{rand(999_999_999).to_s}"),
+                        :id => 'my_chart', :bgcolor => '#f2f2f2', :width => 400, :height => 250)

@@ -1,0 +1,90 @@
+<% url = url_for(:action =>'cb_assign_field_changed', :id=>"#{x_node}") %>
+<div id="cb_assignment_div" style="width:100%;height:100%;overflow:auto">
+	<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+  <fieldset>
+    <p class="legend">Basic Info</p>
+      <table class="style1">
+        <tr>
+          <td class="key">Assign To</td>
+          <td>
+             <%= select_tag("cbshow_typ",
+                               options_for_select(
+                                 [["<Nothing>", "nil"]] +  ASSIGN_TOS[x_node.split('-').last == "Compute" ? "chargeback_compute".to_sym : "chargeback_storage".to_sym].invert.sort,
+                                 @edit[:new][:cbshow_typ]),
+                               "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                               "data-miq_observe"=>{:url=>url}.to_json) %>
+          </td>
+        </tr>
+        <% if !@edit[:new][:cbshow_typ].blank? && @edit[:new][:cbshow_typ].ends_with?("-tags")%>
+          <tr>
+            <td class="key">Tag Category</td>
+            <td>
+               <%= select_tag("cbtag_cat",
+                               options_for_select(
+                                 [["<Choose a Category>", ""]] + Array(@edit[:cb_assign][:cats].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
+                                 @edit[:new][:cbtag_cat].to_s),
+                               "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                               "data-miq_observe"=>{:url=>url}.to_json) %>
+            </td>
+          </tr>
+        <% end %>
+        <% unless @edit[:new][:cbshow_typ].nil? || @edit[:new][:cbshow_typ] == "nil" %>
+          <% if !@edit[:new][:cbshow_typ].ends_with?("-tags") ||
+              (@edit[:new][:cbshow_typ].ends_with?("-tags") && !@edit[:new][:cbtag_cat].blank?)%>
+            <tr>
+              <td class="key">Selections</td>
+              <td>
+                <table class="style3">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if @edit[:new][:cbshow_typ].ends_with?("-tags") %>
+                      <% @edit[:cb_assign][:tags].invert.sort{|a,b|a.first.downcase<=>b.first.downcase}.each do |tag,id| %>
+                        <tr class="<%= cycle('row0', 'row1') %>">
+                          <td>
+                            <%= h(tag) %>
+                          </td>
+                          <td>
+                            <%= select_tag("#{@edit[:new][:cbshow_typ]}__#{id}",
+                                              options_for_select(
+                                                [["<Nothing>", "nil"]] +  @edit[:cb_rates].invert.sort,
+                                                @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
+                                              "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                          </td>
+                        </tr>
+                      <% end	%>
+                    <% else %>
+                      <% @edit[:cb_assign][:cis].invert.sort{|a,b|a.first.downcase<=>b.first.downcase}.each do |ci,id| %>
+                        <tr id="new_tr" class="<%= cycle('row0', 'row1') %>">
+                          <td><%= h(ci) %></td>
+                          <td>
+                            <%= select_tag("#{@edit[:new][:cbshow_typ]}__#{id}",
+                                              options_for_select(
+                                                [["<Nothing>", "nil"]] +  @edit[:cb_rates].invert.sort,
+                                                @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
+                                              "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% end %>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="40">
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+    </table>
+  </fieldset>
+</div>

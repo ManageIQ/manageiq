@@ -1,0 +1,53 @@
+#
+# Toolbar config file
+#
+---
+:model: User
+:button_groups:
+- :name: user_vmdb
+  :items:
+  - :buttonSelect: user_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: rbac_user_add
+      :image: new
+      :text: "Add a new User"
+      :title: "Add a new User"
+    - :button: rbac_user_edit
+      :image: edit
+      :text: Edit the selected User
+      :title: Select a single User to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: rbac_user_copy
+      :image: copy
+      :text: Copy the selected User to a new User
+      :title: Select a single User to copy
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: rbac_user_delete
+      :image: delete
+      :text: Delete selected Users
+      :title: Select one or more Users to delete
+      :url_parms: 'main_div'
+      :confirm: "Delete all selected Users?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: rbac_user_policy
+  :items:
+  - :buttonSelect: rbac_user_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: rbac_user_tags_edit
+      :image: tag
+      :text: "Edit '#{session[:customer_name]}' Tags for the selected Users"
+      :title: "Edit '#{session[:customer_name]}' Tags for the selected Users"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

@@ -1,0 +1,32 @@
+	<% width = size == 150 ? 54 : 35 %>
+	<% height = width %>
+	<% vendor = item.vendor ? item.vendor.downcase : "unknown" %>
+	<% if @settings[:quadicons][:vdidesktoppool] %>
+		<div class="flobj" ><img src="/images/icons/<%= size %>/base.png" width="<%= size %>" height="<%= size %>"/></div>
+		<div class="flobj a<%= size %>"><p><%= item.vdi_desktops.size %></p></div>
+		<div class="flobj c<%= size %>"><img src="/images/icons/new/vendor-<%= h(vendor) %>.png"/></div>
+		<div class="flobj d<%= size %>"><p><%= h(item.vdi_users.size) %></p></div>
+	<% else %>
+		<div class="flobj" ><img src="/images/icons/<%= size %>/base-single.png"/></div>
+		<div class="flobj e<%= size %>"><img src="/images/icons/new/vendor-<%= h(vendor) %>.png" width="<%= width * 1.8 %>" height="<%= height * 1.8 %>"/></div>
+	<% end %>
+	<% if typ == :listnav %><%# Listnav, no href needed %>
+		<div class="flobj"><img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/></div>
+	<% else %>
+		<% if ! @embedded || @showlinks %>
+			<div class="flobj">
+				<a href="<%= url_for_record(item) %>" title="<%=h(item.name)%>">
+					<img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/>
+				</a>
+			</div>
+		<% else %>
+			<div class="flobj">
+				<a title="<%= h(item.name) %>">
+					<img src="/images/icons/<%= size %>/vdi_desktop_pool.png" border="0"/>
+				</a>
+			</div>
+		<% end %>
+	<% end %>
+
+
+

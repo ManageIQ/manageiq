@@ -1,0 +1,75 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: SmartProxy Builds
+
+# Menu name
+name: SmartProxy Build
+
+# Main DB table report is based on
+db: MiqProxyBuild
+
+# Columns to fetch from the main table
+cols:
+- name
+- build
+- platform
+- arch
+- file_ctime
+- file_mtime
+- file_size
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order: 
+- build
+- platform
+- file_ctime
+- file_size
+
+# Column titles, in order
+headers:
+- Build
+- Platform
+- Date/Time
+- Size
+
+# Condition(s) string for the SQL query
+conditions: 
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+- build
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 

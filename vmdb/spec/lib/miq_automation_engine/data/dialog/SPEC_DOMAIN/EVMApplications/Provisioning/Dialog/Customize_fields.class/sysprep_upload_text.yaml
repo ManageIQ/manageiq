@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: sysprep_upload_text
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: sysprep_upload_text
+  - value1:
+      value: /EVMApplications/Provisioning/Dialog/customize_fields_sysprepuploadtext/*

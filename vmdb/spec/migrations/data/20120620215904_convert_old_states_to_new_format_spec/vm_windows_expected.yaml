@@ -1,0 +1,6397 @@
+---
+- :filesystem_drivers:
+  - :display_name: ! '@%systemroot%\system32\browser.dll,-102'
+    :id: 447000000010571
+    :start: Manual
+    :class: SystemService
+  - :display_name: CD/DVD File System Reader
+    :id: 447000000010579
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\dfsc.sys,-101'
+    :id: 447000000010599
+    :start: System Start
+    :class: SystemService
+  - :display_name: exFAT File System Driver
+    :id: 447000000010617
+    :start: Manual
+    :class: SystemService
+  - :display_name: FAT12/16/32 File System Driver
+    :id: 447000000010618
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fileinfo.sys,-100'
+    :id: 447000000010623
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\filetrace.sys,-10001'
+    :id: 447000000010624
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fltmgr.sys,-10001'
+    :id: 447000000010626
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fsdepends.sys,-10001'
+    :id: 447000000010629
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\luafv.sys,-100'
+    :id: 447000000010676
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1002'
+    :id: 447000000010688
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1004'
+    :id: 447000000010689
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1006'
+    :id: 447000000010690
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010696
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\mup.sys,-101'
+    :id: 447000000010704
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: NetBIOS Interface
+    :id: 447000000010712
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010723
+    :start: System Start
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010727
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1000'
+    :id: 447000000010764
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-102'
+    :id: 447000000010816
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-104'
+    :id: 447000000010817
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010818
+    :start: Manual
+    :class: SystemService
+  - :display_name: udfs
+    :id: 447000000010848
+    :start: Disabled
+    :class: SystemService
+  - :display_name: WIMMount
+    :id: 447000000010900
+    :start: Manual
+    :class: SystemService
+  :groups:
+  - :id: 447000000006551
+    :name: Administrators
+    :class: Account
+  - :id: 447000000006552
+    :name: Backup Operators
+    :class: Account
+  - :id: 447000000006553
+    :name: Certificate Service DCOM Access
+    :class: Account
+  - :id: 447000000006554
+    :name: Cryptographic Operators
+    :class: Account
+  - :id: 447000000006555
+    :name: Distributed COM Users
+    :class: Account
+  - :id: 447000000006556
+    :name: Event Log Readers
+    :class: Account
+  - :id: 447000000006557
+    :name: Guests
+    :class: Account
+  - :id: 447000000006558
+    :name: IIS_IUSRS
+    :class: Account
+  - :id: 447000000006559
+    :name: Network Configuration Operators
+    :class: Account
+  - :id: 447000000006560
+    :name: Performance Log Users
+    :class: Account
+  - :id: 447000000006561
+    :name: Performance Monitor Users
+    :class: Account
+  - :id: 447000000006562
+    :name: Power Users
+    :class: Account
+  - :id: 447000000006563
+    :name: Print Operators
+    :class: Account
+  - :id: 447000000006564
+    :name: Remote Desktop Users
+    :class: Account
+  - :id: 447000000006565
+    :name: Replicator
+    :class: Account
+  - :id: 447000000006566
+    :name: Users
+    :class: Account
+  :guest_applications:
+  - :id: 447000000034833
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.4148
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.4148
+    :class: GuestApplication
+  - :id: 447000000034834
+    :v_unique_name: WPT Redistributables
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034835
+    :v_unique_name: Windows PE x86 x64 wims
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034836
+    :v_unique_name: Microsoft Deployment Toolkit 2012 Update 1 (6.1.2369.0)
+    :vendor: Microsoft Corporation
+    :version: 6.1.2369.0
+    :class: GuestApplication
+  - :id: 447000000034837
+    :v_unique_name: Kits Configuration Installer
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034838
+    :v_unique_name: Windows System Image Manager on amd64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034839
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.6161
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.6161
+    :class: GuestApplication
+  - :id: 447000000034840
+    :v_unique_name: Windows Automated Installation Kit
+    :vendor: Microsoft Corporation
+    :version: 2.0.0.0
+    :class: GuestApplication
+  - :id: 447000000034841
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.6161
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.6161
+    :class: GuestApplication
+  - :id: 447000000034842
+    :v_unique_name: Toolkit Documentation
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034843
+    :v_unique_name: VMware Tools
+    :vendor: VMware, Inc.
+    :version: 8.6.0.6868
+    :class: GuestApplication
+  - :id: 447000000034844
+    :v_unique_name: Windows PE x86 x64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034845
+    :v_unique_name: Microsoft .NET Framework 4 Extended
+    :vendor: Microsoft Corporation
+    :version: 4.0.30319
+    :class: GuestApplication
+  - :id: 447000000034846
+    :v_unique_name: WPTx64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034847
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.4148
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.4148
+    :class: GuestApplication
+  - :id: 447000000034848
+    :v_unique_name: Microsoft Silverlight
+    :vendor: Microsoft Corporation
+    :version: 5.1.10411.0
+    :class: GuestApplication
+  - :id: 447000000034849
+    :v_unique_name: Windows Deployment Customizations
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034850
+    :v_unique_name: Microsoft .NET Framework 4 Client Profile
+    :vendor: Microsoft Corporation
+    :version: 4.0.30319
+    :class: GuestApplication
+  - :id: 447000000034851
+    :v_unique_name: Windows Deployment Tools
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034852
+    :v_unique_name: Internet Explorer
+    :vendor: Microsoft Corporation
+    :version: 9.00.8112.16446
+    :class: GuestApplication
+  - :id: 447000000034853
+    :v_unique_name: VMware Tools tray application
+    :vendor: VMware, Inc.
+    :version: 8.6.0 build-446312
+    :class: GuestApplication
+  - :id: 447000000034854
+    :v_unique_name: Magic ISO Maker v5.5 (build 0281)
+    :class: GuestApplication
+  - :id: 447000000034855
+    :v_unique_name: Assessment and Deployment Kit
+    :vendor: Microsoft Corporation
+    :version: 8.59.25584
+    :class: GuestApplication
+  :hardware:
+    :cdroms:
+    - :device_name: CD/DVD drive 1
+      :device_type: cdrom-image
+      :filename: ! '[Datastore1] Vm1/[]'
+      :id: 447000000001979
+      :location: '1:0'
+      :present: true
+      :start_connected: true
+      :class: Disk
+    :disks:
+    - :allocated_space: 42947575808
+      :device_name: Hard disk 1
+      :filename: ! '[Datastore1] Vm1/Vm1.vmdk'
+      :id: 447000000001978
+      :location: '0:0'
+      :present: true
+      :size: 42949672960
+      :size_on_disk: 38621151232
+      :start_connected: true
+      :unallocated_space: 2097152
+      :class: Disk
+    - :device_name: CD/DVD drive 1
+      :filename: ! '[Datastore1] Vm1/[]'
+      :id: 447000000001979
+      :location: '1:0'
+      :present: true
+      :start_connected: true
+      :class: Disk
+    - :device_name: disk
+      :filename: ! '[Datastore1] Vm1/'
+      :id: 447000000003146
+      :location: '0'
+      :present: true
+      :start_connected: false
+      :class: Disk
+    :floppies:
+    - :device_name: disk
+      :filename: ! '[Datastore1] Vm1/'
+      :id: 447000000003146
+      :location: '0'
+      :present: true
+      :start_connected: false
+      :class: Disk
+    :nics:
+    - :address: 00:50:56:91:05:9d
+      :id: 447000000001147
+      :location: '6'
+      :present: true
+      :start_connected: true
+      :class: GuestDevice
+    :volumes:
+    - :id: 447000000000439
+      :name: ''
+      :size: 104857600
+      :typ: physical
+      :class: Volume
+    - :filesystem: NTFS
+      :free_space: 4067311616
+      :id: 447000000000440
+      :name: ! 'C:'
+      :size: 42842718208
+      :typ: physical
+      :used_space: 38775406592
+      :class: Volume
+    :bios: 42110866-eb4b-5bed-2525-6f2e124532b1
+    :config_version: vmx-08
+    :guest_os: windows7server64
+    :guest_os_full_name: Microsoft Windows Server 2008 R2 (64-bit)
+    :id: 447000000001079
+    :memory_cpu: 4096
+    :numvcpus: 1
+    :class: Hardware
+  :kernel_drivers:
+  - :id: 447000000010522
+    :class: SystemService
+  - :id: 447000000010523
+    :class: SystemService
+  - :id: 447000000010524
+    :class: SystemService
+  - :id: 447000000010525
+    :class: SystemService
+  - :id: 447000000010526
+    :class: SystemService
+  - :id: 447000000010527
+    :class: SystemService
+  - :id: 447000000010528
+    :class: SystemService
+  - :display_name: 1394 OHCI Compliant Host Controller
+    :id: 447000000010529
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft ACPI Driver
+    :id: 447000000010530
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ACPI Power Meter Driver
+    :id: 447000000010531
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010532
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010533
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010534
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010535
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\afd.sys,-1000'
+    :id: 447000000010537
+    :start: System Start
+    :class: SystemService
+  - :display_name: Intel AGP Bus Filter
+    :id: 447000000010538
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010540
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010541
+    :start: Manual
+    :class: SystemService
+  - :display_name: AMD K8 Processor Driver
+    :id: 447000000010542
+    :start: Manual
+    :class: SystemService
+  - :display_name: AMD Processor Driver
+    :id: 447000000010543
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010544
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010545
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010546
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appidsvc.dll,-102'
+    :id: 447000000010548
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010552
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010553
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010554
+    :class: SystemService
+  - :id: 447000000010555
+    :class: SystemService
+  - :id: 447000000010556
+    :class: SystemService
+  - :id: 447000000010557
+    :class: SystemService
+  - :id: 447000000010558
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32000'
+    :id: 447000000010560
+    :start: Manual
+    :class: SystemService
+  - :display_name: IDE Channel
+    :id: 447000000010561
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme II VBD
+    :id: 447000000010564
+    :start: Manual
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme Gigabit Ethernet - NDIS 6.0
+    :id: 447000000010565
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010566
+    :class: SystemService
+  - :display_name: Beep
+    :id: 447000000010567
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010570
+    :start: System Start
+    :class: SystemService
+  - :display_name: Brother USB Mass-Storage Lower Filter Driver
+    :id: 447000000010572
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother USB Mass-Storage Upper Filter Driver
+    :id: 447000000010573
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC Serial Port Interface Driver (WDM)
+    :id: 447000000010575
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother WDM Serial driver
+    :id: 447000000010576
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC USB Fax Only Modem
+    :id: 447000000010577
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC USB Serial WDM Driver
+    :id: 447000000010578
+    :start: Manual
+    :class: SystemService
+  - :display_name: CD-ROM Driver
+    :id: 447000000010580
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\clfs.sys,-100'
+    :id: 447000000010582
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft AC Adapter Driver
+    :id: 447000000010587
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010588
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010589
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft Composite Battery Driver
+    :id: 447000000010590
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Composite Bus Enumerator Driver
+    :id: 447000000010591
+    :start: Manual
+    :class: SystemService
+  - :display_name: Crcdisk Filter Driver
+    :id: 447000000010593
+    :start: Disabled
+    :class: SystemService
+  - :id: 447000000010594
+    :class: SystemService
+  - :id: 447000000010596
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\discache.sys,-102'
+    :id: 447000000010601
+    :start: System Start
+    :class: SystemService
+  - :display_name: Disk Driver
+    :id: 447000000010602
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010603
+    :start: Manual
+    :class: SystemService
+  - :display_name: LDDM Graphics Subsystem
+    :id: 447000000010607
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel(R) PRO/1000 NDIS 6 Adapter Driver
+    :id: 447000000010608
+    :start: Manual
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme II 10 GigE VBD
+    :id: 447000000010610
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010612
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Hardware Error Device Driver
+    :id: 447000000010613
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010614
+    :class: SystemService
+  - :display_name: Floppy Disk Controller Driver
+    :id: 447000000010620
+    :start: Manual
+    :class: SystemService
+  - :display_name: Floppy Disk Driver
+    :id: 447000000010625
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010630
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft Generic AGPv3.0 Filter for K8 Processor Platforms
+    :id: 447000000010631
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft UAA Bus Driver for High Definition Audio
+    :id: 447000000010633
+    :start: Manual
+    :class: SystemService
+  - :display_name: HID UPS Battery Driver
+    :id: 447000000010634
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft HID Class Driver
+    :id: 447000000010636
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010638
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\http.sys,-1'
+    :id: 447000000010639
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\hwpolicy.sys,-101'
+    :id: 447000000010640
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: i8042 Keyboard and PS/2 Mouse Port Driver
+    :id: 447000000010641
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel RAID Controller Windows 7
+    :id: 447000000010642
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010644
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010646
+    :class: SystemService
+  - :id: 447000000010647
+    :class: SystemService
+  - :id: 447000000010648
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Intel Processor Driver
+    :id: 447000000010649
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel(R) QuickData Technology Device
+    :id: 447000000010650
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32013'
+    :id: 447000000010652
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010654
+    :start: Manual
+    :class: SystemService
+  - :display_name: IP Network Address Translator
+    :id: 447000000010655
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010656
+    :start: Manual
+    :class: SystemService
+  - :display_name: iScsiPort Driver
+    :id: 447000000010657
+    :start: Manual
+    :class: SystemService
+  - :display_name: Keyboard Class Driver
+    :id: 447000000010658
+    :start: Manual
+    :class: SystemService
+  - :display_name: Keyboard HID Driver
+    :id: 447000000010659
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010661
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010662
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Kernel Streaming Thunks
+    :id: 447000000010663
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010667
+    :class: SystemService
+  - :display_name: Link-Layer Topology Discovery Mapper I/O Driver
+    :id: 447000000010668
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010671
+    :class: SystemService
+  - :id: 447000000010672
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010673
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010674
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010675
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010677
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010678
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010680
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Monitor Class Function Driver Service
+    :id: 447000000010681
+    :start: Manual
+    :class: SystemService
+  - :display_name: Mouse Class Driver
+    :id: 447000000010682
+    :start: Manual
+    :class: SystemService
+  - :display_name: Mouse HID Driver
+    :id: 447000000010683
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\mountmgr.sys,-100'
+    :id: 447000000010684
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010685
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FirewallAPI.dll,-23092'
+    :id: 447000000010686
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010691
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010692
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010694
+    :class: SystemService
+  - :id: 447000000010695
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\mshidkmdf.sys,-100'
+    :id: 447000000010697
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010698
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010701
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft System Management BIOS Driver
+    :id: 447000000010702
+    :start: System Start
+    :class: SystemService
+  - :display_name: Microsoft Input Configuration Driver
+    :id: 447000000010703
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\ndis.sys,-200'
+    :id: 447000000010706
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: NDIS Capture LightWeight Filter
+    :id: 447000000010707
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32001'
+    :id: 447000000010708
+    :start: Manual
+    :class: SystemService
+  - :display_name: NDIS Usermode I/O Protocol
+    :id: 447000000010709
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32002'
+    :id: 447000000010710
+    :start: Manual
+    :class: SystemService
+  - :display_name: NDIS Proxy
+    :id: 447000000010711
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\netbt.sys,-2'
+    :id: 447000000010713
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010721
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\nsiproxy.sys,-2'
+    :id: 447000000010725
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010726
+    :class: SystemService
+  - :id: 447000000010728
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010729
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010730
+    :start: Manual
+    :class: SystemService
+  - :display_name: NVIDIA nForce AGP Bus Filter
+    :id: 447000000010731
+    :start: Manual
+    :class: SystemService
+  - :display_name: 1394 OHCI Compliant Host Controller (Legacy)
+    :id: 447000000010732
+    :start: Manual
+    :class: SystemService
+  - :display_name: Parallel port driver
+    :id: 447000000010733
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\partmgr.sys,-100'
+    :id: 447000000010734
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: PCI Bus Driver
+    :id: 447000000010735
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010736
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010737
+    :start: Manual
+    :class: SystemService
+  - :display_name: Performance Counters for Windows Driver
+    :id: 447000000010738
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: PEAUTH
+    :id: 447000000010739
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010740
+    :class: SystemService
+  - :id: 447000000010742
+    :class: SystemService
+  - :id: 447000000010743
+    :class: SystemService
+  - :id: 447000000010744
+    :class: SystemService
+  - :id: 447000000010748
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32006'
+    :id: 447000000010750
+    :start: Manual
+    :class: SystemService
+  - :display_name: Processor Driver
+    :id: 447000000010751
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\drivers\pacer.sys,-101'
+    :id: 447000000010754
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010755
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010756
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Access Auto Connection Driver
+    :id: 447000000010757
+    :start: Manual
+    :class: SystemService
+  - :display_name: WAN Miniport (IKEv2)
+    :id: 447000000010758
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32005'
+    :id: 447000000010760
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32007'
+    :id: 447000000010762
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\sstpsvc.dll,-202'
+    :id: 447000000010763
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Desktop Device Redirector Bus Driver
+    :id: 447000000010765
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\DRIVERS\RDPCDD.sys,-100'
+    :id: 447000000010766
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010767
+    :class: SystemService
+  - :display_name: Terminal Server Device Redirector Driver
+    :id: 447000000010768
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\RDPENCDD.sys,-101'
+    :id: 447000000010769
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drprov.dll,-100'
+    :id: 447000000010770
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\RdpRefMp.sys,-101'
+    :id: 447000000010771
+    :start: System Start
+    :class: SystemService
+  - :display_name: RDP Winstation Driver
+    :id: 447000000010772
+    :start: Manual
+    :class: SystemService
+  - :display_name: Link-Layer Topology Discovery Responder
+    :id: 447000000010779
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010780
+    :start: Manual
+    :class: SystemService
+  - :display_name: sacdrv
+    :id: 447000000010781
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010784
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\drivers\scfilter.sys,-11'
+    :id: 447000000010786
+    :start: Manual
+    :class: SystemService
+  - :display_name: Security Driver
+    :id: 447000000010789
+    :start: Automatic
+    :class: SystemService
+  - :display_name: Serenum Filter Driver
+    :id: 447000000010792
+    :start: Manual
+    :class: SystemService
+  - :display_name: Serial port driver
+    :id: 447000000010793
+    :start: System Start
+    :class: SystemService
+  - :display_name: Serial Mouse Driver
+    :id: 447000000010794
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010795
+    :class: SystemService
+  - :id: 447000000010796
+    :class: SystemService
+  - :id: 447000000010797
+    :class: SystemService
+  - :display_name: SFF Storage Class Driver
+    :id: 447000000010799
+    :start: Manual
+    :class: SystemService
+  - :display_name: SFF Storage Protocol Driver for MMC
+    :id: 447000000010800
+    :start: Manual
+    :class: SystemService
+  - :display_name: SFF Storage Protocol Driver for SDBus
+    :id: 447000000010801
+    :start: Manual
+    :class: SystemService
+  - :display_name: High-Capacity Floppy Disk Drive
+    :id: 447000000010802
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010805
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010806
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50005'
+    :id: 447000000010807
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010808
+    :class: SystemService
+  - :id: 447000000010809
+    :class: SystemService
+  - :id: 447000000010810
+    :class: SystemService
+  - :display_name: Security Processor Loader Driver
+    :id: 447000000010812
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010821
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vmstorfltres.dll,-1000'
+    :id: 447000000010822
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010823
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010824
+    :start: Manual
+    :class: SystemService
+  - :display_name: Software Bus Driver
+    :id: 447000000010825
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50003'
+    :id: 447000000010829
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft IPv6 Protocol Driver
+    :id: 447000000010830
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010831
+    :class: SystemService
+  - :display_name: TCP/IP Registry Compatibility
+    :id: 447000000010832
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010833
+    :class: SystemService
+  - :display_name: TDPIPE
+    :id: 447000000010834
+    :start: Manual
+    :class: SystemService
+  - :display_name: TDTCP
+    :id: 447000000010835
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50004'
+    :id: 447000000010836
+    :start: System Start
+    :class: SystemService
+  - :display_name: Terminal Device Driver
+    :id: 447000000010837
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010842
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\DRIVERS\tssecsrv.sys,-101'
+    :id: 447000000010843
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010844
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Desktop Generic USB Device
+    :id: 447000000010845
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Tunnel Miniport Adapter Driver
+    :id: 447000000010846
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft AGPv3.5 Filter
+    :id: 447000000010847
+    :start: Manual
+    :class: SystemService
+  - :display_name: Uli AGP Bus Filter
+    :id: 447000000010850
+    :start: Manual
+    :class: SystemService
+  - :display_name: UMBus Enumerator Driver
+    :id: 447000000010851
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft UMPass Driver
+    :id: 447000000010852
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Generic Parent Driver
+    :id: 447000000010855
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB 2.0 Enhanced Host Controller Miniport Driver
+    :id: 447000000010856
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Standard Hub Driver
+    :id: 447000000010857
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Open Host Controller Miniport Driver
+    :id: 447000000010858
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB PRINTER Class
+    :id: 447000000010859
+    :start: Manual
+    :class: SystemService
+  - :display_name: USB Mass Storage Driver
+    :id: 447000000010860
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Universal Host Controller Miniport Driver
+    :id: 447000000010861
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Virtual Drive Enumerator Driver
+    :id: 447000000010864
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010866
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010867
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010868
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010869
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010870
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010871
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010872
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware VMCI Bus Driver
+    :id: 447000000010873
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: VMware Replay Debugging Helper
+    :id: 447000000010874
+    :start: System Start
+    :class: SystemService
+  - :display_name: Memory Control Driver
+    :id: 447000000010875
+    :start: Automatic
+    :class: SystemService
+  - :display_name: VMware Pointing Device
+    :id: 447000000010876
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware Vista Physical Disk Helper
+    :id: 447000000010877
+    :start: System Start
+    :class: SystemService
+  - :display_name: Volume Manager Driver
+    :id: 447000000010880
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\volmgrx.sys,-100'
+    :id: 447000000010881
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Storage volumes
+    :id: 447000000010882
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010883
+    :start: Manual
+    :class: SystemService
+  - :display_name: Wacom Serial Pen HID Driver
+    :id: 447000000010887
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32011'
+    :id: 447000000010888
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32012'
+    :id: 447000000010889
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010892
+    :start: Manual
+    :class: SystemService
+  - :display_name: Kernel Mode Driver Frameworks service
+    :id: 447000000010893
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: WFP Lightweight Filter
+    :id: 447000000010899
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010901
+    :class: SystemService
+  - :id: 447000000010902
+    :class: SystemService
+  - :id: 447000000010906
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010907
+    :class: SystemService
+  - :display_name: Microsoft Windows Management Interface for ACPI
+    :id: 447000000010908
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010909
+    :class: SystemService
+  - :display_name: Windows Socket 2.0 Non-IFS Service Provider Support Environment
+    :id: 447000000010912
+    :start: System Start
+    :class: SystemService
+  - :display_name: User Mode Driver Frameworks Platform Driver
+    :id: 447000000010914
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010916
+    :class: SystemService
+  - :id: 447000000010917
+    :class: SystemService
+  :patches:
+  - :id: 447000000001238
+    :name: KB2633952
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001239
+    :name: KB2676562
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001240
+    :name: KB2545698
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001241
+    :name: KB982018
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001242
+    :name: KB2484033
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001243
+    :name: KB2488113
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001244
+    :name: KB2505438
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001245
+    :name: KB2506928
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001246
+    :name: KB2511250
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001247
+    :name: KB2515325
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001248
+    :name: KB2522422
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001249
+    :name: KB2529073
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001250
+    :name: KB2530548
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001251
+    :name: KB2536275
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001252
+    :name: KB2541014
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001253
+    :name: KB2544521
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001254
+    :name: KB2547666
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001255
+    :name: KB2570947
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001256
+    :name: KB2584146
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001257
+    :name: KB2603229
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001258
+    :name: KB2604115
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001259
+    :name: KB2607047
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001260
+    :name: KB2608658
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001261
+    :name: KB2618451
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001262
+    :name: KB2620704
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001263
+    :name: KB2621440
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001264
+    :name: KB2631813
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001265
+    :name: KB2636573
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001266
+    :name: KB2643719
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001267
+    :name: KB2656356
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001268
+    :name: KB2656373
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001269
+    :name: KB2658846
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001270
+    :name: KB2660075
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001271
+    :name: KB2667402
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001272
+    :name: KB2685939
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001273
+    :name: KB2686831
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001274
+    :name: KB2695962
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001275
+    :name: KB2699779
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001276
+    :name: KB2709630
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001277
+    :name: KB2709981
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001278
+    :name: KB976902
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001279
+    :name: KB2492386
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001280
+    :name: KB2425227
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001281
+    :name: KB2506014
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001282
+    :name: KB2506212
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001283
+    :name: KB2507618
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001284
+    :name: KB2509553
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001285
+    :name: KB2510531
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001286
+    :name: KB2511455
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001287
+    :name: KB2533552
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001288
+    :name: KB2536276
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001289
+    :name: KB2544893
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001290
+    :name: KB2552343
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001291
+    :name: KB2563227
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001292
+    :name: KB2564958
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001293
+    :name: KB2567680
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001294
+    :name: KB2585542
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001295
+    :name: KB2607576
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001296
+    :name: KB2620712
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001297
+    :name: KB2640148
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001298
+    :name: KB2644615
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001299
+    :name: KB2645640
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001300
+    :name: KB2653956
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001301
+    :name: KB2654428
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001302
+    :name: KB2659262
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001303
+    :name: KB2679255
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001304
+    :name: KB2688338
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001305
+    :name: KB2690533
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001306
+    :name: KB2703157
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001307
+    :name: KB2709162
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001308
+    :name: KB2709715
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001309
+    :name: KB2718704
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001310
+    :name: KB2560656
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001311
+    :name: KB2699988
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001312
+    :name: KB2677070
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001313
+    :name: KB976932
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001314
+    :name: KB976933
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  :tags:
+  - :category_description: Cost Center
+    :category_id: 447000000000057
+    :category_name: cc
+    :category_single_value: true
+    :entry_description: Cost Center 001
+    :entry_id: 447000000000058
+    :entry_name: '001'
+    :id: 447000000000061
+    :name: /managed/cc/001
+    :namespace: managed
+  - :category_description: Parent Folder Path (Hosts & Clusters)
+    :category_id: 447000000000126
+    :category_name: folder_path_yellow
+    :category_single_value: true
+    :entry_description: Datacenters
+    :entry_id: 447000000000127
+    :entry_name: datacenters
+    :id: 447000000000130
+    :name: /managed/folder_path_yellow/datacenters
+    :namespace: managed
+  - :id: 447000000000165
+    :name: /miq_policy/assignment/miq_policy_set/447000000000027
+    :namespace: miq_policy
+    :entry_id: 
+    :category_id: 
+    :category_single_value: 
+  - :id: 447000000000166
+    :name: /miq_policy/assignment/miq_policy_set/447000000000029
+    :namespace: miq_policy
+    :entry_id: 
+    :category_id: 
+    :category_single_value: 
+  - :category_description: Parent Folder Path (VMs & Templates)
+    :category_id: 447000000000124
+    :category_name: folder_path_blue
+    :category_single_value: true
+    :entry_description: Datacenters/Testing Environment/vm
+    :entry_id: 447000000000162
+    :entry_name: datacenters:testing_environment:vm
+    :id: 447000000000167
+    :name: /managed/folder_path_blue/datacenters:testing_environment:vm
+    :namespace: managed
+  :users:
+  - :enabled: true
+    :id: 447000000006549
+    :last_logon: 2013-01-18 14:57:06.000000000 Z
+    :name: Administrator
+    :class: Account
+  - :enabled: false
+    :id: 447000000006550
+    :name: Guest
+    :class: Account
+  :win32_services:
+  - :display_name: ! '@%SystemRoot%\system32\aelupsvc.dll,-1'
+    :id: 447000000010536
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\Alg.exe,-112'
+    :id: 447000000010539
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30011'
+    :id: 447000000010547
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appidsvc.dll,-100'
+    :id: 447000000010549
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appinfo.dll,-100'
+    :id: 447000000010550
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@appmgmts.dll,-3250'
+    :id: 447000000010551
+    :start: Manual
+    :class: SystemService
+  - :display_name: ASP.NET State Service
+    :id: 447000000010559
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\audiosrv.dll,-204'
+    :id: 447000000010562
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\audiosrv.dll,-200'
+    :id: 447000000010563
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\bfe.dll,-1001'
+    :id: 447000000010568
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\qmgr.dll,-1000'
+    :id: 447000000010569
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\browser.dll,-100'
+    :id: 447000000010574
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\certprop.dll,-11'
+    :id: 447000000010581
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v2.0.50727_X86
+    :id: 447000000010583
+    :start: Disabled
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v2.0.50727_X64
+    :id: 447000000010584
+    :start: Disabled
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v4.0.30319_X86
+    :id: 447000000010585
+    :start: Automatic
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v4.0.30319_X64
+    :id: 447000000010586
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-947'
+    :id: 447000000010592
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\cryptsvc.dll,-1001'
+    :id: 447000000010595
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@oleres.dll,-5012'
+    :id: 447000000010597
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\defragsvc.dll,-101'
+    :id: 447000000010598
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\dhcpcore.dll,-100'
+    :id: 447000000010600
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\dnsapi.dll,-101'
+    :id: 447000000010604
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\dot3svc.dll,-1102'
+    :id: 447000000010605
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\dps.dll,-500'
+    :id: 447000000010606
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\eapsvc.dll,-1'
+    :id: 447000000010609
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\efssvc.dll,-100'
+    :id: 447000000010611
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wevtsvc.dll,-200'
+    :id: 447000000010615
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2450'
+    :id: 447000000010616
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FCRegSvc.dll,-5000'
+    :id: 447000000010619
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\fdPHost.dll,-100'
+    :id: 447000000010621
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\fdrespub.dll,-100'
+    :id: 447000000010622
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\FntCache.dll,-100'
+    :id: 447000000010627
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\PresentationHost.exe,-3309'
+    :id: 447000000010628
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@gpapi.dll,-112'
+    :id: 447000000010632
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\hidserv.dll,-101'
+    :id: 447000000010635
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\kmsvc.dll,-6'
+    :id: 447000000010637
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\Microsoft.NET\Framework64\v3.0\Windows Communication
+      Foundation\ServiceModelInstallRC.dll,-8193'
+    :id: 447000000010643
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ikeext.dll,-501'
+    :id: 447000000010645
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\IPBusEnum.dll,-102'
+    :id: 447000000010651
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\iphlpsvc.dll,-500'
+    :id: 447000000010653
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@keyiso.dll,-100'
+    :id: 447000000010660
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2946'
+    :id: 447000000010664
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-100'
+    :id: 447000000010665
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-100'
+    :id: 447000000010666
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\lltdres.dll,-1'
+    :id: 447000000010669
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\lmhsvc.dll,-101'
+    :id: 447000000010670
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\mmcss.dll,-100'
+    :id: 447000000010679
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FirewallAPI.dll,-23090'
+    :id: 447000000010687
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2797'
+    :id: 447000000010693
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\iscsidsc.dll,-5000'
+    :id: 447000000010699
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\msimsg.dll,-27'
+    :id: 447000000010700
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\qagentrt.dll,-6'
+    :id: 447000000010705
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\netlogon.dll,-102'
+    :id: 447000000010714
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\netman.dll,-109'
+    :id: 447000000010715
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8195'
+    :id: 447000000010716
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8197'
+    :id: 447000000010717
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\netprofm.dll,-202'
+    :id: 447000000010718
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8199'
+    :id: 447000000010719
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8201'
+    :id: 447000000010720
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\nlasvc.dll,-1'
+    :id: 447000000010722
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\nsisvc.dll,-200'
+    :id: 447000000010724
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\sysWow64\perfhost.exe,-2'
+    :id: 447000000010741
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\pla.dll,-500'
+    :id: 447000000010745
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umpnpmgr.dll,-100'
+    :id: 447000000010746
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\polstore.dll,-5010'
+    :id: 447000000010747
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umpo.dll,-100'
+    :id: 447000000010749
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\profsvc.dll,-300'
+    :id: 447000000010752
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\psbase.dll,-300'
+    :id: 447000000010753
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\rasauto.dll,-200'
+    :id: 447000000010759
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\rasmans.dll,-200'
+    :id: 447000000010761
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\mprdim.dll,-200'
+    :id: 447000000010773
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@regsvc.dll,-1'
+    :id: 447000000010774
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\RpcEpMap.dll,-1001'
+    :id: 447000000010775
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\Locator.exe,-2'
+    :id: 447000000010776
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@oleres.dll,-5010'
+    :id: 447000000010777
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@gpapi.dll,-114'
+    :id: 447000000010778
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\sacsvr.dll,-500'
+    :id: 447000000010782
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\samsrv.dll,-1'
+    :id: 447000000010783
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\SCardSvr.dll,-1'
+    :id: 447000000010785
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\schedsvc.dll,-100'
+    :id: 447000000010787
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\certprop.dll,-13'
+    :id: 447000000010788
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\seclogon.dll,-7001'
+    :id: 447000000010790
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\Sens.dll,-200'
+    :id: 447000000010791
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\SessEnv.dll,-1026'
+    :id: 447000000010798
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ipnathlp.dll,-106'
+    :id: 447000000010803
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\shsvcs.dll,-12288'
+    :id: 447000000010804
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\snmptrap.exe,-3'
+    :id: 447000000010811
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\spoolsv.exe,-1'
+    :id: 447000000010813
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sppsvc.exe,-101'
+    :id: 447000000010814
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sppuinotify.dll,-103'
+    :id: 447000000010815
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\ssdpsrv.dll,-100'
+    :id: 447000000010819
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sstpsvc.dll,-200'
+    :id: 447000000010820
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\swprv.dll,-103'
+    :id: 447000000010826
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tapisrv.dll,-10100'
+    :id: 447000000010827
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tbssvc.dll,-100'
+    :id: 447000000010828
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\termsrv.dll,-268'
+    :id: 447000000010838
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\mmcss.dll,-102'
+    :id: 447000000010839
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\trkwks.dll,-1'
+    :id: 447000000010840
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\servicing\TrustedInstaller.exe,-100'
+    :id: 447000000010841
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ui0detect.exe,-101'
+    :id: 447000000010849
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umrdp.dll,-1000'
+    :id: 447000000010853
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\upnphost.dll,-213'
+    :id: 447000000010854
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\dwm.exe,-2000'
+    :id: 447000000010862
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vaultsvc.dll,-1003'
+    :id: 447000000010863
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vds.exe,-100'
+    :id: 447000000010865
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware Tools Service
+    :id: 447000000010878
+    :start: Automatic
+    :class: SystemService
+  - :display_name: VMware Snapshot Provider
+    :id: 447000000010879
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\vssvc.exe,-102'
+    :id: 447000000010884
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\w32time.dll,-200'
+    :id: 447000000010885
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30003'
+    :id: 447000000010886
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30001'
+    :id: 447000000010890
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\WcsPlugInService.dll,-200'
+    :id: 447000000010891
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wdi.dll,-502'
+    :id: 447000000010894
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wdi.dll,-500'
+    :id: 447000000010895
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wecsvc.dll,-200'
+    :id: 447000000010896
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\wercplsupport.dll,-101'
+    :id: 447000000010897
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\wersvc.dll,-100'
+    :id: 447000000010898
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\winhttp.dll,-100'
+    :id: 447000000010903
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wbem\wmisvc.dll,-205'
+    :id: 447000000010904
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wsmsvc.dll,-101'
+    :id: 447000000010905
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wbem\wmiapsrv.exe,-110'
+    :id: 447000000010910
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wpdbusenum.dll,-100'
+    :id: 447000000010911
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wuaueng.dll,-105'
+    :id: 447000000010913
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wudfsvc.dll,-1000'
+    :id: 447000000010915
+    :start: Manual
+    :class: SystemService
+  :boot_time: 2013-02-21 00:37:17.000000000 Z
+  :cpu_limit: -1
+  :cpu_reserve: 0
+  :cpu_reserve_expand: false
+  :cpu_shares: 1000
+  :cpu_shares_level: normal
+  :id: 447000000001072
+  :last_scan_on: 2013-03-21 19:44:24.000000000 Z
+  :location: Vm1/Vm1.vmx
+  :memory_limit: -1
+  :memory_reserve: 0
+  :memory_reserve_expand: false
+  :memory_shares: 40960
+  :memory_shares_level: normal
+  :name: Vm1
+  :tools_status: toolsOk
+  :vendor: VMware
+  :class: Vm
+- :filesystem_drivers:
+  - :display_name: ! '@%systemroot%\system32\browser.dll,-102'
+    :id: 447000000010571
+    :start: Manual
+    :class: SystemService
+  - :display_name: CD/DVD File System Reader
+    :id: 447000000010579
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\dfsc.sys,-101'
+    :id: 447000000010599
+    :start: System Start
+    :class: SystemService
+  - :display_name: exFAT File System Driver
+    :id: 447000000010617
+    :start: Manual
+    :class: SystemService
+  - :display_name: FAT12/16/32 File System Driver
+    :id: 447000000010618
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fileinfo.sys,-100'
+    :id: 447000000010623
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\filetrace.sys,-10001'
+    :id: 447000000010624
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fltmgr.sys,-10001'
+    :id: 447000000010626
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fsdepends.sys,-10001'
+    :id: 447000000010629
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\luafv.sys,-100'
+    :id: 447000000010676
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1002'
+    :id: 447000000010688
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1004'
+    :id: 447000000010689
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1006'
+    :id: 447000000010690
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010696
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\mup.sys,-101'
+    :id: 447000000010704
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: NetBIOS Interface
+    :id: 447000000010712
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010723
+    :start: System Start
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010727
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1000'
+    :id: 447000000010764
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-102'
+    :id: 447000000010816
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-104'
+    :id: 447000000010817
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010818
+    :start: Manual
+    :class: SystemService
+  - :display_name: udfs
+    :id: 447000000010848
+    :start: Disabled
+    :class: SystemService
+  - :display_name: WIMMount
+    :id: 447000000010900
+    :start: Manual
+    :class: SystemService
+  :groups:
+  - :id: 447000000006551
+    :name: Administrators
+    :class: Account
+  - :id: 447000000006552
+    :name: Backup Operators
+    :class: Account
+  - :id: 447000000006553
+    :name: Certificate Service DCOM Access
+    :class: Account
+  - :id: 447000000006554
+    :name: Cryptographic Operators
+    :class: Account
+  - :id: 447000000006555
+    :name: Distributed COM Users
+    :class: Account
+  - :id: 447000000006556
+    :name: Event Log Readers
+    :class: Account
+  - :id: 447000000006557
+    :name: Guests
+    :class: Account
+  - :id: 447000000006558
+    :name: IIS_IUSRS
+    :class: Account
+  - :id: 447000000006559
+    :name: Network Configuration Operators
+    :class: Account
+  - :id: 447000000006560
+    :name: Performance Log Users
+    :class: Account
+  - :id: 447000000006561
+    :name: Performance Monitor Users
+    :class: Account
+  - :id: 447000000006562
+    :name: Power Users
+    :class: Account
+  - :id: 447000000006563
+    :name: Print Operators
+    :class: Account
+  - :id: 447000000006564
+    :name: Remote Desktop Users
+    :class: Account
+  - :id: 447000000006565
+    :name: Replicator
+    :class: Account
+  - :id: 447000000006566
+    :name: Users
+    :class: Account
+  :guest_applications:
+  - :id: 447000000034833
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.4148
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.4148
+    :class: GuestApplication
+  - :id: 447000000034834
+    :v_unique_name: WPT Redistributables
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034835
+    :v_unique_name: Windows PE x86 x64 wims
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034836
+    :v_unique_name: Microsoft Deployment Toolkit 2012 Update 1 (6.1.2369.0)
+    :vendor: Microsoft Corporation
+    :version: 6.1.2369.0
+    :class: GuestApplication
+  - :id: 447000000034837
+    :v_unique_name: Kits Configuration Installer
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034838
+    :v_unique_name: Windows System Image Manager on amd64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034839
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.6161
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.6161
+    :class: GuestApplication
+  - :id: 447000000034840
+    :v_unique_name: Windows Automated Installation Kit
+    :vendor: Microsoft Corporation
+    :version: 2.0.0.0
+    :class: GuestApplication
+  - :id: 447000000034841
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.6161
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.6161
+    :class: GuestApplication
+  - :id: 447000000034842
+    :v_unique_name: Toolkit Documentation
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034843
+    :v_unique_name: VMware Tools
+    :vendor: VMware, Inc.
+    :version: 8.6.0.6868
+    :class: GuestApplication
+  - :id: 447000000034844
+    :v_unique_name: Windows PE x86 x64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034845
+    :v_unique_name: Microsoft .NET Framework 4 Extended
+    :vendor: Microsoft Corporation
+    :version: 4.0.30319
+    :class: GuestApplication
+  - :id: 447000000034846
+    :v_unique_name: WPTx64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034847
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.4148
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.4148
+    :class: GuestApplication
+  - :id: 447000000034848
+    :v_unique_name: Microsoft Silverlight
+    :vendor: Microsoft Corporation
+    :version: 5.1.10411.0
+    :class: GuestApplication
+  - :id: 447000000034849
+    :v_unique_name: Windows Deployment Customizations
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034850
+    :v_unique_name: Microsoft .NET Framework 4 Client Profile
+    :vendor: Microsoft Corporation
+    :version: 4.0.30319
+    :class: GuestApplication
+  - :id: 447000000034851
+    :v_unique_name: Windows Deployment Tools
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034852
+    :v_unique_name: Internet Explorer
+    :vendor: Microsoft Corporation
+    :version: 9.00.8112.16446
+    :class: GuestApplication
+  - :id: 447000000034853
+    :v_unique_name: VMware Tools tray application
+    :vendor: VMware, Inc.
+    :version: 8.6.0 build-446312
+    :class: GuestApplication
+  - :id: 447000000034854
+    :v_unique_name: Magic ISO Maker v5.5 (build 0281)
+    :class: GuestApplication
+  - :id: 447000000034855
+    :v_unique_name: Assessment and Deployment Kit
+    :vendor: Microsoft Corporation
+    :version: 8.59.25584
+    :class: GuestApplication
+  :hardware:
+    :cdroms:
+    - :device_name: CD/DVD drive 1
+      :device_type: cdrom-image
+      :filename: ! '[Datastore1] Vm1/[]'
+      :id: 447000000001979
+      :location: '1:0'
+      :present: true
+      :start_connected: true
+      :class: Disk
+    :disks:
+    - :allocated_space: 42947575808
+      :device_name: Hard disk 1
+      :filename: ! '[Datastore1] Vm1/Vm1.vmdk'
+      :id: 447000000001978
+      :location: '0:0'
+      :present: true
+      :size: 42949672960
+      :size_on_disk: 38621151232
+      :start_connected: true
+      :unallocated_space: 2097152
+      :class: Disk
+    - :device_name: CD/DVD drive 1
+      :filename: ! '[Datastore1] Vm1/[]'
+      :id: 447000000001979
+      :location: '1:0'
+      :present: true
+      :start_connected: true
+      :class: Disk
+    - :device_name: disk
+      :filename: ! '[Datastore1] Vm1/'
+      :id: 447000000003080
+      :location: '0'
+      :present: true
+      :start_connected: false
+      :class: Disk
+    :floppies:
+    - :device_name: disk
+      :filename: ! '[Datastore1] Vm1/'
+      :id: 447000000003080
+      :location: '0'
+      :present: true
+      :start_connected: false
+      :class: Disk
+    :nics:
+    - :address: 00:50:56:91:05:9d
+      :id: 447000000001147
+      :location: '6'
+      :present: true
+      :start_connected: true
+      :class: GuestDevice
+    :volumes:
+    - :id: 447000000000439
+      :name: ''
+      :size: 104857600
+      :typ: physical
+      :class: Volume
+    - :filesystem: NTFS
+      :free_space: 4067610624
+      :id: 447000000000440
+      :name: ! 'C:'
+      :size: 42842718208
+      :typ: physical
+      :used_space: 38775107584
+      :class: Volume
+    :bios: 42110866-eb4b-5bed-2525-6f2e124532b1
+    :config_version: vmx-08
+    :guest_os: windows7server64
+    :guest_os_full_name: Microsoft Windows Server 2008 R2 (64-bit)
+    :id: 447000000001079
+    :memory_cpu: 4096
+    :numvcpus: 1
+    :class: Hardware
+  :kernel_drivers:
+  - :id: 447000000010522
+    :class: SystemService
+  - :id: 447000000010523
+    :class: SystemService
+  - :id: 447000000010524
+    :class: SystemService
+  - :id: 447000000010525
+    :class: SystemService
+  - :id: 447000000010526
+    :class: SystemService
+  - :id: 447000000010527
+    :class: SystemService
+  - :id: 447000000010528
+    :class: SystemService
+  - :display_name: 1394 OHCI Compliant Host Controller
+    :id: 447000000010529
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft ACPI Driver
+    :id: 447000000010530
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ACPI Power Meter Driver
+    :id: 447000000010531
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010532
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010533
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010534
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010535
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\afd.sys,-1000'
+    :id: 447000000010537
+    :start: System Start
+    :class: SystemService
+  - :display_name: Intel AGP Bus Filter
+    :id: 447000000010538
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010540
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010541
+    :start: Manual
+    :class: SystemService
+  - :display_name: AMD K8 Processor Driver
+    :id: 447000000010542
+    :start: Manual
+    :class: SystemService
+  - :display_name: AMD Processor Driver
+    :id: 447000000010543
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010544
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010545
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010546
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appidsvc.dll,-102'
+    :id: 447000000010548
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010552
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010553
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010554
+    :class: SystemService
+  - :id: 447000000010555
+    :class: SystemService
+  - :id: 447000000010556
+    :class: SystemService
+  - :id: 447000000010557
+    :class: SystemService
+  - :id: 447000000010558
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32000'
+    :id: 447000000010560
+    :start: Manual
+    :class: SystemService
+  - :display_name: IDE Channel
+    :id: 447000000010561
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme II VBD
+    :id: 447000000010564
+    :start: Manual
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme Gigabit Ethernet - NDIS 6.0
+    :id: 447000000010565
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010566
+    :class: SystemService
+  - :display_name: Beep
+    :id: 447000000010567
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010570
+    :start: System Start
+    :class: SystemService
+  - :display_name: Brother USB Mass-Storage Lower Filter Driver
+    :id: 447000000010572
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother USB Mass-Storage Upper Filter Driver
+    :id: 447000000010573
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC Serial Port Interface Driver (WDM)
+    :id: 447000000010575
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother WDM Serial driver
+    :id: 447000000010576
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC USB Fax Only Modem
+    :id: 447000000010577
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC USB Serial WDM Driver
+    :id: 447000000010578
+    :start: Manual
+    :class: SystemService
+  - :display_name: CD-ROM Driver
+    :id: 447000000010580
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\clfs.sys,-100'
+    :id: 447000000010582
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft AC Adapter Driver
+    :id: 447000000010587
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010588
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010589
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft Composite Battery Driver
+    :id: 447000000010590
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Composite Bus Enumerator Driver
+    :id: 447000000010591
+    :start: Manual
+    :class: SystemService
+  - :display_name: Crcdisk Filter Driver
+    :id: 447000000010593
+    :start: Disabled
+    :class: SystemService
+  - :id: 447000000010594
+    :class: SystemService
+  - :id: 447000000010596
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\discache.sys,-102'
+    :id: 447000000010601
+    :start: System Start
+    :class: SystemService
+  - :display_name: Disk Driver
+    :id: 447000000010602
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010603
+    :start: Manual
+    :class: SystemService
+  - :display_name: LDDM Graphics Subsystem
+    :id: 447000000010607
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel(R) PRO/1000 NDIS 6 Adapter Driver
+    :id: 447000000010608
+    :start: Manual
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme II 10 GigE VBD
+    :id: 447000000010610
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010612
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Hardware Error Device Driver
+    :id: 447000000010613
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010614
+    :class: SystemService
+  - :display_name: Floppy Disk Controller Driver
+    :id: 447000000010620
+    :start: Manual
+    :class: SystemService
+  - :display_name: Floppy Disk Driver
+    :id: 447000000010625
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010630
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft Generic AGPv3.0 Filter for K8 Processor Platforms
+    :id: 447000000010631
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft UAA Bus Driver for High Definition Audio
+    :id: 447000000010633
+    :start: Manual
+    :class: SystemService
+  - :display_name: HID UPS Battery Driver
+    :id: 447000000010634
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft HID Class Driver
+    :id: 447000000010636
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010638
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\http.sys,-1'
+    :id: 447000000010639
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\hwpolicy.sys,-101'
+    :id: 447000000010640
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: i8042 Keyboard and PS/2 Mouse Port Driver
+    :id: 447000000010641
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel RAID Controller Windows 7
+    :id: 447000000010642
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010644
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010646
+    :class: SystemService
+  - :id: 447000000010647
+    :class: SystemService
+  - :id: 447000000010648
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Intel Processor Driver
+    :id: 447000000010649
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel(R) QuickData Technology Device
+    :id: 447000000010650
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32013'
+    :id: 447000000010652
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010654
+    :start: Manual
+    :class: SystemService
+  - :display_name: IP Network Address Translator
+    :id: 447000000010655
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010656
+    :start: Manual
+    :class: SystemService
+  - :display_name: iScsiPort Driver
+    :id: 447000000010657
+    :start: Manual
+    :class: SystemService
+  - :display_name: Keyboard Class Driver
+    :id: 447000000010658
+    :start: Manual
+    :class: SystemService
+  - :display_name: Keyboard HID Driver
+    :id: 447000000010659
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010661
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010662
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Kernel Streaming Thunks
+    :id: 447000000010663
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010667
+    :class: SystemService
+  - :display_name: Link-Layer Topology Discovery Mapper I/O Driver
+    :id: 447000000010668
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010671
+    :class: SystemService
+  - :id: 447000000010672
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010673
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010674
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010675
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010677
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010678
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010680
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Monitor Class Function Driver Service
+    :id: 447000000010681
+    :start: Manual
+    :class: SystemService
+  - :display_name: Mouse Class Driver
+    :id: 447000000010682
+    :start: Manual
+    :class: SystemService
+  - :display_name: Mouse HID Driver
+    :id: 447000000010683
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\mountmgr.sys,-100'
+    :id: 447000000010684
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010685
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FirewallAPI.dll,-23092'
+    :id: 447000000010686
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010691
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010692
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010694
+    :class: SystemService
+  - :id: 447000000010695
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\mshidkmdf.sys,-100'
+    :id: 447000000010697
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010698
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010701
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft System Management BIOS Driver
+    :id: 447000000010702
+    :start: System Start
+    :class: SystemService
+  - :display_name: Microsoft Input Configuration Driver
+    :id: 447000000010703
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\ndis.sys,-200'
+    :id: 447000000010706
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: NDIS Capture LightWeight Filter
+    :id: 447000000010707
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32001'
+    :id: 447000000010708
+    :start: Manual
+    :class: SystemService
+  - :display_name: NDIS Usermode I/O Protocol
+    :id: 447000000010709
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32002'
+    :id: 447000000010710
+    :start: Manual
+    :class: SystemService
+  - :display_name: NDIS Proxy
+    :id: 447000000010711
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\netbt.sys,-2'
+    :id: 447000000010713
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010721
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\nsiproxy.sys,-2'
+    :id: 447000000010725
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010726
+    :class: SystemService
+  - :id: 447000000010728
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010729
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010730
+    :start: Manual
+    :class: SystemService
+  - :display_name: NVIDIA nForce AGP Bus Filter
+    :id: 447000000010731
+    :start: Manual
+    :class: SystemService
+  - :display_name: 1394 OHCI Compliant Host Controller (Legacy)
+    :id: 447000000010732
+    :start: Manual
+    :class: SystemService
+  - :display_name: Parallel port driver
+    :id: 447000000010733
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\partmgr.sys,-100'
+    :id: 447000000010734
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: PCI Bus Driver
+    :id: 447000000010735
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010736
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010737
+    :start: Manual
+    :class: SystemService
+  - :display_name: Performance Counters for Windows Driver
+    :id: 447000000010738
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: PEAUTH
+    :id: 447000000010739
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010740
+    :class: SystemService
+  - :id: 447000000010742
+    :class: SystemService
+  - :id: 447000000010743
+    :class: SystemService
+  - :id: 447000000010744
+    :class: SystemService
+  - :id: 447000000010748
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32006'
+    :id: 447000000010750
+    :start: Manual
+    :class: SystemService
+  - :display_name: Processor Driver
+    :id: 447000000010751
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\drivers\pacer.sys,-101'
+    :id: 447000000010754
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010755
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010756
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Access Auto Connection Driver
+    :id: 447000000010757
+    :start: Manual
+    :class: SystemService
+  - :display_name: WAN Miniport (IKEv2)
+    :id: 447000000010758
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32005'
+    :id: 447000000010760
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32007'
+    :id: 447000000010762
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\sstpsvc.dll,-202'
+    :id: 447000000010763
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Desktop Device Redirector Bus Driver
+    :id: 447000000010765
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\DRIVERS\RDPCDD.sys,-100'
+    :id: 447000000010766
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010767
+    :class: SystemService
+  - :display_name: Terminal Server Device Redirector Driver
+    :id: 447000000010768
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\RDPENCDD.sys,-101'
+    :id: 447000000010769
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drprov.dll,-100'
+    :id: 447000000010770
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\RdpRefMp.sys,-101'
+    :id: 447000000010771
+    :start: System Start
+    :class: SystemService
+  - :display_name: RDP Winstation Driver
+    :id: 447000000010772
+    :start: Manual
+    :class: SystemService
+  - :display_name: Link-Layer Topology Discovery Responder
+    :id: 447000000010779
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010780
+    :start: Manual
+    :class: SystemService
+  - :display_name: sacdrv
+    :id: 447000000010781
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010784
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\drivers\scfilter.sys,-11'
+    :id: 447000000010786
+    :start: Manual
+    :class: SystemService
+  - :display_name: Security Driver
+    :id: 447000000010789
+    :start: Automatic
+    :class: SystemService
+  - :display_name: Serenum Filter Driver
+    :id: 447000000010792
+    :start: Manual
+    :class: SystemService
+  - :display_name: Serial port driver
+    :id: 447000000010793
+    :start: System Start
+    :class: SystemService
+  - :display_name: Serial Mouse Driver
+    :id: 447000000010794
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010795
+    :class: SystemService
+  - :id: 447000000010796
+    :class: SystemService
+  - :id: 447000000010797
+    :class: SystemService
+  - :display_name: SFF Storage Class Driver
+    :id: 447000000010799
+    :start: Manual
+    :class: SystemService
+  - :display_name: SFF Storage Protocol Driver for MMC
+    :id: 447000000010800
+    :start: Manual
+    :class: SystemService
+  - :display_name: SFF Storage Protocol Driver for SDBus
+    :id: 447000000010801
+    :start: Manual
+    :class: SystemService
+  - :display_name: High-Capacity Floppy Disk Drive
+    :id: 447000000010802
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010805
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010806
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50005'
+    :id: 447000000010807
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010808
+    :class: SystemService
+  - :id: 447000000010809
+    :class: SystemService
+  - :id: 447000000010810
+    :class: SystemService
+  - :display_name: Security Processor Loader Driver
+    :id: 447000000010812
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010821
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vmstorfltres.dll,-1000'
+    :id: 447000000010822
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010823
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010824
+    :start: Manual
+    :class: SystemService
+  - :display_name: Software Bus Driver
+    :id: 447000000010825
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50003'
+    :id: 447000000010829
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft IPv6 Protocol Driver
+    :id: 447000000010830
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010831
+    :class: SystemService
+  - :display_name: TCP/IP Registry Compatibility
+    :id: 447000000010832
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010833
+    :class: SystemService
+  - :display_name: TDPIPE
+    :id: 447000000010834
+    :start: Manual
+    :class: SystemService
+  - :display_name: TDTCP
+    :id: 447000000010835
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50004'
+    :id: 447000000010836
+    :start: System Start
+    :class: SystemService
+  - :display_name: Terminal Device Driver
+    :id: 447000000010837
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010842
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\DRIVERS\tssecsrv.sys,-101'
+    :id: 447000000010843
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010844
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Desktop Generic USB Device
+    :id: 447000000010845
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Tunnel Miniport Adapter Driver
+    :id: 447000000010846
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft AGPv3.5 Filter
+    :id: 447000000010847
+    :start: Manual
+    :class: SystemService
+  - :display_name: Uli AGP Bus Filter
+    :id: 447000000010850
+    :start: Manual
+    :class: SystemService
+  - :display_name: UMBus Enumerator Driver
+    :id: 447000000010851
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft UMPass Driver
+    :id: 447000000010852
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Generic Parent Driver
+    :id: 447000000010855
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB 2.0 Enhanced Host Controller Miniport Driver
+    :id: 447000000010856
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Standard Hub Driver
+    :id: 447000000010857
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Open Host Controller Miniport Driver
+    :id: 447000000010858
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB PRINTER Class
+    :id: 447000000010859
+    :start: Manual
+    :class: SystemService
+  - :display_name: USB Mass Storage Driver
+    :id: 447000000010860
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Universal Host Controller Miniport Driver
+    :id: 447000000010861
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Virtual Drive Enumerator Driver
+    :id: 447000000010864
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010866
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010867
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010868
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010869
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010870
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010871
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010872
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware VMCI Bus Driver
+    :id: 447000000010873
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: VMware Replay Debugging Helper
+    :id: 447000000010874
+    :start: System Start
+    :class: SystemService
+  - :display_name: Memory Control Driver
+    :id: 447000000010875
+    :start: Automatic
+    :class: SystemService
+  - :display_name: VMware Pointing Device
+    :id: 447000000010876
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware Vista Physical Disk Helper
+    :id: 447000000010877
+    :start: System Start
+    :class: SystemService
+  - :display_name: Volume Manager Driver
+    :id: 447000000010880
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\volmgrx.sys,-100'
+    :id: 447000000010881
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Storage volumes
+    :id: 447000000010882
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010883
+    :start: Manual
+    :class: SystemService
+  - :display_name: Wacom Serial Pen HID Driver
+    :id: 447000000010887
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32011'
+    :id: 447000000010888
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32012'
+    :id: 447000000010889
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010892
+    :start: Manual
+    :class: SystemService
+  - :display_name: Kernel Mode Driver Frameworks service
+    :id: 447000000010893
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: WFP Lightweight Filter
+    :id: 447000000010899
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010901
+    :class: SystemService
+  - :id: 447000000010902
+    :class: SystemService
+  - :id: 447000000010906
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010907
+    :class: SystemService
+  - :display_name: Microsoft Windows Management Interface for ACPI
+    :id: 447000000010908
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010909
+    :class: SystemService
+  - :display_name: Windows Socket 2.0 Non-IFS Service Provider Support Environment
+    :id: 447000000010912
+    :start: System Start
+    :class: SystemService
+  - :display_name: User Mode Driver Frameworks Platform Driver
+    :id: 447000000010914
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010916
+    :class: SystemService
+  - :id: 447000000010917
+    :class: SystemService
+  :patches:
+  - :id: 447000000001238
+    :name: KB2633952
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001239
+    :name: KB2676562
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001240
+    :name: KB2545698
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001241
+    :name: KB982018
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001242
+    :name: KB2484033
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001243
+    :name: KB2488113
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001244
+    :name: KB2505438
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001245
+    :name: KB2506928
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001246
+    :name: KB2511250
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001247
+    :name: KB2515325
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001248
+    :name: KB2522422
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001249
+    :name: KB2529073
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001250
+    :name: KB2530548
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001251
+    :name: KB2536275
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001252
+    :name: KB2541014
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001253
+    :name: KB2544521
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001254
+    :name: KB2547666
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001255
+    :name: KB2570947
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001256
+    :name: KB2584146
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001257
+    :name: KB2603229
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001258
+    :name: KB2604115
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001259
+    :name: KB2607047
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001260
+    :name: KB2608658
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001261
+    :name: KB2618451
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001262
+    :name: KB2620704
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001263
+    :name: KB2621440
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001264
+    :name: KB2631813
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001265
+    :name: KB2636573
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001266
+    :name: KB2643719
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001267
+    :name: KB2656356
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001268
+    :name: KB2656373
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001269
+    :name: KB2658846
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001270
+    :name: KB2660075
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001271
+    :name: KB2667402
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001272
+    :name: KB2685939
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001273
+    :name: KB2686831
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001274
+    :name: KB2695962
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001275
+    :name: KB2699779
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001276
+    :name: KB2709630
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001277
+    :name: KB2709981
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001278
+    :name: KB976902
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001279
+    :name: KB2492386
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001280
+    :name: KB2425227
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001281
+    :name: KB2506014
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001282
+    :name: KB2506212
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001283
+    :name: KB2507618
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001284
+    :name: KB2509553
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001285
+    :name: KB2510531
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001286
+    :name: KB2511455
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001287
+    :name: KB2533552
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001288
+    :name: KB2536276
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001289
+    :name: KB2544893
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001290
+    :name: KB2552343
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001291
+    :name: KB2563227
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001292
+    :name: KB2564958
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001293
+    :name: KB2567680
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001294
+    :name: KB2585542
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001295
+    :name: KB2607576
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001296
+    :name: KB2620712
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001297
+    :name: KB2640148
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001298
+    :name: KB2644615
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001299
+    :name: KB2645640
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001300
+    :name: KB2653956
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001301
+    :name: KB2654428
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001302
+    :name: KB2659262
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001303
+    :name: KB2679255
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001304
+    :name: KB2688338
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001305
+    :name: KB2690533
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001306
+    :name: KB2703157
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001307
+    :name: KB2709162
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001308
+    :name: KB2709715
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001309
+    :name: KB2718704
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001310
+    :name: KB2560656
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001311
+    :name: KB2699988
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001312
+    :name: KB2677070
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001313
+    :name: KB976932
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001314
+    :name: KB976933
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  :tags:
+  - :category_description: Cost Center
+    :category_id: 447000000000057
+    :category_name: cc
+    :category_single_value: true
+    :entry_description: Cost Center 001
+    :entry_id: 447000000000058
+    :entry_name: '001'
+    :id: 447000000000061
+    :name: /managed/cc/001
+    :namespace: managed
+  - :category_description: Parent Folder Path (Hosts & Clusters)
+    :category_id: 447000000000126
+    :category_name: folder_path_yellow
+    :category_single_value: true
+    :entry_description: Datacenters
+    :entry_id: 447000000000127
+    :entry_name: datacenters
+    :id: 447000000000130
+    :name: /managed/folder_path_yellow/datacenters
+    :namespace: managed
+  - :id: 447000000000165
+    :name: /miq_policy/assignment/miq_policy_set/447000000000027
+    :namespace: miq_policy
+    :entry_id: 
+    :category_id: 
+    :category_single_value: 
+  - :id: 447000000000166
+    :name: /miq_policy/assignment/miq_policy_set/447000000000029
+    :namespace: miq_policy
+    :entry_id: 
+    :category_id: 
+    :category_single_value: 
+  - :category_description: Parent Folder Path (VMs & Templates)
+    :category_id: 447000000000124
+    :category_name: folder_path_blue
+    :category_single_value: true
+    :entry_description: Datacenters/Testing Environment/vm
+    :entry_id: 447000000000162
+    :entry_name: datacenters:testing_environment:vm
+    :id: 447000000000167
+    :name: /managed/folder_path_blue/datacenters:testing_environment:vm
+    :namespace: managed
+  :users:
+  - :enabled: true
+    :id: 447000000006549
+    :last_logon: 2013-01-18 14:57:06.000000000 Z
+    :name: Administrator
+    :class: Account
+  - :enabled: false
+    :id: 447000000006550
+    :name: Guest
+    :class: Account
+  :win32_services:
+  - :display_name: ! '@%SystemRoot%\system32\aelupsvc.dll,-1'
+    :id: 447000000010536
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\Alg.exe,-112'
+    :id: 447000000010539
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30011'
+    :id: 447000000010547
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appidsvc.dll,-100'
+    :id: 447000000010549
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appinfo.dll,-100'
+    :id: 447000000010550
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@appmgmts.dll,-3250'
+    :id: 447000000010551
+    :start: Manual
+    :class: SystemService
+  - :display_name: ASP.NET State Service
+    :id: 447000000010559
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\audiosrv.dll,-204'
+    :id: 447000000010562
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\audiosrv.dll,-200'
+    :id: 447000000010563
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\bfe.dll,-1001'
+    :id: 447000000010568
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\qmgr.dll,-1000'
+    :id: 447000000010569
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\browser.dll,-100'
+    :id: 447000000010574
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\certprop.dll,-11'
+    :id: 447000000010581
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v2.0.50727_X86
+    :id: 447000000010583
+    :start: Disabled
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v2.0.50727_X64
+    :id: 447000000010584
+    :start: Disabled
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v4.0.30319_X86
+    :id: 447000000010585
+    :start: Automatic
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v4.0.30319_X64
+    :id: 447000000010586
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-947'
+    :id: 447000000010592
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\cryptsvc.dll,-1001'
+    :id: 447000000010595
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@oleres.dll,-5012'
+    :id: 447000000010597
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\defragsvc.dll,-101'
+    :id: 447000000010598
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\dhcpcore.dll,-100'
+    :id: 447000000010600
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\dnsapi.dll,-101'
+    :id: 447000000010604
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\dot3svc.dll,-1102'
+    :id: 447000000010605
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\dps.dll,-500'
+    :id: 447000000010606
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\eapsvc.dll,-1'
+    :id: 447000000010609
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\efssvc.dll,-100'
+    :id: 447000000010611
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wevtsvc.dll,-200'
+    :id: 447000000010615
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2450'
+    :id: 447000000010616
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FCRegSvc.dll,-5000'
+    :id: 447000000010619
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\fdPHost.dll,-100'
+    :id: 447000000010621
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\fdrespub.dll,-100'
+    :id: 447000000010622
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\FntCache.dll,-100'
+    :id: 447000000010627
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\PresentationHost.exe,-3309'
+    :id: 447000000010628
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@gpapi.dll,-112'
+    :id: 447000000010632
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\hidserv.dll,-101'
+    :id: 447000000010635
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\kmsvc.dll,-6'
+    :id: 447000000010637
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\Microsoft.NET\Framework64\v3.0\Windows Communication
+      Foundation\ServiceModelInstallRC.dll,-8193'
+    :id: 447000000010643
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ikeext.dll,-501'
+    :id: 447000000010645
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\IPBusEnum.dll,-102'
+    :id: 447000000010651
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\iphlpsvc.dll,-500'
+    :id: 447000000010653
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@keyiso.dll,-100'
+    :id: 447000000010660
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2946'
+    :id: 447000000010664
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-100'
+    :id: 447000000010665
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-100'
+    :id: 447000000010666
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\lltdres.dll,-1'
+    :id: 447000000010669
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\lmhsvc.dll,-101'
+    :id: 447000000010670
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\mmcss.dll,-100'
+    :id: 447000000010679
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FirewallAPI.dll,-23090'
+    :id: 447000000010687
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2797'
+    :id: 447000000010693
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\iscsidsc.dll,-5000'
+    :id: 447000000010699
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\msimsg.dll,-27'
+    :id: 447000000010700
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\qagentrt.dll,-6'
+    :id: 447000000010705
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\netlogon.dll,-102'
+    :id: 447000000010714
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\netman.dll,-109'
+    :id: 447000000010715
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8195'
+    :id: 447000000010716
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8197'
+    :id: 447000000010717
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\netprofm.dll,-202'
+    :id: 447000000010718
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8199'
+    :id: 447000000010719
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8201'
+    :id: 447000000010720
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\nlasvc.dll,-1'
+    :id: 447000000010722
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\nsisvc.dll,-200'
+    :id: 447000000010724
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\sysWow64\perfhost.exe,-2'
+    :id: 447000000010741
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\pla.dll,-500'
+    :id: 447000000010745
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umpnpmgr.dll,-100'
+    :id: 447000000010746
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\polstore.dll,-5010'
+    :id: 447000000010747
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umpo.dll,-100'
+    :id: 447000000010749
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\profsvc.dll,-300'
+    :id: 447000000010752
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\psbase.dll,-300'
+    :id: 447000000010753
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\rasauto.dll,-200'
+    :id: 447000000010759
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\rasmans.dll,-200'
+    :id: 447000000010761
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\mprdim.dll,-200'
+    :id: 447000000010773
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@regsvc.dll,-1'
+    :id: 447000000010774
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\RpcEpMap.dll,-1001'
+    :id: 447000000010775
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\Locator.exe,-2'
+    :id: 447000000010776
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@oleres.dll,-5010'
+    :id: 447000000010777
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@gpapi.dll,-114'
+    :id: 447000000010778
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\sacsvr.dll,-500'
+    :id: 447000000010782
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\samsrv.dll,-1'
+    :id: 447000000010783
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\SCardSvr.dll,-1'
+    :id: 447000000010785
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\schedsvc.dll,-100'
+    :id: 447000000010787
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\certprop.dll,-13'
+    :id: 447000000010788
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\seclogon.dll,-7001'
+    :id: 447000000010790
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\Sens.dll,-200'
+    :id: 447000000010791
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\SessEnv.dll,-1026'
+    :id: 447000000010798
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ipnathlp.dll,-106'
+    :id: 447000000010803
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\shsvcs.dll,-12288'
+    :id: 447000000010804
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\snmptrap.exe,-3'
+    :id: 447000000010811
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\spoolsv.exe,-1'
+    :id: 447000000010813
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sppsvc.exe,-101'
+    :id: 447000000010814
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sppuinotify.dll,-103'
+    :id: 447000000010815
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\ssdpsrv.dll,-100'
+    :id: 447000000010819
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sstpsvc.dll,-200'
+    :id: 447000000010820
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\swprv.dll,-103'
+    :id: 447000000010826
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tapisrv.dll,-10100'
+    :id: 447000000010827
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tbssvc.dll,-100'
+    :id: 447000000010828
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\termsrv.dll,-268'
+    :id: 447000000010838
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\mmcss.dll,-102'
+    :id: 447000000010839
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\trkwks.dll,-1'
+    :id: 447000000010840
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\servicing\TrustedInstaller.exe,-100'
+    :id: 447000000010841
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ui0detect.exe,-101'
+    :id: 447000000010849
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umrdp.dll,-1000'
+    :id: 447000000010853
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\upnphost.dll,-213'
+    :id: 447000000010854
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\dwm.exe,-2000'
+    :id: 447000000010862
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vaultsvc.dll,-1003'
+    :id: 447000000010863
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vds.exe,-100'
+    :id: 447000000010865
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware Tools Service
+    :id: 447000000010878
+    :start: Automatic
+    :class: SystemService
+  - :display_name: VMware Snapshot Provider
+    :id: 447000000010879
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\vssvc.exe,-102'
+    :id: 447000000010884
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\w32time.dll,-200'
+    :id: 447000000010885
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30003'
+    :id: 447000000010886
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30001'
+    :id: 447000000010890
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\WcsPlugInService.dll,-200'
+    :id: 447000000010891
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wdi.dll,-502'
+    :id: 447000000010894
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wdi.dll,-500'
+    :id: 447000000010895
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wecsvc.dll,-200'
+    :id: 447000000010896
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\wercplsupport.dll,-101'
+    :id: 447000000010897
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\wersvc.dll,-100'
+    :id: 447000000010898
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\winhttp.dll,-100'
+    :id: 447000000010903
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wbem\wmisvc.dll,-205'
+    :id: 447000000010904
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wsmsvc.dll,-101'
+    :id: 447000000010905
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wbem\wmiapsrv.exe,-110'
+    :id: 447000000010910
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wpdbusenum.dll,-100'
+    :id: 447000000010911
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wuaueng.dll,-105'
+    :id: 447000000010913
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wudfsvc.dll,-1000'
+    :id: 447000000010915
+    :start: Manual
+    :class: SystemService
+  :boot_time: 2013-02-21 00:37:20.000000000 Z
+  :cpu_limit: -1
+  :cpu_reserve: 0
+  :cpu_reserve_expand: false
+  :cpu_shares: 1000
+  :cpu_shares_level: normal
+  :id: 447000000001072
+  :last_scan_on: 2013-03-20 07:25:02.000000000 Z
+  :location: Vm1/Vm1.vmx
+  :memory_limit: -1
+  :memory_reserve: 0
+  :memory_reserve_expand: false
+  :memory_shares: 40960
+  :memory_shares_level: normal
+  :name: Vm1
+  :tools_status: toolsOk
+  :vendor: VMware
+  :class: Vm
+- :filesystem_drivers:
+  - :display_name: ! '@%systemroot%\system32\browser.dll,-102'
+    :id: 447000000010571
+    :start: Manual
+    :class: SystemService
+  - :display_name: CD/DVD File System Reader
+    :id: 447000000010579
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\dfsc.sys,-101'
+    :id: 447000000010599
+    :start: System Start
+    :class: SystemService
+  - :display_name: exFAT File System Driver
+    :id: 447000000010617
+    :start: Manual
+    :class: SystemService
+  - :display_name: FAT12/16/32 File System Driver
+    :id: 447000000010618
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fileinfo.sys,-100'
+    :id: 447000000010623
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\filetrace.sys,-10001'
+    :id: 447000000010624
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fltmgr.sys,-10001'
+    :id: 447000000010626
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\fsdepends.sys,-10001'
+    :id: 447000000010629
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\luafv.sys,-100'
+    :id: 447000000010676
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1002'
+    :id: 447000000010688
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1004'
+    :id: 447000000010689
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1006'
+    :id: 447000000010690
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010696
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\mup.sys,-101'
+    :id: 447000000010704
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: NetBIOS Interface
+    :id: 447000000010712
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010723
+    :start: System Start
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010727
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-1000'
+    :id: 447000000010764
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-102'
+    :id: 447000000010816
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-104'
+    :id: 447000000010817
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010818
+    :start: Manual
+    :class: SystemService
+  - :display_name: udfs
+    :id: 447000000010848
+    :start: Disabled
+    :class: SystemService
+  - :display_name: WIMMount
+    :id: 447000000010900
+    :start: Manual
+    :class: SystemService
+  :groups:
+  - :id: 447000000006551
+    :name: Administrators
+    :class: Account
+  - :id: 447000000006552
+    :name: Backup Operators
+    :class: Account
+  - :id: 447000000006553
+    :name: Certificate Service DCOM Access
+    :class: Account
+  - :id: 447000000006554
+    :name: Cryptographic Operators
+    :class: Account
+  - :id: 447000000006555
+    :name: Distributed COM Users
+    :class: Account
+  - :id: 447000000006556
+    :name: Event Log Readers
+    :class: Account
+  - :id: 447000000006557
+    :name: Guests
+    :class: Account
+  - :id: 447000000006558
+    :name: IIS_IUSRS
+    :class: Account
+  - :id: 447000000006559
+    :name: Network Configuration Operators
+    :class: Account
+  - :id: 447000000006560
+    :name: Performance Log Users
+    :class: Account
+  - :id: 447000000006561
+    :name: Performance Monitor Users
+    :class: Account
+  - :id: 447000000006562
+    :name: Power Users
+    :class: Account
+  - :id: 447000000006563
+    :name: Print Operators
+    :class: Account
+  - :id: 447000000006564
+    :name: Remote Desktop Users
+    :class: Account
+  - :id: 447000000006565
+    :name: Replicator
+    :class: Account
+  - :id: 447000000006566
+    :name: Users
+    :class: Account
+  :guest_applications:
+  - :id: 447000000034833
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.4148
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.4148
+    :class: GuestApplication
+  - :id: 447000000034834
+    :v_unique_name: WPT Redistributables
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034835
+    :v_unique_name: Windows PE x86 x64 wims
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034836
+    :v_unique_name: Microsoft Deployment Toolkit 2012 Update 1 (6.1.2369.0)
+    :vendor: Microsoft Corporation
+    :version: 6.1.2369.0
+    :class: GuestApplication
+  - :id: 447000000034837
+    :v_unique_name: Kits Configuration Installer
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034838
+    :v_unique_name: Windows System Image Manager on amd64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034839
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.6161
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.6161
+    :class: GuestApplication
+  - :id: 447000000034840
+    :v_unique_name: Windows Automated Installation Kit
+    :vendor: Microsoft Corporation
+    :version: 2.0.0.0
+    :class: GuestApplication
+  - :id: 447000000034841
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.6161
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.6161
+    :class: GuestApplication
+  - :id: 447000000034842
+    :v_unique_name: Toolkit Documentation
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034843
+    :v_unique_name: VMware Tools
+    :vendor: VMware, Inc.
+    :version: 8.6.0.6868
+    :class: GuestApplication
+  - :id: 447000000034844
+    :v_unique_name: Windows PE x86 x64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034845
+    :v_unique_name: Microsoft .NET Framework 4 Extended
+    :vendor: Microsoft Corporation
+    :version: 4.0.30319
+    :class: GuestApplication
+  - :id: 447000000034846
+    :v_unique_name: WPTx64
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034847
+    :v_unique_name: Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.4148
+    :vendor: Microsoft Corporation
+    :version: 9.0.30729.4148
+    :class: GuestApplication
+  - :id: 447000000034848
+    :v_unique_name: Microsoft Silverlight
+    :vendor: Microsoft Corporation
+    :version: 5.1.10411.0
+    :class: GuestApplication
+  - :id: 447000000034849
+    :v_unique_name: Windows Deployment Customizations
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034850
+    :v_unique_name: Microsoft .NET Framework 4 Client Profile
+    :vendor: Microsoft Corporation
+    :version: 4.0.30319
+    :class: GuestApplication
+  - :id: 447000000034851
+    :v_unique_name: Windows Deployment Tools
+    :vendor: Microsoft
+    :version: 8.59.25584
+    :class: GuestApplication
+  - :id: 447000000034852
+    :v_unique_name: Internet Explorer
+    :vendor: Microsoft Corporation
+    :version: 9.00.8112.16446
+    :class: GuestApplication
+  - :id: 447000000034853
+    :v_unique_name: VMware Tools tray application
+    :vendor: VMware, Inc.
+    :version: 8.6.0 build-446312
+    :class: GuestApplication
+  - :id: 447000000034854
+    :v_unique_name: Magic ISO Maker v5.5 (build 0281)
+    :class: GuestApplication
+  - :id: 447000000034855
+    :v_unique_name: Assessment and Deployment Kit
+    :vendor: Microsoft Corporation
+    :version: 8.59.25584
+    :class: GuestApplication
+  :hardware:
+    :cdroms:
+    - :device_name: CD/DVD drive 1
+      :device_type: cdrom-image
+      :filename: ! '[Datastore1] Vm1/[]'
+      :id: 447000000001979
+      :location: '1:0'
+      :present: true
+      :start_connected: true
+      :class: Disk
+    :disks:
+    - :allocated_space: 42947575808
+      :device_name: Hard disk 1
+      :filename: ! '[Datastore1] Vm1/Vm1.vmdk'
+      :id: 447000000001978
+      :location: '0:0'
+      :present: true
+      :size: 42949672960
+      :size_on_disk: 38621151232
+      :start_connected: true
+      :unallocated_space: 2097152
+      :class: Disk
+    - :device_name: CD/DVD drive 1
+      :filename: ! '[Datastore1] Vm1/[]'
+      :id: 447000000001979
+      :location: '1:0'
+      :present: true
+      :start_connected: true
+      :class: Disk
+    - :device_name: disk
+      :filename: ! '[Datastore1] Vm1/'
+      :id: 447000000002911
+      :location: '0'
+      :present: true
+      :start_connected: false
+      :class: Disk
+    :floppies:
+    - :device_name: disk
+      :filename: ! '[Datastore1] Vm1/'
+      :id: 447000000002911
+      :location: '0'
+      :present: true
+      :start_connected: false
+      :class: Disk
+    :nics:
+    - :address: 00:50:56:91:05:9d
+      :id: 447000000001147
+      :location: '6'
+      :present: true
+      :start_connected: true
+      :class: GuestDevice
+    :volumes:
+    - :id: 447000000000439
+      :name: ''
+      :size: 104857600
+      :typ: physical
+      :class: Volume
+    - :filesystem: NTFS
+      :free_space: 4072243200
+      :id: 447000000000440
+      :name: ! 'C:'
+      :size: 42842718208
+      :typ: physical
+      :used_space: 38770475008
+      :class: Volume
+    :bios: 42110866-eb4b-5bed-2525-6f2e124532b1
+    :config_version: vmx-08
+    :guest_os: windows7server64
+    :guest_os_full_name: Microsoft Windows Server 2008 R2 (64-bit)
+    :id: 447000000001079
+    :memory_cpu: 4096
+    :numvcpus: 1
+    :class: Hardware
+  :kernel_drivers:
+  - :id: 447000000010522
+    :class: SystemService
+  - :id: 447000000010523
+    :class: SystemService
+  - :id: 447000000010524
+    :class: SystemService
+  - :id: 447000000010525
+    :class: SystemService
+  - :id: 447000000010526
+    :class: SystemService
+  - :id: 447000000010527
+    :class: SystemService
+  - :id: 447000000010528
+    :class: SystemService
+  - :display_name: 1394 OHCI Compliant Host Controller
+    :id: 447000000010529
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft ACPI Driver
+    :id: 447000000010530
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ACPI Power Meter Driver
+    :id: 447000000010531
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010532
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010533
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010534
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010535
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\afd.sys,-1000'
+    :id: 447000000010537
+    :start: System Start
+    :class: SystemService
+  - :display_name: Intel AGP Bus Filter
+    :id: 447000000010538
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010540
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010541
+    :start: Manual
+    :class: SystemService
+  - :display_name: AMD K8 Processor Driver
+    :id: 447000000010542
+    :start: Manual
+    :class: SystemService
+  - :display_name: AMD Processor Driver
+    :id: 447000000010543
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010544
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010545
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010546
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appidsvc.dll,-102'
+    :id: 447000000010548
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010552
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010553
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010554
+    :class: SystemService
+  - :id: 447000000010555
+    :class: SystemService
+  - :id: 447000000010556
+    :class: SystemService
+  - :id: 447000000010557
+    :class: SystemService
+  - :id: 447000000010558
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32000'
+    :id: 447000000010560
+    :start: Manual
+    :class: SystemService
+  - :display_name: IDE Channel
+    :id: 447000000010561
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme II VBD
+    :id: 447000000010564
+    :start: Manual
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme Gigabit Ethernet - NDIS 6.0
+    :id: 447000000010565
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010566
+    :class: SystemService
+  - :display_name: Beep
+    :id: 447000000010567
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010570
+    :start: System Start
+    :class: SystemService
+  - :display_name: Brother USB Mass-Storage Lower Filter Driver
+    :id: 447000000010572
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother USB Mass-Storage Upper Filter Driver
+    :id: 447000000010573
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC Serial Port Interface Driver (WDM)
+    :id: 447000000010575
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother WDM Serial driver
+    :id: 447000000010576
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC USB Fax Only Modem
+    :id: 447000000010577
+    :start: Manual
+    :class: SystemService
+  - :display_name: Brother MFC USB Serial WDM Driver
+    :id: 447000000010578
+    :start: Manual
+    :class: SystemService
+  - :display_name: CD-ROM Driver
+    :id: 447000000010580
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\clfs.sys,-100'
+    :id: 447000000010582
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft AC Adapter Driver
+    :id: 447000000010587
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010588
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010589
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft Composite Battery Driver
+    :id: 447000000010590
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Composite Bus Enumerator Driver
+    :id: 447000000010591
+    :start: Manual
+    :class: SystemService
+  - :display_name: Crcdisk Filter Driver
+    :id: 447000000010593
+    :start: Disabled
+    :class: SystemService
+  - :id: 447000000010594
+    :class: SystemService
+  - :id: 447000000010596
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\discache.sys,-102'
+    :id: 447000000010601
+    :start: System Start
+    :class: SystemService
+  - :display_name: Disk Driver
+    :id: 447000000010602
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010603
+    :start: Manual
+    :class: SystemService
+  - :display_name: LDDM Graphics Subsystem
+    :id: 447000000010607
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel(R) PRO/1000 NDIS 6 Adapter Driver
+    :id: 447000000010608
+    :start: Manual
+    :class: SystemService
+  - :display_name: Broadcom NetXtreme II 10 GigE VBD
+    :id: 447000000010610
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010612
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Hardware Error Device Driver
+    :id: 447000000010613
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010614
+    :class: SystemService
+  - :display_name: Floppy Disk Controller Driver
+    :id: 447000000010620
+    :start: Manual
+    :class: SystemService
+  - :display_name: Floppy Disk Driver
+    :id: 447000000010625
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010630
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft Generic AGPv3.0 Filter for K8 Processor Platforms
+    :id: 447000000010631
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft UAA Bus Driver for High Definition Audio
+    :id: 447000000010633
+    :start: Manual
+    :class: SystemService
+  - :display_name: HID UPS Battery Driver
+    :id: 447000000010634
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft HID Class Driver
+    :id: 447000000010636
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010638
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\http.sys,-1'
+    :id: 447000000010639
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\hwpolicy.sys,-101'
+    :id: 447000000010640
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: i8042 Keyboard and PS/2 Mouse Port Driver
+    :id: 447000000010641
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel RAID Controller Windows 7
+    :id: 447000000010642
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010644
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010646
+    :class: SystemService
+  - :id: 447000000010647
+    :class: SystemService
+  - :id: 447000000010648
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Intel Processor Driver
+    :id: 447000000010649
+    :start: Manual
+    :class: SystemService
+  - :display_name: Intel(R) QuickData Technology Device
+    :id: 447000000010650
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32013'
+    :id: 447000000010652
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010654
+    :start: Manual
+    :class: SystemService
+  - :display_name: IP Network Address Translator
+    :id: 447000000010655
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010656
+    :start: Manual
+    :class: SystemService
+  - :display_name: iScsiPort Driver
+    :id: 447000000010657
+    :start: Manual
+    :class: SystemService
+  - :display_name: Keyboard Class Driver
+    :id: 447000000010658
+    :start: Manual
+    :class: SystemService
+  - :display_name: Keyboard HID Driver
+    :id: 447000000010659
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010661
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010662
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Kernel Streaming Thunks
+    :id: 447000000010663
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010667
+    :class: SystemService
+  - :display_name: Link-Layer Topology Discovery Mapper I/O Driver
+    :id: 447000000010668
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010671
+    :class: SystemService
+  - :id: 447000000010672
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010673
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010674
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010675
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010677
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010678
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010680
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Monitor Class Function Driver Service
+    :id: 447000000010681
+    :start: Manual
+    :class: SystemService
+  - :display_name: Mouse Class Driver
+    :id: 447000000010682
+    :start: Manual
+    :class: SystemService
+  - :display_name: Mouse HID Driver
+    :id: 447000000010683
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\mountmgr.sys,-100'
+    :id: 447000000010684
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010685
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FirewallAPI.dll,-23092'
+    :id: 447000000010686
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010691
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010692
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010694
+    :class: SystemService
+  - :id: 447000000010695
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\mshidkmdf.sys,-100'
+    :id: 447000000010697
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010698
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010701
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft System Management BIOS Driver
+    :id: 447000000010702
+    :start: System Start
+    :class: SystemService
+  - :display_name: Microsoft Input Configuration Driver
+    :id: 447000000010703
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\ndis.sys,-200'
+    :id: 447000000010706
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: NDIS Capture LightWeight Filter
+    :id: 447000000010707
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32001'
+    :id: 447000000010708
+    :start: Manual
+    :class: SystemService
+  - :display_name: NDIS Usermode I/O Protocol
+    :id: 447000000010709
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32002'
+    :id: 447000000010710
+    :start: Manual
+    :class: SystemService
+  - :display_name: NDIS Proxy
+    :id: 447000000010711
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\netbt.sys,-2'
+    :id: 447000000010713
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010721
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\nsiproxy.sys,-2'
+    :id: 447000000010725
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010726
+    :class: SystemService
+  - :id: 447000000010728
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010729
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010730
+    :start: Manual
+    :class: SystemService
+  - :display_name: NVIDIA nForce AGP Bus Filter
+    :id: 447000000010731
+    :start: Manual
+    :class: SystemService
+  - :display_name: 1394 OHCI Compliant Host Controller (Legacy)
+    :id: 447000000010732
+    :start: Manual
+    :class: SystemService
+  - :display_name: Parallel port driver
+    :id: 447000000010733
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\partmgr.sys,-100'
+    :id: 447000000010734
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: PCI Bus Driver
+    :id: 447000000010735
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010736
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010737
+    :start: Manual
+    :class: SystemService
+  - :display_name: Performance Counters for Windows Driver
+    :id: 447000000010738
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: PEAUTH
+    :id: 447000000010739
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010740
+    :class: SystemService
+  - :id: 447000000010742
+    :class: SystemService
+  - :id: 447000000010743
+    :class: SystemService
+  - :id: 447000000010744
+    :class: SystemService
+  - :id: 447000000010748
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32006'
+    :id: 447000000010750
+    :start: Manual
+    :class: SystemService
+  - :display_name: Processor Driver
+    :id: 447000000010751
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\drivers\pacer.sys,-101'
+    :id: 447000000010754
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010755
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010756
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Access Auto Connection Driver
+    :id: 447000000010757
+    :start: Manual
+    :class: SystemService
+  - :display_name: WAN Miniport (IKEv2)
+    :id: 447000000010758
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32005'
+    :id: 447000000010760
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32007'
+    :id: 447000000010762
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\sstpsvc.dll,-202'
+    :id: 447000000010763
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Desktop Device Redirector Bus Driver
+    :id: 447000000010765
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\DRIVERS\RDPCDD.sys,-100'
+    :id: 447000000010766
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010767
+    :class: SystemService
+  - :display_name: Terminal Server Device Redirector Driver
+    :id: 447000000010768
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\RDPENCDD.sys,-101'
+    :id: 447000000010769
+    :start: System Start
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drprov.dll,-100'
+    :id: 447000000010770
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\drivers\RdpRefMp.sys,-101'
+    :id: 447000000010771
+    :start: System Start
+    :class: SystemService
+  - :display_name: RDP Winstation Driver
+    :id: 447000000010772
+    :start: Manual
+    :class: SystemService
+  - :display_name: Link-Layer Topology Discovery Responder
+    :id: 447000000010779
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010780
+    :start: Manual
+    :class: SystemService
+  - :display_name: sacdrv
+    :id: 447000000010781
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010784
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\drivers\scfilter.sys,-11'
+    :id: 447000000010786
+    :start: Manual
+    :class: SystemService
+  - :display_name: Security Driver
+    :id: 447000000010789
+    :start: Automatic
+    :class: SystemService
+  - :display_name: Serenum Filter Driver
+    :id: 447000000010792
+    :start: Manual
+    :class: SystemService
+  - :display_name: Serial port driver
+    :id: 447000000010793
+    :start: System Start
+    :class: SystemService
+  - :display_name: Serial Mouse Driver
+    :id: 447000000010794
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010795
+    :class: SystemService
+  - :id: 447000000010796
+    :class: SystemService
+  - :id: 447000000010797
+    :class: SystemService
+  - :display_name: SFF Storage Class Driver
+    :id: 447000000010799
+    :start: Manual
+    :class: SystemService
+  - :display_name: SFF Storage Protocol Driver for MMC
+    :id: 447000000010800
+    :start: Manual
+    :class: SystemService
+  - :display_name: SFF Storage Protocol Driver for SDBus
+    :id: 447000000010801
+    :start: Manual
+    :class: SystemService
+  - :display_name: High-Capacity Floppy Disk Drive
+    :id: 447000000010802
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010805
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010806
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50005'
+    :id: 447000000010807
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010808
+    :class: SystemService
+  - :id: 447000000010809
+    :class: SystemService
+  - :id: 447000000010810
+    :class: SystemService
+  - :display_name: Security Processor Loader Driver
+    :id: 447000000010812
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010821
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vmstorfltres.dll,-1000'
+    :id: 447000000010822
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010823
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010824
+    :start: Manual
+    :class: SystemService
+  - :display_name: Software Bus Driver
+    :id: 447000000010825
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50003'
+    :id: 447000000010829
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Microsoft IPv6 Protocol Driver
+    :id: 447000000010830
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010831
+    :class: SystemService
+  - :display_name: TCP/IP Registry Compatibility
+    :id: 447000000010832
+    :start: Automatic
+    :class: SystemService
+  - :id: 447000000010833
+    :class: SystemService
+  - :display_name: TDPIPE
+    :id: 447000000010834
+    :start: Manual
+    :class: SystemService
+  - :display_name: TDTCP
+    :id: 447000000010835
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tcpipcfg.dll,-50004'
+    :id: 447000000010836
+    :start: System Start
+    :class: SystemService
+  - :display_name: Terminal Device Driver
+    :id: 447000000010837
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010842
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\DRIVERS\tssecsrv.sys,-101'
+    :id: 447000000010843
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010844
+    :start: Manual
+    :class: SystemService
+  - :display_name: Remote Desktop Generic USB Device
+    :id: 447000000010845
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Tunnel Miniport Adapter Driver
+    :id: 447000000010846
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft AGPv3.5 Filter
+    :id: 447000000010847
+    :start: Manual
+    :class: SystemService
+  - :display_name: Uli AGP Bus Filter
+    :id: 447000000010850
+    :start: Manual
+    :class: SystemService
+  - :display_name: UMBus Enumerator Driver
+    :id: 447000000010851
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft UMPass Driver
+    :id: 447000000010852
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Generic Parent Driver
+    :id: 447000000010855
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB 2.0 Enhanced Host Controller Miniport Driver
+    :id: 447000000010856
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Standard Hub Driver
+    :id: 447000000010857
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Open Host Controller Miniport Driver
+    :id: 447000000010858
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB PRINTER Class
+    :id: 447000000010859
+    :start: Manual
+    :class: SystemService
+  - :display_name: USB Mass Storage Driver
+    :id: 447000000010860
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft USB Universal Host Controller Miniport Driver
+    :id: 447000000010861
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft Virtual Drive Enumerator Driver
+    :id: 447000000010864
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010866
+    :start: Manual
+    :class: SystemService
+  - :display_name: ''
+    :id: 447000000010867
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010868
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010869
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010870
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010871
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010872
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware VMCI Bus Driver
+    :id: 447000000010873
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: VMware Replay Debugging Helper
+    :id: 447000000010874
+    :start: System Start
+    :class: SystemService
+  - :display_name: Memory Control Driver
+    :id: 447000000010875
+    :start: Automatic
+    :class: SystemService
+  - :display_name: VMware Pointing Device
+    :id: 447000000010876
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware Vista Physical Disk Helper
+    :id: 447000000010877
+    :start: System Start
+    :class: SystemService
+  - :display_name: Volume Manager Driver
+    :id: 447000000010880
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\drivers\volmgrx.sys,-100'
+    :id: 447000000010881
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: Storage volumes
+    :id: 447000000010882
+    :start: Boot Start
+    :class: SystemService
+  - :id: 447000000010883
+    :start: Manual
+    :class: SystemService
+  - :display_name: Wacom Serial Pen HID Driver
+    :id: 447000000010887
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32011'
+    :id: 447000000010888
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\rascfg.dll,-32012'
+    :id: 447000000010889
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010892
+    :start: Manual
+    :class: SystemService
+  - :display_name: Kernel Mode Driver Frameworks service
+    :id: 447000000010893
+    :start: Boot Start
+    :class: SystemService
+  - :display_name: WFP Lightweight Filter
+    :id: 447000000010899
+    :start: System Start
+    :class: SystemService
+  - :id: 447000000010901
+    :class: SystemService
+  - :id: 447000000010902
+    :class: SystemService
+  - :id: 447000000010906
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010907
+    :class: SystemService
+  - :display_name: Microsoft Windows Management Interface for ACPI
+    :id: 447000000010908
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010909
+    :class: SystemService
+  - :display_name: Windows Socket 2.0 Non-IFS Service Provider Support Environment
+    :id: 447000000010912
+    :start: System Start
+    :class: SystemService
+  - :display_name: User Mode Driver Frameworks Platform Driver
+    :id: 447000000010914
+    :start: Manual
+    :class: SystemService
+  - :id: 447000000010916
+    :class: SystemService
+  - :id: 447000000010917
+    :class: SystemService
+  :patches:
+  - :id: 447000000001238
+    :name: KB2633952
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001239
+    :name: KB2676562
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001240
+    :name: KB2545698
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001241
+    :name: KB982018
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001242
+    :name: KB2484033
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001243
+    :name: KB2488113
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001244
+    :name: KB2505438
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001245
+    :name: KB2506928
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001246
+    :name: KB2511250
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001247
+    :name: KB2515325
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001248
+    :name: KB2522422
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001249
+    :name: KB2529073
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001250
+    :name: KB2530548
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001251
+    :name: KB2536275
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001252
+    :name: KB2541014
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001253
+    :name: KB2544521
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001254
+    :name: KB2547666
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001255
+    :name: KB2570947
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001256
+    :name: KB2584146
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001257
+    :name: KB2603229
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001258
+    :name: KB2604115
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001259
+    :name: KB2607047
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001260
+    :name: KB2608658
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001261
+    :name: KB2618451
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001262
+    :name: KB2620704
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001263
+    :name: KB2621440
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001264
+    :name: KB2631813
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001265
+    :name: KB2636573
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001266
+    :name: KB2643719
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001267
+    :name: KB2656356
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001268
+    :name: KB2656373
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001269
+    :name: KB2658846
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001270
+    :name: KB2660075
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001271
+    :name: KB2667402
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001272
+    :name: KB2685939
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001273
+    :name: KB2686831
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001274
+    :name: KB2695962
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001275
+    :name: KB2699779
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001276
+    :name: KB2709630
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001277
+    :name: KB2709981
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001278
+    :name: KB976902
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001279
+    :name: KB2492386
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001280
+    :name: KB2425227
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001281
+    :name: KB2506014
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001282
+    :name: KB2506212
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001283
+    :name: KB2507618
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001284
+    :name: KB2509553
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001285
+    :name: KB2510531
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001286
+    :name: KB2511455
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001287
+    :name: KB2533552
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001288
+    :name: KB2536276
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001289
+    :name: KB2544893
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001290
+    :name: KB2552343
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001291
+    :name: KB2563227
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001292
+    :name: KB2564958
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001293
+    :name: KB2567680
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001294
+    :name: KB2585542
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001295
+    :name: KB2607576
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001296
+    :name: KB2620712
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001297
+    :name: KB2640148
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001298
+    :name: KB2644615
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001299
+    :name: KB2645640
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001300
+    :name: KB2653956
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001301
+    :name: KB2654428
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001302
+    :name: KB2659262
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001303
+    :name: KB2679255
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001304
+    :name: KB2688338
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001305
+    :name: KB2690533
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001306
+    :name: KB2703157
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001307
+    :name: KB2709162
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001308
+    :name: KB2709715
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001309
+    :name: KB2718704
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001310
+    :name: KB2560656
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001311
+    :name: KB2699988
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001312
+    :name: KB2677070
+    :v_install_date: '2012-07-03'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001313
+    :name: KB976932
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  - :id: 447000000001314
+    :name: KB976933
+    :v_install_date: '2010-11-21'
+    :vendor: Microsoft Corporation
+    :class: Patch
+  :tags:
+  - :category_description: Cost Center
+    :category_id: 447000000000057
+    :category_name: cc
+    :category_single_value: true
+    :entry_description: Cost Center 001
+    :entry_id: 447000000000058
+    :entry_name: '001'
+    :id: 447000000000061
+    :name: /managed/cc/001
+    :namespace: managed
+  - :category_description: Parent Folder Path (Hosts & Clusters)
+    :category_id: 447000000000126
+    :category_name: folder_path_yellow
+    :category_single_value: true
+    :entry_description: Datacenters
+    :entry_id: 447000000000127
+    :entry_name: datacenters
+    :id: 447000000000130
+    :name: /managed/folder_path_yellow/datacenters
+    :namespace: managed
+  - :id: 447000000000165
+    :name: /miq_policy/assignment/miq_policy_set/447000000000027
+    :namespace: miq_policy
+    :entry_id: 
+    :category_id: 
+    :category_single_value: 
+  - :id: 447000000000166
+    :name: /miq_policy/assignment/miq_policy_set/447000000000029
+    :namespace: miq_policy
+    :entry_id: 
+    :category_id: 
+    :category_single_value: 
+  - :category_description: Parent Folder Path (VMs & Templates)
+    :category_id: 447000000000124
+    :category_name: folder_path_blue
+    :category_single_value: true
+    :entry_description: Datacenters/Testing Environment/vm
+    :entry_id: 447000000000162
+    :entry_name: datacenters:testing_environment:vm
+    :id: 447000000000167
+    :name: /managed/folder_path_blue/datacenters:testing_environment:vm
+    :namespace: managed
+  :users:
+  - :enabled: true
+    :id: 447000000006549
+    :last_logon: 2013-01-18 14:57:06.000000000 Z
+    :name: Administrator
+    :class: Account
+  - :enabled: false
+    :id: 447000000006550
+    :name: Guest
+    :class: Account
+  :win32_services:
+  - :display_name: ! '@%SystemRoot%\system32\aelupsvc.dll,-1'
+    :id: 447000000010536
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\Alg.exe,-112'
+    :id: 447000000010539
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30011'
+    :id: 447000000010547
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appidsvc.dll,-100'
+    :id: 447000000010549
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\appinfo.dll,-100'
+    :id: 447000000010550
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@appmgmts.dll,-3250'
+    :id: 447000000010551
+    :start: Manual
+    :class: SystemService
+  - :display_name: ASP.NET State Service
+    :id: 447000000010559
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\audiosrv.dll,-204'
+    :id: 447000000010562
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\audiosrv.dll,-200'
+    :id: 447000000010563
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\bfe.dll,-1001'
+    :id: 447000000010568
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\qmgr.dll,-1000'
+    :id: 447000000010569
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\browser.dll,-100'
+    :id: 447000000010574
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\certprop.dll,-11'
+    :id: 447000000010581
+    :start: Manual
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v2.0.50727_X86
+    :id: 447000000010583
+    :start: Disabled
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v2.0.50727_X64
+    :id: 447000000010584
+    :start: Disabled
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v4.0.30319_X86
+    :id: 447000000010585
+    :start: Automatic
+    :class: SystemService
+  - :display_name: Microsoft .NET Framework NGEN v4.0.30319_X64
+    :id: 447000000010586
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-947'
+    :id: 447000000010592
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\cryptsvc.dll,-1001'
+    :id: 447000000010595
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@oleres.dll,-5012'
+    :id: 447000000010597
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\defragsvc.dll,-101'
+    :id: 447000000010598
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\dhcpcore.dll,-100'
+    :id: 447000000010600
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\dnsapi.dll,-101'
+    :id: 447000000010604
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\dot3svc.dll,-1102'
+    :id: 447000000010605
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\dps.dll,-500'
+    :id: 447000000010606
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\eapsvc.dll,-1'
+    :id: 447000000010609
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\efssvc.dll,-100'
+    :id: 447000000010611
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wevtsvc.dll,-200'
+    :id: 447000000010615
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2450'
+    :id: 447000000010616
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FCRegSvc.dll,-5000'
+    :id: 447000000010619
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\fdPHost.dll,-100'
+    :id: 447000000010621
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\fdrespub.dll,-100'
+    :id: 447000000010622
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\FntCache.dll,-100'
+    :id: 447000000010627
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\PresentationHost.exe,-3309'
+    :id: 447000000010628
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@gpapi.dll,-112'
+    :id: 447000000010632
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\hidserv.dll,-101'
+    :id: 447000000010635
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\kmsvc.dll,-6'
+    :id: 447000000010637
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\Microsoft.NET\Framework64\v3.0\Windows Communication
+      Foundation\ServiceModelInstallRC.dll,-8193'
+    :id: 447000000010643
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ikeext.dll,-501'
+    :id: 447000000010645
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\IPBusEnum.dll,-102'
+    :id: 447000000010651
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\iphlpsvc.dll,-500'
+    :id: 447000000010653
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@keyiso.dll,-100'
+    :id: 447000000010660
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2946'
+    :id: 447000000010664
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\srvsvc.dll,-100'
+    :id: 447000000010665
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wkssvc.dll,-100'
+    :id: 447000000010666
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\lltdres.dll,-1'
+    :id: 447000000010669
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\lmhsvc.dll,-101'
+    :id: 447000000010670
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\mmcss.dll,-100'
+    :id: 447000000010679
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\FirewallAPI.dll,-23090'
+    :id: 447000000010687
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@comres.dll,-2797'
+    :id: 447000000010693
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\iscsidsc.dll,-5000'
+    :id: 447000000010699
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\msimsg.dll,-27'
+    :id: 447000000010700
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\qagentrt.dll,-6'
+    :id: 447000000010705
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\netlogon.dll,-102'
+    :id: 447000000010714
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\netman.dll,-109'
+    :id: 447000000010715
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8195'
+    :id: 447000000010716
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8197'
+    :id: 447000000010717
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\netprofm.dll,-202'
+    :id: 447000000010718
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8199'
+    :id: 447000000010719
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@C:\Windows\Microsoft.NET\Framework64\v4.0.30319\\ServiceModelInstallRC.dll,-8201'
+    :id: 447000000010720
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\nlasvc.dll,-1'
+    :id: 447000000010722
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\nsisvc.dll,-200'
+    :id: 447000000010724
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\sysWow64\perfhost.exe,-2'
+    :id: 447000000010741
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\pla.dll,-500'
+    :id: 447000000010745
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umpnpmgr.dll,-100'
+    :id: 447000000010746
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\polstore.dll,-5010'
+    :id: 447000000010747
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umpo.dll,-100'
+    :id: 447000000010749
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\profsvc.dll,-300'
+    :id: 447000000010752
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\psbase.dll,-300'
+    :id: 447000000010753
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\rasauto.dll,-200'
+    :id: 447000000010759
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\rasmans.dll,-200'
+    :id: 447000000010761
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\mprdim.dll,-200'
+    :id: 447000000010773
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@regsvc.dll,-1'
+    :id: 447000000010774
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\RpcEpMap.dll,-1001'
+    :id: 447000000010775
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\Locator.exe,-2'
+    :id: 447000000010776
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@oleres.dll,-5010'
+    :id: 447000000010777
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@gpapi.dll,-114'
+    :id: 447000000010778
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\sacsvr.dll,-500'
+    :id: 447000000010782
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\samsrv.dll,-1'
+    :id: 447000000010783
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\SCardSvr.dll,-1'
+    :id: 447000000010785
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\schedsvc.dll,-100'
+    :id: 447000000010787
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\certprop.dll,-13'
+    :id: 447000000010788
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\seclogon.dll,-7001'
+    :id: 447000000010790
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\Sens.dll,-200'
+    :id: 447000000010791
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\SessEnv.dll,-1026'
+    :id: 447000000010798
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ipnathlp.dll,-106'
+    :id: 447000000010803
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\shsvcs.dll,-12288'
+    :id: 447000000010804
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\snmptrap.exe,-3'
+    :id: 447000000010811
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\spoolsv.exe,-1'
+    :id: 447000000010813
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sppsvc.exe,-101'
+    :id: 447000000010814
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sppuinotify.dll,-103'
+    :id: 447000000010815
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\ssdpsrv.dll,-100'
+    :id: 447000000010819
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\sstpsvc.dll,-200'
+    :id: 447000000010820
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\swprv.dll,-103'
+    :id: 447000000010826
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tapisrv.dll,-10100'
+    :id: 447000000010827
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\tbssvc.dll,-100'
+    :id: 447000000010828
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\termsrv.dll,-268'
+    :id: 447000000010838
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\mmcss.dll,-102'
+    :id: 447000000010839
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\trkwks.dll,-1'
+    :id: 447000000010840
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\servicing\TrustedInstaller.exe,-100'
+    :id: 447000000010841
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\ui0detect.exe,-101'
+    :id: 447000000010849
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\umrdp.dll,-1000'
+    :id: 447000000010853
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\upnphost.dll,-213'
+    :id: 447000000010854
+    :start: Disabled
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\dwm.exe,-2000'
+    :id: 447000000010862
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vaultsvc.dll,-1003'
+    :id: 447000000010863
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\vds.exe,-100'
+    :id: 447000000010865
+    :start: Manual
+    :class: SystemService
+  - :display_name: VMware Tools Service
+    :id: 447000000010878
+    :start: Automatic
+    :class: SystemService
+  - :display_name: VMware Snapshot Provider
+    :id: 447000000010879
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\vssvc.exe,-102'
+    :id: 447000000010884
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\w32time.dll,-200'
+    :id: 447000000010885
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30003'
+    :id: 447000000010886
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%windir%\system32\inetsrv\iisres.dll,-30001'
+    :id: 447000000010890
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\WcsPlugInService.dll,-200'
+    :id: 447000000010891
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wdi.dll,-502'
+    :id: 447000000010894
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wdi.dll,-500'
+    :id: 447000000010895
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wecsvc.dll,-200'
+    :id: 447000000010896
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\wercplsupport.dll,-101'
+    :id: 447000000010897
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\System32\wersvc.dll,-100'
+    :id: 447000000010898
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\winhttp.dll,-100'
+    :id: 447000000010903
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wbem\wmisvc.dll,-205'
+    :id: 447000000010904
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wsmsvc.dll,-101'
+    :id: 447000000010905
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%Systemroot%\system32\wbem\wmiapsrv.exe,-110'
+    :id: 447000000010910
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wpdbusenum.dll,-100'
+    :id: 447000000010911
+    :start: Manual
+    :class: SystemService
+  - :display_name: ! '@%systemroot%\system32\wuaueng.dll,-105'
+    :id: 447000000010913
+    :start: Automatic
+    :class: SystemService
+  - :display_name: ! '@%SystemRoot%\system32\wudfsvc.dll,-1000'
+    :id: 447000000010915
+    :start: Manual
+    :class: SystemService
+  :boot_time: 2013-02-21 00:37:23.000000000 Z
+  :cpu_limit: -1
+  :cpu_reserve: 0
+  :cpu_reserve_expand: false
+  :cpu_shares: 1000
+  :cpu_shares_level: normal
+  :id: 447000000001072
+  :last_scan_on: 2013-03-04 16:03:37.000000000 Z
+  :location: Vm1/Vm1.vmx
+  :memory_limit: -1
+  :memory_reserve: 0
+  :memory_reserve_expand: false
+  :memory_shares: 40960
+  :memory_shares_level: normal
+  :name: Vm1
+  :tools_status: toolsOk
+  :vendor: VMware
+  :class: Vm

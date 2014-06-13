@@ -1,0 +1,20 @@
+--- 
+vms_001: 
+  created_on: 2007-07-25 17:50:49
+  name: MIQ Server Appliance (Ubuntu Server 7.04)
+  autostart: 
+  format: 
+  guid: 94637d40-3ad7-11dc-8fda-00197eb5fb22
+  storage_id: 
+  last_sync_on: 2007-07-25 17:57:47
+  smart: "0"
+  registered: "1"
+  updated_on: 2007-07-30 21:09:45
+  busy: "0"
+  config_xml: 
+  id: "1"
+  description: 
+  version: 
+  host_id: "1"
+  vendor: vmware
+  location: file:///C:\Users\MIQ Server Appliance - Ubuntu\MIQ Server Appliance - Ubuntu.vmx

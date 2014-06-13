@@ -1,0 +1,18 @@
+<%# Div to hold the actual tree %>
+<div id="export_tree_div" style="width:100%;height:100%;">
+  <div id="export_treebox" style="width:100%;height:100%;color:#000; overflow: hidden"></div>
+                  <%= render(:partial       => 'layouts/dynatree',
+                    :locals=>{:tree_id      => 'export_treebox',
+                              :tree_name    => 'export_tree',
+                              :id_prefix    => 'export_',
+                              :json_tree    => @temp[:export_tree],
+                              :onclick      => 'cfmeOnClick_SelectTreeNode',
+                              :select_node  => "#{x_node}",
+                              :exp_tree     => false,
+                              :base_id      => 'root',
+                              :no_base_exp  => true,
+                              :highlighting => true,
+                              :tree_state   => true,
+                              :multi_lines  => true
+                              }) %>
+</div>

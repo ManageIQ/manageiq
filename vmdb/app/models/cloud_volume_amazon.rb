@@ -1,0 +1,2 @@
+class CloudVolumeAmazon < CloudVolume
+end

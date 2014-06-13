@@ -1,0 +1,566 @@
+<ConfigRoot>
+  <_type>vim.CustomizationSpecItem</_type>
+  <info>
+    <_type>vim.CustomizationSpecInfo</_type>
+    <changeVersion>1274201370</changeVersion>
+    <description>This is the spec to use with the W2K8-x64-STD-SP2-Vanilla-Template for the vCloud POC</description>
+    <lastUpdateTime>2010-05-18T16:49:30Z</lastUpdateTime>
+    <name>W2K8-x64-STD-SP2-Vanilla</name>
+    <type>Windows</type>
+  </info>
+  <spec>
+    <_type>vim.vm.customization.Specification</_type>
+    <encryptionKey>
+      <_length>471</_length>
+      <_type>byte[]</_type>
+      <e id="0">48</e>
+      <e id="1">-126</e>
+      <e id="10">2</e>
+      <e id="100">19</e>
+      <e id="101">6</e>
+      <e id="102">3</e>
+      <e id="103">85</e>
+      <e id="104">4</e>
+      <e id="105">10</e>
+      <e id="106">19</e>
+      <e id="107">12</e>
+      <e id="108">86</e>
+      <e id="109">77</e>
+      <e id="11">1</e>
+      <e id="110">119</e>
+      <e id="111">97</e>
+      <e id="112">114</e>
+      <e id="113">101</e>
+      <e id="114">44</e>
+      <e id="115">32</e>
+      <e id="116">73</e>
+      <e id="117">110</e>
+      <e id="118">99</e>
+      <e id="119">46</e>
+      <e id="12">2</e>
+      <e id="120">49</e>
+      <e id="121">21</e>
+      <e id="122">48</e>
+      <e id="123">19</e>
+      <e id="124">6</e>
+      <e id="125">3</e>
+      <e id="126">85</e>
+      <e id="127">4</e>
+      <e id="128">11</e>
+      <e id="129">19</e>
+      <e id="13">2</e>
+      <e id="130">12</e>
+      <e id="131">86</e>
+      <e id="132">77</e>
+      <e id="133">119</e>
+      <e id="134">97</e>
+      <e id="135">114</e>
+      <e id="136">101</e>
+      <e id="137">44</e>
+      <e id="138">32</e>
+      <e id="139">73</e>
+      <e id="14">4</e>
+      <e id="140">110</e>
+      <e id="141">99</e>
+      <e id="142">46</e>
+      <e id="143">49</e>
+      <e id="144">35</e>
+      <e id="145">48</e>
+      <e id="146">33</e>
+      <e id="147">6</e>
+      <e id="148">3</e>
+      <e id="149">85</e>
+      <e id="15">5</e>
+      <e id="150">4</e>
+      <e id="151">3</e>
+      <e id="152">19</e>
+      <e id="153">26</e>
+      <e id="154">86</e>
+      <e id="155">77</e>
+      <e id="156">119</e>
+      <e id="157">97</e>
+      <e id="158">114</e>
+      <e id="159">101</e>
+      <e id="16">77</e>
+      <e id="160">32</e>
+      <e id="161">100</e>
+      <e id="162">101</e>
+      <e id="163">102</e>
+      <e id="164">97</e>
+      <e id="165">117</e>
+      <e id="166">108</e>
+      <e id="167">116</e>
+      <e id="168">32</e>
+      <e id="169">99</e>
+      <e id="17">-72</e>
+      <e id="170">101</e>
+      <e id="171">114</e>
+      <e id="172">116</e>
+      <e id="173">105</e>
+      <e id="174">102</e>
+      <e id="175">105</e>
+      <e id="176">99</e>
+      <e id="177">97</e>
+      <e id="178">116</e>
+      <e id="179">101</e>
+      <e id="18">-123</e>
+      <e id="180">49</e>
+      <e id="181">33</e>
+      <e id="182">48</e>
+      <e id="183">31</e>
+      <e id="184">6</e>
+      <e id="185">9</e>
+      <e id="186">42</e>
+      <e id="187">-122</e>
+      <e id="188">72</e>
+      <e id="189">-122</e>
+      <e id="19">48</e>
+      <e id="190">-9</e>
+      <e id="191">13</e>
+      <e id="192">1</e>
+      <e id="193">9</e>
+      <e id="194">1</e>
+      <e id="195">22</e>
+      <e id="196">18</e>
+      <e id="197">115</e>
+      <e id="198">117</e>
+      <e id="199">112</e>
+      <e id="2">1</e>
+      <e id="20">13</e>
+      <e id="200">112</e>
+      <e id="201">111</e>
+      <e id="202">114</e>
+      <e id="203">116</e>
+      <e id="204">64</e>
+      <e id="205">118</e>
+      <e id="206">109</e>
+      <e id="207">119</e>
+      <e id="208">97</e>
+      <e id="209">114</e>
+      <e id="21">6</e>
+      <e id="210">101</e>
+      <e id="211">46</e>
+      <e id="212">99</e>
+      <e id="213">111</e>
+      <e id="214">109</e>
+      <e id="215">48</e>
+      <e id="216">92</e>
+      <e id="217">48</e>
+      <e id="218">13</e>
+      <e id="219">6</e>
+      <e id="22">9</e>
+      <e id="220">9</e>
+      <e id="221">42</e>
+      <e id="222">-122</e>
+      <e id="223">72</e>
+      <e id="224">-122</e>
+      <e id="225">-9</e>
+      <e id="226">13</e>
+      <e id="227">1</e>
+      <e id="228">1</e>
+      <e id="229">1</e>
+      <e id="23">42</e>
+      <e id="230">5</e>
+      <e id="231">0</e>
+      <e id="232">3</e>
+      <e id="233">75</e>
+      <e id="234">0</e>
+      <e id="235">48</e>
+      <e id="236">72</e>
+      <e id="237">2</e>
+      <e id="238">65</e>
+      <e id="239">0</e>
+      <e id="24">-122</e>
+      <e id="240">-97</e>
+      <e id="241">-108</e>
+      <e id="242">102</e>
+      <e id="243">115</e>
+      <e id="244">-11</e>
+      <e id="245">122</e>
+      <e id="246">-45</e>
+      <e id="247">-22</e>
+      <e id="248">41</e>
+      <e id="249">-109</e>
+      <e id="25">72</e>
+      <e id="250">15</e>
+      <e id="251">22</e>
+      <e id="252">96</e>
+      <e id="253">19</e>
+      <e id="254">-52</e>
+      <e id="255">23</e>
+      <e id="256">-79</e>
+      <e id="257">-2</e>
+      <e id="258">123</e>
+      <e id="259">-33</e>
+      <e id="26">-122</e>
+      <e id="260">-45</e>
+      <e id="261">93</e>
+      <e id="262">113</e>
+      <e id="263">-58</e>
+      <e id="264">-101</e>
+      <e id="265">-128</e>
+      <e id="266">47</e>
+      <e id="267">38</e>
+      <e id="268">-90</e>
+      <e id="269">-32</e>
+      <e id="27">-9</e>
+      <e id="270">43</e>
+      <e id="271">74</e>
+      <e id="272">101</e>
+      <e id="273">-32</e>
+      <e id="274">-32</e>
+      <e id="275">-92</e>
+      <e id="276">99</e>
+      <e id="277">14</e>
+      <e id="278">-128</e>
+      <e id="279">114</e>
+      <e id="28">13</e>
+      <e id="280">-4</e>
+      <e id="281">-8</e>
+      <e id="282">18</e>
+      <e id="283">-55</e>
+      <e id="284">-27</e>
+      <e id="285">-63</e>
+      <e id="286">-1</e>
+      <e id="287">-13</e>
+      <e id="288">-44</e>
+      <e id="289">80</e>
+      <e id="29">1</e>
+      <e id="290">102</e>
+      <e id="291">-67</e>
+      <e id="292">52</e>
+      <e id="293">-110</e>
+      <e id="294">115</e>
+      <e id="295">-3</e>
+      <e id="296">27</e>
+      <e id="297">123</e>
+      <e id="298">119</e>
+      <e id="299">-108</e>
+      <e id="3">-45</e>
+      <e id="30">1</e>
+      <e id="300">25</e>
+      <e id="301">123</e>
+      <e id="302">121</e>
+      <e id="303">-99</e>
+      <e id="304">2</e>
+      <e id="305">3</e>
+      <e id="306">1</e>
+      <e id="307">0</e>
+      <e id="308">1</e>
+      <e id="309">-93</e>
+      <e id="31">5</e>
+      <e id="310">78</e>
+      <e id="311">48</e>
+      <e id="312">76</e>
+      <e id="313">48</e>
+      <e id="314">9</e>
+      <e id="315">6</e>
+      <e id="316">3</e>
+      <e id="317">85</e>
+      <e id="318">29</e>
+      <e id="319">19</e>
+      <e id="32">5</e>
+      <e id="320">4</e>
+      <e id="321">2</e>
+      <e id="322">48</e>
+      <e id="323">0</e>
+      <e id="324">48</e>
+      <e id="325">11</e>
+      <e id="326">6</e>
+      <e id="327">3</e>
+      <e id="328">85</e>
+      <e id="329">29</e>
+      <e id="33">0</e>
+      <e id="330">15</e>
+      <e id="331">4</e>
+      <e id="332">4</e>
+      <e id="333">3</e>
+      <e id="334">2</e>
+      <e id="335">4</e>
+      <e id="336">-80</e>
+      <e id="337">48</e>
+      <e id="338">29</e>
+      <e id="339">6</e>
+      <e id="34">48</e>
+      <e id="340">3</e>
+      <e id="341">85</e>
+      <e id="342">29</e>
+      <e id="343">37</e>
+      <e id="344">4</e>
+      <e id="345">22</e>
+      <e id="346">48</e>
+      <e id="347">20</e>
+      <e id="348">6</e>
+      <e id="349">8</e>
+      <e id="35">27</e>
+      <e id="350">43</e>
+      <e id="351">6</e>
+      <e id="352">1</e>
+      <e id="353">5</e>
+      <e id="354">5</e>
+      <e id="355">7</e>
+      <e id="356">3</e>
+      <e id="357">1</e>
+      <e id="358">6</e>
+      <e id="359">8</e>
+      <e id="36">49</e>
+      <e id="360">43</e>
+      <e id="361">6</e>
+      <e id="362">1</e>
+      <e id="363">5</e>
+      <e id="364">5</e>
+      <e id="365">7</e>
+      <e id="366">3</e>
+      <e id="367">2</e>
+      <e id="368">48</e>
+      <e id="369">19</e>
+      <e id="37">25</e>
+      <e id="370">6</e>
+      <e id="371">3</e>
+      <e id="372">85</e>
+      <e id="373">29</e>
+      <e id="374">17</e>
+      <e id="375">4</e>
+      <e id="376">12</e>
+      <e id="377">48</e>
+      <e id="378">10</e>
+      <e id="379">-126</e>
+      <e id="38">48</e>
+      <e id="380">8</e>
+      <e id="381">115</e>
+      <e id="382">100</e>
+      <e id="383">118</e>
+      <e id="384">118</e>
+      <e id="385">99</e>
+      <e id="386">50</e>
+      <e id="387">48</e>
+      <e id="388">49</e>
+      <e id="389">48</e>
+      <e id="39">23</e>
+      <e id="390">13</e>
+      <e id="391">6</e>
+      <e id="392">9</e>
+      <e id="393">42</e>
+      <e id="394">-122</e>
+      <e id="395">72</e>
+      <e id="396">-122</e>
+      <e id="397">-9</e>
+      <e id="398">13</e>
+      <e id="399">1</e>
+      <e id="4">48</e>
+      <e id="40">6</e>
+      <e id="400">1</e>
+      <e id="401">5</e>
+      <e id="402">5</e>
+      <e id="403">0</e>
+      <e id="404">3</e>
+      <e id="405">65</e>
+      <e id="406">0</e>
+      <e id="407">83</e>
+      <e id="408">-46</e>
+      <e id="409">93</e>
+      <e id="41">3</e>
+      <e id="410">109</e>
+      <e id="411">-11</e>
+      <e id="412">84</e>
+      <e id="413">-95</e>
+      <e id="414">55</e>
+      <e id="415">25</e>
+      <e id="416">16</e>
+      <e id="417">-48</e>
+      <e id="418">38</e>
+      <e id="419">121</e>
+      <e id="42">85</e>
+      <e id="420">-7</e>
+      <e id="421">14</e>
+      <e id="422">2</e>
+      <e id="423">13</e>
+      <e id="424">-20</e>
+      <e id="425">-98</e>
+      <e id="426">53</e>
+      <e id="427">64</e>
+      <e id="428">-27</e>
+      <e id="429">-38</e>
+      <e id="43">4</e>
+      <e id="430">-79</e>
+      <e id="431">-49</e>
+      <e id="432">-66</e>
+      <e id="433">-117</e>
+      <e id="434">39</e>
+      <e id="435">42</e>
+      <e id="436">-118</e>
+      <e id="437">25</e>
+      <e id="438">-61</e>
+      <e id="439">54</e>
+      <e id="44">10</e>
+      <e id="440">-50</e>
+      <e id="441">-6</e>
+      <e id="442">-46</e>
+      <e id="443">-117</e>
+      <e id="444">-45</e>
+      <e id="445">-30</e>
+      <e id="446">-109</e>
+      <e id="447">-121</e>
+      <e id="448">83</e>
+      <e id="449">-25</e>
+      <e id="45">19</e>
+      <e id="450">47</e>
+      <e id="451">60</e>
+      <e id="452">-65</e>
+      <e id="453">-55</e>
+      <e id="454">40</e>
+      <e id="455">74</e>
+      <e id="456">106</e>
+      <e id="457">-12</e>
+      <e id="458">84</e>
+      <e id="459">125</e>
+      <e id="46">16</e>
+      <e id="460">-116</e>
+      <e id="461">36</e>
+      <e id="462">-120</e>
+      <e id="463">121</e>
+      <e id="464">-40</e>
+      <e id="465">-66</e>
+      <e id="466">-86</e>
+      <e id="467">19</e>
+      <e id="468">91</e>
+      <e id="469">73</e>
+      <e id="47">86</e>
+      <e id="470">16</e>
+      <e id="48">77</e>
+      <e id="49">119</e>
+      <e id="5">-126</e>
+      <e id="50">97</e>
+      <e id="51">114</e>
+      <e id="52">101</e>
+      <e id="53">32</e>
+      <e id="54">73</e>
+      <e id="55">110</e>
+      <e id="56">115</e>
+      <e id="57">116</e>
+      <e id="58">97</e>
+      <e id="59">108</e>
+      <e id="6">1</e>
+      <e id="60">108</e>
+      <e id="61">101</e>
+      <e id="62">114</e>
+      <e id="63">48</e>
+      <e id="64">30</e>
+      <e id="65">23</e>
+      <e id="66">13</e>
+      <e id="67">48</e>
+      <e id="68">57</e>
+      <e id="69">49</e>
+      <e id="7">125</e>
+      <e id="70">48</e>
+      <e id="71">49</e>
+      <e id="72">51</e>
+      <e id="73">49</e>
+      <e id="74">51</e>
+      <e id="75">52</e>
+      <e id="76">54</e>
+      <e id="77">53</e>
+      <e id="78">49</e>
+      <e id="79">90</e>
+      <e id="8">-96</e>
+      <e id="80">23</e>
+      <e id="81">13</e>
+      <e id="82">49</e>
+      <e id="83">57</e>
+      <e id="84">49</e>
+      <e id="85">48</e>
+      <e id="86">49</e>
+      <e id="87">49</e>
+      <e id="88">49</e>
+      <e id="89">51</e>
+      <e id="9">3</e>
+      <e id="90">52</e>
+      <e id="91">54</e>
+      <e id="92">53</e>
+      <e id="93">49</e>
+      <e id="94">90</e>
+      <e id="95">48</e>
+      <e id="96">118</e>
+      <e id="97">49</e>
+      <e id="98">21</e>
+      <e id="99">48</e>
+    </encryptionKey>
+    <globalIPSettings>
+      <_type>vim.vm.customization.GlobalIPSettings</_type>
+      <dnsSuffixList>
+        <_length>4</_length>
+        <_type>string[]</_type>
+        <e id="0">vlab.company.com</e>
+        <e id="1">vlab1.company.com</e>
+        <e id="2">vlab2.company.com</e>
+        <e id="3">company.com</e>
+      </dnsSuffixList>
+    </globalIPSettings>
+    <identity>
+      <_type>vim.vm.customization.Sysprep</_type>
+      <guiRunOnce>
+        <_type>vim.vm.customization.GuiRunOnce</_type>
+        <commandList>
+          <_length>1</_length>
+          <_type>string[]</_type>
+          <e id="0">NETDOM JOIN %computername% /Domain:&quot;vLab&quot; /UserD:&quot;joindomain&quot; /PasswordD:&quot;!CloudPOC&quot;  /reboot:10</e>
+        </commandList>
+      </guiRunOnce>
+      <guiUnattended>
+        <_type>vim.vm.customization.GuiUnattended</_type>
+        <autoLogon>true</autoLogon>
+        <autoLogonCount>1</autoLogonCount>
+        <password>
+          <_type>vim.vm.customization.Password</_type>
+          <plainText>false</plainText>
+          <value>SP05IOZBXHO8cR+3sXeuFaC2O46j/qMLv9AX0d/tOzQMV/DAo2KgmTPMMQif4er/IQwKYt06mY1TC7q8jWFZFg==</value>
+        </password>
+        <timeZone>4</timeZone>
+      </guiUnattended>
+      <identification>
+        <_type>vim.vm.customization.Identification</_type>
+        <domainAdmin>ew186000x</domainAdmin>
+        <domainAdminPassword>
+          <_type>vim.vm.customization.Password</_type>
+          <plainText>false</plainText>
+          <value>88W94HNL7p6Ht+b1rgSUHN1Wbk51IrRTVM2lgGmeEzyPYNTA2XDi+wPbEQ0WVNOl8MyrH3mPOC4Xdb7gXPHYcg==</value>
+        </domainAdminPassword>
+        <joinDomain>vlab</joinDomain>
+      </identification>
+      <licenseFilePrintData>
+        <_type>vim.vm.customization.LicenseFilePrintData</_type>
+        <autoMode>perServer</autoMode>
+        <autoUsers>5</autoUsers>
+      </licenseFilePrintData>
+      <userData>
+        <_type>vim.vm.customization.UserData</_type>
+        <computerName>
+          <_type>vim.vm.customization.VirtualMachineNameGenerator</_type>
+        </computerName>
+        <fullName>Some Company</fullName>
+        <orgName>Company</orgName>
+        <productId>THIS1-ISNOT-AREAL-LICEN-SEKEY</productId>
+      </userData>
+    </identity>
+    <nicSettingMap>
+      <_length>1</_length>
+      <_type>vim.vm.customization.AdapterMapping[]</_type>
+      <e id="0">
+        <_type>vim.vm.customization.AdapterMapping</_type>
+        <adapter>
+          <_type>vim.vm.customization.IPSettings</_type>
+          <ip>
+            <_type>vim.vm.customization.DhcpIpGenerator</_type>
+          </ip>
+          <primaryWINS/>
+          <secondaryWINS/>
+        </adapter>
+      </e>
+    </nicSettingMap>
+    <options>
+      <_type>vim.vm.customization.WinOptions</_type>
+      <changeSID>true</changeSID>
+      <deleteAccounts>false</deleteAccounts>
+    </options>
+  </spec>
+</ConfigRoot>

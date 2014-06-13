@@ -1,0 +1,1300 @@
+---
+- attributes: 
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        CONTAINS: 
+          tag: Vm.managed-environment
+          value: uat
+    search_type: default
+    db: Vm
+- attributes: 
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        CONTAINS: 
+          tag: Vm.managed-environment
+          value: prod
+    search_type: default
+    db: Vm
+- attributes: 
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        CONTAINS: 
+          tag: Vm.managed-environment
+          value: test
+    search_type: default
+    db: Vm
+- attributes: 
+    name: default_Platform / Amazon
+    description: Platform / Amazon
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=":
+          field: Vm-type
+          value: VmAmazon
+    search_type: default
+    search_key: _hidden_
+    db: Vm
+- attributes: 
+    name: default_Platform / VMware
+    description: Platform / VMware
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=":
+          field: Vm-type
+          value: VmVmware
+    search_type: default
+    search_key: _hidden_
+    db: Vm
+- attributes: 
+    name: default_Platform / Microsoft
+    description: Platform / Microsoft
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=":
+          field: Vm-type
+          value: VmMicrosoft
+    search_type: default
+    search_key: _hidden_
+    db: Vm
+- attributes: 
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=": 
+          field: Vm-power_state
+          value: "on"    
+    search_type: default
+    db: Vm
+- attributes: 
+    name: default_Status / Retired
+    description: Status / Retired
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=": 
+          value: "true"
+          field: Vm-retired
+    search_type: default
+    db: Vm
+- attributes: 
+    name: default_Status / Archived
+    description: Status / Archived
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=": 
+          field: Vm-archived
+          value: "true"
+    search_type: default
+    db: Vm
+- attributes: 
+    name: default_Status / Orphaned
+    description: Status / Orphaned
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=": 
+          value: "true"
+          field: Vm-orphaned
+    search_type: default
+    db: Vm
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Vm.managed-environment
+          value: dev
+    search_type: default
+    db: Vm
+- attributes:
+    name: default_Platform / Openstack
+    description: Platform / Openstack
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-type
+          value: VmOpenstack
+    search_type: default
+    search_key: _hidden_
+    db: Vm
+- attributes:
+    name: default_Platform / Redhat
+    description: Platform / Redhat
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-type
+          value: VmRedhat
+    search_type: default
+    search_key: _hidden_
+    db: Vm
+- attributes:
+    name: default_VMs & Instances I Own
+    description: VMs & Instances I Own
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-owned_by_current_user
+          value: "true"
+    search_type: default
+    db: Vm
+- attributes:
+    name: default_VMs & Instances in My LDAP Group
+    description: VMs & Instances in My LDAP Group
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-owned_by_current_ldap_group
+          value: "true"
+    search_type: default
+    db: Vm
+- attributes: 
+    name: default_Platform / EC2
+    description: Platform / EC2
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        "=": 
+          field: Host-vmm_vendor
+          value: EC2
+    search_type: default
+    search_key: _hidden_
+    db: Host
+- attributes: 
+    name: default_Platform / ESX 3.5
+    description: Platform / ESX 3.5
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        and: 
+        - "=": 
+            field: Host-vmm_vendor
+            value: VMware
+        - INCLUDES: 
+            field: Host-vmm_product
+            value: ESX
+        - "=": 
+            field: Host-vmm_version
+            value: 3.5.0
+    search_type: default
+    db: Host
+- attributes: 
+    name: default_Platform / ESX 4.0
+    description: Platform / ESX 4.0
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        and: 
+        - "=": 
+            field: Host-vmm_vendor
+            value: VMware
+        - INCLUDES: 
+            field: Host-vmm_product
+            value: ESX
+        - "=": 
+            field: Host-vmm_version
+            value: 4.0.0
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Platform / ESX 4.1
+    description: Platform / ESX 4.1
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "=":
+            field: Host-vmm_vendor
+            value: VMware
+        - INCLUDES:
+            field: Host-vmm_product
+            value: ESX
+        - "=":
+            field: Host-vmm_version
+            value: 4.1.0
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Platform / ESX 5.0
+    description: Platform / ESX 5.0
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "=":
+            field: Host-vmm_vendor
+            value: VMware
+        - INCLUDES:
+            field: Host-vmm_product
+            value: ESX
+        - "=":
+            field: Host-vmm_version
+            value: 5.0.0
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Platform / HyperV
+    description: Platform / HyperV
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Host-vmm_vendor
+          value: Microsoft
+    search_type: default
+    search_key: _hidden_
+    db: Host
+- attributes: 
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        CONTAINS: 
+          tag: Host.managed-environment
+          value: dev
+    search_type: default
+    db: Host
+- attributes: 
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        CONTAINS: 
+          tag: Host.managed-environment
+          value: prod
+    search_type: default
+    db: Host
+- attributes: 
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        CONTAINS: 
+          tag: Host.managed-environment
+          value: test
+    search_type: default
+    db: Host
+- attributes: 
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression 
+      exp: 
+        CONTAINS: 
+          tag: Host.managed-environment
+          value: uat
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: Host-power_state
+          value: "on"
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Status / Stopped
+    description: Status / Stopped
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: Host-power_state
+            value: "on"
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Platform / KVM
+    description: Platform / KVM
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Host-vmm_vendor
+          value: KVM
+    search_type: default
+    search_key: _hidden_
+    db: Host
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: Host-power_state
+          value: "on"
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Status / Stopped
+    description: Status / Stopped
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: Host-power_state
+            value: "on"
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Provisioning Scope / All
+    description: Provisioning Scope / All
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Host.managed-prov_scope
+          value: all
+    search_type: global
+    db: Host
+- attributes:
+    name: default_IPMI Enabled
+    description: IPMI Enabled
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Host-ipmi_enabled
+          value: true
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: Host-power_state
+          value: "on"
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Status / Stopped
+    description: Status / Stopped
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: Host-power_state
+            value: "on"
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Store Type / NFS
+    description: Store Type / NFS
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Storage-store_type
+          value: NFS
+    search_type: global
+    db: Storage
+- attributes:
+    name: default_Store Type / VMFS
+    description: Store Type / VMFS
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Storage-store_type
+          value: VMFS
+    search_type: global
+    db: Storage
+- attributes:
+    name: default_Provisioning Scope / All
+    description: Provisioning Scope / All
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Storage.managed-prov_scope
+          value: all
+    search_type: global
+    db: Storage
+- attributes:
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: MiqTemplate.managed-environment
+          value: uat
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: MiqTemplate.managed-environment
+          value: prod
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: MiqTemplate.managed-environment
+          value: test
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Platform / Amazon
+    description: Platform / Amazon
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-type
+          value: TemplateAmazon
+    search_type: default
+    search_key: _hidden_
+    db: MiqTemplate
+- attributes:
+    name: default_Platform / VMware
+    description: Platform / VMware
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-type
+          value: TemplateVmware
+    search_type: default
+    search_key: _hidden_
+    db: MiqTemplate
+- attributes:
+    name: default_Platform / Microsoft
+    description: Platform / Microsoft
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-type
+          value: TemplateMicrosoft
+    search_type: default
+    search_key: _hidden_
+    db: MiqTemplate
+- attributes:
+    name: default_Status / Retired
+    description: Status / Retired
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=": 
+          value: "true"
+          field: MiqTemplate-retired
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Status / Archived
+    description: Status / Archived
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-archived
+          value: "true"
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Status / Orphaned
+    description: Status / Orphaned
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          value: "true"
+          field: MiqTemplate-orphaned
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: MiqTemplate.managed-environment
+          value: dev
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Platform / Openstack
+    description: Platform / Openstack
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-type
+          value: TemplateOpenstack
+    search_type: default
+    search_key: _hidden_
+    db: MiqTemplate
+- attributes:
+    name: default_Platform / Redhat
+    description: Platform / Redhat
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-type
+          value: TemplateRedhat
+    search_type: default
+    search_key: _hidden_
+    db: MiqTemplate
+- attributes:
+    name: default_Templates & Images I Own
+    description: Templates & Images I Own
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-owned_by_current_user
+          value: "true"
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Templates & Images in My LDAP Group
+    description: Templates & Images in My LDAP Group
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqTemplate-owned_by_current_ldap_group
+          value: "true"
+    search_type: default
+    db: MiqTemplate
+- attributes:
+    name: default_Find by First Name
+    description: Find by First Name
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: VdiUser.ldap-first_name
+          value: :user_input
+    search_type: default
+    db: VdiUser
+- attributes:
+    name: default_Find by Last Name
+    description: Find by Last Name
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: VdiUser.ldap-last_name
+          value: :user_input
+    search_type: default
+    db: VdiUser
+- attributes:
+    name: default_Find by First and Last Name
+    description: Find by First and Last Name
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - INCLUDES:
+            field: VdiUser.ldap-first_name
+            value: :user_input
+        - INCLUDES:
+            field: VdiUser.ldap-last_name
+            value: :user_input
+    search_type: default
+    db: VdiUser
+- attributes:
+    name: default_Find by E-mail
+    description: Find by E-mail
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: VdiUser.ldap-mail
+          value: :user_input
+    search_type: default
+    db: VdiUser
+- attributes:
+    name: default_Over Sized
+    description: Over Sized
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: TemplateInfra.hardware-disk_capacity
+            value: 50039280896
+        - IS NOT EMPTY:
+            field: TemplateInfra-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateInfra.managed-environment
+          value: uat
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateInfra.managed-environment
+          value: prod
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateInfra.managed-environment
+          value: test
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Platform / Redhat
+    description: Platform / Redhat
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateInfra-type
+          value: TemplateRedhat
+    search_type: default
+    search_key: _hidden_
+    db: TemplateInfra
+- attributes:
+    name: default_Platform / VMware
+    description: Platform / VMware
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateInfra-type
+          value: TemplateVmware
+    search_type: default
+    search_key: _hidden_
+    db: TemplateInfra
+- attributes:
+    name: default_Platform / Microsoft
+    description: Platform / Microsoft
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateInfra-type
+          value: TemplateMicrosoft
+    search_type: default
+    search_key: _hidden_
+    db: TemplateInfra
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateInfra-power_state
+          value: "on"
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Status / Retired
+    description: Status / Retired
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          value: "true"
+          field: TemplateInfra-retired
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Status / Archived
+    description: Status / Archived
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateInfra-archived
+          value: "true"
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Status / Orphaned
+    description: Status / Orphaned
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          value: "true"
+          field: TemplateInfra-orphaned
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Over Allocated
+    description: Over Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: TemplateInfra-v_pct_free_disk_space
+            value: 50
+        - IS NOT EMPTY:
+            field: TemplateInfra-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Under Allocated
+    description: Under Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - <=:
+            field: TemplateInfra-v_pct_free_disk_space
+            value: 35
+        - IS NOT EMPTY:
+            field: TemplateInfra-v_pct_free_disk_space
+            value: ""
+        - IS NOT EMPTY:
+            field: TemplateInfra.host-name
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Guest OS / Windows
+    description: Guest OS / Windows
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: TemplateInfra.operating_system-product_name
+          value: Win
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Guest OS / Linux
+    description: Guest OS / Linux
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: TemplateInfra.operating_system-product_name
+            value: Win
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateInfra.managed-environment
+          value: dev
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Templates I Own
+    description: Templates I Own
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateInfra-owned_by_current_user
+          value: "true"
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Templates in My LDAP Group
+    description: Templates in My LDAP Group
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateInfra-owned_by_current_ldap_group
+          value: "true"
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Analysis Failed
+    description: Analysis Failed
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateInfra.managed-operations
+          value: analysis_failed
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Analysis Required
+    description: Analysis Required
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateInfra.managed-operations
+          value: analysis_required
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Analysis Successful
+    description: Analysis Successful
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateInfra.managed-operations
+          value: analysis_success
+    search_type: default
+    db: TemplateInfra
+- attributes:
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateCloud.managed-environment
+          value: uat
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateCloud.managed-environment
+          value: prod
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateCloud.managed-environment
+          value: test
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Platform / Amazon
+    description: Platform / Amazon
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateCloud-type
+          value: TemplateAmazon
+    search_type: default
+    search_key: _hidden_
+    db: TemplateCloud
+- attributes:
+    name: default_Platform / Openstack
+    description: Platform / Openstack
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateCloud-type
+          value: TemplateOpenstack
+    search_type: default
+    search_key: _hidden_
+    db: TemplateCloud
+- attributes:
+    name: default_Status / Retired
+    description: Status / Retired
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          value: "true"
+          field: TemplateCloud-retired
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Status / Archived
+    description: Status / Archived
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateCloud-archived
+          value: "true"
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: TemplateCloud.managed-environment
+          value: dev
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Images I Own
+    description: Images I Own
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateCloud-owned_by_current_user
+          value: "true"
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Images in My LDAP Group
+    description: Images in My LDAP Group
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: TemplateCloud-owned_by_current_ldap_group
+          value: "true"
+    search_type: default
+    db: TemplateCloud
+- attributes:
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmCloud.managed-environment
+          value: uat
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmCloud.managed-environment
+          value: prod
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmCloud.managed-environment
+          value: test
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmCloud-power_state
+          value: "on"
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Status / Retired
+    description: Status / Retired
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          value: "true"
+          field: VmCloud-retired
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Status / Archived
+    description: Status / Archived
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmCloud-archived
+          value: "true"
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmCloud.managed-environment
+          value: dev
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Platform / Amazon
+    description: Platform / Amazon
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmCloud-type
+          value: VmAmazon
+    search_type: default
+    search_key: _hidden_
+    db: VmCloud
+- attributes:
+    name: default_Platform / Openstack
+    description: Platform / Openstack
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmCloud-type
+          value: VmOpenstack
+    search_type: default
+    search_key: _hidden_
+    db: VmCloud
+- attributes:
+    name: default_Instances I Own
+    description: Instances I Own
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmCloud-owned_by_current_user
+          value: "true"
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Instances in My LDAP Group
+    description: Instances in My LDAP Group
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmCloud-owned_by_current_ldap_group
+          value: "true"
+    search_type: default
+    db: VmCloud
+- attributes:
+    name: default_Over Sized
+    description: Over Sized
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: VmInfra.hardware-disk_capacity
+            value: 50039280896
+        - IS NOT EMPTY:
+            field: VmInfra-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-environment
+          value: uat
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-environment
+          value: prod
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-environment
+          value: test
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Platform / Redhat
+    description: Platform / Redhat
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-type
+          value: VmRedhat
+    search_type: default
+    search_key: _hidden_
+    db: VmInfra
+- attributes:
+    name: default_Function / Desktop
+    description: Function / Desktop
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-function
+          value: desktop
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Platform / VMware
+    description: Platform / VMware
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-type
+          value: VmVmware
+    search_type: default
+    search_key: _hidden_
+    db: VmInfra
+- attributes:
+    name: default_Platform / Microsoft
+    description: Platform / Microsoft
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-type
+          value: VmMicrosoft
+    search_type: default
+    search_key: _hidden_
+    db: VmInfra
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-power_state
+          value: "on"
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Type / Template
+    description: Type / Template
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-template
+          value: "true"
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Type / VM
+    description: Type / VM
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          ENDS WITH:
+            field: VmInfra-location
+            value: .vmtx
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Status / Retired
+    description: Status / Retired
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          value: "true"
+          field: VmInfra-retired
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Status / Archived
+    description: Status / Archived
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-archived
+          value: "true"
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Status / Orphaned
+    description: Status / Orphaned
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          value: "true"
+          field: VmInfra-orphaned
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Over Allocated
+    description: Over Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: VmInfra-v_pct_free_disk_space
+            value: 50
+        - IS NOT EMPTY:
+            field: VmInfra-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Under Allocated
+    description: Under Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - <=:
+            field: VmInfra-v_pct_free_disk_space
+            value: 35
+        - IS NOT EMPTY:
+            field: VmInfra-v_pct_free_disk_space
+            value: ""
+        - IS NOT EMPTY:
+            field: VmInfra.host-name
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Guest OS / Windows
+    description: Guest OS / Windows
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: VmInfra.operating_system-product_name
+          value: Win
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Guest OS / Linux
+    description: Guest OS / Linux
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: VmInfra.operating_system-product_name
+            value: Win
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-environment
+          value: dev
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_VMs I Own
+    description: VMs I Own
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-owned_by_current_user
+          value: "true"
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_VMs in My LDAP Group
+    description: VMs in My LDAP Group
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: VmInfra-owned_by_current_ldap_group
+          value: "true"
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Analysis Failed
+    description: Analysis Failed
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-operations
+          value: analysis_failed
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Analysis Required
+    description: Analysis Required
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-operations
+          value: analysis_required
+    search_type: default
+    db: VmInfra
+- attributes:
+    name: default_Analysis Successful
+    description: Analysis Successful
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: VmInfra.managed-operations
+          value: analysis_success
+    search_type: default
+    db: VmInfra

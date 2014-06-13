@@ -1,0 +1,59 @@
+<%= render :partial => "layouts/flash_msg" %>
+<table class="admintable">
+  <% if @lastaction == "scan_histories" || @lastaction == "registry_items" || @lastaction == "filesystems"%>
+    <% j = 0 %>
+  <% else %>
+    <% j = 1 %>
+  <% end %>
+  <% for i in j...@view.col_order.length %>
+    <tr class="<%= cycle('row0', 'row1') %>">
+      <td class="key">
+        <%= @view.headers[i] %>
+      </td>
+      <% data = @view.table.data[0].data %>
+        <td
+          <% if @view.cols[i] == "vdi_controller_name" && !data["vdi_controller_id"].blank? %>
+            onclick="DoNav('<%= "/vdi_controller/show/#{data["vdi_controller_id"]}" %>');" title="Show <%= ui_lookup(:tables=>"vdi_controller") %>"
+            class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onmouseover="this.style.cursor='pointer'"
+          <% elsif @view.cols[i] == "vdi_farm_name" && !data["vdi_farm"].blank? %>
+            onclick="DoNav('<%= "/vdi_farm/show/#{data["vdi_farm"].id}" %>');" title="Show <%= ui_lookup(:tables=>"vdi_farm") %>"
+            class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onmouseover="this.style.cursor='pointer'"
+          <% elsif @view.cols[i] == "vdi_desktop_pool_name" && !data["vdi_desktop_pool"].blank? %>
+            onclick="DoNav('<%= "/vdi_desktop_pool/show/#{data["vdi_desktop_pool"].id}" %>');" title="Show <%= ui_lookup(:tables=>"vdi_desktop_pool") %>"
+            class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onmouseover="this.style.cursor='pointer'"
+          <% elsif @view.cols[i] == "vdi_desktop_name" && !data["vdi_desktop_id"].blank? %>
+            onclick="DoNav('<%= "/vdi_desktop/show/#{data["vdi_desktop_id"]}" %>');" title="Show <%= ui_lookup(:tables=>"vdi_desktop") %>"
+            class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onmouseover="this.style.cursor='pointer'"
+          <% elsif @view.cols[i] == "vdi_user_name" && !data["vdi_user_id"].blank? %>
+            onclick="DoNav('<%= "/vdi_user/show/#{data["vdi_user_id"]}" %>');" title="Show <%= ui_lookup(:tables=>"vdi_user") %>"
+            class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onmouseover="this.style.cursor='pointer'"
+          <% elsif @view.cols[i] == "vdi_endpoint_device_name" && !data["vdi_endpoint_device_id"].blank? %>
+            onclick="DoNav('<%= "/vdi_endpoint_device/show/#{data["vdi_endpoint_device_id"]}" %>');" title="Show <%= ui_lookup(:tables=>"vdi_endpoint_device") %>"
+            class="<%=cycle('row0','row1',:name=>'rel')%> hover-text" onmouseover="this.style.cursor='pointer'"
+          <% end %>
+        >
+        <% item_data = @item.send(@view.col_order[i]) %>
+        <% if @view.headers[i].downcase == "data" ||  @view.headers[i].downcase == "name" %>
+          <% if !item_data.nil? %>
+            <% item_data.scan(/.{1,125}/).each do |data_part| %>
+              <%= h(data_part)%>
+            <% end %>
+          <% end %>
+        <% elsif @view.headers[i].downcase == "size" %>
+          <%#= h(number_to_human_size(eval("@item.#{@view.col_order[i]}"), 2)) %>
+          <%= h(number_with_delimiter(item_data)) %>
+        <% else %>
+          <% if item_data.is_a?(Time) %>
+            <%=h(format_timezone(item_data)) %>
+          <% else %>
+            <%=h(item_data) %>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  <tr>
+    <th colspan="3" class="footer">
+    </th>
+  </tr>
+</table>

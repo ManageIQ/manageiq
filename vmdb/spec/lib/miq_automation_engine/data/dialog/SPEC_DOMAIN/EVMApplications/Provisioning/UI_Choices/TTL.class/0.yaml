@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: '0'
+    inherits: 
+    description: 
+  fields:
+  - ttl:
+      value: '0'
+  - ttl_friendly:
+      value: Indefinite

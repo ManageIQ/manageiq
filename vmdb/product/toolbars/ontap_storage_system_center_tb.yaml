@@ -1,0 +1,40 @@
+#
+# Toolbar config file
+#
+---
+:model: OntapStorageSystem
+:button_groups:
+- :name: ontap_storage_system_vmdb
+  :items:
+  - :buttonSelect: ontap_storage_system_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ontap_storage_system_create_logical_disk
+      :image: create_logical_disk
+      :text: 'Create Logical Disk'
+      :title: 'Create a Logical Disk (NetApp Flexible Volume) on this #{ui_lookup(:model=>"OntapStorageSystem").split(" - ").last}'
+- :name: ontap_storage_system_policy
+  :items:
+  - :buttonSelect: ontap_storage_system_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: ontap_storage_system_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: 'Edit Tags for this #{ui_lookup(:model=>"OntapStorageSystem").split(" - ").last}'
+- :name: ontap_storage_system_monitoring
+  :items:
+  - :buttonSelect: ontap_storage_system_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: ontap_storage_system_statistics
+      :image: statistics
+      :text: "Utilization"
+      :title: 'Show Utilization for this #{ui_lookup(:model=>"OntapStorageSystem").split(" - ").last}'
+      :url: '/show_statistics'

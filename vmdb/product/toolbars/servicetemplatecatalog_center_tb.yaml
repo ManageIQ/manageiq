@@ -1,0 +1,25 @@
+#
+# Toolbar config file
+#
+---
+:model: ServiceTemplateCatalog
+:button_groups:
+- :name: st_catalog_vmdb
+  :items:
+  - :buttonSelect: st_catalog_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :onwhen: '1+'
+    :items:
+    - :button: st_catalog_edit
+      :image: edit
+      :text: Edit this Item
+      :title: Edit this Item
+      :url_parms: 'main_div'
+    - :button: st_catalog_delete
+      :image: remove
+      :text: Remove Item from the VMDB
+      :title: Remove this Item from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: This Catalog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Catalog?"

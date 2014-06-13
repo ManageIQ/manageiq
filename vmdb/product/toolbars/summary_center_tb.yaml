@@ -1,0 +1,13 @@
+#
+# Toolbar config file
+#
+---
+:model:
+:button_groups:
+- :name: record_summary
+  :items:
+  - :button: show_summary
+    :image: summary-blue
+    :title: 'Show #{@layout == "cim_base_storage_extent" ? @record.evm_display_name : @record.name} Summary'
+    :url: '/show'
+    :url_parms: '?id=#{@record.id}'

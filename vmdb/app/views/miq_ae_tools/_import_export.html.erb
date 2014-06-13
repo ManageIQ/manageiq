@@ -1,0 +1,34 @@
+<div id="import_export_div">
+	<%= render(:partial=>"layouts/flash_msg") %>
+	<fieldset>
+		<p class="legend">Import</p>
+		Import Datastore classes
+		<%= form_tag({:action=>"upload", :typ=>"ae_tag", :db=>"MiqAeClass"}, :multipart => true) do %>
+			<%= file_field("upload", "datastore") %>
+			<%= submit_tag("Upload", :id=>"upload_atags", :class => "upload" ) %>
+
+
+		<% end %>
+	</fieldset>
+
+	<fieldset>
+		<p class="legend">Export</p>
+		<%= link_to(image_tag("/images/toolbars/export.png", :border=>"0",
+									:alt=>"Export all classes and instances"),
+									{:action=>'export_datastore'},
+									:title=>"Export all classes and instances")
+			%>&nbsp;Export all Datastore classes and instances to a file
+	</fieldset>
+
+	<fieldset>
+		<p class="legend">Reset</p>
+			<%= link_to(image_tag("/images/toolbars/reset.png",
+												:alt=>"Reset all custom classes and instances to default"),
+												{:action=>'reset_datastore'},
+                        "data-miq_sparkle_on" => true,
+                        :confirm=>"All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?",
+                        :remote=>true,
+												:title=>"Reset all custom classes and instances to default")
+			%>&nbsp;Reset all Datastore custom classes and instances to default
+	</fieldset>
+</div>

@@ -1,0 +1,17 @@
+<div id="tl_div">
+  <% if @report && @report.table && @report.table.data.blank? %>
+  <% elsif @report %>
+    <fieldset>
+      <div id="miq_timeline" style="height: 450px; overflow:hidden; border: 1px solid #aaa"></div>
+      <%= render(:partial=>"layouts/timeline",
+                :locals=>{:bands=>@report.timeline[:bands],
+                          :tl_json=>@temp[:tl_json].to_s.html_safe,
+                          :data_action=>"getTLdata",
+                          :position_time=>session[:tl_position]
+                }) %>
+      <% if @report.filter_summary %>
+        <%= @report.filter_summary%>
+      <% end %>
+    </fieldset>
+  <% end %>
+</div>

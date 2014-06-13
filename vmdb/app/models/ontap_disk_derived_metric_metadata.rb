@@ -1,0 +1,2 @@
+class OntapDiskDerivedMetricMetadata < StorageMetricsMetadata
+end

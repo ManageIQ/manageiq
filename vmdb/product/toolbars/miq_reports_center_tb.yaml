@@ -1,0 +1,17 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqReport
+:button_groups:
+- :name: report_vmdb
+  :items:
+  - :buttonSelect: report_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: miq_report_new
+      :image: new
+      :text: "Add a new Report"
+      :title: "Add a new Report"

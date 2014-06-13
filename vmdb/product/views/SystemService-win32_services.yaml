@@ -1,0 +1,92 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: Win32 Services
+
+# Menu name
+name: Win32 Services
+
+# Main DB table report is based on
+db: SystemService
+
+# Subset of main table records by association
+scoped_association: win32_services
+
+# Columns to fetch from the main table
+cols:
+- name
+- svc_type
+- start
+- image_path
+- display_name
+- depend_on_service
+- depend_on_group
+- object_name
+- description
+- enable_run_levels
+- disable_run_levels
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order: 
+- name
+- svc_type
+- start
+- image_path
+- display_name
+- depend_on_service
+- depend_on_group
+- object_name
+- description
+
+# Column titles, in order
+headers:
+- Name
+- Service Type
+- Start
+- Image Path
+- Display Name
+- Depend on Service
+- Depend on Group
+- Object Name
+- Description
+
+# Condition(s) string for the SQL query
+conditions: 
+
+# Order string for the SQL query
+order: Ascending
+
+# Columns to sort the report on, in order
+sortby:
+- name
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph: 
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 

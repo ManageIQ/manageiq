@@ -1,0 +1,29 @@
+The environment probe consists of three files:
+script/env_probe 
+	Wrapper shell script that runs the ruby scripts and tars up the resulting logs and yaml files.
+
+script/env_probe_vc_inv.rb
+	Ruby script that Connects to the specified VC and runs the same inventory that EVM does for a refresh. 
+	It creates a log with debug trace level as  well as a yaml file containing the full inventory hash that was returned. 
+	The yaml file can be loaded in ruby console for further analysis or processed into a real VMDB.
+
+	Output: 
+	log/env_probe_vc_inv.log
+	log/env_probe_vc_inv.yml
+
+script/env_probe_event_catcher.rb
+	Event catcher simulation ruby script. This script connects to the specified Virtual Center and catches and logs events to a 
+	log file until ^C is entered from the console.
+
+	Output:
+	log/env_probe_event_catcher.log
+
+Execution Instructions:
+	From the vmdb directory run the probes with the following command line: 
+	
+	       script/env_probe <vc host name or ip@> <vc user id> <vc password>
+
+	The script will run the VC inventory probe followed by the event catcher probe. The event catcher will run until ^C is entered. Let it run until a 
+	few events are caught. Once the event catcher probe exits the 2 log files and yaml file will automatically be tarred up in a file named 
+	env_probe_results_<vc host name or ip@>.tar in the vmdb directory.
+

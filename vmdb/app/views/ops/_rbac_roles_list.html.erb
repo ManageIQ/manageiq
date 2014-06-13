@@ -1,0 +1,8 @@
+<% if x_node == "xx-ur" %>
+	<div id='main_div'>
+		<% if @view %>
+			<%= render(:partial=>'layouts/x_gtl',
+								:locals=>{:action_url=>"rbac_roles_list"}) %>
+		<% end %>
+	</div>
+<% end %>

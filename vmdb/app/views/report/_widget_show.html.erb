@@ -1,0 +1,237 @@
+<div id="form_div">
+  <% s = @widget.miq_schedule %>
+  <% tz = @timezone = s && s.run_at && s.run_at[:tz] ? s.run_at[:tz] : session[:user_tz] %>
+    <p class="legend">Basic Information</p>
+    <table class="style1">
+        <tr>
+          <td class="key"><% if @widget.read_only %>* <% end %>Title</td>
+          <td>
+            <%= h(@widget.title) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key"><% if @widget.read_only %>* <% end %>Description</td>
+          <td>
+              <%= h(@widget.description) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Active</td>
+          <td>
+              <%= h(@widget.enabled)%>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Default</td>
+          <td>
+              <%= h(@widget.read_only)%>
+          </td>
+        </tr>
+    </table>
+    <hr>
+  <% unless @sb[:wtype] == "m" %>
+      <p class="legend">Status</p>
+      <table class="style1">
+          <tr>
+            <td class="key">Current Status</td>
+            <td>
+              <%
+                  case @widget.status.downcase
+                  when "complete"
+                    img = "complete"
+                  when "queued"
+                    img = "queued"
+                  when "running"
+                    img = "running"
+                  when "error"
+                    img = "error"
+                  end
+              %>
+              <% if @widget.status.downcase != "none" %>
+                <img src="/images/icons/new/status_<%=img%>.png" width="16" height="16"/>
+              <% end %>
+              <%= h(@widget.status) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Last Run Time</td>
+            <td>
+              <%= h(@widget.last_run_on ? format_timezone(@widget.last_run_on, tz,"view") : "") %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Message</td>
+            <td>
+                <%= h(@widget.status_message)%>
+            </td>
+          </tr>
+      </table>
+    <hr>
+  <% end %>
+    <% title = case @sb[:wtype]
+                when "r" ; "Report Options"
+                when "c" ; "Chart Report"
+                when "rf" ; "RSS Feed Options"
+                when "m" ; "Menu Shortcuts"
+               end
+    %>
+    <p class="legend"><%=title%></p>
+    <table class="style1">
+      <% if @sb[:wtype] == "r" %>
+        <tr>
+          <td class="key"><% if @widget.read_only %>* <% end %>Report Filter</td>
+          <td>
+            <% if @widget.resource %>
+              <%= h(@widget.resource.name) %>
+            <% else %>
+              <span style="color:red;">*** Report no longer exists ***</span>
+            <% end %>
+          </td>
+        </tr>
+      <% elsif @sb[:wtype] == "c" %>
+        <tr>
+          <td class="key"><% if @widget.read_only %>* <% end %>Filter</td>
+          <td>
+            <% if @widget.resource %>
+              <%= h(@widget.resource.title) %>
+            <% else %>
+              <span style="color:red;">*** Chart no longer exists ***</span>
+            <% end %>
+          </td>
+        </tr>
+      <% elsif @sb[:wtype] == "rf" %>
+        <% typ = @widget.resource ? "Internal" : "External"%>
+        <tr>
+          <td class="key"><% if @widget.read_only %>* <% end %>Type</td>
+          <td class="wide">
+            <%= h(typ) %>
+          </td>
+        </tr>
+        <% if typ == "Internal" %>
+          <tr>
+            <td class="key"><% if @widget.read_only %>* <% end %>Internal RSS Feed</td>
+            <td class="wide">
+              <% if @widget.resource %>
+                <%= h(@widget.resource.name) %>
+              <% else %>
+                <span style="color:red;">*** RSS Feed no longer exists ***</span>
+              <% end %>
+            </td>
+          </tr>
+        <% else %>
+          <tr>
+            <td class="key"><% if @widget.read_only %>* <% end %>External RSS Feed/URL</td>
+            <td class="wide">
+              <%= h(@widget.options[:url]) %>
+            </td>
+          </tr>
+        <% end %>
+      <% elsif @sb[:wtype] == "m" %>
+        <tr>
+          <td class="key"><% if @widget.read_only %>* <% end %>Shortcuts</td>
+          <td class="wide">
+<% if true %> <%# TODO: fix formatting to look like widget menu shortcuts (first attempt in ELSE) %>
+            <% @widget.miq_widget_shortcuts.order("sequence").each_with_index do |ws, wsi| %>
+              <% unless wsi == 0 %>
+                <br/>
+              <% end %>
+              <%= ws.description %>
+            <% end %>
+<% else %>
+            <div id="modules">
+              <div class="yui-b">
+                <div class="yui-gb">
+                  <div class="yui-u first" style="position:relative;min-height:50px;" id="col1">
+                    <% @widget.miq_widget_shortcuts.each do |ws| %>
+                      <div>
+                        <div class="modbox">
+                          <h2 class="modtitle">
+                            <a class="<%= @widget.content_type %>box"></a>
+                            <div>
+                              <span class="modtitle_text">
+                                <%= ws.description %>
+                              </span>
+                            </div>
+                          </h2>
+
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+<% end %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @sb[:wtype] == "r" %>
+        <% @sb[:col_order].each_with_index do |col,idx| %>
+          <tr>
+            <td class="key">Column <%=idx+1%></td>
+            <td>
+              <%= h(col) %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      <% if ["r","rf"].include?(@sb[:wtype]) %>
+        <tr>
+          <td class="key">Row Count</td>
+          <td>
+            <%= h(@widget.options[:row_count].to_s) %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <hr>
+  <% unless @sb[:wtype] == "m" %>
+    <p class="legend">Timer</p>
+    <table class="style1">
+      <% if s.is_a?(MiqSchedule) %>
+        <tr>
+          <td class="key">Run At</td>
+          <td><%= h(s.run_at_to_human(@timezone).to_s) %></td>
+        </tr>
+        <tr>
+          <td class="key">Next Run Time</td>
+          <td>
+            <% if !s.next_run_on.blank? %>
+              <%= h(format_timezone(s.next_run_on, tz, "view")) %>
+            <% end %>
+          </td>
+        </tr>
+      <% else %>
+        <tr>
+          <td class="error">
+            <b>No timer is attached to this Widget, its contents will not be updated.</b>
+            <br/>
+            Edit this Widget to configure a timer.
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <hr>
+  <% end %>
+  <p class="legend">Visibility</p>
+    <table class="style1">
+      <% show_to = @widget.visibility && @widget.visibility[:groups] ? "By Group" :
+        @widget.visibility && @widget.visibility[:roles] && @widget.visibility[:roles][0] == "_ALL_" ? "To All Users" : "By Role" %>
+        <tr>
+          <td class="key">Show</td>
+          <td><%= h(show_to) %></td>
+        </tr>
+        <% if show_to == "By Role" && !@sb[:user_roles].blank? %>
+          <tr>
+            <td class="key">User Roles</td>
+            <td><%= h(@sb[:user_roles].join(", ")) %></td>
+          </tr>
+        <% elsif show_to == "By Group" && !@sb[:groups].blank? %>
+          <tr>
+            <td class="key">Groups</td>
+            <td><%= h(@sb[:groups].join(", ")) %></td>
+          </tr>
+        <% end %>
+    </table>
+  <% if @widget.read_only %> * Fields are read only for default Widgets<% end %>
+</div>

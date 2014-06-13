@@ -1,0 +1,1674 @@
+---
+- id: 1
+  name: vm
+  timestamp: 2013-04-02 10:37:50.000000000 Z
+  created_on: 2013-04-02 10:38:46.217500000 Z
+  stats: ! "--- \nname: Vm1\nmemory_shares: \"40960\"\ncpu_reserve_expand:
+    \"false\"\noriginal_filename: vm\nmemory_reserve: \"0\"\nlocation: Vm1/Vm1.vmx\ntools_status:
+    toolsNotInstalled\ncpu_shares: \"1000\"\ncreated_on: \"1364899125\"\ncpu_limit:
+    \"-1\"\nid: \"447000000000024\"\nmemory_shares_level: normal\ncpu_shares_level:
+    normal\nlast_scan_on: Tue Apr 02 10:34:17 UTC 2013\nversion: \"2.0\"\nmemory_reserve_expand:
+    \"false\"\nmemory_limit: \"-1\"\ncpu_reserve: \"0\"\nvendor: VMware\n_timestamp_:
+    \"1364899070\"\ndisplay_time: \"2013-04-02T10:38:45Z\"\n"
+  scantype: full
+  resource_id: 447000000000024
+  resource_type: Vm
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><vm cpu_reserve_expand='false' memory_shares='40960'
+    name='Vm1' location='Vm1/Vm1.vmx'
+    memory_reserve='0' original_filename='vm' created_on='1364899125' cpu_shares='1000'
+    tools_status='toolsNotInstalled' cpu_limit='-1' cpu_shares_level='normal' memory_shares_level='normal'
+    id='447000000000024' version='2.0' last_scan_on='Tue Apr 02 10:34:17 UTC 2013'
+    cpu_reserve='0' memory_limit='-1' memory_reserve_expand='false' vendor='VMware'
+    display_time='2013-04-02T10:38:45Z' _timestamp_='1364899070'><groups _macro_='has_many'><account
+    name='root' id='447000000001108'/><account name='bin' id='447000000001109'/><account
+    name='daemon' id='447000000001110'/><account name='sys' id='447000000001111'/><account
+    name='adm' id='447000000001112'/><account name='tty' id='447000000001113'/><account
+    name='disk' id='447000000001114'/><account name='lp' id='447000000001115'/><account
+    name='mem' id='447000000001116'/><account name='kmem' id='447000000001117'/><account
+    name='wheel' id='447000000001118'/><account name='mail' id='447000000001119'/><account
+    name='news' id='447000000001120'/><account name='uucp' id='447000000001121'/><account
+    name='man' id='447000000001122'/><account name='games' id='447000000001123'/><account
+    name='gopher' id='447000000001124'/><account name='dip' id='447000000001125'/><account
+    name='ftp' id='447000000001126'/><account name='lock' id='447000000001127'/><account
+    name='nobody' id='447000000001128'/><account name='users' id='447000000001129'/><account
+    name='utmp' id='447000000001130'/><account name='utempter' id='447000000001131'/><account
+    name='floppy' id='447000000001132'/><account name='vcsa' id='447000000001133'/><account
+    name='nscd' id='447000000001134'/><account name='slocate' id='447000000001135'/><account
+    name='tcpdump' id='447000000001136'/><account name='gnokii' id='447000000001137'/><account
+    name='dbus' id='447000000001138'/><account name='polkituser' id='447000000001139'/><account
+    name='pulse' id='447000000001140'/><account name='pulse-rt' id='447000000001141'/><account
+    name='pulse-access' id='447000000001142'/><account name='avahi' id='447000000001143'/><account
+    name='mailnull' id='447000000001144'/><account name='smmsp' id='447000000001145'/><account
+    name='apache' id='447000000001146'/><account name='smolt' id='447000000001147'/><account
+    name='sshd' id='447000000001148'/><account name='rpcuser' id='447000000001149'/><account
+    name='nfsnobody' id='447000000001150'/><account name='torrent' id='447000000001151'/><account
+    name='wbpriv' id='447000000001152'/><account name='haldaemon' id='447000000001153'/><account
+    name='hsqldb' id='447000000001154'/><account name='gdm' id='447000000001155'/><account
+    name='ntp' id='447000000001156'/><account name='thomash68' id='447000000001157'/><account
+    name='avahi-autoipd' id='447000000001158'/><account name='rpc' id='447000000001159'/></groups><guest_applications
+    _macro_='has_many'><guest_application arch='noarch' id='447000000005645' version='2.0'
+    release='1.fc9' v_unique_name='iso-codes'/><guest_application arch='noarch' id='447000000005646'
+    version='2.02.08' release='1.fc8.1' v_unique_name='ql2200-firmware'/><guest_application
+    arch='i386' id='447000000005647' version='4.3.0' release='8' v_unique_name='libgcc
+    (i386)'/><guest_application arch='x86_64' id='447000000005648' version='1.0.4'
+    release='3.fc9' v_unique_name='libICE (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005649' version='2.0.1' release='5' v_unique_name='expat (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005650' version='0.2.6' release='8.fc9' v_unique_name='audiofile
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005651' version='3.2.7'
+    release='20.fc9' v_unique_name='procps (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005652' version='0.2.11' release='3.fc9' v_unique_name='libieee1284
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005653' version='0.10.0'
+    release='1.fc9' v_unique_name='pixman (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005654' version='1.0.3' release='2.fc9' v_unique_name='libksba (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005655' version='1.8.0' release='28.fc9' v_unique_name='gdbm
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005656' version='1.1.0'
+    release='4.fc9' v_unique_name='libiec61883 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005657' version='3.5.20' release='2.fc9' v_unique_name='djvulibre-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005658' version='5.2'
+    release='13.fc9' v_unique_name='readline (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005659' version='1.02.24' release='11.fc9' v_unique_name='device-mapper-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005660' version='3.1.5'
+    release='17.fc9' v_unique_name='gawk (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005661' version='2.4.0' release='10.fc9' v_unique_name='gphoto2 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005662' version='0.79' release='3.fc9' v_unique_name='libcdio
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005663' version='4.4.1'
+    release='4.fc9' v_unique_name='libwvstreams (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005664' version='1.4.10' release='3.fc9' v_unique_name='m4 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005665' version='0.9' release='4.fc9' v_unique_name='urlview
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005666' version='2.1.5'
+    release='11.fc9' v_unique_name='eject (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005667' version='5.07' release='11.fc9' v_unique_name='gnuchess (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005668' version='1.25' release='4.fc9' v_unique_name='sg3_utils-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005669' version='0.23.2'
+    release='4' v_unique_name='cadaver (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005670' version='0.7' release='1.23.fc9' v_unique_name='mcelog (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005671' version='0.72' release='4.fc9' v_unique_name='mtr
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005672' version='1.4'
+    release='11.fc9' v_unique_name='rdate (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005673' version='006' release='4.fc9' v_unique_name='bcm43xx-fwcutter
+    (x86_64)'/><guest_application arch='noarch' id='447000000005674' version='2.4'
+    release='5.fc9' v_unique_name='urw-fonts'/><guest_application arch='x86_64' id='447000000005675'
+    version='1.2.2' release='3.fc9' v_unique_name='libXrandr (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005676' version='1.1.1' release='4.fc9' v_unique_name='libXdamage
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005677' version='1.0.3'
+    release='5.fc9' v_unique_name='libXv (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005678' version='2.4.0' release='14.fc9' v_unique_name='freeglut
+    (x86_64)'/><guest_application arch='noarch' id='447000000005679' version='7.2'
+    release='6.fc9' v_unique_name='xorg-x11-fonts-100dpi'/><guest_application arch='noarch'
+    id='447000000005680' version='0.003' release='4.fc8' v_unique_name='jomolhari-fonts'/><guest_application
+    arch='noarch' id='447000000005681' version='2.2' release='7.fc9' v_unique_name='baekmuk-ttf-fonts-gulim'/><guest_application
+    arch='x86_64' id='447000000005682' version='0.215' release='3' v_unique_name='rhpl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005683' version='0.4.4'
+    release='10.fc9' v_unique_name='libnotify (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005684' version='0.1.1' release='3.fc9' v_unique_name='notify-python
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005685' version='0.2.10'
+    release='3.fc9' v_unique_name='ConsoleKit-x11 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005686' version='2.12.1' release='6.fc9' v_unique_name='pygtk2 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005687' version='0.7' release='1.fc9' v_unique_name='xdg-user-dirs-gtk
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005688' version='0.4.0'
+    release='3' v_unique_name='prelink (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005689' version='2.6.25' release='14.fc9' v_unique_name='kernel (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005690' version='0.05' release='20' v_unique_name='ifd-egate
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005691' version='1.9.1'
+    release='2.fc9' v_unique_name='mono-data (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005692' version='0.2.0' release='2.fc9' v_unique_name='libspectre
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005693' version='0.11.0'
+    release='3.fc9' v_unique_name='gnome-bluetooth-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005694' version='2.18.4' release='1.fc9' v_unique_name='libgnomeprint22
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005695' version='1.22.1'
+    release='1.fc9' v_unique_name='at-spi-python (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005696' version='3.6.3' release='2.fc9' v_unique_name='lftp (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005697' version='2.10.8' release='3.fc9' v_unique_name='gthumb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005698' version='0.11.0'
+    release='3.fc9' v_unique_name='gnome-bluetooth (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005699' version='2.7.1' release='10jpp.1.fc9' v_unique_name='xerces-j2
+    (x86_64)'/><guest_application arch='noarch' id='447000000005700' version='11.85'
+    release='7.fc9' v_unique_name='tex-preview'/><guest_application arch='x86_64'
+    id='447000000005701' version='1.1.1' release='9.fc9' v_unique_name='xorg-x11-drv-void
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005702' version='2.2.1'
+    release='1.fc9' v_unique_name='xorg-x11-drv-citron (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005703' version='0.9.0' release='1.fc9' v_unique_name='xorg-x11-drv-sisusb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005704' version='1.2.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-summa (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005705' version='0.0.10' release='2.20080408git0991281.fc9'
+    v_unique_name='xorg-x11-drv-nouveau (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005706' version='1.1.1' release='1.fc9' v_unique_name='xorg-x11-drv-aiptek
+    (x86_64)'/><guest_application arch='noarch' id='447000000005707' version='1.2.15'
+    release='2.fc9' v_unique_name='system-config-keyboard'/><guest_application id='447000000005708'
+    version='6df2196f' release='48b5d596' v_unique_name='gpg-pubkey'/><guest_application
+    arch='noarch' id='447000000005709' version='2.6.18' release='3.fc9' v_unique_name='setup'/><guest_application
+    arch='noarch' id='447000000005710' version='5.110.22.p14' release='1.fc9' v_unique_name='libertas-usb8388-firmware'/><guest_application
+    arch='x86_64' id='447000000005711' version='1.41.3' release='2.fc9' v_unique_name='e2fsprogs-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005712' version='4.6.21'
+    release='7.fc9' v_unique_name='db4 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005713' version='0.23' release='6.fc9' v_unique_name='pkgconfig (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005714' version='1.2.96' release='5.fc9' v_unique_name='festival-speechtools-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005715' version='2.7.4'
+    release='2.fc9' v_unique_name='fuse-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005716' version='1.900.1' release='9.fc9' v_unique_name='jasper-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005717' version='4.23'
+    release='7.fc9' v_unique_name='file-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005718' version='1.18' release='2.fc9' v_unique_name='lcms (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005719' version='1.1.8' release='1.fc9' v_unique_name='libsilc
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005720' version='2.3.5'
+    release='7.fc9' v_unique_name='freetype (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005721' version='4.1.5' release='11.fc9' v_unique_name='sed (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005722' version='1.1.1' release='28.fc9' v_unique_name='libtdb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005723' version='2.0.16'
+    release='3.fc9' v_unique_name='checkpolicy (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005724' version='0.10.20' release='1.fc9' v_unique_name='gstreamer
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005725' version='0.8.7'
+    release='2.fc9' v_unique_name='poppler-utils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005726' version='4.11' release='8.fc9' v_unique_name='texinfo (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005727' version='4.0.0' release='22.fc9' v_unique_name='libdhcp4client
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005728' version='1.1'
+    release='1.fc9' v_unique_name='ed (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005729' version='2.0.12' release='1.fc9' v_unique_name='traceroute
+    (x86_64)'/><guest_application arch='noarch' id='447000000005730' version='2007'
+    release='24.fc9' v_unique_name='texlive-texmf-dvips'/><guest_application arch='x86_64'
+    id='447000000005731' version='2.0' release='4.fc9' v_unique_name='libgdiplus-devel
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005732' version='0.9.8g'
+    release='9.14.fc9' v_unique_name='openssl (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005733' version='2.13.1' release='8.3.fc9' v_unique_name='util-linux-ng
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005734' version='0.7.1'
+    release='1.fc9' v_unique_name='NetworkManager-glib (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005735' version='0.1' release='6.fc9' v_unique_name='libgssglue
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005736' version='2.22.0'
+    release='5.fc9' v_unique_name='metacity (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005737' version='2.0.25' release='3.fc9' v_unique_name='libsemanage
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005738' version='0.2.8.4'
+    release='18.1.fc9' v_unique_name='libwmf (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005739' version='1.8.5' release='1.fc9' v_unique_name='guile (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005740' version='2.8' release='8' v_unique_name='nscd
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005741' version='2.2.21'
+    release='2.fc9' v_unique_name='gmime-sharp (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005742' version='2.2.9' release='1.fc9' v_unique_name='httpd-tools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005743' version='2.3.3'
+    release='3.fc9' v_unique_name='python-sqlite2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005744' version='0.12' release='1.fc9' v_unique_name='kerneloops
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005745' version='1.6.0.0'
+    release='0.25.b09.fc9' v_unique_name='java-1.6.0-openjdk-plugin (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005746' version='3.36' release='3.fc9' v_unique_name='bluez-utils-alsa
+    (x86_64)'/><guest_application arch='noarch' id='447000000005747' version='1.1.1.1'
+    release='8.fc9' v_unique_name='smolt'/><guest_application arch='x86_64' id='447000000005748'
+    version='3.0.11' release='1.fc9' v_unique_name='firefox (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005749' version='1.22.3' release='1.fc9' v_unique_name='gail
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005750' version='2.22.2'
+    release='1.fc9' v_unique_name='eel2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005751' version='1.3.10' release='5.fc9' v_unique_name='cups (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005752' version='4.0.0' release='22.fc9' v_unique_name='dhclient
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005753' version='0.74'
+    release='68.fc9' v_unique_name='perl-version (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005754' version='3.36' release='3.fc9' v_unique_name='bluez-utils-cups
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005755' version='6.8'
+    release='24.fc9' v_unique_name='gdb (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005756' version='2.22.0' release='3.fc9' v_unique_name='sound-juicer
+    (x86_64)'/><guest_application arch='noarch' id='447000000005757' version='3.3.1'
+    release='135.fc9' v_unique_name='selinux-policy-targeted'/><guest_application
+    arch='x86_64' id='447000000005758' version='2.22.1' release='2.fc9' v_unique_name='gnome-python2-canvas
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005759' version='0.10.8'
+    release='10.fc9' v_unique_name='gstreamer-plugins-good (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005760' version='2.22.1' release='2.fc9' v_unique_name='gnome-python2-gconf
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005761' version='0.7.1'
+    release='1.fc9' v_unique_name='NetworkManager (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005762' version='6.3.8.1' release='4.fc9' v_unique_name='ImageMagick-perl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005763' version='2.008'
+    release='68.fc9' v_unique_name='perl-IO-Compress-Base (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005764' version='2.4.2' release='18.3.fc9' v_unique_name='openoffice.org-draw
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005765' version='2.4.2'
+    release='18.3.fc9' v_unique_name='openoffice.org-impress (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005766' version='12.6.2' release='1.fc9' v_unique_name='xorg-x11-drv-vmmouse
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005767' version='2.008'
+    release='68.fc9' v_unique_name='perl-Compress-Zlib (x86_64)'/><guest_application
+    arch='noarch' id='447000000005768' version='1.0' release='0.1.b5.fc9' v_unique_name='html2ps'/><guest_application
+    arch='x86_64' id='447000000005769' version='1.0.15' release='1.fc9' v_unique_name='system-config-printer
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005770' version='0.3.12'
+    release='1.fc9' v_unique_name='PackageKit-udev-helper (x86_64)'/><guest_application
+    arch='noarch' id='447000000005771' version='1.1.0' release='1.fc9' v_unique_name='preupgrade'/><guest_application
+    arch='noarch' id='447000000005772' version='2007' release='4.fc9' v_unique_name='texlive-texmf-errata'/><guest_application
+    arch='noarch' id='447000000005773' version='9.0.0' release='1' v_unique_name='desktop-backgrounds-basic'/><guest_application
+    arch='noarch' id='447000000005774' version='15' release='1' v_unique_name='specspo'/><guest_application
+    arch='x86_64' id='447000000005775' version='4.3.0' release='8' v_unique_name='libstdc++
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005776' version='7.6'
+    release='52.fc9' v_unique_name='tcp_wrappers-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005777' version='2.4.41' release='1.fc9' v_unique_name='libattr
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005778' version='1.0.4'
+    release='5.fc9' v_unique_name='libfontenc (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005779' version='2.1.3' release='3.fc9' v_unique_name='slang (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005780' version='0.0.5' release='1.fc9' v_unique_name='libopenraw
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005781' version='3.4'
+    release='13.fc9' v_unique_name='module-init-tools (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005782' version='2.2.2' release='1.fc9' v_unique_name='libsigc++20
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005783' version='2.8.12'
+    release='2' v_unique_name='cracklib (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005784' version='418' release='3.fc9' v_unique_name='less (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005785' version='1.18.1.4' release='14.fc9' v_unique_name='groff
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005786' version='0.4b41'
+    release='7.1.fc9' v_unique_name='rmt (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005787' version='3.0.9' release='26.fc9' v_unique_name='ttmkfdir
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005788' version='1.2.2'
+    release='5' v_unique_name='cdrdao (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005789' version='8.6' release='1.fc9' v_unique_name='hdparm (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005790' version='1.4.4' release='3.fc9' v_unique_name='pcsc-lite-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005791' version='14.0.1'
+    release='1.fc9' v_unique_name='sox (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005792' version='0.4' release='1' v_unique_name='pakchois (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005793' version='0.17' release='47.fc9' v_unique_name='ftp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005794' version='2.4.41'
+    release='1.fc9' v_unique_name='attr (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005795' version='1.9' release='6.fc9' v_unique_name='vconfig (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005796' version='1.5.0' release='9.fc9' v_unique_name='tree
+    (x86_64)'/><guest_application arch='noarch' id='447000000005797' version='0.10'
+    release='4' v_unique_name='hicolor-icon-theme'/><guest_application arch='x86_64'
+    id='447000000005798' version='1.6.4' release='1.fc9' v_unique_name='cairo (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005799' version='1.0.3' release='3.fc9' v_unique_name='libXtst
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005800' version='7.2'
+    release='4.fc9' v_unique_name='xorg-x11-font-utils (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005801' version='1.0.4' release='2.fc9' v_unique_name='libXaw
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005802' version='1.6f'
+    release='4.fc9' v_unique_name='man (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005803' version='1.0.4' release='5.fc9' v_unique_name='libXfontcache
+    (x86_64)'/><guest_application arch='noarch' id='447000000005804' version='0.12.2'
+    release='1.fc9' v_unique_name='gnome-doc-utils-stylesheets'/><guest_application
+    arch='x86_64' id='447000000005805' version='0.73' release='2.fc9' v_unique_name='usbutils
+    (x86_64)'/><guest_application arch='noarch' id='447000000005806' version='0.3'
+    release='5.2.fc9' v_unique_name='bitmap-fonts'/><guest_application arch='noarch'
+    id='447000000005807' version='0.1.20060928' release='4.fc8' v_unique_name='cjkunifonts-uming'/><guest_application
+    arch='noarch' id='447000000005808' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-gujarati'/><guest_application
+    arch='x86_64' id='447000000005809' version='2.4.1' release='1.fc9' v_unique_name='libsoup
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005810' version='0.8.0'
+    release='1.fc9' v_unique_name='rarian-compat (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005811' version='2.22.0' release='1.fc9' v_unique_name='GConf2 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005812' version='2.14.3' release='2.fc9' v_unique_name='pyorbit
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005813' version='2.6.6'
+    release='1.fc9' v_unique_name='libglademm24 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005814' version='6.0.52' release='2.fc9' v_unique_name='mkinitrd
+    (x86_64)'/><guest_application arch='noarch' id='447000000005815' version='2.22.0'
+    release='6.fc9' v_unique_name='gnome-icon-theme'/><guest_application arch='noarch'
+    id='447000000005816' version='1.0.0' release='1.fc8' v_unique_name='fedora-icon-theme'/><guest_application
+    arch='x86_64' id='447000000005817' version='0.6.9' release='7.fc9' v_unique_name='pinfo
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005818' version='1.0.14'
+    release='1.fc9' v_unique_name='dhcpv6-client (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005819' version='1.0.16' release='4.fc9' v_unique_name='alsa-plugins-pulseaudio
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005820' version='1.9.1'
+    release='2.fc9' v_unique_name='mono-data-sqlite (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005821' version='2.22.0' release='2.fc9' v_unique_name='libbonoboui
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005822' version='2.22.0'
+    release='2.fc9' v_unique_name='gnome-media (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005823' version='1.9.1' release='2.fc9' v_unique_name='mono-web (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005824' version='5.0.2' release='2.fc9' v_unique_name='gutenprint
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005825' version='2.20.0.1'
+    release='5.fc9' v_unique_name='gnome-utils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005826' version='1.0.2' release='4.fc9' v_unique_name='numactl (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005827' version='2.8.2' release='2.fc9' v_unique_name='hpijs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005828' version='1.3.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-trident (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005829' version='1.2.0' release='1.fc9' v_unique_name='xorg-x11-drv-microtouch
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005830' version='1.2.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-hyperpen (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005831' version='0.3.1' release='7.fc9' v_unique_name='xorg-x11-drv-fbdev
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005832' version='1.1.1'
+    release='1.fc9' v_unique_name='xorg-x11-drv-digitaledge (x86_64)'/><guest_application
+    arch='noarch' id='447000000005833' version='2009j' release='1.fc9' v_unique_name='tzdata-java'/><guest_application
+    arch='noarch' id='447000000005834' version='0.6.3' release='24.fc9' v_unique_name='xml-common'/><guest_application
+    arch='x86_64' id='447000000005835' version='2.8' release='8' v_unique_name='glibc
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005836' version='3.5.9'
+    release='2.fc9' v_unique_name='sqlite (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005837' version='1.18' release='2.fc9' v_unique_name='lcms-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005838' version='1.2' release='0.10.rc1.fc9' v_unique_name='speex
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005839' version='1.6.4'
+    release='1.fc9' v_unique_name='cairomm (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005840' version='7.4' release='1.fc9' v_unique_name='xorg-x11-server-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005841' version='1.5'
+    release='2.fc9' v_unique_name='taglib (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005842' version='1.3.0' release='11.fc9' v_unique_name='libraw1394
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005843' version='6' release='2.20090115git.fc9'
+    v_unique_name='ethtool (x86_64)'/><guest_application arch='x86_64' id='447000000005844'
+    version='0.0.99' release='2.fc9' v_unique_name='libnetfilter_conntrack (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005845' version='2.0.32' release='1.fc9' v_unique_name='libsepol
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005846' version='1.2.0'
+    release='28.fc9' v_unique_name='libtalloc (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005847' version='2.6.27' release='1.fc9' v_unique_name='iproute (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005848' version='1.4.1.1' release='2.fc9' v_unique_name='iptables
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005849' version='1.0.5'
+    release='2.fc9' v_unique_name='bzip2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005850' version='0.6.24' release='2.fc9' v_unique_name='gnokii (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005851' version='20071029' release='1.fc9' v_unique_name='libspiro
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005852' version='0.21'
+    release='1.fc9' v_unique_name='mlocate (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005853' version='1.0.6' release='8.fc9' v_unique_name='acpid (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005854' version='7.0' release='12.fc9' v_unique_name='dvd+rw-tools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005855' version='0.8.8'
+    release='5.fc9' v_unique_name='libao (x86_64)'/><guest_application arch='noarch'
+    id='447000000005856' version='9.0.2' release='1' v_unique_name='fedora-release-notes'/><guest_application
+    arch='x86_64' id='447000000005857' version='2.4.10' release='2.fc9' v_unique_name='openldap
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005858' version='2.12.12'
+    release='2.fc9' v_unique_name='gtk2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005859' version='1.0.17' release='6.fc9' v_unique_name='libsndfile
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005860' version='0.52.10'
+    release='1.fc9' v_unique_name='newt-python (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005861' version='2.7.3' release='1.fc9' v_unique_name='libxml2-python
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005862' version='1.1.1'
+    release='5.fc9' v_unique_name='nfs-utils-lib (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005863' version='2.0.1' release='14.fc9' v_unique_name='python-crypto
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005864' version='0.6.8'
+    release='8.fc9' v_unique_name='paps (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005865' version='1.96' release='5.fc9' v_unique_name='festival (x86_64)'/><guest_application
+    arch='noarch' id='447000000005866' version='0.2.4' release='1.fc9' v_unique_name='python-iniparse'/><guest_application
+    arch='x86_64' id='447000000005867' version='0.0.22' release='2.fc9' v_unique_name='gegl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005868' version='7.19.4'
+    release='5.fc9' v_unique_name='libcurl (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005869' version='0.996' release='3.fc9' v_unique_name='xsane-gimp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005870' version='0.9.10'
+    release='2.fc9' v_unique_name='pulseaudio-utils (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005871' version='1.4.12' release='3.fc9' v_unique_name='pycairo
+    (x86_64)'/><guest_application arch='noarch' id='447000000005872' version='8.0.0'
+    release='2.fc9' v_unique_name='fedora-gnome-theme'/><guest_application arch='x86_64'
+    id='447000000005873' version='8.76.4' release='1' v_unique_name='initscripts (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005874' version='2007' release='32.fc9' v_unique_name='texlive
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005875' version='4.4.2.3'
+    release='3.fc9' v_unique_name='rpm-python (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005876' version='0.2.5' release='1.fc9' v_unique_name='gvfs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005877' version='0.26' release='1.fc9' v_unique_name='bluez-gnome
+    (x86_64)'/><guest_application arch='noarch' id='447000000005878' version='1.5.10'
+    release='1.fc9' v_unique_name='system-config-network-tui'/><guest_application
+    arch='x86_64' id='447000000005879' version='5.1p1' release='3.fc9' v_unique_name='openssh-askpass
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005880' version='1.0.1'
+    release='1.fc9' v_unique_name='nautilus-sendto (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005881' version='2.2.9' release='1.fc9' v_unique_name='httpd (x86_64)'/><guest_application
+    arch='noarch' id='447000000005882' version='1.2.10' release='1.fc9' v_unique_name='system-config-firewall-tui'/><guest_application
+    arch='x86_64' id='447000000005883' version='1.5.2' release='7.fc9' v_unique_name='xorg-x11-server-Xorg
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005884' version='3.0.2'
+    release='1.fc9' v_unique_name='lm_sensors (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005885' version='3.0.2' release='67.fc9' v_unique_name='foomatic
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005886' version='10.35.61'
+    release='1.fc9' v_unique_name='netpbm-progs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005887' version='2007' release='32.fc9' v_unique_name='texlive-latex
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005888' version='3.07'
+    release='68.fc9' v_unique_name='perl-Pod-Simple (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005889' version='2.22.3' release='1.fc9' v_unique_name='gnome-applets
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005890' version='2.22.3'
+    release='1.fc9' v_unique_name='orca (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005891' version='3.2.11' release='0.28.fc9' v_unique_name='samba-client
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005892' version='1.2.1'
+    release='1.fc9' v_unique_name='xorg-x11-drv-glint (x86_64)'/><guest_application
+    arch='noarch' id='447000000005893' version='3.10' release='8.fc9' v_unique_name='perl-HTML-Tagset'/><guest_application
+    arch='noarch' id='447000000005894' version='1.0.6' release='1.fc9' v_unique_name='system-config-users-docs'/><guest_application
+    arch='x86_64' id='447000000005895' version='2.0.52' release='8.fc9' v_unique_name='policycoreutils-gui
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005896' version='0.3.12'
+    release='1.fc9' v_unique_name='PackageKit-yum-plugin (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005897' version='2.4.13' release='1.fc9' v_unique_name='filesystem
+    (x86_64)'/><guest_application arch='noarch' id='447000000005898' version='2007'
+    release='4.fc9' v_unique_name='texlive-texmf-errata-dvips'/><guest_application
+    arch='noarch' id='447000000005899' version='1.19.38' release='1.fc8.1' v_unique_name='ql2100-firmware'/><guest_application
+    arch='noarch' id='447000000005900' version='3.0' release='9' v_unique_name='ipw2200-firmware'/><guest_application
+    arch='noarch' id='447000000005901' version='1.4' release='1' v_unique_name='zd1211-firmware'/><guest_application
+    arch='noarch' id='447000000005902' version='8.1' release='1.1.1' v_unique_name='rootfiles'/><guest_application
+    arch='x86_64' id='447000000005903' version='1.2.3' release='18.fc9' v_unique_name='zlib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005904' version='1.3.37'
+    release='2' v_unique_name='chkconfig (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005905' version='6b' release='41.fc9' v_unique_name='libjpeg (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005906' version='2.06' release='4.fc9' v_unique_name='libcap
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005907' version='1.6'
+    release='2' v_unique_name='libgpg-error (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005908' version='1.0.3' release='5.fc9' v_unique_name='libXau (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005909' version='0.3.14' release='1.fc9' v_unique_name='liboil
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005910' version='4.2.2'
+    release='7.fc9' v_unique_name='gmp (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005911' version='1.1' release='3.fc9' v_unique_name='libnl (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005912' version='2.0.7' release='6' v_unique_name='pth
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005913' version='2.1.5'
+    release='6.fc9' v_unique_name='libmusicbrainz (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005914' version='2.9' release='1.30.1.fc9' v_unique_name='dmidecode
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005915' version='1.3'
+    release='1.fc9' v_unique_name='libtasn1 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005916' version='2.0.1' release='2.fc9.1' v_unique_name='smbios-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005917' version='0.4'
+    release='6.fc9' v_unique_name='libwiimote (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005918' version='0.2.38' release='7.fc9' v_unique_name='esound-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005919' version='4.2.33'
+    release='3.fc9' v_unique_name='findutils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005920' version='2.19' release='3.fc9' v_unique_name='which (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005921' version='0.1.2' release='8.fc9' v_unique_name='libsamplerate
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005922' version='1.2.12'
+    release='2.fc9' v_unique_name='apr (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005923' version='2.9.13' release='2' v_unique_name='tmpwatch (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005924' version='20071127' release='2.fc9' v_unique_name='iputils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005925' version='1.2.3'
+    release='4.fc9' v_unique_name='cupsddk-drivers (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005926' version='1.0.6' release='2.fc9' v_unique_name='cryptsetup-luks
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005927' version='1.06'
+    release='33.fc9' v_unique_name='bc (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005928' version='1.7' release='33.fc9' v_unique_name='time (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005929' version='4.3.0' release='8' v_unique_name='cpp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005930' version='1.1.6'
+    release='3.fc9' v_unique_name='gpgme (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005931' version='2.31' release='6.fc9' v_unique_name='zip (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005932' version='1.3e' release='2.fc9' v_unique_name='libevent
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005933' version='0.7'
+    release='6.fc9' v_unique_name='vbetool (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005934' version='3.4' release='5.fc9' v_unique_name='pax (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005935' version='0.4.0' release='6.fc9' v_unique_name='libvisual
+    (x86_64)'/><guest_application arch='i386' id='447000000005936' version='4.3.0'
+    release='8' v_unique_name='libstdc++ (i386)'/><guest_application arch='x86_64'
+    id='447000000005937' version='2.3' release='2.fc9' v_unique_name='minicom (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005938' version='3.9.8' release='4.fc9' v_unique_name='tcpdump
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005939' version='6.3.2'
+    release='50.fc9' v_unique_name='psacct (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005940' version='2.0.6' release='4.fc9' v_unique_name='nano (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005941' version='1.2.1' release='5.fc9' v_unique_name='cpuspeed
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005942' version='0.5.4'
+    release='4.fc9' v_unique_name='efibootmgr (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005943' version='2.11' release='9.fc9' v_unique_name='dosfstools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005944' version='1.1.7'
+    release='8.2.2' v_unique_name='pam_smb (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005945' version='6.1.5' release='45' v_unique_name='rdist (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005946' version='1.2.15' release='21.fc9' v_unique_name='joystick
+    (x86_64)'/><guest_application arch='noarch' id='447000000005947' version='9.0.0'
+    release='2.fc9' v_unique_name='fedora-logos'/><guest_application arch='x86_64'
+    id='447000000005948' version='1.1.4' release='1.fc9' v_unique_name='libX11 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005949' version='0.9' release='4.fc9' v_unique_name='startup-notification
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005950' version='1.0.4'
+    release='1.fc9' v_unique_name='libXmu (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005951' version='1.1.3' release='4.fc9' v_unique_name='libXi (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005952' version='1.1.9' release='2.fc9' v_unique_name='libXcursor
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005953' version='1.0.1'
+    release='5.fc9' v_unique_name='libXxf86misc (x86_64)'/><guest_application arch='noarch'
+    id='447000000005954' version='5.50' release='18.fc8' v_unique_name='ghostscript-fonts'/><guest_application
+    arch='x86_64' id='447000000005955' version='1.0.0' release='5.fc9' v_unique_name='libXTrap
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005956' version='2.8.12'
+    release='2' v_unique_name='cracklib-dicts (x86_64)'/><guest_application arch='noarch'
+    id='447000000005957' version='2.18.0' release='2.fc7' v_unique_name='gnome-mime-data'/><guest_application
+    arch='x86_64' id='447000000005958' version='7' release='2.fc9' v_unique_name='pam_ccreds
+    (x86_64)'/><guest_application arch='noarch' id='447000000005959' version='2.24'
+    release='3.fc9' v_unique_name='dejavu-fonts-experimental'/><guest_application
+    arch='noarch' id='447000000005960' version='7.2' release='6.fc9' v_unique_name='xorg-x11-fonts-ISO8859-1-100dpi'/><guest_application
+    arch='noarch' id='447000000005961' version='2.0' release='2.fc8' v_unique_name='paktype-fonts'/><guest_application
+    arch='noarch' id='447000000005962' version='0.2.2' release='5.fc8' v_unique_name='lklug-fonts'/><guest_application
+    arch='noarch' id='447000000005963' version='0.4.9' release='3.fc9' v_unique_name='thaifonts-scalable'/><guest_application
+    arch='noarch' id='447000000005964' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-telugu'/><guest_application
+    arch='x86_64' id='447000000005965' version='0.15' release='1.fc9' v_unique_name='desktop-file-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005966' version='4.3.0'
+    release='8' v_unique_name='libgcj (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005967' version='0.8' release='4.fc9' v_unique_name='PolicyKit-gnome-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005968' version='0.2.10'
+    release='3.fc9' v_unique_name='ConsoleKit (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005969' version='0.56.9' release='1' v_unique_name='libuser (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005970' version='0.56.9' release='1' v_unique_name='libuser-python
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005971' version='1.0.9'
+    release='6.1' v_unique_name='libmng (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005972' version='2.14.12' release='3.fc9' v_unique_name='ORBit2 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005973' version='2.22.0' release='2.fc9' v_unique_name='libgnomekbd
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005974' version='1.14.8'
+    release='1.fc9' v_unique_name='libgsf (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005975' version='2.22.0' release='1.fc9' v_unique_name='GConf2-gtk
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005976' version='0.10'
+    release='1.fc9' v_unique_name='xdg-user-dirs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005977' version='0.17' release='4.fc9' v_unique_name='gettext (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005978' version='6.0.52' release='2.fc9' v_unique_name='nash
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005979' version='2.22.2'
+    release='1.fc9' v_unique_name='librsvg2 (x86_64)'/><guest_application arch='noarch'
+    id='447000000005980' version='2.1' release='2.fc9' v_unique_name='python-reportlab'/><guest_application
+    arch='x86_64' id='447000000005981' version='1.1.0' release='4.fc9' v_unique_name='pygtkglext
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005982' version='0.31'
+    release='1.fc9' v_unique_name='gnome-user-share (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005983' version='0.55' release='9.fc9' v_unique_name='irqbalance
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005984' version='1.84'
+    release='16.fc9' v_unique_name='nc (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005985' version='014' release='12.fc9' v_unique_name='pcmciautils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005986' version='1.4.4'
+    release='3.fc9' v_unique_name='pcsc-lite (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005987' version='2.22.1' release='1.fc9' v_unique_name='zenity (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005988' version='0.4.1' release='3.fc9' v_unique_name='ndesk-dbus-glib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005989' version='1.1.0'
+    release='6.fc9' v_unique_name='coolkey (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005990' version='0.8' release='4.fc9' v_unique_name='PolicyKit-gnome
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005991' version='2.22.0'
+    release='3.fc9' v_unique_name='libgnome (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005992' version='0.10.11' release='2.fc9' v_unique_name='gstreamer-python
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005993' version='1.1.6'
+    release='11.fc9' v_unique_name='genisoimage (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005994' version='0.8' release='1.fc9' v_unique_name='gnome-mount
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005995' version='1.3.0'
+    release='2.fc9' v_unique_name='xorg-x11-drv-mouse (x86_64)'/><guest_application
+    arch='x86_64' id='447000000005996' version='1.9.1' release='2.fc9' v_unique_name='mono-winforms
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005997' version='0.5'
+    release='6.fc9' v_unique_name='sinjdoc (x86_64)'/><guest_application arch='x86_64'
+    id='447000000005998' version='1.20.0' release='2.fc9' v_unique_name='libgail-gnome
+    (x86_64)'/><guest_application arch='x86_64' id='447000000005999' version='1.18.1.4'
+    release='14.fc9' v_unique_name='groff-perl (x86_64)'/><guest_application arch='noarch'
+    id='447000000006000' version='0.9.6' release='3.fc9' v_unique_name='createrepo'/><guest_application
+    arch='noarch' id='447000000006001' version='1.0.0' release='1.fc8' v_unique_name='fedora-screensaver-theme'/><guest_application
+    arch='x86_64' id='447000000006002' version='1.3.7' release='3.fc9' v_unique_name='gok
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006003' version='2.22.0'
+    release='2.fc9' v_unique_name='bug-buddy (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006004' version='2.1' release='25.fc9' v_unique_name='fbset (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006005' version='3.1' release='19.fc8' v_unique_name='redhat-lsb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006006' version='1.0.19'
+    release='10.fc9' v_unique_name='sane-backends-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006007' version='2.7.0' release='7jpp.2.fc9' v_unique_name='xalan-j2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006008' version='1.3.0'
+    release='12jpp.3.fc9' v_unique_name='bsh (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006009' version='1.1' release='1jpp.12' v_unique_name='xml-commons-resolver
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006010' version='0.5'
+    release='2.fc9' v_unique_name='openoffice.org-writer2latex (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006011' version='2.8.2' release='2.fc9' v_unique_name='hplip
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006012' version='0.2.0'
+    release='0.1.fc9' v_unique_name='xorg-x11-drv-diamondtouch (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006013' version='1.2.2' release='1.fc9' v_unique_name='xorg-x11-drv-acecad
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006014' version='0.10.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-sis (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006015' version='1.1.2' release='1.fc9' v_unique_name='xorg-x11-drv-dynapro
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006016' version='1.10.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-s3virge (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006017' version='0.0.1' release='1.fc9' v_unique_name='xorg-x11-drv-wiimote
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006018' version='1.2.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-palmax (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006019' version='0.85.0' release='1.fc9' v_unique_name='xorg-x11-drv-ast
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006020' version='1.2.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-i740 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006021' version='1.1.2' release='1.fc9' v_unique_name='xorg-x11-drv-calcomp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006022' version='7.3'
+    release='4.fc9' v_unique_name='xorg-x11-drivers (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006023' version='0.9.4' release='5.fc9' v_unique_name='unique
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006024' version='2.22.2.1'
+    release='1.fc9' v_unique_name='control-center-filesystem (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006025' version='1.5.2' release='7.fc9' v_unique_name='xorg-x11-server-common
+    (x86_64)'/><guest_application arch='noarch' id='447000000006026' version='1.20'
+    release='1.fc9' v_unique_name='fontpackages-filesystem'/><guest_application arch='noarch'
+    id='447000000006027' version='1.6' release='0.1.r5.1jpp.2.fc7' v_unique_name='rhino'/><guest_application
+    arch='noarch' id='447000000006028' version='4.04.05' release='1.fc9' v_unique_name='ql2400-firmware'/><guest_application
+    arch='x86_64' id='447000000006029' version='2.7.3' release='1.fc9' v_unique_name='libxml2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006030' version='5.6'
+    release='18.20080628.fc9' v_unique_name='ncurses-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006031' version='2.5.1' release='26.fc9' v_unique_name='python-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006032' version='1.0.5'
+    release='2.fc9' v_unique_name='bzip2-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006033' version='1.4.4' release='1.fc9' v_unique_name='libgcrypt
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006034' version='1.2.0'
+    release='4.fc9' v_unique_name='libvorbis (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006035' version='2.8' release='8' v_unique_name='glibc-common (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006036' version='0.9.10' release='2.fc9' v_unique_name='pulseaudio-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006037' version='0.2.8.4'
+    release='18.1.fc9' v_unique_name='libwmf-lite (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006038' version='4.50.1' release='2.fc9' v_unique_name='wavpack (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006039' version='7.2' release='6.fc9' v_unique_name='xorg-x11-xkb-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006040' version='2.1.22'
+    release='15.fc9' v_unique_name='cyrus-sasl-plain (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006041' version='0.6.8' release='8.fc9' v_unique_name='paps-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006042' version='10.35.61'
+    release='1.fc9' v_unique_name='netpbm (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006043' version='4.23' release='7.fc9' v_unique_name='file (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006044' version='7.1' release='0.37.fc9' v_unique_name='mesa-libGL
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006045' version='2.2.47'
+    release='2.fc9' v_unique_name='acl (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006046' version='0.3.9' release='22.fc9' v_unique_name='upstart (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006047' version='1.6.1' release='3.fc9' v_unique_name='OpenEXR-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006048' version='3.2'
+    release='23.fc9' v_unique_name='bash (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006049' version='3.12.2.0' release='3.fc9' v_unique_name='nss (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006050' version='1.20.4' release='1.fc9' v_unique_name='pango
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006051' version='1.1.24'
+    release='2.fc9' v_unique_name='libxslt (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006052' version='2.22.3' release='2.fc9' v_unique_name='libgtop2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006053' version='1.20.1'
+    release='92.fc9' v_unique_name='gpm (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006054' version='2.0' release='4.fc9' v_unique_name='libgdiplus (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006055' version='1.3.2' release='1.fc9' v_unique_name='libXfont
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006056' version='2.2.21'
+    release='2.fc9' v_unique_name='gmime (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006057' version='2.9' release='8.fc9' v_unique_name='cpio (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006058' version='0.10.15' release='2.fc9' v_unique_name='gstreamer-plugins-flumpegdemux
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006059' version='0.6.22'
+    release='11.fc9' v_unique_name='avahi-autoipd (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006060' version='3.3.4' release='1.fc9' v_unique_name='setools-console
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006061' version='1.1.23'
+    release='3.fc9' v_unique_name='libpaper (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006062' version='3.7p3' release='24.fc9' v_unique_name='Canna-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006063' version='0.9.9'
+    release='1.fc9' v_unique_name='slrn (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006064' version='3.12.2.0' release='3.fc9' v_unique_name='nss-tools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006065' version='7.4'
+    release='1.fc9' v_unique_name='xorg-x11-utils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006066' version='7.1' release='0.37.fc9' v_unique_name='glx-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006067' version='2009.4.4'
+    release='1.fc9' v_unique_name='ntfs-3g (x86_64)'/><guest_application arch='i386'
+    id='447000000006068' version='1.2.1' release='7.fc9' v_unique_name='hunspell (i386)'/><guest_application
+    arch='noarch' id='447000000006069' version='2007' release='24.fc9' v_unique_name='texlive-texmf-latex'/><guest_application
+    arch='x86_64' id='447000000006070' version='1.5.2' release='7.fc9' v_unique_name='opensp
+    (x86_64)'/><guest_application arch='noarch' id='447000000006071' version='2.22.1'
+    release='1.fc9' v_unique_name='gnome-user-docs'/><guest_application arch='x86_64'
+    id='447000000006072' version='6.10' release='35.fc9' v_unique_name='coreutils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006073' version='1.0.4'
+    release='4.fc9' v_unique_name='pam (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006074' version='0.8' release='3.fc9' v_unique_name='PolicyKit (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006075' version='1.3.10' release='5.fc9' v_unique_name='cups-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006076' version='2.22.3'
+    release='4.fc9' v_unique_name='evolution-data-server (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006077' version='2.22.3' release='1.fc9' v_unique_name='libwnck
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006078' version='0.9.10'
+    release='2.fc9' v_unique_name='pulseaudio-core-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006079' version='2.6.6' release='1.fc9' v_unique_name='gimp-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006080' version='0.9.10'
+    release='2.fc9' v_unique_name='pulseaudio (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006081' version='2.22.2' release='1.fc9' v_unique_name='gnome-menus
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006082' version='0.8.7'
+    release='2.fc9' v_unique_name='poppler-glib (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006083' version='2.0.67' release='4.fc9' v_unique_name='libselinux-python
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006084' version='0.1.11'
+    release='8.fc9' v_unique_name='libsexy (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006085' version='1.1.16.3' release='2.fc9.1' v_unique_name='xine-lib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006086' version='2.1.22'
+    release='15.fc9' v_unique_name='cyrus-sasl-md5 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006087' version='2.22.3' release='1.fc9' v_unique_name='gnome-keyring-pam
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006088' version='1.1.2'
+    release='9.fc9' v_unique_name='yum-metadata-parser (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006089' version='0.3.4' release='1.fc9' v_unique_name='obex-data-server
+    (x86_64)'/><guest_application arch='noarch' id='447000000006090' version='3.0.0'
+    release='9.fc9' v_unique_name='python-urlgrabber'/><guest_application arch='noarch'
+    id='447000000006091' version='3.0.0' release='0.9.b8.fc9' v_unique_name='PyOpenGL'/><guest_application
+    arch='x86_64' id='447000000006092' version='0.20061229' release='5.fc9' v_unique_name='festvox-slt-arctic-hts
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006093' version='5.4.4'
+    release='1.fc9' v_unique_name='authconfig (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006094' version='2.3.5' release='1.fc9' v_unique_name='pam_krb5 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006095' version='0.18' release='7.fc9' v_unique_name='libssh2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006096' version='1.3.0'
+    release='2.fc9' v_unique_name='nspluginwrapper (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006097' version='1.40' release='1.fc9' v_unique_name='transmission
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006098' version='1.20.4'
+    release='6.fc9' v_unique_name='ypbind (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006099' version='0.9.10' release='2.fc9' v_unique_name='pulseaudio-module-gconf
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006100' version='2.14.3'
+    release='1.fc9' v_unique_name='gtk2-engines (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006101' version='3.1.10' release='25.fc9' v_unique_name='at (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006102' version='6.3.8' release='7.fc9' v_unique_name='fetchmail
+    (x86_64)'/><guest_application arch='noarch' id='447000000006103' version='1.1.1.1'
+    release='8.fc9' v_unique_name='smolt-firstboot'/><guest_application arch='noarch'
+    id='447000000006104' version='1.8' release='11.fc9' v_unique_name='sos'/><guest_application
+    arch='x86_64' id='447000000006105' version='2.22.1' release='3.fc9' v_unique_name='libgnomeui
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006106' version='0.6.22'
+    release='11.fc9' v_unique_name='avahi (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006107' version='2007' release='32.fc9' v_unique_name='kpathsea (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006108' version='124' release='4.fc9' v_unique_name='udev
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006109' version='2007'
+    release='32.fc9' v_unique_name='texlive-dvips (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006110' version='2.22.2' release='1.fc9' v_unique_name='evince (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006111' version='3.18.3' release='1.fc9' v_unique_name='gtkhtml3
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006112' version='5.1p1'
+    release='3.fc9' v_unique_name='openssh (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006113' version='4.11' release='8.fc9' v_unique_name='texinfo-tex
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006114' version='2.0.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-vesa (x86_64)'/><guest_application
+    arch='noarch' id='447000000006115' version='2.0.12' release='4.fc9' v_unique_name='setroubleshoot-server'/><guest_application
+    arch='x86_64' id='447000000006116' version='0.10.1' release='2.fc9.1' v_unique_name='tomboy
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006117' version='5.1p1'
+    release='3.fc9' v_unique_name='openssh-clients (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006118' version='0.3.12' release='1.fc9' v_unique_name='PackageKit-gstreamer-plugin
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006119' version='2.5.8'
+    release='1.fc9' v_unique_name='pidgin (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006120' version='2.6.7.1' release='1.fc9' v_unique_name='mdadm (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006121' version='2.1.22' release='15.fc9' v_unique_name='cyrus-sasl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006122' version='4.9.0'
+    release='1.fc9' v_unique_name='dasher (x86_64)'/><guest_application arch='noarch'
+    id='447000000006123' version='1.2.87' release='1.fc9' v_unique_name='system-config-users'/><guest_application
+    arch='x86_64' id='447000000006124' version='2.6.27.25' release='78.2.56.fc9' v_unique_name='kernel
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006125' version='2.22.1'
+    release='2.fc9' v_unique_name='gnome-python2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006126' version='5.10.0' release='68.fc9' v_unique_name='perl (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006127' version='2.22.2.1' release='2.fc9' v_unique_name='gnome-settings-daemon
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006128' version='0.7.6'
+    release='4.fc9' v_unique_name='compiz (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006129' version='1.0.15' release='1.fc9' v_unique_name='system-config-printer-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006130' version='2.22.3'
+    release='1.fc9' v_unique_name='gnome-session (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006131' version='0.12.3' release='16.fc9' v_unique_name='pilot-link
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006132' version='0.11.6'
+    release='2.fc9' v_unique_name='rhythmbox (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006133' version='2.4.2' release='18.3.fc9' v_unique_name='openoffice.org-graphicfilter
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006134' version='0.2.903'
+    release='1.fc9' v_unique_name='xorg-x11-drv-openchrome (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006135' version='2.22.0' release='4.fc9' v_unique_name='gnome-python2-applet
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006136' version='2.19.1'
+    release='28.fc9' v_unique_name='gnome-python2-libegg (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006137' version='2.22.3' release='1.fc9' v_unique_name='gnome-games
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006138' version='2.22.0'
+    release='10.fc9' v_unique_name='gdm-user-switch-applet (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006139' version='2.4.2' release='18.3.fc9' v_unique_name='openoffice.org-math
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006140' version='1.5.18'
+    release='2.fc9' v_unique_name='mutt (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006141' version='0.15.1' release='3.fc9' v_unique_name='xorg-x11-drv-synaptics
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006142' version='2.2.0'
+    release='2.fc9' v_unique_name='xorg-x11-drv-savage (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006143' version='1.2.3' release='1.fc9' v_unique_name='xorg-x11-drv-elographics
+    (x86_64)'/><guest_application arch='noarch' id='447000000006144' version='1.0'
+    release='38.fc9' v_unique_name='docbook-dtds'/><guest_application arch='x86_64'
+    id='447000000006145' version='3.56' release='5.fc9' v_unique_name='perl-HTML-Parser
+    (x86_64)'/><guest_application arch='noarch' id='447000000006146' version='1.9.36'
+    release='1.fc9' v_unique_name='system-config-date'/><guest_application arch='noarch'
+    id='447000000006147' version='2.0.12' release='4.fc9' v_unique_name='setroubleshoot'/><guest_application
+    arch='noarch' id='447000000006148' version='7.3.6' release='26.fc9' v_unique_name='logwatch'/><guest_application
+    arch='x86_64' id='447000000006149' version='2.23.2' release='17.fc9' v_unique_name='totem-xine
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006150' version='2.23.2'
+    release='17.fc9' v_unique_name='totem-mozplugin (x86_64)'/><guest_application
+    arch='noarch' id='447000000006151' version='8.1' release='1' v_unique_name='basesystem'/><guest_application
+    arch='noarch' id='447000000006152' version='2007' release='4.fc9' v_unique_name='texlive-texmf-errata-fonts'/><guest_application
+    arch='noarch' id='447000000006153' version='2.2' release='7.fc9' v_unique_name='baekmuk-ttf-fonts-common'/><guest_application
+    arch='noarch' id='447000000006154' version='2.22.0' release='1.fc9' v_unique_name='gnome-backgrounds'/><guest_application
+    arch='noarch' id='447000000006155' version='1.3' release='8' v_unique_name='ipw2100-firmware'/><guest_application
+    arch='noarch' id='447000000006156' version='2.14.1.5' release='2' v_unique_name='iwl3945-firmware'/><guest_application
+    arch='x86_64' id='447000000006157' version='4.3.0' release='8' v_unique_name='libgcc
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006158' version='0.6.16'
+    release='1.fc9' v_unique_name='libexif (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006159' version='1.5.24' release='6.fc9' v_unique_name='libtool-ltdl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006160' version='1.2'
+    release='3.fc9' v_unique_name='keyutils-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006161' version='1.2.1' release='4.fc9' v_unique_name='flac (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006162' version='1.0.2' release='5.fc9' v_unique_name='libXdmcp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006163' version='0.9.8'
+    release='2.fc9' v_unique_name='libpcap (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006164' version='2.0.1' release='2.fc9.1' v_unique_name='libsmbios
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006165' version='8.1.1'
+    release='48.fc9' v_unique_name='mailx (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006166' version='0.0.14.1' release='1.fc9' v_unique_name='ggz-client-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006167' version='2.2.2'
+    release='3.fc9' v_unique_name='libshout (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006168' version='7.6' release='52.fc9' v_unique_name='tcp_wrappers
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006169' version='2.5.1'
+    release='59.fc9' v_unique_name='grep (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006170' version='2.5.0' release='2.fc9' v_unique_name='fontconfig
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006171' version='1.02.24'
+    release='11.fc9' v_unique_name='device-mapper (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006172' version='22.6' release='5.fc9' v_unique_name='psmisc (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006173' version='1.1.5' release='2.fc9' v_unique_name='libutempter
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006174' version='1.60'
+    release='87.fc9' v_unique_name='net-tools (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006175' version='3.81' release='12.fc9' v_unique_name='make (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006176' version='2.02.33' release='11.fc9' v_unique_name='lvm2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006177' version='1.1.6'
+    release='11.fc9' v_unique_name='wodim (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006178' version='4.3.0' release='8' v_unique_name='libgomp (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006179' version='3.22' release='21.fc9' v_unique_name='procmail
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006180' version='29'
+    release='2.fc9' v_unique_name='wireless-tools (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006181' version='3.13' release='1.fc9' v_unique_name='inotify-tools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006182' version='2.5.0'
+    release='5' v_unique_name='linux-atm-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006183' version='1.08' release='2.fc9' v_unique_name='mingetty (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006184' version='2.2' release='5.fc9' v_unique_name='libtextcat
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006185' version='0.1.9'
+    release='4.fc9' v_unique_name='libthai (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006186' version='2.0.0' release='7.fc9' v_unique_name='ntfsprogs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006187' version='2.2'
+    release='40.fc9' v_unique_name='nss_db (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006188' version='1.1.6' release='11.fc9' v_unique_name='icedax (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006189' version='1.3.37' release='2' v_unique_name='ntsysv
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006190' version='0.17'
+    release='42.fc9' v_unique_name='telnet (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006191' version='2.17' release='22.fc9' v_unique_name='setserial
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006192' version='0.17'
+    release='36.fc9' v_unique_name='finger (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006193' version='3.1' release='31.fc9' v_unique_name='dos2unix (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006194' version='2.5.6' release='2.fc9' v_unique_name='mpage
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006195' version='1.0.4'
+    release='1.fc9' v_unique_name='libXext (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006196' version='1.0.4' release='5.fc9' v_unique_name='libXt (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006197' version='1.0.1' release='5.fc9' v_unique_name='libXxf86vm
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006198' version='1.0.3'
+    release='1.fc9' v_unique_name='libXinerama (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006199' version='0.4.0' release='4.fc9' v_unique_name='libXcomposite
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006200' version='1.0.4'
+    release='5.fc9' v_unique_name='libxkbfile (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006201' version='1.0.2' release='3.fc9' v_unique_name='libXevie (x86_64)'/><guest_application
+    arch='noarch' id='447000000006202' version='1.10' release='19.fc9' v_unique_name='crontabs'/><guest_application
+    arch='x86_64' id='447000000006203' version='1.0.4' release='4.fc9' v_unique_name='libXvMC
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006204' version='1.0.2'
+    release='5.fc9' v_unique_name='libdmx (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006205' version='1.0.3' release='4.fc9' v_unique_name='libXres (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006206' version='1.60' release='5.fc9' v_unique_name='wvdial
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006207' version='7.3'
+    release='3.fc9' v_unique_name='xorg-x11-apps (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006208' version='1.0.3' release='2.fc9' v_unique_name='xorg-x11-twm
+    (x86_64)'/><guest_application arch='noarch' id='447000000006209' version='7.2'
+    release='6.fc9' v_unique_name='xorg-x11-fonts-misc'/><guest_application arch='x86_64'
+    id='447000000006210' version='0.97' release='33.fc9' v_unique_name='grub (x86_64)'/><guest_application
+    arch='noarch' id='447000000006211' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-bengali'/><guest_application
+    arch='noarch' id='447000000006212' version='1.6.2' release='2.fc8' v_unique_name='kacst-fonts'/><guest_application
+    arch='noarch' id='447000000006213' version='1.0' release='2.fc8' v_unique_name='abyssinica-fonts'/><guest_application
+    arch='noarch' id='447000000006214' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-kannada'/><guest_application
+    arch='noarch' id='447000000006215' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-oriya'/><guest_application
+    arch='x86_64' id='447000000006216' version='0.1.9' release='5.fc9' v_unique_name='gamin
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006217' version='0.2.10'
+    release='3.fc9' v_unique_name='ConsoleKit-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006218' version='0.75' release='2.fc9' v_unique_name='passwd (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006219' version='0.16.13' release='1.fc9' v_unique_name='vte
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006220' version='0.8.10'
+    release='2.fc9' v_unique_name='libIDL (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006221' version='2.22.1' release='1.fc9' v_unique_name='gucharmap
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006222' version='8.14.2'
+    release='4.fc9' v_unique_name='sendmail (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006223' version='0.1.9' release='5.fc9' v_unique_name='gamin-python
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006224' version='0.1'
+    release='8.fc9' v_unique_name='pygpgme (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006225' version='1.2.85' release='1' v_unique_name='kudzu (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006226' version='2.12.1' release='6.fc9' v_unique_name='pygtk2-libglade
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006227' version='0.6.1'
+    release='5.fc9' v_unique_name='libcroco (x86_64)'/><guest_application arch='noarch'
+    id='447000000006228' version='8.9.11' release='3.fc9' v_unique_name='redhat-menus'/><guest_application
+    arch='noarch' id='447000000006229' version='0.3.90' release='1.fc9' v_unique_name='nodoka-metacity-theme'/><guest_application
+    arch='x86_64' id='447000000006230' version='2.9' release='3' v_unique_name='yp-tools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006231' version='2.0'
+    release='1.15.1.fc9' v_unique_name='rng-utils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006232' version='0.9.18' release='4.fc9' v_unique_name='irda-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006233' version='0.6.1a'
+    release='2.fc9' v_unique_name='ndesk-dbus (x86_64)'/><guest_application arch='noarch'
+    id='447000000006234' version='1.0.0' release='1.fc8' v_unique_name='fedorainfinity-screensaver-theme'/><guest_application
+    arch='x86_64' id='447000000006235' version='2.22.0' release='2.fc9' v_unique_name='libbonobo
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006236' version='1.22.1'
+    release='1.fc9' v_unique_name='at-spi (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006237' version='0.4.18' release='3.fc9' v_unique_name='gnome-speech
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006238' version='1.17'
+    release='28.fc9' v_unique_name='psutils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006239' version='2.11.1' release='3.fc9' v_unique_name='gtkhtml2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006240' version='1.3.04'
+    release='1jpp.1.fc9' v_unique_name='xml-commons-apis (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006241' version='2.12.1' release='4.fc9' v_unique_name='gnome-netstatus
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006242' version='2.22.1'
+    release='1.fc9' v_unique_name='nautilus-cd-burner (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006243' version='2.18.2' release='1.fc9' v_unique_name='libgnomeprintui22
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006244' version='0.15.0'
+    release='2.fc9' v_unique_name='gnome-mag (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006245' version='0.2.6.1' release='1.fc9' v_unique_name='libmtp (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006246' version='1.9.1' release='2.fc9' v_unique_name='mono-extras
+    (x86_64)'/><guest_application arch='noarch' id='447000000006247' version='2009j'
+    release='1.fc9' v_unique_name='tzdata'/><guest_application arch='noarch' id='447000000006248'
+    version='1.0' release='1.fc9' v_unique_name='anaconda-yum-plugins'/><guest_application
+    arch='x86_64' id='447000000006249' version='2.22.1' release='1.fc9' v_unique_name='gnome-power-manager
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006250' version='3.2'
+    release='58.fc9' v_unique_name='isdn4k-utils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006251' version='0.4' release='6.fc9' v_unique_name='gnome-vfs2-obexftp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006252' version='5.0.2'
+    release='2.fc9' v_unique_name='gutenprint-foomatic (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006253' version='1.0.19' release='10.fc9' v_unique_name='sane-backends
+    (x86_64)'/><guest_application arch='noarch' id='447000000006254' version='0.11.5'
+    release='1.fc9' v_unique_name='alacarte'/><guest_application arch='x86_64' id='447000000006255'
+    version='1.9' release='1.fc9' v_unique_name='rhpxl (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006256' version='0.2.0' release='1.fc9' v_unique_name='xorg-x11-drv-v4l
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006257' version='1.1.0'
+    release='5.fc9' v_unique_name='xorg-x11-drv-ur98 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006258' version='1.1.0' release='6.fc9' v_unique_name='xorg-x11-drv-spaceorb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006259' version='1.6.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-siliconmotion (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006260' version='0.3.0' release='1.fc9' v_unique_name='xorg-x11-drv-dummy
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006261' version='1.3.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-penmount (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006262' version='0.7.9.8' release='6.fc9' v_unique_name='linuxwacom
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006263' version='4.2.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-rendition (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006264' version='1.2.0' release='1.fc9' v_unique_name='xorg-x11-drv-tek4957
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006265' version='1.3.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-i128 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006266' version='1.2.0' release='1.fc9' v_unique_name='xorg-x11-drv-fpit
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006267' version='1.2.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-jamstudio (x86_64)'/><guest_application
+    arch='noarch' id='447000000006268' version='1.0.51' release='9.fc9' v_unique_name='system-config-display'/><guest_application
+    arch='noarch' id='447000000006269' version='9' release='5.transition' v_unique_name='fedora-release'/><guest_application
+    arch='x86_64' id='447000000006270' version='5.6' release='18.20080628.fc9' v_unique_name='ncurses-base
+    (x86_64)'/><guest_application arch='noarch' id='447000000006271' version='20090612'
+    release='1.fc9' v_unique_name='vlgothic-fonts-common'/><guest_application arch='noarch'
+    id='447000000006272' version='3.03.27' release='1.fc9' v_unique_name='ql23xx-firmware'/><guest_application
+    arch='noarch' id='447000000006273' version='3.0' release='12.1.fc9' v_unique_name='words'/><guest_application
+    arch='x86_64' id='447000000006274' version='1.13' release='4.fc9' v_unique_name='popt
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006275' version='1.7.5'
+    release='1.fc9' v_unique_name='audit-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006276' version='3.8.2' release='13.fc9' v_unique_name='libtiff (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006277' version='2.2.47' release='2.fc9' v_unique_name='libacl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006278' version='2.4.0'
+    release='0.13.fc9' v_unique_name='libdrm (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006279' version='1.2.1' release='7.fc9' v_unique_name='hunspell (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006280' version='1.1' release='5.fc9' v_unique_name='libxcb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006281' version='0.52.10'
+    release='1.fc9' v_unique_name='newt (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006282' version='124' release='4.fc9' v_unique_name='libvolume_id
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006283' version='1.3'
+    release='13.fc9' v_unique_name='openobex (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006284' version='0.10.3' release='2.fc9' v_unique_name='libpciaccess
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006285' version='2.11'
+    release='2.20080712cvs.fc9' v_unique_name='libedit (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006286' version='0.8.7' release='1.fc9' v_unique_name='libmodplug
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006287' version='1.0.4'
+    release='7.fc9' v_unique_name='ustr (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006288' version='7.1' release='0.37.fc9' v_unique_name='mesa-dri-drivers
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006289' version='8.89'
+    release='1.fc9' v_unique_name='dcraw (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006290' version='0.0.22' release='1.fc9' v_unique_name='babl (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006291' version='1.04' release='68.fc9' v_unique_name='perl-Pod-Escapes
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006292' version='5.6'
+    release='18.20080628.fc9' v_unique_name='ncurses (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006293' version='4.11' release='8.fc9' v_unique_name='info
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006294' version='2.16.6'
+    release='3.fc9' v_unique_name='glib2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006295' version='0.30' release='3.fc9' v_unique_name='shared-mime-info
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006296' version='0.8.7'
+    release='2.fc9' v_unique_name='poppler (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006297' version='10.0' release='2.fc9' v_unique_name='cdparanoia-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006298' version='3.23'
+    release='5.fc9' v_unique_name='MAKEDEV (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006299' version='0.9.5' release='2.fc9' v_unique_name='nss_compat_ossl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006300' version='10.0'
+    release='2.fc9' v_unique_name='cdparanoia (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006301' version='7.2.060' release='1.fc9' v_unique_name='vim-minimal
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006302' version='5.5.27'
+    release='0jpp.2.fc9' v_unique_name='tomcat5-servlet-2.4-api (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006303' version='4.2.4p7' release='1.fc9' v_unique_name='ntpdate
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006304' version='3.3.4'
+    release='1.fc9' v_unique_name='setools-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006305' version='7.2.060' release='1.fc9' v_unique_name='vim-common
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006306' version='1.2.1'
+    release='3.fc9' v_unique_name='libconfig (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006307' version='5.5.27' release='0jpp.2.fc9' v_unique_name='tomcat5-jsp-2.0-api
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006308' version='2.5.4'
+    release='35.fc9' v_unique_name='patch (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006309' version='2.18.50.0.6' release='7.fc9' v_unique_name='binutils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006310' version='0.4.7'
+    release='17.fc9' v_unique_name='device-mapper-multipath (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006311' version='1.12.1' release='2.fc9' v_unique_name='mozplugger
+    (x86_64)'/><guest_application arch='i386' id='447000000006312' version='5.6' release='18.20080628.fc9'
+    v_unique_name='ncurses-libs (i386)'/><guest_application arch='noarch' id='447000000006313'
+    version='0.6.3' release='24.fc9' v_unique_name='sgml-common'/><guest_application
+    arch='noarch' id='447000000006314' version='1.04' release='1.fc9' v_unique_name='liberation-fonts'/><guest_application
+    arch='noarch' id='447000000006315' version='20090612' release='1.fc9' v_unique_name='vlgothic-fonts'/><guest_application
+    arch='x86_64' id='447000000006316' version='0.74' release='8.fc9' v_unique_name='dbus-glib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006317' version='2.5.1'
+    release='26.fc9' v_unique_name='python (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006318' version='0.5.11' release='2.fc9' v_unique_name='hal-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006319' version='1.98'
+    release='1.fc9' v_unique_name='usermode (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006320' version='2.22.3' release='1.fc9' v_unique_name='gnome-keyring
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006321' version='2.22.3'
+    release='1.fc9' v_unique_name='totem-pl-parser (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006322' version='0.83.0' release='2.fc9' v_unique_name='dbus-python
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006323' version='2.12.1'
+    release='1.fc9' v_unique_name='gtk-sharp2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006324' version='3.7.6' release='5.fc9' v_unique_name='logrotate
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006325' version='1.2.12'
+    release='7.fc9' v_unique_name='apr-util (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006326' version='1.98' release='1.fc9' v_unique_name='usermode-gtk
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006327' version='1.7.5'
+    release='1.fc9' v_unique_name='audit-libs-python (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006328' version='0.1.7' release='1.fc9' v_unique_name='rpcbind
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006329' version='2.12.7'
+    release='1.fc9' v_unique_name='gtkmm24 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006330' version='0.28.3' release='1.fc9' v_unique_name='neon (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006331' version='2.4.4' release='7.fc9' v_unique_name='ppp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006332' version='24.2'
+    release='11.fc9' v_unique_name='python-numeric (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006333' version='1.7.5' release='1.fc9' v_unique_name='audit (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006334' version='0.3.1' release='3.fc9' v_unique_name='mono-addins
+    (x86_64)'/><guest_application arch='noarch' id='447000000006335' version='0.6c9'
+    release='1.fc9' v_unique_name='python-setuptools'/><guest_application arch='noarch'
+    id='447000000006336' version='2007' release='24.fc9' v_unique_name='texlive-texmf-fonts'/><guest_application
+    arch='x86_64' id='447000000006337' version='0.9.10' release='2.fc9' v_unique_name='pulseaudio-module-x11
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006338' version='0.7.1'
+    release='2.fc9' v_unique_name='gtk-nodoka-engine (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006339' version='0.10.0' release='3.fc9' v_unique_name='libbtctl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006340' version='2.6.6'
+    release='1.fc9' v_unique_name='gimp-help-browser (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006341' version='1.2.0' release='2.fc9' v_unique_name='vorbis-tools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006342' version='2.22.4'
+    release='1.fc9' v_unique_name='gnome-system-monitor (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006343' version='1.0' release='7.fc9' v_unique_name='cronie
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006344' version='0.996'
+    release='3.fc9' v_unique_name='xsane (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006345' version='1.6.9p13' release='8.fc9' v_unique_name='sudo (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006346' version='1.11.4' release='1.fc9' v_unique_name='wget
+    (x86_64)'/><guest_application arch='noarch' id='447000000006347' version='0.16'
+    release='1.fc9' v_unique_name='pyxdg'/><guest_application arch='noarch' id='447000000006348'
+    version='4.4.0' release='7.fc9' v_unique_name='bittorrent'/><guest_application
+    arch='x86_64' id='447000000006349' version='2.20.1.1' release='4.fc9' v_unique_name='libgnomecanvas
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006350' version='2.22.2'
+    release='3.fc9' v_unique_name='gnome-panel-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006351' version='0.6.22' release='11.fc9' v_unique_name='avahi-glib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006352' version='4.4.2.3'
+    release='3.fc9' v_unique_name='rpm (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006353' version='2.5.8' release='1.fc9' v_unique_name='libpurple
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006354' version='0.3.12'
+    release='1.fc9' v_unique_name='PackageKit-glib (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006355' version='0.6.22' release='11.fc9' v_unique_name='avahi-compat-libdns_sd
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006356' version='3.2.11'
+    release='0.28.fc9' v_unique_name='samba-common (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006357' version='2.22.3' release='1.fc9' v_unique_name='mousetweaks
+    (x86_64)'/><guest_application arch='noarch' id='447000000006358' version='3.2.21'
+    release='2.fc9' v_unique_name='yum'/><guest_application arch='noarch' id='447000000006359'
+    version='3.3.1' release='135.fc9' v_unique_name='selinux-policy'/><guest_application
+    arch='x86_64' id='447000000006360' version='2.45' release='1.fc9' v_unique_name='dnsmasq
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006361' version='5.1p1'
+    release='3.fc9' v_unique_name='openssh-server (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006362' version='2.22.2' release='1.fc9' v_unique_name='evince-dvi
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006363' version='2.22.2'
+    release='1.fc9' v_unique_name='vino (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006364' version='2.3' release='63.fc9' v_unique_name='anacron (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006365' version='3.15' release='8.fc9' v_unique_name='quota
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006366' version='2.22.4'
+    release='1.fc9' v_unique_name='file-roller (x86_64)'/><guest_application arch='noarch'
+    id='447000000006367' version='1.2.10' release='1.fc9' v_unique_name='system-config-firewall'/><guest_application
+    arch='x86_64' id='447000000006368' version='2.7.4' release='2.fc9' v_unique_name='fuse
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006369' version='0.5.11'
+    release='2.fc9' v_unique_name='hal (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006370' version='0.10.19' release='4.fc9' v_unique_name='gstreamer-plugins-base
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006371' version='2.22.2.1'
+    release='1.fc9' v_unique_name='control-center (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006372' version='2.22.1' release='2.fc9' v_unique_name='gnome-python2-gnomevfs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006373' version='0.6.0'
+    release='5.fc9' v_unique_name='libgpod (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006374' version='2.22.0' release='10.fc9' v_unique_name='gdm (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006375' version='2.22.3.1' release='1.fc9' v_unique_name='evolution
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006376' version='0.7.6'
+    release='6.fc9' v_unique_name='compiz-fusion (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006377' version='2.4.2' release='18.3.fc9' v_unique_name='openoffice.org-calc
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006378' version='0.3.12'
+    release='1.fc9' v_unique_name='PackageKit-yum (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006379' version='2.22.0' release='4.fc9' v_unique_name='gnome-python2-gnomeprint
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006380' version='2.19.1'
+    release='28.fc9' v_unique_name='gnome-python2-gtkhtml2 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006381' version='2.22.3' release='3.fc9' v_unique_name='gedit
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006382' version='0.6.16'
+    release='4.fc9' v_unique_name='hal-cups-utils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006383' version='2.4.2' release='18.3.fc9' v_unique_name='openoffice.org-writer
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006384' version='7.2.060'
+    release='1.fc9' v_unique_name='vim-enhanced (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006385' version='1.4.9' release='1.fc9' v_unique_name='xorg-x11-drv-mga
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006386' version='1.2.1'
+    release='1.fc9' v_unique_name='xorg-x11-drv-mutouch (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006387' version='2.008' release='68.fc9' v_unique_name='perl-IO-Compress-Zlib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006388' version='2.22.1'
+    release='13.fc9' v_unique_name='yelp (x86_64)'/><guest_application arch='noarch'
+    id='447000000006389' version='5.816' release='1.fc9' v_unique_name='perl-libwww-perl'/><guest_application
+    arch='x86_64' id='447000000006390' version='0.7.6' release='4.fc9' v_unique_name='compiz-gnome
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006391' version='2.22.3.1'
+    release='1.fc9' v_unique_name='evolution-help (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006392' version='4.2.4p7' release='1.fc9' v_unique_name='ntp-perl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006393' version='2.23.2'
+    release='17.fc9' v_unique_name='totem (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006394' version='0.3.12' release='1.fc9' v_unique_name='PackageKit
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006395' version='1.9'
+    release='2.fc9' v_unique_name='mozilla-filesystem (x86_64)'/><guest_application
+    arch='noarch' id='447000000006396' version='2.1.28' release='1.fc9' v_unique_name='mailcap'/><guest_application
+    arch='noarch' id='447000000006397' version='8' release='1' v_unique_name='fedora-bookmarks'/><guest_application
+    arch='noarch' id='447000000006398' version='1.2' release='4' v_unique_name='rt61pci-firmware'/><guest_application
+    arch='noarch' id='447000000006399' version='2.78' release='2.fc9' v_unique_name='man-pages'/><guest_application
+    arch='x86_64' id='447000000006400' version='2.3.20' release='1.fc9' v_unique_name='libart_lgpl
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006401' version='1.1.3'
+    release='9.fc9' v_unique_name='libogg (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006402' version='3.1.0' release='10' v_unique_name='hesiod (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006403' version='0.0.14.1' release='1.fc9' v_unique_name='libggz
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006404' version='0.6.14'
+    release='7' v_unique_name='libidn (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006405' version='2.86' release='24' v_unique_name='sysvinit-tools
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006406' version='1.3.12'
+    release='6.fc9' v_unique_name='gzip (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006407' version='0.7.4' release='5.fc9' v_unique_name='pinentry (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006408' version='1.0.0' release='4.fc9' v_unique_name='libdv
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006409' version='1.0.12'
+    release='6.fc9' v_unique_name='gsm (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006410' version='0.12' release='3.fc9' v_unique_name='libdaemon (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006411' version='1.2.6' release='4.fc9' v_unique_name='libmpcdec
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006412' version='0.4b41'
+    release='7.1.fc9' v_unique_name='dump (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006413' version='4.78' release='8.fc9' v_unique_name='lsof (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006414' version='2.2' release='30.fc9' v_unique_name='unix2dos
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006415' version='0.9.4'
+    release='3.fc9' v_unique_name='libXrender (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006416' version='2.1.12' release='5.fc9' v_unique_name='libXft (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006417' version='3.5.7' release='4.fc9' v_unique_name='libXpm
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006418' version='1.0.2'
+    release='2.fc9' v_unique_name='libXxf86dga (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006419' version='1.0.4' release='5' v_unique_name='pam_passwdqc (x86_64)'/><guest_application
+    arch='noarch' id='447000000006420' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-malayalam'/><guest_application
+    arch='noarch' id='447000000006421' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-hindi'/><guest_application
+    arch='x86_64' id='447000000006422' version='1.22.0' release='1.fc9' v_unique_name='atk
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006423' version='0.3.37'
+    release='1.fc9' v_unique_name='pyxf86config (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006424' version='0.8.0' release='1.fc9' v_unique_name='rarian (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006425' version='2.2.0' release='1.fc9' v_unique_name='pygtksourceview
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006426' version='1.12'
+    release='31.fc9' v_unique_name='kbd (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006427' version='0.1.9' release='5.fc9' v_unique_name='python-sexy
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006428' version='1.0.4'
+    release='1' v_unique_name='isomd5sum (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006429' version='0.0.5' release='1.fc9' v_unique_name='libopenraw-gnome
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006430' version='0.3.5'
+    release='1.fc9' v_unique_name='libbeagle (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006431' version='0.9.6' release='1.fc9' v_unique_name='pavucontrol
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006432' version='1.17'
+    release='1.45.fc9' v_unique_name='microcode_ctl (x86_64)'/><guest_application
+    arch='noarch' id='447000000006433' version='0.99.15' release='1.fc9' v_unique_name='system-config-services'/><guest_application
+    arch='x86_64' id='447000000006434' version='1.9.1' release='2.fc9' v_unique_name='mono-core
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006435' version='1.2.1'
+    release='4.fc9' v_unique_name='ccid (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006436' version='2.22.0' release='1.fc9' v_unique_name='gnome-vfs2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006437' version='1.8.0.9'
+    release='2jpp.1.fc9' v_unique_name='hsqldb (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006438' version='6.3.8.1' release='4.fc9' v_unique_name='ImageMagick
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006439' version='0.14.2'
+    release='12.fc9' v_unique_name='planner (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006440' version='0.51' release='1.fc9' v_unique_name='gnome-phone-manager
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006441' version='0.9.5'
+    release='0.5.svn20070924.fc9' v_unique_name='gstreamer-plugins-pulse (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006442' version='2.22.0' release='1.fc9' v_unique_name='gnome-vfs2-smb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006443' version='5.38'
+    release='2.fc9' v_unique_name='smartmontools-config (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006444' version='1.2.0' release='1.fc9' v_unique_name='xorg-x11-drv-voodoo
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006445' version='1.2.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-cirrus (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006446' version='1.4.0' release='1.fc9' v_unique_name='xorg-x11-drv-tdfx
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006447' version='10.16.0'
+    release='1.fc9' v_unique_name='xorg-x11-drv-vmware (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006448' version='1.2.0' release='1.fc9' v_unique_name='xorg-x11-drv-magellan
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006449' version='1.97'
+    release='1.fc9' v_unique_name='firstboot (x86_64)'/><guest_application arch='noarch'
+    id='447000000006450' version='1.2' release='4.fc9' v_unique_name='xkeyboard-config'/><guest_application
+    arch='noarch' id='447000000006451' version='2.6.27.25' release='78.2.56.fc9' v_unique_name='kernel-firmware'/><guest_application
+    arch='i686' id='447000000006452' version='2.8' release='8' v_unique_name='glibc
+    (i686)'/><guest_application arch='x86_64' id='447000000006453' version='1.2.37'
+    release='1.fc9' v_unique_name='libpng (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006454' version='2.1.22' release='15.fc9' v_unique_name='cyrus-sasl-lib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006455' version='0.141'
+    release='1.fc9' v_unique_name='elfutils-libelf (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006456' version='2.1.0' release='1.fc9' v_unique_name='exempi (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006457' version='2.3.1' release='2.fc9' v_unique_name='hyphen
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006458' version='2.1.0'
+    release='4.fc9' v_unique_name='libsysfs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006459' version='0.4.7' release='17.fc9' v_unique_name='kpartx (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006460' version='1.96' release='5.fc9' v_unique_name='festival-lib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006461' version='1.0.1'
+    release='2.fc9' v_unique_name='ilmbase (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006462' version='5.1.4' release='1.fc9' v_unique_name='lua (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006463' version='2.0.67' release='4.fc9' v_unique_name='libselinux
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006464' version='1.4.2'
+    release='2.fc9' v_unique_name='enchant (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006465' version='1.41.3' release='2.fc9' v_unique_name='e2fsprogs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006466' version='1.4.1.1'
+    release='2.fc9' v_unique_name='iptables-ipv6 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006467' version='2.2.10' release='4.fc9' v_unique_name='pciutils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006468' version='0.9.10'
+    release='2.fc9' v_unique_name='pulseaudio-libs-glib2 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006469' version='1.2.13' release='3.fc9' v_unique_name='SDL
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006470' version='1.19'
+    release='6.fc9' v_unique_name='tar (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006471' version='242' release='2.fc9' v_unique_name='xterm (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006472' version='0.17' release='50.fc9' v_unique_name='rsh
+    (x86_64)'/><guest_application arch='noarch' id='447000000006473' version='1.7.5'
+    release='1jpp.2.fc9' v_unique_name='jpackage-utils'/><guest_application arch='x86_64'
+    id='447000000006474' version='1.2.4' release='2.fc9' v_unique_name='dbus-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006475' version='1.2.4'
+    release='2.fc9' v_unique_name='dbus (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006476' version='2.6.2' release='6.fc9' v_unique_name='libglade2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006477' version='1.2.4'
+    release='2.fc9' v_unique_name='dbus-x11 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006478' version='2.14.2' release='1.fc9' v_unique_name='pygobject2
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006479' version='3.20.2'
+    release='2.fc9' v_unique_name='rsyslog (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006480' version='0.1.10' release='1.fc9' v_unique_name='libtirpc
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006481' version='4.2.4p7'
+    release='1.fc9' v_unique_name='ntp (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006482' version='0.6.4' release='3.fc9' v_unique_name='wpa_supplicant
+    (x86_64)'/><guest_application arch='noarch' id='447000000006483' version='1.0.2'
+    release='5.20081121cvs.fc9' v_unique_name='xdg-utils'/><guest_application arch='noarch'
+    id='447000000006484' version='1.7.1' release='1.fc9' v_unique_name='python-paste'/><guest_application
+    arch='x86_64' id='447000000006485' version='2.6.6' release='1.fc9' v_unique_name='gimp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006486' version='1.0.0'
+    release='0.13.svn37790.fc9' v_unique_name='WebKit-gtk (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006487' version='9.5.1' release='2.P2.fc9' v_unique_name='bind-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006488' version='5.22.3'
+    release='1.fc9' v_unique_name='gcalctool (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006489' version='0.11.4' release='1.fc9' v_unique_name='elinks (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006490' version='5.4.4' release='1.fc9' v_unique_name='authconfig-gtk
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006491' version='2.22.3'
+    release='1.fc9' v_unique_name='gnome-desktop (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006492' version='2.0.52' release='8.fc9' v_unique_name='policycoreutils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006493' version='3.2.11'
+    release='0.28.fc9' v_unique_name='libsmbclient (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006494' version='1.0.8' release='5.fc9' v_unique_name='gnome-spell
+    (x86_64)'/><guest_application arch='noarch' id='447000000006495' version='2.0.11'
+    release='1.fc9' v_unique_name='setroubleshoot-plugins'/><guest_application arch='x86_64'
+    id='447000000006496' version='3.36' release='3.fc9' v_unique_name='bluez-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006497' version='2.22.2'
+    release='1.fc9' v_unique_name='evince-djvu (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006498' version='9.0.0' release='8.fc9' v_unique_name='rhgb (x86_64)'/><guest_application
+    arch='noarch' id='447000000006499' version='3.3.1' release='135.fc9' v_unique_name='selinux-policy-devel'/><guest_application
+    arch='x86_64' id='447000000006500' version='0.2.5' release='1.fc9' v_unique_name='gvfs-fuse
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006501' version='2.4.2'
+    release='18.3.fc9' v_unique_name='openoffice.org-core (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006502' version='5.4.1' release='19.fc9' v_unique_name='net-snmp-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006503' version='2.008'
+    release='68.fc9' v_unique_name='perl-Compress-Raw-Zlib (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006504' version='2007' release='32.fc9' v_unique_name='texlive-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006505' version='2.22.0'
+    release='4.fc9' v_unique_name='gnome-python2-desktop (x86_64)'/><guest_application
+    arch='noarch' id='447000000006506' version='20080607' release='1.fc9' v_unique_name='hal-info'/><guest_application
+    arch='x86_64' id='447000000006507' version='5.4.1' release='19.fc9' v_unique_name='net-snmp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006508' version='4.24'
+    release='1.fc9' v_unique_name='stunnel (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006509' version='6.8.0' release='19.fc9' v_unique_name='xorg-x11-drv-ati
+    (x86_64)'/><guest_application arch='noarch' id='447000000006510' version='1.37'
+    release='1.fc9' v_unique_name='perl-URI'/><guest_application arch='noarch' id='447000000006511'
+    version='1.0.5' release='1.fc9' v_unique_name='system-config-date-docs'/><guest_application
+    arch='noarch' id='447000000006512' version='1.5.10' release='1.fc9' v_unique_name='system-config-network'/><guest_application
+    arch='x86_64' id='447000000006513' version='0.3.12' release='3.fc9' v_unique_name='gnome-packagekit
+    (x86_64)'/><guest_application arch='noarch' id='447000000006514' version='2007'
+    release='4.fc9' v_unique_name='texlive-texmf-errata-latex'/><guest_application
+    arch='noarch' id='447000000006515' version='1.8' release='4' v_unique_name='rt73usb-firmware'/><guest_application
+    arch='noarch' id='447000000006516' version='1.3' release='4' v_unique_name='atmel-firmware'/><guest_application
+    arch='noarch' id='447000000006517' version='2.22.2' release='1' v_unique_name='gnome-audio'/><guest_application
+    arch='x86_64' id='447000000006518' version='0.1.12' release='15.fc9' v_unique_name='libusb
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006519' version='1.0beta2'
+    release='4.fc9' v_unique_name='libtheora (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006520' version='1.0.14' release='1.fc9' v_unique_name='libdhcp6client
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006521' version='1.99.8'
+    release='1.fc9' v_unique_name='libdhcp (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006522' version='0.5.3' release='2.fc9' v_unique_name='libavc1394
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006523' version='2.4.17'
+    release='1.fc9' v_unique_name='libarchive (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006524' version='2.8.1' release='21.fc9' v_unique_name='diffutils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006525' version='1.0.1'
+    release='12.fc9.1' v_unique_name='lockdev (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006526' version='1.8.8' release='5.fc9' v_unique_name='parted (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006527' version='1.0.1' release='2.fc9' v_unique_name='dirmngr
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006528' version='1.5'
+    release='3.fc9' v_unique_name='radeontool (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006529' version='0.12.20' release='23.fc9' v_unique_name='lrzsz (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006530' version='1.0.2' release='2.fc9' v_unique_name='libiptcdata
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006531' version='2.2.1'
+    release='3.fc9' v_unique_name='iptstate (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006532' version='1.4.9' release='1.fc9' v_unique_name='gnupg (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006533' version='5.52' release='9.fc9' v_unique_name='unzip
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006534' version='0.17'
+    release='30.2.4' v_unique_name='talk (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006535' version='1.2' release='31.fc9' v_unique_name='symlinks (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006536' version='011' release='3.fc9' v_unique_name='b43-fwcutter
+    (x86_64)'/><guest_application arch='noarch' id='447000000006537' version='7.3'
+    release='1.fc9' v_unique_name='xorg-x11-filesystem'/><guest_application arch='x86_64'
+    id='447000000006538' version='4.0.3' release='3.fc9' v_unique_name='libXfixes
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006539' version='1.1.2'
+    release='4.fc9' v_unique_name='libXScrnSaver (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006540' version='1.0.2' release='4.fc9' v_unique_name='xorg-x11-xauth
+    (x86_64)'/><guest_application arch='noarch' id='447000000006541' version='8.0.2'
+    release='1.fc9' v_unique_name='bluecurve-icon-theme'/><guest_application arch='noarch'
+    id='447000000006542' version='2.24' release='3.fc9' v_unique_name='dejavu-fonts'/><guest_application
+    arch='x86_64' id='447000000006543' version='0.5.3' release='26' v_unique_name='pam_pkcs11
+    (x86_64)'/><guest_application arch='noarch' id='447000000006544' version='7.2'
+    release='6.fc9' v_unique_name='xorg-x11-fonts-Type1'/><guest_application arch='noarch'
+    id='447000000006545' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-tamil'/><guest_application
+    arch='noarch' id='447000000006546' version='2.2.1' release='2.fc9' v_unique_name='lohit-fonts-punjabi'/><guest_application
+    arch='noarch' id='447000000006547' version='0.20080207' release='1.fc9' v_unique_name='hunspell-en'/><guest_application
+    arch='x86_64' id='447000000006548' version='3.5' release='1.fc9' v_unique_name='libxklavier
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006549' version='2.0.11'
+    release='8.fc9' v_unique_name='gtkspell (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006550' version='0.3.7' release='9.fc9' v_unique_name='notification-daemon
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006551' version='0.8.14'
+    release='1.fc9' v_unique_name='libwpd (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006552' version='1.19.4' release='2.fc9' v_unique_name='setuptool
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006553' version='5.38'
+    release='2.fc9' v_unique_name='smartmontools (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006554' version='1.1.6' release='9.fc9' v_unique_name='python-imaging
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006555' version='1.2.0'
+    release='6.fc9' v_unique_name='gtkglext-libs (x86_64)'/><guest_application arch='noarch'
+    id='447000000006556' version='2.22.0' release='1.fc9' v_unique_name='gnome-themes'/><guest_application
+    arch='noarch' id='447000000006557' version='0.3.90' release='1.fc9' v_unique_name='nodoka-theme-gnome'/><guest_application
+    arch='x86_64' id='447000000006558' version='3.8' release='3.fc9' v_unique_name='rp-pppoe
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006559' version='1.3.0'
+    release='3.fc9' v_unique_name='xorg-x11-drv-keyboard (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006560' version='1.1.0' release='7.fc9' v_unique_name='pm-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006561' version='2.22.1'
+    release='1.fc9' v_unique_name='gnome-screensaver (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006562' version='1.5.0.0' release='21.fc9' v_unique_name='java-1.5.0-gcj
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006563' version='0.10'
+    release='0.k.6jpp.2' v_unique_name='java_cup (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006564' version='0.2.3' release='3.fc9' v_unique_name='libgnomecups
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006565' version='1.4'
+    release='6.fc9' v_unique_name='perl-String-CRC32 (x86_64)'/><guest_application
+    arch='noarch' id='447000000006566' version='5.48' release='3.fc9' v_unique_name='perl-Date-Manip'/><guest_application
+    arch='x86_64' id='447000000006567' version='2.0.16' release='2.fc9' v_unique_name='gnome-pilot
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006568' version='2.21.92'
+    release='1.fc9' v_unique_name='evolution-webcal (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006569' version='0.7' release='7.fc9' v_unique_name='krb5-auth-dialog
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006570' version='2.3.0'
+    release='12jpp.2.fc9' v_unique_name='bsf (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006571' version='1.2.0' release='1.fc9' v_unique_name='xorg-x11-drv-apm
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006572' version='1.1.2'
+    release='1.fc9' v_unique_name='xorg-x11-drv-dmc (x86_64)'/><guest_application
+    id='447000000006573' version='4f2a6fd2' release='3f9d9d3b' v_unique_name='gpg-pubkey'/><guest_application
+    arch='noarch' id='447000000006574' version='0.222' release='1.fc9' v_unique_name='hwdata'/><guest_application
+    arch='noarch' id='447000000006575' version='13' release='1' v_unique_name='comps-extras'/><guest_application
+    arch='noarch' id='447000000006576' version='228.57.2.23' release='1.fc9' v_unique_name='iwl4965-firmware'/><guest_application
+    arch='x86_64' id='447000000006577' version='1.1.0' release='1.fc9' v_unique_name='libSM
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006578' version='3.36'
+    release='1.fc9' v_unique_name='bluez-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006579' version='2.0.4' release='4.fc9' v_unique_name='gnutls (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006580' version='4.1.3' release='10.fc9' v_unique_name='giflib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006581' version='7.3'
+    release='4.fc9' v_unique_name='pcre (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006582' version='3.8.1' release='9.fc9' v_unique_name='libicu (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006583' version='0.0.41' release='1.fc9' v_unique_name='libnfnetlink
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006584' version='7.1'
+    release='0.37.fc9' v_unique_name='mesa-libGLU (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006585' version='2.3.1' release='2.fc9' v_unique_name='hyphen-en
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006586' version='4.7.3'
+    release='1.1.fc9' v_unique_name='nspr (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006587' version='4.1.1' release='4.fc9' v_unique_name='shadow-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006588' version='2.16.4'
+    release='2.fc9' v_unique_name='glibmm24 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006589' version='1.1.0' release='0.fc9' v_unique_name='meanwhile
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006590' version='0.10.20'
+    release='1.fc9' v_unique_name='gstreamer-tools (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006591' version='1.4.0' release='0.15.rc5.fc9' v_unique_name='aalib-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006592' version='1.0.0.rc14'
+    release='8.fc9' v_unique_name='dmraid (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006593' version='2.3.1' release='1.fc9' v_unique_name='mpfr (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006594' version='4.0' release='8.fc9' v_unique_name='jwhois
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006595' version='3.0.4'
+    release='0.fc9' v_unique_name='rsync (x86_64)'/><guest_application arch='noarch'
+    id='447000000006596' version='2007' release='24.fc9' v_unique_name='texlive-texmf'/><guest_application
+    arch='x86_64' id='447000000006597' version='1.3.2' release='31.fc9' v_unique_name='openjade
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006598' version='1.6.3'
+    release='16.fc9' v_unique_name='krb5-libs (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006599' version='1.0.17' release='2.fc9' v_unique_name='alsa-lib
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006600' version='2.22.5.1'
+    release='1.fc9' v_unique_name='nautilus-extensions (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006601' version='1.9.0.11' release='1.fc9' v_unique_name='xulrunner
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006602' version='2.22.3'
+    release='1.fc9' v_unique_name='libgweather (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006603' version='1.6.0.0' release='0.25.b09.fc9' v_unique_name='java-1.6.0-openjdk
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006604' version='2.2.2'
+    release='1.fc9' v_unique_name='gtksourceview2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006605' version='9.5.1' release='2.P2.fc9' v_unique_name='bind-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006606' version='1.0.9'
+    release='1.fc9' v_unique_name='xorg-x11-xinit (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006607' version='3.60' release='68.fc9' v_unique_name='perl-Module-Pluggable
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006608' version='264'
+    release='1.fc9' v_unique_name='nss_ldap (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006609' version='0.5.1' release='2.fc9' v_unique_name='python-genshi
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006610' version='2.0.10'
+    release='1.fc9' v_unique_name='gnupg2 (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006611' version='1.1.2' release='11.fc9' v_unique_name='nfs-utils
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006612' version='1.0.17'
+    release='2.fc9' v_unique_name='alsa-utils (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006613' version='1.6.3' release='16.fc9' v_unique_name='krb5-workstation
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006614' version='0.9.10'
+    release='2.fc9' v_unique_name='pulseaudio-esound-compat (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006615' version='4.4.2.3' release='3.fc9' v_unique_name='rpm-libs
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006616' version='3.2.11'
+    release='0.28.fc9' v_unique_name='samba-winbind (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006617' version='2.16.1' release='3.fc9' v_unique_name='gnome-sharp
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006618' version='2.22.2'
+    release='3.fc9' v_unique_name='gnome-panel (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006619' version='2.22.1' release='2.fc9' v_unique_name='gnome-python2-bonobo
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006620' version='0.4.3.1'
+    release='2.fc9' v_unique_name='f-spot (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006621' version='2.22.5.1' release='1.fc9' v_unique_name='nautilus
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006622' version='2.22.3'
+    release='1.fc9' v_unique_name='eog (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006623' version='2.22.2' release='1.fc9' v_unique_name='gnome-terminal
+    (x86_64)'/><guest_application arch='noarch' id='447000000006624' version='1.1.19'
+    release='1.fc9' v_unique_name='yum-utils'/><guest_application arch='x86_64' id='447000000006625'
+    version='5.10.0' release='68.fc9' v_unique_name='perl-libs (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006626' version='8.63' release='3.fc9' v_unique_name='ghostscript
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006627' version='2.23.2'
+    release='17.fc9' v_unique_name='totem-gstreamer (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006628' version='2.0.8' release='1.fc9' v_unique_name='xorg-x11-drv-evdev
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006629' version='2.3.2'
+    release='3.fc9' v_unique_name='xorg-x11-drv-i810 (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006630' version='2.19.1' release='28.fc9' v_unique_name='gnome-python2-extras
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006631' version='0.7.1'
+    release='1.fc9' v_unique_name='NetworkManager-gnome (x86_64)'/><guest_application
+    arch='x86_64' id='447000000006632' version='1.6.4' release='10.fc9' v_unique_name='enscript
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006633' version='2.1.10'
+    release='2.fc9' v_unique_name='xorg-x11-drv-nv (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006634' version='0.7.6' release='6.fc9' v_unique_name='compiz-fusion-gnome
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006635' version='4.14'
+    release='5.fc9' v_unique_name='a2ps (x86_64)'/><guest_application arch='x86_64'
+    id='447000000006636' version='2.4.2' release='18.3.fc9' v_unique_name='openoffice.org-xsltfilter
+    (x86_64)'/><guest_application arch='x86_64' id='447000000006637' version='2.23.2'
+    release='17.fc9' v_unique_name='totem-nautilus (x86_64)'/></guest_applications><hardware
+    bios='564d439c-83db-b36e-1960-f23b4b832af6' guest_os='rhel5_64' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' guest_os_full_name='Red Hat Enterprise
+    Linux 5 (64-bit)' numvcpus='1'><cdroms _macro_='has_many'><disk location='1:0'
+    start_connected='true' device_type='cdrom-raw' id='447000000000105' filename='/dev/hda'
+    present='true' device_name='CD/DVD Drive 1'/></cdroms><disks _macro_='has_many'><disk
+    location='1:0' start_connected='true' device_type='cdrom-raw' id='447000000000105'
+    filename='/dev/hda' present='true' device_name='CD/DVD Drive 1'/><disk size_on_disk='8128561152'
+    location='0:0' size='16106127360' unallocated_space='1061376' start_connected='true'
+    allocated_space='16105065984' device_type='disk' id='447000000000106' filename='[Thecus-N7700]
+    Vm1/Vm1.vmdk' present='true' device_name='Hard
+    disk 1'/><disk location='0' start_connected='true' device_type='floppy' id='447000000003563'
+    filename='/dev/fd0' present='true' device_name='disk'/></disks><floppies _macro_='has_many'><disk
+    location='0' start_connected='true' device_type='floppy' id='447000000003563'
+    filename='/dev/fd0' present='true' device_name='disk'/></floppies><nics _macro_='has_many'><guest_device
+    address='00:50:56:8b:06:ba' location='6' start_connected='true' id='447000000000035'
+    present='true'/></nics><volumes _macro_='has_many'><volume name='/dev/sda1' typ='physical'
+    free_space='185919488' size='205599744' filesystem='Ext3' used_space='19680256'
+    id='447000000000086'/><volume name='LogVol00' typ='logical' free_space='9621172224'
+    size='13757317120' filesystem='Ext3' used_space='4136144896' id='447000000000087'/><volume
+    name='LogVol01' typ='logical' size='2080374784' id='447000000000088'/></volumes></hardware><linux_initprocesses
+    _macro_='has_many'><system_service id='447000000001656' image_path='/etc/rc.d/init.d/functions'/><system_service
+    id='447000000001657' image_path='/etc/rc.d/init.d/hsqldb'/><system_service id='447000000001658'
+    image_path='/etc/rc.d/init.d/NetworkManager'/><system_service id='447000000001659'
+    image_path='/etc/rc.d/init.d/udev-post'/><system_service id='447000000001660'
+    image_path='/etc/rc.d/init.d/iptables'/><system_service id='447000000001661' image_path='/etc/rc.d/init.d/killall'/><system_service
+    id='447000000001662' image_path='/etc/rc.d/init.d/cpuspeed'/><system_service id='447000000001663'
+    image_path='/etc/rc.d/init.d/network'/><system_service id='447000000001664' image_path='/etc/rc.d/init.d/snmptrapd'/><system_service
+    id='447000000001665' image_path='/etc/rc.d/init.d/anacron'/><system_service id='447000000001666'
+    image_path='/etc/rc.d/init.d/netconsole'/><system_service id='447000000001667'
+    image_path='/etc/rc.d/init.d/rpcgssd'/><system_service id='447000000001668' image_path='/etc/rc.d/init.d/sendmail'/><system_service
+    id='447000000001669' image_path='/etc/rc.d/init.d/capi'/><system_service id='447000000001670'
+    image_path='/etc/rc.d/init.d/rdisc'/><system_service id='447000000001671' image_path='/etc/rc.d/init.d/netplugd'/><system_service
+    id='447000000001672' image_path='/etc/rc.d/init.d/halt'/><system_service id='447000000001673'
+    image_path='/etc/rc.d/init.d/rpcidmapd'/><system_service id='447000000001674'
+    image_path='/etc/rc.d/init.d/sshd'/><system_service id='447000000001675' image_path='/etc/rc.d/init.d/nfs'/><system_service
+    id='447000000001676' image_path='/etc/rc.d/init.d/microcode_ctl'/><system_service
+    id='447000000001677' image_path='/etc/rc.d/init.d/dnsmasq'/><system_service id='447000000001678'
+    image_path='/etc/rc.d/init.d/btseed'/><system_service id='447000000001679' image_path='/etc/rc.d/init.d/gpm'/><system_service
+    id='447000000001680' image_path='/etc/rc.d/init.d/pand'/><system_service id='447000000001681'
+    image_path='/etc/rc.d/init.d/atd'/><system_service id='447000000001682' image_path='/etc/rc.d/init.d/bluetooth'/><system_service
+    id='447000000001683' image_path='/etc/rc.d/init.d/haldaemon'/><system_service
+    id='447000000001684' image_path='/etc/rc.d/init.d/netfs'/><system_service id='447000000001685'
+    image_path='/etc/rc.d/init.d/firstboot'/><system_service id='447000000001686'
+    image_path='/etc/rc.d/init.d/fuse'/><system_service id='447000000001687' image_path='/etc/rc.d/init.d/httpd'/><system_service
+    id='447000000001688' image_path='/etc/rc.d/init.d/wpa_supplicant'/><system_service
+    id='447000000001689' image_path='/etc/rc.d/init.d/acpid'/><system_service id='447000000001690'
+    image_path='/etc/rc.d/init.d/ip6tables'/><system_service id='447000000001691'
+    image_path='/etc/rc.d/init.d/dund'/><system_service id='447000000001692' image_path='/etc/rc.d/init.d/winbind'/><system_service
+    id='447000000001693' image_path='/etc/rc.d/init.d/avahi-daemon'/><system_service
+    id='447000000001694' image_path='/etc/rc.d/init.d/setroubleshoot'/><system_service
+    id='447000000001695' image_path='/etc/rc.d/init.d/isdn'/><system_service id='447000000001696'
+    image_path='/etc/rc.d/init.d/rpcsvcgssd'/><system_service id='447000000001697'
+    image_path='/etc/rc.d/init.d/smolt'/><system_service id='447000000001698' image_path='/etc/rc.d/init.d/multipathd'/><system_service
+    id='447000000001699' image_path='/etc/rc.d/init.d/nfslock'/><system_service id='447000000001700'
+    image_path='/etc/rc.d/init.d/nscd'/><system_service id='447000000001701' image_path='/etc/rc.d/init.d/ypbind'/><system_service
+    id='447000000001702' image_path='/etc/rc.d/rc.local'/><system_service id='447000000001703'
+    image_path='/etc/rc.d/init.d/cups'/><system_service id='447000000001704' image_path='/etc/rc.d/init.d/irda'/><system_service
+    id='447000000001705' image_path='/etc/rc.d/init.d/cups-config-daemon'/><system_service
+    id='447000000001706' image_path='/etc/rc.d/init.d/crond'/><system_service id='447000000001707'
+    image_path='/etc/rc.d/init.d/smartd'/><system_service id='447000000001708' image_path='/etc/rc.d/init.d/messagebus'/><system_service
+    id='447000000001709' image_path='/etc/rc.d/init.d/restorecond'/><system_service
+    id='447000000001710' image_path='/etc/rc.d/init.d/ntpd'/><system_service id='447000000001711'
+    image_path='/etc/rc.d/init.d/saslauthd'/><system_service id='447000000001712'
+    image_path='/etc/rc.d/init.d/snmpd'/><system_service id='447000000001713' image_path='/etc/rc.d/init.d/bttrack'/><system_service
+    id='447000000001714' image_path='/etc/rc.d/init.d/rpcbind'/><system_service id='447000000001715'
+    image_path='/etc/rc.d/init.d/auditd'/><system_service id='447000000001716' image_path='/etc/rc.d/init.d/irqbalance'/><system_service
+    id='447000000001717' image_path='/etc/rc.d/init.d/psacct'/><system_service id='447000000001718'
+    image_path='/etc/rc.d/init.d/rsyslog'/><system_service id='447000000001719' image_path='/etc/rc.d/init.d/lm_sensors'/><system_service
+    id='447000000001720' image_path='/etc/rc.d/init.d/mdmonitor'/><system_service
+    id='447000000001721' image_path='/etc/rc.d/init.d/pcscd'/><system_service id='447000000001722'
+    image_path='/etc/rc.d/init.d/kerneloops'/><system_service id='447000000001723'
+    image_path='/etc/rc.d/init.d/ntpdate'/></linux_initprocesses><tags _macro_='has_many'><tag
+    name='/managed/cc/001' entry_id='447000000000058' namespace='managed' category_name='cc'
+    id='447000000000061' category_single_value='true' category_id='447000000000057'
+    entry_name='001' entry_description='Cost Center 001' category_description='Cost
+    Center'/><tag name='/managed/folder_path_blue/datacenters:dc1:vm' entry_id='447000000000125'
+    namespace='managed' category_name='folder_path_blue' id='447000000000128' category_single_value='true'
+    category_id='447000000000124' entry_name='datacenters:dc1:vm' entry_description='Datacenters/DC1/vm'
+    category_description='Parent Folder Path (VMs & Templates)'/><tag name='/managed/folder_path_yellow/datacenters'
+    entry_id='447000000000127' namespace='managed' category_name='folder_path_yellow'
+    id='447000000000130' category_single_value='true' category_id='447000000000126'
+    entry_name='datacenters' entry_description='Datacenters' category_description='Parent
+    Folder Path (Hosts & Clusters)'/><tag name='/miq_policy/assignment/miq_policy_set/447000000000027'
+    namespace='miq_policy' id='447000000000165'/><tag name='/miq_policy/assignment/miq_policy_set/447000000000029'
+    namespace='miq_policy' id='447000000000166'/></tags><users _macro_='has_many'><account
+    name='uucp' id='447000000001070'/><account name='nfsnobody' id='447000000001071'/><account
+    name='tcpdump' id='447000000001072'/><account name='games' id='447000000001073'/><account
+    name='halt' id='447000000001074'/><account name='polkituser' id='447000000001075'/><account
+    name='ftp' id='447000000001076'/><account name='shutdown' id='447000000001077'/><account
+    name='avahi-autoipd' id='447000000001078'/><account name='pulse' id='447000000001079'/><account
+    name='nobody' id='447000000001080'/><account name='avahi' id='447000000001081'/><account
+    name='lp' id='447000000001082'/><account name='rpc' id='447000000001083'/><account
+    name='gdm' id='447000000001084'/><account name='haldaemon' id='447000000001085'/><account
+    name='mail' id='447000000001086'/><account name='sync' id='447000000001087'/><account
+    name='thomash68' id='447000000001088' last_logon='Sat Mar 19 13:10:29 UTC 2011'/><account
+    name='hsqldb' id='447000000001089'/><account name='sshd' id='447000000001090'/><account
+    name='nscd' id='447000000001091'/><account name='gopher' id='447000000001092'/><account
+    name='operator' id='447000000001093'/><account name='root' id='447000000001094'/><account
+    name='apache' id='447000000001095'/><account name='smmsp' id='447000000001096'/><account
+    name='vcsa' id='447000000001097'/><account name='bin' id='447000000001098'/><account
+    name='dbus' id='447000000001099'/><account name='news' id='447000000001100'/><account
+    name='daemon' id='447000000001101'/><account name='torrent' id='447000000001102'/><account
+    name='rpcuser' id='447000000001103'/><account name='smolt' id='447000000001104'/><account
+    name='ntp' id='447000000001105'/><account name='mailnull' id='447000000001106'/><account
+    name='adm' id='447000000001107'/></users></vm>
+  md5: 621187af76851f1765f9fd3350fd3611
+- id: 2
+  name: vm
+  timestamp: 2013-04-01 02:35:11.000000000 Z
+  created_on: 2013-04-02 10:39:04.235996000 Z
+  stats: ! "--- \nadds: \"2\"\noriginal_filename: vm\ncreated_on: \"1364783711\"\nupdates:
+    \"1\"\nversion: \"2.0\"\ndeletes: \"2\"\ndisplay_time: \"2013-04-01T02:35:34Z\"\n"
+  scantype: diff
+  resource_id: 447000000000024
+  resource_type: Vm
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><xmlDiff adds='2' original_filename='vm'
+    created_on='1364783711' updates='1' version='2.0' display_time='2013-04-01T02:35:34Z'
+    deletes='2'><adds><item><path><vm name='Vm1' memory_shares='40960'
+    cpu_reserve_expand='false' original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364899125' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Tue
+    Apr 02 10:34:17 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364899070' display_time='2013-04-02T10:38:45Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003563'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364899125' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Tue
+    Apr 02 10:34:17 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364899070' display_time='2013-04-02T10:38:45Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003563'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item></adds><deletes><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364783734' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon
+    Apr 01 02:31:20 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364783711' display_time='2013-04-01T02:35:34Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003495'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364783734' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon
+    Apr 01 02:31:20 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364783711' display_time='2013-04-01T02:35:34Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003495'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item></deletes><updates><item><path
+    root='true'/><data><vm name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364899125' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Tue
+    Apr 02 10:34:17 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364899070' display_time='2013-04-02T10:38:45Z'/></data><data_old><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364783734' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon
+    Apr 01 02:31:20 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364783711' display_time='2013-04-01T02:35:34Z'/></data_old></item></updates></xmlDiff>
+  md5: fb5c1dc67556274757b159a601473375
+- id: 3
+  name: vm
+  timestamp: 2013-03-30 21:36:24.000000000 Z
+  created_on: 2013-04-01 02:35:46.225034000 Z
+  stats: ! "--- \nadds: \"2\"\noriginal_filename: vm\ncreated_on: \"1364679384\"\nupdates:
+    \"1\"\nversion: \"2.0\"\ndeletes: \"2\"\ndisplay_time: \"2013-03-30T21:36:50Z\"\n"
+  scantype: diff
+  resource_id: 447000000000024
+  resource_type: Vm
+  xml_data: <?xml version='1.0' encoding='UTF-8'?><xmlDiff adds='2' original_filename='vm'
+    created_on='1364679384' updates='1' version='2.0' display_time='2013-03-30T21:36:50Z'
+    deletes='2'><adds><item><path><vm name='Vm1' memory_shares='40960'
+    cpu_reserve_expand='false' original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364783734' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon
+    Apr 01 02:31:20 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364783711' display_time='2013-04-01T02:35:34Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003495'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364783734' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon
+    Apr 01 02:31:20 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364783711' display_time='2013-04-01T02:35:34Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003495'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item></adds><deletes><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364679410' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Sat
+    Mar 30 21:32:18 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364679384' display_time='2013-03-30T21:36:50Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><disks _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003417'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item><item><path><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364679410' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Sat
+    Mar 30 21:32:18 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364679384' display_time='2013-03-30T21:36:50Z'><hardware
+    guest_os='rhel5_64' bios='564d439c-83db-b36e-1960-f23b4b832af6' memory_cpu='4096'
+    id='447000000000025' config_version='vmx-04' numvcpus='1' guest_os_full_name='Red
+    Hat Enterprise Linux 5 (64-bit)'><floppies _macro_='has_many'/></hardware></vm></path><data
+    index='0'><disk location='0' start_connected='true' device_type='floppy' id='447000000003417'
+    filename='/dev/fd0' present='true' device_name='disk'/></data></item></deletes><updates><item><path
+    root='true'/><data><vm name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364783734' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Mon
+    Apr 01 02:31:20 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364783711' display_time='2013-04-01T02:35:34Z'/></data><data_old><vm
+    name='Vm1' memory_shares='40960' cpu_reserve_expand='false'
+    original_filename='vm' memory_reserve='0' location='Vm1/Vm1.vmx'
+    tools_status='toolsNotInstalled' cpu_shares='1000' created_on='1364679410' cpu_limit='-1'
+    id='447000000000024' memory_shares_level='normal' cpu_shares_level='normal' last_scan_on='Sat
+    Mar 30 21:32:18 UTC 2013' version='2.0' memory_reserve_expand='false' memory_limit='-1'
+    cpu_reserve='0' vendor='VMware' _timestamp_='1364679384' display_time='2013-03-30T21:36:50Z'/></data_old></item></updates></xmlDiff>
+  md5: 2bc047ea6ac3caeaa8f1f4487397419c

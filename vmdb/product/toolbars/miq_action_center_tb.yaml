@@ -1,0 +1,24 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAction
+:button_groups:
+- :name: miq_action_vmdb
+  :items:
+  - :buttonSelect: miq_action_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: action_edit
+      :image: edit
+      :text: 'Edit this Action'
+      :title: 'Edit this Action'
+      :url_parms: '?type=basic'
+    - :button: action_delete
+      :image: delete
+      :text: 'Delete this Action'
+      :title: 'Delete this Action'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to delete this Action?'

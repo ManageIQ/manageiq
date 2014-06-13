@@ -1,0 +1,49 @@
+<script>
+  <%# Create from/to date JS vars to limit calendar starting from %>
+  var miq_cal_dateFrom = miqCalendarDateConversion("<%= @timezone_offset%>");
+</script>
+
+<div id="layout_div" style="position:relative; width:auto; height:<%= center_div_height(true, 550) %>px;">
+  <% content_for :trees do %>
+    <% @trees.each do |tree| %>
+      <div style="display:none">
+        <%= render(:partial => tree,
+                   :locals=>{:name => tree}) %>
+      </div>
+    <% end %>
+  <% end %>
+  <div id="main_div" class="main_div">
+    <% @lists.each do |list| %>
+      <%= render :partial => list %>
+    <% end %>
+  </div><%# Include the center cell divs %>
+</div>
+
+<% content_for :accords do %>
+  <%# Create the explorer dhtmlx layout/accordion JS objects %>
+  <%= render(:partial => "layouts/dhtmlxlayout_explorer",
+             :locals => {:accords => @accords,
+                         :active_accord=>@sb[:active_accord],
+                         :accord_select_function => "miqAccordReportSelect",
+                         :cell_b_text => @right_cell_text,
+                         :cell_b_object => "#{@right_cell_div}_div"}
+      ) %>
+<% end %>
+
+<script>
+  function miqReportAfterOnload() {
+    <% if @right_cell_div == "role_list" %>
+      <% if role_allows(:feature=>"miq_report_menu_editor") %>
+        cfmeDynatree_activateNode('roles_tree','<%= x_node %>');
+        <% if x_node.split('-').length > 1 %>
+          <%# if Role was selected when refreshing screen %>
+          $('menu_div1').hide();
+          $('menu_div3').show();
+        <% end %>
+      <% end %>
+    <% else %>
+      cfmeDynatree_activateNode('<%= x_active_tree.to_s %>','<%= x_node %>')
+    <% end %>
+  };
+  var miq_after_onload = "miqReportAfterOnload();"
+</script>

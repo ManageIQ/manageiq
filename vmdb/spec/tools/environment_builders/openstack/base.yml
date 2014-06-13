@@ -1,0 +1,4 @@
+---
+:connection:
+  :ems_port: 5000
+  :ems_username: "admin"

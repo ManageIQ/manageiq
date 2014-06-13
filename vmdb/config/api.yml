@@ -1,0 +1,576 @@
+---
+:base:
+  :module: api
+  :name: CFME API
+  :description: CloudForms Management Engine REST API
+  :version: '0.1'
+:version:
+  :regex: !ruby/regexp /^v[0-9]+\.[0-9]+$/
+  :definitions:
+  - :name: '1.0'
+    :ident: v1.0
+  - :name: '0.1'
+:method:
+  :names:
+  - :get
+  - :put
+  - :post
+  - :patch
+  - :delete
+  :sets:
+    :g: &70174834086080
+    - :get
+    :gpd: &70174834085620
+    - :get
+    - :post
+    - :delete
+    :gpppd: &70174834084700
+    - :get
+    - :put
+    - :post
+    - :patch
+    - :delete
+:collections:
+  :auth:
+    :description: REST API Authentication
+    :options:
+    - :primary
+    :methods: *70174834086080
+  :clusters:
+    :description: Clusters
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: EmsCluster
+    :subcollections:
+    - :tags
+    - :policies
+    :collection_actions:
+      :post:
+      - :name: delete
+        :identifier: ems_cluster_delete
+    :resource_actions:
+      :delete:
+      - :name: delete
+        :identifier: ems_cluster_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: ems_cluster_tag
+      - :name: unassign
+        :identifier: ems_cluster_tag
+  :data_stores:
+    :description: Datastores
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Storage
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :post:
+      - :name: delete
+        :identifier: storage_delete
+    :resource_actions:
+      :delete:
+      - :name: delete
+        :identifier: storage_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: storage_tag
+      - :name: unassign
+        :identifier: storage_tag
+  :groups:
+    :description: Groups
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqGroup
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: rbac_group_add
+      - :name: edit
+        :identifier: rbac_group_edit
+      - :name: delete
+        :identifier: rbac_group_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: rbac_group_edit
+      :delete:
+      - :name: delete
+        :identifier: rbac_group_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: rbac_group_tags_edit
+      - :name: unassign
+        :identifier: rbac_group_tags_edit
+  :hosts:
+    :description: Hosts
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Host
+    :subcollections:
+    - :tags
+    - :policies
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: host_new
+      - :name: edit
+        :identifier: host_edit
+      - :name: refresh
+        :identifier: host_refresh
+      - :name: standby
+        :identifier: host_standby
+      - :name: shutdown
+        :identifier: host_shutdown
+      - :name: restart
+        :identifier: host_reboot
+      - :name: poweron
+        :identifier: host_start
+      - :name: poweroff
+        :identifier: host_stop
+      - :name: reset
+        :identifier: host_reset
+      - :name: delete
+        :identifier: host_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: host_edit
+      - :name: refresh
+        :identifier: host_refresh
+      - :name: standby
+        :identifier: host_standby
+      - :name: shutdown
+        :identifier: host_shutdown
+      - :name: restart
+        :identifier: host_reboot
+      - :name: poweron
+        :identifier: host_start
+      - :name: poweroff
+        :identifier: host_stop
+      - :name: reset
+        :identifier: host_reset
+      :delete:
+      - :name: delete
+        :identifier: host_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: host_tag
+      - :name: unassign
+        :identifier: host_tag
+  :policies:
+    :description: Policies
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqPolicy
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: policy_new
+      - :name: edit
+        :identifier: policy_edit
+      - :name: delete
+        :identifier: policy_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: policy_edit
+      :delete:
+      - :name: delete
+        :identifier: policy_delete
+  :policy_profiles:
+    :description: Policy Profiles
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqPolicySet
+    :subcollections:
+    - :policies
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: profile_new
+      - :name: edit
+        :identifier: profile_edit
+      - :name: delete
+        :identifier: profile_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: profile_edit
+      :delete:
+      - :name: delete
+        :identifier: profile_delete
+  :providers:
+    :description: Providers
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: ExtManagementSystem
+    :subcollections:
+    - :tags
+    - :policies
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: ems_infra_new
+      - :name: edit
+        :identifier: ems_infra_edit
+      - :name: refresh
+        :identifier: ems_infra_refresh
+      - :name: delete
+        :identifier: ems_infra_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: ems_infra_edit
+      - :name: refresh
+        :identifier: ems_infra_delete
+      :delete:
+      - :name: delete
+        :identifier: ems_infra_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: ems_infra_tag
+      - :name: unassign
+        :identifier: ems_infra_tag
+  :requests:
+    :description: Requests
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqRequest
+  :resource_pools:
+    :description: Resource Pools
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: ResourcePool
+    :subcollections:
+    - :tags
+    - :policies
+    :collection_actions:
+      :post:
+      - :name: delete
+        :identifier: resource_pool_delete
+    :resource_actions:
+      :delete:
+      - :name: delete
+        :identifier: resource_pool_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: resource_pool_tag
+      - :name: unassign
+        :identifier: resource_pool_tag
+  :roles:
+    :description: Roles
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqUserRole
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: rbac_role_add
+      - :name: edit
+        :identifier: rbac_role_edit
+      - :name: delete
+        :identifier: rbac_role_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: rbac_role_edit
+      :delete:
+      - :name: delete
+        :identifier: rbac_role_delete
+  :servers:
+    :description: EVM Servers
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqServer
+  :service_catalogs:
+    :description: Service Catalogs
+    :options:
+    - :collection
+    :methods: *70174834084700
+    :klass: ServiceTemplateCatalog
+    :subcollections:
+    - :service_templates
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: st_catalog_new
+      - :name: edit
+        :identifier: st_catalog_edit
+      - :name: delete
+        :identifier: st_catalog_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: st_catalog_edit
+      :delete:
+      - :name: delete
+        :identifier: st_catalog_delete
+  :service_requests:
+    :description: Service Requests
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: ServiceTemplateProvisionRequest
+  :service_templates:
+    :description: Service Templates
+    :options:
+    - :collection
+    - :subcollection
+    - :show
+    - :show_as_collection
+    :methods: *70174834084700
+    :klass: ServiceTemplate
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :post:
+      - :name: edit
+        :identifier: catalogitem_edit
+      - :name: delete
+        :identifier: catalogitem_delete
+    :subcollection_actions:
+      :post:
+      - :name: edit
+        :identifier: catalogitem_edit
+      - :name: delete
+        :identifier: catalogitem_delete
+      - :name: order
+        :identifier: svc_catalog_provision
+      - :name: assign
+        :identifier: st_catalog_edit
+      - :name: unassign
+        :identifier: st_catalog_edit
+    :resource_actions:
+      :post:
+      - :name: edit
+      :delete:
+      - :name: delete
+        :identifier: catalogitem_delete
+    :subresource_actions:
+      :post:
+      - :name: edit
+        :identifier: catalogitem_edit
+      - :name: order
+        :identifier: svc_catalog_provision
+      - :name: assign
+        :identifier: st_catalog_edit
+      - :name: unassign
+        :identifier: st_catalog_edit
+      :delete:
+      - :name: delete
+        :identifier: catalogitem_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: catalogitem_tag
+      - :name: unassign
+        :identifier: catalogitem_tag
+  :services:
+    :description: Services
+    :options:
+    - :collection
+    :methods: *70174834084700
+    :klass: Service
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :post:
+      - :name: edit
+        :identifier: service_edit
+      - :name: retire
+        :identifier: service_retire
+      - :name: delete
+        :identifier: service_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: service_edit
+      - :name: retire
+        :identifier: service_retire
+      :delete:
+      - :name: delete
+        :identifier: service_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: service_tag
+      - :name: unassign
+        :identifier: service_tag
+  :tags:
+    :description: Tags
+    :options:
+    - :subcollection
+    :methods: *70174834085620
+    :klass: Tag
+    :subcollection_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
+    :subresource_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
+  :templates:
+    :description: Templates
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqTemplate
+    :subcollections:
+    - :tags
+    - :policies
+    :collection_actions:
+      :post:
+      - :name: refresh
+        :identifier: miq_template_refresh
+      - :name: edit
+        :identifier: miq_template_edit
+      - :name: delete
+        :identifier: miq_template_delete
+    :resource_actions:
+      :post:
+      - :name: refresh
+        :identifier: miq_template_refresh
+      - :name: edit
+        :identifier: miq_template_edit
+      :delete:
+      - :name: delete
+        :identifier: miq_template_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: miq_template_tag
+      - :name: unassign
+        :identifier: miq_template_tag
+  :users:
+    :description: Users
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: User
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: rbac_user_add
+      - :name: edit
+        :identifier: rbac_user_edit
+      - :name: delete
+        :identifier: rbac_user_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: rbac_user_edit
+      :delete:
+      - :name: delete
+        :identifier: rbac_user_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: rbac_user_tags_edit
+      - :name: unassign
+        :identifier: rbac_user_tags_edit
+  :vms:
+    :description: Virtual Machines
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Vm
+    :subcollections:
+    - :tags
+    - :policies
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: vm_miq_request_new
+      - :name: edit
+        :identifier: vm_edit
+      - :name: refresh
+        :identifier: vm_refresh
+      - :name: shutdown
+        :identifier: vm_guest_shutdown
+      - :name: restart
+        :identifier: vm_guest_restart
+      - :name: poweron
+        :identifier: vm_start
+      - :name: poweroff
+        :identifier: vm_stop
+      - :name: suspend
+        :identifier: vm_suspend
+      - :name: reset
+        :identifier: vm_reset
+      - :name: retire
+        :identifier: vm_retire
+      - :name: delete
+        :identifier: vm_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: vm_edit
+      - :name: refresh
+        :identifier: vm_refresh
+      - :name: shutdown
+        :identifier: vm_guest_shutdown
+      - :name: restart
+        :identifier: vm_guest_restart
+      - :name: poweron
+        :identifier: vm_start
+      - :name: poweroff
+        :identifier: vm_stop
+      - :name: suspend
+        :identifier: vm_suspend
+      - :name: reset
+        :identifier: vm_reset
+      - :name: retire
+        :identifier: vm_retire
+      :delete:
+      - :name: delete
+        :identifier: vm_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: vm_tag
+      - :name: unassign
+        :identifier: vm_tag
+  :zones:
+    :description: Zones
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Zone
+    :collection_actions:
+      :post:
+      - :name: add
+        :identifier: zone_new
+      - :name: edit
+        :identifier: zone_edit
+      - :name: delete
+        :identifier: zone_delete
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: zone_edit
+      :delete:
+      - :name: delete
+        :identifier: zone_delete

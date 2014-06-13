@@ -1,0 +1,19 @@
+---
+:config_script: 
+:cwd: c:/var/www/miq/vmdb
+:daemon: false
+:debug: false
+:docroot: public
+:environment: production
+:group: 
+:host: 0.0.0.0
+:includes: 
+:log_file: c:/var/www/miq/vmdb/log/mongrel.log
+:mime_map: 
+:num_processors: 1024
+:pid_file: c:/var/www/miq/vmdb/log/mongrel.pid
+:port: 3000
+:prefix: 
+:throttle: 0
+:timeout: 60
+:user: 

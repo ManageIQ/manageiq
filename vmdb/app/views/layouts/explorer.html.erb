@@ -1,0 +1,48 @@
+<%= render :partial => "layouts/global_header" %>
+
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"layout"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"accordion"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"grid"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"combo"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"menu"} %>
+<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"toolbar"} %>
+
+<div id="context_div"></div>	<%# Div to refer context menu to %>
+<div id="layout_div" style="position:relative; width:auto; height:<%= center_div_height(true,550) %>px;">
+  <%= yield :trees %>
+  <div id="center_cell_div" style="display:none;">
+
+    <div id="taskbar_div">
+      <%= render :partial => "layouts/x_taskbar" %>
+    </div>
+
+    <%= yield %>
+
+    <div id="paging_div">
+      <% if saved_report_paging? %>
+        <%= render(:partial => 'layouts/saved_report_paging_bar', :locals=>{:pages=>@sb[:pages]}) %>
+      <% else %>
+        <%= render(:partial => '/layouts/x_pagingcontrols') %>
+      <% end %>
+    </div>
+
+  </div>
+</div>
+
+<%= yield :accords %>
+
+<%= render :partial => "layouts/page_header" %>
+
+<%= render :partial => "layouts/page_footer" %>
+
+<script>
+  var miqLayout = new dhtmlXLayoutObject(document.body,"1C");
+  miqLayout.cont.obj._offsetLeft = miqLayout.cont.obj._offsetTop = miqLayout.cont.obj._offsetWidth = miqLayout.cont.obj._offsetHeight = 0;
+  miqLayout.setSizes();
+  miqLayout.cells("a").hideHeader();
+  miqLayout.attachHeader("page_header_div");
+  miqLayout.attachFooter("page_footer_div");
+</script>
+
+<%= render :partial => "layouts/global_footer" %>

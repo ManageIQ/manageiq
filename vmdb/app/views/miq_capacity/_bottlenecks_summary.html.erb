@@ -1,0 +1,13 @@
+<div id="bottlenecks_summary_div">
+	<% if x_node != "" %>
+		<%= render(:partial =>"layouts/flash_msg", :locals=>{:div_num=>"1"}) %>
+		<%= render(:partial => 'bottlenecks_options', :locals=>{:typ=>"summ"}) %>
+	<% else %>
+		<div style="padding-left: 20px; padding-top: 20px; width: 700px">
+			<h3><fieldset>
+				Select a node on the left to view Bottlenecks timeline.
+			</fieldset></h3>
+		</div>
+	<% end %>
+	<%= render :partial=>'bottlenecks_tl_detail' %>
+</div>

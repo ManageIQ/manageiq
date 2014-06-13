@@ -1,0 +1,78 @@
+<div id="ae_tabs" style="display:none;width:auto;height:99%;overflow:auto;">
+	<%#  Toplevel Tabbar %>
+  <% nodes = x_node.split('-') %>
+	<% if nodes.first == "aec" %>
+		<ul class="tab">
+			<li><a href="#instances">Instances</a></li>
+			<li><a href="#methods">Methods</a></li>
+			<li><a href="#props">Properties</a></li>
+			<li><a href="#schema">Schema</a></li>
+		</ul>
+		<div id="instances" name="instances">
+			<%= render :partial => "class_instances" %>
+		</div>
+		<div id="methods" name="methods">
+			<%= render :partial => "class_methods" %>
+		</div>
+		<div id="props" name="props">
+			<%= render :partial => "class_props" %>
+		</div>
+		<div id="schema" name="schema">
+			<%= render :partial => "class_fields" %>
+		</div>
+	<% elsif nodes.first == "aei" %>
+		<ul>
+			<li><a href="#instances">Instances</a></li>
+		</ul>
+		<div id="instances" name="instances">
+			<%= render :partial => "instance_fields" %>
+		</div>
+	<% elsif nodes.first == "aem" %>
+		<ul>
+			<li><a href="#methods">Method Inputs</a></li>
+		</ul>
+		<div id="methods" name="methods">
+			<%= render :partial => "method_inputs" %>
+		</div>
+	<% elsif nodes.first == "aen" %>
+      <% if @in_a_form && @edit.has_key?(:ae_class_id) %>
+        <%# class add %>
+        <ul>
+          <li><a href="#props">Properties</a></li>
+        </ul>
+        <div id="props" name="props">
+          <%= render :partial => "class_add" %>
+        </div>
+      <% else %>
+        <ul>
+          <li><a href="#details">Namespace Details</a></li>
+        </ul>
+        <div id="details" name="Details">
+          <% if !@in_a_form %>
+            <%= render :partial => "ns_details" %>
+          <% else %>
+            <%= render :partial => "ns_list" %>
+          <% end %>
+        </div>
+      <% end %>
+	<% elsif nodes.first == "root" %>
+		<%# ns_list_div%>
+		<ul>
+			<li><a href="#namespaces">Namespaces</a></li>
+		</ul>
+		<div id="namespaces" name="namespaces">
+			<%= render :partial => "ns_list" %>
+		</div>
+	<% end %>
+
+</div>
+<script>
+	//method takes hash that can have 4 keys: tabs div id, active_tab label,
+	//url to go to when tab is changed, and whether to check for abandon changes or not
+	miq_jquery_tabs_init({tabs_div: "ae_tabs", active_tab: "<%=@sb[:active_tab]%>", url: "/miq_ae_class/change_tab/", tab_changes: true});
+	if (typeof miqEditor != "undefined") miqEditor.refresh();
+  <% if @in_a_form %>
+    <%# disable any other tabs on screen when in edit %>
+    miq_jquery_disable_inactive_tabs('ae_tabs');
+  <% end %>
+</script>

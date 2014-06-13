@@ -1,0 +1,22 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqWidgetSet
+:button_groups:
+- :name: db_vmdb
+  :items:
+  - :buttonSelect: db_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: db_new
+      :image: new
+      :text: "Add a new Dashboard"
+      :title: "Add a new Dashboard"
+    - :separator:
+    - :button: db_seq_edit
+      :image: edit-assign
+      :text: "Edit Sequence of Dashboards"
+      :title: "Edit Sequence of Dashboards"

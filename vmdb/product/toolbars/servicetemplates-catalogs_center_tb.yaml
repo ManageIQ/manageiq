@@ -1,0 +1,20 @@
+#
+# Toolbar config file
+#
+---
+:model: ServiceTemplate
+:button_groups:
+- :name: svc_catalog_lifecycle
+  :items:
+  - :buttonSelect: svc_catalog_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :items:
+    - :button: svc_catalog_provision_not  # Added _not so no buttons show for now
+      :image: new
+      :url_parms: 'main_div'
+      :text: "Provision Service"
+      :title: "Select a single Item to Provision Service"
+      :enabled: 'false'
+      :onwhen: '1'

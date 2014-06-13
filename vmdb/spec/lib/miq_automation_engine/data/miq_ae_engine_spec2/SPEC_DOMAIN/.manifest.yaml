@@ -1,0 +1,33 @@
+---
+__domain__.yaml:
+  classes: 1
+  instances: 3
+  created_on: 2014-05-19 18:31:00.920728000 Z
+  updated_on: 2014-05-19 18:31:00.920728000 Z
+  size: 163
+  sha1: 8CUgrwvnaF6Y2LRqmidR9zfd+ns=
+CYCLICAL/__namespace__.yaml:
+  created_on: 2014-05-19 18:31:01.031508000 Z
+  updated_on: 2014-05-19 18:31:01.031508000 Z
+  size: 160
+  sha1: dXGgjEPVcwvX5CuJNgwLYVxYXfs=
+CYCLICAL/AUTOMATE.class/__class__.yaml:
+  created_on: 2014-05-19 18:31:01.113867000 Z
+  updated_on: 2014-05-19 18:31:01.113867000 Z
+  size: 951
+  sha1: 3g0+HXjAV871E7dBch5fTvk4WvM=
+CYCLICAL/AUTOMATE.class/test1.yaml:
+  created_on: 2014-05-19 18:31:01.191435000 Z
+  updated_on: 2014-05-19 18:31:01.191435000 Z
+  size: 197
+  sha1: dxLf3h7lTVtkfL/WWckx3R0U3uk=
+CYCLICAL/AUTOMATE.class/test2.yaml:
+  created_on: 2014-05-19 18:31:01.202482000 Z
+  updated_on: 2014-05-19 18:31:01.202482000 Z
+  size: 197
+  sha1: 9rlZP4oIrMBfBHIKnkgOOhRII24=
+CYCLICAL/AUTOMATE.class/test4.yaml:
+  created_on: 2014-05-19 18:31:01.210899000 Z
+  updated_on: 2014-05-19 18:31:01.210899000 Z
+  size: 197
+  sha1: LCZ2M4B08PhBylQqB3QKZBI/3Pg=

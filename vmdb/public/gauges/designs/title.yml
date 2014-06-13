@@ -1,0 +1,11 @@
+<%= gauge :base %>
+  <%= dial :text, :title %>
+      rotation: -90
+      size:      78
+      alpha:     10
+      x:        -15
+      y:        300
+      color:    ffffff
+      width:    300
+      text:     Hello World
+      

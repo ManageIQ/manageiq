@@ -1,0 +1,16 @@
+<%= stylesheet_link_tag 'XMLDisplay' %>
+<%= javascript_include_tag 'XMLDisplay' %>
+<div id="results_xml_div">
+  <% if @temp[:results] %>
+    <div id='XMLHolder'></div>
+    <% if @temp[:results] %>
+      <script>
+        var tempxml = "<%= @temp[:results].gsub(/[\r\n]/, '').gsub(/["]/, '\\\\"').html_safe %>"
+        LoadXMLString('XMLHolder',tempxml);
+      </script>
+    <% end %>
+  <% else %>
+    <br/>&nbsp<strong>* Enter Automation Simulation options on the left and press Submit</strong>
+  <% end %>
+</div>
+

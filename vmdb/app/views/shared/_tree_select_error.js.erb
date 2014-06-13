@@ -1,0 +1,6 @@
+<%# Renders JS to handle tree select error %>
+<% select_node            = options[:select_node] %>
+
+<%= x_active_tree.to_s %>.selectItem('<%= select_node %>', false);
+
+<%= render :partial => "shared/ajax/flash_msg_replace" %>

@@ -1,0 +1,716 @@
+# Generated Wed Jul 02 12:01:31 -0500 2008--- 
+vm119: 
+  name: vm119
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: fat32
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\MultiExtent\Windows 2000 Professional.vmdk
+vm62: 
+  name: vm62
+  vm_system_partition: 1
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 6
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\CheckPoint Software\VPN-1 VSX NGX PRODUCT\Red Hat Linux.vmdk
+vm34: 
+  name: vm34
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\SQL 2005 1\SQL1.vmdk
+vm90: 
+  name: vm90
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\MIQ-DC2\MIQ-DC2.vmdk
+vm35: 
+  name: vm35
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\SQL 2005 2\SQL1.vmdk
+vm121: 
+  name: vm121
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\VMware Server on WS6\VMware Server on XP\Windows XP Professional.vmdk
+vm92: 
+  name: vm92
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\MIQ-DEV\MIQ-DEV.vmdk
+vm122: 
+  name: vm122
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\VMware Server on WS6\VMware Server on XP\Windows XP Professional-0.vmdk
+vm151: 
+  name: vm151
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 3
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\VMs\VMWare\VirtualAppliances.net LAPP\VirtualAppliancesLAPP\VirtualAppliancesLAPP.vmdk
+vm123: 
+  name: vm123
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\Win2K3-EE\Windows Server 2003 Enterprise Edition.vmdk
+vm38: 
+  name: vm38
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\asterisk-0.9.6.5-x86\asterisk-0.9.6.5-x86.vmdk
+vm94: 
+  name: vm94
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\MIQ-PRODUCT\MIQ-PRODUCT.vmdk
+vm67: 
+  name: vm67
+  vm_system_partition: 1
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 4
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\Engarde Secure linux\Other Linux 2.6.x kernel.vmdk
+vm124: 
+  name: vm124
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\Windows 2000 Professional\Windows 2000 Professional.vmdk
+vm39: 
+  name: vm39
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\joomla-1.0.12-x86\joomla-1.0.12-x86.vmdk
+vm153: 
+  name: vm153
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 3
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\VMs\VMWare\VirtualAppliances.net TomCat\VirtualAppliancesTomcat\VirtualAppliancesTomcat.vmdk
+vm126: 
+  name: vm126
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\Windows Vista (experimental)\Windows Vista (experimental).vmdk
+vm155: 
+  name: vm155
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\VMs\VMWare\VMware Server on WS6\VMware Server on XP\Windows XP Professional.vmdk
+vm127: 
+  name: vm127
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\WinXP Testcase\Windows XP Professional.vmdk
+vm156: 
+  name: vm156
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\VMs\VMWare\VMware Server on WS6\VMware Server on XP\Windows XP Professional-0.vmdk
+vm40: 
+  name: vm40
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\knowledgetree-3.4.2-x86\knowledgetree-3.4.2-x86.vmdk
+vm157: 
+  name: vm157
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\VMs\VMWare\Win2K3-EE\Windows Server 2003 Enterprise Edition.vmdk
+vm41: 
+  name: vm41
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\lamp-1.3.2-x86\lamp-1.3.2-x86.vmdk
+vm128: 
+  name: vm128
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch4\Windows Server 2008\Windows Server 2008 (experimental).vmdk
+vm158: 
+  name: vm158
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\VMs\VMWare\Windows 2000 Professional\Windows 2000 Professional.vmdk
+vm42: 
+  name: vm42
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\musicpd-0.12.2-x86\musicpd-0.12.2-x86.vmdk
+vm43: 
+  name: vm43
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\port25-0.11-x86\port25-0.11-x86.vmdk
+vm71: 
+  name: vm71
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\Pandora Debian\Debian 3.1R4 Pandora FMS\Debian 3.1R4 Pandora FMS.vmdk
+vm44: 
+  name: vm44
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\vehera-base-1.6.10-x86\vehera-base-1.6.10-x86.vmdk
+vm0: 
+  name: vm0
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\Scratch\VM\MIQ-FTP\scsi0-0-0-MIQ-FTP.vmdk
+vm45: 
+  name: vm45
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\App-Web Server\rPath\zenoss-2.0.0-x86\zenoss-2.0.0-x86.vmdk
+vm1: 
+  name: vm1
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\Scratch\VM\MIQ-FTP\scsi0-1-0-MIQ-FTP_1.vmdk
+vm73: 
+  name: vm73
+  vm_system_partition: 1
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\reflex vsa\Reflex_RCC-vmware\Reflex_RCC-vmware.vmdk
+vm46: 
+  name: vm46
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\database\MySQL Server 5.0\mysql-5.0.45-x86\mysql-5.0.45-x86.vmdk
+vm2: 
+  name: vm2
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\Scratch\VM\Time\scsi0-0-0-Time.vmdk
+vm74: 
+  name: vm74
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\Untangle501 debian\untangle501\untangle501.vmdk
+vm160: 
+  name: vm160
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\VMs\VMWare\WinXP Testcase\Windows XP Professional.vmdk
+vm76: 
+  name: vm76
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: reiserfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\vkernel\V-Kernel Release 1.0\V-Kernel Release 1.0.vmdk
+vm77: 
+  name: vm77
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: reiserfs
+  num_partitions: 4
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\vkernel\V-Kernel Release 1.0\V-Kernel Release 1.0 (2).vmdk
+vm21: 
+  name: vm21
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\vmshare\VMWare\SQL 2005 1\SQL1.vmdk
+vm108: 
+  name: vm108
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: microsoft
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VirtualPC\WinXP Pro\WinXP Pro.vhd
+vm138: 
+  name: vm138
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: microsoft
+  os_type: windows
+  location: \\miq-websvr1\VM\VMs\VirtualPC\WinXP Pro\WinXP Pro.vhd
+vm22: 
+  name: vm22
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\AntiSpam\GFI.vmdk
+vm109: 
+  name: vm109
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\ESX ready\MySQL Server 5.0\mysql-5.0.45-x86\mysql-5.0.45-x86.vmdk
+vm23: 
+  name: vm23
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\DHCP Server\Windows Server 2003 Standard Edition.vmdk
+vm24: 
+  name: vm24
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\Domain Controller\Windows Server 2003 Standard Edition.vmdk
+vm80: 
+  name: vm80
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\security\vyatta virtual appliance\Vyatta-VC2.2\Vyatta VC2-2.vmdk
+vm52: 
+  name: vm52
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: reiserfs
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\operating systems\Ubuntu-baseline\copy of Ubuntu server 7.04 ReiserFS\Ubuntu.vmdk
+vm25: 
+  name: vm25
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\Itunes Copy\MIQ-ITUNES-flat.vmdk
+vm53: 
+  name: vm53
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\operating systems\Ubuntu-baseline\Ubuntu server 7.04 EXT2\Ubuntu.vmdk
+vm54: 
+  name: vm54
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\operating systems\Ubuntu-baseline\Ubuntu server 7.04 EXT3 (reference machine)\Ubuntu.vmdk
+vm111: 
+  name: vm111
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch3\VM_depot\VMWare\ESXSparse\TestVM-000001-delta.vmdk
+vm83: 
+  name: vm83
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMware-ACE-Management-Server-Appliance-1.0.200703201845-42757\vaos-cl2.vmdk
+vm55: 
+  name: vm55
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: reiserfs
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\operating systems\Ubuntu-baseline\Ubuntu server 7.04 ReiserFS\Ubuntu.vmdk
+vm141: 
+  name: vm141
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\VMs\VMWare\ESX ready\MySQL Server 5.0\mysql-5.0.45-x86\mysql-5.0.45-x86.vmdk
+vm84: 
+  name: vm84
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\VPN Server\RRAS.vmdk
+vm56: 
+  name: vm56
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\scratch2\VMware\VMWare Appliance Marketplace\rmoore\Vyatta Community 2.2\Vyatta-VC2.2\Vyatta VC2-2.vmdk
+vm85: 
+  name: vm85
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\Web Server\Windows Server 2003 Standard Edition.vmdk
+vm143: 
+  name: vm143
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ext3
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\VMs\VMWare\Jumpbox\trac-1.0.1\disks\root.vmdk
+vm86: 
+  name: vm86
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: fat32
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\Win2K3-EE Fat32\Windows Server 2003 Enterprise Edition.vmdk
+vm87: 
+  name: vm87
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\Win 2003 Svr Template\2K3 Tmp.vmdk
+vm145: 
+  name: vm145
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: fat32
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\VMs\VMWare\MultiExtent\Windows 2000 Professional.vmdk
+vm88: 
+  name: vm88
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\Windows 2000 Professional\Windows 2000 Professional.vmdk
+vm146: 
+  name: vm146
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: reiserfs
+  num_partitions: 2
+  disk_type: ""
+  vm_type: vmware
+  os_type: linux
+  location: \\miq-websvr1\VM\VMs\VMWare\SuSE10\SuSE10\SUSE Linux Enterprise Server.vmdk
+vm89: 
+  name: vm89
+  vm_system_partition: 0
+  num_volumes: 1
+  num_disk: 1
+  fs_type: ntfs
+  num_partitions: 1
+  disk_type: ""
+  vm_type: vmware
+  os_type: windows
+  location: \\miq-websvr1\VM\scratch2\VMware\Windows Server 2003 Enterprise x64 Edition\Windows Server 2003 Enterprise x64 Edition.vmdk

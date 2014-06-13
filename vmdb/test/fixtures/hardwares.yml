@@ -1,0 +1,16 @@
+--- 
+hardwares_001: 
+  bios: Phoenix ROM BIOS PLUS Version 1.10 A06
+  guest_os: "Microsoft\xC2\xAE Windows Vista\xC2\x99 Ultimate"
+  memory_cpu: "2045"
+  vm_id: 
+  cpu_speed: "2000"
+  config_version: 
+  id: "1"
+  cpu_type: Intel(R) Core(TM)2 CPU         T7200  @ 2.00GHz
+  time_sync: 
+  host_id: "1"
+  annotation: 
+  bios_location: 
+  numvcpus: "2"
+  virtual_hw_version: 

@@ -1,0 +1,90 @@
+<%# global_header view contains everything up to the body tag %>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-store"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="must-revalidate"/>
+    <meta http-equiv="cache-control" content="no-cache, no store"/>
+
+    <title>
+      <%= h(title_from_layout(@layout)) %>
+    </title>
+
+    <%= stylesheet_link_tag 'application' %>
+
+    <%= tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico") %>
+    <%= stylesheet_link_tag 'header' %>
+    <%= stylesheet_link_tag 'glyphicons' %>
+    <%= stylesheet_link_tag 'template' %>
+    <%= render :partial=>"stylesheets/template50" %>
+    <!--[if IE 8]>
+    <html class="ie8"><![endif]-->
+    <%# jQuery includes %>
+    <%= javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min' %>
+    <script type="text/javascript">
+      $j = jQuery;	<%# Override jQuery $ to $j %>
+    </script>
+
+    <%# jQuery UI CSS %>
+    <%= stylesheet_link_tag "jquery/miq/jquery-ui-1.9.2.custom" %>
+
+    <%= javascript_include_tag 'jquery.observe_field' %>	<%# Observe field plugin          %>
+    <%= javascript_include_tag 'miq_jquery_ujs_rails3' %> <%# MIQ modified jquery UJS       %>
+    <%= javascript_include_tag 'miq_ujs_bindings' %>			<%# MIQ UJS event bindings        %>
+    <%= javascript_include_tag 'jquery.form' %>	          <%# Form plugin (for file uploads %>
+    <%= javascript_include_tag 'jquery.cookie' %>	        <%# Cookie plugin (dynatree)      %>
+
+    <%= csrf_meta_tag %>
+
+    <%= javascript_include_tag 'prototype_min', 'effects_min', 'application', 'dragdrop_min', 'controls_min' %>
+
+    <%= javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcommon.js', 'dhtmlx_gpl_36/dhtmlxcontainer.js' %>
+
+    <%= stylesheet_link_tag '/assets/dynatree_1.2.4/skin-cfme/ui.dynatree.css' %>
+    <%= javascript_include_tag 'dynatree_1.2.4/jquery.dynatree', 'cfme_dynatree' %>
+
+    <%= stylesheet_link_tag 'slick.grid.css', 'cfme_slickgrid'%>
+    <%= javascript_include_tag 'SlickGrid-2.1/jquery.event.drag-2.2', 'SlickGrid-2.1/slick.core',
+      'SlickGrid-2.1/slick.grid', 'SlickGrid-2.1/slick.dataview', 'SlickGrid-2.1/plugins/slick.autotooltips',
+      'cfme_slickgrid' %>
+
+    <% if @timeline %>
+      <%= javascript_include_tag '/javascripts/timeline/api/timeline-api.js' %>
+      <% if @timeline_filter %>
+        <%= javascript_include_tag '/javascripts/timeline/api/scripts/miq_filters.js' %>
+        <%= javascript_include_tag '/javascripts/timeline/api/scripts/miq_layouts.js' %>
+        <%= javascript_include_tag '/javascripts/timeline/api/scripts/miq_painters.js' %>
+      <% end %>
+    <% end %>
+
+    <%= javascript_include_tag 'spin' %>  <%# JS activity spinner %>
+
+    <style>html, body{width:100%; height:100%; margin:0px; padding:0px; overflow:hidden;}</style>
+</head>
+
+<%# Generate <body> tag %>
+<% if ["configuration","policy"].include?(@layout) %>
+
+  <%# For IE7+, don't use onload.  See global_footer for workaround. %>
+  <% if is_browser_ie? %>
+    <body id="<%= @config_tab %>" onresize="miqOnResize();" >
+  <% else %>
+    <body onload="miqOnLoad();" id="<%= @config_tab %>" onresize="miqOnResize();" >
+  <% end %>
+
+<% else %>
+
+  <%# For IE7+, don't use onload.  See global_footer for workaround. %>
+  <% if is_browser_ie? %>
+    <body id="<%= @layout %>" onresize="miqOnResize();" >
+  <% else %>
+    <body onload="miqOnLoad();" id="<%= @layout %>" onresize="miqOnResize();" >
+  <% end %>
+
+<% end %>

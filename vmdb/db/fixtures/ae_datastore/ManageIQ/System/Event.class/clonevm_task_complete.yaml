@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: VM - Clone Complete
+    name: CloneVM_Task_Complete
+    inherits: 
+    description: 
+  fields:
+  - logical_event:
+      value: NOT_vm_created
+  - rel5:
+      value: /Automation/Vm/${#logical_event}?vm_id=${process#dest_vm_id}

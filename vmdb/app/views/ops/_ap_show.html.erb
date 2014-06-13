@@ -1,0 +1,82 @@
+<div id='main_div'>
+  <%= render(:partial=>"layouts/flash_msg") %>
+  <p class="legend">Info</p>
+  <table class="style1">
+      <tr>
+        <td class="key">Name</td>
+        <td><%= h(@selected_scan.name) %></td>
+      </tr>
+      <tr>
+        <td class="key">Description</td>
+        <td><%= h(@selected_scan.description) %></td>
+      </tr>
+      <tr>
+        <td class="key">Type</td>
+        <td class="wide"><%= h(@selected_scan.mode) %></td>
+      </tr>
+  </table>
+  <hr>
+  <% unless @selected_scan.mode == "Host" %>
+    <% if @category %>
+
+
+            <p class="legend">Categories</p>
+            <table class="style1">
+                  <% @category.sort.each do |c| %>
+                    <tr>
+                      <td><%= h(c) %></td>
+                   </tr>
+                  <% end %>
+              </table>
+            <hr>
+    <% end  %>
+  <% end %>
+  <% if @file %>
+    <p class="legend">File Items</p>
+    <table class="style3">
+      <thead>
+        <tr>
+          <th width="200">Name</th>
+          <th>Collect Contents?</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @file.sort.each do |f| %>
+          <tr>
+            <td width="200"><%= h(f) %></td>
+            <td ><%= h(@file_stats["#{f}"]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <hr>
+  <% end  %>
+      <% unless @selected_scan.mode == "Host" %>
+        <% if @registry %>
+          <p class="legend">Registry Items</p>
+          <table class="style1">
+            <% @registry.sort_by { |r| r["key"] }.each do | k | %>
+              <tr>
+                <td><%= h(k["hive"]) %>\<%= h(k["key"]) %> : <%= h(k["value"]) %></td>
+              <tr>
+            <% end %>
+          </table>
+          <hr>
+        <% end %>
+      <% end %>
+    <% if @nteventlog %>
+
+
+          <p class="legend">Event Log Items</p>
+          <table class="style1">
+                <% @nteventlog.sort_by{|l|l[:name]}.each do | k | %>
+                  <tr>
+                    <td><%= h(k[:name]) %></td>
+                  <tr>
+                <% end %>
+            </table>
+
+
+    <% end %>
+
+</div>

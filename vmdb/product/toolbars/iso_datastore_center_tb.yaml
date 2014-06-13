@@ -1,0 +1,25 @@
+#
+# Toolbar config file
+#
+---
+:model: IsoDatastore
+:button_groups:
+- :name: iso_datastore_vmdb
+  :items:
+  - :buttonSelect: iso_datastore_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: iso_datastore_delete
+      :image: delete
+      :text: 'Remove this ISO Datastore from the VMDB'
+      :title: 'Remove this ISO Datastore from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This ISO Datastore and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this ISO Datastore?'
+    - :separator:
+    - :button: iso_datastore_refresh
+      :image: refresh
+      :text: 'Refresh Relationships'
+      :title: 'Refresh Relationships for this ISO Datastore'
+      :confirm: 'Refresh Relationships for this ISO Datastore?'

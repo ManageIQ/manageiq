@@ -1,0 +1,24 @@
+<% url = url_for(:action =>'evm_relationship_field_changed') %>
+<div id="tab_div">
+	<%= render :partial => "layouts/flash_msg" %>
+	<fieldset>
+		<p class="legend">Servers</p>
+		<table class="style1">
+			<tr>
+				<td class="key">Select Server:</td>
+				<td class="wide">
+          <%= select_tag("server_id",
+                          options_for_select([["<Not a Server>",""]] + @servers.sort, @edit[:new][:server]),
+                          "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                          "data-miq_observe"=>{:url=>url}.to_json) %>
+				</td>
+				<td width="100">
+				</td>
+			</tr>
+
+		</table>
+	</fieldset>
+	<% if !@edit[:explorer] %>
+		<%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:action_url=>'evm_relationship_update',:ajax_buttons=>true})%>
+	<% end %>
+</div>

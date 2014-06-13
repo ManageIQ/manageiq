@@ -1,0 +1,15 @@
+--- 
+operating_systems_001: 
+  system_root: C:\Windows
+  name: computername
+  vm_id: 
+  productid: 89580-OEM-7332132-00141
+  product_type: WinNT
+  build_number: "6000"
+  bitness: 
+  id: "1"
+  version: "6.0"
+  host_id: "1"
+  service_pack: 
+  distribution: 
+  product_name: Windows Vista (TM) Ultimate

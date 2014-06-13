@@ -1,0 +1,2 @@
+class CloudVolumeSnapshotOpenstack < CloudVolumeSnapshot
+end

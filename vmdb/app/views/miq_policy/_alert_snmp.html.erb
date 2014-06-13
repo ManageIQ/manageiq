@@ -1,0 +1,132 @@
+<% if @edit %>
+  <% url = url_for(:action => 'alert_field_changed',
+                   :id     => "#{@alert.id || "new"}") 
+  %>
+<% end %>
+<div id="alert_snmp_div" >
+  <p class="legend">SNMP Trap</p>
+  <table class="style1">
+    <% if @edit %>
+      <tr>
+        <td class="key">Send an SNMP Trap</td>
+        <td>
+          <%= check_box_tag("send_snmp_cb", 
+                            value="1",
+                            checked=@edit[:new][:send_snmp],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+          %>
+        </td>
+      </tr>
+      <% if @edit[:new][:send_snmp] %>
+        <tr>
+          <td class="key">Host</td>
+          <td>
+            <%= text_field_tag("host_1",
+                               @edit[:new][:snmp][:host][0],
+                               :maxlength => MAX_DESC_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json)
+            %>
+           <br/>
+            <%= text_field_tag("host_2",
+                               @edit[:new][:snmp][:host][1],
+                               :maxlength => MAX_DESC_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
+            <br/>
+            <%= text_field_tag("host_3",
+                               @edit[:new][:snmp][:host][2],
+                               :maxlength => MAX_DESC_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json)
+            %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Version</td>
+          <td>
+            <% version = ["v1","v2"] %>
+            <%= select_tag('snmp_version',
+                           options_for_select(version, 
+                                              @edit[:new][:snmp][:snmp_version]),
+                           :style => "width:50px",
+                           "data-miq_sparkle_on"  => true, 
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => url}.to_json) 
+            %>
+          </td>
+        </tr>
+        <% trap_text = @edit[:new][:snmp][:snmp_version] == "v1" || @edit[:new][:snmp][:snmp_version].nil? ? "Trap Number" : "Trap Object ID" %>
+        <tr>
+          <td class="key"><%= trap_text %></td>
+          <td>
+            <%= text_field_tag("trap_id",
+                               @edit[:new][:snmp][:trap_id],
+                               :maxlength => MAX_DESC_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+  <% if @edit[:new][:send_snmp] %>
+    <br/>
+    <table class="style3">
+      <thead>
+        <tr>
+          <th>Variable Object ID</th>
+          <th>Type</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <% 10.times do |i| %>
+        <% f = "oid__" + (i+1).to_s %>
+        <% t = "var_type__" + (i+1).to_s %>
+        <% v = "value__" + (i+1).to_s %>
+        <tr>
+          <td class="wide">
+            <%= text_field_tag("#{f}",
+                               @edit[:new][:snmp][:variables][i][:oid],
+                               :maxlength => MAX_DESC_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
+          </td>
+          <td class="wide">
+            <%= select_tag("#{t}",
+                           options_for_select(["<None>"] + @edit[:snmp_var_types].sort,
+                                              @edit[:new][:snmp][:variables][i][:var_type]),
+                           :style => "width:100px",
+                           "data-miq_sparkle_on"  => true, 
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => url}.to_json) 
+            %>
+          </td>
+          <% if @edit[:new][:snmp][:variables][i][:var_type] == "Null" || @edit[:new][:snmp][:variables][i][:var_type] == "<None>" %>
+            <%  val_disabled = true %>
+          <% else %>
+            <%  val_disabled = false %>
+          <% end %>
+          <td class="wider">
+            <%= text_field_tag("#{v}",
+                               @edit[:new][:snmp][:variables][i][:value],
+                               :disabled  => val_disabled,
+                               :maxlength => MAX_DESC_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+  <hr>
+</div>
+<% if @edit %>
+  <%# Need this to bind checkbox observers when under DHTMLX tabs %>
+  <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+  <script>miqObserveCheckboxes();</script>
+<% end %>

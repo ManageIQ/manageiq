@@ -1,0 +1,11 @@
+.maincontent
+  = render :partial => "layouts/flash_msg"
+  = hidden_div_if(@settings[:views][:dashboards] != "graphical", :id => "graphical_div") do
+    = render :partial => "shared/summary/graphical", :locals => { :title => "Relationships",            :items => graphical_group_relationships }
+  = hidden_div_if(@settings[:views][:dashboards] != "textual", :id => "textual_div") do
+    %dl.col2
+      %dd
+        = render :partial => "shared/summary/textual", :locals => { :title => "Properties",            :items => textual_group_properties }
+        = render :partial => "shared/summary/textual", :locals => { :title => "Relationships",         :items => textual_group_relationships }
+      %dd
+        = render :partial => "shared/summary/textual_firewall_rules", :locals => { :title => "Firewall Rules", :items => textual_group_firewall, :labels => ["Network Protocol", "Host Protocol", "Direction", "Port", "End Port", "Source"]}

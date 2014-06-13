@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: Cluster_Workload_Management
+    inherits: 
+    description: 
+  fields:
+  - method1:
+      value: Cluster_Workload_Management

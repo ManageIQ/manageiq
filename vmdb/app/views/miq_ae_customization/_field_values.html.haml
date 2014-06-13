@@ -1,0 +1,24 @@
+#field_values_div
+  = form_tag(url_for(:action => 'field_value_accept', :id=>"#{@record.id || "new"}"), :remote=>true) do
+    %fieldset
+      %p.legend Entries
+      = render :partial => "layouts/flash_msg"
+      %table.style3
+        %thead
+          %tr
+            %th.icon
+            %th.title Value
+            %th.title Description
+        %tbody
+          - if entry == "new"
+            = render :partial => "field_value_entry", :locals=>{:entry=>"new", :edit=>true}
+          - else
+            = render :partial => "field_value_entry", :locals=>{:entry=>"new", :edit=>false}
+          - @edit[:field_values].each_with_index do | e, i |
+            - if entry != nil && entry != "new" && entry.to_i == i
+              = render :partial => "field_value_entry", :locals=>{:entry=>e, :idx=>i, :edit=>true}
+            - else
+              = render :partial => "field_value_entry", :locals=>{:entry=>e, :idx=>i, :edit=>false}
+        %tfoot
+          %tr
+            %td{:colspan => "40"}

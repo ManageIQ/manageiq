@@ -1,0 +1,47 @@
+<%= stylesheet_link_tag "service_dialogs" %>
+
+<% content_for :trees do %>
+  <% @built_trees.each do |tree| %>
+    <div style="display:none">
+      <%= render(:partial => "shared/tree",
+                 :locals  => {:tree => tree, :name => tree.name.to_s}) %>
+    </div>
+  <% end %>
+
+  <%# Custom left cell div for service dialog editor to use %>
+  <%= render :partial => "layouts/custom_left_cell" %>
+<% end %>
+
+<% content_for :accords do %>
+  <%= render(:partial => "layouts/dhtmlxlayout_explorer",
+             :locals=>{:accords=>@accords,
+                       :active_accord=>@sb[:active_accord],
+                       :accord_select_function=>"miqAccordCustomizationSelect"}
+            ) %>
+<% end %>
+
+<% if x_active_tree == :ab_tree %>    <%# Showing a Buttons tree %>
+  <div id="main_div" class="main_div">
+    <%= render :partial => "shared/buttons/ab_list" %>
+  </div>
+<% elsif x_active_tree == :old_dialogs_tree %>                                      <%# Showing a Dialogs tree %>
+  <div id="main_div" class="main_div">
+    <% if @dialog %>
+      <%= render :partial => "old_dialogs_details" %>
+    <% else %>
+      <%= render :partial => "old_dialogs_list" %>
+    <% end %>
+  </div>
+<% elsif x_active_tree == :dialogs_tree %>                                      <%# Showing a Dialogs tree %>
+  <div id="main_div" class="main_div">
+    <% if @record %>
+      <%= render :partial => "dialog_details" %>
+    <% else %>
+      <%= render(:partial => 'layouts/x_gtl') %>
+    <% end %>
+  </div>
+<% elsif x_active_tree == :dialog_import_export_tree %>
+  <div id="main_div" class="main_div">
+    <%= render :partial => "dialog_import_export" %>
+  </div>
+<% end %>

@@ -1,0 +1,1084 @@
+--- 
+? !str:VimString 
+  str: group-v12431
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Harpreet
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v12431
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-12481
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12432
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v12486
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: THennessy
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v12486
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-12487
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12491
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v3
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: vm
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: datacenter-2
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: group-v59
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v12494
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v48
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v61
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v11341
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v64
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v12353
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v932
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v12486
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v12256
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v60
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v887
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v66
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12495
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-1005
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-1023
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-1024
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-1022
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12446
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11897
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12447
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-19
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12423
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12426
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12424
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v12223
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Discovered virtual machine
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v12223
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray []
+
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v12256
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Training
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v12256
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-12257
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12258
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12259
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v3577
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: GreggT
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v3577
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-1137
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11869
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v642
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: vm
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: datacenter-641
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: group-v12223
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v3552
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v3577
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v12431
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v12202
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: group-v11862
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-5065
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-9171
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12429
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-931
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-1058
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12569
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-667
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-671
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-999
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-h12485
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Test
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-h4
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-h12485
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: domain-s12627
+      "@vimType": :ComputeResource
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v12202
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Jason
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v12202
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-12203
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v11862
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: JoeR
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v11862
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-9176
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12430
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12617
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12437
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12442
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12443
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12438
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12436
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12226
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11929
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12214
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12217
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12215
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11858
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11861
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12225
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12224
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12211
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11932
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12205
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12201
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11930
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-858
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v48
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Discovered virtual machine
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v48
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-893
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12564
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v59
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: BHelgeson
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v59
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray []
+
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-h4
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: host
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: datacenter-2
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-h4
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: group-h12485
+      "@vimType": :Folder
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: domain-c871
+      "@vimType": :ClusterComputeResource
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v60
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: VCs
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v60
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-20
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-901
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v887
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: View Environment
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v887
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-889
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-905
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-d1
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Datacenters
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  MOR: !str:VimString 
+    str: group-d1
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: datacenter-641
+      "@vimType": :Datacenter
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datacenter-672
+      "@vimType": :Datacenter
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: datacenter-2
+      "@vimType": :Datacenter
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-h674
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: host
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: datacenter-672
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-h674
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray []
+
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v61
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Infra
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v61
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-25
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v932
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Rich
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v932
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-12507
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12351
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-863
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12352
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11339
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-8654
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-973
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-975
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-786
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-854
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-851
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-846
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-982
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-2057
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-788
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-841
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-844
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-850
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-h643
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: host
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: datacenter-641
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-h643
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: domain-s646
+      "@vimType": :ComputeResource
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v12494
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Brandon
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v12494
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-12508
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v64
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: MFeifer
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v64
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-830
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12506
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12503
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12482
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11910
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11881
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12613
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12614
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-1061
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11911
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v3552
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: GregM
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v642
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v3552
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-1136
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12461
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v11341
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: JFitzgerald
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v11341
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-11342
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v12353
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: RMoore
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v12353
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-12354
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v66
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: Xlecauchois
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-v3
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v66
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: vm-979
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-980
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11902
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12220
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12441
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11914
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12440
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-11883
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+    - !str:VimString 
+      str: vm-12631
+      "@vimType": :VirtualMachine
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: group-v673
+  "@vimType": :Folder
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: vm
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: datacenter-672
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-v673
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  childEntity: !seq:VimArray []
+
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+

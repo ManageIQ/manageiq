@@ -1,0 +1,40 @@
+#
+# Toolbar config file
+#
+---
+:model: OntapFileShare
+:button_groups:
+- :name: ontap_file_share_vmdb
+  :items:
+  - :buttonSelect: ontap_file_share_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ontap_file_share_create_datastore
+      :image: create_datastore
+      :text: 'Create Datastore'
+      :title: 'Create a Datastore based on this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'
+- :name: ontap_file_share_policy
+  :items:
+  - :buttonSelect: ontap_file_share_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: ontap_file_share_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: 'Edit Tags for this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'
+- :name: ontap_file_share_monitoring
+  :items:
+  - :buttonSelect: ontap_file_share_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: ontap_file_share_statistics
+      :image: statistics
+      :text: "Utilization"
+      :title: 'Show Utilization for this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'
+      :url: '/show_statistics'

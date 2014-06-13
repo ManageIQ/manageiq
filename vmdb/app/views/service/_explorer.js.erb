@@ -1,0 +1,27 @@
+<%# Renders JS to replace the contents of the miq_policy explorer view as directed by the controller %>
+
+<%# Pull options into local vars %>
+<% object_tree_json = options.delete(:object_tree) %>
+<% exp              = options.delete(:exp) %>
+
+<% if object_tree_json %>
+  obj_tree.loadJSONObject(<%= object_tree_json %>);
+  obj_tree.loadOpenStates('obj_tree');
+<% end %>
+
+<% if exp %>  <%# See if any miq expression vars need to be set %>
+  <% if exp[:val1_type] %>
+    miq_val1_type = '<%= exp[:val1_type] %>';
+  <% end %>
+  <% if exp[:val1_title] %>
+    miq_val1_title = '<%= exp[:val1_title] %>';
+  <% end %>
+  <% if exp[:val2_type] %>
+    miq_val2_type = '<%= exp[:val2_type] %>';
+  <% end %>
+  <% if exp[:val2_title] %>
+    miq_val2_title = '<%= exp[:val2_title] %>';
+  <% end %>
+<% end %>
+
+<%= render :partial => "shared/explorer", :locals => {:options => options} %>

@@ -1,0 +1,108 @@
+<% action = "saved_report_paging" %>
+<% url = url_for(:action =>action) %>
+<% @pb_occ ||= 0; @pb_occ+=1 %>
+<% pages ||= {:perpage => @settings[:perpage][:reports], :current=>1, :total=>5, :items => @sb[:pages][:items]} %>
+
+<div id='rpb_div_<%= @pb_occ.to_s %>'>
+
+	<table border="0" cellpadding="0" cellspacing="0" width="100%"
+		style="
+				height: 30px;
+				border: 1px solid #BAB9BA;
+				border-width: 1px 1px 0px 1px;
+				background: url(/images/layout/teaserbarlg.png) repeat-x left bottom;
+				">
+
+		<tr>
+			<td valign="middle">
+					<%# if ! @db.nil? && @pc_occ == 1 && ["Host", "Vm", "management_system","Repository", "Storage",
+																							"Service", "ems_cluster", "resource_pool"].include?(@db) &&
+																							@db.downcase == request.parameters["controller"].downcase %>
+
+							<%#= link_to(image_tag("/images/toolbars/txt.png", :class=>"rollover small", :type=>"application/txt", :alt=>"Download this report in text format"),
+													{:action=>'download_data', :download_type=>"text", :db_type=>@db},
+													:title=>"Download this report in text format")
+							%>
+
+							<%#= link_to(image_tag("/images/toolbars/csv.png", :class=>"rollover small", :type=>"application/csv", :alt=>"Download this report in CSV format"),
+													{:action=>'download_data', :download_type=>"csv", :db_type=>@db},
+													:title=>"Download this report in CSV format")
+							%>
+
+							<%#= link_to(image_tag("/images/toolbars/pdf.png", :class=>"rollover small", :type=>"application/pdf", :alt=>"Download this report in PDF format"),
+													{:action=>'download_data', :download_type=>"pdf", :db_type=>@db},
+													:title=>"Download this report in PDF format")
+							%>
+
+					<%# end %>
+			</td>
+			<td align="right" valign="middle">
+				<table border="0" cellpadding="0" cellspacing="0" align="right">
+					<tr>
+						<td style="padding: 4px 2px 4px 2px;" nowrap>Per page:</td>
+						<td style="padding: 4px 2px 4px 2px;">
+              <%= select_tag("perpage_setting#{@pb_occ}",
+                             options_for_select(@pp_choices, pages[:perpage]),
+                             "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                             "data-miq_observe"=>{:url=>url}.to_json) %>
+						</td>
+						<td nowrap>
+								<!-- first button -->
+								<% if pages[:current] > 1 %>
+									<%= link_to(image_tag('/images/toolbars/first.png', :border=>"0", :class=>"rollover small"),
+													{:action=>action, :page=>1},
+													"data-miq_sparkle_on" => true,
+													"data-miq_sparkle_off" => true,
+													:remote=>true,
+													:title=>"") %>
+									<%= link_to(image_tag('/images/toolbars/previous.png', :border=>"0", :class=>"rollover small"),
+													{:action=>action, :page=>pages[:current] - 1},
+													"data-miq_sparkle_on" => true,
+													"data-miq_sparkle_off" => true,
+													:remote=>true,
+													:title=>"") %>
+								<% else %>
+									<%= image_tag('/images/toolbars/first.png',  :class=>"dimmed small") %>
+									<%= image_tag('/images/toolbars/previous.png', :class=>"dimmed small")	%>
+								<% end %>
+
+								<% if pages[:current] < pages[:total] %>
+									<%= link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
+													{:action=>action, :page=>pages[:current] + 1},
+													"data-miq_sparkle_on" => true,
+													"data-miq_sparkle_off" => true,
+													:remote=>true,
+													:title=>"") %>
+									<%= link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
+													{:action=>action, :page=>pages[:total]},
+													"data-miq_sparkle_on" => true,
+													"data-miq_sparkle_off" => true,
+													:remote=>true,
+													:title=>"") %>
+								<% else %>
+									<%= image_tag('/images/toolbars/next.png', :class=>"dimmed small") %>
+									<%= image_tag('/images/toolbars/last.png', :class=>"dimmed small") %>
+								<% end %>
+						</td>
+						<td valign="middle"  style="padding: 4px">
+							<% start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1 %>
+							<% end_number = pages[:perpage] * pages[:current] %>
+							<% if start_number == pages[:items] %>
+								<%= "(Row #{start_number} of #{pages[:items]})" %>
+							<% else %>
+								<% if end_number > pages[:items] %>
+									<%= "(Rows #{start_number}-#{pages[:items]} of #{pages[:items]})" %>
+								<% else %>
+									<%= "(Rows #{start_number}-#{end_number} of #{pages[:items]})" %>
+								<% end %>
+							<% end %>
+							<input type='hidden' name='limitstart' value='0' />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<%= render(:partial => '/layouts/x_form_buttons') %>
+

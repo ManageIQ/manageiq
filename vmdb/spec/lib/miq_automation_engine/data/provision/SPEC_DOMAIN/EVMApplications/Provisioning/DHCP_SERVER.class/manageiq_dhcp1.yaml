@@ -1,0 +1,16 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: MANAGEIQ_dhcp1
+    inherits: 
+    description: 
+  fields:
+  - name:
+      value: miq_dhcp
+  - ip:
+      value: 192.168.252.6
+  - domain:
+      value: /EVMApplications/Provisioning/DOMAIN/MANAGEIQ

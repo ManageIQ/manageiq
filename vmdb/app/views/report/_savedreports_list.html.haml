@@ -1,0 +1,24 @@
+- if @sb[:active_accord] == :savedreports
+  - if @report
+    = render :partial => 'layouts/flash_msg', :locals => {:top_pad => 10}
+    = render :partial => "shared/report_chart_and_html", :locals => { :html => @html, :chart => @zgraph, :report => @report }
+  - elsif x_node.split('-').length == 1 && @view
+    -# setting it to nil so saved reports can be displayed, unless all saved
+    -# reports were deleted
+    - if @view.table.data.empty?
+      %br
+      %strong No Reports available.
+    - else
+      = render :partial => 'layouts/x_gtl'
+  - elsif x_node.split('-').length == 2 && @view
+    - if @view.table.data.empty?
+      %br
+      %strong * No Reports available.
+    - else
+      = render :partial => 'layouts/x_gtl'
+  - elsif x_active_tree == :savedreports_tree && x_node.split('-').length == 3 && !@report && @temp[:report_result]
+    = render :partial => 'report_status'
+  - else
+    #alert.alert-info
+      %span.pficon.pficon-info
+      %strong Choose a Report to view from the menus on the left.

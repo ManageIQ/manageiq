@@ -1,0 +1,130 @@
+<% url = url_for(:action=>'timeprofile_field_changed') %>
+<div id="tab_div">
+  <%= render :partial => "layouts/flash_msg" %>
+  <% disabled = @tp_restricted %>
+  <fieldset>
+    <p class="legend">Time Profile Information</p>
+    <table class="style1">
+      <tbody>
+        <tr>
+          <td class="key">Description</td>
+          <td class="wider">
+            <%= text_field_tag("description",
+                                @edit[:new][:description],
+                                :disabled => disabled,
+                                :maxlength=>50,
+                                "data-miq_focus"=>true,
+                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          </td>
+        </tr>
+        <% if session[:userrole] == "super_administrator" || session[:userrole] == "administrator" %>
+          <tr>
+            <td class="key">Scope</td>
+            <td>
+              <%= select_tag("profile_type",
+                                options_for_select([["All Users","global"],["Current User","user"]],
+                                  @edit[:new][:profile_type]),
+                                :disabled => disabled,
+                                "data-miq_observe"=>{:url=>url}.to_json) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= render(:partial=>'timeprofile_days_hours', :locals => {:disabled => disabled})%>
+    <table class="style1">
+      <tbody>
+        <tr>
+          <td class="key">Timezone</td>
+          <td>
+            <%= select_tag("profile_tz",
+                              options_for_select([["<Determine at Run Time>", nil]] + ALL_TIMEZONES,
+                                @edit[:new][:profile][:tz]),
+                              :disabled => disabled,
+                              "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                              "data-miq_observe"=>{:url=>url}.to_json) %>
+          </td>
+        </tr>
+        <% if ["super_administrator", "administrator"].include?(session[:userrole]) %>
+          <tr id="rollup_daily_tr"
+            <% unless @edit[:new][:profile][:tz] %>
+              style="display:none;"
+            <% end %>
+          >
+            <td class="key">Roll Up Daily Performance</td>
+            <td>
+              <% rollup_disabled = !@timeprofile.miq_reports.empty? ? true : disabled %>
+              <%= check_box_tag("rollup_daily", value="1",
+                                  checked=@edit[:new][:rollup_daily],
+                                  :disabled => rollup_disabled,
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+              <% unless @timeprofile.miq_reports.empty? %>
+                <div class = "note">In use by <%= @timeprofile.miq_reports.count%> reports, cannot be disabled</div>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+
+  <% if ["timeprofile_new", "timeprofile_copy","timeprofile_create"].include?(controller.action_name) %>
+    <div id="buttons_on">
+      <ul id="form_buttons">
+        <li>
+          <%= image_tag('/images/formbuttons/add.png', :border=>"0", :class=>"button",
+                      :alt=>"Add this Time Profile", :title=>"Add this Time Profile",
+                      :onclick=>"miqAjaxButton('#{url_for(:action=>"timeprofile_create",
+                                                          :id=>"new",
+                                                          :button=>"add")}');")
+          %>
+        </li>
+        <li>
+          <%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+                        :alt=>"Cancel", :title=>"Cancel",
+                        :onclick=>"miqAjaxButton('#{url_for(:action=>"timeprofile_create",
+                                                            :id=>"new",
+                                                            :button=>"cancel")}');")
+          %>
+        </li>
+      </ul>
+    </div>
+  <% else %>
+    <%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:record_id=>@timeprofile.id, :action_url=>'timeprofile_update', :ajax_buttons=>true})%>
+  <% end %>
+
+  <% unless @timeprofile.miq_reports.empty? %>
+    <fieldset>
+      <p class="legend">Reports Currently Using This Time Profile</p>
+      <table class="style3">
+        <tr>
+          <td width="50%" valign="top">
+            <table class="admintable">
+              <thead>
+                <tr>
+                  <th class="icon"></th>
+                  <th nowrap>Name</th>
+                  <th nowrap>Title</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @timeprofile.miq_reports.sort_by{|a| a.name.downcase}.each do |r| %>
+                  <tr>
+                    <td class="icon">
+                        <img src="/images/icons/new/report.png" valign="middle" border="0" height="20" width="20" />
+                    </td>
+                    <td><%= r.name %></td>
+                    <td><%= r.title %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+  <% end %>
+  <%# Need this to bind checkbox observers when under DHTMLX tabs %>
+  <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+  <script>miqObserveCheckboxes();</script>
+</div>

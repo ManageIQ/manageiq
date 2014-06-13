@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: OntapStorageVolume
+:button_groups:
+- :name: ontap_storage_volume_policy
+  :items:
+  - :buttonSelect: ontap_storage_volume_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: ontap_storage_volume_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit tags for the selected Volumes"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'  
+

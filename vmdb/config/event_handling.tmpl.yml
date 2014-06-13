@@ -1,0 +1,1471 @@
+---
+#
+# The bottleneck_event_groups section defines the different groups that
+#   bottleneck events can fall under, for filtering and reporting purposes.
+#   See the event_groups section for details.
+#
+bottleneck_event_groups:
+  Capacity:
+    :detail:
+    - DiskUsage
+    :name: Capacity
+  Utilization:
+    :detail:
+    - CpuUsage
+    - MemoryUsage
+    :name: Utilization
+
+#
+# The event_groups section defines the different groups that events can
+#   fall under, for filtering and reporting purposes.  'critical' events are
+#   meant to be shown at all times in reports, whereas 'detail' events can be
+#   left out of some reports for that category unless specified.
+#
+event_groups:
+  addition:
+    :critical:
+    - CloneTaskEvent
+    - ClusterCreatedEvent
+    - CreateFolder
+    - DatacenterCreatedEvent
+    - DatastoreDiscoveredEvent
+    - HostConnectedEvent
+    - HOST_DETECTED
+    - HOST_REGISTER_AUTO_APPROVE_PATTERN
+    - HOST_REGISTER_ERROR_UPDATING_HOST
+    - HOST_REGISTER_ERROR_UPDATING_HOST_ALL_TAKEN
+    - HOST_REGISTER_ERROR_UPDATING_NAME
+    - HOST_REGISTER_ERROR_UPDATING_NAMES_ALL_TAKEN
+    - HOST_REGISTER_EXISTING_HOST_UPDATE_FAILED
+    - HOST_REGISTER_FAILED
+    - HOST_REGISTER_HOST_IS_ACTIVE
+    - HOST_REGISTER_NAME_IS_ACTIVE
+    - HOST_REGISTER_SUCCEEDED
+    - IMPORTEXPORT_STARTING_EXPORT_TEMPLATE
+    - IMPORTEXPORT_EXPORT_TEMPLATE
+    - ResourcePoolCreatedEvent
+    - TemplateDeployedEvent
+    - USER_ADD
+    - USER_ADD_HOST
+    - USER_ADD_VM
+    - USER_ADD_VM_FINISHED_FAILURE
+    - USER_ADD_VM_FINISHED_SUCCESS
+    - USER_ADD_VM_TEMPLATE
+    - USER_ADD_VM_TEMPLATE_FINISHED_FAILURE
+    - USER_ADD_VM_TEMPLATE_FINISHED_SUCCESS
+    - USER_FAILED_ADD_HOST
+    - USER_FAILED_ADD_VM_TEMPLATE
+    - VmConnectedEvent
+    - VmCreatedEvent
+    - VmDeployedEvent
+    - VmRegisteredEvent
+    - image.update
+    - image.create
+    - image.upload
+    :detail:
+    - CloneVM_Task
+    - CloneVM_Task_Complete
+    - CreateClusterEx
+    - CreateClusterEx_Complete
+    - CreateDatacenter
+    - CreateDatacenter_Complete
+    - CreateResourcePool
+    - CreateResourcePool_Complete
+    - CreateVM_Task
+    - CreateVM_Task_Complete
+    - ReconnectHost_Task
+    - RegisterVM_Task
+    - RegisterVM_Task_Complete
+    - VmBeingClonedEvent
+    - VmBeingCreatedEvent
+    - VmBeingDeployedEvent
+    :name: Creation/Addition
+  configuration:
+    :critical:
+    - ClusterReconfiguredEvent
+    - EnterMaintenanceMode_Task_Complete
+    - ExitMaintenanceMode_Task_Complete
+    - FailoverLevelRestored
+    - MarkAsTemplate_Complete
+    - RefreshStorageSystem
+    - ResourcePoolReconfiguredEvent
+    - TemplateToVm
+    - USER_ADD_DISK_TO_VM
+    - USER_ADD_DISK_TO_VM_FINISHED_FAILURE
+    - USER_ADD_DISK_TO_VM_FINISHED_SUCCESS
+    - USER_CHANGE_FLOPPY_VM
+    - USER_EJECT_VM_DISK
+    - USER_EJECT_VM_FLOPPY
+    - USER_FAILED_ADD_DISK_TO_VM
+    - USER_FAILED_CHANGE_DISK_VM
+    - USER_FAILED_CHANGE_FLOPPY_VM
+    - USER_FAILED_REMOVE_DISK_FROM_VM
+    - USER_FAILED_UPDATE_HOST
+    - USER_FAILED_UPDATE_VM
+    - USER_FAILED_UPDATE_VM_DISK
+    - USER_FAILED_UPDATE_VM_TEMPLATE
+    - USER_REMOVE_DISK_FROM_VM
+    - USER_UPDATE_HOST
+    - USER_UPDATE_VM
+    - USER_UPDATE_VM_DISK
+    - USER_UPDATE_VM_TEMPLATE
+    - VmReconfiguredEvent
+    - VmResourcePoolMovedEvent
+    - VmToTemplate
+    :detail:
+    - EnterMaintenanceMode_Task
+    - ExitMaintenanceMode_Task
+    - MarkAsTemplate
+    - MoveIntoFolder_Task
+    - MoveInto_Task
+    - MoveIntoResourcePool
+    - MoveIntoResourcePool_Complete
+    - ReconfigVM_Task
+    - ReconfigVM_Task_Complete
+    - VmMacAssignedEvent
+    - VmResourceReallocatedEvent
+    - VmUuidAssignedEvent
+    :name: Configuration/Reconfiguration
+  console:
+    :critical:
+    - USER_LOGGED_IN_VM
+    - USER_LOGGED_OUT_VM
+    - UserLoginSessionEvent
+    - UserLogoutSessionEvent
+    - VmAcquiredMksTicketEvent
+    - VmRemoteConsoleConnectedEvent
+    :detail: []
+    :name: Console Activity
+  deletion:
+    :critical:
+    - ClusterDestroyedEvent
+    - DestroyDatacenter_Task
+    - DestroyFolder_Task
+    - HostConnectionLostEvent
+    - HostDisconnectedEvent
+    - ResourcePoolDestroyedEvent
+    - UnregisterVM_Complete
+    - USER_FAILED_REMOVE_HOST
+    - USER_FAILED_REMOVE_VM
+    - USER_FAILED_REMOVE_VM_TEMPLATE
+    - USER_REMOVE_HOST
+    - USER_REMOVE_VM
+    - USER_REMOVE_VM_FINISHED
+    - USER_REMOVE_VM_TEMPLATE
+    - USER_REMOVE_VM_TEMPLATE_FINISHED
+    - VmDisconnectedEvent
+    - VmRemovedEvent
+    - image.delete
+    :detail:
+    - Destroy_Task
+    - Destroy_Task_Complete
+    - DestroyCluster_Task_Complete
+    - DestroyCluster_Task
+    - DestroyResourcePool_Task
+    - DestroyResourcePool_Task_Complete
+    - DestroyVM_Task
+    - DestroyVM_Task_Complete
+    - DisconnectHost_Task
+    - UnregisterVM
+    :name: Deletion/Removal
+  general:
+    :critical:
+    - AD_COMPUTER_ACCOUNT_FAILED
+    - AD_COMPUTER_ACCOUNT_SUCCEEDED
+    - CPU_FLAGS_NX_IS_MISSING
+    - HOST_APPROVE
+    - HOST_APPROVE_FAILED
+    - HOST_DOMAIN_DELAY_INTERVAL
+    - HOST_INITIALIZING
+    - HOST_INSTALL
+    - HOST_INSTALL_FAILED
+    - HOST_INSTALL_IN_PROGRESS
+    - HOST_INSTALL_IN_PROGRESS_ERROR
+    - HOST_INSTALL_IN_PROGRESS_WARNING
+    - HOST_RECOVER_FAILED_VMS_UNKNOWN
+    - HOST_RUN_IN_NO_KVM_MODE
+    - HOST_SET_NONOPERATIONAL
+    - HOST_SET_NONOPERATIONAL_DOMAIN
+    - HOST_SET_NONOPERATIONAL_DOMAIN_FAILED
+    - HOST_SET_NONOPERATIONAL_FAILED
+    - HOST_SET_NONOPERATIONAL_IFACE_DOWN
+    - HOST_SET_NONOPERATIONAL_NETWORK
+    - HOST_VERSION_NOT_SUPPORTED_FOR_CLUSTER
+    - IMAGES_SYNCRONIZER_DESKTOP_NOT_EXIST_IN_IRS
+    - IMAGES_SYNCRONIZER_DESKTOP_NOT_EXIST_IN_VDC
+    - IMAGES_SYNCRONIZER_DESKTOP_WITHOUT_TEMPLATE_VDC
+    - IMAGES_SYNCRONIZER_IMAGE_TEMPLATE_NOT_EXIST
+    - IMAGES_SYNCRONIZER_SNAPSHOT_NOT_EXIST_IN_IRS
+    - IMAGES_SYNCRONIZER_SNAPSHOT_NOT_EXIST_IN_VDC
+    - IMAGES_SYNCRONIZER_SNAPSHOTS_NOT_ATTACHED_TO_VM_IN_VDC
+    - IMAGES_SYNCRONIZER_TEMPLATE_NOT_EXIST_IMAGE_EXIST
+    - IMAGES_SYNCRONIZER_TEMPLATE_NOT_EXIST_IN_VDC
+    - IRS_HOSTED_ON_HOST
+    - RECONSTRUCT_MASTER_DONE
+    - RECONSTRUCT_MASTER_FAILED
+    - RECONSTRUCT_MASTER_FAILED_NO_MASTER
+    - RescanAllHBA
+    - RescanVMFS
+    - ScheduledTaskStartedEvent
+    - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_SEARCHING_NEW_SPM
+    - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_WITH_ERROR
+    - SYSTEM_UPDATE_HOST_GROUP
+    - SYSTEM_UPDATE_HOST_GROUP_FAILED
+    - TaskTimeoutEvent
+    - TASK_CLEARING_ASYNC_TASK
+    - TASK_STOPPING_ASYNC_TASK
+    - UPDATE_TAGS_VM_DEFAULT_DISPLAY_TYPE
+    - UPDATE_TAGS_VM_DEFAULT_DISPLAY_TYPE_FAILED
+    - USER_ADD_BOOKMARK
+    - USER_ADD_BOOKMARK_FAILED
+    - USER_ADD_HOST_GROUP
+    - USER_ADD_HOST_GROUP_FAILED
+    - USER_ADD_PERMISSION
+    - USER_ADD_PERMISSION_FAILED
+    - USER_ADD_ROLE
+    - USER_ADD_ROLE_FAILED
+    - USER_ADD_ROLE_WITH_ACTION_GROUP
+    - USER_ADD_ROLE_WITH_ACTION_GROUP_FAILED
+    - USER_ADD_TAG
+    - USER_ADD_TAG_FAILED
+    - USER_ATTACH_TAG_TO_HOST
+    - USER_ATTACH_TAG_TO_HOST_EXISTS
+    - USER_ATTACH_TAG_TO_HOST_FAILED
+    - USER_ATTACH_TAG_TO_USER
+    - USER_ATTACH_TAG_TO_USER_EXISTS
+    - USER_ATTACH_TAG_TO_USER_FAILED
+    - USER_ATTACH_TAG_TO_USER_GROUP
+    - USER_ATTACH_TAG_TO_USER_GROUP_EXISTS
+    - USER_ATTACH_TAG_TO_USER_GROUP_FAILED
+    - USER_ATTACH_TAG_TO_VM
+    - USER_ATTACH_TAG_TO_VM_EXISTS
+    - USER_ATTACH_TAG_TO_VM_FAILED
+    - USER_ATTACHED_ACTION_GROUP_TO_ROLE
+    - USER_ATTACHED_ACTION_GROUP_TO_ROLE_FAILED
+    - USER_CHANGE_DISK_VM
+    - USER_CLEAR_UNKNOWN_VMS
+    - USER_COPIED_TEMPLATE
+    - USER_COPIED_TEMPLATE_FINISHED_FAILURE
+    - USER_COPIED_TEMPLATE_FINISHED_SUCCESS
+    - USER_DEDICATE_VM_TO_POWERCLIENT
+    - USER_DEDICATE_VM_TO_POWERCLIENT_FAILED
+    - USER_DETACH_HOST_FROM_TAG
+    - USER_DETACH_HOST_FROM_TAG_FAILED
+    - USER_DETACH_USER_FROM_TAG
+    - USER_DETACH_USER_FROM_TAG_FAILED
+    - USER_DETACH_USER_GROUP_FROM_TAG
+    - USER_DETACH_USER_GROUP_FROM_TAG_FAILED
+    - USER_DETACH_VM_FROM_TAG
+    - USER_DETACH_VM_FROM_TAG_FAILED
+    - USER_DETACHED_ACTION_GROUP_FROM_ROLE
+    - USER_DETACHED_ACTION_GROUP_FROM_ROLE_FAILED
+    - USER_FAILED_ADD_ADUSER
+    - USER_FAILED_CLEAR_UNKNOWN_VMS
+    - USER_FAILED_COPY_TEMPLATE
+    - USER_FAILED_REMOVE_ADUSER
+    - USER_LOCKED_VM
+    - USER_MOVE_TAG
+    - USER_MOVE_TAG_FAILED
+    - USER_PASSWORD_CHANGE_FAILED
+    - USER_PASSWORD_CHANGED
+    - USER_REMOVE_ADUSER
+    - USER_REMOVE_BOOKMARK
+    - USER_REMOVE_BOOKMARK_FAILED
+    - USER_REMOVE_HOST_GROUP
+    - USER_REMOVE_HOST_GROUP_FAILED
+    - USER_REMOVE_PERMISSION
+    - USER_REMOVE_PERMISSION_FAILED
+    - USER_REMOVE_ROLE
+    - USER_REMOVE_ROLE_FAILED
+    - USER_REMOVE_TAG
+    - USER_REMOVE_TAG_FAILED
+    - USER_UNLOCKED_VM
+    - USER_UPDATE_BOOKMARK
+    - USER_UPDATE_BOOKMARK_FAILED
+    - USER_UPDATE_HOST_GROUP
+    - USER_UPDATE_HOST_GROUP_FAILED
+    - USER_UPDATE_ROLE
+    - USER_UPDATE_ROLE_FAILED
+    - USER_UPDATE_TAG
+    - USER_UPDATE_TAG_FAILED
+    - USER_UPDATE_VM_CLUSTER_DEFAULT_HOST_CLEARED
+    - USER_VDC_LOGIN_FAILED
+    - USER_VDC_LOGOUT_FAILED
+    - VDC_START
+    - VDC_STOP
+    - VM_BLK_VIRTIO_NO_CACHE
+    - VM_CLEARED
+    - VM_SET_TO_UNKNOWN_STATUS
+    - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
+    - VM_RENAMED
+    :detail: []
+    :name: General Activity
+  import_export:
+    :critical:
+    - IMPORTEXPORT_EXPORT_TEMPLATE
+    - IMPORTEXPORT_EXPORT_TEMPLATE_FAILED
+    - IMPORTEXPORT_EXPORT_VM
+    - IMPORTEXPORT_EXPORT_VM_FAILED
+    - IMPORTEXPORT_FAILED_TO_IMPORT_TEMPLATE
+    - IMPORTEXPORT_FAILED_TO_IMPORT_VM
+    - IMPORTEXPORT_IMPORT_TEMPLATE
+    - IMPORTEXPORT_IMPORT_TEMPLATE_FAILED
+    - IMPORTEXPORT_IMPORT_VM
+    - IMPORTEXPORT_IMPORT_VM_FAILED
+    - IMPORTEXPORT_REMOVE_TEMPLATE
+    - IMPORTEXPORT_REMOVE_TEMPLATE_FAILED
+    - IMPORTEXPORT_REMOVE_VM
+    - IMPORTEXPORT_REMOVE_VM_FAILED
+    - IMPORTEXPORT_STARTING_EXPORT_TEMPLATE
+    - IMPORTEXPORT_STARTING_EXPORT_VM
+    - IMPORTEXPORT_STARTING_IMPORT_TEMPLATE
+    - IMPORTEXPORT_STARTING_IMPORT_VM
+    - IMPORTEXPORT_STARTING_REMOVE_TEMPLATE
+    - IMPORTEXPORT_STARTING_REMOVE_VM
+    - TEMPLATE_IMPORT
+    - TEMPLATE_IMPORT_FAILED
+    - USER_EXPORT_TEMPLATE
+    - USER_EXPORT_TEMPLATE_FAILED
+    - USER_EXPORT_VM
+    - USER_EXPORT_VM_FAILED
+    - VM_IMPORT
+    - VM_IMPORT_FAILED
+    - VM_IMPORT_INFO
+    :detail: []
+    :name: Import / Export
+  migration:
+    :critical:
+    - DatastoreFileMovedEvent
+    - DrsMigrateVM_Task
+    - DrsVmMigratedEvent
+    - MigrateTaskEvent
+    - MigrateVM_Task
+    - RelocateVM_Task
+    - USER_FAILED_MOVE_TEMPLATE
+    - USER_FAILED_MOVE_VM
+    - USER_HOST_MAINTENANCE_MIGRATION_FAILED
+    - USER_MOVED_TEMPLATE
+    - USER_MOVED_TEMPLATE_FINISHED_FAILURE
+    - USER_MOVED_TEMPLATE_FINISHED_SUCCESS
+    - USER_MOVED_VM
+    - USER_MOVED_VM_FINISHED_FAILURE
+    - USER_MOVED_VM_FINISHED_SUCCESS
+    - VM_MIGRATION_ABORT
+    - VM_MIGRATION_DONE
+    - VM_MIGRATION_FAILED
+    - VM_MIGRATION_FAILED_DURING_MOVE_TO_MAINTANANCE
+    - VM_MIGRATION_FAILED_FROM_TO
+    - VM_MIGRATION_ON_CONNECT_CHECK_FAILED
+    - VM_MIGRATION_ON_CONNECT_CHECK_SUCCEEDED
+    - VM_MIGRATION_START
+    - VM_MIGRATION_TRYING_RERUN
+    - VmMigratedEvent
+    - VmRelocatedEvent
+    :detail:
+    - DrsMigrateVM_Task_Complete
+    - MigrateVM_Task_Complete
+    - MigrationHostWarningEvent
+    - Move_Task
+    - Move_Task_Complete
+    - RelocateTaskEvent
+    - RelocateVM_Task_Complete
+    - VmBeingRelocatedEvent
+    :name: Migration/Vmotion
+  network:
+    :critical:
+    - HOST_ALERT_FENCING_IS_NOT_CONFIGURED
+    - HOST_ALERT_FENCING_NO_PROXY_HOST
+    - HOST_ALERT_FENCING_OPERATION_FAILED
+    - HOST_ALERT_FENCING_OPERATION_SKIPPED
+    - HOST_ALERT_FENCING_TEST_FAILED
+    - HOST_FENCE_STATUS
+    - HOST_FENCE_STATUS_FAILED
+    - HOST_MANUAL_FENCE_FAILED_CALL_FENCE_SPM
+    - HOST_MANUAL_FENCE_STATUS
+    - HOST_MANUAL_FENCE_STATUS_FAILED
+    - NETWORK_ADD_BOND
+    - NETWORK_ADD_BOND_FAILED
+    - NETWORK_ADD_NETWORK
+    - NETWORK_ADD_NETWORK_FAILED
+    - NETWORK_ADD_TEMPLATE_INTERFACE
+    - NETWORK_ADD_TEMPLATE_INTERFACE_FAILED
+    - NETWORK_ADD_VM_INTERFACE
+    - NETWORK_ADD_VM_INTERFACE_FAILED
+    - NETWORK_INTERFACE_PLUGGED_INTO_VM
+    - NETWORK_ATTACH_NETWORK_TO_HOST
+    - NETWORK_ATTACH_NETWORK_TO_HOST_FAILED
+    - NETWORK_ATTACH_NETWORK_TO_HOST_GROUP
+    - NETWORK_ATTACH_NETWORK_TO_HOST_GROUP_FAILED
+    - NETWORK_COMMINT_NETWORK_CHANGES
+    - NETWORK_COMMINT_NETWORK_CHANGES_FAILED
+    - NETWORK_DETACH_NETWORK_FROM_HOST
+    - NETWORK_DETACH_NETWORK_FROM_HOST_FAILED
+    - NETWORK_DETACH_NETWORK_TO_HOST_GROUP
+    - NETWORK_DETACH_NETWORK_TO_HOST_GROUP_FAILED
+    - NETWORK_HOST_MISSING_CLUSER_VLAN
+    - NETWORK_HOST_NETWORK_MATCH_CLUSTER
+    - NETWORK_HOST_NETWORK_NOT_MATCH_CLUSTER
+    - NETWORK_HOST_USING_WRONG_CLUSER_VLAN
+    - NETWORK_REMOVE_BOND
+    - NETWORK_REMOVE_BOND_FAILED
+    - NETWORK_REMOVE_NETWORK
+    - NETWORK_REMOVE_NETWORK_FAILED
+    - NETWORK_REMOVE_TEMPLATE_INTERFACE
+    - NETWORK_REMOVE_TEMPLATE_INTERFACE_FAILED
+    - NETWORK_REMOVE_VM_INTERFACE
+    - NETWORK_REMOVE_VM_INTERFACE_FAILED
+    - NETWORK_UPDATE_DISPLAY_TO_HOST_GROUP
+    - NETWORK_UPDATE_DISPLAY_TO_HOST_GROUP_FAILED
+    - NETWORK_UPDATE_NETWORK_TO_HOST_INTERFACE
+    - NETWORK_UPDATE_NETWORK_TO_HOST_INTERFACE_FAILED
+    - NETWORK_UPDATE_TEMPLATE_INTERFACE
+    - NETWORK_UPDATE_TEMPLATE_INTERFACE_FAILED
+    - NETWORK_UPDATE_VM_INTERFACE
+    - NETWORK_UPDATE_VM_INTERFACE_FAILED
+    - network.floating_ip.allocate
+    - network.floating_ip.deallocate
+    - network.floating_ip.associate
+    - network.floating_ip.disassociate
+    :detail: []
+    :name: Network
+  power:
+    :critical:
+    - AUTO_FAILED_SUSPEND_VM
+    - AUTO_SUSPEND_VM
+    - AUTO_SUSPEND_VM_FINISH_FAILURE
+    - AUTO_SUSPEND_VM_FINISH_SUCCESS
+    - DrsVmPoweredOnEvent
+    - HOST_FAILED_TO_RUN_VMS
+    - HOST_INITIATED_RUN_VM
+    - HOST_INITIATED_RUN_VM_FAILED
+    - RebootGuest_Complete
+    - RecommendHostsForVm
+    - RUN_VM_FAILED
+    - SYSTEM_HOST_RESTART
+    - SYSTEM_FAILED_HOST_RESTART
+    - ShutdownGuest
+    - USER_ADD_VM_STARTED
+    - USER_FAILED_ADD_VM
+    - USER_FAILED_HOST_RESTART
+    - USER_FAILED_HOST_SHUTDOWN
+    - USER_FAILED_HOST_START
+    - USER_FAILED_HOST_STOP
+    - USER_FAILED_PAUSE_VM
+    - USER_FAILED_RESUME_VM
+    - USER_FAILED_RUN_VM
+    - USER_FAILED_SHUTDOWN_VM
+    - USER_FAILED_STOP_VM
+    - USER_FAILED_STOPPING_VM_INSTEAD_OF_SHUTDOWN
+    - USER_FAILED_SUSPEND_VM
+    - USER_HOST_MAINTENANCE
+    - USER_HOST_RESTART
+    - USER_HOST_SHUTDOWN
+    - USER_HOST_START
+    - USER_HOST_STOP
+    - USER_INITIATED_RUN_VM
+    - USER_INITIATED_RUN_VM_FAILED
+    - USER_INITIATED_SHUTDOWN_VM
+    - USER_PAUSE_VM
+    - USER_RESUME_VM
+    - USER_RUN_VM
+    - USER_RUN_VM_AS_STATELESS_FINISHED_FAILURE
+    - USER_RUN_VM_ON_NON_DEFAULT_HOST
+    - USER_STARTED_VM
+    - USER_STOP_VM
+    - USER_STOP_SUSPENDED_VM
+    - USER_STOP_SUSPENDED_VM_FAILED
+    - USER_STOPPED_VM_INSTEAD_OF_SHUTDOWN
+    - USER_SUSPEND_VM
+    - USER_SUSPEND_VM_FINISH_FAILURE
+    - USER_SUSPEND_VM_FINISH_SUCCESS
+    - USER_SUSPEND_VM_OK
+    - VM_DOWN
+    - VM_DOWN_ERROR
+    - VM_PAUSED_ENOSPC
+    - VM_PAUSED_ERROR
+    - VM_SHUTDOWN_FAILED
+    - VmGuestRebootEvent
+    - VmGuestShutdownEvent
+    - VmPoweredOffEvent
+    - VmPoweredOnEvent
+    - VmResumingEvent
+    - VmStartedOnEvent
+    - VmStoppedEvent
+    - VmSuspendedEvent
+    - compute.instance.create.end
+    - compute.instance.shutdown.end
+    - compute.instance.delete.end
+    - compute.instance.power_off.end
+    - compute.instance.power_on.end
+    - compute.instance.soft_delete.end
+    - compute.instance.reboot.end
+    - compute.instance.suspend
+    - compute.instance.resume
+    :detail:
+    - PowerOffVM_Task
+    - PowerOffVM_Task_Complete
+    - PowerOnMultiVM_Task
+    - PowerOnVM_Task
+    - PowerOnVM_Task_Complete
+    - RebootGuest
+    - ResetVM_Task
+    - ResetVM_Task_Complete
+    - ShutdownGuest_Complete
+    - SuspendVM_Task
+    - SuspendVM_Task_Complete
+    - VmStartingEvent
+    - VmStoppingEvent
+    - VmSuspendingEvent
+    :name: Power Activity
+  snapshot:
+    :critical:
+    - CreateSnapshot_Task
+    - RemoveAllSnapshots_Task
+    - RemoveSnapshot_Task
+    - RevertToSnapshot_Task
+    - USER_CREATE_SNAPSHOT
+    - USER_CREATE_SNAPSHOT_FINISHED_FAILURE
+    - USER_CREATE_SNAPSHOT_FINISHED_SUCCESS
+    - USER_FAILED_CREATE_SNAPSHOT
+    - USER_FAILED_MERGE_SNAPSHOT
+    - USER_FAILED_RESTORE_FROM_SNAPSHOT
+    - USER_FAILED_TRY_BACK_TO_SNAPSHOT
+    - USER_MERGE_SNAPSHOT
+    - USER_MERGE_SNAPSHOT_FINISHED_FAILURE
+    - USER_MERGE_SNAPSHOT_FINISHED_SUCCESS
+    - USER_RESTORE_FROM_SNAPSHOT
+    - USER_RESTORE_FROM_SNAPSHOT_FINISH_FAILURE
+    - USER_RESTORE_FROM_SNAPSHOT_FINISH_SUCCESS
+    - USER_TRY_BACK_TO_SNAPSHOT
+    - USER_TRY_BACK_TO_SNAPSHOT_FINISH_FAILURE
+    - USER_TRY_BACK_TO_SNAPSHOT_FINISH_SUCCESS
+    :detail: []
+    :name: Snapshot Activity
+  status:
+    :critical:
+    - AlarmCreatedEvent
+    - AlarmRemovedEvent
+    - AlarmStatusChangedEventVm
+    - CERTIFICATE_FILE_NOT_FOUND
+    - ClusterStatusChangedEvent
+    - DasHostFailedEvent
+    - DuplicateIpDetectedEvent
+    - EVMAlertEvent
+    - GeneralHostWarningEvent
+    - HostDasErrorEvent
+    - HOST_ACTIVATE
+    - HOST_ACTIVATE_FAILED
+    - HOST_CPU_LOWER_THAN_CLUSTER
+    - HOST_CPU_RETRIEVE_FAILED
+    - HOST_FAILURE
+    - HOST_LOW_MEM
+    - HOST_MAINTENANCE
+    - HOST_MAINTENANCE_FAILED
+    - HOST_RECOVER
+    - HOST_RECOVER_FAILED
+    - HOST_SLOW_STORAGE_RESPONSE_TIME
+    - IRS_DISK_SPACE_LOW
+    - IRS_DISK_SPACE_LOW_ERROR
+    - IRS_FAILURE
+    - MAC_ADDRESS_IS_IN_USE
+    - MAC_POOL_EMPTY
+    - RemoveAlarm
+    - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_FROM_NON_OPERATIONAL
+    - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_WITH_ERROR
+    - SYSTEM_MASTER_DOMAIN_NOT_IN_SYNC
+    - USER_FAILED_ATTACH_USER_TO_VM
+    - VM_FAILURE
+    - VM_NOT_RESPONDING
+    - VmConfigMissingEvent
+    :detail:
+    - DatacenterRenamedEvent
+    - GeneralUserEvent
+    - LicenseServerUnavailableEvent
+    - Rename_Task
+    - Rename_Task_Complete
+    - RenameCluster_Task
+    - RenameDatacenter_Task
+    - RenameDatacenter_Task_Complete
+    - RenameFolder_Task
+    - RenameResourcePool_Task
+    - RenameVM_Task
+    - RenameVM_Task_Complete
+    - VmRenamedEvent
+    :name: Alarm/Status change/Errors
+  storage:
+    :critical:
+    - CONNECT_STORAGE_POOL_FAILED
+    - CONNECT_STORAGE_SERVERS_FAILED
+    - RECOVERY_STORAGE_POOL
+    - RECOVERY_STORAGE_POOL_FAILED
+    - STORAGE_DOMAIN_ERROR
+    - SYSTEM_CHANGE_STORAGE_POOL_STATUS_NO_HOST_FOR_SPM
+    - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC
+    - SYSTEM_CHANGE_STORAGE_POOL_STATUS_RESET_IRS
+    - SYSTEM_DEACTIVATE_STORAGE_DOMAIN_FAILED
+    - SYSTEM_DEACTIVATED_STORAGE_DOMAIN
+    - SYSTEM_FAILED_CHANGE_STORAGE_POOL_STATUS
+    - USER_ACTIVATE_STORAGE_DOMAIN_FAILED
+    - USER_ACTIVATE_STORAGE_POOL
+    - USER_ACTIVATE_STORAGE_POOL_FAILED
+    - USER_ACTIVATED_STORAGE_DOMAIN
+    - USER_ADD_STORAGE_DOMAIN
+    - USER_ADD_STORAGE_DOMAIN_FAILED
+    - USER_ADD_STORAGE_POOL
+    - USER_ADD_STORAGE_POOL_FAILED
+    - USER_ATTACH_STORAGE_DOMAIN_TO_POOL
+    - USER_ATTACH_STORAGE_DOMAIN_TO_POOL_FAILED
+    - USER_CONNECT_HOSTS_TO_LUN_FAILED
+    - USER_DEACTIVATE_STORAGE_DOMAIN_FAILED
+    - USER_DEACTIVATED_STORAGE_DOMAIN
+    - USER_DETACH_STORAGE_DOMAIN_FROM_POOL
+    - USER_DETACH_STORAGE_DOMAIN_FROM_POOL_FAILED
+    - USER_EXTENDED_STORAGE_DOMAIN
+    - USER_EXTENDED_STORAGE_DOMAIN_FAILED
+    - USER_FORCE_REMOVE_STORAGE_DOMAIN
+    - USER_FORCE_REMOVE_STORAGE_DOMAIN_FAILED
+    - USER_REMOVE_STORAGE_DOMAIN
+    - USER_REMOVE_STORAGE_DOMAIN_FAILED
+    - USER_REMOVE_STORAGE_POOL
+    - USER_REMOVE_STORAGE_POOL_FAILED
+    - USER_UPDATE_STORAGE_DOMAIN
+    - USER_UPDATE_STORAGE_DOMAIN_FAILED
+    - USER_UPDATE_STORAGE_POOL
+    - USER_UPDATE_STORAGE_POOL_FAILED
+    :detail: []
+    :name: Storage
+  vdi:
+    :critical:
+    - VdiLoginSessionEvent
+    - VdiLogoffSessionEvent
+    - VdiConnectingSessionEvent
+    - VdiDisconnectedSessionEvent
+    - VdiConsoleLoggedInSessionEvent
+    - USER_ADD_VM_POOL
+    - USER_ADD_VM_POOL_FAILED
+    - USER_ADD_VM_POOL_WITH_VMS
+    - USER_ADD_VM_POOL_WITH_VMS_FAILED
+    - USER_ADD_VM_TO_POOL
+    - USER_ADD_VM_TO_POOL_FAILED
+    - USER_ADD_VM_POOL_WITH_VMS_ADD_HOST_FAILED
+    - USER_ATTACH_AD_GROUP_TO_TIME_LEASED_POOL
+    - USER_ATTACH_AD_GROUP_TO_TIME_LEASED_POOL_FAILED
+    - USER_ATTACH_USER_TO_POOL
+    - USER_ATTACH_USER_TO_POOL_FAILED
+    - USER_ATTACH_USER_TO_POOL_FAILED_INTERNAL
+    - USER_ATTACH_USER_TO_POOL_INTERNAL
+    - USER_ATTACH_USER_TO_TIME_LEASED_POOL
+    - USER_ATTACH_USER_TO_TIME_LEASED_POOL_FAILED
+    - USER_ATTACH_USER_TO_VM
+    - USER_ATTACH_USER_TO_VM_FROM_POOL
+    - USER_ATTACH_USER_TO_VM_FROM_POOL_FAILED
+    - USER_ATTACH_USER_TO_VM_FROM_POOL_FINISHED_FAILURE
+    - USER_ATTACH_USER_TO_VM_FROM_POOL_FINISHED_SUCCESS
+    - USER_ATTACH_VM_POOL_TO_AD_GROUP
+    - USER_ATTACH_VM_POOL_TO_AD_GROUP_FAILED
+    - USER_ATTACH_VM_POOL_TO_AD_GROUP_FAILED_INTERNAL
+    - USER_ATTACH_VM_POOL_TO_AD_GROUP_INTERNAL
+    - USER_ATTACH_VM_TO_AD_GROUP
+    - USER_ATTACH_VM_TO_AD_GROUP_FAILED
+    - USER_DETACH_AD_GROUP_FROM_TIME_LEASED_POOL
+    - USER_DETACH_AD_GROUP_FROM_TIME_LEASED_POOL_FAILED
+    - USER_DETACH_AD_GROUP_FROM_TIME_LEASED_POOL_FAILED_INTERNAL
+    - USER_DETACH_AD_GROUP_FROM_TIME_LEASED_POOL_INTERNAL
+    - USER_DETACH_USER_FROM_POOL
+    - USER_DETACH_USER_FROM_POOL_FAILED
+    - USER_DETACH_USER_FROM_TIME_LEASED_POOL
+    - USER_DETACH_USER_FROM_TIME_LEASED_POOL_FAILED
+    - USER_DETACH_USER_FROM_TIME_LEASED_POOL_FAILED_INTERNAL
+    - USER_DETACH_USER_FROM_TIME_LEASED_POOL_INTERNAL
+    - USER_DETACH_USER_FROM_VM
+    - USER_DETACH_VM_POOL_TO_AD_GROUP
+    - USER_DETACH_VM_POOL_TO_AD_GROUP_FAILED
+    - USER_DETACH_VM_TO_AD_GROUP
+    - USER_DETACH_VM_TO_AD_GROUP_FAILED
+    - USER_FAILED_DETACH_USER_FROM_VM
+    - USER_REMOVE_AD_GROUP
+    - USER_REMOVE_AD_GROUP_FAILED
+    - USER_REMOVE_VM_FROM_POOL
+    - USER_REMOVE_VM_FROM_POOL_FAILED
+    - USER_REMOVE_VM_POOL
+    - USER_REMOVE_VM_POOL_FAILED
+    - USER_UPDATE_AD_GROUP_TO_TIME_LEASED_POOL
+    - USER_UPDATE_AD_GROUP_TO_TIME_LEASED_POOL_FAILED
+    - USER_UPDATE_USER_TO_TIME_LEASED_POOL
+    - USER_UPDATE_USER_TO_TIME_LEASED_POOL_FAILED
+    - USER_UPDATE_VM_POOL
+    - USER_UPDATE_VM_POOL_FAILED
+    - USER_UPDATE_VM_POOL_WITH_VMS
+    - USER_UPDATE_VM_POOL_WITH_VMS_FAILED
+    :detail: []
+    :name: VDI Activity
+
+#
+# The event_handling section defines the set of steps taken when a particular
+#   event is encountered.
+#
+#   Steps can be taken on the following objects:
+#     src_vm, src_host, dest_vm, dest_host, ems
+#     first_chained_src_vm, first_chained_src_host, etc.
+#
+#   The possible types of steps are:
+#     refresh - Perform a refresh on the specified objects
+#     scan    - Perform a scan on the specified objects
+#     policy  - Raise a policy event for the specified object
+#     call    - Call the method with the given parameters for the specified object
+#
+event_handling:
+  AUTO_SUSPEND_VM_FINISH_SUCCESS:
+  - refresh:
+    - src_vm
+  CloneVM_Task:
+  - policy:
+    - src_vm
+    - vm_clone_start
+    - host
+  CloneVM_Task_Complete:
+  - policy:
+    - src_vm
+    - vm_clone
+    - host
+  - refresh:
+    - src_vm
+    - dest_host
+  CreateClusterEx_Complete:
+  - refresh:
+    - ems
+  CreateDatacenter_Complete:
+  - refresh:
+    - ems
+  CreateFolder:
+  - refresh:
+    - ems
+  CreateResourcePool_Complete:
+  - refresh:
+    - ems
+  CreateSnapshot_Task:
+  - policy:
+    - src_vm
+    - vm_snapshot
+  - refresh:
+    - src_vm
+  CreateVM_Task_Complete:
+  # Ignore CreateVM_Task_Complete for policy for now the vm_create event will be raised when the VM is created
+  DatastoreDiscoveredEvent:
+  - refresh:
+    - src_host
+  DatastoreRemovedOnHostEvent:
+  - refresh:
+    - src_host
+  Destroy_Task:
+  - refresh:
+    - ems
+  DestroyCluster_Task_Complete:
+  - refresh:
+    - ems
+  DestroyDatacenter_Task:
+  - refresh:
+    - ems
+  DestroyFolder_Task:
+  - refresh:
+    - ems
+  DestroyResourcePool_Task_Complete:
+  - refresh:
+    - ems
+  DestroyVM_Task_Complete:
+  - call:
+    - src_vm
+    - disconnect_storage
+  - refresh:
+    - src_vm
+  DrsMigrateVM_Task_Complete:
+  - refresh:
+    - src_vm
+  DrsVmPoweredOnEvent:
+  - call:
+    - src_vm
+    - state=
+    - 'on'
+  - call:
+    - src_vm
+    - save!
+  EnterMaintenanceMode_Task_Complete:
+  - call:
+    - src_host
+    - state=
+    - maintenance
+  - call:
+    - src_host
+    - save!
+  - refresh:
+    - src_host
+  ExitMaintenanceMode_Task_Complete:
+  - call:
+    - src_host
+    - state=
+    - 'on'
+  - call:
+    - src_host
+    - save!
+  - refresh:
+    - src_host
+  - scan:
+    - src_host
+  HOST_ACTIVATE:
+  - refresh:
+    - src_host
+  HOST_ACTIVATE_FAILED:
+  - refresh:
+    - src_host
+  HOST_DETECTED:
+  - refresh:
+    - ems
+  HOST_FAILURE:
+  - refresh:
+    - src_host
+  HOST_INITIATED_RUN_VM:
+  - refresh:
+    - src_host
+  HOST_INSTALL:
+  - refresh:
+    - ems
+  HOST_MAINTENANCE:
+  - refresh:
+    - src_host
+  HOST_MAINTENANCE_FAILED:
+  - refresh:
+    - src_host
+  HOST_RECOVER:
+  - refresh:
+    - src_host
+  HOST_RECOVER_FAILED:
+  - refresh:
+    - src_host
+  HostConnectedEvent:
+  - policy:
+    - src_host
+    - host_connect
+  - call:
+    - src_host
+    - state=
+    - 'on'
+  - call:
+    - src_host
+    - save!
+  - refresh:
+    - src_host
+  HOST_REGISTER_SUCCEEDED:
+  - policy:
+    - src_host
+    - host_connect
+  - call:
+    - src_host
+    - state=
+    - 'on'
+  - call:
+    - src_host
+    - save!
+  - refresh:
+    - src_host
+  HostConnectionLostEvent:
+  - policy:
+    - src_host
+    - host_disconnect
+  - call:
+    - src_host
+    - state=
+    - 'off'
+  - call:
+    - src_host
+    - save!
+  HostDisconnectedEvent:
+  - policy:
+    - src_host
+    - host_disconnect
+  IMPORTEXPORT_IMPORT_TEMPLATE:
+  - refresh:
+    - ems
+  IMPORTEXPORT_IMPORT_VM:
+  - refresh:
+    - ems
+  IMPORTEXPORT_REMOVE_TEMPLATE:
+  - refresh:
+    - src_vm
+  IMPORTEXPORT_REMOVE_VM:
+  - refresh:
+    - src_vm
+  MarkAsTemplate_Complete:
+  - call:
+    - src_vm
+    - template=
+    - true
+  - call:
+    - src_vm
+    - save!
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_template
+  MarkAsVirtualMachine:
+  - call:
+    - src_vm
+    - template=
+    - false
+  - call:
+    - src_vm
+    - save!
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_create
+  MigrateVM_Task:
+  - policy:
+    - src_vm
+    - vm_migrate
+  MigrateVM_Task_Complete:
+  - refresh:
+    - src_vm
+  Move_Task_Complete:
+  - refresh:
+    - ems
+  MoveInto_Task:
+  - refresh:
+    - ems
+  MoveIntoFolder_Task:
+  - refresh:
+    - ems
+  MoveIntoResourcePool_Complete:
+  - refresh:
+    - src_vm
+  NETWORK_ADD_TEMPLATE_INTERFACE:
+  - refresh:
+    - src_vm
+  NETWORK_ADD_VM_INTERFACE:
+  - refresh:
+    - src_vm
+  NETWORK_REMOVE_TEMPLATE_INTERFACE:
+  - refresh:
+    - src_vm
+  NETWORK_REMOVE_VM_INTERFACE:
+  - refresh:
+    - src_vm
+  NETWORK_UPDATE_TEMPLATE_INTERFACE:
+  - refresh:
+    - src_vm
+  PowerOnVM_Task_Complete:
+  - policy:
+    - src_vm
+    - vm_start
+  RebootGuest_Complete:
+  - policy:
+    - src_vm
+    - vm_reboot_guest
+  RebootHost_Task:
+  - call:
+    - src_host
+    - state=
+    - 'off'
+  - call:
+    - src_host
+    - save!
+  ReconfigVM_Task_Complete:
+  - call:
+    - src_vm
+    - refresh_on_reconfig
+  - policy:
+    - src_vm
+    - vm_reconfigure
+  RegisterVM_Task_Complete:
+  - refresh:
+    - src_host
+  RelocateVM_Task_Complete:
+  - policy:
+    - src_vm
+    - vm_migrate
+  RemoveAllSnapshots_Task:
+  - call:
+    - src_vm
+    - snapshots.destroy_all
+  RemoveSnapshot_Task:
+  - refresh:
+    - src_vm
+  Rename_Task:
+  - refresh:
+    - ems
+  RenameCluster_Task:
+  - refresh:
+    - ems
+  RenameDatacenter_Task_Complete:
+  - refresh:
+    - ems
+  RenameFolder_Task:
+  - refresh:
+    - ems
+  RenameResourcePool_Task:
+  - refresh:
+    - ems
+  RenameVM_Task_Complete:
+  - refresh:
+    - src_vm
+  ResetVM_Task_Complete:
+  - policy:
+    - src_vm
+    - vm_reset
+  RevertToSnapshot_Task:
+  - refresh:
+    - src_vm
+  ShutdownGuest_Complete:
+  - policy:
+    - src_vm
+    - vm_shutdown_guest
+  SYSTEM_HOST_RESTART:
+  - refresh:
+    - src_host
+  SuspendVM_Task_Complete:
+  - policy:
+    - src_vm
+    - vm_suspend
+  TEMPLATE_IMPORT:
+  - refresh:
+    - ems
+  UnregisterVM_Complete:
+  - policy:
+    - src_vm
+    - vm_unregister
+  - refresh:
+    - src_vm
+  USER_ADD_DISK_TO_VM_FINISHED_SUCCESS:
+  - refresh:
+    - src_vm
+  USER_ADD_HOST:
+  - refresh:
+    - src_ems_cluster
+  USER_ADD_STORAGE_DOMAIN:
+  - refresh:
+    - ems
+  USER_ADD_STORAGE_POOL:
+  - refresh:
+    - ems
+  USER_ADD_VM:
+  - policy:
+    - src_vm
+    - vm_discover
+  - refresh:
+    - src_ems_cluster
+  USER_ADD_VM_FINISHED_SUCCESS:
+  - refresh:
+    - ems
+  USER_ADD_VM_TEMPLATE:
+  - refresh:
+    - src_ems_cluster
+  USER_ADD_VM_TEMPLATE_FINISHED_FAILURE:
+  - policy:
+    - src_vm
+    - vm_discover
+  USER_ADD_VM_TEMPLATE_FINISHED_SUCCESS:
+  - policy:
+    - src_vm
+    - vm_template
+  USER_ATTACH_STORAGE_DOMAIN_TO_POOL:
+  - refresh:
+    - ems
+  USER_CHANGE_DISK_VM:
+  - refresh:
+    - src_vm
+  USER_COPIED_TEMPLATE:
+  - refresh:
+    - src_ems_cluster
+  USER_COPIED_TEMPLATE_FINISHED_SUCCESS:
+  - refresh:
+    - src_vm
+  USER_CREATE_SNAPSHOT:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_snapshot
+  USER_CREATE_SNAPSHOT_FINISHED_SUCCESS:
+  - policy:
+    - src_vm
+    - vm_snapshot_complete
+  - refresh:
+    - src_vm
+  USER_DEACTIVATED_STORAGE_DOMAIN:
+  - refresh:
+    - ems
+  USER_DETACH_STORAGE_DOMAIN_FROM_POOL:
+  - refresh:
+    - ems
+  USER_EJECT_VM_DISK:
+  - refresh:
+    - src_vm
+  USER_EJECT_VM_FLOPPY:
+  - refresh:
+    - src_vm
+  USER_FAILED_RUN_VM:
+  - refresh:
+    - src_vm
+  USER_HOST_MAINTENANCE:
+  - refresh:
+    - src_host
+  USER_HOST_RESTART:
+  - refresh:
+    - src_host
+  USER_HOST_SHUTDOWN:
+  - refresh:
+    - src_host
+  USER_HOST_START:
+  - refresh:
+    - src_host
+  USER_HOST_STOP:
+  - refresh:
+    - src_host
+  USER_INITIATED_RUN_VM_FAILED:
+  - refresh:
+    - src_vm
+  USER_INITIATED_SHUTDOWN_VM:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_shutdown_guest
+  USER_LOGGED_IN_VM:
+  - policy:
+    - src_vm
+    - vm_remote_console_connected
+  USER_MERGE_SNAPSHOT_FINISHED_SUCCESS:
+  - refresh:
+    - src_vm
+  USER_MOVED_TEMPLATE:
+  - refresh:
+    - src_vm
+  USER_MOVED_TEMPLATE_FINISHED_SUCCESS:
+  - policy:
+    - src_vm
+    - vm_migrate
+  USER_MOVED_VM:
+  - refresh:
+    - src_vm
+  USER_MOVED_VM_FINISHED_SUCCESS:
+  - policy:
+    - src_vm
+    - vm_migrate
+  - refresh:
+    - src_vm
+  USER_PAUSE_VM:
+  - refresh:
+    - src_vm
+  USER_REMOVE_HOST:
+  - refresh:
+    - src_ems_cluster
+  USER_REMOVE_VM:
+  - refresh:
+    - src_ems_cluster
+  - policy:
+    - src_vm
+    - vm_unregister
+  USER_REMOVE_VM_TEMPLATE:
+  - refresh:
+    - src_ems_cluster
+  USER_REMOVE_DISK_FROM_VM:
+  - refresh:
+    - src_vm
+  USER_REMOVE_VM_FINISHED:
+  - call:
+    - src_vm
+    - disconnect_storage
+  - policy:
+    - src_vm
+    - vm_unregister
+  - refresh:
+    - src_ems_cluster
+  USER_REMOVE_VM_TEMPLATE_FINISHED:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_unregister
+  USER_RESTORE_FROM_SNAPSHOT:
+  - refresh:
+    - src_vm
+  USER_RESTORE_FROM_SNAPSHOT_FINISH_SUCCESS:
+  - refresh:
+    - src_vm
+  USER_RESUME_VM:
+  - refresh:
+    - src_vm
+  USER_RUN_VM:
+  - policy:
+    - src_vm
+    - vm_start
+  - refresh:
+    - src_vm
+  USER_RUN_VM_ON_NON_DEFAULT_HOST:
+  - refresh:
+    - src_host
+  USER_STOP_VM:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_poweroff
+  USER_STOP_SUSPENDED_VM:
+  - refresh:
+    - src_vm
+  USER_STOPPED_VM_INSTEAD_OF_SHUTDOWN:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_poweroff
+  USER_SUSPEND_VM_FINISH_SUCCESS:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_suspend
+  USER_TRY_BACK_TO_SNAPSHOT:
+  - refresh:
+    - src_vm
+  USER_TRY_BACK_TO_SNAPSHOT_FINISH_SUCCESS:
+  - refresh:
+    - src_vm
+  USER_UPDATE_HOST:
+  - refresh:
+    - src_ems_cluster
+  USER_UPDATE_VM:
+  - policy:
+    - src_vm
+    - vm_reconfigure
+  - refresh:
+    - src_vm
+  USER_UPDATE_VM_DISK:
+  - refresh:
+    - src_vm
+  USER_UPDATE_VM_TEMPLATE:
+  - refresh:
+    - src_vm
+  VdiConnectingSessionEvent:
+  - policy:
+    - src_vm
+    - vm_vdi_connecting_session
+  VdiConsoleLoggedInSessionEvent:
+  - policy:
+    - src_vm
+    - vm_vdi_console_logged_in_session
+  VdiDisconnectedSessionEvent:
+  - policy:
+    - src_vm
+    - vm_vdi_disconnected_session
+  VdiLoginSessionEvent:
+  - policy:
+    - src_vm
+    - vm_vdi_login_session
+  VdiLogoffSessionEvent:
+  - policy:
+    - src_vm
+    - vm_vdi_logoff_session
+  VM_DOWN:
+  - refresh:
+    - src_vm
+  VM_DOWN_ERROR:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_poweroff
+  VM_IMPORT:
+  - refresh:
+    - src_ems_cluster
+  VM_MIGRATION_DONE:
+  - refresh:
+    - src_ems_cluster
+  - policy:
+    - src_vm
+    - vm_migrate
+  VM_RENAMED:
+  - refresh:
+    - ems
+  NETWORK_INTERFACE_PLUGGED_INTO_VM:
+  - refresh:
+    - ems
+  VmCreatedEvent:
+  - refresh:
+    - src_host
+  VmPoweredOffEvent:
+  - call:
+    - src_vm
+    - state=
+    - 'off'
+  - call:
+    - src_vm
+    - save!
+  - policy:
+    - src_vm
+    - vm_poweroff
+  VmPoweredOnEvent:
+  - call:
+    - src_vm
+    - state=
+    - 'on'
+  - call:
+    - src_vm
+    - save!
+  VmRelocatedEvent:
+  - refresh:
+    - first_chained_src_host
+    - src_host
+  VmRemoteConsoleConnectedEvent:
+  - policy:
+    - src_vm
+    - vm_remote_console_connected
+  VmRenamedEvent:
+  - policy:
+    - src_vm
+    - vm_renamed_event
+  VmSuspendedEvent:
+  - call:
+    - src_vm
+    - state=
+    - suspended
+  - call:
+    - src_vm
+    - save!
+  compute.instance.create.end:
+  - refresh:
+    - ems
+  compute.instance.delete.end:
+  - refresh:
+    - ems
+  compute.instance.shutdown.end:
+  - refresh:
+    - ems
+  compute.instance.power_off.end:
+  - refresh:
+    - ems
+  image.update:
+  - refresh:
+    - ems
+  image.create:
+  - refresh:
+    - ems
+  image.upload:
+  - refresh:
+    - ems
+  image.delete:
+  - refresh:
+    - ems
+  network.floating_ip.allocate:
+  - refresh:
+    - ems
+  network.floating_ip.deallocate:
+  - refresh:
+    - ems
+  network.floating_ip.associate:
+  - refresh:
+    - ems
+  network.floating_ip.disassociate:
+  - refresh:
+    - ems
+
+#
+# The filtered_events section defines which events should not be added to the
+#   database.  Keys that have nil values will be filtered at the event catcher
+#   level.  Keys that do have values, in the format of a hash of object type to
+#   an array of ids, will be filtered such that they are not added to the event
+#   table.
+#
+filtered_events:
+  AlarmActionTriggeredEvent:
+  AlarmCreatedEvent:
+  AlarmEmailCompletedEvent:
+  AlarmEmailFailedEvent:
+  AlarmReconfiguredEvent:
+  AlarmRemovedEvent:
+  AlarmScriptCompleteEvent:
+  AlarmScriptFailedEvent:
+  AlarmSnmpCompletedEvent:
+  AlarmSnmpFailedEvent:
+  AlarmStatusChangedEvent:
+  AlreadyAuthenticatedSessionEvent:
+  UNASSIGNED:
+  USER_REMOVE_VG:
+  USER_REMOVE_VG_FAILED:
+  USER_VDC_LOGIN:
+  USER_VDC_LOGOUT:
+  UserLoginSessionEvent:
+  UserLogoutSessionEvent:
+  scheduler.run_instance.start:
+  scheduler.run_instance.scheduled:
+  scheduler.run_instance.end:
+
+#
+# The task_final_events section defines which events could be the final event
+#   for a task, and the list of those tasks for which that event is a final event.
+#   When the final event is encountered, and if the first event in the
+#   chain is one of the specified tasks, a rollup task is created with the name
+#   #{event}_Complete.
+#
+task_final_events:
+  ClusterCreatedEvent:
+  - CreateClusterEx
+  ClusterDestroyedEvent:
+  - DestroyCluster_Task
+  DatacenterCreatedEvent:
+  - CreateDatacenter
+  DatacenterRenamedEvent:
+  - RenameDatacenter_Task
+  DatastoreFileMovedEvent:
+  - Move_Task
+  DrsVmMigratedEvent:
+  - DrsMigrateVM_Task
+  DrsVmPoweredOnEvent:
+  - PowerOnVM_Task
+  EnteredMaintenanceModeEvent:
+  - EnterMaintenanceMode_Task
+  ExitMaintenanceModeEvent:
+  - ExitMaintenanceMode_Task
+  ResourcePoolCreatedEvent:
+  - CreateResourcePool
+  ResourcePoolDestroyedEvent:
+  - DestroyResourcePool_Task
+  ResourcePoolMovedEvent:
+  - MoveIntoResourcePool
+  VmClonedEvent:
+  - CloneVM_Task
+  VmCreatedEvent:
+  - CreateVM_Task
+  VmDeployedEvent:
+  - CloneVM_Task
+  VmGuestRebootEvent:
+  - RebootGuest
+  VmGuestShutdownEvent:
+  - ShutdownGuest
+  VmGuestStandbyEvent:
+  - StandbyGuest
+  VmMigratedEvent:
+  - MigrateVM_Task
+  - RelocateVM_Task
+  VmPoweredOffEvent:
+  - PowerOffVM_Task
+  VmPoweredOnEvent:
+  - PowerOnVM_Task
+  - ResetVM_Task
+  VmReconfiguredEvent:
+  - ReconfigVM_Task
+  VmRegisteredEvent:
+  - RegisterVM_Task
+  VmRelocatedEvent:
+  - RelocateVM_Task
+  VmRemovedEvent:
+  - DestroyVM_Task
+  - UnregisterVM
+  VmRenamedEvent:
+  - RenameVM_Task
+  VmResourcePoolMovedEvent:
+  - MarkAsTemplate
+  - MoveIntoResourcePool
+  VmSuspendedEvent:
+  - SuspendVM_Task

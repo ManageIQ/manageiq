@@ -1,0 +1,33 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqWidget
+:button_groups:
+- :name: widget_vmdb
+  :items:
+  - :buttonSelect: widget_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: widget_edit
+      :image: edit
+      :text: "Edit this Widget"
+      :title: "Edit this Widget"
+    - :button: widget_copy
+      :image: copy
+      :text: "Copy this Widget"
+      :title: "Copy this Widget"
+    - :button: widget_delete
+      :image: delete
+      :text: "Delete this Widget from the Database"
+      :title: "Delete this Widget from the Database"
+      :url_parms: '&refresh=y'
+      :confirm: "Warning: This Widget and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Widget?"
+    - :separator:
+    - :button: widget_generate_content
+      :image: collect
+      :confirm: 'Are you sure you want initiate content generation for this Widget now?'
+      :text: Generate Widget content now
+      :title: Generate Widget content now

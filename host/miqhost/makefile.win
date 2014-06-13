@@ -1,0 +1,29 @@
+LIBDIR = ../..
+VERBLIB = lib/Verbs
+MDLIB = lib/metadata
+UTILLIB = lib/util
+DSKLIB = lib/disk
+FSLIB = lib/fs
+ENCLIB = lib/encryption
+MAIN = host/miqhost/miqhost.rb host/miqhost/expose_services.rb host/miqhost/MiqHostConfig.rb host/miqhost/process_queue.rb host/miqhost/heartbeat.rb
+
+RBPACK = ../../../ruby_sfx/rbpack.win
+
+EXCLUDE = -x \*\\.svn\\\* -x \*~
+
+TARGET = miqhost.exe
+TFP = $(shell pwd)/$(TARGET)
+
+$(TARGET): FRC
+	rm -f $(TARGET)
+	cp $(RBPACK) $(TARGET)
+	cd $(LIBDIR); zip -A -r $(TFP) $(VERBLIB) $(EXCLUDE)
+	cd $(LIBDIR); zip -A -r $(TFP) $(MDLIB) $(EXCLUDE)
+	cd $(LIBDIR); zip -A -r $(TFP) $(UTILLIB) $(EXCLUDE)
+	cd $(LIBDIR); zip -A -r $(TFP) $(DSKLIB) $(EXCLUDE)
+	cd $(LIBDIR); zip -A -r $(TFP) $(FSLIB) $(EXCLUDE)
+	cd $(LIBDIR); zip -A -r $(TFP) $(ENCLIB) $(EXCLUDE)
+	cd $(LIBDIR); zip -A $(TFP) $(MAIN)
+	zip -A $(TFP) init.rb
+
+FRC:

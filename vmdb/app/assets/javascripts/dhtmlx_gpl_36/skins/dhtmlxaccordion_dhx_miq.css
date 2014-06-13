@@ -1,0 +1,129 @@
+/* MAIN OBJ */
+div.dhx_acc_base_dhx_blue {
+  overflow: hidden;
+}
+/* SINGLE ITEM */
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item_hidden {
+  display: none;
+}
+
+/* HEADER */
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item div.dhx_acc_item_label {
+  position: relative;
+  color: #454545;
+  font: normal 93% OpenSansSemibold,Arial,Helvetica,sans-serif;
+  height: 33px;
+  line-height: 24px;
+  vertical-align: middle;
+  overflow: hidden;
+  background-image: url("/images/layout/accordionbkgd.png");
+  background-position: left top;
+  background-repeat: repeat-x;
+  -moz-user-select: none;
+  cursor: pointer; cursor: hand;
+  border-top: #696969 1px solid;
+  padding-left: 4px;
+  border-bottom: #CCC 1px solid;
+  text-shadow: #ebebeb 0 1px 0;
+}
+
+/* LABEL */
+div.dhx_acc_base_dhx_blue div.dhx_acc_item div.dhx_acc_item_label span {
+  margin: 0px 4px;
+  line-height: 32px;
+}
+
+/* HOVERED HEADER */
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item_lavel_hover {
+  background-image: url("/images/layout/accordionbkgd.png")!important;
+  background-position: left bottom;
+  color: #000;
+  }
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item_lavel_hover span {
+  color: #000;
+}
+
+/* HEADER BOTTOM BORDER FAKE */
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item div.dhx_acc_item_label div.dhx_acc_item_label_btmbrd {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0px;
+  border-bottom: #CCC 1px solid;
+  }
+
+/* ICON */
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item div.dhx_acc_item_label img.dhx_acc_item_icon {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 4px;
+  top: 4px;
+}
+
+/* ?? accordion attached to window */
+
+.dhtmlxAccordionAttached {
+  border: none !important;
+}
+
+/* tabbar */
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item div.dhx_tabbar_row {
+  background-color: #D2E3EA;
+}
+
+/* status bar */
+
+div.dhx_acc_base_dhx_blue div.dhxcont_statusbar {
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  _bottom: -1px;
+  border-top: #B5CDE4 0px solid;
+  background-color: #D9E8F6;
+  width: 100%;
+  overflow: hidden;
+  font-family: Tahoma;
+  font-size: 11px;
+  vertical-align: middle;
+  line-height: 19px;
+  -moz-user-select: none;
+  cursor: default;
+  padding-left: 4px;
+}
+
+/* CONTAINER */
+
+div.dhx_acc_base_dhx_blue div.dhx_acc_item div.dhxcont_global_content_area {
+  position: absolute;
+  overflow: hidden;
+  border-top: #686868 1px solid;
+  background: url(/images/layout/background.png) repeat-x left top;
+}
+
+div.dhxcont_content_blocker {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 101%;
+  height: 101%;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+  opacity: 0;
+  background: #FFFFFF;
+  z-index: 1;
+  -moz-user-select: none;
+}

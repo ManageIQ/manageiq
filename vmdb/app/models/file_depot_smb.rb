@@ -1,0 +1,2 @@
+class FileDepotSmb < FileDepot
+end

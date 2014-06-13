@@ -1,0 +1,16 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: INFO
+    inherits: 
+    description: 
+  fields:
+  - random_number:
+      value: /TEST/NUMBERS/${#environment}#create
+  - months:
+      value: /TEST/MONTHS/*#create
+  - weekdays:
+      value: /TEST/WEEKDAYS/*#create

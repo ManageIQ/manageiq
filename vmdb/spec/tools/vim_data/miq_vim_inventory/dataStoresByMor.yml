@@ -1,0 +1,2973 @@
+--- 
+? !str:VimString 
+  str: datastore-12281
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12281
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Backup1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "38646255616"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4dbed2c7-8193376e-7283-00188b404015/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "656626679808"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12281
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "1048508891136"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-798
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-798
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: NetAppSim1Vol1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "4410318893"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: netfs://192.168.252.169//vol/vol1/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: NFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-798
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-941
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-941
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Test1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "39909861376"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc317f7-1021a6f0-3619-0010187f038c/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "64957186048"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-941
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "536602476544"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-952
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-952
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo7
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa1e0-d60c745c-3510-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "40166752256"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-952
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-974
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-974
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: NetAppSim2Lun1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "536870912"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cfd46de-09fb16d0-d60a-0010187f038c/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "6666846208"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-974
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "15837691904"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12282
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12282
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: temp1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4dce5b88-623e8e7e-0dc0-00188b404015/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "2667552178176"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12282
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "2830920318976"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12609
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12609
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: rpotest
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: netfs://192.168.252.30//vol/rpotest/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: NFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "42947682304"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12609
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "42949672960"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-942
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-942
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-BigPain1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc6eabb-716e00da-6c53-0010187f00d8/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "98205433856"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-942
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "107105746944"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-953
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-953
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Prod1 (1)
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "338640414720"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3f9f09-38b9b7dc-365d-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "85162196992"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-953
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "524254445568"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-997
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-997
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: Test
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "1082130432"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: netfs://10.1.1.210//vol/Test/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: NAS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-997
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-943
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-943
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Prod1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3f9f09-38b9b7dc-365d-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "85162196992"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-943
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "524254445568"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-954
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-954
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-InstMedia (1)
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3f9ff0-0997964c-75a7-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "95226429440"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-954
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-944
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-944
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-ViewTest
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3f9f97-ce308d08-6e80-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "155178762240"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-944
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "209648091136"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-955
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-955
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo4
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa119-bee30593-58c5-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "87113596928"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-955
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-1126
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-1126
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Dev1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "977558157312"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d4c275b-3ae8220a-6675-0010187f03a0/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "275139002368"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-1126
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "1048508891136"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12348
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12348
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Backup1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4dbed2c7-8193376e-7283-00188b404015/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "656643457024"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12348
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "1048508891136"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-857
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-857
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: NetAppSim0Vol1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: netfs://192.168.252.108//vol/vol1/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: NFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-857
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-945
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-945
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-InstMedia
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3f9ff0-0997964c-75a7-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "95224332288"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-945
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-956
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-956
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo5
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa15a-e1b0090c-a4df-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "102374572032"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-956
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-967
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-967
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Test2
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "172369107968"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d40403b-10c21b4e-0c17-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "257468399616"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-967
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "524254445568"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-1006
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-1006
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Test2
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d40403b-10c21b4e-0c17-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "257468399616"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-1006
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "524254445568"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12349
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12349
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: temp1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4dce5b88-623e8e7e-0dc0-00188b404015/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "2667552178176"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12349
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "2830920318976"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12350
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12350
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: NetApp01Vol1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "130119090348"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: netfs://192.168.252.30//vol/vol1/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: NFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "77848834048"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12350
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "107374182400"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-892
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-892
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: datastore1 (1)
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d28908f-944a1570-26fb-842b2b4d33ce/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "234284384256"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-892
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "244544700416"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-946
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-946
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa03f-ff63dd86-7910-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "203668062208"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-946
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "314337918976"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-957
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-957
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo6
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa19c-9a8da7b2-b159-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "81665196032"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-957
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-1084
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-1084
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: RichRcuTest
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: netfs://192.168.252.114//vol/RichRcuTest/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: NAS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-1084
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12571
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12571
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: MSAN2
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "82854300672"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4df2e108-cc896576-e253-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "838491701248"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12571
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "3832184569856"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-651
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-651
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: msan1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "1610612736"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4aaab00b-65d3660c-1dbe-001517bfe5a4/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "324278419456"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-651
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "2095675604992"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-947
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-947
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo2
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa096-fb177631-af3f-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "72028782592"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-947
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-958
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-958
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-ViewTest
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "68616646656"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3f9f97-ce308d08-6e80-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "155179810816"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-958
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "209648091136"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-14
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-14
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: datastore1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc06a6a-6823ff15-9d07-842b2b4dc7cf/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "153263013888"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-14
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "244544700416"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-80
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-80
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: msan1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "182047154176"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4aaab00b-65d3660c-1dbe-001517bfe5a4/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "324276322304"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-80
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "2095675604992"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-805
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-805
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: NetApp01Lun1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "9336496128"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d0acc35-98f8ff00-7ed4-0010187f038c/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "326795001856"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-805
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "354334801920"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-948
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-948
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo3
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa0e1-d33f32b7-db83-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "84933607424"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-948
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-959
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-959
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "80478218240"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa03f-ff63dd86-7910-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "203670159360"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-959
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "314337918976"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-960
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-960
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo2
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa096-fb177631-af3f-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "72029831168"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-960
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12616
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12616
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: nas-ds-add-test
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: netfs://192.168.252.30//vol/nas_ds_add_test/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: NFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "8589447168"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12616
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "8589934592"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-15
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-15
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Prod1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "2147483648"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc15532-1139a5f5-44f6-0010187f00c8/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-15
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-653
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-653
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: datastore1 (1)
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc076f5-8ecb63db-4d62-842b2b4dc937/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "243955400704"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-653
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "244544700416"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-741
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-741
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-BigPain1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc6eabb-716e00da-6c53-0010187f00d8/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "98206482432"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-741
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "107105746944"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-949
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-949
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo4
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa119-bee30593-58c5-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "87112548352"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-949
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-950
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-950
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo5
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa15a-e1b0090c-a4df-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "102374572032"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-950
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-961
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-961
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo3
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa0e1-d33f32b7-db83-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "84933607424"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-961
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-11915
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-11915
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Dev1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "105563277312"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d4c275b-3ae8220a-6675-0010187f03a0/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "275139002368"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-11915
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "1048508891136"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-16
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-16
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-InstMedia
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc1b6e9-de74b1f5-fe62-0010187f038c/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-16
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "0"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-951
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-951
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo6
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa19c-9a8da7b2-b159-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "81666244608"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-951
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-962
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-962
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Demo7
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4d3fa1e0-d60c745c-3510-0010187f00da/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "40165703680"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-962
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "104689827840"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-12630
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-12630
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: datastore1 (2)
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4df0f63e-684d6530-cf4c-005056af001b/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "5034213376"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-12630
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "false"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "5368709120"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+
+? !str:VimString 
+  str: datastore-28
+  "@vimType": :Datastore
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  capability: !map:VimHash 
+    perFileThinProvisioningSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    directoryHierarchySupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    rawDiskMappingsSupported: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreCapability
+  MOR: !str:VimString 
+    str: datastore-28
+    "@vimType": :Datastore
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: StarM1-Test1
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    uncommitted: !str:VimString 
+      str: "353299408896"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    url: !str:VimString 
+      str: sanfs://vmfs_uuid:4cc317f7-1021a6f0-3619-0010187f038c/
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    type: !str:VimString 
+      str: VMFS
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    freeSpace: !str:VimString 
+      str: "64958234624"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    datastore: !str:VimString 
+      str: datastore-28
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+    multipleHostAccess: !str:VimString 
+      str: "true"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPBoolean"
+    capacity: !str:VimString 
+      str: "536602476544"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    __iv__@vimType: 
+    __iv__@xsiType: :DatastoreSummary
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
+

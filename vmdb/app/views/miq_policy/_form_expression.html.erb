@@ -1,0 +1,30 @@
+<div id="form_expression_div">
+  <% if @expkey == :expression %>
+    <p class="legend">Expression (Choose an element of the expression to edit)</p>
+    <%= render(:partial => 'layouts/exp_editor') %>
+  <% else %>
+    <p class="legend">Expression (Press the "Edit" button to edit the expression)</p>
+    <%= link_to(image_tag("/images/toolbars/edit.png",
+                          :border => "0", 
+                          :alt    => "Edit this Expression"),
+                {:action => 'condition_edit', 
+                 :button => "expression"},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :remote => true,
+                :title  => "Edit this Expression")
+    %>
+    <br/>
+    <% if @edit[:expression_table] != nil %>
+      <% @edit[:expression_table].each do |token| %>
+        <% if ! ["AND", "OR", "(", ")"].include?([token].flatten.first) %>
+          <%= h([token].flatten.first) %>
+        <% else %>
+          <font color="black"><b><%= h([token].flatten.first) %></b></font>
+        <% end %>
+      <% end %>
+    <% else %>
+      No expression defined, a condition must contain a valid expression.
+    <% end %>
+  <% end %>
+</div>

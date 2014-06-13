@@ -1,0 +1,63 @@
+#
+# Toolbar config file
+#
+---
+:model: Diagnostics
+:button_groups:
+- :name: support_reloading
+  :items:
+  # Roles by Servers tab
+  - :button: reload_server_tree
+    :image: reload
+    :title: 'Reload Current Display'
+- :name: ldap_domain_vmdb
+  :items:
+    # Roles by Server tab
+  - :buttonSelect: support_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: zone_delete_server
+      :image: delete
+      :text: 'Delete Server #{@record.name} [#{@record.id}]'
+      :title: 'Delete Server #{@record.name} [#{@record.id}]'
+      :confirm: 'Do you want to delete Server #{@record.name} [#{@record.id}]?'
+    - :button: zone_role_start
+      :image: start
+      :text: 'Start Role'
+      :title: 'Start the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]'
+      :confirm: 'Start the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]?'
+    - :button: zone_role_suspend
+      :image: suspend
+      :text: 'Suspend Role'
+      :title: 'Suspend the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]'
+      :confirm: 'Suspend the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]?'
+    - :button: zone_demote_server
+      :image: remove_master
+      :text: 'Demote Server'
+      :title: 'Demote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to secondary for the #{@record.server_role.description} Role'
+      :confirm: 'Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.'
+    - :button: zone_promote_server
+      :image: set_master
+      :text: 'Promote Server'
+      :title: 'Promote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to primary for the #{@record.server_role.description} Role'
+      :confirm: 'Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role.'
+    # collect logs tab
+  - :buttonSelect: support_vmdb_choice
+    :image: collect_current
+    :title: 'Collect Logs'
+    :text: Collect
+    :items:
+    - :button: zone_collect_current_logs
+      :image: collect_current
+      :text: 'Collect current logs'
+      :title: 'Collect the current logs from the selected #{ui_lookup(:table=>"zone")}'
+    - :button: zone_collect_logs
+      :image: collect_all
+      :text: 'Collect all logs'
+      :title: 'Collect all logs from the selected #{ui_lookup(:table=>"zone")}'
+  - :button: zone_log_depot_edit
+    :image: edit
+    :text: 'Edit'
+    :title: 'Edit the Log Depot settings for the selected #{ui_lookup(:table=>"zone")}'

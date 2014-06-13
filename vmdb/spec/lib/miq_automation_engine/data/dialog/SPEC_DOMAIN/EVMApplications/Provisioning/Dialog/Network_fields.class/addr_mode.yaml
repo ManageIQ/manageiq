@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: addr_mode
+    inherits: 
+    description: 
+  fields:
+  - key:
+      value: addr_mode
+  - value:
+      value: /EVMApplications/Provisioning/Dialog/network_fields_addrmode/*

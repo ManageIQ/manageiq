@@ -1,0 +1,63 @@
+#
+# Toolbar config file
+#
+---
+:model: Dialog
+:button_groups:
+- :name: dialog_vmdb
+  :items:
+  - :buttonSelect: dialog_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: dialog_edit
+      :image: edit
+      :text: "Edit this Dialog"
+      :title: "Edit this Dialog"
+      :url_parms: 'main_div'
+    - :button: dialog_copy
+      :image: copy
+      :title: "Copy this Dialog"
+      :text: "Copy this Dialog"
+      :url_parms: 'main_div'
+    - :button: dialog_delete
+      :image: remove
+      :text: "Remove from the VMDB"
+      :title: "Remove this Dialog from the VMDB"
+      :url_parms: 'main_div'
+      :confirm: "Warning: This Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Dialog?"
+- :name: dialog_add
+  :items:
+  - :buttonSelect: dialog_add_choice
+    :image: new
+    :title: Add
+    :enabled: 'true'    
+    :items:
+    - :button: dialog_add_tab
+      :image: new
+      :text: "Add a new Tab to this Dialog"
+      :title: Add a new Tab to this Dialog
+      :url_parms: '?typ=tab&id=#{@edit[:rec_id]}'
+    - :button: dialog_add_box
+      :image: new
+      :text: "Add a new Box to this Tab"
+      :title: Add a new Box to this Tab
+      :url_parms: '?typ=box&id=#{@edit[:rec_id]}'
+    - :button: dialog_add_element
+      :image: new
+      :text: "Add a new Element to this Box"
+      :title: Add a new Element to this Box
+      :url_parms: '?typ=element&id=#{@edit[:rec_id]}'
+- :name: dialog_discard
+  :items:
+  - :button: dialog_res_discard
+    :image: discard
+    :title: 'Discard this new #{@sb[:node_typ].titleize}'
+    :url_parms: '?id=#{@edit[:rec_id]}'
+- :name: dialog_edit_delete
+  :items:
+  - :button: dialog_resource_remove
+    :image: delete
+    :title: "Delete selected #{@sb[:txt]}"
+    :url_parms: '?id=#{@edit[:rec_id]}'

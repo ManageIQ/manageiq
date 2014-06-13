@@ -1,0 +1,40 @@
+---
+__domain__.yaml:
+  classes: 1
+  instances: 2
+  method_files: 1
+  method_instances: 1
+  created_on: 2014-05-19 19:41:12.242752000 Z
+  updated_on: 2014-05-19 19:41:12.242752000 Z
+  size: 156
+  sha1: jfpCOqPT1fiyxgYuaRqhsntqBnY=
+evm/__namespace__.yaml:
+  created_on: 2014-05-19 19:41:12.517831000 Z
+  updated_on: 2014-05-19 19:41:12.517831000 Z
+  size: 155
+  sha1: Ugj4UH0RSS4/JizAws9eIjjPH68=
+evm/AUTOMATE.class/__class__.yaml:
+  created_on: 2014-05-19 19:41:12.550637000 Z
+  updated_on: 2014-05-19 19:41:12.550637000 Z
+  size: 1325
+  sha1: 2EYrMxY28Wveyl8dDq1fOYJ+E1w=
+evm/AUTOMATE.class/test1.yaml:
+  created_on: 2014-05-19 19:41:12.571457000 Z
+  updated_on: 2014-05-19 19:41:12.571457000 Z
+  size: 184
+  sha1: FrvUXzmxNaizpZ87ou2llJ5a31s=
+evm/AUTOMATE.class/test2.yaml:
+  created_on: 2014-05-19 19:41:12.582421000 Z
+  updated_on: 2014-05-19 19:41:12.582421000 Z
+  size: 193
+  sha1: ARRTaEBPU+7UNSmQNlyLa96tBBw=
+evm/AUTOMATE.class/__methods__/root_method.rb:
+  created_on: 2014-05-19 19:41:12.591026000 Z
+  updated_on: 2014-05-19 19:41:12.591026000 Z
+  size: 419
+  sha1: wcEu+61yqeH/nb7rvP1ACoYuKvI=
+evm/AUTOMATE.class/__methods__/root_method.yaml:
+  created_on: 2014-05-19 19:41:12.591026000 Z
+  updated_on: 2014-05-19 19:41:12.591026000 Z
+  size: 191
+  sha1: JN6zLbHI1Uop5bQJmcWU6jfITzE=

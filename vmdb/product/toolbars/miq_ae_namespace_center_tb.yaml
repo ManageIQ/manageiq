@@ -1,0 +1,36 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAeNamespace
+:button_groups:
+- :name: miq_ae_namespace_vmdb
+  :items:
+  - :buttonSelect: miq_ae_namespace_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: miq_ae_namespace_new
+      :image: new_namespace
+      :text: 'Add a New Namespace'
+      :title: 'Add a New Namespace'
+    - :button: miq_ae_class_new
+      :image: new_class
+      :text: 'Add a New Class'
+      :title: 'Add a New Class'
+    - :button: miq_ae_item_edit
+      :image: edit
+      :text: 'Edit Selected Item'
+      :title: 'Edit Selected Item'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: miq_ae_namespace_delete
+      :image: delete
+      :text: 'Remove selected Items'
+      :title: 'Remove selected Items'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to remove selected Items?'
+      :enabled: 'false'
+      :onwhen: '1+'
