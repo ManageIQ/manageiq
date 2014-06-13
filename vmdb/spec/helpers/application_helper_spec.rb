@@ -3213,7 +3213,7 @@ describe ApplicationHelper do
   end
 
   context "#title_from_layout" do
-    let(:title)  {"CloudForms Management Engine"}
+    let(:title) { I18n.t('product.name') }
     subject { title_from_layout(@layout) }
 
     it "when layout is blank" do
