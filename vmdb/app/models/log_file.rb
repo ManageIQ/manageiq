@@ -325,26 +325,6 @@ class LogFile < ActiveRecord::Base
     FileUtils.rm_f(local_file) if File.exist?(local_file)
   end
 
-  def file_exists_ftp?(existing_ftp = nil)
-    log_header = "MIQ(#{self.class.name}-file_exists_ftp?)"
-    $log.info("#{log_header} Checking existance of log file [#{self.log_uri}]...")
-
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(self.log_uri))
-    path = URI.decode(path)
-
-    ftp = existing_ftp || self.class.connect_ftp(file_depot.depot_hash.merge(:uri => log_uri))
-    begin
-      result = !ftp.ls(path).blank?
-    rescue => err
-      $log.warn("#{log_header} #{err}")
-      result = false
-    ensure
-      ftp.close unless existing_ftp
-    end
-    $log.info("#{log_header} Checking existance of log file [#{self.log_uri}]...Complete, result: [#{result}]")
-    return result
-  end
-
   def format_log_time(time)
     return time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
   end
