@@ -1,7 +1,7 @@
 <% width = size == 150 ? 54 : 35 %>
 <% height = width %>
-<% if @settings[:quadicons][:ems] %>
-	<div class="flobj" ><img src="/images/icons/<%= size %>/base.png" width="<%= size %>" height="<%= size %>"/></div>
+<% if @settings[:quadicons][@layout == 'ems_infra' ? :ems : :ems_cloud] %>
+  <div class="flobj" ><img src="/images/icons/<%= size %>/base.png" width="<%= size %>" height="<%= size %>"/></div>
 	<% a_count = item.is_a?(EmsCloud) ? item.total_vms : item.hosts.size %>  <%# Get the VM or Host count %>
 	<div class="flobj a<%= size %>"><p><%= a_count %></p></div>
   <% if item.is_a?(EmsCloud) %>
