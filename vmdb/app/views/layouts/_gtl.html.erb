@@ -42,24 +42,51 @@
 
   <div id="records_div" style="<%= rec_display%>">
     <% unless @embedded %>
-      <% if @pages && @items_per_page != ONE_MILLION %>
-        <%= render :partial => '/layouts/pagingcontrols', :locals=> {:pages=>@pages, :action_url=>action_url, :db=>view.db, :headers=>view.headers,:button_div=>button_div} %>
-      <% end %>
-      <%# Don't show flash message in gtl, partial already exists on screen %>
+          <%# Don't show flash message in gtl, partial already exists on screen %>
       <% if render_flash_msg? && table.data.length > 0 %>
         <%= render :partial => "layouts/flash_msg" %>
       <% end %>
+      <% if @pages && @items_per_page != ONE_MILLION %>
+        <%= render :partial => '/layouts/pagingcontrols',
+                   :locals  => {:pages     => @pages,
+                                :action_url => action_url,
+                                :db         => view.db,
+                                :headers    => view.headers,
+                                :button_div => button_div}
+        %>
+      <% end %>
     <% end %>
     <% if @gtl_type==nil || @gtl_type=="grid" %>
-      <%= render :partial => "layouts/gtl/grid", :locals=>{:table=>table, :button_div=>button_div, :view=>view, :action_url=>action_url} %>
+      <%= render :partial => "layouts/gtl/grid", 
+                 :locals  => {:table      => table,
+                              :button_div => button_div,
+                              :view       => view,
+                              :action_url => action_url}
+      %>
     <% elsif @gtl_type=="tile" %>
-      <%= render :partial => "layouts/gtl/tile", :locals=>{:table=>table, :button_div=>button_div, :view=>view, :action_url=>action_url} %>
+      <%= render :partial => "layouts/gtl/tile", 
+                 :locals  => {:table      => table,
+                              :button_div => button_div,
+                              :view       => view,
+                              :action_url => action_url}
+      %>
     <% elsif @gtl_type == "list" %>
-      <%= render :partial => "layouts/gtl/list", :locals=>{:table=>table, :button_div=>button_div, :view=>view, :action_url=>action_url, :listicon_image=>listicon_image} %>
+      <%= render :partial => "layouts/gtl/list", 
+                 :locals  => {:table          => table, 
+                              :button_div     => button_div,
+                              :view           => view, 
+                              :action_url     => action_url, 
+                              :listicon_image => listicon_image}
+      %>
     <% end %>
     <% unless @embedded %>
       <% if @pages && @items_per_page != ONE_MILLION %>
-        <%= render :partial => '/layouts/pagingcontrols', :locals=> {:pages=>@pages, :action_url=>action_url, :db=>nil,:button_div=>button_div} %>
+        <%= render :partial => '/layouts/pagingcontrols',
+                   :locals  => {:pages      => @pages, 
+                                :action_url => action_url,
+                                :db         => nil,
+                                :button_div => button_div}
+        %>
       <% end %>
     <% end %>
   </div>
