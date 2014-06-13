@@ -3,6 +3,10 @@ module MiqVimDump
     def dumpObj(obj, level=0)
         @globalIndent = "" if !@globalIndent
         @dumpToLog = false if @dumpToLog.nil?
+        if level == 0 && obj.respond_to?(:xsiType) && !obj.xsiType.nil?
+        	indentedPrint("#{obj.class.name} <#{obj.xsiType}>:", 0)
+        	@globalIndent = @globalIndent + "    "
+        end
 	    if obj.kind_of? Array
             dumpArray(obj, level)
         elsif obj.kind_of? Hash
