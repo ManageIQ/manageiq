@@ -521,8 +521,9 @@ module ApplicationController::Buttons
           ab_get_node_info(x_node) if x_active_tree == :ab_tree
           replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
         else
-          @custom_button.errors.each do |field,msg|
-            add_flash(I18n.t("flash.error_during", :task=>"add") << "#{field.to_s.capitalize} #{msg}", :error)
+          @custom_button.errors.each do |field, msg|
+            add_flash(I18n.t("flash.error_during", :task => "add") <<
+                      @custom_button.errors.full_message(field, msg), :error)
           end
           @lastaction = "automate_button"
           @layout = "miq_ae_automate_button"

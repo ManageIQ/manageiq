@@ -4,7 +4,6 @@
 en:
   product:
     name: ManageIQ
-
   # Flash messages shown in the UI
   flash:
     add:
@@ -593,6 +592,8 @@ en:
       ext_management_system:
         hostname: "Host Name"
         ipaddress: "IP Address"
+      custom_button:
+        description: "Button Hover Text"
     errors:
       template:
         header:
