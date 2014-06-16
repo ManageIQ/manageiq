@@ -33,6 +33,7 @@ class TimeProfile < ActiveRecord::Base
         TimeProfile.create!(
           :description          => DEFAULT_TZ,
           :tz                   => DEFAULT_TZ,
+          :profile_type         => "global",
           :rollup_daily_metrics => true
         )
       end
