@@ -6,8 +6,6 @@ class MiqAeDomain < MiqAeNamespace
     where(:enabled => true)
   end
 
-  protected
-
   def self.highest_priority
     MiqAeDomain.order('priority DESC').first.priority
   end

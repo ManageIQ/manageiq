@@ -421,6 +421,7 @@ en:
     count_not_in_current_region: "%{label} are not in the current region and will be skipped"
     error_during_delete_with_count: "Error during %{count_model} delete from the CFME Database"
     error_no_longer_exists: "Error: Record no longer exists in the database"
+    invalid_button_action: "Invalid button action."
     not_in_current_region: "The selected %{label} is not in the current region"
     refresh_cu_data: "Refresh of recent C&U data has been initiated"
     schedule_queued_to_run: "The selected Schedule has been queued to run"

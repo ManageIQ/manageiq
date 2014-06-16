@@ -40,7 +40,7 @@ describe MiqAeClassController do
     it "Marks domain as locked/readonly" do
       set_user_privileges
       ns = FactoryGirl.create(:miq_ae_namespace, :system => false)
-      controller.instance_variable_set(:@_params, {:id => ns.id})
+      controller.instance_variable_set(:@_params, :id => ns.id)
       controller.stub(:replace_right_cell)
       controller.send(:domain_lock)
       ns.reload
@@ -52,7 +52,7 @@ describe MiqAeClassController do
     it "Marks domain as unlocked/editable" do
       set_user_privileges
       ns = FactoryGirl.create(:miq_ae_namespace, :system => true)
-      controller.instance_variable_set(:@_params, {:id => ns.id})
+      controller.instance_variable_set(:@_params, :id => ns.id)
       controller.stub(:replace_right_cell)
       controller.send(:domain_unlock)
       ns.reload
@@ -63,24 +63,26 @@ describe MiqAeClassController do
   context "#domains_priority_edit" do
     it "sets priority of domains" do
       set_user_privileges
-      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => nil, :priority => 1)
-      ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "test2", :parent => nil, :priority => 2)
-      ns3 = FactoryGirl.create(:miq_ae_namespace, :name => "test3", :parent => nil, :priority => 3)
-      ns4 = FactoryGirl.create(:miq_ae_namespace, :name => "test4", :parent => nil, :priority => 4)
-      order = ["test3", "test2", "test4", "test1"]
+      FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => nil, :priority => 1)
+      FactoryGirl.create(:miq_ae_namespace, :name => "test2", :parent => nil, :priority => 2)
+      FactoryGirl.create(:miq_ae_namespace, :name => "test3", :parent => nil, :priority => 3)
+      FactoryGirl.create(:miq_ae_namespace, :name => "test4", :parent => nil, :priority => 4)
+      order = %w(test3 test2 test4 test1)
       edit = {
-          :new     => {:domain_order => order},
-          :key     => "priority__edit",
-          :current => {:domain_order => order},
+        :new     => {:domain_order => order},
+        :key     => "priority__edit",
+        :current => {:domain_order => order},
       }
-      controller.instance_variable_set(:@_params, {:button => "save"})
+      controller.instance_variable_set(:@_params, :button => "save")
       controller.instance_variable_set(:@edit, edit)
       controller.instance_variable_set(:@sb, {})
       session[:edit] = edit
       controller.stub(:replace_right_cell)
       controller.send(:domains_priority_edit)
       domain_order = []
-      MiqAeDomain.order('priority ASC').collect { |domain| domain_order.push(domain.name) unless domain.priority == 0}
+      MiqAeDomain.order('priority ASC').collect { |domain|
+        domain_order.push(domain.name) unless domain.priority == 0
+      }
       domain_order.should eq(edit[:new][:domain_order])
     end
   end

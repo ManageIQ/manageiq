@@ -176,8 +176,8 @@ class User < ActiveRecord::Base
     return false if self.miq_user_role.nil?
     feature = MiqProductFeature.find_by_identifier(options[:identifier])
     feature.try(:hidden) ?
-        self.miq_user_role.allows_any?(:identifiers => [options[:identifier]]) :
-        self.miq_user_role.allows?(options)
+        miq_user_role.allows_any?(:identifiers => [options[:identifier]]) :
+        miq_user_role.allows?(options)
   end
 
   def role_allows_any?(options={})
