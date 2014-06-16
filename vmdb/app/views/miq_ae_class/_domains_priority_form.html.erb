@@ -1,0 +1,48 @@
+<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_domains_priority"}  %>
+<div id="domains_list">
+  <table class="admintable">
+    <tbody>
+  <tr>
+    <td >
+      <table width="50%" class="form" id="formtest">
+        <tr>
+      <td align="left" class="widthed">Domains:</td>
+      <td></td>
+      </tr>
+            <tr>
+          <td align="left" valign="top">
+             <%= select_tag('seq_fields[]', options_for_select(@edit[:new][:domain_order], @selected), { :multiple=> true, :style=>"width: 450px", :size=>20, :id=>"seq_fields" } ) %>
+          </td>
+          <td width="30" align="left" valign="middle">
+            <% if @edit[:new][:domain_order].length < 2 %>
+              <%= image_tag("/images/toolbars/up.png", :class=>"dimmed small") %>
+            <% else %>
+              <%= link_to(image_tag("/images/toolbars/up.png",
+                                  :class=>"rollover small", :alt=>"Move selected fields up"),
+                                {:action=>'priority_form_field_changed', :button=>'up', :id=>"priority__edit"},
+                                "data-submit" =>"domains_list",
+                                :remote=>true,
+                                :title=>'Move selected fields up')
+              %>
+            <% end %>
+
+            <% if @edit[:new][:domain_order].length < 2 %>
+              <%= image_tag("/images/toolbars/down.png", :class=>"dimmed small") %>
+            <% else %>
+              <%= link_to(image_tag("/images/toolbars/down.png",
+                                      :class=>"rollover small", :alt=>"Move selected fields down"),
+                                    {:action=>'priority_form_field_changed', :button=>'down', :id=>"priority__edit"},
+                                    "data-submit" =>"domains_list",
+                                    :remote=>true,
+                                    :title=>'Move selected fields down')
+              %>
+            <% end %>
+          </td>
+          </tr>
+          <div class="note">* Select one or more consecutive groups to move up or down.</div>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

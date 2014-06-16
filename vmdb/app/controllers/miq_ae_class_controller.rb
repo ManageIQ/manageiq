@@ -42,26 +42,37 @@ class MiqAeClassController < ApplicationController
     end
   end
 
+  AE_X_BUTTON_ALLOWED_ACTIONS = {
+    'instance_fields_edit'        => :edit_instance,
+    'method_inputs_edit'          => :edit_mehod,
+    'miq_ae_class_edit'           => :edit_class,
+    'miq_ae_class_delete'         => :deleteclasses,
+    'miq_ae_class_new'            => :new,
+    'miq_ae_domain_delete'        => :delete_domain,
+    'miq_ae_domain_edit'          => :edit_domain,
+    'miq_ae_domain_lock'          => :domain_lock,
+    'miq_ae_domain_unlock'        => :domain_unlock,
+    'miq_ae_domain_new'           => :new_domain,
+    'miq_ae_domain_priority_edit' => :domains_priority_edit,
+    'miq_ae_field_edit'           => :edit_fields,
+    'miq_ae_field_seq'            => :fields_seq_edit,
+    'miq_ae_instance_delete'      => :deleteinstances,
+    'miq_ae_instance_edit'        => :edit_instance,
+    'miq_ae_instance_new'         => :new_instance,
+    'miq_ae_item_edit'            => :edit_item,
+    'miq_ae_method_delete'        => :deletemethods,
+    'miq_ae_method_edit'          => :edit_method,
+    'miq_ae_method_new'           => :new_method,
+    'miq_ae_namespace_delete'     => :delete_ns,
+    'miq_ae_namespace_edit'       => :edit_ns,
+    'miq_ae_namespace_new'        => :new_ns,
+  }.freeze
+
   def x_button
-    # handle buttons pressed on the button bar
-    @sb[:action] = params[:pressed]
-    delete_ns if params[:pressed] == "miq_ae_namespace_delete"
-    edit_ns if params[:pressed] == "miq_ae_namespace_edit"
-    new_ns if params[:pressed] == "miq_ae_namespace_new"
-    deleteinstances if params[:pressed] == "miq_ae_instance_delete"
-    edit_instance if params[:pressed] == "miq_ae_instance_edit"
-    new_instance if params[:pressed] == "miq_ae_instance_new"
-    edit_instance if params[:pressed] == "instance_fields_edit"
-    edit_item if params[:pressed] == "miq_ae_item_edit"
-    edit_class if params[:pressed] == "miq_ae_class_edit"
-    deleteclasses if params[:pressed] == "miq_ae_class_delete"
-    new if params[:pressed] == "miq_ae_class_new"
-    edit_fields if params[:pressed] == "miq_ae_field_edit"
-    deletemethods if params[:pressed] == "miq_ae_method_delete"
-    edit_method if params[:pressed] == "miq_ae_method_edit"
-    new_method if params[:pressed] == "miq_ae_method_new"
-    edit_method if params[:pressed] == "method_inputs_edit"
-    fields_seq_edit if params[:pressed] == "miq_ae_field_seq"
+    @sb[:action] = action = params[:pressed]
+    raise ActionController::RoutingError.new('invalid button action') unless
+        AE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+    self.send(AE_X_BUTTON_ALLOWED_ACTIONS[action])
   end
 
   def explorer
@@ -172,21 +183,21 @@ class MiqAeClassController < ApplicationController
           set_right_cell_text(x_node,@ae_class)
         end
       when "aei"
-        inst = MiqAeInstance.find_by_id(from_cid(id[1]))
-        if inst.nil?
+        @record = MiqAeInstance.find_by_id(from_cid(id[1]))
+        if @record.nil?
           set_root_node
         else
-          @edit[:new][:ae_inst][:name] = inst.name
-          @edit[:new][:ae_inst][:display_name] = inst.display_name
-          @edit[:new][:ae_inst][:description] = inst.description
-          @ae_class = inst.ae_class
-          @edit[:ae_class_id] = @ae_class.id
-          @edit[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields,inst)
-          @sb[:active_tab] = "instances"
-          set_right_cell_text(x_node,inst)
+          @edit[:new][:ae_inst][:name]         = @record.name
+          @edit[:new][:ae_inst][:display_name] = @record.display_name
+          @edit[:new][:ae_inst][:description]  = @record.description
+          @ae_class             = @record.ae_class
+          @edit[:ae_class_id]   = @ae_class.id
+          @edit[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
+          @sb[:active_tab]      = "instances"
+          set_right_cell_text(x_node, @record)
         end
       when "aem"
-        @edit[:new][:ae_method] = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
+        @record = @edit[:new][:ae_method] = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
         if @edit[:new][:ae_method].nil?
           set_root_node
         else
@@ -199,18 +210,18 @@ class MiqAeClassController < ApplicationController
           set_right_cell_text(x_node,@edit[:new][:ae_method])
         end
       when "aen"
-        rec = MiqAeNamespace.find_by_id(from_cid(id[1]))
-        if rec.nil?
+        @record = MiqAeNamespace.find_by_id(from_cid(id[1]))
+        if @record.nil?
           set_root_node
         else
           records = Array.new
           # Add Namespaces under a namespace
-          details = MiqAeNamespace.all(:conditions => {:parent_id=>rec.id.to_i})
+          details = MiqAeNamespace.all(:conditions => {:parent_id => @record.id.to_i})
           details.flatten.sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}.each do |r|
             records.push(r)
           end
           # Add classes under a namespace
-          details_cls = rec.ae_classes
+          details_cls = @record.ae_classes
           if !details_cls.nil?
             details_cls.flatten.sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}.each do |r|
               records.push(r)
@@ -220,10 +231,11 @@ class MiqAeClassController < ApplicationController
           @temp[:combo_xml] = get_combo_xml([MiqAeField.new])
           @temp[:dtype_combo_xml] = get_dtype_combo_xml([MiqAeField.new])   # passing fields because that's how many combo boxes we need
           @sb[:active_tab] = "details"
-          set_right_cell_text(x_node,rec)
+          set_right_cell_text(x_node, @record)
         end
       else
         rec = MiqAeNamespace.all(:conditions => {:parent_id=>nil})
+        @record = nil
         @temp[:grid_xml] = build_toplevel_grid(rec)
         @right_cell_text = "Datastore"
         @sb[:active_tab] = "namespaces"
@@ -238,6 +250,7 @@ class MiqAeClassController < ApplicationController
     @lastaction = "explorer"
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
+    @sb[:action] = nil
     replace_right_cell
   end
 
@@ -277,44 +290,52 @@ class MiqAeClassController < ApplicationController
     end
 
     if @sb[:action] == "miq_ae_field_seq"
-      presenter[:lock_unlock_trees][:ae_tree] = true
       presenter[:replace_partials][:flash_msg_div_fields_seq] = r[
         :partial => "layouts/flash_msg",
         :locals  => {:div_num=>"_fields_seq"}
       ] if @flash_array
       presenter[:update_partials][:class_fields_div] = r[:partial => "fields_seq_form"]
+    elsif @sb[:action] == "miq_ae_domain_priority_edit"
+      presenter[:replace_partials][:flash_msg_div_domains_priority] = r[
+          :partial => "layouts/flash_msg",
+          :locals  => {:div_num=>"_domains_priority"}
+      ] if @flash_array
+      presenter[:update_partials][:ns_list_div] = r[:partial => "domains_priority_form"]
     else
       @sb[:active_tab] = 'instances' if nodes[0] == 'aec' && !['methods', 'props', 'schema'].include?(@sb[:active_tab])
       presenter[:update_partials][:main_div] = r[:partial=>"all_tabs"]
     end
     if @in_a_form
-      action_url = case nodes.first
-      when 'root', 'aen'
-        if @edit.key?(:ae_class_id)
-          @edit[:rec_id].nil? ? 'create' : 'update'
-        else
-          @edit[:rec_id].nil? ? 'create_ns' : 'update_ns'
-        end
-      when 'aei'
-        @edit[:rec_id].nil? ? 'create_instance' : 'update_instance'
-      when 'aem'
-        @edit[:rec_id].nil? ? 'create_method' : 'update_method'
-      when 'aec'
-        case @sb[:active_tab]
-        when 'instances' then @edit[:rec_id].nil? ? 'create_instance' : 'update_instance'
-        when 'methods'   then @edit[:rec_id].nil? ? 'create_method' : 'update_method'
-        when 'props'     then @edit[:rec_id].nil? ? 'create' : 'update'
-        else @sb[:action] == 'miq_ae_field_seq' ? 'fields_seq_edit' : 'update_fields'
-        end
-      end
+      action_url =  case nodes.first
+                    when 'root', 'aen'
+                      if @sb[:action] == "miq_ae_domain_priority_edit"
+                        'domains_priority_edit'
+                      elsif @edit.key?(:ae_class_id)
+                        @edit[:rec_id].nil? ? 'create' : 'update'
+                      else
+                        @edit[:rec_id].nil? ? 'create_ns' : 'update_ns'
+                      end
+                    when 'aei'
+                      @edit[:rec_id].nil? ? 'create_instance' : 'update_instance'
+                    when 'aem'
+                      @edit[:rec_id].nil? ? 'create_method' : 'update_method'
+                    when 'aec'
+                      case @sb[:active_tab]
+                      when 'instances' then @edit[:rec_id].nil? ? 'create_instance' : 'update_instance'
+                      when 'methods'   then @edit[:rec_id].nil? ? 'create_method' : 'update_method'
+                      when 'props'     then @edit[:rec_id].nil? ? 'create' : 'update'
+                      else @sb[:action] == 'miq_ae_field_seq' ? 'fields_seq_edit' : 'update_fields'
+                      end
+                    end
       presenter[:expand_collapse_cells][:c] = 'expand' # incase it was collapsed for summary screen, and incase there were no records on show_list
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:update_partials][:form_buttons_div] = r[
         :partial => "layouts/x_edit_buttons",
         :locals  => {
-          :record_id  => @edit[:rec_id],
-          :action_url => action_url,
-          :serialize  =>  @sb[:active_tab] == 'methods',
+          :record_id    => @edit[:rec_id],
+          :action_url   => action_url,
+          :multi_record => @sb[:action] == "miq_ae_domain_priority_edit",
+          :serialize    =>  @sb[:active_tab] == 'methods',
         }
       ]
     else
@@ -728,14 +749,14 @@ def build_toplevel_grid(view)
     replace_right_cell
   end
 
+  def edit_domain
+    assert_privileges("miq_ae_domain_edit")
+    edit_domain_or_namespace
+  end
+
   def edit_ns
     assert_privileges("miq_ae_namespace_edit")
-    obj = find_checked_items
-    @ae_ns = MiqAeNamespace.find(from_cid(obj[0].split('-')[1]))
-    set_ns_form_vars
-    @in_a_form = true
-    session[:changed] = @changed = false
-    replace_right_cell
+    edit_domain_or_namespace
   end
 
   def edit_instance
@@ -1009,25 +1030,6 @@ def build_toplevel_grid(view)
     @right_cell_text = @edit[:rec_id].nil? ?
                         I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"Class Schema")) :
                         I18n.t("cell_header.editing_model_record",:model=>ui_lookup(:model=>"Class Schema"), :name=>@ae_class.name)
-    session[:edit] = @edit
-  end
-
-  # Set form variables for edit
-  def set_ns_form_vars
-    session[:field_data] = Hash.new
-    @edit = Hash.new
-    session[:edit] = Hash.new
-    @edit[:ae_ns_id] = @ae_ns.id
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
-    @edit[:rec_id] = @ae_ns.id || nil
-    @edit[:key] = "aens_edit__#{@ae_ns.id || "new"}"
-    @edit[:new][:ns_name] = @ae_ns.name
-    @edit[:new][:ns_description] = @ae_ns.description
-    @edit[:current] = @edit[:new].dup
-    @right_cell_text = @edit[:rec_id].nil? ?
-        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqAeNamespace")) :
-        I18n.t("cell_header.editing_model_record",:model=>ui_lookup(:model=>"MiqAeNamespace"), :name=>@ae_ns.name)
     session[:edit] = @edit
   end
 
@@ -1418,7 +1420,7 @@ exit MIQ_OK"
     when "cancel"
       session[:edit] = nil  # clean out the saved info
       add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeNamespace"),
+                      :model=>ui_lookup(:model=>"#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
                       :name=>@ae_ns.name))
       @in_a_form = false
       replace_right_cell
@@ -1438,7 +1440,7 @@ exit MIQ_OK"
         end
       else
         add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"MiqAeNamespace"),
+                        :model=>ui_lookup(:model=>"#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
                         :name=>ae_ns.name))
         AuditEvent.success(build_saved_audit(ae_ns, @edit))
         session[:edit] = nil  # clean out the saved info
@@ -1446,7 +1448,7 @@ exit MIQ_OK"
         replace_right_cell([:ae])
       end
     when "reset"
-      set_ns_form_vars
+      set_ns_form_vars("MiqAeNamespace")
       session[:changed] = @changed = false
       add_flash(I18n.t("flash.edit.reset"), :warning)
       @button = "reset"
@@ -1525,14 +1527,6 @@ exit MIQ_OK"
     assert_privileges("miq_ae_class_new")
     @ae_class = MiqAeClass.new
     set_form_vars
-    @in_a_form = true
-    replace_right_cell
-  end
-
-  def new_ns
-    assert_privileges("miq_ae_namespace_new")
-    @ae_ns = MiqAeNamespace.new
-    set_ns_form_vars
     @in_a_form = true
     replace_right_cell
   end
@@ -1650,7 +1644,7 @@ exit MIQ_OK"
     case params[:button]
     when "cancel"
       add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeNamespace")))
+                      :model=>ui_lookup(:model=>"#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}")))
       @in_a_form = false
       replace_right_cell
     when "add"
@@ -1667,7 +1661,7 @@ exit MIQ_OK"
         end
       else
         add_flash(I18n.t("flash.add.added",
-                        :model=>ui_lookup(:model=>"MiqAeNamespace"),
+                        :model=>ui_lookup(:model=>"#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
                         :name=>add_ae_ns.name))
         @in_a_form = false
         replace_right_cell([:ae])
@@ -1844,11 +1838,15 @@ exit MIQ_OK"
   # Get variables from user edit form
   def fields_seq_field_changed
     return unless load_edit("fields_edit__seq","replace_cell__explorer")
-    move_cols_up if params[:button] == "up"
-    move_cols_down if params[:button] == "down"
+    move_selected_fields_up(@edit[:new][:fields_list], params[:seq_fields], "Fields")   if params[:button] == "up"
+    move_selected_fields_down(@edit[:new][:fields_list], params[:seq_fields], "Fields") if params[:button] == "down"
+    unless @flash_array
+      @refresh_div = "column_lists"
+      @refresh_partial = "fields_seq_form"
+    end
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
-      page.replace("flash_msg_div_fields_seq", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"fields_seq"}) unless @refresh_div && @refresh_div != "column_lists"
+      page.replace("flash_msg_div_fields_seq", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_fields_seq"}) unless @refresh_div && @refresh_div != "column_lists"
       page.replace(@refresh_div, :partial=>@refresh_partial) if @refresh_div
       if @changed
         page << javascript_for_miq_button_visibility(@changed)
@@ -1899,6 +1897,51 @@ exit MIQ_OK"
       if params[:button] == "reset"
         add_flash(I18n.t("flash.edit.reset"), :warning)
       end
+      replace_right_cell
+    end
+  end
+
+  def priority_form_field_changed
+    return unless load_edit(params[:id],"replace_cell__explorer")
+    priority_get_form_vars
+    render :update do |page|                    # Use JS to update the display
+      changed = (@edit[:new] != @edit[:current])
+      page.replace("flash_msg_div_domains_priority", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_domains_priority"}) if @flash_array
+      page.replace(@refresh_div,
+                   :partial => @refresh_partial,
+                   :locals  => {:action => "domains_priority_edit"}) if @refresh_div
+      page << javascript_for_miq_button_visibility(changed)
+      page << "miqSparkle(false);"
+    end
+  end
+
+  def domains_priority_edit
+    assert_privileges("miq_ae_domain_priority_edit")
+    case params[:button]
+    when "cancel"
+      @sb[:action] = @in_a_form = nil
+      @edit = session[:edit] = nil  # clean out the saved info
+      add_flash(I18n.t("flash.priority_order_cancelled"))
+      replace_right_cell
+    when "save"
+      return unless load_edit("priority__edit","replace_cell__explorer")
+      #TODO: need to move this to model method
+      @edit[:new][:domain_order].reverse!.each_with_index do |domain, i|
+        d = MiqAeDomain.find_by_name(domain.split(" (Read Only)").first)
+        d.priority = i + 1
+        d.save!
+      end
+      add_flash(I18n.t("flash.priority_order_saved"))
+      @sb[:action] = @in_a_form = nil
+      @edit = session[:edit] = nil  # clean out the saved info
+      replace_right_cell([:ae])
+    when "reset", nil # Reset or first time in
+      priority_edit_screen
+      if params[:button] == "reset"
+        add_flash(I18n.t("flash.edit.reset"), :warning)
+      end
+      @lock_tree = true
+      session[:changed] = @changed = false
       replace_right_cell
     end
   end
@@ -1998,8 +2041,18 @@ private
   end
 
   # Delete all selected or single displayed aeclasses(s)
+  def delete_domain
+    assert_privileges("miq_ae_domain_delete")
+    delete_domain_or_namespaces
+  end
+
+  # Delete all selected or single displayed aeclasses(s)
   def delete_ns
     assert_privileges("miq_ae_namespace_delete")
+    delete_domain_or_namespaces
+  end
+
+  def delete_domain_or_namespaces
     @sb[:row_selected] = find_checked_items
     ae_ns = []
     ae_cs = []
@@ -2007,7 +2060,12 @@ private
       @sb[:row_selected].each do |items|
         item = items.split('-')
         if item[0] == "aen"
-          ae_ns.push(from_cid(item[1]))
+          record = MiqAeNamespace.find_by_id(from_cid(item[1]))
+          if record.editable?
+            ae_ns.push(from_cid(item[1]))
+          else
+            add_flash(I18n.t("flash.cannot_delete", :model => ui_lookup(:model=>"MiqAeDomain"), :field => record.name), :error)
+          end
         else
           ae_cs.push(from_cid(item[1]))
         end
@@ -2060,92 +2118,85 @@ private
     @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
     @in_a_form = true
     @in_a_form_fields = true
-    if ["up","down"].include?(params[:button])
-      move_cols_up if params[:button] == "up"
-      move_cols_down if params[:button] == "down"
-      @temp[:combo_xml] = get_combo_xml(@edit[:new][:fields].sort_by{|a| [a.priority.to_i]})
-      @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields].sort_by{|a| [a.priority.to_i]})    # passing fields because that's how many combo boxes we need
-    else
-      if params[:item].blank? && !["accept", "save"].include?(params[:button])  && params["action"] != "field_delete"
-        session[:field_data][:aetype] = @edit[:new_field][:aetype] = params[:field_aetype] if params[:field_aetype]
-        session[:field_data][:datatype] = @edit[:new_field][:datatype] = params[:field_datatype] if params[:field_datatype]
-        session[:field_data][:name] = @edit[:new_field][:name] = params[:field_name].strip if params[:field_name]
-        session[:field_data][:display_name] = @edit[:new_field][:display_name] = params[:field_display_name] if params[:field_display_name]
-        session[:field_data][:description] = @edit[:new_field][:description] = params[:field_description] if params[:field_description]
-        if params[:field_substitution]
-          session[:field_data][:substitution] = @edit[:new_field][:substitute] = params[:field_substitution].to_i == 1 ? true : false
-        end
-
-        @edit[:new_field][:priority] = 1
-        @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each_with_index do |flds,i|
-          if i == @edit[:new][:fields].length-1
-            if flds.priority.nil?
-              @edit[:new_field][:priority] = 1
-            else
-              @edit[:new_field][:priority] = flds.priority.to_i+1
-            end
-          end
-        end
-        session[:field_data][:default_value] = @edit[:new_field][:default_value] = params[:field_default_value] if params[:field_default_value]
-        session[:field_data][:default_value] = @edit[:new_field][:default_value] = params[:field_password_value] if params[:field_password_value]
-        session[:field_data][:message] = @edit[:new_field][:message] = params[:field_message] if params[:field_message]
-        session[:field_data][:collect] = @edit[:new_field][:collect] = params[:field_collect] if params[:field_collect]
-        session[:field_data][:on_entry] = @edit[:new_field][:on_entry] = params[:field_on_entry] if params[:field_on_entry]
-        session[:field_data][:on_exit] = @edit[:new_field][:on_exit] = params[:field_on_exit] if params[:field_on_exit]
-        session[:field_data][:on_error] = @edit[:new_field][:on_error] = params[:field_on_error] if params[:field_on_error]
-        session[:field_data][:max_retries] = @edit[:new_field][:max_retries] = params[:field_max_retries] if params[:field_max_retries]
-        session[:field_data][:max_time] = @edit[:new_field][:max_time] = params[:field_max_time] if params[:field_max_time]
-        @edit[:new_field][:class_id] = @ae_class.id
-
-        @edit[:new][:fields].each_with_index do |flds,i|
-          var_name = "fields_aetype" << i.to_s
-          @edit[:new][:fields][i][:aetype] = params[var_name.to_sym] if params[var_name.to_sym]
-          var_name = "fields_datatype" << i.to_s
-          @edit[:new][:fields][i][:datatype] = params[var_name.to_sym] if params[var_name.to_sym]
-
-          @edit[:new][:fields][i][:name] = params["fields_name_#{i}".to_sym].strip if params["fields_name_#{i}".to_sym]
-          @edit[:new][:fields][i][:display_name] = params["fields_display_name_#{i}".to_sym] if params["fields_display_name_#{i}".to_sym]
-          @edit[:new][:fields][i][:description] = params["fields_description_#{i}".to_sym] if params["fields_description_#{i}".to_sym]
-          if params["fields_substitution_#{i}".to_sym]
-            @edit[:new][:fields][i][:substitute] = params["fields_substitution_#{i}".to_sym].to_i == 1 ? true : false
-          end
-
-          @edit[:new][:fields][i][:default_value] = params["fields_default_value_#{i}".to_sym] if params["fields_default_value_#{i}".to_sym]
-          @edit[:new][:fields][i][:default_value] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
-          @edit[:new][:fields][i][:message] = params["fields_message_#{i}".to_sym] if params["fields_message_#{i}".to_sym]
-          @edit[:new][:fields][i][:collect] = params["fields_collect_#{i}".to_sym] if params["fields_collect_#{i}".to_sym]
-          @edit[:new][:fields][i][:on_entry] = params["fields_on_entry_#{i}".to_sym] if params["fields_on_entry_#{i}".to_sym]
-          @edit[:new][:fields][i][:on_exit] = params["fields_on_exit_#{i}".to_sym] if params["fields_on_exit_#{i}".to_sym]
-          @edit[:new][:fields][i][:on_error] = params["fields_on_error_#{i}".to_sym] if params["fields_on_error_#{i}".to_sym]
-          @edit[:new][:fields][i][:max_retries] = params["fields_max_retries_#{i}".to_sym] if params["fields_max_retries_#{i}".to_sym]
-          @edit[:new][:fields][i][:max_time] = params["fields_max_time_#{i}".to_sym] if params["fields_max_time_#{i}".to_sym]
-          #@edit[:new][:fields][i][:class_id] = @ae_class.id.to_s
-        end
-      elsif params[:button] == "accept"
-        if !session[:field_data][:name] || session[:field_data][:name] == ""
-          add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
-          return
-        end
-        new_field = MiqAeField.new
-        new_field.name = @edit[:new_field][:name]
-        new_field.display_name = @edit[:new_field][:display_name]
-        new_field.description = @edit[:new_field][:description]
-        new_field.aetype = @edit[:new_field][:aetype]
-        new_field.datatype = @edit[:new_field][:datatype]
-        new_field.substitute = @edit[:new_field][:substitute]
-        new_field.priority = @edit[:new_field][:priority]
-        new_field.default_value = @edit[:new_field][:default_value]
-        new_field.message = @edit[:new_field][:message]
-        new_field.collect = @edit[:new_field][:collect]
-        new_field.class_id = @edit[:new_field][:class_id]
-        new_field.on_entry = @edit[:new_field][:on_entry]
-        new_field.on_exit = @edit[:new_field][:on_exit]
-        new_field.on_error = @edit[:new_field][:on_error]
-        new_field.max_retries = @edit[:new_field][:max_retries]
-        new_field.max_time = @edit[:new_field][:max_time]
-        @edit[:new][:fields].push(new_field)
-        @edit[:new_field] = session[:field_data] = {}
+    if params[:item].blank? && !["accept", "save"].include?(params[:button])  && params["action"] != "field_delete"
+      session[:field_data][:aetype] = @edit[:new_field][:aetype] = params[:field_aetype] if params[:field_aetype]
+      session[:field_data][:datatype] = @edit[:new_field][:datatype] = params[:field_datatype] if params[:field_datatype]
+      session[:field_data][:name] = @edit[:new_field][:name] = params[:field_name].strip if params[:field_name]
+      session[:field_data][:display_name] = @edit[:new_field][:display_name] = params[:field_display_name] if params[:field_display_name]
+      session[:field_data][:description] = @edit[:new_field][:description] = params[:field_description] if params[:field_description]
+      if params[:field_substitution]
+        session[:field_data][:substitution] = @edit[:new_field][:substitute] = params[:field_substitution].to_i == 1 ? true : false
       end
+
+      @edit[:new_field][:priority] = 1
+      @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each_with_index do |flds,i|
+        if i == @edit[:new][:fields].length-1
+          if flds.priority.nil?
+            @edit[:new_field][:priority] = 1
+          else
+            @edit[:new_field][:priority] = flds.priority.to_i+1
+          end
+        end
+      end
+      session[:field_data][:default_value] = @edit[:new_field][:default_value] = params[:field_default_value] if params[:field_default_value]
+      session[:field_data][:default_value] = @edit[:new_field][:default_value] = params[:field_password_value] if params[:field_password_value]
+      session[:field_data][:message] = @edit[:new_field][:message] = params[:field_message] if params[:field_message]
+      session[:field_data][:collect] = @edit[:new_field][:collect] = params[:field_collect] if params[:field_collect]
+      session[:field_data][:on_entry] = @edit[:new_field][:on_entry] = params[:field_on_entry] if params[:field_on_entry]
+      session[:field_data][:on_exit] = @edit[:new_field][:on_exit] = params[:field_on_exit] if params[:field_on_exit]
+      session[:field_data][:on_error] = @edit[:new_field][:on_error] = params[:field_on_error] if params[:field_on_error]
+      session[:field_data][:max_retries] = @edit[:new_field][:max_retries] = params[:field_max_retries] if params[:field_max_retries]
+      session[:field_data][:max_time] = @edit[:new_field][:max_time] = params[:field_max_time] if params[:field_max_time]
+      @edit[:new_field][:class_id] = @ae_class.id
+
+      @edit[:new][:fields].each_with_index do |flds,i|
+        var_name = "fields_aetype" << i.to_s
+        @edit[:new][:fields][i][:aetype] = params[var_name.to_sym] if params[var_name.to_sym]
+        var_name = "fields_datatype" << i.to_s
+        @edit[:new][:fields][i][:datatype] = params[var_name.to_sym] if params[var_name.to_sym]
+
+        @edit[:new][:fields][i][:name] = params["fields_name_#{i}".to_sym].strip if params["fields_name_#{i}".to_sym]
+        @edit[:new][:fields][i][:display_name] = params["fields_display_name_#{i}".to_sym] if params["fields_display_name_#{i}".to_sym]
+        @edit[:new][:fields][i][:description] = params["fields_description_#{i}".to_sym] if params["fields_description_#{i}".to_sym]
+        if params["fields_substitution_#{i}".to_sym]
+          @edit[:new][:fields][i][:substitute] = params["fields_substitution_#{i}".to_sym].to_i == 1 ? true : false
+        end
+
+        @edit[:new][:fields][i][:default_value] = params["fields_default_value_#{i}".to_sym] if params["fields_default_value_#{i}".to_sym]
+        @edit[:new][:fields][i][:default_value] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
+        @edit[:new][:fields][i][:message] = params["fields_message_#{i}".to_sym] if params["fields_message_#{i}".to_sym]
+        @edit[:new][:fields][i][:collect] = params["fields_collect_#{i}".to_sym] if params["fields_collect_#{i}".to_sym]
+        @edit[:new][:fields][i][:on_entry] = params["fields_on_entry_#{i}".to_sym] if params["fields_on_entry_#{i}".to_sym]
+        @edit[:new][:fields][i][:on_exit] = params["fields_on_exit_#{i}".to_sym] if params["fields_on_exit_#{i}".to_sym]
+        @edit[:new][:fields][i][:on_error] = params["fields_on_error_#{i}".to_sym] if params["fields_on_error_#{i}".to_sym]
+        @edit[:new][:fields][i][:max_retries] = params["fields_max_retries_#{i}".to_sym] if params["fields_max_retries_#{i}".to_sym]
+        @edit[:new][:fields][i][:max_time] = params["fields_max_time_#{i}".to_sym] if params["fields_max_time_#{i}".to_sym]
+        #@edit[:new][:fields][i][:class_id] = @ae_class.id.to_s
+      end
+    elsif params[:button] == "accept"
+      if !session[:field_data][:name] || session[:field_data][:name] == ""
+        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        return
+      end
+      new_field = MiqAeField.new
+      new_field.name = @edit[:new_field][:name]
+      new_field.display_name = @edit[:new_field][:display_name]
+      new_field.description = @edit[:new_field][:description]
+      new_field.aetype = @edit[:new_field][:aetype]
+      new_field.datatype = @edit[:new_field][:datatype]
+      new_field.substitute = @edit[:new_field][:substitute]
+      new_field.priority = @edit[:new_field][:priority]
+      new_field.default_value = @edit[:new_field][:default_value]
+      new_field.message = @edit[:new_field][:message]
+      new_field.collect = @edit[:new_field][:collect]
+      new_field.class_id = @edit[:new_field][:class_id]
+      new_field.on_entry = @edit[:new_field][:on_entry]
+      new_field.on_exit = @edit[:new_field][:on_exit]
+      new_field.on_error = @edit[:new_field][:on_error]
+      new_field.max_retries = @edit[:new_field][:max_retries]
+      new_field.max_time = @edit[:new_field][:max_time]
+      @edit[:new][:fields].push(new_field)
+      @edit[:new_field] = session[:field_data] = {}
     end
   end
 
@@ -2209,8 +2260,12 @@ private
   # Get variables from edit form
   def get_ns_form_vars
     @ae_ns = MiqAeNamespace.find_by_id(from_cid(@edit[:ae_ns_id]))
-    @edit[:new][:ns_name] = params[:ns_name].blank? ? nil : params[:ns_name] if params[:ns_name]
-    @edit[:new][:ns_description] = params[:ns_description].blank? ? nil : params[:ns_description] if params[:ns_description]
+    @edit[:new][:ns_name] = params[:ns_name].blank? ?
+        nil : params[:ns_name] if params[:ns_name]
+    @edit[:new][:ns_description] = params[:ns_description].blank? ?
+        nil : params[:ns_description] if params[:ns_description]
+    @edit[:new][:enabled] = params[:ns_enabled] == "1" ?
+        true : false if params[:ns_enabled]
     @in_a_form = true
   end
 
@@ -2283,9 +2338,14 @@ private
 
   # Set record variables to new values
   def set_ns_record_vars(miqaens)
-    miqaens.name = @edit[:new][:ns_name].strip unless @edit[:new][:ns_name].blank?
+    miqaens.name        = @edit[:new][:ns_name].strip unless @edit[:new][:ns_name].blank?
     miqaens.description = @edit[:new][:ns_description]
-    miqaens.parent_id = from_cid(x_node.split('-')[1]) if x_node != "root"
+    miqaens.parent_id   = @edit[:new][:domain] ? nil : from_cid(x_node.split('-')[1])
+    if @edit[:new][:domain]
+      miqaens.enabled     = @edit[:new][:enabled]
+      # set highest priority on new records.
+      miqaens.priority    = MiqAeDomain.highest_priority + 1 unless miqaens.id
+    end
   end
 
   # Set record variables to new values
@@ -2364,66 +2424,182 @@ private
     session[:edit] = @edit
   end
 
-  def move_cols_up
-    return unless load_edit("fields_edit__seq","replace_cell__explorer")
-    if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
+  def move_selected_fields_up(available_fields, selected_fields, display_name)
+    if no_items_selected?(selected_fields)
+      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field => display_name), :error)
       return
     end
-    consecutive, first_idx, last_idx = selected_consecutive?
-    if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field=>"fields"), :error)
+    consecutive, first_idx, last_idx = selected_consecutive?(available_fields, selected_fields)
+    unless consecutive
+      add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field => display_name), :error)
     else
       if first_idx > 0
-        @edit[:new][:fields_list][first_idx..last_idx].reverse.each do |field|
-          pulled = @edit[:new][:fields_list].delete(field)
-          @edit[:new][:fields_list].insert(first_idx - 1, pulled)
+        available_fields[first_idx..last_idx].reverse.each do |field|
+          pulled = available_fields.delete(field)
+          available_fields.insert(first_idx - 1, pulled)
         end
       end
-      @refresh_div = "column_lists"
-      @refresh_partial = "fields_seq_form"
     end
-    @selected = params[:seq_fields]
+    @selected = selected_fields
   end
 
-  def move_cols_down
-    return unless load_edit("fields_edit__seq","replace_cell__explorer")
-    if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
+  def move_selected_fields_down(available_fields, selected_fields, display_name)
+    if no_items_selected?(selected_fields)
+      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=> display_name), :error)
       return
     end
-    consecutive, first_idx, last_idx = selected_consecutive?
-    if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field=>"fields"), :error)
+    consecutive, first_idx, last_idx = selected_consecutive?(available_fields, selected_fields)
+    unless consecutive
+      add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field => display_name), :error)
     else
-      if last_idx < @edit[:new][:fields_list].length - 1
+      if last_idx < available_fields.length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one
-        insert_idx = -1 if last_idx == @edit[:new][:fields_list].length - 2 # Insert at end if 1 away from end
-        @edit[:new][:fields_list][first_idx..last_idx].each do |field|
-          pulled = @edit[:new][:fields_list].delete(field)
-          @edit[:new][:fields_list].insert(insert_idx, pulled)
+        insert_idx = -1 if last_idx == available_fields.length - 2 # Insert at end if 1 away from end
+        available_fields[first_idx..last_idx].each do |field|
+          pulled = available_fields.delete(field)
+          available_fields.insert(insert_idx, pulled)
         end
       end
-      @refresh_div = "column_lists"
-      @refresh_partial = "fields_seq_form"
     end
-    @selected = params[:seq_fields]
+    @selected = selected_fields
   end
 
-  def selected_consecutive?
+  def no_items_selected?(field_name)
+    !field_name || field_name.length == 0 || field_name[0] == ""
+  end
+
+  def selected_consecutive?(available_fields, selected_fields)
     first_idx = last_idx = 0
-    @edit[:new][:fields_list].each_with_index do |nf,idx|
-      first_idx = idx if nf == params[:seq_fields].first
-      if nf == params[:seq_fields].last
+    available_fields.each_with_index do |nf, idx|
+      first_idx = idx if nf == selected_fields.first
+      if nf == selected_fields.last
         last_idx = idx
         break
       end
     end
-    if last_idx - first_idx + 1 > params[:seq_fields].length
+    if last_idx - first_idx + 1 > selected_fields.length
       return [false, first_idx, last_idx]
     else
       return [true, first_idx, last_idx]
     end
+  end
+
+  def edit_domain_or_namespace
+    obj = find_checked_items
+    obj = [x_node] if obj.nil? && params[:pressed] == "miq_ae_domain_edit"
+    @ae_ns = MiqAeNamespace.find(from_cid(obj[0].split('-')[1]))
+    if @ae_ns.domain? && !@ae_ns.editable?
+      add_flash(I18n.t("flash.cant_edit_read_only",
+                       :model => ui_lookup(:model => "MiqAeDomain"),
+                       :name  => @ae_ns.name),
+                :error)
+    else
+      set_ns_form_vars("MiqAeNamespace")
+      @in_a_form = true
+      session[:changed] = @changed = false
+    end
+    replace_right_cell
+  end
+
+  def new_ns
+    assert_privileges("miq_ae_namespace_new")
+    new_domain_or_namespace("MiqAeNamespace")
+  end
+
+  def new_domain
+    assert_privileges("miq_ae_domain_new")
+    new_domain_or_namespace("MiqAeDomain")
+  end
+
+  def new_domain_or_namespace(typ)
+    @ae_ns = MiqAeNamespace.new
+    set_ns_form_vars(typ)
+    @in_a_form = true
+    replace_right_cell
+  end
+
+  # Set form variables for edit
+  def set_ns_form_vars(typ)
+    session[:field_data] = {}
+    @edit                = {}
+    session[:edit]       = {}
+    @edit[:ae_ns_id] = @ae_ns.id
+    @edit[:new]     = {}
+    @edit[:current] = {}
+    @edit[:rec_id]  = @ae_ns.id || nil
+    @edit[:key]     = "aens_edit__#{@ae_ns.id || "new"}"
+    @edit[:new][:ns_name]        = @ae_ns.name
+    @edit[:new][:ns_description] = @ae_ns.description
+    # set these field for a new domain or when existing record is a domain
+    if typ == "MiqAeDomain" || (@ae_ns.id && @ae_ns.domain?)
+      @edit[:new][:domain]  = true
+      @edit[:new][:enabled] = @ae_ns.enabled
+    end
+    @edit[:current]  = @edit[:new].dup
+    @right_cell_text = @edit[:rec_id].nil? ?
+        I18n.t("cell_header.adding_model_record",
+               :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}")) :
+        I18n.t("cell_header.editing_model_record",
+               :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
+               :name  => @ae_ns.name)
+    session[:edit] = @edit
+  end
+
+  def priority_edit_screen
+    @in_a_form = true
+    @edit                      = {}
+    @edit[:new]                = {}
+    @edit[:current]            = {}
+    @edit[:new][:domain_order] = []
+    MiqAeDomain.order('priority DESC').collect { |domain| @edit[:new][:domain_order].push("#{domain.editable? ?
+        domain.name : domain.name + " (Read Only)"}") unless domain.priority == 0 }
+    @edit[:key]     = "priority__edit"
+    @edit[:current] = copy_hash(@edit[:new])
+    session[:edit]  = @edit
+  end
+
+  def priority_get_form_vars
+    @in_a_form = true
+    move_selected_fields_up(@edit[:new][:domain_order], params[:seq_fields], "Domains")   if params[:button] == "up"
+    move_selected_fields_down(@edit[:new][:domain_order], params[:seq_fields], "Domains") if params[:button] == "down"
+    unless @flash_array
+      @refresh_div     = "domains_list"
+      @refresh_partial = "domains_priority_form"
+    end
+  end
+
+  def domain_toggle(locked)
+    assert_privileges("miq_ae_domain_#{locked ? 'lock' : 'unlock'}")
+    action = locked ? "Locked" : "Unlocked"
+    if params[:id].nil?
+      add_flash(I18n.t("flash.no_records_selected_to_be_marked",
+                       :model  => ui_lookup(:model => "MiqAeDomain"),
+                       :action => action),
+                :error)
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
+    end
+    domain_toggle_lock(params[:id], locked)
+    add_flash(I18n.t("flash.selected_records_were_marked",
+                     :model  => ui_lookup(:model=>"MiqAeDomain"),
+                     :action => action),
+              :info, true) unless flash_errors?
+    replace_right_cell([:ae])
+  end
+
+  def domain_lock
+    domain_toggle(true)
+  end
+
+  def domain_unlock
+    domain_toggle(false)
+  end
+
+  def domain_toggle_lock(domain_id, lock_value)
+    domain        = MiqAeNamespace.find_by_id(domain_id)
+    domain.system = lock_value
+    domain.save!
   end
 
   def get_session_data

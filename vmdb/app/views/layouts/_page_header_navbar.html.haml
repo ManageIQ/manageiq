@@ -209,7 +209,7 @@
         %a{:href=>'/dashboard/maintab/?tab=aut'}= h(MAIN_TABS[:aut])
         %ul(class="#{primary_nav_class(:aut)}")
 
-          -if role_allows(:feature => 'miq_ae_class_explorer')
+          -if role_allows(:feature => 'miq_ae_domain_view')
             %li(class="#{secondary_nav_class('miq_ae_class')}")
               %a{:href=>'/miq_ae_class/explorer'}Explorer
 
