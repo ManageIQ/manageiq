@@ -23,9 +23,9 @@ $:.push("#{File.dirname(__FILE__)}/patches")
 require 'active_support_string_patch'
 require 'ruport_patch'
 
-APPLIANCE_DATA_VOL = File.exists?('/var/www/miq/vmdb') ? "/var/lib/data" : File.expand_path(Rails.root + "/tmp")
-MIQ_TEMP = File.join(APPLIANCE_DATA_VOL, "miq_temp")
-Dir.mkdir(MIQ_TEMP) if !File.exist?(MIQ_TEMP) && File.exist?(APPLIANCE_DATA_VOL)
+APPLIANCE_DATA_VOL = File.directory?("/var/www/miq/vmdb") ? "/var/lib/data" : Rails.root.join("tmp")
+MIQ_TEMP           = File.join(APPLIANCE_DATA_VOL, "miq_temp")
+FileUtils.mkdir_p(MIQ_TEMP)
 
 module VMDB
   def self.model_loaded?(name)
