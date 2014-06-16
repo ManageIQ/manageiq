@@ -69,22 +69,9 @@ module ReportController::Reports::Editor
                         :name=>@rpt.name))
           #only do this for new reports
           if !@edit[:rpt_id]
-            custom_folder = false   #flag to check existence of custom folder in rpt_menu
+            self.x_node = "xx-#{@sb[:rpt_menu].length}_xx-#{@sb[:rpt_menu].length}-0"
             build_report_listnav
-            @sb[:rpt_menu].each_with_index do |lvl1,i|
-              if lvl1[0]  == @sb[:grp_title]
-                lvl1[1].each_with_index do |lvl2,k|
-                  if lvl2[0].downcase == "custom"
-                    lvl2[1].each_with_index do |r, j|
-                      self.x_node = "xx-#{i}_xx-#{i}-#{k}_rep-#{to_cid(@rpt.id)}" if r == @rpt.name
-                    end
-                    custom_folder = true
-                  end
-                end
-              end
-            end
-            # if adding first custom report, need to do this because at that point custom folder doesn't exist in rpt_menu
-            self.x_node = "xx-#{@sb[:rpt_menu].length}_xx-#{@sb[:rpt_menu].length}-0_rep-#{to_cid(@rpt.id)}" if !custom_folder
+            setnode_for_customreport
           end
           @edit = session[:edit] = nil # clean out the saved info
           @sb[:rep_tree_build_time] = Time.now.utc
@@ -1833,4 +1820,19 @@ module ReportController::Reports::Editor
     return nil
   end
 
+  def setnode_for_customreport
+    @sb[:rpt_menu].each_with_index do |level1_nodes, i|
+      if level1_nodes[0]  == @sb[:grp_title]
+        level1_nodes[1].each_with_index do |level2_nodes, k|
+          # Check for the existence of the Custom folder in the Reports tree and
+          # check if at least one report exists underneath it
+          if level2_nodes[0].downcase == "custom" && level2_nodes[1].count > 1
+            level2_nodes[1].each_with_index do |report|
+              self.x_node = "xx-#{i}_xx-#{i}-#{k}_rep-#{to_cid(@rpt.id)}" if report == @rpt.name
+            end
+          end
+        end
+      end
+    end
+  end
 end
