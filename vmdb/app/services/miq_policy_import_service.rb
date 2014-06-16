@@ -24,7 +24,7 @@ class MiqPolicyImportService
   private
 
   def create_import_file_upload(file_contents)
-    uploaded_content, _ = MiqPolicy.import(file_contents)
+    uploaded_content, _ = MiqPolicy.import(file_contents, :preview => true)
 
     ImportFileUpload.create.tap do |import_file_upload|
       import_file_upload.store_policy_import_data(uploaded_content.to_yaml)

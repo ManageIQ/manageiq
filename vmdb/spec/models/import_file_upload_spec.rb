@@ -8,7 +8,7 @@ describe ImportFileUpload do
 
     before do
       import_file_upload.create_binary_blob(:binary => "---\n- :file: contents\n")
-      MiqPolicy.stub(:import_from_array).with([{:file => "contents"}]).and_return(policy_array)
+      MiqPolicy.stub(:import_from_array).with([{:file => "contents"}], :preview => true).and_return(policy_array)
     end
 
     it "returns the imported policy array" do

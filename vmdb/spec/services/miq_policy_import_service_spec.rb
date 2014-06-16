@@ -68,7 +68,7 @@ describe MiqPolicyImportService do
     let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 1).as_null_object }
 
     before do
-      MiqPolicy.stub(:import).with("file contents").and_return(:uploaded => "content")
+      MiqPolicy.stub(:import).with("file contents", :preview => true).and_return(:uploaded => "content")
       MiqQueue.stub(:put_or_update)
       ImportFileUpload.stub(:create).and_return(import_file_upload)
     end
