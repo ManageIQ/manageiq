@@ -17,7 +17,7 @@ LOG_FILE    = LOG_DIR + "vim.log"
 
 class VixDiskLib
   VIXDISKLIB_FLAG_OPEN_READ_ONLY = FFI::VixDiskLib::API::VIXDISKLIB_FLAG_OPEN_READ_ONLY
-  @init_parms = {}
+  @initialized = nil
   @drb_services = []
   @connection_lock = Sync.new
   @shutting_down = nil
@@ -26,18 +26,14 @@ class VixDiskLib
   # Just stash the init arguments into a hash for now.
   # We will call init on the server every time a connect request is made.
   #
-  def self.init(info_logger = nil, warn_logger = nil, error_logger = nil, lib_dir = nil)
-    raise VixDiskLibError, "VixDiskLibClient.init() VixDiskLib already initialized" unless @init_parms.empty?
-    @init_parms[:info] = info_logger
-    @init_parms[:warn] = warn_logger
-    @init_parms[:error] = error_logger
-    @init_parms[:lib_dir] = lib_dir
+  def self.init(_info_logger = nil, _warn_logger = nil, _error_logger = nil, _lib_dir = nil)
+    @initialized = true
     nil
   end
 
   def self.connect(connect_parms)
     @connection_lock.synchronize(:EX) do
-      raise VixDiskLibError, "VixDiskLibClient.connect() failed: VixDiskLib not initialized" if @init_parms.empty?
+      raise VixDiskLibError, "VixDiskLibClient.connect() failed: VixDiskLib not initialized" if @initialized.nil?
       raise VixDiskLibError, "VixDiskLibClient.connect() aborting: VixDiskLib shutting down" if @shutting_down
       vix_disk_lib_service = start_service
       @drb_services << vix_disk_lib_service
@@ -48,7 +44,7 @@ class VixDiskLib
       retry_limit = 5
       begin
         sleep 1
-        vix_disk_lib_service.init(@init_parms[:info], @init_parms[:warn], @init_parms[:error], @init_parms[:lib_dir])
+        vix_disk_lib_service.init
       rescue DRb::DRbConnError => e
         if retry_limit > 0
           sleep 1
@@ -79,7 +75,7 @@ class VixDiskLib
         end
       end
       # Now clear data so we can start over if needed
-      @init_parms.clear
+      @initialized = nil
       num_services = @drb_services.size
       @drb_services.pop(num_services)
     end
@@ -102,13 +98,12 @@ class VixDiskLib
   def self.start_service
     #
     # TODO: Get the path to the server programatically - this server should probably live elsewhere.
-    # TODO: Find a better place for this log file - the real log dir.
     #
     my_env = setup_env
     reader, writer = IO.pipe
     writerfd = writer.fileno
     my_env["WRITER_FD"] = writerfd.to_s
-    pid = Kernel.spawn(my_env, "ruby " + SERVER_PATH + "VixDiskLibServer.rb",
+    pid = Kernel.spawn(my_env, "ruby #{SERVER_PATH}VixDiskLibServer.rb",
                        [:out, :err]     => [LOG_FILE, "a"],
                        :unsetenv_others => true,
                        :close_others    => false,

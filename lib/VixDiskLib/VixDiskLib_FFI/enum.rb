@@ -1,4 +1,3 @@
-
 require 'ffi'
 
 module FFI
@@ -329,14 +328,14 @@ module FFI
 
       # Disk types
       DiskType = enum(
-        :DISK_MONOLITHIC_SPARSE, 1, # monolithic file, sparse
-        :DISK_MONOLITHIC_FLAT,   2, # monolithic file, all space pre-allocated
-        :DISK_SPLIT_SPARSE,      3, # disk split into 2GB extents, sparse
-        :DISK_SPLIT_FLAT,        4, # disk split into 2GB extents, pre-allocated
-        :DISK_VMFS_FLAT,         5, # ESX 3.0 and above flat disks
-        :DISK_STREAM_OPTIMIZED,  6, # compressed monolithic sparse
-        :DISK_VMFS_THIN,         7, # ESX 3.0 and above thin provisioned
-        :DISK_VMFS_SPARSE,       8, # ESX 3.0 and above sparse disks
+        :DISK_MONOLITHIC_SPARSE, 1,  # monolithic file, sparse
+        :DISK_MONOLITHIC_FLAT,   2,  # monolithic file, all space pre-allocated
+        :DISK_SPLIT_SPARSE,      3,  # disk split into 2GB extents, sparse
+        :DISK_SPLIT_FLAT,        4,  # disk split into 2GB extents, pre-allocated
+        :DISK_VMFS_FLAT,         5,  # ESX 3.0 and above flat disks
+        :DISK_STREAM_OPTIMIZED,  6,  # compressed monolithic sparse
+        :DISK_VMFS_THIN,         7,  # ESX 3.0 and above thin provisioned
+        :DISK_VMFS_SPARSE,       8,  # ESX 3.0 and above sparse disks
         :DISK_UNKNOWN,           256 # unknown type
       )
 

@@ -1,4 +1,3 @@
-
 require 'ffi'
 
 module FFI
@@ -22,8 +21,8 @@ module FFI
       end
 
       class UidPasswdCreds < FFI::Struct
-        layout :userName, :pointer, # User id and password on the
-               :password, :pointer # VC/ESX host.
+        layout :userName, :pointer,      # User id and password on the
+               :password, :pointer       # VC/ESX host.
       end
 
       class SessionIdCreds < FFI::Struct # Not supported in 1.0
@@ -32,15 +31,10 @@ module FFI
                :key,             :pointer
       end
 
-      class TicketIdCreds < FFI::Struct # Internal use only.
+      class TicketIdCreds < FFI::Struct  # Internal use only.
         layout :dummy, :char
       end
 
-    #  class Creds < FFI::Union
-    #    layout :uid,       UidPasswdCreds.by_value,
-    #           :sessionId, SessionIdCreds.by_value,
-    #           :ticketId,  TicketIdCreds
-    #  end
       class Creds < FFI::Union
         layout :uid,       UidPasswdCreds,
                :sessionId, SessionIdCreds,
@@ -76,11 +70,11 @@ module FFI
       class Info < FFI::Struct
         layout :biosGeo,            Geometry.by_value, # BIOS geometry for booting and partitioning
                :physGeo,            Geometry.by_value, # physical geometry
-               :capacity,           :SectorType, # total capacity in sectors
-               :adapterType,        AdapterType, # adapter type
-               :numLinks,           :int, # number of links (i.e. base disk + redo logs)
-               :parentFileNameHint, :pointer, # parent file for a redo log
-               :uuid,               :pointer # disk UUID
+               :capacity,           :SectorType,       # total capacity in sectors
+               :adapterType,        AdapterType,       # adapter type
+               :numLinks,           :int,              # number of links (i.e. base disk + redo logs)
+               :parentFileNameHint, :pointer,          # parent file for a redo log
+               :uuid,               :pointer           # disk UUID
       end
 
       class HandleStruct < FFI::Struct

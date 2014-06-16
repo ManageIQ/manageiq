@@ -1,5 +1,3 @@
-
-
 require 'ffi'
 
 module FFI
@@ -39,9 +37,9 @@ module FFI
       HWVERSION_CURRENT = HWVERSION_WORKSTATION_6
 
       # Flags for open
-      VIXDISKLIB_FLAG_OPEN_UNBUFFERED = (1 << 0) # disable host disk caching
+      VIXDISKLIB_FLAG_OPEN_UNBUFFERED = (1 << 0)  # disable host disk caching
       VIXDISKLIB_FLAG_OPEN_SINGLE_LINK = (1 << 1) # don't open parent disk(s)
-      VIXDISKLIB_FLAG_OPEN_READ_ONLY = (1 << 2) # open read-only
+      VIXDISKLIB_FLAG_OPEN_READ_ONLY = (1 << 2)   # open read-only
     end
   end
 end

@@ -9,7 +9,7 @@ module FFI
       attach_function :vsnprintf,   # http://www.cpluscplus.com/reference/cstdio/vsnprintf/
                       [
                         :buffer_in, # s
-                        :int,	# n
+                        :int,	    # n
                         :string,    # format
                         :pointer,   # arg
                       ],

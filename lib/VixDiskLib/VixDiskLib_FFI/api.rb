@@ -1,4 +1,3 @@
-
 require 'ffi'
 
 module FFI
@@ -469,7 +468,7 @@ module FFI
       attach_function :unlink, :VixDiskLib_Unlink,
                       [
                         :Connection,                # connection,
-                        :pointer                    # const char *path);
+                        :pointer                    # const char *path
                       ],
                       :VixError
 
@@ -490,7 +489,7 @@ module FFI
                         :SectorType,                # capacity,
                         :bool,                      # updateGeometry,
                         :ProgressFunc,              # progressFunc,
-                        :pointer                    # progressCallbackData);
+                        :pointer                    # progressCallbackData
                       ],
                       :VixError
       # Shrinks an existing disk, only local disks are shrunk.
@@ -503,7 +502,7 @@ module FFI
                       [
                         :pointer,                   # diskHandle,
                         :ProgressFunc,              # progressFunc,
-                        :pointer                    # progressCallbackData);
+                        :pointer                    # progressCallbackData
                       ],
                       :VixError
 
@@ -517,7 +516,7 @@ module FFI
                       [
                         :pointer,                   # diskHandle,
                         :ProgressFunc,              # progressFunc,
-                        :pointer                    # progressCallbackData);
+                        :pointer                    # progressCallbackData
                       ],
                       :VixError
 
@@ -557,8 +556,8 @@ module FFI
                         :pointer,              # srcPath,
                         CreateParams,          # createParams,
                         :ProgressFunc,         # progressFunc,
-                        :pointer,              # progressCallbackData);
-                        :bool                  # overWrite);
+                        :pointer,              # progressCallbackData
+                        :bool                  # overWrite
                       ],
                       :VixError
       # Retrieves information about a disk.
@@ -635,7 +634,7 @@ module FFI
                       [
                         :pointer,         # diskHandle,
                         :int,             # cloneDiskType,
-                        :pointer          # spaceNeeded);
+                        :pointer          # spaceNeeded
                       ],
                       :VixError
 
@@ -649,7 +648,7 @@ module FFI
                       [
                         :pointer,          # connection,
                         :pointer,          # filename,
-                        :bool              # repair);
+                        :bool              # repair
                       ],
                       :VixError
     end
