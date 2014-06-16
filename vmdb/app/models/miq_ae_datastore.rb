@@ -38,7 +38,7 @@ module MiqAeDatastore
   end
 
   def self.convert(filename, domain_name = temp_domain, export_options = {})
-    if export_options['zip_file'].blank? && export_options['export_dir'].blank?
+    if export_options['zip_file'].blank? && export_options['export_dir'].blank? && export_options['yaml_file'].blank?
       export_options['export_dir'] = TMP_DIR
     end
 
