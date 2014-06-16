@@ -32,31 +32,6 @@ class AlertController < ApplicationController
       page.replace 'tab_div', :partial=>'rss_list'
     end
   end
-  # Start a local RSS feed from a view
-  def start_rss
-    if params[:feed]
-      @feed = params[:feed]
-      @limit = params[:limit].nil? ? 10 : params[:limit].to_i
-      begin
-        if @feed[0..4] != "http:"       # feed is local, call the rss_feed method
-          @rss_feed = SimpleRSS.parse(rss(@feed, true))
-        else
-          @rss_feed = SimpleRSS.parse(open(params[:feed]))          # open the external feed
-        end
-      rescue Exception => e
-        @rss_error_title = "Problem with RSS feed: " + params[:feed]
-        @rss_error_text = e.to_s
-        $log.warn("MIQ(dashboard-show): [#{e.to_s}]")
-      end
-    else
-      @rss_error_title = "Problem with RSS"
-      @rss_error_text = "No feed specified"
-    end
-#   render :partial => 'rssfeed', :locals=>{:item=>params[:item]}
-    render :update do |page|
-      page.replace_html("dd_#{params[:item]}", :partial=>"rssfeed", :locals=>{:item=>params[:item]})
-    end
-  end
 
   # Render an RSS feed back to either a local or non-local reader
   def rss(feed=nil, local=false)

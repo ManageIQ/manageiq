@@ -236,7 +236,7 @@ class VdiBaseController < ApplicationController
       end
     end
     render :update do |page|
-      page.redirect_to :controller =>request.parameters[:controller], :action => 'assign'     # redirect to build the retire screen
+      page.redirect_to :controller => controller_name, :action => 'assign' # redirect to build the retire screen
     end
   end
 

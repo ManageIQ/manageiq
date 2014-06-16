@@ -12,9 +12,7 @@ module AutomateTreeHelper
 
       case params[:button]
       when 'submit'
-        el = "#{edit_key}_div"
-        page << "if ($('#{el}')) $('#{el}').show();"
-        # FIXME: replace with set_element_visible after 5.2
+        page << set_element_visible("#{edit_key}_div", true)
         @edit[:new][edit_key] = @edit[:automate_tree_fqname]
         if @edit[:new][edit_key]
           page << "$('#{edit_key}').value = '#{@edit[:new][edit_key]}';"

@@ -280,47 +280,45 @@ class DashboardController < ApplicationController
 
   # Toggle dashboard item size
   def widget_toggle_minmax
-    if params[:widget]                # Make sure we got a widget in
-      w = params[:widget].to_i
-      render :update do |page|
-        if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
-          page << "$('w_#{w}_minmax').addClassName('minbox');"
-          page << "$('w_#{w}_minmax').removeClassName('maxbox');"
-#         page << "$('dd_w#{w}_box').visualEffect('slide_down', {duration:0.3});" ### TODO: Causing JS error on charts
-          page << "$('dd_w#{w}_box').show();"
-          page << "$('w_#{w}_minmax').title = 'Minimize';"
-          @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
-        else
-          page << "$('w_#{w}_minmax').addClassName('maxbox');"
-          page << "$('w_#{w}_minmax').removeClassName('minbox');"
-#         page << "$('dd_w#{w}_box').visualEffect('slide_up', {duration:0.3});"
-          page << "$('dd_w#{w}_box').hide();"
-          page << "$('w_#{w}_minmax').title = 'Restore';"
-          @sb[:dashboards][@sb[:active_db]][:minimized].push(w)
-        end
-      end
-      save_user_dashboards
-    else
-      render :nothing=>true               # We have nothing to say  :)
+    unless params[:widget] # Make sure we got a widget in
+      render :nothing => true
+      return
     end
+
+    w = params[:widget].to_i
+    render :update do |page|
+      if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
+        page << "$('w_#{w}_minmax').addClassName('minbox');"
+        page << "$('w_#{w}_minmax').removeClassName('maxbox');"
+        page << "$('dd_w#{w}_box').show();"
+        page << "$('w_#{w}_minmax').title = 'Minimize';"
+        @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
+      else
+        page << "$('w_#{w}_minmax').addClassName('maxbox');"
+        page << "$('w_#{w}_minmax').removeClassName('minbox');"
+        page << "$('dd_w#{w}_box').hide();"
+        page << "$('w_#{w}_minmax').title = 'Restore';"
+        @sb[:dashboards][@sb[:active_db]][:minimized].push(w)
+      end
+    end
+    save_user_dashboards
   end
 
   # Zoom in on chart widget
   def widget_zoom
-    if params[:widget]                # Make sure we got a widget in
-      w = params[:widget].to_i
-      widget = MiqWidget.find_by_id(w)
+    unless params[:widget] # Make sure we got a widget in
+      render :nothing => true
+      return
+    end
 
-      # Save the rr id for render_zgraph
-      @sb[:report_result_id] = widget.contents_for_user(session[:userid]).miq_report_result_id
+    widget = MiqWidget.find_by_id(params[:widget].to_i)
+    # Save the rr id for render_zgraph
+    @sb[:report_result_id] = widget.contents_for_user(session[:userid]).miq_report_result_id
 
-      render :update do |page|
-        page.replace_html("lightbox_div", :partial=>"zoomed_chart", :locals=>{:widget=>widget})
-        page << "$j('#lightbox-panel').fadeIn(300);"
-        page << "miqLoadCharts();"
-      end
-    else
-      render :nothing=>true               # We have nothing to say  :)
+    render :update do |page|
+      page.replace_html("lightbox_div", :partial => "zoomed_chart", :locals => {:widget => widget})
+      page << "$j('#lightbox-panel').fadeIn(300);"
+      page << "miqLoadCharts();"
     end
   end
 
