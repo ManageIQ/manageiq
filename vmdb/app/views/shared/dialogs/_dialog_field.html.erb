@@ -44,10 +44,13 @@
         &nbsp;<%= session[:user_tz] %>
       <% end %>
     <% when 'DialogFieldDynamicList' %>
-      <%= select_tag(field.name, options_for_select(field.values, @edit[:wf].value(field.name)),
-                     'data-miq_sparkle_on'  => true,
-                     'data-miq_sparkle_off' => true,
-                     'data-miq_observe'     => { :url => url }.to_json) %>
+      <%= select_tag(
+        field.name,
+        options_for_select(field.values.collect(&:reverse), @edit[:wf].value(field.name)),
+        'data-miq_sparkle_on'  => true,
+        'data-miq_sparkle_off' => true,
+        'data-miq_observe'     => { :url => url }.to_json
+      ) %>
       <% if field.show_refresh_button? %>
         <%= button_tag('Refresh',
                         :onclick => remote_function(
