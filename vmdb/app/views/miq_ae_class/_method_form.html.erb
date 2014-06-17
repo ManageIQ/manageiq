@@ -1,18 +1,29 @@
 <% if @sb[:active_tab] == "methods" %>
-  <% url = url_for(:action=>'form_method_field_changed', :id=>"#{@ae_method.id || "new"}") %>
+  <% url = url_for(:action => 'form_method_field_changed',
+                   :id     => "#{@ae_method.id || "new"}")
+  %>
     <p class="legend">Main Info</p>
     <table class="style1">
         <tr>
-          <td class="key"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize)%></td>
-          <td class="wide"><%= h(@sb[:namespace_path]) %></td>
+          <td class="key">
+            <%= Dictionary::gettext('fqname', 
+                                    :type     => :column,
+                                    :notfound => :titleize)
+            %>
+          </td>
+          <td class="wide">
+            <%= h(@sb[:namespace_path]) %>
+          </td>
         </tr>
         <tr>
           <td class="key">Name</td>
           <td class="wide">
             <%= text_field_tag("#{prefix}method_name",
                                 @edit[:new][:name],
-                                :maxlength=>MAX_NAME_LEN,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                :maxlength         => MAX_NAME_LEN,
+                                "data-miq_observe" => {:interval => '.5', 
+                                                       :url      => url}.to_json)
+            %>
           </td>
             <%#= javascript_tag("$('method_name').focus()") %>
         </tr>
@@ -21,16 +32,20 @@
           <td class="wide">
             <%= text_field_tag("#{prefix}method_display_name",
                                 @edit[:new][:display_name],
-                                :maxlength=>MAX_NAME_LEN,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                :maxlength         => MAX_NAME_LEN,
+                                "data-miq_observe" => {:interval => '.5',
+                                                       :url      => url}.to_json)
+            %>
           </td>
         </tr>
         <tr>
           <td class="key">Location</td>
           <td class="wide">
             <%= select_tag("#{prefix}method_location",
-                              options_for_select(@edit[:new][:available_locations].sort, @edit[:new][:location]),
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(@edit[:new][:available_locations].sort, 
+                           @edit[:new][:location]),
+                           "data-miq_observe" => {:url => url}.to_json)
+            %>
           </td>
         </tr>
         <% if @ae_method.created_on %>
@@ -44,7 +59,9 @@
         </table> 
         <hr>
         <p class="legend">Data</p>
-        <%= render :partial => "method_data", :locals=>{:field_name=>"#{prefix}method"} %>
+        <%= render :partial => "method_data",
+                   :locals  => {:field_name => "#{prefix}method"}
+        %>
         <hr>
     <p class="legend">Input Parameters</p>
     <table class="noshow">
@@ -55,12 +72,20 @@
         <% title = "Hide Input Parameters" %>
         <% display = "" %>
       <% end %>
-      <tr><td>
-        <%= link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png", :class=>"rollover small",
-            :id=>"exp_collapse_img", :style=>"z-index:50", :alt=>title, :title=>title),
-          {:action=>'expand_toggle', :id=>"exp_collapse"},
-          :remote=>true) %>
-      </td></tr>
+      <tr>
+        <td>
+          <%= link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png", 
+                                :class => "rollover small",
+                                :id    => "exp_collapse_img",
+                                :style => "z-index:50", 
+                                :alt   => title, 
+                                :title=>title),
+                      {:action => 'expand_toggle',
+                       :id     => "exp_collapse"},
+                      :remote  => true)
+          %>
+        </td>
+      </tr>
     </table>
     <div id="inputs_div" style="<%=display%>">
       <table class="style3">
@@ -77,37 +102,48 @@
             <% if flds.id != 0 %>
             <tr class="<%=cycle('row0','row1',:name=>'schema')%>">
               <td>
-              <%= link_to(image_tag("/images/icons/16/notequal-red.png", :alt=>"Click to delete this input field from method"),
-                      {:action=>"field_method_delete", :id=>flds.id.to_i,:arr_id=>i},
-                      "data-miq_sparkle_on" => true,
-                      "data-miq_sparkle_off" => true,
-                      :remote=>true,
-                      :confirm=>'Are you sure you want to delete input field from method?',
-                      :title=>"Click to delete this input field from method")
+              <%= link_to(image_tag("/images/icons/16/notequal-red.png",
+                                    :alt     => "Click to delete this input field from method"),
+                          {:action => "field_method_delete",
+                           :id     => flds.id.to_i,
+                           :arr_id => i},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :confirm               => 'Are you sure you want to delete input field from method?',
+                          :title                 => "Click to delete this input field from method")
               %>
             </td>
               <td>
                 <%= text_field_tag("#{prefix}fields_name_#{i}",
                                       flds["name"],
-                                      :maxlength=>50,
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                      :maxlength         => 50,
+                                      "data-miq_observe" => {:interval => '.5',
+                                                             :url      => url}.to_json)
+                %>
               </td>
               <td>
                 <%  str_txt = flds["datatype"] == "password" ? "display:none" : "" %>
                 <%  str_pwd = flds["datatype"] == "password" ? "" : "display:none" %>
                 <%= text_field_tag("#{prefix}fields_value_#{i}",
-                                      flds["default_value"],
-                                      :style=>str_txt,
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                   flds["default_value"],
+                                   :style             => str_txt,
+                                   "data-miq_observe" => {:interval => '.5',
+                                                          :url      => url}.to_json)
+                %>
                 <%= password_field_tag("#{prefix}fields_password_value_#{i}",
                                       flds["default_value"],
-                                      :style=>str_pwd,
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                      :style             => str_pwd,
+                                      "data-miq_observe" => {:interval => '.5',
+                                                             :url      => url}.to_json)
+                %>
               </td>
               <td>
                 <%= select_tag("#{prefix}fields_datatype_#{i}",
-                                  options_for_select(@edit[:new][:available_datatypes], flds["datatype"]),
-                                  "data-miq_observe"=>{:url=>url}.to_json) %>
+                               options_for_select(@edit[:new][:available_datatypes],
+                               flds["datatype"]),
+                               "data-miq_observe" => {:url => url}.to_json)
+                %>
             </td>
             </tr>
             <% end %>
@@ -122,35 +158,45 @@
           <% else %>
             <tr class="<%=cycle('row0','row1',:name=>'schema')%>">
               <td>
-                  <%= link_to(image_tag("/images/icons/16/na.png", :alt=>"Add this entry"),
-                          {:action=>"field_method_accept", :button=>"accept"},
-                          "data-miq_sparkle_on" => true,
-                          "data-miq_sparkle_off" => true,
-                          :remote=>true,
-                          :title=>"Add this entry")
+                  <%= link_to(image_tag("/images/icons/16/na.png",
+                                        :alt => "Add this entry"),
+                                       {:action => "field_method_accept",
+                                        :button =>"accept"},
+                                       "data-miq_sparkle_on"  => true,
+                                       "data-miq_sparkle_off" => true,
+                                       :remote                => true,
+                                       :title                 => "Add this entry")
                   %>
               </td>
               <td>
                 <%= text_field_tag("#{prefix}field_name",
-                                      session[:field_data][:name],
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                   session[:field_data][:name],
+                                   "data-miq_observe" => {:interval => '.5',
+                                                          :url      => url}.to_json)
+                %>
               </td>
               <td>
                 <%  str_txt = session[:field_data][:datatype] == "password" ? "display:none" : "" %>
                 <%  str_pwd = session[:field_data][:datatype] == "password" ? "" : "display:none" %>
                 <%= text_field_tag("#{prefix}field_default_value",
                                       session[:field_data][:default_value],
-                                      :style=>str_txt,
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                      :style             => str_txt,
+                                      "data-miq_observe" => {:interval => '.5',
+                                                             :url      => url}.to_json)
+                %>
                 <%= password_field_tag("#{prefix}field_password_value",
-                                      session[:field_data][:data_value],
-                                      :style=>str_pwd,
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                       session[:field_data][:data_value],
+                                       :style             => str_pwd,
+                                       "data-miq_observe" => {:interval => '.5',
+                                                              :url      => url}.to_json)
+                %>
               </td>
               <td>
                 <%= select_tag("#{prefix}field_datatype",
-                                  options_for_select(@edit[:new][:available_datatypes], session[:field_data][:datatype]),
-                                  "data-miq_observe"=>{:url=>url}.to_json) %>
+                               options_for_select(@edit[:new][:available_datatypes], 
+                               session[:field_data][:datatype]),
+                               "data-miq_observe" => {:url => url}.to_json)
+                %>
               </td>
             </tr>
           <% end %>

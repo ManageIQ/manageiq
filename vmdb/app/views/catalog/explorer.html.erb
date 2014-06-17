@@ -1,25 +1,34 @@
 <% content_for :trees do %>
   <% @built_trees.each do |tree| %>
-    <div style="display:none;"><%= render(:partial => "shared/tree", :locals  => {:tree => tree, :name => tree.name.to_s}) %></div>
+    <div style="display:none;">
+      <%= render(:partial => "shared/tree", 
+                 :locals  => {:tree => tree, 
+                 :name    => tree.name.to_s}) 
+      %>
+    </div>
   <% end %>
 <% end %>
 
 <% content_for :accords do %>
   <%# Create the explorer dhtmlx layout/accordion JS objects %>
   <%= render(:partial => "layouts/dhtmlxlayout_explorer",
-             :locals=>{:accords=>@accords,
-                       :active_accord=>@sb[:active_accord],
-                       :accord_select_function=>"miqAccordCTSelect"}
-  ) %>
+             :locals  => {:accords                => @accords,
+                          :active_accord          => @sb[:active_accord],
+                          :accord_select_function => "miqAccordCTSelect"})
+  %>
 <% end %>
 
 <%# Include the center cell divs %>
 <% if ["MiqTemplate","ServiceResource","ServiceTemplate","ServiceTemplateCatalog"].include?(X_TREE_NODE_PREFIXES[@nodetype]) && !@view %><%# Showing a specific VM %>
   <div id="main_div" class="main_div">
     <% if X_TREE_NODE_PREFIXES[@nodetype] == "MiqTemplate" %>
-      <%= render(:partial => 'vm_common/main', :locals=>{:controller=>"vm"}) %>
+      <%= render(:partial => 'vm_common/main', 
+                 :locals  => {:controller => "vm"})
+      %>
     <% else %>
-      <%= render(:partial => "#{x_active_tree}_show", :locals=>{:controller=>"catalog"}) %>
+      <%= render(:partial => "#{x_active_tree}_show", 
+                 :locals  => {:controller => "catalog"})
+      %>
     <% end %>
   </div>
 <% else %>
@@ -35,7 +44,8 @@
 
 <%# To include MyCodeMirror JS and CSS files %>
 <%= render :partial => "/layouts/my_code_mirror",
-           :locals => {:text_area_id => "miq_none",
-                       :mode => "htmlmixed",
-                       :height=>350,
-                       :width=>600} %>
+           :locals  => {:text_area_id => "miq_none",
+                        :mode         => "htmlmixed",
+                        :height       => 350,
+                        :width        => 600}
+%>

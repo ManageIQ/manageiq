@@ -1,70 +1,82 @@
-<div id="method_inputs_div>
-	<% if !@in_a_form && @edit[:new][:ae_method] %>
-		<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_method_inputs"}  %>
+<div id="method_inputs_div">
+  <% if !@in_a_form && @edit[:new][:ae_method] %>
+    <%= render :partial => "layouts/flash_msg",
+               :locals  => {:div_num => "_method_inputs"}
+    %>
+    <p class="legend">Main Info</p>
+    <table class="style1">
+        <tr>
+          <td class="key">
+            <%= Dictionary::gettext('fqname', 
+                                    :type     => :column,
+                                    :notfound => :titleize)
+            %>
+          </td>
+          <td class="wide"><%= h(@sb[:namespace_path]) %></td>
+        </tr>
+        <tr>
+          <td class="key">Name</td>
+          <td class="wide"><%= @edit[:new][:ae_method].name %></td>
+        </tr>
+        <tr>
+          <td class="key">Display Name</td>
+          <td class="wide"><%= @edit[:new][:ae_method].display_name %></td>
+        </tr>
+        <tr>
+          <td class="key">Location</td>
+          <td class="wide"><%= @edit[:new][:ae_method].location %></td>
+        </tr>
+        <tr>
+          <td class="key">Created On</td>
+          <td class="wide"><%= h(format_timezone(@edit[:new][:ae_method].created_on,Time.zone,"gtl")) %></td>
+        </tr>
+      </table>
+      <p class="legend">Data</p>
+        <% if @edit[:new][:ae_method].location == "inline" %>
+          <%= text_area("method1",
+                        "data",
+                        :value    => @edit[:new][:ae_method].data,
+                        :size     => "90x20",
+                        :disabled => true,
+                        :style    => "display:none;")
+          %>
+          <%# Create a MyCodeMirror editor for the text area %>
+          <%= render :partial => "/layouts/my_code_mirror",
+                     :locals  => {:text_area_id => "method1_data",
+                                  :mode         => "ruby",
+                                  :line_numbers => true,
+                                  :read_only    => true}
+          %>
+        <% else %>
+            <%= @edit[:new][:ae_method].data %>
+        <% end %>
+  <%# show inputs parameters grid if there are any inputs %>
+  <div id="params_div" style="display:<%=  @edit[:grid_methods_xml] ? "" : "none"%>">
+  <hr>
+  <p class="legend">Input Parameters</p>
+    <%= render :partial => 'layouts/dhtmlxgrid',
+               :locals  => {:options => {:grid_id   => "method_inputs_grid_div",
+                                         :grid_name => "method_inputs_grid",
+                                         :grid_url  => "/miq_ae_class/tree_select/",
+                                         :grid_xml  => @edit[:grid_methods_xml],
+                                         :no_resize => true,
+                                         :autosize  => true,
+                                         :set_sizes => true,
+                                         :skin      => "style3",
+                                         :alt_row   => true,
+                                         :div_in_js => true}}
+    %>
+  </div>
 
-							<p class="legend">Main Info</p>
-							<table class="style1">
-									<tr>
-										<td class="key"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize)%></td>
-										<td class="wide"><%= h(@sb[:namespace_path]) %></td>
-									</tr>
-									<tr>
-										<td class="key">Name</td>
-										<td class="wide"><%= @edit[:new][:ae_method].name %></td>
-									</tr>
-									<tr>
-										<td class="key">Display Name</td>
-										<td class="wide"><%= @edit[:new][:ae_method].display_name %></td>
-									</tr>
-									<tr>
-										<td class="key">Location</td>
-										<td class="wide"><%= @edit[:new][:ae_method].location %></td>
-									</tr>
-									<tr>
-										<td class="key">Created On</td>
-										<td class="wide"><%= h(format_timezone(@edit[:new][:ae_method].created_on,Time.zone,"gtl")) %></td>
-									</tr>
-								</table>
-								<p class="legend">Data</p>
-									<% if @edit[:new][:ae_method].location == "inline" %>
-										<%= text_area("method1","data",
-																	:value=>@edit[:new][:ae_method].data,
-																	:size=>"90x20",
-																	:disabled=>true,
-																	:style=>"display:none;") %>
-										<%# Create a MyCodeMirror editor for the text area %>
-										<%= render :partial=>"/layouts/my_code_mirror",
-																:locals=>{:text_area_id=>"method1_data",
-																					:mode=>"ruby",
-																					:line_numbers=>true,
-																					:read_only=>true} %>
-									<% else %>
-											<%= @edit[:new][:ae_method].data %>
-									<% end %>
-						<%# show inputs parameters grid if there are any inputs %>
-						<div id="params_div" style="display:<%=  @edit[:grid_methods_xml] ? "" : "none"%>">
-						<hr>
-						<p class="legend">Input Parameters</p>
-							<%= render :partial => 'layouts/dhtmlxgrid',
-															:locals=>{:options=>{:grid_id=>"method_inputs_grid_div",
-																				:grid_name=>"method_inputs_grid",
-																				:grid_url=>"/miq_ae_class/tree_select/",
-																				:grid_xml=>@edit[:grid_methods_xml],
-																				:no_resize=>true,
-																				:autosize=>true,
-																				:set_sizes=>true,
-																				:skin=>"style3",
-																				:alt_row=>true,
-																				:div_in_js=>true
-																				}}
-								%>
-						</div>
-
-	<% else %>
-		<div id="method_form_div">
-			<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_method_inputs"}  %>
-			<%= render :partial => "method_form", :locals=>{:prefix=>""}  %>
-		</div>
-	<% end %>
-	<br/>
+  <% else %>
+    <div id="method_form_div">
+      <%= render :partial => "layouts/flash_msg", 
+                 :locals  => {:div_num => "_method_inputs"}
+      %>
+      <%= render :partial => "method_form",
+                 :locals  => {:prefix => ""}
+      %>
+    </div>
+  <% end %>
+  <br/>
 </div>

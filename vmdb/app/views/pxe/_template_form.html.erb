@@ -1,49 +1,60 @@
-<% url = url_for(:action=>'template_form_field_changed', :id=>"#{@ct.id || "new"}") %>
-<% url_one_trans = url_for(:action=>'template_form_field_changed', :id=>"#{@ct.id || "new"}", :transOne=>'1') %>
+<% url = url_for(:action => 'template_form_field_changed',
+                 :id     => "#{@ct.id || "new"}")
+%>
+<% url_one_trans = url_for(:action   => 'template_form_field_changed',
+                           :id       => "#{@ct.id || "new"}",
+                           :transOne =>'1')
+%>
 <div id="form_div">
 	<%= render :partial => "layouts/flash_msg" %>
-    <p class="legend">Basic Information</p>
-    <table class="style1">
-        <tr>
-          <td class="key">Name</td>
-          <td class="wide">
-              <%= text_field_tag("name",
-                                  @edit[:new][:name],
-                                  :maxlength=>MAX_NAME_LEN,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-            <%= javascript_tag("$('name').focus()") %>
-          </td>
-        </tr>
-        <tr>
-          <td class="key">Description</td>
-          <td class="wide">
-              <%= text_field_tag("description",
-                                  @edit[:new][:description],
-                                  :maxlength=>100,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-            </td>
-        </tr>
-        <tr>
-          <td class="key">Image Type</td>
-          <% img_types = (@ct.id ? [] : [["<Choose>",nil]]) + @edit[:pxe_image_types] %>
-          <td class="wide">
-              <%= select_tag("img_typ",
-                                options_for_select(img_types, @edit[:new][:img_type]),
-                                "data-miq_observe"=>{:url=>url}.to_json) %>
-            </td>
-        </tr>
-        <tr>
-          <td class="key">Type</td>
-          <% types = (@ct.id ? [] : [["<Choose>",nil]]) + [["Kickstart","CustomizationTemplateKickstart"],["Sysprep","CustomizationTemplateSysprep"],["CloudInit","CustomizationTemplateCloudInit"]] %>
-          <td class="wide">
-            <%= select_tag("typ",
-                           options_for_select(types, @edit[:new][:typ]),
-                           "data-miq_observe"=>{:url=>url}.to_json) %>
-          </td>
-        </tr>
-          </table>
-          <hr>
-          <p class="legend">Script</p>
-            <%= render :partial => "template_script_data" %>
+  <p class="legend">Basic Information</p>
+  <table class="style1">
+    <tr>
+      <td class="key">Name</td>
+      <td class="wide">
+          <%= text_field_tag("name",
+                              @edit[:new][:name],
+                              :maxlength         => MAX_NAME_LEN,
+                              "data-miq_observe" => {:interval => '.5',
+                                                     :url      => url}.to_json)
+          %>
+        <%= javascript_tag("$('name').focus()") %>
+      </td>
+    </tr>
+    <tr>
+      <td class="key">Description</td>
+      <td class="wide">
+        <%= text_field_tag("description",
+                           @edit[:new][:description],
+                           :maxlength         => 100,
+                           "data-miq_observe" => {:interval => '.5', 
+                                                  :url      => url}.to_json)
+        %>
+      </td>
+    </tr>
+    <tr>
+      <td class="key">Image Type</td>
+      <% img_types = (@ct.id ? [] : [["<Choose>",nil]]) + @edit[:pxe_image_types] %>
+      <td class="wide">
+        <%= select_tag("img_typ",
+                       options_for_select(img_types,
+                                          @edit[:new][:img_type]),
+                       "data-miq_observe" => {:url => url}.to_json)
+        %>
+      </td>
+    </tr>
+    <tr>
+      <td class="key">Type</td>
+      <% types = (@ct.id ? [] : [["<Choose>",nil]]) + [["Kickstart","CustomizationTemplateKickstart"],["Sysprep","CustomizationTemplateSysprep"],["CloudInit","CustomizationTemplateCloudInit"]] %>
+      <td class="wide">
+        <%= select_tag("typ",
+                       options_for_select(types, @edit[:new][:typ]),
+                       "data-miq_observe" => {:url => url}.to_json)
+        %>
+      </td>
+    </tr>
+  </table>
+  <hr>
+  <p class="legend">Script</p>
+  <%= render :partial => "template_script_data" %>
 </div>
-
