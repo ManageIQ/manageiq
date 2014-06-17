@@ -306,27 +306,7 @@ class MiqAeClassController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial=>"all_tabs"]
     end
     if @in_a_form
-      action_url =  case nodes.first
-                    when 'root', 'aen'
-                      if @sb[:action] == "miq_ae_domain_priority_edit"
-                        'domains_priority_edit'
-                      elsif @edit.key?(:ae_class_id)
-                        @edit[:rec_id].nil? ? 'create' : 'update'
-                      else
-                        @edit[:rec_id].nil? ? 'create_ns' : 'update_ns'
-                      end
-                    when 'aei'
-                      @edit[:rec_id].nil? ? 'create_instance' : 'update_instance'
-                    when 'aem'
-                      @edit[:rec_id].nil? ? 'create_method' : 'update_method'
-                    when 'aec'
-                      case @sb[:active_tab]
-                      when 'instances' then @edit[:rec_id].nil? ? 'create_instance' : 'update_instance'
-                      when 'methods'   then @edit[:rec_id].nil? ? 'create_method' : 'update_method'
-                      when 'props'     then @edit[:rec_id].nil? ? 'create' : 'update'
-                      else @sb[:action] == 'miq_ae_field_seq' ? 'fields_seq_edit' : 'update_fields'
-                      end
-                    end
+      action_url =  create_action_url(nodes.first)
       presenter[:expand_collapse_cells][:c] = 'expand' # incase it was collapsed for summary screen, and incase there were no records on show_list
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:update_partials][:form_buttons_div] = r[
@@ -1665,8 +1645,8 @@ exit MIQ_OK"
         end
       else
         add_flash(I18n.t("flash.add.added",
-                        :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
-                        :name  => add_ae_ns.name))
+                         :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
+                         :name  => add_ae_ns.name))
         @in_a_form = false
         replace_right_cell([:ae])
       end
@@ -1682,7 +1662,7 @@ exit MIQ_OK"
     @temp[:combo_xml] = get_combo_xml(@edit[:new][:fields])
     @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
     session[:field_data] = Hash.new
-    @edit[:new_field][:substitute] = session[:field_data][:substitution] = true
+    @edit[:new_field][:substitute] = session[:field_data][:substitute] = true
     @changed = (@edit[:new] != @edit[:current])
     @edit[:current][:fields].each_with_index do |fld,i|         #needed to compare each object's attributes to find out if something has changed
       if @edit[:new][:fields][i].attributes != fld.attributes
@@ -1956,6 +1936,34 @@ exit MIQ_OK"
 
 private
 
+  def create_action_url(node)
+    prefix = @edit[:rec_id].nil? ? 'create' : 'update'
+    case node
+    when 'root', 'aen'
+      if @sb[:action] == "miq_ae_domain_priority_edit"
+        'domains_priority_edit'
+      elsif @edit.key?(:ae_class_id)
+        prefix
+      else
+        prefix + '_ns'
+      end
+    when 'aei'
+      prefix + '_instance'
+    when 'aem'
+      prefix + '_method'
+    when 'aec'
+      return 'fields_seq_edit' if @sb[:action] == 'miq_ae_field_seq'
+      prefix = @edit[:rec_id].nil? ? 'create' : 'update'
+      suffix = {
+        'instances' => '_instance',
+        'methods'   => '_method',
+        'props'     => '',
+        'schema'    => '_fields'
+      }
+      prefix + suffix[@sb[:active_tab]]
+    end
+  end
+
   def get_rec_name(rec)
     column = rec.display_name.blank? ? :name : :display_name
     if rec.kind_of?(MiqAeNamespace) && rec.domain? && !rec.editable?
@@ -2064,7 +2072,10 @@ private
     @sb[:row_selected] = find_checked_items
     ae_ns = []
     ae_cs = []
-    if @sb[:row_selected]
+    if params[:id] && params[:pressed] == "miq_ae_domain_delete"
+      ae_ns.push(params[:id])
+      self.x_node = "root"
+    elsif @sb[:row_selected]
       @sb[:row_selected].each do |items|
         item = items.split('-')
         if item[0] == "aen"
@@ -2124,6 +2135,12 @@ private
     end
   end
 
+  def field_attributes
+    [:aetype, :class_id, :collect, :datatype, :default_value, :description,
+     :display_name, :max_retries, :max_time, :message, :name, :on_entry,
+     :on_error, :on_exit, :priority, :substitute]
+  end
+
   # Get variables from edit form
   def fields_get_form_vars
     @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
@@ -2133,15 +2150,17 @@ private
       field_data = session[:field_data]
       new_field = @edit[:new_field]
 
-      field_data[:aetype] = new_field[:aetype] = params[:field_aetype] if params[:field_aetype]
-      field_data[:datatype] = new_field[:datatype] = params[:field_datatype] if params[:field_datatype]
-      field_data[:name] = new_field[:name] = params[:field_name].strip if params[:field_name]
-      field_data[:display_name] = new_field[:display_name] = params[:field_display_name] if params[:field_display_name]
-      field_data[:description] = new_field[:description] = params[:field_description] if params[:field_description]
-      if params[:field_substitution]
-        field_data[:substitution] = new_field[:substitute] = params[:field_substitution].to_i == 1 ? true : false
+      field_attributes.each do |field|
+        field_name = "field_#{field}".to_sym
+        if field == :substitute
+          field_data[field] = new_field[field] = params[field_name].to_i == 1 if params[field_name]
+        else
+          field_data[field] = new_field[field] = params[field_name] if params[field_name]
+        end
       end
 
+      field_data[:default_value] = new_field[:default_value] =
+          params[:field_password_value] if params[:field_password_value]
       new_field[:priority] = 1
       @edit[:new][:fields].sort_by { |a| [a.priority.to_i] }.each_with_index do |flds, i|
         if i == @edit[:new][:fields].length - 1
@@ -2152,69 +2171,29 @@ private
           end
         end
       end
-      field_data[:default_value] = new_field[:default_value] =
-        params[:field_default_value] if params[:field_default_value]
-      field_data[:default_value] = new_field[:default_value] =
-        params[:field_password_value] if params[:field_password_value]
-      field_data[:message] = new_field[:message] = params[:field_message] if params[:field_message]
-      field_data[:collect] = new_field[:collect] = params[:field_collect] if params[:field_collect]
-      field_data[:on_entry] = new_field[:on_entry] = params[:field_on_entry] if params[:field_on_entry]
-      field_data[:on_exit] = new_field[:on_exit] = params[:field_on_exit] if params[:field_on_exit]
-      field_data[:on_error] = new_field[:on_error] = params[:field_on_error] if params[:field_on_error]
-      field_data[:max_retries] = new_field[:max_retries] = params[:field_max_retries] if params[:field_max_retries]
-      field_data[:max_time] = new_field[:max_time] = params[:field_max_time] if params[:field_max_time]
       new_field[:class_id] = @ae_class.id
 
       @edit[:new][:fields].each_with_index do |fld, i|
-        var_name = "fields_aetype" << i.to_s
-        fld[:aetype] = params[var_name.to_sym] if params[var_name.to_sym]
-        var_name = "fields_datatype" << i.to_s
-        fld[:datatype] = params[var_name.to_sym] if params[var_name.to_sym]
-
-        fld[:name] = params["fields_name_#{i}".to_sym].strip if params["fields_name_#{i}".to_sym]
-        fld[:display_name] =
-          params["fields_display_name_#{i}".to_sym] if params["fields_display_name_#{i}".to_sym]
-        fld[:description] =
-          params["fields_description_#{i}".to_sym] if params["fields_description_#{i}".to_sym]
-        if params["fields_substitution_#{i}".to_sym]
-          fld[:substitute] = params["fields_substitution_#{i}".to_sym].to_i == 1 ? true : false
+        field_attributes.each do |field|
+          field_name = "fields_#{field}_#{i}".to_sym
+          if field == :substitute
+            fld[field] = params[field_name].to_i == 1 if params[field_name]
+          elsif %w(aetype datatype).include?(field.to_s)
+            var_name = "fields_#{field}#{i}"
+            fld[field] = params[var_name.to_sym] if params[var_name.to_sym]
+          else
+            fld[field] = params[field_name] if params[field_name]
+          end
         end
-
-        fld[:default_value] =
-          params["fields_default_value_#{i}".to_sym] if params["fields_default_value_#{i}".to_sym]
-        fld[:default_value] =
-          params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
-        fld[:message] = params["fields_message_#{i}".to_sym] if params["fields_message_#{i}".to_sym]
-        fld[:collect] = params["fields_collect_#{i}".to_sym] if params["fields_collect_#{i}".to_sym]
-        fld[:on_entry] = params["fields_on_entry_#{i}".to_sym] if params["fields_on_entry_#{i}".to_sym]
-        fld[:on_exit] = params["fields_on_exit_#{i}".to_sym] if params["fields_on_exit_#{i}".to_sym]
-        fld[:on_error] = params["fields_on_error_#{i}".to_sym] if params["fields_on_error_#{i}".to_sym]
-        fld[:max_retries] = params["fields_max_retries_#{i}".to_sym] if params["fields_max_retries_#{i}".to_sym]
-        fld[:max_time] = params["fields_max_time_#{i}".to_sym] if params["fields_max_time_#{i}".to_sym]
       end
     elsif params[:button] == "accept"
       if !session[:field_data][:name] || session[:field_data][:name] == ""
         add_flash(I18n.t("flash.edit.field_required", :field => "Name"), :error)
         return
       end
-      new_field = MiqAeField.new
-      new_field.name = @edit[:new_field][:name]
-      new_field.display_name = @edit[:new_field][:display_name]
-      new_field.description = @edit[:new_field][:description]
-      new_field.aetype = @edit[:new_field][:aetype]
-      new_field.datatype = @edit[:new_field][:datatype]
-      new_field.substitute = @edit[:new_field][:substitute]
-      new_field.priority = @edit[:new_field][:priority]
-      new_field.default_value = @edit[:new_field][:default_value]
-      new_field.message = @edit[:new_field][:message]
-      new_field.collect = @edit[:new_field][:collect]
-      new_field.class_id = @edit[:new_field][:class_id]
-      new_field.on_entry = @edit[:new_field][:on_entry]
-      new_field.on_exit = @edit[:new_field][:on_exit]
-      new_field.on_error = @edit[:new_field][:on_error]
-      new_field.max_retries = @edit[:new_field][:max_retries]
-      new_field.max_time = @edit[:new_field][:max_time]
-      @edit[:new][:fields].push(new_field)
+      new_fields = {}
+      field_attributes.each_with_object({}) { |field| new_fields[field] = @edit[:new_field][field] }
+      @edit[:new][:fields].push(MiqAeField.new(new_fields))
       @edit[:new_field] = session[:field_data] = {}
     end
   end

@@ -39,7 +39,7 @@ describe MiqAeClassController do
   context "#domain_lock" do
     it "Marks domain as locked/readonly" do
       set_user_privileges
-      ns = FactoryGirl.create(:miq_ae_namespace, :system => false)
+      ns = FactoryGirl.create(:miq_ae_domain_enabled)
       controller.instance_variable_set(:@_params, :id => ns.id)
       controller.stub(:replace_right_cell)
       controller.send(:domain_lock)
@@ -51,7 +51,7 @@ describe MiqAeClassController do
   context "#domain_unlock" do
     it "Marks domain as unlocked/editable" do
       set_user_privileges
-      ns = FactoryGirl.create(:miq_ae_namespace, :system => true)
+      ns = FactoryGirl.create(:miq_ae_domain_disabled)
       controller.instance_variable_set(:@_params, :id => ns.id)
       controller.stub(:replace_right_cell)
       controller.send(:domain_unlock)
