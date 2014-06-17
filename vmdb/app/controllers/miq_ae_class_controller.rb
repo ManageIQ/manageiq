@@ -324,10 +324,7 @@ class MiqAeClassController < ApplicationController
       presenter[:set_visible_elements][:form_buttons_div] = false
     end
 
-    if !@edit || (params[:button] && 'reset' != params[:button])
-      # unlock tree, unhide dim for tree
-      presenter[:lock_unlock_trees][:ae_tree] = false
-    end
+    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
 
     if !@in_a_form || (params[:pressed] && params[:pressed].ends_with?("_delete"))
       presenter[:set_visible_elements][:params_div] =

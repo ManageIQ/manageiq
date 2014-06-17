@@ -15,10 +15,9 @@ module JsHelper
   # replacement for app/views/shared/ajax/_tree_lock_unlock.js.erb
   def tree_lock(tree_var, lock = true)
     bool_str = (!!lock).to_s
-    " if (typeof #{tree_var} != 'undefined') {
-        #{tree_var}.lockTree(#{bool_str});
-        miqDimDiv('#{tree_var}_div',#{bool_str});
-      };
+    "
+      $j('##{tree_var}box').dynatree('#{lock ? 'disable' : 'enable'}');
+      miqDimDiv('#{tree_var}_div',#{bool_str});
     "
   end
 
