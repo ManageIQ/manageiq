@@ -1,4 +1,6 @@
-<% url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}") %>
+<% url = url_for(:action => 'settings_form_field_changed', 
+                 :id     => "#{@sb[:active_tab].split('_').last}")
+%>
 <% if @sb[:active_tab] == "settings_advanced" %>
   <%= render :partial => "layouts/flash_msg" %>
   <div id="form_div">
@@ -28,15 +30,20 @@
           <% end %>
             <%= select_tag('file_name',
                           options_for_select(VMDB::Config.available_config_names.invert.sort, session[:config_file_name]),
-                          "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                          "data-miq_observe"=>{:url=>url}.to_json) %>
+                          "data-miq_sparkle_on"  => true, 
+                          "data-miq_sparkle_off" => true,
+                          "data-miq_observe"     => {:url => url}.to_json)
+            %>
           </div>
         </td>
       </tr>
     </table>
     <hr>
     <p class="legend">Editing <%= h(VMDB::Config.available_config_names[session[:config_file_name]]) %> File<font color="red">*</font></p>
-    <%= text_area_tag("file_data",@edit[:new][:file_data],:style=>"display:none;") %>
+    <%= text_area_tag("file_data",
+                      @edit[:new][:file_data],
+                      :style => "display:none;")
+    %>
   </div>
 <% end %>
 
@@ -44,11 +51,10 @@
   <%# only render if tab was changed, when coming back from outside render partial in explorer view %>
   <% w = @winW - 450 %>
   <%# Create a MyCodeMirror editor for the text area %>
-  <%= render :partial=>"/layouts/my_code_mirror",
-              :locals=>{:text_area_id=>"file_data",
-                        :mode=>"yaml",
-                        :line_numbers=>true,
-                        :url=>url,
-                        :height=>center_div_height,
-                        :width=>w} %>
+  <%= render :partial => "/layouts/my_code_mirror",
+             :locals  => {:text_area_id => "file_data",
+                          :mode         => "yaml",
+                          :line_numbers => true,
+                          :url          => url}
+  %>
 <% end %>
