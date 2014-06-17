@@ -15,6 +15,6 @@ module VimMappingRegistry
 	end
 
 	def self.args(cType)
-		registry[cType].keys
+		registry[cType] && registry[cType].keys
 	end
 end
