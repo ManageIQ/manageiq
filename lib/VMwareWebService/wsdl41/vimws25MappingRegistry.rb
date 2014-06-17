@@ -80060,7 +80060,7 @@
     ]
   )
 
-  # VirtualE1000e added frpm VIM 5.5
+  # VirtualE1000e added from VIM 5.5
   LiteralRegistry.register(
     :class => VimWs25::VirtualE1000e,
     :schema_ns => "urn:vim25",
@@ -80081,7 +80081,7 @@
     ]
   )
 
-  # VirtualE1000e added frpm VIM 5.5
+  # VirtualE1000e added from VIM 5.5
   LiteralRegistry.register(
     :class => VimWs25::VirtualE1000eOption,
     :schema_ns => "urn:vim25",
