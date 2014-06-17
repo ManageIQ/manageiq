@@ -37165,6 +37165,51 @@
     ]
   )
 
+  # VirtualE1000e added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::VirtualE1000e,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualE1000e",
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["key", "SOAP::SOAPInt"],
+      ["deviceInfo", "VimWs25::Description", [0, 1]],
+      ["backing", "VimWs25::VirtualDeviceBackingInfo", [0, 1]],
+      ["connectable", "VimWs25::VirtualDeviceConnectInfo", [0, 1]],
+      ["controllerKey", "SOAP::SOAPInt", [0, 1]],
+      ["unitNumber", "SOAP::SOAPInt", [0, 1]],
+      ["addressType", "SOAP::SOAPString", [0, 1]],
+      ["macAddress", "SOAP::SOAPString", [0, 1]],
+      ["wakeOnLanEnabled", "SOAP::SOAPBoolean", [0, 1]]
+    ]
+  )
+
+  # VirtualE1000e added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::VirtualE1000eOption,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualE1000eOption",
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["type", "SOAP::SOAPString"],
+      ["connectOption", "VimWs25::VirtualDeviceConnectOption", [0, 1]],
+      ["controllerType", "SOAP::SOAPString", [0, 1]],
+      ["autoAssignController", "VimWs25::BoolOption", [0, 1]],
+      ["backingOption", "VimWs25::VirtualDeviceBackingOption[]", [0, nil]],
+      ["defaultBackingOptionIndex", "SOAP::SOAPInt", [0, 1]],
+      ["licensingLimit", "SOAP::SOAPString[]", [0, nil]],
+      ["deprecated", "SOAP::SOAPBoolean"],
+      ["plugAndPlay", "SOAP::SOAPBoolean"],
+      ["hotRemoveSupported", "SOAP::SOAPBoolean", [0, 1]],
+      ["supportedOUI", "VimWs25::ChoiceOption"],
+      ["macType", "VimWs25::ChoiceOption"],
+      ["wakeOnLanEnabled", "VimWs25::BoolOption"],
+      ["vmDirectPathGen2Supported", "SOAP::SOAPBoolean", [0, 1]]
+    ]
+  )
+
   EncodedRegistry.register(
     :class => VimWs25::VirtualEnsoniq1371,
     :schema_ns => "urn:vim25",
@@ -79994,6 +80039,53 @@
     :class => VimWs25::VirtualE1000Option,
     :schema_ns => "urn:vim25",
     :schema_type => "VirtualE1000Option",
+    :schema_qualified => false,
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["type", "SOAP::SOAPString"],
+      ["connectOption", "VimWs25::VirtualDeviceConnectOption", [0, 1]],
+      ["controllerType", "SOAP::SOAPString", [0, 1]],
+      ["autoAssignController", "VimWs25::BoolOption", [0, 1]],
+      ["backingOption", "VimWs25::VirtualDeviceBackingOption[]", [0, nil]],
+      ["defaultBackingOptionIndex", "SOAP::SOAPInt", [0, 1]],
+      ["licensingLimit", "SOAP::SOAPString[]", [0, nil]],
+      ["deprecated", "SOAP::SOAPBoolean"],
+      ["plugAndPlay", "SOAP::SOAPBoolean"],
+      ["hotRemoveSupported", "SOAP::SOAPBoolean", [0, 1]],
+      ["supportedOUI", "VimWs25::ChoiceOption"],
+      ["macType", "VimWs25::ChoiceOption"],
+      ["wakeOnLanEnabled", "VimWs25::BoolOption"],
+      ["vmDirectPathGen2Supported", "SOAP::SOAPBoolean", [0, 1]]
+    ]
+  )
+
+  # VirtualE1000e added frpm VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::VirtualE1000e,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualE1000e",
+    :schema_qualified => false,
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["key", "SOAP::SOAPInt"],
+      ["deviceInfo", "VimWs25::Description", [0, 1]],
+      ["backing", "VimWs25::VirtualDeviceBackingInfo", [0, 1]],
+      ["connectable", "VimWs25::VirtualDeviceConnectInfo", [0, 1]],
+      ["controllerKey", "SOAP::SOAPInt", [0, 1]],
+      ["unitNumber", "SOAP::SOAPInt", [0, 1]],
+      ["addressType", "SOAP::SOAPString", [0, 1]],
+      ["macAddress", "SOAP::SOAPString", [0, 1]],
+      ["wakeOnLanEnabled", "SOAP::SOAPBoolean", [0, 1]]
+    ]
+  )
+
+  # VirtualE1000e added frpm VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::VirtualE1000eOption,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualE1000eOption",
     :schema_qualified => false,
     :schema_element => [
       ["dynamicType", "SOAP::SOAPString", [0, 1]],
