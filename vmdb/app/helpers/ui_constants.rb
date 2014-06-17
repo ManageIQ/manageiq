@@ -110,6 +110,7 @@ module UiConstants
     ["Yellow", "yellow"],
     ["Green", "green"],
     ["Blue", "blue"],
+    ["ManageIQ-Blue", "manageiq-blue"],
     ["Black", "black"]
   ]
 
@@ -150,6 +151,10 @@ module UiConstants
     "blue"=>{
       :font_color=>"#0c7ad7",
       :background_color=>"#0c7ad7"
+    },
+    "manageiq-blue"=>{
+      :font_color=>"#0c7ad7",
+      :background_color=>"#187aa2"
     },
     "black"=>{
       :font_color=>"#000",
