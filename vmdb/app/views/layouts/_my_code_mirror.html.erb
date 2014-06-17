@@ -4,28 +4,28 @@
 <% mode ||= "yaml"							%><%# Mode (i.e. ruby, yaml) used for text formatting %>
 <% theme ||= "eclipse"					%><%# MyCodeMirror theme %>
 <% line_numbers ||= false				%><%# Show line numbers %>
-<% height ||= "100"							%><%# Edit box height in pixels %>
-<% width ||= "300"							%><%# Edit box width in pixels %>
+<% height ||= "auto"							%><%# Edit box height in pixels %>
+<% width ||= "auto"							%><%# Edit box width in pixels %>
 <% read_only ||= false					%><%# Edit box height in pixels %>
 <% multi_mode ||= false         %><%# to load/switch between multiple modes, for customization template editor %>
 
-<%= javascript_include_tag "CodeMirror-2.2/codemirror.js" %>
+<%= javascript_include_tag "codemirror-4.2/lib/codemirror.js" %>
 <% if multi_mode %>
   <% modes.each do |mode| %>
-    <%= javascript_include_tag "CodeMirror-2.2/mode/#{mode}/#{mode}.js" %>
+    <%= javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js" %>
   <% end %>
 <% elsif mode == "htmlmixed" %>
-  <%= javascript_include_tag "CodeMirror-2.2/mode/javascript/javascript.js"%>
-  <%= javascript_include_tag "CodeMirror-2.2/mode/css/css.js"%>
-  <%= javascript_include_tag "CodeMirror-2.2/mode/#{mode}/#{mode}.js"%>
-  <%= javascript_include_tag "CodeMirror-2.2/mode/xml/xml.js" %>
+  <%= javascript_include_tag "codemirror-4.2/mode/javascript/javascript.js"%>
+  <%= javascript_include_tag "codemirror-4.2/mode/css/css.js"%>
+  <%= javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js"%>
+  <%= javascript_include_tag "codemirror-4.2/mode/xml/xml.js" %>
 <% else %>
-  <%= javascript_include_tag "CodeMirror-2.2/mode/#{mode}/#{mode}.js" %>
+  <%= javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js" %>
 <% end %>
 
-<%= stylesheet_link_tag "CodeMirror-2.2/codemirror.css" %>
+<%= stylesheet_link_tag "codemirror-4.2/lib/codemirror.css" %>
 <% unless theme == "default" %>
-	<%= stylesheet_link_tag "CodeMirror-2.2/#{theme}.css" %>
+	<%= stylesheet_link_tag "codemirror-4.2/theme/#{theme}.css" %>
 <% end %>
 
 <script type="text/javascript">
@@ -35,11 +35,11 @@
 				lineNumbers: <%= line_numbers %>,
 				matchBrackets: true,
 				theme: '<%= theme %>',
-				readOnly: <%= read_only ? "'nocursor'".html_safe : false %>,
-				onChange: function(){miqSendOneTrans('<%= url %>')},
-				onBlur: function(){miqEditor.save()}
+				readOnly: <%= read_only ? "'nocursor'".html_safe : false %>
 			}
 		);
+    miqEditor.on("change", function(cm, change) {miqSendOneTrans('<%= url %>')}),
+    miqEditor.on("blur", function(cm) {miqEditor.save()}),
 		$j('.CodeMirror-scroll')[0].style.height = '<%= height %>px';
 		$j('.CodeMirror-scroll')[0].style.width = '<%= width %>px';
 		miqEditor.focus();

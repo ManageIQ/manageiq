@@ -267,17 +267,24 @@ table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutPolySplitterHor {
 	vertical-align: top;
     display: none;
 }
+
+/* hides inactive horizontal splitter tr */
+table.dhtmlxLayoutPolyContainer_dhx_blue > tbody > tr:nth-child(2),
+table.dhtmlxLayoutPolyContainer_dhx_blue > tbody > tr:nth-child(4)
+ {
+ 	height: 0px !important;
+	display: none !important;
+}
+
 /* hor-based splitter inactive */
 table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutPolySplitterHorInactive {
-	font-size: 1px;
-	height: 5px;
-	line-height: 5px;
-	cursor: default;
-	-moz-user-select: none;
-	background-color: #F0F0F0;
-	vertical-align: top;
-	display: none;
+	height: 0px !important;
+	display: none !important;
 }
+table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutPolySplitterHorInactive div {
+	height: 0px !important;
+	display: none !important;
+	}
 /* ver-based splitter */
 table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutPolySplitterVer {
 	font-size: 2px;
@@ -479,7 +486,7 @@ table.dhtmlxLayoutPolyContainer_dhx_blue div.dhxcont_statusbar, table.dhtmlxLayo
 /* dhxcont cells in layout */
 table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutSinglePoly div.dhxcont_global_content_area {
 	position: absolute;
-	overflow: hidden; /* important for IE */
+	overflow: visible; /* important for IE */
 	border: #000 0px solid;
 /*	background-color: #FFFFFF;*/
 }
@@ -521,4 +528,4 @@ table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutSinglePoly div.dhtmlxPol
 	-moz-user-select: none;
 }
 
-.main_div {width:98%;height:100%;overflow:auto; padding-left: 15px; margin-top:18px !important}
+.main_div {width:98%;height:98%;overflow:auto; padding-left: 15px; margin-top:18px !important}
