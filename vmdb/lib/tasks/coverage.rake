@@ -18,7 +18,6 @@ namespace :test do
           t.libs << "test"
           t.test_files = FileList["test/#{target}/*_test.rb"]
           t.output_dir = File.join(ENV['CC_BUILD_ARTIFACTS'], "coverage") if ENV['CC_BUILD_ARTIFACTS'] != nil
-          t.verbose = true
           if target == "unit"
             t.rcov_opts = ['--rails --aggregate coverage.data --text-report --sort coverage --no-html']
 #            t.rcov_opts = ['--rails --aggregate coverage.data --text-report --sort coverage ']
