@@ -273,7 +273,7 @@ class MiqAlert < ActiveRecord::Base
     notifications.each_key do |k|
       if k == :email
         notifications[k].to_miq_a.each do |n|
-          n[:to].each_line do |to|
+          n[:to].each do |to|
             description = "#{k.to_s.titleize} Action To: [#{to}] for Alert: #{self.description}"
             actions << MiqAction.new(
               :action_type => k.to_s,
