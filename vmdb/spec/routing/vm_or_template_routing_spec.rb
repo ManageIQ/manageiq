@@ -36,6 +36,7 @@ describe VmOrTemplateController do
     drift_to_csv
     drift_to_pdf
     drift_to_txt
+    vm_show
   ).each do |path|
     describe "##{path}" do
       it "routes with GET" do

@@ -1691,6 +1691,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         util_report_download
         utilization
+        vm_show
       ),
       :post => %w(
         accordion_select
