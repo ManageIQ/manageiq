@@ -1150,11 +1150,11 @@ function miq_jquery_disable_inactive_tabs(tabs_div){
   //getting length of tabs on screen
   tab_len = $j('#' + tabs_div).tabs('length');
   //getting index of currently active tabs
-  curTab = $j('.ui-tabs-panel:not(.ui-tabs-hide)')
+  curTab = $j('#' + tabs_div).tabs().tabs('option', 'selected').valueOf();
   //building array of tab indexes to be disabled, excluding active tab index
   var arr=new Array
   for(var i=1,j=0;i<=tab_len;i++){
-    if(i != curTab.index()){
+    if(i != curTab+1){
       arr[j++] = i-1;
     }
   }

@@ -1,0 +1,37 @@
+#
+# Toolbar config file
+#
+---
+:model: MiqAeDomain
+:button_groups:
+- :name: miq_ae_domain_vmdb
+  :items:
+  - :buttonSelect: miq_ae_domain_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: miq_ae_domain_new
+      :image: new_namespace
+      :text: 'Add a New Domain'
+      :title: 'Add a New Domain'
+    - :button: miq_ae_domain_edit
+      :image: edit
+      :text: 'Edit Selected Domains'
+      :title: 'Select a single Domains to edit'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: miq_ae_domain_delete
+      :image: remove
+      :text: 'Remove Domains'
+      :title: 'Remove selected Domains'
+      :url_parms: 'main_div'
+      :confirm: 'Are you sure you want to remove the selected Domains?'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: miq_ae_domain_priority_edit
+      :image: edit-assign
+      :text: "Edit Priority Order of Domains"
+      :title: "Edit Priority Order  of Domains"

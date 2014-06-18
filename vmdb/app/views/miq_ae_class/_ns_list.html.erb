@@ -30,10 +30,12 @@
       <fieldset>
         <p class="legend">Info</p>
         <table class="style1">
-          <tr>
-            <td class="key"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize)%></td>
-            <td class="wide"><%= h(@sb[:namespace_path]) %></td>
-          </tr>
+          <% unless @edit[:new][:domain] %>
+            <tr>
+              <td class="key"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize)%></td>
+              <td class="wide"><%= h(@sb[:namespace_path]) %></td>
+            </tr>
+          <% end %>
           <tr>
             <td class="key">Name</td>
             <td class="wide">
@@ -53,8 +55,22 @@
                                     "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
             </td>
           </tr>
+          <% if @edit[:new][:domain] %>
+            <tr>
+              <td class="key">Enabled</td>
+              <td>
+                <%= check_box_tag("ns_enabled",
+                                  value   = "1",
+                                  checked = @edit[:new][:enabled],
+                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+              </td>
+            </tr>
+          <% end %>
         </table>
       </fieldset>
     </div>
+    <%# Need this to bind checkbox observers when under DHTMLX tabs %>
+    <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+    <script>miqObserveCheckboxes();</script>
   <% end %>
 </div>

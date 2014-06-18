@@ -373,9 +373,12 @@ en:
     no_records_selected_for_task: 'No %{model} were selected for %{task}'
     no_records_selected_to_be_disabled: 'No %{model} were selected to be disabled'
     no_records_selected_to_be_enabled: 'No %{model} were selected to be enabled'
+    no_records_selected_to_be_marked: 'No %{model} were selected to be marked as %{action}'
     no_utilization_data_available: "No Utilization data available"
     no_vc_defined: "No Virtual Center instances have been defined, press a button to Add or Discover one"
     press_back_button: "Press your browser's Back button or click a tab to continue"
+    priority_order_cancelled: "Edit of Priority Order was cancelled by the user"
+    priority_order_saved: "Priority Order was saved"
     record_no_longer_exists: "%{record_name} no longer exists in the database"
     record_not_authorized for user: "You are not authorized to view %{record_name}"
     search_not_found: "The selected Filter record was not found"
@@ -418,6 +421,7 @@ en:
     count_not_in_current_region: "%{label} are not in the current region and will be skipped"
     error_during_delete_with_count: "Error during %{count_model} delete from the CFME Database"
     error_no_longer_exists: "Error: Record no longer exists in the database"
+    invalid_button_action: "Invalid button action."
     not_in_current_region: "The selected %{label} is not in the current region"
     refresh_cu_data: "Refresh of recent C&U data has been initiated"
     schedule_queued_to_run: "The selected Schedule has been queued to run"
@@ -427,6 +431,7 @@ en:
     selected_records_deleted_with_count: "Successfully deleted %{count_model} from the CFME Database"
     selected_records_were_disabled: 'The selected %{model} were disabled'
     selected_records_were_enabled: 'The selected %{model} were enabled'
+    selected_records_were_marked: 'The selected %{model} were marked as %{action}'
     task_cancelled: "%{task} was cancelled by the user"
     unknown_error: "Unknown error has occurred"
     user_not_authorized: "The user is not authorized for this task or item."

@@ -528,6 +528,7 @@ Vmdb::Application.routes.draw do
         create_instance
         create_method
         create_ns
+        domains_priority_edit
         explorer
         expand_toggle
         field_accept
@@ -543,6 +544,7 @@ Vmdb::Application.routes.draw do
         form_instance_field_changed
         form_method_field_changed
         form_ns_field_changed
+        priority_form_field_changed
         reload
         tree_select
         tree_autoload_dynatree

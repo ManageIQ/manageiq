@@ -1922,6 +1922,51 @@
   :feature_type: node
   :identifier: miq_ae_class_explorer
   :children:
+  - :name: Automate Domains
+    :description: Automate Domains
+    :feature_type: node
+    :identifier: miq_ae_domain
+    :children:
+    - :name: View
+      :description: View
+      :feature_type: view
+      :identifier: miq_ae_domain_view
+    - :name: Modify
+      :description: Modify Domain
+      :feature_type: admin
+      :identifier: miq_ae_domain_admin
+      :children:
+      - :name: Add
+        :description: Add Automate Domain
+        :feature_type: admin
+        :identifier: miq_ae_domain_new
+      - :name: Edit
+        :description: Edit Automate Domain
+        :feature_type: admin
+        :identifier: miq_ae_domain_edit
+      - :name: Delete
+        :description: Delete Automate Domain
+        :feature_type: admin
+        :identifier: miq_ae_domain_delete
+      - :name: Priority Order
+        :description: Edit Priority Order of Domains
+        :feature_type: admin
+        :identifier: miq_ae_domain_priority_edit
+      - :name: Lock/Unlock
+        :description: Lock/Unlock Domain
+        :feature_type: admin
+        :identifier: miq_ae_domain_lock_unlock
+        :children:
+        - :name: Unlock
+          :description: Unlock Domain
+          :feature_type: admin
+          :identifier: miq_ae_domain_unlock
+          :hidden: true
+        - :name: Lock
+          :description: Lock Domain
+          :feature_type: admin
+          :identifier: miq_ae_domain_lock
+          :hidden: true
   - :name: Automate Namespace
     :description: Automate Namespace
     :feature_type: node

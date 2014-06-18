@@ -825,6 +825,15 @@ module ApplicationHelper
       when "action_delete"
         return true if !role_allows(:feature=>"action_delete")
       end
+    when "MiqAeClass", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
+      case id
+      when "miq_ae_domain_lock"
+        return true unless @record.editable?
+      when "miq_ae_domain_unlock"
+        return true if @record.editable? || @record.priority.to_i == 0
+      else
+        return true unless @record.editable?
+      end
     when "MiqAlert"
       case id
       when "alert_copy"
@@ -1164,6 +1173,17 @@ module ApplicationHelper
       when "action_delete"
         return "Default actions can not be deleted." if @record.action_type == "default"
         return "Actions assigned to Policies can not be deleted" if @record.miq_policies.length > 0
+      end
+    when "MiqAeNamespace"
+      case id
+      when "miq_ae_domain_delete"
+        return "Read Only Domain cannot be deleted." unless @record.editable?
+      when "miq_ae_domain_edit"
+        return "Read Only Domain cannot be edited" unless @record.editable?
+      when "miq_ae_domain_lock"
+        return "Domain is Locked." unless @record.editable?
+      when "miq_ae_domain_unlock"
+        return "Domain is Unlocked." if @record.editable?
       end
     when "MiqAlert"
       case id
@@ -1895,9 +1915,8 @@ module ApplicationHelper
 
   def center_toolbar_filename_automate
     nodes = x_node.split('-')
-    return "blank_view_tb" unless ae_object_editable?(nodes)
     return case nodes.first
-           when "root" then "blank_view_tb"
+           when "root" then "miq_ae_domains_center_tb"
            when "aen"  then domain_or_namespace_toolbar(nodes.last)
            when "aec"  then case @sb[:active_tab]
                             when "methods" then  "miq_ae_methods_center_tb"
@@ -1910,21 +1929,10 @@ module ApplicationHelper
            end
   end
 
-  def ae_object_editable?(nodes)
-    kls = case nodes.first
-          when "aen" then MiqAeNamespace
-          when "aec" then MiqAeClass
-          when "aei" then MiqAeInstance
-          when "aem" then MiqAeMethod
-          else            nil
-          end
-    kls.find_by_id(from_cid(nodes.last)).editable? unless kls.nil?
-  end
-
   def domain_or_namespace_toolbar(node_id)
     ns = MiqAeNamespace.find(from_cid(node_id))
-    if ns.domain? && ns.editable?
-      "miq_ae_namespaces_center_tb"
+    if ns.domain?
+      "miq_ae_domain_center_tb"
     elsif !ns.domain?
       "miq_ae_namespace_center_tb"
     else

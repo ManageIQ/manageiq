@@ -5,4 +5,8 @@ class MiqAeDomain < MiqAeNamespace
   def self.enabled
     where(:enabled => true)
   end
+
+  def self.highest_priority
+    MiqAeDomain.order('priority DESC').first.priority
+  end
 end

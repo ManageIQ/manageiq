@@ -3991,43 +3991,17 @@ describe ApplicationHelper do
                :trees       => {:ae_tree => {:tree => :ae_tree}}}
       end
 
-      it "should return blank toolbar on root node" do
+      it "should return domains toolbar on root node" do
         x_node_set('root', :ae_tree)
         toolbar_name = center_toolbar_filename_automate
-        toolbar_name.should eq("blank_view_tb")
-      end
-
-      it "should return blank toolbar on read only namespace and class nodes" do
-        n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
-        x_node_set("aen-#{n1.id}", :ae_tree)
-        toolbar_name = center_toolbar_filename_automate
-        toolbar_name.should eq("blank_view_tb")
-
-        c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-        x_node_set("aec-#{c1.id}", :ae_tree)
-
-        @sb[:active_tab] = "props"
-        toolbar_name = center_toolbar_filename_automate
-        toolbar_name.should eq("blank_view_tb")
-
-        @sb[:active_tab] = "methods"
-        toolbar_name = center_toolbar_filename_automate
-        toolbar_name.should eq("blank_view_tb")
-
-        @sb[:active_tab] = "schema"
-        toolbar_name = center_toolbar_filename_automate
-        toolbar_name.should eq("blank_view_tb")
-
-        @sb[:active_tab] = ""
-        toolbar_name = center_toolbar_filename_automate
-        toolbar_name.should eq("blank_view_tb")
+        toolbar_name.should eq("miq_ae_domains_center_tb")
       end
 
       it "should return namespaces toolbar on domain node" do
         n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10)
         x_node_set("aen-#{n1.id}", :ae_tree)
         toolbar_name = center_toolbar_filename_automate
-        toolbar_name.should eq("miq_ae_namespaces_center_tb")
+        toolbar_name.should eq("miq_ae_domain_center_tb")
       end
 
       it "should return namespace toolbar on namespace node" do
