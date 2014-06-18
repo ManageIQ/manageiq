@@ -1,5 +1,5 @@
 <% url = url_for(:action=>'form_instance_field_changed', :id=>"#{@ae_inst.id || "new"}") %>
-<fieldset>
+
   <p class="legend">Main Info</p>
   <table class="style1">
     <tr>
@@ -35,9 +35,9 @@
       </td>
     </tr>
   </table>
-</fieldset>
+  <hr>
 
-<fieldset>
+
   <p class="legend">Fields</p>
   <table class="style3" cellspacing="1">
     <thead>
@@ -131,4 +131,4 @@
       <% end %>
     </tbody>
   </table>
-</fieldset>
+

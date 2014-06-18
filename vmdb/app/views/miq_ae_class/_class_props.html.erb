@@ -7,9 +7,12 @@
       <%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_class_props"}  %>
           <dl class="col2">
             <dd>
-              <fieldset>
+
                 <p class="legend">Properties</p>
                 <table class="style3">
+                  <thead>
+                    <tr><th><th></tr>
+                  </thead>
                   <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
                     <td class="label"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize)%></td>
                     <td class="wide"><%= h(@sb[:namespace_path]) %></td>
@@ -35,7 +38,7 @@
                     <td><%= h(@ae_class.ae_instances.length) %></td>
                   </tr>
                 </table>
-              </fieldset>
+
             </dd>
           </dl>
     <% else %>

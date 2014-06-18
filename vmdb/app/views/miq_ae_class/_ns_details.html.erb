@@ -1,7 +1,7 @@
 <div id="ns_details_div">
 <% if !@in_a_form %>
 	<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_ns_details"}  %>
-	<fieldset>
+
 		<div class="checkall">
 			<input id="Toggle2" type="checkbox" name="Toggle2" onclick="miqCheck_AE_All('center_tb','ns_grid');"/> (Check All)
 		</div>
@@ -18,6 +18,6 @@
 																:div_in_js=>true
 																}}
 			%>
-	</fieldset>
+
 <% end %>
 </div>

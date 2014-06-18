@@ -1,7 +1,7 @@
 <div id="class_methods_div">
 <% if !@in_a_form %>
   <%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_class_methods"}  %>
-	<fieldset>
+
 		<p class="legend">Methods</p>
 			<div class="checkall">
 				<input id="Toggle4" type="checkbox" name="Toggle4" onclick="miqCheck_AE_All('center_tb','class_methods_grid');"/> (Check All)
@@ -20,7 +20,7 @@
 																		:div_in_js=>true
 																		}}
 					%>
-		</fieldset>
+
 <% elsif @edit[:new][:fields] %>
 	<div id="form_div">
 		<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_class_methods"}  %>
