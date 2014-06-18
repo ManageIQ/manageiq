@@ -72,21 +72,24 @@
         <% title = "Hide Input Parameters" %>
         <% display = "" %>
       <% end %>
-      <tr>
-        <td>
-          <%= link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png", 
-                                :class => "rollover small",
-                                :id    => "exp_collapse_img",
-                                :style => "z-index:50", 
-                                :alt   => title, 
-                                :title=>title),
-                      {:action => 'expand_toggle',
-                       :id     => "exp_collapse"},
-                      :remote  => true)
-          %>
-        </td>
-      </tr>
+      <thead>
+        <tr>
+          <th class="special">
+            <%= link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png", 
+                                  :class => "rollover small",
+                                  :id    => "exp_collapse_img",
+                                  :style => "z-index:50", 
+                                  :alt   => title, 
+                                  :title=>title),
+                        {:action => 'expand_toggle',
+                         :id     => "exp_collapse"},
+                        :remote  => true)
+            %>
+          </th>
+        </tr>
+      </thead>
     </table>
+
     <div id="inputs_div" style="<%=display%>">
       <table class="style3">
         <thead>
@@ -203,5 +206,4 @@
         </tbody>
       </table>
     </div>
-
 <% end %>

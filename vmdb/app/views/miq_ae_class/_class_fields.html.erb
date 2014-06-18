@@ -2,51 +2,53 @@
   <% if x_node.split('-')[0] == "aec" || params[:pressed] || ["field_select", "field_accept", "field_delete"].include?(params[:action]) %>
     <% if !@in_a_form_fields %>
       <!-- Show Schema -->
-      <%= render :partial => "layouts/flash_msg", :locals => { :div_num => "_class_fields" }  %>
-
-        <p class="legend">Schema</p>
-        <table class="style3">
-          <thead>
-          <tr>
-            <% ['Name', 'Description', 'Default Value', 'Collect', 'Message', 'On Entry', 'On Exit', 'On Error', 'Max Retries', 'Max Time'].each do |title| %>
-              <th><%= title %></th>
+      <%= render :partial => "layouts/flash_msg", 
+                 :locals  => {:div_num => "_class_fields"}
+      %>
+      <p class="legend">Schema</p>
+      <table class="style3">
+        <thead>
+        <tr>
+          <% ['Name', 'Description', 'Default Value', 'Collect', 'Message', 'On Entry', 'On Exit', 'On Error', 'Max Retries', 'Max Time'].each do |title| %>
+            <th><%= title %></th>
+          <% end %>
+        </tr>
+        </thead>
+        <tbody>
+        <% @ae_class.ae_fields.each do |ae_field| %>
+          <% image = ae_field.substitute ? "passed.png" : "failed.png" %>
+          <tr class="<%=cycle('row0','row1', :name => 'schema')%>">
+            <% ['name', 'description', 'default_value', 'collect', 'message', 'on_entry', 'on_exit', 'on_error', 'max_retries', 'max_time'].each do |fname| %>
+              <td>
+                <!-- Name is special processed -->
+                <% if fname == 'name' %>
+                  <img src="/images/icons/new/ae_<%=ae_field.aetype%>.png" alt="Type: <%=ae_field.aetype%>" title="Type: <%=ae_field.aetype%>"/>
+                  <% if !ae_field.datatype.blank? && ae_field.datatype != "string" %>
+                    <img src="/images/icons/new/<%=ae_field.datatype%>.png" alt="Data Type: <%=ae_field.datatype%>" title="Data Type: <%=ae_field.datatype%>"/>
+                  <% end %>
+                  <img src="/images/icons/16/<%= image%>" alt="Substitution: <%=ae_field.substitute%>" title="Substitution: <%=ae_field.substitute%>"/>
+                  <%= h(ae_field.display_name)%> (<%= h(ae_field.name)%>)
+                <% elsif fname == 'default_value' %>
+                  <!-- show astericks if its a password field -->
+                  <%= h((ae_field.datatype == "password") ? "********" : ae_field.send(fname))%>
+                <% else %>
+                  <%= h(ae_field.send(fname))%>
+                <% end%>
+              </td>
             <% end %>
           </tr>
-          </thead>
-          <tbody>
-          <% @ae_class.ae_fields.each do |ae_field| %>
-            <% image = ae_field.substitute ? "passed.png" : "failed.png" %>
-            <tr class="<%=cycle('row0','row1', :name => 'schema')%>">
-              <% ['name', 'description', 'default_value', 'collect', 'message', 'on_entry', 'on_exit', 'on_error', 'max_retries', 'max_time'].each do |fname| %>
-                <td>
-                  <!-- Name is special processed -->
-                  <% if fname == 'name' %>
-                    <img src="/images/icons/new/ae_<%=ae_field.aetype%>.png" alt="Type: <%=ae_field.aetype%>" title="Type: <%=ae_field.aetype%>"/>
-                    <% if !ae_field.datatype.blank? && ae_field.datatype != "string" %>
-                      <img src="/images/icons/new/<%=ae_field.datatype%>.png" alt="Data Type: <%=ae_field.datatype%>" title="Data Type: <%=ae_field.datatype%>"/>
-                    <% end %>
-                    <img src="/images/icons/16/<%= image%>" alt="Substitution: <%=ae_field.substitute%>" title="Substitution: <%=ae_field.substitute%>"/>
-                    <%= h(ae_field.display_name)%> (<%= h(ae_field.name)%>)
-                  <% elsif fname == 'default_value' %>
-                    <!-- show astericks if its a password field -->
-                    <%= h((ae_field.datatype == "password") ? "********" : ae_field.send(fname))%>
-                  <% else %>
-                    <%= h(ae_field.send(fname))%>
-                  <% end%>
-                </td>
-              <% end %>
-            </tr>
-          <%  end	%>
-          </tbody>
-        </table>
-
+        <%  end	%>
+        </tbody>
+      </table>
     <% else %>
-      <% url = url_for(:action=>'fields_form_field_changed', :id=>"#{@ae_class.id || "new"}") %>
+      <% url = url_for(:action => 'fields_form_field_changed',
+                       :id     => "#{@ae_class.id || "new"}")
+      %>
       <!-- Edit Schema -->
       <div id="form_div">
-        <div style="padding-top:10px;"></div>
-        <%= render :partial => "layouts/flash_msg", :locals => { :div_num => "_class_fields" } %>
-
+        <%= render :partial => "layouts/flash_msg",
+                   :locals  => {:div_num => "_class_fields"}
+        %>
           <p class="legend">Schema</p>
           <table class="style3">
             <thead>
@@ -62,13 +64,16 @@
               <% if field.id != 0 %>
                 <tr class="<%=cycle('row0','row1', :name => 'schema')%>">
                   <td>
-                    <%= link_to(image_tag("/images/icons/16/notequal-red.png", :alt => "Click to delete this field from schema"),
-                                {:action => "field_delete", :id => field.id.to_i, :arr_id => i },
-                                "data-miq_sparkle_on" => true,
+                    <%= link_to(image_tag("/images/icons/16/notequal-red.png",
+                                          :alt     => "Click to delete this field from schema"),
+                                {:action => "field_delete", 
+                                 :id     => field.id.to_i,
+                                 :arr_id => i },
+                                "data-miq_sparkle_on"  => true,
                                 "data-miq_sparkle_off" => true,
-                                :remote=>true,
-                                :confirm=>'Are you sure you want to delete field from schema?',
-                                :title => "Click to delete this field from schema")
+                                :remote                => true,
+                                :confirm               => 'Are you sure you want to delete field from schema?',
+                                :title                 => "Click to delete this field from schema")
                     %>
                   </td>
                   <% ["name", "aetype", "datatype", "default_value", "display_name", "description", "substitute", "collect", "message", "on_entry", "on_exit", "on_error", "max_retries", "max_time"].each do |fname| %>
@@ -80,8 +85,14 @@
                         <% xml_combo  = @temp[symbol][i] %>
                         <% combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}" %>
                         <div id="<%=combo_id%>"></div>
-                        <%= render :partial => 'layouts/dhtmlxcombo', :locals => { :combo_id => combo_id, :combo_name => combo_name, :xml_combo => xml_combo, :combo_url => combo_url } %>
+                        <%= render :partial => 'layouts/dhtmlxcombo', 
+                                   :locals  => { :combo_id   => combo_id, 
+                                                 :combo_name => combo_name, 
+                                                 :xml_combo  => xml_combo, 
+                                                 :combo_url  => combo_url}
+                        %>
                       <% elsif fname == 'substitute' %>
+
                         <%= check_box_tag("fields_#{fname}_#{i}", value="1",
                                           checked=field.substitute,
                                           "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
@@ -91,16 +102,22 @@
                         <% default_value = field.send(fname) %>
                         <%= text_field_tag("fields_default_value_#{i}",
                                            default_value,
-                                           :style => str_txt,
-                                           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                           :style             => str_txt,
+                                           "data-miq_observe" => {:interval => '.5', 
+                                                                  :url      => url}.to_json)
+                        %>
                         <%= password_field_tag("fields_password_value_#{i}",
                                                default_value,
-                                               :style => str_pwd,
-                                               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                               :style             => str_pwd,
+                                               "data-miq_observe" => {:interval => '.5', 
+                                                                      :url      => url}.to_json)
+                        %>
                       <% else %>
                         <%= text_field_tag("fields_#{fname}_#{i}",
                                            field.send(fname),
-                                           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                           "data-miq_observe" => {:interval => '.5',
+                                                                  :url      => url}.to_json)
+                        %>
                       <% end %>
                     </td>
                   <% end %>
@@ -125,12 +142,14 @@
               %>
               <tr class="<%=cycle('row0','row1', :name =>'schema')%>">
                 <td>
-                  <%= link_to(image_tag("/images/icons/16/na.png", :alt => "Add this entry"),
-                              {:action => "field_accept", :button => "accept"},
-                              "data-miq_sparkle_on" => true,
+                  <%= link_to(image_tag("/images/icons/16/na.png", 
+                                        :alt => "Add this entry"),
+                              {:action => "field_accept", 
+                               :button => "accept"},
+                              "data-miq_sparkle_on"  => true,
                               "data-miq_sparkle_off" => true,
-                              :remote=>true,
-                              :title => "Add this entry")
+                              :remote                => true,
+                              :title                 => "Add this entry")
                   %>
                 </td>
                 <% ["name", "aetype", "datatype", "default_value", "display_name", "description", "substitute", "collect", "message", "on_entry", "on_exit", "on_error", "max_retries", "max_time"].each do |fname| %>
@@ -141,7 +160,12 @@
                       <% xml_combo  = @edit[:new]["#{fname}s".to_sym][0] %>
                       <% combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}" %>
                       <div id="<%=combo_id%>"></div>
-                      <%= render :partial => 'layouts/dhtmlxcombo', :locals => { :combo_id => combo_id, :combo_name => combo_name, :xml_combo => xml_combo, :combo_url => combo_url } %>
+                      <%= render :partial => 'layouts/dhtmlxcombo', 
+                                 :locals  => { :combo_id   => combo_id, 
+                                               :combo_name => combo_name, 
+                                               :xml_combo  => xml_combo, 
+                                               :combo_url  => combo_url }
+                      %>
                     <% elsif fname == 'substitute' %>
                       <% checked = !session[:field_data].blank? && session[:field_data][:substitute] %>
                       <%= check_box_tag("field_#{fname}", value="1",
@@ -152,16 +176,22 @@
                       <%  str_pwd = session[:field_data][:datatype] == "password" ? "" : "display:none" %>
                       <%= text_field_tag("field_default_value",
                                          session[:field_data][:default_value],
-                                         :style => str_txt,
-                                         "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                         :style             => str_txt,
+                                         "data-miq_observe" => {:interval => '.5', 
+                                                                :url      => url}.to_json)
+                      %>
                       <%= password_field_tag("field_password_value",
                                              session[:field_data][:default_value],
-                                             :style => str_pwd,
-                                             "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                             :style             => str_pwd,
+                                             "data-miq_observe" => {:interval => '.5', 
+                                                                    :url      => url}.to_json)
+                      %>
                     <% else %>
                       <%= text_field_tag("field_#{fname}",
                                          session[:field_data][fname.to_sym],
-                                         "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                         "data-miq_observe" => {:interval => '.5', 
+                                                                :url      => url}.to_json)
+                      %>
                     <% end %>
                   </td>
                 <% end %>
