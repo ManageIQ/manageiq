@@ -1698,8 +1698,8 @@ exit MIQ_OK"
   # AJAX driven routine to delete a classification entry
   def field_delete
     fields_get_form_vars
-    @temp[:combo_xml] = get_combo_xml(@ae_class.ae_fields)
-    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@ae_class.ae_fields)    # passing fields because that's how many combo boxes we need
+    @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields])
+    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])
     if params[:id].to_i != 0
       #@edit[:new][:fields][params[:id].to_i].id = "0"
       @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each_with_index do |flds,i|
