@@ -11,8 +11,7 @@ class TestVersionInfo < Test::Unit::TestCase
   end
 
   def test_exes
-    get_versioninfo(File.join(@dataPath, "VMwareTray.exe")) # This is the VMware tray module from VM Server
-    get_versioninfo(File.join(@dataPath, "frhed.exe"))       # This is the Free Hex Editor module
+    get_versioninfo(File.join(@dataPath, "pe_header_version_info_test.exe"))
   end
 
   def get_versioninfo(filename)
@@ -22,23 +21,15 @@ class TestVersionInfo < Test::Unit::TestCase
     assert_instance_of(Hash, vi)
     
     # Validate the basic fields are not nil
-    assert_not_nil(vi['sig'])
-    assert_not_nil(vi['PRODUCTVERSION_HEADER'])
-    assert_not_nil(vi['FILEVERSION_HEADER'])
-    assert_not_nil(vi['code_page'])
-    assert_not_nil(vi['lang'])
-    assert_not_nil(vi['data_length'])
     assert_equal("StringFileInfo", vi['sig'])
-
-    # Validate that the string data is within a range.  (400-1000 chars)
-    assert_in_delta(700, vi['data_length'], 300)
+    assert_equal('5,6,7,8',        vi['PRODUCTVERSION_HEADER'])
+    assert_equal('5,6,7,8',        vi['FILEVERSION_HEADER'])
+    assert_equal('04b0',           vi['code_page'])
+    assert_equal('0000',           vi['lang'])
+    assert_equal(896,              vi['data_length'])
 
     # Validate that the external name matches the internal name
     assert_equal(File.basename(filename), vi['OriginalFilename'])
-
-    # Check that we can sort the hash into an array
-    sortedArray = vi.sort {|a,b| a<=>b}
-    assert_instance_of(Array, sortedArray)
   end
   
   def test_textFile
