@@ -399,10 +399,8 @@ class Storage < ActiveRecord::Base
   cache_with_timeout(:count_of_vmdk_disk_files, 15.seconds) do
     flat_clause  = "base_name NOT LIKE '%-flat.vmdk'"
     delta_clause = "base_name NOT LIKE '%-delta.vmdk'"
-    snap_clause  = case ActiveRecord::Base.connection.adapter_name
-    when "PostgreSQL"; "AND base_name NOT SIMILAR TO '%\-[0-9][0-9][0-9][0-9][0-9][0-9]\.vmdk'"
-    when "MySQL";      "AND base_name NOT REGEXP '%\-[0-9][0-9][0-9][0-9][0-9][0-9]\.vmdk'"
-    end
+    snap_clause  = "AND #{ActiveRecordQueryParts.not_regexp("base_name", "%\-[0-9][0-9][0-9][0-9][0-9][0-9]\.vmdk")}"
+
     StorageFile.all(
       :select     => "COUNT(id) AS storage_file_count, storage_id",
       :conditions => "ext_name = 'vmdk' AND #{flat_clause} AND #{delta_clause} #{snap_clause}",
