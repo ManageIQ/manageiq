@@ -33,7 +33,7 @@ describe VmdbwsController, :apis => true do
 
     result = invoke(:Version)
     result.should be_kind_of(Array)
-    result.should have(5).things     # version = [maj, min, build, x, revision]
+    result.should have_at_least(2).items    # version = [maj, min, build, x, build] or ["master", build]
     result.each {|ver| ver.should be_kind_of(String)}
   end
 
