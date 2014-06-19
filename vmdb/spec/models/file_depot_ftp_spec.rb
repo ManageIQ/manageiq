@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe FileDepotFtp do
   before do
-    _, @miq_server, _ = EvmSpecHelper.create_guid_miq_server_zone
+    _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   let(:connection)     { double("FtpConnection") }
@@ -13,7 +13,7 @@ describe FileDepotFtp do
     it "does not already exist" do
       file_depot_ftp.should_receive(:connect).and_return(connection)
       file_depot_ftp.should_receive(:destination_file_exists?).and_return(false)
-      connection.should_receive(:mkdir).with("/uploads/default_#{@miq_server.id}/miq_server_1_#{@miq_server.id}")
+      connection.should_receive(:mkdir).with("/uploads/#{@zone.name}_#{@zone.id}/#{@miq_server.name}_#{@miq_server.id}")
       connection.should_receive(:putbinaryfile)
       log_file.should_receive(:post_upload_tasks)
       connection.should_receive(:close)
