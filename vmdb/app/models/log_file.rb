@@ -284,59 +284,41 @@ class LogFile < ActiveRecord::Base
   end
 
   def upload_log_file_ftp
-    log_header = "MIQ(#{self.class.name}-upload_log_file_ftp)"
-    $log.info("#{log_header} Adding log file [#{local_file}] to ftp [#{file_depot.uri}...")
-
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(file_depot.uri))
-
-    server = self.resource
-    zone   = server.zone
-    path   = [URI.decode(path), "#{zone.name}_#{zone.id}", "#{server.name}_#{server.id}"].join("/")
-
-    # Convert path to a relative path, not an absolute path by removing any leading slashes
-    path.gsub!(/^\/+/, "")
-    ftp = self.class.connect_ftp(file_depot.depot_hash)
-
-    begin
-      $log.info("#{log_header} Changing directory to [#{path}]")
-      build_path_ftp(ftp, path)
-      ftp.chdir(path)
-
-      date_string = "#{format_log_time(self.logging_started_on)}_#{format_log_time(self.logging_ended_on)}"
-      destname    = self.historical ? "Archive_" : "Current_"
-      destname   += "region_#{MiqRegion.my_region.region rescue "unknown"}_#{zone.name}_#{zone.id}_#{server.name}_#{server.id}_#{date_string}#{File.extname(local_file)}"
-
-      # Add back the leading slash when providing the path
-      self.log_uri = URI::HTTP.new(scheme, userinfo, host, port, registry, "/#{path}/#{destname}", opaque, query, fragment).to_s
-      if self.file_exists_ftp?(ftp)
-        $log.info("#{log_header} Log file with URI: [#{self.log_uri}] already exists, skipping add")
-        ftp.close
-        return
-      end
-
-      $log.info("#{log_header} Posting file [#{local_file}] to [#{log_uri}]")
-      self.save
-      ftp.putbinaryfile(local_file, destname)
-    rescue => err
-      msg = "'#{err.message}', writing to FTP: [#{file_depot.uri}], Username: [#{file_depot.authentication_userid}]"
-      $log.error("#{log_header} #{msg}")
-      raise msg
-    ensure
-      ftp.close
-    end
-
-    $log.info("#{log_header} Adding log file [#{local_file}] to ftp [#{file_depot.uri}]...Complete")
-    log_uri
+    file_depot.upload_file(self)
   end
 
   def upload_log_file_nfs
     uri_to_add = build_log_uri(file_depot.uri, local_file)
-    MiqNfsSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    uri        = MiqNfsSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    update_attributes(
+      :state   => "available",
+      :log_uri => uri
+    )
+    post_upload_tasks
   end
 
   def upload_log_file_smb
     uri_to_add = build_log_uri(file_depot.uri, local_file)
-    MiqSmbSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    uri        = MiqSmbSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    update_attributes(
+      :state   => "available",
+      :log_uri => uri
+    )
+    post_upload_tasks
+  end
+
+  def destination_directory
+    File.join("#{resource.zone.name}_#{resource.zone.id}", "#{resource.name}_#{resource.id}")
+  end
+
+  def destination_file_name
+    date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
+    destname    = historical ? "Archive_" : "Current_"
+    destname   << "region_#{MiqRegion.my_region.try(:region) || "unknown"}_#{resource.zone.name}_#{resource.zone.id}_#{resource.name}_#{resource.id}_#{date_string}#{File.extname(local_file)}"
+  end
+
+  def post_upload_tasks
+    FileUtils.rm_f(local_file) if File.exist?(local_file)
   end
 
   def remove_log_file_ftp
