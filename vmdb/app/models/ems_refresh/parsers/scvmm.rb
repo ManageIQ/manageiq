@@ -2,6 +2,7 @@
 module EmsRefresh::Parsers
   class Scvmm < Infra
     INVENTORY_SCRIPT = File.join(File.dirname(__FILE__), 'ps_scripts/get_inventory.ps1')
+    DRIVE_LETTER     = /\A[a-z][:]/i
 
     def self.ems_inv_to_hashes(ems, options = nil)
       new(ems, options).ems_inv_to_hashes
@@ -138,7 +139,7 @@ module EmsRefresh::Parsers
         :type             => 'VmMicrosoft',
         :vendor           => vendor,
         :power_state      => lookup_power_state(p[:VirtualMachineState][:ToString]),
-        :location         => p[:VMCPath].sub(drive_letter_regex, "").strip,
+        :location         => p[:VMCPath].sub(DRIVE_LETTER, "").strip,
         :operating_system => os_hash,
         :connection_state => lookup_connected_state(connection_state),
         :tools_status     => process_tools_status(p),
@@ -209,7 +210,7 @@ module EmsRefresh::Parsers
 
     def map_mount_point_to_datastore(properties)
       properties[:DiskVolumes].each.with_object({}) do |dv, h|
-        mount_point    = dv[:Props][:Name].match(drive_letter_regex).to_s
+        mount_point    = dv[:Props][:Name].match(DRIVE_LETTER).to_s
         next if mount_point.blank?
         storage        = @data_index.fetch_path(:storages, dv[:Props][:ID])
         h[mount_point] = storage
@@ -381,7 +382,7 @@ module EmsRefresh::Parsers
     def process_vm_storage(vmcpath, host)
       return nil if vmcpath.nil? || host.nil?
 
-      mount_point  = vmcpath.match(drive_letter_regex).to_s
+      mount_point  = vmcpath.match(DRIVE_LETTER).to_s
       return nil if mount_point.nil?
 
       mapping = @data_index.fetch_path(:host_uid_to_datastore_mount_point_mapping, host[:uid_ems])
@@ -504,10 +505,6 @@ module EmsRefresh::Parsers
       else
         "unknown"
       end
-    end
-
-    def drive_letter_regex
-      /\A[a-z][:]/i
     end
 
     #
