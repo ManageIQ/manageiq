@@ -20,19 +20,17 @@ describe JsHelper do
   context '#tree_lock' do
     it 'returns js to lock tree' do
       tree_lock('bar',true).should eq(
-    " if (typeof bar != 'undefined') {
-        bar.lockTree(true);
-        miqDimDiv('bar_div',true);
-      };
+    "
+      $j('#barbox').dynatree('disable');
+      miqDimDiv('bar_div',true);
     ")
     end
 
     it 'returns js to unlock tree' do
       tree_lock('bar',false).should eq(
-    " if (typeof bar != 'undefined') {
-        bar.lockTree(false);
-        miqDimDiv('bar_div',false);
-      };
+    "
+      $j('#barbox').dynatree('enable');
+      miqDimDiv('bar_div',false);
     ")
     end
   end
