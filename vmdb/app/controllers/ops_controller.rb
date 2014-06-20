@@ -817,7 +817,7 @@ class OpsController < ApplicationController
   def get_session_data
     @title         = "Configuration"
     @layout        = "ops"
-    @tasks_options = session[:tasks_options] == nil ? "" : session[:tasks_options]
+    @tasks_options = session[:tasks_options] || ""
   end
 
   def set_session_data

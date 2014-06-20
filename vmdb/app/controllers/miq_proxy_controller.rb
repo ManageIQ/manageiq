@@ -1150,7 +1150,7 @@ class MiqProxyController < ApplicationController
     @jobs_tab      = session[:jobs_tab] if session[:jobs_tab]
     @tabform       = session[:tabform]  if session[:tabform]
     @lastaction    = session[:jobs_lastaction]
-    @tasks_options = session[:tasks_options] == nil ? "" : session[:tasks_options]
+    @tasks_options = session[:tasks_options] || ""
   end
 
   def set_session_data

@@ -129,8 +129,8 @@ module VmShowMixin
     @catinfo        = session[:vm_catinfo]
     @cats           = session[:vm_cats]
     @display        = session[:vm_display]
-    @polArr         = session[:polArr] == nil ? "" : session[:polArr]            # current tags in effect
-    @policy_options = session[:policy_options] == nil ? "" : session[:policy_options]
+    @polArr         = session[:polArr] || ""          # current tags in effect
+    @policy_options = session[:policy_options] || ""
   end
 
   def set_session_data

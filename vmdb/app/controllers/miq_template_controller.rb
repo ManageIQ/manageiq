@@ -28,8 +28,8 @@ class MiqTemplateController < ApplicationController
     @catinfo        = session[:miq_template_catinfo]
     @cats           = session[:miq_template_cats]
     @display        = session[:miq_template_display]
-    @polArr         = session[:polArr] == nil ? "" : session[:polArr]           # current tags in effect
-    @policy_options = session[:policy_options] == nil ? "" : session[:policy_options]
+    @polArr         = session[:polArr] || "" # current tags in effect
+    @policy_options = session[:policy_options] || ""
   end
 
   def set_session_data
