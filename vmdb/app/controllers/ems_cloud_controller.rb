@@ -21,7 +21,7 @@ class EmsCloudController < ApplicationController
   private ############################
 
   def get_session_data
-    @title      = "#{ui_lookup(:tables=>"ems_cloud")}"
+    @title      = ui_lookup(:tables=>"ems_cloud")
     @layout     = "ems_cloud"
     @table_name = request.parameters[:controller]
     @model      = EmsCloud
