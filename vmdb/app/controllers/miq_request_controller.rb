@@ -652,21 +652,23 @@ class MiqRequestController < ApplicationController
     end
   end
 
-
+  def get_layout
+    case @request_tab
+    when "vm"
+      "miq_request_vm"
+    when "host"
+      "miq_request_host"
+    when "ae"
+      "miq_request_ae"
+    else
+      "miq_request_vm"
+    end
+  end
 
   def get_session_data
     @title        = "Requests"
     @request_tab  = session[:request_tab] if session[:request_tab]
-    case @request_tab
-    when "vm"
-      @layout = "miq_request_vm"
-    when "host"
-      @layout = "miq_request_host"
-    when "ae"
-      @layout = "miq_request_ae"
-    else
-      @layout = "miq_request_vm"
-    end
+    @layout       = get_layout
     @lastaction   = session[:request_lastaction]
     @showtype     = session[:request_lastaction]
     @display      = session[:request_display]

@@ -902,12 +902,16 @@ class DashboardController < ApplicationController
     end
   end
 
+  def get_layout
+    if request.parameters["action"] == "window_sizes" # Don't change layout when window size changes
+      session[:layout]
+    else
+      ["my_tasks", "timeline", "my_ui_tasks"].include?(session[:layout]) ? session[:layout] : "dashboard"
+    end
+  end
+
   def get_session_data
-      if request.parameters["action"] == "window_sizes" # Don't change layout when window size changes
-      @layout = session[:layout]
-      else
-      @layout = ["my_tasks","timeline","my_ui_tasks"].include?(session[:layout]) ? session[:layout] : "dashboard"
-      end
+    @layout       = get_layout
     @report       = session[:report]
     @current_page = session[:vm_current_page] # current page number
   end
