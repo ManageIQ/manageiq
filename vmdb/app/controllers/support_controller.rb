@@ -29,9 +29,13 @@ class SupportController < ApplicationController
 
   private ############################
 
+  def get_layout
+    %w(about diagnostics).include?(session[:layout]) ? session[:layout] : "about"
+  end
+
   def get_session_data
-    @title = "Support"
-    @layout = ["about", "diagnostics"].include?(session[:layout]) ? session[:layout] : "about"
+    @title  = "Support"
+    @layout = get_layout
   end
 
   def set_session_data

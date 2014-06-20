@@ -266,7 +266,7 @@ class MiqAeToolsController < ApplicationController
   end
 
   def get_session_data
-    @layout = "miq_ae_tools"
+    @layout  = "miq_ae_tools"
     @resolve = session[:resolve] if session[:resolve]
   end
 

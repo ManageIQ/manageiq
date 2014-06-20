@@ -131,18 +131,18 @@ class FlavorController < ApplicationController
   private ############################
 
   def get_session_data
-    @title = "Flavor"
-    @layout = "flavor"
+    @title      = "Flavor"
+    @layout     = "flavor"
     @lastaction = session[:flavor_lastaction]
-    @display = session[:flavor_display]
-    @filters = session[:flavor_filters]
-    @catinfo = session[:flavor_catinfo]
+    @display    = session[:flavor_display]
+    @filters    = session[:flavor_filters]
+    @catinfo    = session[:flavor_catinfo]
   end
 
   def set_session_data
     session[:flavor_lastaction] = @lastaction
-    session[:flavor_display] = @display == nil ? session[:flavor_display] : @display
-    session[:flavor_filters] = @filters
-    session[:flavor_catinfo] = @catinfo
+    session[:flavor_display]    = @display unless @display.nil?
+    session[:flavor_filters]    = @filters
+    session[:flavor_catinfo]    = @catinfo
   end
 end

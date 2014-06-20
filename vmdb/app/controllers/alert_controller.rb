@@ -62,8 +62,8 @@ class AlertController < ApplicationController
   end
 
   def get_session_data
-    @title = "RSS"
-    @layout = "rss"
+    @title      = "RSS"
+    @layout     = "rss"
     @lastaction = session[:alert_lastaction]
   end
 

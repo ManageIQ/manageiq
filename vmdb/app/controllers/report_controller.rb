@@ -802,13 +802,13 @@ class ReportController < ApplicationController
   end
 
   def get_session_data
-    @layout = request.parameters[:action].starts_with?('usage') ? 'usage' : 'report'
+    @layout           = request.parameters[:action].starts_with?('usage') ? 'usage' : 'report'
     @lastaction       = session[:report_lastaction]
     @report_tab       = session[:report_tab]
     @report_result_id = session[:report_result_id]
     @menu             = session[:report_menu]
     @folders          = session[:report_folders]
-    @ght_type         = session[:ght_type].nil? ? "tabular" : session[:ght_type]
+    @ght_type         = session[:ght_type] || "tabular"
     @report_groups    = session[:report_groups]
     @edit             = session[:edit] unless session[:edit].nil?
     @catinfo          = session[:vm_catinfo]

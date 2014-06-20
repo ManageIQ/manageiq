@@ -1471,16 +1471,16 @@ class CatalogController < ApplicationController
   end
 
   def get_session_data
-    @title = "Catalog Items"
-    @layout = "catalogs"
+    @title      = "Catalog Items"
+    @layout     = "catalogs"
     @lastaction = session[:svc_lastaction]
-    @options = session[:prov_options]
-    @resolve = session[:resolve] if session[:resolve]
+    @options    = session[:prov_options]
+    @resolve    = session[:resolve] if session[:resolve]
   end
 
   def set_session_data
     session[:svc_lastaction] = @lastaction
-    session[:prov_options] = @options if @options
-    session[:resolve] = @resolve if @resolve
+    session[:prov_options]   = @options if @options
+    session[:resolve]        = @resolve if @resolve
   end
 end

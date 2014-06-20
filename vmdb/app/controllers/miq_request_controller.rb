@@ -652,38 +652,40 @@ class MiqRequestController < ApplicationController
     end
   end
 
-
-
-  def get_session_data
-    @title = "Requests"
-    @request_tab = session[:request_tab] if session[:request_tab]
+  def get_layout
     case @request_tab
     when "vm"
-      @layout = "miq_request_vm"
+      "miq_request_vm"
     when "host"
-      @layout = "miq_request_host"
+      "miq_request_host"
     when "ae"
-      @layout = "miq_request_ae"
+      "miq_request_ae"
     else
-      @layout = "miq_request_vm"
+      "miq_request_vm"
     end
-    @lastaction = session[:request_lastaction]
-    @showtype = session[:request_lastaction]
-    @display = session[:request_display]
+  end
+
+  def get_session_data
+    @title        = "Requests"
+    @request_tab  = session[:request_tab] if session[:request_tab]
+    @layout       = get_layout
+    @lastaction   = session[:request_lastaction]
+    @showtype     = session[:request_lastaction]
+    @display      = session[:request_display]
     @current_page = session[:request_current_page]
-    @options = session[:prov_options]
+    @options      = session[:prov_options]
     #@edit = session[:edit] if session[:edit]
   end
 
   def set_session_data
-    session[:edit] = @edit if !@edit.nil?
-    session[:layout] = @layout if @layout != nil
-    session[:request_lastaction] = @lastaction
-    session[:request_showtype] = @showtype
-    session[:request_display] = @display == nil ? session[:request_display] : @display
-    session[:request_tab] = @request_tab == nil ? session[:request_tab] : @request_tab
+    session[:edit]                 = @edit unless @edit.nil?
+    session[:layout]               = @layout unless @layout.nil?
+    session[:request_lastaction]   = @lastaction
+    session[:request_showtype]     = @showtype
+    session[:request_display]      = @display unless @display.nil?
+    session[:request_tab]          = @request_tab unless @request_tab.nil?
     session[:request_current_page] = @current_page
-    session[:prov_options] = @options if @options
+    session[:prov_options]         = @options if @options
   end
 
 end

@@ -22,7 +22,7 @@ class VmVdiController < VdiBaseController
   private ###########################
 
   def get_session_data
-    @filters = session[:vm_vdi_filters]
+    @filters    = session[:vm_vdi_filters]
     @title      = ui_lookup(:tables => self.class.table_name)
     @layout     = self.class.table_name
     @lastaction = session["#{self.class.session_key_prefix}_lastaction".to_sym]
@@ -31,9 +31,9 @@ class VmVdiController < VdiBaseController
   end
 
   def set_session_data
-    session[:vm_vdi_filters] = @filters
+    session[:vm_vdi_filters]                                      = @filters
     session["#{self.class.session_key_prefix}_lastaction".to_sym] = @lastaction
     session["#{self.class.session_key_prefix}_showtype".to_sym]   = @showtype
-    session["#{self.class.session_key_prefix}_display".to_sym]    = @display.nil? ? session["#{self.class.session_key_prefix}_display".to_sym] : @display
+    session["#{self.class.session_key_prefix}_display".to_sym]    = @display unless @display.nil?
   end
 end

@@ -1039,10 +1039,10 @@ class HostController < ApplicationController
 
   def set_session_data
     session[:host_lastaction] = @lastaction
-    session[:host_display]    = @display.nil? ? session[:host_display] : @display
+    session[:host_display]    = @display unless @display.nil?
     session[:host_filters]    = @filters
     session[:host_catinfo]    = @catinfo
-    session[:miq_compressed]  = @compressed   unless @compressed.nil?
+    session[:miq_compressed]  = @compressed  unless @compressed.nil?
     session[:miq_exists_mode] = @exists_mode unless @exists_mode.nil?
     session[:vm_compare_base] = @base
   end

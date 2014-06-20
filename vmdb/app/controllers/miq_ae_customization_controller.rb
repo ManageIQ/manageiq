@@ -272,11 +272,6 @@ class MiqAeCustomizationController < ApplicationController
     x_history_add_item(:id=>node, :text=>@right_cell_text) unless x_active_tree == :dialog_edit_tree
   end
 
-  def get_session_data
-    @layout = "miq_ae_customization"
-    @resolve = session[:resolve] if session[:resolve]
-  end
-
   def get_specific_node_info(node)
     if x_active_tree == :ab_tree
       ab_get_node_info(node)
@@ -386,6 +381,11 @@ class MiqAeCustomizationController < ApplicationController
 
   def set_right_cell_text(presenter)
     presenter[:right_cell_text] = @right_cell_text
+  end
+
+  def get_session_data
+    @layout  = "miq_ae_customization"
+    @resolve = session[:resolve] if session[:resolve]
   end
 
   def set_session_data

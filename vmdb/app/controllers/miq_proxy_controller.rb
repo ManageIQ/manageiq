@@ -1140,29 +1140,33 @@ class MiqProxyController < ApplicationController
 #    rec.vmstate_refresh_frequency = @edit[:new][:vmstate_refresh_frequency]
   end
 
+  def get_layout
+    %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(session[:layout]) ? session[:layout] : "miq_proxy"
+  end
+
   def get_session_data
-    @title = "Smart Proxy"
-    @layout = ["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(session[:layout]) ? session[:layout] : "miq_proxy"
-    @lastaction = session[:miqproxy_lastaction]
-    @display = session[:miqproxy_display]
-    @filters = session[:miqproxy_filters]
-    @catinfo = session[:miqproxy_catinfo]
-    @jobs_tab = session[:jobs_tab] if session[:jobs_tab]
-    @tabform = session[:tabform] if session[:tabform]
-    @lastaction = session[:jobs_lastaction]
-    @tasks_options = session[:tasks_options] == nil ? "" : session[:tasks_options]
+    @title         = "Smart Proxy"
+    @layout        = get_layout
+    @lastaction    = session[:miqproxy_lastaction]
+    @display       = session[:miqproxy_display]
+    @filters       = session[:miqproxy_filters]
+    @catinfo       = session[:miqproxy_catinfo]
+    @jobs_tab      = session[:jobs_tab] if session[:jobs_tab]
+    @tabform       = session[:tabform]  if session[:tabform]
+    @lastaction    = session[:jobs_lastaction]
+    @tasks_options = session[:tasks_options] || ""
   end
 
   def set_session_data
     session[:miqproxy_lastaction] = @lastaction
-    session[:miqproxy_display] = @display == nil ? session[:miqproxy_display] : @display
-    session[:miqproxy_filters] = @filters
-    session[:miqproxy_catinfo] = @catinfo
-    session[:jobs_tab] = @jobs_tab
-    session[:tabform] = @tabform
-    session[:layout] = @layout
-    session[:jobs_lastaction] = @lastaction
-    session[:tasks_options] = @tasks_options if @tasks_options != nil
+    session[:miqproxy_display]    = @display unless @display.nil?
+    session[:miqproxy_filters]    = @filters
+    session[:miqproxy_catinfo]    = @catinfo
+    session[:jobs_tab]            = @jobs_tab
+    session[:tabform]             = @tabform
+    session[:layout]              = @layout
+    session[:jobs_lastaction]     = @lastaction
+    session[:tasks_options]       = @tasks_options unless @tasks_options.nil?
   end
 
 end

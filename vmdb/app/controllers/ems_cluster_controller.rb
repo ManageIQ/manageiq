@@ -322,18 +322,18 @@ class EmsClusterController < ApplicationController
   end
 
   def get_session_data
-    @title = "Clusters"
-    @layout = "ems_cluster"
+    @title      = "Clusters"
+    @layout     = "ems_cluster"
     @lastaction = session[:ems_cluster_lastaction]
-    @display = session[:ems_cluster_display]
-    @filters = session[:ems_cluster_filters]
-    @catinfo = session[:ems_cluster_catinfo]
+    @display    = session[:ems_cluster_display]
+    @filters    = session[:ems_cluster_filters]
+    @catinfo    = session[:ems_cluster_catinfo]
   end
 
   def set_session_data
     session[:ems_cluster_lastaction] = @lastaction
-    session[:ems_cluster_display] = @display == nil ? session[:ems_cluster_display] : @display
-    session[:ems_cluster_filters] = @filters
-    session[:ems_cluster_catinfo] = @catinfo
+    session[:ems_cluster_display]    = @display unless @display.nil?
+    session[:ems_cluster_filters]    = @filters
+    session[:ems_cluster_catinfo]    = @catinfo
   end
 end

@@ -971,23 +971,23 @@ class ConfigurationController < ApplicationController
   end
 
   def get_session_data
-    @title = session[:config_title] ? "Configuration" : session[:config_title]
-    @layout = "configuration"
-    @config_tab = session[:config_tab] if session[:config_tab]
-    @tabform = session[:config_tabform] if session[:config_tabform]
-    @schema_ver = session[:config_schema_ver] if session[:config_schema_ver]
-    @all_checked = session[:all_checked] if session[:all_checked]
-    @zone_options = session[:zone_options] if session[:zone_options]
+    @title        = session[:config_title] ? "Configuration" : session[:config_title]
+    @layout       = "configuration"
+    @config_tab   = session[:config_tab]        if session[:config_tab]
+    @tabform      = session[:config_tabform]    if session[:config_tabform]
+    @schema_ver   = session[:config_schema_ver] if session[:config_schema_ver]
+    @all_checked  = session[:all_checked]       if session[:all_checked]
+    @zone_options = session[:zone_options]      if session[:zone_options]
   end
 
   def set_session_data
-    session[:config_tab] = @config_tab
-    session[:config_tabform] = @tabform
+    session[:config_tab]        = @config_tab
+    session[:config_tabform]    = @tabform
     session[:config_schema_ver] = @schema_ver
-    session[:vm_filters] = @filters
-    session[:vm_catinfo] = @catinfo
-    session[:vm_cats] = @cats
-    session[:all_checked] = @all_checked if @all_checked
-    session[:zone_options] = @zone_options
+    session[:vm_filters]        = @filters
+    session[:vm_catinfo]        = @catinfo
+    session[:vm_cats]           = @cats
+    session[:all_checked]       = @all_checked if @all_checked
+    session[:zone_options]      = @zone_options
   end
 end

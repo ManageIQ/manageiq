@@ -804,17 +804,17 @@ class ChargebackController < ApplicationController
   end
 
   def get_session_data
-    @title = "Chargeback"
-    @layout ||= "chargeback"
-    @lastaction = session[:chargeback_lastaction]
-    @display = session[:chargeback_display]
+    @title        = "Chargeback"
+    @layout     ||= "chargeback"
+    @lastaction   = session[:chargeback_lastaction]
+    @display      = session[:chargeback_display]
     @current_page = session[:chargeback_current_page]
   end
 
   def set_session_data
-    session[:chargeback_lastaction] = @lastaction
+    session[:chargeback_lastaction]   = @lastaction
     session[:chargeback_current_page] = @current_page
-    session[:chageback_display] = @display == nil ? session[:chargeback_display] : @display
+    session[:chageback_display]       = @display unless @display.nil?
   end
 
 end

@@ -1119,25 +1119,25 @@ class MiqPolicyController < ApplicationController
   end
 
   def get_session_data
-    @title = "Policies"
+    @title          = "Policies"
     if request.parameters["action"] == "wait_for_task"  # Don't change layout when wait_for_task came in for RSOP
       @layout = session[:layout]
     else
       @layout = params[:action] && params[:action].starts_with?("rsop") ? "miq_policy_rsop" : "miq_policy"
     end
-    @lastaction = session[:miq_policy_lastaction]
-    @display = session[:miq_policy_display]
-    @current_page = session[:miq_policy_current_page]
+    @lastaction     = session[:miq_policy_lastaction]
+    @display        = session[:miq_policy_display]
+    @current_page   = session[:miq_policy_current_page]
     alert_build_pulldowns
     @server_options = session[:server_options] if session[:server_options]
   end
 
   def set_session_data
-    session[:layout] = @layout
-    session[:miq_policy_lastaction] = @lastaction
+    session[:layout]                  = @layout
+    session[:miq_policy_lastaction]   = @lastaction
     session[:miq_policy_current_page] = @current_page
-    session[:miq_policy_display] = @display == nil ? session[:miq_policy_display] : @display
-    session[:server_options] = @server_options
+    session[:miq_policy_display]      = @display unless @display.nil?
+    session[:server_options]          = @server_options
   end
 
 end
