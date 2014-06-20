@@ -62,6 +62,23 @@ module ActiveRecordQueryParts
     end
   end
 
+  def self.regexp(field, regex, qualifier = nil)
+    operator =
+      case ActiveRecord::Base.connection.adapter_name
+      when "PostgreSQL" then "SIMILAR TO"
+      when "MySQL"      then "REGEXP"
+      else raise NotImplementedError
+      end
+
+    operator = "NOT #{operator}" if qualifier == :negate
+
+    "#{field} #{operator} '#{regex}'"
+  end
+
+  def self.not_regexp(field, regex)
+    regexp(field, regex, :negate)
+  end
+
   def self.glob_to_sql_like(text)
     text.gsub!('*', '%')
     text.gsub!('?', '_')
