@@ -18,8 +18,8 @@ module MiqAeDiscoverySpec
     end
 
     it "properly processes MiqAeEvent.raise_ems_event" do
-      ws = MiqAeEvent.raise_ems_event(@event)
-      ws.should_not be_nil
+      MiqAeEngine.should_receive(:deliver_queue)
+      MiqAeEvent.raise_ems_event(@event)
     end
 
     context "automate deliver" do

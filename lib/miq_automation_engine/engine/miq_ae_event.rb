@@ -121,8 +121,7 @@ module MiqAeEvent
       :tenant_id        => tenant_id,
       :automate_message => message
     }
-
-    MiqAeEngine.deliver(args)
+    MiqAeEngine.deliver_queue(args, {:priority => MiqQueue::HIGH_PRIORITY})
   end
 
   def self.provider_event_target(event)
