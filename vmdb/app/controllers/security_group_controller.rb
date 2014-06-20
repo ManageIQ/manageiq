@@ -133,19 +133,19 @@ class SecurityGroupController < ApplicationController
   private ############################
 
   def get_session_data
-    @title = "Security Group"
-    @layout = "security_group"
+    @title      = "Security Group"
+    @layout     = "security_group"
     @lastaction = session[:security_group_lastaction]
-    @display = session[:security_group_display]
-    @filters = session[:security_group_filters]
-    @catinfo = session[:security_group_catinfo]
+    @display    = session[:security_group_display]
+    @filters    = session[:security_group_filters]
+    @catinfo    = session[:security_group_catinfo]
   end
 
   def set_session_data
     session[:security_group_lastaction] = @lastaction
-    session[:security_group_display] = @display == nil ? session[:security_group_display] : @display
-    session[:security_group_filters] = @filters
-    session[:security_group_catinfo] = @catinfo
+    session[:security_group_display]    = @display == nil ? session[:security_group_display] : @display
+    session[:security_group_filters]    = @filters
+    session[:security_group_catinfo]    = @catinfo
   end
 
 end

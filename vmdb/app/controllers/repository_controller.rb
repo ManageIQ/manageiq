@@ -402,19 +402,19 @@ class RepositoryController < ApplicationController
   end
 
   def get_session_data
-    @title = "Repositories"
-    @layout = "repository"
+    @title      = "Repositories"
+    @layout     = "repository"
     @lastaction = session[:repo_lastaction]
-    @display = session[:repo_display]
-    @filters = session[:repo_filters]
-    @catinfo = session[:repo_catinfo]
+    @display    = session[:repo_display]
+    @filters    = session[:repo_filters]
+    @catinfo    = session[:repo_catinfo]
   end
 
   def set_session_data
     session[:repo_lastaction] = @lastaction
-    session[:repo_display] = @display == nil ? session[:repo_display] : @display
-    session[:repo_filters] = @filters
-    session[:repo_catinfo] = @catinfo
+    session[:repo_display]    = @display == nil ? session[:repo_display] : @display
+    session[:repo_filters]    = @filters
+    session[:repo_catinfo]    = @catinfo
   end
 
 end

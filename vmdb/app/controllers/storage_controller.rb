@@ -309,21 +309,21 @@ class StorageController < ApplicationController
 # end
 
   def get_session_data
-    @title = "Storage"
-    @layout = "storage"
+    @title      = "Storage"
+    @layout     = "storage"
     @lastaction = session[:storage_lastaction]
-    @display = session[:storage_display]
-    @filters = session[:storage_filters]
-    @catinfo = session[:storage_catinfo]
-    @showtype = session[:storage_showtype]
-    end
+    @display    = session[:storage_display]
+    @filters    = session[:storage_filters]
+    @catinfo    = session[:storage_catinfo]
+    @showtype   = session[:storage_showtype]
+  end
 
   def set_session_data
     session[:storage_lastaction] = @lastaction
-    session[:storage_display] = @display == nil ? session[:storage_display] : @display
-    session[:storage_filters] = @filters
-    session[:storage_catinfo] = @catinfo
-    session[:storage_showtype] = @showtype
+    session[:storage_display]    = @display == nil ? session[:storage_display] : @display
+    session[:storage_filters]    = @filters
+    session[:storage_catinfo]    = @catinfo
+    session[:storage_showtype]   = @showtype
   end
 
 end

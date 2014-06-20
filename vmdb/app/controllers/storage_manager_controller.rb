@@ -502,19 +502,19 @@ class StorageManagerController < ApplicationController
   end
 
   def get_session_data
-    @title = "Storage Managers"
-    @layout = "storage_manager"
+    @title      = "Storage Managers"
+    @layout     = "storage_manager"
     @lastaction = session[:sm_lastaction]
-    @display = session[:sm_display]
-    @filters = session[:sm_filters]
-    @catinfo = session[:sm_catinfo]
+    @display    = session[:sm_display]
+    @filters    = session[:sm_filters]
+    @catinfo    = session[:sm_catinfo]
   end
 
   def set_session_data
     session[:sm_lastaction] = @lastaction
-    session[:sm_display] = @display == nil ? session[:sm_display] : @display
-    session[:sm_filters] = @filters
-    session[:sm_catinfo] = @catinfo
+    session[:sm_display]    = @display == nil ? session[:sm_display] : @display
+    session[:sm_filters]    = @filters
+    session[:sm_catinfo]    = @catinfo
   end
 
 end

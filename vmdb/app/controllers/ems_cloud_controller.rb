@@ -21,20 +21,20 @@ class EmsCloudController < ApplicationController
   private ############################
 
   def get_session_data
-    @title = "#{ui_lookup(:tables=>"ems_cloud")}"
-    @layout = "ems_cloud"
+    @title      = "#{ui_lookup(:tables=>"ems_cloud")}"
+    @layout     = "ems_cloud"
     @table_name = request.parameters[:controller]
-    @model = EmsCloud
+    @model      = EmsCloud
     @lastaction = session[:ems_cloud_lastaction]
-    @display = session[:ems_cloud_display]
-    @filters = session[:ems_cloud_filters]
-    @catinfo = session[:ems_cloud_catinfo]
+    @display    = session[:ems_cloud_display]
+    @filters    = session[:ems_cloud_filters]
+    @catinfo    = session[:ems_cloud_catinfo]
   end
 
   def set_session_data
     session[:ems_cloud_lastaction] = @lastaction
-    session[:ems_cloud_display] = @display == nil ? session[:ems_cloud_display] : @display
-    session[:ems_cloud_filters] = @filters
-    session[:ems_cloud_catinfo] = @catinfo
+    session[:ems_cloud_display]    = @display == nil ? session[:ems_cloud_display] : @display
+    session[:ems_cloud_filters]    = @filters
+    session[:ems_cloud_catinfo]    = @catinfo
   end
 end

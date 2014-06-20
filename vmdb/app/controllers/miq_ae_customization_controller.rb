@@ -273,7 +273,7 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def get_session_data
-    @layout = "miq_ae_customization"
+    @layout  = "miq_ae_customization"
     @resolve = session[:resolve] if session[:resolve]
   end
 

@@ -147,18 +147,18 @@ class AvailabilityZoneController < ApplicationController
   private ############################
 
   def get_session_data
-    @title = "Availability Zone"
-    @layout = "availability_zone"
+    @title      = "Availability Zone"
+    @layout     = "availability_zone"
     @lastaction = session[:availability_zone_lastaction]
-    @display = session[:availability_zone_display]
-    @filters = session[:availability_zone_filters]
-    @catinfo = session[:availability_zone_catinfo]
+    @display    = session[:availability_zone_display]
+    @filters    = session[:availability_zone_filters]
+    @catinfo    = session[:availability_zone_catinfo]
   end
 
   def set_session_data
     session[:availability_zone_lastaction] = @lastaction
-    session[:availability_zone_display] = @display == nil ? session[:availability_zone_display] : @display
-    session[:availability_zone_filters] = @filters
-    session[:availability_zone_catinfo] = @catinfo
+    session[:availability_zone_display]    = @display == nil ? session[:availability_zone_display] : @display
+    session[:availability_zone_filters]    = @filters
+    session[:availability_zone_catinfo]    = @catinfo
   end
 end

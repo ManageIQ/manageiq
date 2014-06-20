@@ -21,20 +21,20 @@ class EmsInfraController < ApplicationController
   private ############################
 
   def get_session_data
-    @title = "#{ui_lookup(:tables=>"ems_infra")}"
-    @layout = "ems_infra"
+    @title      = "#{ui_lookup(:tables=>"ems_infra")}"
+    @layout     = "ems_infra"
     @table_name = request.parameters[:controller]
-    @model = EmsInfra
+    @model      = EmsInfra
     @lastaction = session[:ems_infra_lastaction]
-    @display = session[:ems_infra_display]
-    @filters = session[:ems_infra_filters]
-    @catinfo = session[:ems_infra_catinfo]
+    @display    = session[:ems_infra_display]
+    @filters    = session[:ems_infra_filters]
+    @catinfo    = session[:ems_infra_catinfo]
   end
 
   def set_session_data
     session[:ems_infra_lastaction] = @lastaction
-    session[:ems_infra_display] = @display == nil ? session[:ems_infra_display] : @display
-    session[:ems_infra_filters] = @filters
-    session[:ems_infra_catinfo] = @catinfo
+    session[:ems_infra_display]    = @display == nil ? session[:ems_infra_display] : @display
+    session[:ems_infra_filters]    = @filters
+    session[:ems_infra_catinfo]    = @catinfo
   end
 end

@@ -316,17 +316,17 @@ class PxeController < ApplicationController
   end
 
   def get_session_data
-    @title = "PXE"
-    @layout = "pxe"
-    @lastaction = session[:pxe_lastaction]
-    @display = session[:pxe_display]
+    @title        = "PXE"
+    @layout       = "pxe"
+    @lastaction   = session[:pxe_lastaction]
+    @display      = session[:pxe_display]
     @current_page = session[:pxe_current_page]
   end
 
   def set_session_data
-    session[:pxe_lastaction] = @lastaction
+    session[:pxe_lastaction]   = @lastaction
     session[:pxe_current_page] = @current_page
-    session[:pxe_display] = @display == nil ? session[:pxe_display] : @display
+    session[:pxe_display]      = @display == nil ? session[:pxe_display] : @display
   end
 
 end

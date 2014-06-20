@@ -802,7 +802,7 @@ class ReportController < ApplicationController
   end
 
   def get_session_data
-    @layout = request.parameters[:action].starts_with?('usage') ? 'usage' : 'report'
+    @layout           = request.parameters[:action].starts_with?('usage') ? 'usage' : 'report'
     @lastaction       = session[:report_lastaction]
     @report_tab       = session[:report_tab]
     @report_result_id = session[:report_result_id]

@@ -655,8 +655,8 @@ class MiqRequestController < ApplicationController
 
 
   def get_session_data
-    @title = "Requests"
-    @request_tab = session[:request_tab] if session[:request_tab]
+    @title        = "Requests"
+    @request_tab  = session[:request_tab] if session[:request_tab]
     case @request_tab
     when "vm"
       @layout = "miq_request_vm"
@@ -667,23 +667,23 @@ class MiqRequestController < ApplicationController
     else
       @layout = "miq_request_vm"
     end
-    @lastaction = session[:request_lastaction]
-    @showtype = session[:request_lastaction]
-    @display = session[:request_display]
+    @lastaction   = session[:request_lastaction]
+    @showtype     = session[:request_lastaction]
+    @display      = session[:request_display]
     @current_page = session[:request_current_page]
-    @options = session[:prov_options]
+    @options      = session[:prov_options]
     #@edit = session[:edit] if session[:edit]
   end
 
   def set_session_data
-    session[:edit] = @edit if !@edit.nil?
-    session[:layout] = @layout if @layout != nil
-    session[:request_lastaction] = @lastaction
-    session[:request_showtype] = @showtype
-    session[:request_display] = @display == nil ? session[:request_display] : @display
-    session[:request_tab] = @request_tab == nil ? session[:request_tab] : @request_tab
+    session[:edit]                 = @edit if !@edit.nil?
+    session[:layout]               = @layout if @layout != nil
+    session[:request_lastaction]   = @lastaction
+    session[:request_showtype]     = @showtype
+    session[:request_display]      = @display == nil ? session[:request_display] : @display
+    session[:request_tab]          = @request_tab == nil ? session[:request_tab] : @request_tab
     session[:request_current_page] = @current_page
-    session[:prov_options] = @options if @options
+    session[:prov_options]         = @options if @options
   end
 
 end

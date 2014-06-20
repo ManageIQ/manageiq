@@ -788,17 +788,17 @@ class MiqCapacityController < ApplicationController
   end
 
   def get_session_data
-    @title = "Utilization"
-    @layout ||= "miq_capacity_utilization"
-    @lastaction = session[:miq_capacity_lastaction]
-    @display = session[:miq_capacity_display]
+    @title        = "Utilization"
+    @layout     ||= "miq_capacity_utilization"
+    @lastaction   = session[:miq_capacity_lastaction]
+    @display      = session[:miq_capacity_display]
     @current_page = session[:miq_capacity_current_page]
   end
 
   def set_session_data
-    session[:miq_capacity_lastaction] = @lastaction
+    session[:miq_capacity_lastaction]   = @lastaction
     session[:miq_capacity_current_page] = @current_page
-    session[:miq_capacity_display] = @display == nil ? session[:miq_capacity_display] : @display
+    session[:miq_capacity_display]      = @display == nil ? session[:miq_capacity_display] : @display
   end
 
 end

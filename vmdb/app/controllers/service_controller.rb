@@ -494,14 +494,14 @@ class ServiceController < ApplicationController
   end
 
   def get_session_data
-    @title = "My Services"
-    @layout = "services"
+    @title      = "My Services"
+    @layout     = "services"
     @lastaction = session[:svc_lastaction]
-    @options = session[:prov_options]
+    @options    = session[:prov_options]
   end
 
   def set_session_data
     session[:svc_lastaction] = @lastaction
-    session[:prov_options] = @options if @options
+    session[:prov_options]   = @options if @options
   end
 end

@@ -2601,16 +2601,16 @@ private
   end
 
   def get_session_data
-    @layout = "miq_ae_class"
-    @title = "Datastore"
+    @layout     = "miq_ae_class"
+    @title      = "Datastore"
     @lastaction = session[:aeclass_lastaction]
-    @record = session[:record]
-    @edit = session[:edit]
+    @record     = session[:record]
+    @edit       = session[:edit]
   end
 
   def set_session_data
     session[:aeclass_lastaction] = @lastaction
-    session[:record] = @record
-    session[:edit] = @edit
+    session[:record]             = @record
+    session[:edit]               = @edit
   end
 end

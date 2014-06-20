@@ -1042,7 +1042,7 @@ class HostController < ApplicationController
     session[:host_display]    = @display.nil? ? session[:host_display] : @display
     session[:host_filters]    = @filters
     session[:host_catinfo]    = @catinfo
-    session[:miq_compressed]  = @compressed   unless @compressed.nil?
+    session[:miq_compressed]  = @compressed  unless @compressed.nil?
     session[:miq_exists_mode] = @exists_mode unless @exists_mode.nil?
     session[:vm_compare_base] = @base
   end

@@ -30,7 +30,7 @@ class SupportController < ApplicationController
   private ############################
 
   def get_session_data
-    @title = "Support"
+    @title  = "Support"
     @layout = ["about", "diagnostics"].include?(session[:layout]) ? session[:layout] : "about"
   end
 
