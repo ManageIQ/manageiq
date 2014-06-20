@@ -130,6 +130,15 @@ module EvmSpecHelper
 
   def self.import_yaml_model(dirname, domain, attrs = {})
     options = {'import_dir' => dirname, 'preview' => false, 'domain' => domain}
+    yaml_import(domain, options, attrs)
+  end
+
+  def self.import_yaml_model_from_file(yaml_file, domain, attrs = {})
+    options = {'yaml_file' => yaml_file, 'preview' => false, 'domain' => domain}
+    yaml_import(domain, options, attrs)
+  end
+
+  def self.yaml_import(domain, options, attrs = {})
     MiqAeImport.new(domain, options).import
     dom = MiqAeNamespace.find_by_fqname(domain)
     dom.update_attributes!(attrs.reverse_merge(:enabled => true)) if dom

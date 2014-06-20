@@ -19,16 +19,16 @@ class MiqAeNamespace < ActiveRecord::Base
     query.where(low_name.eq(last)).detect { |namespace| namespace.fqname.downcase == fqname }
   end
 
-  def self.find_or_create_by_fqname(fqname)
+  def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
-    found = self.find_by_fqname(fqname)
+    found = find_by_fqname(fqname, include_classes)
     return found unless found.nil?
 
     parts = fqname.split('/')
     new_parts = [parts.pop]
     loop do
-      found = self.find_by_fqname(parts.join('/'))
+      found = find_by_fqname(parts.join('/'), include_classes)
       break unless found.nil?
       new_parts.unshift(parts.pop)
       break if parts.empty?

@@ -1,0 +1,245 @@
+---
+SPEC_DOMAIN:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: SPEC_DOMAIN
+        description: 
+        display_name: 
+        system: 
+        priority: 100
+        enabled: false
+  NS1:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: NS1
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    CLASS1.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS1
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield1
+              display_name: 
+              datatype: integer
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield2
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+          - rfield1:
+              value: wilma
+          - mfield2:
+              value: woolly mammoth
+          - mfield3:
+              value: saber tooth
+          - afield2:
+              value: betty
+  .manifest.yaml:
+    __domain__.yaml:
+      classes: 1
+      instances: 1
+      created_on: 2014-06-30 20:47:01.376685000 Z
+      updated_on: 2014-06-30 20:47:01.376685000 Z
+      size: 168
+      sha1: 9g2g8XRTYab2z9EphoFs6xKZgoM=
+    NS1/__namespace__.yaml:
+      created_on: 2014-06-30 20:47:01.839006000 Z
+      updated_on: 2014-06-30 20:47:01.839006000 Z
+      size: 155
+      sha1: cq/oyFF9/djhEY2xkPvpL3ugqUM=
+    NS1/CLASS1.class/__class__.yaml:
+      created_on: 2014-06-30 20:47:01.913797000 Z
+      updated_on: 2014-06-30 20:47:01.913797000 Z
+      size: 3456
+      sha1: 0NpGjj70OxNuYohgW9A/uOgBjsc=
+    NS1/CLASS1.class/default.yaml:
+      created_on: 2014-06-30 20:47:01.940447000 Z
+      updated_on: 2014-06-30 20:47:01.940447000 Z
+      size: 319
+      sha1: zx4UL7SzOWMSjhJ4+1Q8BFJ7wcQ=

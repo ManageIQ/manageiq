@@ -113,6 +113,16 @@ class MiqAeClass < ActiveRecord::Base
     ae_namespace.editable?
   end
 
+  def field_names
+    ae_fields.collect { |x| x.name.downcase }
+  end
+
+  def field_hash(name)
+    field = ae_fields.detect { |f| f.name.casecmp(name) == 0 }
+    raise "field #{name} not found in class #{@name}" if field.nil?
+    field.attributes
+  end
+
   private
 
   def scoped_methods(s)
