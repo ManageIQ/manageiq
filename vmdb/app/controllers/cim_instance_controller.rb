@@ -171,15 +171,17 @@ class CimInstanceController < ApplicationController
   def get_session_data
     @title      = ui_lookup(:tables => self.class.table_name)
     @layout     = self.class.table_name
-    @lastaction = session["#{self.class.session_key_prefix}_lastaction".to_sym]
-    @showtype   = session["#{self.class.session_key_prefix}_showtype".to_sym]
-    @display    = session["#{self.class.session_key_prefix}_display".to_sym]
+    prefix      = self.class.session_key_prefix
+    @lastaction = session["#{prefix}_lastaction".to_sym]
+    @showtype   = session["#{prefix}_showtype".to_sym]
+    @display    = session["#{prefix}_display".to_sym]
   end
 
   def set_session_data
-    session["#{self.class.session_key_prefix}_lastaction".to_sym] = @lastaction
-    session["#{self.class.session_key_prefix}_showtype".to_sym]   = @showtype
-    session["#{self.class.session_key_prefix}_display".to_sym]    = @display unless @display.nil?
+    prefix                                 = self.class.session_key_prefix
+    session["#{prefix}_lastaction".to_sym] = @lastaction
+    session["#{prefix}_showtype".to_sym]   = @showtype
+    session["#{prefix}_display".to_sym]    = @display unless @display.nil?
   end
 
 end
