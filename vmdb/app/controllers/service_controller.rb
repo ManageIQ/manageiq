@@ -469,6 +469,9 @@ class ServiceController < ApplicationController
       end
 
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}','#{x_node}');" if params[:id]
+      page << "$j('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
+      dim_div = @in_a_form && @edit && @edit[:current] ? true : false
+      page << "miqDimDiv('#{x_active_tree}_div',#{dim_div});"
       page << "miqSparkle(false);"
     end
   end

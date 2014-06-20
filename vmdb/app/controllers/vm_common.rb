@@ -1897,7 +1897,7 @@ module VmCommon
 
     presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
     presenter[:set_visible_elements][:quicksearchbox] = false
-
+    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
   end
