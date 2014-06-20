@@ -1140,9 +1140,13 @@ class MiqProxyController < ApplicationController
 #    rec.vmstate_refresh_frequency = @edit[:new][:vmstate_refresh_frequency]
   end
 
+  def get_layout
+    ["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(session[:layout]) ? session[:layout] : "miq_proxy"
+  end
+
   def get_session_data
     @title         = "Smart Proxy"
-    @layout        = ["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(session[:layout]) ? session[:layout] : "miq_proxy"
+    @layout        = get_layout
     @lastaction    = session[:miqproxy_lastaction]
     @display       = session[:miqproxy_display]
     @filters       = session[:miqproxy_filters]
