@@ -58,7 +58,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
     Relationship.count.should        == 34
 
     MiqQueue.count.should            == 28
-    Storage.count.should             == 3
+    Storage.count.should             == 6
   end
 
   def assert_ems
@@ -70,7 +70,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
     @ems.ems_clusters.size.should        == 1
     @ems.resource_pools.size.should      == 0
 
-    @ems.storages.size.should            == 3
+    @ems.storages.size.should            == 6
     @ems.hosts.size.should               == 3
     @ems.vms_and_templates.size.should   == 28
     @ems.vms.size.should                 == 23
@@ -79,10 +79,10 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
   end
 
   def assert_specific_storage
-    @storage = Storage.find_by_name("SilverLun")
+    @storage = Storage.find_by_name("file://hyperv-h01.manageiq.com/G:/")
     @storage.should have_attributes(
       :ems_ref                     => "afc847e1-9d85-4488-91bb-4284c9a29d07",
-      :name                        => "SilverLun",
+      :name                        => "file://hyperv-h01.manageiq.com/G:/",
       :store_type                  => "NTFS",
       :total_space                 => 10_735_316_992,
       :free_space                  => 7_471_022_080,
@@ -162,7 +162,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
       :ems_ref          => "ae9c0f43-295e-4a73-adba-b4cbc7875563",
       :vendor           => "Microsoft",
       :power_state      => "on",
-      :location         => "C:\\ProgramData\\Microsoft\\Windows\\Hyper-V\\Salesforce_A",
+      :location         => "\\ProgramData\\Microsoft\\Windows\\Hyper-V\\Salesforce_A\\Virtual Machines\\194AE824-BA4A-4809-B3BB-86E0ACA1489B.xml",
       :tools_status     => "OS shutdown: true, Time synchronization: true, Data exchange: true, Heartbeat: true, Backup: true",
       :boot_time        => nil,
       :connection_state => "connected",
