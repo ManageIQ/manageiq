@@ -332,7 +332,7 @@ class EmsClusterController < ApplicationController
 
   def set_session_data
     session[:ems_cluster_lastaction] = @lastaction
-    session[:ems_cluster_display]    = @display == nil ? session[:ems_cluster_display] : @display
+    session[:ems_cluster_display]    = @display unless @display.nil?
     session[:ems_cluster_filters]    = @filters
     session[:ems_cluster_catinfo]    = @catinfo
   end

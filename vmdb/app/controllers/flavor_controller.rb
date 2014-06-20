@@ -141,7 +141,7 @@ class FlavorController < ApplicationController
 
   def set_session_data
     session[:flavor_lastaction] = @lastaction
-    session[:flavor_display]    = @display == nil ? session[:flavor_display] : @display
+    session[:flavor_display]    = @display unless @display.nil?
     session[:flavor_filters]    = @filters
     session[:flavor_catinfo]    = @catinfo
   end

@@ -33,7 +33,7 @@ class EmsCloudController < ApplicationController
 
   def set_session_data
     session[:ems_cloud_lastaction] = @lastaction
-    session[:ems_cloud_display]    = @display == nil ? session[:ems_cloud_display] : @display
+    session[:ems_cloud_display]    = @display unless @display.nil?
     session[:ems_cloud_filters]    = @filters
     session[:ems_cloud_catinfo]    = @catinfo
   end

@@ -326,7 +326,7 @@ class PxeController < ApplicationController
   def set_session_data
     session[:pxe_lastaction]   = @lastaction
     session[:pxe_current_page] = @current_page
-    session[:pxe_display]      = @display == nil ? session[:pxe_display] : @display
+    session[:pxe_display]      = @display unless @display.nil?
   end
 
 end

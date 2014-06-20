@@ -814,7 +814,7 @@ class ChargebackController < ApplicationController
   def set_session_data
     session[:chargeback_lastaction]   = @lastaction
     session[:chargeback_current_page] = @current_page
-    session[:chageback_display]       = @display == nil ? session[:chargeback_display] : @display
+    session[:chageback_display]       = @display unless @display.nil?
   end
 
 end

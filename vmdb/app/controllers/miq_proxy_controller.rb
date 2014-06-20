@@ -1155,7 +1155,7 @@ class MiqProxyController < ApplicationController
 
   def set_session_data
     session[:miqproxy_lastaction] = @lastaction
-    session[:miqproxy_display]    = @display == nil ? session[:miqproxy_display] : @display
+    session[:miqproxy_display]    = @display unless @display.nil?
     session[:miqproxy_filters]    = @filters
     session[:miqproxy_catinfo]    = @catinfo
     session[:jobs_tab]            = @jobs_tab

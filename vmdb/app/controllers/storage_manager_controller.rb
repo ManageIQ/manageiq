@@ -512,7 +512,7 @@ class StorageManagerController < ApplicationController
 
   def set_session_data
     session[:sm_lastaction] = @lastaction
-    session[:sm_display]    = @display == nil ? session[:sm_display] : @display
+    session[:sm_display]    = @display unless @display.nil?
     session[:sm_filters]    = @filters
     session[:sm_catinfo]    = @catinfo
   end

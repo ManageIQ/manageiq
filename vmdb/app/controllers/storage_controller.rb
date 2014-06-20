@@ -320,7 +320,7 @@ class StorageController < ApplicationController
 
   def set_session_data
     session[:storage_lastaction] = @lastaction
-    session[:storage_display]    = @display == nil ? session[:storage_display] : @display
+    session[:storage_display]    = @display unless @display.nil?
     session[:storage_filters]    = @filters
     session[:storage_catinfo]    = @catinfo
     session[:storage_showtype]   = @showtype

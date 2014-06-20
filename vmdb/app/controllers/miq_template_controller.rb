@@ -41,7 +41,7 @@ class MiqTemplateController < ApplicationController
     session[:miq_template_filters]      = @filters
     session[:miq_template_catinfo]      = @catinfo
     session[:miq_template_cats]         = @cats
-    session[:miq_template_display]      = @display == nil ? session[:miq_template_display] : @display
+    session[:miq_template_display]      = @display unless @display.nil?
     session[:polArr]                    = @polArr if @polArr != nil
     session[:policy_options]            = @policy_options if @policy_options != nil
   end

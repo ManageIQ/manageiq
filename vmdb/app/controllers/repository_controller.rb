@@ -412,7 +412,7 @@ class RepositoryController < ApplicationController
 
   def set_session_data
     session[:repo_lastaction] = @lastaction
-    session[:repo_display]    = @display == nil ? session[:repo_display] : @display
+    session[:repo_display]    = @display unless @display.nil?
     session[:repo_filters]    = @filters
     session[:repo_catinfo]    = @catinfo
   end

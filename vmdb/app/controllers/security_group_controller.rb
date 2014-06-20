@@ -143,7 +143,7 @@ class SecurityGroupController < ApplicationController
 
   def set_session_data
     session[:security_group_lastaction] = @lastaction
-    session[:security_group_display]    = @display == nil ? session[:security_group_display] : @display
+    session[:security_group_display]    = @display unless @display.nil?
     session[:security_group_filters]    = @filters
     session[:security_group_catinfo]    = @catinfo
   end

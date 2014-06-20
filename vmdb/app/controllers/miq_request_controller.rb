@@ -682,8 +682,8 @@ class MiqRequestController < ApplicationController
     session[:layout]               = @layout if @layout != nil
     session[:request_lastaction]   = @lastaction
     session[:request_showtype]     = @showtype
-    session[:request_display]      = @display == nil ? session[:request_display] : @display
-    session[:request_tab]          = @request_tab == nil ? session[:request_tab] : @request_tab
+    session[:request_display]      = @display unless @display.nil?
+    session[:request_tab]          = @request_tab unless @request_tab.nil?
     session[:request_current_page] = @current_page
     session[:prov_options]         = @options if @options
   end

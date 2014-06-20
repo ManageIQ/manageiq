@@ -798,7 +798,7 @@ class MiqCapacityController < ApplicationController
   def set_session_data
     session[:miq_capacity_lastaction]   = @lastaction
     session[:miq_capacity_current_page] = @current_page
-    session[:miq_capacity_display]      = @display == nil ? session[:miq_capacity_display] : @display
+    session[:miq_capacity_display]      = @display unless @display.nil?
   end
 
 end

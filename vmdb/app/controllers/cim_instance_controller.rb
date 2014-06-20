@@ -179,7 +179,7 @@ class CimInstanceController < ApplicationController
   def set_session_data
     session["#{self.class.session_key_prefix}_lastaction".to_sym] = @lastaction
     session["#{self.class.session_key_prefix}_showtype".to_sym]   = @showtype
-    session["#{self.class.session_key_prefix}_display".to_sym]    = @display.nil? ? session["#{self.class.session_key_prefix}_display".to_sym] : @display
+    session["#{self.class.session_key_prefix}_display".to_sym]    = @display unless @display.nil?
   end
 
 end

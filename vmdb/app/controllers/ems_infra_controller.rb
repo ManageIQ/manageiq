@@ -33,7 +33,7 @@ class EmsInfraController < ApplicationController
 
   def set_session_data
     session[:ems_infra_lastaction] = @lastaction
-    session[:ems_infra_display]    = @display == nil ? session[:ems_infra_display] : @display
+    session[:ems_infra_display]    = @display unless @display.nil?
     session[:ems_infra_filters]    = @filters
     session[:ems_infra_catinfo]    = @catinfo
   end

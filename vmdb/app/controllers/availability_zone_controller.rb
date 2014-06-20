@@ -157,7 +157,7 @@ class AvailabilityZoneController < ApplicationController
 
   def set_session_data
     session[:availability_zone_lastaction] = @lastaction
-    session[:availability_zone_display]    = @display == nil ? session[:availability_zone_display] : @display
+    session[:availability_zone_display]    = @display unless @display.nil?
     session[:availability_zone_filters]    = @filters
     session[:availability_zone_catinfo]    = @catinfo
   end

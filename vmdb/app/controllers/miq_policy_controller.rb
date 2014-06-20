@@ -1136,7 +1136,7 @@ class MiqPolicyController < ApplicationController
     session[:layout]                  = @layout
     session[:miq_policy_lastaction]   = @lastaction
     session[:miq_policy_current_page] = @current_page
-    session[:miq_policy_display]      = @display == nil ? session[:miq_policy_display] : @display
+    session[:miq_policy_display]      = @display unless @display.nil?
     session[:server_options]          = @server_options
   end
 
