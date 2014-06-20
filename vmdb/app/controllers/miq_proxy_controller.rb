@@ -1162,7 +1162,7 @@ class MiqProxyController < ApplicationController
     session[:tabform]             = @tabform
     session[:layout]              = @layout
     session[:jobs_lastaction]     = @lastaction
-    session[:tasks_options]       = @tasks_options if @tasks_options != nil
+    session[:tasks_options]       = @tasks_options unless @tasks_options.nil?
   end
 
 end

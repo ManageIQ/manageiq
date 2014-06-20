@@ -678,8 +678,8 @@ class MiqRequestController < ApplicationController
   end
 
   def set_session_data
-    session[:edit]                 = @edit if !@edit.nil?
-    session[:layout]               = @layout if @layout != nil
+    session[:edit]                 = @edit unless @edit.nil?
+    session[:layout]               = @layout unless @layout.nil?
     session[:request_lastaction]   = @lastaction
     session[:request_showtype]     = @showtype
     session[:request_display]      = @display unless @display.nil?

@@ -35,15 +35,15 @@ class MiqTemplateController < ApplicationController
   def set_session_data
     session[:miq_template_lastaction]   = @lastaction
     session[:miq_template_showtype]     = @showtype
-    session[:miq_compressed]            = @compressed if @compressed != nil
-    session[:miq_exists_mode]           = @exists_mode if @exists_mode != nil
+    session[:miq_compressed]            = @compressed unless @compressed.nil?
+    session[:miq_exists_mode]           = @exists_mode unless @exists_mode.nil?
     session[:miq_template_compare_base] = @base
     session[:miq_template_filters]      = @filters
     session[:miq_template_catinfo]      = @catinfo
     session[:miq_template_cats]         = @cats
     session[:miq_template_display]      = @display unless @display.nil?
-    session[:polArr]                    = @polArr if @polArr != nil
-    session[:policy_options]            = @policy_options if @policy_options != nil
+    session[:polArr]                    = @polArr unless @polArr.nil?
+    session[:policy_options]            = @policy_options unless @policy_options.nil?
   end
 
 end

@@ -821,7 +821,7 @@ class OpsController < ApplicationController
   end
 
   def set_session_data
-    session[:tasks_options] = @tasks_options if @tasks_options != nil
+    session[:tasks_options] = @tasks_options unless @tasks_options.nil?
   end
 
 end
