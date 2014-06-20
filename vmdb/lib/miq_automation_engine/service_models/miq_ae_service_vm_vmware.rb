@@ -22,7 +22,8 @@ module MiqAeMethodService
           :method_name => method_name,
           :args        => args,
           :zone        => @object.my_zone,
-          :role        => "ems_operations"
+          :role        => "ems_operations",
+          :task_id     => nil               # Clear task_id to allow running synchronously under current worker process
         }
 
         if sync
