@@ -78,8 +78,9 @@ describe MiqAeDatastore do
   end
 
   it ".restore" do
+    dummy_zipfile = File.expand_path(File.join(File.dirname(__FILE__), "/miq_ae_datastore/data/dummy.zip"))
     MiqAeYamlImport.any_instance.should_receive(:import).once
-    MiqAeDatastore.restore(nil)
+    MiqAeDatastore.restore(dummy_zipfile)
   end
 
   it ".upload" do
