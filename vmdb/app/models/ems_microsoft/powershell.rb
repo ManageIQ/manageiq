@@ -24,12 +24,12 @@ class EmsMicrosoft
       end
 
       def powershell_results_to_xml(results)
-        results[:data].collect { |d| d[:stdout] }.join
+        results[:data].collect { |d| d[:stdout] if d.key?(:stdout) }.join
       end
 
       def powershell_xml_to_hash(xml)
         require 'win32/miq-powershell'
-        MiqPowerShell::Convert.new(xml[:data]).to_h
+        MiqPowerShell::Convert.new(xml).to_h
       end
 
       def log_dos_error_results(results)
@@ -43,7 +43,7 @@ class EmsMicrosoft
       log_header = "#{self.class.name}##{__method__}"
       $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...")
 
-      result, timings = Benchmark.realtime_block(:execution) do
+      _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
           results = connection.run_cmd(command)
           self.class.log_dos_error_results(results)
@@ -51,8 +51,6 @@ class EmsMicrosoft
       end
 
       $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...Complete - Timings: #{timings}")
-
-      result
     end
   end
 end
