@@ -1,23 +1,22 @@
 <div id="ns_details_div">
 <% if !@in_a_form %>
-	<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_ns_details"}  %>
-	<fieldset>
-		<div class="checkall">
-			<input id="Toggle2" type="checkbox" name="Toggle2" onclick="miqCheck_AE_All('center_tb','ns_grid');"/> (Check All)
-		</div>
-			<%= render :partial => 'layouts/dhtmlxgrid',
-											:locals=>{:options=>{:grid_id=>"ns_grid_div",
-																:grid_name=>"ns_grid",
-																:grid_url=>"/miq_ae_class/tree_select/",
-																:grid_xml=>@temp[:grid_ns_xml],
-																:autosize=>true,
-																:set_sizes=>true,
-																:no_resize=>true,
-																:skin=>"style3",
-																:alt_row=>true,
-																:div_in_js=>true
-																}}
-			%>
-	</fieldset>
+  <%= render :partial => "layouts/flash_msg", 
+             :locals  => {:div_num => "_ns_details"} 
+  %>
+    <div class="checkall">
+      <input id="Toggle2" type="checkbox" name="Toggle2" onclick="miqCheck_AE_All('center_tb','ns_grid');"/> (Check All)
+    </div>
+    <%= render :partial => 'layouts/dhtmlxgrid',
+               :locals  => {:options => {:grid_id   => "ns_grid_div",
+                                         :grid_name => "ns_grid",
+                                         :grid_url  => "/miq_ae_class/tree_select/",
+                                         :grid_xml  => @temp[:grid_ns_xml],
+                                         :autosize  => true,
+                                         :set_sizes => true,
+                                         :no_resize => true,
+                                         :skin      => "style3",
+                                         :alt_row   => true,
+                                         :div_in_js => true}}
+    %>
 <% end %>
 </div>

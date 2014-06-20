@@ -1,30 +1,32 @@
 <div id="class_instances_div">
 <% if !@in_a_form %>
-	<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_class_instances"}  %>
-	<fieldset>
-		<p class="legend">Instances</p>
-		<div class="checkall">
-			<input id="Toggle3" type="checkbox" name="Toggle3" onclick="miqCheck_AE_All('center_tb','instance_grid');"/> (Check All)
-		</div>
-			<%= render :partial => 'layouts/dhtmlxgrid',
-											:locals=>{:options=>{:grid_id=>"cls_inst_grid_div",
-																:grid_name=>"instance_grid",
-																:grid_url=>"/miq_ae_class/tree_select/",
-																:grid_xml=>@edit[:grid_inst_list_xml],
-																:no_resize=>true,
-																:autosize=>true,
-																:set_sizes=>true,
-																:skin=>"style3",
-																:alt_row=>true,
-																:div_in_js=>true
-																}}
-			%>
-		<% elsif @edit[:new][:ae_inst] %>
-		</fieldset>
-			<div id="form_div">
-				<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_class_instances"}  %>
-				<%= render :partial => "instance_form", :locals=>{:prefix=>"cls_"}  %>
-			</div>
-		<% end %>
+  <%= render :partial => "layouts/flash_msg",
+             :locals  => {:div_num => "_class_instances"}
+  %>
+  <p class="legend">Instances</p>
+  <div class="checkall">
+    <input id="Toggle3" type="checkbox" name="Toggle3" onclick="miqCheck_AE_All('center_tb','instance_grid');"/> (Check All)
+  </div>
+  <%= render :partial => 'layouts/dhtmlxgrid',
+             :locals  => {:options   => {:grid_id => "cls_inst_grid_div",
+                          :grid_name => "instance_grid",
+                          :grid_url  => "/miq_ae_class/tree_select/",
+                          :grid_xml  => @edit[:grid_inst_list_xml],
+                          :no_resize => true,
+                          :autosize  => true,
+                          :set_sizes => true,
+                          :skin      => "style3",
+                          :alt_row   => true,
+                          :div_in_js => true}}
+  %>
+  <% elsif @edit[:new][:ae_inst] %>
+    <div id="form_div">
+      <%= render :partial => "layouts/flash_msg",
+                 :locals  => {:div_num => "_class_instances"}
+      %>
+      <%= render :partial => "instance_form",
+                 :locals  => {:prefix => "cls_"}
+      %>
+    </div>
+  <% end %>
 </div>
-

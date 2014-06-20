@@ -1,47 +1,59 @@
-<% url = url_for(:action=>'form_field_changed', :id=>"#{@ae_class.id || "new"}") %>
-<fieldset>
-	<p class="legend">Properties</p>
-	<table class="style1">
-			<tr>
-				<td class="key"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize)%></td>
-				<td class="wide"><%= @sb[:namespace_path] %></td>
-			</tr>
-			<tr>
-				<td class="key">Name</td>
-				<td class="wide">
-					<%= text_field_tag("name",
-							@edit[:new][:name],
-							:maxlength=>MAX_NAME_LEN,
-							"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-					<%= javascript_tag("$('name').focus()") %>
-				</td>
-			</tr>
-			<tr>
-				<td class="key">Display Name</td>
-				<td class="wide">
-					<%= text_field_tag("display_name",
-							@edit[:new][:display_name],
-							:maxlength=>MAX_NAME_LEN,
-							"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-				</td>
-			</tr>
-			<tr>
-				<td class="key">Description</td>
-				<td class="wide">
-					<%= text_field_tag("description",
-							@edit[:new][:description],
-							:maxlength=>MAX_NAME_LEN,
-							"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-				</td>
-			</tr>
-			<tr>
-				<td class="key">Inherits From</td>
-				<td class="wide">
-					<%= select_tag('inherits_from',
-														options_for_select([["<Choose>",""]] + @edit[:inherits_from].sort,
-															@edit[:new][:inherits]),
-														"data-miq_observe"=>{:url=>url}.to_json) %>
-				</td>
-			</tr>
-	</table>
-</fieldset>
+<% url = url_for(:action => 'form_field_changed',
+                 :id     => "#{@ae_class.id || "new"}")
+%>
+  <p class="legend">Properties</p>
+  <table class="style1">
+      <tr>
+        <td class="key">
+          <%= Dictionary::gettext('fqname', 
+                                  :type     => :column,
+                                  :notfound => :titleize)
+          %>
+        </td>
+        <td class="wide"><%= @sb[:namespace_path] %></td>
+      </tr>
+      <tr>
+        <td class="key">Name</td>
+        <td class="wide">
+          <%= text_field_tag("name",
+              @edit[:new][:name],
+              :maxlength         => MAX_NAME_LEN,
+              "data-miq_observe" => {:interval => '.5', 
+                                     :url      => url}.to_json)
+          %>
+          <%= javascript_tag("$('name').focus()") %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Display Name</td>
+        <td class="wide">
+          <%= text_field_tag("display_name",
+              @edit[:new][:display_name],
+              :maxlength         => MAX_NAME_LEN,
+              "data-miq_observe" => {:interval => '.5', 
+                                     :url      => url}.to_json)
+          %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Description</td>
+        <td class="wide">
+          <%= text_field_tag("description",
+              @edit[:new][:description],
+              :maxlength         => MAX_NAME_LEN,
+              "data-miq_observe" => {:interval => '.5',
+                                     :url      => url}.to_json)
+          %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Inherits From</td>
+        <td class="wide">
+          <%= select_tag('inherits_from',
+                         options_for_select([["<Choose>",""]] + @edit[:inherits_from].sort,
+                         @edit[:new][:inherits]),
+                         "data-miq_observe" => {:url => url}.to_json)
+          %>
+        </td>
+      </tr>
+  </table>

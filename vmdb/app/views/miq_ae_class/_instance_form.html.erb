@@ -1,9 +1,15 @@
-<% url = url_for(:action=>'form_instance_field_changed', :id=>"#{@ae_inst.id || "new"}") %>
-<fieldset>
+<% url = url_for(:action => 'form_instance_field_changed',
+                 :id     => "#{@ae_inst.id || "new"}")
+%>
   <p class="legend">Main Info</p>
   <table class="style1">
     <tr>
-      <td class="key"><%= Dictionary::gettext('fqname', :type=>:column, :notfound=>:titleize) %></td>
+      <td class="key">
+        <%= Dictionary::gettext('fqname',
+                                :type     => :column,
+                                :notfound => :titleize)
+        %>
+      </td>
       <td class="wide"><%= h(@sb[:namespace_path]) %></td>
     </tr>
     <tr>
@@ -11,8 +17,10 @@
       <td class="wide">
         <%= text_field_tag("#{prefix}inst_name",
                            @edit[:new][:ae_inst]["name"],
-                           :maxlength => MAX_NAME_LEN,
-                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                           :maxlength         => MAX_NAME_LEN,
+                           "data-miq_observe" => {:interval => '.5',
+                                                  :url      => url}.to_json)
+        %>
         <%= javascript_tag("$('#{prefix}inst_name').focus()") %>
        </td>
     </tr>
@@ -21,8 +29,10 @@
       <td class="wide">
         <%= text_field_tag("#{prefix}inst_display_name",
                            @edit[:new][:ae_inst]["display_name"],
-                           :maxlength => MAX_NAME_LEN,
-                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                           :maxlength         => MAX_NAME_LEN,
+                           "data-miq_observe" => {:interval => '.5', 
+                                                  :url      => url}.to_json)
+        %>
       </td>
     </tr>
     <tr>
@@ -30,14 +40,14 @@
       <td class="wide">
         <%= text_field_tag("#{prefix}inst_description",
                            @edit[:new][:ae_inst]["description"],
-                           :maxlength => MAX_NAME_LEN,
-                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                           :maxlength         => MAX_NAME_LEN,
+                           "data-miq_observe" => {:interval => '.5',
+                                                  :url      => url}.to_json)
+        %>
       </td>
     </tr>
   </table>
-</fieldset>
-
-<fieldset>
+  <hr>
   <p class="legend">Fields</p>
   <table class="style3" cellspacing="1">
     <thead>
@@ -68,19 +78,23 @@
             <% if @edit[:new][:ae_fields][i].datatype == "password" %>
               <%= password_field_tag("#{prefix}inst_password_value_#{i}",
                                      flds["value"].blank? ? default_value : flds["value"],
-                                     :class => cls,
+                                     :class  => cls,
                                      :onBlur =>"miqSetInputValues(this, 'blur')",
                                      #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                      "data-miq_default_value" => default_value,
-                                     "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                                     "data-miq_observe"       => {:interval => '.5', 
+                                                                  :url      => url}.to_json)
+              %>
             <% else %>
               <%= text_field_tag("#{prefix}inst_value_#{i}",
                                  flds["value"].blank? ? default_value : flds["value"],
-                                 :class => cls,
-                                 :onBlur =>"miqSetInputValues(this, 'blur')",
+                                 :class  => cls,
+                                 :onBlur => "miqSetInputValues(this, 'blur')",
                                  #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                  "data-miq_default_value" => default_value,
-                                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                                 "data-miq_observe"       => {:interval => '.5',
+                                                              :url      => url}.to_json)
+              %>
             <% end %>
           </td>
           <td>
@@ -92,43 +106,50 @@
                                :onBlur => "miqSetInputValues(this, 'blur')",
                                #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                "data-miq_default_value" => default_value,
-                               "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                               "data-miq_observe" => {:interval => '.5',
+                                                      :url      => url}.to_json)
+            %>
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i].on_exit %>
             <% cls = flds["on_exit"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_exit_#{i}",
                                flds["on_exit"].blank? ? default_value : flds["on_exit"],
-                               :class => cls,
+                               :class  => cls,
                                :onBlur =>"miqSetInputValues(this, 'blur')",
                                #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                "data-miq_default_value" => default_value,
-                               "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                               "data-miq_observe" => {:interval => '.5',
+                                                      :url      => url}.to_json)
+            %>
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i].on_error %>
             <% cls = flds["on_error"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_error_#{i}",
                                flds["on_error"].blank? ? default_value : flds["on_error"],
-                               :class => cls,
+                               :class  => cls,
                                :onBlur => "miqSetInputValues(this, 'blur')",
                                #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                "data-miq_default_value" => default_value,
-                               "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
+                               "data-miq_observe"       => {:interval => '.5',
+                                                            :url      => url}.to_json)
+            %>
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i].collect %>
             <% cls = flds["collect"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_collect_#{i}",
                                flds["collect"].blank? ? default_value : flds["collect"],
-                               :class => cls,
-                               :onBlur =>"miqSetInputValues(this, 'blur')",
+                               :class  => cls,
+                               :onBlur => "miqSetInputValues(this, 'blur')",
                                #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                "data-miq_default_value" => default_value,
-                               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                               "data-miq_observe"       => {:interval => '.5', 
+                                                            :url      => url}.to_json)
+            %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
-</fieldset>
