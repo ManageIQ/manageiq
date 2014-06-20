@@ -1141,7 +1141,7 @@ class MiqProxyController < ApplicationController
   end
 
   def get_layout
-    ["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(session[:layout]) ? session[:layout] : "miq_proxy"
+    %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(session[:layout]) ? session[:layout] : "miq_proxy"
   end
 
   def get_session_data

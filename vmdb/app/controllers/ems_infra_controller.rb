@@ -21,7 +21,7 @@ class EmsInfraController < ApplicationController
   private ############################
 
   def get_session_data
-    @title      = ui_lookup(:tables=>"ems_infra")
+    @title      = ui_lookup(:tables => "ems_infra")
     @layout     = "ems_infra"
     @table_name = request.parameters[:controller]
     @model      = EmsInfra

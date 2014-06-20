@@ -906,7 +906,7 @@ class DashboardController < ApplicationController
     if request.parameters["action"] == "window_sizes" # Don't change layout when window size changes
       session[:layout]
     else
-      ["my_tasks", "timeline", "my_ui_tasks"].include?(session[:layout]) ? session[:layout] : "dashboard"
+      %w(my_tasks timeline my_ui_tasks).include?(session[:layout]) ? session[:layout] : "dashboard"
     end
   end
 
