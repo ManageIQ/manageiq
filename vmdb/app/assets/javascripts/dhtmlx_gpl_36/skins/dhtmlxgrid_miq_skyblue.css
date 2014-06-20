@@ -1,18 +1,53 @@
 /* DHTMLXGRID.CSS ****/
 
 /* to keep text in grid from overlapping in cells */
-div.gridbox table.hdr td {font-size: 93%; /*12px*/border: 0px solid;padding:4px 0px 4px 0px; overflow:hidden;}  
-div.gridbox table.obj td {border: 0px solid;font-size: 93%/*12px*/; overflow:hidden;}
-.dragSpanDiv{font-size: 93%; /*12px*/ }
-.dhx_combo_select{font-size: 93%; /*12px*/}
-div.gridbox div.ftr td {font-size: 93%; /*12px*/height:20px;padding-right:5px;}
-.dhx_dragColDiv{font-size: 93% /*12px*/;}
+div.gridbox table.hdr td {
+  border: 0 solid;
+  padding: 4px 0 4px 0; 
+  overflow: hidden;
+  font-size: 12px;
+}  
+div.gridbox table.obj td {
+  border: 0 solid;
+  font-size: 12px;
+  overflow:hidden;
+}
+.dragSpanDiv {
+  font-size: 12px;
+}
+.dhx_combo_select {
+  font-size: 12px;
+}
+div.gridbox div.ftr td {
+  height: 20px;
+  padding-right:5px;
+  font-size: 12px;
+}
+.dhx_dragColDiv {
+  font-size: 12px;
+}
 
 /* DHTMLXGRID.CSS style3 (skin) - (Based on Style3 Tables)*/
-div.gridbox_style3 {border-left:1px solid  #d1d1d1;}
-div.gridbox_style3 table.hdr{text-align: center; vertical-align:top; }
-div.gridbox_style3 table.hdr td{ vertical-align:top; height: 19px;margin: 0;padding: 4px;border-right: 1px solid #d1d1d1;border-left: 0px !important;border-top: 1px solid #d1d1d1;border-bottom: 1px #d1d1d1 solid;font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif !important;line-height: 19px;}
-div.gridbox_style3 table.hdr td{ 
+div.gridbox_style3 {
+  border-left: 1px solid  #d1d1d1;
+}
+div.gridbox_style3 table.hdr {
+  text-align: center; 
+  vertical-align:top;
+}
+div.gridbox_style3 table.hdr td {
+  height: 19px;
+  margin: 0;
+  padding: 4px;
+  border-right: 1px solid #d1d1d1;
+  border-left: 0px !important;
+  border-top: 1px solid #d1d1d1;
+  border-bottom: 1px #d1d1d1 solid;
+  vertical-align: top;
+  font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif !important;
+  line-height: 19px;
+}
+div.gridbox_style3 table.hdr td { 
   background-image: -webkit-linear-gradient(top, #fafafa, #ededed); /* For Chrome and Safari */
   background-image:    -moz-linear-gradient(top, #fafafa, #ededed); /* For old Fx (3.6 to 15) */
   background-image:     -ms-linear-gradient(top, #fafafa, #ededed); /* For pre-releases of IE 10*/
@@ -21,33 +56,68 @@ div.gridbox_style3 table.hdr td{
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */  
 } 
 
-div.gridbox_style3 table.hdr td div.hdrcell{ overflow:hidden; padding: 4px;}
-div.gridbox_style3 table.hdr td div.hdrcell:hover{  cursor: pointer;}
-div.gridbox_style3 table.obj td {border: 1px solid transparent;border-right: 1px solid #d1d1d1;border-bottom-color: #e7e7e7;padding: 2px 2px 2px 5px;margin: 0;vertical-align: middle;cursor: default;color: #4d5258;}
-
+div.gridbox_style3 table.hdr td div.hdrcell {
+  overflow: hidden; 
+  padding: 4px;
+}
+div.gridbox_style3 table.hdr td div.hdrcell:hover{
+  cursor: pointer;
+}
+div.gridbox_style3 table.obj td {
+  border: 1px solid transparent;
+  border-right: 1px solid #d1d1d1;
+  border-bottom-color: #e7e7e7;
+  padding: 2px 2px 2px 5px;
+  margin: 0;
+  vertical-align: middle;
+  cursor: default;
+  color: #4d5258;
+  }
 <% if @temp && @temp[:ro_grid] %>
-  div.gridbox_style3 table.obj tr td:hover {background: #d5ecf8 !important; cursor: default;}
-  div.gridbox_style3 table.obj tr:hover {background: #d5ecf8 !important; cursor: default;}
+  div.gridbox_style3 table.obj tr td:hover {
+    background: #d5ecf8 !important; 
+    cursor: default;
+  }
+  div.gridbox_style3 table.obj tr:hover {
+    background: #d5ecf8 !important;
+    cursor: default;
+  }
 <% else %>
-  div.gridbox_style3 table.obj tr td:hover {background: #d5ecf8 !important; cursor: hand; cursor: pointer;}
-  div.gridbox_style3 table.obj tr:hover {background: #d5ecf8 !important; cursor: hand; cursor: pointer;}
+  div.gridbox_style3 table.obj tr td:hover {
+    background: #d5ecf8 !important; 
+    cursor: hand; 
+    cursor: pointer;
+  }
+  div.gridbox_style3 table.obj tr:hover {
+    background: #d5ecf8 !important;
+    cursor: hand; cursor: pointer;
+  }
 <% end %>
-div.gridbox_style3 .dhx_combo_edit{font-size: 93% /*12px*/;}
-div.gridbox_style3 table.obj tr.rowselected td.cellselected, div.gridbox_style3 table.obj td.cellselected {background: #fffda8;}
-div.gridbox_style3 .miq_row0 {background-color: #fff;}
-div.gridbox_style3 .miq_row1 {background: #f5f5f5 !important;}
+
+div.gridbox_style3 .dhx_combo_edit {
+  font-size: 12px;
+}
+div.gridbox_style3 table.obj tr.rowselected td.cellselected, div.gridbox_style3 table.obj td.cellselected {
+  background: #fffda8;
+}
+div.gridbox_style3 .miq_row0 {
+  background-color: #fff;
+}
+div.gridbox_style3 .miq_row1 {
+  background: #f5f5f5 !important;
+}
 
 /* Report Menu Editor*/
 div.gridbox_menueditor {border:1px solid  #cfcfcf; }
 div.gridbox_menueditor .objbox {background-color: #f8f8f8;width:216px;overflow: hidden;}
 div.gridbox_menueditor table.hdr td {display: none;}
 div.gridbox_menueditor table.hdr td div.hdrcell{xwidth:auto;padding-left:0px;}
-div.gridbox_menueditor table.hdr .filter{padding-left:0px !important;text-align:center;-moz-user-select:text;	}		
-div.gridbox_menueditor table.obj td {background: #f8f8f8 url('/images/layout/accordion_bg.png');color:#4b4b4b;font: normal 93% OpenSansSemibold,Arial,Helvetica,sans-serif;height:22px;line-height: 22px;text-decoration:none;text-indent: 8px;vertical-align: top;}	
+div.gridbox_menueditor table.hdr .filter{padding-left:0px !important;text-align:center;-moz-user-select:text; }   
+div.gridbox_menueditor table.obj td {background: #f8f8f8 url('/images/layout/accordion_bg.png');color:#4b4b4b;font: normal 93% OpenSansSemibold,Arial,Helvetica,sans-serif;height:22px;line-height: 22px;text-decoration:none;text-indent: 8px;vertical-align: top;}  
 div.gridbox_menueditor table.row20px tr td {padding-right:4px;padding-left:4px;}
 div.gridbox_menueditor .dhx_combo_edit{font-size: 93%; /*12px*/}
 div.gridbox_menueditor table.obj tr.rowselected td{color:black;}
-div.gridbox_menueditor table.obj tr.rowselected td.cellselected, div.gridbox_light table.obj td.cellselected {background: <%# @css[:font_color] %> #4b4b4b; url('/images/layout/accordion_bg.png') left bottom;}	
+div.gridbox_menueditor table.obj tr.rowselected td.cellselected, div.gridbox_light table.obj td.cellselected {background: <%# @css[:font_color] %> #4b4b4b; url('/images/layout/accordion_bg.png') left bottom;}  
 div.gridbox_menueditor .odd_menueditor{border-top: 0px solid #FFF;}
 div.gridbox_menueditor div.ftr td {empty-cells:show;} 
 div.gridbox_menueditor2 {border:1px solid  #cfcfcf;}
@@ -61,8 +131,8 @@ div.gridbox_menueditor2 table.obj td {background-image: url('/images/icons/16/fo
 div.gridbox_menueditor2 table.row20px tr td {padding-right:4px;padding-left:4px; width: 500px;}
 div.gridbox_menueditor2 .dhx_combo_edit{font-size: 93%; /*12px*/}
 div.gridbox_menueditor2 table.obj tr.rowselected td{color:black;}
- div.gridbox_menueditor2 table.obj tr.rowselected td.cellselected, div.gridbox_light table.obj td.cellselected {background-image: url('/images/icons/16/folder.png');background-repeat: no-repeat;background-color: #d5d5d5; }
- div.gridbox_menueditor2 table.obj  td:hover {  background-color: #d5d5d5; } 
+div.gridbox_menueditor2 table.obj tr.rowselected td.cellselected, div.gridbox_light table.obj td.cellselected {background-image: url('/images/icons/16/folder.png');background-repeat: no-repeat;background-color: #d5d5d5; }
+div.gridbox_menueditor2 table.obj  td:hover {  background-color: #d5d5d5; } 
 div.gridbox_menueditor2 .odd_menueditor2{border-top: 0px solid #FFF}
 div.gridbox_menueditor2 div.ftr td {empty-cells:show;}
 
@@ -70,8 +140,12 @@ div.gridbox_menueditor2 div.ftr td {empty-cells:show;}
 
 /* entire compare area */
 
-div.gridbox_miq{padding-left: 0px;padding-right: 0px;border: 1px solid #e7e7e7;}
-	
+div.gridbox_miq {
+  padding-left: 0;
+  padding-right: 0;
+  border: 1px solid #e7e7e7;
+}
+  
 /* entire header row */
 div.gridbox_miq .xhdr{border:0px solid #e7e7e7;background-color:#fff;}
 div.gridbox_miq div.topMumba{position:absolute;left:0px;width:100%;height:3px;background-image:url(imgs/skinC_header.png);overflow:hidden;padding:0px;margin:0px;}
@@ -82,10 +156,10 @@ div.gridbox_miq div.bottomMumba img,div.gridbox_miq div.topMumba img{border:0px;
 
 div.gridbox_miq table.hdr td {
   height: 150px;
-  border-width:  0px 1px 0px 0px ;
+  border-width:  0 1px 0 0;
   border-color: #e7e7e7;
   background-color: #fff;
-  font: normal 100% OpenSansSemibold,Arial,Helvetica,sans-serif;
+  font: normal 100% OpenSansSemibold, Arial, Helvetica, sans-serif;
   vertical-align: bottom;
   text-align: left;
 }
@@ -99,10 +173,9 @@ div.gridbox_miq table.hdr td span.rotated-text {
   white-space: nowrap;
   text-align: left;
   -webkit-transform: rotate(-90deg); 
-  -moz-transform: rotate(-90deg);	
-  -ms-transform: rotate(-90deg);	
+  -moz-transform: rotate(-90deg); 
+  -ms-transform: rotate(-90deg);  
 }
-
 .ie8 div.gridbox_miq table.hdr td a.rotated-text,
 .ie8 div.gridbox_miq table.hdr td span.rotated-text {
   width: 110px;
@@ -111,13 +184,44 @@ div.gridbox_miq table.hdr td span.rotated-text {
   filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
   background: #fff; /* addresses ie8 anti-aliasing bug */
 }
-
-div.gridbox_miq table.hdr td div.hdrcell{width:auto;padding-bottom:2px;text-align:center}
-div.gridbox_miq table.hdr td div.hdrcell div#quadicon{padding-left:37px;}
-div.gridbox_miq table.hdr .filter{padding-left:0px !important;text-align:center;}
-div.gridbox_miq table.obj td {border-width:  0px 1px 1px 0px ;border-color:#e7e7e7;font-size: 93%; /*12px*/padding-right:4px;padding-left:4px;background-color:#fff;text-align: center;}
-div.gridbox_miq table.row20px tr td {padding-right:4px;padding-left:4px;}
-
-div.gridbox_miq .dhx_combo_edit{font-size: 93%; /*12px*/}
-div.gridbox_miq .odd_light{background-color:#E5F2F8;}
-div.gridbox_miq div.ftr td {height:30px;padding:0px;border-left: 1px solid #e7e7e7;border-right: 1px #e7e7e7;background-color:#f0f0f0;font-style : italic;font-size:12px;text-align: center;}
+div.gridbox_miq table.hdr td div.hdrcell {
+  width: auto;
+  padding-bottom: 2px;
+  text-align: center
+}
+div.gridbox_miq table.hdr td div.hdrcell div#quadicon {
+  padding-left: 37px;
+}
+div.gridbox_miq table.hdr .filter {
+  padding-left: 0 !important;
+  text-align:center;
+}
+div.gridbox_miq table.obj td {
+  border-width:  0 1px 1px 0;
+  border-color: #e7e7e7;
+  font-size: 12px;
+  padding-right: 4px;
+  padding-left: 4px;
+  background-color: #fff;
+  text-align: center;
+}
+div.gridbox_miq table.row20px tr td {
+  padding-right: 4px;
+  padding-left: 4px;
+}
+div.gridbox_miq .dhx_combo_edit {
+  font-size: 12px;
+}
+div.gridbox_miq .odd_light {
+  background-color: #E5F2F8;
+}
+div.gridbox_miq div.ftr td {
+  height: 30px;
+  padding: 0;
+  border-left: 1px solid #e7e7e7;
+  border-right: 1px #e7e7e7;
+  background-color:#f0f0f0;
+  font-style : italic;
+  font-size: 12px;
+  text-align: center;
+}
