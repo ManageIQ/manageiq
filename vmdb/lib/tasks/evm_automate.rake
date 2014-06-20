@@ -71,9 +71,9 @@ namespace :evm do
     task :usage => :environment do
       puts "The following automate tasks are available"
       puts " Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name " \
-                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename "
+                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename "
       puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name "  \
-                               "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename"
+                               "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
       puts " Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false"
       puts " Restore         - Usage: rake evm:automate:restore BACKUP_ZIP_FILE=filename"
       puts " Clear           - Usage: rake evm:automate:clear"
@@ -97,19 +97,21 @@ namespace :evm do
       EvmAutomate.list_class(namespace)
     end
 
-    desc 'Export automate model information to a folder or zip file. ENV options DOMAIN,NAMESPACE,CLASS,EXPORT_DIR|ZIP_FILE'
+    desc 'Export automate model information to a folder or zip file. ENV options DOMAIN,NAMESPACE,CLASS,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :export => :environment do
       begin
         domain         = ENV['DOMAIN']
         raise "Must specify domain for export:" if domain.nil?
         zip_file       = ENV['ZIP_FILE']
         export_dir     = ENV['EXPORT_DIR']
-        if zip_file.nil? && export_dir.nil?
+        yaml_file      = ENV['YAML_FILE']
+        if zip_file.nil? && export_dir.nil? && yaml_file.nil?
           zip_file = "./#{domain}.zip"
           puts "No export location specified. Exporting domain: #{domain} to: #{zip_file}"
         end
         export_options = {'export_dir' => export_dir,
                           'zip_file'   => zip_file,
+                          'yaml_file'  => yaml_file,
                           'namespace'  => ENV['NAMESPACE'],
                           'class'      => ENV['CLASS'],
                           'overwrite'  => ENV['OVERWRITE'].to_s.downcase == 'true'}
@@ -125,8 +127,8 @@ namespace :evm do
     desc 'Import automate model information from an export folder or zip file. '
     task :import => :environment do
       begin
-        raise "Must specify domain for export:" if ENV['DOMAIN'].blank?
-        if ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank?
+        raise "Must specify domain for import:" if ENV['DOMAIN'].blank?
+        if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank?
           raise 'Must specify either a directory with exported automate model or a zip file'
         end
         preview        = ENV['PREVIEW'] ||= 'true'
@@ -138,12 +140,15 @@ namespace :evm do
                           'namespace' => ENV['NAMESPACE'],
                           'class'     => ENV['CLASS'],
                           'import_as' => import_as}
-        if ENV['ZIP_FILE'].nil?
-          puts "Importing automate domain: #{ENV['DOMAIN']} from directory #{ENV['IMPORT_DIR']}"
-          import_options['import_dir'] = ENV['IMPORT_DIR'] unless ENV['IMPORT_DIR'].nil?
-        else
+        if ENV['ZIP_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['ZIP_FILE']}"
-          import_options['zip_file']   = ENV['ZIP_FILE']   unless ENV['ZIP_FILE'].nil?
+          import_options['zip_file']   = ENV['ZIP_FILE']
+        elsif ENV['IMPORT_DIR'].present?
+          puts "Importing automate domain: #{ENV['DOMAIN']} from directory #{ENV['IMPORT_DIR']}"
+          import_options['import_dir'] = ENV['IMPORT_DIR']
+        elsif ENV['YAML_FILE'].present?
+          puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['YAML_FILE']}"
+          import_options['yaml_file']   = ENV['YAML_FILE']
         end
         MiqAeImport.new(ENV['DOMAIN'], import_options).import
       rescue => err
@@ -204,7 +209,7 @@ namespace :evm do
       end
     end
 
-    desc 'Convert the legacy automation model to new format  ENV options FILE,DOMAIN,EXPORT_DIR|ZIP_FILE'
+    desc 'Convert the legacy automation model to new format  ENV options FILE,DOMAIN,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :convert => :environment do
       puts "Convert automation model from the legacy xml file"
       domain_name    = ENV["DOMAIN"]
@@ -212,13 +217,15 @@ namespace :evm do
       export_options = {}
       zip_file    = ENV['ZIP_FILE']
       export_dir  = ENV['EXPORT_DIR']
+      yaml_file   = ENV['YAML_FILE']
       overwrite   =  (ENV['OVERWRITE'] ||= 'false').downcase.==('true')
 
       export_options['zip_file'] = zip_file if zip_file
       export_options['export_dir'] = export_dir if export_dir
+      export_options['yaml_file'] = yaml_file if yaml_file
       export_options['overwrite'] = overwrite
 
-      raise "Must specify the ZIP_FILE or EXPORT_DIR to store converted model" if zip_file.nil? && export_dir.nil?
+      raise "Must specify the ZIP_FILE or EXPORT_DIR or YAML_FILE to store converted model" if zip_file.nil? && export_dir.nil? && yaml_file.nil?
 
       model_filename = ENV["FILE"]
       raise "Must specify legacy automation backup file xml to " + \
@@ -230,6 +237,7 @@ namespace :evm do
       puts "The automate model has been converted from : #{model_filename}"
       puts "Converted model in directory: #{export_dir}" if export_dir
       puts "Converted model in zip file: #{zip_file}" if zip_file
+      puts "Converted model in yaml file: #{yaml_file}" if yaml_file
     end
   end
 end
