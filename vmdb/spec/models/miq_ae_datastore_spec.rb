@@ -1,6 +1,77 @@
 require "spec_helper"
 
 describe MiqAeDatastore do
+  before(:each) do
+    @ver_fname = File.expand_path(File.join(File.dirname(__FILE__), "version.xml"))
+
+    @export_xml = <<-XML
+      <MiqAeDatastore version="1.0">
+        <MiqAeClass name="VM" namespace="Factory" display_name="Virtual Machine">
+          <MiqAeMethod name="CustomizeRequest" language="ruby" scope="instance" location="inline"><![CDATA[# end]]>
+          </MiqAeMethod>
+          <MiqAeSchema>
+            <MiqAeField name="execute" substitute="true" aetype="method" datatype="string" priority="1" message="create">
+            </MiqAeField>
+          </MiqAeSchema>
+        </MiqAeClass>
+        <MiqAeClass name="test_class" namespace="Factory/test" display_name="test namespace">
+          <MiqAeMethod name="test_method" language="ruby" scope="instance" location="inline"><![CDATA[# end]]>
+          </MiqAeMethod>
+          <MiqAeSchema>
+            <MiqAeField name="execute" substitute="true" aetype="method" datatype="string" priority="1" message="create">
+            </MiqAeField>
+          </MiqAeSchema>
+        </MiqAeClass>
+        <MiqAeClass name="DHCP_Server" namespace="EVMApplications/Provisioning" display_name="DHCP Server">
+          <MiqAeSchema>
+            <MiqAeField name="name" substitute="true" aetype="attribute" datatype="string" priority="1" message="create">
+            </MiqAeField>
+          </MiqAeSchema>
+        </MiqAeClass>
+      </MiqAeDatastore>
+    XML
+
+    @defaults_miq_ae_field = {}
+    @defaults_miq_ae_field[:message]    = MiqAeField.default(:message)
+    @defaults_miq_ae_field[:substitute] = MiqAeField.default(:substitute).to_s
+  end
+
+  after(:each) do
+    File.delete(@ver_fname) if File.exist?(@ver_fname)
+  end
+
+  def setup_version_xml(v)
+    v = v.nil? ? "" : "version='#{v}'"
+    xml = <<-XML
+    <MiqAeDatastore #{v}>
+      <MiqAeClass name="AUTOMATE" namespace="EVM">
+        <MiqAeSchema>
+          <MiqAeField name="attr1" aetype="attribute" />
+        </MiqAeSchema>
+        <MiqAeInstance name="test1"/>
+      </MiqAeClass>
+    </MiqAeDatastore>
+    XML
+    File.open(@ver_fname, "w") { |f| f.write(xml) }
+  end
+
+  it "should test version" do
+    MiqAeDatastore.reset
+    setup_version_xml(MiqAeDatastore::XML_VERSION_MIN_SUPPORTED)
+    -> { MiqAeDatastore.import(@ver_fname) }.should_not raise_error
+
+    MiqAeDatastore.reset
+    setup_version_xml(MiqAeDatastore::XML_VERSION_MIN_SUPPORTED.to_f + 0.1)
+    -> { MiqAeDatastore.import(@ver_fname) }.should_not raise_error
+
+    MiqAeDatastore.reset
+    setup_version_xml(MiqAeDatastore::XML_VERSION_MIN_SUPPORTED.to_f - 0.1)
+    -> { MiqAeDatastore.import(@ver_fname) }.should raise_error(RuntimeError)
+
+    MiqAeDatastore.reset
+    setup_version_xml(nil)
+    -> { MiqAeDatastore.import(@ver_fname) }.should raise_error(RuntimeError)
+  end
 
   it ".backup" do
     MiqAeYamlExportZipfs.any_instance.should_receive(:export).once

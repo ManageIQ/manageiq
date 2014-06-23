@@ -76,4 +76,35 @@ describe MiqAeMethod do
       res.count.should eq(2)
     end
   end
+
+  describe "#to_export_xml" do
+    let(:miq_ae_method) do
+      described_class.new(
+        :class_id   => 321,
+        :created_on => Time.now,
+        :data       => "the data",
+        :id         => 123,
+        :inputs     => inputs,
+        :updated_by => "me",
+        :updated_on => Time.now
+      )
+    end
+
+    let(:inputs) { [miq_ae_field] }
+    let(:miq_ae_field) { MiqAeField.new }
+
+    before do
+      miq_ae_field.stub(:to_export_xml) do |options|
+        options[:builder].inputs
+      end
+    end
+
+    it "produces the expected xml" do
+      expected_xml = <<-XML
+<MiqAeMethod name="" language="" scope="" location=""><![CDATA[the data]]><inputs/></MiqAeMethod>
+      XML
+
+      expect(miq_ae_method.to_export_xml).to eq(expected_xml.chomp)
+    end
+  end
 end

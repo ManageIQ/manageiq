@@ -79,6 +79,9 @@ class CustomButton < ActiveRecord::Base
     return rec
   end
 
+  def to_export_xml(_options)
+  end
+
   # Helper methods to support moving automate columns to resource_actions table
   def uri=(value)
   end
