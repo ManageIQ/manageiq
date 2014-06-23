@@ -1164,14 +1164,20 @@ module ApplicationController::Explorer
       	keep = true
         if o.is_a?(EmsFolder) ||  # If it's a folder object, see if it has any descendants
             !results.include?(o)   # If search removed it, see if it has any descendants
-          process_show_list(:model => "VmOrTemplate", :association=>"all_vms_and_templates", :parent=>o)  # Fetch the report records
-          keep = !@view.table.data.empty?  # Keep only if descendants present
+          keep = rbac_has_visible_vm_descendants?(o)
         end
         keep
       end
     end
 
     return results                # Return the objects that search allowed
+  end
+
+  def rbac_has_visible_vm_descendants?(o)
+    target_ids = o.descendant_ids(:of_type => "VmOrTemplate").transpose.last
+    return false if target_ids.blank?
+    results, _attrs = Rbac.search(:targets => target_ids, :class => VmOrTemplate)
+    results.length > 0
   end
 
   def valid_active_node(treenodeid)
