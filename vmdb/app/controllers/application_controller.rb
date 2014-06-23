@@ -1018,25 +1018,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def get_saved_reports(rep_id, node_color, menu_name)
-    report_results = MiqReportResult.where(:miq_report_id => rep_id.to_i)
-                                    .where(:userid => session[:userid])
-                                    .order(:created_on => :desc)
-
-    report_results.collect do |r|
-      formatted_last_run_on = format_timezone(r.last_run_on, Time.zone, "gtl")
-      {
-        'id'      => "saved-#{r.id}__#{r.name}",
-        'text'    => formatted_last_run_on,
-        'tooltip' => "Available Report: #{formatted_last_run_on}",
-        'im0'     => "saved.png",
-        'im1'     => "saved.png",
-        'im2'     => "saved.png",
-        'style'   => "background-color:#{node_color};padding-left: 0px;" # No cursor pointer
-      }
-    end
-  end
-
   def get_reports_menu(group=session[:group], tree_type="reports", mode="menu")
     rptmenu = Array.new
     reports = Array.new
