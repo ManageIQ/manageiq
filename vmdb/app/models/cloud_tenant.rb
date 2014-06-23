@@ -10,4 +10,5 @@ class CloudTenant < ActiveRecord::Base
   has_many        :cloud_volume_snapshots
   has_many        :cloud_object_store_containers
   has_many        :cloud_object_store_objects
+  has_many        :cloud_resource_quotas
 end

@@ -1,0 +1,2 @@
+class OpenstackResourceQuota < CloudResourceQuota
+end

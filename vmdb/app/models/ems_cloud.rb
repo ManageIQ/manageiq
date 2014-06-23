@@ -19,6 +19,7 @@ class EmsCloud < ExtManagementSystem
   has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
   has_many :flavors,                       :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_tenants,                 :foreign_key => :ems_id, :dependent => :destroy
+  has_many :cloud_resource_quotas,         :foreign_key => :ems_id, :dependent => :destroy
   has_many :floating_ips,                  :foreign_key => :ems_id, :dependent => :destroy
   has_many :security_groups,               :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_networks,                :foreign_key => :ems_id, :dependent => :destroy
