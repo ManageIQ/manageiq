@@ -173,7 +173,7 @@ module UiConstants
     :con        => "Control",
     :aut        => "Automate",
     :opt        => "Optimize",
-    :set        => "Settings & Operations",
+    :set        => "Configure",
   }
 
   # Main tab features (used to show main tab if any features are assigned to the user's group's role)
