@@ -1481,7 +1481,7 @@ module VmCommon
       listnav_search_selected(search_id) unless params.has_key?(:search_text) # Clear or set the adv search filter
       if @edit[:adv_search_applied] &&
           MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
-          params[:action] == "tree_select"
+          %w(reload tree_select).include?(params[:action])
         self.x_node = params[:id]
         quick_search_show
         return
