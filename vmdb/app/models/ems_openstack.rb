@@ -58,6 +58,10 @@ class EmsOpenstack < EmsCloud
     openstack_handle(options).connect(options)
   end
 
+  def connect_volume
+    connect(:service => "Volume")
+  end
+
   def connect_identity
     connect(:service => "Identity")
   end
