@@ -1427,7 +1427,7 @@ exit MIQ_OK"
         replace_right_cell([:ae])
       end
     when "reset"
-      set_ns_form_vars("MiqAeNamespace")
+      ns_set_form_vars(@ae_ns.domain? ? "MiqAeDomain" : "MiqAeNamespace")
       session[:changed] = @changed = false
       add_flash(I18n.t("flash.edit.reset"), :warning)
       @button = "reset"
@@ -1904,8 +1904,7 @@ exit MIQ_OK"
     assert_privileges("miq_ae_domain_priority_edit")
     case params[:button]
     when "cancel"
-      @sb[:action] = @in_a_form = nil
-      @edit = session[:edit] = nil  # clean out the saved info
+      @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
       add_flash(I18n.t("flash.priority_order_cancelled"))
       replace_right_cell
     when "save"
@@ -1917,15 +1916,11 @@ exit MIQ_OK"
         d.save!
       end
       add_flash(I18n.t("flash.priority_order_saved"))
-      @sb[:action] = @in_a_form = nil
-      @edit = session[:edit] = nil  # clean out the saved info
+      @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell([:ae])
     when "reset", nil # Reset or first time in
       priority_edit_screen
-      if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
-      end
-      @lock_tree = true
+      add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
       session[:changed] = @changed = false
       replace_right_cell
     end
@@ -1934,30 +1929,30 @@ exit MIQ_OK"
 private
 
   def create_action_url(node)
-    prefix = @edit[:rec_id].nil? ? 'create' : 'update'
-    case node
-    when 'root', 'aen'
-      if @sb[:action] == "miq_ae_domain_priority_edit"
-        'domains_priority_edit'
-      elsif @edit.key?(:ae_class_id)
-        prefix
-      else
-        prefix + '_ns'
-      end
-    when 'aei'
-      prefix + '_instance'
-    when 'aem'
-      prefix + '_method'
-    when 'aec'
-      return 'fields_seq_edit' if @sb[:action] == 'miq_ae_field_seq'
+    if @sb[:action] == "miq_ae_domain_priority_edit"
+      'domains_priority_edit'
+    elsif @sb[:action] == 'miq_ae_field_seq'
+      'fields_seq_edit'
+    else
       prefix = @edit[:rec_id].nil? ? 'create' : 'update'
-      suffix = {
-        'instances' => '_instance',
-        'methods'   => '_method',
-        'props'     => '',
-        'schema'    => '_fields'
-      }
-      prefix + suffix[@sb[:active_tab]]
+      if node ==  'aec'
+        suffix_hash = {
+          'instances' => '_instance',
+          'methods'   => '_method',
+          'props'     => '',
+          'schema'    => '_fields'
+        }
+        suffix = suffix_hash[@sb[:active_tab]]
+      else
+        suffix_hash = {
+          'root' => '_ns',
+          'aei'  => '_instance',
+          'aem'  => '_method',
+          'aen'  => @edit.key?(:ae_class_id) ? '' : '_ns'
+        }
+        suffix = suffix_hash[node]
+      end
+      prefix + suffix
     end
   end
 
@@ -2073,22 +2068,7 @@ private
       ae_ns.push(params[:id])
       self.x_node = "root"
     elsif @sb[:row_selected]
-      @sb[:row_selected].each do |items|
-        item = items.split('-')
-        if item[0] == "aen"
-          record = MiqAeNamespace.find_by_id(from_cid(item[1]))
-          if record.editable?
-            ae_ns.push(from_cid(item[1]))
-          else
-            add_flash(I18n.t("flash.cannot_delete",
-                             :model => ui_lookup(:model => "MiqAeDomain"),
-                             :field => record.name),
-                      :error)
-          end
-        else
-          ae_cs.push(from_cid(item[1]))
-        end
-      end
+      ae_ns, ae_cs = items_to_delete
     else
       node = x_node.split('-')
       ae_cs.push(from_cid(node[1]))
@@ -2098,6 +2078,28 @@ private
     process_ae_ns(ae_ns, "destroy")     unless ae_ns.empty?
     process_aeclasses(ae_cs, "destroy") unless ae_cs.empty?
     replace_right_cell([:ae])
+  end
+
+  def items_to_delete
+    ns_list = []
+    cs_list = []
+    @sb[:row_selected].each do |items|
+      item = items.split('-')
+      if item[0] == "aen"
+        record = MiqAeNamespace.find_by_id(from_cid(item[1]))
+        if record.editable?
+          ns_list.push(from_cid(item[1]))
+        else
+          add_flash(I18n.t("flash.cannot_delete",
+                           :model => ui_lookup(:model => "MiqAeDomain"),
+                           :field => record.name),
+                    :error)
+        end
+      else
+        cs_list.push(from_cid(item[1]))
+      end
+    end
+    return ns_list, cs_list
   end
 
   # Common aeclasses button handler routines
@@ -2255,12 +2257,13 @@ private
   # Get variables from edit form
   def get_ns_form_vars
     @ae_ns = MiqAeNamespace.find_by_id(from_cid(@edit[:ae_ns_id]))
-    @edit[:new][:ns_name] = params[:ns_name].blank? ?
-        nil : params[:ns_name] if params[:ns_name]
-    @edit[:new][:ns_description] = params[:ns_description].blank? ?
-        nil : params[:ns_description] if params[:ns_description]
-    @edit[:new][:enabled] = params[:ns_enabled] == "1" ?
-        true : false if params[:ns_enabled]
+    [:ns_name, :ns_description, :enabled].each do |field|
+      if field == :enabled
+        @edit[:new][field] = params[:ns_enabled] == "1" if params[:ns_enabled]
+      else
+        @edit[:new][field] = params[field].blank? ? nil : params[field] if params[field]
+      end
+    end
     @in_a_form = true
   end
 
@@ -2489,7 +2492,7 @@ private
                        :name  => @ae_ns.name),
                 :error)
     else
-      set_ns_form_vars("MiqAeNamespace")
+      ns_set_form_vars(@ae_ns.domain? ? "MiqAeDomain" : "MiqAeNamespace")
       @in_a_form = true
       session[:changed] = @changed = false
     end
@@ -2508,47 +2511,49 @@ private
 
   def new_domain_or_namespace(typ)
     @ae_ns = MiqAeNamespace.new
-    set_ns_form_vars(typ)
+    ns_set_form_vars(typ)
     @in_a_form = true
     replace_right_cell
   end
 
   # Set form variables for edit
-  def set_ns_form_vars(typ)
-    session[:field_data] = {}
-    @edit                = {}
-    session[:edit]       = {}
-    @edit[:ae_ns_id] = @ae_ns.id
-    @edit[:new]     = {}
-    @edit[:current] = {}
-    @edit[:rec_id]  = @ae_ns.id || nil
-    @edit[:key]     = "aens_edit__#{@ae_ns.id || "new"}"
-    @edit[:new][:ns_name]        = @ae_ns.name
-    @edit[:new][:ns_description] = @ae_ns.description
+  def ns_set_form_vars(typ)
+    session[:field_data] = session[:edit] = {}
+    @edit = {
+      :ae_ns_id => @ae_ns.id,
+      :current  => {},
+      :key      => "aens_edit__#{@ae_ns.id || "new"}",
+      :rec_id   => @ae_ns.id || nil
+    }
+    @edit[:new] = {
+      :ns_name        => @ae_ns.name,
+      :ns_description => @ae_ns.description
+    }
     # set these field for a new domain or when existing record is a domain
-    if typ == "MiqAeDomain" || (@ae_ns.id && @ae_ns.domain?)
-      @edit[:new][:domain]  = true
-      @edit[:new][:enabled] = @ae_ns.enabled
-    end
-    @edit[:current]  = @edit[:new].dup
-    @right_cell_text = @edit[:rec_id].nil? ?
-        I18n.t("cell_header.adding_model_record",
-               :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}")) :
-        I18n.t("cell_header.editing_model_record",
-               :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
-               :name  => @ae_ns.name)
+    @edit[:new].merge!(:domain => true, :enabled => @ae_ns.enabled) if typ == "MiqAeDomain"
+    @edit[:current] = @edit[:new].dup
+    @right_cell_text = ns_right_cell_text
     session[:edit] = @edit
+  end
+
+  def ns_right_cell_text
+    model = ui_lookup(:model => @edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace")
+    name_for_msg = @edit[:rec_id].nil? ? "cell_header.adding_model_record" : "cell_header.editing_model_record"
+    options = @edit[:rec_id].nil? ? {:model => model} : {:model => model, :name => @ae_ns.name}
+    I18n.t(name_for_msg, options)
   end
 
   def priority_edit_screen
     @in_a_form = true
-    @edit                      = {}
-    @edit[:new]                = {}
-    @edit[:current]            = {}
-    @edit[:new][:domain_order] = []
-    MiqAeDomain.order('priority DESC').collect { |domain| @edit[:new][:domain_order].push("#{domain.editable? ?
-      domain.name : domain.name + " (Read Only)"}") unless domain.priority == 0 }
-    @edit[:key]     = "priority__edit"
+    @edit = {
+      :key => "priority__edit"
+    }
+    @edit[:new] = {
+      :domain_order => []
+    }
+    domains = MiqAeDomain.order('priority DESC')
+    order = @edit[:new][:domain_order]
+    domains.collect { |d| order.push("#{d.editable? ? d.name : d.name + " (Read Only)"}") unless d.priority == 0 }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit]  = @edit
   end
