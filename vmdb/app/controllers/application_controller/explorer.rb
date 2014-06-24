@@ -1160,13 +1160,13 @@ module ApplicationController::Explorer
 
     # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
     if descendant_model && User.current_user_has_filters?
+      filtered_objects = objects - results
       results = objects.select do |o|
-      	keep = true
-        if o.is_a?(EmsFolder) ||  # If it's a folder object, see if it has any descendants
-            !results.include?(o)   # If search removed it, see if it has any descendants
-          keep = rbac_has_visible_vm_descendants?(o)
+        if o.is_a?(EmsFolder) || filtered_objects.include?(o)
+          rbac_has_visible_vm_descendants?(o)
+        else
+          true
         end
-        keep
       end
     end
 
