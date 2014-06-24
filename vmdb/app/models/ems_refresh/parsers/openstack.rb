@@ -23,6 +23,7 @@ module EmsRefresh::Parsers
       @volume_service_name  = @os_handle.volume_service_name
       @storage_service      = @os_handle.detect_storage_service
       @storage_service_name = @os_handle.storage_service_name
+      @identity_service     = @os_handle.identity_service
     end
 
     def ems_inv_to_hashes
@@ -32,6 +33,7 @@ module EmsRefresh::Parsers
       get_flavors
       get_availability_zones
       get_tenants
+      get_quotas
       get_key_pairs
       get_security_groups
       get_networks
@@ -101,8 +103,47 @@ module EmsRefresh::Parsers
     end
 
     def get_tenants
-      tenants = @identity_service.tenants
-      process_collection(tenants, :cloud_tenants) { |tenant| parse_tenant(tenant) }
+      @tenants = @identity_service.tenants
+      process_collection(@tenants, :cloud_tenants) { |tenant| parse_tenant(tenant) }
+    end
+
+    def get_quotas
+      # each call to "get_quota" returns a hash of the form:
+      #   {"id" => "ems_ref", "quota_key_1" => "value", "quota_key_2" => "value"}
+      # we want hashes that look more like:
+      #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_1", :value => "value"},
+      #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_2", :value => "value"}
+      quotas = @tenants.each_with_object([]) do |tenant, arr|
+        arr.concat(get_quotas_by_tenant_and_service(tenant, "compute", @connection))
+        arr.concat(get_quotas_by_tenant_and_service(tenant, "volume", @volume_service)) if @volume_service_name == :cinder
+        arr.concat(get_quotas_by_tenant_and_service(tenant, "network", @network_service, "quota")) if @network_service_name == :neutron
+      end
+      process_collection(quotas, :cloud_resource_quotas) { |quota| parse_quota(quota) }
+    end
+
+    def get_quotas_by_tenant_and_service(tenant, service_name, service_connection, element_name = "quota_set")
+      service_quotas = service_connection.get_quota(tenant.id).body[element_name]
+      ems_ref = service_quotas["id"]
+      # the array of hashes returned from this block is the same as what would
+      # be produced by parse_quota ... so, parse_quota just returns the same
+      # hash with a compound key
+      service_quotas.except("id").collect do |key, value|
+        begin
+          value = value.to_i
+        rescue
+          #TODO: determine a decent "error" value here
+          # -1 is a valid value from the service and means "unlimited"
+          value = 0
+        end
+        {
+          :cloud_tenant => @data_index.fetch_path(:cloud_tenants, tenant.id),
+          :service_name => service_name,
+          :ems_ref      => ems_ref,
+          :name         => key,
+          :value        => value,
+          :type         => "OpenstackResourceQuota",
+        }
+      end
     end
 
     def get_key_pairs
@@ -273,6 +314,11 @@ module EmsRefresh::Parsers
       }
 
       return uid, new_result
+    end
+
+    def parse_quota(quota)
+      uid = [quota["emf_ref"], quota["name"]]
+      return uid, quota
     end
 
     def self.key_pair_type
