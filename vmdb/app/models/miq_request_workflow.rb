@@ -2,7 +2,7 @@ require 'enumerator'
 require 'miq-hash_struct'
 
 class MiqRequestWorkflow
-  attr_accessor :dialogs, :requester, :values
+  attr_accessor :dialogs, :requester, :values, :last_vm_id
 
   def self.automate_dialog_request
     nil

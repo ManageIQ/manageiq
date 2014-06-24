@@ -1773,6 +1773,7 @@ module VmCommon
         locals[:no_reset]        = true                                                                               # don't need reset button on the screen
         locals[:submit_button]   = ['clone', 'migrate', 'publish', 'reconfigure', 'pre_prov'].include?(@sb[:action])  # need submit button on the screen
         locals[:continue_button] = ['miq_request_new'].include?(@sb[:action])                                         # need continue button on the screen
+        update_buttons(locals) if @edit && @edit[:buttons].present?
         presenter[:clear_tree_cookies] = "prov_trees"
       end
 
@@ -1986,6 +1987,10 @@ module VmCommon
     when "pre_prov"
       partial = "miq_request/prov_edit"
       header = I18n.t("cell_header.miq_request_new", :model=>ui_lookup(:tables => table))
+      action = "pre_prov_continue"
+    when "pre_prov_continue"
+      partial = "miq_request/prov_edit"
+      header = I18n.t("cell_header.miq_request_new", :model => ui_lookup(:tables => table))
       action = "prov_edit"
     when "ownership"
       partial = "shared/views/ownership"
@@ -2182,5 +2187,11 @@ module VmCommon
       @unauthorized = true unless record.nil?
     end
     record
+  end
+
+  def update_buttons(locals)
+    locals[:continue_button] = locals[:submit_button] = false
+    locals[:continue_button] = true if @edit[:buttons].include?(:continue)
+    locals[:submit_button] = true if @edit[:buttons].include?(:submit)
   end
 end

@@ -70,6 +70,12 @@ describe 'routes for VmInfra' do
     end
   end
 
+  describe '#pre_prov_continue' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/pre_prov_continue")).to route_to("#{controller_name}#pre_prov_continue")
+    end
+  end
+
   describe '#reconfigure_field_changed' do
     it 'routes with POST' do
       expect(
@@ -99,6 +105,18 @@ describe 'routes for VmInfra' do
   describe '#vm_pre_prov' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/vm_pre_prov")).to route_to("#{controller_name}#vm_pre_prov")
+    end
+  end
+
+  describe '#sort_ds_grid' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/sort_ds_grid")).to route_to("#{controller_name}#sort_ds_grid")
+    end
+  end
+
+  describe '#sort_host_grid' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/sort_host_grid")).to route_to("#{controller_name}#sort_host_grid")
     end
   end
 

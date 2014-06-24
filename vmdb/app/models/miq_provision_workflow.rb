@@ -70,10 +70,10 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       @dialogs = get_pre_dialogs if initial_pass && options[:use_pre_dialog] != false
       if @dialogs.nil?
         @dialogs = get_dialogs
-        normalize_numeric_fields
       else
         @running_pre_dialog = true if options[:use_pre_dialog] != false
       end
+      normalize_numeric_fields unless @dialogs.nil?
     end
 
     password_helper(@values, false) # Decrypt passwords in the hash for the UI

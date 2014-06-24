@@ -59,6 +59,14 @@ module ApplicationController::MiqRequestMethods
     end
   end
 
+  def pre_prov_continue
+    if params[:button] == "submit"
+      prov_edit
+    else
+      pre_prov
+    end
+  end
+
   # Pre provisioning, select a template
   def pre_prov
     if params[:button] == "cancel"
@@ -85,20 +93,37 @@ module ApplicationController::MiqRequestMethods
       params[:button] = nil                   # Clear the incoming button
       @edit = session[:edit]                  # Grab what we need from @edit
       @explorer = @edit[:explorer]
-      @src_vm_id = @edit[:src_vm_id]          # Hang on to selected VM to populate prov
       @vdi_users = @edit[:vdi_users] if @edit[:vdi_users]  # Hang on to selected VDI Users to populate prov
-      @edit = session[:edit] = nil            # Remove @edit
 
-      @redirect_controller = "miq_request"
-      @refresh_partial = "prov_edit"
-      if @explorer
-        @_params[:org_controller] = "vm"        # Set up for prov_edit
-        prov_edit
-        @sb[:action] = "pre_prov"
-        replace_right_cell
+      if @edit[:wf].nil?
+        @src_vm_id = @edit[:src_vm_id]          # Hang on to selected VM to populate prov
+        @edit = session[:edit] = nil
       else
-        render :update do |page|
-          page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :src_vm_id=>@src_vm_id, :org_controller=>"vm", :vdi_users=>@vdi_users
+        @workflow_exists = true
+        @src_vm_id = @edit[:wf].last_vm_id
+        validate_preprov
+      end
+      if @flash_array
+        render :update do |page|                    # Use JS to update the display
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        @redirect_controller = "miq_request"
+        @refresh_partial = "miq_request/prov_edit"
+        if @explorer
+          @_params[:org_controller] = "vm"        # Set up for prov_edit
+          prov_edit
+          @sb[:action] = "pre_prov"
+          replace_right_cell
+        else
+          render :update do |page|
+            page.redirect_to :controller     => @redirect_controller,
+                             :action         => @refresh_partial,
+                             :src_vm_id      => @src_vm_id,
+                             :org_controller => "vm",
+                             :vdi_users      => @vdi_users
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          end
         end
       end
     elsif params[:sort_choice]
@@ -497,6 +522,19 @@ module ApplicationController::MiqRequestMethods
     end
   end
 
+  def validate_preprov
+    @edit[:wf].get_dialog_order.each do |d|
+      @edit[:wf].get_all_fields(d).keys.each do |f|
+        field = @edit[:wf].get_field(f, d)
+        @edit[:wf].validate(@edit[:new])
+        unless field[:error].nil?
+          @error_div ||= "#{d}"
+          add_flash(field[:error], :error)
+        end
+      end
+    end
+  end
+
   def prov_req_submit
     id = session[:edit][:req_id] || "new"
     return unless load_edit("prov_edit__#{id}","show_list")
@@ -702,7 +740,7 @@ module ApplicationController::MiqRequestMethods
     @edit[:req_id] = req ? req.id : nil                           # Save existing request record id, if passed in
     @edit[:key] = "prov_edit__#{@edit[:req_id] && @edit[:req_id] || "new"}"
     options = req ? req.get_options : Hash.new                    # Use existing request options, if passed in
-    @edit[:new] = options
+    @edit[:new] = options unless @workflow_exists
     @edit[:org_controller] = params[:org_controller]  if params[:org_controller]          #request originated from controller
     @edit[:prov_option_types] = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
     if ["miq_template","service_template","vm"].include?(@edit[:org_controller])
@@ -741,6 +779,7 @@ module ApplicationController::MiqRequestMethods
         end
 
         options[:vdi_users_list] = @vdi_users ? @vdi_users.split('_') : params[:vdi_users].split('_') if @vdi_users || params[:vdi_users]
+        options[:use_pre_dialog] = false if @workflow_exists
 
         if src_vm_id && !src_vm_id[0].blank?
           wf_type = MiqProvisionWorkflow.class_for_source(src_vm_id[0])
@@ -748,6 +787,7 @@ module ApplicationController::MiqRequestMethods
           #handle copy button for host provisioning
           wf_type = @edit[:st_prov_type] ? MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type]) : MiqHostProvisionWorkflow
         end
+        pre_prov_values = copy_hash(@edit[:wf].values) if @edit[:wf]
         begin
           @edit[:wf] = req && req.type == "VmMigrateRequest" ? VmMigrateWorkflow.new(@edit[:new],session[:userid]) : wf_type.new(@edit[:new],session[:userid], options)   # Create a new provision workflow for this edit session
         rescue MiqException::MiqVmError => bang
@@ -799,6 +839,10 @@ module ApplicationController::MiqRequestMethods
       # Give the model a change to modify the dialog based on the default settings
       #common grids
       @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
+      unless pre_prov_values.nil?
+        @edit[:new] = @edit[:new].reject { |_k, v| v.nil? }
+        @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include? k }
+      end
       @edit[:ds_sortdir] ||= "DESC"
       @edit[:ds_sortcol] ||= "free_space"
       @edit[:host_sortdir] ||= "ASC"

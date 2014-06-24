@@ -1640,6 +1640,7 @@ Vmdb::Application.routes.draw do
         protect
         processes
         pre_prov
+        pre_prov_continue
         prov_edit
         prov_field_changed
         quick_search
@@ -1655,6 +1656,8 @@ Vmdb::Application.routes.draw do
         show
         snap_pressed
         snap_vm
+        sort_ds_grid
+        sort_host_grid
         sort_vm_grid
         squash_toggle
         tagging_edit

@@ -242,7 +242,7 @@ pfx = "miq_request/"
           <%= render(:partial => "layouts/dynatree",
                :locals => {
                  :tree_id                     => tree_id,
-                 :tree_name                   => session[:tree_name],
+                 :tree_name                   => "all_tags_tree",
                  :json_tree                   => @temp[:all_tags_tree],
                  :oncheck                     => "miqOnCheck_ProvTags",
                  :check_url                   => "/miq_request/prov_field_changed/#{@edit && @edit[:req_id] ? @edit[:req_id] : @miq_request ? @miq_request.id : "new"}",
