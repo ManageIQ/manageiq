@@ -30,11 +30,13 @@
             >
               <%= select_tag('choices_chosen',
                               options_for_select(@temp[:export_reports].sort),
-                              :style=>"width:auto; min-width:375px; background-color:#fff; border: 0px;",
-                              :size=>15,
-                              :style=>"width: 400px",
-                              :multiple=> true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                              :style             => "width:auto; min-width:375px; background-color:#fff; border: 0px;",
+                              :size              => 15,
+                              :style             => "width: 400px",
+                              :multiple          => true,
+                              :onchange          => "toggleConvertButtonToLink($j('#export_button'),
+                                                      'download_report', $j('#choices_chosen').val() != null);",
+                              "data-miq_observe" => {:url => url}.to_json) %>
             </div>
           </td>
         </tr>

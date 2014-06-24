@@ -291,6 +291,26 @@ function miqValidateButtons(h_or_s, prefix) {
       if($(on_id)) $(on_id).hide();
 }   }
 
+// Convert Button image to hyperlink
+function toggleConvertButtonToLink(button, url, toggle) {
+  if (toggle == true) {
+    if(button.hasClass('dimmed')) {
+      button.removeClass('dimmed')
+    }
+    if(button[0].parentNode.outerHTML.indexOf('<a href') == -1) {
+      button[0].outerHTML = "<a href=" + url + " title='" + button[0].getAttribute('alt') + "'>" + button[0].outerHTML + "</a>";
+    }
+  }
+  else {
+    if(!button.hasClass('dimmed')) {
+      button.addClass('dimmed')
+    }
+    if(button[0].parentNode.outerHTML.indexOf('<a href') > -1) {
+      button[0].parentNode.outerHTML = button[0].outerHTML;
+    }
+  }
+}
+
 // update all checkboxes on a form when the masterToggle checkbox is changed
 // parms: button_div=<id of div with buttons to update>, override=<forced state>
 function miqUpdateAllCheckboxes(button_div,override) {

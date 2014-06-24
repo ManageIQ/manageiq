@@ -200,10 +200,13 @@
 																																	:item=>0)}');")
 								%>
               <% elsif export_button %>
-                <%= link_to(image_tag("/images/formbuttons/export.png", :class=>"button", :border=>"0", :type=>"application/txt",
-                                      :alt=>"Download Report to YAML"),
-                            {:action=>action_url},
-                            {:title=>"Download Report to YAML"})
+                <%= image_tag("/images/formbuttons/export.png",
+                              :class  => "button dimmed",
+                              :border => "0",
+                              :type   => "application/txt",
+                              :id     => "export_button",
+                              :alt    => "Download Report to YAML")
+
                 %>
 							<% else %>
 								<%#= image_tag('/images/formbuttons/back2.png', :border=>"0", :class=>"button",
