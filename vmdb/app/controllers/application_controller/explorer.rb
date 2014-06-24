@@ -1134,32 +1134,18 @@ module ApplicationController::Explorer
     end
   end
 
-  # Commented out as not being called yet,
-  #   since calling this does not perform better than just doing a .count on the next methods results
-  #def rbac_filtered_object_count(objects)
-  # return 0 if objects.empty?
-   # options = {:targets => objects, :results_format => :ids}
-   # options[:where_clause] = "vdi IS false" if objects[0].class.base_class.name.to_s == "VmOrTemplate"
-  # results, attrs = Rbac.search(options)
-  # results.length
-  #end
-
   def rbac_filtered_objects(objects, options = {})
     return objects if objects.empty?
 
-    # Uncomment the following line to skip filtering for parent nodes (i.e. show V&T tree like admin sees it with all nodes)
-#    return objects unless objects.first.is_a?(VmOrTemplate)
-
-    descendant_model = nil
-
     # Remove VmOrTemplate :match_via_descendants option if present, comment to let Rbac.search process it
-    descendant_model = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
+    check_vm_descendants = false
+    check_vm_descendants = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
 
-    options.merge!({:targets => objects, :results_format => :objects})
-    results, attrs = Rbac.search(options)
+    options.merge!(:targets => objects, :results_format => :objects)
+    results, _attrs = Rbac.search(options)
 
     # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
-    if descendant_model && User.current_user_has_filters?
+    if check_vm_descendants && User.current_user_has_filters?
       filtered_objects = objects - results
       results = objects.select do |o|
         if o.is_a?(EmsFolder) || filtered_objects.include?(o)
@@ -1170,7 +1156,7 @@ module ApplicationController::Explorer
       end
     end
 
-    return results                # Return the objects that search allowed
+    results
   end
 
   def rbac_has_visible_vm_descendants?(o)
