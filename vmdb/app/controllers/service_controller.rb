@@ -401,7 +401,6 @@ class ServiceController < ApplicationController
             locals = {:record_id => @edit[:rec_id], :action_url => action_url}
             if action == "ownership"
               locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
-              locals[:record_id] = @record.id
             end
           end
           page.replace_html("form_buttons_div", :partial => "layouts/x_edit_buttons", :locals => locals)
