@@ -164,16 +164,16 @@ module UiConstants
 
   # Main tabs
   MAIN_TABS = {
-    :vi         => "Cloud Intelligence",
-    :svc        => "Services",
-    :inf        => "Infrastructure",
-    :clo        => "Clouds",
-    :vdi        => "VDI",
-    :sto        => "Storage",
-    :con        => "Control",
-    :aut        => "Automate",
-    :opt        => "Optimize",
-    :set        => "Settings & Operations",
+    :vi  => "Cloud Intelligence",
+    :svc => "Services",
+    :inf => "Infrastructure",
+    :clo => "Clouds",
+    :vdi => "VDI",
+    :sto => "Storage",
+    :con => "Control",
+    :aut => "Automate",
+    :opt => "Optimize",
+    :set => "Configure",
   }
 
   # Main tab features (used to show main tab if any features are assigned to the user's group's role)
