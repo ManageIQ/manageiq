@@ -80,9 +80,7 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.send(:domains_priority_edit)
       domain_order = []
-      MiqAeDomain.order('priority ASC').collect { |domain|
-        domain_order.push(domain.name) unless domain.priority == 0
-      }
+      MiqAeDomain.order('priority ASC').collect { |d| domain_order.push(d.name) unless d.priority == 0 }
       domain_order.should eq(edit[:new][:domain_order])
     end
   end

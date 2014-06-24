@@ -35,8 +35,8 @@
       :title: 'Add a New Namespace'
     - :button: miq_ae_namespace_edit
       :image: edit
-      :text: 'Edit Selected Namespaces'
-      :title: 'Select a single Namespaces to edit'
+      :text: 'Edit Selected Namespace'
+      :title: 'Select a single Namespace to edit'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
