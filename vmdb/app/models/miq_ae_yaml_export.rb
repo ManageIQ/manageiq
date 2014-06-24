@@ -223,7 +223,7 @@ class MiqAeYamlExport
   end
 
   def reset_manifest
-    @manifest = {}
+    @manifest = {DOMAIN_YAML_FILENAME => {}}
     @counts   = Hash.new { |h, k| h[k] = 0 }
   end
 

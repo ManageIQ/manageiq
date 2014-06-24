@@ -226,16 +226,17 @@ describe MiqAeDatastore do
     end
 
     it "domain, as directory" do
-      assert_export_import_roundtrip({}, {})
+      import_options = {'import_dir' => @export_dir, 'system' => false, 'enabled' => true}
+      assert_export_import_roundtrip({}, import_options)
     end
 
     it "domain, as zip" do
-      options = {'zip_file' => @zip_file}
+      options = {'zip_file' => @zip_file,  'system' => false, 'enabled' => true}
       assert_export_import_roundtrip(options, options)
     end
 
     it "domain, as yaml" do
-      options = {'yaml_file' => @yaml_file}
+      options = {'yaml_file' => @yaml_file, 'system' => false, 'enabled' => true}
       assert_export_import_roundtrip(options, options)
     end
 
@@ -244,17 +245,20 @@ describe MiqAeDatastore do
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
+      dom = MiqAeDomain.find_by_fqname(@manageiq_domain.name)
+      dom.should be_system
+      dom.should be_enabled
     end
 
-    it "domain, priority 0 should change priority to 1" do
+    it "domain, priority 0 should get retained for manageiq domain" do
       export_model(@manageiq_domain.name)
       @manageiq_domain.priority.should equal(0)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
 
-      ns = MiqAeNamespace.find_by_name(@manageiq_domain.name)
-      ns.priority.should equal(1)
+      ns = MiqAeNamespace.find_by_fqname(@manageiq_domain.name)
+      ns.priority.should equal(0)
     end
 
     it "domain, using import_as (new domain name), to directory" do
@@ -534,6 +538,27 @@ describe MiqAeDatastore do
     end
   end
 
+  context 'backup and restore' do
+    before do
+      create_factory_data('customer', 16)
+      set_customer_values
+    end
+
+    it 'all domains' do
+      import_options = {'zip_file' => @zip_file, 'restore' => true}
+      export_options = {'zip_file' => @zip_file}
+      @customer_domain.update_attributes(:enabled => true)
+      export_model(ALL_DOMAINS, export_options)
+      reset_and_import(@export_dir, ALL_DOMAINS, import_options)
+      MiqAeDomain.find_by_fqname(@manageiq_domain.name).priority.should eql(0)
+      cust_domain = MiqAeDomain.find_by_fqname(@customer_domain.name)
+      cust_domain.priority.should eql(1)
+      cust_domain.should be_enabled
+      MiqAeNamespace.find_by_fqname('$').should_not be_nil
+    end
+
+  end
+
   def reset_and_import(import_dir, domain, options = {})
     options = {'import_dir' => import_dir} if options.empty?
     import_as = options['import_as'].presence
@@ -629,7 +654,7 @@ describe MiqAeDatastore do
   end
 
   def create_factory_data(domain_name, priority)
-    domain   = FactoryGirl.create(:miq_ae_namespace, :name => domain_name,                     :priority => priority)
+    domain   = FactoryGirl.create(:miq_ae_domain_enabled, :name => domain_name,                :priority => priority)
     n1       = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1",    :parent_id => domain.id)
     n1_c1    = FactoryGirl.create(:miq_ae_class,     :name => "#{domain_name}_test_class_1",   :namespace_id => n1.id)
     n1_1     = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1_1",  :parent_id => n1.id)
