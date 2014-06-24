@@ -10,6 +10,7 @@ require 'rspec/fire'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 # include the lib matchers
 Dir[Rails.root.join("../lib/spec/support/custom_matchers/*.rb")].each { |f| require f }
+Dir[Rails.root.join("../lib/spec/support/deferred_garbage_collection.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -65,6 +66,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     Bullet.start_request if defined?(Bullet)
+    DeferredGarbageCollection.start if defined?(DeferredGarbageCollection)
   end
 
   config.after(:each) do
@@ -73,6 +75,7 @@ RSpec.configure do |config|
       Bullet.end_request
     end
     EvmSpecHelper.clear_caches
+    DeferredGarbageCollection.reconsider if defined?(DeferredGarbageCollection)
   end
 end
 
