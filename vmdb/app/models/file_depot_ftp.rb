@@ -58,7 +58,7 @@ class FileDepotFtp < FileDepot
       ftp         = Net::FTP.new(host)
       ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
       # ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
-      ftp.login(authentication_userid, authentication_password)
+      ftp.login(*login_credentials)
       $log.info("#{log_header} Connected to #{self.class.name}: #{name}")
     rescue SocketError => err
       $log.error("#{log_header} Failed to connect.  #{err.message}")
@@ -97,5 +97,9 @@ class FileDepotFtp < FileDepot
   def base_path
     # URI.split(URI.encode("ftp://ftp.example.com/incoming"))[5]  => "/incoming"
     URI.split(URI.encode(uri))[5]
+  end
+
+  def login_credentials
+    [authentication_userid, authentication_password]
   end
 end
