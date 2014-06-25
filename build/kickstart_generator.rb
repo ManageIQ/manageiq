@@ -1,6 +1,7 @@
 # TODO: Remove this if build.rb is the only entry-point
 require File.join(File.dirname(__FILE__), '1_8_7_hacks')
 require_relative 'productization'
+require_relative 'git_checkout'
 
 require 'erb'
 require 'json'
@@ -18,6 +19,7 @@ module Build
     def initialize(targets, puddle)
       @targets = targets
       @puddle  = puddle # used during ERB evaluation
+      @git_checkout = ::Build::GitCheckout.new
     end
 
     def run(task = :all)

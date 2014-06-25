@@ -144,6 +144,9 @@ rm -rf $app_root
 git clone https://github.com/ManageIQ/manageiq.git $app_root
 pushd $app_root
 
+git checkout <%= @git_checkout.branch_or_tag %>
+git reset --hard <%= @git_checkout.commit_sha %>
+
 #### TODO: Refactor this so the cfme rpm and the upstream share much of this code.
 
 # Use ruby here: system/miq_system_update.rb???
