@@ -18,11 +18,19 @@ class EmsFolder < ActiveRecord::Base
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
 
-  def hidden?
-    return false unless self.ext_management_system.kind_of?(EmsVmware)
-    return false unless ["Datacenters", "vm", "host"].include?(self.name)
-    p = self.parent
-    return p.kind_of?(ExtManagementSystem) || (p.respond_to?(:is_datacenter?) && p.is_datacenter?)
+  NON_DISPLAY_FOLDERS = ['Datacenters', 'vm', 'host']
+
+  def hidden?(overrides = {})
+    ems = overrides[:ext_management_system] || ext_management_system
+    return false unless ems.kind_of?(EmsVmware)
+
+    p = overrides[:parent] || self.parent if NON_DISPLAY_FOLDERS.include?(name)
+
+    case name
+    when "Datacenters" then p.kind_of?(ExtManagementSystem)
+    when "vm", "host"  then p.kind_of?(EmsFolder) && p.is_datacenter?
+    else                    false
+    end
   end
 
   #
@@ -148,7 +156,6 @@ class EmsFolder < ActiveRecord::Base
 
   # Folder pathing methods
   # TODO: Store the full path directly in the folder objects for performance reasons
-  NON_DISPLAY_FOLDERS = ['Datacenters', 'vm', 'host']
 
   # Returns an array of all parent folders with options for excluding "hidden"
   #   folders.  Default options are:
