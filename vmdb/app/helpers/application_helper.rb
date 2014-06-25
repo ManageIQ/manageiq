@@ -74,6 +74,15 @@ module ApplicationHelper
     record.class.base_model.name.underscore
   end
 
+  def controller_to_model
+    case self.class.model.to_s
+    when "TemplateCloud", "VmCloud", "TemplateInfra", "VmInfra"
+      VmOrTemplate
+    else
+      self.class.model
+    end
+  end
+
   def url_for_record(record, action="show") # Default action is show
     @id = to_cid(record.id)
     if record.kind_of?(VmOrTemplate)

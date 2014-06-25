@@ -2798,7 +2798,7 @@ class ApplicationController < ActionController::Base
   end
 
   def identify_tl_or_perf_record
-    identify_record(params[:id])
+    identify_record(params[:id], controller_to_model)
   end
 
   def assert_privileges(feature)
