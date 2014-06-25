@@ -230,48 +230,6 @@ class LogFile < ActiveRecord::Base
     @@do_ping ||= @@ping_depot_options[:ping_depot] == true ? true : false
   end
 
-  def self.connect_ftp(settings)
-    log_header = "MIQ(#{self.name}-connect_ftp)"
-    begin
-      scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(settings[:uri]))
-
-      # Only try the tcp ping if enabled
-      if self.do_ping?
-        $log.info("#{log_header} pinging: #{host} on #{21} with timeout: #{self.ping_timeout}")
-
-        # Added here until ftp is refactored into a separate class
-        require 'net/ping'
-        begin
-          # To prevent "no route to host" type issues, assume refused connection indicates the host is reachable
-          before = Net::Ping::TCP.econnrefused
-          Net::Ping::TCP.econnrefused = true
-
-          # Try to ping the host on port 21 before connecting
-          tcp_conn = Net::Ping::TCP.new(host, 21, self.ping_timeout)
-        ensure
-          Net::Ping::TCP.econnrefused = before
-        end
-        res = tcp_conn.ping
-        $log.info("#{log_header} pinging: #{host} on #{21} with timeout: #{self.ping_timeout}...result: #{res}")
-        raise "Connect: Cannot communicate with: #{host} - verify the URI host value and your DNS settings" unless res
-      end
-      $log.info("#{log_header} Connecting to [#{settings[:uri]}]...")
-      ftp = Net::FTP.new(host)
-
-      # Use passive mode to avoid firewall issues with the ftp server initiating connections to the client's data port
-      # see http://slacksite.com/other/ftp.html#passive
-      ftp.passive = true
-      ftp.debug_mode = true if settings[:debug]
-      ftp.login(settings[:username], settings[:password])
-    rescue => err
-      msg = "#{err.message}, connecting to FTP: [#{settings[:uri]}], Username: [#{settings[:username]}]"
-      $log.error("#{log_header} #{msg}")
-      raise msg
-    end
-    $log.info("#{log_header} Connecting to [#{settings[:uri]}]...Complete")
-    return ftp
-  end
-
   def upload_log_file_db
     log_header       = "MIQ(#{self.class.name}-upload_log_file_db)"
     self.binary_blob = BinaryBlob.new(:name => "logs", :data_type => "zip")
@@ -307,6 +265,10 @@ class LogFile < ActiveRecord::Base
     post_upload_tasks
   end
 
+  def remove_log_file_ftp
+    file_depot.remove_file(self)
+  end
+
   def destination_directory
     File.join("#{resource.zone.name}_#{resource.zone.id}", "#{resource.name}_#{resource.id}")
   end
@@ -321,82 +283,11 @@ class LogFile < ActiveRecord::Base
     FileUtils.rm_f(local_file) if File.exist?(local_file)
   end
 
-  def remove_log_file_ftp
-    log_header = "MIQ(#{self.class.name}-remove_log_file_ftp)"
-    $log.info("#{log_header} Removing log file [#{self.log_uri}]...")
-
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(self.log_uri))
-    path = URI.decode(path)
-
-    ftp = self.class.connect_ftp(file_depot.depot_hash.merge(:uri => log_uri))
-
-    begin
-      $log.info("#{log_header} Deleting file [#{path}]...")
-      ftp.delete(path)
-    rescue => err
-      msg = "#{err.message}', deleting [#{path}] on FTP: [#{file_depot.uri}], Username: [#{file_depot.authentication_userid}]"
-      $log.error("#{log_header} #{msg}")
-      raise msg
-    ensure
-      ftp.close
-    end
-    $log.info("#{log_header} Deleting file [#{path}]...Complete")
-  end
-
-  def file_exists_ftp?(existing_ftp = nil)
-    log_header = "MIQ(#{self.class.name}-file_exists_ftp?)"
-    $log.info("#{log_header} Checking existance of log file [#{self.log_uri}]...")
-
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(self.log_uri))
-    path = URI.decode(path)
-
-    ftp = existing_ftp || self.class.connect_ftp(file_depot.depot_hash.merge(:uri => log_uri))
-    begin
-      result = !ftp.ls(path).blank?
-    rescue => err
-      $log.warn("#{log_header} #{err}")
-      result = false
-    ensure
-      ftp.close unless existing_ftp
-    end
-    $log.info("#{log_header} Checking existance of log file [#{self.log_uri}]...Complete, result: [#{result}]")
-    return result
-  end
-
   def format_log_time(time)
     return time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
   end
 
   private
-
-  def build_path_ftp(ftp, path)
-    current = nil
-    path.split("/").each do |p|
-      # Do not attempt to change to a blank directory
-      next if p.blank?
-      current = current.nil? ? p : [current, p].join("/")
-      begin
-        # Keep track of where we were before changing the directory
-        pwd = ftp.pwd
-        $log.info("Checking Directory: [#{current}] from [#{pwd}]")
-        ftp.chdir(current)
-      rescue Net::FTPPermError => err
-        # directory does not exist
-      rescue => err
-        raise "#{err.message}, changing to remote directory '#{current}' from '#{pwd}'" unless code.to_i == 550 # The system cannot find the path specified.
-      else
-        $log.info("Directory: [#{current}] exists")
-
-        # Change back to the original directory
-        ftp.chdir(pwd)
-        next # directory already exists
-      end
-
-      $log.info("Creating Directory: [#{current}] from [#{ftp.pwd}]")
-      ftp.mkdir(current)
-    end
-    current
-  end
 
   def self._request_logs(options)
     taskid = options[:taskid]

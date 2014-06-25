@@ -26,6 +26,16 @@ class FileDepotFtp < FileDepot
     end
   end
 
+  def remove_file(file)
+    log_header = "MIQ(#{self.class.name}##{__method__})"
+    @file = file
+    $log.info("#{log_header} Removing log file [#{destination_file}]...")
+    with_connection do |ftp|
+      ftp.delete(destination_file)
+    end
+    $log.info("#{log_header} Removing log file [#{destination_file}]...complete")
+  end
+
   private
 
   def with_connection
