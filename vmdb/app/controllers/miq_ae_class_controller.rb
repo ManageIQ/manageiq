@@ -1900,7 +1900,7 @@ exit MIQ_OK"
       return unless load_edit("priority__edit", "replace_cell__explorer")
       # TODO: need to move this to model method
       @edit[:new][:domain_order].reverse!.each_with_index do |domain, i|
-        d = MiqAeDomain.find_by_name(domain.split(" (Read Only)").first)
+        d = MiqAeDomain.find_by_name(domain.split(" (Locked)").first)
         d.priority = i + 1
         d.save!
       end
@@ -2544,7 +2544,7 @@ private
     }
     domains = MiqAeDomain.order('priority DESC')
     order = @edit[:new][:domain_order]
-    domains.collect { |d| order.push("#{d.editable? ? d.name : d.name + " (Read Only)"}") unless d.priority == 0 }
+    domains.collect { |d| order.push("#{d.editable? ? d.name : add_read_only_suffix(d.name)}") unless d.priority == 0 }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit]  = @edit
   end
