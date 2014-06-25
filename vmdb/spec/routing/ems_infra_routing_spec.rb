@@ -5,6 +5,7 @@ describe EmsInfraController do
   let(:controller_name) { "ems_infra" }
 
   it_behaves_like "A controller that has advanced search routes"
+  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has CRUD routes"
   it_behaves_like "A controller that has discovery routes"

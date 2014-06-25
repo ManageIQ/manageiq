@@ -54,6 +54,7 @@ Vmdb::Application.routes.draw do
         perf_chart_chooser
         perf_top_chart
         quick_search
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -94,6 +95,7 @@ Vmdb::Application.routes.draw do
         reload
         resolve
         resource_delete
+        save_col_widths
         servicetemplate_edit
         sort_ds_grid
         sort_host_grid
@@ -245,6 +247,7 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -309,6 +312,7 @@ Vmdb::Application.routes.draw do
         perf_top_chart
         protect
         quick_search
+        save_col_widths
         save_default_search
         sections_field_changed
         show
@@ -363,6 +367,7 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -413,6 +418,7 @@ Vmdb::Application.routes.draw do
         exp_token_pressed
         quick_search
         panel_control
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -502,6 +508,7 @@ Vmdb::Application.routes.draw do
         perf_chart_chooser
         perf_top_chart
         protect
+        save_col_widths
         save_default_search
         sections_field_changed
         show
@@ -594,6 +601,7 @@ Vmdb::Application.routes.draw do
         old_dialogs_update
         reload
         resolve
+        save_col_widths
         tree_autoload_dynatree
         tree_select
         upload_import_file
@@ -859,6 +867,7 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -905,6 +914,7 @@ Vmdb::Application.routes.draw do
         perf_chart_chooser
         protect
         quick_search
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -954,6 +964,7 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -998,6 +1009,7 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
+        save_col_widths
         sections_field_changed
         show
         show_list
@@ -1111,6 +1123,7 @@ Vmdb::Application.routes.draw do
         iso_datastore_create
         iso_datastore_form_field_changed
         iso_datastore_list
+        iso_img_form_field_changed
         log_depot_validate
         pxe_image_edit
         pxe_image_type_edit
@@ -1230,6 +1243,7 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         quick_search
         panel_control
+        save_col_widths
         save_default_search
         show
         show_list
@@ -1258,6 +1272,7 @@ Vmdb::Application.routes.draw do
         exp_token_pressed
         panel_control
         protect
+        save_col_widths
         show
         show_list
         tagging_edit
@@ -1298,6 +1313,7 @@ Vmdb::Application.routes.draw do
         exp_token_pressed
         quick_search
         panel_control
+        save_col_widths
         show
         show_list
         tag_edit_form_field_changed
@@ -1322,6 +1338,7 @@ Vmdb::Application.routes.draw do
         reload
         retire
         retire_date_changed
+        save_col_widths
         service_edit
         service_form_field_changed
         service_tag
@@ -1385,6 +1402,7 @@ Vmdb::Application.routes.draw do
         perf_chart_chooser
         protect
         quick_search
+        save_col_widths
         save_default_search
         sections_field_changed
         show
@@ -1421,6 +1439,7 @@ Vmdb::Application.routes.draw do
         form_field_changed
         panel_control
         quick_search
+        save_col_widths
         show
         show_list
         toggle_dash
@@ -1540,6 +1559,7 @@ Vmdb::Application.routes.draw do
         reload
         retire
         retire_date_changed
+        save_col_widths
         scan_histories
         sections_field_changed
         security_groups
@@ -1649,6 +1669,7 @@ Vmdb::Application.routes.draw do
         reload
         retire
         retire_date_changed
+        save_col_widths
         scan_histories
         sections_field_changed
         security_groups
@@ -1762,6 +1783,7 @@ Vmdb::Application.routes.draw do
         reload
         retire
         retire_date_changed
+        save_col_widths
         scan_histories
         sections_field_changed
         show

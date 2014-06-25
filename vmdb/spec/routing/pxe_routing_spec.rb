@@ -35,6 +35,12 @@ describe PxeController do
     end
   end
 
+  describe "#iso_img_form_field_changed" do
+    it "routes with POST" do
+      expect(post("/pxe/iso_img_form_field_changed")).to route_to("pxe#iso_img_form_field_changed")
+    end
+  end
+
   describe "#log_depot_validate" do
     it "routes with POST" do
       expect(post("/pxe/log_depot_validate")).to route_to("pxe#log_depot_validate")
