@@ -302,7 +302,11 @@ class MiqAeClassController < ApplicationController
       ] if @flash_array
       presenter[:update_partials][:ns_list_div] = r[:partial => "domains_priority_form"]
     else
-      @sb[:active_tab] = 'instances' if nodes[0] == 'aec' && !['methods', 'props', 'schema'].include?(@sb[:active_tab])
+      if @sb[:action] == "miq_ae_class_edit"
+        @sb[:active_tab] = 'props'
+      else
+        @sb[:active_tab] ||= 'instances'
+      end
       presenter[:update_partials][:main_div] = r[:partial=>"all_tabs"]
     end
     if @in_a_form
@@ -468,7 +472,7 @@ class MiqAeClassController < ApplicationController
     return xml.to_s
   end
 
-def build_toplevel_grid(view)
+  def build_toplevel_grid(view)
     xml = REXML::Document.load("")
     xml << REXML::XMLDecl.new(1.0, "UTF-8")
 
@@ -476,88 +480,73 @@ def build_toplevel_grid(view)
     root = xml.add_element("rows")
     # Build the header row
     head = root.add_element("head")
-    new_column = head.add_element("column", {"type"=>"ch", "width"=>25, "align"=>"center"}) # Checkbox column
-    new_column = head.add_element("column", {"width"=>"30","align"=>"left", "sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = ""
-    new_column = head.add_element("column", {"width"=>"*","align"=>"left", "sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Name"
-    new_column = head.add_element("column", {"width"=>"*","align"=>"left", "sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Description"
+    toplevel_grid_add_header(head)
+    toplevel_grid_add_rows(root, view)
+    xml.to_s
+  end
 
+  def toplevel_grid_add_header(hrow)
+    new_column = hrow.add_element("column", "type" => "ch", "width" => 25, "align" => "center")
+    ["", "Name", "Description", "Enabled"].each do |col|
+      width = col == "" ? "30" : "*"
+      new_column = hrow.add_element("column", "width" => width, "align" => "left", "sort" => "na")
+      new_column.add_attribute("type", 'ro')
+      new_column.text = col
+    end
+  end
+
+  def toplevel_grid_add_rows(root, view)
     view.flatten.sort_by { |a| a.priority.to_s }.reverse.each do |kids|
       next if kids[:name] == "$"  # Skip the build-in namespace
-      cls,img_name = set_cls(kids.class)
+      cls, _ = set_cls(kids.class)
       rec_name = get_rec_name(kids)
       if rec_name
-        rec_name = rec_name.gsub(/\n/,"\\n")
-        rec_name = rec_name.gsub(/\t/,"\\t")
-        rec_name = rec_name.gsub(/"/,"'")
+        rec_name = rec_name.gsub(/\n/, "\\n")
+        rec_name = rec_name.gsub(/\t/, "\\t")
+        rec_name = rec_name.gsub(/"/, "'")
         rec_name = CGI.escapeHTML(rec_name)
-        rec_name = rec_name.gsub(/\\/,"&#92;")
+        rec_name = rec_name.gsub(/\\/, "&#92;")
       end
-      srow = root.add_element("row", {"id"=>"#{cls}-#{to_cid(kids.id)}", "style"=>"border-bottom: 1px solid #CCCCCC;color:black; text-align: center"})
-      srow.add_element("cell").text = "0" # Checkbox column unchecked
-      srow.add_element("cell",
-                       "image" => "blank.png",
-                       "title" => "#{cls}",
-                       "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
-                       REXML::CData.new("<img src='/images/icons/new/ae_domain.png' border='0' height='20', \
-                         width='20', align='middle' alt='#{cls}' title='#{cls}'>")
-      srow.add_element("cell",
-                       "image" => "blank.png",
-                       "title" => "#{rec_name}",
-                       "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = rec_name
-      srow.add_element("cell",
-                       "image" => "blank.png",
-                       "title" => "#{kids.description}",
-                       "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
-                       kids.description
+      srow = root.add_element("row",
+                              "id"    => "#{cls}-#{to_cid(kids.id)}",
+                              "style" => "border-bottom: 1px solid #CCCCCC;color:black; text-align: center")
+      toplevel_grid_add_row_data(srow, kids, cls, rec_name)
     end
-    return xml.to_s
+  end
+
+  def toplevel_grid_add_row_data(srow, kids, cls, rec_name)
+    srow.add_element("cell").text = "0" # Checkbox column unchecked
+    srow.add_element("cell",
+                     "image" => "blank.png",
+                     "title" => "#{cls}",
+                     "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
+                     REXML::CData.new("<img src='/images/icons/new/ae_domain.png' border='0' height='20', \
+                       width='20', align='middle' alt='#{cls}' title='#{cls}'>")
+    srow.add_element("cell",
+                     "image" => "blank.png",
+                     "title" => "#{rec_name}",
+                     "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = rec_name
+    %w(description enabled).each do |field|
+      srow.add_element("cell",
+                       "image" => "blank.png",
+                       "title" => "#{kids.send(field)}",
+                       "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
+                       kids.send(field)
+    end
   end
 
   def grid_add_header(head)
-    col_width = 900/7
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na","align"=>"left"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Name"
+    col_width = 900 / 7
+    columns = ["Name", "Value", "On Entry", "On Exit", "Collect", "Max Retries", "Max Time", "Message"]
 
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na","align"=>"left"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Value"
-
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "On Entry"
-
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "On Exit"
-
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "On Error"
-
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Collect"
-
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Max Retries"
-
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Max Time"
-
-    new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Message"
+    columns.each do |column|
+      options = {"width" => "#{col_width}", "sort" => "na"}
+      options.merge!("align" => "left") if %w(Name Value).include?(column)
+      new_column = head.add_element("column", options)
+      new_column.add_attribute("type", 'ro')
+      new_column.text = column
+    end
   end
-
 
   def build_fields_grid(view,inst)
     xml = REXML::Document.load("")
@@ -1403,7 +1392,7 @@ exit MIQ_OK"
       replace_right_cell
     when "save"
       ae_ns = find_by_id_filtered(MiqAeNamespace, params[:id])
-      set_ns_record_vars(ae_ns)                     # Set the record variables, but don't save
+      ns_set_record_vars(ae_ns)                     # Set the record variables, but don't save
       begin
         MiqAeNamespace.transaction do
           ae_ns.save!
@@ -1628,7 +1617,7 @@ exit MIQ_OK"
       replace_right_cell
     when "add"
       add_ae_ns = MiqAeNamespace.new
-      set_ns_record_vars(add_ae_ns)                       # Set the record variables, but don't save
+      ns_set_record_vars(add_ae_ns)                       # Set the record variables, but don't save
       begin
         MiqAeNamespace.transaction do
           add_ae_ns.save!
@@ -1977,7 +1966,7 @@ private
     if params[:id]
       aeclasses.push(params[:id])
       cls = MiqAeClass.find_by_id(from_cid(params[:id]))
-      self.x_node = "aen-#{to_cid(cls.id)}"
+      self.x_node = "aen-#{to_cid(cls.namespace_id)}"
     else
       @sb[:row_selected] = find_checked_items
       @sb[:row_selected].each do |items|
@@ -2335,14 +2324,16 @@ private
   end
 
   # Set record variables to new values
-  def set_ns_record_vars(miqaens)
+  def ns_set_record_vars(miqaens)
     miqaens.name        = @edit[:new][:ns_name].strip unless @edit[:new][:ns_name].blank?
     miqaens.description = @edit[:new][:ns_description]
-    miqaens.parent_id   = @edit[:new][:domain] ? nil : from_cid(x_node.split('-')[1])
     if @edit[:new][:domain]
       miqaens.enabled     = @edit[:new][:enabled]
       # set highest priority on new records.
       miqaens.priority    = MiqAeDomain.highest_priority + 1 unless miqaens.id
+      miqaens.parent_id   = nil
+    else
+      miqaens.parent_id   = from_cid(x_node.split('-')[1]) unless miqaens.id
     end
   end
 
@@ -2484,7 +2475,7 @@ private
 
   def edit_domain_or_namespace
     obj = find_checked_items
-    obj = [x_node] if obj.nil? && params[:pressed] == "miq_ae_domain_edit"
+    obj = [x_node] if obj.nil? && params[:id]
     @ae_ns = MiqAeNamespace.find(from_cid(obj[0].split('-')[1]))
     if @ae_ns.domain? && !@ae_ns.editable?
       add_flash(I18n.t("flash.cant_edit_read_only",
