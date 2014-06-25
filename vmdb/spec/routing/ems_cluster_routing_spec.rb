@@ -5,6 +5,7 @@ describe EmsClusterController do
   let(:controller_name) { "ems_cluster" }
 
   it_behaves_like "A controller that has advanced search routes"
+  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has download_data routes"
   it_behaves_like "A controller that has policy protect routes"
