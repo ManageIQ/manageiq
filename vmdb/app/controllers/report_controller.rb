@@ -350,7 +350,7 @@ class ReportController < ApplicationController
             @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
                                         :typ=>@sb[:rpt_menu][nodes[1].to_i][0],
                                         :model=>ui_lookup(:models=>"MiqReport"))
-          elsif nodes.length == 4
+          elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present?
             @sb[:rep_details] = Hash.new
             @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].each_with_index do |rep,i|
               r = MiqReport.find_by_name(rep)
@@ -369,6 +369,8 @@ class ReportController < ApplicationController
             @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
                                         :typ=>@sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][0],
                                         :model=>ui_lookup(:models=>"MiqReport"))
+          elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].nil?
+            x_node_set("root", x_active_tree)
           elsif nodes.length == 5
             @sb[:selected_rep_id] = from_cid(nodes[4])
             if role_allows(:feature=>"miq_report_widget_editor")
