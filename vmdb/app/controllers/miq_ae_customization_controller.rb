@@ -164,7 +164,7 @@ class MiqAeCustomizationController < ApplicationController
     @lastaction = "automate_button"
     @layout = "miq_ae_customization"
 
-    render :layout => "explorer"
+    render :layout => "explorer" unless request.xml_http_request?
   end
 
   def tree_select

@@ -161,9 +161,14 @@ module MiqAeCustomizationController::OldDialogs
     session[:dialog_sortcol] = @sortcol
     session[:dialog_sortdir] = @sortdir
 
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
-      render :update do |page|                    # Use RJS to update the display
-        page.replace("gtl_div", :partial=>"layouts/gtl", :locals=>{:action_url=>"old_dialogs_list",:button_div=>'policy_bar'})
+    if params[:ppsetting] || params[:searchtag] || params[:entry] ||
+      params[:sort_choice] || params[:page]
+      render :update do |page|
+        page.replace("gtl_div",
+                     :partial => "layouts/x_gtl",
+                     :locals  => {:action_url => "old_dialogs_list",
+                                  :button_div => 'policy_bar'})
+        page << "miqSparkle(false)"
       end
     end
   end
