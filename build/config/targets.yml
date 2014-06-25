@@ -1,6 +1,7 @@
 ---
 name: manageiq
 directory: upstream
+repository: https://github.com/ManageIQ/manageiq.git
 targets:
   # Format:
   #   target: img_fac_target

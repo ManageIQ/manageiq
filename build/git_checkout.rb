@@ -3,7 +3,7 @@ require 'pathname'
 module Build
   class GitCheckout
     attr_reader :commit_sha, :branch_or_tag, :remote
-    def initialize(remote = "https://github.com/ManageIQ/manageiq.git")
+    def initialize(remote)
       @remote = remote
       read_version_file
     end

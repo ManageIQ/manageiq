@@ -7,6 +7,7 @@ require 'yaml'
 
 require_relative 'productization'
 require_relative 'kickstart_generator'
+require_relative 'git_checkout'
 
 $log = Logger.new(STDOUT)
 
@@ -41,9 +42,9 @@ HOUR_MINUTE           = Time.now.strftime("%H%M")
 timestamp             = "#{YEAR_MONTH_DAY}#{HOUR_MINUTE}"
 
 targets_config = YAML.load_file(targets_file)
-name, directory, targets  = targets_config.values_at("name", "directory", "targets")
-generator = Build::KickstartGenerator.new(targets.keys, puddle)
-generator.run
+name, directory, repo, targets  = targets_config.values_at("name", "directory", "repository", "targets")
+git_checkout = Build::GitCheckout.new(repo)
+Build::KickstartGenerator.new(targets.keys, puddle, git_checkout).run
 
 FILE_TYPE = {
   'vsphere'       => 'ova',
@@ -83,7 +84,7 @@ Dir.chdir("/root/src/imagefactory") do
     $log.info "Built #{target} with final UUID: #{uuid}"
     source      = "/var/lib/imagefactory/storage/#{uuid}.body"
 
-    file_name = "#{name}-#{target}-#{build_label}-#{timestamp}-#{generator.commit_sha}.#{FILE_TYPE[imgfac_target]}"
+    file_name = "#{name}-#{target}-#{build_label}-#{timestamp}-#{git_checkout.commit_sha}.#{FILE_TYPE[imgfac_target]}"
     destination = DESTINATION_DIRECTORY.join(file_name)
     $log.info `mv  #{source} #{destination}`
   end

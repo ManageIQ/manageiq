@@ -141,7 +141,7 @@ app_root="$www_root/miq"
 
 rm -rf $app_root
 
-git clone https://github.com/ManageIQ/manageiq.git $app_root
+git clone <%= @git_checkout.remote %> $app_root
 pushd $app_root
 
 git checkout <%= @git_checkout.branch_or_tag %>
