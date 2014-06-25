@@ -37,13 +37,13 @@ def verify_run(output)
   end
 end
 
-YEAR_MONTH_DAY        = Time.now.strftime("%Y%m%d")
-HOUR_MINUTE           = Time.now.strftime("%H%M")
-timestamp             = "#{YEAR_MONTH_DAY}#{HOUR_MINUTE}"
+YEAR_MONTH_DAY = Time.now.strftime("%Y%m%d")
+HOUR_MINUTE    = Time.now.strftime("%H%M")
+timestamp      = "#{YEAR_MONTH_DAY}#{HOUR_MINUTE}"
 
-targets_config = YAML.load_file(targets_file)
-name, directory, repo, targets  = targets_config.values_at("name", "directory", "repository", "targets")
-git_checkout = Build::GitCheckout.new(repo)
+targets_config                 = YAML.load_file(targets_file)
+name, directory, repo, targets = targets_config.values_at("name", "directory", "repository", "targets")
+git_checkout                   = Build::GitCheckout.new(repo)
 Build::KickstartGenerator.new(targets.keys, puddle, git_checkout).run
 
 FILE_TYPE = {
