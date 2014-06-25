@@ -285,7 +285,7 @@ class MiqLdap
     user_type ||= @user_type.split("-").first
     user_type = "dn" if self.is_dn?(username)
     begin
-      search_opts = {:base => @basedn, :scope => :sub}
+      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", "memberof"]}
 
       case user_type
       when "upn", "userprincipalname", "mail"
