@@ -14,7 +14,7 @@ module Build
     KS_GEN_DIR = KS_DIR.join("generated").freeze
     KS_FILE    = Productization.file_for("kickstarts/base.ks.erb").freeze
 
-    attr_reader :targets, :puddle
+    attr_reader :targets, :puddle, :git_checkout
 
     def initialize(targets, puddle)
       @targets = targets
