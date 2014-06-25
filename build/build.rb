@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '1_8_7_hacks')
+require File.expand_path(File.join(File.dirname(__FILE__), '1_8_7_hacks'))
 require 'pathname'
 require 'fileutils'
 require 'logger'
