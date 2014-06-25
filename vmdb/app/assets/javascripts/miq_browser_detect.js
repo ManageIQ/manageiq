@@ -77,12 +77,18 @@ function miqBrowserDetect() {
         identity: "Explorer",
         versionSearch: "rv"
       },
-			{
-				string: navigator.userAgent,
-				subString: "Gecko",
-				identity: "Mozilla",
-				versionSearch: "rv"
-			},
+            {
+                string: navigator.vendor,
+                subString: "Google Inc.",
+                identity: "Chrome",
+                versionSearch: "Chrome"
+            },
+            {
+                string: navigator.userAgent,
+                subString: "Gecko",
+                identity: "Mozilla",
+                versionSearch: "rv"
+            },
 			{ 		// for older Netscapes (4-)
 				string: navigator.userAgent,
 				subString: "Mozilla",
