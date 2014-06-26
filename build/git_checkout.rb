@@ -2,7 +2,7 @@ require 'pathname'
 
 module Build
   class GitCheckout
-    attr_reader :commit_sha, :branch_or_tag, :remote
+    attr_reader :commit_sha, :remote
     def initialize(remote)
       @remote = remote
       read_version_file
@@ -16,6 +16,10 @@ module Build
           ls_remote_sha(dereferenced_tag) || ls_remote_sha(@branch_or_tag)
         end
       long_sha.to_s[0, 10]
+    end
+
+    def branch
+      @branch_or_tag.split("-").first
     end
 
     def ls_remote_sha(target)
