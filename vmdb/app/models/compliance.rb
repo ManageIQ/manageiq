@@ -104,7 +104,7 @@ class Compliance < ActiveRecord::Base
       p["conditions"].each do |c|
         dhash[:condition_id]     = c["id"]
         dhash[:condition_desc]   = c["description"]
-        dhash[:condition_result] = c["result"] == "allow" ? true : false
+        dhash[:condition_result] = c["result"] == "allow"
         comp.compliance_details.create(dhash)
       end
     end

@@ -1281,7 +1281,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       self.send(cust_method, field_hash, data_value)
     else
       value = case data_type
-              when :boolean then data_value == "true" ? true : false
+              when :boolean then data_value == "true"
               when :integer then data_value.to_i_with_method
               when :string  then data_value.to_s
               else data_value

@@ -134,7 +134,7 @@ class MiqIPMI
       if data[0].to_i.to_s == data[0].to_s
         macs << mac = {:index => data[0], :address => data[1]}
         unless data[2].blank?
-          mac[:enabled] = data[2] == 'Enabled' ? true : false
+          mac[:enabled] = data[2] == 'Enabled'
         else
           mac[:enabled] = true
         end

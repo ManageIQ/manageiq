@@ -593,9 +593,9 @@ module ApplicationHelper
       when :widgets_tree
         case id
           when "widget_new"
-            return x_node == "root" ? true :  false
+            return x_node == "root"
           when "widget_generate_content"
-            return @sb[:wtype] == "m" ? true : false
+            return @sb[:wtype] == "m"
         end
         return false
       when :reports_tree
@@ -606,7 +606,7 @@ module ApplicationHelper
             return @sb[:active_tab] == "report_info" && @record.rpt_type == "Custom" ?
                 false : true
           when "miq_report_copy","miq_report_new","miq_report_run","miq_report_only","miq_report_schedules"
-            return @sb[:active_tab] == "saved_reports" ? true : false
+            return @sb[:active_tab] == "saved_reports"
           when "view_graph","view_hybrid","view_tabular"
             return @ght_type && @report && @report.graph &&
                 (@zgraph || (@ght_type == "tabular" && @html)) ? false : true

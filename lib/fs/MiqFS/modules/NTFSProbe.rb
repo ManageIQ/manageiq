@@ -10,7 +10,7 @@ module NTFSProbe
     dobj.seek(3)
     oem = dobj.read(8).unpack('a8')[0].strip
     
-		ntfs = (oem == 'NTFS') ? true : false
+		ntfs = oem == 'NTFS'
 		if $log
   	  $log.debug("NTFSProbe << TRUE") if ntfs
   	  $log.debug("NTFSProbe << FALSE because OEM Name is not NTFS, but is '#{oem}'") if not ntfs

@@ -120,7 +120,7 @@ module Fat32
 				end
 				
 				# If attribute contains 0x0f then LFN entry.
-				isLfn = buf[ATTRIB_OFFSET] == FA_LFN ? true : false
+				isLfn = buf[ATTRIB_OFFSET] == FA_LFN
 				@dir_ent = isLfn ? DIR_ENT_LFN.decode(buf) : DIR_ENT_SFN.decode(buf)
 				break if !isLfn
 				

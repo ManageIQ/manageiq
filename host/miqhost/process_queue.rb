@@ -21,7 +21,7 @@ module Manageiq
       @qName = queueName
       @stats = {:total=>0, :errors=>0, :name=>queueName}
       @taskFile = File.join(cfg.dataDir, "pq-#{queueName}.yaml")
-      @syncQueue = (queueName == "sync") ? true : false
+      @syncQueue = queueName == "sync"
       @current_task = {}
       @continue = true
       unless @syncQueue

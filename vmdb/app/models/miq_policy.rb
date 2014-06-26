@@ -136,7 +136,7 @@ class MiqPolicy < ActiveRecord::Base
 
   def action_result_for_event(action,event)
     pe = miq_policy_contents.find_by_miq_action_id_and_miq_event_id(event.id, action.id)
-    return pe.qualifier == "success" ? true : false
+    return pe.qualifier == "success"
   end
 
   def delete_event(event)

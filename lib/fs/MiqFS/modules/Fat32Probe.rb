@@ -19,7 +19,7 @@ module Fat32Probe
 		# Check file system label for 'FAT32   '
 		# NOTE: This works for MS tools but maybe not for others.
 		fslabel = bs[82, 8].unpack('a8')[0].strip
-		fat32 = (fslabel == 'FAT32') ? true : false
+		fat32 = fslabel == 'FAT32'
 		if $log
   	  $log.debug("Fat32Probe << TRUE") if fat32
   	  $log.debug("Fat32Probe << FALSE because FS label is NOT FAT32, but is '#{fslabel}'") if not fat32

@@ -772,7 +772,7 @@ class Host < ActiveRecord::Base
   def is_proxy_active?
     return false unless self.miq_proxy
 
-    self.miq_proxy.state == "on" ? true : false
+    self.miq_proxy.state == "on"
   end
 
   def miq_proxies

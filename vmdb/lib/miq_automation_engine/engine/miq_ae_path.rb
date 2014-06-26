@@ -50,7 +50,7 @@ module MiqAeEngine
 
     def self.has_wildcard?(path)
       return false if path.nil?
-      return path.last == "*" ? true : false
+      return path.last == "*"
     end
   end
 end

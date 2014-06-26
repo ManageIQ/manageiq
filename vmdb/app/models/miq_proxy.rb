@@ -1105,7 +1105,7 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def is_active?
-    self.state == "on" ? true : false
+    self.state == "on"
   end
 
   def self.active_by_domain(domain_name, platform=nil)
