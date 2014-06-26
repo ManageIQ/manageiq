@@ -236,6 +236,16 @@ class VimService < Handsoap::Service
 		end
 		return(parse_response(response, 'CreateFilterResponse')['returnval'])
 	end
+
+	def createFolder(pfMor, fname)
+		response = invoke("n1:CreateFolder") do |message|
+			message.add "n1:_this", pfMor do |i|
+				i.set_attr "type", pfMor.vimType
+			end
+			message.add "n1:name", fname
+		end
+		return(parse_response(response, 'CreateFolderResponse')['returnval'])
+	end
 	
 	def createNasDatastore(dssMor, spec)
 		response = invoke("n1:CreateNasDatastore") do |message|
