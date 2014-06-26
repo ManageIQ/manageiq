@@ -36,7 +36,7 @@ describe MiqPassword do
     ], [
       "`~!@\#$%^&*()_+-=[]{}\\|;:\"'<>,./?",
       "v1:{ziplwo+PA+gmKTNpJTRQtfRk+nPL2A2g3nnHdRRv86fBjyziiQ1V//g5u+dJ\nRyjl}",
-      "v2:{zad43i0dQB+8z45ZYMVmpFcagbt40T0aFddhHlj6YtPgoOJ5N3uBYAp8WwuZ\nQkar}",
+      "v2:{zad43i0dQB+8z45ZYMVmpFcagbt40T0aFddhHlj6YtPgoOJ5N3uBYAp8WwuZQkar}",
       "JilJmiBufmyWjlAGLStE7+KEfwxCzZOS38ZSjH8JXEPCqdeQzWsXEddlqvzL\n0PpW",
     ], [
       "abc\t\n\vzabc",
@@ -163,6 +163,12 @@ describe MiqPassword do
 
     it "should fail on recrypt bad password" do
       expect { MiqPassword.new.recrypt("v2:{55555}") }.to raise_error
+    end
+
+    it "should decrypt passwords with newlines" do
+      expect(MiqPassword.decrypt("v2:{zad43i0dQB+8z45ZYMVmpFcagbt40T0aFddhHlj6YtPgoOJ5N3uBYAp8WwuZ\nQkar}")).to(
+        eq("`~!@\#$%^&*()_+-=[]{}\\|;:\"'<>,./?")
+      )
     end
   end
 
