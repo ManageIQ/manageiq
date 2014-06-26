@@ -84,10 +84,8 @@ class Condition < ActiveRecord::Base
 
       MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression after substitution: [#{expr.gsub(/\n/, " ")}]")
       result = self.do_eval(expr)
-      # result = result == "false" ? false : result == "true"
       MiqPolicy.logger.info("MIQ(condition-eval): Name: #{name}, Expression evaluation result: [#{result}]")
     end
-    # p "result: #{result}"
     result
   end
 
