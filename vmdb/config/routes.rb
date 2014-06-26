@@ -1065,6 +1065,7 @@ Vmdb::Application.routes.draw do
         forest_select
         log_depot_edit
         log_depot_field_changed
+        log_depot_validate
         orphaned_records_delete
         perf_chart_chooser
         product_updates_list
