@@ -136,6 +136,7 @@ module MiqAeDatastore
         Benchmark.realtime_block(:datastore_import_time) do
           classes.each do |c|
             namespace = c.delete("namespace")
+            next if namespace == '$'
             namespace = File.join(domain_name, namespace) if domain_name && namespace != "$"
             ae_namespaces[namespace] ||= Benchmark.realtime_block(:build_namespaces) do
               MiqAeNamespace.find_or_create_by_fqname(namespace)
