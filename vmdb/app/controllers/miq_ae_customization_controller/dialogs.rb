@@ -1154,7 +1154,7 @@ module MiqAeCustomizationController::Dialogs
               )
 
             elsif f.type == "DialogFieldCheckBox"
-              fld[:default_value] = f.default_value.nil? ? true : (f.default_value == "f" ? false : true)
+              fld[:default_value] = f.default_value.to_s != "f"
 
             elsif f.type.include?("Text")
               fld[:protected]     = f.protected? if f.type.include?('TextBox')
