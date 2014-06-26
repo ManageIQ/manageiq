@@ -11,6 +11,16 @@
     :title: Configuration
     :text: Configuration
     :items:
+    - :button: miq_ae_namespace_edit
+      :image: edit
+      :text: 'Edit this Namespace'
+      :title: 'Edit this Namespace'
+    - :button: miq_ae_namespace_delete
+      :image: delete
+      :text: 'Remove this Namespace'
+      :title: 'Remove this Namespace'
+      :confirm: 'Are you sure you want to remove this Namespace?'
+    - :separator:
     - :button: miq_ae_namespace_new
       :image: new_namespace
       :text: 'Add a New Namespace'

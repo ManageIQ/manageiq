@@ -11,6 +11,17 @@
     :title: Configuration
     :text: Configuration
     :items:
+    - :button: miq_ae_class_edit
+      :image: edit
+      :text: 'Edit this Class'
+      :title: 'Edit this Class'
+    - :button: miq_ae_class_delete
+      :image: delete
+      :text: 'Remove this Class'
+      :title: 'Remove this Class'
+      :url_parms: '&refresh=y'
+      :confirm: 'Are you sure you want to remove this Class?'
+    - :separator:
     - :button: miq_ae_method_new
       :image: new_method
       :text: 'Add a New Method'
