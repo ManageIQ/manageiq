@@ -172,22 +172,17 @@ describe VmInfraController do
     end
 
     context "#rbac_filtered_objects" do
-      it "loads correct yaml view" do
-        ems = FactoryGirl.create(:ems_vmware)
+      it "properly calls RBAC" do
         ems_folder = FactoryGirl.create(:ems_folder)
-        ems.ems_folders = [ems_folder]
-        report = FactoryGirl.create(:miq_report)
-        view = MiqReport.new(YAML.load_file("#{VIEWS_FOLDER}/VmOrTemplate-all_vms_and_templates.yaml"))
-        admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => MiqProductFeature.find_all_by_identifier(["everything"]))
-        admin_group = FactoryGirl.create(:miq_group, :miq_user_role => admin_role)
-        admin_group.set_managed_filters([["/managed/service_level/gold"]])
-        user = FactoryGirl.create(:user, :name => 'wilma', :miq_groups => [admin_group])
+        ems = FactoryGirl.create(:ems_vmware, :ems_folders => [ems_folder])
+
+        user = FactoryGirl.create(:user_admin)
+        user.current_group.set_managed_filters([["/managed/service_level/gold"]])
         User.stub(:current_user => user)
-        ruport_data = Ruport::Data::Table.new(:column_names => ["name"])
-        view.table = ruport_data
-        controller.instance_variable_set(:@view, view)
-        controller.should_receive(:process_show_list).with(:model => "VmOrTemplate", :association => "all_vms_and_templates", :parent => ems_folder)
-        controller.send(:rbac_filtered_objects, [ems_folder], {:match_via_descendants => "VmOrTemplate"})
+
+        Rbac.should_receive(:search).with(:targets => [ems_folder], :results_format=>:objects).and_call_original
+
+        controller.send(:rbac_filtered_objects, [ems_folder], :match_via_descendants => "VmOrTemplate")
       end
     end
 
