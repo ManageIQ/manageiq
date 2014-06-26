@@ -20,5 +20,12 @@ module AutomationSpecHelper
     fields
   end
 
+  def assert_method_executed(uri, value)
+    ws = MiqAeEngine.instantiate(uri)
+    ws.should_not be_nil
+    roots = ws.roots
+    roots.should have(1).item
+    roots.first.attributes['method_executed'].should == value
+  end
 end
 

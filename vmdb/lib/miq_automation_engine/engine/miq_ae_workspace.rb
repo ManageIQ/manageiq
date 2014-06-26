@@ -354,5 +354,9 @@ module MiqAeEngine
     def overlay_namespace(scheme, uri, ns, klass, instance)
       @dom_search.get_alternate_domain(scheme, uri, ns, klass, instance)
     end
+
+    def overlay_method(ns, klass, method)
+      @dom_search.get_alternate_domain_method('miqaedb', "#{ns}/#{klass}/#{method}", ns, klass, method)
+    end
   end
 end

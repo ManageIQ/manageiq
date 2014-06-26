@@ -10,29 +10,36 @@ module MiqAeEngine
     def get_alternate_domain(scheme, uri, ns, klass, instance)
       return ns if ns.nil? || klass.nil?
       return ns if scheme != "miqaedb"
-      return ns if @fqns_id_cache[ns] if @fqns_id_cache.key?(ns)
-      search(uri, ns, klass, instance)
+      return ns if @fqns_id_cache.key?(ns)
+      search(uri, ns, klass, instance, nil)
+    end
+
+    def get_alternate_domain_method(scheme, uri, ns, klass, method)
+      return ns if ns.nil? || klass.nil?
+      return ns if scheme != "miqaedb"
+      return ns if @fqns_id_cache.key?(ns)
+      search(uri, ns, klass, nil, method)
     end
 
     private
 
-    def search(uri, ns, klass, instance)
+    def search(uri, ns, klass, instance, method)
       unless @partial_ns.include?(ns)
         fqns = MiqAeNamespace.find_by_fqname(ns, false)
         @fqns_id_cache[ns] = fqns.id if fqns
         return ns if fqns
       end
       @partial_ns << ns unless @partial_ns.include?(ns)
-      find_first_fq_domain(uri, ns, klass, instance)
+      find_first_fq_domain(uri, ns, klass, instance, method)
     end
 
-    def find_first_fq_domain(uri, ns, klass, instance)
+    def find_first_fq_domain(uri, ns, klass, instance, method)
       # Check if the namespace, klass and instance exist if it does
       # swap out the namespace
       parts = ns.split('/')
       parts.unshift("")
-      matching_domain = get_matching_domain(parts, klass, instance)
-      matching_domain ||= get_matching_domain(parts, klass, MiqAeObject::MISSING_INSTANCE)
+      matching_domain = get_matching_domain(parts, klass, instance, method)
+      matching_domain ||= get_matching_domain(parts, klass, MiqAeObject::MISSING_INSTANCE, method)
       if matching_domain
         parts[0]     = matching_domain
         ns = parts.join('/')
@@ -41,13 +48,17 @@ module MiqAeEngine
       ns
     end
 
-    def get_matching_domain(ns_parts, klass, instance)
+    def get_matching_domain(ns_parts, klass, instance, method)
       @sorted_domains.detect do |domain|
         ns_parts[0] = domain
         ns_id       = find_fqns_id(ns_parts)
         cls_id      = find_class_id(klass, ns_id) if ns_id
-        find_instance_id(instance, cls_id) if instance && cls_id
+        get_matching(cls_id, instance, method) if cls_id
       end
+    end
+
+    def get_matching(cls_id, instance, method)
+      instance ? find_instance_id(instance, cls_id) : find_method_id(method, cls_id)
     end
 
     def find_fqns_id(fqns_parts)
@@ -74,6 +85,13 @@ module MiqAeEngine
       ae_instance_filter = MiqAeInstance.arel_table[:name].lower.matches(instance_name)
       ae_instances = MiqAeInstance.where(ae_instance_filter).where(:class_id => class_id)
       ae_instances.first.try(:id)
+    end
+
+    def find_method_id(method_name, class_id)
+      return nil if method_name.nil? || class_id.nil?
+      ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(method_name)
+      ae_methods = ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id)
+      ae_methods.first.try(:id)
     end
   end
 end
