@@ -126,7 +126,7 @@
 				<table class="style1">
 					<tr>
 						<%# default is uncehcked, if left unchecked, pass readonly=true, if checked pass readonly=false %>
-						<% checked = resolve[:new][:readonly] == true ? false : true %>
+						<% checked = resolve[:new][:readonly] != true %>
 						<td class="key">Execute Methods</td>
 						<td>
               <%= check_box_tag("readonly", value="1",

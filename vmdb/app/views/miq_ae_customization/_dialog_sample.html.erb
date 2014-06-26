@@ -38,7 +38,7 @@
                                             field.default_value,
                                             :size=>"50x6", :disabled=>true) %>
                         <% when "DialogFieldCheckBox" %>
-                          <% checked = field.default_value == "f" ? false : true  %>
+                          <% checked = field.default_value != "f"  %>
                           <%= check_box_tag("field.id", value="1",checked=checked, :disabled=>true) %>
                         <% when "DialogFieldDateControl", "DialogFieldDateTimeControl" %>
                           <% if field.show_past_dates %>
