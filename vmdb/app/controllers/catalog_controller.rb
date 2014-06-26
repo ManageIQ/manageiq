@@ -700,7 +700,7 @@ class CatalogController < ApplicationController
   end
 
   def service_template_list(condition, options={})
-    @no_checkboxes = x_active_tree == :svccat_tree ? true : false
+    @no_checkboxes = x_active_tree == :svccat_tree
     if x_active_tree == :svccat_tree
       @temp[:gtl_buttons] = ["view_list","view_tile"]
       @temp[:gtl_small_tiles] = true
@@ -991,7 +991,7 @@ class CatalogController < ApplicationController
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description]  = params[:description] if params[:description]
     @edit[:new][:provision_cost]  = params[:provision_cost] if params[:provision_cost]
-    @edit[:new][:display]  = params[:display] == "1" ? true : false if params[:display]
+    @edit[:new][:display]  = params[:display] == "1" if params[:display]
     @edit[:new][:catalog_id] = params[:catalog_id] if params[:catalog_id]
     @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
     #saving it in @edit as well, to use it later because prov_set_form_vars resets @edit[:new]

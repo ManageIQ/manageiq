@@ -1146,8 +1146,8 @@ module ApplicationController::CiProcessing
   end
 
   def reconfigure_get_form_vars
-    @edit[:new][:cb_memory] = params[:cb_memory] == "1" ? true : false if params[:cb_memory]
-    @edit[:new][:cb_cpu] = params[:cb_cpu] == "1" ? true : false if params[:cb_cpu]
+    @edit[:new][:cb_memory] = params[:cb_memory] == "1" if params[:cb_memory]
+    @edit[:new][:cb_cpu] = params[:cb_cpu] == "1" if params[:cb_cpu]
     @edit[:new][:mem_typ] = params[:mem_typ] if params[:mem_typ]
     @edit[:new][:memory] = params[:memory] if params[:memory]
     @edit[:new][:cpu_count] = params[:cpu_count] if params[:cpu_count]

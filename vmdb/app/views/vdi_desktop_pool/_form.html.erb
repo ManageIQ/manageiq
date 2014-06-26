@@ -61,7 +61,7 @@
                 <% end %>
                 <% if !@record.id %>
                   Add using SSL
-                  <% checked = @edit[:new][:use_ssl] == true ? true : false %>
+                  <% checked = @edit[:new][:use_ssl] == true %>
                   <%= check_box_tag("use_ssl", value="1",
                                     checked=checked,
                                     "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>

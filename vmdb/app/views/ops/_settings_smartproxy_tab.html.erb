@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td class="key">Read Only Mode</td>
-      <% checked = @edit[:new][:agent][:readonly].to_s == "1" ? true : false %>
+      <% checked = @edit[:new][:agent][:readonly].to_s == "1" %>
       <td colspan="2">
         <%= check_box_tag("agent_readonly", value="1",
                             checked=checked,

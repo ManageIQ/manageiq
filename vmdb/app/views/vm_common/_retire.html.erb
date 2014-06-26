@@ -23,7 +23,7 @@
 				</td>
 			</tr>
 			<tr>
-				<% disabled = session[:retire_date] == nil ? true : false %>
+				<% disabled = session[:retire_date] == nil %>
 				<td class="key">Retirement Warning</td>
 				<td class="wide"><%= select("retirement","warn", [["None",""],["1 Week before retirement",7],["2 Weeks before retirement",14],["30 Days before retirement",30]], {:selected=>session[:retire_warn]},{:disabled=>disabled}) %></td>
 				<%= observe_field("retirement_warn",

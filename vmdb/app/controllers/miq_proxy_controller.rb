@@ -1067,7 +1067,7 @@ class MiqProxyController < ApplicationController
     @miq_proxy = MiqProxy.find_by_id(@edit[:miq_proxy_id])
 
     @edit[:new][:ws_port] = params[:ws_port] if params[:ws_port]
-    @edit[:new][:readonly] = params[:readonly] == "1" ? true : false if params[:readonly]
+    @edit[:new][:readonly] = params[:readonly] == "1" if params[:readonly]
     @edit[:new][:hb_freq_mins] = params[:hb_freq_mins] if params[:hb_freq_mins]
     @edit[:new][:hb_freq_secs] = params[:hb_freq_secs] if params[:hb_freq_secs]
     @edit[:new][:hb_freq] = @edit[:new][:hb_freq_mins].to_i * 60 + @edit[:new][:hb_freq_secs].to_i if params[:hb_freq_mins] || params[:hb_freq_days]
