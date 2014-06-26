@@ -58,7 +58,7 @@ class Condition < ActiveRecord::Base
         raise "condition '#{name}', include value \"#{expression["include"]}\", is invalid. Should be one of \"any, all or none\""
       end
 
-      expression["include"] == "any" ? result = false : result = true
+      result = expression["include"] != "any"
       expression["tag"].split.each {|tag|
         # p "rec.is_tagged_with?(#{tag}, :ns => #{expression["ns"]})"
         if rec.is_tagged_with?(tag, :ns => expression["ns"])

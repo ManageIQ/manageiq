@@ -349,7 +349,7 @@ class MiqVimVm
     def hasSnapshot?(name, refresh=false)
         @cacheLock.synchronize(:SH) do
             return false if !(si = snapshotInfo_locked(refresh))
-            return searchSsTree(si['rootSnapshotList'], 'name', name) == nil ? false : true
+            return !searchSsTree(si['rootSnapshotList'], 'name', name).nil?
         end
     end
 
