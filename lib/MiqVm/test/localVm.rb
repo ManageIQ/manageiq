@@ -1,7 +1,8 @@
 
-$:.push("#{File.dirname(__FILE__)}/..")
+$LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
+$LOAD_PATH.push("#{File.dirname(__FILE__)}/../..")
 
-require 'rubygems'
+require_relative '../../bundler_setup'
 require 'ostruct'
 require 'log4r'
 require 'MiqVm'
