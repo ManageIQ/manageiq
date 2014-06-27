@@ -41,6 +41,13 @@
                               :tables    => 'availability_zone',
                               :controller=> 'ems_cloud')
 
+          - if role_allows(:feature => "cloud_tenant_show_list")
+            = link_if_nonzero(:count      => @record.number_of(:cloud_tenants),
+                              :record_id  => @record.id,
+                              :display    => "cloud_tenants",
+                              :tables     => "cloud_tenant",
+                              :controller => "ems_cloud")
+
           - if role_allows(:feature=>"flavor_show_list")
             = link_if_nonzero(:count     => @record.number_of(:flavors),
                               :record_id => @record.id,
