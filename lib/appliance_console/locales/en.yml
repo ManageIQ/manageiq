@@ -8,6 +8,7 @@ en:
     - hostname
     - datetime
     - dbrestore
+    - httpdauth
     - evmstop
     - evmstart
     - restart
@@ -20,6 +21,7 @@ en:
     hostname: Set Hostname
     datetime: Set Timezone, Date, and Time
     dbrestore: Restore Database From Backup
+    httpdauth: Configure External Authentication (httpd)
     evmstop: Stop EVM Server Processes
     evmstart: Start EVM Server Processes
     restart: Restart Appliance
