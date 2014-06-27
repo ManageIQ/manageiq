@@ -15,6 +15,8 @@ class CloudTenant < ActiveRecord::Base
   has_many        :cloud_object_store_objects
   has_many        :cloud_resource_quotas
 
+  acts_as_miq_taggable
+
   virtual_column :total_vms, :type => :integer, :uses => :vms
 
   def total_vms
