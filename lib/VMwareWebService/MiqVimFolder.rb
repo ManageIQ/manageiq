@@ -19,6 +19,10 @@ class MiqVimFolder
 	def release
 	    # @invObj.releaseObj(self)
     end
+
+    def reload
+    	@fh = @invObj.getMoProp(@fMor)
+    end
 	
 	def fMor
 	    return(@fMor)
@@ -68,6 +72,16 @@ class MiqVimFolder
 		return taskMor unless ah[:wait]
 	    waitForTask(taskMor)
 	end # def addStandaloneHost
+
+	def createFolder(fname)
+		@invObj.createFolder(@fMor, fname)
+	end
+
+	def subFolderMors
+		fh['childEntity'].each_with_object([]) do |ce, ra|
+			ra << ce if ce.vimType == 'Folder'
+		end
+	end
     
     def waitForTask(tmor)
 	    @invObj.waitForTask(tmor, self.class.to_s)
