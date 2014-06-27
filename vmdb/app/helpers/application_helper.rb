@@ -2476,7 +2476,7 @@ module ApplicationHelper
   NAV_LAYOUT_MAP = {
     :vi  => %w{dashboard report chargeback timeline rss},
     :svc => %w{services catalogs vm_or_template miq_request_vm},
-    :clo => %w{ems_cloud availability_zone flavor security_group vm_cloud},
+    :clo => %w{ems_cloud availability_zone cloud_tenant flavor security_group vm_cloud},
     :inf => %w{ems_infra ems_cluster host vm_infra resource_pool storage repository pxe miq_request_host},
     :vdi => %w{vdi_farm vdi_controller vdi_desktop_pool vdi_desktop vdi_endpoint_device vdi_user vm_vdi},
     :sto => %w{ontap_storage_system ontap_logical_disk ontap_storage_volume ontap_file_share storage_manager},
