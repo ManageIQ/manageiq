@@ -3,10 +3,10 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: Vm - Migrate Application
+    display_name: 
     name: UI_Vm_Migrate_Info
     inherits: 
     description: 
   fields:
   - rel5:
-      value: /EVMApplications/Operations/Profile/VmMigrate/${/#user.normalized_ldap_group}#${process#message}
+      value: /Infrastructure/VM/Migrate/Profile/${/#user.normalized_ldap_group}#${process#message}

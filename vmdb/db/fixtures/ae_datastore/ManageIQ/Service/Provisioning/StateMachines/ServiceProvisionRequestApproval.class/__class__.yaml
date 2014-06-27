@@ -1,0 +1,53 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: 
+    display_name: 
+    name: ServiceProvisionRequestApproval
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: state
+      name: ValidateRequest
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: validate_request
+      on_exit: 
+      on_error: pending_request
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: ApproveRequest
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: approve_request
+      on_exit: 
+      on_error: pending_request
+      max_retries: '100'
+      max_time: 

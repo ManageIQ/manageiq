@@ -1,0 +1,18 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Default
+    name: Default
+    inherits: 
+    description: 
+  fields:
+  - UnregisterFromProvider:
+      value: ! '#/Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider'
+  - DeleteFromProvider:
+      value: /Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromProvider
+  - CheckUnregisteredFromProvider:
+      value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckUnregisteredFromProvider
+  - DeleteFromVMDB:
+      value: /Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB

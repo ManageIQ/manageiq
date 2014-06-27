@@ -1,0 +1,52 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: update_retirement_status
+    display_name: 
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs:
+  - field:
+      aetype: 
+      name: status_state
+      display_name: 
+      datatype: 
+      priority: 1
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: 
+      name: status
+      display_name: 
+      datatype: 
+      priority: 2
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 

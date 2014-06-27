@@ -3,12 +3,14 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: Request Starting
+    display_name: 
     name: request_starting
     inherits: 
     description: 
   fields:
   - on_entry:
       value: get_request_type
+  - rel4:
+      value: /System/Process/parse_provider_category
   - rel5:
       value: /System/Policy/${#request_type}_starting

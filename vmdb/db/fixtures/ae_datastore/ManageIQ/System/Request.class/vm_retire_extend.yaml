@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /Alert/EmailNotifications/vm_retire_extend
+      value: /${/#ae_provider_category}/VM/Retirement/Email/vm_retire_extend

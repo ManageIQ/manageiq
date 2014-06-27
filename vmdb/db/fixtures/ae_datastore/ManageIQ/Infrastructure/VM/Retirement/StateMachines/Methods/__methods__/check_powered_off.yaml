@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: check_powered_off
+    display_name: CheckPoweredOff
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []

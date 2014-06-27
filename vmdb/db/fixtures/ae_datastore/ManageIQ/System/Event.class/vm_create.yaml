@@ -3,7 +3,7 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: VM - Creation
+    display_name: 
     name: vm_create
     inherits: 
     description: 
@@ -11,4 +11,4 @@ object:
   - logical_event:
       value: vm_create
   - rel5:
-      value: /Automation/VMLifecycle/Discovery?vm_id=${process#vm_id}
+      value: 

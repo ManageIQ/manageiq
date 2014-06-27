@@ -3,10 +3,12 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: EVM Requests
+    display_name: 
     name: Request
     inherits: 
     description: 
   fields:
+  - on_entry:
+      value: parse_provider_category
   - rel5:
       value: /System/Request/${#request}

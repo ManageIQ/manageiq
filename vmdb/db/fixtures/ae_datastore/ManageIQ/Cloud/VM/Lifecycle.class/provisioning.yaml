@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: Provisioning
+    inherits: 
+    description: 
+  fields:
+  - Relationship5:
+      value: /Cloud/VM/Provisioning/Profile/${/#user.normalized_ldap_group}#get_state_machine
+  - Relationship6:
+      value: /Cloud/VM/Provisioning/StateMachines/${/#state_machine}/${/#miq_provision.provision_type}

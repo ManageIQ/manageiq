@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: Migrate
+    inherits: 
+    description: 
+  fields:
+  - Relationship5:
+      value: /Infrastructure/VM/Migrate/Profile/${/#user.normalized_ldap_group}#get_state_machine
+  - Relationship6:
+      value: /Infrastructure/VM/Migrate/StateMachines/${/#state_machine}/default

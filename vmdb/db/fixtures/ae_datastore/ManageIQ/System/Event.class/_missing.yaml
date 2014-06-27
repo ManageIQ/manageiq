@@ -3,7 +3,7 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: Default for Missing Events
+    display_name: 
     name: .missing
     inherits: 
     description: 

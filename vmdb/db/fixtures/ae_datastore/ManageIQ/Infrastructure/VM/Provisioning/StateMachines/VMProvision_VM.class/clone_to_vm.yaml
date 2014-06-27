@@ -1,0 +1,16 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: Clone VM
+    name: clone_to_vm
+    inherits: 
+    description: 
+  fields:
+  - PreProvision:
+      value: /Infrastructure/VM/Provisioning/StateMachines/Methods/PreProvision_Clone_to_VM
+  - PostProvision:
+      value: /Infrastructure/VM/Provisioning/StateMachines/Methods/PostProvision_Clone_to_VM
+  - EmailOwner:
+      value: /Infrastructure/VM/Provisioning/Email/MiqProvision_Complete?event=vm_cloned

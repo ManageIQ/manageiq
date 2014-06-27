@@ -3,12 +3,14 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: EVM Automation
+    display_name: 
     name: Automation
     inherits: 
     description: 
   fields:
+  - on_entry:
+      value: parse_provider_category
   - meth1:
       value: parse_automation_request
   - rel2:
-      value: /Automation/${#target_class}/${#target_instance}
+      value: /${/#ae_provider_category}/${#target_component}/${#target_class}/${#target_instance}
