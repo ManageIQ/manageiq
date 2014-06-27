@@ -157,6 +157,7 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        panel_control
       )
     },
 
