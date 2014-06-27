@@ -25,6 +25,7 @@ describe VmCloudController do
               method.to_s
             end
           it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
+            controller.stub(:x_button_response)
             controller.should_receive(actual_method)
             get :x_button, :id => FactoryGirl.create(:template_redhat), :pressed => actual_action
           end

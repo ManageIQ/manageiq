@@ -126,6 +126,10 @@ module ApplicationController::Explorer
     # no need to render anything, method will render flash message when async task is completed
     return if 'mark_vdi' == action
 
+    x_button_response(model, action)
+  end
+
+  def x_button_response(model, action)
     if @refresh_partial == "layouts/flash_msg"
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
