@@ -73,6 +73,14 @@ module EmsCommon
           @view.extras[:total_count] > @view.extras[:auth_count]
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables=>@table_name)
       end
+    elsif @display == "cloud_tenants" || session[:display] == "cloud_tenants" && params[:display].nil?
+      title = "Cloud Tenants"
+      drop_breadcrumb( {:name => "#{@ems.name} (All #{title})", :url => "/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      @view, @pages = get_view(CloudTenant, :parent => @ems) # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] && @view.extras[:auth_count] && @view.extras[:total_count] > @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables => @table_name)
+      end
     elsif @display == "flavors" || session[:display] == "flavors" && params[:display].nil?
       title = "Flavors"
       drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )

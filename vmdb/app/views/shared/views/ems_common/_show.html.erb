@@ -1,5 +1,5 @@
 <div id='main_div'>
-  <% if ["availability_zones","ems_clusters","flavors","security_groups","hosts","instances","images",
+  <% if ["availability_zones","cloud_tenants","ems_clusters","flavors","security_groups","hosts","instances","images",
             "miq_templates","vms","storages","miq_proxies"].include?(@display) &&
             @showtype != "compare"%>
     <%= render :partial => "layouts/gtl", :locals=>{:action_url=>"show/#{@ems.id}"} %>
