@@ -87,7 +87,9 @@ class VmScan < Job
         unless prof_policies.nil?
           scan_profiles = []
           prof_policies.each {|p| scan_profiles += p[:result] unless p[:result].nil?}
-          self.options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
+          unless scan_profiles.blank?
+            self.options[:scan_profiles] = scan_profiles
+          end
         end
       end
 
@@ -170,7 +172,6 @@ class VmScan < Job
   def call_scan
     $log.info "action-call_scan: Enter"
 
-    self.options[:categories] ||= VmOrTemplate.default_scan_categories_no_profile()
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
       vm = VmOrTemplate.find(self.target_id)
@@ -186,6 +187,7 @@ class VmScan < Job
       scan_args = {"ems"=>ems_list, "snapshot"=> snapshot}
       # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
       scan_args["vmScanProfiles"] = self.options[:scan_profiles].nil? ? vm.scan_profile_list : self.options[:scan_profiles]
+      self.options[:categories] = vm.scan_profile_categories(scan_args["vmScanProfiles"])
       if vm.scan_via_ems?
         scan_args['snapshot']['forceFleeceDefault'] = false if vm.template?
         ems_list['connect_to'] = 'ems'
@@ -268,7 +270,6 @@ class VmScan < Job
   def call_synchronize
     $log.info "action-call_synchronize: Enter"
 
-    self.options[:categories] ||= %w{vmconfig vmevents accounts software services system}
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
       vm = VmOrTemplate.find(self.target_id)
