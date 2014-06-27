@@ -232,7 +232,7 @@
                                 "data-miq_observe"=>{:url=>url}.to_json) %>
               </td>
             </tr>
-            <% chk = @edit[:new][:smtp][:authentication] == "none" ? true : false %>
+            <% chk = @edit[:new][:smtp][:authentication] == "none" %>
             <tr>
               <td class="key">User Name</td>
               <td class="wide">

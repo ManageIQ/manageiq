@@ -226,8 +226,6 @@ module ReportController::Reports
       @sortcol = session["#{x_active_tree}_sortcol".to_sym].nil? ? 0 : session["#{x_active_tree}_sortcol".to_sym].to_i
       @sortdir = session["#{x_active_tree}_sortdir".to_sym].nil? ? "DESC" : session["#{x_active_tree}_sortdir".to_sym]
 
-      #don't need paging on report show screen for available reports box
-      #@view, @pages = get_view(MiqReportResult, :where_clause=>set_saved_reports_condition(from_cid(nodeid.split('_')[0])), :all_pages=>x_active_tree == :reports_tree ? true : false)
       @view, @pages = get_view(MiqReportResult, :where_clause=>set_saved_reports_condition(from_cid(nodeid.split('_')[0])))
       @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr
       #Saving converted time to be displayed on saved reports list view

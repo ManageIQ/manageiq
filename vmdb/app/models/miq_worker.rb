@@ -195,7 +195,7 @@ class MiqWorker < ActiveRecord::Base
         settings.merge!(section)
 
         # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
-        raw = (options[:raw] == true) ? true : false
+        raw = options[:raw] == true
 
         # Clean up the configuration values in a format like "30.seconds"
         unless raw

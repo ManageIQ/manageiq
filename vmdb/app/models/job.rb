@@ -216,7 +216,7 @@ class Job < ActiveRecord::Base
   end
 
   def is_active?
-    (self.state == "finished" || self.state == "waiting_to_start") ? false : true
+    !["finished", "waiting_to_start"].include?(self.state)
   end
 
   def self.delete_older(ts, condition)

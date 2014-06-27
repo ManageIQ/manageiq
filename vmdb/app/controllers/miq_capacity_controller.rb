@@ -243,7 +243,7 @@ class MiqCapacityController < ApplicationController
                 params[:trend_storage_val]
           page.replace("planning_options_div", :partial=>"planning_options")
         end
-        session[:changed] = @sb[:planning][:options][:chosen_vm] || @sb[:planning][:options][:vm_mode] == :manual ? true : false
+        session[:changed] = @sb[:planning][:options][:chosen_vm] || @sb[:planning][:options][:vm_mode] == :manual
         page << javascript_for_miq_button_visibility(session[:changed])
       end
     end

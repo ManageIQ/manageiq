@@ -242,7 +242,7 @@ class VdiDesktopPoolController < VdiBaseController
                             VdiDesktopPool.new
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description] = params[:description] if params[:description]
-    @edit[:new][:enabled] = params[:enabled] == "1" ? true : false if params[:enabled]
+    @edit[:new][:enabled] = params[:enabled] == "1" if params[:enabled]
     @edit[:new][:vdi_farm_id] = params[:vdi_farm_id] == "" ? nil : params[:vdi_farm_id] if params[:vdi_farm_id]
     #reset these, incase selected farm doesnt have any emses or if farm selection has changed
     if params[:vdi_farm_id]
@@ -271,7 +271,7 @@ class VdiDesktopPoolController < VdiBaseController
     @edit[:new][:assignment_behavior] = @edit[:behaviors][0].last if @edit[:behaviors] && @edit[:behaviors].length == 1
     @edit[:new][:assignment_behavior] = params[:assignment_behavior] == "" ? nil : params[:assignment_behavior] if params[:assignment_behavior]
     @edit[:new][:ems_id] = params[:ems_id] == "" ? nil : params[:ems_id] if params[:ems_id]
-    @edit[:new][:use_ssl] = params[:use_ssl] == "1" ? true : false if params[:use_ssl]
+    @edit[:new][:use_ssl] = params[:use_ssl] == "1" if params[:use_ssl]
   end
 
 

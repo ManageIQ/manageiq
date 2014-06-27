@@ -288,7 +288,7 @@ module ReportController::Dashboards
       @edit[:new][:name] = params[:name] if params[:name]
       @edit[:new][:description] = params[:description] if params[:description]
       if params[:locked]
-        @edit[:new][:locked] = params[:locked].to_i == 1 ? true : false
+        @edit[:new][:locked] = params[:locked].to_i == 1
       end
       if params[:widget]                # Make sure we got a widget in
         w = params[:widget].to_i

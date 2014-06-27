@@ -8,12 +8,12 @@
   <% if @explorer %>
     <div id="list_grid" style="cursor:hand;"></div>
     <% ajax_url =
-         %w(OntapStorageSystem
+        !(%w(OntapStorageSystem
             OntapLogicalDisk
             OntapStorageVolume
             OntapFileShare
             SecurityGroup).include?(view.db) ||
-         (request.parameters[:controller] == "service" && view.db == "Vm") ? false : true
+        (request.parameters[:controller] == "service" && view.db == "Vm"))
     %>
     <%# don't need a row url to be AJAX when displaying a list of other CI's inside explorer %>
     <%= render(:partial => 'layouts/dhtmlxgrid',

@@ -9,7 +9,7 @@
 					<tr>
 						<td class="key">Analyze VMs on Discovery</td>
 						<td>
-							<% check = @edit[:new][:host][:autoscan].to_s == "1" ? true : false %>
+							<% check = @edit[:new][:host][:autoscan].to_s == "1" %>
 								<%= check_box_tag("host_autoscan", value="1", checked=check,
 																			"data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
 								<%= javascript_tag("$('host_autoscan').focus()") %>
@@ -18,7 +18,7 @@
 					<tr>
 						<td class="key">VMs Inherit Host <%= h(session[:customer_name]) %> Tags on VM Discovery</td>
 						<td>
-							<% check = @edit[:new][:host][:inherit_mgt_tags].to_s == "1" ? true : false %>
+							<% check = @edit[:new][:host][:inherit_mgt_tags].to_s == "1" %>
 								<%= check_box_tag("host_inherit_mgt_tags", value="1", checked=check,
 																			"data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
 						</td>

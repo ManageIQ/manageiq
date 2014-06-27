@@ -227,7 +227,7 @@ class LogFile < ActiveRecord::Base
 
   def self.do_ping?
     self.get_ping_depot_options
-    @@do_ping ||= @@ping_depot_options[:ping_depot] == true ? true : false
+    @@do_ping ||= @@ping_depot_options[:ping_depot] == true
   end
 
   def upload_log_file_db

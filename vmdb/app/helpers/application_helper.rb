@@ -542,11 +542,11 @@ module ApplicationHelper
             when "reload_server_tree"
               return false
             when "delete_server", "zone_delete_server"
-              return @record.class == MiqServer ? false : true
+              return @record.class != MiqServer
             when "role_start", "role_suspend", "zone_role_start", "zone_role_suspend"
-              return @record.class == AssignedServerRole && @record.miq_server.started? ? false : true
+              return !(@record.class == AssignedServerRole && @record.miq_server.started?)
             when "demote_server", "promote_server", "zone_demote_server", "zone_promote_server"
-              return @record.class == AssignedServerRole && @record.master_supported? ? false : true
+              return !(@record.class == AssignedServerRole && @record.master_supported?)
             end
             return true
           when "diagnostics_summary"
@@ -572,10 +572,10 @@ module ApplicationHelper
       nodes = x_node.split('-')
       if nodes.first == "root"
         # show only add button on root node
-        id == "customization_template_new" ? false : true
+        id != "customization_template_new"
       elsif nodes.last == "system" || (@record && @record.system)
         # allow only copy button for system customization templates
-        id == "customization_template_copy" ? false : true
+        id != "customization_template_copy"
       else
         false
       end
@@ -593,20 +593,20 @@ module ApplicationHelper
       when :widgets_tree
         case id
           when "widget_new"
-            return x_node == "root" ? true :  false
+            return x_node == "root"
           when "widget_generate_content"
-            return @sb[:wtype] == "m" ? true : false
+            return @sb[:wtype] == "m"
         end
         return false
       when :reports_tree
         case id
           when "saved_report_delete", "reload"
-            return @sb[:active_tab] == "saved_reports" ? false : true
+            return @sb[:active_tab] != "saved_reports"
           when "miq_report_edit","miq_report_delete"
             return @sb[:active_tab] == "report_info" && @record.rpt_type == "Custom" ?
                 false : true
           when "miq_report_copy","miq_report_new","miq_report_run","miq_report_only","miq_report_schedules"
-            return @sb[:active_tab] == "saved_reports" ? true : false
+            return @sb[:active_tab] == "saved_reports"
           when "view_graph","view_hybrid","view_tabular"
             return @ght_type && @report && @report.graph &&
                 (@zgraph || (@ght_type == "tabular" && @html)) ? false : true
@@ -615,7 +615,7 @@ module ApplicationHelper
       when :savedreports_tree
         case id
           when "reload"
-            return x_node == "root" ? false : true
+            return x_node != "root"
           when "view_graph","view_hybrid","view_tabular"
             return @ght_type && @report && @report.graph &&
                 (@zgraph || (@ght_type == "tabular" && @html)) ? false : true

@@ -81,7 +81,7 @@ module BlackboxMixin
   def blackbox_manager_ws(options)
     # Skip local configuration if we are running against a VMFS datastore
     # We need to call a WS once the blackbox disk file is in place.
-    config_locally = self.storage.store_type == "VMFS" ? false : true
+    config_locally = self.storage.store_type != "VMFS"
     eventData = {:config => {:vmId=>self.guid, :svrId=>MiqServer.my_guid, :path=>self.path},
       :options => {:config_locally=>config_locally, :jobid=>options["taskid"]}}
 

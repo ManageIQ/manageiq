@@ -121,7 +121,7 @@ module ApplicationController::Buttons
       end
       @edit[:new][:target_attr_name] = params[:target_attr_name] if params[:target_attr_name]
       @edit[:new][:name] = params[:name] if params[:name]
-      @edit[:new][:display] = params[:display] == "1" ? true : false if params[:display]
+      @edit[:new][:display] = params[:display] == "1" if params[:display]
       @edit[:new][:description] = params[:description] if params[:description]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
       @edit[:new][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
@@ -705,7 +705,7 @@ module ApplicationController::Buttons
     else
       @edit[:new][:name] = params[:name] if params[:name]
       @edit[:new][:description] = params[:description] if params[:description]
-      @edit[:new][:display] = params[:display] == "1" ? true : false if params[:display]
+      @edit[:new][:display] = params[:display] == "1" if params[:display]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
       @edit[:new][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
     end

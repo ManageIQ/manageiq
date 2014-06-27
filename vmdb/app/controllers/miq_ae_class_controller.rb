@@ -1037,7 +1037,7 @@ $evm.log(\"info\", \"Automate Method Started\")
 $evm.log(\"info\", \"Automate Method Ended\")
 exit MIQ_OK"
     end
-    @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != "" ? true : false
+    @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
     @edit[:new][:fields] = @ae_method.inputs.deep_clone
     @edit[:new][:available_datatypes] = MiqAeField.available_datatypes_for_ui
     @edit[:current] = @edit[:new].dup
@@ -1191,7 +1191,7 @@ exit MIQ_OK"
           @changed = true
         end
       end
-      @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != "" ? true : false
+      @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
       render :update do |page|                    # Use JS to update the display
         page.replace_html(@refresh_div, :partial=>@refresh_partial)  if @refresh_div && @prev_location != @edit[:new][:location]
         #page.replace_html("hider_1", :partial=>"method_data", :locals=>{:field_name=>@field_name})  if @prev_location != @edit[:new][:location]

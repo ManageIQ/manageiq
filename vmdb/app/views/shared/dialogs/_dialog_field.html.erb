@@ -18,7 +18,7 @@
                         :size=>"50x6",
                         "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
     <% when "DialogFieldCheckBox" %>
-      <% checked = @edit[:wf].value(field.name) == "f" ? false : true %>
+      <% checked = @edit[:wf].value(field.name) != "f" %>
       <%= check_box_tag(field.name, value="1",checked=checked,
                           #"data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
                           "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>

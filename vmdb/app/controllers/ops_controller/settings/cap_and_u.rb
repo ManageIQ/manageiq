@@ -221,27 +221,27 @@ module OpsController::Settings::CapAndU
     if params[:tree_name] == "clhosts_tree"     # User checked/unchecked a cluster tree node
       if params[:check_all]                         #to handle check/uncheck cluster all checkbox
         @edit[:new][:clusters].each do |c|                                  # Check each clustered host
-          c[:capture] = params[:check_all] == "true" ? true : false # if cluster checked/unchecked Set C&U flag for all hosts under it as well
+          c[:capture] = params[:check_all] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
           @edit[:new][c[:name].to_sym].each do |h|
-            h[:capture] = params[:check_all] == "true" ? true : false # Set C&U flag depending on if checkbox parm is present
+            h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
           end
         end
         @edit[:new][:non_cl_hosts].each do |h|                                  # Check each non clustered host
-          @edit[:new][:non_cluster_host_enabled][h[:id].to_s] = params[:check_all] == "true" ? true : false # Set C&U flag depending on if checkbox parm is present
+          @edit[:new][:non_cluster_host_enabled][h[:id].to_s] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
         end
       else
         @edit[:new][:clusters].each do |c|                                  # Check each cluster
           if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
-            c[:capture] = params[:check] == "true" ? true : false  # if cluster checked/unchecked Set C&U flag for all hosts under it as well
+            c[:capture] = params[:check] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
             @edit[:new][c[:name].to_sym].each do |h|
-              h[:capture] = params[:check] == "true" ? true : false  # Set C&U flag depending on if checkbox parm is present
+              h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
             end
           elsif nodetype[0] == "NonCluster_0"
             process_form_vars_for_non_clustered(node_type)
           elsif node_type[0] == "Host"
             @edit[:new][c[:name].to_sym].each do |h|
               if node_type[1].to_i == h[:id].to_i
-                h[:capture] = params[:check] == "true" ? true : false  # Set C&U flag depending on if checkbox parm is present
+                h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
                 c[:capture] = false if params[:check] == "0"
               end
             end
@@ -273,12 +273,12 @@ module OpsController::Settings::CapAndU
     if params[:tree_name] == "cu_datastore_tree" # User checked/unchecked a storage tree node
       if params[:check_all]          #to handle check/uncheck storage all checkbox
         @edit[:new][:storages].each do |s|                                        # Check each storage
-          s[:capture] = params[:check_all] == "true" ? true : false               # Set C&U flag depending on if checkbox parm is present
+          s[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
         end
       else
         @edit[:new][:storages].each do |s|                                  # Check each storage
           if node_type[0] == "Datastore" && node_type[1].to_s == s[:id].to_s
-            s[:capture] = params[:check] == "true" ? true : false # Set C&U flag depending on if checkbox parm is present
+            s[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
           end
         end
       end
@@ -398,7 +398,7 @@ module OpsController::Settings::CapAndU
       ds_node[:tooltip] = name
       ds_node[:style] = "cursor:default"     # No cursor pointer
       ds_node[:icon] = "storage.png"
-      ds_node[:select] = s[:capture] == true ? true :false
+      ds_node[:select] = s[:capture] == true
 
       children = Array.new
       st = @temp[:st_recs][s[:id]]

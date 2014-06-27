@@ -408,7 +408,7 @@ module OpsController::Settings::Common
             replace_right_cell(@nodetype,[:settings])
           elsif @sb[:active_tab] == "settings_custom_logos"
             render :update do |page|
-              page.redirect_to :action => 'explorer', :flash_msg=>@flash_array[0][:message], :flash_error =>@flash_array[0][:level] == :error ? true : false, :escape => false  # redirect to build the server screen
+              page.redirect_to :action => 'explorer', :flash_msg=>@flash_array[0][:message], :flash_error =>@flash_array[0][:level] == :error, :escape => false  # redirect to build the server screen
             end
             return
           else
@@ -815,7 +815,7 @@ module OpsController::Settings::Common
       @edit[:current].config.each_key do |category|
         @edit[:current].config[category].symbolize_keys.each_key do |key|
           if category == :smtp && key == :enable_starttls_auto  # Checkbox is handled differently
-            @edit[:new][category][key] = params["#{category}_#{key}"] == "1" ? true : false if params.has_key?("#{category}_#{key}")
+            @edit[:new][category][key] = params["#{category}_#{key}"] == "1" if params.has_key?("#{category}_#{key}")
           else
             @edit[:new][category][key] = params["#{category}_#{key}"] if params["#{category}_#{key}"]
           end

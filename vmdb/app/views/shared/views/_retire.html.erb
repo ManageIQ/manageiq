@@ -24,7 +24,7 @@
 				</td>
 			</tr>
 			<tr>
-				<% disabled = session[:retire_date] == nil ? true : false %>
+				<% disabled = session[:retire_date] == nil %>
 				<td class="key">Retirement Warning</td>
 				<td class="wide">
           <%= select_tag("retirement_warn",

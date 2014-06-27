@@ -84,7 +84,7 @@
 						<tr>
 							<td class="key">Count</td>
 							<td class="wide">
-								<% uiworker_count_disbaled = Vmdb::Application.config.session_store == :memory_store ? true : false %>
+								<% uiworker_count_disbaled = Vmdb::Application.config.session_store == :memory_store %>
 								<% if uiworker_count_disbaled %>
 									<%= h(@edit[:new].config[:workers][:worker_base][:ui_worker][:count].to_i) %>
 								<% else %>

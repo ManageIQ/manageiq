@@ -105,7 +105,7 @@ module MiqPolicyController::Rsop
 
   def rsop_toggle
     @explorer = true
-    @sb[:rsop][:open] = @sb[:rsop][:open] == true ? false : true    #set this before creating toolbar
+    @sb[:rsop][:open] = @sb[:rsop][:open] != true # set this before creating toolbar
     rsop_button_pressed
   end
 
