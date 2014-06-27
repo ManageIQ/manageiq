@@ -122,19 +122,21 @@ module MiqAeDatastore
     [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each { |k| k.delete_all }
   end
 
-  def self.reset_manageiq_domain(datastore_dir)
-    ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
-    ns.destroy if ns
-    import_yaml_dir(datastore_dir, MANAGEIQ_DOMAIN)
-    ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
-    ns.update_attributes!(:system => true, :enabled => true, :priority => MANAGEIQ_PRIORITY) if ns
-    reset_default_namespace
-  end
-
   def self.reset_default_namespace
     ns = MiqAeNamespace.find_by_fqname(DEFAULT_OBJECT_NAMESPACE)
     ns.destroy if ns
     seed_default_namespace
+  end
+
+  def self.reset_domain(datastore_dir, domain_name)
+    $log.info("MIQ(MiqAeDatastore) Resetting domain #{domain_name} from #{datastore_dir}") if $log
+    ns = MiqAeDomain.find_by_fqname(domain_name)
+    ns.destroy if ns
+    import_yaml_dir(datastore_dir, domain_name)
+    if domain_name.downcase == MANAGEIQ_DOMAIN.downcase
+      ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
+      ns.update_attributes!(:system => true, :enabled => true, :priority => MANAGEIQ_PRIORITY) if ns
+    end
   end
 
   def self.seed_default_namespace
@@ -154,8 +156,12 @@ module MiqAeDatastore
 
   def self.reset_to_defaults
     ds_dir = File.expand_path(File.join(Rails.root, 'db/fixtures/ae_datastore'))
-    raise "#{MANAGEIQ_DOMAIN} domain directory not found [#{ds_dir}]" unless Dir.exist?(ds_dir)
-    reset_manageiq_domain(ds_dir)
+    raise "Datastore directory [#{ds_dir}] not found" unless Dir.exist?(ds_dir)
+    Dir.glob("#{ds_dir}/*/#{MiqAeDomain::DOMAIN_YAML_FILENAME}").each do |domain_file|
+      domain_name = File.basename(File.dirname(domain_file))
+      reset_domain(ds_dir, domain_name)
+    end
+    reset_default_namespace
   end
 
   def self.seed

@@ -55,16 +55,11 @@ namespace :evm do
       end
     end
 
-    desc 'Reset the ManageIQ domain to the default values'
+    desc 'Reset the default automate domain(s) (ManageIQ and others)'
     task :reset => :environment do
-      puts "Reset the ManageIQ automation model"
-      miq_model_dir = File.expand_path(File.join(Rails.root, "db/fixtures/datastore"))
-      unless Dir.exist?(miq_model_dir)
-        raise "The ManageIQ automation directory does not exist file: #{miq_model_dir}"
-      end
-      puts "Resetting the ManageIQ domain from : #{miq_model_dir}"
-      MiqAeDatastore.reset_manageiq_domain(miq_model_dir)
-      puts "The automate ManageIQ model has been reset."
+      puts "Resetting the default domains in the automation model"
+      MiqAeDatastore.reset_to_defaults
+      puts "The default domains in the automation model have been reset."
     end
 
     desc 'Usage information regarding available tasks'
