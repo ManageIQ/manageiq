@@ -15,6 +15,13 @@ class FileDepotRedhatDropbox < FileDepotFtp
     false
   end
 
+  def destination_file
+    @destination_file ||= begin
+      file_name = [support_case, file.destination_file_name].delete_blanks.join("-")
+      File.join(destination_path, file_name)
+    end
+  end
+
   def destination_path
     "/incoming"
   end
