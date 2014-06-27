@@ -11,6 +11,13 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 # include the lib matchers
 Dir[Rails.root.join("../lib/spec/support/custom_matchers/*.rb")].each { |f| require f }
 
+begin
+  require 'simplecov'
+  SimpleCov.start "rails"
+rescue LoadError
+  # won't run coverage if gem not loaded
+end
+
 RSpec.configure do |config|
   # == Mock Framework
   #

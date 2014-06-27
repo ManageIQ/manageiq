@@ -4,6 +4,7 @@
 .loadpath
 .project
 .redcar/
+coverage/
 *.sublime-project
 *.sublime-workspace
 *.sln
