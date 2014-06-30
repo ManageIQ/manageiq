@@ -543,9 +543,10 @@ module OpsController::Diagnostics
   end
 
   def log_depot_get_form_vars_from_settings(settings)
-    @edit[:protocol]           = settings[:uri].nil? ? nil : @edit[:protocols_hash][settings[:uri].split('://')[0]]
-    @edit[:new][:uri_prefix]   = settings[:uri].nil? ? nil : settings[:uri].split('://')[0]
-    @edit[:new][:uri]          = settings[:uri].nil? ? nil : settings[:uri].split('://')[1]
+    protocol, path = settings[:uri].to_s.split('://')
+    @edit[:protocol]           = protocol
+    @edit[:new][:uri_prefix]   = protocol
+    @edit[:new][:uri]          = path
     @edit[:new][:log_userid]   = settings[:username]
     @edit[:new][:log_password] = settings[:password]
     @edit[:new][:log_verify]   = settings[:password]
@@ -630,17 +631,10 @@ module OpsController::Diagnostics
     @edit[:current] = Hash.new
     @edit[:protocols_hash] = LogFile::SUPPORTED_DEPOTS
     #have to create array to add <choose> on the top in the form
-    @edit[:protocols_arr] = Array.new
-    @edit[:protocols_hash].each do |p|
-      @edit[:protocols_arr].push(p[1])
-    end
+    @edit[:protocols_arr] = @edit[:protocols_hash].values
     @edit[:key] = "logdepot_edit__#{@record.id || "new"}"
-    settings = @record.get_log_depot_settings
-    if settings.nil? || settings[:from_zone]
-      log_depot_reset_form_vars
-    else
-      log_depot_get_form_vars_from_settings(settings)
-    end
+    log_depot = @record.log_file_depot.try(:depot_hash)
+    log_depot_get_form_vars_from_settings(log_depot) if log_depot.present?
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true
