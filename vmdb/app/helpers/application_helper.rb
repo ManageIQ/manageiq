@@ -1406,13 +1406,6 @@ module ApplicationHelper
         return "Only #{MAX_DASHBOARD_COUNT} Dashboards are allowed for a group" if @temp[:widgetsets].length >= MAX_DASHBOARD_COUNT
       when "db_seq_edit"
         return "There should be atleast 2 Dashboards to Edit Sequence" if @temp[:widgetsets].length <= 1
-      when "miq_capacity_download_csv", "miq_capacity_download_pdf", "miq_capacity_download_text"
-        if (x_active_tree == nil && @sb[:planning] && @sb[:planning][:rpt] && !@sb[:planning][:rpt].table.data.empty?) ||
-            (x_active_tree == :utilization_tree && @sb[:util] && @sb[:util][:trend_rpt] && @sb[:util][:summary])
-          return false
-        else
-          return "No records found for this report"
-        end
       when "render_report_csv", "render_report_pdf",
           "render_report_txt", "report_only"
         if (@html || @zgraph) && (!@report.extras[:grouping] || (@report.extras[:grouping] && @report.extras[:grouping][:_total_][:count] > 0))
@@ -1427,7 +1420,19 @@ module ApplicationHelper
             MiqReportResult.find(@report_result_id).try(:miq_report_result_details).try(:length).to_i > 0 ? false : "No records found for this report"
       end
     end
+    return check_for_utilization_download_buttons if %w(miq_capacity_download_csv
+                                                        miq_capacity_download_pdf
+                                                        miq_capacity_download_text).include?(id)
     false
+  end
+
+  def check_for_utilization_download_buttons
+    return false if x_active_tree.nil? &&
+                    @sb.fetch_path(:planning, :rpt) &&
+                    !@sb[:planning][:rpt].table.data.empty?
+    return false if @sb.fetch_path(:util, :trend_rpt) &&
+                    @sb.fetch_path(:util, :summary)
+    "No records found for this report"
   end
 
   def get_record_cls(record)
