@@ -5,21 +5,20 @@ module Build
     attr_reader :commit_sha, :remote
     def initialize(remote)
       @remote = remote
-      read_version_file
     end
 
     def commit_sha
       long_sha =
-        if @branch_or_tag == "master"
+        if ref == "master"
           ls_remote_sha("master")
         else
-          ls_remote_sha(dereferenced_tag) || ls_remote_sha(@branch_or_tag)
+          ls_remote_sha(dereferenced_tag) || ls_remote_sha(ref)
         end
       long_sha.to_s[0, 10]
     end
 
     def branch
-      @branch_or_tag.split("-").first
+      ref.split("-").first
     end
 
     def ls_remote_sha(target)
@@ -29,13 +28,15 @@ module Build
     private
 
     def dereferenced_tag
-      "#{@branch_or_tag}^{}"
+      "#{ref}^{}"
     end
 
     # TODO: Perhaps the contents of the VERSION should be passed in
-    def read_version_file
-      file = Pathname.new(File.expand_path(File.dirname(__FILE__)))
-      @branch_or_tag = File.read(file.join("../vmdb/VERSION")).strip
+    def ref
+      @ref ||= begin
+        file = Pathname.new(File.expand_path(File.dirname(__FILE__)))
+        File.read(file.join("../vmdb/VERSION")).strip
+      end
     end
   end
 end
