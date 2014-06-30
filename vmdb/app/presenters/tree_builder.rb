@@ -286,7 +286,7 @@ class TreeBuilder
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
-  def rbac_filtered_objects(object, options = {})
+  def rbac_filtered_objects(objects, options = {})
     self.class.rbac_filtered_objects(objects, options)
   end
 
