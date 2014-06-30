@@ -81,6 +81,6 @@ module CloudTenantHelper::TextualSummary
   def textual_quotas(quota)
     label = "#{quota.service_name}::#{quota.name}"
     num   = quota.value.to_i
-    h     = {:label => label, :value => num}
+    h     = {:label => label, :value => (num < 0 ? "Unlimited" : num)}
   end
 end
