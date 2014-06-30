@@ -1427,12 +1427,12 @@ module ApplicationHelper
   end
 
   def check_for_utilization_download_buttons
-    if (x_active_tree.nil? && @sb[:planning] && @sb[:planning][:rpt] && !@sb[:planning][:rpt].table.data.empty?) ||
-        (x_active_tree == :utilization_tree && @sb[:util] && @sb[:util][:trend_rpt] && @sb[:util][:summary])
-      return false
-    else
-      return "No records found for this report"
-    end
+    return false if x_active_tree.nil? &&
+                    @sb.fetch_path(:planning, :rpt) &&
+                    !@sb[:planning][:rpt].table.data.empty?
+    return false if @sb.fetch_path(:util, :trend_rpt) &&
+                    @sb.fetch_path(:util, :summary)
+    "No records found for this report"
   end
 
   def get_record_cls(record)
