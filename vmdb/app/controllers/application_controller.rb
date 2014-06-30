@@ -183,6 +183,7 @@ class ApplicationController < ActionController::Base
 
   # Control blinds effects on nav panel divs
   def panel_control
+    @keep_compare = true
     panel = params[:panel]
     render :update do |page|
       @panels[panel] = !@panels[panel]
