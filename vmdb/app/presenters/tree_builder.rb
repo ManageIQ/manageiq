@@ -226,8 +226,7 @@ class TreeBuilder
     # open nodes to show selected automate entry point
     x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
 
-    builder_class = dynatree ? TreeNodeBuilderDynatree : TreeNodeBuilderDHTMLX
-    node = builder_class.build(object, pid, options)
+    node = x_build_single_node(object, pid, options, dynatree)
 
     if dynatree
       # FIXME: missing this for non-dynatree
@@ -254,6 +253,11 @@ class TreeBuilder
       end
     end
     [node]
+  end
+
+  def x_build_single_node(object, pid, options, dynatree = true)
+    builder_class = dynatree ? TreeNodeBuilderDynatree : TreeNodeBuilderDHTMLX
+    builder_class.build(object, pid, options)
   end
 
   def x_build_node_dynatree(object, pid, options)   # Called with object, tree node parent id, tree options
