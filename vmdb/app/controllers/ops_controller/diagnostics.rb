@@ -99,7 +99,7 @@ module OpsController::Diagnostics
       pfx = @sb[:active_tab] == "diagnostics_collect_logs" ? "logdepot" : "dbbackup"
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("#{pfx}_edit__#{id}","replace_cell__explorer")
-      validate_uri_settings if @edit[:protocal]
+      validate_uri_settings if @edit[:protocol]
       if @flash_array
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
