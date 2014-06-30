@@ -3,7 +3,7 @@ module CloudTenantHelper::TextualSummary
   # Groups
   #
   def textual_group_relationships
-    items = %w{ems_cloud instances}
+    items = %w{ems_cloud security_groups instances images}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -27,12 +27,34 @@ module CloudTenantHelper::TextualSummary
     h
   end
 
+  def textual_security_groups
+    label = ui_lookup(:tables=>"security_groups")
+    num   = @record.number_of(:security_groups)
+    h     = {:label => label, :image => "security_group", :value => num}
+    if num > 0
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'security_groups')
+    end
+    h
+  end
+
   def textual_instances
     label = ui_lookup(:tables=>"vm_cloud")
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => 'instances')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_images
+    label = ui_lookup(:tables=>"template_cloud")
+    num   = @record.number_of(:miq_templates)
+    h     = {:label => label, :image => "vm", :value => num}
+    if num > 0 && role_allows(:feature => "miq_template_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => 'images')
       h[:title] = "Show all #{label}"
     end
     h

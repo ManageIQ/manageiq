@@ -44,6 +44,17 @@
                                     {:title=>"Show this Cloud Tenant's parent #{ui_lookup(:table=>"ems_cloud")}"},
                                     '/images/icons/16/link_external.gif') %>
             <% end %>
+		<% end %>
+
+          <% if role_allows(:feature=>"security_group_show_list") %>
+            <% unless @record.number_of(:security_groups) == 0 %>
+              <%= link_to_with_icon("Security Groups (#{@record.number_of(:security_groups)})",
+                                    {:action=>'show', :id=>@record, :display=>'security_groups'},
+                                    :title=>"Show all Security Groups") %>
+            <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              Security Groups (<%= @record.number_of(:security_groups) %>)<br/>
+            <% end %>
           <% end %>
 
           <% if role_allows(:feature=>"vm_show_list") %>
@@ -57,6 +68,16 @@
             <% end %>
           <% end %>
 
+          <% if role_allows(:feature=>"miq_template_show_list") %>
+            <% unless @record.number_of(:miq_templates) == 0 %>
+              <%= link_to_with_icon("Images (#{@record.number_of(:miq_templates)})",
+                                    {:action=>'show', :id=>@record, :display=>'images'},
+                                    :title=>"Show all Images") %>
+            <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              Images (<%= @record.number_of(:miq_templates) %>)<br/>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

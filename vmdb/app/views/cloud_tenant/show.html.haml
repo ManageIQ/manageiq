@@ -6,7 +6,7 @@
   - elsif @showtype == "download_pdf"
     = render :partial => "layouts/show_pdf"
   - else
-    - if ["instances"].include?(@display) && @showtype != "compare"
+    - if ["instances", "images", "security_groups"].include?(@display) && @showtype != "compare"
       = render :partial => "layouts/gtl", :locals=>{:action_url=>"show/#{@cloud_tenant.id}"}
     - elsif @showtype == "compare" || @showtype == "drift_history" || @showtype == "drift" || @showtype == "item"
       = render :partial=>"layouts/#{@showtype}"
