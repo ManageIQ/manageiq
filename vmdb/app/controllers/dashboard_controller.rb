@@ -644,7 +644,7 @@ class DashboardController < ApplicationController
 
       # Call the authentication, use wait_for_task if a task is spawned
       begin
-        user_or_taskid = User.authenticate(user[:name],user[:password])
+        user_or_taskid = User.authenticate(user[:name], user[:password], request)
       rescue MiqException::MiqEVMLoginError => err
         @flash_msg = I18n.t("flash.authentication.error")
         user[:name] = nil

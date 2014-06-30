@@ -213,7 +213,7 @@ class User < ActiveRecord::Base
     raise MiqException::MiqEVMLoginError, "authentication failed" unless ldap.bind(fq_user, password)
   end
 
-  def self.authenticate(username, password)
+  def self.authenticate(username, password, request = nil)
     fail_message = "Authentication failed"
     mode = self.mode
 
@@ -224,6 +224,8 @@ class User < ActiveRecord::Base
         self.authenticate_ldap(username, password)
       elsif mode == "amazon"
         self.authenticate_amazon(username, password)
+      elsif mode == "httpd"
+        authenticate_httpd(username, request)
       end
 
       raise MiqException::MiqEVMLoginError, fail_message if user_or_taskid.nil?
@@ -339,25 +341,10 @@ class User < ActiveRecord::Base
         return nil
       end
 
-      matching_groups = self.match_iam_groups(amazon_auth, amazon_user)
-      if matching_groups.empty?
-        msg = "Authentication failed for userid #{username}, unable to match user's group membership to an EVM role"
-        $log.warn("#{log_prefix}: #{msg}")
-        AuditEvent.failure(audit.merge(:message => msg))
-        task.error(msg)
-        task.state_finished
-        return nil
-      end
-
+      matching_groups = match_groups(amazon_auth.get_memberships(amazon_user))
       user   = self.find_by_userid(username) || self.new(:userid => username)
       user.update_attrs_from_iam(amazon_auth, amazon_user, username)
-      user.miq_groups = matching_groups
-      user.lastlogon  = Time.now.utc
-      user.save!
-      $log.info("#{log_prefix}: Authorized User: [#{username}]")
-
-      task.userid = user.userid
-      task.update_status("Finished", "Ok", "User authorized successfully")
+      user.save_successful_logon(matching_groups, audit, task)
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
@@ -454,30 +441,103 @@ class User < ActiveRecord::Base
         return nil
       end
 
-      matching_groups = self.match_ldap_groups(ldap, lobj)
-      if matching_groups.empty?
-        msg = "Authentication failed for userid #{fq_user}, unable to match user's group membership to an EVM role"
-        $log.warn("#{log_prefix}: #{msg}")
-        AuditEvent.failure(audit.merge(:message => msg))
-        task.error(msg)
-        task.state_finished
-        return nil
-      end
-
+      matching_groups = match_groups(getUserMembership(ldap, lobj))
       userid = ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || fq_user)
       user   = self.find_by_userid(userid) || self.new(:userid => userid)
       user.update_attrs_from_ldap(ldap, lobj)
-      user.miq_groups = matching_groups
-      user.lastlogon  = Time.now.utc
-      user.save!
-      $log.info("#{log_prefix}: Authorized User FQDN: [#{fq_user}]")
-
-      task.userid = user.userid
-      task.update_status("Finished", "Ok", "User authorized successfully")
+      user.save_successful_logon(matching_groups, audit, task)
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
       AuditEvent.failure(audit.merge(:message=> err.message))
+      task.state_finished
+      raise
+    end
+  end
+
+  def self.authenticate_httpd(username, request)
+    audit = {:event => "authenticate_httpd", :userid => username}
+    if request.nil?
+      AuditEvent.failure(audit.merge(:message => "Authentication failed for user #{username}, request missing"))
+      nil
+    elsif request.headers['X_REMOTE_USER'].present?
+      AuditEvent.success(audit.merge(:message => "User #{username} successfully validated by httpd"))
+
+      if VMDB::Config.new("vmdb").config[:authentication][:httpd_role] == true
+        user = authorize_httpd_queue(username, request)
+      else
+        # If role_mode == database we will only use httpd for authentication. Also, the user must exist in our database
+        # otherwise we will fail authentication
+        unless (user = find_by_userid(username))
+          AuditEvent.failure(audit.merge(:message => "User #{username} authenticated but not defined in EVM"))
+          raise MiqException::MiqEVMLoginError,
+                "User authenticated but not defined in EVM, please contact your EVM administrator"
+        end
+      end
+
+      AuditEvent.success(audit.merge(:message => "Authentication successful for user #{username}"))
+      user
+    else
+      external_auth_error = request.headers['HTTP_X_EXTERNAL_AUTH_ERROR']
+      AuditEvent.failure(audit.merge(:message => "Authentication failed for userid #{username} #{external_auth_error}"))
+      nil
+    end
+  end
+
+  def self.authorize_httpd_queue(username, request)
+    task = MiqTask.create(:name => "External httpd User Authorization of '#{username}'", :userid => username)
+    user_attrs = {:username  => username,
+                  :fullname  => request.headers['X_REMOTE_USER_FULLNAME'],
+                  :firstname => request.headers['X_REMOTE_USER_FIRSTNAME'],
+                  :lastname  => request.headers['X_REMOTE_USER_LASTNAME'],
+                  :email     => request.headers['X_REMOTE_USER_EMAIL']}
+    membership_list = (request.headers['X_REMOTE_USER_GROUPS'] || '').split(":")
+
+    if !MiqEnvironment::Process.is_ui_worker_via_command_line?
+      authorize_httpd(task.id, username, user_attrs, membership_list)
+    else
+      MiqQueue.put(
+        :queue_name   => "generic",
+        :class_name   => to_s,
+        :method_name  => "authorize_httpd",
+        :args         => [task.id, username, user_attrs, membership_list],
+        :server_guid  => MiqServer.my_guid,
+        :priority     => MiqQueue::HIGH_PRIORITY,
+        :miq_callback => {
+          :class_name  => task.class.name,
+          :instance_id => task.id,
+          :method_name => :queue_callback_on_exceptions,
+          :args        => ['Finished']
+        })
+    end
+
+    task.id
+  end
+
+  def self.authorize_httpd(taskid, username, user_attrs, membership_list)
+    log_prefix = "MIQ(User.authorize_httpd):"
+    audit = {:event => "authorize_httpd", :userid => username}
+
+    task = MiqTask.find_by_id(taskid)
+    if task.nil?
+      message = "#{log_prefix} Unable to find task with id: [#{taskid}]"
+      $log.error(message)
+      raise message
+    end
+    task.update_status("Active", "Ok", "Authorizing")
+
+    begin
+      VMDB::Config.new("vmdb").config[:authentication]
+      $log.info("#{log_prefix}  User: [#{username}]")
+
+      matching_groups = match_groups(membership_list)
+      user = find_by_userid(username) || new(:userid => username)
+      user.update_attrs_from_httpd(user_attrs)
+      user.save_successful_logon(matching_groups, audit, task)
+    rescue err
+      $log.log_backtrace(err)
+      task.error(err.message)
+      AuditEvent.failure(audit.merge(:message => err.message))
       task.state_finished
       raise
     end
@@ -558,7 +618,7 @@ class User < ActiveRecord::Base
     uobj = ldap.get_user_object(value, attr)
     raise "Unable to auto-create user because LDAP search returned no data for user with #{attr}: [#{value}]" if uobj.nil?
 
-    matching_groups = self.match_ldap_groups(ldap, uobj)
+    matching_groups = match_groups(getUserMembership(ldap, uobj))
     raise "Unable to auto-create user because unable to match user's group membership to an EVM role" if matching_groups.empty?
 
     user = self.new
@@ -580,9 +640,41 @@ class User < ActiveRecord::Base
     self.email      = email unless email.blank?
   end
 
+  def update_attrs_from_httpd(user_attrs)
+    self.userid     = user_attrs[:username]
+    self.name       = user_attrs[:fullname]
+    self.first_name = user_attrs[:firstname]
+    self.last_name  = user_attrs[:lastname]
+    self.email      = user_attrs[:email] unless user_attrs[:email].blank?
+  end
+
   def update_attrs_from_iam(amazon_auth, amazon_user, username)
     self.userid     = username
     self.name       = amazon_user.name
+  end
+
+  def save_successful_logon(matching_groups, audit = nil, task = nil)
+    log_prefix = "MIQ(User#save_successful_logon) User: [#{userid}]"
+    if matching_groups.empty?
+      msg = "Authentication failed for userid #{userid}, unable to match user's group membership to an EVM role"
+      AuditEvent.failure(audit.merge(:message => msg)) if audit
+      if task
+        $log.warn("#{log_prefix}: #{msg}")
+        task.error(msg)
+        task.state_finished
+      end
+      return nil
+    end
+
+    self.miq_groups = matching_groups
+    self.lastlogon = Time.now.utc unless task.nil?
+    save!
+    if task
+      $log.info("#{log_prefix}: Authorized User: [#{userid}]")
+      task.userid = userid
+      task.update_status("Finished", "Ok", "User authorized successfully")
+    end
+    self
   end
 
   def current_group=(group)
@@ -731,31 +823,18 @@ class User < ActiveRecord::Base
     groups.uniq
   end
 
-  def self.match_ldap_groups(ldap, obj)
-    log_prefix  = "MIQ(User#match_ldap_groups)"
-    groups      = self.getUserMembership(ldap, obj).collect {|g| g.downcase}
+  def self.match_groups(groups)
+    log_prefix  = "MIQ(User#match_groups)"
+
+    return [] if groups.empty?
+    groups = groups.collect { |g| g.downcase }
+
     miq_groups  = MiqServer.my_server.miq_groups
     miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
     miq_groups  = MiqGroup.find(:all, :conditions => {:resource_id => nil, :resource_type => nil}) if miq_groups.empty?
-    miq_groups.sort!  { |a,b| a.sequence <=> b.sequence }
-    groups.each       { |g| $log.debug("#{log_prefix} Group from LDAP: #{g.downcase}") }
-    miq_groups.each   { |g| $log.debug("#{log_prefix} Group from EVM: #{g.description.downcase}") }
-    miq_groups.select { |g| groups.include?(g.description.downcase) }
-  end
-
-  def self.get_iam_user_membership(amazon_auth, amazon_user)
-    amazon_auth.get_memberships(amazon_user)
-  end
-
-  def self.match_iam_groups(amazon_auth, amazon_user)
-    log_prefix  = "MIQ(User#match_iam_groups)"
-    groups      = self.get_iam_user_membership(amazon_auth, amazon_user).collect {|g| g.downcase}
-    miq_groups  = MiqServer.my_server.miq_groups
-    miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
-    miq_groups  = MiqGroup.find(:all, :conditions => {:resource_id => nil, :resource_type => nil}) if miq_groups.empty?
-    miq_groups.sort!  { |a,b| a.sequence <=> b.sequence }
-    groups.each       { |g| $log.debug("#{log_prefix} Group from Amazon IAM: #{g.downcase}") }
-    miq_groups.each   { |g| $log.debug("#{log_prefix} Group from EVM: #{g.description.downcase}") }
+    miq_groups.sort!  { |a, b| a.sequence <=> b.sequence }
+    groups.each       { |g| $log.debug("#{log_prefix} External Group: #{g}") }
+    miq_groups.each   { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }
     miq_groups.select { |g| groups.include?(g.description.downcase) }
   end
 

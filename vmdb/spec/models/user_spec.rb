@@ -267,8 +267,10 @@ describe User do
 
       it "will fail task if user group doesn't match an EVM role" do
         @miq_ldap.stub(:get_user_object => "user object")
+        @miq_ldap.stub(:get_attr => nil)
+        @miq_ldap.stub(:normalize => "a-username")
         MiqLdap.stub(:new).and_return(@miq_ldap)
-        User.stub(:match_ldap_groups).and_return([])
+        User.stub(:getUserMembership).and_return([])
 
         AuditEvent.should_receive(:failure).once
         User.authorize_ldap(@task.id, @fq_user).should be_nil

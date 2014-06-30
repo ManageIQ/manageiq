@@ -718,10 +718,12 @@ module VMDB
       Config.wstimeout data.timeout
     end
 
+    AUTH_TYPES = %w(ldap ldaps httpd amazon database none)
     def self.authentication(data, mode="activate")
       valid, errors = [true, []]
-      if !["ldap", "ldaps", "amazon", "database", "none"].include?(data.mode)
-        valid = false; errors << [:mode, "authentication type, \"#{data.mode}\", invalid. Should be one of: ldap, ldaps, amazon, database or none"]
+      unless AUTH_TYPES.include?(data.mode)
+        valid = false
+        errors << [:mode, "authentication type, \"#{data.mode}\", invalid. Should be one of: #{AUTH_TYPES.join(", ")}"]
       end
 
       if data.mode == "ldap"
