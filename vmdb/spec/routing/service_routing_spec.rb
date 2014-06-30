@@ -101,6 +101,14 @@ describe 'routes for ServiceController' do
     end
   end
 
+  describe '#tree_autoload_dynatree' do
+    it 'routes with POST' do
+      expect(
+        post("/#{controller_name}/tree_autoload_dynatree")
+      ).to route_to("#{controller_name}#tree_autoload_dynatree")
+    end
+  end
+
   describe "#tree_select" do
     it "routes with POST" do
       expect(post("/service/tree_select")).to route_to("service#tree_select")

@@ -14,6 +14,17 @@ module MiqAeMethodService
     expose :indirect_service_children
     expose :parent_service
 
+    CREATE_ATTRIBUTES = [:name, :description, :service_template]
+
+    def self.create(options = {})
+      attributes = options.symbolize_keys.slice(*CREATE_ATTRIBUTES)
+      if attributes[:service_template]
+        raise ArgumentError, "service_template must be a MiqAeServiceServiceTemplate" unless
+          attributes[:service_template].kind_of?(MiqAeMethodService::MiqAeServiceServiceTemplate)
+        attributes[:service_template] = ServiceTemplate.find(attributes[:service_template].id)
+      end
+      ar_method { MiqAeServiceModelBase.wrap_results(Service.create!(attributes)) }
+    end
 
     def name=(new_name)
       ar_method do
@@ -24,6 +35,26 @@ module MiqAeMethodService
 
     def description=(new_description)
       ar_method { @object.update_attribute(:description, new_description) }
+    end
+
+    def display=(display)
+      ar_method do
+        @object.display = display
+        @object.save
+      end
+    end
+
+    def parent_service=(service)
+      ar_method do
+        if service
+          raise ArgumentError, "service must be a MiqAeServiceService" unless service.kind_of?(
+            MiqAeMethodService::MiqAeServiceService)
+          @object.service = Service.find(service.id)
+        else
+          @object.service = nil
+        end
+        @object.save
+      end
     end
 
     def retires_on=(date)

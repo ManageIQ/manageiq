@@ -203,6 +203,7 @@ class TreeBuilder
                                                     x_get_tree_g_kids(object, options) : nil
                         when MiqRegion           then x_get_tree_region_kids(object, options)
                         when PxeServer           then x_get_tree_pxe_server_kids(object, options)
+                        when Service             then x_get_tree_service_kids(object, options)
                         when ServiceTemplateCatalog
                                                  then x_get_tree_stc_kids(object, options)
                         when ServiceTemplate		 then x_get_tree_st_kids(object, options)

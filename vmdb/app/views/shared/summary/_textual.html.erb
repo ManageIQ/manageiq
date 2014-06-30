@@ -20,7 +20,7 @@
         <td class="label"><%= item[:label] %></td>
         <td>
           <% if item[:image] %>
-            <img src="/images/icons/new/<%= item[:image] %>.png" />
+            <img src="<%= File.absolute_path("#{item[:image]}#{'.png' if File.extname(item[:image]).blank?}", '/images/icons/new')%>" />
           <% end %>
           <%= !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]}) %>
         </td>

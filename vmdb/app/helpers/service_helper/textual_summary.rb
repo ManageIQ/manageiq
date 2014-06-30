@@ -22,7 +22,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w{catalog_item}
+    items = %w(catalog_item parent_service)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -80,6 +80,17 @@ module ServiceHelper::TextualSummary
       s[:link]  = url_for(:controller => 'catalog', :action => 'show', :id => st)
     end
     s
+  end
+
+  def textual_parent_service
+    parent = @record.parent_service
+    {
+      :label => "Parent Service",
+      :image => parent.picture ? "/pictures/#{parent.picture.basename}" : 'service',
+      :value => parent.name,
+      :title => "Show this Service's Parent Service",
+      :link  => url_for(:controller => 'service', :action => 'show', :id => parent)
+    } if parent
   end
 
   def textual_owner
