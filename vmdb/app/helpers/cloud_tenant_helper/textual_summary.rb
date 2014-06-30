@@ -12,6 +12,11 @@ module CloudTenantHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_quotas
+    quotas = @record.cloud_resource_quotas.order(:service_name, :name)
+    quotas.collect { |quota| textual_quotas(quota) }.flatten.compact
+  end
+
   #
   # Items
   #
@@ -71,5 +76,11 @@ module CloudTenantHelper::TextualSummary
       h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
     end
     h
+  end
+
+  def textual_quotas(quota)
+    label = "#{quota.service_name}::#{quota.name}"
+    num   = quota.value.to_i
+    h     = {:label => label, :value => num}
   end
 end
