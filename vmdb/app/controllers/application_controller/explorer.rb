@@ -1135,35 +1135,7 @@ module ApplicationController::Explorer
   end
 
   def rbac_filtered_objects(objects, options = {})
-    return objects if objects.empty?
-
-    # Remove VmOrTemplate :match_via_descendants option if present, comment to let Rbac.search process it
-    check_vm_descendants = false
-    check_vm_descendants = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
-
-    options.merge!(:targets => objects, :results_format => :objects)
-    results, _attrs = Rbac.search(options)
-
-    # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
-    if check_vm_descendants && User.current_user_has_filters?
-      filtered_objects = objects - results
-      results = objects.select do |o|
-        if o.is_a?(EmsFolder) || filtered_objects.include?(o)
-          rbac_has_visible_vm_descendants?(o)
-        else
-          true
-        end
-      end
-    end
-
-    results
-  end
-
-  def rbac_has_visible_vm_descendants?(o)
-    target_ids = o.descendant_ids(:of_type => "VmOrTemplate").transpose.last
-    return false if target_ids.blank?
-    results, _attrs = Rbac.search(:targets => target_ids, :class => VmOrTemplate)
-    results.length > 0
+    TreeBuilder.rbac_filtered_objects(objects, options)
   end
 
   def valid_active_node(treenodeid)

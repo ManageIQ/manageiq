@@ -285,33 +285,40 @@ class TreeBuilder
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
-  def rbac_filtered_objects(objects, options = {})
+  def rbac_filtered_objects(object, options = {})
+    self.class.rbac_filtered_objects(objects, options)
+  end
+
+  def self.rbac_filtered_objects(objects, options = {})
     return objects if objects.empty?
 
-    # Uncomment the following line to skip filtering for parent nodes (i.e. show V&T tree like admin sees it with all nodes)
-    #    return objects unless objects.first.is_a?(VmOrTemplate)
-
-    descendant_model = nil
-
     # Remove VmOrTemplate :match_via_descendants option if present, comment to let Rbac.search process it
-    descendant_model = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
+    check_vm_descendants = false
+    check_vm_descendants = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
 
     options.merge!(:targets => objects, :results_format => :objects)
-    results, attrs = Rbac.search(options)
+    results, _attrs = Rbac.search(options)
 
     # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
-    if descendant_model && User.current_user_has_filters?
+    if check_vm_descendants && User.current_user_has_filters?
+      filtered_objects = objects - results
       results = objects.select do |o|
-        keep = true
-        if o.is_a?(EmsFolder) ||  # If it's a folder object, see if it has any descendants
-            !results.include?(o)  # If search removed it, see if it has any descendants
-          process_show_list(:model => "VmOrTemplate", :association => "all_vms_and_templates", :parent => o)  # Fetch the report records
-          keep = !@view.table.data.empty?  # Keep only if descendants present
+        if o.is_a?(EmsFolder) || filtered_objects.include?(o)
+          rbac_has_visible_vm_descendants?(o)
+        else
+          true
         end
-        keep
       end
     end
 
     results
   end
+
+  def self.rbac_has_visible_vm_descendants?(o)
+    target_ids = o.descendant_ids(:of_type => "VmOrTemplate").transpose.last
+    return false if target_ids.blank?
+    results, _attrs = Rbac.search(:targets => target_ids, :class => VmOrTemplate)
+    results.length > 0
+  end
+  private_class_method :rbac_has_visible_vm_descendants?
 end
