@@ -1,6 +1,5 @@
-require 'state_machine'
-
 class Job < ActiveRecord::Base
+  include_concern 'StateMachine'
   include UuidMixin
   include ReportableMixin
   include FilterableMixin
@@ -98,11 +97,6 @@ class Job < ActiveRecord::Base
     end
   end
 
-  def signal(signal, *args)
-    signal = :abort_job if signal == :abort
-    self.send(signal, *args)
-  end
-
   def set_status(message, status="ok", code = 0)
     self.message = message
     self.status  = status
@@ -126,29 +120,29 @@ class Job < ActiveRecord::Base
     @storage_dispatcher_process_finish_flag = true
   end
 
-  def process_cancel(transition)
-    options = transition.args.first || {}
+  def process_cancel(*args)
+    options = args.first || {}
     options[:message] ||= options[:userid] ? "Job canceled by user [#{options[:useid]}] on #{Time.now}" : "Job canceled on #{Time.now}"
     options[:status] ||= "ok"
     $log.info "action-cancel: job canceling, #{options[:message]}"
     signal(:finish, options[:message], options[:status])
   end
 
-  def process_error(transition)
-    message, status = transition.args
+  def process_error(*args)
+    message, status = args
     $log.error "action-error: #{message}"
     set_status(message, status, 1)
   end
 
-  def process_abort(transition)
-    message, status = transition.args
+  def process_abort(*args)
+    message, status = args
     $log.error "action-abort: job aborting, #{message}"
     set_status(message, status, 1)
     signal(:finish, message, status)
   end
 
-  def process_finished(transition)
-    message, status = transition.args
+  def process_finished(*args)
+    message, status = args
     $log.info "action-finished: job finished, #{message}"
     set_status(message, status)
     dispatch_finish

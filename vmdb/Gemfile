@@ -63,7 +63,6 @@ gem "ruby-progressbar",               "~>0.0.10",     :require => false
 gem "rufus-scheduler",                "~>2.0.19",     :require => false
 gem "savon",                          "~>2.2.0",      :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.1.0",      :require => false
-gem "state_machine",                  "~>1.1.2",      :require => false  # Remove :require=>false if running rake state_machine:draw
 gem "uglifier",                       "~>2.4.0",      :require => false
 
 #

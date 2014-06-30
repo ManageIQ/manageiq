@@ -1,45 +1,16 @@
 class VmSynchronize < Job
-  state_machine :state, :initial => :initialize do
-    event :initializing do
-      transition :initialize => :waiting_to_start
-    end
-
-    event :start do
-      transition :waiting_to_start => :synchronize
-    end
-    after_transition :on => :start, :waiting_to_start => :synchronize, :do => :call_synchronize
-
-    event :sync_started do
-      transition :synchronize => :synchronizing
-    end
-
-    event :data do
-      transition :synchronizing => same
-    end
-    after_transition :on => :data, :do => :process_data
-
-    event :abort_job do
-      transition all => :aborting
-    end
-
-    event :cancel do
-      transition all => :canceling
-    end
-
-    event :finish do
-      transition all => :finished
-    end
-
-    event :error do
-      transition all => same
-    end
-    # On the Error event, call the error method
-    after_transition :on => :error,     :do => :process_error
-
-    # On Entry to the State
-    after_transition all => :aborting,  :do => :process_abort
-    after_transition all => :canceling, :do => :process_cancel
-    after_transition all => :finished,  :do => :process_finished
+  def load_transitions
+    self.state ||= 'initialize'
+    {
+      :initializing => {'initialize'       => 'waiting_to_start'},
+      :start        => {'waiting_to_start' => 'synchronize'     },
+      :sync_started => {'synchronize'      => 'synchronizing'   },
+      :data         => {'synchronizing'    => 'synchronizing'   },
+      :abort_job    => {'*'                => 'aborting'        },
+      :cancel       => {'*'                => 'canceling'       },
+      :finish       => {'*'                => 'finished'        },
+      :error        => {'*'                => '*'               }
+    }
   end
 
   def call_synchronize
@@ -65,10 +36,10 @@ class VmSynchronize < Job
     signal(:sync_started)
   end
 
-  def process_data(transition)
+  def process_data(*args)
     $log.info "action-process_data: starting..."
 
-    data = transition.args.first
+    data = args.first
 
     set_status("Processing VM data")
 
@@ -101,4 +72,12 @@ class VmSynchronize < Job
     end
     # got data to process
   end
+
+  # Map signals
+  alias_method :start,     :call_synchronize
+  alias_method :data,      :process_data
+  alias_method :abort_job, :process_abort
+  alias_method :cancel,    :process_cancel
+  alias_method :finish,    :process_finished
+  alias_method :error,     :process_error
 end

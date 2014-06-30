@@ -1,76 +1,25 @@
 class VmScan < Job
-  state_machine :state, :initial => :initialize do
-
-    event :initializing do
-      transition :initialize => :waiting_to_start
-    end
-
-    event :start do
-      transition [:waiting_to_start, :wait_for_broker] => :snapshot_create
-    end
-
-    event :snapshot_complete do
-      transition :snapshot_create => :scanning
-    end
-    after_transition :on => :snapshot_complete, :snapshot_create => :scanning, :do => :call_scan
-
-    event :data do
-      transition [:snapshot_create, :scanning]      => :scanning
-      transition [:snapshot_delete, :synchronizing] => same
-    end
-    after_transition :on => :data, :do => :process_data
-
-    event :snapshot_delete do
-      transition :scanning => :snapshot_delete
-    end
-    after_transition :on => :snapshot_delete, :scanning => :snapshot_delete, :do => :call_snapshot_delete
-
-    event :snapshot_complete do
-      transition :snapshot_delete => :synchronizing
-    end
-    after_transition :on => :snapshot_complete, :snapshot_delete => :synchronizing, :do => :call_synchronize
-
-    event :broker_unavailable do
-      transition :snapshot_create => :wait_for_broker
-    end
-
-    event :scan_retry do
-      transition :scanning => :scanning
-    end
-    after_transition :on => :scan_retry, :scanning => :scanning, :do => :call_scan
-
-    event :abort_retry do
-      transition :scanning => :scanning
-    end
-    after_transition :on => :abort_retry, :scanning => :scanning, :do => :abort_retry
-
-    event :abort_job do
-      transition all => :aborting
-    end
-
-    event :cancel do
-      transition all => :canceling
-    end
-
-    event :finish do
-      transition all => :finished
-    end
-
-    event :error do
-      transition all => same
-    end
-    # On the Error event, call the error method
-    after_transition :on => :error, :do => :process_error
-
-    # On Entry to the State
-    after_transition all => :waiting_to_start,  :do => :dispatch_start
-    after_transition all => :wait_for_broker,   :do => :wait_for_vim_broker
-    after_transition all => :snapshot_create,   :do => :call_snapshot_create
-    after_transition all => :scanning,          :do => :scanning
-    after_transition all => :synchronizing,     :do => :synchronizing
-    after_transition all => :aborting,          :do => :process_abort
-    after_transition all => :canceling,         :do => :process_cancel
-    after_transition all => :finished,          :do => :process_finished
+  def load_transitions
+    self.state ||= 'initialize'
+    {
+      :initializing       => {'initialize'       => 'waiting_to_start'},
+      :snapshot_delete    => {'scanning'         => 'snapshot_delete' },
+      :broker_unavailable => {'snapshot_create'  => 'wait_for_broker' },
+      :scan_retry         => {'scanning'         => 'scanning'        },
+      :abort_retry        => {'scanning'         => 'scanning'        },
+      :abort_job          => {'*'                => 'aborting'        },
+      :cancel             => {'*'                => 'canceling'       },
+      :finish             => {'*'                => 'finished'        },
+      :error              => {'*'                => '*'               },
+      :start              => {'waiting_to_start' => 'snapshot_create'  ,
+                              'wait_for_broker'  => 'snapshot_create' },
+      :snapshot_complete  => {'snapshot_create'  => 'scanning'         ,
+                              'snapshot_delete'  => 'synchronizing'   },
+      :data               => {'snapshot_create'  => 'scanning'         ,
+                              'scanning'         => 'scanning'         ,
+                              'snapshot_delete'  => 'snapshot_delete'  ,
+                              'synchronizing'    => 'synchronizing'   }
+    }
   end
 
   def call_snapshot_create
@@ -309,10 +258,10 @@ class VmScan < Job
     self.context[:scan_attempted] = true
   end
 
-  def process_data(transition)
+  def process_data(*args)
     $log.info "action-process_data: starting..."
 
-    data = transition.args.first
+    data = args.first
     set_status("Processing VM data")
 
     doc = MiqXml.load(data)
@@ -459,8 +408,8 @@ class VmScan < Job
     Snapshot.evm_snapshot_description(self.jobid, type)
   end
 
-  def process_cancel(transition)
-    options = transition.args.first || {}
+  def process_cancel(*args)
+    options = args.first || {}
 
     $log.info "action-cancel: job canceling, #{options[:message]}"
 
@@ -474,7 +423,7 @@ class VmScan < Job
   end
 
   # Logic to determine if we should abort the job or retry the scan depending on the error
-  def abort_retry(*args)
+  def call_abort_retry(*args)
     message, status, skip_retry = args
     if message.to_s.include?("Could not find VM: [") && self.options[:scan_count].to_i.zero?
       # We may need to skip calling the retry if this method is called twice.
@@ -490,7 +439,7 @@ class VmScan < Job
     end
   end
 
-  def process_abort(transition)
+  def process_abort(*args)
     begin
       unless self.context[:snapshot_mor].nil?
         mor = self.context[:snapshot_mor]
@@ -509,6 +458,47 @@ class VmScan < Job
 
     super
   end
+
+  # Signals
+  def snapshot_complete
+    if state == 'scanning'
+      scanning
+      call_scan
+    else
+      call_synchronize
+    end
+  end
+
+  def data(*args)
+    process_data(*args)
+    if state == 'scanning'
+      scanning
+    elsif state == 'synchronizing'
+      synchronizing
+    else # state == 'snapshot_delete'
+      # do nothing?
+    end
+  end
+
+  def scan_retry
+    scanning
+    call_scan
+  end
+
+  def abort_retry(*args)
+    scanning
+    call_abort_retry(*args)
+  end
+
+  # All other signals
+  alias_method :initializing,       :dispatch_start
+  alias_method :start,              :call_snapshot_create
+  alias_method :snapshot_delete,    :call_snapshot_delete
+  alias_method :broker_unavailable, :wait_for_vim_broker
+  alias_method :abort_job,          :process_abort
+  alias_method :cancel,             :process_cancel
+  alias_method :finish,             :process_finished
+  alias_method :error,              :process_error
 
   private
 
