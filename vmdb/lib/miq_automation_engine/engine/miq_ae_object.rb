@@ -586,7 +586,6 @@ module MiqAeEngine
         service_model = MiqAeMethodService.const_get("MiqAeService#{SM_LOOKUP[datatype]}")
         return service_model.find(value)
       rescue NameError
-        $miq_ae_logger.warn("Service Model #{datatype} not found")
       end
 
       # default datatype => 'string'
