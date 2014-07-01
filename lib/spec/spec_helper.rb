@@ -9,5 +9,12 @@ $:.push(LIB_ROOT)
 # in ./support/ and its subdirectories.
 Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].each {|f| require f}
 
+begin
+  require 'simplecov'
+  SimpleCov.start
+rescue LoadError
+  # won't run coverage if gem not loaded
+end
+
 RSpec.configure do |config|
 end
