@@ -1,0 +1,108 @@
+class TreeBuilderVmsAndTemplates < FullTreeBuilder
+  attr_accessor :root_ems
+
+  def initialize(root, *args)
+    @root_ems = root.kind_of?(ExtManagementSystem) ? root : root.ext_management_system
+    super
+  end
+
+  def relationship_tree
+    # TODO: Do more to pre-prune the tree.
+    # - Use :of_type to limit the types of objects
+    # - Perhaps only get the folders, then prune those based on RBAC and let
+    #   the UI still do the lazy loading of individual folders.  This can be
+    #   possibly done by querying the relationship tree only, and then only
+    #   converting the folders to real objects.  For the VMs we only need ids,
+    #   so taking them from the relationship records can cut down on the huge
+    #   VM query.
+    tree = root.subtree_arranged
+
+    prune_non_vandt_folders(tree)
+    reparent_hidden_folders(tree)
+    prune_rbac(tree)
+    sort_tree(tree)
+
+    # The node builder uses normalized_state to determine the icon on each VM,
+    #   which, in turn, needs the EMS
+    preload_ems_for_vms(tree)
+
+    tree
+  end
+
+  private
+
+  def prune_non_vandt_folders(tree, parent = nil)
+    tree.reject! do |object, children|
+      prune_non_vandt_folders(children, object)
+      parent.kind_of?(EmsFolder) && parent.is_datacenter? &&
+        object.kind_of?(EmsFolder) && object.name != "vm"
+    end
+  end
+
+  def hidden_child_folder?(object, children)
+    return false unless children.length == 1
+    child = children.keys.first
+    child.kind_of?(EmsFolder) && child.hidden?(:ext_management_system => root_ems, :parent => object)
+  end
+
+  def reparent_hidden_folders(tree)
+    tree.each do |object, children|
+      if hidden_child_folder?(object, children)
+        children     = children.values.first
+        tree[object] = children
+      end
+      reparent_hidden_folders(children)
+    end
+  end
+
+  def prune_rbac(tree)
+    vms = extract_vms(tree).uniq
+
+    allowed_vm_ids, _attrs = Rbac.search(:targets => vms, :results_format => :ids)
+    allowed_vm_ids = Set.new(allowed_vm_ids)
+
+    prune_filtered_vms(tree, allowed_vm_ids)
+    prune_empty_folders(tree)
+  end
+
+  def extract_vms(tree)
+    tree.collect do |object, children|
+      child_vms = extract_vms(children)
+      child_vms.unshift(object) if object.kind_of?(VmOrTemplate)
+      child_vms
+    end.flatten
+  end
+
+  def prune_filtered_vms(tree, allowed_vm_ids)
+    tree.reject! do |object, children|
+      prune_filtered_vms(children, allowed_vm_ids)
+      object.kind_of?(VmOrTemplate) && !allowed_vm_ids.include?(object.id)
+    end
+  end
+
+  def prune_empty_folders(tree)
+    tree.reject! do |object, children|
+      prune_empty_folders(children)
+      object.kind_of?(EmsFolder) && children.empty?
+    end
+  end
+
+  # Datacenters will sort before normal folders via the sort_tree method
+  SORT_CLASSES = [ExtManagementSystem, EmsFolder, VmOrTemplate]
+
+  def sort_tree(tree)
+    tree.keys.each do |object|
+      tree[object] = sort_tree(tree[object])
+    end
+
+    tree.sort_by! do |object, _children|
+      datacenter = object.kind_of?(EmsFolder) ? object.is_datacenter? : false
+      [SORT_CLASSES.index(object.class.base_class), datacenter, object.name.downcase]
+    end
+  end
+
+  def preload_ems_for_vms(tree)
+    vms = extract_vms(tree)
+    ActiveRecord::Associations::Preloader.new(vms, :ext_management_system).run
+  end
+end
