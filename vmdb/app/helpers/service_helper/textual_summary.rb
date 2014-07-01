@@ -31,6 +31,12 @@ module ServiceHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_miq_custom_attributes
+    items = %w(miq_custom_attributes)
+    ret = items.collect { |m| send("textual_#{m}") }.flatten.compact
+    ret.blank? ? nil : ret
+  end
+
   #
   # Items
   #
@@ -120,4 +126,9 @@ module ServiceHelper::TextualSummary
     h
   end
 
+  def textual_miq_custom_attributes
+    attrs = @record.miq_custom_attributes
+    return nil if attrs.blank?
+    attrs.collect { |a| {:label => a.name, :value => a.value} }
+  end
 end

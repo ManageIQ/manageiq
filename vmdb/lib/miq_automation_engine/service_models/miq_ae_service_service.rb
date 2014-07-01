@@ -13,6 +13,9 @@ module MiqAeMethodService
     expose :direct_service_children
     expose :indirect_service_children
     expose :parent_service
+    expose :custom_keys, :method => :miq_custom_keys
+    expose :custom_get, :method => :miq_custom_get
+    expose :custom_set, :method => :miq_custom_set, :override_return => true
 
     CREATE_ATTRIBUTES = [:name, :description, :service_template]
 
