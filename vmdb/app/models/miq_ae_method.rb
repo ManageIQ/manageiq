@@ -77,4 +77,14 @@ class MiqAeMethod < ActiveRecord::Base
   def editable?
     ae_class.ae_namespace.editable?
   end
+
+  def field_names
+    inputs.collect { |f| f.name.downcase }
+  end
+
+  def field_value_hash(name)
+    field = inputs.detect { |f| f.name.casecmp(name) == 0 }
+    raise "Field #{name} not found in method #{self.name}" if field.nil?
+    field.attributes
+  end
 end

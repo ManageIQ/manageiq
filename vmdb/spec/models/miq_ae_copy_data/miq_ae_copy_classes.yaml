@@ -1,0 +1,2829 @@
+---
+SPEC_DOMAIN:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: SPEC_DOMAIN
+        description: 
+        display_name: 
+        system: 
+        priority: 100
+        enabled: false
+  NS1:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: NS1
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    CLASS1.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS1
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield1
+              display_name: 
+              datatype: integer
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield2
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+          - rfield1:
+              value: wilma
+          - mfield2:
+              value: woolly mammoth
+          - mfield3:
+              value: saber tooth
+          - afield2:
+              value: betty
+      default2.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default2
+            inherits: 
+            description: 
+          fields:
+          - afield2:
+              value: betty lou
+      delete1.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: delete1
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+          - rfield1:
+              value: wilma
+          - mfield2:
+              value: woolly mammoth
+          - mfield3:
+              value: saber tooth
+      instance1.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: instance1
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+          - rfield1:
+              value: wilma
+          - mfield2:
+              value: woolly mammoth
+          - mfield3:
+              value: saber tooth
+          - afield2:
+              value: betty
+      one_field.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: one_field
+            inherits: 
+            description: 
+          fields:
+          - afield2:
+              value: betty lou
+      __methods__:
+        send_email.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: send_email
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: builtin
+            inputs:
+            - field:
+                aetype: 
+                name: to
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: 
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: subject
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: 
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: body
+                display_name: 
+                datatype: string
+                priority: 3
+                owner: 
+                default_value: 
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+        test_method.rb: ! 'puts "Hello World"
+
+'
+        test_method.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: test_method
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: database
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: couchdb
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: username
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: fred
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: password
+                display_name: 
+                datatype: password
+                priority: 3
+                owner: 
+                default_value: v2:{rLoUV68K3awm6YlKoQnAYg==}
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: procedure_name
+                display_name: 
+                datatype: string
+                priority: 4
+                owner: 
+                default_value: larry
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: params
+                display_name: 
+                datatype: string
+                priority: 5
+                owner: 
+                default_value: curly
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+        test_method_diff_parameter.rb: ! 'puts "Hello World"
+
+'
+        test_method_diff_parameter.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: test_method_diff_parameter
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: database
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: redis
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: username
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: fred
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: password
+                display_name: 
+                datatype: password
+                priority: 3
+                owner: 
+                default_value: v2:{rLoUV68K3awm6YlKoQnAYg==}
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: procedure_name
+                display_name: 
+                datatype: string
+                priority: 4
+                owner: 
+                default_value: larry
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: params
+                display_name: 
+                datatype: string
+                priority: 5
+                owner: 
+                default_value: curly
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+        test_method_diff_script.rb: ! 'puts "Hello Morld"
+
+'
+        test_method_diff_script.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: test_method_diff_script
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: database
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: couchdb
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: username
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: fred
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: password
+                display_name: 
+                datatype: password
+                priority: 3
+                owner: 
+                default_value: v2:{rLoUV68K3awm6YlKoQnAYg==}
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: procedure_name
+                display_name: 
+                datatype: string
+                priority: 4
+                owner: 
+                default_value: larry
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: params
+                display_name: 
+                datatype: string
+                priority: 5
+                owner: 
+                default_value: curly
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+    CLASS_ADD_A_FIELD.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS_ADD_A_FIELD
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield1
+              display_name: 
+              datatype: integer
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield3
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield2
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields: []
+    CLASS_AETYPE_OFF.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS_AETYPE_OFF
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: attribute
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: attribute
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: afield1
+              display_name: 
+              datatype: integer
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: afield2
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+    CLASS_DATATYPE_OFF.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS_DATATYPE_OFF
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: integer
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield1
+              display_name: 
+              datatype: integer
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield1
+              display_name: 
+              datatype: integer
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield2
+              display_name: 
+              datatype: integer
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield2
+              display_name: 
+              datatype: integer
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield3
+              display_name: 
+              datatype: integer
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield1
+              display_name: 
+              datatype: string
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield2
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields: []
+    CLASS_FIELD_DELETED.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS_FIELD_DELETED
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield2
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+          - rfield1:
+              value: wilma
+          - mfield2:
+              value: woolly mammoth
+          - mfield3:
+              value: saber tooth
+          - afield2:
+              value: betty
+      default2.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default2
+            inherits: 
+            description: 
+          fields:
+          - afield2:
+              value: betty lou
+    CLASS_IN_USE_FIELD_DELETED.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS_IN_USE_FIELD_DELETED
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield1
+              display_name: 
+              datatype: integer
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+          - rfield1:
+              value: wilma
+          - mfield2:
+              value: woolly mammoth
+          - mfield3:
+              value: saber tooth
+          - afield1:
+              value: barney
+    CLASS_PRIORITY_OFF.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS_PRIORITY_OFF
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield2
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: afield1
+              display_name: 
+              datatype: integer
+              priority: 4
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 7
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 21
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 51
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields: []
+    MIXED_CASE_NAMES.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: MIXED_CASE_NAMES
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: state
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: method
+              name: MfIeld1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: RfIeLd1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: MfIeLd2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: RfIeLd2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: MfiEld3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: AfIeLd1
+              display_name: 
+              datatype: integer
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: AfIeLd2
+              display_name: 
+              datatype: string
+              priority: 8
+              owner: 
+              default_value: barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields: []
+      __methods__:
+        send_email.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: send_email
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: builtin
+            inputs:
+            - field:
+                aetype: 
+                name: to
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: 
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: subject
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: 
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: body
+                display_name: 
+                datatype: string
+                priority: 3
+                owner: 
+                default_value: 
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+        test_method.rb: ! 'puts "Hello World"
+
+'
+        test_method.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: test_method
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: database
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: couchdb
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: username
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: fred
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: password
+                display_name: 
+                datatype: password
+                priority: 3
+                owner: 
+                default_value: v2:{rLoUV68K3awm6YlKoQnAYg==}
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: procedure_name
+                display_name: 
+                datatype: string
+                priority: 4
+                owner: 
+                default_value: larry
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: params
+                display_name: 
+                datatype: string
+                priority: 5
+                owner: 
+                default_value: curly
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+        test_method_diff_parameter.rb: ! 'puts "Hello World"
+
+'
+        test_method_diff_parameter.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: test_method_diff_parameter
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: database
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: redis
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: username
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: fred
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: password
+                display_name: 
+                datatype: password
+                priority: 3
+                owner: 
+                default_value: v2:{rLoUV68K3awm6YlKoQnAYg==}
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: procedure_name
+                display_name: 
+                datatype: string
+                priority: 4
+                owner: 
+                default_value: larry
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: params
+                display_name: 
+                datatype: string
+                priority: 5
+                owner: 
+                default_value: curly
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+        test_method_diff_script.rb: ! 'puts "Hello Morld"
+
+'
+        test_method_diff_script.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: test_method_diff_script
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: database
+                display_name: 
+                datatype: string
+                priority: 1
+                owner: 
+                default_value: couchdb
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: username
+                display_name: 
+                datatype: string
+                priority: 2
+                owner: 
+                default_value: fred
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: password
+                display_name: 
+                datatype: password
+                priority: 3
+                owner: 
+                default_value: v2:{rLoUV68K3awm6YlKoQnAYg==}
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: procedure_name
+                display_name: 
+                datatype: string
+                priority: 4
+                owner: 
+                default_value: larry
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+            - field:
+                aetype: 
+                name: params
+                display_name: 
+                datatype: string
+                priority: 5
+                owner: 
+                default_value: curly
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+  NS2:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: NS2
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    CLASS1.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: CLASS1
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: attribute
+              name: CustomizeRequest
+              display_name: 
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: update_provision_status(status => 'Customizing Request',status_state
+                => 'on_entry')
+              on_exit: update_provision_status(status => 'Customized Request',status_state
+                => 'on_exit')
+              on_error: update_provision_status(status => 'error in Customizing Request',status_state
+                => 'on_error')
+              max_retries: '100'
+              max_time: 
+          - field:
+              aetype: attribute
+              name: mfield1
+              display_name: 
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: rfield1
+              display_name: 
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: mfield2
+              display_name: 
+              datatype: string
+              priority: 4
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: rfield2
+              display_name: 
+              datatype: string
+              priority: 5
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: mfield3
+              display_name: 
+              datatype: string
+              priority: 6
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: afield1
+              display_name: 
+              datatype: integer
+              priority: 7
+              owner: 
+              default_value: wilma
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      default.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: default
+            inherits: 
+            description: 
+          fields:
+          - mfield1:
+              value: dinosaur
+  .manifest.yaml:
+    __domain__.yaml:
+      classes: 9
+      instances: 14
+      method_instances: 8
+      method_files: 6
+      created_on: 2014-06-23 18:57:19.884194000 Z
+      updated_on: 2014-06-23 18:57:19.884194000 Z
+      size: 168
+      sha1: 9g2g8XRTYab2z9EphoFs6xKZgoM=
+    NS1/__namespace__.yaml:
+      created_on: 2014-06-23 18:57:20.278041000 Z
+      updated_on: 2014-06-23 18:57:20.278041000 Z
+      size: 155
+      sha1: cq/oyFF9/djhEY2xkPvpL3ugqUM=
+    NS1/CLASS1.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:20.523547000 Z
+      updated_on: 2014-06-23 18:57:20.523547000 Z
+      size: 3456
+      sha1: 0NpGjj70OxNuYohgW9A/uOgBjsc=
+    NS1/CLASS1.class/default.yaml:
+      created_on: 2014-06-23 18:57:20.550704000 Z
+      updated_on: 2014-06-23 18:57:20.550704000 Z
+      size: 319
+      sha1: zx4UL7SzOWMSjhJ4+1Q8BFJ7wcQ=
+    NS1/CLASS1.class/default2.yaml:
+      created_on: 2014-06-23 18:57:20.564058000 Z
+      updated_on: 2014-06-23 18:57:20.564058000 Z
+      size: 178
+      sha1: 9EHeX/gPnTi5mg4uVrroUeYUMmo=
+    NS1/CLASS1.class/delete1.yaml:
+      created_on: 2014-06-23 18:57:20.587093000 Z
+      updated_on: 2014-06-23 18:57:20.587093000 Z
+      size: 287
+      sha1: curqnhUE1FXeiK33uidHVzdR1VY=
+    NS1/CLASS1.class/instance1.yaml:
+      created_on: 2014-06-23 18:57:20.571308000 Z
+      updated_on: 2014-06-23 18:57:20.571308000 Z
+      size: 321
+      sha1: kp2xNMz/vNNYuKoSS1yCJEU03gs=
+    NS1/CLASS1.class/one_field.yaml:
+      created_on: 2014-06-23 18:57:20.597059000 Z
+      updated_on: 2014-06-23 18:57:20.597059000 Z
+      size: 179
+      sha1: VlZH2Wv7MwDG967YVH4sDZrT89I=
+    NS1/CLASS1.class/__methods__/send_email.yaml:
+      created_on: 2014-06-23 18:57:20.671558000 Z
+      updated_on: 2014-06-23 18:57:20.671558000 Z
+      size: 1269
+      sha1: d8T7CTsfDT3hbBLzcwMZWE5qoHc=
+    NS1/CLASS1.class/__methods__/test_method.rb:
+      created_on: 2014-06-23 18:57:20.608141000 Z
+      updated_on: 2014-06-23 18:57:20.608141000 Z
+      size: 19
+      sha1: yQWqqJJtskjOtTFDwpQ96adU1z0=
+    NS1/CLASS1.class/__methods__/test_method.yaml:
+      created_on: 2014-06-23 18:57:20.608141000 Z
+      updated_on: 2014-06-23 18:57:20.608141000 Z
+      size: 2064
+      sha1: vIrEIKekZ0T6IGv3MVjCZodWZfA=
+    NS1/CLASS1.class/__methods__/test_method_diff_parameter.rb:
+      created_on: 2014-06-23 18:57:20.654061000 Z
+      updated_on: 2014-06-23 18:57:20.654061000 Z
+      size: 19
+      sha1: yQWqqJJtskjOtTFDwpQ96adU1z0=
+    NS1/CLASS1.class/__methods__/test_method_diff_parameter.yaml:
+      created_on: 2014-06-23 18:57:20.654061000 Z
+      updated_on: 2014-06-23 18:57:20.654061000 Z
+      size: 2077
+      sha1: cj2xuKlC4AZ+npIK2PdstWawxPQ=
+    NS1/CLASS1.class/__methods__/test_method_diff_script.rb:
+      created_on: 2014-06-23 18:57:20.633523000 Z
+      updated_on: 2014-06-23 18:57:20.633523000 Z
+      size: 19
+      sha1: BVvFyPC7YOv1NP49ttoH30DW1yo=
+    NS1/CLASS1.class/__methods__/test_method_diff_script.yaml:
+      created_on: 2014-06-23 18:57:20.633523000 Z
+      updated_on: 2014-06-23 18:57:20.633523000 Z
+      size: 2076
+      sha1: 1zZEqljbwx8zT98U4fGeY8EhDG8=
+    NS1/CLASS_ADD_A_FIELD.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:21.037967000 Z
+      updated_on: 2014-06-23 18:57:21.037967000 Z
+      size: 3845
+      sha1: ygtgunIGxrj29yn+D8YIusovHgw=
+    NS1/CLASS_ADD_A_FIELD.class/default.yaml:
+      created_on: 2014-06-23 18:57:21.060688000 Z
+      updated_on: 2014-06-23 18:57:21.060688000 Z
+      size: 144
+      sha1: xQRcXVq5zXQFu4eo8J7bkb4w0MU=
+    NS1/CLASS_AETYPE_OFF.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:20.920763000 Z
+      updated_on: 2014-06-23 18:57:20.920763000 Z
+      size: 3470
+      sha1: fW1gMEn1/upePurHX7exFp4Kk+w=
+    NS1/CLASS_AETYPE_OFF.class/default.yaml:
+      created_on: 2014-06-23 18:57:20.942250000 Z
+      updated_on: 2014-06-23 18:57:20.942250000 Z
+      size: 176
+      sha1: oF3mUKYqXKWIJ8NgnLkoUcdgyfU=
+    NS1/CLASS_DATATYPE_OFF.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:20.961073000 Z
+      updated_on: 2014-06-23 18:57:20.961073000 Z
+      size: 3473
+      sha1: D1AMoYjXDgT+P+hV/HMxxIJw3sE=
+    NS1/CLASS_DATATYPE_OFF.class/default.yaml:
+      created_on: 2014-06-23 18:57:20.981727000 Z
+      updated_on: 2014-06-23 18:57:20.981727000 Z
+      size: 144
+      sha1: xQRcXVq5zXQFu4eo8J7bkb4w0MU=
+    NS1/CLASS_FIELD_DELETED.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:21.133142000 Z
+      updated_on: 2014-06-23 18:57:21.133142000 Z
+      size: 3091
+      sha1: 70GhR5SEeJL3TARWCEpkw8Gev38=
+    NS1/CLASS_FIELD_DELETED.class/default.yaml:
+      created_on: 2014-06-23 18:57:21.154630000 Z
+      updated_on: 2014-06-23 18:57:21.154630000 Z
+      size: 319
+      sha1: zx4UL7SzOWMSjhJ4+1Q8BFJ7wcQ=
+    NS1/CLASS_FIELD_DELETED.class/default2.yaml:
+      created_on: 2014-06-23 18:57:21.165502000 Z
+      updated_on: 2014-06-23 18:57:21.165502000 Z
+      size: 178
+      sha1: 9EHeX/gPnTi5mg4uVrroUeYUMmo=
+    NS1/CLASS_IN_USE_FIELD_DELETED.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:21.080595000 Z
+      updated_on: 2014-06-23 18:57:21.080595000 Z
+      size: 3098
+      sha1: /uv7doHWvGzmpJgJgKNFAqAkif8=
+    NS1/CLASS_IN_USE_FIELD_DELETED.class/default.yaml:
+      created_on: 2014-06-23 18:57:21.102394000 Z
+      updated_on: 2014-06-23 18:57:21.102394000 Z
+      size: 320
+      sha1: c9vQ5PLWam6NFmfkBbIv/WCOPgo=
+    NS1/CLASS_PRIORITY_OFF.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:20.998956000 Z
+      updated_on: 2014-06-23 18:57:20.998956000 Z
+      size: 3470
+      sha1: HoemsQComxh371c5U2mTqrnQ0bM=
+    NS1/CLASS_PRIORITY_OFF.class/default.yaml:
+      created_on: 2014-06-23 18:57:21.019398000 Z
+      updated_on: 2014-06-23 18:57:21.019398000 Z
+      size: 144
+      sha1: xQRcXVq5zXQFu4eo8J7bkb4w0MU=
+    NS1/MIXED_CASE_NAMES.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:20.732322000 Z
+      updated_on: 2014-06-23 18:57:20.732322000 Z
+      size: 3466
+      sha1: Hrp9Abma0d8W3/UX3lOmnosi4E8=
+    NS1/MIXED_CASE_NAMES.class/default.yaml:
+      created_on: 2014-06-23 18:57:20.753229000 Z
+      updated_on: 2014-06-23 18:57:20.753229000 Z
+      size: 144
+      sha1: xQRcXVq5zXQFu4eo8J7bkb4w0MU=
+    NS1/MIXED_CASE_NAMES.class/__methods__/send_email.yaml:
+      created_on: 2014-06-23 18:57:20.893698000 Z
+      updated_on: 2014-06-23 18:57:20.893698000 Z
+      size: 1269
+      sha1: d8T7CTsfDT3hbBLzcwMZWE5qoHc=
+    NS1/MIXED_CASE_NAMES.class/__methods__/test_method.rb:
+      created_on: 2014-06-23 18:57:20.762892000 Z
+      updated_on: 2014-06-23 18:57:20.762892000 Z
+      size: 19
+      sha1: yQWqqJJtskjOtTFDwpQ96adU1z0=
+    NS1/MIXED_CASE_NAMES.class/__methods__/test_method.yaml:
+      created_on: 2014-06-23 18:57:20.762892000 Z
+      updated_on: 2014-06-23 18:57:20.762892000 Z
+      size: 2064
+      sha1: vIrEIKekZ0T6IGv3MVjCZodWZfA=
+    NS1/MIXED_CASE_NAMES.class/__methods__/test_method_diff_parameter.rb:
+      created_on: 2014-06-23 18:57:20.875782000 Z
+      updated_on: 2014-06-23 18:57:20.875782000 Z
+      size: 19
+      sha1: yQWqqJJtskjOtTFDwpQ96adU1z0=
+    NS1/MIXED_CASE_NAMES.class/__methods__/test_method_diff_parameter.yaml:
+      created_on: 2014-06-23 18:57:20.875782000 Z
+      updated_on: 2014-06-23 18:57:20.875782000 Z
+      size: 2077
+      sha1: cj2xuKlC4AZ+npIK2PdstWawxPQ=
+    NS1/MIXED_CASE_NAMES.class/__methods__/test_method_diff_script.rb:
+      created_on: 2014-06-23 18:57:20.853962000 Z
+      updated_on: 2014-06-23 18:57:20.853962000 Z
+      size: 19
+      sha1: BVvFyPC7YOv1NP49ttoH30DW1yo=
+    NS1/MIXED_CASE_NAMES.class/__methods__/test_method_diff_script.yaml:
+      created_on: 2014-06-23 18:57:20.853962000 Z
+      updated_on: 2014-06-23 18:57:20.853962000 Z
+      size: 2076
+      sha1: 1zZEqljbwx8zT98U4fGeY8EhDG8=
+    NS2/__namespace__.yaml:
+      created_on: 2014-06-23 18:57:21.203492000 Z
+      updated_on: 2014-06-23 18:57:21.203492000 Z
+      size: 155
+      sha1: +bli10RLw4va4CY+FkUXTkSG614=
+    NS2/CLASS1.class/__class__.yaml:
+      created_on: 2014-06-23 18:57:21.222951000 Z
+      updated_on: 2014-06-23 18:57:21.222951000 Z
+      size: 3079
+      sha1: 2iu8PtXEjFUEZ2BDNSJt2iYVARY=
+    NS2/CLASS1.class/default.yaml:
+      created_on: 2014-06-23 18:57:21.242171000 Z
+      updated_on: 2014-06-23 18:57:21.242171000 Z
+      size: 176
+      sha1: oF3mUKYqXKWIJ8NgnLkoUcdgyfU=

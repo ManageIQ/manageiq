@@ -102,8 +102,20 @@ class MiqAeInstance < ActiveRecord::Base
     ae_class.ae_namespace.editable?
   end
 
-  private
+  def field_names
+    fields = ae_values.collect { |v| v.field_id }
+    ae_class.ae_fields.select { |x| fields.include?(x.id) }.collect { |f| f.name.downcase }
+  end
 
+  def field_value_hash(name)
+    field = ae_class.ae_fields.detect { |f| f.name.casecmp(name) == 0 }
+    raise "Field #{name} not found in class #{ae_class.fqname}" if field.nil?
+    value = ae_values.detect { |v| v.field_id == field.id }
+    raise "Field #{name} not found in instance #{self.name} in class #{ae_class.fqname}" if value.nil?
+    value.attributes
+  end
+
+  private
 
   def validate_field(field)
     if field.kind_of?(MiqAeField)
