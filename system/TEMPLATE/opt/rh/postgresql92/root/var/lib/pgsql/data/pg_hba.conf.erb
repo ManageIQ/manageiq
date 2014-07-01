@@ -1,5 +1,5 @@
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
-local    all             postgres,root                           trust
-<% if ssl -%>
-hostssl  all             all            all                      cert map=sslmap
-<% end -%>
+local    all            all                                     peer map=usermap
+#host    all            all             127.0.0.1/32            ident map=usermap
+#host    all            all             all                     md5
+<%= "#" unless ssl %>hostssl all             all            all                     cert map=sslmap
