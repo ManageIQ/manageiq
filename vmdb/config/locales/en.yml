@@ -384,7 +384,7 @@ en:
     no_records_selected_to_be_enabled: 'No %{model} were selected to be enabled'
     no_records_selected_to_be_marked: 'No %{model} were selected to be marked as %{action}'
     no_utilization_data_available: "No Utilization data available"
-    no_vc_defined: "No Virtual Center instances have been defined, press a button to Add or Discover one"
+    non_admin_cannot_access: "Non-admin users can not access the system until at least 1 VM/Instance has been discovered"
     press_back_button: "Press your browser's Back button or click a tab to continue"
     priority_order_cancelled: "Edit of Priority Order was cancelled by the user"
     priority_order_saved: "Priority Order was saved"

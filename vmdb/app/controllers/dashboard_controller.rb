@@ -438,18 +438,19 @@ class DashboardController < ApplicationController
 
     unless params[:task_id] # First time thru, check for buttons pressed
       # Handle More and Back buttons (for changing password)
-      if params[:button] == "more"
+      case params[:button]
+      when "more"
         @more = true
         render :update do |page|
-          page.replace("login_more_div", :partial=>"login_more")
+          page.replace("login_more_div", :partial => "login_more")
           page << "$j('#user_new_password').focus();"
           page << "$('back_button').show();"
           page << "$('more_button').hide();"
         end
         return
-      elsif params[:button] == "back"
+      when "back"
         render :update do |page|
-          page.replace("login_more_div", :partial=>"login_more")
+          page.replace("login_more_div", :partial => "login_more")
           page << "$j('#user_name').focus();"
           page << "$('back_button').hide();"
           page << "$('more_button').show();"
@@ -459,28 +460,29 @@ class DashboardController < ApplicationController
     end
 
     user = {
-      :name             =>  params[:user_name],
-      :password         =>  params[:user_password],
-      :new_password     =>  params[:user_new_password],
-      :verify_password  =>  params[:user_verify_password]
+      :name            => params[:user_name],
+      :password        => params[:user_password],
+      :new_password    => params[:user_new_password],
+      :verify_password => params[:user_verify_password]
     }
 
-    url = validate_user(user)
-
-    unless @wait_for_task
+    validation = validate_user(user)
+    case validation.result
+    when :wait_for_task
+      # noop, page content already set by initiate_wait_for_task
+    when :pass
+      session['referer'] = request.base_url + '/'
       render :update do |page|
-        if url  # User is logged in, redirect to URL
-          session['referer'] = request.base_url + '/'
-          page.redirect_to(url)
-        else    # No URL, show error msg
-          @flash_msg ||= "Error: Authentication failed"
-          session[:userid], session[:username], session[:user_tags] = nil
-          page.replace_html('flash_div', @flash_msg)
-          page << "$('flash_div').show();"
-#         page << "$('flash_div').visualEffect('pulsate');"
-          page << "miqSparkle(false);"
-          page << "miqEnableLoginFields(true);"
-        end
+        page.redirect_to(validation.url)
+      end
+    when :fail
+      session[:userid], session[:username], session[:user_tags] = nil
+      flash_msg = validation.flash_msg || "Error: Authentication failed"
+      render :update do |page|
+        page.replace_html('flash_div', flash_msg)
+        page << "$('flash_div').show();"
+        page << "miqSparkle(false);"
+        page << "miqEnableLoginFields(true);"
       end
     end
   end
@@ -627,7 +629,7 @@ class DashboardController < ApplicationController
     end
   end
 
-  private ###########################
+  private
 
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
@@ -640,121 +642,128 @@ class DashboardController < ApplicationController
   end
   helper_method(:tl_toggle_button_enablement)
 
-  # Validate user login credentials - return <url for redirect> or nil if an error
-  def validate_user(user)
-    unless params[:task_id]                       # First time thru, kick off authenticate task
-
-      # Pre_authenticate checks
-      if user.blank? || user[:name].blank?
-        @flash_msg = "Error: Name is required"
-        return nil
-      end
-      if user[:new_password] != nil && user[:new_password] != user[:verify_password]
-        @flash_msg = "Error: New password and verify password must be the same"
-        return nil
-      end
-      if user[:new_password] != nil && user[:new_password].blank?
-        @flash_msg = "Error: New password can not be blank"
-        return nil
-      end
-      if user[:new_password] != nil && user[:password] == user[:new_password]
-        @flash_msg = "Error: New password is the same as existing password"
-        return nil
-      end
-
-      # Call the authentication, use wait_for_task if a task is spawned
-      begin
-        user_or_taskid = User.authenticate(user[:name], user[:password], request)
-      rescue MiqException::MiqEVMLoginError => err
-        @flash_msg = I18n.t("flash.authentication.error")
-        user[:name] = nil
-        return
-      end
-      if user_or_taskid.kind_of?(User)
-        user[:name] = user_or_taskid.userid
-      else
-        initiate_wait_for_task(:task_id => user_or_taskid) # Wait for the task to complete
-        @wait_for_task = true
-        return
-      end
-    else
-      task = MiqTask.find_by_id(params[:task_id])
-      if task.status.downcase != "ok"
-        @flash_msg = "Error: " + task.message
-        task.destroy
-        return
-      end
-      user[:name] = task.userid
+  def validate_user_collect_task(user, task_id)
+    task = MiqTask.find_by_id(task_id)
+    if task.status.downcase != "ok"
+      validate = ValidateResult.new(:fail, "Error: " + task.message)
       task.destroy
+      #@flash_msg = "Error: " + task.message
+      #return
+      return validate
+    end
+    user[:name] = task.userid
+    task.destroy
+    ValidateResult.new(:pass)
+  end
+
+  def validate_user_kick_off_task(user)
+    # Pre_authenticate checks
+    return ValidateResult.new(:fail, "Error: Name is required") if user.blank? || user[:name].blank?
+
+    return ValidateResult.new(:fail, "Error: New password and verify password must be the same") if
+      user[:new_password].present? && user[:new_password] != user[:verify_password]
+
+    return ValidateResult.new(:fail, "Error: New password can not be blank") if !user[:new_password].nil? && user[:new_password].blank?
+
+    return ValidateResult.new(:fail, "Error: New password is the same as existing password") if
+      user[:new_password].present? && user[:password] == user[:new_password]
+
+    # Call the authentication, use wait_for_task if a task is spawned
+    begin
+      user_or_taskid = User.authenticate(user[:name], user[:password])
+    rescue MiqException::MiqEVMLoginError
+      user[:name] = nil
+      return ValidateResult.new(:fail, I18n.t("flash.authentication.error"))
     end
 
-    if user[:name]
-      if user[:new_password] != nil
-        begin
-          User.find_by_userid(user[:name]).change_password(user[:password], user[:new_password])
-        rescue StandardError => bang
-          @flash_msg = "Error: " + bang.message
-          return nil
-        end
-      end
+    if user_or_taskid.kind_of?(User)
+      user[:name] = user_or_taskid.userid
+      return ValidateResult.new(:pass)
+    else
+      initiate_wait_for_task(:task_id => user_or_taskid)
+      return ValidateResult.new(:wait_for_task, nil)
+    end
+  end
 
-      db_user = User.find_by_userid(user[:name])
+  def user_is_super_admin?
+    session[:userrole] == 'super_administrator'
+  end
 
-      start_url = session[:start_url] # Hang on to the initial start URL
-      unless session_reset(db_user)          # Reset/recreate the session hash
-        @flash_msg = I18n.t("flash.authentication.missing_role_or_group",
-                            :model => session[:group] ? "Role" : "Group")
-        return nil
-      end
+  def validate_user_handle_not_ready
+    if user_is_super_admin?
+      ValidateResult.new(:pass, nil, url_for(
+        :controller    => "ops",
+        :action        => 'explorer',
+        :flash_warning => true,
+        :no_refresh    => true,
+        :flash_msg     => I18n.t("flash.server_still_starting_admin"),
+        :escape        => false)
+      )
+    else
+      ValidateResult.new(:fail, I18n.t("flash.server_still_starting"))
+    end
+  end
 
-      # If a main db is specified, don't allow logins until super admin has set up the system
-      if session[:userrole] != 'super_administrator' &&
-        get_vmdb_config[:product][:maindb] &&
-          ! Vm.first &&
-          ! Host.first
-        @flash_msg = "Logins not allowed, no providers are being managed yet. Please contact the administrator"
-        return nil
-      end
+  def validate_user_handle_no_records
+    ValidateResult.new(:pass, nil, url_for(
+      :controller    => "ems_infra",
+      :action        => 'show_list',
+      :flash_warning => true,
+      :flash_msg     => I18n.t("flash.non_admin_cannot_access"))
+    )
+  end
 
-      session_init(db_user)    # Initialize the session hash variables
+  ValidateResult = Struct.new(:result, :flash_msg, :url)
 
-      if MiqServer.my_server(true).logon_status != :ready
-        if session[:userrole] == 'super_administrator'
-          return url_for(:controller=>"ops",
-                        :action=>'explorer',
-                        :flash_warning=>true,
-                        :no_refresh=>true,
-                        :flash_msg=>I18n.t("flash.server_still_starting_admin"),
-                        :escape=>false)
-        else
-          @flash_msg = I18n.t("flash.server_still_starting")
-          return nil
-        end
-      end
-
-      # Start super admin at the main db if the main db has no records yet
-      if session[:userrole] == 'super_administrator' &&
-        get_vmdb_config[:product][:maindb] && !get_vmdb_config[:product][:maindb].constantize.first
-        if get_vmdb_config[:product][:maindb] == "Host"
-          return url_for(:controller=>"Host",
-                        :action=>'show_list',
-                        :flash_warning=>true,
-                        :flash_msg=>I18n.t("flash.no_host_defined"))
-        elsif get_vmdb_config[:product][:maindb] == "EmsInfra"
-          return url_for(:controller=>"ems_infra",
-                        :action=>'show_list',
-                        :flash_warning=>true,
-                        :flash_msg=>I18n.t("flash.no_vc_defined"))
-        end
-      end
-
-      return start_url_for_user(start_url)
+  # Validate user login credentials
+  #   return <url for redirect> as part of the result
+  #
+  def validate_user(user)
+    if params[:task_id].present?
+      validation = validate_user_collect_task(params[:task_id])
+    else # First time thru, kick off authenticate task
+      validation = validate_user_kick_off_task(user)
+      return validation unless validation.result == :pass
     end
 
-    session[:userid], session[:username], session[:user_tags] = nil
-    User.current_userid = nil
-    @flash_msg ||= "Error: Authentication failed"
-    return nil
+    unless user[:name]
+      session[:userid], session[:username], session[:user_tags] = nil
+      User.current_userid = nil
+      return ValidateResult.new(:fail, @flash_msg ||= "Error: Authentication failed")
+    end
+
+    if user[:new_password].present?
+      begin
+        User.find_by_userid(user[:name]).change_password(user[:password], user[:new_password])
+      rescue StandardError => bang
+        return ValidateResult.new(:fail, "Error: " + bang.message)
+      end
+    end
+
+    db_user = User.find_by_userid(user[:name])
+    return ValidateResult.new(
+      :fail,
+      I18n.t("flash.authentication.missing_role_or_group", :model => session[:group] ? "Role" : "Group")
+    ) unless session_reset(db_user) # Reset/recreate the session hash
+
+    start_url = session[:start_url] # Hang on to the initial start URL
+
+    # Don't allow logins until there's some content in the system
+    return ValidateResult.new(
+      :fail,
+      "Logins not allowed, no providers are being managed yet. Please contact the administrator"
+    ) unless user_is_super_admin? || Vm.first || Host.first
+
+    session_init(db_user) # Initialize the session hash variables
+
+    return validate_user_handle_not_ready if MiqServer.my_server(true).logon_status != :ready
+
+    # Start super admin at the main db if the main db has no records yet
+    return validate_user_handle_no_records if user_is_super_admin? &&
+                                                get_vmdb_config[:product][:maindb] &&
+                                                  !get_vmdb_config[:product][:maindb].constantize.first
+
+    ValidateResult.new(:pass, nil, start_url_for_user(start_url))
   end
 
   def start_url_for_user(start_url)
