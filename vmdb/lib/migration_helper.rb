@@ -1,3 +1,11 @@
+# MigrationHelper is a module that can be included into migrations to add
+# additional helper methods, thus eliminating some duplication and database
+# specific coding.
+#
+# If mixed into a non-migration class, the module expects the following methods
+# to be defined as in a migration: connection, say, say_with_time.  Additionally,
+# any "extension" methods will need the original method defined.  For example,
+# remove_index_ex expects remove_index to be defined.
 module MigrationHelper
   BULK_COPY_DIRECTORY = File.expand_path(File.join(Rails.root, %w{tmp bulk_copy}))
 
@@ -320,7 +328,7 @@ module MigrationHelper
   def drop_trigger_postgresql(table, name)
     say_with_time("drop_trigger(:#{table}, :#{name})") do
       connection.execute("DROP TRIGGER IF EXISTS #{name} ON #{table};", 'Drop trigger')
-      connection.execute("DROP FUNCTION #{name}();", 'Drop trigger function')
+      connection.execute("DROP FUNCTION IF EXISTS #{name}();", 'Drop trigger function')
     end
   end
 
