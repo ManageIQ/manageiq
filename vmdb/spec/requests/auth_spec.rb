@@ -4,6 +4,9 @@ describe "Login process" do
   before(:each) do
     Vmdb::Application.config.secret_token = 'x' * 40
     guid, server, zone, admin_user, admin_group, admin_role = EvmSpecHelper::seed_admin_user_and_friends
+
+    ApplicationController.any_instance.stub(:set_user_time_zone)
+    MiqEnvironment::Process.stub(:is_web_server_worker?).and_return(true)
   end
 
   context "w/o a valid session" do
@@ -30,6 +33,27 @@ describe "Login process" do
         expect(response.status).to eq(200)
         expect(response.body).to match /password you entered is incorrect/
       end
+    end
+  end
+
+  context 'w/ a valid session' do
+    it "allows access w/ a valid referer" do
+      post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
+      get '/ems_cloud/show_list', nil, {'HTTP_REFERER' => "http://www.example.com/"}
+      expect(response.status).to eq(200)
+    end
+
+    it "does not allow access w/o a valid referer" do
+      post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
+      get '/ems_cloud/show_list', nil, {'HTTP_REFERER' => "http://foo.bar.com"}
+      expect(response.status).to eq(403)
+    end
+
+    it "allows access w/o a valid referer to a whitelisted entry point" do
+      post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
+      host = FactoryGirl.create(:host)
+      get "/host/show/#{host.id}"
+      expect(response.status).to eq(200)
     end
   end
 end
