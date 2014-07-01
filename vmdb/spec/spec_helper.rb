@@ -63,15 +63,7 @@ RSpec.configure do |config|
   }
   config.include RakeTaskExampleGroup, :type => :rake_task
 
-  config.before(:each) do
-    Bullet.start_request if defined?(Bullet)
-  end
-
   config.after(:each) do
-    if defined?(Bullet)
-      Bullet.perform_out_of_channel_notifications if Bullet.notification?
-      Bullet.end_request
-    end
     EvmSpecHelper.clear_caches
   end
 end
