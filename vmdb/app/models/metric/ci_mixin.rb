@@ -23,11 +23,15 @@ module Metric::CiMixin
 
   def has_perf_data?(interval_name = "hourly")
     @has_perf_data ||= {}
-    if @has_perf_data.has_key?(interval_name)
-      @has_perf_data[interval_name]
-    else
-      @has_perf_data[interval_name] = !!first_capture
+    unless @has_perf_data.key?(interval_name) # memoize boolean
+      @has_perf_data[interval_name] = associated_metrics(interval_name).exists?
     end
+    @has_perf_data[interval_name]
+  end
+
+  def associated_metrics(interval_name)
+    _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    send(meth).where(:capture_interval_name => interval_name)
   end
 
   def last_capture(interval_name = "hourly")
@@ -39,9 +43,7 @@ module Metric::CiMixin
   end
 
   def first_and_last_capture(interval_name = "hourly")
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
-    perf = self.send(meth)
-      .where(:capture_interval_name => interval_name)
+    perf = associated_metrics(interval_name)
       .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
       .group(:resource_id)
       .first
