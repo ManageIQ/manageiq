@@ -9,6 +9,8 @@
 #     - cloud_subnets
 #   - security_groups
 #     - firewall_rules
+#   - cloud_volumes
+#   - cloud_volume_snapshots
 #   - vms
 #     - storages (link)
 #     - security_groups (link)
@@ -19,6 +21,8 @@
 #     - custom_attributes
 #     - snapshots
 #   - floating_ips
+#   - cloud_object_store_containers
+#     - cloud_object_store_objects
 #
 
 module EmsRefresh::SaveInventoryCloud
@@ -38,12 +42,27 @@ module EmsRefresh::SaveInventoryCloud
       $log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
     end
 
-    child_keys = [:flavors, :availability_zones, :cloud_tenants, :key_pairs, :cloud_networks, :security_groups, :vms, :floating_ips]
+    child_keys = [
+      :flavors,
+      :availability_zones,
+      :cloud_tenants,
+      :key_pairs,
+      :cloud_networks,
+      :security_groups,
+      :cloud_volumes,
+      :cloud_volume_snapshots,
+      :vms,
+      :floating_ips,
+      :cloud_object_store_containers,
+      :cloud_object_store_objects
+    ]
 
     # Save and link other subsections
     child_keys.each do |k|
       self.send("save_#{k}_inventory", ems, hashes[k], target)
     end
+
+    link_volumes_to_base_snapshots(hashes[:cloud_volumes])
 
     ems.save!
     hashes[:id] = ems.id
@@ -196,5 +215,100 @@ module EmsRefresh::SaveInventoryCloud
 
     self.save_inventory_multi(:floating_ips, FloatingIp, ems, hashes, deletes, :ems_ref, nil, [:vm, :cloud_tenant])
     self.store_ids_for_new_records(ems.floating_ips, hashes, :ems_ref)
+  end
+
+  def save_cloud_volumes_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.cloud_volumes(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+      ems.cloud_volumes.dup
+    else
+      []
+    end
+
+    hashes.each do |h|
+      h[:ems_id]               = ems.id
+      h[:cloud_tenant_id]      = h.fetch_path(:tenant, :id)
+      h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
+      # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
+    end
+
+    self.save_inventory_multi(:cloud_volumes, CloudVolume, ems, hashes, deletes, :ems_ref, nil, [:tenant, :availability_zone, :base_snapshot])
+    self.store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
+  end
+
+  def save_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.cloud_volume_snapshots(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+      ems.cloud_volume_snapshots.dup
+    else
+      []
+    end
+
+    hashes.each do |h|
+      h[:ems_id]          = ems.id
+      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
+      h[:cloud_volume_id] = h.fetch_path(:volume, :id)
+    end
+
+    self.save_inventory_multi(:cloud_volume_snapshots, CloudVolumeSnapshot, ems, hashes, deletes, :ems_ref, nil, [:tenant, :volume])
+    self.store_ids_for_new_records(ems.cloud_volume_snapshots, hashes, :ems_ref)
+  end
+
+  def link_volumes_to_base_snapshots(hashes)
+    base_snapshot_to_volume = hashes.each_with_object({}) do |h, bsh|
+      next unless (base_snapshot = h[:base_snapshot])
+      (bsh[base_snapshot[:id]] ||= []) << h[:id]
+    end
+
+    base_snapshot_to_volume.each do |bsid, volids|
+      CloudVolume.update_all({:cloud_volume_snapshot_id => bsid}, {:id => volids})
+    end
+  end
+
+  def save_cloud_object_store_containers_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.cloud_object_store_containers(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+      ems.cloud_object_store_containers.dup
+    else
+      []
+    end
+
+    hashes.each do |h|
+      h[:ems_id]          = ems.id
+      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
+    end
+
+    self.save_inventory_multi(:cloud_object_store_containers, CloudObjectStoreContainer, ems, hashes, deletes, :ems_ref, nil, :tenant)
+    self.store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
+  end
+
+  def save_cloud_object_store_objects_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.cloud_object_store_objects(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+      ems.cloud_object_store_objects.dup
+    else
+      []
+    end
+
+    hashes.each do |h|
+      h[:ems_id]                          = ems.id
+      h[:cloud_tenant_id]                 = h.fetch_path(:tenant, :id)
+      h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
+    end
+
+    self.save_inventory_multi(:cloud_object_store_objects, CloudObjectStoreObject, ems, hashes, deletes, :ems_ref, nil, [:tenant, :container])
+    self.store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
   end
 end

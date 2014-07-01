@@ -178,10 +178,13 @@ module EmsRefresh::SaveInventory
     return if hashes.nil?
 
     # Update the associated ids
-    hashes.each { |h| h[:storage_id] = h.fetch_path(:storage, :id) }
+    hashes.each do |h|
+      h[:storage_id] = h.fetch_path(:storage, :id)
+      h[:backing_id] = h.fetch_path(:backing, :id)
+    end
 
     deletes = hardware.disks(true).dup
-    self.save_inventory_multi(:disks, Disk, hardware, hashes, deletes, [:controller_type, :location], nil, [:storage])
+    self.save_inventory_multi(:disks, Disk, hardware, hashes, deletes, [:controller_type, :location], nil, [:storage, :backing])
   end
 
   def save_network_inventory(guest_device, hash)

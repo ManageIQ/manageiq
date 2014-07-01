@@ -1,6 +1,7 @@
 class Disk < ActiveRecord::Base
   belongs_to :hardware
   belongs_to :storage
+  belongs_to :backing, :polymorphic => true
   has_many :partitions
   has_one :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
 

@@ -6,4 +6,8 @@ class CloudTenant < ActiveRecord::Base
   has_many        :cloud_networks
   has_many        :vms_and_templates
   has_many        :floating_ips
+  has_many        :cloud_volumes
+  has_many        :cloud_volume_snapshots
+  has_many        :cloud_object_store_containers
+  has_many        :cloud_object_store_objects
 end
