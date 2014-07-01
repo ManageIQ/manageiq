@@ -58,6 +58,7 @@ module MiqAeCustomizationController::Dialogs
         end
         page << "miqInitDashboardCols();"
       end
+      page << "miqSparkle(false);"
     end
 
   end
