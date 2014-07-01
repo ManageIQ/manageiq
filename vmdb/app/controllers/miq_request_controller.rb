@@ -458,7 +458,7 @@ class MiqRequestController < ApplicationController
       cond.push(cond_hash)
     end
 
-    if opts[:applied_states]
+    if opts[:applied_states].present?
       opts[:applied_states].each_with_index do |state,i|
         if i == 0
           @or_hash = Hash.new
