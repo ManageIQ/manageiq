@@ -50,19 +50,3 @@ require "timecop"
 require "vcr"
 require "webmock/rspec"
 require "capybara"
-
-if ENV['CC_BUILD_ARTIFACTS']
-  require "bullet"
-  Bullet.enable = true
-
-  # Use a log file in the CC_BUILD_ARTIFACTS directory so they're available automatically
-  Bullet.bullet_logger = true
-  logger = UniformNotifier::CustomizedLogger.instance_variable_get(:@logger)
-  logger.close
-  UniformNotifier::CustomizedLogger.instance_variable_set(:@logger, nil)
-
-  bullet_log = File.expand_path(File.join(ENV['CC_BUILD_ARTIFACTS'], "bullet.log"))
-  bullet_log_file = File.open(bullet_log, 'a+')
-  bullet_log_file.sync
-  UniformNotifier.customized_logger = bullet_log_file
-end
