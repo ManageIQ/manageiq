@@ -962,21 +962,16 @@ class ApplicationController < ActionController::Base
   end
 
   def set_user_time_zone
-    tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-
     # if authenticating or past login screen
-    if (!session[:userid].blank? || !params[:user_name].blank?)
-      user = session[:userid].blank? ? params[:user_name] : session[:userid]
-      @tz = get_timezone_for_userid(user)
-    elsif !tz.blank?
-      #before login screen
-      @tz = tz
-    end
-    @tz = @tz.blank? ? "UTC" : @tz      #if server and user zone has not been set yet
-#   Time.zone = ActiveSupport::TimeZone::MAPPING[@tz]
-    Time.zone = @tz
-    session[:user_tz] = @tz
-#   Time.zone = ActiveSupport::TimeZone::MAPPING["UTC"] if Time.zone.blank?       #if timezone saved didnt exist in Mapping table
+    @tz = if session[:userid].present? || params[:user_name].present?
+            get_timezone_for_userid(session[:userid] || params[:user_name])
+          else
+            MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
+          end
+
+    @tz ||= 'UTC'
+
+    session[:user_tz] = Time.zone = @tz
   end
 
   # Initialize the options for server selection
