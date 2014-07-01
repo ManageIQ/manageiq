@@ -2754,7 +2754,7 @@ class ApplicationController < ActionController::Base
                       :record_name=>record_name),
                 :error)
     elsif authrec.nil?
-      add_flash(I18n.t("flash.record_not_authorized for user",
+      add_flash(I18n.t("flash.record_not_authorized_for_user",
                       :record_name=>"#{ui_lookup(:model=>rec.class.base_model.to_s)} '#{resource_name}'"),
                 :error)
     end
