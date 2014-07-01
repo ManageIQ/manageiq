@@ -370,7 +370,7 @@ class DashboardController < ApplicationController
         page.redirect_to :action => 'show'
       end
     else
-      render :nothing=>true               # We have nothing to say  :)
+      render :nothing => true
     end
   end
 
@@ -396,7 +396,7 @@ class DashboardController < ApplicationController
         page.redirect_to :action => 'show'
       end
     else
-      render :nothing=>true               # We have nothing to say  :)
+      render :nothing => true
     end
   end
 
@@ -619,13 +619,9 @@ class DashboardController < ApplicationController
     # Rebuild the session
     session_reset(db_user)
     session_init(db_user)
-    url = start_url_for_user(nil)
+    url = start_url_for_user(nil) || url_for(:controller => params[:controller], :action => 'show')
     render :update do |page|
-      if url
-        page.redirect_to(url)
-      else
-        page.redirect_to :action => 'show'
-      end
+      page.redirect_to(url)
     end
   end
 
