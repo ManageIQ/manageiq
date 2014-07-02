@@ -246,6 +246,12 @@
         :identifier: ems_infra_tag
       - :name: unassign
         :identifier: ems_infra_tag
+  :request_tasks:
+    :description: Request Tasks
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqRequestTask
   :requests:
     :description: Requests
     :options:
