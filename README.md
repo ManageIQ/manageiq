@@ -1,7 +1,7 @@
 #Welcome to ManageIQ
 
-[![Build Status](https://travis-ci.org/ManageIQ/manageiq.png)](https://travis-ci.org/ManageIQ/manageiq)
-[![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq.png)](https://codeclimate.com/github/ManageIQ/manageiq)
+[![Build Status](http://img.shields.io/travis/ManageIQ/manageiq.svg)](https://travis-ci.org/ManageIQ/manageiq)
+[![Code Climate](http://img.shields.io/codeclimate/github/ManageIQ/manageiq.svg)](https://codeclimate.com/github/ManageIQ/manageiq)
 
 The wait is over - ManageIQ's code repository is open source.
 
