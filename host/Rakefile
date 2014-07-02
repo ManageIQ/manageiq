@@ -23,6 +23,7 @@ task :rcov do
       t.test_files = FileList['test/ts_*.rb']
       t.output_dir = File.join(ENV['CC_BUILD_ARTIFACTS'], "coverage") if ENV['CC_BUILD_ARTIFACTS'] != nil
       t.rcov_opts = ['--text-report', '--exclude', 'spec,/usr/lib/ruby']
+      t.verbose = false
     end
   rescue LoadError
     puts 'Rcov is not available. Proceeding without...'

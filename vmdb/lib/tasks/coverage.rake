@@ -1,5 +1,4 @@
 
-
 namespace :test do
   namespace :coverage do
     desc "Delete aggregate coverage data."
@@ -18,9 +17,9 @@ namespace :test do
           t.libs << "test"
           t.test_files = FileList["test/#{target}/*_test.rb"]
           t.output_dir = File.join(ENV['CC_BUILD_ARTIFACTS'], "coverage") if ENV['CC_BUILD_ARTIFACTS'] != nil
+          t.verbose = false
           if target == "unit"
             t.rcov_opts = ['--rails --aggregate coverage.data --text-report --sort coverage --no-html']
-#            t.rcov_opts = ['--rails --aggregate coverage.data --text-report --sort coverage ']
           else
             t.rcov_opts = ['--rails --aggregate coverage.data --no-html --text-summary']
           end
