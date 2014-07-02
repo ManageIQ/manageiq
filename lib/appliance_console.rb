@@ -364,9 +364,9 @@ Date and Time Configuration
         when I18n.t("advanced_settings.httpdauth")
           say("#{selection}\n\n")
 
-          httpdauth = ExternalHttpdAuthentication.new(host)
-          if httpdauth.activate
-            httpdauth.post_activation
+          httpd_auth = ExternalHttpdAuthentication.new(host)
+          if httpd_auth.activate
+            httpd_auth.post_activation
             say("\nExternal Authentication configured successfully.\n")
             press_any_key
           else

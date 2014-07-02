@@ -54,11 +54,10 @@ module ApplianceConsole
 
     def post_activation
       say("\nRestarting sssd and httpd ...")
-      AwesomeSpawn.run!("#{SERVICE_COMMAND} sssd restart")
-      AwesomeSpawn.run!("#{SERVICE_COMMAND} httpd restart")
+      %w(sssd httpd).each { |service| LinuxAdmin::Service.new(service).restart }
 
       say("Configuring sssd to start upon reboots ...")
-      AwesomeSpawn.run!("#{CHKCONFIG_COMMAND} sssd on")
+      LinuxAdmin::Service.new("sssd").enable
     end
 
     private

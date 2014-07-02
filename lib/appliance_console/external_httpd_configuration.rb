@@ -17,10 +17,6 @@ EOS
     HTTPD_EXTERNAL_AUTH = "/etc/httpd/#{EXTERNAL_AUTH_FILE}"
     HTTPD_CONFIG        = "/etc/httpd/conf.d/cfme-https-application.conf"
 
-    RPM_COMMAND         = "/bin/rpm"
-    SERVICE_COMMAND     = "/sbin/service"
-    CHKCONFIG_COMMAND   = "/sbin/chkconfig"
-
     GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
     SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
 
@@ -140,27 +136,23 @@ LoadModule lookup_identity_module modules/mod_lookup_identity.so
     end
 
     #
-    # RPM Utilities
-    #
-    def rpm_installed?(rpm_package)
-      result = AwesomeSpawn.run!(RPM_COMMAND, :params => {"-qa" => rpm_package})
-      if result.output.blank?
-        say("#{rpm_package} RPM is not installed")
-        return false
-      end
-      true
-    end
-
-    #
     # Validation Methods
     #
     def installation_valid?
+      installed_rpm_packages = LinuxAdmin::Rpm.list_installed.keys
       rpm_packages = %w(ipa-client sssd-dbus mod_intercept_form_submit mod_authnz_pam mod_lookup_identity)
-      missing = rpm_packages.count { |package| !rpm_installed?(package) }
+
+      missing = rpm_packages.count do |package|
+        installed = installed_rpm_packages.include?(package)
+        say("#{package} RPM is not installed") unless installed
+        !installed
+      end
+
       if missing > 0
         say("\nAppliance Installation is not valid for enabling External Authentication\n")
         return false
       end
+
       true
     end
 
