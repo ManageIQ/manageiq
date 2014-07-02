@@ -123,19 +123,11 @@ class Zone < ActiveRecord::Base
 
   def set_log_depot_settings(new_settings)
     new_settings = new_settings.except(:from_zone)
-    validate_log_depot_settings(new_settings)
+    LogFile.validate_log_depot_settings(new_settings)
 
     log_file_depot ? log_file_depot.depot_hash = new_settings : create_log_file_depot(:depot_hash => new_settings)
 
     $log.info("MIQ(#{self.class.name}#set_log_depot_settings) Log Depot settings updated")
-  end
-
-  def validate_log_depot_settings(settings)
-    LogFile.validate_log_depot_settings(settings)
-  end
-
-  def verify_log_depot_settings(settings)
-    LogFile.verify_log_depot_settings(settings)
   end
 
   def host_ids
