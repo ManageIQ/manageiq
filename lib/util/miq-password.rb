@@ -157,7 +157,7 @@ class MiqPassword
 
   def encrypt_version_2(str)
     return "v2:{}" if str.nil? || str.empty?
-    "v2:{#{self.class.v2_key.encrypt64(str).chomp}}"
+    "v2:{#{self.class.v2_key.encrypt64(str).chomp.gsub("\n", "")}}"
   end
 
   def encrypt_version_1(str)
