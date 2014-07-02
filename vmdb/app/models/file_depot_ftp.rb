@@ -1,6 +1,8 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
+  DISPLAY_NAME = "FTP"
+
   def upload_file(file)
     log_header = "MIQ(#{self.class.name}##{__method__})"
     super

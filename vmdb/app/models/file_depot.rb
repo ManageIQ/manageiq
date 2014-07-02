@@ -1,4 +1,6 @@
 class FileDepot < ActiveRecord::Base
+  DISPLAY_NAME = nil
+
   include AuthenticationMixin
   belongs_to            :resource, :polymorphic => true
   has_many              :log_files
@@ -6,9 +8,9 @@ class FileDepot < ActiveRecord::Base
 
   attr_accessor         :file
 
-  SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'nfs' => 'Network File System'}.freeze
+  def self.supported_depots
+    descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass::DISPLAY_NAME }
+  end
 
   def depot_hash=(hsh = {})
     return if hsh == self.depot_hash

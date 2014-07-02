@@ -12,12 +12,6 @@ class LogFile < ActiveRecord::Base
 
   cattr_reader :log_request_timeout
 
-  SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'ftp' => 'File Transfer Protocol',
-    'nfs' => 'Network File System'
-    }.freeze
-
   before_destroy :remove
 
   def relative_path_for_upload(loc_file)
@@ -178,7 +172,7 @@ class LogFile < ActiveRecord::Base
 
   def self.validate_log_depot_settings(settings)
     post_method = self.get_post_method(settings) # This will raise an error if URI is malformed
-    raise "Unsupported schema in URI, '#{post_method}', for log depot" unless post_method.blank? || FileDepot::SUPPORTED_DEPOTS.keys.include?(post_method.downcase)
+    raise "Unsupported schema in URI, '#{post_method}', for log depot" unless post_method.blank? || FileDepot.supported_depots.keys.include?("FileDepot#{post_method.capitalize}")
     raise "no credentials defined" unless settings[:username] && settings[:password] || post_method == 'nfs' # NFS doesn't require credentials
     return true
   end

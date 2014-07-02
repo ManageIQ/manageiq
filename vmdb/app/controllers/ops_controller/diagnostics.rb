@@ -629,7 +629,7 @@ module OpsController::Diagnostics
     @edit = Hash.new
     @edit[:new] = Hash.new
     @edit[:current] = Hash.new
-    @edit[:protocols_hash] = LogFile::SUPPORTED_DEPOTS
+    @edit[:protocols_hash] = FileDepot.supported_depots
     #have to create array to add <choose> on the top in the form
     @edit[:protocols_arr] = @edit[:protocols_hash].values
     @edit[:key] = "logdepot_edit__#{@record.id || "new"}"
