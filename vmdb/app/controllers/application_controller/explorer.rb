@@ -252,7 +252,14 @@ module ApplicationController::Explorer
                                                  :userid=>session[:userid], # Userid for RBAC filtering
                                                  :parent=>nil               # Asking for roots, no parent
                                              }))
-    root_nodes = Array.new
+
+    if [:vandt].include?(options[:type]) # :vandt tree is built in a "new" full tree style
+      root_nodes = roots[0...-2]
+      roots      = roots[-2, 2] # but, still build the archive and orphan trees the old way
+    else
+      root_nodes = Array.new
+    end
+
     roots.each do |r|
       root_nodes += x_build_node_dynatree(r, nil, options)  # Build the node(s), passing in the parent object and the options
     end
@@ -518,7 +525,20 @@ module ApplicationController::Explorer
         objects = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
       end
       return options[:count_only] ? objects.count : objects.sort{|a,b| a.name.downcase <=> b.name.downcase}
-    when :vandt, :handc
+    when :vandt # :vandt is partially built in a "new" full tree way
+      objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
+
+      if count_only
+        return objects.length + 2
+      else
+        objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options).tree }
+        return objects +
+          [
+            {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived VMs and Templates"},
+            {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned VMs and Templates"}
+          ]
+      end
+    when :handc
       objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
       if count_only
         return objects.length + 2

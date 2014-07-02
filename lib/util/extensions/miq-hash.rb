@@ -14,4 +14,20 @@ class Hash #:nodoc:
   end
   alias bracket_equals_without_subclassed_string []=
   alias []= bracket_equals_with_subclassed_string
+
+  unless method_defined?(:sort!)
+    def sort!(*args, &block)
+      sorted = sort(*args, &block)
+      sorted = self.class[sorted.to_a] unless sorted.instance_of?(self.class)
+      replace(sorted)
+    end
+  end
+
+  unless method_defined?(:sort_by!)
+    def sort_by!(*args, &block)
+      sorted = sort_by(*args, &block)
+      sorted = self.class[sorted.to_a] unless sorted.instance_of?(self.class)
+      replace(sorted)
+    end
+  end
 end
