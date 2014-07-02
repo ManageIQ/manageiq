@@ -1742,11 +1742,13 @@ module VmCommon
     end
     h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
 
-    # Clicked on right cell record, open the tree enough to show the node, if not already showing
-    if params[:action] == "x_show" && @record &&          # Showing a record
-       !@in_a_form &&                                     # Not in a form
-       x_tree[:type] != :filter                           # Not in a filter tree
-      add_nodes = open_parent_nodes(@record)              # Open the parent nodes of selected record, if not open
+    unless x_active_tree == :vandt_tree
+      # Clicked on right cell record, open the tree enough to show the node, if not already showing
+      if params[:action] == "x_show" && @record &&          # Showing a record
+          !@in_a_form &&                                     # Not in a form
+          x_tree[:type] != :filter                           # Not in a filter tree
+        add_nodes = open_parent_nodes(@record)              # Open the parent nodes of selected record, if not open
+      end
     end
 
     # Build presenter to render the JS command for the tree update
