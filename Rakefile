@@ -69,7 +69,14 @@ namespace :test do
   def update_bundle(dir)
     Dir.chdir(File.join(File.dirname(__FILE__), dir))
     system('bundle check')
-    system('bundle update') if $? != 0
+    system_retry('bundle update') if $CHILD_STATUS != 0
+  end
+
+  def system_retry(cmd, count = 3)
+    count.times do
+      system(cmd)
+      break if $CHILD_STATUS == 0
+    end
   end
 end
 
