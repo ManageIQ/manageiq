@@ -2,18 +2,21 @@ language: ruby
 rvm: 1.9.3
 env:
   global:
+  - BUNDLE_PATH=~/.bundle
   - BUNDLE_WITHOUT=development:metric_fu:qpid
   - RUBY_GC_MALLOC_LIMIT=90000000
+  - AMAZON_S3_BUCKET=manageiq-travisci-bundler-cache
+  - secure: EsYqZLiFhqAzrEAbxJ77Om3l02cJWOzDNMfWQMnvmjB0uPRck1pOmKJS6E28ZCGKkGJ8gnRJaMqum8Sp2UluGD8Y6qSYiv34FjKWeAJ14bDlDxvqhM+/cPxNk7iW6cKDiKyEBxqq5KCSYV6YQNjaPa0StcZWv9CLIqrlkRoC+gQ=
   matrix:
-  - TEST_SUITE=lib
-  - TEST_SUITE=vmdb
-  - TEST_SUITE=migrations
-  - TEST_SUITE=replication
-  - TEST_SUITE=automation
+  - TEST_SUITE=lib         BUNDLE_CACHE_FILE=lib-cache
+  - TEST_SUITE=vmdb        BUNDLE_CACHE_FILE=vmdb-cache
+  - TEST_SUITE=migrations  BUNDLE_CACHE_FILE=vmdb-cache
+  - TEST_SUITE=replication BUNDLE_CACHE_FILE=vmdb-cache
+  - TEST_SUITE=automation  BUNDLE_CACHE_FILE=vmdb-cache
 addons:
   postgresql: '9.3'
 before_install:
-- "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
+- ! 'echo ''gem: --no-ri --no-rdoc --no-document'' > ~/.gemrc'
 - gem uninstall -x -i $GEM_HOME@global bundler
 - gem uninstall -ax rake
 - gem uninstall -x -i $GEM_HOME@global rake
