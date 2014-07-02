@@ -69,7 +69,14 @@ namespace :test do
   def update_bundle(dir)
     Dir.chdir(File.join(File.dirname(__FILE__), dir))
     system('bundle check')
-    system('bundle update') if $? != 0
+    system_retry('bundle update') if $CHILD_STATUS != 0
+  end
+
+  def system_retry(cmd, count = 3)
+    count.times do
+      system(cmd)
+      break if $CHILD_STATUS == 0
+    end
   end
 end
 
@@ -152,17 +159,16 @@ namespace :build do
 
     require 'fileutils'
     require 'pathname'
-    require 'platform'
 
-    base     = Pathname.new(File.dirname(__FILE__)).freeze
-    platform = RUBY_PLATFORM.match(/(.+?)[0-9\.]*$/)[1] # => "x86_64-linux" or "x86_64-darwin"
-    arch     = platform.split("-").first                # => "x86_64"
+    base      = Pathname.new(File.dirname(__FILE__)).freeze
+    platform  = RUBY_PLATFORM.match(/(.+?)[0-9\.]*$/)[1] # => "x86_64-linux" or "x86_64-darwin"
+    _arch, os = platform.split("-")                      # => ["x86_64", "linux"]
 
     #
     # MiqBlockDevOps
     #
 
-    if Platform::IMPL == :linux && arch == "x86_64"
+    if platform == "x86_64-linux"
       build_shared_objects(
         "MiqBlockDevOps.so",
         base.join("lib/disk/modules/MiqBlockDevOps/"),
@@ -176,7 +182,7 @@ namespace :build do
     # MiqLargeFileLinux
     #
 
-    if Platform::IMPL == :linux && arch == "x86"
+    if platform == "x86_64-linux"
       build_shared_objects(
         "MiqLargeFileLinux.so",
         base.join("lib/disk/modules/MiqLargeFileLinux.d/"),
@@ -190,7 +196,7 @@ namespace :build do
     # SlpLib
     #
 
-    if Platform::IMPL == :macosx
+    if os == "darwin"
       include_file = "/usr/local/include/slp.h"
       lib_file     = "/usr/local/lib/libslp.dylib"
       so_name      = "SlpLib_raw.bundle"
