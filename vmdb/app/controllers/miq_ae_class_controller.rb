@@ -735,20 +735,7 @@ class MiqAeClassController < ApplicationController
       id = x_node.split('-')
     end
     @ae_inst = MiqAeInstance.find(from_cid(id[1]))
-    @ae_class = MiqAeClass.find(@ae_inst.class_id)
-    @ae_fields = @ae_class.ae_fields
-    @ae_values = Array.new
-
-    @ae_fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_i,@ae_inst.id.to_i)
-      if val.nil?
-        val = MiqAeValue.new
-        val.field_id = fld.id.to_i
-        val.instance_id = @ae_inst.id.to_i
-      end
-      @ae_values.push(val)
-      #@ae_values.push(MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_i,@ae_inst.id.to_i))
-    end
+    initial_setup_for_instances_form_vars(@ae_inst)
     set_instances_form_vars
     @in_a_form = true
     session[:changed] = @changed = false
@@ -775,16 +762,36 @@ class MiqAeClassController < ApplicationController
   def set_instances_form_vars
     session[:inst_data] = Hash.new
     @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
-    @edit = Hash.new
-    @edit[:ae_inst_id] = @ae_inst.id
-    @edit[:ae_class_id] = @ae_class.id
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
-    @edit[:rec_id] = @ae_inst.id || nil
-    @edit[:key] = "aeinst_edit__#{@ae_inst.id || "new"}"
-    @edit[:new][:ae_inst] = @ae_inst
-    @edit[:new][:ae_values] = @ae_values
-    @edit[:new][:ae_fields] = @ae_class.ae_fields
+    @edit = {
+      :ae_inst_id  => @ae_inst.id,
+      :ae_class_id => @ae_class.id,
+      :rec_id      => @ae_inst.id || nil,
+      :key         => "aeinst_edit__#{@ae_inst.id || "new"}",
+      :new         => {}
+    }
+    @edit[:new][:ae_inst]   = {}
+    @edit[:new][:ae_values] = []
+    @edit[:new][:ae_fields] = []
+    instance_column_names.each do |fld|
+      @edit[:new][:ae_inst][fld] = @ae_inst.send(fld)
+    end
+
+    @ae_values.each do |ae_value|
+      values = {}
+      value_column_names.each do |fld|
+        values[fld] = ae_value.send(fld)
+      end
+      @edit[:new][:ae_values].push(values)
+    end
+
+    @ae_class.ae_fields.each do |ae_field|
+      field = {}
+      field_column_names.each do |fld|
+        field[fld] = ae_field.send(fld)
+      end
+      @edit[:new][:ae_fields].push(field)
+    end
+
     @edit[:current] = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
         I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqAeInstance")) :
@@ -817,11 +824,6 @@ class MiqAeClassController < ApplicationController
       end
 
       @changed = (@edit[:current] != @edit[:new])
-      @changed = (@edit[:current][:ae_inst].attributes != @edit[:new][:ae_inst].attributes)
-      @edit[:current][:ae_values].each_with_index do |fld,i|          #needed to compare each object's attributes to find out if something has changed
-        @changed = true if @edit[:new][:ae_values][i].attributes != fld.attributes
-      end
-
       page << javascript_for_miq_button_visibility(@changed)
     end
   end
@@ -840,7 +842,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      if @edit[:new][:ae_inst].name.blank? || @edit[:new][:ae_inst].name == ""
+      if @edit[:new][:ae_inst]["name"].blank? || @edit[:new][:ae_inst]["name"] == ""
         add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
       end
       if @flash_array
@@ -853,12 +855,12 @@ class MiqAeClassController < ApplicationController
         end
         return
       end
-      set_instances_record_vars(@edit[:current][:ae_inst])      # Set the instance record variables, but don't save
-      set_instances_value_vars(@edit[:current][:ae_values])   # Set the instance record variables, but don't save
+      set_instances_record_vars(@ae_inst)    # Set the instance record variables, but don't save
+      set_instances_value_vars(@ae_values)   # Set the instance record variables, but don't save
       begin
         MiqAeInstance.transaction do
-          @edit[:current][:ae_inst].save!
-          @edit[:current][:ae_values].each do |val|
+          @ae_inst.save!
+          @ae_values.each do |val|
             val = nil if val == ""
             val.save!
           end
@@ -904,7 +906,7 @@ class MiqAeClassController < ApplicationController
     when "add"
       return unless load_edit("aeinst_edit__new","replace_cell__explorer")
       get_instances_form_vars
-      if @edit[:new][:ae_inst].name.blank? || @edit[:new][:ae_inst].name == ""
+      if @edit[:new][:ae_inst]["name"].blank? || @edit[:new][:ae_inst]["name"] == ""
         add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
       end
       if @flash_array
@@ -914,14 +916,13 @@ class MiqAeClassController < ApplicationController
         return
       end
       add_aeinst = MiqAeInstance.new
-      set_instances_record_vars(add_aeinst)                       # Set the instance record variables, but don't save
+      set_instances_record_vars(add_aeinst)  # Set the instance record variables, but don't save
+      set_instances_value_vars(@ae_values)   # Set the instance value record variables, but don't save
       begin
         MiqAeInstance.transaction do
           add_aeinst.save!
-          inst_rec = MiqAeInstance.find(add_aeinst.id)
-          inst_rec_id = inst_rec.id
-          @edit[:new][:ae_values].each do |val|
-            val.instance_id = inst_rec_id
+          @ae_values.each do |val|
+            val.instance_id = add_aeinst.id
             val.save!
           end
         end  # end of transaction
@@ -1501,15 +1502,8 @@ exit MIQ_OK"
 
   def new_instance
     assert_privileges("miq_ae_instance_new")
-    @ae_values = Array.new
     @ae_inst = MiqAeInstance.new
-    @ae_class = MiqAeClass.find_by_id(@edit[:ae_class_id])
-    @ae_class.ae_fields.each do |fld|
-      v = MiqAeValue.new
-      v.instance_id = @ae_inst.id.to_i
-      v.field_id = fld.id.to_i
-      @ae_values.push(v)
-    end
+    initial_setup_for_instances_form_vars(@ae_inst)
     set_instances_form_vars
     @in_a_form = true
     replace_right_cell
@@ -1917,6 +1911,45 @@ exit MIQ_OK"
 
 private
 
+  def initial_setup_for_instances_form_vars(ae_inst)
+    if ae_inst.id
+      @ae_class  = MiqAeClass.find(@ae_inst.class_id)
+      @ae_fields = @ae_class.ae_fields
+      @ae_values = []
+      @ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
+        val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_i, @ae_inst.id.to_i)
+        if val.nil?
+          val             = MiqAeValue.new
+          val.field_id    = fld.id.to_i
+          val.instance_id = @ae_inst.id.to_i
+        end
+        @ae_values.push(val)
+      end
+    else
+      @ae_values = []
+      @ae_inst   = MiqAeInstance.new
+      @ae_class  = MiqAeClass.find_by_id(@edit[:ae_class_id])
+      @ae_class.ae_fields.each do |fld|
+        v             = MiqAeValue.new
+        v.instance_id = @ae_inst.id.to_i
+        v.field_id    = fld.id.to_i
+        @ae_values.push(v)
+      end
+    end
+  end
+
+  def instance_column_names
+    %w(name description display_name)
+  end
+
+  def field_column_names
+    %w(aetype collect datatype default_value display_name name on_entry on_error on_exit substitute)
+  end
+
+  def value_column_names
+    %w(collect display_name on_entry on_error on_exit max_retries max_time value)
+  end
+
   def create_action_url(node)
     if @sb[:action] == "miq_ae_domain_priority_edit"
       'domains_priority_edit'
@@ -2257,8 +2290,9 @@ private
   end
 
   def get_instances_form_vars_for(prefix = nil)
-    ['name', 'display_name', 'description'].each do |key|
-      @edit[:new][:ae_inst].send("#{key}=", params["#{prefix}inst_#{key}"].blank? ? nil : params["#{prefix}inst_#{key}"])   if params["#{prefix}inst_#{key}"]
+    instance_column_names.each do |key|
+      @edit[:new][:ae_inst][key] =
+        params["#{prefix}inst_#{key}"].blank? ? nil : params["#{prefix}inst_#{key}"] if params["#{prefix}inst_#{key}"]
     end
 
     @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.each_with_index do |fld,i|
@@ -2267,8 +2301,6 @@ private
         @edit[:new][:ae_values][i][key] = params["#{prefix}inst_#{key}_#{i}".to_sym]  if params["#{prefix}inst_#{key}_#{i}".to_sym]
       end
       @edit[:new][:ae_values][i]["value"]    = params["#{prefix}inst_password_value_#{i}".to_sym] if params["#{prefix}inst_password_value_#{i}".to_sym]
-
-      @edit[:new][:ae_values][i]["field_id"] = fld.id
     end
   end
 
@@ -2376,22 +2408,18 @@ private
 
   # Set record variables to new values
   def set_instances_record_vars(miqaeinst)
-    miqaeinst.name = @edit[:new][:ae_inst].name.strip
-    miqaeinst.display_name = @edit[:new][:ae_inst].display_name
-    miqaeinst.description = @edit[:new][:ae_inst].description
+    instance_column_names.each do |attr|
+      miqaeinst.send("#{attr}=", @edit[:new][:ae_inst][attr].strip)
+    end
     miqaeinst.class_id = from_cid(@edit[:ae_class_id])
   end
 
   # Set record variables to new values
   def set_instances_value_vars(vals)
     vals.each_with_index do |v,i|
-      v.value = @edit[:new][:ae_values][i].value if @edit[:new][:ae_values][i].value != @edit[:current][:ae_values][i].value
-      v.collect = @edit[:new][:ae_values][i].collect if @edit[:new][:ae_values][i].collect != @edit[:current][:ae_values][i].collect
-      v.on_entry = @edit[:new][:ae_values][i].on_entry if @edit[:new][:ae_values][i].on_entry != @edit[:current][:ae_values][i].on_entry
-      v.on_exit = @edit[:new][:ae_values][i].on_exit if @edit[:new][:ae_values][i].on_exit != @edit[:current][:ae_values][i].on_exit
-      v.on_error = @edit[:new][:ae_values][i].on_error if @edit[:new][:ae_values][i].on_error != @edit[:current][:ae_values][i].on_error
-      v.max_retries = @edit[:new][:ae_values][i].max_retries if @edit[:new][:ae_values][i].max_retries != @edit[:current][:ae_values][i].max_retries
-      v.max_time = @edit[:new][:ae_values][i].max_time if @edit[:new][:ae_values][i].max_time != @edit[:current][:ae_values][i].max_time
+      value_column_names.each do |attr|
+        v.send("#{attr}=", @edit[:new][:ae_values][i][attr]) if @edit[:new][:ae_values][i][attr]
+      end
     end
   end
 
