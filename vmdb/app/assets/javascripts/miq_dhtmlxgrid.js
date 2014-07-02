@@ -263,3 +263,17 @@ function miqOrderService(id){
   );
 }
 
+function miqDhtmlxgridSerialize(gridObj) {
+  dhtmlxgridXml = "<?xml version='1.0'?>";
+  dhtmlxgridXml += "<rows>";
+  rowIds = gridObj.getAllRowIds().split(',');
+  for (i = 0; i < rowIds.length; i++) {
+    dhtmlxgridXml += "<row id=" + "'" + rowIds[i] + "'>";
+    for (j = 0; j < gridObj.getColumnCount(); j++) {
+      dhtmlxgridXml += "<cell>" + gridObj.cells(rowIds[i], j).getValue() + "</cell>";
+    }
+    dhtmlxgridXml += "</row>";
+  }
+  dhtmlxgridXml += "</rows>";
+  return dhtmlxgridXml;
+}
