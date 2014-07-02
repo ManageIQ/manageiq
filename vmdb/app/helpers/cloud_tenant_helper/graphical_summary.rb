@@ -25,7 +25,7 @@ module CloudTenantHelper::GraphicalSummary
     num = @record.number_of(:security_groups)
     h = {:label => label, :image => "security_group", :value => num}
     if num > 0 && role_allows(:feature => "security_group_show_list")
-      h[:link] = link_to("", {:action => 'show', :id => @cloud_tenant, :display => 'security_groups'}, :title => "Show all #{label}", :onclick=>"return miqCheckForChanges()")
+      h[:link] = link_to("", {:action => 'show', :id => @cloud_tenant, :display => 'security_groups'}, :title => "Show all #{label}", :onclick => "return miqCheckForChanges()")
     end
     h
   end
@@ -35,7 +35,7 @@ module CloudTenantHelper::GraphicalSummary
     num = @record.number_of(:vms)
     h = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:link] = link_to("", {:action => 'show', :id => @cloud_tenant, :display => 'instances'}, :title => "Show all #{label}", :onclick=>"return miqCheckForChanges()")
+      h[:link] = link_to("", {:action => 'show', :id => @cloud_tenant, :display => 'instances'}, :title => "Show all #{label}", :onclick => "return miqCheckForChanges()")
     end
     h
   end
@@ -45,7 +45,7 @@ module CloudTenantHelper::GraphicalSummary
     num = @record.number_of(:miq_templates)
     h = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:link] = link_to("", {:action => 'show', :id => @cloud_tenant, :display => 'instances'}, :title => "Show all #{label}", :onclick=>"return miqCheckForChanges()")
+      h[:link] = link_to("", {:action => 'show', :id => @cloud_tenant, :display => 'instances'}, :title => "Show all #{label}", :onclick => "return miqCheckForChanges()")
     end
     h
   end
