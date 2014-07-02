@@ -20,8 +20,4 @@ class FileDepotAnonymousFtp < FileDepotFtp
   def login_credentials
     ["anonymous", "anonymous"]
   end
-
-  def requires_credentials?
-    false
-  end
 end

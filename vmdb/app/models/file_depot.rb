@@ -2,7 +2,6 @@ class FileDepot < ActiveRecord::Base
   include AuthenticationMixin
   belongs_to            :resource, :polymorphic => true
   has_many              :log_files
-  validate              :validate_credentials
   validates_presence_of :uri
 
   attr_accessor         :file
@@ -22,15 +21,6 @@ class FileDepot < ActiveRecord::Base
       :uri      => self.uri,
       :password => self.authentication_password
     }
-  end
-
-  #TODO: Move the depot logic out of LogFile and add it here
-  def requires_credentials?
-    LogFile.requires_credentials?(LogFile.get_post_method(:uri => self.uri))
-  end
-
-  def validate_credentials
-    errors.add(:file_depot, "is missing credentials") if requires_credentials? && authentication_invalid?
   end
 
   def self.verify_depot_hash(hsh)
