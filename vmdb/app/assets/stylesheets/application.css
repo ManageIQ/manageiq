@@ -5,7 +5,6 @@
  *
  *= require slick.grid
  *= require jquery.jqplot
- *= require dialog_import_export
  *= require widget_import_export
  *= require ../javascripts/dynatree_1.2.4/skin-cfme/ui.dynatree
 */
