@@ -36,6 +36,12 @@ class FileDepotFtp < FileDepot
     $log.info("#{log_header} Removing log file [#{destination_file}]...complete")
   end
 
+  def verify_credentials(_auth_type = nil)
+    with_connection { |c| c.last_response }
+  rescue
+    false
+  end
+
   private
 
   def with_connection
