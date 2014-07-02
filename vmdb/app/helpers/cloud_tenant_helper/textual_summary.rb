@@ -33,7 +33,7 @@ module CloudTenantHelper::TextualSummary
   end
 
   def textual_security_groups
-    label = ui_lookup(:tables=>"security_groups")
+    label = ui_lookup(:tables => "security_groups")
     num   = @record.number_of(:security_groups)
     h     = {:label => label, :image => "security_group", :value => num}
     if num > 0
@@ -44,7 +44,7 @@ module CloudTenantHelper::TextualSummary
   end
 
   def textual_instances
-    label = ui_lookup(:tables=>"vm_cloud")
+    label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
@@ -55,7 +55,7 @@ module CloudTenantHelper::TextualSummary
   end
 
   def textual_images
-    label = ui_lookup(:tables=>"template_cloud")
+    label = ui_lookup(:tables => "template_cloud")
     num   = @record.number_of(:miq_templates)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
@@ -73,7 +73,7 @@ module CloudTenantHelper::TextualSummary
       h[:image] = "smarttag"
       h[:value] = "No #{label} have been assigned"
     else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
+      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned} }
     end
     h
   end
@@ -81,7 +81,7 @@ module CloudTenantHelper::TextualSummary
   def textual_quotas(quota)
     label = quota_label(quota.service_name, quota.name)
     num   = quota.value.to_i
-    h     = {:label => label, :value => (num < 0 ? "Unlimited" : num)}
+    {:label => label, :value => (num < 0 ? "Unlimited" : num)}
   end
 
   def quota_label(service_name, quota_name)

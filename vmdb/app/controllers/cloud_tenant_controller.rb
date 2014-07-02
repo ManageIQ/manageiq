@@ -1,5 +1,4 @@
 class CloudTenantController < ApplicationController
-
   before_filter :check_privileges
   before_filter :get_session_data
   after_filter :cleanup_action
@@ -23,18 +22,18 @@ class CloudTenantController < ApplicationController
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@cloud_tenant)
-      drop_breadcrumb( {:name => @cloud_tenant.name + " (Summary)", :url => "/cloud_tenant/show/#{@cloud_tenant.id}"} )
+      drop_breadcrumb({:name => @cloud_tenant.name + " (Summary)", :url => "/cloud_tenant/show/#{@cloud_tenant.id}"})
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
+      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     when "ems_cloud"
-      drop_breadcrumb( {:name => @cloud_tenant.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=ems_cloud"} )
+      drop_breadcrumb({:name => @cloud_tenant.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=ems_cloud"})
       @view, @pages = get_view(EmsCloud, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
     when "instances", "images"
       table = @display == "instances" ? "vm_cloud" : "template_cloud"
       title = ui_lookup(:tables => table)
       kls   = @display == "instances" ? VmCloud : TemplateCloud
-      drop_breadcrumb( {:name => @cloud_tenant.name + " (All #{title})", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}"} )
+      drop_breadcrumb({:name => @cloud_tenant.name + " (All #{title})", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}"})
       @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -45,7 +44,7 @@ class CloudTenantController < ApplicationController
       table = "security_groups"
       title = ui_lookup(:tables => table)
       kls   = SecurityGroup
-      drop_breadcrumb( {:name => @cloud_tenant.name + " (All #{title})", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}"} )
+      drop_breadcrumb({:name => @cloud_tenant.name + " (All #{title})", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}"})
       @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
