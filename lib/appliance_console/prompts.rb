@@ -2,6 +2,7 @@ module ApplianceConsole
   module Prompts
     CLEAR_CODE    = `clear`
     IP_REGEXP     = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+    DOMAIN_REGEXP = /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,13}$/
     DATE_REGEXP   = /^(2[0-9]{3})-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])/
     TIME_REGEXP   = /^(0?[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/
     INT_REGEXP    = /^[0-9]+$/
@@ -49,6 +50,10 @@ module ApplianceConsole
       agree("Are you sure#{clarifier}? (Y/N): ")
     end
 
+    def ask_for_domain(prompt, default = nil, validate = DOMAIN_REGEXP, error_text = "a valid Domain.", &block)
+      just_ask(prompt, default, validate, error_text, &block)
+    end
+
     def ask_for_ip(prompt, default, validate = IP_REGEXP, error_text = "a valid IP Address.", &block)
       just_ask(prompt, default, validate, error_text, &block)
     end
@@ -56,6 +61,10 @@ module ApplianceConsole
     def ask_for_ip_or_none(prompt, default = nil)
       validation = ->(p) { p.empty? || p =~ /^'?NONE'?$/i || p =~ IP_REGEXP }
       ask_for_ip(prompt, default, validation).gsub(/^'?NONE'?$/i, "")
+    end
+
+    def ask_for_hostname(prompt, default = nil, validate = HOSTNAME_REGEXP, error_text = "a valid Hostname.", &block)
+      just_ask(prompt, default, validate, error_text, &block)
     end
 
     def ask_for_ip_or_hostname(prompt, default = nil)

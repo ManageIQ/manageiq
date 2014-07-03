@@ -153,6 +153,7 @@ require 'appliance_console/logging'
 require 'appliance_console/database_configuration'
 require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
+require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/env'
 require 'appliance_console/key_configuration'
@@ -359,6 +360,21 @@ Date and Time Configuration
             ca.remote(cahost, causer).run
           end
           press_any_key
+
+        when I18n.t("advanced_settings.httpdauth")
+          say("#{selection}\n\n")
+
+          httpd_auth = ExternalHttpdAuthentication.new(host)
+          if httpd_auth.activate
+            httpd_auth.post_activation
+            say("\nExternal Authentication configured successfully.\n")
+            press_any_key
+          else
+            say("\nExternal Authentication configuration failed!\n")
+            press_any_key
+            raise MiqSignalError
+          end
+
         when I18n.t("advanced_settings.evmstop")
           say("#{selection}\n\n")
           if agree("\nNote: It may take up to a few minutes for all EVM Server processes to exit gracefully.  Perform an EVM stop? (Y/N): ")
