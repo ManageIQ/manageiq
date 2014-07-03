@@ -111,7 +111,7 @@ class EmsOpenstack < EmsCloud
 
     raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(auth_type)
 
-    options.merge(:auth_type => auth_type)
+    options.merge!(:auth_type => auth_type)
     case auth_type.to_s
     when 'default'; verify_api_credentials(options)
     when 'amqp';    verify_amqp_credentials(options)
