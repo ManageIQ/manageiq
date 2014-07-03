@@ -1,7 +1,8 @@
 module VmOrTemplate::VmwareShared
   include_concern 'RefreshOnScan'
 
-  def provider_object(connection)
+  def provider_object(connection = nil)
+    connection ||= ext_management_system.connect
     api_type = connection.about["apiType"]
     mor =
       case api_type
