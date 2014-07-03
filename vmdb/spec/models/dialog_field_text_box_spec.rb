@@ -61,4 +61,35 @@ describe DialogFieldTextBox do
 
   end
 
+  context "validation" do
+    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
+
+    context "#validate" do
+      let(:dt) { active_record_instance_double('DialogTab', :label => 'tab') }
+      let(:dg) { active_record_instance_double('DialogGroup', :label => 'group') }
+
+      before(:each) do
+        df.validator_type = 'regex'
+        df.validator_rule = '[aA]bc'
+        df.required = true
+      end
+
+      it "should return nil when no error is detected" do
+        df.value = 'Abc'
+        df.validate(dt, dg).should be_nil
+      end
+
+      it "should return an error when the value doesn't match the regex rule" do
+        df.value = '123'
+        df.validate(dt, dg).should == 'tab/group/test field is invalid'
+      end
+
+      it "should return an error when a required value is not provided" do
+        df.value = ''
+        df.validator_rule = ''
+        df.validate(dt, dg).should == 'tab/group/test field is required'
+      end
+    end
+  end
+
 end

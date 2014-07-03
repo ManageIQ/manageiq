@@ -71,6 +71,24 @@
               = check_box_tag('field_required', 'true',
                             @edit[:field_required],
                             "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+          - if @edit[:field_typ].include?('TextBox')
+            %tr
+              %td.key Validator Type
+              %td
+                = select_tag('field_validator_type',
+                              options_for_select([["None", nil], ["Regular Expression", 'regex']],
+                                                 @edit[:field_validator_type]),
+                              "data-miq_sparkle_on" => true,
+                              "data-miq_observe"    => {:url => url}.to_json)
+            %tr
+              %td.key Validator Rule
+              %td
+                \/
+                = text_field_tag("field_validator_rule", @edit[:field_validator_rule],
+                                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                                 :disabled          => @edit[:field_validator_type].blank?,
+                                 :maxlength         => 250)
+                \/
         - elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(@edit[:field_typ])
           %tr
             %td.key Show Past Dates
