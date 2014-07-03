@@ -18,7 +18,7 @@ module MiqAeDatastore
   TMP_DIR = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine"))
 
   def self.temp_domain
-    "#{TEMP_DOMAIN_PREFIX}-#{Time.now.iso8601(6).tr('.:', '_')}"
+    "#{TEMP_DOMAIN_PREFIX}-#{MiqUUID.new_guid}"
   end
 
   def self.xml_deprecated_warning
