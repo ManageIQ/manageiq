@@ -2094,7 +2094,7 @@ class ApplicationController < ActionController::Base
     if ["job", "miqtask"].include?(dbname)
       pages[:perpage] = @settings[:perpage][:job_task]    # Set per page separate for job/task
     else
-      pages[:perpage] = @settings[:perpage][@gtl_type.to_sym]
+      pages[:perpage] = @settings[:perpage][PERPAGE_TYPES[@gtl_type]]
     end
     pages[:current] = params[:page] == nil ? 1 : params[:page].to_i
     pages[:items] = view.extras[:auth_count] || view.extras[:total_count]
