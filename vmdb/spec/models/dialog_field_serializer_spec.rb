@@ -24,7 +24,9 @@ describe DialogFieldSerializer do
       "values_method_options"   => "values method options",
       "options"                 => "options",
       "label"                   => "label",
-      "position"                => 1
+      "position"                => 1,
+      "validator_type"          => "validator_type",
+      "validator_rule"          => "validator_rule"
     }
   end
 
