@@ -496,16 +496,12 @@ describe MiqAeDatastore do
     end
 
     def assert_class_with_builtin_methods_export(export_options, import_options)
-      inline_method = @aen1_aec1.ae_methods.first
-      inline_method.location.should eql 'inline'
-      inline_method.data.should_not be_nil
-      inline_method.update_attributes('location' => 'builtin', 'data' => nil)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
                    'meth' => 2, 'field' => 6, 'value' => 4)
       aen1_aec1  = MiqAeClass.find_by_name('manageiq_test_class_1')
-      builtin_method = aen1_aec1.ae_methods.first
+      builtin_method = MiqAeMethod.find_by_class_id_and_name(aen1_aec1.id, 'test2')
       builtin_method.location.should eql 'builtin'
       builtin_method.data.should be_nil
     end
@@ -652,8 +648,7 @@ describe MiqAeDatastore do
                        :name     => 'test2',
                        :scope    => "instance",
                        :language => "ruby",
-                       :data     => "puts 1",
-                       :location => "inline")
+                       :location => "builtin")
     FactoryGirl.create(:miq_ae_instance,  :name => 'test_instance2', :class_id => n1_c1.id)
     create_fields(n1_c1, n1_c1_i1, n1_c1_m1)
 
@@ -679,7 +674,6 @@ describe MiqAeDatastore do
     @aen1_1          = MiqAeNamespace.find_by_name('manageiq_namespace_1_1')
     @aen1_aec1       = MiqAeClass.find_by_name('manageiq_test_class_1')
     @aen1_aec2       = MiqAeClass.find_by_name('manageiq_test_class_2')
-    @aen1_aec2       = MiqAeClass.find_by_name('manageiq_test_class_2')
     @class_dir       = "#{@aen1_aec1.fqname}.class"
     @class_file      = File.join(@export_dir, @class_dir, '__class__.yaml')
     @instance_file   = File.join(@export_dir, @class_dir, 'manageiq_test_instance1.yaml')
@@ -692,7 +686,7 @@ describe MiqAeDatastore do
     @customer_aen1_1    = MiqAeNamespace.find_by_name('customer_namespace_1_1')
     @customer_aen1_aec1 = MiqAeClass.find_by_name('customer_test_class_1')
     @customer_aen1_aec2 = MiqAeClass.find_by_name('customer_test_class_2')
-    @class_name       = @aen1_aec1.name
+    @class_name         = @customer_aen1_aec1.name
   end
 
   def setup_export_dir
