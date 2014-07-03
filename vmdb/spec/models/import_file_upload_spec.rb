@@ -31,12 +31,12 @@ describe ImportFileUpload do
             :id          => 0,
             :name        => "dialog",
             :status_icon => "checkmark",
-            :status      => "Service dialog already exists"
+            :status      => "This object already exists in the database with the same name"
           }, {
             :id          => 1,
             :name        => "Dialog2",
             :status_icon => "checkmark",
-            :status      => "Service dialog already exists"
+            :status      => "This object already exists in the database with the same name"
         }].to_json
 
         import_file_upload.service_dialog_json.should == expected_json
@@ -51,15 +51,72 @@ describe ImportFileUpload do
             :id          => 0,
             :name        => "dialog",
             :status_icon => "equal-green",
-            :status      => "New service dialog"
+            :status      => "New object"
           }, {
             :id          => 1,
             :name        => "Dialog2",
             :status_icon => "equal-green",
-            :status      => "New service dialog"
+            :status      => "New object"
         }].to_json
 
         import_file_upload.service_dialog_json.should == expected_json
+      end
+    end
+  end
+
+  describe "#widget_json" do
+    before do
+      import_file_upload.create_binary_blob(
+        :binary => <<-BINARY
+---
+- MiqWidget:
+    title: Widget1
+- MiqWidget:
+    title: widget
+    not_name: test
+        BINARY
+      )
+      MiqWidget.stub(:exists?).with(:title => "widget").and_return(exists?)
+      MiqWidget.stub(:exists?).with(:title => "Widget1").and_return(exists?)
+    end
+
+    context "when a given widget exists" do
+      let(:exists?) { true }
+
+      it "returns json with a checkmark status icon" do
+        expected_json = [{
+          :id          => 0,
+          :name        => "widget",
+          :status_icon => "checkmark",
+          :status      => "This object already exists in the database with the same name"
+        }, {
+          :id          => 1,
+          :name        => "Widget1",
+          :status_icon => "checkmark",
+          :status      => "This object already exists in the database with the same name"
+        }].to_json
+
+        expect(import_file_upload.widget_json).to eq(expected_json)
+      end
+    end
+
+    context "when a given widget does not exist" do
+      let(:exists?) { false }
+
+      it "returns json with an equal-green status icon" do
+        expected_json = [{
+          :id          => 0,
+          :name        => "widget",
+          :status_icon => "equal-green",
+          :status      => "New object"
+        }, {
+          :id          => 1,
+          :name        => "Widget1",
+          :status_icon => "equal-green",
+          :status      => "New object"
+        }].to_json
+
+        expect(import_file_upload.widget_json).to eq(expected_json)
       end
     end
   end
@@ -78,7 +135,7 @@ describe ImportFileUpload do
     end
 
     it "stores the binary blob data type" do
-      import_file_upload.binary_blob.data_type.should == "String"
+      import_file_upload.binary_blob.data_type.should == "yml"
     end
   end
 
@@ -97,6 +154,24 @@ describe ImportFileUpload do
 
     it "stores the binary blob data type" do
       import_file_upload.binary_blob.data_type.should == "yml"
+    end
+  end
+
+  describe "#store_widget_import_data" do
+    before do
+      import_file_upload.store_widget_import_data("123")
+    end
+
+    it "stores the binary blob binary data" do
+      expect(import_file_upload.binary_blob.binary).to eq("123")
+    end
+
+    it "stores the binary blob name" do
+      expect(import_file_upload.binary_blob.name).to eq("Widget import")
+    end
+
+    it "stores the binary blob data type" do
+      expect(import_file_upload.binary_blob.data_type).to eq("yml")
     end
   end
 

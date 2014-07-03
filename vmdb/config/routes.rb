@@ -1158,18 +1158,22 @@ Vmdb::Application.routes.draw do
         db_widget_dd_done
         download_report
         explorer
+        export_widgets
         miq_report_edit
         miq_report_new
         preview_chart
         preview_timeline
         render_chart
         report_only
+        review_import
         sample_chart
         sample_timeline
         send_report_data
+        widget_json
       ),
       :post => %w(
         accordion_select
+        cancel_import
         change_tab
         create
         db_edit
@@ -1185,6 +1189,7 @@ Vmdb::Application.routes.draw do
         filter_change
         form_field_changed
         get_report
+        import_widgets
         menu_editor
         menu_field_changed
         menu_folder_message_display
@@ -1200,6 +1205,7 @@ Vmdb::Application.routes.draw do
         tree_autoload_dynatree
         tree_select
         upload
+        upload_widget_import_file
         wait_for_task
         widget_edit
         widget_form_field_changed

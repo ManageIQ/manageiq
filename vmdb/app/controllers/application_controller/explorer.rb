@@ -442,6 +442,12 @@ module ApplicationController::Explorer
   def x_get_tree_roots(options)
     count_only = options[:count_only]
     case options[:type]
+    when :export
+      export_children = [
+        {:id => "exportcustomreports", :tree => "export_tree", :text => "Custom Reports", :image => "report"},
+        {:id => "exportwidgets", :tree => "export_tree", :text => "Widgets", :image => "report"}
+      ]
+      return count_only ? export_children.length : export_children
     when :ab
       @resolve[:target_classes] = Hash.new
       CustomButton.button_classes.each{|db| @resolve[:target_classes][db] = ui_lookup(:model=>db)}

@@ -1,0 +1,38 @@
+- url = url_for(:action=>'export_field_changed')
+
+%h2 Custom Reports
+
+= render :partial=>"layouts/flash_msg"
+
+%p.legend Import
+
+#import_div
+  %table.style1
+    %tr
+      %td
+        = form_tag({:action => "upload", :typ => "import", :dbtype => @sb[:dbtype]}, :multipart => true) do
+          - overwrite = @sb[:overwrite] ? true : false
+          = check_box_tag("overwrite", value="1", checked=overwrite)
+          Overwrite existing reports? &nbsp;&nbsp;&nbsp;
+          = file_field("upload", "file")
+          &nbsp;&nbsp;&nbsp;
+          = submit_tag("Upload", :id => "upload_atags")
+%hr
+
+%p.legend Export
+
+%table.style1
+  %tr
+    %td.key(align="left" valign="top")
+      Available Custom Reports:
+    %td(align="left" valign="top")
+      %div(style="overflow: auto; width: 400px; border: 1px solid #999999;")
+        = select_tag('choices_chosen',
+          options_for_select(@temp[:export_reports].sort),
+          :style             => "width:auto; min-width:375px; background-color:#fff; border: 0px;",
+          :size              => 15,
+          :style             => "width: 400px",
+          :multiple          => true,
+          :onchange          => "toggleConvertButtonToLink($j('#export_button'),
+                                  'download_report', $j('#choices_chosen').val() != null);",
+          "data-miq_observe" => {:url => url}.to_json)

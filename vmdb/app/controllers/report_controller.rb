@@ -143,6 +143,7 @@ class ReportController < ApplicationController
       self.x_active_tree   ||= 'savedreports_tree'
       self.x_active_accord ||= 'savedreports'
     end
+
     if role_allows(:feature => "miq_report_reports", :any => true)
       build_report_listnav
       @trees.push("reports_tree")
@@ -151,6 +152,7 @@ class ReportController < ApplicationController
       self.x_active_tree   ||= 'reports_tree'
       self.x_active_accord ||= 'reports'
     end
+
     if role_allows(:feature => "miq_report_schedules")
       build_schedules_tree
       @trees.push("schedules_tree")
@@ -159,24 +161,27 @@ class ReportController < ApplicationController
       self.x_active_tree   ||= 'schedules_tree'
       self.x_active_accord ||= 'schedules'
     end
+
     if role_allows(:feature => "miq_report_dashboard_editor")
-      build_db_tree if role_allows(:feature => "miq_report_dashboard_editor")
+      build_db_tree
       @trees.push("db_tree")
       @accords.push(:name => "db", :title => "Dashboards", :container => "db_tree_div")
       @lists.push("db_list")
       self.x_active_tree   ||= 'db_tree'
       self.x_active_accord ||= 'db'
     end
+
     if role_allows(:feature => "miq_report_widget_editor")
-      build_widgets_tree if role_allows(:feature => "miq_report_widget_editor")
+      build_widgets_tree
       @trees.push("widgets_tree")
       @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_tree_div")
       @lists.push("widget_list")
       self.x_active_tree   ||= 'widgets_tree'
       self.x_active_accord ||= 'widgets'
     end
+
     if role_allows(:feature => "miq_report_menu_editor")
-      build_roles_tree(:roles, :roles_tree) if role_allows(:feature => "miq_report_menu_editor")
+      build_roles_tree(:roles, :roles_tree)
       @trees.push("roles_tree")
       @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_tree_div")
       @lists.push("role_list")
@@ -184,12 +189,16 @@ class ReportController < ApplicationController
       self.x_active_accord ||= 'roles'
 #      x_node_set("root", :roles_tree)
     end
+
     if role_allows(:feature => "miq_report_export")
-      build_export_tree if role_allows(:feature => "miq_report_export")
+      build_export_tree
       @trees.push("export_tree")
       @accords.push(:name => "export", :title => "Import/Export", :container => "export_tree_div")
       @lists.push("export")
+      self.x_active_tree ||= "export_tree"
+      self.x_active_accord ||= "export"
     end
+
     @temp[:widget_nodes] ||= []
     @sb[:node_clicked] = false
     x_node_set("root", :roles_tree) if params[:load_edit_err]
@@ -213,7 +222,12 @@ class ReportController < ApplicationController
       self.x_active_accord = params[:id]
       self.x_active_tree   = "#{params[:id]}_tree"
       x_node_set("root", :roles_tree) unless @changed   # reset menu editor to show All Roles if nothing has been changed
-      replace_right_cell
+
+      trees_to_replace = []
+      trees_to_replace << :widgets if params[:id] == "widgets"
+      trees_to_replace << :reports if params[:id] == "reports"
+
+      replace_right_cell(:replace_trees => trees_to_replace)
     else
       render :nothing => true
     end
@@ -245,6 +259,79 @@ class ReportController < ApplicationController
   def get_report
     self.x_node = params[:id]
     replace_right_cell
+  end
+
+  def export_widgets
+    if params[:widgets]
+      widgets = MiqWidget.where(:id => params[:widgets])
+      widget_yaml = MiqWidget.export_to_yaml(widgets, MiqWidget)
+      timestamp = format_timezone(Time.current, Time.zone, "export_filename")
+      send_data(widget_yaml, :filename => "widget_export_#{timestamp}.yml")
+    else
+      add_flash(I18n.t("flash.button.at_least_selected", :num => 1, :model => "item", :action => "export"), :error)
+      @sb[:flash_msg] = @flash_array
+      redirect_to :action => :explorer
+    end
+  end
+
+  def upload_widget_import_file
+    redirect_options = {:action => :review_import}
+
+    upload_file = params.fetch_path(:upload, :file)
+
+    if upload_file.nil?
+      add_flash("Use the browse button to locate an import file", :warning)
+    else
+      begin
+        import_file_upload_id = widget_importer.store_for_import(upload_file.read)
+        add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
+        redirect_options[:import_file_upload_id] = import_file_upload_id
+      rescue WidgetImporter::Validator::NonYamlError
+        add_flash(I18n.t("flash.service_dialog.unsupported_import_format"), :error)
+      end
+    end
+
+    redirect_options[:message] = @flash_array.first.to_json
+
+    redirect_to redirect_options
+  end
+
+  def import_widgets
+    import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
+
+    if import_file_upload
+      $log.info("[#{session[:userid]}] initiated import")
+      widget_importer.import_widgets(import_file_upload, params[:widgets_to_import])
+      add_flash(I18n.t("flash.report.widget_import_successful"), :info)
+    else
+      add_flash(I18n.t("flash.report.widget_import_file_upload_expired"), :error)
+    end
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
+  end
+
+  def widget_json
+    import_file_upload_json = ImportFileUpload.find(params[:import_file_upload_id]).widget_json
+
+    respond_to do |format|
+      format.json { render :json => import_file_upload_json }
+    end
+  end
+
+  def review_import
+    @import_file_upload_id = params[:import_file_upload_id]
+    @message = params[:message]
+  end
+
+  def cancel_import
+    widget_importer.cancel_import(params[:import_file_upload_id])
+    add_flash(I18n.t("flash.report.widget_import_cancelled"), :info)
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
   end
 
   private ###########################
@@ -279,16 +366,147 @@ class ReportController < ApplicationController
 
   #Build the main import/export tree
   def build_export_tree(type=:export, name=:export_tree)
-    x_tree_init(name, type, "Import / Export", :open_all => true)
+    x_tree_init(name, type, "Import / Export", :open_all => true, :add_root => false)
     tree_nodes = x_build_dynatree(x_tree(name))
 
-    # Fill in root node details
-    root           = tree_nodes.first
-    root[:title]   = "Import / Export"
-    root[:tooltip] = "Import / Export"
-    root[:icon]    = "report.png"
     @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
+  end
+
+  def determine_root_node_info
+    case x_active_tree
+    when :db_tree
+      db_get_node_info
+    when :export_tree
+      @export = true
+      get_export_reports
+      @right_cell_text ||= "Import / Export"
+      @help_topic        = request.parameters["controller"] + "-import_export"
+    when :roles_tree
+      menu_get_all
+      @changed = session[:changed] = false
+      @help_topic = request.parameters["controller"] + "-menus_editor"
+    when :reports_tree
+      @right_cell_text ||= "All Reports"
+    when :savedreports_tree
+      get_all_saved_reports
+    when :schedules_tree
+      @schedule = nil
+      schedule_get_all
+      @help_topic = request.parameters["controller"] + "-schedules_list"
+    when :widgets_tree
+      widget_get_node_info
+    end
+  end
+
+  def determine_g_node_info
+    if x_active_tree == :roles_tree
+      @sb[:menu_buttons] = true
+      get_menu(nodeid) unless nodeid.blank?
+    else
+      db_get_node_info
+    end
+  end
+
+  def determine_xx_node_info
+    if x_active_tree == :savedreports_tree
+      saved_reports_get_node_info
+    elsif x_active_tree == :db_tree
+      db_get_node_info
+    elsif x_active_tree == :reports_tree
+      reports_get_node_info
+    elsif x_active_tree == :widgets_tree
+      widget_get_node_info
+    elsif x_active_tree == :export_tree
+      export_get_node_info
+    end
+  end
+
+  def determine_rr_node_info
+    nodes = x_node.split('-')
+    show_saved_report
+    @record = MiqReportResult.find_by_id(from_cid(nodes.last))
+    @right_cell_text = I18n.t(
+      "cell_header.model_record",
+      :name  => "#{@record.name} - #{format_timezone(@record.created_on, Time.zone, "gt")}",
+      :model => "Saved Report"
+    )
+    @right_cell_div  = "savedreports_list"
+  end
+
+  def export_get_node_info
+    if x_node.split('-').last == "exportcustomreports"
+      get_export_reports
+      @right_cell_div = "export_custom_reports"
+      @right_cell_text = "Custom Reports"
+    else
+      @in_a_form = true
+      @widget_exports = MiqWidget.all.reject(&:read_only).collect { |widget| [widget.title, widget.id] }
+      @right_cell_div = "export_widgets"
+      @right_cell_text = "Widgets"
+    end
+  end
+
+  def saved_reports_get_node_info
+    nodes = x_node.split('-')
+    get_all_reps(nodes[1])
+    miq_report = MiqReport.find(@sb[:miq_report_id])
+    @sb[:sel_saved_rep_id] = nodes.last
+    @right_cell_div        = "savedreports_list"
+    @right_cell_text = I18n.t("cell_header.model_record",
+                              :name  => miq_report.name,
+                              :model => "Saved Reports")
+  end
+
+  def reports_get_node_info
+    nodes = x_node.split('-')
+
+    if nodes.length == 2
+      @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
+                                  :typ   => @sb[:rpt_menu][nodes[1].to_i][0],
+                                  :model => ui_lookup(:models => "MiqReport"))
+
+    elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present?
+      @sb[:rep_details] = {}
+
+      @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].each_with_index do |rep, _|
+        r = MiqReport.find_by_name(rep)
+        if r
+          details                    = Hash.new
+          details["display_filters"] = r.display_filter ? true : false
+          details["filters"]         = r.conditions     ? true : false
+          details["charts"]          = r.graph          ? true : false
+          details["sortby"]          = r.sortby         ? true : false
+          details["id"]              = r.id
+          details["user"]            = r.user ? r.user.userid : ""
+          details["group"]           = r.miq_group ? r.miq_group.description : ""
+          @sb[:rep_details][r.name]  = details
+        end
+      end
+
+      @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
+                                  :typ   => @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][0],
+                                  :model => ui_lookup(:models => "MiqReport"))
+
+    elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].nil?
+      x_node_set("root", x_active_tree)
+
+    elsif nodes.length == 5
+      @sb[:selected_rep_id] = from_cid(nodes[4])
+      if role_allows(:feature => "miq_report_widget_editor")
+        # all widgets for this report
+        get_all_widgets("report", from_cid(nodes[4]))
+      end
+      get_all_reps(nodes[4])
+
+    elsif nodes.length == 6
+      @sb[:last_saved_id] = x_node
+      @sb[:miq_report_id] = nil
+      show_saved
+    end
+
+    @right_cell_div  ||= "report_list"
+    @right_cell_text ||= I18n.t("cell_header.all_model_records", :model => ui_lookup(:models => "MiqReport"))
   end
 
   # Get all info for the node about to be displayed
@@ -302,112 +520,22 @@ class ReportController < ApplicationController
       @nodetype, nodeid = treenodeid.split("-")
     end
     @sb[:menu_buttons] = false
+
     case @nodetype
-      when "root"
-        case x_active_tree
-          when :db_tree
-            db_get_node_info
-          when :export_tree
-            @export = true
-            get_export_reports
-            @right_cell_text ||= "Import / Export Custom Reports"
-            @help_topic        = request.parameters["controller"] + "-import_export"
-          when :roles_tree
-            menu_get_all
-            @changed = session[:changed] = false
-            @help_topic = request.parameters["controller"] + "-menus_editor"
-          when :reports_tree
-            @right_cell_text ||= "All Reports"
-          when :savedreports_tree
-            get_all_saved_reports
-          when :schedules_tree
-            @schedule = nil
-            schedule_get_all
-            @help_topic = request.parameters["controller"] + "-schedules_list"
-          when :widgets_tree
-            widget_get_node_info
-        end
-      when "g"
-        if x_active_tree == :roles_tree
-          @sb[:menu_buttons] = true
-          get_menu(nodeid) unless nodeid.blank?
-        else
-          #dashboard group selected
-          db_get_node_info
-        end
-      when "xx"
-        if x_active_tree == :savedreports_tree
-          #clicked on saved report folder node
-          nodes = x_node.split('-')
-          #saved reports under report node on saved report accordion
-          get_all_reps(nodes[1])
-          miq_report = MiqReport.find(@sb[:miq_report_id])
-          @sb[:sel_saved_rep_id] = nodes.last
-          @right_cell_div        = "savedreports_list"
-          @right_cell_text = I18n.t("cell_header.model_record",
-                                    :name=>miq_report.name,
-                                    :model=>"Saved Reports")
-        elsif x_active_tree == :db_tree
-          db_get_node_info
-        elsif x_active_tree == :reports_tree
-          nodes = x_node.split('-')
-          if nodes.length == 2
-            #set right cell text for first level folder
-            @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
-                                        :typ=>@sb[:rpt_menu][nodes[1].to_i][0],
-                                        :model=>ui_lookup(:models=>"MiqReport"))
-          elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present?
-            @sb[:rep_details] = Hash.new
-            @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].each_with_index do |rep,i|
-              r = MiqReport.find_by_name(rep)
-              if r
-                details                    = Hash.new
-                details["display_filters"] = r.display_filter ? true : false
-                details["filters"]         = r.conditions     ? true : false
-                details["charts"]          = r.graph          ? true : false
-                details["sortby"]          = r.sortby         ? true : false
-                details["id"]              = r.id
-                details["user"]            = r.user ? r.user.userid : ""
-                details["group"]           = r.miq_group ? r.miq_group.description : ""
-                @sb[:rep_details][r.name]  = details
-              end
-            end
-            @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
-                                        :typ=>@sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][0],
-                                        :model=>ui_lookup(:models=>"MiqReport"))
-          elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].nil?
-            x_node_set("root", x_active_tree)
-          elsif nodes.length == 5
-            @sb[:selected_rep_id] = from_cid(nodes[4])
-            if role_allows(:feature=>"miq_report_widget_editor")
-              # all widgets for this report
-              get_all_widgets("report",from_cid(nodes[4]))
-            end
-            get_all_reps(nodes[4])
-          elsif nodes.length == 6
-            @sb[:last_saved_id] = x_node
-            @sb[:miq_report_id] = nil
-            show_saved
-          end
-          @right_cell_div  ||= "report_list"
-          @right_cell_text ||= I18n.t("cell_header.all_model_records", :model=>ui_lookup(:models=>"MiqReport"))
-        elsif x_active_tree == :widgets_tree
-          widget_get_node_info
-        end
-      when "rr"
-        #on saved report node
-        nodes = x_node.split('-')
-        show_saved_report
-        @record = MiqReportResult.find_by_id(from_cid(nodes.last))
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                  :name=>"#{@record.name} - #{format_timezone(@record.created_on,Time.zone,"gt")}",
-                                  :model=>"Saved Report")
-        @right_cell_div  = "savedreports_list"
-      when "msc"
-        get_schedule(nodeid) unless nodeid.blank?
-        @sb[:selected_sched_id] = nodeid unless nodeid.blank?
+    when "root"
+      determine_root_node_info
+    when "g"
+      determine_g_node_info
+    when "xx"
+      determine_xx_node_info
+    when "rr"
+      determine_rr_node_info
+    when "msc"
+      get_schedule(nodeid) unless nodeid.blank?
+      @sb[:selected_sched_id] = nodeid unless nodeid.blank?
     end
-    x_history_add_item(:id=>treenodeid, :text=>@right_cell_text)
+
+    x_history_add_item(:id => treenodeid, :text => @right_cell_text)
   end
 
   def get_export_reports
@@ -425,11 +553,16 @@ class ReportController < ApplicationController
   def set_form_locals
     locals = Hash.new
     if x_active_tree == :export_tree
-      action_url = "download_report"
-      locals[:no_reset] = true
-      locals[:no_cancel] = true
-      locals[:multi_record] = true
-      locals[:export_button] = true
+      if x_node == "xx-exportwidgets"
+        action_url = nil
+        record_id = nil
+      else
+        action_url = "download_report"
+        locals[:no_reset] = true
+        locals[:no_cancel] = true
+        locals[:multi_record] = true
+        locals[:export_button] = true
+      end
     elsif x_active_tree == :schedules_tree || params[:pressed] == "miq_report_schedules"
       action_url = "schedule_edit"
       record_id = @edit[:sched_id] ? @edit[:sched_id] : nil
@@ -486,7 +619,7 @@ class ReportController < ApplicationController
     nodes.pop
     parents = Array.new
     nodes.each do |node|
-      parents.push({:id=>node.split('xx-').last})
+      parents.push(:id => node.split('xx-').last)
     end
 
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
@@ -837,4 +970,7 @@ class ReportController < ApplicationController
     session[:report_folders]    = @folders
   end
 
+  def widget_importer
+    @widget_importer ||= WidgetImporter.new
+  end
 end

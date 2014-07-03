@@ -851,4 +851,261 @@ describe ReportController do
       expect { response }.to render_template('layouts/exception')
     end
   end
+
+  describe "#export_widgets" do
+    include_context "valid session"
+
+    let(:params) { {:widgets => widget_list} }
+
+    before do
+      bypass_rescue
+    end
+
+    context "when there are widget parameters" do
+      let(:widget_list) { %w(1 2 3) }
+      let(:widget_yaml) { "the widget yaml" }
+      let(:widgets) { [active_record_instance_double("MiqWidget")] }
+
+      before do
+        MiqWidget.stub(:where).with(:id => widget_list).and_return(widgets)
+        MiqWidget.stub(:export_to_yaml).with(widgets, MiqWidget).and_return(widget_yaml)
+      end
+
+      it "sends the data" do
+        get :export_widgets, params
+        response.body.should == "the widget yaml"
+      end
+
+      it "sets the filename to the current date" do
+        Timecop.freeze(2013, 1, 2) do
+          get :export_widgets, params
+          response.header['Content-Disposition'].should include("widget_export_20130102_000000.yml")
+        end
+      end
+    end
+
+    context "when there are not widget parameters" do
+      let(:widget_list) { nil }
+
+      it "sets a flash message" do
+        get :export_widgets, params
+        assigns(:flash_array).should == [{
+          :message => "At least 1 item must be selected for export",
+          :level   => :error
+        }]
+      end
+
+      it "sets the flash array on the sandbox" do
+        get :export_widgets, params
+        assigns(:sb)[:flash_msg].should == [{
+          :message => "At least 1 item must be selected for export",
+          :level   => :error
+        }]
+      end
+
+      it "redirects to the explorer" do
+        get :export_widgets, params
+        response.should redirect_to(:action => :explorer)
+      end
+    end
+  end
+
+  describe "#upload_widget_import_file" do
+    include_context "valid session"
+
+    let(:widget_importer) { instance_double("WidgetImporter") }
+
+    before do
+      bypass_rescue
+    end
+
+    shared_examples_for "ReportController#upload_widget_import_file that does not upload a file" do
+      it "redirects with a warning message" do
+        xhr :post, :upload_widget_import_file, params
+        response.should redirect_to(
+          :action  => :review_import,
+          :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
+        )
+      end
+    end
+
+    context "when an upload file is given" do
+      let(:filename) { "filename" }
+      let(:file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/import_widgets.yml"), "text/yml") }
+      let(:params) { {:upload => {:file => file}} }
+
+      before do
+        WidgetImporter.stub(:new).and_return(widget_importer)
+      end
+
+      context "when the widget importer does not raise an error" do
+        before do
+          widget_importer.stub(:store_for_import).with("the yaml data").and_return(123)
+          file.stub(:read).and_return("the yaml data")
+        end
+
+        it "redirects to review_import with an import file upload id" do
+          xhr :post, :upload_widget_import_file, params
+          response.should redirect_to(
+            :action                => :review_import,
+            :import_file_upload_id => 123,
+            :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
+          )
+        end
+
+        it "imports the widgets" do
+          widget_importer.should_receive(:store_for_import).with("the yaml data")
+          xhr :post, :upload_widget_import_file, params
+        end
+      end
+
+      context "when the widget importer raises an import error" do
+        before do
+          widget_importer.stub(:store_for_import).and_raise(WidgetImporter::Validator::NonYamlError)
+        end
+
+        it "redirects with an error message" do
+          xhr :post, :upload_widget_import_file, params
+          response.should redirect_to(
+            :action  => :review_import,
+            :message => {
+              :message => "Error: the file uploaded is not of the supported format",
+              :level   => :error
+            }.to_json
+          )
+        end
+      end
+    end
+
+    context "when the upload parameter is nil" do
+      let(:params) { {} }
+
+      it_behaves_like "ReportController#upload_widget_import_file that does not upload a file"
+    end
+
+    context "when an upload file is not given" do
+      let(:params) { {:upload => {:file => nil}} }
+
+      it_behaves_like "ReportController#upload_widget_import_file that does not upload a file"
+    end
+  end
+
+  describe "#widget_json" do
+    include_context "valid session"
+
+    let(:params) { {:import_file_upload_id => "123"} }
+    let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+
+    before do
+      bypass_rescue
+      ImportFileUpload.stub(:find).with("123").and_return(import_file_upload)
+      import_file_upload.stub(:widget_json).and_return("the widget json")
+    end
+
+    it "returns the json" do
+      xhr :get, :widget_json, params
+      response.body.should == "the widget json"
+    end
+  end
+
+  describe "#review_import" do
+    include_context "valid session"
+
+    let(:params) { {:import_file_upload_id => "123", :message => "the message"} }
+
+    before do
+      bypass_rescue
+    end
+
+    it "assigns the import file upload id" do
+      get :review_import, params
+      assigns(:import_file_upload_id).should == "123"
+    end
+
+    it "assigns the message" do
+      get :review_import, params
+      assigns(:message).should == "the message"
+    end
+  end
+
+  describe "#cancel_import" do
+    include_context "valid session"
+
+    let(:params) { {:import_file_upload_id => "123"} }
+    let(:widget_importer) { instance_double("WidgetImporter") }
+
+    before do
+      bypass_rescue
+      WidgetImporter.stub(:new).and_return(widget_importer)
+      widget_importer.stub(:cancel_import)
+    end
+
+    it "cancels the import" do
+      widget_importer.should_receive(:cancel_import).with("123")
+      xhr :post, :cancel_import, params
+    end
+
+    it "returns a 200" do
+      xhr :post, :cancel_import, params
+      response.status.should == 200
+    end
+
+    it "returns the flash messages" do
+      xhr :post, :cancel_import, params
+      response.body.should == [{:message => "Widget import cancelled", :level => :info}].to_json
+    end
+  end
+
+  describe "#import_widgets" do
+    include_context "valid session"
+
+    let(:widget_importer) { instance_double("WidgetImporter") }
+    let(:params) { {:import_file_upload_id => "123", :widgets_to_import => ["potato"]} }
+
+    before do
+      bypass_rescue
+      ImportFileUpload.stub(:where).with(:id => "123").and_return([import_file_upload])
+      WidgetImporter.stub(:new).and_return(widget_importer)
+    end
+
+    shared_examples_for "ReportController#import_widgets" do
+      it "returns a status of 200" do
+        xhr :post, :import_widgets, params
+        response.status.should == 200
+      end
+    end
+
+    context "when the import file upload exists" do
+      let(:import_file_upload) do
+        instance_double("ImportFileUpload")
+      end
+
+      before do
+        widget_importer.stub(:import_widgets)
+      end
+
+      it_behaves_like "ReportController#import_widgets"
+
+      it "imports the data" do
+        widget_importer.should_receive(:import_widgets).with(import_file_upload, ["potato"])
+        xhr :post, :import_widgets, params
+      end
+
+      it "returns the flash message" do
+        xhr :post, :import_widgets, params
+        response.body.should == [{:message => "Widgets imported successfully", :level => :info}].to_json
+      end
+    end
+
+    context "when the import file upload does not exist" do
+      let(:import_file_upload) { nil }
+
+      it_behaves_like "ReportController#import_widgets"
+
+      it "returns the flash message" do
+        xhr :post, :import_widgets, params
+        response.body.should == [{:message => "Error: Widget import file upload expired", :level => :error}].to_json
+      end
+    end
+  end
 end

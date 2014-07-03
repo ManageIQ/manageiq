@@ -186,6 +186,42 @@ describe VmInfraController do
       end
     end
 
+    describe "#x_get_tree_roots" do
+      let(:options) { {:count_only => count_only, :type => type} }
+
+      context "when the options type is export" do
+        let(:type) { :export }
+
+        context "when the options count_only is true" do
+          let(:count_only) { true }
+
+          it "returns the count of the export children" do
+            expect(controller.send(:x_get_tree_roots, options)).to eq(2)
+          end
+        end
+
+        context "when the options count_only is false" do
+          let(:count_only) { false }
+
+          it "returns the export children" do
+            expect(controller.send(:x_get_tree_roots, options)).to eq(
+              [{
+                :id    => "exportcustomreports",
+                :tree  => "export_tree",
+                :text  => "Custom Reports",
+                :image => "report"
+              }, {
+                :id    => "exportwidgets",
+                :tree  => "export_tree",
+                :text  => "Widgets",
+                :image => "report"
+              }]
+            )
+          end
+        end
+      end
+    end
+
     context "#x_get_tree_region_kids" do
       it "does not return Cloud Providers nodes for Utilization tree" do
         MiqRegion.seed

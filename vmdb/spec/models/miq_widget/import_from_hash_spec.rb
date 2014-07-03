@@ -1,15 +1,6 @@
 require "spec_helper"
 
 describe MiqWidget do
-  before(:each) do
-    guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid => guid)
-    FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone), :guid => guid, :status => "started")
-    MiqServer.my_server(true)
-
-    MiqRegion.seed
-  end
-
   context ".import_from_hash" do
     before do
       @user       = FactoryGirl.create(:user_admin)
