@@ -85,10 +85,12 @@ namespace :build do
   task :upload do
     raise "must set ENV['SCP_USER_HOST'], such as root@your_host" if ENV['SCP_USER_HOST'].nil?
 
-    build_dir = File.join(File.dirname(__FILE__), 'build')
+    require 'pathname'
+    build_dir = Pathname.new(File.join(File.dirname(__FILE__), 'build'))
 
-    `ssh #{ENV['SCP_USER_HOST']} "rm -rf ~/manageiq"`
-    `scp -qr #{build_dir} #{ENV['SCP_USER_HOST']}:~/manageiq`
+    `ssh #{ENV['SCP_USER_HOST']} "rm -rf ~/manageiq && mkdir -p ~/manageiq/vmdb"`
+    `scp -qr #{build_dir} #{ENV['SCP_USER_HOST']}:~/manageiq/build`
+    `scp -qr #{build_dir.join("../vmdb/VERSION")} #{ENV['SCP_USER_HOST']}:~/manageiq/vmdb/VERSION`
   end
 
   namespace :shared_objects do

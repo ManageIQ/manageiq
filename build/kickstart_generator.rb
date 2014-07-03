@@ -13,11 +13,12 @@ module Build
     KS_GEN_DIR = KS_DIR.join("generated").freeze
     KS_FILE    = Productization.file_for("kickstarts/base.ks.erb").freeze
 
-    attr_accessor :targets, :puddle
+    attr_reader :targets, :puddle, :git_checkout
 
-    def initialize(targets, puddle)
-      @targets = targets
-      @puddle  = puddle # used during ERB evaluation
+    def initialize(targets, puddle, git_checkout)
+      @targets      = targets
+      @puddle       = puddle # used during ERB evaluation
+      @git_checkout = git_checkout
     end
 
     def run(task = :all)
