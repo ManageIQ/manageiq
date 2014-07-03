@@ -1,4 +1,4 @@
-@mixin linear-gradient($fromColor, $toColor)
+=linear-gradient($fromColor, $toColor)
   background-color: $toColor /* Fallback Color */
   background-image: -webkit-gradient(linear, left top, left bottom, from($fromColor), to($toColor)) /* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, $fromColor, $toColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
@@ -8,12 +8,12 @@
   background-image:         linear-gradient(top, $fromColor, $toColor)
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{$fromColor}', EndColorStr='#{$toColor}')
 
-@mixin opacity($opacity)
+=opacity($opacity)
   opacity: $opacity
   $opacity-ie: $opacity * 100
   filter: alpha(opacity=$opacity-ie) //IE8
 
-@mixin declare-font-face($font-family, $font-filename, $font-weight : normal, $font-style :normal, $font-stretch : normal)
+=declare-font-face($font-family, $font-filename, $font-weight : normal, $font-style :normal, $font-stretch : normal)
   @font-face
     font-family: '#{$font-family}'
     src: url(<%= asset_path('#{$font-filename}.eot') %>)
