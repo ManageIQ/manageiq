@@ -537,7 +537,7 @@ class MiqAeClassController < ApplicationController
 
   def grid_add_header(head)
     col_width = 900 / 7
-    columns = ["Name", "Value", "On Entry", "On Exit", "Collect", "Max Retries", "Max Time", "Message"]
+    columns = ["Name", "Value", "On Entry", "On Exit", "On Error", "Collect", "Max Retries", "Max Time", "Message"]
 
     columns.each do |column|
       options = {"width" => "#{col_width}", "sort" => "na"}
@@ -2395,7 +2395,7 @@ private
   # Set record variables to new values
   def set_instances_record_vars(miqaeinst)
     instance_column_names.each do |attr|
-      miqaeinst.send("#{attr}=", @edit[:new][:ae_inst][attr].strip)
+      miqaeinst.send("#{attr}=", @edit[:new][:ae_inst][attr].strip) if @edit[:new][:ae_inst][attr]
     end
     miqaeinst.class_id = from_cid(@edit[:ae_class_id])
   end
