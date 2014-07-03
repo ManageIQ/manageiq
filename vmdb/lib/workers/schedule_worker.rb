@@ -27,15 +27,19 @@ class ScheduleWorker < WorkerBase
     @user_scheduler   = Rufus::Scheduler.start_new
   end
 
+  def dst?
+    Time.now.dst?
+  end
+
   def check_dst
-    return if @dst == Time.now.dst?
+    return if @dst == dst?
     self.run_callbacks(:dst_change) do
       reset_dst
     end
   end
 
   def reset_dst
-    @dst = Time.now.dst?
+    @dst = dst?
   end
 
   def queue_length
