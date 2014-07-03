@@ -176,10 +176,10 @@ class MiqAeClassController < ApplicationController
         if @ae_class.nil?
           set_root_node
         else
-          @edit[:grid_inst_list_xml] = build_details_grid(@ae_class.ae_instances)
+          @temp[:grid_inst_list_xml] = build_details_grid(@ae_class.ae_instances)
           @temp[:combo_xml] = get_combo_xml(@ae_class.ae_fields)
           @temp[:dtype_combo_xml] = get_dtype_combo_xml(@ae_class.ae_fields)    # passing fields because that's how many combo boxes we need
-          @edit[:grid_methods_list_xml] = build_details_grid(@ae_class.ae_methods)
+          @temp[:grid_methods_list_xml] = build_details_grid(@ae_class.ae_methods)
           set_right_cell_text(x_node,@ae_class)
         end
       when "aei"
@@ -2611,13 +2611,11 @@ private
     @layout     = "miq_ae_class"
     @title      = "Datastore"
     @lastaction = session[:aeclass_lastaction]
-    @record     = session[:record]
     @edit       = session[:edit]
   end
 
   def set_session_data
     session[:aeclass_lastaction] = @lastaction
-    session[:record]             = @record
     session[:edit]               = @edit
   end
 end
