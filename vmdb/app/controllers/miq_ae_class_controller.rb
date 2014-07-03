@@ -734,8 +734,7 @@ class MiqAeClassController < ApplicationController
     else
       id = x_node.split('-')
     end
-    @ae_inst = MiqAeInstance.find(from_cid(id[1]))
-    initial_setup_for_instances_form_vars(@ae_inst)
+    initial_setup_for_instances_form_vars(from_cid(id[1]))
     set_instances_form_vars
     @in_a_form = true
     session[:changed] = @changed = false
@@ -761,7 +760,6 @@ class MiqAeClassController < ApplicationController
   # Set form variables for edit
   def set_instances_form_vars
     session[:inst_data] = Hash.new
-    @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
     @edit = {
       :ae_inst_id  => @ae_inst.id,
       :ae_class_id => @ae_class.id,
@@ -842,7 +840,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      if @edit[:new][:ae_inst]["name"].blank? || @edit[:new][:ae_inst]["name"] == ""
+      if @edit[:new][:ae_inst]["name"].blank?
         add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
       end
       if @flash_array
@@ -906,7 +904,7 @@ class MiqAeClassController < ApplicationController
     when "add"
       return unless load_edit("aeinst_edit__new","replace_cell__explorer")
       get_instances_form_vars
-      if @edit[:new][:ae_inst]["name"].blank? || @edit[:new][:ae_inst]["name"] == ""
+      if @edit[:new][:ae_inst]["name"].blank?
         add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
       end
       if @flash_array
@@ -1502,8 +1500,7 @@ exit MIQ_OK"
 
   def new_instance
     assert_privileges("miq_ae_instance_new")
-    @ae_inst = MiqAeInstance.new
-    initial_setup_for_instances_form_vars(@ae_inst)
+    initial_setup_for_instances_form_vars(nil)
     set_instances_form_vars
     @in_a_form = true
     replace_right_cell
@@ -1911,30 +1908,19 @@ exit MIQ_OK"
 
 private
 
-  def initial_setup_for_instances_form_vars(ae_inst)
-    if ae_inst.id
-      @ae_class  = MiqAeClass.find(@ae_inst.class_id)
-      @ae_fields = @ae_class.ae_fields
-      @ae_values = []
-      @ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-        val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_i, @ae_inst.id.to_i)
-        if val.nil?
-          val             = MiqAeValue.new
-          val.field_id    = fld.id.to_i
-          val.instance_id = @ae_inst.id.to_i
-        end
-        @ae_values.push(val)
+  def initial_setup_for_instances_form_vars(ae_inst_id)
+    @ae_inst   =  ae_inst_id ? MiqAeInstance.find(ae_inst_id) : MiqAeInstance.new
+    @ae_class  = MiqAeClass.find(@edit[:ae_class_id])
+    @ae_values = []
+
+    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
+      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_i, @ae_inst.id.to_i)
+      if val.nil?
+        val             = MiqAeValue.new
+        val.field_id    = fld.id.to_i
+        val.instance_id = @ae_inst.id.to_i
       end
-    else
-      @ae_values = []
-      @ae_inst   = MiqAeInstance.new
-      @ae_class  = MiqAeClass.find_by_id(@edit[:ae_class_id])
-      @ae_class.ae_fields.each do |fld|
-        v             = MiqAeValue.new
-        v.instance_id = @ae_inst.id.to_i
-        v.field_id    = fld.id.to_i
-        @ae_values.push(v)
-      end
+      @ae_values.push(val)
     end
   end
 
