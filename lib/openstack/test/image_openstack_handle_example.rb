@@ -10,7 +10,7 @@ require 'bundler_setup'
 require 'openstack_handle'
 
 begin
-	os_handle = OpenstackHandle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
+  os_handle = OpenstackHandle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
 
   puts "**** Tenants:"
   os_handle.tenants.each do |t|
@@ -34,7 +34,7 @@ begin
       puts "\t\t\t#{ak}:\t#{av}"
     end
   end
-rescue Exception => err
+rescue => err
   puts err.to_s
   puts err.backtrace.join("\n")
 end
