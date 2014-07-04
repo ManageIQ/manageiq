@@ -466,7 +466,7 @@ class DashboardController < ApplicationController
       :verify_password => params[:user_verify_password]
     }
 
-    validation = validate_user(user)
+    validation = validate_user(user, params[:task_id])
     case validation.result
     when :wait_for_task
       # noop, page content already set by initiate_wait_for_task
@@ -643,8 +643,6 @@ class DashboardController < ApplicationController
     if task.status.downcase != "ok"
       validate = ValidateResult.new(:fail, "Error: " + task.message)
       task.destroy
-      #@flash_msg = "Error: " + task.message
-      #return
       return validate
     end
     user[:name] = task.userid
@@ -714,9 +712,9 @@ class DashboardController < ApplicationController
   # Validate user login credentials
   #   return <url for redirect> as part of the result
   #
-  def validate_user(user)
-    if params[:task_id].present?
-      validation = validate_user_collect_task(params[:task_id])
+  def validate_user(user, task_id)
+    if task_id.present?
+      validation = validate_user_collect_task(user, task_id)
     else # First time thru, kick off authenticate task
       validation = validate_user_kick_off_task(user)
       return validation unless validation.result == :pass
