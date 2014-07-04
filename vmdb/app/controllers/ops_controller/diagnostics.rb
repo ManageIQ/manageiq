@@ -492,7 +492,7 @@ module OpsController::Diagnostics
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
       session[:changed] = changed
-      page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:div_num=>flash_div_num}) if @prev_uri_prefix != @edit[:new][:uri_prefix]
+      page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:div_num=>flash_div_num}) if @prev_protocol != @edit[:protocol]
       if @sb[:active_tab] == "diagnostics_database"
         if changed && @edit[:new][:uri_prefix] != "nfs" &&
             (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
@@ -555,8 +555,14 @@ module OpsController::Diagnostics
   def log_depot_get_form_vars
     @record = @sb[:selected_typ] == "miq_server" ? MiqServer.find_by_id(@sb[:selected_server_id]) : Zone.find_by_id(@sb[:selected_server_id])
     @prev_uri_prefix = @edit[:new][:uri_prefix]
-    @edit[:protocol] = params[:log_protocol].blank? ? nil : params[:log_protocol] if params[:log_protocol]
-    @edit[:new][:uri_prefix] = @edit[:protocols_hash].invert[params[:log_protocol]] if params[:log_protocol]
+    @prev_protocol   = @edit[:protocol]
+    @edit[:protocol] = params[:log_protocol] if params[:log_protocol] # @edit[:protocol] holds the current value of the selector so that it is not reset when _field_changed is called
+
+    if @sb[:active_tab] == "diagnostics_collect_logs"
+      @edit[:new][:uri_prefix] = @edit[:protocol].present? ? Object.const_get(@edit[:protocols_hash].key(@edit[:protocol])).uri_prefix : nil
+    else
+      @edit[:new][:uri_prefix] = @edit[:protocols_hash].invert[params[:log_protocol]] if params[:log_protocol]
+    end
 
     if params[:log_protocol] == "" || @edit[:new][:uri_prefix] == "nfs" || params[:backup_schedule] == ""
       @edit[:new][:uri]          = params[:log_protocol] == "" ? nil : params[:uri]
