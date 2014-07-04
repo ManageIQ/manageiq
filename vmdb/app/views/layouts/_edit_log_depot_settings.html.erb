@@ -28,20 +28,38 @@
           ) %>
         </td>
       </tr>
-      <% if @edit[:new][:uri_prefix] %>
+      <% if @edit[:protocol] == "RedHat Dropbox" %>
+        <tr>
+          <td class="key">Support Case</td>
+          <td class="wide">You will be prompted for a case number at log collection.</td>
+        </tr>
+      <% elsif @edit[:new][:uri_prefix] %>
+        <tr>
+          <td class="key">Depot Name</td>
+          <td class="wide">
+            <%= text_field_tag("depot_name", @edit[:new][:depot_name],
+              :maxlength         => 50,
+              "data-miq_observe" => {
+                :interval => '.5',
+                :url      => url
+              }.to_json
+            ) %>
+          </td>
+        </tr>
         <tr>
           <td class="key">URI</td>
           <td class="wide"><%= @edit[:new][:uri_prefix] %>://
-            <%= text_field_tag(
-              "uri",
-              @edit[:new][:uri],
-              :maxlength => 100,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json
+            <%= text_field_tag("uri", @edit[:new][:uri],
+              :maxlength         => 100,
+              "data-miq_observe" => {
+                :interval => '.5',
+                :url      => url
+              }.to_json
             ) %>
           </td>
           <%= javascript_tag("$('uri').focus()") %>
         </tr>
-        <% unless @edit[:new][:uri_prefix] == "nfs" %>
+        <% unless (@edit[:new][:uri_prefix] == "nfs" || @edit[:protocol] == "Anonymous FTP") %>
           <%= render(
             :partial => "/layouts/auth_credentials",
             :locals  => {
