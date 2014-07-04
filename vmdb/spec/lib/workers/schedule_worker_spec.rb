@@ -659,33 +659,34 @@ describe ScheduleWorker do
         end
       end
 
-      it "should never invoke after_dst_change callbacks if still EDT" do
-        Timecop.travel(@start + 10.minutes)
-        @schedule_worker.should_receive(:load_user_schedules).never
-        @schedule_worker.check_dst
-      end
-
-      it "should invoke after_dst_change callbacks only once if now EST" do
-        @start = Time.parse('Sun November 7 01:00:00 -0500 2010')
-        Timecop.travel(@start)
-        @schedule_worker.should_receive(:load_user_schedules).once
-        @schedule_worker.check_dst
-        @schedule_worker.check_dst
-      end
-
       it "should never sync_all_user_schedules if scheduler role disabled" do
         @schedule_worker.instance_variable_set(:@active_roles, [])
-        @start = Time.parse('Sun November 7 01:00:00 -0500 2010')
-        Timecop.travel(@start)
         @schedule_worker.should_receive(:sync_all_user_schedules).never
-        @schedule_worker.check_dst
+        @schedule_worker.load_user_schedules
       end
 
       it "should sync_all_user_schedules if scheduler role enabled" do
         @schedule_worker.instance_variable_set(:@active_roles, ['scheduler'])
-        @start = Time.parse('Sun November 7 01:00:00 -0500 2010')
-        Timecop.travel(@start)
         @schedule_worker.should_receive(:sync_all_user_schedules).once
+        @schedule_worker.load_user_schedules
+      end
+    end
+
+    context "with Daylight Savings Time changes" do
+      before do
+        @schedule_worker.stub(:dst?).and_return(true)
+        @schedule_worker.reset_dst
+      end
+
+      it "should not invoke after_dst_change callbacks if Daylight Savings Time is unchanged" do
+        @schedule_worker.should_receive(:load_user_schedules).never
+        @schedule_worker.check_dst
+      end
+
+      it "should invoke after_dst_change callbacks only once if Daylight Savings Time changes" do
+        @schedule_worker.stub(:dst?).and_return(false)
+        @schedule_worker.should_receive(:load_user_schedules).once
+        @schedule_worker.check_dst
         @schedule_worker.check_dst
       end
     end
