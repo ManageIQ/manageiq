@@ -654,77 +654,77 @@ describe MiqExpression do
         Timecop.return
       end
 
-      it "should return the correct time when calling normalize_date_time" do
+      it ".normalize_date_time" do
         # Test <value> <interval> Ago
-        MiqExpression.normalize_date_time("3 Hours Ago", "Eastern Time (US & Canada)"   ).iso8601.should == "2011-01-11T09:00:00-05:00"
-        MiqExpression.normalize_date_time("3 Hours Ago", "UTC"                          ).iso8601.should == "2011-01-11T14:00:00Z"
-        MiqExpression.normalize_date_time("3 Hours Ago", "UTC", "end"                   ).iso8601.should == "2011-01-11T14:59:59Z"
+        MiqExpression.normalize_date_time("3 Hours Ago", "Eastern Time (US & Canada)"   ).utc.to_s.should == "2011-01-11 14:00:00 UTC"
+        MiqExpression.normalize_date_time("3 Hours Ago", "UTC"                          ).utc.to_s.should == "2011-01-11 14:00:00 UTC"
+        MiqExpression.normalize_date_time("3 Hours Ago", "UTC", "end"                   ).utc.to_s.should == "2011-01-11 14:59:59 UTC"
 
-        MiqExpression.normalize_date_time("3 Days Ago", "Eastern Time (US & Canada)"    ).iso8601.should == "2011-01-08T00:00:00-05:00"
-        MiqExpression.normalize_date_time("3 Days Ago", "UTC"                           ).iso8601.should == "2011-01-08T00:00:00Z"
-        MiqExpression.normalize_date_time("3 Days Ago", "UTC", "end"                    ).iso8601.should == "2011-01-08T23:59:59Z"
+        MiqExpression.normalize_date_time("3 Days Ago", "Eastern Time (US & Canada)"    ).utc.to_s.should == "2011-01-08 05:00:00 UTC"
+        MiqExpression.normalize_date_time("3 Days Ago", "UTC"                           ).utc.to_s.should == "2011-01-08 00:00:00 UTC"
+        MiqExpression.normalize_date_time("3 Days Ago", "UTC", "end"                    ).utc.to_s.should == "2011-01-08 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("3 Weeks Ago", "Eastern Time (US & Canada)"   ).iso8601.should == "2010-12-20T00:00:00-05:00"
-        MiqExpression.normalize_date_time("3 Weeks Ago", "UTC"                          ).iso8601.should == "2010-12-20T00:00:00Z"
+        MiqExpression.normalize_date_time("3 Weeks Ago", "Eastern Time (US & Canada)"   ).utc.to_s.should == "2010-12-20 05:00:00 UTC"
+        MiqExpression.normalize_date_time("3 Weeks Ago", "UTC"                          ).utc.to_s.should == "2010-12-20 00:00:00 UTC"
 
-        MiqExpression.normalize_date_time("4 Months Ago", "Eastern Time (US & Canada)"  ).iso8601.should == "2010-09-01T00:00:00-04:00"
-        MiqExpression.normalize_date_time("4 Months Ago", "UTC"                         ).iso8601.should == "2010-09-01T00:00:00Z"
-        MiqExpression.normalize_date_time("4 Months Ago", "UTC", "end"                  ).iso8601.should == "2010-09-30T23:59:59Z"
+        MiqExpression.normalize_date_time("4 Months Ago", "Eastern Time (US & Canada)"  ).utc.to_s.should == "2010-09-01 04:00:00 UTC"
+        MiqExpression.normalize_date_time("4 Months Ago", "UTC"                         ).utc.to_s.should == "2010-09-01 00:00:00 UTC"
+        MiqExpression.normalize_date_time("4 Months Ago", "UTC", "end"                  ).utc.to_s.should == "2010-09-30 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("1 Quarter Ago", "Eastern Time (US & Canada)" ).iso8601.should == "2010-10-01T00:00:00-04:00"
-        MiqExpression.normalize_date_time("1 Quarter Ago", "UTC"                        ).iso8601.should == "2010-10-01T00:00:00Z"
-        MiqExpression.normalize_date_time("1 Quarter Ago", "UTC", "end"                 ).iso8601.should == "2010-12-31T23:59:59Z"
+        MiqExpression.normalize_date_time("1 Quarter Ago", "Eastern Time (US & Canada)" ).utc.to_s.should == "2010-10-01 04:00:00 UTC"
+        MiqExpression.normalize_date_time("1 Quarter Ago", "UTC"                        ).utc.to_s.should == "2010-10-01 00:00:00 UTC"
+        MiqExpression.normalize_date_time("1 Quarter Ago", "UTC", "end"                 ).utc.to_s.should == "2010-12-31 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("3 Quarters Ago", "Eastern Time (US & Canada)").iso8601.should == "2010-04-01T00:00:00-04:00"
-        MiqExpression.normalize_date_time("3 Quarters Ago", "UTC"                       ).iso8601.should == "2010-04-01T00:00:00Z"
-        MiqExpression.normalize_date_time("3 Quarters Ago", "UTC", "end"                ).iso8601.should == "2010-06-30T23:59:59Z"
+        MiqExpression.normalize_date_time("3 Quarters Ago", "Eastern Time (US & Canada)").utc.to_s.should == "2010-04-01 04:00:00 UTC"
+        MiqExpression.normalize_date_time("3 Quarters Ago", "UTC"                       ).utc.to_s.should == "2010-04-01 00:00:00 UTC"
+        MiqExpression.normalize_date_time("3 Quarters Ago", "UTC", "end"                ).utc.to_s.should == "2010-06-30 23:59:59 UTC"
 
         # Test Now, Today, Yesterday
-        MiqExpression.normalize_date_time("Now", "Eastern Time (US & Canada)"           ).iso8601.should == "2011-01-11T12:00:00-05:00"
-        MiqExpression.normalize_date_time("Now", "UTC"                                  ).iso8601.should == "2011-01-11T17:00:00Z"
-        MiqExpression.normalize_date_time("Now", "UTC", "end"                           ).iso8601.should == "2011-01-11T17:59:59Z"
+        MiqExpression.normalize_date_time("Now", "Eastern Time (US & Canada)"           ).utc.to_s.should == "2011-01-11 17:00:00 UTC"
+        MiqExpression.normalize_date_time("Now", "UTC"                                  ).utc.to_s.should == "2011-01-11 17:00:00 UTC"
+        MiqExpression.normalize_date_time("Now", "UTC", "end"                           ).utc.to_s.should == "2011-01-11 17:59:59 UTC"
 
-        MiqExpression.normalize_date_time("Today", "Eastern Time (US & Canada)"         ).iso8601.should == "2011-01-11T00:00:00-05:00"
-        MiqExpression.normalize_date_time("Today", "UTC"                                ).iso8601.should == "2011-01-11T00:00:00Z"
-        MiqExpression.normalize_date_time("Today", "UTC", "end"                         ).iso8601.should == "2011-01-11T23:59:59Z"
+        MiqExpression.normalize_date_time("Today", "Eastern Time (US & Canada)"         ).utc.to_s.should == "2011-01-11 05:00:00 UTC"
+        MiqExpression.normalize_date_time("Today", "UTC"                                ).utc.to_s.should == "2011-01-11 00:00:00 UTC"
+        MiqExpression.normalize_date_time("Today", "UTC", "end"                         ).utc.to_s.should == "2011-01-11 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("Yesterday", "Eastern Time (US & Canada)"     ).iso8601.should == "2011-01-10T00:00:00-05:00"
-        MiqExpression.normalize_date_time("Yesterday", "UTC"                            ).iso8601.should == "2011-01-10T00:00:00Z"
-        MiqExpression.normalize_date_time("Yesterday", "UTC", "end"                     ).iso8601.should == "2011-01-10T23:59:59Z"
+        MiqExpression.normalize_date_time("Yesterday", "Eastern Time (US & Canada)"     ).utc.to_s.should == "2011-01-10 05:00:00 UTC"
+        MiqExpression.normalize_date_time("Yesterday", "UTC"                            ).utc.to_s.should == "2011-01-10 00:00:00 UTC"
+        MiqExpression.normalize_date_time("Yesterday", "UTC", "end"                     ).utc.to_s.should == "2011-01-10 23:59:59 UTC"
 
         # Test Last ...
-        MiqExpression.normalize_date_time("Last Hour", "Eastern Time (US & Canada)"     ).iso8601.should == "2011-01-11T11:00:00-05:00"
-        MiqExpression.normalize_date_time("Last Hour", "UTC"                            ).iso8601.should == "2011-01-11T16:00:00Z"
-        MiqExpression.normalize_date_time("Last Hour", "UTC", "end"                     ).iso8601.should == "2011-01-11T16:59:59Z"
+        MiqExpression.normalize_date_time("Last Hour", "Eastern Time (US & Canada)"     ).utc.to_s.should == "2011-01-11 16:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Hour", "UTC"                            ).utc.to_s.should == "2011-01-11 16:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Hour", "UTC", "end"                     ).utc.to_s.should == "2011-01-11 16:59:59 UTC"
 
-        MiqExpression.normalize_date_time("Last Week", "Eastern Time (US & Canada)"     ).iso8601.should == "2011-01-03T00:00:00-05:00"
-        MiqExpression.normalize_date_time("Last Week", "UTC"                            ).iso8601.should == "2011-01-03T00:00:00Z"
-        MiqExpression.normalize_date_time("Last Week", "UTC", "end"                     ).iso8601.should == "2011-01-09T23:59:59Z"
+        MiqExpression.normalize_date_time("Last Week", "Eastern Time (US & Canada)"     ).utc.to_s.should == "2011-01-03 05:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Week", "UTC"                            ).utc.to_s.should == "2011-01-03 00:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Week", "UTC", "end"                     ).utc.to_s.should == "2011-01-09 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("Last Month", "Eastern Time (US & Canada)"    ).iso8601.should == "2010-12-01T00:00:00-05:00"
-        MiqExpression.normalize_date_time("Last Month", "UTC"                           ).iso8601.should == "2010-12-01T00:00:00Z"
-        MiqExpression.normalize_date_time("Last Month", "UTC", "end"                    ).iso8601.should == "2010-12-31T23:59:59Z"
+        MiqExpression.normalize_date_time("Last Month", "Eastern Time (US & Canada)"    ).utc.to_s.should == "2010-12-01 05:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Month", "UTC"                           ).utc.to_s.should == "2010-12-01 00:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Month", "UTC", "end"                    ).utc.to_s.should == "2010-12-31 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("Last Quarter", "Eastern Time (US & Canada)"  ).iso8601.should == "2010-10-01T00:00:00-04:00"
-        MiqExpression.normalize_date_time("Last Quarter", "UTC"                         ).iso8601.should == "2010-10-01T00:00:00Z"
-        MiqExpression.normalize_date_time("Last Quarter", "UTC", "end"                  ).iso8601.should == "2010-12-31T23:59:59Z"
+        MiqExpression.normalize_date_time("Last Quarter", "Eastern Time (US & Canada)"  ).utc.to_s.should == "2010-10-01 04:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Quarter", "UTC"                         ).utc.to_s.should == "2010-10-01 00:00:00 UTC"
+        MiqExpression.normalize_date_time("Last Quarter", "UTC", "end"                  ).utc.to_s.should == "2010-12-31 23:59:59 UTC"
 
         # Test This ...
-        MiqExpression.normalize_date_time("This Hour", "Eastern Time (US & Canada)"     ).iso8601.should == "2011-01-11T12:00:00-05:00"
-        MiqExpression.normalize_date_time("This Hour", "UTC"                            ).iso8601.should == "2011-01-11T17:00:00Z"
-        MiqExpression.normalize_date_time("This Hour", "UTC", "end"                     ).iso8601.should == "2011-01-11T17:59:59Z"
+        MiqExpression.normalize_date_time("This Hour", "Eastern Time (US & Canada)"     ).utc.to_s.should == "2011-01-11 17:00:00 UTC"
+        MiqExpression.normalize_date_time("This Hour", "UTC"                            ).utc.to_s.should == "2011-01-11 17:00:00 UTC"
+        MiqExpression.normalize_date_time("This Hour", "UTC", "end"                     ).utc.to_s.should == "2011-01-11 17:59:59 UTC"
 
-        MiqExpression.normalize_date_time("This Week", "Eastern Time (US & Canada)"     ).iso8601.should == "2011-01-10T00:00:00-05:00"
-        MiqExpression.normalize_date_time("This Week", "UTC"                            ).iso8601.should == "2011-01-10T00:00:00Z"
-        MiqExpression.normalize_date_time("This Week", "UTC", "end"                     ).iso8601.should == "2011-01-16T23:59:59Z"
+        MiqExpression.normalize_date_time("This Week", "Eastern Time (US & Canada)"     ).utc.to_s.should == "2011-01-10 05:00:00 UTC"
+        MiqExpression.normalize_date_time("This Week", "UTC"                            ).utc.to_s.should == "2011-01-10 00:00:00 UTC"
+        MiqExpression.normalize_date_time("This Week", "UTC", "end"                     ).utc.to_s.should == "2011-01-16 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("This Month", "Eastern Time (US & Canada)"    ).iso8601.should == "2011-01-01T00:00:00-05:00"
-        MiqExpression.normalize_date_time("This Month", "UTC"                           ).iso8601.should == "2011-01-01T00:00:00Z"
-        MiqExpression.normalize_date_time("This Month", "UTC", "end"                    ).iso8601.should == "2011-01-31T23:59:59Z"
+        MiqExpression.normalize_date_time("This Month", "Eastern Time (US & Canada)"    ).utc.to_s.should == "2011-01-01 05:00:00 UTC"
+        MiqExpression.normalize_date_time("This Month", "UTC"                           ).utc.to_s.should == "2011-01-01 00:00:00 UTC"
+        MiqExpression.normalize_date_time("This Month", "UTC", "end"                    ).utc.to_s.should == "2011-01-31 23:59:59 UTC"
 
-        MiqExpression.normalize_date_time("This Quarter", "Eastern Time (US & Canada)"  ).iso8601.should == "2011-01-01T00:00:00-05:00"
-        MiqExpression.normalize_date_time("This Quarter", "UTC"                         ).iso8601.should == "2011-01-01T00:00:00Z"
-        MiqExpression.normalize_date_time("This Quarter", "UTC", "end"                  ).iso8601.should == "2011-03-31T23:59:59Z"
+        MiqExpression.normalize_date_time("This Quarter", "Eastern Time (US & Canada)"  ).utc.to_s.should == "2011-01-01 05:00:00 UTC"
+        MiqExpression.normalize_date_time("This Quarter", "UTC"                         ).utc.to_s.should == "2011-01-01 00:00:00 UTC"
+        MiqExpression.normalize_date_time("This Quarter", "UTC", "end"                  ).utc.to_s.should == "2011-03-31 23:59:59 UTC"
       end
 
       it "should generate the correct ruby expression running to_ruby with an expression having relative dates with no time zone" do
