@@ -15,6 +15,10 @@
       :image: edit
       :text: 'Edit this Class'
       :title: 'Edit this Class'
+    - :button: miq_ae_class_copy
+      :image: copy
+      :text: 'Copy this Class'
+      :title: 'Copy this Class'
     - :button: miq_ae_class_delete
       :image: delete
       :text: 'Remove this Class'
@@ -30,6 +34,13 @@
       :image: edit
       :text: 'Edit Selected Instance'
       :title: 'Select a single Instance to edit'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: miq_ae_instance_copy
+      :image: copy
+      :text: 'Copy Selected Instance'
+      :title: 'Select a single Instance to copy'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'

@@ -15,6 +15,10 @@
       :image: edit
       :text: 'Edit this Instance'
       :title: 'Edit this Instance'
+    - :button: miq_ae_instance_copy
+      :image: copy
+      :text: 'Copy this Instance'
+      :title: 'Copy this Instance'
     - :button: miq_ae_instance_delete
       :image: delete
       :text: 'Remove this Instance'

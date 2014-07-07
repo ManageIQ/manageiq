@@ -15,6 +15,10 @@
       :image: edit
       :text: 'Edit this Class'
       :title: 'Edit this Class'
+    - :button: miq_ae_class_copy
+      :image: copy
+      :text: 'Copy this Class'
+      :title: 'Copy this Class'
     - :button: miq_ae_class_delete
       :image: delete
       :text: 'Remove this Class'

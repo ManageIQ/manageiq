@@ -1,5 +1,6 @@
 module AutomateTreeHelper
   def at_tree_select_toggle(edit_key)
+    build_ae_tree(:automate, :automate_tree)
     render :update do |page|
       tree_close = proc do
         @edit[:ae_tree_select] = false
@@ -17,6 +18,11 @@ module AutomateTreeHelper
         if @edit[:new][edit_key]
           page << "$('#{edit_key}').value = '#{@edit[:new][edit_key]}';"
           page << "$('#{edit_key}').title = '#{@edit[:new][edit_key]}';"
+        end
+        if params[:controller] == "miq_ae_class"
+          page.replace("form_div", :partial => "copy_objects_form")
+          @changed = (@edit[:new] != @edit[:current])
+          page << javascript_for_miq_button_visibility(@changed)
         end
         tree_close.call
 
@@ -39,10 +45,15 @@ module AutomateTreeHelper
   end
 
   def at_tree_select(edit_key)
-    instance =
-      MiqAeInstance.find_by_id(from_cid(params[:id].split('_').last.split('-').last)) if params[:id].start_with?("aei-")
-    if instance
-      @edit[:automate_tree_fqname] = instance.fqname
+    id = from_cid(params[:id].split('_').last.split('-').last)
+    if params[:id].start_with?("aei-")
+      record = MiqAeInstance.find_by_id(id)
+    elsif params[:id].start_with?("aen-") && params[:controller] == "miq_ae_class"
+      record = MiqAeNamespace.find_by_id(id)
+      record = nil if record.domain?
+    end
+    if record
+      @edit[:automate_tree_fqname] = record.fqname
       # save selected id in edit until save button is pressed
       @edit[:active_id] = params[:id]
       @changed = @edit[:new][edit_key] != @edit[:automate_tree_fqname]

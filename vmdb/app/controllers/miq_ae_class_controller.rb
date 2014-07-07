@@ -1,6 +1,7 @@
 require "rexml/document"
 class MiqAeClassController < ApplicationController
   include MiqAeClassHelper
+  include AutomateTreeHelper
 
   before_filter :check_privileges
   before_filter :get_session_data
@@ -45,6 +46,7 @@ class MiqAeClassController < ApplicationController
   AE_X_BUTTON_ALLOWED_ACTIONS = {
     'instance_fields_edit'        => :edit_instance,
     'method_inputs_edit'          => :edit_mehod,
+    'miq_ae_class_copy'           => :copy_objects,
     'miq_ae_class_edit'           => :edit_class,
     'miq_ae_class_delete'         => :deleteclasses,
     'miq_ae_class_new'            => :new,
@@ -56,10 +58,12 @@ class MiqAeClassController < ApplicationController
     'miq_ae_domain_priority_edit' => :domains_priority_edit,
     'miq_ae_field_edit'           => :edit_fields,
     'miq_ae_field_seq'            => :fields_seq_edit,
+    'miq_ae_instance_copy'        => :copy_objects,
     'miq_ae_instance_delete'      => :deleteinstances,
     'miq_ae_instance_edit'        => :edit_instance,
     'miq_ae_instance_new'         => :new_instance,
     'miq_ae_item_edit'            => :edit_item,
+    'miq_ae_method_copy'          => :copy_objects,
     'miq_ae_method_delete'        => :deletemethods,
     'miq_ae_method_edit'          => :edit_method,
     'miq_ae_method_new'           => :new_method,
@@ -77,6 +81,7 @@ class MiqAeClassController < ApplicationController
 
   def explorer
     @built_trees = []
+    @sb[:action] = nil
     @sb[:open_tree_nodes] ||= Array.new # Create array to keep open tree nodes (only for autoload trees)
     @explorer = true
     #don't need right bottom cell
@@ -254,6 +259,40 @@ class MiqAeClassController < ApplicationController
     replace_right_cell
   end
 
+  # Check for parent nodes missing from ae tree and return them if any
+  def open_parent_nodes(record)
+    existing_node = nil
+    nodes         =  record.fqname.split("/")
+    parents       = []
+    nodes.each_with_index do |_, i|
+      if i == nodes.length - 1
+        selected_node = x_node.split("-")
+        parents.push(record.ae_class) if %w(aei aem).include?(selected_node[0])
+        self.x_node = "#{selected_node[0]}-#{to_cid(record.id)}"
+        parents.push(record)
+      else
+        parents.push(MiqAeNamespace.find_by_fqname(nodes[0..i].join("/")))
+      end
+    end
+
+    # Go up thru the parents and find the highest level unopened, mark all as opened along the way
+    unless parents.empty? ||  # Skip if no parents or parent already open
+        x_tree[:open_nodes].include?(x_build_node_id(parents.last))
+      parents.reverse.each do |p|
+        p_node = x_build_node_id(p)
+        unless x_tree[:open_nodes].include?(p_node)
+          x_tree[:open_nodes].push(p_node)
+          existing_node = p_node
+        end
+      end
+    end
+    add_nodes = {:key      => existing_node,
+                 :children => TreeBuilder.tree_add_child_nodes(@sb,
+                                                               x_tree[:klass_name],
+                                                               existing_node)} if existing_node
+    add_nodes
+  end
+
   def replace_right_cell(replace_trees = [])
     @explorer = true
 
@@ -270,8 +309,11 @@ class MiqAeClassController < ApplicationController
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename) if !@in_a_form
     h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb")
 
+    add_nodes = open_parent_nodes(@record) if params[:button] == "copy"
+
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
+      :add_nodes   => add_nodes,
       :temp        => @temp,
     )
     r = proc { |opts| render_to_string(opts) }
@@ -301,6 +343,12 @@ class MiqAeClassController < ApplicationController
           :locals  => {:div_num => "_domains_priority"}
       ] if @flash_array
       presenter[:update_partials][:ns_list_div] = r[:partial => "domains_priority_form"]
+    elsif %w(miq_ae_class_copy miq_ae_instance_copy miq_ae_method_copy).include?(@sb[:action])
+      presenter[:replace_partials][:flash_msg_div_copy] = r[
+          :partial => "layouts/flash_msg",
+          :locals  => {:div_num => "_copy"}
+      ] if @flash_array
+      presenter[:update_partials][:main_div] = r[:partial => "copy_objects_form"]
     else
       if @sb[:action] == "miq_ae_class_edit"
         @sb[:active_tab] = 'props'
@@ -318,6 +366,7 @@ class MiqAeClassController < ApplicationController
         :locals  => {
           :record_id    => @edit[:rec_id],
           :action_url   => action_url,
+          :copy_button  => action_url == "copy_objects",
           :multi_record => @sb[:action] == "miq_ae_domain_priority_edit",
           :serialize    => @sb[:active_tab] == 'methods',
         }
@@ -351,7 +400,8 @@ class MiqAeClassController < ApplicationController
 
     presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
     presenter[:osf_node] = x_node
-    presenter[:extra_js] << "miqButtons('hide');"
+
+    presenter[:extra_js] << "miqButtons('#{@changed ? 'show' : 'hide'}');"
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
@@ -1906,6 +1956,54 @@ exit MIQ_OK"
     end
   end
 
+  def copy_objects
+    typ, action = typ_and_action_for_copy
+    id = params[:id] || find_checked_items.first
+    case params[:button]
+    when "cancel"
+      copy_cancel
+    when "copy"
+      copy_save
+    when "reset", nil # Reset or first time in
+      copy_reset(typ, id, action)
+    end
+  end
+
+  def form_copy_objects_field_changed
+    return unless load_edit("copy_objects__#{params[:id]}", "replace_cell__explorer")
+    get_copy_objects_form_vars
+    build_ae_tree(:automate, :automate_tree)
+    @changed = (@edit[:new] != @edit[:current])
+    if @edit[:new][:namespace].nil? && @edit[:new][:override_source]
+      @changed = true
+    elsif @edit[:new][:namespace].nil? && !@edit[:new][:override_source]
+      @changed = false
+    end
+    render :update do |page|                    # Use JS to update the display
+      page.replace("form_div", :partial => "copy_objects_form") if params[:domain] || params[:override_source]
+      page << javascript_for_miq_button_visibility(@changed)
+    end
+  end
+
+  def ae_tree_select_toggle
+    @edit = session[:edit]
+    self.x_active_tree = :ae_tree
+    at_tree_select_toggle(:namespace)
+
+    if params[:button] == 'submit'
+      x_node_set(@edit[:active_id], :automate_tree)
+      @edit[:namespace] = @edit[:new][:namespace]
+    end
+
+    session[:edit] = @edit
+  end
+
+  def ae_tree_select
+    @edit = session[:edit]
+    at_tree_select(:namespace)
+    session[:edit] = @edit
+  end
+
 private
 
   def initial_setup_for_instances_form_vars(ae_inst_id)
@@ -1936,11 +2034,140 @@ private
     %w(collect display_name on_entry on_error on_exit max_retries max_time value)
   end
 
+  def typ_and_action_for_copy
+    action = params[:pressed] || @sb[:action]
+    case action
+    when "miq_ae_class_copy"
+      typ = MiqAeClass
+    when "miq_ae_instance_copy"
+      typ = MiqAeInstance
+    when "miq_ae_method_copy"
+      typ = MiqAeMethod
+    end
+    return typ, action
+  end
+
+  def get_copy_objects_form_vars
+    %w(domain override_existing override_source namespace).each do |field|
+      fld = field.to_sym
+      if %w(override_existing override_source).include?(field)
+        @edit[:new][fld] = params[fld] == "1" if params[fld]
+        @edit[:new][:namespace] = nil if @edit[:new][:override_source]
+      else
+        @edit[:new][fld] = params[fld] if params[fld]
+        if fld == :domain && params[fld]
+          # save domain in sandbox, treebuilder doesnt have access to @edit
+          @sb[:domain_id]         = params[fld]
+          @edit[:new][:namespace] = nil
+        end
+      end
+    end
+  end
+
+  def copy_save
+    assert_privileges(@sb[:action])
+    return unless load_edit("copy_objects__#{params[:id]}", "replace_cell__explorer")
+    @record = @edit[:typ].find_by_id(@edit[:rec_id])
+    if @edit[:typ] == MiqAeClass
+      kls = MiqAeClassCopy
+    elsif @edit[:typ] == MiqAeInstance
+      kls = MiqAeInstanceCopy
+    elsif @edit[:typ] == MiqAeMethod
+      kls = MiqAeMethodCopy
+    end
+
+    domain = MiqAeDomain.find_by_id(@edit[:new][:domain])
+    begin
+      res = kls.new(@record.fqname).to_domain(domain.name, @edit[:new][:namespace], @edit[:new][:overwrite_location])
+    rescue StandardError => bang
+      add_flash(I18n.t("flash.error_during",
+                       :task => "#{ui_lookup(:model => "#{@edit[:typ]}")} copy") << bang.message, :error)
+      render :update do |page|
+        page.replace("flash_msg_div_copy",
+                     :partial => "layouts/flash_msg",
+                     :locals  => {:div_num => "_copy"})
+      end
+    else
+      if res.errors.empty?
+        add_flash(I18n.t("flash.copy.copied",
+                         :model => ui_lookup(:model => "#{@edit[:typ]}")
+                  )
+        )
+        @record = res
+        self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(res.id)}"
+        @changed = session[:changed] = false
+        @in_a_form = false
+        @sb[:action] = @edit = session[:edit] = nil
+        replace_right_cell
+      else
+        res.errors.each do |field, msg|
+          add_flash("#{field.to_s.capitalize} #{msg}", :error)
+        end
+        render :update do |page|
+          page.replace("flash_msg_div_copy",
+                       :partial => "layouts/flash_msg",
+                       :locals  => {:div_num => "_copy"})
+        end
+      end
+    end
+  end
+
+  def copy_reset(typ, id, button_pressed)
+    assert_privileges(button_pressed)
+    @changed = session[:changed] = @in_a_form = true
+    copy_objects_edit_screen(typ, id, button_pressed)
+    if params[:button] == "reset"
+      add_flash(I18n.t("flash.edit.reset"), :warning)
+    end
+    build_ae_tree(:automate, :automate_tree)
+    replace_right_cell
+  end
+
+  def copy_cancel
+    assert_privileges(@sb[:action])
+    @record = session[:edit][:typ].find_by_id(session[:edit][:rec_id])
+    @sb[:action] = session[:edit] = nil # clean out the saved info
+    add_flash(I18n.t("flash.copy.cancelled",
+                     :model => ui_lookup(:model => "#{@edit[:typ]}")
+              )
+    )
+    @in_a_form = false
+    replace_right_cell
+  end
+
+  def copy_objects_edit_screen(typ, id, button_pressed)
+    domains = {}
+    @record = typ.find_by_id(id)
+    record_domain = @record.fqname.split('/').first
+    MiqAeDomain.all_unlocked_domains.collect { |domain| domains[domain.id] =
+        record_domain == domain.name ? "#{domain.name}  (Same Domain)" : domain.name }
+    @edit = {
+      :typ        => typ,
+      :action     => button_pressed,
+      :rec_id     => id,
+      :key        => "copy_objects__#{id}",
+      :domains    => domains,
+      :namespaces => {}
+    }
+    @edit[:new] = {
+      :domain            => domains.first.first,
+      :override_source   => true,
+      :namespace         => nil,
+      :override_existing => false
+    }
+    @sb[:domain_id] = domains.first.first
+    @edit[:current] = copy_hash(@edit[:new])
+    @right_cell_text = "Copy of '#{ui_lookup(:model => "#{typ}")}'"
+    session[:edit] = @edit
+  end
+
   def create_action_url(node)
     if @sb[:action] == "miq_ae_domain_priority_edit"
       'domains_priority_edit'
     elsif @sb[:action] == 'miq_ae_field_seq'
       'fields_seq_edit'
+    elsif %w(miq_ae_class_copy miq_ae_instance_copy miq_ae_method_copy).include?(@sb[:action])
+      'copy_objects'
     else
       prefix = @edit[:rec_id].nil? ? 'create' : 'update'
       if node ==  'aec'

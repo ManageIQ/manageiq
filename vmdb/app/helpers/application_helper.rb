@@ -836,6 +836,8 @@ module ApplicationHelper
       end
     when "MiqAeClass", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       case id
+      when "miq_ae_class_copy", "miq_ae_instance_copy", "miq_ae_method_copy"
+        return true unless MiqAeDomain.unlocked_domains?
       when "miq_ae_domain_lock"
         return true unless @record.editable?
       when "miq_ae_domain_unlock"

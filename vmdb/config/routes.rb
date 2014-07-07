@@ -530,7 +530,10 @@ Vmdb::Application.routes.draw do
         explorer
       ),
       :post => %w(
+        ae_tree_select
+        ae_tree_select_toggle
         change_tab
+        copy_objects
         create
         create_instance
         create_method
@@ -547,6 +550,7 @@ Vmdb::Application.routes.draw do
         fields_form_field_changed
         fields_seq_edit
         fields_seq_field_changed
+        form_copy_objects_field_changed
         form_field_changed
         form_instance_field_changed
         form_method_field_changed
