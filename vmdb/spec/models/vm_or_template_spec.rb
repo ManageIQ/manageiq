@@ -365,4 +365,33 @@ describe VmOrTemplate do
       end
     end
   end
+
+  context "#scan_profile_categories" do
+    before do
+      @vm = FactoryGirl.create(:vm_vmware)
+    end
+
+    it "should produce profile categories without a default or customer profile" do
+      categories = @vm.scan_profile_categories(@vm.scan_profile_list)
+      categories.should eq VmOrTemplate.default_scan_categories_no_profile
+    end
+
+    it "should produce profile categories from the default profile" do
+      item_set = ScanItemSet.new
+      item_set.stub(:members) { [FactoryGirl.build(:scan_item_category_default), FactoryGirl.build(:scan_item_file)] }
+      ScanItemSet.stub(:find_by_name).with("default") { item_set }
+
+      categories = @vm.scan_profile_categories(@vm.scan_profile_list)
+      categories.should match_array ["default", "profiles"]
+    end
+
+    it "should produce profile categories from the customer profile" do
+      item_set = ScanItemSet.new
+      item_set.stub(:members) { [FactoryGirl.build(:scan_item_category_test), FactoryGirl.build(:scan_item_file)] }
+      ScanItemSet.stub(:find_by_name).with("test") { item_set }
+
+      categories = @vm.scan_profile_categories(ScanItem.get_profile("test"))
+      categories.should match_array ["test", "profiles"]
+    end
+  end
 end

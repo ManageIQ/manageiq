@@ -14,11 +14,11 @@ describe VmScan do
       MiqServer.any_instance.stub(:is_a_proxy? => true)
       MiqServer.any_instance.stub(:has_active_role? => true)
 
-      @ems       = FactoryGirl.create(:ems_vmware,           :name => "Test EMS", :zone => @zone)
+      @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @zone)
       @proxy     = FactoryGirl.create(:active_cos_proxy, :name => "test_cos_proxy")
       @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
       @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems, :miq_proxy => @proxy)
-      @vm        = FactoryGirl.create(:vm_vmware,               :name => "test_vm", :location => "abc/abc.vmx", :state => 'on', :host => @host, :ext_management_system => @ems, :storage => @storage)
+      @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx", :state => 'on', :host => @host, :ext_management_system => @ems, :storage => @storage)
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
       @job = @vm.scan
@@ -157,6 +157,20 @@ describe VmScan do
         @vm.ext_management_system.should_receive(:vm_log_user_event).once
         @job.end_user_event_message(@vm)
         @job.end_user_event_message(@vm)
+      end
+    end
+
+    context "#create_scan_args" do
+      it "should have no vmScanProfiles by default" do
+        args = @job.create_scan_args(@vm)
+        args["vmScanProfiles"].should eq []
+      end
+
+      it "should have vmScanProfiles from scan_profiles option" do
+        profiles = [ScanItemSet.any_instance.stub(:name => 'default')]
+        @job.options[:scan_profiles] = profiles
+        args = @job.create_scan_args(@vm)
+        args["vmScanProfiles"].should eq profiles
       end
     end
 
