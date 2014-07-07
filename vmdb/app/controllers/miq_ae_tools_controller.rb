@@ -115,7 +115,7 @@ class MiqAeToolsController < ApplicationController
 
   # Send all classes and instances
   def export_datastore
-    filename = "datastore_" + format_timezone(Time.now,Time.zone,"fname") + ".xml"
+    filename = "datastore_" + format_timezone(Time.now, Time.zone, "fname") + ".zip"
     disable_client_cache
     send_data(MiqAeDatastore.export,
         :filename => filename)
