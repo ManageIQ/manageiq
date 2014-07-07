@@ -38,8 +38,8 @@ describe MiqAeToolsController do
   end
 
   describe "#reset_datastore" do
-    it "routes with GET" do
-      expect(get("/miq_ae_tools/reset_datastore")).to route_to("miq_ae_tools#reset_datastore")
+    it "routes with POST" do
+      expect(post("/miq_ae_tools/reset_datastore")).to route_to("miq_ae_tools#reset_datastore")
     end
   end
 
@@ -56,6 +56,12 @@ describe MiqAeToolsController do
   describe "#upload" do
     it "routes with POST" do
       expect(post("/miq_ae_tools/upload")).to route_to("miq_ae_tools#upload")
+    end
+  end
+
+  describe "#wait_for_task" do
+    it "routes with POST" do
+      expect(post("/miq_ae_tools/wait_for_task")).to route_to("miq_ae_tools#wait_for_task")
     end
   end
 end
