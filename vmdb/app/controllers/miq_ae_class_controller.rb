@@ -18,7 +18,7 @@ class MiqAeClassController < ApplicationController
     #resetting flash array so messages don't get displayed when tab is changed
     @flash_array = Array.new
     @explorer = true
-    @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
+    @record = @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
     @sb[:active_tab] = params[:tab_id]
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
     case params[:tab_id]
@@ -261,7 +261,6 @@ class MiqAeClassController < ApplicationController
 
   # Check for parent nodes missing from ae tree and return them if any
   def open_parent_nodes(record)
-    existing_node = nil
     nodes         =  record.fqname.split("/")
     parents       = []
     nodes.each_with_index do |_, i|
@@ -271,10 +270,15 @@ class MiqAeClassController < ApplicationController
         self.x_node = "#{selected_node[0]}-#{to_cid(record.id)}"
         parents.push(record)
       else
-        parents.push(MiqAeNamespace.find_by_fqname(nodes[0..i].join("/")))
+        ns = MiqAeNamespace.find_by_fqname(nodes[0..i].join("/"))
+        parents.push(ns) if ns
       end
     end
+    build_and_add_nodes(parents)
+  end
 
+  def build_and_add_nodes(parents)
+    existing_node = nil
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
     unless parents.empty? ||  # Skip if no parents or parent already open
         x_tree[:open_nodes].include?(x_build_node_id(parents.last))
@@ -1958,7 +1962,7 @@ exit MIQ_OK"
 
   def copy_objects
     typ, action = typ_and_action_for_copy
-    id = params[:id] || find_checked_items.first
+    id = find_checked_items ? find_checked_items.first.split("-").last : params[:id]
     case params[:button]
     when "cancel"
       copy_cancel
@@ -2075,39 +2079,33 @@ private
     elsif @edit[:typ] == MiqAeMethod
       kls = MiqAeMethodCopy
     end
+    copy_and_save_objects(kls)
+  end
 
+  def copy_and_save_objects(kls)
     domain = MiqAeDomain.find_by_id(@edit[:new][:domain])
     begin
       res = kls.new(@record.fqname).to_domain(domain.name, @edit[:new][:namespace], @edit[:new][:overwrite_location])
     rescue StandardError => bang
       add_flash(I18n.t("flash.error_during",
                        :task => "#{ui_lookup(:model => "#{@edit[:typ]}")} copy") << bang.message, :error)
-      render :update do |page|
-        page.replace("flash_msg_div_copy",
-                     :partial => "layouts/flash_msg",
-                     :locals  => {:div_num => "_copy"})
-      end
     else
       if res.errors.empty?
-        add_flash(I18n.t("flash.copy.copied",
-                         :model => ui_lookup(:model => "#{@edit[:typ]}")
-                  )
-        )
+        add_flash(I18n.t("flash.copy.copied", :model => ui_lookup(:model => "#{@edit[:typ]}")))
         @record = res
         self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(res.id)}"
-        @changed = session[:changed] = false
-        @in_a_form = false
+        @in_a_form = @changed = session[:changed] = false
         @sb[:action] = @edit = session[:edit] = nil
         replace_right_cell
       else
         res.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        render :update do |page|
-          page.replace("flash_msg_div_copy",
-                       :partial => "layouts/flash_msg",
-                       :locals  => {:div_num => "_copy"})
-        end
+      end
+    end
+    if flash_errors?
+      render :update do |page|
+        page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       end
     end
   end
@@ -2137,15 +2135,15 @@ private
 
   def copy_objects_edit_screen(typ, id, button_pressed)
     domains = {}
-    @record = typ.find_by_id(id)
+    @record = typ.find_by_id(from_cid(id))
     record_domain = @record.fqname.split('/').first
     MiqAeDomain.all_unlocked_domains.collect { |domain| domains[domain.id] =
         record_domain == domain.name ? "#{domain.name}  (Same Domain)" : domain.name }
     @edit = {
       :typ        => typ,
       :action     => button_pressed,
-      :rec_id     => id,
-      :key        => "copy_objects__#{id}",
+      :rec_id     => from_cid(id),
+      :key        => "copy_objects__#{from_cid(id)}",
       :domains    => domains,
       :namespaces => {}
     }

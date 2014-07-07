@@ -27,11 +27,11 @@ class MiqAeDomain < MiqAeNamespace
     MiqAeDomain.reset_priority_by_ordered_ids(ids)
   end
 
-  def self.unlocked_domains?
-    where(:system => false).count > 0
+  def self.any_unlocked?
+    MiqAeDomain.where('system is null OR system = ?', [false]).count > 0
   end
 
-  def self.all_unlocked_domains
-    where(:system => false).order('priority DESC')
+  def self.all_unlocked
+    MiqAeDomain.where('system is null OR system = ?', [false]).order('priority DESC')
   end
 end

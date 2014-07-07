@@ -45,4 +45,34 @@ describe MiqAeDomain do
       d1.priority.should eql(1)
     end
   end
+
+  context "any_unlocked?" do
+    it "should return unlocked_domains? as true if the there are any unloacked doamins available" do
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => false)
+      MiqAeDomain.any_unlocked?.should be_true
+    end
+
+    it "should return unlocked_domains? as false if the there are no unloacked doamins available" do
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => true)
+      MiqAeDomain.any_unlocked?.should be_false
+    end
+  end
+
+  context "all_unlocked" do
+    it "should return all unlocked domains" do
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => false)
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd3', :priority => 10, :system => nil)
+      MiqAeDomain.all_unlocked.count.should eq(2)
+    end
+
+    it "should return empty array when there are no unlocked domains" do
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => true)
+      FactoryGirl.create(:miq_ae_namespace, :name => 'd3', :priority => 10, :system => true)
+      MiqAeDomain.all_unlocked.count.should eq(0)
+    end
+  end
 end
