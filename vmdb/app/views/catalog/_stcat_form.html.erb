@@ -2,9 +2,7 @@
 <div id="form_div">
 	<%= render :partial => "layouts/flash_msg" %>
   <%# show form if Catalog bundle is being added or if it's an edit of existing catalog item, else force user to select type %>
-  <dl class="col1">
-    <dd>
-      <fieldset>
+
         <p class="legend">Basic Info</p>
         <table class="style1">
           <tr>
@@ -31,11 +29,8 @@
             </td>
           </tr>
         </table>
-      </fieldset>
-      <fieldset>
+
+      <hr>
         <p class="legend">Assign Buttons</p>
         <%= render :partial => "column_lists" %>
-      </fieldset>
-    </dd>
-  </dl>
 </div>

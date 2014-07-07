@@ -3,9 +3,7 @@
   	<%= render :partial => "layouts/flash_msg" %>
     <%# show form if Catalog bundle is being added or if it's an edit of existing catalog item, else force user to select type %>
     <% if @edit[:new][:service_type] == "atomic" && !@edit[:wf] && !@edit[:new][:st_prov_type] %>
-      <dl class="col1">
-        <dd>
-          <fieldset>
+
             <p class="legend">New Catalog Item</p>
             <table class="style1">
               <tr>
@@ -19,9 +17,7 @@
                 </td>
               </tr>
             </table>
-          </fieldset>
-        </dd>
-      </dl>
+
     <% else %>
       <%= render :partial => "form"%>
     <% end %>

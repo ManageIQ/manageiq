@@ -1,7 +1,7 @@
 <% url = url_for(:action=>@edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed", :id=>"#{@edit[:rec_id] || "new"}") %>
 <div id="resources_info_div">
   <% if @edit[:new][:service_type] == "composite" %>
-    <fieldset>
+
       <p class="legend">Resources</p>
       <table class="style1">
         <tr>
@@ -15,9 +15,9 @@
           </td>
         </tr>
       </table>
-    </fieldset>
+
     <% if !@edit[:new][:selected_resources].empty? %>
-      <fieldset>
+
         <p class="legend">Selected Resources</p>
         <table class="style3">
           <thead>
@@ -109,7 +109,6 @@
           <% end %>
           </tbody>
         </table>
-      </fieldset>
     <% end %>
   <% end %>
 </div>

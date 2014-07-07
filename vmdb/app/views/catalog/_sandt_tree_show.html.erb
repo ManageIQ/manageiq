@@ -14,9 +14,7 @@
     <% end %>
   </ul>
   <div id="basic" name="basic" width="80px">
-    <dl class="col2">
-      <dd>
-        <fieldset>
+
           <p class="legend">Basic Information</p>
           <table class="style1">
             <tr>
@@ -52,10 +50,8 @@
               <td><%= h(@sb[:retire_fqname]) %>
             </tr>
           </table>
-        </fieldset>
-      </dd>
-      <dd>
-        <fieldset>
+
+          <hr>
           <p class="legend">Custom Image</p>
           <% if @record.picture %>
             <table>
@@ -94,14 +90,11 @@
             <% end %>
             <script type="text/javascript">miqInitJqueryForm();</script>
           <% end %>
-        </fieldset>
-      </dd>
-    </dl>
+
   </div>
 
   <% if @record.display %>
     <div id="details" name="details" width="80px">
-      <fieldset>
         <p class="legend">Basic Information</p>
         <table class="style1">
           <tr>
@@ -111,13 +104,11 @@
             </td>
           </tr>
         </table>
-      </fieldset>
     </div>
   <% end %>
 
   <% if @record.composite? %>
     <div id="resources" name="resources" width="80px">
-      <fieldset>
         <p class="legend">Resources</p>
         <% resources = @record.service_resources %>
         <% if !resources.empty? %>
@@ -173,16 +164,13 @@
         <% else %>
           No Resources found.
         <% end %>
-      </fieldset>
     </div>
   <% else %>
     <% if !@record.prov_type || (@record.prov_type && @record.prov_type != "generic") %>
       <div id="request" name="request" width="80px">
         <% if @options[:wf] %>
-          <fieldset>
             <p class="legend">Request Info</p>
               <%= render :partial => "miq_request/prov_wf", :locals=>{:wf=>@options[:wf], :show=>true} %>
-          </fieldset>
         <% else %>
           <span style="color:red"><%= @no_wf_msg %></span>
         <% end %>

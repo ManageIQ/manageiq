@@ -4,9 +4,7 @@
 
 	<% end %>
 	<%= hidden_div_if(@settings[:views][:dashboards] != "textual", :id => "textual_div") do %>
-		<dl class="col1">
-			<dd>
-				<fieldset>
+
           <table>
             <tr>
               <td valign="center">
@@ -23,9 +21,9 @@
               </td>
             </tr>
           </table>
-				</fieldset>
+
         <% unless @record_service_templates.empty? %>
-          <fieldset>
+            <hr>
             <table class="style3">
               <thead>
               <th>Catalog Items</th>
@@ -43,13 +41,11 @@
               <% end %>
               </tbody>
             </table>
-          </fieldset>
         <% else %>
-          <fieldset>
-            No Catalog Items found.
-          </fieldset>
+          <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+           <strong> No Catalog Items found.</strong>
+          </div>
         <% end %>
-      </dd>
-		</dl>
 	<% end %>
 </div>

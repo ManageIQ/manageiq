@@ -4,9 +4,7 @@
 
   <% end %>
   <%= hidden_div_if(@settings[:views][:dashboards] != "textual", :id => "textual_div") do %>
-    <dl class="col1">
-      <dd>
-        <fieldset>
+
           <table>
             <tr>
               <td align="center" valign="top">
@@ -65,8 +63,5 @@
               </td>
             </tr>
           </table>
-        </fieldset>
-      </dd>
-    </dl>
   <% end %>
 </div>
