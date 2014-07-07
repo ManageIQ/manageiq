@@ -618,14 +618,15 @@ Vmdb::Application.routes.draw do
         fetch_log
         import_export
         log
-        reset_datastore
         resolve
       ),
       :post => %w(
         button
         form_field_changed
+        reset_datastore
         resolve
         upload
+        wait_for_task
       )
     },
 
