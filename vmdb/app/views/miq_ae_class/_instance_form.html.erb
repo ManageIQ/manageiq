@@ -63,19 +63,19 @@
     <tbody>
       <% @edit[:new][:ae_values].each_with_index do |flds,i| %>
         <tr class="<%=cycle('row0','row1',:name=>'schema')%>">
-          <% image = @edit[:new][:ae_fields][i].substitute ? "passed.png" : "failed.png" %>
+          <% image = @edit[:new][:ae_fields][i]["substitute"] ? "passed.png" : "failed.png" %>
           <td>
-            <img src="/images/icons/new/ae_<%= @edit[:new][:ae_fields][i].aetype %>.png" alt="Type: <%= @edit[:new][:ae_fields][i].aetype %>" title="Type: <%= @edit[:new][:ae_fields][i].aetype %>" />
-            <% if !@edit[:new][:ae_fields][i].datatype.blank? && @edit[:new][:ae_fields][i].datatype != "string" %>
-              <img src="/images/icons/new/<%= @edit[:new][:ae_fields][i].datatype %>.png" alt="Data Type: <%= @edit[:new][:ae_fields][i].datatype %>" title="Data Type: <%= @edit[:new][:ae_fields][i].datatype %>" />
+            <img src="/images/icons/new/ae_<%= @edit[:new][:ae_fields][i]["aetype"] %>.png" alt="Type: <%= @edit[:new][:ae_fields][i]["aetype"] %>" title="Type: <%= @edit[:new][:ae_fields][i]["aetype"] %>" />
+            <% if !@edit[:new][:ae_fields][i]["datatype"].blank? && @edit[:new][:ae_fields][i]["datatype"] != "string" %>
+              <img src="/images/icons/new/<%= @edit[:new][:ae_fields][i]["datatype"] %>.png" alt="Data Type: <%= @edit[:new][:ae_fields][i]["datatype"] %>" title="Data Type: <%= @edit[:new][:ae_fields][i]["datatype"] %>" />
             <% end %>
-            <img src="/images/icons/16/<%= image %> " alt="Substitution: <%= @edit[:new][:ae_fields][i].substitute %>" title="Substitution: <%= @edit[:new][:ae_fields][i].substitute %>" />&nbsp;
-            <%= h(@edit[:new][:ae_fields][i].display_name) %> (<%= h(@edit[:new][:ae_fields][i].name) %>)
+            <img src="/images/icons/16/<%= image %> " alt="Substitution: <%= @edit[:new][:ae_fields][i]["substitute"] %>" title="Substitution: <%= @edit[:new][:ae_fields][i]["substitute"] %>" />&nbsp;
+            <%= h(@edit[:new][:ae_fields][i]["display_name"]) %> (<%= h(@edit[:new][:ae_fields][i]["name"]) %>)
           </td>
           <td>
-            <% default_value = @edit[:new][:ae_fields][i].default_value %>
+            <% default_value = @edit[:new][:ae_fields][i]["default_value"] %>
             <% cls = flds["value"].blank? && !default_value.blank? ? "input_def_val" : "" %>
-            <% if @edit[:new][:ae_fields][i].datatype == "password" %>
+            <% if @edit[:new][:ae_fields][i]["datatype"] == "password" %>
               <%= password_field_tag("#{prefix}inst_password_value_#{i}",
                                      flds["value"].blank? ? default_value : flds["value"],
                                      :class  => cls,
@@ -98,7 +98,7 @@
             <% end %>
           </td>
           <td>
-            <% default_value = @edit[:new][:ae_fields][i].on_entry %>
+            <% default_value = @edit[:new][:ae_fields][i]["on_entry"] %>
             <% cls = flds["on_entry"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_entry_#{i}",
                                flds["on_entry"].blank? ? default_value : flds["on_entry"],
@@ -111,7 +111,7 @@
             %>
           </td>
           <td>
-            <% default_value = @edit[:new][:ae_fields][i].on_exit %>
+            <% default_value = @edit[:new][:ae_fields][i]["on_exit"] %>
             <% cls = flds["on_exit"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_exit_#{i}",
                                flds["on_exit"].blank? ? default_value : flds["on_exit"],
@@ -124,7 +124,7 @@
             %>
           </td>
           <td>
-            <% default_value = @edit[:new][:ae_fields][i].on_error %>
+            <% default_value = @edit[:new][:ae_fields][i]["on_error"] %>
             <% cls = flds["on_error"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_error_#{i}",
                                flds["on_error"].blank? ? default_value : flds["on_error"],
@@ -137,7 +137,7 @@
             %>
           </td>
           <td>
-            <% default_value = @edit[:new][:ae_fields][i].collect %>
+            <% default_value = @edit[:new][:ae_fields][i]["collect"] %>
             <% cls = flds["collect"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_collect_#{i}",
                                flds["collect"].blank? ? default_value : flds["collect"],
