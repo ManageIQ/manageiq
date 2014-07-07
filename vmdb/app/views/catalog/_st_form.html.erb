@@ -1,23 +1,24 @@
-<% url = url_for(:action=>@edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed", :id=>"#{@edit[:rec_id] || "new"}") %>
+<% url = url_for(:action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed",
+                 :id     => "#{@edit[:rec_id] || "new"}")
+%>
   <div id="form_div">
   	<%= render :partial => "layouts/flash_msg" %>
     <%# show form if Catalog bundle is being added or if it's an edit of existing catalog item, else force user to select type %>
     <% if @edit[:new][:service_type] == "atomic" && !@edit[:wf] && !@edit[:new][:st_prov_type] %>
-
-            <p class="legend">New Catalog Item</p>
-            <table class="style1">
-              <tr>
-                <td class="key">Catalog Item Type</td>
-                <td class="notwide">
-                  <%= select_tag('st_prov_type',
-                                 options_for_select(([["<Choose>",nil]]) + Array(@edit[:st_prov_types].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
-                                                    nil),
-                                 "data-miq_sparkle_on"=>true,
-                                 "data-miq_observe"=>{:url=>url}.to_json) %>
-                </td>
-              </tr>
-            </table>
-
+      <p class="legend">New Catalog Item</p>
+      <table class="style1">
+        <tr>
+          <td class="key">Catalog Item Type</td>
+          <td class="notwide">
+            <%= select_tag('st_prov_type',
+                           options_for_select(([["<Choose>",nil]]) + Array(@edit[:st_prov_types].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
+                                              nil),
+                           "data-miq_sparkle_on" => true,
+                           "data-miq_observe"    => {:url => url}.to_json)
+            %>
+          </td>
+        </tr>
+      </table>
     <% else %>
       <%= render :partial => "form"%>
     <% end %>

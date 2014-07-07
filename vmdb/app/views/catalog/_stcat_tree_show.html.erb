@@ -1,51 +1,51 @@
 <div class="maincontent">
-	<%= render :partial => "layouts/flash_msg" %>
-	<%= hidden_div_if(@settings[:views][:dashboards] != "graphical", :id => "graphical_div") do %>
+  <%= render :partial => "layouts/flash_msg" %>
+  <%= hidden_div_if(@settings[:views][:dashboards] != "graphical", :id => "graphical_div") do %>
 
-	<% end %>
-	<%= hidden_div_if(@settings[:views][:dashboards] != "textual", :id => "textual_div") do %>
+    <% end %>
+    <%= hidden_div_if(@settings[:views][:dashboards] != "textual", :id => "textual_div") do %>
 
-          <table>
-            <tr>
-              <td valign="center">
-                <table class="style1">
-                  <tr>
-                    <td class="key">Name</td>
-                    <td class="notwide"><%= @record.name %></td>
-                  </tr>
-                  <tr>
-                    <td class="key">Description</td>
-                    <td class="notwide"><%= @record.description%></td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-
-        <% unless @record_service_templates.empty? %>
-            <hr>
-            <table class="style3">
-              <thead>
-              <th>Catalog Items</th>
-              </thead>
-              <tbody>
-              <% @record_service_templates.sort_by{ |a| a.name.downcase }.each do |obj| %>
-                <tr class="<%= cycle('row0', 'row1') %>"
-                    onclick="<%= remote_function(:loading=>"miqSparkle(true);", :complete=>"miqSparkle(false);",
-                                  :url=>"/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}") %>"
-                    onmouseover="this.style.cursor='pointer'" title="Click to this Catalog Item">
-                  <td>
-                    <%= obj.name %>
-                  </td>
-                </tr>
-              <% end %>
-              </tbody>
+      <table>
+        <tr>
+          <td valign="center">
+            <table class="style1">
+              <tr>
+                <td class="key">Name</td>
+                <td class="notwide"><%= @record.name %></td>
+              </tr>
+              <tr>
+                <td class="key">Description</td>
+                <td class="notwide"><%= @record.description%></td>
+              </tr>
             </table>
-        <% else %>
-          <div class="alert alert-info">
-            <span class="pficon pficon-info"></span>
-           <strong> No Catalog Items found.</strong>
-          </div>
-        <% end %>
-	<% end %>
+          </td>
+        </tr>
+      </table>
+
+    <% unless @record_service_templates.empty? %>
+        <hr>
+        <table class="style3">
+          <thead>
+           <th>Catalog Items</th>
+          </thead>
+          <tbody>
+            <% @record_service_templates.sort_by{ |a| a.name.downcase }.each do |obj| %>
+              <tr class="<%= cycle('row0', 'row1') %>"
+                  onclick="<%= remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
+                                :url => "/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}") %>"
+                  onmouseover="this.style.cursor='pointer'" title="Click to this Catalog Item">
+                <td>
+                  <%= obj.name %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+    <% else %>
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+       <strong> No Catalog Items found.</strong>
+      </div>
+    <% end %>
+  <% end %>
 </div>

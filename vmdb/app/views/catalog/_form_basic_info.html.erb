@@ -1,6 +1,10 @@
-<% url = url_for(:action=>@edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed", :id=>"#{@edit[:rec_id] || "new"}") %>
+<% url = url_for(:action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed", 
+                 :id     => "#{@edit[:rec_id] || "new"}")
+%>
 <div id="basic_info_div">
-  <%= hidden_div_if(@edit && @edit[:ae_tree_select] != true, :id=>"ae_tree_select_div" ) do %>
+  <%= hidden_div_if(@edit && @edit[:ae_tree_select] != true, 
+                    :id => "ae_tree_select_div" ) do
+  %>
   <%# if @edit && @edit[:ae_tree_select] %>
     <%= render(:partial=>'layouts/ae_tree_select') %>
   <%# end %>
@@ -10,19 +14,25 @@
       <tr>
         <td class="key">Name / Description</td>
         <td>
-            <%= text_field_tag("name",
-                              @edit[:new][:name].to_s,
-                              :maxlength=>40,
-                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          <%= text_field_tag("name",
+                             @edit[:new][:name].to_s,
+                             :maxlength         => 40,
+                             "data-miq_observe" => {:interval => '.5',
+                                                    :url      => url}.to_json)
+          %>
             &nbsp;/&nbsp;
             <%= text_field_tag("description",
-                              @edit[:new][:description],
-                              :maxlength=>60,
-                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                               @edit[:new][:description],
+                               :maxlength         => 60,
+                               "data-miq_observe" => {:interval => '.5',
+                                                      :url      => url}.to_json)
+            %>
             &nbsp;
             <%= check_box_tag("display", value="1",
-                                  checked=@edit[:new][:display],
-                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>&nbsp;Display in Catalog
+                              checked=@edit[:new][:display],
+                              "data-miq_observe_checkbox" => {:url => url}.to_json)
+            %>
+            &nbsp;Display in Catalog
         </td>
       </tr>
       <%= javascript_tag("$('name').focus()") %>
@@ -33,18 +43,20 @@
           <%= select_tag('catalog_id',
                          options_for_select(([["<Unassigned>",nil]]) + @edit[:new][:available_catalogs],
                                             @edit[:new][:catalog_id]),
-                         "data-miq_sparkle_on"=>true,
-                         "data-miq_observe"=>{:url=>url}.to_json) %>
+                         "data-miq_sparkle_on" => true,
+                         "data-miq_observe"    => {:url => url}.to_json)
+          %>
         </td>
       </tr>
         <tr>
           <td class="key">Dialog</td>
           <td class="wide">
             <%= select_tag('dialog_id',
-                              options_for_select(([["<No Dialog>",nil]]) + Array(@edit[:new][:available_dialogs].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
-                                @edit[:new][:dialog_id]),
-                                "data-miq_sparkle_on"=>true,
-                                "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(([["<No Dialog>",nil]]) + Array(@edit[:new][:available_dialogs].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
+                           @edit[:new][:dialog_id]),
+                           "data-miq_sparkle_on" => true,
+                           "data-miq_observe"    => {:url => url}.to_json)
+            %>
           </td>
         </tr>
         <tr>
@@ -53,23 +65,26 @@
             <table>
               <tr>
                 <td>
-                <%= text_field_tag("fqname",
-                                   @edit[:new][:fqname],
-                                   :onFocus => 'miqShowAE_Tree("provision");miqButtons(false);') %>
+                  <%= text_field_tag("fqname",
+                                     @edit[:new][:fqname],
+                                     :onFocus => 'miqShowAE_Tree("provision");miqButtons(false);')
+                  %>
                 </td>
                 <td>
-                <% display = @edit[:new][:fqname] != "" ? "" : "display:none" %>
-                <div id="fqname_div" style="<%=display%>">
-                  <%= link_to(image_tag('/images/toolbars/discard.png',
-                                        :class=>"rollover small", :alt=>"Remove this Provisioning Entry Point"),
-                              {:action=>'ae_tree_select_discard', :typ => "provision"},
-                              "data-miq_sparkle_on" => true,
-                              "data-miq_sparkle_off" => true,
-                              "data-confirm"=>"Are you sure you want to remove this Provisioning Entry Point?",
-                              :remote=>true,
-                              :title=>"Remove this Provisioning Entry Point")
-                  %>
-                </div>
+                  <% display = @edit[:new][:fqname] != "" ? "" : "display:none" %>
+                  <div id="fqname_div" style="<%=display%>">
+                    <%= link_to(image_tag('/images/toolbars/discard.png',
+                                          :class => "rollover small", 
+                                          :alt   => "Remove this Provisioning Entry Point"),
+                                {:action => 'ae_tree_select_discard', 
+                                 :typ    => "provision"},
+                                "data-miq_sparkle_on"  => true,
+                                "data-miq_sparkle_off" => true,
+                                "data-confirm"         => "Are you sure you want to remove this Provisioning Entry Point?",
+                                :remote                => true,
+                                :title                 => "Remove this Provisioning Entry Point")
+                    %>
+                  </div>
                 </td>
               </tr>
             </table>
@@ -83,19 +98,22 @@
                 <td>
                   <%= text_field_tag("retire_fqname",
                                      @edit[:new][:retire_fqname],
-                                     :onFocus => 'miqShowAE_Tree("retire");miqButtons(false);') %>
+                                     :onFocus => 'miqShowAE_Tree("retire");miqButtons(false);')
+                  %>
                 </td>
                 <td>
                   <% display = @edit[:new][:retire_fqname] != "" ? "" : "display:none" %>
                   <div id="retire_fqname_div" style="<%=display%>">
                     <%= link_to(image_tag('/images/toolbars/discard.png',
-                                          :class=>"rollover small", :alt=>"Remove this Retirement Entry Point"),
-                                {:action=>'ae_tree_select_discard', :typ => "retirement"},
-                                "data-miq_sparkle_on" => true,
+                                          :class => "rollover small", 
+                                          :alt   => "Remove this Retirement Entry Point"),
+                                {:action => 'ae_tree_select_discard',
+                                 :typ    => "retirement"},
+                                "data-miq_sparkle_on"  => true,
                                 "data-miq_sparkle_off" => true,
-                                "data-confirm"=>"Are you sure you want to remove this Retirement Entry Point?",
-                                :remote=>true,
-                                :title=>"Remove this Retirement Entry Point")
+                                "data-confirm"         => "Are you sure you want to remove this Retirement Entry Point?",
+                                :remote                => true,
+                                :title                 => "Remove this Retirement Entry Point")
                     %>
                   </div>
                 </td>

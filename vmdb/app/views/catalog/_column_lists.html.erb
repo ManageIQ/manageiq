@@ -1,42 +1,62 @@
 <div id="column_lists">
-        <table width="100%" class="form" id="formtest">
-          <tr>
-            <td align="left" class="widthed">   UnAssigned:</td>
-            <td></td>
-            <td align="left">Selected:</td>
-          </tr>
-          <tr>
-            <td align="right" valign="top">
-              <%= select_tag('available_fields[]',
-                             options_for_select(@edit[:new][:available_fields]),
-                             {:multiple=> true, :style=>"width: 450px", :size=>8, :id=>"available_fields"}) %>
-            </td>
-            <td width="30" valign="middle">
-              <% if @edit[:new][:available_fields].length == 0 %>
-                <%= image_tag("/images/toolbars/right.png", :class=>"dimmed rollover small") %>
-              <% else %>
-                <%= link_to(image_tag("/images/toolbars/right.png", :class=>"rollover small", :alt=>"Move selected fields right"),
-                            {:action=>'st_catalog_form_field_changed', :button=>'right', :id=>"#{@edit[:rec_id] || "new"}"},
-                            "data-submit"=>'column_lists',
-                            :remote=>true,
-                            :title=>'Move selected buttons right')
-                %>
-              <% end %>
-
-              <% if @edit[:new][:fields].length == 0 %>
-                <%= image_tag("/images/toolbars/left.png", :class=>"dimmed rollover small") %>
-              <% else %>
-                <%= link_to(image_tag("/images/toolbars/left.png", :class=>"rollover small", :alt=>"Move selected fields left"),
-                            {:action=>'st_catalog_form_field_changed', :button=>'left', :id=>"#{@edit[:rec_id] || "new"}"},
-                            "data-submit"=>'column_lists',
-                            :remote=>true,
-                            :title=>'Move selected buttons left')
-                %>
-              <% end %>
-            </td>
-            <td align="left" valign="top">
-              <%= select_tag('selected_fields[]', options_for_select( @edit[:new][:fields], @selected ), { :multiple=> true, :style=>"width: 450px", :size=>8, :id=>"selected_fields"} ) %>
-            </td>
-          </tr>
-        </table>
+  <table width="100%" class="form" id="formtest">
+    <tr>
+      <td align="left" class="widthed">   UnAssigned:</td>
+      <td></td>
+      <td align="left">Selected:</td>
+    </tr>
+    <tr>
+      <td align="right" valign="top">
+        <%= select_tag('available_fields[]',
+                       options_for_select(@edit[:new][:available_fields]),
+                       {:multiple => true, 
+                        :style    => "width: 450px", 
+                        :size     => 8, 
+                        :id       => "available_fields"})
+        %>
+      </td>
+      <td width="30" valign="middle">
+        <% if @edit[:new][:available_fields].length == 0 %>
+          <%= image_tag("/images/toolbars/right.png", 
+                        :class => "dimmed rollover small")
+          %>
+        <% else %>
+          <%= link_to(image_tag("/images/toolbars/right.png", 
+                                :class => "rollover small",
+                                :alt   => "Move selected fields right"),
+                      {:action => 'st_catalog_form_field_changed', 
+                       :button => 'right', 
+                       :id     => "#{@edit[:rec_id] || "new"}"},
+                      "data-submit" => 'column_lists',
+                      :remote       => true,
+                      :title        => 'Move selected buttons right')
+          %>
+        <% end %>
+        <% if @edit[:new][:fields].length == 0 %>
+          <%= image_tag("/images/toolbars/left.png", 
+                        :class => "dimmed rollover small")
+          %>
+        <% else %>
+          <%= link_to(image_tag("/images/toolbars/left.png", 
+                                :class => "rollover small", 
+                                :alt   => "Move selected fields left"),
+                      {:action => 'st_catalog_form_field_changed', 
+                       :button => 'left', 
+                       :id     => "#{@edit[:rec_id] || "new"}"},
+                      "data-submit" => 'column_lists',
+                      :remote       => true,
+                      :title        => 'Move selected buttons left')
+          %>
+        <% end %>
+      </td>
+      <td align="left" valign="top">
+        <%= select_tag('selected_fields[]', options_for_select(@edit[:new][:fields], @selected ),
+                       {:multiple => true, 
+                        :style    => "width: 450px", 
+                        :size     => 8, 
+                        :id       => "selected_fields"}) 
+        %>
+      </td>
+    </tr>
+  </table>
 </div>
