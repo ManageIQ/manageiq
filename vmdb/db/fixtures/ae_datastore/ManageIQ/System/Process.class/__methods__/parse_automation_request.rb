@@ -1,10 +1,7 @@
-###################################
 #
-# EVM Automate Method: parse_automation_request
+# Description: This method is used to parse incoming automation requests
 #
-# Notes: This method is used to parse incoming automation requests
-#
-###################################
+
 cur = $evm.object
 case cur['request']
 when 'vm_provision'
