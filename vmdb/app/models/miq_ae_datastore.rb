@@ -106,7 +106,13 @@ module MiqAeDatastore
   end
 
   def self.export
-    MiqAeDatastore::XmlExport.to_xml
+    require 'tempfile'
+    temp_export = Tempfile.new('ae_export')
+    MiqAeDatastore.backup('zip_file' => temp_export.path, 'overwrite' => true)
+    File.read(temp_export.path)
+  ensure
+    temp_export.close
+    temp_export.unlink
   end
 
   def self.export_class(ns, class_name)
