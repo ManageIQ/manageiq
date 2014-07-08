@@ -6,7 +6,8 @@ describe "StatusManagement" do
   end
 
   #for now, just making sure there are no syntax errors
-  it "should log status" do
+  it ".log_status" do
+    MiqServer.should_receive(:log_system_status).once
     MiqServer.log_status
   end
 end
