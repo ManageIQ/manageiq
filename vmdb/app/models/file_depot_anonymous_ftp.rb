@@ -1,6 +1,4 @@
-class FileDepotRedhatDropbox < FileDepotFtp
-  default_value_for :uri, "ftp://dropbox.redhat.com"
-
+class FileDepotAnonymousFtp < FileDepotFtp
   def remove_file(_file)
     $log.info("MIQ(#{self.class.name}##{__method__}) Removing log file not supported on this depot type")
   end
@@ -13,13 +11,6 @@ class FileDepotRedhatDropbox < FileDepotFtp
 
   def destination_file_exists?(_ftp, _file)
     false
-  end
-
-  def destination_file
-    @destination_file ||= begin
-      file_name = [support_case, file.destination_file_name].delete_blanks.join("-")
-      File.join(destination_path, file_name)
-    end
   end
 
   def destination_path
