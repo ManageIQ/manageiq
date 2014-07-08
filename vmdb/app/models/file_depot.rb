@@ -1,6 +1,7 @@
 class FileDepot < ActiveRecord::Base
   DISPLAY_NAME = nil
 
+  include NewWithTypeStiMixin
   include AuthenticationMixin
   belongs_to            :resource, :polymorphic => true
   has_many              :miq_servers, :foreign_key => :log_file_depot_id, :dependent => :nullify

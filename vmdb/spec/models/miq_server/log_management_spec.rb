@@ -11,22 +11,6 @@ describe MiqServer do
       depot.update_authentication(:default => {:userid => "user", :password => "pass"})
     end
 
-    context "#set_log_depot_settings" do
-      it "creates a new log depot" do
-        @miq_server.set_log_depot_settings(new_depot_hash)
-
-        expect(@miq_server.log_file_depot.depot_hash).to eq(new_depot_hash)
-      end
-
-      it "updates an existing log depot" do
-        @miq_server.update_attributes(:log_file_depot_id => depot.id)
-
-        @miq_server.set_log_depot_settings(new_depot_hash)
-
-        expect(@miq_server.log_file_depot.depot_hash).to eq(new_depot_hash)
-      end
-    end
-
     context "#get_log_depot_settings" do
       let(:depot_hash) { {:uri => uri, :username => "user", :password => "pass"} }
 

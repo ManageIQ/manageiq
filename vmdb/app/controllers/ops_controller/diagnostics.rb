@@ -99,7 +99,7 @@ module OpsController::Diagnostics
       pfx = @sb[:active_tab] == "diagnostics_collect_logs" ? "logdepot" : "dbbackup"
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("#{pfx}_edit__#{id}","replace_cell__explorer")
-      validate_uri_settings if @edit[:protocol]
+      validate_uri_settings if @edit[:protocol].present?
       if @flash_array
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -107,18 +107,22 @@ module OpsController::Diagnostics
         end
         return
       end
-      settings = {:username => @edit[:new][:log_userid], :password => @edit[:new][:log_password] }
-      if @edit[:new][:uri_prefix].nil?
-        settings.delete(:verify)
-        settings.delete(:uri)
-        settings.delete(:username)
-        settings.delete(:password)
-      else
-        settings.delete(:verify)
-        settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri].to_s
-      end
+
       begin
-        @record.set_log_depot_settings(settings)
+        if @edit[:protocol].blank?
+          @record.log_file_depot.destroy
+        else
+          new_uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri].to_s
+          type    = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
+          depot   = (@record.log_file_depot if @record.log_file_depot.kind_of?(type)) || @record.build_log_file_depot(:type => type.to_s)
+          unless type.to_s == "FileDepotRedhatDropbox"
+            depot.uri  = new_uri
+            depot.name = @edit[:new][:depot_name]
+          end
+          depot.save
+          depot.update_authentication(:default => {:userid => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}) unless type.to_s == "FileDepotRedhatDropbox"
+          @record.save  # Because #create_log_file_depot updates the attribute, but doesn't save it.
+        end
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task=>"Save") << bang.message, :error)
         @changed = true
@@ -298,6 +302,7 @@ module OpsController::Diagnostics
     @edit[:new][:uri_prefix] = @edit[:protocols_hash].invert[params[:log_protocol]] if params[:log_protocol]
     if settings && !settings.blank? && @prev_backup_schedule != @edit[:selected_backup_schedule]
       log_depot_get_form_vars_from_settings(settings)
+      @edit[:protocol] = @edit[:new][:uri_prefix]
     else
       log_depot_get_form_vars
     end
@@ -536,6 +541,7 @@ module OpsController::Diagnostics
 
   def log_depot_reset_form_vars
     @edit[:protocol]           = nil
+    @edit[:new][:depot_name]   = nil
     @edit[:new][:uri]          = nil
     @edit[:new][:log_userid]   = nil
     @edit[:new][:log_password] = nil
@@ -544,7 +550,6 @@ module OpsController::Diagnostics
 
   def log_depot_get_form_vars_from_settings(settings)
     protocol, path = settings[:uri].to_s.split('://')
-    @edit[:protocol]           = protocol
     @edit[:new][:uri_prefix]   = protocol
     @edit[:new][:uri]          = path
     @edit[:new][:log_userid]   = settings[:username]
@@ -564,7 +569,8 @@ module OpsController::Diagnostics
       @edit[:new][:uri_prefix] = @edit[:protocols_hash].invert[params[:log_protocol]] if params[:log_protocol]
     end
 
-    if params[:log_protocol] == "" || @edit[:new][:uri_prefix] == "nfs" || params[:backup_schedule] == ""
+    @edit[:new][:depot_name] = params[:depot_name] if params[:depot_name]
+    if @edit[:new][:uri_prefix].in?([nil, "nfs"]) || params[:backup_schedule] == ""
       @edit[:new][:uri]          = params[:log_protocol] == "" ? nil : params[:uri]
       @edit[:new][:log_userid]   = nil
       @edit[:new][:log_password] = nil
@@ -641,6 +647,8 @@ module OpsController::Diagnostics
     @edit[:key] = "logdepot_edit__#{@record.id || "new"}"
     log_depot = @record.log_file_depot.try(:depot_hash)
     log_depot_get_form_vars_from_settings(log_depot) if log_depot.present?
+    @edit[:protocol] = @record.log_file_depot.try(:class).try(:const_get, "DISPLAY_NAME")
+    @edit[:new][:depot_name] = @record.log_file_depot.try(:name)
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true
