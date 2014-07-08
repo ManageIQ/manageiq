@@ -166,8 +166,7 @@ class LogFile < ActiveRecord::Base
     # Strip any leading and trailing whitespace
     settings[:uri].strip!
 
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(settings[:uri]))
-    return scheme
+    URI.split(URI.encode(settings[:uri]))[0]
   end
 
   def self.validate_log_depot_settings(settings)

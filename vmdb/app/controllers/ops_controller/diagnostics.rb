@@ -86,7 +86,7 @@ module OpsController::Diagnostics
 
   def log_depot_edit
     assert_privileges("#{@sb[:selected_typ] == "miq_server" ? "" : "zone_"}log_depot_edit")
-    @record = @sb[:selected_typ] == "miq_server" ? MiqServer.find_by_id(@sb[:selected_server_id]) : Zone.find_by_id(@sb[:selected_server_id])
+    @record = @sb[:selected_typ].classify.constantize.find_by_id(@sb[:selected_server_id])
     #@schedule = nil # setting to nil, since we are using same view for both db_back and log_depot edit
     case params[:button]
     when "cancel"
@@ -495,14 +495,14 @@ module OpsController::Diagnostics
     log_depot_get_form_vars
     log_depot_set_verify_status
     changed = (@edit[:new] != @edit[:current])
+    required_fields = @edit[:new].values_at(:uri, :log_userid, :log_password, :log_verify)
     render :update do |page|                    # Use JS to update the display
       session[:changed] = changed
       page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:div_num=>flash_div_num}) if @prev_protocol != @edit[:protocol]
       if @sb[:active_tab] == "diagnostics_database"
         if changed && @edit[:new][:uri_prefix] != "nfs" &&
             (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
-            ( (@edit[:new][:uri].blank? && @edit[:new][:log_userid].blank? && @edit[:new][:log_password].blank? && @edit[:new][:log_verify].blank?) ||
-                (!@edit[:new][:uri].blank? && !@edit[:new][:log_userid].blank? && !@edit[:new][:log_password].blank? && !@edit[:new][:log_verify].blank?))
+            (required_fields.all?(&:blank?) || required_fields.all?(&:present?))
           page << "$('submit_on').show()";
           page << "$('submit_off').hide()";
           page << "miqButtons('show');"
@@ -519,8 +519,7 @@ module OpsController::Diagnostics
       else
         if changed && @edit[:new][:uri_prefix] != "nfs" &&
             (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
-            ( (@edit[:new][:uri].blank? && @edit[:new][:log_userid].blank? && @edit[:new][:log_password].blank? && @edit[:new][:log_verify].blank?) ||
-                (!@edit[:new][:uri].blank? && !@edit[:new][:log_userid].blank? && !@edit[:new][:log_password].blank? && !@edit[:new][:log_verify].blank?))
+            (required_fields.all?(&:blank?) || required_fields.all?(&:present?))
           page << "miqButtons('show');"
         else
           page << javascript_for_miq_button_visibility(changed && @edit[:new][:uri_prefix] == "nfs")
@@ -558,7 +557,7 @@ module OpsController::Diagnostics
   end
 
   def log_depot_get_form_vars
-    @record = @sb[:selected_typ] == "miq_server" ? MiqServer.find_by_id(@sb[:selected_server_id]) : Zone.find_by_id(@sb[:selected_server_id])
+    @record = @sb[:selected_typ].classify.constantize.find_by_id(@sb[:selected_server_id])
     @prev_uri_prefix = @edit[:new][:uri_prefix]
     @prev_protocol   = @edit[:protocol]
     @edit[:protocol] = params[:log_protocol] if params[:log_protocol] # @edit[:protocol] holds the current value of the selector so that it is not reset when _field_changed is called
