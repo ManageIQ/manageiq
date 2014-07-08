@@ -1,10 +1,7 @@
-###################################
 #
-# EVM Automate Method: update_migration_status
+# Description: This method updates the migration status
 #
-# Required inputs: status
-#
-###################################
+
 miq_task = $evm.root['vm_migrate_task']
 status   = $evm.inputs['status']
 
