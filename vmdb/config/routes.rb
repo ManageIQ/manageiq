@@ -1334,6 +1334,7 @@ Vmdb::Application.routes.draw do
         button
         dialog_field_changed
         dialog_form_button_pressed
+        dynamic_list_refresh
         explorer
         ownership_field_changed
         ownership_update
