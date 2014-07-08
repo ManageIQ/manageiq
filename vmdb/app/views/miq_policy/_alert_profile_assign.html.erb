@@ -10,7 +10,7 @@
       </tr>
       <tr>
         <td class="key">Assign To</td>
-        <td>
+        <td class="wider">
           <%= select_tag('chosen_assign_to',
                           options_for_select([["<Nothing>", nil]] + ASSIGN_TOS[@alert_profile.mode].invert.sort,
                                              @assign[:new][:assign_to]),
@@ -23,7 +23,7 @@
       <% if @assign[:new][:assign_to].to_s.ends_with?("-tags") %>
         <tr>
           <td class="key">Tag Category</td>
-          <td>
+          <td class="wider">
             <%= select_tag('chosen_cat',
                             options_for_select([["<Choose>", nil]] + @assign[:cats].invert.sort,
                                                @assign[:new][:cat]),
