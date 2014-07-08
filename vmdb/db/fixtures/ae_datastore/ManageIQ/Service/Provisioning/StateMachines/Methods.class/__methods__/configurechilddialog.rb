@@ -1,14 +1,6 @@
 #
-#            EVM Automate Method
+# Description: Example showing how to set a value of service_type based on a dialog_value of dialog_service_type.
 #
-$evm.log("info", "EVM Automate Method ConfigureChildDialog Started")
-#
-#            Method Code Goes here
-#
-$evm.log("info", "===========================================")
-$evm.log("info", "Listing ROOT Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
-$evm.log("info", "===========================================")
 
 stp_task = $evm.root["service_template_provision_task"]
 $evm.log("info", "===========================================")
@@ -16,24 +8,14 @@ $evm.log("info", "Listing task Attributes:")
 stp_task.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
 $evm.log("info", "===========================================")
 
-$evm.log("info", "No child dialog options have been configured.")
-exit MIQ_OK
-
 dialog_service_type = $evm.root['dialog_service_type']
 $evm.log("info", "User selected Dialog option = [#{dialog_service_type}]")
 
-stp_miq_request_task = stp_task.miq_request_task
-  # $evm.log("info","(parent) miq_request_task:  = [#{stp_miq_request_task}]")
-
 stp_miq_request_tasks = stp_task.miq_request_tasks
-  # $evm.log("info","(children) miq_request_tasks count:  = [#{stp_miq_request_tasks.count}]")
-
 stp_miq_request_tasks.each do |t|
-  $evm.log("info", " Setting dialog for: #{t.description}")
+  $evm.log("info", "Setting dialog for: #{t.description}")
   service = t.source
   service_resource = t.service_resource
-  # $evm.log("info"," Child service resource name: #{service_resource.resource_name}")
-  # $evm.log("info"," Child service resource description: #{service_resource.resource_description}")
 
   service_tag_array = service.tags(:app_tier)
   service_tag = service_tag_array.first.to_s
@@ -71,8 +53,3 @@ stp_miq_request_tasks.each do |t|
 
   $evm.log("info", "Set dialog for selection: [#{dialog_service_type}]  Service_Tier: [#{service_tag}] Memory size: [#{memory_size}]")
 end
-#
-#
-#
-$evm.log("info", "EVM Automate Method ConfigureChildDialog Ended")
-exit MIQ_OK
