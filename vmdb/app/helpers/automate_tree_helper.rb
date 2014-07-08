@@ -5,6 +5,8 @@ module AutomateTreeHelper
       tree_close = proc do
         @edit[:ae_tree_select] = false
         @changed = (@edit[:new] != @edit[:current])
+        @changed = @edit[:new][:override_source] if params[:controller] == "miq_ae_class" &&
+                                                    @edit[:new][:namespace].nil?
         page << "$('ae_tree_select_div').hide();"
         page << "$('blocker_div').hide();"
         page << javascript_for_miq_button_visibility(@changed)
@@ -19,11 +21,7 @@ module AutomateTreeHelper
           page << "$('#{edit_key}').value = '#{@edit[:new][edit_key]}';"
           page << "$('#{edit_key}').title = '#{@edit[:new][edit_key]}';"
         end
-        if params[:controller] == "miq_ae_class"
-          page.replace("form_div", :partial => "copy_objects_form")
-          @changed = (@edit[:new] != @edit[:current])
-          page << javascript_for_miq_button_visibility(@changed)
-        end
+        page.replace("form_div", :partial => "copy_objects_form") if params[:controller] == "miq_ae_class"
         tree_close.call
 
       when 'cancel'

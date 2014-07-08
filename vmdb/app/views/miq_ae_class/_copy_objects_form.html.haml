@@ -1,0 +1,44 @@
+- url = url_for(:action => 'form_copy_objects_field_changed', :id => @edit[:rec_id])
+= render :partial => "layouts/flash_msg", :locals => {:div_num => "_copy"}
+#form_div
+  = hidden_div_if(!@edit[:new][:namespace], :id => "ae_tree_select_div" ) do
+    = render(:partial => 'layouts/ae_tree_select')
+  %fieldset
+    %p
+    %table.style1
+      %tr
+        %td.key Domain
+        %td.wide
+          - if @edit[:domains].length == 1
+            = @edit[:domains].first.last
+          - else
+            = select_tag("domain",
+              options_for_select(Array(@edit[:domains].invert).sort,
+              @edit[:new][:domain]),
+              "data-miq_observe" => {:url => url}.to_json)
+      %tr
+        %td.key Copy will override Source
+        %td
+          = check_box_tag("override_source",
+                          value   = "1",
+                          checked = @edit[:new][:override_source],
+                          :id                         => "override_source",
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+      - unless @edit[:new][:override_source]
+        %tr
+          %td.key Namespace
+          %td.wider
+            = text_field_tag("namespace",
+                             @edit[:new][:namespace],
+                             :onFocus => 'miqShowAE_Tree("namespace");miqButtons(false);')
+      - if %w(MiqAeInstance MiqAeMethod).include?(@edit[:typ].to_s) && @edit[:new][:namespace]
+        %tr
+          %td.key "Overwrite the existing #{ui_lookup(:model => @edit[:typ].to_s)}?"
+          %td
+            =check_box_tag("override_existing",
+                           value   = "1",
+                           checked = @edit[:new][:override_existing],
+                           :id => "override_existing",
+                           "data-miq_observe_checkbox" => {:url => url}.to_json)
+%script
+  miqObserveCheckboxes();

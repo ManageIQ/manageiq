@@ -278,6 +278,13 @@ class MiqAeClassController < ApplicationController
   end
 
   def build_and_add_nodes(parents)
+    existing_node = find_existing_node(parents)
+    return nil if existing_node.nil?
+    children = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], existing_node)
+    {:key      => existing_node, :children => children}
+  end
+
+  def find_existing_node(parents)
     existing_node = nil
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
     unless parents.empty? ||  # Skip if no parents or parent already open
@@ -290,11 +297,7 @@ class MiqAeClassController < ApplicationController
         end
       end
     end
-    add_nodes = {:key      => existing_node,
-                 :children => TreeBuilder.tree_add_child_nodes(@sb,
-                                                               x_tree[:klass_name],
-                                                               existing_node)} if existing_node
-    add_nodes
+    existing_node
   end
 
   def replace_right_cell(replace_trees = [])
@@ -336,31 +339,40 @@ class MiqAeClassController < ApplicationController
     end
 
     if @sb[:action] == "miq_ae_field_seq"
-      presenter[:replace_partials][:flash_msg_div_fields_seq] = r[
-        :partial => "layouts/flash_msg",
-        :locals  => {:div_num=>"_fields_seq"}
-      ] if @flash_array
-      presenter[:update_partials][:class_fields_div] = r[:partial => "fields_seq_form"]
+      if @flash_array
+        replace_partial_div = :flash_msg_div_fields_seq
+        replace_partial_div_num = "_fields_seq"
+      end
+      update_partial_div = :class_fields_div
+      update_partial = "fields_seq_form"
     elsif @sb[:action] == "miq_ae_domain_priority_edit"
-      presenter[:replace_partials][:flash_msg_div_domains_priority] = r[
-          :partial => "layouts/flash_msg",
-          :locals  => {:div_num => "_domains_priority"}
-      ] if @flash_array
-      presenter[:update_partials][:ns_list_div] = r[:partial => "domains_priority_form"]
-    elsif %w(miq_ae_class_copy miq_ae_instance_copy miq_ae_method_copy).include?(@sb[:action])
-      presenter[:replace_partials][:flash_msg_div_copy] = r[
-          :partial => "layouts/flash_msg",
-          :locals  => {:div_num => "_copy"}
-      ] if @flash_array
-      presenter[:update_partials][:main_div] = r[:partial => "copy_objects_form"]
+      if @flash_array
+        replace_partial_div = :flash_msg_div_domains_priority
+        replace_partial_div_num = "_domains_priority"
+      end
+      update_partial_div = :ns_list_div
+      update_partial = "domains_priority_form"
+    elsif MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
+      if @flash_array
+        replace_partial_div = :flash_msg_div_copy
+        replace_partial_div_num = "_copy"
+      end
+      update_partial_div = :main_div
+      update_partial = "copy_objects_form"
     else
       if @sb[:action] == "miq_ae_class_edit"
         @sb[:active_tab] = 'props'
       else
         @sb[:active_tab] ||= 'instances'
       end
-      presenter[:update_partials][:main_div] = r[:partial=>"all_tabs"]
+      update_partial_div = :main_div
+      update_partial = "all_tabs"
     end
+    presenter[:replace_partials][replace_partial_div] = r[
+        :partial => "layouts/flash_msg",
+        :locals  => {:div_num => replace_partial_div_num}
+    ] if replace_partial_div
+    presenter[:update_partials][update_partial_div] = r[:partial => update_partial] if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)
       presenter[:expand_collapse_cells][:c] = 'expand' # incase it was collapsed for summary screen, and incase there were no records on show_list
@@ -1961,7 +1973,6 @@ exit MIQ_OK"
   end
 
   def copy_objects
-    typ, action = typ_and_action_for_copy
     id = find_checked_items ? find_checked_items.first.split("-").last : params[:id]
     case params[:button]
     when "cancel"
@@ -1969,20 +1980,18 @@ exit MIQ_OK"
     when "copy"
       copy_save
     when "reset", nil # Reset or first time in
+      action = params[:pressed] || @sb[:action]
+      typ = action.split("_").first(3).join("_").camelcase.constantize
       copy_reset(typ, id, action)
     end
   end
 
   def form_copy_objects_field_changed
     return unless load_edit("copy_objects__#{params[:id]}", "replace_cell__explorer")
-    get_copy_objects_form_vars
+    copy_objects_get_form_vars
     build_ae_tree(:automate, :automate_tree)
     @changed = (@edit[:new] != @edit[:current])
-    if @edit[:new][:namespace].nil? && @edit[:new][:override_source]
-      @changed = true
-    elsif @edit[:new][:namespace].nil? && !@edit[:new][:override_source]
-      @changed = false
-    end
+    @changed = @edit[:new][:override_source] if @edit[:new][:namespace].nil?
     render :update do |page|                    # Use JS to update the display
       page.replace("form_div", :partial => "copy_objects_form") if params[:domain] || params[:override_source]
       page << javascript_for_miq_button_visibility(@changed)
@@ -2038,20 +2047,7 @@ private
     %w(collect display_name on_entry on_error on_exit max_retries max_time value)
   end
 
-  def typ_and_action_for_copy
-    action = params[:pressed] || @sb[:action]
-    case action
-    when "miq_ae_class_copy"
-      typ = MiqAeClass
-    when "miq_ae_instance_copy"
-      typ = MiqAeInstance
-    when "miq_ae_method_copy"
-      typ = MiqAeMethod
-    end
-    return typ, action
-  end
-
-  def get_copy_objects_form_vars
+  def copy_objects_get_form_vars
     %w(domain override_existing override_source namespace).each do |field|
       fld = field.to_sym
       if %w(override_existing override_source).include?(field)
@@ -2072,41 +2068,22 @@ private
     assert_privileges(@sb[:action])
     return unless load_edit("copy_objects__#{params[:id]}", "replace_cell__explorer")
     @record = @edit[:typ].find_by_id(@edit[:rec_id])
-    if @edit[:typ] == MiqAeClass
-      kls = MiqAeClassCopy
-    elsif @edit[:typ] == MiqAeInstance
-      kls = MiqAeInstanceCopy
-    elsif @edit[:typ] == MiqAeMethod
-      kls = MiqAeMethodCopy
-    end
-    copy_and_save_objects(kls)
-  end
-
-  def copy_and_save_objects(kls)
     domain = MiqAeDomain.find_by_id(@edit[:new][:domain])
     begin
-      res = kls.new(@record.fqname).to_domain(domain.name, @edit[:new][:namespace], @edit[:new][:overwrite_location])
+      res = @record.copy(domain.name, @edit[:new][:namespace], @edit[:new][:overwrite_location])
     rescue StandardError => bang
       add_flash(I18n.t("flash.error_during",
                        :task => "#{ui_lookup(:model => "#{@edit[:typ]}")} copy") << bang.message, :error)
-    else
-      if res.errors.empty?
-        add_flash(I18n.t("flash.copy.copied", :model => ui_lookup(:model => "#{@edit[:typ]}")))
-        @record = res
-        self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(res.id)}"
-        @in_a_form = @changed = session[:changed] = false
-        @sb[:action] = @edit = session[:edit] = nil
-        replace_right_cell
-      else
-        res.errors.each do |field, msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
-      end
-    end
-    if flash_errors?
       render :update do |page|
         page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       end
+    else
+      add_flash(I18n.t("flash.copy.copied", :model => ui_lookup(:model => "#{@edit[:typ]}")))
+      @record = res
+      self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(res.id)}"
+      @in_a_form = @changed = session[:changed] = false
+      @sb[:action] = @edit = session[:edit] = nil
+      replace_right_cell
     end
   end
 
@@ -2136,9 +2113,7 @@ private
   def copy_objects_edit_screen(typ, id, button_pressed)
     domains = {}
     @record = typ.find_by_id(from_cid(id))
-    record_domain = @record.fqname.split('/').first
-    MiqAeDomain.all_unlocked_domains.collect { |domain| domains[domain.id] =
-        record_domain == domain.name ? "#{domain.name}  (Same Domain)" : domain.name }
+    MiqAeDomain.all_unlocked.collect { |domain| domains[domain.id] = domain_display_name(domain) }
     @edit = {
       :typ        => typ,
       :action     => button_pressed,
@@ -2164,7 +2139,7 @@ private
       'domains_priority_edit'
     elsif @sb[:action] == 'miq_ae_field_seq'
       'fields_seq_edit'
-    elsif %w(miq_ae_class_copy miq_ae_instance_copy miq_ae_method_copy).include?(@sb[:action])
+    elsif MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
       'copy_objects'
     else
       prefix = @edit[:rec_id].nil? ? 'create' : 'update'

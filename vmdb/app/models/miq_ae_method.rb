@@ -87,4 +87,8 @@ class MiqAeMethod < ActiveRecord::Base
     raise "Field #{name} not found in method #{self.name}" if field.nil?
     field.attributes
   end
+
+  def copy(domain, namespace, overwrite_location)
+    MiqAeMethodCopy.new(fqname).to_domain(domain, namespace, overwrite_location)
+  end
 end

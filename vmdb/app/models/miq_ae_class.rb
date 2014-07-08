@@ -123,6 +123,10 @@ class MiqAeClass < ActiveRecord::Base
     field.attributes
   end
 
+  def copy(domain, namespace, overwrite_location)
+    MiqAeClassCopy.new(fqname).to_domain(domain, namespace, overwrite_location)
+  end
+
   private
 
   def scoped_methods(s)
