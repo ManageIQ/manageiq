@@ -8,7 +8,8 @@ class SubclassFileDepotByProtocol < ActiveRecord::Migration
 
     say_with_time("Sub-classing all FileDepots") do
       FileDepot.all.each do |fd|
-        fd.update_attributes(:type => type_from_uri(fd.uri.to_s))
+        new_type = type_from_uri(fd.uri.to_s)
+        new_type.blank? ? fd.destroy : fd.update_attributes(:type => new_type)
       end
     end
   end
@@ -19,11 +20,11 @@ class SubclassFileDepotByProtocol < ActiveRecord::Migration
 
   private
 
-  PROTOCOL_TRANSLATIONS = Hash.new("FileDepot").merge(
-      'ftp' => 'FileDepotFtp',
-      'nfs' => 'FileDepotNfs',
-      'smb' => 'FileDepotSmb',
-    )
+  PROTOCOL_TRANSLATIONS = {
+    'ftp' => 'FileDepotFtp',
+    'nfs' => 'FileDepotNfs',
+    'smb' => 'FileDepotSmb',
+  }
 
   def type_from_uri(uri)
     protocol = URI(uri).scheme

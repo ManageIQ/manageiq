@@ -16,5 +16,15 @@ describe SubclassFileDepotByProtocol do
       expect(file_depot_stub.where(:type => "FileDepotNfs").count).to eq(1)
       expect(file_depot_stub.where(:type => "FileDepotSmb").count).to eq(1)
     end
+
+    it "Removes invalid records" do
+      [nil, "", "aaa"].each { |type| file_depot_stub.create!(:uri => type) }
+
+      expect(FileDepot.count).to eq(3)
+
+      migrate
+
+      expect(FileDepot.count).to eq(0)
+    end
   end
 end
