@@ -34,28 +34,22 @@
           </td>
         </tr>
       <% end %>
-      <% if @assign[:obj_tree] %>
-        <tr>
-          <td class="key">Selections</td>
-          <td>
-            <% if @assign[:obj_tree] %>
-              <fieldset>
-              <div id="obj_treebox" style="width:100%;height:<%= @winH - 500 %>px;color:#000; overflow: hidden"></div>
-              </fieldset>
-              <%= render(:partial => "layouts/dynatree",
-                         :locals  => {:tree_id    => "obj_treebox",
-                                      :tree_name  => "obj_tree",
-                                      :json_tree  => @assign[:obj_tree],
-                                      :oncheck    => "cfmeOnClick_SmartProxyAffinityCheck",
-                                      :check_url  => "alert_profile_assign_changed/",
-                                      :exp_tree   => false,
-                                      :checkboxes => true
-                                     }) 
-              %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
     </table>
-    <hr>
+    <% if @assign[:obj_tree] %>
+      <hr>
+      <p class="legend">Selections</p>
+      <% if @assign[:obj_tree] %>
+        <div id="obj_treebox" style="width:100%;height:<%= @winH - 500 %>px;color:#000; overflow: hidden"></div>
+          <%= render(:partial => "layouts/dynatree",
+                     :locals  => {:tree_id    => "obj_treebox",
+                                  :tree_name  => "obj_tree",
+                                  :json_tree  => @assign[:obj_tree],
+                                  :oncheck    => "cfmeOnClick_SmartProxyAffinityCheck",
+                                  :check_url  => "alert_profile_assign_changed/",
+                                  :exp_tree   => false,
+                                  :checkboxes => true
+                                 }) 
+          %>
+      <% end %>
+    <% end %>
 </div>
