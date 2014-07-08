@@ -77,10 +77,11 @@ unix_socket_permissions = 0770		# begin with 0 to use octal notation
 # - Security and Authentication -
 
 #authentication_timeout = 1min		# 1s-600s
-ssl = <%= ssl ? "on " : "off" %>                           # (change requires restart)
-ssl_cert_file = 'postgres.crt'      # (change requires restart)
-ssl_key_file  = 'postgres.key'      # (change requires restart)
-ssl_ca_file   = 'root.crt'          # (change requires restart)
+ssl = <%= ssl ? "on " : "off" %>                                                   # (change requires restart)
+ssl_cert_file = '/var/www/miq/vmdb/certs/postgres.crt'      # (change requires restart)
+ssl_key_file  = '/var/www/miq/vmdb/certs/postgres.key'      # (change requires restart)
+ssl_ca_file   = '/var/www/miq/vmdb/certs/root.crt'          # (change requires restart)
+#ssl_crl_file = '/var/www/miq/vmdb/certs/crl.crt'           # (change requires restart)
 #ssl_ciphers = 'ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH'	# allowed SSL ciphers
 					# (change requires restart)
 #ssl_renegotiation_limit = 512MB	# amount of data between renegotiations
