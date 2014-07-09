@@ -68,15 +68,17 @@ namespace :test do
 
   def update_bundle(dir)
     Dir.chdir(File.join(File.dirname(__FILE__), dir))
-    system('bundle check')
-    system_retry('bundle update') if $CHILD_STATUS != 0
+    unless system('bundle check')
+      raise "Cannot update the bundle" unless system_retry('bundle update')
+    end
   end
 
   def system_retry(cmd, count = 3)
-    count.times do
-      system(cmd)
-      break if $CHILD_STATUS == 0
+    (1..count).each do |i|
+      puts "** #{cmd} (try #{i}/#{count})"
+      return true if system(cmd)
     end
+    false
   end
 end
 
