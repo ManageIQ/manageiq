@@ -246,7 +246,7 @@ class CatalogController < ApplicationController
     else
       identify_catalog(from_cid(params[:id]))
       @record = ServiceTemplateCatalog.find_by_id(from_cid(params[:id])) if @record.nil?
-      params[:id] = x_build_node_id(@record,nil,x_tree(:sandt_tree))  # Get the tree node id
+      params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
     end
     tree_select
   end
