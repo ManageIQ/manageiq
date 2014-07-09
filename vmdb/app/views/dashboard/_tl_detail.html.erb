@@ -3,22 +3,23 @@
   <%= @title %></div>
   <br/>
   <%= yield %>
-  <fieldset>
-    <%= render :partial => "layouts/flash_msg" %>
-    <% if @report && @report.table && @report.table.data.blank? %>
-    <% elsif @report %>
-      <div id="miq_timeline" style="height: 500px; border: 1px solid #aaa"></div>
-      <%= render(:partial=>"layouts/timeline",
-                :locals=>{:bands=>@report.timeline[:bands],
-                          :tl_json=>@temp[:tl_json].to_s.html_safe,
-                          :data_action=>"getTLdata",
-                          :position_time=>session[:tl_position]
-                }) %>
-      <% if @report.filter_summary %>
-        <%= @report.filter_summary%>
-      <% end %>
-    <% else %>
-      <h3>Choose a Timeline from the menus on the left.</h3>
-    <% end %></font>
-  </fieldset>
+  <%= render :partial => "layouts/flash_msg" %>
+  <% if @report && @report.table && @report.table.data.blank? %>
+  <% elsif @report %>
+    <div id="miq_timeline" style="height: 500px; border: 1px solid #aaa"></div>
+    <%= render(:partial => "layouts/timeline",
+               :locals  => {:bands         => @report.timeline[:bands],
+                            :tl_json       => @temp[:tl_json].to_s.html_safe,
+                            :data_action   => "getTLdata",
+                            :position_time => session[:tl_position]}) 
+    %>
+    <% if @report.filter_summary %>
+      <%= @report.filter_summary%>
+    <% end %>
+  <% else %>
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>Choose a Timeline from the menus on the left.</strong>
+    </div>
+  <% end %>
 </div>
