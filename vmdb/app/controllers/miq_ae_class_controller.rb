@@ -2072,7 +2072,8 @@ private
     @sb[:row_selected] = find_checked_items
     ae_ns = []
     ae_cs = []
-    if params[:id] && params[:pressed] == "miq_ae_domain_delete"
+    if params[:id] && params[:miq_grid_checks] == "" &&
+        %w(miq_ae_domain_delete miq_ae_namespace_delete).include?(params[:pressed])
       ae_ns.push(params[:id])
       self.x_node = "root"
     elsif @sb[:row_selected]
