@@ -15,6 +15,10 @@
       :image: edit
       :text: 'Edit this Method'
       :title: 'Edit this Method'
+    - :button: miq_ae_method_copy
+      :image: edit
+      :text: 'Copy this Method'
+      :title: 'Copy this Method'
     - :button: miq_ae_method_delete
       :image: delete
       :text: 'Remove this Method'

@@ -115,6 +115,10 @@ class MiqAeInstance < ActiveRecord::Base
     value.attributes
   end
 
+  def copy(domain, namespace, overwrite_location)
+    MiqAeInstanceCopy.new(fqname).to_domain(domain, namespace, overwrite_location)
+  end
+
   private
 
   def validate_field(field)

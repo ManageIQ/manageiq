@@ -40,7 +40,9 @@ en:
     capacity:
       planning_reset: "Planning options have been reset by the user"
       utilization_data_not_available: "No Utilization data available to generate planning results"
-
+    copy:
+      cancelled: '%{model} copy was cancelled by the user'
+      copied: '%{model} was copied'
     edit:
       at_least_1:
         configured: "At least one %{field} must be configured"

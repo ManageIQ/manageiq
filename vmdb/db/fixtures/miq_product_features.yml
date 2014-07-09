@@ -2011,6 +2011,11 @@
         :feature_type: admin
         :hidden: true
         :identifier: miq_ae_class_new
+      - :name: Copy
+        :description: Copy Automate Class
+        :feature_type: admin
+        :hidden: true
+        :identifier: miq_ae_class_copy
       - :name: Edit
         :description: Edit Automate Class
         :feature_type: admin
@@ -2043,6 +2048,11 @@
         :feature_type: admin
         :hidden: true
         :identifier: miq_ae_instance_new
+      - :name: Copy
+        :description: Copy Automate Instance
+        :feature_type: admin
+        :hidden: true
+        :identifier: miq_ae_instance_copy
       - :name: Edit
         :description: Edit Automate Instance
         :feature_type: admin
@@ -2070,6 +2080,11 @@
         :feature_type: admin
         :hidden: true
         :identifier: miq_ae_method_new
+      - :name: Copy
+        :description: Copy Automate Method
+        :feature_type: admin
+        :hidden: true
+        :identifier: miq_ae_method_copy
       - :name: Edit
         :description: Edit Automate Method
         :feature_type: admin

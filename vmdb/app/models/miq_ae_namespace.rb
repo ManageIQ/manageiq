@@ -79,6 +79,10 @@ class MiqAeNamespace < ActiveRecord::Base
     fqname.sub(domain_name.to_s, '')
   end
 
+  def fqname_sans_domain
+    fqname.split('/')[1..-1].join("/")
+  end
+
   def domain_name
     return name if domain?
     ns = ancestors.last

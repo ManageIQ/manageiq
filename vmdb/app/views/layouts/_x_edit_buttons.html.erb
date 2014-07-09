@@ -9,6 +9,7 @@
 <% submit_text ||= nil      %>  <%# need to show title on submit button on database config screen %>
 <% apply_button ||= nil     %>  <%# need to show apply button instead of save button %>
 <% continue_button ||= nil  %>  <%# need to show continue button instead of save button %>
+<% copy_button ||= nil      %>  <%# need to show copy button instead of save button %>
 <% create_button ||= nil    %>  <%# need to show create button instead of save button %>
 <% save_confirm_text ||= nil%>  <%# need to show confirm message when save button is pressed on database config screen %>
 <% save_text ||= nil        %>  <%# need to show title on save button on database config screen %>
@@ -81,6 +82,13 @@
 																																		:id=>record_id,
 																																		:button=>"create")}',true);")
 									%>
+                <% elsif copy_button %>
+                  <%= image_tag('/images/formbuttons/copy.png', :border=>"0", :class=>"button",
+                                :alt=>"Copy", :title=>"Copy",
+                                :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
+                                                                    :id=>record_id,
+                                                                    :button=>"copy")}',true);")
+                  %>
 								<% else %>
                   <% unless save_confirm_text %>
                     <%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
@@ -149,6 +157,8 @@
                   <%= image_tag("/images/formbuttons/submit.png",	:class=>"dimmed",:alt=>title, :title=>title) %>
                 <% elsif continue_button %>
                   <%= image_tag("/images/formbuttons/continue.png",	:class=>"dimmed") %>
+                <% elsif copy_button %>
+                  <%= image_tag("/images/formbuttons/copy.png",	:class=>"dimmed") %>
                 <% else %>
 								  <%= image_tag("/images/formbuttons/save.png",	:class=>"dimmed") %>
                 <% end %>

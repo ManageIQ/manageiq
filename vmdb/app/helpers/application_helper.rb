@@ -835,6 +835,7 @@ module ApplicationHelper
         return true if !role_allows(:feature=>"action_delete")
       end
     when "MiqAeClass", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
+      return false if MIQ_AE_COPY_ACTIONS.include?(id) && MiqAeDomain.any_unlocked?
       case id
       when "miq_ae_domain_lock"
         return true unless @record.editable?
