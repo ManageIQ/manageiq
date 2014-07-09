@@ -126,12 +126,18 @@ LoadModule lookup_identity_module modules/mod_lookup_identity.so
 
     def configure_sssd_ifp(config)
       user_attributes = LDAP_ATTRS.keys.collect { |k| "+#{k}" }.join(", ")
-      if config.include?("[ifp]")
-        config[/\[ifp\](\n.*)+user_attributes = (.*)/, 2] = user_attributes
-      else
-        config << "\n[ifp]
+      ifp_config      = "
   allowed_uids = apache, root
-  user_attributes = #{user_attributes}\n"
+  user_attributes = #{user_attributes}
+"
+      if config.include?("[ifp]")
+        if config[/\[ifp\](\n.*)+user_attributes = (.*)/]
+          config[/\[ifp\](\n.*)+user_attributes = (.*)/, 2] = user_attributes
+        else
+          config[/\[ifp\](\n)/, 1] = ifp_config
+        end
+      else
+        config << "\n[ifp]#{ifp_config}\n"
       end
     end
 
