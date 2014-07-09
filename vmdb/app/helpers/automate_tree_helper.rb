@@ -16,7 +16,7 @@ module AutomateTreeHelper
       case params[:button]
       when 'submit'
         page << set_element_visible("#{edit_key}_div", true)
-        @edit[:new][edit_key] = @edit[:automate_tree_fqname]
+        @edit[:new][edit_key] = @edit[:automate_tree_selected_path]
         if @edit[:new][edit_key]
           page << "$('#{edit_key}').value = '#{@edit[:new][edit_key]}';"
           page << "$('#{edit_key}').title = '#{@edit[:new][edit_key]}';"
@@ -30,7 +30,7 @@ module AutomateTreeHelper
 
       else
         @edit[:ae_field_typ] = params[:typ]
-        @changed = @edit[:new][edit_key] != @edit[:automate_tree_fqname]
+        @changed = @edit[:new][edit_key] != @edit[:automate_tree_selected_path]
         self.x_active_tree = :automate_tree
         page << "$('ae_tree_select_div').show();"
         page << "$('blocker_div').show();"
@@ -46,15 +46,16 @@ module AutomateTreeHelper
     id = from_cid(params[:id].split('_').last.split('-').last)
     if params[:id].start_with?("aei-")
       record = MiqAeInstance.find_by_id(id)
-    elsif params[:id].start_with?("aen-") && params[:controller] == "miq_ae_class"
+    elsif params[:id].start_with?("aen-") && controller_name == "miq_ae_class"
       record = MiqAeNamespace.find_by_id(id)
       record = nil if record.domain?
     end
     if record
-      @edit[:automate_tree_fqname] = record.fqname
+      @edit[:automate_tree_selected_path] =
+          controller_name == "miq_ae_class" ? record.fqname_sans_domain : record.fqname
       # save selected id in edit until save button is pressed
       @edit[:active_id] = params[:id]
-      @changed = @edit[:new][edit_key] != @edit[:automate_tree_fqname]
+      @changed = @edit[:new][edit_key] != @edit[:automate_tree_selected_path]
     end
     render :update do |page|
       page << javascript_for_miq_button_visibility(@changed)

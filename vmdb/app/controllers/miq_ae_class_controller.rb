@@ -281,7 +281,7 @@ class MiqAeClassController < ApplicationController
     existing_node = find_existing_node(parents)
     return nil if existing_node.nil?
     children = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], existing_node)
-    {:key      => existing_node, :children => children}
+    {:key => existing_node, :children => children}
   end
 
   def find_existing_node(parents)
@@ -291,7 +291,9 @@ class MiqAeClassController < ApplicationController
         x_tree[:open_nodes].include?(x_build_node_id(parents.last))
       parents.reverse.each do |p|
         p_node = x_build_node_id(p)
-        unless x_tree[:open_nodes].include?(p_node)
+        if x_tree[:open_nodes].include?(p_node)
+          return p_node
+        else
           x_tree[:open_nodes].push(p_node)
           existing_node = p_node
         end
@@ -320,9 +322,15 @@ class MiqAeClassController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :add_nodes   => add_nodes,
       :temp        => @temp,
     )
+
+    if add_nodes
+      # remove any existing nodes before adding child nodes to avoid duplication
+      presenter[:remove_nodes] = true
+      presenter[:add_nodes]    = add_nodes
+    end
+
     r = proc { |opts| render_to_string(opts) }
 
     presenter[:save_open_states_trees] << :ae_tree
@@ -2130,7 +2138,7 @@ private
     }
     @sb[:domain_id] = domains.first.first
     @edit[:current] = copy_hash(@edit[:new])
-    @right_cell_text = "Copy of '#{ui_lookup(:model => "#{typ}")}'"
+    @right_cell_text = "Copy of #{ui_lookup(:model => "#{typ}")}"
     session[:edit] = @edit
   end
 
