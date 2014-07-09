@@ -59,7 +59,7 @@
           </td>
           <%= javascript_tag("$('uri').focus()") %>
         </tr>
-        <% unless (@edit[:new][:uri_prefix] == "nfs" || @edit[:protocol] == "Anonymous FTP") %>
+        <% if @edit[:new][:requires_credentials] %>
           <%= render(
             :partial => "/layouts/auth_credentials",
             :locals  => {

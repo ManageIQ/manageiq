@@ -120,8 +120,8 @@ module OpsController::Diagnostics
             depot.name = @edit[:new][:depot_name]
           end
           depot.save
-          depot.update_authentication(:default => {:userid => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}) unless type.to_s == "FileDepotRedhatDropbox"
-          @record.save  # Because #create_log_file_depot updates the attribute, but doesn't save it.
+          depot.update_authentication(:default => {:userid => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}) if type.try(:requires_credentials?)
+          @record.save
         end
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task=>"Save") << bang.message, :error)
@@ -334,7 +334,7 @@ module OpsController::Diagnostics
       add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
     elsif @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
       add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
-    elsif @edit[:new][:uri_prefix] == "smb" || @edit[:new][:uri_prefix] == "ftp"
+    elsif @edit[:new][:requires_credentials]
       if @edit[:new][:uri].blank?
         add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
       elsif @edit[:new][:log_userid].blank?
@@ -500,7 +500,7 @@ module OpsController::Diagnostics
       session[:changed] = changed
       page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:div_num=>flash_div_num}) if @prev_protocol != @edit[:protocol]
       if @sb[:active_tab] == "diagnostics_database"
-        if changed && @edit[:new][:uri_prefix] != "nfs" &&
+        if changed && @edit[:new][:requires_credentials] &&
             (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
             (required_fields.all?(&:blank?) || required_fields.all?(&:present?))
           page << "$('submit_on').show()";
@@ -517,12 +517,12 @@ module OpsController::Diagnostics
           page << javascript_for_miq_button_visibility(changed && @edit[:new][:uri_prefix] == "nfs")
         end
       else
-        if changed && @edit[:new][:uri_prefix] != "nfs" &&
+        if changed && @edit[:new][:requires_credentials] &&
             (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
             (required_fields.all?(&:blank?) || required_fields.all?(&:present?))
           page << "miqButtons('show');"
         else
-          page << javascript_for_miq_button_visibility(changed && @edit[:new][:uri_prefix] == "nfs")
+          page << javascript_for_miq_button_visibility(changed && !@edit[:new][:requires_credentials])
         end
       end
       if @edit[:log_verify_status] != session[:log_depot_log_verify_status]
@@ -563,9 +563,12 @@ module OpsController::Diagnostics
     @edit[:protocol] = params[:log_protocol] if params[:log_protocol] # @edit[:protocol] holds the current value of the selector so that it is not reset when _field_changed is called
 
     if @sb[:active_tab] == "diagnostics_collect_logs"
-      @edit[:new][:uri_prefix] = @edit[:protocol].present? ? Object.const_get(@edit[:protocols_hash].key(@edit[:protocol])).uri_prefix : nil
+      klass = @edit[:protocol].present? ? Object.const_get(@edit[:protocols_hash].key(@edit[:protocol])) : nil
+      @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
+      @edit[:new][:uri_prefix] = klass.try(:uri_prefix)
     else
       @edit[:new][:uri_prefix] = @edit[:protocols_hash].invert[params[:log_protocol]] if params[:log_protocol]
+      @edit[:new][:requires_credentials] = @edit[:new][:uri_prefix] != "nfs"
     end
 
     @edit[:new][:depot_name] = params[:depot_name] if params[:depot_name]
@@ -646,8 +649,10 @@ module OpsController::Diagnostics
     @edit[:key] = "logdepot_edit__#{@record.id || "new"}"
     log_depot = @record.log_file_depot.try(:depot_hash)
     log_depot_get_form_vars_from_settings(log_depot) if log_depot.present?
-    @edit[:protocol] = @record.log_file_depot.try(:class).try(:const_get, "DISPLAY_NAME")
-    @edit[:new][:depot_name] = @record.log_file_depot.try(:name)
+    klass                              = @record.log_file_depot.try(:class)
+    @edit[:protocol]                   = klass.try(:const_get, "DISPLAY_NAME")
+    @edit[:new][:depot_name]           = @record.log_file_depot.try(:name)
+    @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true

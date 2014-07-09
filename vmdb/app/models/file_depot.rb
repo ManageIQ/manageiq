@@ -14,6 +14,10 @@ class FileDepot < ActiveRecord::Base
     descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass::DISPLAY_NAME }
   end
 
+  def self.requires_credentials?
+    true
+  end
+
   def depot_hash=(hsh = {})
     return if hsh == self.depot_hash
     self.update_authentication( {:default => {:userid => hsh[:username], :password => hsh[:password]} } )

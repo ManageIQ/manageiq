@@ -1,6 +1,10 @@
 class FileDepotAnonymousFtp < FileDepotFtp
   DISPLAY_NAME = "Anonymous FTP"
 
+  def self.requires_credentials?
+    false
+  end
+
   def remove_file(_file)
     $log.info("MIQ(#{self.class.name}##{__method__}) Removing log file not supported on this depot type")
   end
