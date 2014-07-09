@@ -67,6 +67,12 @@ class ReportController < ApplicationController
 
   def upload
     @sb[:flash_msg] = Array.new
+    if params.fetch_path(:upload, :file) && File.size(params[:upload][:file].tempfile) == 0
+      redirect_to :action      => 'explorer',
+                  :flash_msg   => I18n.t("flash.report.import_file_empty_error"),
+                  :flash_error => true
+      return
+    end
     if params[:upload] && params[:upload][:file] && params[:upload][:file].respond_to?(:read)
       @sb[:overwrite] = !params[:overwrite].nil?
       begin

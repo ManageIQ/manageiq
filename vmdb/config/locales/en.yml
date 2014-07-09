@@ -273,6 +273,7 @@ en:
       sort_required_for_chart: "Report can not be saved unless sort field has been configured for Charts"
       widget_generation_error: "Widget content generation error: "
       widget_generation_started: "Content generation for this Widget has been initiated"
+      import_file_empty_error: "Import file cannot be empty"
 
     request:
       cannot_create_workflow: 'Cannot create Request Info, error: '
