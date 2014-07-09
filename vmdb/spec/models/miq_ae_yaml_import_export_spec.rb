@@ -226,16 +226,17 @@ describe MiqAeDatastore do
     end
 
     it "domain, as directory" do
-      assert_export_import_roundtrip({}, {})
+      import_options = {'import_dir' => @export_dir, 'system' => false, 'enabled' => true}
+      assert_export_import_roundtrip({}, import_options)
     end
 
     it "domain, as zip" do
-      options = {'zip_file' => @zip_file}
+      options = {'zip_file' => @zip_file,  'system' => false, 'enabled' => true}
       assert_export_import_roundtrip(options, options)
     end
 
     it "domain, as yaml" do
-      options = {'yaml_file' => @yaml_file}
+      options = {'yaml_file' => @yaml_file, 'system' => false, 'enabled' => true}
       assert_export_import_roundtrip(options, options)
     end
 
@@ -244,17 +245,20 @@ describe MiqAeDatastore do
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
+      dom = MiqAeDomain.find_by_fqname(@manageiq_domain.name, false)
+      dom.should be_system
+      dom.should be_enabled
     end
 
-    it "domain, priority 0 should change priority to 1" do
+    it "domain, priority 0 should get retained for manageiq domain" do
       export_model(@manageiq_domain.name)
       @manageiq_domain.priority.should equal(0)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
 
-      ns = MiqAeNamespace.find_by_name(@manageiq_domain.name)
-      ns.priority.should equal(1)
+      ns = MiqAeNamespace.find_by_fqname(@manageiq_domain.name, false)
+      ns.priority.should equal(0)
     end
 
     it "domain, using import_as (new domain name), to directory" do
@@ -332,18 +336,18 @@ describe MiqAeDatastore do
     end
 
     it "domain, import only multi-part namespace, to directory" do
-      import_options = {'namespace' => @aen1_1.ns_fqname, 'import_dir' => @export_dir}
+      import_options = {'namespace' => @aen1_1.fqname_sans_domain, 'import_dir' => @export_dir}
       assert_import_multipart_namespace_only({}, import_options)
     end
 
     it "domain, import only multi-part namespace, to zip" do
-      import_options = {'namespace' => @aen1_1.ns_fqname, 'zip_file' => @zip_file}
+      import_options = {'namespace' => @aen1_1.fqname_sans_domain, 'zip_file' => @zip_file}
       export_options = {'zip_file' => @zip_file}
       assert_import_multipart_namespace_only(export_options, import_options)
     end
 
     it "domain, import only multi-part namespace, to yaml" do
-      import_options = {'namespace' => @aen1_1.ns_fqname, 'yaml_file' => @yaml_file}
+      import_options = {'namespace' => @aen1_1.fqname_sans_domain, 'yaml_file' => @yaml_file}
       export_options = {'yaml_file' => @yaml_file}
       assert_import_multipart_namespace_only(export_options, import_options)
     end
@@ -408,18 +412,18 @@ describe MiqAeDatastore do
     end
 
     it "namespace, multi-part, to directory" do
-      export_options = {'namespace' => @aen1_1.ns_fqname, 'export_dir' => @export_dir}
+      export_options = {'namespace' => @aen1_1.fqname_sans_domain, 'export_dir' => @export_dir}
       assert_multi_namespace_export(export_options, {})
     end
 
     it "namespace, multi-part, as zip" do
-      export_options = {'namespace' => @aen1_1.ns_fqname, 'zip_file' => @zip_file}
+      export_options = {'namespace' => @aen1_1.fqname_sans_domain, 'zip_file' => @zip_file}
       import_options = {'zip_file' => @zip_file}
       assert_multi_namespace_export(export_options, import_options)
     end
 
     it "namespace, multi-part, as yaml" do
-      export_options = {'namespace' => @aen1_1.ns_fqname, 'yaml_file' => @yaml_file}
+      export_options = {'namespace' => @aen1_1.fqname_sans_domain, 'yaml_file' => @yaml_file}
       import_options = {'yaml_file' => @yaml_file}
       assert_multi_namespace_export(export_options, import_options)
     end
@@ -438,9 +442,11 @@ describe MiqAeDatastore do
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
                    'meth' => 2, 'field' => 6, 'value' => 4)
-      @aen1_aec1_aei2   = FactoryGirl.create(:miq_ae_instance,
-                                             :name     => 'test_instance2',
-                                             :class_id => @aen1_aec1.id)
+      @manageiq_domain = MiqAeNamespace.find_by_fqname('manageiq', false)
+      @aen1_aec1       = MiqAeClass.find_by_name('manageiq_test_class_1')
+      @aen1_aec1_aei2  = FactoryGirl.create(:miq_ae_instance,
+                                            :name     => 'test_instance3',
+                                            :class_id => @aen1_aec1.id)
       setup_export_dir
       export_model(@manageiq_domain.name, options)
       MiqAeImport.new(@manageiq_domain.name, 'preview' => false, 'import_dir' => @export_dir).import
@@ -532,6 +538,27 @@ describe MiqAeDatastore do
       check_counts('ns'   => 2, 'class' => 1, 'inst'  => 3,
                    'meth' => 0, 'field' => 0, 'value' => 0)
     end
+  end
+
+  context 'backup and restore' do
+    before do
+      create_factory_data('customer', 16)
+      set_customer_values
+    end
+
+    it 'all domains' do
+      import_options = {'zip_file' => @zip_file, 'restore' => true}
+      export_options = {'zip_file' => @zip_file}
+      @customer_domain.update_attributes(:enabled => true)
+      export_model(ALL_DOMAINS, export_options)
+      reset_and_import(@export_dir, ALL_DOMAINS, import_options)
+      MiqAeDomain.find_by_fqname(@manageiq_domain.name, false).priority.should eql(0)
+      cust_domain = MiqAeDomain.find_by_fqname(@customer_domain.name, false)
+      cust_domain.priority.should eql(1)
+      cust_domain.should be_enabled
+      MiqAeNamespace.find_by_fqname('$', false).should_not be_nil
+    end
+
   end
 
   def reset_and_import(import_dir, domain, options = {})
@@ -629,7 +656,7 @@ describe MiqAeDatastore do
   end
 
   def create_factory_data(domain_name, priority)
-    domain   = FactoryGirl.create(:miq_ae_namespace, :name => domain_name,                     :priority => priority)
+    domain   = FactoryGirl.create(:miq_ae_domain_enabled, :name => domain_name,                :priority => priority)
     n1       = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1",    :parent_id => domain.id)
     n1_c1    = FactoryGirl.create(:miq_ae_class,     :name => "#{domain_name}_test_class_1",   :namespace_id => n1.id)
     n1_1     = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1_1",  :parent_id => n1.id)

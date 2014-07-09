@@ -11,7 +11,6 @@ module MiqAeYamlImportExportMixin
   METHOD_OBJ_TYPE         = 'method'
   ALL_DOMAINS             = '*'
   VERSION                 = 1.0
-  DEFAULT_DOMAIN_PRIORITY = 1
 
   EXPORT_EXCLUDE_KEYS     = [/^id$/, /_id$/, /^created_on/, /^updated_on/, /^updated_by/, /^reserved$/]
 
@@ -24,18 +23,10 @@ module MiqAeYamlImportExportMixin
   end
 
   def add_domain(domain_yaml)
-    reset_system_domain(domain_yaml)
-    domain_yaml['object']['attributes'].delete('enabled')
-    MiqAeNamespace.create!(domain_yaml['object']['attributes'])
+    MiqAeDomain.create!(domain_yaml['object']['attributes'])
   end
 
-  def reset_system_domain(domain_obj)
-    return if domain_obj.fetch_path('object', 'attributes', 'priority').to_i > 0
-    $log.info("#{self.class} Cannot import domain as system. Changing priority to #{DEFAULT_DOMAIN_PRIORITY}.")
-    domain_obj['object']['attributes']['priority'] = DEFAULT_DOMAIN_PRIORITY
-  end
-
-  def add_namespace(fqname, namespace_yaml)
+  def add_namespace(fqname)
     MiqAeNamespace.find_or_create_by_fqname(fqname)
   end
 
