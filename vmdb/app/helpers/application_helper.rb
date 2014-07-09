@@ -52,7 +52,7 @@ module ApplicationHelper
     role_allows_intern(options) rescue false
   end
 
-  def role_allows_intern(options={})
+  def role_allows_intern(options = {})
     role_id = User.current_user.miq_user_role.try(:id)
     if options[:feature]
       auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :
