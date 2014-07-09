@@ -33,8 +33,12 @@ class EmsOpenstack < EmsCloud
     raise
   end
 
-  def self.auth_url(address, port = 5000)
-    "http://#{address}:#{port}/v2.0/tokens"
+  def self.auth_url(address, port = nil)
+    "http://#{address}:#{port || 5000}/v2.0/tokens"
+  end
+
+  def auth_url
+    self.class.auth_url(address, port)
   end
 
   def browser_url
@@ -48,7 +52,6 @@ class EmsOpenstack < EmsCloud
     password = options[:pass] || self.authentication_password(options[:auth_type])
 
     service  = (options[:service] || "Compute").to_s.camelize
-    auth_url = self.class.auth_url(self.address, self.port)
 
     self.class.raw_connect(username, password, auth_url, service)
   end

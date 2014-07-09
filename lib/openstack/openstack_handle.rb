@@ -34,14 +34,18 @@ class OpenstackHandle
     @connection_options
   end
 
-  def initialize(username, password, address, port = 5000)
+  def initialize(username, password, address, port = nil)
     @username = username
     @password = password
     @address  = address
-    @port     = port
+    @port     = port || 5000
 
     @connection_cache   = {}
     @connection_options = self.class.connection_options
+  end
+
+  def auth_url
+    self.class.auth_url(address, port)
   end
 
   def browser_url
