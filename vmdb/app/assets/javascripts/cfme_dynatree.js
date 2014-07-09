@@ -27,6 +27,11 @@ function cfmeAddNodeChildren(treename, key, selected_node, children){
   cfmeDynatree_activateNodeSilently(treename, selected_node);
 }
 
+function cfmeRemoveNodeChildren(treename, key){
+  var pnode = $j("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+  pnode.removeChildren();
+}
+
 // Get children of a tree node via ajax for autoload
 function cfmeOnLazyRead_GetNodeChildren(node, tree, controller) {
   node.appendAjax({

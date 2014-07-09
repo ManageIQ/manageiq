@@ -1,8 +1,9 @@
 <%# Div to hold the actual tree %>
+<% entry_point ||= "Instance"  %>
 <div id="automate_tree_div">
   <%= hidden_field_tag(:ignore_form_changes) %>
   <fieldset>
-    <p class="legend">Select Entry Point Instance</p>
+    <p class="legend">Select Entry Point <%=entry_point%></p>
     <div id="automate_tree_box"></div>
     <%= render(:partial => "layouts/dynatree",
                :locals => {:tree_id             => "automate_tree_box",

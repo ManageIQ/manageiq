@@ -107,6 +107,12 @@ class ExplorerPresenter
 
     @options[:trees_to_replace].each { |tree, opts| @out << replace_tree(tree,opts) }
 
+    if @options[:remove_nodes]
+      @out << "cfmeRemoveNodeChildren('#{@options[:active_tree]}',
+                                      '#{@options[:add_nodes][:key]}'
+      );\n"
+    end
+
     if @options[:add_nodes]
       @out << "
         if (typeof #{@options[:active_tree]} == 'undefined') {

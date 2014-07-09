@@ -2,7 +2,7 @@
 = render :partial => "layouts/flash_msg", :locals => {:div_num => "_copy"}
 #form_div
   = hidden_div_if(!@edit[:new][:namespace], :id => "ae_tree_select_div" ) do
-    = render(:partial => 'layouts/ae_tree_select')
+    = render(:partial => 'layouts/ae_tree_select', :locals => {:entry_point => "Namespace"})
   %fieldset
     %p
     %table.style1
@@ -33,7 +33,7 @@
                              :onFocus => 'miqShowAE_Tree("namespace");miqButtons(false);')
       - if %w(MiqAeInstance MiqAeMethod).include?(@edit[:typ].to_s) && @edit[:new][:namespace]
         %tr
-          %td.key "Overwrite the existing #{ui_lookup(:model => @edit[:typ].to_s)}?"
+          %td.key Overwrite the #{ui_lookup(:model => @edit[:typ].to_s)} if it already exists?
           %td
             =check_box_tag("override_existing",
                            value   = "1",

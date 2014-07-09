@@ -39,7 +39,7 @@
       :onwhen: '1'
     - :button: miq_ae_method_copy
       :image: copy
-      :text: 'Copy Selected Method'
+      :text: 'Copy a single Method'
       :title: 'Select a single Method to copy'
       :url_parms: 'main_div'
       :enabled: 'false'
