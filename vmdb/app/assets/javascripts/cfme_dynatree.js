@@ -510,7 +510,7 @@ function miqMenuChangeRow(grid,action,click_url) {
       }
       break;
     case "serialize":
-      new Ajax.Request(click_url + "?tree=" + encodeURIComponent(folder_list_grid.serialize()),
+      new Ajax.Request(click_url + "?tree=" + encodeURIComponent(miqDhtmlxgridSerialize(folder_list_grid)),
         {asynchronous:true, evalScripts:true,
           onComplete:function(request){miqSparkle(false);},
           onLoading:function(request){miqSparkle(true);}}
