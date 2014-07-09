@@ -14,18 +14,19 @@
     <% end %>
   </ul>
   <div id="basic" name="basic" width="80px">
-    <dl class="col2">
-      <dd>
-        <fieldset>
+
           <p class="legend">Basic Information</p>
           <table class="style1">
             <tr>
               <td class="key">Name / Description</td>
               <td><%= @record.name %> / <%= @record.description%>
-                <%= check_box_tag(display, value=true,
+                <%= check_box_tag(display, 
+                                  value=true,
                                   checked=@record.display,
-                                  :disabled=>true) %>
-                &nbsp;Display in Catalog</td>
+                                  :disabled => true)
+                %>
+                &nbsp;Display in Catalog
+              </td>
             </tr>
             <!--
             <tr>
@@ -52,26 +53,29 @@
               <td><%= h(@sb[:retire_fqname]) %>
             </tr>
           </table>
-        </fieldset>
-      </dd>
-      <dd>
-        <fieldset>
+
+          <hr>
           <p class="legend">Custom Image</p>
           <% if @record.picture %>
             <table>
               <tr>
                 <td>
-                  <%= image_tag("#{@record.picture.url_path}?#{rand(99999999).to_s}", :style=>"width:100px; height:100px;") %>
+                  <%= image_tag("#{@record.picture.url_path}?#{rand(99999999).to_s}", 
+                                :style => "width:100px; height:100px;")
+                  %>
                 </td>
                 <td valign="bottom">
                   <%= link_to(image_tag('/images/toolbars/remove.png',
-                                        :class=>"rollover small", :alt=>"Remove this Cutsom Image"),
-                              {:action=>'st_upload_image', :id=>@record.id, :pressed=>'remove'},
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_sparkle_off"=>true,
-                              :remote=>true,
-                              :confirm=>"Are you sure you want to remove this Custom Image?",
-                              :title=>"Remove this Custom Image")
+                                        :class => "rollover small", 
+                                        :alt   => "Remove this Cutsom Image"),
+                              {:action  => 'st_upload_image', 
+                               :id      => @record.id, 
+                               :pressed =>'remove'},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote                => true,
+                              :confirm               => "Are you sure you want to remove this Custom Image?",
+                              :title                 => "Remove this Custom Image")
                   %>
                 </td>
               </tr>
@@ -80,28 +84,34 @@
             No custom image has been uploaded.<br/><br/>
           <% end %>
           <% if is_browser_ie? %>
-            <%= form_tag({:action=>"st_upload_image", :id=>@record.id}, :multipart => true) do %>
+            <%= form_tag({:action    => "st_upload_image", 
+                          :id        => @record.id}, 
+                          :multipart => true) do
+            %>
               <%= file_field("upload", "image") %>
-              <%= submit_tag("Upload", :id=>"upload", :class => "upload"  ) %> * Requirements: File-type - PNG; Dimensions - 350x70.
+              <%= submit_tag("Upload", 
+                             :id    => "upload", 
+                             :class => "upload")
+              %>
+              * Requirements: File-type - PNG; Dimensions - 350x70.
             <% end %>
           <% else %>
-            <%= form_tag({:action=>"st_upload_image", :id=>@record.id},
-                         :id=>"uploadForm",
-                         :multipart => true) do %>
+            <%= form_tag({:action => "st_upload_image", 
+                          :id     => @record.id},
+                         :id        => "uploadForm",
+                         :multipart => true) do
+            %>
               <%= file_field("upload", "image") %>
               <%#= submit_tag("Upload", :id=>@record.id, :class => "upload") %>
               * Requirements - Type: jpg/png  Size: 100x100
             <% end %>
             <script type="text/javascript">miqInitJqueryForm();</script>
           <% end %>
-        </fieldset>
-      </dd>
-    </dl>
+
   </div>
 
   <% if @record.display %>
     <div id="details" name="details" width="80px">
-      <fieldset>
         <p class="legend">Basic Information</p>
         <table class="style1">
           <tr>
@@ -111,13 +121,11 @@
             </td>
           </tr>
         </table>
-      </fieldset>
     </div>
   <% end %>
 
   <% if @record.composite? %>
     <div id="resources" name="resources" width="80px">
-      <fieldset>
         <p class="legend">Resources</p>
         <% resources = @record.service_resources %>
         <% if !resources.empty? %>
@@ -150,8 +158,8 @@
                 <tr id="new_tr" class="seperator"><td colspan="<%=col_span%>"></td></tr>
               <% end %>
               <tr class="<%= cycle('row0', 'row1') %>"
-                  onclick="<%= remote_function(:loading=>"miqSparkle(true);", :complete=>"miqSparkle(false);",
-                                               :url=>"/catalog/x_show/#{to_cid(r.resource_id)}") %>"
+                  onclick="<%= remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
+                                               :url => "/catalog/x_show/#{to_cid(r.resource_id)}") %>"
                   onmouseover="this.style.cursor='pointer'" title="Click to this Catalog Item">
                 <td class="icon" nowrap>
                   <img src="/images/icons/new/service_template.png" valign="middle" border="0" height="20" width="20" />
@@ -173,16 +181,16 @@
         <% else %>
           No Resources found.
         <% end %>
-      </fieldset>
     </div>
   <% else %>
     <% if !@record.prov_type || (@record.prov_type && @record.prov_type != "generic") %>
       <div id="request" name="request" width="80px">
         <% if @options[:wf] %>
-          <fieldset>
             <p class="legend">Request Info</p>
-              <%= render :partial => "miq_request/prov_wf", :locals=>{:wf=>@options[:wf], :show=>true} %>
-          </fieldset>
+              <%= render :partial => "miq_request/prov_wf", 
+                         :locals  => {:wf   => @options[:wf], 
+                                      :show => true}
+              %>
         <% else %>
           <span style="color:red"><%= @no_wf_msg %></span>
         <% end %>
@@ -196,4 +204,3 @@
   //miq_jquery_tabs_init({tabs_div: "st_form_tabs", active_tab: "<%=@sb[:st_form_active_tab]%>", disabled_tabs: [1,2] })
   miq_jquery_tabs_init({tabs_div: "st_tabs", active_tab: "basic"})
 </script>
-

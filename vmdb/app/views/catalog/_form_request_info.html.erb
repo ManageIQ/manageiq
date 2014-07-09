@@ -1,15 +1,13 @@
 <% if !@edit[:wf] %>
   <span style="color:red"><%= @no_wf_msg %></span>
 <% else %>
-  <% url = url_for(:action=>@edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed", :id=>"#{@edit[:rec_id] || "new"}") %>
-  <dl class="col1">
-    <dd>
-      <fieldset>
-        <p class="legend">Request Info</p>
-        <%= render :partial => "miq_request/prov_wf", :locals=>{:wf=>@edit[:wf]} %>
-      </fieldset>
-    </dd>
-  </dl>
+  <% url = url_for(:action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed",
+                   :id     => "#{@edit[:rec_id] || "new"}")
+  %>
+    <p class="legend">Request Info</p>
+    <%= render :partial => "miq_request/prov_wf",
+               :locals  => {:wf => @edit[:wf]}
+    %>
   <br/>
   <%= "Note: Fields marked with * are required." %>
 <% end %>

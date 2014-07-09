@@ -4,69 +4,71 @@
 
   <% end %>
   <%= hidden_div_if(@settings[:views][:dashboards] != "textual", :id => "textual_div") do %>
-    <dl class="col1">
-      <dd>
-        <fieldset>
-          <table>
-            <tr>
-              <td align="center" valign="top">
-                <% if @record.picture %>
-                  <%= image_tag("#{@record.picture.url_path}?#{rand(99999999).to_s}", :style=>"width:100px; height:100px;") %>
-                <% else %>
-                  <%= image_tag("/images/icons/new/service_template.png", :style=>"width:100px; height:100px;") %>
+    <table>
+      <tr>
+        <td align="center" valign="top">
+          <% if @record.picture %>
+            <%= image_tag("#{@record.picture.url_path}?#{rand(99999999).to_s}", 
+                          :style => "width:100px; height:100px;")
+            %>
+          <% else %>
+            <%= image_tag("/images/icons/new/service_template.png", 
+                          :style => "width:100px; height:100px;")
+            %>
+          <% end %>
+          </br></br>
+          <%# show order now button %>
+          <div id="buttons">
+            <ul id="form_buttons">
+              <li>
+                <% d = nil %>
+                <% @record.resource_actions.each do |ra| %>
+                  <% d = Dialog.find_by_id(ra.dialog_id.to_i) if ra.action.downcase == "provision" %>
                 <% end %>
-                </br></br>
-                <%# show order now button %>
-                <div id="buttons">
-                  <ul id="form_buttons">
-                    <li>
-                      <% d = nil %>
-                      <% @record.resource_actions.each do |ra| %>
-                        <% d = Dialog.find_by_id(ra.dialog_id.to_i) if ra.action.downcase == "provision" %>
-                      <% end %>
-                      <% if d.nil? %>
-                        <%= image_tag("/images/formbuttons/order.png",:alt=>"No Ordering Dialog is available",
-                                      :title=>"No Ordering Dialog is available",	:class=>"dimmed") %>
-                      <% else %>
-                        <%= image_tag('/images/formbuttons/order.png', :border=>"0", :class=>"button",
-                                      :alt=>"Order this Service", :title=>"Order this Service",
-                                      :onclick=>"miqAjaxButton('#{url_for(:action=>"svc_catalog_provision",
-                                                                          :id=>@record.id,
-                                                                          :button=>"order")}');")
-                        %>
-                      <% end %>
-                    </li>
-                  </ul>
-                </div>
-              </td>
-              <td valign="top">
-                <table class="style1">
-                  <tr>
-                    <td class="key">Name</td>
-                    <td class="notwide"><%= @record.name %></td>
-                  </tr>
-                  <tr>
-                    <td class="key">Description</td>
-                    <td class="notwide"><%= @record.description%></td>
-                  </tr>
-                  <!--
-                  <tr>
-                    <td class="key">Cost</td>
-                    <td><%= h(@record.provision_cost.nil? ? "" : sprintf("%.2f", @record.provision_cost.to_f)) %>
-                  </tr>
-                  -->
-                  <tr>
-                    <td class="key">Long Description</td>
-                    <td class="wide">
-                      <%= @record.long_description.to_s.html_safe %>
-                    </td>
-                  </tr>
-                </table>
-              </td>
+                <% if d.nil? %>
+                  <%= image_tag("/images/formbuttons/order.png",
+                                :alt   => "No Ordering Dialog is available",
+                                :title => "No Ordering Dialog is available",	
+                                :class => "dimmed")
+                  %>
+                <% else %>
+                  <%= image_tag('/images/formbuttons/order.png', 
+                                :border  => "0", 
+                                :class   => "button",
+                                :alt     => "Order this Service", 
+                                :title   => "Order this Service",
+                                :onclick => "miqAjaxButton('#{url_for(:action => "svc_catalog_provision",
+                                                                      :id     => @record.id,
+                                                                      :button => "order")}');")
+                  %>
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        </td>
+        <td valign="top">
+          <table class="style1">
+            <tr>
+              <td class="key">Name</td>
+              <td class="notwide"><%= @record.name %></td>
+            </tr>
+            <tr>
+              <td class="key">Description</td>
+              <td class="notwide"><%= @record.description%></td>
+            </tr>
+            <!--
+            <tr>
+              <td class="key">Cost</td>
+              <td><%= h(@record.provision_cost.nil? ? "" : sprintf("%.2f", @record.provision_cost.to_f)) %>
+            </tr>
+            -->
+            <tr>
+              <td class="key">Long Description</td>
+              <td class="wide"><%= @record.long_description.to_s.html_safe %></td>
             </tr>
           </table>
-        </fieldset>
-      </dd>
-    </dl>
+        </td>
+      </tr>
+    </table>
   <% end %>
 </div>
