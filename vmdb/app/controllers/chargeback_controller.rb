@@ -799,7 +799,9 @@ class ChargebackController < ApplicationController
     ## Clear the JS gtl_list_grid var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:right_cell_text]     = @right_cell_text
-    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
+    unless x_active_tree == :cb_assignments_tree
+      presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
+    end
     render :js => presenter.to_html
   end
 
