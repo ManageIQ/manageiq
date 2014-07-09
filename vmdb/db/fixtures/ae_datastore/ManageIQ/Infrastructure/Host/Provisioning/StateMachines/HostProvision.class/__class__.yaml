@@ -1,0 +1,311 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: Factory State Machines
+    display_name: 
+    name: HostProvision
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: state
+      name: CustomizeRequest
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/CustomizeRequest
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Customizing Request',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Customized Request',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => 'error in Customizing Request',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: AcquireIPAddress
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Acquiring IP Address',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Acquired IP Address',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => 'error in Acquiring IP Address',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: AcquireMACAddress
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Acquiring MAC Address',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Acquired MAC Address',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => 'error in Acquiring MAC Address',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: RegisterDNS
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Registering DNS',status_state =>
+        'on_entry')
+      on_exit: update_provision_status(status => 'Registered DNS',status_state =>
+        'on_exit')
+      on_error: update_provision_status(status => 'error in Registering DNS',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: RegisterCMDB
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Registering CMDB',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Registered CMDB',status_state =>
+        'on_exit')
+      on_error: update_provision_status(status => 'error in Registering CMDB',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: RegisterAD
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Registering ActiveDirectory',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Registered ActiveDirectory',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => 'error in Registering ActiveDirectory',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PreProvision
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/PreProvision_Host
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Applying PreProvision Customizations',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Applied PreProvision Customizations',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => 'error in Applying PreProvision
+        Customizations',status_state => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: Provision
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/Provision
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'PXE Booting Host',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'PXE Booted Host',status_state =>
+        'on_exit')
+      on_error: update_provision_status(status => 'error in PXE Booting Host',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: CheckProvisioned
+      display_name: 
+      datatype: string
+      priority: 9
+      owner: 
+      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/CheckProvisioned
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: update_provision_status(status => 'Provisioning Host',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => '${/#ae_reason}',status_state =>
+        'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PostProvision
+      display_name: 
+      datatype: string
+      priority: 10
+      owner: 
+      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/PostProvision_Host
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Applying PostProvision Customizations',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Applied PostProvision Customizations',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => 'error in Applying PostProvision
+        Customizations',status_state => 'on_error')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: RegisterDHCP
+      display_name: 
+      datatype: string
+      priority: 11
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Registering DHCP',status_state
+        => 'on_entry')
+      on_exit: update_provision_status(status => 'Registered DHCP',status_state =>
+        'on_exit')
+      on_error: update_provision_status(status => 'error in Registering DHCP',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: ActivateCMDB
+      display_name: 
+      datatype: string
+      priority: 12
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Activating CMDB',status_state =>
+        'on_entry')
+      on_exit: update_provision_status(status => 'Activated CMDB',status_state =>
+        'on_exit')
+      on_error: update_provision_status(status => 'error in Activating CMDB',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: EmailOwner
+      display_name: 
+      datatype: string
+      priority: 13
+      owner: 
+      default_value: /Infrastructure/Host/Provisioning/Email/MiqHostProvision_complete?event=host_provisioned
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Emailing Owner',status_state =>
+        'on_entry')
+      on_exit: update_provision_status(status => 'provision_complete',status_state
+        => 'on_exit')
+      on_error: update_provision_status(status => 'error in Emailing Owner',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 

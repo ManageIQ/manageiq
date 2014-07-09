@@ -127,7 +127,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       args = {
         :object_type      => self.class.name,
         :object_id        => self.id,
-        :namespace        => "Factory/StateMachines",
+        :namespace        => "Service/Provisioning/StateMachines",
         :class_name       => "ServiceProvision_Template",
         :instance_name    => req_type,
         :automate_message => "create",

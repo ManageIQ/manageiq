@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     description: Automation Requests
-    display_name: Automation Requests
+    display_name: 
     name: Request
     type: 
     inherits: 

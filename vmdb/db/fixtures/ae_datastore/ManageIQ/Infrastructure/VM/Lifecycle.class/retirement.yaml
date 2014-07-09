@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: Retirement
+    inherits: 
+    description: 
+  fields:
+  - Relationship4:
+      value: /Infrastructure/VM/Retirement/StateMachines/VMRetirement/Default

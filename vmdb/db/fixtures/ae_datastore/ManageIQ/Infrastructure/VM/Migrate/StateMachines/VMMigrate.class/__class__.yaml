@@ -1,0 +1,216 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: State Machines
+    display_name: 
+    name: VMMigrate
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: state
+      name: CustomizeRequest
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/Method/CustomizeRequest
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Customizing Request',status_state
+        => 'on_entry')
+      on_exit: update_migration_status(status => 'Customized Request',status_state
+        => 'on_error')
+      on_error: update_migration_status(status => 'error in Customizing Request',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: BestHost
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/StateMachines/Method/BestHost
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Determining Best Host',status_state
+        => 'on_entry')
+      on_exit: update_migration_status(status => 'Determined Best Host',status_state
+        => 'on_error')
+      on_error: update_migration_status(status => 'error in Best Host',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: BestStorage
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/StateMachines/Method/BestStorage
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Determining Best Storage',status_state
+        => 'on_entry')
+      on_exit: update_migration_status(status => 'Determined Best Storage',status_state
+        => 'on_error')
+      on_error: update_migration_status(status => 'error in Best Storage',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PreMigration
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/StateMachines/Method/PreMigration
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Applying PreMigration Customizations',status_state
+        => 'on_entry')
+      on_exit: update_migration_status(status => 'Applied PreMigration Customizations',status_state
+        => 'on_exit')
+      on_error: update_migration_status(status => 'error in Applying PreMigration
+        Customizations',status_state => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: Migrate
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/StateMachines/Method/Migrate
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Migrating VM',status_state => 'on_entry')
+      on_exit: update_migration_status(status => 'Migrated VM',status_state => 'on_exit')
+      on_error: update_migration_status(status => 'error in Migrating VM',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: CheckMigration
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/StateMachines/Method/CheckMigration
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: update_migration_status(status => 'Migrating VM',status_state => 'on_exit')
+      on_error: update_migration_status(status => '${/#ae_reason}',status_state =>
+        'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PostMigration
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/StateMachines/Method/PostMigration
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Applying PostMigration Customizations',status_state
+        => 'on_entry')
+      on_exit: update_migration_status(status => 'Applied PostMigration Customizations',status_state
+        => 'on_exit')
+      on_error: update_migration_status(status => 'error in Applying PostMigration
+        Customizations',status_state => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: ActivateCMDB
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Activating CMDB',status_state =>
+        'on_entry')
+      on_exit: update_migration_status(status => 'Activated CMDB',status_state =>
+        'on_exit')
+      on_error: update_migration_status(status => 'error in Activating CMDB',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: EmailOwner
+      display_name: 
+      datatype: string
+      priority: 9
+      owner: 
+      default_value: /Infrastructure/VM/Migrate/Email/vm_migration_complete?event=vm_migrated
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_migration_status(status => 'Emailing Owner',status_state =>
+        'on_entry')
+      on_exit: update_migration_status(status => 'migration_complete',status_state
+        => 'on_exit')
+      on_error: update_migration_status(status => 'error in Emailing Owner',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 

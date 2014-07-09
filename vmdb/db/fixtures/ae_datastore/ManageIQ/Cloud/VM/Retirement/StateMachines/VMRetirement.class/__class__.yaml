@@ -1,0 +1,335 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: VMRetirement
+    display_name: 
+    name: VMRetirement
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: state
+      name: CheckPoweredOff
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: /Cloud/VM/Retirement/StateMachines/Methods/CheckPoweredOff
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Powering Off VM',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Powered Off VM',status_state =>
+        'on_exit')
+      on_error: update_retirement_status(status => 'Error in Powering Off VM',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: DeactivateCMDB
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: ! '#/Integration/CMDB/Deactivate'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Deactivating from CMDB',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Deactivated from CMDB',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Deactivating from CMDB',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: UnregisterDHCP
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: ! '#/Integration/IPAM/UnregisterDHCP'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Unregistering from DHCP',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Unregistered from DHCP',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Unregistering from DHCP',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: UnregisterAD
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: ! '#/Integration/IPAM/UnregisterAD'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Unregistering from AD',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Unregistered from AD',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Unregistering from AD',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: UnregisterDNS
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: ! '#/Integration/IPAM/UnregisterDNS'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Unregistering from DNS',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Unregistered from DNS',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Unregistering from DNS',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: ReleaseMACAddress
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: ! '#/Integration/IPAM/ReleaseMACAddress'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Releasing MAC Address',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Released MAC Address',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Releasing MAC Address',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: ReleaseIPAddress
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: ! '#/Integration/IPAM/ReleaseIPAddress'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Releasing IP Address',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Released IP Address',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Releasing IP Address',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PreDeleteEmailOwner
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: ! '#/Cloud/VM/Retirement/Email/vm_retirement_emails?event=vm_entered_retirement'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Notifying VM Owner',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Notified VM Owner',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Notifying VM Owner',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: UnregisterFromProvider
+      display_name: 
+      datatype: string
+      priority: 9
+      owner: 
+      default_value: /Cloud/VM/Retirement/StateMachines/Methods/UnregisterFromProvider
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Unregistering from Provider',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Unregistered from Provider',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Unregistering from Provider',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PreDeleteFromProvider
+      display_name: 
+      datatype: string
+      priority: 10
+      owner: 
+      default_value: ! '#/Cloud/VM/Retirement/StateMachines/Methods/PreDeleteFromProvider'
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Executing PreDelete from Provider',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Executed PreDelete from Provider',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Executing PreDelete from
+        Provider',status_state => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: DeleteFromProvider
+      display_name: 
+      datatype: string
+      priority: 11
+      owner: 
+      default_value: /Cloud/VM/Retirement/StateMachines/Methods/DeleteFromProvider
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Deleting from Provider',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Deleted from Provider',status_state =>
+        'on_exit')
+      on_error: update_retirement_status(status => 'Error in Deleting from Provider',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: EmailOwner
+      display_name: 
+      datatype: string
+      priority: 12
+      owner: 
+      default_value: /Cloud/VM/Retirement/Email/vm_retirement_emails?event=vm_retired
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Emailing VM Owner',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Emailed VM Owner',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Emailing VM Owner',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: CheckUnregisteredFromProvider
+      display_name: 
+      datatype: string
+      priority: 13
+      owner: 
+      default_value: /Cloud/VM/Retirement/StateMachines/Methods/CheckUnregisteredFromProvider
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Checking Unregistration from Provider',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Checked Unregistration from Provider',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Checking Unregistration
+        from Provider',status_state => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: DeleteFromVMDB
+      display_name: 
+      datatype: string
+      priority: 14
+      owner: 
+      default_value: /Cloud/VM/Retirement/StateMachines/Methods/DeleteFromVMDB
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Removing from VMDB',status_state
+        => 'on_entry')
+      on_exit: update_retirement_status(status => 'Removed from VMDB',status_state
+        => 'on_exit')
+      on_error: update_retirement_status(status => 'Error in Removing from VMDB',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 

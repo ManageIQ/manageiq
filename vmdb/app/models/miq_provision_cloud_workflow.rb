@@ -90,6 +90,11 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
     rails_logger('get_source_and_targets', 1)
     return @target_resource=result
   end
+
+  def dialog_name_from_automate(message, extra_attrs)
+    extra_attrs['platform_category'] = 'cloud'
+    super(message, extra_attrs)
+  end
 end
 
 # Preload any subclasses of this class, so that they will be part of the

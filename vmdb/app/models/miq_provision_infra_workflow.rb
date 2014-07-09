@@ -60,6 +60,10 @@ class MiqProvisionInfraWorkflow < MiqProvisionWorkflow
     return @target_resource=result
   end
 
+  def dialog_name_from_automate(message, extra_attrs)
+    extra_attrs['platform_category'] = 'infra'
+    super(message, extra_attrs)
+  end
 end
 
 # Preload any subclasses of this class, so that they will be part of the
