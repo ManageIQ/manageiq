@@ -97,7 +97,7 @@ class MiqQueue < ActiveRecord::Base
     if (args_size + data_size) > 512
       log_prefix=LOG_PREFIX[:put]
       culprit = caller.detect {|r| ! (r =~ /miq_queue.rb/) } || ""
-      $log.warn("#{log_prefix} #{culprit.split("in").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
+      $log.warn("#{log_prefix} #{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
     end
   end
 
