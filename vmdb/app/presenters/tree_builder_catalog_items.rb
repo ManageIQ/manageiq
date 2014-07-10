@@ -46,4 +46,10 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
     end
     count_only_or_objects(options[:count_only], objects, nil)
   end
+
+  def x_get_tree_st_kids(object, options)
+    count = options[:type] == :svvcat ? 0 : object.custom_button_sets.count + object.custom_buttons.count
+    objects = count > 0 ? [{:id => object.id.to_s, :text => 'Actions', :image => 'folder', :tip => 'Actions'}] : []
+    count_only_or_objects(options[:count_only], objects, nil)
+  end
 end

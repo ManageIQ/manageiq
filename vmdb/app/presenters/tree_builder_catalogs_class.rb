@@ -14,19 +14,6 @@ class TreeBuilderCatalogsClass < TreeBuilder
     end
   end
 
-  def x_get_tree_st_kids(object, options)
-  # if options[:count_only]
-  #  return options[:type] = :svccat ? 0 : (object.vms_and_templates.count + object.service_templates.count)
-  # else
-  #  return options[:type] = :svccat ? [] : (object.vms_and_templates.sort{|a,b| a.name.downcase <=> b.name.downcase} +
-  #      object.service_templates.sort{|a,b| a.name.downcase <=> b.name.downcase})
-  # end
-
-    count = options[:type] == :svvcat ? 0 : object.custom_button_sets.count + object.custom_buttons.count
-    objects = count > 0 ? [{:id => object.id.to_s, :text => 'Actions', :image => 'folder', :tip => 'Actions'}] : []
-    count_only_or_objects(options[:count_only], objects, nil)
-  end
-
   # TODO: De-duplicate the following methods from tree_builder_buttons.rb
   def get_custom_buttons(object)
     # FIXME: don't we have a method for the splits?
