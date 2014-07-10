@@ -74,17 +74,15 @@ describe ApplicationController do
     end
   end
 
-  context "#validate_route" do
-    it "should return true for valid route" do
-      result = controller.send(:validate_route, 'host', 'POST', 'show')
+  context "#valid_route?" do
+    it "should return true for a valid route" do
+      result = controller.send(:valid_route?, 'POST', 'host', 'show')
       result.should be_true
     end
 
-    it "should raise an error for a valid route" do
-      msg = "The user is not authorized for this task or item."
-      lambda do
-        controller.send(:validate_route, 'host', 'POST', 'some_route')
-      end.should raise_error(MiqException::RbacPrivilegeException, msg)
+    it "should return false for an invalid route" do
+      result = controller.send(:valid_route?, 'POST', 'host', 'some_route')
+      result.should be_false
     end
   end
 
