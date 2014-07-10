@@ -800,6 +800,7 @@ class ReportController < ApplicationController
       # lock schedules tree when jumping from reports to add a schedule for a report
       presenter[:lock_unlock_trees][:schedules_tree] = true if params[:pressed] == 'miq_report_schedules'
     else
+      presenter[:lock_unlock_trees][x_active_tree] = false
       [:db_tree, :reports_tree, :savedreports_tree, :schedules_tree, :widgets_tree, :roles_tree].each do |tree|
         presenter[:lock_unlock_trees][tree] = false
       end
