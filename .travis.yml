@@ -1,16 +1,23 @@
 language: ruby
-rvm: 1.9.3
+rvm:
+- "2.0"
+- "2.1"
 env:
   global:
   - BUNDLE_WITHOUT=development:metric_fu:qpid
   - RUBY_GC_MALLOC_LIMIT=90000000
   matrix:
-  - TEST_SUITE=lib         TEST_ROOT=lib
-  - TEST_SUITE=vmdb        TEST_ROOT=vmdb
-  - TEST_SUITE=migrations  TEST_ROOT=vmdb
-  - TEST_SUITE=replication TEST_ROOT=vmdb
-  - TEST_SUITE=automation  TEST_ROOT=vmdb
-  - TEST_SUITE=javascript  TEST_ROOT=vmdb
+  - "TEST_SUITE=lib         TEST_ROOT=lib"
+  - "TEST_SUITE=vmdb        TEST_ROOT=vmdb"
+  - "TEST_SUITE=migrations  TEST_ROOT=vmdb"
+  - "TEST_SUITE=replication TEST_ROOT=vmdb"
+  - "TEST_SUITE=automation  TEST_ROOT=vmdb"
+  - "TEST_SUITE=javascript  TEST_ROOT=vmdb"
+matrix:
+  allow_failures:
+  - rvm: "2.1"
+    env: "TEST_SUITE=vmdb        TEST_ROOT=vmdb"
+  fast_finish: true
 addons:
   postgresql: '9.3'
 before_install:
