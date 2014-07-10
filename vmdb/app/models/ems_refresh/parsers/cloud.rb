@@ -41,14 +41,17 @@ module EmsRefresh::Parsers
 
     def add_instance_disk(disks, size, location, name, controller_type)
       if size > 0
-        disks << {
+        disk = {
           :device_name     => name,
           :device_type     => "disk",
           :controller_type => controller_type,
           :location        => location,
           :size            => size
         }
+        disks << disk
+        return disk
       end
+      nil
     end
   end
 end

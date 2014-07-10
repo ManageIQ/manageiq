@@ -9,6 +9,7 @@ class CloudVolume < ActiveRecord::Base
   has_many   :attachments, :class_name => 'Disk', :as => :backing
 
   def self.available
-    where(:vm_id => nil)
+    joins("LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id")
+      .where("disks.backing_id" => nil)
   end
 end
