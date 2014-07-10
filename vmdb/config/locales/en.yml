@@ -78,6 +78,8 @@ en:
         first: "Styling for '%{field}', first value is in error: "
         second: "Styling for '%{field}', second value is in error: "
         third: "Styling for '%{field}', third value is in error: "
+      field_syntax_error:
+        yaml: "Syntax error in YAML file: "
       filter:
         current_search_reset: "The current search details have been reset"
         field_value_error: "%{field} Value Error: %{msg}"
