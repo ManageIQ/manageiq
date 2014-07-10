@@ -90,7 +90,8 @@ module EmsRefresh::Parsers
 
     def get_availability_zones
       azs = servers.collect(&:availability_zone)
-      azs.concat(volumes.collect(&:availability_zone)).compact.uniq
+      azs.concat(volumes.collect(&:availability_zone)).compact!
+      azs.uniq!
       azs << nil # force the null availability zone for openstack
       process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
     end
@@ -151,7 +152,11 @@ module EmsRefresh::Parsers
       snapshots = []
       @identity_service.tenants.each do |t|
         next if t.name == "services"
-        volume_service_for_tenant = @ems.connect(:service => 'Volume', :extra_opts => {:openstack_tenant => t.name})
+        begin
+          volume_service_for_tenant = @ems.connect(:service => 'Volume', :extra_opts => {:openstack_tenant => t.name})
+        rescue Excon::Errors::Unauthorized => eeu_err
+          next
+        end
         snapshots += volume_service_for_tenant.list_snapshots.body['snapshots']
       end
       process_collection(snapshots, :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
@@ -163,7 +168,11 @@ module EmsRefresh::Parsers
       # if Swift supports it.
       @identity_service.tenants.each do |t|
         next if t.name == "services"
-        storage_service_for_tenant = @ems.connect(:service => 'Storage', :extra_opts => {:openstack_tenant => t.name})
+        begin
+          storage_service_for_tenant = @ems.connect(:service => 'Storage', :extra_opts => {:openstack_tenant => t.name})
+        rescue Excon::Errors::Unauthorized => eeu_err
+          next
+        end
 
         storage_service_for_tenant.directories.each do |fd|
           result = process_collection_item(fd, :cloud_object_store_containers) { |c| parse_container(c, t) }
@@ -384,8 +393,11 @@ module EmsRefresh::Parsers
         else
           disk = add_instance_disk(disks, new_result[:size], dev, "OpenStack Volume")
         end
-        disk[:backing]      = new_result
-        disk[:backing_type] = 'CloudVolume'
+
+        if disk
+          disk[:backing]      = new_result
+          disk[:backing_type] = 'CloudVolume'
+        end
       end
 
       return uid, new_result
