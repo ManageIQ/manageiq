@@ -1390,12 +1390,10 @@ exit MIQ_OK"
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_ns = find_by_id_filtered(MiqAeNamespace, params[:id])
+      ae_ns = find_by_id_filtered(@edit[:typ].constantize, params[:id])
       ns_set_record_vars(ae_ns)                     # Set the record variables, but don't save
       begin
-        MiqAeNamespace.transaction do
-          ae_ns.save!
-        end  # end of transaction
+        ae_ns.save!
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
         session[:changed] = @changed
@@ -1407,7 +1405,7 @@ exit MIQ_OK"
         end
       else
         add_flash(I18n.t("flash.edit.saved",
-                         :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
+                         :model => ui_lookup(:model => "#{ae_ns.domain? ? "MiqAeDomain" : "MiqAeNamespace"}"),
                          :name  => ae_ns.name))
         AuditEvent.success(build_saved_audit(ae_ns, @edit))
         session[:edit] = nil  # clean out the saved info
@@ -1415,7 +1413,7 @@ exit MIQ_OK"
         replace_right_cell([:ae])
       end
     when "reset"
-      ns_set_form_vars(@ae_ns.domain? ? "MiqAeDomain" : "MiqAeNamespace")
+      ns_set_form_vars
       session[:changed] = @changed = false
       add_flash(I18n.t("flash.edit.reset"), :warning)
       @button = "reset"
@@ -1607,12 +1605,11 @@ exit MIQ_OK"
       @in_a_form = false
       replace_right_cell
     when "add"
-      add_ae_ns = MiqAeNamespace.new
-      ns_set_record_vars(add_ae_ns)                       # Set the record variables, but don't save
+      parent_id = @edit[:typ] == "MiqAeDomain" ? nil : from_cid(x_node.split('-')[1])
+      add_ae_ns = @edit[:typ].constantize.new(:parent_id => parent_id)
+      ns_set_record_vars(add_ae_ns)      # Set the record variables, but don't save
       begin
-        MiqAeNamespace.transaction do
-          add_ae_ns.save!
-        end
+        add_ae_ns.save
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task => "add") << bang.message, :error)
         render :update do |page|
@@ -1622,7 +1619,7 @@ exit MIQ_OK"
         end
       else
         add_flash(I18n.t("flash.add.added",
-                         :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
+                         :model => ui_lookup(:model => add_ae_ns.class.name),
                          :name  => add_ae_ns.name))
         @in_a_form = false
         replace_right_cell([:ae])
@@ -1889,12 +1886,11 @@ exit MIQ_OK"
       replace_right_cell
     when "save"
       return unless load_edit("priority__edit", "replace_cell__explorer")
-      # TODO: need to move this to model method
+      domains = []
       @edit[:new][:domain_order].reverse!.each_with_index do |domain, i|
-        d = MiqAeDomain.find_by_name(domain.split(" (Locked)").first)
-        d.priority = i + 1
-        d.save!
+        domains.push(MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id)
       end
+      MiqAeDomain.reset_priority_by_ordered_ids(domains)
       add_flash(I18n.t("flash.priority_order_saved"))
       @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell([:ae])
@@ -2056,10 +2052,21 @@ private
     process_elements(aemethods, MiqAeMethod, task)
   end
 
-  # Delete all selected or single displayed aeclasses(s)
   def delete_domain
     assert_privileges("miq_ae_domain_delete")
-    delete_domain_or_namespaces
+    aedomains = []
+    if params[:id]
+      aedomains.push(params[:id])
+      self.x_node = "root"
+    else
+      selected = find_checked_items
+      selected.each do |items|
+        item = items.split('-')
+        aedomains.push(from_cid(item[1]))
+      end
+    end
+    process_elements(aedomains, MiqAeDomain, 'destroy') unless aedomains.empty?
+    replace_right_cell([:ae])
   end
 
   # Delete all selected or single displayed aeclasses(s)
@@ -2069,15 +2076,15 @@ private
   end
 
   def delete_domain_or_namespaces
-    @sb[:row_selected] = find_checked_items
+    selected = find_checked_items
     ae_ns = []
     ae_cs = []
     if params[:id] && params[:miq_grid_checks] == "" &&
-        %w(miq_ae_domain_delete miq_ae_namespace_delete).include?(params[:pressed])
+       params[:pressed] == "miq_ae_namespace_delete"
       ae_ns.push(params[:id])
       self.x_node = "root"
-    elsif @sb[:row_selected]
-      ae_ns, ae_cs = items_to_delete
+    elsif selected
+      ae_ns, ae_cs = items_to_delete(selected)
     else
       node = x_node.split('-')
       ae_cs.push(from_cid(node[1]))
@@ -2089,10 +2096,10 @@ private
     replace_right_cell([:ae])
   end
 
-  def items_to_delete
+  def items_to_delete(selected)
     ns_list = []
     cs_list = []
-    @sb[:row_selected].each do |items|
+    selected.each do |items|
       item = items.split('-')
       if item[0] == "aen"
         record = MiqAeNamespace.find_by_id(from_cid(item[1]))
@@ -2346,14 +2353,7 @@ private
   def ns_set_record_vars(miqaens)
     miqaens.name        = @edit[:new][:ns_name].strip unless @edit[:new][:ns_name].blank?
     miqaens.description = @edit[:new][:ns_description]
-    if @edit[:new][:domain]
-      miqaens.enabled     = @edit[:new][:enabled]
-      # set highest priority on new records.
-      miqaens.priority    = MiqAeDomain.highest_priority + 1 unless miqaens.id
-      miqaens.parent_id   = nil
-    else
-      miqaens.parent_id   = from_cid(x_node.split('-')[1]) unless miqaens.id
-    end
+    miqaens.enabled     = @edit[:new][:enabled] if miqaens.domain?
   end
 
   # Set record variables to new values
@@ -2491,14 +2491,15 @@ private
   def edit_domain_or_namespace
     obj = find_checked_items
     obj = [x_node] if obj.nil? && params[:id]
-    @ae_ns = MiqAeNamespace.find(from_cid(obj[0].split('-')[1]))
+    typ = params[:pressed] == "miq_ae_domain_edit" ? MiqAeDomain : MiqAeNamespace
+    @ae_ns = typ.find(from_cid(obj[0].split('-')[1]))
     if @ae_ns.domain? && !@ae_ns.editable?
       add_flash(I18n.t("flash.cant_edit_read_only",
                        :model => ui_lookup(:model => "MiqAeDomain"),
                        :name  => @ae_ns.name),
                 :error)
     else
-      ns_set_form_vars(@ae_ns.domain? ? "MiqAeDomain" : "MiqAeNamespace")
+      ns_set_form_vars
       @in_a_form = true
       session[:changed] = @changed = false
     end
@@ -2516,18 +2517,19 @@ private
   end
 
   def new_domain_or_namespace(typ)
-    @ae_ns = MiqAeNamespace.new
-    ns_set_form_vars(typ)
+    parent_id = x_node == "root" ? nil : from_cid(x_node.split("-").last)
+    @ae_ns = typ.constantize.new(:parent_id => parent_id)
+    ns_set_form_vars
     @in_a_form = true
     replace_right_cell
   end
 
   # Set form variables for edit
-  def ns_set_form_vars(typ)
+  def ns_set_form_vars
     session[:field_data] = session[:edit] = {}
     @edit = {
       :ae_ns_id => @ae_ns.id,
-      :current  => {},
+      :typ      => @ae_ns.domain? ? "MiqAeDomain" : "MiqAeNamespace",
       :key      => "aens_edit__#{@ae_ns.id || "new"}",
       :rec_id   => @ae_ns.id || nil
     }
@@ -2536,7 +2538,7 @@ private
       :ns_description => @ae_ns.description
     }
     # set these field for a new domain or when existing record is a domain
-    @edit[:new].merge!(:domain => true, :enabled => @ae_ns.enabled) if typ == "MiqAeDomain"
+    @edit[:new].merge!(:enabled => @ae_ns.enabled) if @ae_ns.domain?
     @edit[:current] = @edit[:new].dup
     @right_cell_text = ns_right_cell_text
     session[:edit] = @edit

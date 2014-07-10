@@ -31,7 +31,7 @@
     <div id="form_ns_div">
       <p class="legend">Info</p>
       <table class="style1">
-        <% unless @edit[:new][:domain] %>
+        <% unless @ae_ns.domain? %>
           <tr>
             <td class="key">
               <%= Dictionary::gettext('fqname', 
@@ -67,7 +67,7 @@
             %>
           </td>
         </tr>
-        <% if @edit[:new][:domain] %>
+        <% if @ae_ns.domain? %>
           <tr>
             <td class="key">Enabled</td>
             <td>
