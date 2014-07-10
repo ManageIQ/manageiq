@@ -287,12 +287,13 @@ class PxeController < ApplicationController
         end
 
         presenter[:update_partials][:form_buttons_div] = r[
-            :partial => "layouts/x_edit_buttons",
-            :locals  => {
-              :record_id    => @edit[:rec_id],
-              :action_url   => action_url,
-              :multi_record => multi_record
-            }
+          :partial => "layouts/x_edit_buttons",
+          :locals  => {
+            :record_id    => @edit[:rec_id],
+            :action_url   => action_url,
+            :multi_record => multi_record,
+            :serialize    => true
+          }
         ]
       else
         presenter[:set_visible_elements][:form_buttons_div] = false
