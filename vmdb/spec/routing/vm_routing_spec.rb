@@ -30,6 +30,7 @@ describe VmOrTemplateController do
     policy_sim_add
     policy_sim_remove
     pre_prov
+    pre_prov_continue
     provision
     reconfigure
     reconfigure_field_changed
