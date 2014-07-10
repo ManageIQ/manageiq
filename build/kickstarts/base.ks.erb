@@ -9,6 +9,7 @@ repo --name=epel --baseurl=http://dl.fedoraproject.org/pub/epel/6Server/x86_64/
 repo --name=SCL --baseurl=http://mirror.centos.org/centos/6/SCL/x86_64/
 
 repo --name=manageiq-scl --baseurl=http://copr-be.cloud.fedoraproject.org/results/jrafanie/manageiq-scl/epel-6-x86_64/
+repo --name=ipa --baseurl=http://copr-be.cloud.fedoraproject.org/results/adelton/identity_demo/epel-6-x86_64/
 
 lang en_US.UTF-8
 keyboard us
@@ -75,6 +76,15 @@ scl-utils-build                  # build requires
 yum-utils
 zip                              # build requires
 zlib-devel                       # lib build requires
+
+# IPA Identity RPMs for External Authentication
+c-ares
+ipa-client
+sssd-dbus
+mod_intercept_form_submit
+mod_authnz_pam
+mod_lookup_identity
+mod_lookup_identity-selinux      # Only needed for CentOS 6.5.  It will not be needed on CentOS 6.6 and later.
 
 # bundler has some downstream patches we need or shared objects are not found
 ruby193-rubygem-bundler
