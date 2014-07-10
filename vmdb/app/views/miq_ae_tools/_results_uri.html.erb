@@ -15,13 +15,15 @@
           </tr>
           <tr>
             <td class="key">Object Attribute Type</td>
-            <td class="wide"><%= ui_lookup(:model=>@resolve[:button_class]) %></td>
+            <td class="wide"><%= ui_lookup(:model => @resolve[:button_class]) %></td>
           </tr>
         <% end %>
       </table>
     </fieldset>
   <% else %>
-    <br/>&nbsp<strong>* Enter Automation Simulation options on the left and press Submit</strong>
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>Enter Automation Simulation options on the left and press Submit.</strong>
+    </div>
   <% end %>
 </div>
-
