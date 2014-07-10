@@ -73,6 +73,11 @@ module EmsRefresh::Parsers
       process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
     end
 
+    def get_private_flavor(id)
+      private_flavor = @connection.flavors.get(id)
+      process_collection([private_flavor], :flavors) { |flavor| parse_flavor(flavor) }
+    end
+
     def get_availability_zones
       azs = servers.collect(&:availability_zone).compact.uniq
       azs << nil # force the null availability zone for openstack
@@ -342,6 +347,10 @@ module EmsRefresh::Parsers
       flavor_uid = server.flavor["id"]
       @known_flavors << flavor_uid
       flavor = @data_index.fetch_path(:flavors, flavor_uid)
+      if flavor.nil?
+        get_private_flavor(flavor_uid)
+        flavor = @data_index.fetch_path(:flavors, flavor_uid)
+      end
 
       private_network = {:ipaddress => server.private_ip_address}.delete_nils
       public_network  = {:ipaddress => server.public_ip_address}.delete_nils
