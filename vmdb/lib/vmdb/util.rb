@@ -1,5 +1,13 @@
 module VMDB
   module Util
+    def self.eager_load_subclasses(klass)
+      ActiveSupport::Dependencies.autoload_paths.each do |root|
+        Dir.glob(File.join(root, "#{klass.underscore}_*.rb")).each do |file|
+          File.basename(file, '.*').camelize.constantize
+        end
+      end
+    end
+
     def self.compressed_log_patterns
       # From a log file such as production.log-20090504.gz,
       # create an array of strings containing the date patterns:

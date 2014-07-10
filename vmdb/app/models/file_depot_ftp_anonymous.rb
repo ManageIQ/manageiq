@@ -1,6 +1,4 @@
-class FileDepotAnonymousFtp < FileDepotFtp
-  DISPLAY_NAME = "Anonymous FTP"
-
+class FileDepotFtpAnonymous < FileDepotFtp
   def self.requires_credentials?
     false
   end
