@@ -51,7 +51,7 @@
           <th class="icon"></th><th></th>
         </thead>
         <tbody>
-        <% @sb[:menu].invert.sort.each do |pp| %>
+        <% @sb[:menu].invert.each do |pp| %>
           <tr class="<%= cycle('row0', 'row1') %>"
             onclick="cfmeDynatree_activateNode('<%= @sb[:active_tree] %>', 'g-<%=to_cid(pp[1])%>');"
             onmouseover="this.style.cursor='pointer'" title="View this Profile">

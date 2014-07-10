@@ -746,7 +746,7 @@ module ReportController::Menus
   def menu_get_all
     roles,title = get_group_roles
     @sb[:menu] = Hash.new
-    roles.sort{|a,b| a.name <=> b.name}.each do |r|
+    roles.sort_by { |a| a.name.downcase }.each do |r|
       @sb[:menu][r.id] = r.name
     end
     @right_cell_text = title == "My #{ui_lookup(:model=>"MiqGroup")}" ?
