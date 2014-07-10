@@ -166,324 +166,14 @@ module OpsController::Settings::Common
   end
 
   def settings_update
-    if params[:button] == "verify"                                      # User doing ldap verify
-      settings_get_form_vars
-      return unless @edit
-      @validate = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
-      @validate.config.each_key do |category|
-        @validate.config[category] = @edit[:new][category].dup
-      end
-      if @validate.ldap_verify
-        add_flash(I18n.t("flash.ops.settings.ldap_settings_validated"))
-      else
-        @validate.errors.each do |field,msg|
-          add_flash("#{field.titleize}: #{msg}", :error)
-        end
-      end
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
-    elsif params[:button] == "amazon_verify"                                      # User doing amazon verify
-      settings_get_form_vars
-      return unless @edit
-      @validate = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
-      @validate.config.each_key do |category|
-        @validate.config[category] = @edit[:new][category].dup
-      end
-      if @validate.amazon_verify
-        add_flash(I18n.t("flash.ops.settings.amazon_settings_validated"))
-      else
-        @validate.errors.each do |field,msg|
-          add_flash("#{field.titleize}: #{msg}", :error)
-        end
-      end
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
-    elsif params[:button] == "email_verify"                                     # User doing ldap verify
-      settings_get_form_vars
-      return unless @edit
-      begin
-        GenericMailer.test_email(@sb[:new_to],@edit[:new][:smtp]).deliver
-      rescue Exception => err
-        add_flash(I18n.t("flash.ops.settings.error_during_email") << err.class.name << ", " << err.to_s, :error)
-      else
-        add_flash(I18n.t("flash.ops.settings.test_email_sent", :email=>@sb[:new_to]))
-      end
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
-    elsif params[:button] == "db_verify"
-      settings_get_form_vars
-      return unless @edit
-      db_config = MiqDbConfig.new(@edit[:new])
-      result = db_config.valid?
-      if result == true
-        add_flash(I18n.t("flash.ops.settings.db_settings_validated"))
-      else
-        db_config.errors.each do |field,msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
-      end
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
-    elsif params[:button] == "save"
-      settings_get_form_vars
-      return unless @edit
-      case @sb[:active_tab]
-      when 'settings_rhn_edit'
-        if rhn_allow_save?
-          rhn_save_subscription
-          add_flash(I18n.t("flash.ops.settings.customer_info_saved"))
-          @changed = false
-          @edit    = nil
-          @sb[:active_tab] = 'settings_rhn'
-          settings_get_info('root')
-          replace_right_cell('root')
-        else
-          render_flash
-        end
-        return
-      when "settings_smartproxy_affinity"
-        smartproxy_affinity_update
-      when "settings_server", "settings_authentication"
-        # Server Settings
-        settings_server_validate
-        unless @flash_array.blank?
-          render_flash
-          return
-        end
-        @changed = (@edit[:new] != @edit[:current].config)
-        @update = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
-      when "settings_workers"                                   # Workers Settings
-        @changed = (@edit[:new] != @edit[:current].config)
-        qwb = @edit[:new].config[:workers][:worker_base][:queue_worker_base]
-        w = qwb[:generic_worker]
-        @edit[:new].set_worker_setting!(:MiqGenericWorker, :count, w[:count].to_i)
-        @edit[:new].set_worker_setting!(:MiqGenericWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        w = qwb[:priority_worker]
-        @edit[:new].set_worker_setting!(:MiqPriorityWorker, :count, w[:count].to_i)
-        @edit[:new].set_worker_setting!(:MiqPriorityWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        w = qwb[:ems_metrics_collector_worker][:defaults]
-        @edit[:new].set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :count], w[:count].to_i)
-        @edit[:new].set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], human_size_to_rails_method(w[:memory_threshold]))
-
-        w = qwb[:ems_metrics_processor_worker]
-        @edit[:new].set_worker_setting!(:MiqEmsMetricsProcessorWorker, :count, w[:count].to_i)
-        @edit[:new].set_worker_setting!(:MiqEmsMetricsProcessorWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        w = qwb[:ems_refresh_worker][:defaults]
-        @edit[:new].set_worker_setting!(:MiqEmsRefreshWorker, [:defaults, :memory_threshold], human_size_to_rails_method(w[:memory_threshold]))
-
-        wb = @edit[:new].config[:workers][:worker_base]
-        w = wb[:event_catcher]
-        @edit[:new].set_worker_setting!(:MiqEventCatcher, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        w = wb[:vim_broker_worker]
-        @edit[:new].set_worker_setting!(:MiqVimBrokerWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        wb[:replication_worker][:replication][:destination].delete(:verify)
-        @edit[:new].set_worker_setting!(:MiqReplicationWorker,:replication, wb[:replication_worker][:replication])
-
-        w = qwb[:smart_proxy_worker]
-        @edit[:new].set_worker_setting!(:MiqSmartProxyWorker, :count, w[:count].to_i)
-        @edit[:new].set_worker_setting!(:MiqSmartProxyWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        w = wb[:ui_worker]
-        @edit[:new].set_worker_setting!(:MiqUiWorker, :count, w[:count].to_i)
-
-        w = qwb[:reporting_worker]
-        @edit[:new].set_worker_setting!(:MiqReportingWorker, :count, w[:count].to_i)
-        @edit[:new].set_worker_setting!(:MiqReportingWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        w = wb[:web_service_worker]
-        @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :count, w[:count].to_i)
-        @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
-
-        @update = MiqServer.find(@sb[:selected_server_id]).get_config
-      when "settings_database"                                      # Database tab
-        db_config = MiqDbConfig.new(@edit[:new])
-        result = db_config.save
-        if result == true
-          add_flash(I18n.t("flash.ops.settings.db_settings_saved"))
-          @changed = false
-          begin
-            MiqServer.my_server(true).restart_queue
-          rescue StandardError => bang
-            add_flash(I18n.t("flash.ops.settings.error_during_task", :task=>"Server restart") << bang.message, :error)  # Push msg and error flag
-          else
-            add_flash(I18n.t("flash.record.task_initiated", :model=>ui_lookup(:table=>"evm_server"), :task=>"Restart"))
-          end
-        else
-          db_config.errors.each do |field,msg|
-            add_flash("#{field.to_s.capitalize} #{msg}", :error)
-          end
-          @changed = (@edit[:new] != @edit[:current])
-        end
-      when "settings_host"                                      # Host Settings tab
-        @changed = (@edit[:new] != @edit[:current].config)
-        @update = VMDB::Config.new("hostdefaults")            # Get the settings object to update it
-      when "settings_custom_logos"                                      # Custom Logo tab
-        @changed = (@edit[:new] != @edit[:current].config)
-        @update = VMDB::Config.new("vmdb")                    # Get the settings object to update it
-      when "settings_maintenance"                                         # Maintenance tab
-      when "settings_smartproxy"                                          # SmartProxy Defaults tab
-        @changed = (@edit[:new] != @edit[:current].config)
-        @update = VMDB::Config.new("hostdefaults")            # Get the settings object to update it
-        @update.config.each_key do |category|
-          @update.config[category] = @edit[:new][category].dup
-        end
-        if @edit[:new][:agent][:wsListenPort] &&  !(@edit[:new][:agent][:wsListenPort] =~ /^\d+$/)
-          add_flash(I18n.t("flash.edit.field_must_be.numeric", :field=>"Web Services Listen Port"), :error)
-        end
-        if @edit[:new][:agent][:log][:wrap_size] && (!(@edit[:new][:agent][:log][:wrap_size] =~ /^\d+$/) || @edit[:new][:agent][:log][:wrap_size].to_i == 0)
-          add_flash(I18n.t("flash.edit.field_must_be.numeric_greater_than_0", :field=>"Log Wrap Size"), :error)
-        end
-        if ! @flash_array
-          @update.config[:agent][:log][:wrap_size] = @edit[:new][:agent][:log][:wrap_size].to_i * 1024 * 1024
-          if @update.validate       # Have VMDB class validate the settings
-            @update.save
-            add_flash(I18n.t("flash.ops.settings.smartproxy_settings_saved"))
-            @changed = false
-          else
-            @update.errors.each do |field,msg|
-              add_flash("#{field.titleize}: #{msg}", :error)
-              @changed = true
-            end
-          end
-        end
-        get_node_info(x_node)
-        replace_right_cell(@nodetype)
-        return
-      when "settings_advanced"                                          # Advanced manual yaml editor tab
-        result = VMDB::Config.save_file(session[:config_file_name], @edit[:new][:file_data])  # Save the config file
-        if result != true                                         # Result contains errors?
-          result.each do |field,msg|
-            add_flash("#{field.to_s.titleize}: #{msg}", :error)
-          end
-          @changed = (@edit[:new] != @edit[:current])
-        else
-          add_flash(I18n.t("flash.ops.settings.advanced_settings_saved", :filename=>VMDB::Config.available_config_names[session[:config_file_name]]))
-          @changed = false
-        end
-#       redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
-        get_node_info(x_node)
-        replace_right_cell(@nodetype)
-        return
-      end
-      if !['settings_rhn_edit',"settings_workers","settings_database","settings_maintenance","settings_advanced"].include?(@sb[:active_tab]) &&
-          x_node.split("-").first != "z"
-        @update.config.each_key do |category|
-          @update.config[category] = @edit[:new][category].dup
-        end
-        if @edit[:new][:ntp]
-          @update.config[:ntp] = @edit[:new][:ntp].dup
-        end
-        if @update.validate                                           # Have VMDB class validate the settings
-          if ["settings_server","settings_authentication"].include?(@sb[:active_tab])
-            server = MiqServer.find(@sb[:selected_server_id])
-            @validate = server.set_config(@update)  # Save server settings against selected server
-          else
-            @update.save                                              # Save other settings for current server
-          end
-          AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
-          if @sb[:active_tab] == "settings_server"
-            add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Configuration", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone))
-          elsif @sb[:active_tab] == "settings_authentication"
-            add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Authentication", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone))
-          else
-            add_flash(I18n.t("flash.ops.settings.config_settings_saved"))
-          end
-          if @sb[:active_tab] == "settings_server" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
-            session[:customer_name] = @update.config[:server][:company]
-            session[:vmdb_name] = @update.config[:server][:name]
-          elsif @sb[:active_tab] == "settings_custom_logos"                           # Reset session variable for logo field
-            session[:custom_logo] = @update.config[:server][:custom_logo]
-          end
-          set_user_time_zone if @sb[:active_tab] == "settings_server"
-          #settings_set_form_vars
-          session[:changed] = @changed = false
-          get_node_info(x_node)
-          if @sb[:active_tab] == "settings_server"
-            replace_right_cell(@nodetype,[:settings])
-          elsif @sb[:active_tab] == "settings_custom_logos"
-            render :update do |page|
-              page.redirect_to :action => 'explorer', :flash_msg=>@flash_array[0][:message], :flash_error =>@flash_array[0][:level] == :error, :escape => false  # redirect to build the server screen
-            end
-            return
-          else
-            replace_right_cell(@nodetype)
-          end
-        else
-          @update.errors.each do |field,msg|
-            add_flash("#{field.titleize}: #{msg}", :error)
-          end
-          @changed = true
-          session[:changed] = @changed
-          get_node_info(x_node)
-          replace_right_cell(@nodetype)
-        end
-      elsif @sb[:active_tab] == "settings_workers" &&
-          x_node.split("-").first != "z"
-        if !@edit[:default_verify_status]
-          add_flash(I18n.t("flash.edit.passwords_mismatch"), :error)
-        end
-        if @flash_array != nil
-          session[:changed] = @changed = true
-          render :update do |page|
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
-          return
-        end
-        @update.config.each_key do |category|
-          @update.config[category] = @edit[:new].config[category].dup
-        end
-        if @update.validate                                           # Have VMDB class validate the settings
-          server = MiqServer.find(@sb[:selected_server_id])
-          @validate = server.set_config(@update)  # Save server settings against selected server
-
-          AuditEvent.success(build_config_audit(@edit[:new].config, @edit[:current].config))
-          add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Configuration", :name=>server.name, :server_id=>@sb[:selected_server_id], :zone=>server.my_zone))
-
-          if @sb[:active_tab] == "settings_workers" &&  @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
-            session[:customer_name] = @update.config[:server][:company]
-            session[:vmdb_name] = @update.config[:server][:name]
-          end
-          @changed = false
-          get_node_info(x_node)
-          replace_right_cell(@nodetype)
-        else
-          @update.errors.each do |field,msg|
-            add_flash("#{field.titleize}: #{msg}", :error)
-          end
-          @changed = true
-          get_node_info(x_node)
-          replace_right_cell(@nodetype)
-        end
-      else
-        @changed = false
-        get_node_info(x_node)
-        replace_right_cell(@nodetype)
-      end
-    elsif params[:button] == "reset"
-      session[:changed] = @changed = false
-      add_flash(I18n.t("flash.edit.reset"), :warning)
-      if @sb[:active_tab] == 'settings_rhn_edit'
-        edit_rhn
-      else
-        get_node_info(x_node)
-        replace_right_cell(@nodetype)
-      end
-    elsif params[:button] == "cancel"
-      @sb[:active_tab] = 'settings_rhn'
-      @changed = false
-      @edit = nil
-      settings_get_info('root')
-      add_flash(I18n.t('flash.ops.settings.customer_info_edit_cancelled'))
-      replace_right_cell('root')
+    case params[:button]
+    when 'verify'        then settings_update_ldap_verify
+    when 'amazon_verify' then settings_update_amazon_verify
+    when 'email_verify'  then settings_update_email_verify
+    when 'db_verify'     then settings_update_db_verify
+    when 'save'          then settings_update_save
+    when 'reset'         then settings_update_reset
+    when 'cancel'        then settings_update_cancel
     end
   end
 
@@ -500,6 +190,338 @@ module OpsController::Settings::Common
   end
 
   private
+
+  def settings_update_ldap_verify
+    settings_get_form_vars
+    return unless @edit
+    @validate = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
+    @validate.config.each_key do |category|
+      @validate.config[category] = @edit[:new][category].dup
+    end
+    if @validate.ldap_verify
+      add_flash(I18n.t("flash.ops.settings.ldap_settings_validated"))
+    else
+      @validate.errors.each do |field, msg|
+        add_flash("#{field.titleize}: #{msg}", :error)
+      end
+    end
+    render :update do |page|
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
+  def settings_update_amazon_verify
+    settings_get_form_vars
+    return unless @edit
+    @validate = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
+    @validate.config.each_key do |category|
+      @validate.config[category] = @edit[:new][category].dup
+    end
+    if @validate.amazon_verify
+      add_flash(I18n.t("flash.ops.settings.amazon_settings_validated"))
+    else
+      @validate.errors.each do |field,msg|
+        add_flash("#{field.titleize}: #{msg}", :error)
+      end
+    end
+    render :update do |page|
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
+  def settings_update_email_verify
+    settings_get_form_vars
+    return unless @edit
+    begin
+      GenericMailer.test_email(@sb[:new_to],@edit[:new][:smtp]).deliver
+    rescue Exception => err
+      add_flash(I18n.t("flash.ops.settings.error_during_email") << err.class.name << ", " << err.to_s, :error)
+    else
+      add_flash(I18n.t("flash.ops.settings.test_email_sent", :email=>@sb[:new_to]))
+    end
+    render :update do |page|
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
+  def settings_update_db_verify
+    settings_get_form_vars
+    return unless @edit
+    db_config = MiqDbConfig.new(@edit[:new])
+    result = db_config.valid?
+    if result == true
+      add_flash(I18n.t("flash.ops.settings.db_settings_validated"))
+    else
+      db_config.errors.each do |field,msg|
+        add_flash("#{field.to_s.capitalize} #{msg}", :error)
+      end
+    end
+    render :update do |page|
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
+  def settings_update_save
+    settings_get_form_vars
+    return unless @edit
+    case @sb[:active_tab]
+    when 'settings_rhn_edit'
+      if rhn_allow_save?
+        rhn_save_subscription
+        add_flash(I18n.t("flash.ops.settings.customer_info_saved"))
+        @changed = false
+        @edit    = nil
+        @sb[:active_tab] = 'settings_rhn'
+        settings_get_info('root')
+        replace_right_cell('root')
+      else
+        render_flash
+      end
+      return
+    when "settings_smartproxy_affinity"
+      smartproxy_affinity_update
+    when "settings_server", "settings_authentication"
+      # Server Settings
+      settings_server_validate
+      unless @flash_array.blank?
+        render_flash
+        return
+      end
+      @changed = (@edit[:new] != @edit[:current].config)
+      @update = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
+    when "settings_workers"                                   # Workers Settings
+      @changed = (@edit[:new] != @edit[:current].config)
+      qwb = @edit[:new].config[:workers][:worker_base][:queue_worker_base]
+      w = qwb[:generic_worker]
+      @edit[:new].set_worker_setting!(:MiqGenericWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqGenericWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      w = qwb[:priority_worker]
+      @edit[:new].set_worker_setting!(:MiqPriorityWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqPriorityWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      w = qwb[:ems_metrics_collector_worker][:defaults]
+      @edit[:new].set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :count], w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], human_size_to_rails_method(w[:memory_threshold]))
+
+      w = qwb[:ems_metrics_processor_worker]
+      @edit[:new].set_worker_setting!(:MiqEmsMetricsProcessorWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqEmsMetricsProcessorWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      w = qwb[:ems_refresh_worker][:defaults]
+      @edit[:new].set_worker_setting!(:MiqEmsRefreshWorker, [:defaults, :memory_threshold], human_size_to_rails_method(w[:memory_threshold]))
+
+      wb = @edit[:new].config[:workers][:worker_base]
+      w = wb[:event_catcher]
+      @edit[:new].set_worker_setting!(:MiqEventCatcher, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      w = wb[:vim_broker_worker]
+      @edit[:new].set_worker_setting!(:MiqVimBrokerWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      wb[:replication_worker][:replication][:destination].delete(:verify)
+      @edit[:new].set_worker_setting!(:MiqReplicationWorker,:replication, wb[:replication_worker][:replication])
+
+      w = qwb[:smart_proxy_worker]
+      @edit[:new].set_worker_setting!(:MiqSmartProxyWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqSmartProxyWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      w = wb[:ui_worker]
+      @edit[:new].set_worker_setting!(:MiqUiWorker, :count, w[:count].to_i)
+
+      w = qwb[:reporting_worker]
+      @edit[:new].set_worker_setting!(:MiqReportingWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqReportingWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      w = wb[:web_service_worker]
+      @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      @update = MiqServer.find(@sb[:selected_server_id]).get_config
+    when "settings_database"                                      # Database tab
+      db_config = MiqDbConfig.new(@edit[:new])
+      result = db_config.save
+      if result == true
+        add_flash(I18n.t("flash.ops.settings.db_settings_saved"))
+        @changed = false
+        begin
+          MiqServer.my_server(true).restart_queue
+        rescue StandardError => bang
+          add_flash(I18n.t("flash.ops.settings.error_during_task", :task=>"Server restart") << bang.message, :error)  # Push msg and error flag
+        else
+          add_flash(I18n.t("flash.record.task_initiated", :model=>ui_lookup(:table=>"evm_server"), :task=>"Restart"))
+        end
+      else
+        db_config.errors.each do |field,msg|
+          add_flash("#{field.to_s.capitalize} #{msg}", :error)
+        end
+        @changed = (@edit[:new] != @edit[:current])
+      end
+    when "settings_host"                                      # Host Settings tab
+      @changed = (@edit[:new] != @edit[:current].config)
+      @update = VMDB::Config.new("hostdefaults")            # Get the settings object to update it
+    when "settings_custom_logos"                                      # Custom Logo tab
+      @changed = (@edit[:new] != @edit[:current].config)
+      @update = VMDB::Config.new("vmdb")                    # Get the settings object to update it
+    when "settings_maintenance"                                         # Maintenance tab
+    when "settings_smartproxy"                                          # SmartProxy Defaults tab
+      @changed = (@edit[:new] != @edit[:current].config)
+      @update = VMDB::Config.new("hostdefaults")            # Get the settings object to update it
+      @update.config.each_key do |category|
+        @update.config[category] = @edit[:new][category].dup
+      end
+      if @edit[:new][:agent][:wsListenPort] &&  !(@edit[:new][:agent][:wsListenPort] =~ /^\d+$/)
+        add_flash(I18n.t("flash.edit.field_must_be.numeric", :field=>"Web Services Listen Port"), :error)
+      end
+      if @edit[:new][:agent][:log][:wrap_size] && (!(@edit[:new][:agent][:log][:wrap_size] =~ /^\d+$/) || @edit[:new][:agent][:log][:wrap_size].to_i == 0)
+        add_flash(I18n.t("flash.edit.field_must_be.numeric_greater_than_0", :field=>"Log Wrap Size"), :error)
+      end
+      if ! @flash_array
+        @update.config[:agent][:log][:wrap_size] = @edit[:new][:agent][:log][:wrap_size].to_i * 1024 * 1024
+        if @update.validate       # Have VMDB class validate the settings
+          @update.save
+          add_flash(I18n.t("flash.ops.settings.smartproxy_settings_saved"))
+          @changed = false
+        else
+          @update.errors.each do |field,msg|
+            add_flash("#{field.titleize}: #{msg}", :error)
+            @changed = true
+          end
+        end
+      end
+      get_node_info(x_node)
+      replace_right_cell(@nodetype)
+      return
+    when "settings_advanced"                                          # Advanced manual yaml editor tab
+      result = VMDB::Config.save_file(session[:config_file_name], @edit[:new][:file_data])  # Save the config file
+      if result != true                                         # Result contains errors?
+        result.each do |field,msg|
+          add_flash("#{field.to_s.titleize}: #{msg}", :error)
+        end
+        @changed = (@edit[:new] != @edit[:current])
+      else
+        add_flash(I18n.t("flash.ops.settings.advanced_settings_saved", :filename=>VMDB::Config.available_config_names[session[:config_file_name]]))
+        @changed = false
+      end
+#     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
+      get_node_info(x_node)
+      replace_right_cell(@nodetype)
+      return
+    end
+    if !['settings_rhn_edit',"settings_workers","settings_database","settings_maintenance","settings_advanced"].include?(@sb[:active_tab]) &&
+        x_node.split("-").first != "z"
+      @update.config.each_key do |category|
+        @update.config[category] = @edit[:new][category].dup
+      end
+      if @edit[:new][:ntp]
+        @update.config[:ntp] = @edit[:new][:ntp].dup
+      end
+      if @update.validate                                           # Have VMDB class validate the settings
+        if ["settings_server","settings_authentication"].include?(@sb[:active_tab])
+          server = MiqServer.find(@sb[:selected_server_id])
+          @validate = server.set_config(@update)  # Save server settings against selected server
+        else
+          @update.save                                              # Save other settings for current server
+        end
+        AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
+        if @sb[:active_tab] == "settings_server"
+          add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Configuration", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone))
+        elsif @sb[:active_tab] == "settings_authentication"
+          add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Authentication", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone))
+        else
+          add_flash(I18n.t("flash.ops.settings.config_settings_saved"))
+        end
+        if @sb[:active_tab] == "settings_server" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
+          session[:customer_name] = @update.config[:server][:company]
+          session[:vmdb_name] = @update.config[:server][:name]
+        elsif @sb[:active_tab] == "settings_custom_logos"                           # Reset session variable for logo field
+          session[:custom_logo] = @update.config[:server][:custom_logo]
+        end
+        set_user_time_zone if @sb[:active_tab] == "settings_server"
+        #settings_set_form_vars
+        session[:changed] = @changed = false
+        get_node_info(x_node)
+        if @sb[:active_tab] == "settings_server"
+          replace_right_cell(@nodetype,[:settings])
+        elsif @sb[:active_tab] == "settings_custom_logos"
+          render :update do |page|
+            page.redirect_to :action => 'explorer', :flash_msg=>@flash_array[0][:message], :flash_error =>@flash_array[0][:level] == :error, :escape => false  # redirect to build the server screen
+          end
+          return
+        else
+          replace_right_cell(@nodetype)
+        end
+      else
+        @update.errors.each do |field,msg|
+          add_flash("#{field.titleize}: #{msg}", :error)
+        end
+        @changed = true
+        session[:changed] = @changed
+        get_node_info(x_node)
+        replace_right_cell(@nodetype)
+      end
+    elsif @sb[:active_tab] == "settings_workers" &&
+        x_node.split("-").first != "z"
+      if !@edit[:default_verify_status]
+        add_flash(I18n.t("flash.edit.passwords_mismatch"), :error)
+      end
+      if @flash_array != nil
+        session[:changed] = @changed = true
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+        return
+      end
+      @update.config.each_key do |category|
+        @update.config[category] = @edit[:new].config[category].dup
+      end
+      if @update.validate                                           # Have VMDB class validate the settings
+        server = MiqServer.find(@sb[:selected_server_id])
+        @validate = server.set_config(@update)  # Save server settings against selected server
+
+        AuditEvent.success(build_config_audit(@edit[:new].config, @edit[:current].config))
+        add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Configuration", :name=>server.name, :server_id=>@sb[:selected_server_id], :zone=>server.my_zone))
+
+        if @sb[:active_tab] == "settings_workers" &&  @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
+          session[:customer_name] = @update.config[:server][:company]
+          session[:vmdb_name] = @update.config[:server][:name]
+        end
+        @changed = false
+        get_node_info(x_node)
+        replace_right_cell(@nodetype)
+      else
+        @update.errors.each do |field,msg|
+          add_flash("#{field.titleize}: #{msg}", :error)
+        end
+        @changed = true
+        get_node_info(x_node)
+        replace_right_cell(@nodetype)
+      end
+    else
+      @changed = false
+      get_node_info(x_node)
+      replace_right_cell(@nodetype)
+    end
+  end
+
+  def settings_update_reset
+    session[:changed] = @changed = false
+    add_flash(I18n.t("flash.edit.reset"), :warning)
+    if @sb[:active_tab] == 'settings_rhn_edit'
+      edit_rhn
+    else
+      get_node_info(x_node)
+      replace_right_cell(@nodetype)
+    end
+  end
+
+  def settings_update_cancel
+    @sb[:active_tab] = 'settings_rhn'
+    @changed = false
+    @edit = nil
+    settings_get_info('root')
+    add_flash(I18n.t('flash.ops.settings.customer_info_edit_cancelled'))
+    replace_right_cell('root')
+  end
 
   def settings_server_validate
     if @sb[:active_tab] == "settings_server" && @edit[:new][:server] && ((@edit[:new][:server][:custom_support_url].nil? || @edit[:new][:server][:custom_support_url].strip == "") && (!@edit[:new][:server][:custom_support_url_description].nil? && @edit[:new][:server][:custom_support_url_description].strip != "") ||
