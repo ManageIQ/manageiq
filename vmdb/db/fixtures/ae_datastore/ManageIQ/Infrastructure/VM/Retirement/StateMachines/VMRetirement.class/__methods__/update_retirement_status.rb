@@ -3,9 +3,6 @@
 # Required inputs: status, status_state
 #
 
-# Get vm from root
-vm = $evm.root['vm']
-
 # Get variables from Server object
 server = $evm.root['miq_server']
 

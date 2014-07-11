@@ -12,7 +12,7 @@
 #
 
 # Build email to requester with reason
-def emailrequester(miq_request, appliance, msg, provisionRequestApproval)
+def emailrequester(miq_request, appliance, msg)
   $evm.log("info", "Requester email logic starting")
 
   # Get requester object
@@ -122,7 +122,7 @@ else
 end
 
 # Email Requester
-emailrequester(miq_request, appliance, msg, provisionRequestApproval)
+emailrequester(miq_request, appliance, msg)
 
 # Email Approver
 emailapprover(miq_request, appliance, msg, provisionRequestApproval)

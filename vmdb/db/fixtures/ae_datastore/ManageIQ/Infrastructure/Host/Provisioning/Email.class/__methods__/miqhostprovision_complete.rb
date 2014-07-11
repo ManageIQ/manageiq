@@ -19,9 +19,6 @@ raise "Host not found" if host.nil?
 hostname = prov.get_option(:hostname)
 hostid = prov.get_option(:src_host_ids)
 
-# Get provisioning server
-miq_server = $evm.root['miq_server']
-
 # Override the default appliance IP Address below
 appliance ||= $evm.root['miq_server'].ipaddress
 

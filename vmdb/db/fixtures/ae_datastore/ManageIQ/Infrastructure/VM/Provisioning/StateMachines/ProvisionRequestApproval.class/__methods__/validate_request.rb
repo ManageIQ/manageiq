@@ -180,7 +180,6 @@ end
 #
 ######################################
 if approval_req == true
-  msg = ""
   msg =  "Request was not auto-approved for the following reasons: "
   msg += "(#{reason1}) " unless reason1.nil?
   msg += "(#{reason2}) " unless reason2.nil?

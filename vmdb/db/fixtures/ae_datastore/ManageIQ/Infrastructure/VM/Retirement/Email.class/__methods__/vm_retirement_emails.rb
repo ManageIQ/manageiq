@@ -40,9 +40,6 @@ vm_name = vm['name']
 # Look at the Event Type in the Current Object or in the Root Object
 event_type = $evm.object['event'] || $evm.root['event_type']
 
-# Get provisioning server
-miq_server = $evm.root['miq_server']
-
 # Get VM Owner Name and Email
 evm_owner_id = vm.attributes['evm_owner_id']
 owner = nil

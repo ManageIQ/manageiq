@@ -22,7 +22,6 @@ def process_vmware(prov)
     # If not you can set one here.
     ###################################
     default_vlan = "vlan1"
-    default_dvs = "portgroup1"
 
     if prov.get_option(:vlan).nil?
       $evm.log("info", "Provisioning object <:vlan> updated with <#{default_vlan}>")
@@ -129,7 +128,7 @@ def process_redhat(prov)
 end
 
 # Process Amazon specific provisioning options
-def process_amazon(prov)
+def process_amazon(_prov)
 end # end process_amazon
 
 # Get provisioning object

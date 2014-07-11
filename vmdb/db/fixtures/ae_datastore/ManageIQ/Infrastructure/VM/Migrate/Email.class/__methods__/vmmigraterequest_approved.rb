@@ -25,8 +25,7 @@ $evm.log('info', "Requester email logic starting")
 requester = $evm.root['miq_request'].requester
 
 # Get to_email_address from requester.email then from model if nil
-to = nil
-to  = requester.email || $evm.object['to_email_address']
+to = requester.email || $evm.object['to_email_address']
 
 # Get from_email_address from model unless specified below
 from = nil

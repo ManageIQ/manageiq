@@ -218,7 +218,7 @@ end
 #
 #
 #################################
-def process_amazon(mapping, prov)
+def process_amazon(_mapping, _prov)
 end # end process_amazon
 
 # Get provisioning object

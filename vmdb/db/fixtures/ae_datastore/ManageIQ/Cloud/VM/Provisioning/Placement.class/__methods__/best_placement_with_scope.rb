@@ -15,7 +15,6 @@ cluster = vm.ems_cluster
 raise "Cluster not found for VM:<#{vm.name}>" if cluster.nil?
 $evm.log("info", "Selected Cluster: [#{cluster.nil? ? "nil" : cluster.name}]")
 
-attrs = $evm.object.attributes
 tags  = {}
 #############################
 # Get Tags that are in scope

@@ -45,7 +45,6 @@ end
 # If not you can set one here.
 ###################################
 default_vlan = "vlan1"
-default_dvs = "portgroup1"
 
 if prov.get_option(:vlan).nil?
   prov.set_vlan(default_vlan)

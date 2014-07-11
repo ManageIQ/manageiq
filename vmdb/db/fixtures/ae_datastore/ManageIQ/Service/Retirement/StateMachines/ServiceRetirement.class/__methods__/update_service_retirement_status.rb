@@ -2,9 +2,6 @@
 # Description: This method is a placeholder for retirement status update
 #
 
-# Get vm from root
-service = $evm.root['service']
-
 # Get variables from Server object
 server = $evm.root['miq_server']
 

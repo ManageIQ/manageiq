@@ -3,8 +3,6 @@
 #
 
 service = $evm.root['service']
-category = "lifecycle"
-tag = "retire_full"
 
 if service
   $evm.log('info', "Deleting Service <#{service.name}> from VMDB")

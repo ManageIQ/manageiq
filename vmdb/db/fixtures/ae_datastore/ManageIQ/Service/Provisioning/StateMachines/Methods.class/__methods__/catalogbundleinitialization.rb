@@ -59,7 +59,6 @@ end
 def tag_parent_service(service, options_hash)
   # Setup regular expression for service dialog tags
   tags_regex = /^dialog_tag_0_(.*)/i
-  tags_hash = {}
 
   # Look for tags with a sequence_id of 0 to tag the destination Service
   options_hash[0].each do |k, v|

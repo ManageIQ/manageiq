@@ -12,7 +12,6 @@ raise "User not specified" if user.nil?
 ems  = vm.ext_management_system
 raise "EMS not found for VM:<#{vm.name}>" if ems.nil?
 
-attrs = $evm.object.attributes
 tags  = {}
 
 # Get Tags that are in scope

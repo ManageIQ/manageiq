@@ -11,11 +11,6 @@ def buildDetails(ext_management_system)
   # Set alert to alert description
   options[:alert] = $evm.root['miq_alert_description']
 
-  # Get Appliance name from model unless specified below
-  appliance = nil
-  # appliance ||= $evm.object['appliance']
-  appliance ||= $evm.root['miq_server'].ipaddress
-
   # Get signature from model unless specified below
   signature = nil
   signature ||= $evm.object['signature']

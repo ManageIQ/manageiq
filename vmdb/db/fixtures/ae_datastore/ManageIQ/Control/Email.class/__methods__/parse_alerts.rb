@@ -17,7 +17,7 @@ dumpObjects
 
 # List the types of object we will try to detect
 obj_types = {'vm' => 'vm', 'host' => 'host}', 'storage' => 'storage', 'ems_cluster' => 'ems_cluster', 'ext_management_system' => 'ext_management_system'}
-obj_type = $evm.root.attributes.detect { |k, v| k == obj_types[k] }
+obj_type = $evm.root.attributes.detect { |k, _v| k == obj_types[k] }
 
 # If obj_type is NOT nil else assume miq_server
 unless obj_type.nil?

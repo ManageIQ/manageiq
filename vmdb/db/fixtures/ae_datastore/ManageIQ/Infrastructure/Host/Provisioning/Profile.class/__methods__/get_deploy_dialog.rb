@@ -17,7 +17,7 @@ if run_env_dialog
   if regex =~ dialog_input_vm_tags
     cat = Regexp.last_match[1]
     tag = Regexp.last_match[3]
-    $evm.log("info", "Category: #<{cat}> Tag: <#{tag}>")
+    $evm.log("info", "Category: <#{cat}> Tag: <#{tag}>")
     dialog_name = 'miq_provision_dialogs-deploy-#{tag}'
   end
   ## Set dialog name in the root object to be picked up by dialogs

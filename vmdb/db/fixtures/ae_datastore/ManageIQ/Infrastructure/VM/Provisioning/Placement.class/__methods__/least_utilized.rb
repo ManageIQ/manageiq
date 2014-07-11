@@ -8,8 +8,8 @@ $evm.log("info", "Args:    #{MIQ_ARGS.inspect}")
 prov = $evm.root["miq_provision"]
 vm = prov.vm_template
 raise "VM not specified" if vm.nil?
-ems  = vm.ext_management_system
-raise "EMS not found for VM [#{vm.name}" if vm.nil?
+ems = vm.ext_management_system
+raise "EMS not found for VM [#{vm.name}]" if ems.nil?
 
 # Log space required
 $evm.log("info", "vm=[#{vm.name}], space required=[#{vm.provisioned_storage}]")

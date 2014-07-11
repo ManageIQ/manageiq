@@ -97,8 +97,6 @@ options_hash = get_options_hash(dialog_options)
 
 # Process Child Tasks
 service_template_provision_task.miq_request_tasks.each do |t|
-  # Child Service
-  child_service = t.destination
 
   # Process grandchildren service options
   unless t.miq_request_tasks.nil?

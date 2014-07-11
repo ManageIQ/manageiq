@@ -47,8 +47,6 @@ else
   $evm.log("info", "ESX Scope will limited to hosts in Virtual Center")
 end
 
-curr_host_cpu_percent = host.get_realtime_metric(:v_pct_cpu_ready_delta_summation, [15.minutes.ago.utc, 5.minutes.ago.utc], :avg)
-
 # Get hosts attached to the VC
 hosts = ems.hosts
 

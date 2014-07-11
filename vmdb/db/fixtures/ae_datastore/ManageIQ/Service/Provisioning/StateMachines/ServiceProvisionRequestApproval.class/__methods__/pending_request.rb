@@ -3,7 +3,6 @@
 #
 
 # Get objects
-provision_request = $evm.root['miq_request'].resource
 msg = $evm.object['reason']
 $evm.log('info', "#{msg}")
 
