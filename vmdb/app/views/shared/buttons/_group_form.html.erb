@@ -1,7 +1,7 @@
 <% url = url_for(:action =>'group_form_field_changed', :id=>"#{@custom_button_set.id || "new"}") %>
 <div id="group_form_div" style="width:100%;height:100%;overflow:auto;">
-	<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
-	<fieldset>
+	<%= render(:partial=>"layouts/flash_msg") %>
+
 		<p class="legend">Basic Info</p>
 		<table class="style1">
 			<tr>
@@ -48,12 +48,12 @@
 				</td>
 			</tr>
 		</table>
-	</fieldset>
+
   <% if x_active_tree == :ab_tree || (x_active_tree == :sandt_tree && @edit[:rec_id]) %>
-	  <fieldset>
+	  <hr>
     <p class="legend">Assign Buttons</p>
       <%= render :partial => "shared/buttons/column_lists" %>
-    </fieldset>
+
   <% end %>
   <%# Need this to bind checkbox observers when under DHTMLX tabs %>
   <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>

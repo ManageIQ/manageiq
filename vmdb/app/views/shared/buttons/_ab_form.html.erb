@@ -16,9 +16,9 @@
 		<% end %>
 	</ul>
 
-	<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+	<%= render(:partial=>"layouts/flash_msg") %>
 
-	<fieldset>
+
 		<p class="legend">Action</p>
 		<table class="style1">
 			<tr>
@@ -75,7 +75,7 @@
         </td>
       </tr>
 		</table>
-	</fieldset>
+
 
 	<%= render :partial => "layouts/ae_resolve_options", :locals=>{:resolve=>@edit, :form_action=>"ae_resolve", :ae_custom_button=>true, :field_changed_url=>"automate_button_field_changed"} %>
 

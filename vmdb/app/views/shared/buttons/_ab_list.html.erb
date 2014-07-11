@@ -1,7 +1,7 @@
 <%# showing list of CIs %>
 <% if @sb[:obj_list] %>
   <%= render :partial => "layouts/flash_msg" %>
-  <fieldset>
+
     <table class="style3">
       <thead>
       <th>Object Types</th>
@@ -19,15 +19,17 @@
       <% end %>
       </tbody>
     </table>
-  </fieldset>
+
 <% elsif @sb[:button_groups] %>
   <% if @sb[:button_groups].blank? %>
-    <fieldset>
-      No Items found
-    </fieldset>
+    <hr>
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>No Items found.</strong>
+    </div>
   <% else %>
-    <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
-    <fieldset>
+    <%= render(:partial=>"layouts/flash_msg") %>
+
       <table class="style3">
         <thead>
           <th class="icon"></th>
@@ -85,14 +87,14 @@
           <% end %>
         </tbody>
       </table>
-    </fieldset>
+
   <% end %>
 <% elsif @sb[:buttons] %>
   <%# button node %>
-  <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+  <%= render(:partial=>"layouts/flash_msg") %>
   <%# don't need basic info box for Unassigned button group %>
   <% if @record && @record.kind_of?(CustomButtonSet) %>
-    <fieldset>
+
       <p class="legend">Basic Information</p>
       <table class="style1">
         <tbody>
@@ -117,12 +119,16 @@
         </tr>
         </tbody>
       </table>
-    </fieldset>
+
   <% end %>
   <% if @sb[:buttons].blank? %>
-    <fieldset>No Buttons found</fieldset>
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>No Buttons found.</strong>
+    </div>
+
   <% else %>
-    <fieldset>
+      <hr>
       <table class="style3">
         <thead>
           <th class="icon"></th>
@@ -149,7 +155,7 @@
           <% end %>
         </tbody>
       </table>
-    </fieldset>
+
   <% end %>
 <% elsif @temp && @temp[:custom_button] %>
   <%= render(:partial=>'shared/buttons/ab_show')%>

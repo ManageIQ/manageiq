@@ -1,6 +1,6 @@
-<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+<%= render(:partial=>"layouts/flash_msg") %>
 
-			<fieldset>
+
 				<p class="legend">Basic Information</p>
 				<table class="style1">
 					<tbody>
@@ -29,8 +29,8 @@
             </tr>
 				  </tbody>
 				</table>
-			</fieldset>
-			<fieldset>
+			<hr>
+
 				<p class="legend">Object Details</p>
 				<table class="style1">
 					<tbody>
@@ -48,8 +48,7 @@
 						</tr>
 						</tbody>
 				</table>
-			</fieldset>
-			<fieldset>
+        <hr>
 				<p class="legend">Object Attribute</p>
 				<table class="style1">
 					<tbody>
@@ -67,11 +66,13 @@
 						<% end %>
 						</tbody>
 				</table>
-			</fieldset>
-			<fieldset>
+			<hr>
 				<p class="legend">Attribute/Value Pairs</p>
         <% if @resolve[:new][:attrs].empty? %>
-          No Attribute/Value Pairs found.
+          <div class="alert alert-info">
+			      <span class="pficon pficon-info"></span>
+			      <strong>No Attribute/Value Pairs found.</strong>
+		      </div>
         <% else %>
           <table class="style1">
             <% @resolve[:new][:attrs].each_with_index do |attr, i| %>
@@ -83,8 +84,7 @@
             <% end %>
           </table>
         <% end %>
-			</fieldset>
-			<fieldset>
+			<hr>
 				<p class="legend">Visibility</p>
 				<table class="style1">
 					<% show_to = @temp[:custom_button].visibility.nil? || (@temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] == "_ALL_") ? "To All" : "By Role" %>
@@ -101,5 +101,5 @@
 						<% end %>
 					</tbody>
 				</table>
-			</fieldset>
+
 
