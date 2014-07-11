@@ -1,100 +1,139 @@
 <div id="column_lists">
+  <table width="100%" class="form" id="formtest">
+    <tr>
+      <% if x_active_tree == :ab_tree %>
+        <td align="left" class="widthed">   UnAssigned:</td>
+        <td></td>
+      <% end %>
+      <td align="left">Selected:</td>
+      </tr>
+    <tr>
+      <% if x_active_tree == :ab_tree %>
+        <td align="right" valign="top">
+          <%= select_tag('available_fields[]',
+                          options_for_select(@edit[:new][:available_fields]),
+                                             {:multiple => true, 
+                                              :style    => "width: 450px", 
+                                              :size     => 8, 
+                                              :id       => "available_fields"})
+          %>
+        </td>
+        <td width="30" valign="middle">
+          <% if @edit[:new][:available_fields].length == 0 %>
+            <%= image_tag("/images/toolbars/right.png", 
+                          :class => "dimmed rollover small")
+            %>
+          <% else %>
+            <%= link_to(image_tag("/images/toolbars/right.png",
+                                  :class => "rollover small", 
+                                  :alt   => "Move selected fields right"),
+                        {:action => 'group_form_field_changed',
+                         :button => 'right',
+                         :id     => "#{@custom_button_set.id || "new"}"},
+                        "data-submit" => 'column_lists',
+                        :remote       => true,
+                        :title        => 'Move selected buttons right')
+            %>
+          <% end %>
 
+          <% if @edit[:new][:fields].length == 0 %>
+            <%= image_tag("/images/toolbars/left.png",
+                          :class => "dimmed rollover small")
+            %>
+          <% else %>
+            <%= link_to(image_tag("/images/toolbars/left.png", 
+                                  :class => "rollover small", 
+                                  :alt   => "Move selected fields left"),
+                       {:action => 'group_form_field_changed', 
+                        :button => 'left', 
+                        :id     => "#{@custom_button_set.id || "new"}"},
+                       "data-submit" => 'column_lists',
+                       :remote       => true,
+                       :title        => 'Move selected buttons left')
+            %>
+          <% end %>
+        </td>
+      <% end %>
+      <td align="left" valign="top">
+        <%= select_tag('selected_fields[]',
+                       options_for_select( @edit[:new][:fields], 
+                       @selected ), 
+                       {:multiple => true, 
+                        :style    => "width: 450px", 
+                        :size     => 8, 
+                        :id       => "selected_fields"}) 
+        %>
+      </td>
+      <td width="30" valign="middle">
+        <% if @edit[:new][:fields].length < 2 %>
+          <%= image_tag("/images/toolbars/top.png", 
+                        :class => "dimmed rollover small")
+          %>
+        <% else %>
+          <%= link_to(image_tag("/images/toolbars/top.png",
+                                :class => "rollover small", 
+                                :alt   => "Move selected fields to top"),
+                      {:action  => 'group_form_field_changed',
+                       :button  => 'top', 
+                       :id      => "#{@custom_button_set.id || "new"}"},
+                      "data-submit" => 'column_lists',
+                      :remote       => true,
+                      :title        => 'Move selected buttons to top')
+          %>
+        <% end %>
 
+        <% if @edit[:new][:fields].length < 2 %>
+          <%= image_tag("/images/toolbars/up.png", 
+                        :class => "dimmed rollover small")
+          %>
+        <% else %>
+          <%= link_to(image_tag("/images/toolbars/up.png",
+                                :class  => "rollover small", 
+                                :alt    => "Move selected fields up"),
+                      {:action =>'group_form_field_changed', 
+                       :button => 'up', 
+                       :id     => "#{@custom_button_set.id || "new"}"},
+                      "data-submit" => 'column_lists',
+                      :remote       => true,
+                      :title        => 'Move selected buttons up')
+          %>
+        <% end %>
 
+        <% if @edit[:new][:fields].length < 2 %>
+          <%= image_tag("/images/toolbars/down.png", 
+                        :class => "dimmed rollover small")
+          %>
+        <% else %>
+          <%= link_to(image_tag("/images/toolbars/down.png",
+                                :class => "rollover small", 
+                                :alt   => "Move selected fields down"),
+                      {:action => 'group_form_field_changed', 
+                       :button => 'down', 
+                       :id     => "#{@custom_button_set.id || "new"}"},
+                      "data-submit" => 'column_lists',
+                      :remote       => true,
+                      :title        => 'Move selected buttons down')
+          %>
+        <% end %>
 
-					<table width="100%" class="form" id="formtest">
-						<tr>
-              <% if x_active_tree == :ab_tree %>
-							  <td align="left" class="widthed">   UnAssigned:</td>
-						    <td></td>
-              <% end %>
-							<td align="left">Selected:</td>
-							</tr>
-						<tr>
-              <% if x_active_tree == :ab_tree %>
-                <td align="right" valign="top">
-                  <%= select_tag('available_fields[]',
-                                  options_for_select(@edit[:new][:available_fields]),
-                                                      {:multiple=> true, :style=>"width: 450px", :size=>8, :id=>"available_fields"}) %>
-                </td>
-                <td width="30" valign="middle">
-                  <% if @edit[:new][:available_fields].length == 0 %>
-                    <%= image_tag("/images/toolbars/right.png", :class=>"dimmed rollover small") %>
-                  <% else %>
-                    <%= link_to(image_tag("/images/toolbars/right.png", :class=>"rollover small", :alt=>"Move selected fields right"),
-                          {:action=>'group_form_field_changed', :button=>'right', :id=>"#{@custom_button_set.id || "new"}"},
-                          "data-submit"=>'column_lists',
-                          :remote=>true,
-                          :title=>'Move selected buttons right')
-                    %>
-                  <% end %>
-
-                  <% if @edit[:new][:fields].length == 0 %>
-                    <%= image_tag("/images/toolbars/left.png", :class=>"dimmed rollover small") %>
-                  <% else %>
-                    <%= link_to(image_tag("/images/toolbars/left.png", :class=>"rollover small", :alt=>"Move selected fields left"),
-                          {:action=>'group_form_field_changed', :button=>'left', :id=>"#{@custom_button_set.id || "new"}"},
-                          "data-submit"=>'column_lists',
-                          :remote=>true,
-                          :title=>'Move selected buttons left')
-                    %>
-                  <% end %>
-                </td>
-              <% end %>
-              <td align="left" valign="top">
-                  <%= select_tag('selected_fields[]', options_for_select( @edit[:new][:fields], @selected ), { :multiple=> true, :style=>"width: 450px", :size=>8, :id=>"selected_fields"} ) %>
-              </td>
-						  <td width="30" valign="middle">
-								<% if @edit[:new][:fields].length < 2 %>
-									<%= image_tag("/images/toolbars/top.png", :class=>"dimmed rollover small") %>
-								<% else %>
-									<%= link_to(image_tag("/images/toolbars/top.png", :class=>"rollover small", :alt=>"Move selected fields to top"),
-												{:action=>'group_form_field_changed', :button=>'top', :id=>"#{@custom_button_set.id || "new"}"},
-                        "data-submit"=>'column_lists',
-                        :remote=>true,
-												:title=>'Move selected buttons to top')
-									%>
-								<% end %>
-
-								<% if @edit[:new][:fields].length < 2 %>
-									<%= image_tag("/images/toolbars/up.png", :class=>"dimmed rollover small") %>
-								<% else %>
-									<%= link_to(image_tag("/images/toolbars/up.png", :class=>"rollover small", :alt=>"Move selected fields up"),
-												{:action=>'group_form_field_changed', :button=>'up', :id=>"#{@custom_button_set.id || "new"}"},
-                        "data-submit"=>'column_lists',
-                        :remote=>true,
-												:title=>'Move selected buttons up')
-									%>
-								<% end %>
-
-								<% if @edit[:new][:fields].length < 2 %>
-									<%= image_tag("/images/toolbars/down.png", :class=>"dimmed rollover small") %>
-								<% else %>
-									<%= link_to(image_tag("/images/toolbars/down.png",:class=>"rollover small", :alt=>"Move selected fields down"),
-												{:action=>'group_form_field_changed', :button=>'down', :id=>"#{@custom_button_set.id || "new"}"},
-                        "data-submit"=>'column_lists',
-                        :remote=>true,
-												:title=>'Move selected buttons down')
-									%>
-								<% end %>
-
-								<% if @edit[:new][:fields].length < 2 %>
-									<%= image_tag("/images/toolbars/bottom.png", :class=>"dimmed rollover small") %>
-								<% else %>
-									<%= link_to(image_tag("/images/toolbars/bottom.png", :class=>"rollover small", :alt=>"Move selected fields to bottom"),
-												{:action=>'group_form_field_changed', :button=>'bottom', :id=>"#{@custom_button_set.id || "new"}"},
-                        "data-submit"=>'column_lists',
-                        :remote=>true,
-												:title=>'Move selected buttons to bottom')
-									%>
-								<% end %>
-
-							</td>
-						</tr>
-					</table>
-
-
-
-
+        <% if @edit[:new][:fields].length < 2 %>
+          <%= image_tag("/images/toolbars/bottom.png", 
+                        :class => "dimmed rollover small")
+          %>
+        <% else %>
+          <%= link_to(image_tag("/images/toolbars/bottom.png",
+                                :class => "rollover small", 
+                                :alt   => "Move selected fields to bottom"),
+                      {:action => 'group_form_field_changed', 
+                       :button => 'bottom', 
+                       :id     => "#{@custom_button_set.id || "new"}"},
+                      "data-submit" => 'column_lists',
+                      :remote       => true,
+                      :title        => 'Move selected buttons to bottom')
+          %>
+        <% end %>
+        
+      </td>
+    </tr>
+  </table>
 </div>

@@ -1,24 +1,23 @@
 <%# showing list of CIs %>
 <% if @sb[:obj_list] %>
   <%= render :partial => "layouts/flash_msg" %>
-
-    <table class="style3">
-      <thead>
-      <th>Object Types</th>
-      </thead>
-      <tbody>
-      <%# CI node level%>
-      <% @sb[:obj_list].sort.each do |obj| %>
-        <tr class="<%= cycle('row0', 'row1') %>"
-            onclick="cfmeDynatree_activateNode('ab_tree', 'xx-<%= obj[1].split('_').first %>_<%= @sb[:target_classes][obj[0]] %>')"
-            onmouseover="this.style.cursor='pointer'" title="Click to view details">
-          <td>
-            <%= obj[0] %>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
+  <table class="style3">
+    <thead>
+    <th>Object Types</th>
+    </thead>
+    <tbody>
+    <%# CI node level%>
+    <% @sb[:obj_list].sort.each do |obj| %>
+      <tr class="<%= cycle('row0', 'row1') %>"
+          onclick="cfmeDynatree_activateNode('ab_tree', 'xx-<%= obj[1].split('_').first %>_<%= @sb[:target_classes][obj[0]] %>')"
+          onmouseover="this.style.cursor='pointer'" title="Click to view details">
+        <td>
+          <%= obj[0] %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 
 <% elsif @sb[:button_groups] %>
   <% if @sb[:button_groups].blank? %>
@@ -27,71 +26,71 @@
       <span class="pficon pficon-info"></span>
       <strong>No Items found.</strong>
     </div>
-  <% else %>
-    <%= render(:partial=>"layouts/flash_msg") %>
 
-      <table class="style3">
-        <thead>
-          <th class="icon"></th>
-          <th>Text</th>
-          <% if x_active_tree == :sandt_tree %>
-            <th>Type</th>
-          <% end %>
-          <th>Hover Text</th>
-        </thead>
-        <tbody>
-          <% @sb[:button_groups].each do |obj| %>
-            <% if obj.kind_of?(String) %>
-              <tr class="<%= cycle('row0', 'row1') %>"
-                  onclick="cfmeDynatree_activateNode('ab_tree', '<%= "-ub-#{@nodetype[1]}" %>')"
-                  onmouseover="this.style.cursor='pointer'" title="Click to view details">
-                <td>
-                  <img src="/images/icons/new/folder.png" align="left" width="20" height="20"/>
-                </td>
-                <td>
-                  <%= obj %>
-                </td>
-                <td>
-                  <%= obj %>
-                </td>
-              </tr>
-            <% else %>
-              <% tree_box = x_active_tree == :sandt_tree ? 'sandt_tree' : 'ab_tree' %>
-              <% tree_id = x_node %>
-              <% if obj[:typ] == "CustomButton" %>
-                <% typ = "cb" %>
-                <% img = obj[:button_image] %>
-                <% rec_type = "Button" %>
-              <% else %>
-                <% typ = "cbg" %>
-                <% img = obj[:button_image] %>
-                <% rec_type = "Group" %>
-              <% end %>
-              <tr class="<%= cycle('row0', 'row1') %>"
-                onclick="cfmeDynatree_activateNode('<%= tree_box %>', '<%= tree_id %>_<%= typ %>-<%= to_cid(obj[:id]) %>')"
+  <% else %>
+    <%= render(:partial => "layouts/flash_msg") %>
+    <table class="style3">
+      <thead>
+        <th class="icon"></th>
+        <th>Text</th>
+        <% if x_active_tree == :sandt_tree %>
+          <th>Type</th>
+        <% end %>
+        <th>Hover Text</th>
+      </thead>
+      <tbody>
+        <% @sb[:button_groups].each do |obj| %>
+          <% if obj.kind_of?(String) %>
+            <tr class="<%= cycle('row0', 'row1') %>"
+                onclick="cfmeDynatree_activateNode('ab_tree', '<%= "-ub-#{@nodetype[1]}" %>')"
                 onmouseover="this.style.cursor='pointer'" title="Click to view details">
-                <td>
-                  <img src="/images/icons/new/custom-<%=img%>.png" align="left" width="20" height="20"/>
-                </td>
-                <td>
-                  <%= obj[:name].split("|").first %>
-                </td>
-                <% if x_active_tree == :sandt_tree %>
-                  <td><%=rec_type%></td>
-                <% end %>
-                <td>
-                  <%= obj[:description] %>
-                </td>
-              </tr>
+              <td>
+                <img src="/images/icons/new/folder.png" align="left" width="20" height="20"/>
+              </td>
+              <td>
+                <%= obj %>
+              </td>
+              <td>
+                <%= obj %>
+              </td>
+            </tr>
+          <% else %>
+            <% tree_box = x_active_tree == :sandt_tree ? 'sandt_tree' : 'ab_tree' %>
+            <% tree_id = x_node %>
+            <% if obj[:typ] == "CustomButton" %>
+              <% typ = "cb" %>
+              <% img = obj[:button_image] %>
+              <% rec_type = "Button" %>
+            <% else %>
+              <% typ = "cbg" %>
+              <% img = obj[:button_image] %>
+              <% rec_type = "Group" %>
             <% end %>
+            <tr class="<%= cycle('row0', 'row1') %>"
+              onclick="cfmeDynatree_activateNode('<%= tree_box %>', '<%= tree_id %>_<%= typ %>-<%= to_cid(obj[:id]) %>')"
+              onmouseover="this.style.cursor='pointer'" title="Click to view details">
+              <td>
+                <img src="/images/icons/new/custom-<%=img%>.png" align="left" width="20" height="20"/>
+              </td>
+              <td>
+                <%= obj[:name].split("|").first %>
+              </td>
+              <% if x_active_tree == :sandt_tree %>
+                <td><%=rec_type%></td>
+              <% end %>
+              <td>
+                <%= obj[:description] %>
+              </td>
+            </tr>
           <% end %>
-        </tbody>
-      </table>
+        <% end %>
+      </tbody>
+    </table>
 
   <% end %>
 <% elsif @sb[:buttons] %>
   <%# button node %>
-  <%= render(:partial=>"layouts/flash_msg") %>
+  <%= render(:partial => "layouts/flash_msg") %>
   <%# don't need basic info box for Unassigned button group %>
   <% if @record && @record.kind_of?(CustomButtonSet) %>
 
@@ -105,7 +104,8 @@
             <% display = @record.set_data.has_key?(:display) ? @record.set_data[:display] : true %>
             <%= check_box_tag(display, value=true,
                               checked=display,
-                              :disabled=>true) %>
+                              :disabled => true)
+            %>
             &nbsp;Display on Button
           </td>
         </tr>
@@ -155,15 +155,13 @@
           <% end %>
         </tbody>
       </table>
-
   <% end %>
 <% elsif @temp && @temp[:custom_button] %>
-  <%= render(:partial=>'shared/buttons/ab_show')%>
+  <%= render(:partial => 'shared/buttons/ab_show')%>
 <% elsif ["ab_group_edit","ab_group_new"].include?(params[:pressed]) || (params[:button] == "reset" && params[:action] == "group_update") %>
-  <%= render(:partial=>'shared/buttons/group_form')%>
+  <%= render(:partial => 'shared/buttons/group_form')%>
 <% elsif ["ab_button_edit","ab_button_new"].include?(params[:pressed]) || (params[:button] == "reset" && params[:action] == "button_update") || (params[:button] == "paste" && params[:action] == "resolve")%>
-  <%= render(:partial=>'shared/buttons/ab_form')%>
+  <%= render(:partial => 'shared/buttons/ab_form')%>
 <% elsif params[:pressed] == "ab_group_reorder" || (params[:button] == "reset" && params[:action] == "ab_group_reorder") %>
-  <%= render(:partial=>'shared/buttons/group_order_form') %>
+  <%= render(:partial => 'shared/buttons/group_order_form') %>
 <% end %>
-
