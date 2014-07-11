@@ -48,7 +48,7 @@
                 <%= text_field("user_proxies", "bind_dn", "size"=>20, "maxlength"=>50) %>
               </td>
               <td class="all">
-                <%= password_field("user_proxies", "bind_pwd", "size"=>20, "maxlength"=>50) %>
+                <%= password_field("user_proxies", "bind_pwd", "size"=>20, "maxlength"=>128) %>
               </td>
             </tr>
           <% end %>
@@ -78,7 +78,7 @@
                   <%= text_field("user_proxies", "bind_dn", "size"=>20, "maxlength"=>50, "value"=>entry[:bind_dn]) %>
                 </td>
                 <td class="all">
-                  <%= password_field("user_proxies", "bind_pwd", "size"=>20, "maxlength"=>50, "value"=>entry[:bind_pwd]) %>
+                  <%= password_field("user_proxies", "bind_pwd", "size"=>20, "maxlength"=>128, "value"=>entry[:bind_pwd]) %>
                 </td>
               </tr>
             <% else %>
