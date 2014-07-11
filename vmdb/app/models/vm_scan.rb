@@ -205,7 +205,8 @@ class VmScan < Job
 
   def config_snapshot
     config = VMDB::Config.new('vmdb').config
-    snapshot = {"use_existing"=>self.options[:use_existing_snapshot], "description"=>self.options[:snapshot_description]}
+    snapshot = { "use_existing" => self.options[:use_existing_snapshot],
+                 "description"  => self.options[:snapshot_description]}
     snapshot['create_free_percent'] = config.fetch_path(:snapshots, :create_free_percent) || 100
     snapshot['remove_free_percent'] = config.fetch_path(:snapshots, :remove_free_percent) || 100
     snapshot
@@ -215,24 +216,19 @@ class VmScan < Job
     ems_list = vm.ems_host_list
     ems_list['connect_to'] = vm.scan_via_ems? ? 'ems' : 'host'
 
-    if vm.vendor.to_s == 'RedHat'
-      # Disable connecting to EMS for COS SmartProxy.  Embedded Proxy will
-      # enable this if needed in the scan_sync_vm method in server_smart_proxy.rb.
-      ems_list['connect'] = false
-    end
+    # Disable connecting to EMS for COS SmartProxy.  Embedded Proxy will
+    # enable this if needed in the scan_sync_vm method in server_smart_proxy.rb.
+    ems_list['connect'] = false if vm.vendor.to_s == 'RedHat'
     ems_list
   end
 
   def create_scan_args(vm)
-    scan_args = { "ems"=>config_ems_list(vm), "snapshot"=> config_snapshot }
+    scan_args = { "ems" => config_ems_list(vm), "snapshot" => config_snapshot }
+
     # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
-    scan_args["vmScanProfiles"] = self.options[:scan_profiles].nil? ? vm.scan_profile_list : self.options[:scan_profiles]
-    if vm.scan_via_ems?
-      scan_args['snapshot']['forceFleeceDefault'] = false if vm.template?
-    end
-    if vm.vendor.to_s == 'RedHat'
-      scan_args['permissions'] = {'group' => 36}
-    end
+    scan_args["vmScanProfiles"] = self.options[:scan_profiles] || vm.scan_profile_list
+    scan_args['snapshot']['forceFleeceDefault'] = false if vm.scan_via_ems? && vm.template?
+    scan_args['permissions'] = { 'group' => 36 } if vm.vendor.to_s == 'RedHat'
     scan_args
   end
 
