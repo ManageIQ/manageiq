@@ -2,9 +2,11 @@ require 'pathname'
 
 module Build
   class GitCheckout
-    attr_reader :commit_sha, :remote
-    def initialize(remote)
-      @remote = remote
+    attr_reader :commit_sha, :remote, :ref
+
+    def initialize(options)
+      @remote = options[:remote]
+      @ref    = options[:ref]
     end
 
     def commit_sha
@@ -29,14 +31,6 @@ module Build
 
     def dereferenced_tag
       "#{ref}^{}"
-    end
-
-    # TODO: Perhaps the contents of the VERSION should be passed in
-    def ref
-      @ref ||= begin
-        file = Pathname.new(File.expand_path(File.dirname(__FILE__)))
-        File.read(file.join("../vmdb/VERSION")).strip
-      end
     end
   end
 end
