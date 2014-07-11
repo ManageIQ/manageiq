@@ -9,6 +9,8 @@ require 'appliance_console/external_database_configuration'
 require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/service_group'
 require 'appliance_console/key_configuration'
+require 'appliance_console/principal'
+require 'appliance_console/certificate'
 require 'appliance_console/certificate_authority'
 
 # support for appliance_console methods
@@ -22,13 +24,14 @@ module ApplianceConsole
   class Cli
     attr_accessor :options
 
-    def hostname
-      options[:internal] ? "localhost" : options[:hostname]
+    # machine host
+    def host
+      options[:host] || Env["host"]
     end
 
-    def cahost
-      return unless options[:ca]
-      options[:cahost] || hostname || "localhost"
+    # database hostname
+    def hostname
+      options[:internal] ? "localhost" : options[:hostname]
     end
 
     def local?(name = hostname)
@@ -37,7 +40,11 @@ module ApplianceConsole
 
     # currently, only creates the key for a local CA
     def key?
-      options[:key] || (options[:ca] && local?(cahost))
+      options[:key]
+    end
+
+    def certs?
+      options[:postgres_client_cert] || options[:postgres_server_cert] || options[:api_cert]
     end
 
     def initialize(options = {})
@@ -69,16 +76,17 @@ module ApplianceConsole
         opt :username, "Database Username",  :type => :string,  :short => 'U', :default => "root"
         opt :password, "Database Password",  :type => :string,  :short => "p"
         opt :dbname,   "Database Name",      :type => :string,  :short => "d", :default => "vmdb_production"
-        opt :ca,       "Setup CA",                              :short => 'c'
         opt :key,      "Create master key",  :type => :boolean, :short => "k"
-        opt :cahost,   "CA host",            :type => :string,  :short => nil
-        opt :company,  "CA company name",    :type => :string,  :short => nil, :default => "cfme demo"
-        opt :causer,   "CA User",            :type => :string,                 :default => "root"
+        opt :verbose,  "Verbose",            :type => :boolean, :short => "v"
         opt :dbdisk,   "Database Disk Path", :type => :string
         opt :uninstall_ipa, "Uninstall IPA Client", :type => :boolean,         :default => false
         opt :ipaserver,  "IPA Server FQDN",  :type => :string
         opt :ipaprincipal,  "IPA Server principal", :type => :string,          :default => "admin"
         opt :ipapassword,   "IPA Server password",  :type => :string
+        opt :ca,                   "CA name used for certmonger",       :type => :string,  :default => "ipa"
+        opt :postgres_client_cert, "install certs for postgres client", :type => :boolean
+        opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
+        opt :api_cert,             "install certs for regional api",    :type => :boolean
       end
       Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && hostname && local?
       self
@@ -87,10 +95,10 @@ module ApplianceConsole
     def run
       Env[:host] = options[:host] if options[:host]
       create_key if key?
-      set_ca if options[:ca]
       set_db if hostname
       uninstall_ipa if options[:uninstall_ipa]
       install_ipa if options[:ipaserver]
+      install_certs if certs?
     end
 
     def set_db
@@ -102,6 +110,7 @@ module ApplianceConsole
     end
 
     def set_internal_db
+      say "configuring internal database"
       config = ApplianceConsole::InternalDatabaseConfiguration.new({
         :database    => options[:dbname],
         :region      => options[:region],
@@ -122,6 +131,7 @@ module ApplianceConsole
     end
 
     def set_external_db
+      say "configuring external database"
       config = ApplianceConsole::ExternalDatabaseConfiguration.new({
         :host        => options[:hostname],
         :database    => options[:dbname],
@@ -141,21 +151,32 @@ module ApplianceConsole
     # force creating the key if user specifies -key
     # otherwise, only create if it does not exist locally
     def create_key
+      say "creating encryption key"
       KeyConfiguration.new.create_key(options[:key])
     end
 
-    def set_ca
-      ca = CertificateAuthority.new(Env[:host], Env[:ip])
-      if local?(cahost)
-        ca.local(options[:company]).create.run
-      else
-        ca.remote(cahost, options[:causer]).run
+    def install_certs
+      say "creating ssl certificates"
+      config = CertificateAuthority.new(
+        :hostname => host,
+        :ca_name  => options[:ca],
+        :pgclient => options[:postgres_client_cert],
+        :pgserver => options[:postgres_server_cert],
+        :api      => options[:api_cert],
+        :verbose  => options[:verbose],
+      )
+
+      config.activate
+      say "certificate result: #{config.status_string}"
+      unless config.complete?
+        say "After the certificates are retrieved, rerun to update service configuration files"
       end
     end
 
     def install_ipa
+      raise "please uninstall ipa before reinstalling" if ExternalHttpdAuthentication.ipa_client_configured?
       config = ExternalHttpdAuthentication.new(
-        options[:host] || Env["HOST"],
+        host,
         :ipaserver => options[:ipaserver],
         :principal => options[:ipaprincipal],
         :password  => options[:ipapassword],
@@ -165,6 +186,7 @@ module ApplianceConsole
     end
 
     def uninstall_ipa
+      say "Uninstalling IPA-client"
       config = ExternalHttpdAuthentication.new
       config.ipa_client_unconfigure if config.ipa_client_configured?
     end

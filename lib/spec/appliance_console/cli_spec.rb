@@ -21,6 +21,7 @@ describe ApplianceConsole::Cli do
 
   it "should set database host to localhost if running locally" do
     subject.should_receive(:disk_from_string).and_return('x')
+    subject.should_receive(:say)
     ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
       .with(:region      => 1,
             :database    => 'vmdb_production',
@@ -34,6 +35,7 @@ describe ApplianceConsole::Cli do
 
   it "should pass username and password when configuring database locally" do
     subject.should_receive(:disk_from_string).and_return('x')
+    subject.should_receive(:say)
     ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
       .with(:region      => 1,
             :database    => 'vmdb_production',
@@ -47,6 +49,7 @@ describe ApplianceConsole::Cli do
   end
 
   it "should handle remote databases (and setup region)" do
+    subject.should_receive(:say)
     ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
       .with(:host        => 'host',
             :database    => 'db',
@@ -60,6 +63,7 @@ describe ApplianceConsole::Cli do
   end
 
   it "should handle remote databases (not setting up region)" do
+    subject.should_receive(:say)
     ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
       .with(:host        => 'host',
             :database    => 'db',
@@ -69,6 +73,91 @@ describe ApplianceConsole::Cli do
       .and_return(stub(:activate => true, :post_activation => true))
 
     subject.parse(%w{--hostname host --dbname db --username user --password pass}).run
+  end
+
+  context "#ipa" do
+    it "should handle uninstalling ipa" do
+      subject.should_receive(:say)
+      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
+        .and_return(stub(:ipa_client_configured? => true, :ipa_client_unconfigure => nil))
+      subject.parse(%w{--uninstall-ipa}).run
+    end
+
+    it "should skip uninstalling ipa if not installed" do
+      subject.should_receive(:say)
+      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
+        .and_return(stub(:ipa_client_configured? => false))
+      subject.parse(%w{--uninstall-ipa}).run
+    end
+
+
+    it "should install ipa" do
+      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
+      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
+      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
+          .with('client.domain.com',
+                :ipaserver => 'ipa.domain.com',
+                :principal => 'admin',
+                :password  => 'pass').and_return(stub(:activate => true, :post_activation => nil))
+      subject.parse(%w{--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass}).run
+    end
+
+    it "should not post_activate install ipa (aside: testing passing in host" do
+      ApplianceConsole::Env.should_receive(:[]=).with(:host, "client.domain.com")
+      ApplianceConsole::Env.should_not_receive(:[]).with(:host)
+      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
+      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
+          .with('client.domain.com',
+                :ipaserver => 'ipa.domain.com',
+                :principal => 'admin',
+                :password  => 'pass').and_return(stub(:activate => false))
+      subject.parse(%w{--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com}).run
+    end
+
+    it "should complain if installing ipa-client when ipa is already installed" do
+      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(true)
+      expect {
+        subject.parse(%w{--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass}).run
+        }.to raise_error(/uninstall/)
+    end
+  end
+
+  context "#install_certs" do
+    it "should basic install completed (default ca_name, non verbose)" do
+      subject.should_receive(:say).with(/creating/)
+      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
+      subject.should_receive(:say).with(/certificate result/)
+      subject.should_not_receive(:say).with(/rerun/)
+      ApplianceConsole::CertificateAuthority.should_receive(:new)
+        .with(
+          :hostname => "client.domain.com",
+          :ca_name  => "ipa",
+          :pgclient => true,
+          :pgserver => false,
+          :api      => true,
+          :verbose  => false,
+        ).and_return(stub(:activate => true, :status_string => "good", :complete? => true))
+
+      subject.parse(%w(--postgres-client-cert --api-cert)).run
+    end
+
+    it "should basic install waiting (manual ca_name, verbose)" do
+      subject.should_receive(:say).with(/creating/)
+      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
+      subject.should_receive(:say).with(/certificate result/)
+      subject.should_receive(:say).with(/rerun/)
+      ApplianceConsole::CertificateAuthority.should_receive(:new)
+        .with(
+          :hostname => "client.domain.com",
+          :ca_name  => "super",
+          :pgclient => false,
+          :pgserver => true,
+          :api      => false,
+          :verbose  => true,
+        ).and_return(stub(:activate => true, :status_string => "good", :complete? => false))
+
+      subject.parse(%w(--postgres-server-cert --verbose --ca super)).run
+    end
   end
 
   context "parse" do
@@ -105,42 +194,38 @@ describe ApplianceConsole::Cli do
       end
     end
 
-    context "#cahost" do
-      it "should ignore cahost if not setting up a ca" do
-        subject.parse(%w{--cahost x})
-        expect(subject.cahost).to be_blank
-      end
-
-      it "should default to localhost when setting up a ca" do
-        subject.parse(%w{--ca})
-        expect(subject.cahost).to eq("localhost")
-      end
-
-      it "should ignore cahost if not setting up a ca" do
-        subject.parse(%w{--ca --cahost x})
-        expect(subject.cahost).to eq("x")
-      end
-    end
-
     context "#key" do
       it "should setup a key if passing --key" do
         subject.parse(%w(--key))
         expect(subject).to be_key
       end
+    end
 
-      it "should setup key for localhost" do
-        subject.parse(%w(--ca))
-        expect(subject).to be_key
+    context "#ca" do
+      it "should default to ipa" do
+        expect(subject.parse(%w()).options[:ca]).to eq("ipa")
       end
 
-      it "should setup key for localhost" do
-        subject.parse(%w(--ca --cahost localhost))
-        expect(subject).to be_key
+      it "should support sneakernet" do
+        expect(subject.parse(%w(--ca sneakernet)).options[:ca]).to eq("sneakernet")
+      end
+    end
+
+    context "#certs?" do
+      it "should install certs if postgres client is specified" do
+        expect(subject.parse(%w(--postgres-client-cert))).to be_certs
       end
 
-      it "should not setup key for remote host" do
-        subject.parse(%w(--ca --cahost x))
-        expect(subject).not_to be_key
+      it "should install certs if postgres server is specified" do
+        expect(subject.parse(%w(--postgres-server-cert))).to be_certs
+      end
+
+      it "should install certs if a api is specified" do
+        expect(subject.parse(%w(--api-cert))).to be_certs
+      end
+
+      it "should install certs if all params are specified" do
+        expect(subject.parse(%w(--postgres-client-cert --postgres-server-cert --api-cert))).to be_certs
       end
     end
   end
