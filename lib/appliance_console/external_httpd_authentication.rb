@@ -2,7 +2,7 @@ require_relative "external_httpd_configuration"
 
 module ApplianceConsole
   class ExternalHttpdAuthentication
-    include ApplianceConsole::ExternalHttpdConfiguration
+    include ExternalHttpdConfiguration
 
     def initialize(host = nil)
       @ipaserver, @domain, @password = nil
@@ -29,6 +29,15 @@ module ApplianceConsole
       say("  Realm:          #{realm}\n")
       say("  Naming Context: #{domain_naming_context}\n")
       say("  Principal:      #{@principal}\n")
+    end
+
+    def show_current_configuration
+      return unless ipa_client_configured?
+      config = config_file_read(SSSD_CONFIG)
+      say("\nCurrent External Authentication (httpd) Configuration:\n")
+      say("IPA Server Details:\n")
+      say("  Hostname:       #{fetch_ipa_configuration("ipa_server", config)}\n")
+      say("  Domain:         #{fetch_ipa_configuration("ipa_domain", config)}\n")
     end
 
     def activate
