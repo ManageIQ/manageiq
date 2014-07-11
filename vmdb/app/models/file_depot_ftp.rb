@@ -1,8 +1,6 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
-  DISPLAY_NAME = "FTP"
-
   def self.uri_prefix
     "ftp"
   end

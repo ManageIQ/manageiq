@@ -650,7 +650,7 @@ module OpsController::Diagnostics
     log_depot = @record.log_file_depot.try(:depot_hash)
     log_depot_get_form_vars_from_settings(log_depot) if log_depot.present?
     klass                              = @record.log_file_depot.try(:class)
-    @edit[:protocol]                   = klass.try(:const_get, "DISPLAY_NAME")
+    @edit[:protocol]                   = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) if klass.present?
     @edit[:new][:depot_name]           = @record.log_file_depot.try(:name)
     @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
 

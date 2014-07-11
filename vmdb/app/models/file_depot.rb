@@ -1,6 +1,4 @@
 class FileDepot < ActiveRecord::Base
-  DISPLAY_NAME = nil
-
   include NewWithTypeStiMixin
   include AuthenticationMixin
   belongs_to            :resource, :polymorphic => true
@@ -11,7 +9,7 @@ class FileDepot < ActiveRecord::Base
   attr_accessor         :file
 
   def self.supported_depots
-    descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass::DISPLAY_NAME }
+    descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model) }
   end
 
   def self.requires_credentials?

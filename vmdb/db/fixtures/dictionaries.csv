@@ -20,6 +20,10 @@ model,EmsEvent,Management Event,en
 model,EmsFolder,Folder,en
 model,EmsInfra,Infrastructure Provider,en
 model,ExtManagementSystem,Provider,en
+model,FileDepotFtp,FTP,en
+model,FileDepotFtpAnonymous,Anonymous FTP,en
+model,FileDepotNfs,NFS,en
+model,FileDepotSmb,Samba,en
 model,Filesystem,File,en
 model,Flavor, Flavor,en
 model,HostPerformance,Performance - Host,en
