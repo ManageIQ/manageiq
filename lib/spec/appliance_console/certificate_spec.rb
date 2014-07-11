@@ -14,9 +14,9 @@ describe ApplianceConsole::Certificate do
   let(:root_filename) { "/tmp/certs/root.crt" }
 
   subject do
-    described_class.new(:ca_name => 'ipa',
-                        :hostname => host,
-                        :service => service,
+    described_class.new(:ca_name       => 'ipa',
+                        :hostname      => host,
+                        :service       => service,
                         :cert_filename => cert_filename)
   end
 
@@ -36,6 +36,7 @@ describe ApplianceConsole::Certificate do
     expect_principal_register
     expect_request
     expect_chown
+    expect_chmod([cert_filename])
 
     expect(subject.request).to be_complete
     expect(subject.status).to eq(:complete)
@@ -51,9 +52,9 @@ describe ApplianceConsole::Certificate do
     expect(subject.status).to eq(:rejected)
   end
 
-
   it "should only run complete block if keys already exist" do
     expect_getcert_status(response)
+    expect_chmod([cert_filename])
     yielded = false
 
     subject.request { yielded = true }
@@ -90,8 +91,12 @@ describe ApplianceConsole::Certificate do
     expect_run(/getcert/, ["status", "-f", cert_filename], *responses)
   end
 
+  def expect_chmod(files)
+    FileUtils.should_receive(:chmod).with(0644, files)
+  end
+
   def expect_chown
-    FileUtils.should_receive(:chown).with("user", "group", cert_filename)
+    FileUtils.should_receive(:chown).with("user", "group", key_filename)
   end
 
   def response(ret_code = 0)

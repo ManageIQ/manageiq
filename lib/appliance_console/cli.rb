@@ -99,6 +99,9 @@ module ApplianceConsole
       uninstall_ipa if options[:uninstall_ipa]
       install_ipa if options[:ipaserver]
       install_certs if certs?
+    rescue AwesomeSpawn::CommandResultError => e
+      say e.result.output, e.result.error, ""
+      raise
     end
 
     def set_db
@@ -167,7 +170,7 @@ module ApplianceConsole
       )
 
       config.activate
-      say "certificate result: #{config.status_string}"
+      say "\ncertificate result: #{config.status_string}"
       unless config.complete?
         say "After the certificates are retrieved, rerun to update service configuration files"
       end

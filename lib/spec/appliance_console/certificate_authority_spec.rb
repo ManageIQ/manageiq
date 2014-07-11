@@ -10,7 +10,6 @@ describe ApplianceConsole::CertificateAuthority do
   let(:realm) { "NETWORK.COM" }
   subject { described_class.new(:ca_name => 'ipa', :hostname => host) }
 
-  #TODO: move status work into lower sections
   context "#status" do
     it "should have no status if no services called" do
       expect(subject.status_string).to eq("")
@@ -48,11 +47,14 @@ describe ApplianceConsole::CertificateAuthority do
 
     it "should install postgres server" do
       ipa_configured(true)
-      expect_run(/getcert/, anything, response) #certificate exists
+      expect_run(/getcert/, anything, response) # getcert returns: the certificate already exist
 
       ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
         .and_return(mock("config", :activate => true, :configure_postgres => true))
       LinuxAdmin::Service.should_receive(:new).and_return(mock("Service", :restart => true))
+      FileUtils.should_receive(:chmod).with(0644, anything)
+
+      subject.should_receive(:say)
       subject.activate
       expect(subject.pgserver).to eq(:complete)
       expect(subject.status_string).to eq("pgserver: complete")
@@ -61,7 +63,7 @@ describe ApplianceConsole::CertificateAuthority do
 
     it "should not change postgres if service not responding" do
       ipa_configured(true)
-      expect_run(/getcert/, anything, response(3)) #certificate exists
+      expect_run(/getcert/, anything, response(3)) # getcert returns: waiting on the CA
 
       ApplianceConsole::InternalDatabaseConfiguration.should_not_receive(:new)
       LinuxAdmin::Service.should_not_receive(:new)
@@ -78,7 +80,6 @@ describe ApplianceConsole::CertificateAuthority do
     ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?)
       .and_return(ipa_client_installed)
   end
-
 
   def expect_run(cmd, params, *responses)
     AwesomeSpawn.should_receive(:run).with(cmd, :params => params)

@@ -10,13 +10,13 @@ describe ApplianceConsole::Cli do
   it "should set hostname if defined" do
     ApplianceConsole::Env.should_receive(:[]=).with(:host, 'host1')
 
-    subject.parse(%w{--host host1}).run
+    subject.parse(%w(--host host1)).run
   end
 
   it "should not set hostname if none specified" do
     ApplianceConsole::Env.should_not_receive(:[]=).with(:host, anything)
 
-    subject.parse(%w{}).run
+    subject.parse([]).run
   end
 
   it "should set database host to localhost if running locally" do
@@ -28,9 +28,9 @@ describe ApplianceConsole::Cli do
             :username    => 'root',
             :interactive => false,
             :disk        => 'x')
-      .and_return(stub(:activate => true, :post_activation => true))
+      .and_return(double(:activate => true, :post_activation => true))
 
-    subject.parse(%w{--internal -r 1 --dbdisk x}).run
+    subject.parse(%w(--internal -r 1 --dbdisk x)).run
   end
 
   it "should pass username and password when configuring database locally" do
@@ -43,7 +43,7 @@ describe ApplianceConsole::Cli do
             :password    => 'pass',
             :interactive => false,
             :disk        => 'x')
-      .and_return(stub(:activate => true, :post_activation => true))
+      .and_return(double(:activate => true, :post_activation => true))
 
     subject.parse(%w(--internal --username user --password pass -r 1 --dbdisk x)).run
   end
@@ -57,9 +57,9 @@ describe ApplianceConsole::Cli do
             :username    => 'user',
             :password    => 'pass',
             :interactive => false)
-      .and_return(stub(:activate => true, :post_activation => true))
+      .and_return(double(:activate => true, :post_activation => true))
 
-    subject.parse(%w{--hostname host --dbname db --username user --password pass -r 1}).run
+    subject.parse(%w(--hostname host --dbname db --username user --password pass -r 1)).run
   end
 
   it "should handle remote databases (not setting up region)" do
@@ -70,26 +70,25 @@ describe ApplianceConsole::Cli do
             :username    => 'user',
             :password    => 'pass',
             :interactive => false)
-      .and_return(stub(:activate => true, :post_activation => true))
+      .and_return(double(:activate => true, :post_activation => true))
 
-    subject.parse(%w{--hostname host --dbname db --username user --password pass}).run
+    subject.parse(%w(--hostname host --dbname db --username user --password pass)).run
   end
 
   context "#ipa" do
     it "should handle uninstalling ipa" do
       subject.should_receive(:say)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-        .and_return(stub(:ipa_client_configured? => true, :ipa_client_unconfigure => nil))
-      subject.parse(%w{--uninstall-ipa}).run
+        .and_return(double(:ipa_client_configured? => true, :ipa_client_unconfigure => nil))
+      subject.parse(%w(--uninstall-ipa)).run
     end
 
     it "should skip uninstalling ipa if not installed" do
       subject.should_receive(:say)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-        .and_return(stub(:ipa_client_configured? => false))
-      subject.parse(%w{--uninstall-ipa}).run
+        .and_return(double(:ipa_client_configured? => false))
+      subject.parse(%w(--uninstall-ipa)).run
     end
-
 
     it "should install ipa" do
       ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
@@ -98,8 +97,8 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
-                :password  => 'pass').and_return(stub(:activate => true, :post_activation => nil))
-      subject.parse(%w{--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass}).run
+                :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
+      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass)).run
     end
 
     it "should not post_activate install ipa (aside: testing passing in host" do
@@ -110,15 +109,15 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
-                :password  => 'pass').and_return(stub(:activate => false))
-      subject.parse(%w{--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com}).run
+                :password  => 'pass').and_return(double(:activate => false))
+      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com)).run
     end
 
     it "should complain if installing ipa-client when ipa is already installed" do
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(true)
-      expect {
-        subject.parse(%w{--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass}).run
-        }.to raise_error(/uninstall/)
+      expect do
+        subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass)).run
+      end.to raise_error(/uninstall/)
     end
   end
 
@@ -136,7 +135,7 @@ describe ApplianceConsole::Cli do
           :pgserver => false,
           :api      => true,
           :verbose  => false,
-        ).and_return(stub(:activate => true, :status_string => "good", :complete? => true))
+        ).and_return(double(:activate => true, :status_string => "good", :complete? => true))
 
       subject.parse(%w(--postgres-client-cert --api-cert)).run
     end
@@ -154,7 +153,7 @@ describe ApplianceConsole::Cli do
           :pgserver => true,
           :api      => false,
           :verbose  => true,
-        ).and_return(stub(:activate => true, :status_string => "good", :complete? => false))
+        ).and_return(double(:activate => true, :status_string => "good", :complete? => false))
 
       subject.parse(%w(--postgres-server-cert --verbose --ca super)).run
     end
@@ -167,18 +166,18 @@ describe ApplianceConsole::Cli do
       end
 
       it "should have 'localhost' for internal databases" do
-        subject.parse(%w{--internal --region 1})
+        subject.parse(%w(--internal --region 1))
         expect(subject.hostname).to eq("localhost")
         expect(subject).to be_local
       end
 
       it "should be local (even if explicitly setting hostname" do
-        subject.parse(%w{--hostname localhost --region 1})
+        subject.parse(%w(--hostname localhost --region 1))
         expect(subject).to be_local
       end
 
       it "should respect parameter " do
-        subject.parse(%w{--hostname abc  --region 1})
+        subject.parse(%w(--hostname abc  --region 1))
         expect(subject.hostname).to eq("abc")
         expect(subject).not_to be_local
       end

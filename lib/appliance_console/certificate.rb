@@ -36,10 +36,11 @@ module ApplianceConsole
           request_first
         end
         # NOTE: status probably changed
-        chown_cert unless rejected?
+        chown_key unless rejected?
       end
 
       if complete?
+        chmod_certs
         yield if block_given?
       end
       self
@@ -75,8 +76,14 @@ module ApplianceConsole
       self
     end
 
-    def chown_cert
-      FileUtils.chown(owner.split(".").first, owner.split(".")[1], cert_filename) if owner && (owner != "root")
+    # workaround
+    # currently, the -C is not run after the root certificate is written
+    def chmod_certs
+      FileUtils.chmod(0644, [root_filename, cert_filename].compact)
+    end
+
+    def chown_key
+      FileUtils.chown(owner.split(".").first, owner.split(".")[1], key_filename) if owner && (owner != "root")
       self
     end
 

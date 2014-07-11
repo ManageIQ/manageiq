@@ -31,11 +31,12 @@ module ApplianceConsole
     private
 
     def exist?
-      # using --force because these services tend not to be in dns
       AwesomeSpawn.run("/usr/bin/ipa", :params => ["service-find", "--principal", name]).success?
     end
 
     def request
+      # using --force because these services tend not to be in dns
+      # this is like VERIFY_NONE
       AwesomeSpawn.run!("/usr/bin/ipa", :params => ["service-add", "--force", name])
     end
   end

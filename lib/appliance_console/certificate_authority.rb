@@ -76,6 +76,7 @@ module ApplianceConsole
       ).request
 
       if cert.complete?
+        say "configuring postgres to use certs"
         # only telling postgres to rewrite server configuration files
         # no need for username/password since not writing database.yml
         InternalDatabaseConfiguration.new(:ssl => true).configure_postgres
@@ -85,10 +86,10 @@ module ApplianceConsole
     end
 
     def configure_api
-      cert = Certificate.new(
+      Certificate.new(
         :cert_filename => "#{CFME_DIR}/apiclient.crt",
         :root_filename => "#{CFME_DIR}/root.crt",
-        :service       => "cloudforms", #NOTE: same as postgres client
+        :service       => "cloudforms",
         :extensions    => %w(client),
         :ca_name       => ca_name,
         :hostname      => hostname,
@@ -112,7 +113,7 @@ module ApplianceConsole
     end
 
     def status
-      { "pgclient" => pgclient, "pgserver" => pgserver, "api" => api }.delete_if { |_n, v| !v }
+      {"pgclient" => pgclient, "pgserver" => pgserver, "api" => api}.delete_if { |_n, v| !v }
     end
 
     def status_string
