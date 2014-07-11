@@ -72,7 +72,7 @@ module ApplianceConsole
 
     def create_region
       log_and_feedback(__method__) do
-        LinuxAdmin.run!("script/rails runner script/rake", :params => ["evm:db:region", "--", {:region => region}], :chdir => RAILS_ROOT)
+        AwesomeSpawn.run!("script/rails runner script/rake", :params => ["evm:db:region", "--", {:region => region}], :chdir => RAILS_ROOT)
       end
     end
 
