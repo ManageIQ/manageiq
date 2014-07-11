@@ -1399,14 +1399,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def rbac_free_for_all_button?(task, button_id)
+  def rbac_free_for_custom_button?(task, button_id)
     task == "custom_button" && CustomButton.find_by_id(from_cid(button_id))
   end
 
   def check_button_rbac
     task = params[:pressed]
     # Intentional single = so we can check auth later
-    rbac_free_for_all_button?(task, params[:button_id]) || role_allows(:feature => task)
+    rbac_free_for_custom_button?(task, params[:button_id]) || role_allows(:feature => task)
   end
 
   def handle_button_rbac
