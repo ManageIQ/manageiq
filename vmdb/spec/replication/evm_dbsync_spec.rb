@@ -6,7 +6,7 @@ describe "evm:dbsync" do
     Zone.seed
     MiqServer.seed
 
-    master_db_config = VMDB::Config.new("database").config[:test].merge(:database => "vmdb_replication_master")
+    master_db_config = VMDB::Config.new("database").config[:test].merge(:database => "#{ActiveRecord::Base.connection.current_database}_master")
 
     c = MiqServer.my_server.get_config
     c.config.store_path(:workers, :worker_base, :replication_worker, :replication, :destination, master_db_config)
