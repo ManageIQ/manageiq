@@ -8,18 +8,20 @@ require 'yaml'
 require_relative 'productization'
 require_relative 'kickstart_generator'
 require_relative 'git_checkout'
-
+require_relative 'cli'
 $log = Logger.new(STDOUT)
 
+cli_options = Build::Cli.parse.options
+
 puddle = nil
-arg = ARGV[0].to_s.strip.downcase
-case arg
+case cli_options[:type]
 when "nightly"
-  build_label = "nightly"
-when ""
+  build_label = cli_options[:reference]
+when nil
   build_label = "test"
 else
-  puddle = build_label = arg
+  puddle = cli_options[:type]
+  build_label = "#{cli_options[:type]}-#{cli_options[:reference]}"
 end
 
 targets_file = Build::Productization.file_for("config/targets.yml")
@@ -43,7 +45,7 @@ timestamp      = "#{YEAR_MONTH_DAY}#{HOUR_MINUTE}"
 
 targets_config                 = YAML.load_file(targets_file)
 name, directory, repo, targets = targets_config.values_at("name", "directory", "repository", "targets")
-git_checkout                   = Build::GitCheckout.new(repo)
+git_checkout                   = Build::GitCheckout.new(:remote => repo, :ref => cli_options[:reference])
 Build::KickstartGenerator.new(targets.keys, puddle, git_checkout).run
 
 FILE_TYPE = {

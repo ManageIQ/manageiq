@@ -11,5 +11,5 @@ Dir.chdir(NIGHTLY_BUILD_DIR.join("../..")) do
   `git reset --hard             >> #{log} 2>&1`
   `git clean -dxf               >> #{log} 2>&1`
   `git pull                     >> #{log} 2>&1`
-  `ruby #{BUILD_SCRIPT} nightly >> #{log} 2>&1`
+  `ruby #{BUILD_SCRIPT} --type nightly --reference master >> #{log} 2>&1`
 end

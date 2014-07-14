@@ -90,9 +90,8 @@ namespace :build do
     require 'pathname'
     build_dir = Pathname.new(File.join(File.dirname(__FILE__), 'build'))
 
-    `ssh #{ENV['SCP_USER_HOST']} "rm -rf ~/manageiq && mkdir -p ~/manageiq/vmdb"`
+    `ssh #{ENV['SCP_USER_HOST']} "rm -rf ~/manageiq && mkdir -p ~/manageiq"`
     `scp -qr #{build_dir} #{ENV['SCP_USER_HOST']}:~/manageiq/build`
-    `scp -qr #{build_dir.join("../vmdb/VERSION")} #{ENV['SCP_USER_HOST']}:~/manageiq/vmdb/VERSION`
   end
 
   namespace :shared_objects do
