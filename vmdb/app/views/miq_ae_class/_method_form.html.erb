@@ -102,53 +102,53 @@
         </thead>
         <tbody>
           <% @edit[:new][:fields].each_with_index do |flds,i| %>
-            <% if flds.id != 0 %>
-            <tr class="<%=cycle('row0','row1',:name=>'schema')%>">
-              <td>
-              <%= link_to(image_tag("/images/icons/16/notequal-red.png",
-                                    :alt     => "Click to delete this input field from method"),
-                          {:action => "field_method_delete",
-                           :id     => flds.id.to_i,
-                           :arr_id => i},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          :remote                => true,
-                          :confirm               => 'Are you sure you want to delete input field from method?',
-                          :title                 => "Click to delete this input field from method")
-              %>
-            </td>
-              <td>
-                <%= text_field_tag("#{prefix}fields_name_#{i}",
-                                      flds["name"],
-                                      :maxlength         => 50,
-                                      "data-miq_observe" => {:interval => '.5',
-                                                             :url      => url}.to_json)
+            <% unless @edit[:fields_to_delete].include?(flds["id"]) %>
+              <tr class="<%=cycle('row0','row1',:name=>'schema')%>">
+                <td>
+                <%= link_to(image_tag("/images/icons/16/notequal-red.png",
+                                      :alt     => "Click to delete this input field from method"),
+                            {:action => "field_method_delete",
+                             :id     => flds["id"].to_i,
+                             :arr_id => i},
+                            "data-miq_sparkle_on"  => true,
+                            "data-miq_sparkle_off" => true,
+                            :remote                => true,
+                            :confirm               => 'Are you sure you want to delete input field from method?',
+                            :title                 => "Click to delete this input field from method")
                 %>
               </td>
-              <td>
-                <%  str_txt = flds["datatype"] == "password" ? "display:none" : "" %>
-                <%  str_pwd = flds["datatype"] == "password" ? "" : "display:none" %>
-                <%= text_field_tag("#{prefix}fields_value_#{i}",
-                                   flds["default_value"],
-                                   :style             => str_txt,
-                                   "data-miq_observe" => {:interval => '.5',
-                                                          :url      => url}.to_json)
-                %>
-                <%= password_field_tag("#{prefix}fields_password_value_#{i}",
-                                      flds["default_value"],
-                                      :style             => str_pwd,
-                                      "data-miq_observe" => {:interval => '.5',
-                                                             :url      => url}.to_json)
-                %>
+                <td>
+                  <%= text_field_tag("#{prefix}fields_name_#{i}",
+                                        flds["name"],
+                                        :maxlength         => 50,
+                                        "data-miq_observe" => {:interval => '.5',
+                                                               :url      => url}.to_json)
+                  %>
+                </td>
+                <td>
+                  <%  str_txt = flds["datatype"] == "password" ? "display:none" : "" %>
+                  <%  str_pwd = flds["datatype"] == "password" ? "" : "display:none" %>
+                  <%= text_field_tag("#{prefix}fields_value_#{i}",
+                                     flds["default_value"],
+                                     :style             => str_txt,
+                                     "data-miq_observe" => {:interval => '.5',
+                                                            :url      => url}.to_json)
+                  %>
+                  <%= password_field_tag("#{prefix}fields_password_value_#{i}",
+                                        flds["default_value"],
+                                        :style             => str_pwd,
+                                        "data-miq_observe" => {:interval => '.5',
+                                                               :url      => url}.to_json)
+                  %>
+                </td>
+                <td>
+                  <%= select_tag("#{prefix}fields_datatype_#{i}",
+                                 options_for_select(@edit[:new][:available_datatypes],
+                                 flds["datatype"]),
+                                 "data-miq_observe" => {:url => url}.to_json)
+                  %>
               </td>
-              <td>
-                <%= select_tag("#{prefix}fields_datatype_#{i}",
-                               options_for_select(@edit[:new][:available_datatypes],
-                               flds["datatype"]),
-                               "data-miq_observe" => {:url => url}.to_json)
-                %>
-            </td>
-            </tr>
+              </tr>
             <% end %>
           <% end	%>
           <% if !params[:add] && params[:add] != "new" && (session[:field_data].blank? || session[:field_data].empty?)  %>

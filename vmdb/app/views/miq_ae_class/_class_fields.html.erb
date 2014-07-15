@@ -60,14 +60,14 @@
             </tr>
             </thead>
             <tbody>
-            <% @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each_with_index do |field,i| %>
-              <% if field.id != 0 %>
+            <% @edit[:new][:fields].each_with_index do |field, i| %>
+              <% unless @edit[:fields_to_delete].include?(field["id"]) %>
                 <tr class="<%=cycle('row0','row1', :name => 'schema')%>">
                   <td>
                     <%= link_to(image_tag("/images/icons/16/notequal-red.png",
                                           :alt     => "Click to delete this field from schema"),
                                 {:action => "field_delete", 
-                                 :id     => field.id.to_i,
+                                 :id     => field['id'].to_i,
                                  :arr_id => i },
                                 "data-miq_sparkle_on"  => true,
                                 "data-miq_sparkle_off" => true,
@@ -94,12 +94,12 @@
                       <% elsif fname == 'substitute' %>
 
                         <%= check_box_tag("fields_#{fname}_#{i}", value="1",
-                                          checked=field.substitute,
+                                          checked=field['substitute'],
                                           "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
                       <% elsif fname == 'default_value' %>
-                        <% str_txt       = field.datatype == "password" ? "display:none" : "" %>
-                        <% str_pwd       = field.datatype == "password" ? "" : "display:none" %>
-                        <% default_value = field.send(fname) %>
+                        <% str_txt       = field['datatype'] == "password" ? "display:none" : "" %>
+                        <% str_pwd       = field['datatype'] == "password" ? "" : "display:none" %>
+                        <% default_value = field['default_value'] %>
                         <%= text_field_tag("fields_default_value_#{i}",
                                            default_value,
                                            :style             => str_txt,
@@ -114,7 +114,7 @@
                         %>
                       <% else %>
                         <%= text_field_tag("fields_#{fname}_#{i}",
-                                           field.send(fname),
+                                           field[fname],
                                            "data-miq_observe" => {:interval => '.5',
                                                                   :url      => url}.to_json)
                         %>
@@ -134,9 +134,9 @@
             <% else %>
               <%
                  @prty = 1
-                 @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each_with_index do |field,i|
+                 @edit[:new][:fields].sort_by{|a| [a['priority'].to_i]}.each_with_index do |field,i|
                    if i == @edit[:new][:fields].length - 1
-                     @prty = field.priority.to_i + 1
+                     @prty = field['priority'].to_i + 1
                    end
                  end
               %>

@@ -18,7 +18,7 @@ class MiqAeClassController < ApplicationController
     #resetting flash array so messages don't get displayed when tab is changed
     @flash_array = Array.new
     @explorer = true
-    @record = @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
+    @record = @ae_class = MiqAeClass.find_by_id(from_cid(@temp[:ae_class_id]))
     @sb[:active_tab] = params[:tab_id]
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
     case params[:tab_id]
@@ -86,14 +86,12 @@ class MiqAeClassController < ApplicationController
     @explorer = true
     #don't need right bottom cell
     @collapse_c_cell = true
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     bc_name = "Explorer"
     bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
     drop_breadcrumb( {:name=>bc_name, :url=>"/miq_ae_class/explorer"} )
     @lastaction = "replace_right_cell"
-    @ns_ids = Array.new                     # Capture all VM ids in the tree
-    @trees = Array.new
-    @accords = Array.new
+    @accords = []
     self.x_active_tree = :ae_tree
     tree = build_ae_tree
     @built_trees << tree
@@ -165,19 +163,11 @@ class MiqAeClassController < ApplicationController
 	def get_node_info(node)
     id = valid_active_node(node).split('-')
     @sb[:row_selected] = nil if params[:action] == "tree_select"
-    if @button != "reset" && !params[:pressed]
-      @edit = Hash.new
-      @edit[:current] = Hash.new
-      @edit[:new] = Hash.new
-      @edit[:new][:ae_ns] = MiqAeNamespace.new
-      @edit[:new][:ae_inst] = Hash.new
-      @edit[:new][:ae_method] = MiqAeMethod.new
-    end
     case id[0]
       when "aec"
         @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
         @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
-        @edit[:ae_class_id] = @ae_class.id
+        @temp[:ae_class_id] = @ae_class.id
         if @ae_class.nil?
           set_root_node
         else
@@ -192,27 +182,24 @@ class MiqAeClassController < ApplicationController
         if @record.nil?
           set_root_node
         else
-          @edit[:new][:ae_inst][:name]         = @record.name
-          @edit[:new][:ae_inst][:display_name] = @record.display_name
-          @edit[:new][:ae_inst][:description]  = @record.description
           @ae_class             = @record.ae_class
-          @edit[:ae_class_id]   = @ae_class.id
-          @edit[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
+          @temp[:ae_class_id]   = @ae_class.id
+          @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
           @sb[:active_tab]      = "instances"
           set_right_cell_text(x_node, @record)
         end
       when "aem"
-        @record = @edit[:new][:ae_method] = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
-        if @edit[:new][:ae_method].nil?
+        @record = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
+        if @ae_method.nil?
           set_root_node
         else
-          @ae_class = @edit[:new][:ae_method].ae_class
-          @edit[:ae_class_id] = @ae_class.id
-          inputs = @edit[:new][:ae_method].inputs
-          @edit[:grid_methods_xml] = inputs.blank? ? nil : build_methods_grid(inputs)
+          @ae_class = @ae_method.ae_class
+          @temp[:ae_class_id] = @ae_class.id
+          inputs = @ae_method.inputs
+          @temp[:grid_methods_xml] = inputs.blank? ? nil : build_methods_grid(inputs)
           @sb[:squash_state] = true
           @sb[:active_tab] = "methods"
-          set_right_cell_text(x_node,@edit[:new][:ae_method])
+          set_right_cell_text(x_node, @ae_method)
         end
       when "aen"
         @record = MiqAeNamespace.find_by_id(from_cid(id[1]))
@@ -405,7 +392,7 @@ class MiqAeClassController < ApplicationController
 
     if !@in_a_form || (params[:pressed] && params[:pressed].ends_with?("_delete"))
       presenter[:set_visible_elements][:params_div] =
-        !!(@sb[:active_tab] == "methods" && @edit[:grid_methods_xml])
+        !!(@sb[:active_tab] == "methods" && @temp[:grid_methods_xml])
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list
@@ -439,14 +426,14 @@ class MiqAeClassController < ApplicationController
       xml << REXML::XMLDecl.new(1.0, "UTF-8")
       # Create root element
       root = xml.add_element("complete")
-      if fld.aetype.blank? && (session[:field_data].blank? || session[:field_data][:aetype].blank?)
-        fld.aetype = "attribute"
+      if fld['aetype'].blank? && (session[:field_data].blank? || session[:field_data][:aetype].blank?)
+        fld['aetype'] = "attribute"
       elsif !session[:field_data].blank? && !session[:field_data][:aetype].blank?
-        fld.aetype = session[:field_data][:aetype]
+        fld['aetype'] = session[:field_data][:aetype]
       end
       aetypes.each do |aetype|
         opt = root.add_element("option", {"value"=>aetype,"img_src"=>"/images/icons/new/16_ae_#{aetype}.png"})
-        if fld.aetype == aetype
+        if fld['aetype'] == aetype
           opt.add_attribute("selected","true")
         end
         opt.text = aetype.titleize
@@ -464,14 +451,14 @@ class MiqAeClassController < ApplicationController
       xml << REXML::XMLDecl.new(1.0, "UTF-8")
       # Create root element
       root = xml.add_element("complete")
-      if fld.datatype.blank? && (session[:field_data].blank? || session[:field_data][:datatype].blank?)
-        fld.datatype = "string"
+      if fld['datatype'].blank? && (session[:field_data].blank? || session[:field_data][:datatype].blank?)
+        fld['datatype'] = "string"
       elsif !session[:field_data].blank? && !session[:field_data][:datatype].blank?
-        fld.datatype = session[:field_data][:datatype]
+        fld['datatype'] = session[:field_data][:datatype]
       end
       dtypes.each do |dtype|
         opt = root.add_element("option", {"value"=>dtype,"img_src"=>"/images/icons/new/#{dtype}.png", "img_style"=>"height:16px;width:16px"})
-        if fld.datatype == dtype
+        if fld['datatype'] == dtype
           opt.add_attribute("selected","true")
         end
         opt.text = dtype.titleize
@@ -1049,38 +1036,48 @@ class MiqAeClassController < ApplicationController
   # Set form variables for edit
   def fields_set_form_vars
     @in_a_form_fields = true
-    session[:field_data] = Hash.new
-    @edit = Hash.new
-    session[:edit] = Hash.new
-    @edit[:ae_class_id] = @ae_class.id
-    @edit[:rec_id] = @ae_class ? @ae_class.id : nil
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
-    @edit[:new_field] = Hash.new
-    @edit[:key] = "aefields_edit__#{@ae_class.id || "new"}"
+    session[:field_data] = {}
+    @edit = {
+      :ae_class_id      => @ae_class.id,
+      :rec_id           => @ae_class ? @ae_class.id : nil,
+      :new_field        => {},
+      :key              => "aefields_edit__#{@ae_class.id || "new"}",
+      :fields_to_delete => []
+    }
 
-    @edit[:new][:datatypes] = get_dtype_combo_xml([MiqAeField.new])     # setting combo for adding a new field
-    @edit[:new][:aetypes] = get_combo_xml([MiqAeField.new])             # setting combo for adding a new field
-    @edit[:new][:fields] = @ae_class.ae_fields.deep_clone
-    @temp[:combo_xml] = get_combo_xml(@edit[:new][:fields].sort_by{|a| [a.priority.to_i]})                # combo to show existing fields
-    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields].sort_by{|a| [a.priority.to_i]})    # passing fields because that's how many combo boxes we need
-    @edit[:current] = @edit[:new].dup
-    @edit[:current][:fields] = @edit[:new][:fields].deep_clone
+    @edit[:new] = {
+        :datatypes => get_dtype_combo_xml([MiqAeField.new]),    # setting dtype combo for adding a new field
+        :aetypes   => get_combo_xml([MiqAeField.new]),          # setting aetype combo for adding a new field
+        :fields    => []
+    }
+
+    @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
+      field = {}
+      field_attributes.each do |column|
+        field[column] = fld.send(column)
+      end
+      @edit[:new][:fields].push(field)
+    end
+    # combo to show existing fields
+    @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields].sort_by{|a| [a['priority'].to_i]})
+    # passing in fields because that's how many combo boxes we need
+    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields].sort_by{|a| [a['priority'].to_i]})
+    @edit[:current]         = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
-                        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"Class Schema")) :
-                        I18n.t("cell_header.editing_model_record",:model=>ui_lookup(:model=>"Class Schema"), :name=>@ae_class.name)
+                        I18n.t("cell_header.adding_model_record", :model => ui_lookup(:model => "Class Schema")) :
+                        I18n.t("cell_header.editing_model_record", :model => ui_lookup(:model => "Class Schema"), :name => @ae_class.name)
     session[:edit] = @edit
   end
 
   # Set form variables for edit
   def set_method_form_vars
     session[:field_data] = Hash.new
-    @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
+    @ae_class = ae_class_for_instance_or_method(@ae_method)
     @edit = Hash.new
     session[:edit] = Hash.new
     @edit[:ae_method_id] = @ae_method.id
+    @edit[:fields_to_delete] = []
     @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
     @edit[:new_field] = Hash.new
     @edit[:ae_class_id] = @ae_class.id
     @edit[:rec_id] = @ae_method.id || nil
@@ -1111,16 +1108,26 @@ $evm.log(\"info\", \"Automate Method Ended\")
 exit MIQ_OK"
     end
     @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
-    @edit[:new][:fields] = @ae_method.inputs.deep_clone
+    @edit[:new][:fields] = []
+    @ae_method.inputs.each do |input|
+      field_input = {}
+      method_input_column_names.each do |column|
+        field_input[column] = input.send(column)
+      end
+      @edit[:new][:fields].push(field_input)
+    end
     @edit[:new][:available_datatypes] = MiqAeField.available_datatypes_for_ui
-    @edit[:current] = @edit[:new].dup
-    @edit[:current][:fields] = @edit[:new][:fields].deep_clone
+    @edit[:current] = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
         I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqAeMethod")) :
         I18n.t("cell_header.editing_model_record",:model=>ui_lookup(:model=>"MiqAeMethod"), :name=>@ae_method.name)
     session[:log_depot_default_verify_status] = false
     session[:edit] = @edit
     session[:changed] = @changed = false
+  end
+
+  def ae_class_for_instance_or_method(record)
+    record.id ? record.ae_class : MiqAeClass.find_by_id(from_cid(x_node.split("-").last))
   end
 
   def validate_method_data
@@ -1175,11 +1182,6 @@ exit MIQ_OK"
     return unless load_edit("aefields_edit__#{params[:id]}","replace_cell__explorer")
     fields_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
-    @edit[:current][:fields].each_with_index do |fld,i|         #needed to compare each object's attributes to find out if something has changed
-      if @edit[:new][:fields][i].attributes != fld.attributes
-        @changed = true
-      end
-    end
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial=>@refresh_partial) if @refresh_div
       if !["up","down"].include?(params[:button])
@@ -1199,16 +1201,16 @@ exit MIQ_OK"
             f = field.split('fields_datatype')
             def_field = "fields_default_value_" << f[1].to_s
             pwd_field = "fields_password_value_" << f[1].to_s
-            if @edit[:new][:fields][f[1].to_i].datatype == "password"
+            if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
               page << "$('#{def_field}').hide();"
               page << "$('#{pwd_field}').show();"
               page << "$('#{pwd_field}').value='';"
-              @edit[:new][:fields][f[1].to_i].default_value = nil
+              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << "$('#{pwd_field}').hide();"
               page << "$('#{def_field}').show();"
               page << "$('#{def_field}').value='';"
-              @edit[:new][:fields][f[1].to_i].default_value = nil
+              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
           end
         end
@@ -1225,7 +1227,7 @@ exit MIQ_OK"
       return unless load_edit("aemethod_edit__#{params[:id]}","replace_cell__explorer")
       @prev_location = @edit[:new][:location]
       get_method_form_vars
-      if @sb[:row_selected] || x_node.split('-').first == "aec"
+      if row_selected_in_grid?
         @refresh_div = "class_methods_div"
         @refresh_partial = "class_methods"
         @field_name = "cls_method"
@@ -1259,11 +1261,6 @@ exit MIQ_OK"
         @edit[:new][:data] = ""
       end
       @changed = (@edit[:new] != @edit[:current])
-      @edit[:current][:fields].each_with_index do |fld,i|         #needed to compare each object's attributes to find out if something has changed
-        if @edit[:new][:fields][i].attributes != fld.attributes
-          @changed = true
-        end
-      end
       @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
       render :update do |page|                    # Use JS to update the display
         page.replace_html(@refresh_div, :partial=>@refresh_partial)  if @refresh_div && @prev_location != @edit[:new][:location]
@@ -1290,36 +1287,29 @@ exit MIQ_OK"
             page << "$('method_field_default_value').value = '';"
           end
         end
+
         params.keys.each do |field|
           if field.to_s.starts_with?("cls_fields_datatype_")
             f = field.split('cls_fields_datatype_')
             def_field = "cls_fields_value_" << f[1].to_s
             pwd_field = "cls_fields_password_value_" << f[1].to_s
-            if @edit[:new][:fields][f[1].to_i].datatype == "password"
-              page << "$('#{def_field}').hide();"
-              page << "$('#{pwd_field}').show();"
-              page << "$('#{pwd_field}').value='';"
-              @edit[:new][:fields][f[1].to_i].default_value = nil
-            else
-              page << "$('#{pwd_field}').hide();"
-              page << "$('#{def_field}').show();"
-              page << "$('#{def_field}').value='';"
-              @edit[:new][:fields][f[1].to_i].default_value = nil
-            end
           elsif field.to_s.starts_with?("fields_datatype_")
             f = field.split('fields_datatype_')
             def_field = "fields_value_" << f[1].to_s
             pwd_field = "fields_password_value_" << f[1].to_s
-            if @edit[:new][:fields][f[1].to_i].datatype == "password"
+          end
+
+          if f
+            if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
               page << "$('#{def_field}').hide();"
               page << "$('#{pwd_field}').show();"
               page << "$('#{pwd_field}').value='';"
-              @edit[:new][:fields][f[1].to_i].default_value = nil
+              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << "$('#{pwd_field}').hide();"
               page << "$('#{def_field}').show();"
               page << "$('#{def_field}').value='';"
-              @edit[:new][:fields][f[1].to_i].default_value = nil
+              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
           end
         end
@@ -1409,13 +1399,13 @@ exit MIQ_OK"
       replace_right_cell
     when "save"
       ae_class = find_by_id_filtered(MiqAeClass, params[:id])
-      to_delete, flds_flg = set_field_vars(@edit[:current][:fields])
+      fields = set_field_vars
       begin
         MiqAeClass.transaction do
-          MiqAeField.find_all_by_id(to_delete).each do |fld|
+          MiqAeField.find_all_by_id(@edit[:fields_to_delete]).each do |fld|
             fld.destroy
           end
-          @edit[:current][:fields].sort_by{|a| [a.priority.to_i]}.each do |fld|
+          fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
             fld.default_value = nil if fld.default_value == ""
             fld.save!
           end
@@ -1515,14 +1505,14 @@ exit MIQ_OK"
     when "save"
       ae_method = find_by_id_filtered(MiqAeMethod, params[:id])
       set_method_record_vars(ae_method)                     # Set the record variables, but don't save
-      to_delete, flds_flg = set_input_vars(@edit[:current][:fields])
+      fields = set_input_vars
       begin
         MiqAeMethod.transaction do
           ae_method.save!
-          MiqAeField.find_all_by_id(to_delete).each do |fld|
+          MiqAeField.find_all_by_id(@edit[:fields_to_delete]).each do |fld|
             fld.destroy
           end
-          @edit[:current][:fields].sort_by{|a| [a.priority.to_i]}.each do |fld|
+          fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
             fld.default_value = nil if fld.default_value == ""
             fld.save!
           end
@@ -1712,11 +1702,6 @@ exit MIQ_OK"
     session[:field_data] = Hash.new
     @edit[:new_field][:substitute] = session[:field_data][:substitute] = true
     @changed = (@edit[:new] != @edit[:current])
-    @edit[:current][:fields].each_with_index do |fld,i|         #needed to compare each object's attributes to find out if something has changed
-      if @edit[:new][:fields][i].attributes != fld.attributes
-        @changed = true
-      end
-    end
     render :update do |page|                    # Use JS to update the display
       page.replace_html("class_fields_div", :partial=>"class_fields")
       page << javascript_for_miq_button_visibility(@changed)
@@ -1727,13 +1712,7 @@ exit MIQ_OK"
   # AJAX driven routine to select a classification entry
   def field_accept
     fields_get_form_vars
-    #session[:field_data] = Hash.new
     @changed = (@edit[:new] != @edit[:current])
-    @edit[:current][:fields].each_with_index do |fld,i|         #needed to compare each object's attributes to find out if something has changed
-      if @edit[:new][:fields][i].attributes != fld.attributes
-        @changed = true
-      end
-    end
     @temp[:combo_xml] = get_combo_xml(@edit[:new][:fields])
     @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
     render :update do |page|                    # Use JS to update the display
@@ -1748,20 +1727,9 @@ exit MIQ_OK"
     fields_get_form_vars
     @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields])
     @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])
-    if params[:id].to_i != 0
-      #@edit[:new][:fields][params[:id].to_i].id = "0"
-      @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each_with_index do |flds,i|
-        if i == params[:arr_id].to_i
-          flds.id = "0"
-        end
-      end
-    else
-      @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each_with_index do |flds,i|
-        if i == params[:arr_id].to_i
-          @edit[:new][:fields].delete(flds)
-        end
-      end
-    end
+
+    @edit[:fields_to_delete].push(params[:id]) unless @edit[:fields_to_delete].include?(params[:id])
+    @edit[:new][:fields].delete_at(params[:arr_id].to_i)
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page.replace_html("class_fields_div", :partial=>"class_fields")
@@ -1773,7 +1741,7 @@ exit MIQ_OK"
   # AJAX driven routine to select a classification entry
   def field_method_select
     get_method_form_vars
-    if @sb[:row_selected] || x_node.split('-').first == "aec"
+    if row_selected_in_grid?
       @refresh_div = "class_methods_div"
       @refresh_partial = "class_methods"
     else
@@ -1782,15 +1750,10 @@ exit MIQ_OK"
     end
     session[:field_data] = Hash.new
     @changed = (@edit[:new] != @edit[:current])
-    @edit[:current][:fields].each_with_index do |fld,i|         #needed to compare each object's attributes to find out if something has changed
-      if @edit[:new][:fields][i].attributes != fld.attributes
-        @changed = true
-      end
-    end
     @in_a_form = true
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial=>@refresh_partial) if @refresh_div
-      if @sb[:row_selected] || x_node.split('-').first == "aec"
+      if row_selected_in_grid?
         page << "$('class_methods_div').show();"
         page << "$('cls_field_name').focus();"
       else
@@ -1806,7 +1769,7 @@ exit MIQ_OK"
 # AJAX driven routine to select a classification entry
   def field_method_accept
     get_method_form_vars
-    if @sb[:row_selected] || x_node.split('-').first == "aec"
+    if row_selected_in_grid?
       @refresh_div = "class_methods_div"
       @refresh_partial = "class_methods"
     else
@@ -1815,15 +1778,10 @@ exit MIQ_OK"
     end
     session[:field_data] = Hash.new
     @changed = (@edit[:new] != @edit[:current])
-    @edit[:current][:fields].each_with_index do |fld,i|         #needed to compare each object's attributes to find out if something has changed
-      if @edit[:new][:fields][i].attributes != fld.attributes
-        @changed = true
-      end
-    end
     @in_a_form = true
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial=>@refresh_partial)  if @refresh_div
-      if @sb[:row_selected] || x_node.split('-').first == "aec"
+      if row_selected_in_grid?
         page << "$('class_methods_div').show();"
       else
         page << "$('method_inputs_div').show();"
@@ -1837,26 +1795,20 @@ exit MIQ_OK"
   # AJAX driven routine to delete a classification entry
   def field_method_delete
     get_method_form_vars
-    if @sb[:row_selected] || x_node.split('-').first == "aec"
+    if row_selected_in_grid?
       @refresh_div = "class_methods_div"
       @refresh_partial = "class_methods"
     else
       @refresh_div = "method_inputs_div"
       @refresh_partial = "method_inputs"
     end
-    if params[:id].to_i != 0
-      @edit[:new][:fields].each_with_index do |flds,i|
-        if i == params[:arr_id].to_i
-          flds.id = "0"
-        end
-      end
-    else
-      @edit[:new][:fields].delete_at(params[:arr_id].to_i)
-    end
+    @edit[:fields_to_delete].push(params[:id]) unless @edit[:fields_to_delete].include?(params[:id])
+    @edit[:new][:fields].delete_at(params[:arr_id].to_i)
+
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
-      page.replace_html(@refresh_div, :partial=>@refresh_partial)  if @refresh_div
-      if @sb[:row_selected] || x_node.split('-').first == "aec"
+      page.replace_html(@refresh_div, :partial => @refresh_partial)  if @refresh_div
+      if row_selected_in_grid?
         page << "$('class_methods_div').show();"
       else
         page << "$('method_inputs_div').show();"
@@ -2025,7 +1977,7 @@ private
 
   def initial_setup_for_instances_form_vars(ae_inst_id)
     @ae_inst   =  ae_inst_id ? MiqAeInstance.find(ae_inst_id) : MiqAeInstance.new
-    @ae_class  = MiqAeClass.find(@edit[:ae_class_id])
+    @ae_class  = ae_class_for_instance_or_method(@ae_inst)
     @ae_values = []
 
     @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
@@ -2049,6 +2001,10 @@ private
 
   def value_column_names
     %w(collect display_name on_entry on_error on_exit max_retries max_time value)
+  end
+
+  def method_input_column_names
+    %w(datatype default_value id name priority)
   end
 
   def copy_objects_get_form_vars
@@ -2359,10 +2315,15 @@ private
   end
 
   def field_attributes
-    [:aetype, :class_id, :collect, :datatype, :default_value, :description,
-     :display_name, :max_retries, :max_time, :message, :name, :on_entry,
-     :on_error, :on_exit, :priority, :substitute]
+    %w(aetype class_id collect datatype default_value description
+       display_name id max_retries max_time message name on_entry
+       on_error on_exit priority substitute)
   end
+
+  def row_selected_in_grid?
+    @sb[:row_selected] || x_node.split('-').first == "aec"
+  end
+  helper_method :row_selected_in_grid?
 
   # Get variables from edit form
   def fields_get_form_vars
@@ -2375,22 +2336,22 @@ private
 
       field_attributes.each do |field|
         field_name = "field_#{field}".to_sym
-        if field == :substitute
-          field_data[field] = new_field[field] = params[field_name].to_i == 1 if params[field_name]
+        if field == "substitute"
+          field_data[field] = new_field[field] = params[field_name] == "1" if params[field_name]
         else
           field_data[field] = new_field[field] = params[field_name] if params[field_name]
         end
       end
 
-      field_data[:default_value] = new_field[:default_value] =
+      field_data['default_value'] = new_field[:default_value] =
           params[:field_password_value] if params[:field_password_value]
       new_field[:priority] = 1
-      @edit[:new][:fields].sort_by { |a| [a.priority.to_i] }.each_with_index do |flds, i|
+      @edit[:new][:fields].each_with_index do |flds, i|
         if i == @edit[:new][:fields].length - 1
-          if flds.priority.nil?
+          if flds['priority'].nil?
             new_field[:priority] = 1
           else
-            new_field[:priority] = flds.priority.to_i + 1
+            new_field[:priority] = flds['priority'].to_i + 1
           end
         end
       end
@@ -2399,9 +2360,9 @@ private
       @edit[:new][:fields].each_with_index do |fld, i|
         field_attributes.each do |field|
           field_name = "fields_#{field}_#{i}".to_sym
-          if field == :substitute
+          if field == "substitute"
             fld[field] = params[field_name].to_i == 1 if params[field_name]
-          elsif %w(aetype datatype).include?(field.to_s)
+          elsif %w(aetype datatype).include?(field)
             var_name = "fields_#{field}#{i}"
             fld[field] = params[var_name.to_sym] if params[var_name.to_sym]
           else
@@ -2410,13 +2371,13 @@ private
         end
       end
     elsif params[:button] == "accept"
-      if !session[:field_data][:name] || session[:field_data][:name] == ""
+      if session[:field_data]['name'].blank?
         add_flash(I18n.t("flash.edit.field_required", :field => "Name"), :error)
         return
       end
       new_fields = {}
       field_attributes.each_with_object({}) { |field| new_fields[field] = @edit[:new_field][field] }
-      @edit[:new][:fields].push(MiqAeField.new(new_fields))
+      @edit[:new][:fields].push(new_fields)
       @edit[:new_field] = session[:field_data] = {}
     end
   end
@@ -2433,10 +2394,13 @@ private
       @edit[:new][:location] ||= "inline"
       @edit[:new][:data] = params[:method_data] if params[:method_data]
       @edit[:new][:fields].each_with_index do |flds,i|
-        @edit[:new][:fields][i][:name] = params["fields_name_#{i}".to_sym] if params["fields_name_#{i}".to_sym]
-        @edit[:new][:fields][i][:default_value] = params["fields_value_#{i}".to_sym] if params["fields_value_#{i}".to_sym]
-        @edit[:new][:fields][i][:default_value] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
-        @edit[:new][:fields][i][:datatype] = params["fields_datatype_#{i}".to_sym] if params["fields_datatype_#{i}".to_sym]
+        method_input_column_names.each do |column|
+          @edit[:new][:fields][i][column] = params["fields_#{column}_#{i}".to_sym] if params["fields_#{column}_#{i}".to_sym]
+          if column == "default_value"
+            @edit[:new][:fields][i][column] = params["fields_value_#{i}".to_sym] if params["fields_value_#{i}".to_sym]
+            @edit[:new][:fields][i][column] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
+          end
+        end
       end
       session[:field_data][:name] = @edit[:new_field][:name] = params[:field_name] if params[:field_name]
       session[:field_data][:datatype] = @edit[:new_field][:datatype] = params[:field_datatype] if params[:field_datatype]
@@ -2451,10 +2415,13 @@ private
       @edit[:new][:data] = params[:cls_method_data] if params[:cls_method_data]
       @edit[:new][:data] += "..."   if params[:transOne] && params[:transOne] == "1"          # Update the new data to simulate a change
       @edit[:new][:fields].each_with_index do |flds,i|
-        @edit[:new][:fields][i][:name] = params["cls_fields_name_#{i}".to_sym] if params["cls_fields_name_#{i}".to_sym]
-        @edit[:new][:fields][i][:default_value] = params["cls_fields_value_#{i}".to_sym] if params["cls_fields_value_#{i}".to_sym]
-        @edit[:new][:fields][i][:default_value] = params["cls_fields_password_value_#{i}".to_sym] if params["cls_fields_password_value_#{i}".to_sym]
-        @edit[:new][:fields][i][:datatype] = params["cls_fields_datatype_#{i}".to_sym] if params["cls_fields_datatype_#{i}".to_sym]
+        method_input_column_names.each do |column|
+          @edit[:new][:fields][i][column] = params["cls_fields_#{column}_#{i}".to_sym] if params["cls_fields_#{column}_#{i}".to_sym]
+          if column == "default_value"
+            @edit[:new][:fields][i][column] = params["cls_fields_value_#{i}".to_sym] if params["cls_fields_value_#{i}".to_sym]
+            @edit[:new][:fields][i][column] = params["cls_fields_password_value_#{i}".to_sym] if params["cls_fields_password_value_#{i}".to_sym]
+          end
+        end
       end
       session[:field_data][:name] = @edit[:new_field][:name] = params[:cls_field_name] if params[:cls_field_name]
       session[:field_data][:datatype] = @edit[:new_field][:datatype] = params[:cls_field_datatype] if params[:cls_field_datatype]
@@ -2468,11 +2435,11 @@ private
         add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
         return
       end
-      new_field = MiqAeField.new
-      new_field.name = @edit[:new_field][:name]
-      new_field.datatype = @edit[:new_field][:datatype]
-      new_field.default_value = @edit[:new_field][:default_value]
-      new_field.method_id = @ae_method.id
+      new_field = {}
+      new_field['name']          = @edit[:new_field][:name]
+      new_field['datatype']      = @edit[:new_field][:datatype]
+      new_field['default_value'] = @edit[:new_field][:default_value]
+      new_field['method_id']     = @ae_method.id
       @edit[:new][:fields].push(new_field)
       @edit[:new_field][:name] = @edit[:new_field][:datatype] = @edit[:new_field][:default_value] = ""
     end
@@ -2565,39 +2532,39 @@ private
   end
 
   # Set record variables to new values
-  def set_field_vars(miqaefields)
-    to_delete = Array.new     # id's of records to be deleted
-    flds_flg = true
-    @new_ids = Array.new
-    miqaefields.each do |f|
-      @new_ids.push(f.id) if !@new_ids.include?(f.id)
-    end
-
-    @edit[:new][:fields].each_with_index do |fld,i|
-      if i <= miqaefields.length-1 && (@new_ids.include?(fld.id.to_i) || fld.id.to_s == "0" )   # until it reaches current fields length || if fld exists in current flds but was updated || if fld is marked for deletion
-        if miqaefields[i].attributes != fld.attributes && fld.id.to_s != "0"
-          miqaefields[i] = fld
-        elsif fld.id.to_s == "0"        # delete any fields marked for deletion
-          to_delete.push(miqaefields[i].id)
+  def set_field_vars
+    fields = []
+    @edit[:new][:fields].each_with_index do |fld, i|
+      if fld['id'].nil?
+        new_field = MiqAeField.new
+        if @ae_method
+          new_field.method_id = @ae_method.id
+        else
+          new_field.class_id = @ae_class.id
         end
       else
-        if fld.id.blank?          # add new fields
-          miqaefields.push(fld)
+        new_field = MiqAeField.find_by_id(fld['id'])
+      end
+
+      field_attributes.each do |attr|
+        if attr == "substitute"
+          new_field.send("#{attr}=", @edit[:new][:fields][i][attr])
+        else
+          new_field.send("#{attr}=", @edit[:new][:fields][i][attr]) if @edit[:new][:fields][i][attr]
         end
       end
+      fields.push(new_field)
     end
 
     #reset priority to be in order 1..3
     i = 0
-    miqaefields.sort_by{|a| [a.priority.to_i]}.each do |fld|
-      if !to_delete.include?(fld.id) || fld.id.blank?
+    fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
+      if !@edit[:fields_to_delete].include?(fld.id) || fld.id.blank?
         i += 1
         fld.priority = i
       end
     end
-    flds_flg = false if i <= 0
-
-    return to_delete, flds_flg
+    fields
   end
   alias_method :set_input_vars, :set_field_vars
 

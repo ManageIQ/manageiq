@@ -1,5 +1,5 @@
 <div id="method_inputs_div">
-  <% if !@in_a_form && @edit[:new][:ae_method] %>
+  <% if !@in_a_form && @ae_method %>
     <%= render :partial => "layouts/flash_msg",
                :locals  => {:div_num => "_method_inputs"}
     %>
@@ -16,26 +16,26 @@
         </tr>
         <tr>
           <td class="key">Name</td>
-          <td class="wide"><%= @edit[:new][:ae_method].name %></td>
+          <td class="wide"><%= @ae_method.name %></td>
         </tr>
         <tr>
           <td class="key">Display Name</td>
-          <td class="wide"><%= @edit[:new][:ae_method].display_name %></td>
+          <td class="wide"><%= @ae_method.display_name %></td>
         </tr>
         <tr>
           <td class="key">Location</td>
-          <td class="wide"><%= @edit[:new][:ae_method].location %></td>
-        </tr>
+          <td class="wide"><%= @ae_method.location %></td>
+        </tr>file encoding
         <tr>
           <td class="key">Created On</td>
-          <td class="wide"><%= h(format_timezone(@edit[:new][:ae_method].created_on,Time.zone,"gtl")) %></td>
+          <td class="wide"><%= h(format_timezone(@ae_method.created_on,Time.zone,"gtl")) %></td>
         </tr>
       </table>
       <p class="legend">Data</p>
-        <% if @edit[:new][:ae_method].location == "inline" %>
+        <% if @ae_method.location == "inline" %>
           <%= text_area("method1",
-                        "data",
-                        :value    => @edit[:new][:ae_method].data,
+                        "data",file encoding
+                        :value    => @ae_method.data,
                         :size     => "90x20",
                         :disabled => true,
                         :style    => "display:none;")
@@ -48,17 +48,17 @@
                                   :read_only    => true}
           %>
         <% else %>
-            <%= @edit[:new][:ae_method].data %>
+            <%= @ae_method.data %>
         <% end %>
   <%# show inputs parameters grid if there are any inputs %>
-  <div id="params_div" style="display:<%=  @edit[:grid_methods_xml] ? "" : "none"%>">
+  <div id="params_div" style="display:<%=  @temp[:grid_methods_xml] ? "" : "none"%>">
   <hr>
   <p class="legend">Input Parameters</p>
     <%= render :partial => 'layouts/dhtmlxgrid',
                :locals  => {:options => {:grid_id   => "method_inputs_grid_div",
                                          :grid_name => "method_inputs_grid",
                                          :grid_url  => "/miq_ae_class/tree_select/",
-                                         :grid_xml  => @edit[:grid_methods_xml],
+                                         :grid_xml  => @temp[:grid_methods_xml],
                                          :no_resize => true,
                                          :autosize  => true,
                                          :set_sizes => true,
