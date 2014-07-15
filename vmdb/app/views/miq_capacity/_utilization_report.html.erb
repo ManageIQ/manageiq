@@ -1,7 +1,11 @@
 <div id="utilization_report_div">
-  <%= render(:partial =>"layouts/flash_msg", :locals=>{:div_num=>"3"}) %>
+  <%= render(:partial => "layouts/flash_msg", 
+             :locals  => {:div_num => "3"})
+  %>
   <% if @sb[:util] &&@sb[:util][:trend_rpt] && @sb[:util][:summary] %>
-    <%= render(:partial =>"utilization_options", :locals=>{:cap_type=>"report"}) %>
+    <%= render(:partial => "utilization_options", 
+               :locals  => {:cap_type => "report"})
+    %>
       <hr>
       <table class="style3">
         <thead>
@@ -72,8 +76,9 @@
         <% end %>
       </table>
     <% end %>
-	<% end %>
-	<% if @sb[:util] &&@sb[:util][:trend_rpt] %>
-		<br/ clear="all">&nbsp;* Information shown is based on available trend data from <%= format_timezone(@sb[:util][:options][:trend_start],@sb[:util][:options][:tz],"date") %> to <%= format_timezone(@sb[:util][:options][:trend_end],@sb[:util][:options][:tz],"date") %> in the <%= @sb[:util][:options][:time_profile_tz] || @sb[:util][:options][:tz] %> time zone.<br/><br/>
-	<% end %>
+  <% end %>
+  <% if @sb[:util] &&@sb[:util][:trend_rpt] %>
+    <hr>
+    * Information shown is based on available trend data from <%= format_timezone(@sb[:util][:options][:trend_start],@sb[:util][:options][:tz],"date") %> to <%= format_timezone(@sb[:util][:options][:trend_end],@sb[:util][:options][:tz],"date") %> in the <%= @sb[:util][:options][:time_profile_tz] || @sb[:util][:options][:tz] %> time zone.
+  <% end %>
 </div>

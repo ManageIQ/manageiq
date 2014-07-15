@@ -1,128 +1,165 @@
 <div id="<%= chart_set %>_charts_div" onmousedown="if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();">
-	<% unless @temp[:charts] || @perf_options[:chart_type] != :performance %><%# Only show charts if task has run %>
-	<% else %>
-		<% perf_options ||= @perf_options %>
-		<% width = perf_options[:index] ? 1000 : 350 %>
-		<% height = perf_options[:index] ? 700 : 250 %>
-		<% charts ||= @temp[:charts] %>
+  <% unless @temp[:charts] || @perf_options[:chart_type] != :performance %><%# Only show charts if task has run %>
+  <% else %>
+    <% perf_options ||= @perf_options %>
+    <% width = perf_options[:index] ? 1000 : 350 %>
+    <% height = perf_options[:index] ? 700 : 250 %>
+    <% charts ||= @temp[:charts] %>
 
-		<% if chart_data %>
-			<% if !perf_parent? && !perf_compare_vm? %>
-				<% if charts && chart_data.length > 0 %>
-					<% (0..chart_data.length - 1).each do |c| %>
-						<% unless charts[c][:type] == "None" || chart_data[c] == nil %>
-								<%= render(:partial => '/layouts/perf_chart',
-													:locals=> {:charts=>charts, :chart_data=>chart_data, :chart_set=>chart_set,
-													:chart_index=>c, :width=>width, :height=>height}) %>
-						<% end %>
-					<% end %>
-				<% else %>
-					<h3>No Capacity & Utilization data available.</h3>
-				<% end %>
+    <% if chart_data %>
+      <% if !perf_parent? && !perf_compare_vm? %>
+        <% if charts && chart_data.length > 0 %>
+          <% (0..chart_data.length - 1).each do |c| %>
+            <% unless charts[c][:type] == "None" || chart_data[c] == nil %>
+                <%= render(:partial    => '/layouts/perf_chart',
+                           :locals     => {:charts      => charts, 
+                                           :chart_data  => chart_data, 
+                                           :chart_set   => chart_set,
+                                           :chart_index => c, 
+                                           :width       => width, 
+                                           :height      => height}) 
+                %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+            <strong>No Capacity & Utilization data available.</strong>
+          </div>
+        <% end %>
 
-				<% if @html %>
-					<br clear="all"/>
-					<fieldset style="float:left;">
-					<%= @html.html_safe %>
-					</fieldset>
-				<% end %>
-			<% elsif perf_parent? %><%# Show side by side VM/Parent charts %>
-				<% pcharts = @temp[:parent_charts] %>
-				<% pchart_data = @temp[:parent_chart_data] %>
-				<table>
-					<% if charts && chart_data.length > 0 %>
-						<% (0..chart_data.length - 1).each do |c| %>
-							<% unless charts[c][:type] == "None" || chart_data[c] == nil %>
-								<tr>
-									<td align="center" style="padding-top: 20px;">
-										<h3>VM "<%= @perf_record.name %>"</h3>
-										<div style="width: <%=width+15%>px; height: <%=height+15%>px; float:left; padding: 0px 5px 20px 0px;">
-											<%= render(:partial => '/layouts/perf_chart',
-																:locals=> {:charts=>charts, :chart_data=>chart_data, :chart_set=>chart_set,
-																:chart_index=>c, :width=>width, :height=>height}) %>
-										</div>
-									</td>
-									<td align="center" style="padding-top: 20px;">
-										<h3><%= ui_lookup(:model=>@perf_options[:parent]) %> "<%= @perf_record.send(@perf_options[:parent].underscore).name %>"</h3>
-										<div style="width: <%=width+15%>px; height: <%=height+15%>px; float:left; padding: 0px 5px 20px 0px;">
-											<%= render(:partial => '/layouts/perf_chart',
-																:locals=> {:charts=>pcharts, :chart_data=>pchart_data, :chart_set=>"parent",
-																:chart_index=>c, :width=>width, :height=>height}) %>
-										</div>
-									</td>
-								</tr>
-							<% end %>
-						<% end %>
-						<% if @html %>
-							<tr>
-								<td align="center" style="padding-top: 20px;padding-left: 10px;padding-right: 10px;">
-									<h3>VM "<%= @perf_record.name %>"</h3>
-									<%= @html.html_safe %>
-								</td>
-								<% if @p_html %>
-									<td align="center" style="padding-top: 20px;padding-left: 10px;padding-right: 10px;">
-										<h3><%= ui_lookup(:model=>@perf_options[:parent]) %> "<%= @perf_record.send(@perf_options[:parent].underscore).name %>"</h3>
-										<%= @p_html.html_safe %>
-									</td>
-								<% end %>
-							</tr>
-						<% end %>
-					<% else %>
-						<h3>No Capacity & Utilization data available.</h3>
-					<% end %>
-				</table>
-			<% elsif perf_compare_vm? %><%# Show main charts along with Compare to VM charts %>
-				<table><tr><td>
-					<h3>
-						<br/>
-						<%= ui_lookup(:model=>@perf_record.class.to_s) %> "<%= @perf_record.evm_display_name %>"
-					</h3>
-					<% if charts && chart_data.length > 0 %>
-						<% (0..chart_data.length - 1).each do |c| %>
-							<% unless charts[c][:type] == "None" || chart_data[c] == nil %>
-									<%= render(:partial => '/layouts/perf_chart',
-														:locals=> {:charts=>charts, :chart_data=>chart_data, :chart_set=>chart_set,
-														:chart_index=>c, :width=>width, :height=>height}) %>
-							<% end %>
-						<% end %>
-					<% else %>
-						<h3>No Capacity & Utilization data available.</h3>
-					<% end %>
+        <% if @html %>
+          <br clear="all"/>
+          <fieldset style="float:left;">
+          <%= @html.html_safe %>
+          </fieldset>
+        <% end %>
+      <% elsif perf_parent? %><%# Show side by side VM/Parent charts %>
+        <% pcharts = @temp[:parent_charts] %>
+        <% pchart_data = @temp[:parent_chart_data] %>
+        <table>
+          <% if charts && chart_data.length > 0 %>
+            <% (0..chart_data.length - 1).each do |c| %>
+              <% unless charts[c][:type] == "None" || chart_data[c] == nil %>
+                <tr>
+                  <td align="center" style="padding-top: 20px;">
+                    <h3>VM "<%= @perf_record.name %>"</h3>
+                    <div style="width: <%=width+15%>px; height: <%=height+15%>px; float:left; padding: 0px 5px 20px 0px;">
+                      <%= render(:partial => '/layouts/perf_chart',
+                                 :locals  => {:charts      => charts, 
+                                              :chart_data  => chart_data, 
+                                              :chart_set   => chart_set,
+                                              :chart_index => c, 
+                                              :width       => width, 
+                                              :height      => height})
+                      %>
+                    </div>
+                  </td>
+                  <td align="center" style="padding-top: 20px;">
+                    <h3><%= ui_lookup(:model=>@perf_options[:parent]) %> "<%= @perf_record.send(@perf_options[:parent].underscore).name %>"</h3>
+                    <div style="width: <%=width+15%>px; height: <%=height+15%>px; float:left; padding: 0px 5px 20px 0px;">
+                      <%= render(:partial => '/layouts/perf_chart',
+                                 :locals  => {:charts      => pcharts, 
+                                              :chart_data  => pchart_data, 
+                                              :chart_set   => "parent",
+                                              :chart_index => c,
+                                              :width       => width, 
+                                              :height      => height})
+                      %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+            <% if @html %>
+              <tr>
+                <td align="center" style="padding-top: 20px;padding-left: 10px;padding-right: 10px;">
+                  <h3>VM "<%= @perf_record.name %>"</h3>
+                  <%= @html.html_safe %>
+                </td>
+                <% if @p_html %>
+                  <td align="center" style="padding-top: 20px;padding-left: 10px;padding-right: 10px;">
+                    <h3><%= ui_lookup(:model=>@perf_options[:parent]) %> "<%= @perf_record.send(@perf_options[:parent].underscore).name %>"</h3>
+                    <%= @p_html.html_safe %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          <% else %>
+            <div class="alert alert-info">
+              <span class="pficon pficon-info"></span>
+              <strong>No Capacity & Utilization data available.</strong>
+            </div>
+          <% end %>
+        </table>
+      <% elsif perf_compare_vm? %><%# Show main charts along with Compare to VM charts %>
+        <table><tr><td>
+          <h3>
+            <br/>
+            <%= ui_lookup(:model=>@perf_record.class.to_s) %> "<%= @perf_record.evm_display_name %>"
+          </h3>
+          <% if charts && chart_data.length > 0 %>
+            <% (0..chart_data.length - 1).each do |c| %>
+              <% unless charts[c][:type] == "None" || chart_data[c] == nil %>
+                  <%= render(:partial => '/layouts/perf_chart',
+                             :locals  => {:charts      => charts, 
+                                          :chart_data  => chart_data, 
+                                          :chart_set   => chart_set,
+                                          :chart_index => c, 
+                                          :width       => width, 
+                                          :height      => height})
+                  %>
+              <% end %>
+            <% end %>
+          <% else %>
+            <div class="alert alert-info">
+              <span class="pficon pficon-info"></span>
+              <strong>No Capacity & Utilization data available.</strong>
+            </div>
+          <% end %>
 
-					<% if @html %>
-						<br clear="all"/>
-						<fieldset style="float:left;">
-						<%= @html.html_safe %>
-						</fieldset>
-					<% end %>
-				</td></tr>
-				<tr><td>
-					<h3>
-						<br/>
-						<%= ui_lookup(:model=>@compare_vm.class.base_model.to_s) %> "<%= @compare_vm.name %>"
-					</h3>
-					<% ccharts = @temp[:compare_vm_charts] %>
-					<% cchart_data = @temp[:compare_vm_chart_data] %>
-					<% if ccharts && cchart_data.length > 0 %>
-						<% (0..cchart_data.length - 1).each do |c| %>
-							<% unless ccharts[c][:type] == "None" || cchart_data[c] == nil %>
-									<%= render(:partial => '/layouts/perf_chart',
-														:locals=> {:charts=>ccharts, :chart_data=>cchart_data, :chart_set=>"comparevm",
-														:chart_index=>c, :width=>width, :height=>height}) %>
-							<% end %>
-						<% end %>
-					<% else %>
-						<h3>No Capacity & Utilization data available.</h3>
-					<% end %>
+          <% if @html %>
+            <br clear="all"/>
+            <fieldset style="float:left;">
+            <%= @html.html_safe %>
+            </fieldset>
+          <% end %>
+        </td></tr>
+        <tr><td>
+          <h3>
+            <br/>
+            <%= ui_lookup(:model=>@compare_vm.class.base_model.to_s) %> "<%= @compare_vm.name %>"
+          </h3>
+          <% ccharts = @temp[:compare_vm_charts] %>
+          <% cchart_data = @temp[:compare_vm_chart_data] %>
+          <% if ccharts && cchart_data.length > 0 %>
+            <% (0..cchart_data.length - 1).each do |c| %>
+              <% unless ccharts[c][:type] == "None" || cchart_data[c] == nil %>
+                  <%= render(:partial => '/layouts/perf_chart',
+                             :locals  => {:charts      => ccharts, 
+                                          :chart_data  => cchart_data, 
+                                          :chart_set   => "comparevm",
+                                          :chart_index => c, 
+                                          :width       => width, 
+                                          :height      => height})
+                  %>
+              <% end %>
+            <% end %>
+          <% else %>
+            <div class="alert alert-info">
+              <span class="pficon pficon-info"></span>
+              <strong>No Capacity & Utilization data available.</strong>
+            </div>
+          <% end %>
 
-					<% if @c_html %>
-						<br clear="all"/>
-						<fieldset style="float:left;">
-						<%= @c_html.html_safe %>
-						</fieldset>
-					<% end %>
-				</td></tr></table>
-			<% end %>
-		<% end %>
-	<% end %>
+          <% if @c_html %>
+            <br clear="all"/>
+            <fieldset style="float:left;">
+            <%= @c_html.html_safe %>
+            </fieldset>
+          <% end %>
+        </td></tr></table>
+      <% end %>
+    <% end %>
+  <% end %>
 </div>

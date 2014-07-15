@@ -1,72 +1,77 @@
 <% cap_type ||= "details" %>
-<% url = url_for(:action=>'util_chart_chooser', :id=>@record.id) %>
+<% url = url_for(:action => 'util_chart_chooser', 
+                 :id     => @record.id)
+%>
 <div id="capacity_<%= cap_type %>_options_div" onclick="if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();">
-
-		<p class="legend">Options</p>
-		<table class="style1">
-			<tr>
-				<td class="key" style="width:120px; ">Trends for past</td>
-				<td class="wide" style="padding-right: 5px">
-          <%= select_tag("#{cap_type}_days",
-                              options_for_select(WEEK_CHOICES.invert.sort{|a,b|a.last<=>b.last},
-                                @sb[:util][:options][:days].to_i),
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
-				</td>
-			</tr>
-		</table>
-		<table class="style1">
-			<tr>
-				<td class="key" style="width:120px; ">Classification</td>
-				<td style="padding-right: 5px">
-          <%= select_tag("#{cap_type}_tag",
-                              options_for_select([["<None>","<None>"]] + (@sb[:util][:tags] ? @sb[:util][:tags].invert.sort : []),
-                                @sb[:util][:options][:tag]),
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
-				</td>
-			</tr>
-		</table>
-		<table class="style1">
-			<tr>
-        <td class="key" style="width:120px">Time Profile</td>
-        <td class="wide" style="padding-right: 5px" valign="top">
-          <% if session[:time_profiles].blank? %>
-            No Time Profiles found
-          <% elsif session[:time_profiles].length == 1 %>  <%# Only 1 choice, show the value %>
-            <%= session[:time_profiles][@sb[:util][:options][:time_profile].to_i] %>
-          <% else %>
-            <%= select_tag("#{cap_type}_time_profile",
-                             options_for_select(Array(session[:time_profiles].invert).sort{|a,b| a.first <=> b.first},
-                                @sb[:util][:options][:time_profile]),
-                             "data-miq_sparkle_on"=>true,
-                             "data-miq_observe"=>{:url=>url}.to_json) %>
-          <% end %>
+  <p class="legend">Options</p>
+  <table class="style1">
+    <tr>
+      <td class="key" style="width:120px; ">Trends for past</td>
+      <td class="wide" style="padding-right: 5px">
+        <%= select_tag("#{cap_type}_days",
+                       options_for_select(WEEK_CHOICES.invert.sort{|a,b|a.last<=>b.last},
+                       @sb[:util][:options][:days].to_i),
+                       "data-miq_sparkle_on" => true,
+                       "data-miq_observe"    => {:url => url}.to_json) 
+        %>
+      </td>
+    </tr>
+  </table>
+  <table class="style1">
+    <tr>
+      <td class="key" style="width:120px; ">Classification</td>
+      <td style="padding-right: 5px">
+        <%= select_tag("#{cap_type}_tag",
+                       options_for_select([["<None>","<None>"]] + (@sb[:util][:tags] ? @sb[:util][:tags].invert.sort : []),
+                       @sb[:util][:options][:tag]),
+                       "data-miq_sparkle_on" => true,
+                       "data-miq_observe"    => {:url => url}.to_json)
+        %>
+      </td>
+    </tr>
+  </table>
+  <table class="style1">
+    <tr>
+      <td class="key" style="width:120px">Time Profile</td>
+      <td class="wide" style="padding-right: 5px" valign="top">
+        <% if session[:time_profiles].blank? %>
+          No Time Profiles found
+        <% elsif session[:time_profiles].length == 1 %>  <%# Only 1 choice, show the value %>
+          <%= session[:time_profiles][@sb[:util][:options][:time_profile].to_i] %>
+        <% else %>
+          <%= select_tag("#{cap_type}_time_profile",
+                         options_for_select(Array(session[:time_profiles].invert).sort{|a,b| a.first <=> b.first},
+                         @sb[:util][:options][:time_profile]),
+                         "data-miq_sparkle_on" => true,
+                         "data-miq_observe"    => {:url => url}.to_json)
+          %>
+        <% end %>
+      </td>
+    </tr>
+    <% if ["summ"].include?(cap_type) %>
+      <tr>
+        <td class="key" style="width:120px">Selected Day</td>
+        <td class="wide" style="padding-right: 5px" >
+          <%= text_field_tag("miq_date_1",
+                             @sb[:util][:options][:chart_date],
+                             :readonly               => "true",
+                             "data-miq_sparkle_on"   => true,
+                             "data-miq_observe_date" => {:url => url}.to_json)
+          %>
         </td>
-			</tr>
-			<% if ["summ"].include?(cap_type) %>
-				<tr>
-					<td class="key" style="width:120px">Selected Day</td>
-					<td class="wide" style="padding-right: 5px" >
-            <%= text_field_tag("miq_date_1",
-                                @sb[:util][:options][:chart_date],
-                                :readonly=>"true",
-                                "data-miq_sparkle_on"=>true,
-                                "data-miq_observe_date"=>{:url=>url}.to_json) %>
-					</td>
-				</tr>
-			<% elsif ["report"].include?(cap_type) %>
-				<tr>
-					<td class="key" style="width:120px">Selected Day</td>
-					<td class="wide" style="padding-right: 5px" >
-            <%= text_field_tag("miq_date_2",
-                                @sb[:util][:options][:chart_date],
-                                :readonly=>"true",
-                                "data-miq_sparkle_on"=>true,
-                                "data-miq_observe_date"=>{:url=>url}.to_json) %>
-					</td>
-				</tr>
-			<% end %>
-		</table>
-
+      </tr>
+    <% elsif ["report"].include?(cap_type) %>
+      <tr>
+        <td class="key" style="width:120px">Selected Day</td>
+        <td class="wide" style="padding-right: 5px" >
+          <%= text_field_tag("miq_date_2",
+                              @sb[:util][:options][:chart_date],
+                              :readonly               => "true",
+                              "data-miq_sparkle_on"   => true,
+                              "data-miq_observe_date" => {:url => url}.to_json)
+          %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
 </div>
