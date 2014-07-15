@@ -330,18 +330,18 @@ class ApplicationController < ActionController::Base
 
   # Download currently displayed view
   def download_data
-    view = session[:view].dup if session[:view]                     # Copy session view, if it exists
-    options = session[:paged_view_search_options].merge({:page=>nil, :per_page=>nil}) # Get all pages
-    view.table, attrs = view.paged_view_search(options) # Get the records
+    @view = session[:view].dup if session[:view]                     # Copy session view, if it exists
+    options = session[:paged_view_search_options].merge(:page => nil, :per_page => nil) # Get all pages
+    @view.table, _attrs = @view.paged_view_search(options) # Get the records
 
-    @filename = view.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @filename = @view.title + "_" + format_timezone(Time.now, Time.zone, "fname")
     case params[:download_type]
     when "pdf"
-      download_pdf(view)
+      download_pdf(@view)
     when "text"
-      download_txt(view)
+      download_txt(@view)
     when "csv"
-      download_csv(view)
+      download_csv(@view)
     end
   end
 
