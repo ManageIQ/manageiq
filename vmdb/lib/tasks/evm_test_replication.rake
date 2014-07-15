@@ -33,7 +33,7 @@ class EvmTestSetupReplication
     begin
       File.open(@region_file, "w") { |f| f.puts(99) }
       config = YAML.load(File.read(@db_yaml_file))
-      config["test"]["database"] = "vmdb_replication_master"
+      config["test"]["database"] += "_master"
       File.open(@db_yaml_file, "w") { |f| f.puts(config.to_yaml) }
 
       run_rake_via_shell("evm:db:reset")
