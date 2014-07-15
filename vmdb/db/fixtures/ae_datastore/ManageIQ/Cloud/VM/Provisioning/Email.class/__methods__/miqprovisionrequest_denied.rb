@@ -1,8 +1,6 @@
-###################################
+
 #
-# EVM Automate Method: MiqProvisionRequest_Denied
-#
-# Notes: This method is used to email the provision requester and approver that
+# Description: This method is used to email the provision requester and approver that
 # the VM provision request has been denied
 #
 # Events: request_denied
@@ -15,159 +13,136 @@
 #    requester replies to the email
 # 3. signature - used to stamp the email with a custom signature
 #
+
 ###################################
-# Method for logging
-def log(level, message)
-  @method = 'MiqProvisionRequest_Denied'
-  @debug = true
-  $evm.log(level, "#{@method} - #{message}") if @debug
-end
+#
+# Method: emailrequester
+#
+# Build email to requester with reason
+#
+###################################
+def emailrequester(miq_request, appliance, msg, provisionRequestApproval)
+  $evm.log('info', "Requester email logic starting")
 
-begin
-  log(:info, "EVM Automate Method Started")
+  # Get requester object
+  requester = miq_request.requester
 
-  ###################################
-  #
-  # Method: emailrequester
-  #
-  # Build email to requester with reason
-  #
-  ###################################
-  def emailrequester(miq_request, appliance, msg, provisionRequestApproval)
-    log(:info, "Requester email logic starting")
+  # Get requester email else set to nil
+  requester_email = requester.email || nil
 
-    # Get requester object
-    requester = miq_request.requester
+  # Get Owner Email else set to nil
+  owner_email = miq_request.options[:owner_email] || nil
+  $evm.log('info', "Requester email:<#{requester_email}> Owner Email:<#{owner_email}>")
 
-    # Get requester email else set to nil
-    requester_email = requester.email || nil
+  # if to is nil then use requester_email or owner_email
+  to = nil
+  to ||= requester_email || owner_email
 
-    # Get Owner Email else set to nil
-    owner_email = miq_request.options[:owner_email] || nil
-    log(:info, "Requester email:<#{requester_email}> Owner Email:<#{owner_email}>")
+  # If to is still nil use to_email_address from model
+  to ||= $evm.object['to_email_address']
 
-    # if to is nil then use requester_email or owner_email
-    to = nil
-    to ||= requester_email || owner_email
+  # Get from_email_address from model unless specified below
+  from = nil
+  from ||= $evm.object['from_email_address']
 
-    # If to is still nil use to_email_address from model
-    to ||= $evm.object['to_email_address']
+  # Get signature from model unless specified below
+  signature = nil
+  signature ||= $evm.object['signature']
 
-    # Get from_email_address from model unless specified below
-    from = nil
-    from ||= $evm.object['from_email_address']
-
-    # Get signature from model unless specified below
-    signature = nil
-    signature ||= $evm.object['signature']
-
-    # Set email subject
-    if provisionRequestApproval
-      subject = "Request ID #{miq_request.id} - Your virtual machine request was not approved"
-    else
-      subject = "Request ID #{miq_request.id} - Virtual Machine request was denied due to quota limitations"
-    end
-
-    # Build email body
-    body = "Hello, "
-    body += "<br>#{msg}."
-    body += "<br><br>Approvers notes: #{miq_request.reason}" if provisionRequestApproval
-    body += "<br><br>For more information you can go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
-    body += "<br><br> Thank you,"
-    body += "<br> #{signature}"
-
-    # Send email to requester
-    log(:info, "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
-    $evm.execute(:send_email, to, from, subject, body)
-  end
-
-  ###################################
-  #
-  # Method: emailapprover
-  #
-  # Build email to approver with reason
-  #
-  ###################################
-  def emailapprover(miq_request, appliance, msg, provisionRequestApproval)
-    log('info', "Approver email logic starting")
-
-    # Override to requesters to_email_address below or get value from requester.email then from model
-    requester_email = miq_request.requester.email
-    if requester_email.to_s.empty?
-      requester_email ||= miq_request.requester.email
-    else
-      requester_email ||= $evm.object['to_email_address']
-    end
-
-    # Override to email address below or get to_email_address from from model
-    to = nil
-    to  ||= $evm.object['to_email_address']
-
-    # Override from_email_address below or get from_email_address from model
-    from = nil
-    from ||= $evm.object['from_email_address']
-
-    # Get signature from model unless specified below
-    signature = nil
-    signature ||= $evm.object['signature']
-
-    # Set email subject
-    if provisionRequestApproval
-      subject = "Request ID #{miq_request.id} - Virtual machine request was not approved"
-    else
-      subject = "Request ID #{miq_request.id} - Virtual Machine request was denied due to quota limitations"
-    end
-
-    # Build email body
-    body = "Approver, "
-    body += "<br>A request received from #{requester_email} was denied."
-    body += "<br><br>#{msg}."
-    body += "<br><br>Approvers notes: #{miq_request.reason}" if provisionRequestApproval
-    body += "<br><br>For more information you can go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
-    body += "<br><br> Thank you,"
-    body += "<br> #{signature}"
-
-    # Send email to approver
-    log(:info, "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
-    $evm.execute(:send_email, to, from, subject, body)
-  end
-
-  # Get miq_request from root
-  miq_request = $evm.root['miq_request']
-  raise "miq_request missing" if miq_request.nil?
-  log(:info, "Detected Request:<#{miq_request.id}> with Approval State:<#{miq_request.approval_state}>")
-
-  # Override the default appliance IP Address below
-  appliance = nil
-  # appliance ||= 'evmserver.company.com'
-  appliance ||= $evm.root['miq_server'].ipaddress
-
-  # Get incoming message or set it to default if nil
-  msg = miq_request.resource.message || "Request denied"
-
-  # Check to see which state machine called this method
-  if msg.downcase.include?('quota')
-    provisionRequestApproval = false
+  # Set email subject
+  if provisionRequestApproval
+    subject = "Request ID #{miq_request.id} - Your virtual machine request was not approved"
   else
-    provisionRequestApproval = true
+    subject = "Request ID #{miq_request.id} - Virtual Machine request was denied due to quota limitations"
   end
 
-  # Email Requester
-  emailrequester(miq_request, appliance, msg, provisionRequestApproval)
+  # Build email body
+  body = "Hello, "
+  body += "<br>#{msg}."
+  body += "<br><br>Approvers notes: #{miq_request.reason}" if provisionRequestApproval
+  body += "<br><br>For more information you can go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
+  body += "<br><br> Thank you,"
+  body += "<br> #{signature}"
 
-  # Email Approver
-  emailapprover(miq_request, appliance, msg, provisionRequestApproval)
-
-  #
-  # Exit method
-  #
-  log(:info, "EVM Automate Method Ended")
-  exit MIQ_OK
-
-  #
-  # Set Ruby rescue behavior
-  #
-rescue => err
-  log(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
-  exit MIQ_STOP
+  # Send email to requester
+  $evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+  $evm.execute(:send_email, to, from, subject, body)
 end
+
+###################################
+#
+# Method: emailapprover
+#
+# Build email to approver with reason
+#
+###################################
+def emailapprover(miq_request, appliance, msg, provisionRequestApproval)
+  $evm.log('info', "Approver email logic starting")
+
+  # Override to requesters to_email_address below or get value from requester.email then from model
+  requester_email = miq_request.requester.email
+  if requester_email.to_s.empty?
+    requester_email ||= miq_request.requester.email
+  else
+    requester_email ||= $evm.object['to_email_address']
+  end
+
+  # Override to email address below or get to_email_address from from model
+  to = nil
+  to  ||= $evm.object['to_email_address']
+
+  # Override from_email_address below or get from_email_address from model
+  from = nil
+  from ||= $evm.object['from_email_address']
+
+  # Get signature from model unless specified below
+  signature = nil
+  signature ||= $evm.object['signature']
+
+  # Set email subject
+  if provisionRequestApproval
+    subject = "Request ID #{miq_request.id} - Virtual machine request was not approved"
+  else
+    subject = "Request ID #{miq_request.id} - Virtual Machine request was denied due to quota limitations"
+  end
+
+  # Build email body
+  body = "Approver, "
+  body += "<br>A request received from #{requester_email} was denied."
+  body += "<br><br>#{msg}."
+  body += "<br><br>Approvers notes: #{miq_request.reason}" if provisionRequestApproval
+  body += "<br><br>For more information you can go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
+  body += "<br><br> Thank you,"
+  body += "<br> #{signature}"
+
+  # Send email to approver
+  $evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+  $evm.execute(:send_email, to, from, subject, body)
+end
+
+# Get miq_request from root
+miq_request = $evm.root['miq_request']
+raise "miq_request missing" if miq_request.nil?
+$evm.log('info', "Detected Request:<#{miq_request.id}> with Approval State:<#{miq_request.approval_state}>")
+
+# Override the default appliance IP Address below
+appliance = nil
+# appliance ||= 'evmserver.company.com'
+appliance ||= $evm.root['miq_server'].ipaddress
+
+# Get incoming message or set it to default if nil
+msg = miq_request.resource.message || "Request denied"
+
+# Check to see which state machine called this method
+if msg.downcase.include?('quota')
+  provisionRequestApproval = false
+else
+  provisionRequestApproval = true
+end
+
+# Email Requester
+emailrequester(miq_request, appliance, msg, provisionRequestApproval)
+
+# Email Approver
+emailapprover(miq_request, appliance, msg, provisionRequestApproval)
+

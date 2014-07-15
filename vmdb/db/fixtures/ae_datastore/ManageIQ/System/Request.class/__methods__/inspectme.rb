@@ -1,12 +1,8 @@
-###################################
 #
-# EVM Automate Method: Inspect_me
-#
-# Notes: Log all objects stored in the $evm.root hash.
+# Description: Log all objects stored in the $evm.root hash.
 #        Then log the attributes, associations, tags and
 #        virtual_columns for each automate service model.
 #
-###################################
 
 def dump_root
   $evm.log("info", "Root:<$evm.root> Attributes - Begin")

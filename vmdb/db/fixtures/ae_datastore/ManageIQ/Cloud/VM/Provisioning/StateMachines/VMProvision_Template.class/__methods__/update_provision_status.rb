@@ -1,10 +1,8 @@
-###################################
 #
-# EVM Automate Method: update_provision_status
-#
+# Description: Updates provision status.
 # Required inputs: status
 #
-###################################
+
 prov   = $evm.root['miq_provision']
 status = $evm.inputs['status']
 

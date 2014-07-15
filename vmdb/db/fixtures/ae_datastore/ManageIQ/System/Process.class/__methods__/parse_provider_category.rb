@@ -1,3 +1,7 @@
+#
+# Description: Sets root object ae_providwer_category to cloud/infra
+#
+
 def vm_detect_category(vm)
   return nil unless vm.respond_to?(:cloud)
   vm.cloud == true ? 'cloud' : 'infrastructure'

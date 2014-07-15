@@ -1,10 +1,7 @@
-###################################
-#
-# EVM Automate Method: update_provision_status
-#
+# Description: This method updates the host provisioning status
 # Required inputs: status
 #
-###################################
+
 prov   = $evm.root['miq_host_provision']
 status = $evm.inputs['status']
 
