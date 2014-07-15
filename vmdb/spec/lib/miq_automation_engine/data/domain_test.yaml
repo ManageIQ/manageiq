@@ -1,0 +1,830 @@
+---
+evm1:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: evm1
+        description: 
+        display_name: 
+        system: 
+        priority: 100
+        enabled: 
+  test:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: test
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    AUTOMATE.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: AUTOMATE
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: method
+              name: overlay_method
+              display_name: overlay method
+              datatype: 
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: connect_to
+              display_name: Relationship
+              datatype: 
+              priority: 2
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      _missing.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: .missing
+            inherits: 
+            description: 
+          fields:
+          - overlay_method:
+              value: evm1_missing_method
+      __methods__:
+        evm1_missing_method.rb: ! '$evm.root[''method_executed'']  = "evm1_missing_method"
+
+'
+        evm1_missing_method.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: evm1_missing_method
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs: []
+evm2:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: evm2
+        description: 
+        display_name: 
+        system: 
+        priority: 100
+        enabled: 
+  test:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: test
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    AUTOMATE.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: AUTOMATE
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: method
+              name: overlay_method
+              display_name: overlay method
+              datatype: 
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: connect_to
+              display_name: Relationship
+              datatype: 
+              priority: 2
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      _missing.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: .missing
+            inherits: 
+            description: 
+          fields:
+          - overlay_method:
+              value: evm2_missing_method
+      __methods__:
+        evm2_missing_method.rb: ! '$evm.root[''method_executed'']  = "evm2_missing_method"
+
+'
+        evm2_missing_method.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: evm2_missing_method
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs: []
+user:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: user
+        description: 
+        display_name: 
+        system: 
+        priority: 100
+        enabled: 
+  evm:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: evm
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    AUTOMATE.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: AUTOMATE
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: method
+              name: overlay_method
+              display_name: overlay method
+              datatype: 
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: attr1
+              display_name: Attribute1
+              datatype: 
+              priority: 2
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: connect_to
+              display_name: Relationship
+              datatype: 
+              priority: 3
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      test1.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test1
+            inherits: 
+            description: 
+          fields:
+          - overlay_method:
+              value: user_method
+      test2.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test2
+            inherits: 
+            description: 
+          fields:
+          - connect_to:
+              value: /root/evm/AUTOMATE/test3*
+      test31.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test31
+            inherits: 
+            description: 
+          fields:
+          - attr1:
+              value: test31
+      test32.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test32
+            inherits: 
+            description: 
+          fields:
+          - overlay_method:
+              value: user_method
+          - attr1:
+              value: test32
+      test_wildcard.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test_wildcard
+            inherits: 
+            description: 
+          fields:
+          - connect_to:
+              value: /evm/AUTOMATE/test3*
+      __methods__:
+        user_method.rb: ! "begin\n              $evm.log(\"info\", \"#{@method} -
+          Root:<$evm.root> Begin Attributes\")\n              $evm.root.attributes.sort.each
+          do |k, v|\n                $evm.log(\"info\", \"#{@method} - Root:<$evm.root>
+          Attributes - #{k}: #{v}\")\n              end\n              $evm.log(\"info\",
+          \"#{@method} - Root:<$evm.root> End Attributes\")\n              $evm.log(\"info\",
+          \"#{$evm.class.name}\")\n              $evm.root['method_executed']  = \"user\"\n
+          \           end\n"
+        user_method.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: user_method
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs: []
+root:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: root
+        description: 
+        display_name: 
+        system: 
+        priority: 100
+        enabled: 
+  evm:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: evm
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    AUTOMATE.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: AUTOMATE
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: method
+              name: overlay_method
+              display_name: overlay method
+              datatype: 
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: attr1
+              display_name: Attribute1
+              datatype: 
+              priority: 2
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: connect_to
+              display_name: Relationship
+              datatype: 
+              priority: 3
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      test1.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test1
+            inherits: 
+            description: 
+          fields:
+          - overlay_method:
+              value: root_method
+      test2.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test2
+            inherits: 
+            description: 
+          fields:
+          - connect_to:
+              value: /root/evm/AUTOMATE/test1
+      __methods__:
+        root_method.rb: ! "begin\n          $evm.log(\"info\", \"#{@method} - Root:<$evm.root>
+          Begin Attributes\")\n          $evm.root.attributes.sort.each do |k, v|\n
+          \           $evm.log(\"info\", \"#{@method} - Root:<$evm.root> Attributes
+          - #{k}: #{v}\")\n          end\n          $evm.log(\"info\", \"#{@method}
+          - Root:<$evm.root> End Attributes\")\n          $evm.log(\"info\", \"#{$evm.class.name}\")\n
+          \         $evm.root['method_executed']  = \"root\"\n        end\n"
+        root_method.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: root_method
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs: []
+inert:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: inert
+        description: 
+        display_name: 
+        system: 
+        priority: 100
+        enabled: 
+  evm:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: evm
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    AUTOMATE.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: AUTOMATE
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: method
+              name: overlay_method
+              display_name: overlay method
+              datatype: 
+              priority: 1
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: attr1
+              display_name: Attribute1
+              datatype: 
+              priority: 2
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: relationship
+              name: connect_to
+              display_name: Relationship
+              datatype: 
+              priority: 3
+              owner: 
+              default_value: ''
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      should_get_used.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: should_get_used
+            inherits: 
+            description: 
+          fields:
+          - overlay_method:
+              value: inert_method
+          - attr1:
+              value: test32
+      should_not_get_used.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: should_not_get_used
+            inherits: 
+            description: 
+          fields:
+          - attr1:
+              value: test31
+      test1.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test1
+            inherits: 
+            description: 
+          fields:
+          - overlay_method:
+              value: inert_method
+      test2.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test2
+            inherits: 
+            description: 
+          fields:
+          - connect_to:
+              value: /root/evm/AUTOMATE/test3*
+      test_wildcard.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test_wildcard
+            inherits: 
+            description: 
+          fields:
+          - connect_to:
+              value: /evm/AUTOMATE/test3*
+      __methods__:
+        inert_method.rb: ! '$evm.root[''method_executed'']  = "inert"
+
+'
+        inert_method.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: inert_method
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs: []
+  .manifest.yaml:
+    __domain__.yaml:
+      classes: 5
+      instances: 14
+      method_files: 5
+      method_instances: 5
+      created_on: 2014-06-26 17:14:43.278393000 Z
+      updated_on: 2014-06-26 17:14:43.278393000 Z
+      size: 157
+      sha1: YUFsxVaUKYDhHt7r4baY65iB4Dc=
+    test/__namespace__.yaml:
+      created_on: 2014-06-26 17:15:32.246479000 Z
+      updated_on: 2014-06-26 17:15:32.246479000 Z
+      size: 156
+      sha1: BycJ+oOIr4pkFVz5mF3tVC3CIL8=
+    test/AUTOMATE.class/__class__.yaml:
+      created_on: 2014-06-26 17:15:32.302677000 Z
+      updated_on: 2014-06-26 17:15:32.302677000 Z
+      size: 949
+      sha1: I1rcCYksURWFdA70yLl68+uwtHE=
+    test/AUTOMATE.class/_missing.yaml:
+      created_on: 2014-06-26 17:15:32.320393000 Z
+      updated_on: 2014-06-26 17:15:32.320393000 Z
+      size: 195
+      sha1: 1pjwMe+hU3dPKmtv1Fk4rDHTSLc=
+    test/AUTOMATE.class/__methods__/evm1_missing_method.rb:
+      created_on: 2014-06-26 17:15:18.717320000 Z
+      updated_on: 2014-06-26 17:15:18.717320000 Z
+      size: 54
+      sha1: OLaNrLxBDHKUSHI0rqQkW9FO8i8=
+    test/AUTOMATE.class/__methods__/evm1_missing_method.yaml:
+      created_on: 2014-06-26 17:15:18.717320000 Z
+      updated_on: 2014-06-26 17:15:18.717320000 Z
+      size: 199
+      sha1: XFJAqUk0kgQM/a6fgPfLbYP4KK8=
+    test/AUTOMATE.class/__methods__/evm2_missing_method.rb:
+      created_on: 2014-06-26 17:15:32.330560000 Z
+      updated_on: 2014-06-26 17:15:32.330560000 Z
+      size: 54
+      sha1: 5s0baPkOdN/FzLJ7EIE3yH3bpxs=
+    test/AUTOMATE.class/__methods__/evm2_missing_method.yaml:
+      created_on: 2014-06-26 17:15:32.330560000 Z
+      updated_on: 2014-06-26 17:15:32.330560000 Z
+      size: 199
+      sha1: z4VAPlObr4barDG9iyn6M4GNHPI=
+    evm/__namespace__.yaml:
+      created_on: 2014-06-26 17:14:43.391726000 Z
+      updated_on: 2014-06-26 17:14:43.391726000 Z
+      size: 155
+      sha1: Ugj4UH0RSS4/JizAws9eIjjPH68=
+    evm/AUTOMATE.class/__class__.yaml:
+      created_on: 2014-06-26 17:14:43.479822000 Z
+      updated_on: 2014-06-26 17:14:43.479822000 Z
+      size: 1325
+      sha1: 2EYrMxY28Wveyl8dDq1fOYJ+E1w=
+    evm/AUTOMATE.class/test1.yaml:
+      created_on: 2014-06-26 17:14:43.586939000 Z
+      updated_on: 2014-06-26 17:21:08.891183000 Z
+      size: 185
+      sha1: 6pxBq2d8dbQlicMeBvXJfxahS0c=
+    evm/AUTOMATE.class/test2.yaml:
+      created_on: 2014-06-26 17:14:43.595254000 Z
+      updated_on: 2014-06-26 17:14:43.595254000 Z
+      size: 194
+      sha1: Koa/GR7+eWS+rCVaAuQByrJ+8Zc=
+    evm/AUTOMATE.class/test31.yaml:
+      created_on: 2014-06-26 17:15:57.363128000 Z
+      updated_on: 2014-06-26 17:15:57.363128000 Z
+      size: 171
+      sha1: Oc/sSP30VxJDycnXk9tJKUuHKq8=
+    evm/AUTOMATE.class/test32.yaml:
+      created_on: 2014-06-26 17:15:57.371494000 Z
+      updated_on: 2014-06-26 17:54:49.854040000 Z
+      size: 216
+      sha1: wCR4QClQJFilesGkXleplw0hHl4=
+    evm/AUTOMATE.class/test_wildcard.yaml:
+      created_on: 2014-06-26 17:14:43.603217000 Z
+      updated_on: 2014-06-26 17:14:43.603217000 Z
+      size: 197
+      sha1: m8v35Y7IPBUKsGELGEyRZrr9Nh8=
+    evm/AUTOMATE.class/__methods__/user_method.rb:
+      created_on: 2014-06-26 17:15:57.388791000 Z
+      updated_on: 2014-06-26 17:19:45.646606000 Z
+      size: 451
+      sha1: fgeSObNlDCzUlnch8P2G0zWFA+I=
+    evm/AUTOMATE.class/__methods__/user_method.yaml:
+      created_on: 2014-06-26 17:15:57.388791000 Z
+      updated_on: 2014-06-26 17:19:45.646606000 Z
+      size: 191
+      sha1: EMV0Pb+kmpqpro3QrT7KleFjkNs=
+    evm/AUTOMATE.class/__methods__/root_method.rb:
+      created_on: 2014-06-26 17:16:12.017793000 Z
+      updated_on: 2014-06-26 17:16:12.017793000 Z
+      size: 419
+      sha1: wcEu+61yqeH/nb7rvP1ACoYuKvI=
+    evm/AUTOMATE.class/__methods__/root_method.yaml:
+      created_on: 2014-06-26 17:16:12.017793000 Z
+      updated_on: 2014-06-26 17:16:12.017793000 Z
+      size: 191
+      sha1: JN6zLbHI1Uop5bQJmcWU6jfITzE=
+    evm/AUTOMATE.class/should_get_used.yaml:
+      created_on: 2014-06-26 17:14:43.534232000 Z
+      updated_on: 2014-06-26 17:20:48.369567000 Z
+      size: 226
+      sha1: 6YD88mz2kZx7FgL7szKGPNSVcX4=
+    evm/AUTOMATE.class/should_not_get_used.yaml:
+      created_on: 2014-06-26 17:14:43.578442000 Z
+      updated_on: 2014-06-26 17:14:43.578442000 Z
+      size: 184
+      sha1: 1Q1N66tdhkVD8bqt/YRSfotgp5U=
+    evm/AUTOMATE.class/__methods__/inert_method.rb:
+      created_on: 2014-06-26 17:14:43.635273000 Z
+      updated_on: 2014-06-26 17:20:30.068350000 Z
+      size: 40
+      sha1: Mh/FFmC73YL0uGnVWpIO/mrTceU=
+    evm/AUTOMATE.class/__methods__/inert_method.yaml:
+      created_on: 2014-06-26 17:14:43.635273000 Z
+      updated_on: 2014-06-26 17:20:30.068350000 Z
+      size: 192
+      sha1: oSmOh/rGTc9Ea2Isgroy694pLNs=

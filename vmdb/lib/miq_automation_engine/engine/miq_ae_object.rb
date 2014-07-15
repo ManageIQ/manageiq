@@ -546,6 +546,8 @@ module MiqAeEngine
         aem = cm[method_name] unless cm.nil?
       end
 
+      aem = method_override(namespace, klass, method_name, aem)
+
       raise MiqAeException::MethodNotFound, "Method [#{method_name}] not found in class [#{fq}]" if aem.nil?
       begin
         @workspace.push_method(method_name)
@@ -553,6 +555,17 @@ module MiqAeEngine
       ensure
         @workspace.pop_method
       end
+    end
+
+    def method_override(namespace, klass, method_name, aem)
+      ns = namespace.split('/')
+      ns.shift
+      updated_ns = @workspace.overlay_method(ns.join('/'), klass, method_name)
+      if updated_ns != namespace
+        cls = ::MiqAeClass.find_by_fqname("#{updated_ns}/#{klass}")
+        aem = ::MiqAeMethod.find_by_class_id_and_name(cls.id, method_name) if cls
+      end
+      aem
     end
 
     def get_value(f, type=nil)
