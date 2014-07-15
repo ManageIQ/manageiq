@@ -122,14 +122,15 @@ describe Service do
     end
 
     it "should allow a resource to be connected only once" do
-      vm_first = Vm.first
+      ids = Vm.pluck(:id)
+      vm_first = Vm.find(ids.first)
       @service << vm_first
       @service.service_resources.should have(1).thing
 
       @service.add_resource(vm_first)
       @service.service_resources.should have(1).thing
 
-      @service.add_resource(Vm.last)
+      @service.add_resource(Vm.find(ids.last))
       @service.service_resources.should have(2).things
     end
 
