@@ -6,6 +6,8 @@ class PxeServer < ActiveRecord::Base
 
   alias_attribute :description, :name
 
+  default_value_for :customization_directory, ""
+
   serialize :visibility
 
   validates_presence_of   :name, :uri
