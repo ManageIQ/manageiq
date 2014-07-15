@@ -1,6 +1,6 @@
 <% legend_text ||= "Last 1000 lines from server #{@temp[:server].name} [#{@server_options[:server_id]}] in zone #{@temp[:server].my_zone}" %>
 <%= render :partial=>"layouts/flash_msg" %>
-<fieldset>
+
 	<p class="legend"><%= legend_text %></p>
 
 		<% h = @winH < 627 ? 200 : @winH - 427 %>
@@ -8,5 +8,5 @@
 
 	<%#= text_area_tag("logview", @log, :readonly=>"readonly", :style=>"height:#{h}px;") %>
 	<%= text_area("logview","data", :value=>@log, :readonly=>true, :style=>"height:#{h}px;width:#{w}px;") %>
-</fieldset>
+
 <%= javascript_tag "$('logview_data').scrollTop = $('logview_data').scrollHeight - $('logview_data').clientHeight;" %>

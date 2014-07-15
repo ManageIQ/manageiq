@@ -1,10 +1,17 @@
 <div id="utilization_report_div">
-  <%= render(:partial =>"layouts/flash_msg", :locals=>{:div_num=>"3"}) %>
+  <%= render(:partial => "layouts/flash_msg", 
+             :locals  => {:div_num => "3"})
+  %>
   <% if @sb[:util] &&@sb[:util][:trend_rpt] && @sb[:util][:summary] %>
-    <%= render(:partial =>"utilization_options", :locals=>{:cap_type=>"report"}) %>
+    <%= render(:partial => "utilization_options", 
+               :locals  => {:cap_type => "report"})
+    %>
+      <hr>
       <table class="style3">
         <thead>
-          <tr><th colspan="2" align="left">Basic Information</th></tr>
+          <tr>
+            <th colspan="2" align="left">Basic Information</th>
+          </tr>
         </thead>
         <% @sb[:util][:summary][:info].each do |si| %>
           <tr class="<%=cycle('row0','row1',:name=>'info')%>">
@@ -15,17 +22,19 @@
       </table>
   <% else %>
     <% msg = x_node == "" ? "Select a node on the left to view Utilization report." : "No performance data is available for the selected item." %>
-      <h3>
-        <fieldset>
-          <%=msg%>
-        </fieldset>
-      </h3>
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong><%=msg%></strong>
+    </div>
   <% end %>
   <% if @sb[:util] && @sb[:util][:summary] %>
     <% if @sb[:util][:summary][:cpu] && !@sb[:util][:summary][:cpu].empty? %>
+      <hr>
       <table class="style3">
         <thead>
-          <tr><th colspan="2" align="left">CPU</th></tr>
+          <tr>
+            <th colspan="2" align="left">CPU</th>
+          </tr>
         </thead>
         <% @sb[:util][:summary][:cpu].each do |c| %>
           <tr class="<%=cycle('row0','row1',:name=>'cap')%>">
@@ -36,9 +45,12 @@
       </table>
     <% end %>
     <% if @sb[:util][:summary][:memory] && !@sb[:util][:summary][:memory].empty? %>
+      <hr>
       <table class="style3">
         <thead>
-          <tr><th colspan="2" align="left">Memory</th></tr>
+          <tr>
+            <th colspan="2" align="left">Memory</th>
+          </tr>
         </thead>
         <% @sb[:util][:summary][:memory].each do |m| %>
           <tr class="<%=cycle('row0','row1',:name=>'trend')%>">
@@ -49,9 +61,12 @@
         </table>
     <% end %>
     <% if @sb[:util][:summary][:storage] && !@sb[:util][:summary][:storage].empty? %>
+      <hr>
       <table class="style3">
         <thead>
-          <tr><th colspan="2" align="left">Disk</th></tr>
+          <tr>
+            <th colspan="2" align="left">Disk</th>
+          </tr>
         </thead>
         <% @sb[:util][:summary][:storage].each do |s| %>
           <tr class="<%=cycle('row0','row1',:name=>'cap')%>">
@@ -61,8 +76,9 @@
         <% end %>
       </table>
     <% end %>
-	<% end %>
-	<% if @sb[:util] &&@sb[:util][:trend_rpt] %>
-		<br/ clear="all">&nbsp;* Information shown is based on available trend data from <%= format_timezone(@sb[:util][:options][:trend_start],@sb[:util][:options][:tz],"date") %> to <%= format_timezone(@sb[:util][:options][:trend_end],@sb[:util][:options][:tz],"date") %> in the <%= @sb[:util][:options][:time_profile_tz] || @sb[:util][:options][:tz] %> time zone.<br/><br/>
-	<% end %>
+  <% end %>
+  <% if @sb[:util] &&@sb[:util][:trend_rpt] %>
+    <hr>
+    * Information shown is based on available trend data from <%= format_timezone(@sb[:util][:options][:trend_start],@sb[:util][:options][:tz],"date") %> to <%= format_timezone(@sb[:util][:options][:trend_end],@sb[:util][:options][:tz],"date") %> in the <%= @sb[:util][:options][:time_profile_tz] || @sb[:util][:options][:tz] %> time zone.
+  <% end %>
 </div>
