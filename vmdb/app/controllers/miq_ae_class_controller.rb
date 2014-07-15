@@ -392,7 +392,7 @@ class MiqAeClassController < ApplicationController
 
     if !@in_a_form || (params[:pressed] && params[:pressed].ends_with?("_delete"))
       presenter[:set_visible_elements][:params_div] =
-        !!(@sb[:active_tab] == "methods" && @temp[:grid_methods_xml])
+        @sb[:active_tab] == "methods" && @temp[:grid_methods_xml]
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list
@@ -433,9 +433,7 @@ class MiqAeClassController < ApplicationController
       end
       aetypes.each do |aetype|
         opt = root.add_element("option", {"value"=>aetype,"img_src"=>"/images/icons/new/16_ae_#{aetype}.png"})
-        if fld['aetype'] == aetype
-          opt.add_attribute("selected","true")
-        end
+        opt.add_attribute("selected", "true") if fld['aetype'] == aetype
         opt.text = aetype.titleize
       end
       combo_xml.push(xml.to_s)
@@ -458,9 +456,7 @@ class MiqAeClassController < ApplicationController
       end
       dtypes.each do |dtype|
         opt = root.add_element("option", {"value"=>dtype,"img_src"=>"/images/icons/new/#{dtype}.png", "img_style"=>"height:16px;width:16px"})
-        if fld['datatype'] == dtype
-          opt.add_attribute("selected","true")
-        end
+        opt.add_attribute("selected", "true") if fld['datatype'] == dtype
         opt.text = dtype.titleize
       end
       combo_xml.push(xml.to_s)
@@ -1039,19 +1035,19 @@ class MiqAeClassController < ApplicationController
     session[:field_data] = {}
     @edit = {
       :ae_class_id      => @ae_class.id,
-      :rec_id           => @ae_class ? @ae_class.id : nil,
+      :rec_id           => @ae_class.id,
       :new_field        => {},
       :key              => "aefields_edit__#{@ae_class.id || "new"}",
       :fields_to_delete => []
     }
 
     @edit[:new] = {
-        :datatypes => get_dtype_combo_xml([MiqAeField.new]),    # setting dtype combo for adding a new field
-        :aetypes   => get_combo_xml([MiqAeField.new]),          # setting aetype combo for adding a new field
-        :fields    => []
+      :datatypes => get_dtype_combo_xml([MiqAeField.new]),    # setting dtype combo for adding a new field
+      :aetypes   => get_combo_xml([MiqAeField.new]),          # setting aetype combo for adding a new field
+      :fields    => []
     }
 
-    @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
+    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
       field = {}
       field_attributes.each do |column|
         field[column] = fld.send(column)
@@ -1059,13 +1055,15 @@ class MiqAeClassController < ApplicationController
       @edit[:new][:fields].push(field)
     end
     # combo to show existing fields
-    @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields].sort_by{|a| [a['priority'].to_i]})
+    @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
     # passing in fields because that's how many combo boxes we need
-    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields].sort_by{|a| [a['priority'].to_i]})
+    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
     @edit[:current]         = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
                         I18n.t("cell_header.adding_model_record", :model => ui_lookup(:model => "Class Schema")) :
-                        I18n.t("cell_header.editing_model_record", :model => ui_lookup(:model => "Class Schema"), :name => @ae_class.name)
+                        I18n.t("cell_header.editing_model_record",
+                               :model => ui_lookup(:model => "Class Schema"),
+                               :name  => @ae_class.name)
     session[:edit] = @edit
   end
 
@@ -1405,7 +1403,7 @@ exit MIQ_OK"
           MiqAeField.find_all_by_id(@edit[:fields_to_delete]).each do |fld|
             fld.destroy
           end
-          fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
+          fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
             fld.default_value = nil if fld.default_value == ""
             fld.save!
           end
@@ -1413,9 +1411,11 @@ exit MIQ_OK"
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
         session[:changed] = @changed
-        @changed = true
+        @changed = truemail.corp.redhat.com
         render :update do |page|
-          page.replace("flash_msg_div_class_fields", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_fields"})
+          page.replace("flash_msg_div_class_fields",
+                       :partial => "layouts/flash_msg",
+                       :locals  => {:div_num => "_class_fields"})
         end
       else
         add_flash(I18n.t("flash.edit.saved_for_class",
@@ -1512,7 +1512,7 @@ exit MIQ_OK"
           MiqAeField.find_all_by_id(@edit[:fields_to_delete]).each do |fld|
             fld.destroy
           end
-          fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
+          fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
             fld.default_value = nil if fld.default_value == ""
             fld.save!
           end
@@ -2395,10 +2395,13 @@ private
       @edit[:new][:data] = params[:method_data] if params[:method_data]
       @edit[:new][:fields].each_with_index do |flds,i|
         method_input_column_names.each do |column|
-          @edit[:new][:fields][i][column] = params["fields_#{column}_#{i}".to_sym] if params["fields_#{column}_#{i}".to_sym]
+          @edit[:new][:fields][i][column] =
+            params["fields_#{column}_#{i}".to_sym] if params["fields_#{column}_#{i}".to_sym]
           if column == "default_value"
-            @edit[:new][:fields][i][column] = params["fields_value_#{i}".to_sym] if params["fields_value_#{i}".to_sym]
-            @edit[:new][:fields][i][column] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
+            @edit[:new][:fields][i][column] =
+              params["fields_value_#{i}".to_sym] if params["fields_value_#{i}".to_sym]
+            @edit[:new][:fields][i][column] =
+              params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
           end
         end
       end
@@ -2416,10 +2419,13 @@ private
       @edit[:new][:data] += "..."   if params[:transOne] && params[:transOne] == "1"          # Update the new data to simulate a change
       @edit[:new][:fields].each_with_index do |flds,i|
         method_input_column_names.each do |column|
-          @edit[:new][:fields][i][column] = params["cls_fields_#{column}_#{i}".to_sym] if params["cls_fields_#{column}_#{i}".to_sym]
+          @edit[:new][:fields][i][column] =
+            params["cls_fields_#{column}_#{i}".to_sym] if params["cls_fields_#{column}_#{i}".to_sym]
           if column == "default_value"
-            @edit[:new][:fields][i][column] = params["cls_fields_value_#{i}".to_sym] if params["cls_fields_value_#{i}".to_sym]
-            @edit[:new][:fields][i][column] = params["cls_fields_password_value_#{i}".to_sym] if params["cls_fields_password_value_#{i}".to_sym]
+            @edit[:new][:fields][i][column] =
+              params["cls_fields_value_#{i}".to_sym] if params["cls_fields_value_#{i}".to_sym]
+            @edit[:new][:fields][i][column] =
+              params["cls_fields_password_value_#{i}".to_sym] if params["cls_fields_password_value_#{i}".to_sym]
           end
         end
       end
@@ -2556,9 +2562,14 @@ private
       fields.push(new_field)
     end
 
+    reset_field_priority(fields)
+  end
+  alias_method :set_input_vars, :set_field_vars
+
+  def reset_field_priority(fields)
     #reset priority to be in order 1..3
     i = 0
-    fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
+    fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
       if !@edit[:fields_to_delete].include?(fld.id) || fld.id.blank?
         i += 1
         fld.priority = i
@@ -2566,7 +2577,6 @@ private
     end
     fields
   end
-  alias_method :set_input_vars, :set_field_vars
 
   # Set record variables to new values
   def set_instances_record_vars(miqaeinst)
