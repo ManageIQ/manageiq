@@ -35,6 +35,12 @@ describe 'routes for VmCloud' do
     end
   end
 
+  describe '#pre_prov_continue' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/pre_prov_continue")).to route_to("#{controller_name}#pre_prov_continue")
+    end
+  end
+
   describe '#vm_pre_prov' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/vm_pre_prov")).to route_to("#{controller_name}#vm_pre_prov")

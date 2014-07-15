@@ -82,6 +82,7 @@ describe VmOrTemplateController do
     policy_sim_add
     policy_sim_remove
     pre_prov
+    pre_prov_continue
     processes
     prov_edit
     prov_field_changed
