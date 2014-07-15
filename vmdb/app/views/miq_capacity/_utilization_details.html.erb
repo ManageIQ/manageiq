@@ -8,9 +8,10 @@
   <% else %>
     <% msg = x_node == "" ? "Select a node on the left to view Utilization information." : "No performance data is available for the selected item." %>
 
-    <h3><fieldset>
-      <%=msg%>
-    </fieldset></h3>
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong><%=msg%></strong>
+    </div>
 
   <% end %>
 

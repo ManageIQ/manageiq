@@ -1,7 +1,7 @@
 <% cap_type ||= "details" %>
 <% url = url_for(:action=>'util_chart_chooser', :id=>@record.id) %>
 <div id="capacity_<%= cap_type %>_options_div" onclick="if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();">
-	<fieldset>
+
 		<p class="legend">Options</p>
 		<table class="style1">
 			<tr>
@@ -68,5 +68,5 @@
 				</tr>
 			<% end %>
 		</table>
-	</fieldset>
+
 </div>

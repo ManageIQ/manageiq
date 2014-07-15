@@ -23,12 +23,11 @@
     </tbody></table>
   </fieldset>
 <% else %>
-  <fieldset style="width: <%=width %>px; height: <%=height+20%>px; float:left;">
+  <hr>
     <p class="legend"><%= charts[chart_index][:title] %></p>
     <%= chart_no_url(
                   :id      => "miq_#{chart_set}_#{chart_index}",
                   :bgcolor => "#f2f2f2",
                   :width   => width,
                   :height  => height) %>
-  </fieldset>
 <% end %>
