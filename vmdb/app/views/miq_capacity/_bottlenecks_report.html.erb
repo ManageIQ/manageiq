@@ -7,17 +7,17 @@
 
     <% if @sb[:bottlenecks] && @sb[:bottlenecks][:report] %>
 
-        <fieldset>
+          <hr>
           <p class="legend">Bottleneck Event Details</p>
           <%= @sb[:bottlenecks][:report].to_html.html_safe %>
-        </fieldset>
+
 
     <% end %>
     </table>
   <% else %>
-    <div style="padding-left: 20px; padding-top: 20px; width: 700px"></div>
-    <h3><fielset>
-      Select a node on the left to view Bottlenecks report.
-    </fieldset></h3>
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>Select a node on the left to view Bottlenecks report.</strong>
+    </div>
   <% end %>
 </div>
