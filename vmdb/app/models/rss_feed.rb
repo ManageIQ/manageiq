@@ -7,6 +7,7 @@ class RssFeed < ActiveRecord::Base
   attr_accessor :options
 
   acts_as_miq_taggable
+  include_concern 'ImportExport'
 
   YML_DIR = File.join(File.expand_path(Rails.root), "product", "alerts", "rss")
 
