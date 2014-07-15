@@ -259,4 +259,60 @@ namespace :build do
       end
     end
   end
+
+  namespace :image do
+
+    KICKSTARTS = "git://git.app.eng.bos.redhat.com/cfme_productization.git?manageiq/build/productization/kickstarts#"
+
+    def brew_cmd(config_file, kickstart_file)
+      brew_cmd_string = "brew image-build --nowait --config #{config_file} --repo #{ENV['PUDDLE']} "
+      brew_cmd_string << "--repo http://download.eng.bos.redhat.com/devel/cfme/repos/rhel-6.5.z-x86_64-latest-pkgs "
+      brew_cmd_string << "--kickstart #{kickstart_file} "
+      brew_cmd_string << "--ksurl #{KICKSTARTS}#{KICKSTART_SHA}"
+      brew_cmd_string
+    end
+
+    task :kerberos_init do
+      system('kinit') unless system('klist -s')
+    end
+
+    task :kickstart_sha do
+      KICKSTART_SHA = 'master' if ENV['KICKSTART_SHA'].nil?
+    end
+
+    desc "Perform the vsphere brew image build without installing cfme for diagnosing package dependencies"
+    task :no_cfme_vsphere => [:kerberos_init, :kickstart_sha] do
+      raise "must set ENV['PUDDLE'] to point to the source RPMs" if ENV['PUDDLE'].nil?
+      config_file = File.join(File.dirname(__FILE__), 'build/productization/config/image_build_vsphere')
+      system(brew_cmd(config_file, "no-cfme-vsphere.ks"))
+    end
+
+    desc "Perform the vsphere brew image build"
+    task :vsphere => [:kerberos_init, :kickstart_sha] do
+      raise "must set ENV['PUDDLE'] to point to the source RPMs" if ENV['PUDDLE'].nil?
+      config_file = File.join(File.dirname(__FILE__), 'build/productization/config/image_build_vsphere')
+      system(brew_cmd(config_file, "base-vsphere.ks"))
+    end
+
+    desc "Perform the rhevm brew image build"
+    task :rhevm => [:kerberos_init, :kickstart_sha] do
+      raise "must set ENV['PUDDLE'] to point to the source RPMs" if ENV['PUDDLE'].nil?
+      config_file = File.join(File.dirname(__FILE__), 'build/productization/config/image_build_rhevm')
+      system(brew_cmd(config_file, "base-rhevm.ks"))
+    end
+
+    desc "Perform the rhos brew image build"
+    task :rhos => [:kerberos_init, :kickstart_sha] do
+      raise "must set ENV['PUDDLE'] to point to the source RPMs" if ENV['PUDDLE'].nil?
+      config_file = File.join(File.dirname(__FILE__), 'build/productization/config/image_build_rhos')
+      system(brew_cmd(config_file, "base-rhos.ks"))
+    end
+
+    desc "Perform all of the brew image builds, excluding no_cfme_vsphere"
+    task :all do
+      ['build:image:vsphere', 'build:image:rhevm', 'build:image:rhos'].each { |t| Rake::Task[t].invoke }
+    end
+
+  end
+
 end
