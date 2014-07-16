@@ -45,7 +45,7 @@ module MiqAeMethodService
 
     def miq_group
       $miq_ae_logger.warn("[DEPRECATION] #{self.class.name}#miq_group accessor is deprecated.  Please use current_group instead.  At #{caller[0]}")
-      object_send(:current_group)
+      current_group
     end
 
     private
