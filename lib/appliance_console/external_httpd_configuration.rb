@@ -36,22 +36,20 @@ EOS
       def ipa_client_configure(realm, domain, server, principal, password)
         say("Configuring the IPA Client ...")
         AwesomeSpawn.run!(IPA_INSTALL_COMMAND,
-                          :params => {"-N"              => nil,
-                                      "--force-join"    => nil,
-                                      "--realm="        => realm,
-                                      "--domain="       => domain,
-                                      "--server="       => server,
-                                      "--principal="    => principal,
-                                      "--password="     => password,
-                                      "--fixed-primary" => nil,
-                                      "--unattended"    => nil})
+                          :params => [
+                            "-N", :force_join, :fixed_primary, :unattended, {
+                              :realm=     => realm,
+                              :domain=    => domain,
+                              :server=    => server,
+                              :principal= => principal,
+                              :password=  => password
+                            }
+                          ])
       end
 
       def ipa_client_unconfigure
         say("Un-Configuring the IPA Client ...")
-        AwesomeSpawn.run(IPA_INSTALL_COMMAND,
-                         :params => {"--uninstall"  => nil,
-                                     "--unattended" => nil})
+        AwesomeSpawn.run(IPA_INSTALL_COMMAND, :params => [:uninstall, :unattended])
       end
 
       #
