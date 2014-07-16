@@ -58,9 +58,15 @@ gem "handsoap",    "~>0.2.5",   :require => false, :git => "git://github.com/Man
 gem "rest-client", "~>1.6.7",   :require => false, :git => "git://github.com/ManageIQ/rest-client.git", :tag => "v1.6.7-5"
 gem "rubywbem",    "=0.1.0",    :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :tag => "v0.1.0-2"
 
-group :test do
-  gem "rspec",      "~>2.12.0", :require => false
-  gem "rspec-fire", "~>1.3.0",  :require => false
-  gem "timecop",    "~>0.5.3",  :require => false
-  gem "xml-simple", "=1.0.12",  :require => false  # Used by test/xml/tc_xmlhash_methods.rb
+### Start of gems excluded from the appliances.
+# The gems listed below do not need to be packaged until we find it necessary or useful.
+# Only add gems here that we do not need on an appliance.
+#
+unless ENV['APPLIANCE']
+  group :test do
+    gem "rspec",      "~>2.12.0", :require => false
+    gem "rspec-fire", "~>1.3.0",  :require => false
+    gem "timecop",    "~>0.5.3",  :require => false
+    gem "xml-simple", "=1.0.12",  :require => false  # Used by test/xml/tc_xmlhash_methods.rb
+  end
 end
