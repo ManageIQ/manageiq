@@ -538,6 +538,8 @@ module MiqAeEngine
       # No class means an instance method
       aem = @instance_methods[method_name.downcase] if klass.nil?
       # If not found in instance methods, look in class methods
+
+      namespace_provided = namespace
       namespace ||= @namespace
       klass     ||= @klass
       fq = MiqAeClass.fqname(namespace, klass)
@@ -546,7 +548,12 @@ module MiqAeEngine
         aem = cm[method_name] unless cm.nil?
       end
 
-      aem = method_override(namespace, klass, method_name, aem)
+      if namespace_provided.nil?
+        aem = method_override(namespace, klass, method_name, aem)
+      elsif aem.nil?
+        method_aec = fetch_class(fq)
+        aem = method_aec.ae_methods.detect { |c| c[:name] == method_name } unless method_aec.nil?
+      end
 
       raise MiqAeException::MethodNotFound, "Method [#{method_name}] not found in class [#{fq}]" if aem.nil?
       begin
