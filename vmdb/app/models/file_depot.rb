@@ -9,7 +9,7 @@ class FileDepot < ActiveRecord::Base
   attr_accessor         :file
 
   def self.supported_depots
-    descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model) }
+    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) }.freeze
   end
 
   def self.requires_credentials?

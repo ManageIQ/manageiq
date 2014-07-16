@@ -110,18 +110,14 @@ module OpsController::Diagnostics
 
       begin
         if @edit[:protocol].blank?
-          @record.log_file_depot.destroy
+          @record.log_file_depot.try(:destroy)
         else
           new_uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri].to_s
           type    = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
-          depot   = (@record.log_file_depot if @record.log_file_depot.kind_of?(type)) || @record.build_log_file_depot(:type => type.to_s)
-          unless type.to_s == "FileDepotRedhatDropbox"
-            depot.uri  = new_uri
-            depot.name = @edit[:new][:depot_name]
-          end
-          depot.save
+          depot   = @record.log_file_depot.instance_of?(type) ? @record.log_file_depot : @record.build_log_file_depot(:type => type.to_s)
+          depot.update_attributes(:uri => new_uri, :name => @edit[:new][:depot_name])
           depot.update_authentication(:default => {:userid => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}) if type.try(:requires_credentials?)
-          @record.save
+          @record.save!
         end
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task=>"Save") << bang.message, :error)
@@ -556,16 +552,30 @@ module OpsController::Diagnostics
     @edit[:new][:log_verify]   = settings[:password]
   end
 
+  def file_depot_reset_form_vars
+    if @edit[:protocol].present?
+      klass = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
+      @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
+      @edit[:new][:uri_prefix]           = klass.try(:uri_prefix)
+      depot = @record.log_file_depot.instance_of?(klass) ? @record.log_file_depot : klass.new
+      @edit[:new][:depot_name]           = depot.name
+      @edit[:new][:uri]                  = depot.uri.to_s.split('://').last
+      user, password = depot.try(:depot_hash).values_at(:username, :password)
+      @edit[:new][:log_userid]           = user
+      @edit[:new][:log_password]         = password
+      @edit[:new][:log_verify]           = password
+    else
+      log_depot_reset_form_vars
+    end
+  end
+
   def log_depot_get_form_vars
     @record = @sb[:selected_typ].classify.constantize.find_by_id(@sb[:selected_server_id])
     @prev_uri_prefix = @edit[:new][:uri_prefix]
     @prev_protocol   = @edit[:protocol]
-    @edit[:protocol] = params[:log_protocol] if params[:log_protocol] # @edit[:protocol] holds the current value of the selector so that it is not reset when _field_changed is called
-
+    @edit[:protocol] = params[:log_protocol].presence if params[:log_protocol] # @edit[:protocol] holds the current value of the selector so that it is not reset when _field_changed is called
     if @sb[:active_tab] == "diagnostics_collect_logs"
-      klass = @edit[:protocol].present? ? Object.const_get(@edit[:protocols_hash].key(@edit[:protocol])) : nil
-      @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
-      @edit[:new][:uri_prefix] = klass.try(:uri_prefix)
+      file_depot_reset_form_vars if @prev_protocol != @edit[:protocol]
     else
       @edit[:new][:uri_prefix] = @edit[:protocols_hash].invert[params[:log_protocol]] if params[:log_protocol]
       @edit[:new][:requires_credentials] = @edit[:new][:uri_prefix] != "nfs"

@@ -28,12 +28,7 @@
           ) %>
         </td>
       </tr>
-      <% if @edit[:protocol] == "RedHat Dropbox" %>
-        <tr>
-          <td class="key">Support Case</td>
-          <td class="wide">You will be prompted for a case number at log collection.</td>
-        </tr>
-      <% elsif @edit[:new][:uri_prefix] %>
+      <% if @edit[:protocol] %>
         <tr>
           <td class="key">Depot Name</td>
           <td class="wide">
