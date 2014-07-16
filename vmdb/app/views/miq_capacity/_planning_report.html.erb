@@ -1,25 +1,25 @@
 <div id="planning_report_div">
-  <%= render(:partial =>"layouts/flash_msg", :locals=>{:div_num=>"3"}) %>
+  <%= render(:partial => "layouts/flash_msg", 
+             :locals  => {:div_num => "3"}) 
+  %>
 
 	<% if @perf_record && @sb[:planning] && @sb[:planning][:rpt] %>
-				<fieldset>
-					<p class="legend">VM Counts per <%= ui_lookup(:model=>@sb[:planning][:options][:target_typ]) %></p>
-					<%= @sb[:planning][:rpt].to_html.html_safe %>
-					<% tvms = 0 %>
-					<% @sb[:planning][:rpt].table.data.each{|r|tvms += r["total_vm_count"].to_i} %>
-					Total number of VMs that can fit on all of the above <%= ui_lookup(:models=>@sb[:planning][:options][:target_typ]) %>: <%= tvms %>
-				</fieldset>
 
-			<% if @sb[:planning][:rpt].extras[:vm_profile] %>
+		<p class="legend">VM Counts per <%= ui_lookup(:model => @sb[:planning][:options][:target_typ]) %></p>
+		<%= @sb[:planning][:rpt].to_html.html_safe %>
+		<% tvms = 0 %>
+		<% @sb[:planning][:rpt].table.data.each{|r|tvms += r["total_vm_count"].to_i} %>
+		Total number of VMs that can fit on all of the above <%= ui_lookup(:models => @sb[:planning][:options][:target_typ]) %>: <%= tvms %>
 
-				<%= render(:partial =>"planning_vm_profile") %>
+	  <% if @sb[:planning][:rpt].extras[:vm_profile] %>
+      <%= render(:partial => "planning_vm_profile") %>
+		<% end %>
 
-			<% end %>
 	<% end %>
 
 	<% if @perf_record %>
-		<br/>&nbsp;* Information shown is based on available trend data going back <%= WEEK_CHOICES[@sb[:planning][:options][:days]].downcase %>.<br/><br/>
+		<p>* Information shown is based on available trend data going back <%= WEEK_CHOICES[@sb[:planning][:options][:days]].downcase %>.</p>
 	<% else %>
-		<%= render(:partial =>"planning_instructions") %>
+		<%= render(:partial => "planning_instructions") %>
 	<% end %>
 </div>

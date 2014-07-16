@@ -1,118 +1,96 @@
-<dl class="col2">
-	<dd>
-		<fieldset>
-			<p class="legend">Reference VM Profile</p>
-			<table class="style3">
-				<tr class="<%=cycle('row0','row1')%>">
-					<td class="label" style="width:120px;">Source</td>
-					<td><%= h(PLANNING_VM_MODES[@sb[:planning][:options][:submitted_vm_mode]])%></td>
-				</tr>
-				<% if @sb[:planning][:vm_opts][:cpu] &&
-							@sb[:planning][:options][:trend_cpu] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:cpu] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">CPU Speed</td>
-						<td><%= h(@sb[:planning][:rpt].extras[:vm_profile][:cpu])%></td>
-					</tr>
-				<% end %>
-				<% if @sb[:planning][:vm_opts][:vcpus] &&
-							@sb[:planning][:options][:trend_vcpus] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:vcpus] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">vCPU Count</td>
-						<td><%= h(@sb[:planning][:rpt].extras[:vm_profile][:vcpus])%></td>
-					</tr>
-				<% end %>
-				<% if @sb[:planning][:vm_opts][:memory] &&
-							@sb[:planning][:options][:trend_memory] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:memory] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">Memory Size</td>
-						<td><%= h(@sb[:planning][:rpt].extras[:vm_profile][:memory])%></td>
-					</tr>
-				<% end %>
-				<% if @sb[:planning][:vm_opts][:storage] &&
-							@sb[:planning][:options][:trend_storage] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:storage] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">Disk Space</td>
-						<td><%= h(@sb[:planning][:rpt].extras[:vm_profile][:storage])%></td>
-					</tr>
-				<% end %>
-			</table>
-		</fieldset>
-	</dd>
-	<dd>
-		<fieldset>
-			<p class="legend">Target Options/Limits</p>
-			<table class="style3">
-				<tr class="<%=cycle('row0','row1')%>">
-					<td class="label" style="width:120px;">Show</td>
-					<td><%= h(TARGET_TYPE_CHOICES[@sb[:planning][:options][:target_typ]])%></td>
-				</tr>
-				<% if @sb[:planning][:vm_opts][:cpu] &&
-							@sb[:planning][:options][:trend_cpu] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:cpu] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">CPU Speed</td>
-						<td><%= h(@sb[:planning][:options][:limit_cpu])%>%</td>
-					</tr>
-				<% end %>
-				<% if @sb[:planning][:vm_opts][:vcpus] &&
-							@sb[:planning][:options][:trend_vcpus] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:vcpus] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">vCPU per Core</td>
-						<td><%= h(@sb[:planning][:options][:limit_vcpus])%></td>
-					</tr>
-				<% end %>
-				<% if @sb[:planning][:vm_opts][:memory] &&
-							@sb[:planning][:options][:trend_memory] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:memory] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">Memory Size</td>
-						<td><%= h(@sb[:planning][:options][:limit_memory])%>%</td>
-					</tr>
-				<% end %>
-				<% if @sb[:planning][:vm_opts][:storage] &&
-							@sb[:planning][:options][:trend_storage] &&
-							@sb[:planning][:rpt].extras[:vm_profile][:storage] %>
-					<tr class="<%=cycle('row0','row1')%>">
-						<td class="label" style="width:120px;">Datastore Space</td>
-						<td><%= h(@sb[:planning][:options][:limit_storage])%>%</td>
-					</tr>
-				<% end %>
-			</table>
-		</fieldset>
-	</dd>
-</dl>
-<fieldset>
-	<p class="legend">Trend Options</p>
-	<table class="style3">
-		<tr class="<%=cycle('row0','row1')%>">
-			<td class="label" style="width:120px;">Trend for Past</td>
-			<td><%= h(WEEK_CHOICES[@sb[:planning][:options][:days].to_i])%></td>
-		</tr>
-		<tr class="<%=cycle('row0','row1')%>">
-			<td class="label" style="width:120px;">Time Profile</td>
-			<td>
-				<% tp = @sb[:planning][:options][:time_profile].nil? ? "<No Time Profile Selected>" : session[:time_profiles][@sb[:planning][:options][:time_profile]] %>
-				<%= h(tp)%>
-			</td>
-		</tr>
-		<tr class="<%=cycle('row0','row1')%>">
-			<td class="label" style="width:120px;">Time Zone</td>
-			<td>
-				<% if @sb[:planning][:options][:time_profile_tz] %>
-					<%= @sb[:planning][:options][:time_profile_tz] %>&nbsp;&nbsp;&nbsp; * Set in Time Profile
-				<% else %>
-					<% ALL_TIMEZONES.each do |tz| %>
-						<% if tz[1] == @sb[:planning][:options][:tz] %>
-							<%= h(tz[0])%>
-						<% end %>
-					<% end %>
-				<% end %>
-			</td>
-		</tr>
-	</table>
-</fieldset>
+<hr>
+<p class="legend">Reference VM Profile</p>
+<dl class="dl-horizontal">
+    <dt>Source</dt>
+    <dd><%= h(PLANNING_VM_MODES[@sb[:planning][:options][:submitted_vm_mode]])%></dd>
+
+    <% if @sb[:planning][:vm_opts][:cpu] &&
+          @sb[:planning][:options][:trend_cpu] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:cpu] %>
+      <dt>CPU Speed</dt>
+      <dd><%= h(@sb[:planning][:rpt].extras[:vm_profile][:cpu])%></dd>
+    <% end %>
+
+    <% if @sb[:planning][:vm_opts][:vcpus] &&
+          @sb[:planning][:options][:trend_vcpus] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:vcpus] %>
+      <dt>vCPU Count</dt>
+      <dd><%= h(@sb[:planning][:rpt].extras[:vm_profile][:vcpus])%></dd>
+    <% end %>
+
+    <% if @sb[:planning][:vm_opts][:memory] &&
+          @sb[:planning][:options][:trend_memory] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:memory] %>
+      <dt>Memory Size</dt>
+      <dd><%= h(@sb[:planning][:rpt].extras[:vm_profile][:memory])%></dd>
+    <% end %>
+
+    <% if @sb[:planning][:vm_opts][:storage] &&
+          @sb[:planning][:options][:trend_storage] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:storage] %>
+      <dt>Disk Space</dt>
+      <dd><%= h(@sb[:planning][:rpt].extras[:vm_profile][:storage])%></dd>
+    <% end %>
+    
+  </dl>
+
+  <hr>
+  <p class="legend">Target Options/Limits</p>
+  <dl class="dl-horizontal">
+    <dt>Show</dt>
+    <dd><%= h(TARGET_TYPE_CHOICES[@sb[:planning][:options][:target_typ]])%></dd>
+
+    <% if @sb[:planning][:vm_opts][:cpu] &&
+          @sb[:planning][:options][:trend_cpu] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:cpu] %>
+      <dt>CPU Speed</dt>
+      <dd><%= h(@sb[:planning][:options][:limit_cpu])%>%</dd>
+    <% end %>
+
+    <% if @sb[:planning][:vm_opts][:vcpus] &&
+          @sb[:planning][:options][:trend_vcpus] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:vcpus] %>
+      <dt>vCPU per Core</dt>
+      <dd><%= h(@sb[:planning][:options][:limit_vcpus])%></dd>
+    <% end %>
+
+    <% if @sb[:planning][:vm_opts][:memory] &&
+          @sb[:planning][:options][:trend_memory] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:memory] %>
+      <dt>Memory Size</dt>
+      <dd><%= h(@sb[:planning][:options][:limit_memory])%>%</dd>
+    <% end %>
+
+
+    <% if @sb[:planning][:vm_opts][:storage] &&
+          @sb[:planning][:options][:trend_storage] &&
+          @sb[:planning][:rpt].extras[:vm_profile][:storage] %>
+      <dt>Datastore Space</dt>
+      <dd><%= h(@sb[:planning][:options][:limit_storage])%>%</dd>
+    <% end %>
+
+  </dl>
+
+<hr>
+  <p class="legend">Trend Options</p>
+  <dl class="dl-horizontal">
+      <dt>Trend for Past</dt>
+      <dd><%= h(WEEK_CHOICES[@sb[:planning][:options][:days].to_i])%></dd>
+      <dt>Time Profile</dt>
+      <dd>
+        <% tp = @sb[:planning][:options][:time_profile].nil? ? "<No Time Profile Selected>" : session[:time_profiles][@sb[:planning][:options][:time_profile]] %>
+        <%= h(tp)%>
+      </dd>
+      <dt>Time Zone</dt>
+      <dd>
+        <% if @sb[:planning][:options][:time_profile_tz] %>
+          <%= @sb[:planning][:options][:time_profile_tz] %>&nbsp;&nbsp;&nbsp; * Set in Time Profile
+        <% else %>
+          <% ALL_TIMEZONES.each do |tz| %>
+            <% if tz[1] == @sb[:planning][:options][:tz] %>
+              <%= h(tz[0])%>
+            <% end %>
+          <% end %>
+        <% end %>
+      </dd>
+    </dl>
