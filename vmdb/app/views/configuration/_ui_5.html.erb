@@ -10,7 +10,7 @@
 					<%= form_tag(url_for(:action => 'mytag_create', :id => "newtags_form"), :remote=>true) do %>
 					 <strong>Type one or more tags to create and press "Enter":</strong>
 						<%= text_field_tag("newtags", nil, :maxlength=>"50","data-miq_focus"=>true) %>
-						<%= javascript_tag("$('newtags').focus()") %>
+						<%= javascript_tag("$j('#newtags').focus()") %>
 					<% end %>
 				</td>
 			</tr>

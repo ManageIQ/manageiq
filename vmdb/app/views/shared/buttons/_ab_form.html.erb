@@ -42,7 +42,7 @@
         &nbsp;Display on Button
       </td>
       <% if !is_browser_ie? %>
-        <%= javascript_tag("$('name').focus()") %>
+        <%= javascript_tag("$j('#name').focus()") %>
       <% end %>
     </tr>
     <tr>

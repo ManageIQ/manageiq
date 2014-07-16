@@ -15,7 +15,7 @@
 	<div id="searchbox"><%# Name based search box %>
 		<%= form_tag( {:action=>'show_list'}) do %>
 			<%= text_field("search", "text", :id=>"search_text", :value=>@search_text,:alt=>"Search by Name within results", :title=>"Search by Name within results") %>
-			<%= javascript_tag("$('search_text').focus()") %>
+			<%= javascript_tag("$j('#search_text').focus()") %>
 			<%= image_submit_tag("/images/layout/search.gif", :id=>"searchicon", :name=>"search", :alt=>"Search by Name within results", :title=>"Search by Name within results")%>
 		<% end %>
 	</div>

@@ -22,7 +22,7 @@
                                    "data-miq_observe" => {:interval => '.5', 
                                                           :url      => url}.to_json) 
                 %>
-                <%= javascript_tag("$('description').focus()") %>
+                <%= javascript_tag("$j('#description').focus()") %>
               </td>
             </tr>
           <% end %>
@@ -333,7 +333,7 @@
                           <th class="icon"></th>
                           <th></th>
                         </tr>
-                      </head>
+                      </thead>
                       <tbody>
                         <% @alert_profiles.each do |ap| %>
                           <% id = "xx-#{@alert.db}_ap-#{to_cid(ap.id)}" %>
@@ -374,7 +374,7 @@
                           <th class="icon"></th>
                           <th></th>
                         </tr>
-                      </head>
+                      </thead>
                       <tbody>
                         <% @alert.owning_miq_actions.each do |oa| %>
                           <% id = "a-#{to_cid(oa.id)}" %>

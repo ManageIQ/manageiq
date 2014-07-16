@@ -10,7 +10,7 @@
                             @edit[:field_label],
                             :maxlength=>MAX_NAME_LEN,
                             "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-          = javascript_tag("$('field_label').focus()")
+          = javascript_tag("$j('#field_label').focus()")
       %tr
         %td.key Name
         %td.wide

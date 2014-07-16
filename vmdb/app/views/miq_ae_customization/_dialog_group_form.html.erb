@@ -9,7 +9,7 @@
                             @edit[:group_label],
                             :maxlength=>MAX_NAME_LEN,
                             "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-        <%= javascript_tag("$('group_label').focus()") %>
+        <%= javascript_tag("$j('#group_label').focus()") %>
       </td>
     </tr>
     <tr>

@@ -13,7 +13,7 @@
                              :disabled=>read_only,
                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
             <% if !read_only %>
-              <%= javascript_tag("$('name').focus()") %>
+              <%= javascript_tag("$j('#name').focus()") %>
           <% end %>
         </td>
       </tr>

@@ -12,7 +12,7 @@
           %label Username
           = text_field_tag('user_name', @user_name,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();")
           :javascript
-            $('user_name').focus();
+            $j('#user_name').focus();
         %p
           %label Password
           = password_field_tag('user_password', @user_password,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();",:autocomplete => "off")

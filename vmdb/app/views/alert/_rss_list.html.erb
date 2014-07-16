@@ -19,7 +19,7 @@
                 :multiple                   => false,
                 "data-miq_observe" => {:url => url_for(:action => 'role_selected')}.to_json)
             %>
-            <%= javascript_tag("$('role').focus()") %>
+            <%= javascript_tag("$j('#role').focus()") %>
           </th>
         </tr>
         <tr>

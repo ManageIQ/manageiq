@@ -1,4 +1,4 @@
-<% url = url_for(:action => "st_catalog_form_field_changed", 
+<% url = url_for(:action => "st_catalog_form_field_changed",
                  :id     => "#{@edit[:rec_id] || "new"}")
 %>
 <div id="form_div">
@@ -20,7 +20,7 @@
         </div>
       </td>
     </tr>
-    <%= javascript_tag("$('name').focus()") %>
+    <%= javascript_tag("$j('#name').focus()") %>
     <tr>
       <td class="key">Description</td>
       <td class="wider">

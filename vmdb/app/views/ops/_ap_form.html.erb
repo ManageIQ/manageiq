@@ -16,7 +16,7 @@
 					</td>
 				</tr>
 					<% if !params[:add] && params[:add] != "new"  %>
-						<%= javascript_tag("$('name').focus()") %>
+						<%= javascript_tag("$j('#name').focus()") %>
 					<% end %>
 				<tr>
 					<td class="key">Description</td>
