@@ -5,36 +5,33 @@
 
 	<% if @perf_record %>
 
-		<fieldset>
+
 			<p class="legend">Display Options</p>
-			<table class="style1">
-				<tr>
-					<td class="key" style="width:100px; ">Limit Chart to</td>
-					<td>
+			  <dl class="dl-horizontal">
+        <dt>Limit Chart to</dt>
+
+					<dd>
 						<%= select_tag("display_vms",
 															options_for_select(Array.new(10) {|i| (i+1)*10},
 																@sb[:planning][:options][:display_vms]),
 															"data-miq_sparkle_on"=>true,
 															"data-miq_observe"=>{:url=>url}.to_json) %>
 						VMs
-					</td>
-				</tr>
-			</table>
-		</fieldset>
+					</dd>
+				</dl>
+
 
 		<% if @sb[:planning] && @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"] %>
 			<%= render(:partial =>"layouts/perf_charts",
 								:locals=>{:charts=>@sb[:planning][:charts], :chart_set=>"planning",
 													:chart_data=>@sb[:planning][:chart_data]["planning"], :perf_options=>@sb[:planning][:options]}) %>
 		<% else %>
-			&nbsp;No planning data is available for the selected item.
+			<p>No planning data is available for the selected item.</p>
 		<% end %>
 
 		<% if @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"] %>
 
-			<table>
-				<tr><td style="width:100%">
-					<fieldset>
+
 						<p class="legend">Eligible <%= ui_lookup(:models=>@sb[:planning][:options][:target_typ]) %></p>
 						<table class="style3">
 							<thead>
@@ -61,21 +58,21 @@
 								<% end %>
 							<% end %>
 						</table>
-					</fieldset>
-				</td></tr>
+
+
 				<% if @sb[:planning][:rpt] && @sb[:planning][:rpt].extras[:vm_profile] %>
-					<tr><td>
+
 						<%= render(:partial =>"planning_vm_profile") %>
-					</td></tr>
+
 				<% end %>
-			</table>
+
 
 		<% end %>
 
 	<% end %>
 
 	<% if @perf_record %>
-		<br/>&nbsp;* Information shown is based on available trend data going back <%= WEEK_CHOICES[@sb[:planning][:options][:days]].downcase %>.<br/><br/>
+		<p>* Information shown is based on available trend data going back <%= WEEK_CHOICES[@sb[:planning][:options][:days]].downcase %>.</p>
 	<% else %>
 		<%= render(:partial =>"planning_instructions") %>
 	<% end %>

@@ -17,7 +17,38 @@ dd.fixed {width:500px !important;} /* fixed width to prevent 3 tabs from wrappin
 textarea, input, select {font-family: OpenSansRegular,Arial,Helvetica,sans-serif;font-size: 12px}
 textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1.5em}
 strong {font-family: OpenSansSemibold,Arial,Helvetica,sans-serif;font-weight:normal} /*using OpenSansSemibold for all bolded text*/
-p.legend {margin-top: 9.5px;margin-bottom: 12px;font: 15px OpenSansRegular,Arial,Helvetica,sans-serif;font-weight: 500;}
+
+/* begin modified Patternfly code */
+
+p.legend {
+  margin-top: 9.5px;
+  margin-bottom: 12px;
+  font: 15px OpenSansRegular,Arial,Helvetica,sans-serif;
+  font-weight: 500;
+}
+
+dl.dl-horizontal {
+    float: none;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    line-height: 1.66667;
+}
+dl.dl-horizontal dd {
+    margin-left: 180px;
+    line-height: 1.66667;
+}
+    
+dl.dl-horizontal dt {
+    float: left;
+    width: 160px;
+    clear: left;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family:'OpenSansSemibold';
+    line-height: 1.66667;
+}
 
 .breadcrumb {
   list-style: none outside none;
@@ -86,6 +117,8 @@ hr{
 .alert-danger {background-color:#fff;border-color:#c90813;color:#333}
 .alert-info {background-color:#fff;border-color:#ccc;color:#333}
 .alert strong{position: absolute; padding: 3px 0 0 5px; font-size: 12px}
+
+/* end modified Patternfly code */
 
 fieldset { 
   position: relative; 
