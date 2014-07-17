@@ -222,6 +222,7 @@ To modify the configuration, use a web browser to access the management page.
         Local Database:    #{ApplianceConsole::Utilities.pg_status}
         EVM Database:      #{dbtype} @ #{dbhost}
         Database/Region:   #{database} / #{region || 0}
+        External Auth:     #{ExternalHttpdAuthentication.config_status}
         EVM Version:       #{version}
         EVM Console:       https://#{ip}
         EOL
