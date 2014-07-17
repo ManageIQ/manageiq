@@ -44,7 +44,7 @@
                                         "data-miq_observe" => {:interval => '.5', 
                                                                :url => url}.to_json) 
                     %>
-                    <%= javascript_tag("$('description').focus()") %>
+                    <%= javascript_tag("$j('#description').focus()") %>
                   </td>
                 <% end %>
               </tr>
@@ -369,7 +369,7 @@
                     <th class="icon"></th>
                     <th></th>
                   </tr>
-                </head>
+                </thead>
                 <tbody>
                   <% @policy_profiles.each do |pp| %>
                     <% id = "pp-#{to_cid(pp.id)}" %>

@@ -39,9 +39,9 @@ function miqOnLoad() {
   if (typeof miq_after_onload == "string") eval(miq_after_onload);  // Run MIQ after onload code if present
 
   // Focus on search box, if it's there and allows focus
-  if ($('search_text')) {
+  if ($j('#search_text').length) {
     try{
-      $('search_text').focus();
+      $j('#search_text').focus();
     }
     catch(er){}
   }

@@ -94,8 +94,6 @@
         </td>
       </tr>
     </table>
-    <script type="text/javascript">
-      if ($('value_1')) $('value_1').focus();
-    </script>
+    <%= javascript_tag("if ($j('#value_1').length) $j('#value_1').focus()") %>
   <% end %>
 </div>

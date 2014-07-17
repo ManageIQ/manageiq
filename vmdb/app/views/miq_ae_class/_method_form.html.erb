@@ -25,7 +25,7 @@
                                                        :url      => url}.to_json)
             %>
           </td>
-            <%#= javascript_tag("$('method_name').focus()") %>
+            <%#= javascript_tag("$j('#method_name').focus()") %>
         </tr>
         <tr>
           <td class="key">Display Name</td>
@@ -196,7 +196,7 @@
               </td>
               <td>
                 <%= select_tag("#{prefix}field_datatype",
-                               options_for_select(@edit[:new][:available_datatypes], 
+                               options_for_select(@edit[:new][:available_datatypes],
                                session[:field_data][:datatype]),
                                "data-miq_observe" => {:url => url}.to_json)
                 %>

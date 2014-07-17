@@ -52,7 +52,7 @@
               }.to_json
             ) %>
           </td>
-          <%= javascript_tag("$('uri').focus()") %>
+          <%= javascript_tag("$j('#uri').focus()") %>
         </tr>
         <% if @edit[:new][:requires_credentials] %>
           <%= render(

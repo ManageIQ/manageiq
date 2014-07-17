@@ -773,7 +773,7 @@ class OpsController < ApplicationController
 
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '#{x_node}');"
       page << "miqSparkle(false);"
-      page << "if ($('server_company')) $('server_company').focus();"
+      page << "if ($j('#server_company').length) $j('#server_company').focus();"
       page << "if ($('flash_msg_div')) {"
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "}"

@@ -24,7 +24,7 @@
                                     :maxlength=>MAX_NAME_LEN,
                                     "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
 								<% if !is_browser_ie? %>
-									<%= javascript_tag("$('other_name').focus()") %>
+									<%= javascript_tag("$j('#other_name').focus()") %>
 								<% end %>
 							<% end %>
 <% end %>
@@ -40,7 +40,7 @@
                                     "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
 							<%# unless resolve[:new][:instance_name].blank? %>
 								<% if !is_browser_ie? %>
-									<%= javascript_tag("if (!$('description')) $('object_message').focus()") %>
+									<%= javascript_tag("if (!$j('#description').length) $j('#object_message').focus()") %>
 								<% end %>
 							<%# end %>
 						</td>

@@ -16,7 +16,7 @@
 															 @edit[:new][:description],
 															 :maxlength=>50,
 															 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-										<%= javascript_tag("$('region_description').focus()") %>
+										<%= javascript_tag("$j('#region_description').focus()") %>
 									</td>
 								</tr>
 							</table>

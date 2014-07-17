@@ -76,9 +76,9 @@
 						</td>
 					</tr>
 					<% if @category.nil? %>
-						<%= javascript_tag("$('name').focus()") %>
+						<%= javascript_tag("$j('#name').focus()") %>
 					<% else %>
-						<%= javascript_tag("$('description').focus()") %>
+						<%= javascript_tag("$j('#description').focus()") %>
 					<% end %>
 					<tr>
 						<td class="key">Description</td>

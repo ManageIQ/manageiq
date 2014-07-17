@@ -24,7 +24,7 @@
                               :disabled=>disabled,
                               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
             <% unless @edit[:new][:userid] == "admin" %>
-              <%= javascript_tag("$('name').focus()") %>
+              <%= javascript_tag("$j('#name').focus()") %>
             <% end %>
           <% end %>
         </td>
@@ -54,7 +54,7 @@
                               :maxlength=>50,
                               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
             <% if @edit[:new][:userid] == "admin" %>
-              <%= javascript_tag("$('password').focus()") %>
+              <%= javascript_tag("$j('#password').focus()") %>
             <% end %>
             <%= password_field_tag("password2",
                               @edit[:new][:password2],

@@ -1755,10 +1755,10 @@ exit MIQ_OK"
       page.replace_html(@refresh_div, :partial=>@refresh_partial) if @refresh_div
       if row_selected_in_grid?
         page << "$('class_methods_div').show();"
-        page << "$('cls_field_name').focus();"
+        page << "$j('#cls_field_name').focus();"
       else
         page << "$('method_inputs_div').show();"
-        page << "$('field_name').focus();"
+        page << "$j('#field_name').focus();"
       end
       page << javascript_for_miq_button_visibility(@changed)
       page << "$('inputs_div').show();"

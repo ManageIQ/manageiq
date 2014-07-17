@@ -431,7 +431,7 @@ class DashboardController < ApplicationController
         @more = true
         render :update do |page|
           page.replace("login_more_div", :partial=>"login_more")
-          page << "$('user_new_password').focus();"
+          page << "$j('#user_new_password').focus();"
           page << "$('back_button').show();"
           page << "$('more_button').hide();"
         end
@@ -439,7 +439,7 @@ class DashboardController < ApplicationController
       elsif params[:button] == "back"
         render :update do |page|
           page.replace("login_more_div", :partial=>"login_more")
-          page << "$('user_name').focus();"
+          page << "$j('#user_name').focus();"
           page << "$('back_button').hide();"
           page << "$('more_button').show();"
         end

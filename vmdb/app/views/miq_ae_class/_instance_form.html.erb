@@ -21,7 +21,7 @@
                            "data-miq_observe" => {:interval => '.5',
                                                   :url      => url}.to_json)
         %>
-        <%= javascript_tag("$('#{prefix}inst_name').focus()") %>
+        <%= javascript_tag("$j('##{prefix}inst_name').focus()") %>
        </td>
     </tr>
     <tr>
