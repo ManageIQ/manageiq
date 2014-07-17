@@ -249,5 +249,81 @@ describe MiqWidget do
         end
       end
     end
+
+    context "rss feed" do
+      context "internal" do
+        before do
+          @new_widget = YAML.load("
+            - MiqWidget:
+                description: rss test
+                title: rss test
+                content_type: rss
+                resource_id: 5
+                resource_type: RssFeed
+                enabled: true
+                MiqReportContent:
+                - RssFeed:
+                    name: host_alert_event
+                    link: /alert/rss?feed=host_alert_event"
+           ).first["MiqWidget"]
+        end
+
+        context "with new rss feed" do
+          it "init status" do
+            expect(MiqWidget.count).to eq(1)
+            expect(RssFeed.count).to eq(0)
+          end
+
+          it "preview" do
+            subject
+            expect(MiqWidget.count).to eq(1)
+            expect(RssFeed.count).to eq(0)
+          end
+
+          it "import" do
+            @options[:save] = true
+            subject
+            expect(MiqWidget.count).to eq(2)
+            expect(RssFeed.count).to eq(1)
+          end
+        end
+      end
+
+      context "external" do
+        before do
+          @new_widget = YAML.load("
+            - MiqWidget:
+                description: National Vulnerability Database
+                title: National Vulnerability Database
+                content_type: rss
+                options:
+                  :row_count: 5
+                  :url: https://nvd.nist.gov/download/nvd-rss-analyzed.xml
+                resource_id:
+                resource_type:"
+           ).first["MiqWidget"]
+        end
+
+        context "with new rss feed" do
+          it "init status" do
+            expect(MiqWidget.count).to eq(1)
+            expect(RssFeed.count).to eq(0)
+          end
+
+          it "preview" do
+            subject
+            expect(MiqWidget.count).to eq(1)
+            expect(RssFeed.count).to eq(0)
+          end
+
+          it "import" do
+            @options[:save] = true
+            subject
+            expect(MiqWidget.count).to eq(2)
+            expect(RssFeed.count).to eq(0)
+          end
+        end
+      end
+    end
   end
 end
