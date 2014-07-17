@@ -1,6 +1,11 @@
 class DatabaseBackup < ActiveRecord::Base
   belongs_to :miq_region
 
+  SUPPORTED_DEPOTS = {
+    'smb' => 'Samba',
+    'nfs' => 'Network File System'
+  }.freeze
+
   def self.backup_supported?
     # We currently only support Postgres via internal/external db
     return @backup_supported unless @backup_supported.nil?
@@ -12,7 +17,7 @@ class DatabaseBackup < ActiveRecord::Base
   end
 
   def self.supported_depots
-    FileDepot::SUPPORTED_DEPOTS
+    SUPPORTED_DEPOTS
   end
 
   def self.backup(options)

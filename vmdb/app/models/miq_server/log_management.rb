@@ -239,19 +239,6 @@ module MiqServer::LogManagement
     log_file_depot.try(:depot_hash) || zone.log_file_depot.try(:depot_hash).try(:merge, {:from_zone => true})
   end
 
-  def set_log_depot_settings(new_settings)
-    new_settings = new_settings.except(:from_zone)
-    validate_log_depot_settings(new_settings)
-
-    log_file_depot ? log_file_depot.depot_hash = new_settings : create_log_file_depot(:depot_hash => new_settings)
-
-    $log.info("MIQ(#{self.class.name}#set_log_depot_settings) Log Depot settings updated")
-  end
-
-  def validate_log_depot_settings(settings)
-    LogFile.validate_log_depot_settings(settings)
-  end
-
   def base_zip_log_name
     t = Time.now.utc.iso8601
     # Name the file based on GUID and time.  GUID and Date/time of the request are as close to unique filename as we're going to get

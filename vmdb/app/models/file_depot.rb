@@ -1,15 +1,20 @@
 class FileDepot < ActiveRecord::Base
+  include NewWithTypeStiMixin
   include AuthenticationMixin
   belongs_to            :resource, :polymorphic => true
+  has_many              :miq_servers, :foreign_key => :log_file_depot_id, :dependent => :nullify
   has_many              :log_files
-  validate              :validate_credentials
   validates_presence_of :uri
 
   attr_accessor         :file
 
-  SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'nfs' => 'Network File System'}.freeze
+  def self.supported_depots
+    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) }.freeze
+  end
+
+  def self.requires_credentials?
+    true
+  end
 
   def depot_hash=(hsh = {})
     return if hsh == self.depot_hash
@@ -24,23 +29,14 @@ class FileDepot < ActiveRecord::Base
     }
   end
 
-  #TODO: Move the depot logic out of LogFile and add it here
-  def requires_credentials?
-    LogFile.requires_credentials?(LogFile.get_post_method(:uri => self.uri))
-  end
-
-  def validate_credentials
-    errors.add(:file_depot, "is missing credentials") if requires_credentials? && authentication_invalid?
-  end
-
   def self.verify_depot_hash(hsh)
     return true unless MiqEnvironment::Command.is_appliance?
 
-    # TODO: Move the logfile "depot" logic into this model
+    # TODO: Move the logfile "depot" logic into remaining subclasses
     LogFile.verify_log_depot_settings(hsh)
   end
 
-  def verify_credentials(auth_type=nil)
+  def verify_credentials(_auth_type = nil)
     self.class.verify_depot_hash(self.depot_hash)
   end
 

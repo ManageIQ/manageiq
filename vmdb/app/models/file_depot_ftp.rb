@@ -1,6 +1,10 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
+  def self.uri_prefix
+    "ftp"
+  end
+
   def upload_file(file)
     log_header = "MIQ(#{self.class.name}##{__method__})"
     super
@@ -34,6 +38,12 @@ class FileDepotFtp < FileDepot
       ftp.delete(destination_file)
     end
     $log.info("#{log_header} Removing log file [#{destination_file}]...complete")
+  end
+
+  def verify_credentials(_auth_type = nil)
+    with_connection { |c| c.last_response }
+  rescue
+    false
   end
 
   private

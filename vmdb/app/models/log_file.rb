@@ -12,12 +12,6 @@ class LogFile < ActiveRecord::Base
 
   cattr_reader :log_request_timeout
 
-  SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'ftp' => 'File Transfer Protocol',
-    'nfs' => 'Network File System'
-    }.freeze
-
   before_destroy :remove
 
   def relative_path_for_upload(loc_file)
@@ -172,35 +166,19 @@ class LogFile < ActiveRecord::Base
     # Strip any leading and trailing whitespace
     settings[:uri].strip!
 
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(settings[:uri]))
-    return scheme
-  end
-
-  def self.requires_credentials?(scheme)
-    case scheme
-    when 'nfs'
-      false
-    else
-      true
-    end
-  end
-
-  def self.validate_credentials(scheme, settings)
-    if scheme && requires_credentials?(scheme)
-      raise "no credentials defined" unless settings[:username] && settings[:password]
-    end
+    URI.split(URI.encode(settings[:uri]))[0]
   end
 
   def self.validate_log_depot_settings(settings)
     post_method = self.get_post_method(settings) # This will raise an error if URI is malformed
-    raise "Unsupported schema in URI, '#{post_method}', for log depot" unless post_method.blank? || SUPPORTED_DEPOTS.keys.include?(post_method.downcase)
-    validate_credentials(post_method, settings)
+    raise "Unsupported schema in URI, '#{post_method}', for log depot" unless post_method.blank? || FileDepot.supported_depots.keys.include?("FileDepot#{post_method.capitalize}")
+    raise "no credentials defined" unless settings[:username] && settings[:password] || post_method == 'nfs' # NFS doesn't require credentials
     return true
   end
 
   def self.verify_log_depot_settings(settings)
+    # FTP based connections now use the methods on FileDepotFtp, everything else should move there
     method = self.get_post_method(settings)
-    validate_credentials(method, settings)
 
     if respond_to?("connect_#{method}")
       conn = self.send("connect_#{method}", settings)
@@ -208,7 +186,7 @@ class LogFile < ActiveRecord::Base
       return true
     end
 
-    #At this point db and and ftp should have returned
+    # At this point db should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
     res   = klass.new(settings).verify
     raise "Log Depot Settings validation failed with error: #{res.last}" unless res.first

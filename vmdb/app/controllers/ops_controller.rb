@@ -278,11 +278,10 @@ class OpsController < ApplicationController
   end
 
   def set_log_depot_vars
-    settings = @schedule.depot_hash
-    if settings.nil? || settings.blank?
-      log_depot_reset_form_vars
-    else
+    if (settings = @schedule.depot_hash).present?
       log_depot_get_form_vars_from_settings(settings)
+    else
+      log_depot_reset_form_vars
     end
   end
 
