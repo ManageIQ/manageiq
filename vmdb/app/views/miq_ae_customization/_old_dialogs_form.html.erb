@@ -1,47 +1,56 @@
-<% url = url_for(:action=>'old_dialogs_form_field_changed', :id=>"#{@dialog.id || "new"}") %>
+<% url = url_for(:action => 'old_dialogs_form_field_changed',
+                 :id     => "#{@dialog.id || "new"}")
+%>
 <div id="form_div">
-	<%= render :partial => "layouts/flash_msg" %>
-	<fieldset>
-		<p class="legend">Basic Information</p>
-		<table class="style1">
-				<tr>
-					<td class="key">Name</td>
-					<td class="wide">
-						<%= text_field_tag("name",
-																@edit[:new][:name],
-																:maxlength=>MAX_NAME_LEN,
-																"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-						<%= javascript_tag("$('name').focus()") %>
-					</td>
-				</tr>
-				<tr>
-					<td class="key">Description</td>
-					<td class="wide">
-						<%= text_field_tag("description",
-																@edit[:new][:description],
-																:maxlength=>100,
-																"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-					</td>
-				</tr>
-				<tr>
-					<td class="key">Type</td>
-					<% dialog_types = @dialog.dialog_type ? MiqDialog::DIALOG_TYPES.sort :  [["<Choose>",nil]] + MiqDialog::DIALOG_TYPES.sort %>
-					<td class="wide">
-					<%= select_tag('dialog_type',
-															options_for_select(dialog_types, @edit[:new][:dialog_type]),
-															"data-miq_observe"=>{:url=>url}.to_json) %>
-				</tr>
-				<tr>
-					<td class="key">Content</td>
-					<td class="wide">
-						<%= text_area_tag("content_data",
-															@edit[:new][:content],
-															:style=>"width:600px;height:350px;",
-															"data-miq_send_one_trans"=>true,
-															"data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-					</td>
-				</tr>
-
-		</table>
-	</fieldset>
+  <%= render :partial => "layouts/flash_msg" %>
+  <p class="legend">Basic Information</p>
+  <table class="style1">
+      <tr>
+        <td class="key">Name</td>
+        <td class="wide">
+          <%= text_field_tag("name",
+                             @edit[:new][:name],
+                             :maxlength         => MAX_NAME_LEN,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                   :url       => url}.to_json)
+          %>
+          <%= javascript_tag("$('name').focus()") %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Description</td>
+        <td class="wide">
+          <%= text_field_tag("description",
+                             @edit[:new][:description],
+                             :maxlength         => 100,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json)
+          %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Type</td>
+        <% dialog_types = @dialog.dialog_type ? MiqDialog::DIALOG_TYPES.sort :  [["<Choose>",nil]] + MiqDialog::DIALOG_TYPES.sort %>
+        <td class="wide">
+          <%= select_tag('dialog_type',
+                         options_for_select(dialog_types,
+                         @edit[:new][:dialog_type]),
+                         "data-miq_observe" => {:url => url}.to_json)
+          %>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p class="legend">Content</p>
+    <%= text_area_tag("content_data",
+                      @edit[:new][:content],
+                      :style => "display:none;")
+    %>
+    <%= render :partial => "layouts/my_code_mirror",
+               :locals  => { :text_area_id => "content_data",
+                             :mode         => "yaml",
+                             :line_numbers => true,
+                             :url          => url
+                           }
+    %>
 </div>

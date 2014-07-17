@@ -54,6 +54,9 @@
       'SlickGrid-2.1/slick.grid', 'SlickGrid-2.1/slick.dataview', 'SlickGrid-2.1/plugins/slick.autotooltips',
       'cfme_slickgrid' %>
 
+    <%= javascript_include_tag 'codemirror-4.2/lib/codemirror.js', 'codemirror-4.2/mode/yaml/yaml.js' %>
+    <%= stylesheet_link_tag 'codemirror-4.2/lib/codemirror.css' %>
+
     <% if @timeline %>
       <%= javascript_include_tag '/javascripts/timeline/api/timeline-api.js' %>
       <% if @timeline_filter %>

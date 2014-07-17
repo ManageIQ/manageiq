@@ -251,7 +251,11 @@ module MiqAeCustomizationController::OldDialogs
       if !@edit[:new][:dialog_type]
         add_flash(I18n.t("flash.edit.select_required", :selection=>"Dialog Type"), :error)
       end
-
+      begin
+        YAML.parse(@edit[:new][:content])
+      rescue YAML::SyntaxError => ex
+        add_flash("#{I18n.t("flash.edit.field_syntax_error.yaml")}#{ex.message}", :error)
+      end
       if @flash_array
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")

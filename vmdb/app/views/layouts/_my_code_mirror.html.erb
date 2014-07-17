@@ -9,7 +9,6 @@
 <% read_only ||= false					%><%# Edit box height in pixels %>
 <% multi_mode ||= false         %><%# to load/switch between multiple modes, for customization template editor %>
 
-<%= javascript_include_tag "codemirror-4.2/lib/codemirror.js" %>
 <% if multi_mode %>
   <% modes.each do |mode| %>
     <%= javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js" %>
@@ -23,7 +22,6 @@
   <%= javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js" %>
 <% end %>
 
-<%= stylesheet_link_tag "codemirror-4.2/lib/codemirror.css" %>
 <% unless theme == "default" %>
 	<%= stylesheet_link_tag "codemirror-4.2/theme/#{theme}.css" %>
 <% end %>

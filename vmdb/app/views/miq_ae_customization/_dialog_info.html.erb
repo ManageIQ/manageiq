@@ -1,31 +1,24 @@
 <%# if dialogs is selected %>
-<dl class="col1">
-	<dd>
-		<div id="info_div" style="<%=display%>">
-			<fieldset>
-		<p class="legend">Basic Information</p>
-			<table class="style1">
-				<tbody>
-					<tr>
-						<td class="key">Label</td>
-						<td><%= h(@record.label) %></td>
-					</tr>
-					<tr>
-						<td class="key">Description</td>
-						<td><%= h(@record.description) %></td>
-					</tr>
-					<tr>
-						<td class="key">Created On</td>
-						<td><%= h(format_timezone(@record.created_at,Time.zone,"gtl")) %></td>
-					</tr>
-					<tr>
-						<td class="key">Updated On</td>
-						<td><%= h(format_timezone(@record.updated_at,Time.zone,"gtl")) %></td>
-					</tr>
-				</tbody>
-			</table>
-		</fieldset>
-		</div>
-	</dd>
-</dl>
-
+<div id="info_div" style="<%=display%>">
+  <p class="legend">Basic Information</p>
+  <table class="style1">
+    <tbody>
+      <tr>
+        <td class="key">Label</td>
+        <td><%= h(@record.label) %></td>
+      </tr>
+      <tr>
+        <td class="key">Description</td>
+        <td><%= h(@record.description) %></td>
+      </tr>
+      <tr>
+        <td class="key">Created On</td>
+        <td><%= h(format_timezone(@record.created_at,Time.zone,"gtl")) %></td>
+      </tr>
+      <tr>
+        <td class="key">Updated On</td>
+        <td><%= h(format_timezone(@record.updated_at,Time.zone,"gtl")) %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

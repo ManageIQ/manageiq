@@ -15,7 +15,6 @@
       :image: edit
       :text: "Edit this Dialog"
       :title: "Edit this Dialog"
-      :url_parms: 'main_div'
     - :button: old_dialogs_copy
       :image: copy
       :title: "Copy this Dialog"
