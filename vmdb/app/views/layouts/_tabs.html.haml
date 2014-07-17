@@ -1,0 +1,49 @@
+- if @tabs
+  - if ["dashboard"].include?(@layout)
+    - tab_id = 3
+  - else
+    - tab_id = 2
+  %ul{:class => "tab#{tab_id}"}
+    - @tabs[1..-1].each do |tab|
+      - if tab[0] == @tabs[0][0]
+        %li.active
+          %a
+            = h(tab[1])
+      - else
+        %li
+          - if tab[0] == ""
+            %a= h(tab[1])
+          - else
+            - if ["new","edit"].include?(tab[0].split("_")[0])
+              - unless ["report","ops"].include?(@layout)
+                = link_to(tab[1], {:action=>'change_tab', :tab=>tab[0], :id=>@tabs[0][1]})
+              - else
+                = link_to(tab[1],
+                  {:action=>'change_tab',  :tab=>tab[0], :id=>@tabs[0][1]},
+                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                  :remote=>true)
+            - else
+              - unless ["report","ops"].include?(@layout)
+                = link_to(tab[1], {:action=>'change_tab', :tab=>tab[0], :id=>@tabs[0][1]}, :onclick=>"return miqCheckForChanges()")
+              - else
+                - if @layout == "ops"
+                  = link_to(tab[1],
+                    {:action=>'change_tab',  :tab=>tab[0], :id=>@tabs[0][1]},
+                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                    :remote=>true)
+                - else
+                  = link_to(tab[1],
+                    {:action=>'change_tab',  :tab=>tab[0], :id=>@tabs[0][1]},
+                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                    "data-miq_check_for_changes"=>true,
+                    :remote=>true)
+  %br{:clear => "all"}/
+- if !@tabs && (@lastaction == "show_list" || !@edit && !session[:menu_click])
+  .dhtmlxInfoBarLabel-2
+    - if @edit && @edit[:adv_search_applied] != nil && !session[:menu_click]
+      = h(@title + @edit[:adv_search_applied][:text] + " ")
+      - if (@default_search && @default_search.name != @edit[:adv_search_applied][:name]) || !@default_search
+        (#{link_to("default", {:action => 'adv_search_clear'}, :method => :post, :class => 'active')})
+    - else
+      = @title
+  %br{:clear => "all"}/
