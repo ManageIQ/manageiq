@@ -67,6 +67,7 @@ describe VmOrTemplateController do
     groups
     guest_applications
     kernel_drivers
+    launch_vmware_console
     linux_initprocesses
     ontap_file_shares
     ontap_logical_disks
