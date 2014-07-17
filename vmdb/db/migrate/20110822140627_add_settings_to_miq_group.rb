@@ -1,9 +1,11 @@
 class AddSettingsToMiqGroup < ActiveRecord::Migration
   class MiqGroup < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
     belongs_to :miq_user_role, :class_name => "AddSettingsToMiqGroup::MiqUserRole"
   end
 
   class MiqUserRole < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
     has_many :miq_groups, :class_name => "AddSettingsToMiqGroup::MiqGroup"
     serialize :settings
   end
@@ -13,7 +15,7 @@ class AddSettingsToMiqGroup < ActiveRecord::Migration
 
     say_with_time("Copying report_menus setting from MiqUserRoles to MiqGroups") do
       MiqGroup.all.each do |g|
-        settings = g.miq_user_role.settings
+        settings = g.miq_user_role.try(:settings)
         if settings && settings.has_key?(:report_menus)
           g.update_attribute(:settings, {:report_menus => settings.delete(:report_menus)})
         end
