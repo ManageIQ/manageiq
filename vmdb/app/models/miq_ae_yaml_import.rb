@@ -4,6 +4,7 @@ class MiqAeYamlImport
   def initialize(domain, options)
     @domain_name = domain
     @options     = options
+    @restore     = @options.fetch('restore', false)
   end
 
   def import
@@ -21,6 +22,7 @@ class MiqAeYamlImport
     $log.info("#{self.class} Import options: <#{@options}> preview: <#{@preview}>")
     $log.info("#{self.class} Importing domain:    <#{domain_name}>")
     reset_stats
+    @single_domain = true
     domain_name == ALL_DOMAINS ? import_all_domains : import_domain(domain_folder(domain_name), domain_name)
     log_stats
   end
@@ -41,19 +43,29 @@ class MiqAeYamlImport
   end
 
   def import_all_domains
-    domain_files(ALL_DOMAINS).sort.each do |file|
+    @single_domain = false
+    sorted_domain_files.each do |file|
       directory = File.dirname(file)
       @domain_name = directory.split("/").last
       import_domain(directory, @domain_name)
     end
+    MiqAeDatastore.reset_default_namespace if @restore && !@preview
+  end
+
+  def sorted_domain_files
+    domains = {}
+    domain_files(ALL_DOMAINS).sort.each do |file|
+      directory = File.dirname(file)
+      domain_name = directory.split("/").last
+      domain_yaml = read_domain_yaml(directory, domain_name)
+      domains[file] = domain_yaml['object']['attributes']['priority']
+    end
+    domains.keys.sort { |a, b| domains[a] <=> domains[b] }
   end
 
   def import_domain(domain_folder, domain_name)
-    domain_yaml = read_domain_yaml(domain_folder, domain_name)
-    if @options['import_as']
-      domain_name = @options['import_as']
-      domain_yaml.store_path('object', 'attributes', 'name', domain_name)
-    end
+    domain_yaml = domain_properties(domain_folder, domain_name)
+    domain_name = domain_yaml['object']['attributes']['name']
     domain_obj = MiqAeDomain.find_by_fqname(domain_name, false)
     track_stats('domain', domain_obj)
     domain_obj ||= add_domain(domain_yaml) unless @preview
@@ -62,6 +74,30 @@ class MiqAeYamlImport
     else
       import_all_namespaces(domain_folder, domain_obj, domain_name)
     end
+    update_attributes(domain_obj) if @single_domain && domain_obj
+  end
+
+  def domain_properties(domain_folder, name)
+    domain_yaml = read_domain_yaml(domain_folder, name)
+    if @options['import_as'] && @single_domain
+      name = @options['import_as']
+      domain_yaml.store_path('object', 'attributes', 'name', name)
+    end
+    miq = name.downcase == MiqAeDatastore::MANAGEIQ_DOMAIN.downcase
+    miq ? reset_manageiq_attributes(domain_yaml) : reset_domain_attributes(domain_yaml)
+    domain_yaml
+  end
+
+  def reset_manageiq_attributes(domain_yaml)
+    domain_yaml['object']['attributes']['name']     = MiqAeDatastore::MANAGEIQ_DOMAIN
+    domain_yaml['object']['attributes']['priority'] = MiqAeDatastore::MANAGEIQ_PRIORITY
+    domain_yaml['object']['attributes']['system']   = true
+    domain_yaml['object']['attributes']['enabled']  = true
+  end
+
+  def reset_domain_attributes(domain_yaml)
+    domain_yaml['object']['attributes'].delete('enabled') unless @restore
+    domain_yaml['object']['attributes'].delete('priority')
   end
 
   def import_all_namespaces(namespace_folder, domain_obj, domain_name)
@@ -159,5 +195,11 @@ class MiqAeYamlImport
       return false
     end
     true
+  end
+
+  def update_attributes(domain_obj)
+    return if domain_obj.name.downcase == MiqAeDatastore::MANAGEIQ_DOMAIN.downcase
+    attrs = @options.slice(*%w(enabled system))
+    domain_obj.update_attributes(attrs) unless attrs.empty?
   end
 end # class
