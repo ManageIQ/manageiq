@@ -15,7 +15,7 @@ class Dictionary
       next if line.blank? || line.starts_with?("#")
 
       typ, name, text, locale = line.chomp.split(',')
-      dictionary[self.make_key(name.strip, locale.strip, typ.strip)] = text.strip
+      dictionary.store_path(locale.strip, "dictionary", typ.strip, name.strip, text.strip)
     end
   end
 
@@ -24,7 +24,7 @@ class Dictionary
     opts[:type]     ||= :column
 
     t1, t2  = text.split("__")
-    result  = dict.fetch_path(opts[:locale], opts[:type].to_s, t1.split(".").last)
+    result  = dict.fetch_path(opts[:locale], "dictionary", opts[:type].to_s, t1.split(".").last)
     result += " (#{t2.titleize})" if result && t2
 
     return result if result
@@ -33,13 +33,5 @@ class Dictionary
     col = text.split(".").last
     col = col[2..-1] if col.starts_with?("v_")
     col.send(opts[:notfound]) if opts[:notfound].to_sym == :titleize
-  end
-
-  def self.get(key)
-    dict[key]
-  end
-
-  def self.make_key(name, locale, typ)
-    [name, locale, typ].join("-")
   end
 end
