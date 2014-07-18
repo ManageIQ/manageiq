@@ -13,8 +13,12 @@ module EmsRefresh::Parsers
       @data          = {}
       @data_index    = {}
       @known_flavors = Set.new
-      @network_service, @network_service_name = detect_network_service
-      @image_service, @image_service_name = detect_image_service
+
+      @os_handle            = ems.openstack_handle
+      @network_service      = @os_handle.detect_network_service
+      @network_service_name = @os_handle.network_service_name
+      @image_service        = @os_handle.detect_image_service
+      @image_service_name   = @os_handle.image_service_name
     end
 
     def ems_inv_to_hashes
@@ -44,24 +48,13 @@ module EmsRefresh::Parsers
     end
 
     private
-    def detect_network_service
-      [@ems.connect_network, :neutron]
-    rescue MiqException::ServiceNotAvailable
-      [@connection, :nova]
-    end
-
-    def detect_image_service
-      [@ems.connect_image, :glance]
-    rescue MiqException::ServiceNotAvailable
-      [@connection, :nova]
-    end
 
     def servers
-      @servers ||= @connection.servers.all(:all_tenants => true)
+      @servers ||= @connection.servers_for_accessable_tenants
     end
 
     def security_groups
-      @security_groups ||= @network_service.security_groups
+      @security_groups ||= @network_service.security_groups_for_accessable_tenants
     end
 
     def networks
@@ -133,7 +126,7 @@ module EmsRefresh::Parsers
     # end
 
     def get_images
-      images = @image_service.images
+      images = @image_service.images_for_accessable_tenants
       process_collection(images, :vms) { |image| parse_image(image) }
     end
 
@@ -163,7 +156,7 @@ module EmsRefresh::Parsers
 
     # maintained for legacy nova network support
     def floating_ips_nova
-      @network_service.addresses
+      @network_service.addresses_for_accessable_tenants
     end
 
     def link_vm_genealogy

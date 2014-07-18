@@ -20,21 +20,13 @@ class EmsOpenstack < EmsCloud
   #
 
   def self.raw_connect(username, password, auth_url, service = "Compute")
-    require 'fog'
-    Fog.const_get(service).new(
-      :provider           => 'OpenStack',
-      :openstack_auth_url => auth_url,
-      :openstack_username => username,
-      :openstack_api_key  => password,
-      :connection_options => {:instrumentor => $fog_log}
-    )
-  rescue Fog::Errors::NotFound => err
-    raise MiqException::ServiceNotAvailable if err.message.include?("Could not find service")
-    raise
+    require 'openstack/openstack_handle'
+    OpenstackHandle::Handle.raw_connect(username, password, auth_url, service)
   end
 
   def self.auth_url(address, port = nil)
-    "http://#{address}:#{port || 5000}/v2.0/tokens"
+    require 'openstack/openstack_handle'
+    OpenstackHandle::Handle.auth_url(address, port)
   end
 
   def auth_url
@@ -45,23 +37,19 @@ class EmsOpenstack < EmsCloud
     "http://#{address}/dashboard"
   end
 
+  def openstack_handle(options = {})
+    require 'openstack/openstack_handle'
+    @openstack_handle ||= begin
+      raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+
+      username = options[:user] || self.authentication_userid(options[:auth_type])
+      password = options[:pass] || self.authentication_password(options[:auth_type])
+      OpenstackHandle::Handle.new(username, password, address, port)
+    end
+  end
+
   def connect(options = {})
-    raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
-
-    username = options[:user] || self.authentication_userid(options[:auth_type])
-    password = options[:pass] || self.authentication_password(options[:auth_type])
-
-    service  = (options[:service] || "Compute").to_s.camelize
-
-    self.class.raw_connect(username, password, auth_url, service)
-  end
-
-  def connect_network
-    connect(:service => "Network")
-  end
-
-  def connect_image
-    connect(:service => "Image")
+    openstack_handle(options).connect(options)
   end
 
   def event_monitor_options
