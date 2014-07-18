@@ -520,30 +520,29 @@ class DashboardController < ApplicationController
     @temp[:timeline] = true
     render :update do |page|
       page << "miqHighlight('report_#{session[:last_rpt_id]}_link', false);" if session[:last_rpt_id]
+      center_tb_buttons = {
+        'timeline_txt' => "text",
+        'timeline_csv' => "CSV"
+      }
+      center_tb_buttons['timeline_pdf'] = "PDF" if PdfGenerator.available?
       if @report
         page << "miqHighlight('report_#{@report.id}_link', true);"
-        page << "center_tb.showItem('timeline_txt');"
-        page << "center_tb.showItem('timeline_csv');"
-        page << "center_tb.showItem('timeline_pdf');"
+        center_tb_buttons.keys.each do |button_id|
+          page << "center_tb.showItem('#{button_id}');"
+        end
         if @report.table.data.length == 0
-          page << "center_tb.disableItem('timeline_txt');"
-          page << "center_tb.setItemToolTip('timeline_txt','No records found for this timeline');"
-          page << "center_tb.disableItem('timeline_csv');"
-          page << "center_tb.setItemToolTip('timeline_csv','No records found for this timeline');"
-          page << "center_tb.disableItem('timeline_pdf');"
-          page << "center_tb.setItemToolTip('timeline_pdf','No records found for this timeline');"
+          center_tb_buttons.each do |button_id, typ|
+            page << tl_toggle_button_enablement(button_id, :disabled, typ)
+          end
         else
-          page << "center_tb.enableItem('timeline_txt');"
-          page << "center_tb.setItemToolTip('timeline_txt','Download this Timeline data in text format');"
-          page << "center_tb.enableItem('timeline_csv');"
-          page << "center_tb.setItemToolTip('timeline_csv','Download this Timeline data in CSV format');"
-          page << "center_tb.enableItem('timeline_pdf');"
-          page << "center_tb.setItemToolTip('timeline_pdf','Download this Timeline data in PDF format');"
+          center_tb_buttons.each do |button_id, typ|
+            page << tl_toggle_button_enablement(button_id, :enabled, typ)
+          end
         end
       else
-        page << "center_tb.hideItem('timeline_txt');"
-        page << "center_tb.hideItem('timeline_csv');"
-        page << "center_tb.hideItem('timeline_pdf');"
+        center_tb_buttons.keys.each do |button_id|
+          page << "center_tb.hideItem('#{button_id}');"
+        end
       end
       page.replace("tl_div", :partial=>"dashboard/tl_detail")
       page << "miqSparkle(false);"
@@ -619,6 +618,17 @@ class DashboardController < ApplicationController
   end
 
   private ###########################
+
+  def tl_toggle_button_enablement(button_id, enablement, typ)
+    if enablement == :enabled
+      tooltip = "Download this Timeline data in #{typ} format"
+      "center_tb.enableItem('#{button_id}'); center_tb.setItemToolTip('#{button_id}', '#{tooltip}');"
+    else
+      tooltip = 'No records found for this timeline'
+      "center_tb.disableItem('#{button_id}'); center_tb.setItemToolTip('#{button_id}', '#{tooltip}');"
+    end
+  end
+  helper_method(:tl_toggle_button_enablement)
 
   # Validate user login credentials - return <url for redirect> or nil if an error
   def validate_user(user)
