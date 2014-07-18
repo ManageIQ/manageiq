@@ -30,7 +30,7 @@ module EvmWatchdog
       db_state = self.get_db_state #TODO - See note above.
       if db_state.empty?
         self.log_info("Detected that the database is down.")
-      elsif db_state.include? "started"
+      elsif ["started", "starting"].include?(db_state)
         self.log_info("Detected that the EVM Server with PID [#{pid_file.to_i}] is no longer running.")
         self.start_evm
       else # Not sure why we have a pid file here, maybe we should remove it?

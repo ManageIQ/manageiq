@@ -63,14 +63,16 @@ describe EvmWatchdog do
       described_class.check_evm
     end
 
-    it "Pid not running, DB up, state 'started'." do
-      described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => "started")
-      described_class.should_receive(:log_info).with { |msg| msg.include?("is no longer running") }
-      described_class.should_receive(:start_evm).once
-      described_class.check_evm
+    ['started', 'starting'].each do |state|
+      it "Pid not running, DB up, state '#{state}'." do
+        described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => state)
+        described_class.should_receive(:log_info).with { |msg| msg.include?("is no longer running") }
+        described_class.should_receive(:start_evm).once
+        described_class.check_evm
+      end
     end
 
-    it "Pid not running, DB up, state other than 'started'." do
+    it "Pid not running, DB up, any other state." do
       described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => "killed")
       described_class.should_receive(:log_info).with { |msg| msg.include?("server state should be") }
       described_class.check_evm
