@@ -23,7 +23,7 @@ def dump_attrs(obj, pref = "")
 end
 
 begin
-  os_handle = OpenstackHandle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
+  os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
 
   puts "**** Tenants:"
   os_handle.tenants.each do |t|
