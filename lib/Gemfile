@@ -13,7 +13,7 @@ gem "activerecord",  "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :
 
 # Not locally modified and not required
 gem "awesome_spawn",        "~> 1.2",    :require => false
-gem "binary_struct",        "~> 1.0.1",  :require => false
+gem "binary_struct",        "~> 2.0",    :require => false
 gem "excon",                "~>0.31.0",  :require => false
 gem "ezcrypto",             "=0.7",      :require => false
 gem "facade",               "~>1.0.5",   :require => false  # Used by util/pathname2.rb
