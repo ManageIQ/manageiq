@@ -891,6 +891,7 @@ class DashboardController < ApplicationController
       miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
       tz = @report.tz ? @report.tz : Time.zone
       @report = miq_task.task_results
+      session[:rpt_task_id] = miq_task.id
       if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
         add_flash(I18n.t("flash.error_building_timeline") << miq_task.message, :error)
       else
@@ -922,13 +923,11 @@ class DashboardController < ApplicationController
 
   def get_session_data
     @layout       = get_layout
-    @report       = session[:report]
     @current_page = session[:vm_current_page] # current page number
   end
 
   def set_session_data
     session[:layout]          = @layout
-    session[:report]          = @report
     session[:vm_current_page] = @current_page
   end
 
