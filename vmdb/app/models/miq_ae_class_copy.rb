@@ -26,6 +26,18 @@ class MiqAeClassCopy
     copy
   end
 
+  def self.copy_multiple(ids, domain, ns = nil, overwrite = false)
+    new_ids = []
+    MiqAeClass.transaction do
+      ids.each do |id|
+        class_obj = MiqAeClass.find(id)
+        new_class = new(class_obj.fqname).to_domain(domain, ns, overwrite)
+        new_ids << new_class.id if new_class
+      end
+    end
+    new_ids
+  end
+
   private
 
   def target_ns(domain, ns)

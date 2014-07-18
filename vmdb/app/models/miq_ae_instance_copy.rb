@@ -4,7 +4,7 @@ class MiqAeInstanceCopy
   DELETE_PROPERTIES = %w(id instance_id field_id updated_on created_on
                          updated_by updated_by_user_id)
 
-  def initialize(instance_fqname)
+  def initialize(instance_fqname, validate_schema = true)
     @src_domain, @partial_ns, @ae_class, @instance_name = MiqAeInstanceCopy.split(instance_fqname, true)
     @class_fqname = "#{@src_domain}/#{@partial_ns}/#{@ae_class}"
     @src_class = MiqAeClass.find_by_fqname("#{@src_domain}/#{@partial_ns}/#{@ae_class}")
@@ -13,6 +13,7 @@ class MiqAeInstanceCopy
     raise "Source instance #{@instance_name} not found #{@class_fqname}" unless @src_instance
     @target_class_name = @ae_class
     @flags = MiqAeClassCompareFields::CONGRUENT_SCHEMA | MiqAeClassCompareFields::COMPATIBLE_SCHEMA
+    @validate_schema = validate_schema
   end
 
   def to_domain(domain, ns = nil, overwrite = false)
@@ -31,6 +32,20 @@ class MiqAeInstanceCopy
     @target_name      = new_name
     @target_domain    = @src_domain
     copy
+  end
+
+  def self.copy_multiple(ids, domain, ns = nil, overwrite = false)
+    validate_flag = true
+    nids = []
+    MiqAeInstance.transaction do
+      ids.each do |id|
+        instance_obj = MiqAeInstance.find(id)
+        new_instance = new(instance_obj.fqname, validate_flag).to_domain(domain, ns, overwrite)
+        nids << new_instance.id if new_instance
+        validate_flag = false
+      end
+    end
+    nids
   end
 
   private
@@ -82,6 +97,7 @@ class MiqAeInstanceCopy
 
   def validate
     find_or_create_class
+    return unless @validate_schema
     @class_schema_status = MiqAeClassCompareFields.new(@src_class, @dest_class).compare
     raise "Instance cannot be copied, automation class schema mismatch" if @flags & @class_schema_status == 0
   end

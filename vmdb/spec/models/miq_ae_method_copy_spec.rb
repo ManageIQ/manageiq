@@ -87,6 +87,22 @@ describe MiqAeMethodCopy do
 
   end
 
+  context 'copy multiple' do
+    it 'methods' do
+      domain = 'Fred'
+      fqname = 'test1'
+      ids    = [1, 2, 3]
+      miq_ae_method_copy = mock(MiqAeMethodCopy)
+      miq_ae_method = mock_model(MiqAeMethod)
+      miq_ae_method_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_method }
+      new_ids = [miq_ae_method.id] * ids.length
+      miq_ae_method.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
+      MiqAeMethod.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { miq_ae_method }
+      MiqAeMethodCopy.should_receive(:new).with(fqname).exactly(ids.length).times { miq_ae_method_copy }
+      MiqAeMethodCopy.copy_multiple(ids, domain).should match_array(new_ids)
+    end
+  end
+
   def validate_method(meth1, meth2, status)
     obj = MiqAeMethodCompare.new(meth1, meth2)
     obj.compare
