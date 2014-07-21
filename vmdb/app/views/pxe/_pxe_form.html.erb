@@ -1,7 +1,7 @@
 <% url = url_for(:action=>'pxe_server_form_field_changed', :id=>"#{@ps.id || "new"}") %>
 <div id="form_div">
 	<%= render :partial => "layouts/flash_msg" %>
-  <fieldset>
+
     <p class="legend">Basic Information</p>
     <table class="style1">
       <tbody>
@@ -77,9 +77,9 @@
           </tr>
       </tbody>
     </table>
-  </fieldset>
 
-  <fieldset>
+
+  <hr>
     <p class="legend">PXE Image Menus</p>
     <table class="style1">
       <tbody>
@@ -96,5 +96,5 @@
         <% end %>
       </tbody>
     </table>
-  </fieldset>
+
 </div>

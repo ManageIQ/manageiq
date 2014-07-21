@@ -1,7 +1,7 @@
 <% url = url_for(:action=>'pxe_image_type_form_field_changed', :id=>"#{@pxe_image_type.id || "new"}") %>
 <div id="form_div">
   <%= render :partial => "layouts/flash_msg" %>
-  <fieldset>
+
     <p class="legend">Basic Information</p>
     <table class="style1">
       <tbody>
@@ -26,5 +26,5 @@
         </tr>
       </tbody>
     </table>
-  </fieldset>
+
 </div>

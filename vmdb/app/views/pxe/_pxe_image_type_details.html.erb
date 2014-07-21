@@ -2,7 +2,7 @@
 	<%# if PXE Server is sleted %>
 	<% if @pxe_image_type %>
     <% unless @edit %>
-      <fieldset>
+
         <p class="legend">Basic Information</p>
         <table class="style1">
           <tr>
@@ -14,7 +14,7 @@
             <td><%= h(@pxe_image_type.provision_type) %></td>
           </tr>
         </table>
-      </fieldset>
+
     <% else %>
       <%= render(:partial=>"pxe_image_type_form") %>
     <% end %>

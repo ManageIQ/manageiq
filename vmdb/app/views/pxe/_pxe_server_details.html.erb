@@ -3,8 +3,8 @@
   <% if @ps %>
     <div id="pxe_info_div">
       <% unless @edit %>
-        <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
-        <fieldset>
+        <%= render(:partial=>"layouts/flash_msg") %>
+
           <p class="legend">Basic Information</p>
           <table class="style1">
             <tr>
@@ -36,9 +36,9 @@
               <td><%= h(@ps.last_refresh_on) %></td>
             </tr>
           </table>
-        </fieldset>
+
         <% if @ps.pxe_menus.count > 0 %>
-          <fieldset>
+          <hr>
             <p class="legend">PXE Image Menus</p>
             <table class="style1">
               <tr>
@@ -46,11 +46,11 @@
                 <td><%= h(@ps.pxe_menus[0].file_name) %></td>
               </tr>
             </table>
-          </fieldset>
+
           <% if false %>
             <%# this code can be uncommented when we have multiple pxe_menus %>
             <% if !@ps.pxe_menus.empty? %>
-              <fieldset>
+              <hr>
               <p class="legend">PXE Image Menus</p>
                 <table class="style3">
                   <thead>
@@ -66,12 +66,12 @@
                   <% end %>
                   </tbody>
                 </table>
-              </fieldset>
+ 
             <% end %>
           <% end %>
         <% end %>
         <% unless @ps.pxe_images.empty? %>
-          <fieldset>
+          <hr>
             <p class="legend">PXE Images</p>
             <table class="style3">
               <thead>
@@ -95,10 +95,10 @@
                 <% end %>
               </tbody>
             </table>
-          </fieldset>
+
         <% end %>
         <% unless @ps.windows_images.empty? %>
-          <fieldset>
+          <hr>
             <p class="legend">Windows Images</p>
             <table class="style3">
               <thead>
@@ -122,7 +122,7 @@
               <% end %>
               </tbody>
             </table>
-          </fieldset>
+
         <% end %>
       <% else %>
         <%= render(:partial=>"pxe_form") %>
@@ -133,8 +133,8 @@
   <% if @img %>
     <div id="pxe_img__info_div">
       <% unless @edit %>
-        <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
-        <fieldset>
+        <%= render(:partial=>"layouts/flash_msg") %>
+
           <p class="legend">Basic Information</p>
           <table class="style1">
             <tr>
@@ -158,7 +158,7 @@
               <td><%= h(@img.default_for_windows ? "Yes" : "") %></td>
             </tr>
           </table>
-        </fieldset>
+
       <% else %>
         <%= render(:partial=>"pxe_img_form") %>
       <% end %>
@@ -168,8 +168,7 @@
   <% if @wimg %>
     <div id="pxe_wimg__info_div">
       <% unless @edit %>
-        <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
-        <fieldset>
+        <%= render(:partial=>"layouts/flash_msg") %>
           <p class="legend">Basic Information</p>
           <table class="style1">
             <tr>
@@ -193,7 +192,7 @@
               <td><%= h(@wimg.index) %></td>
             </tr>
           </table>
-        </fieldset>
+
       <% else %>
         <%= render(:partial=>"pxe_wimg_form") %>
       <% end %>
