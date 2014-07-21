@@ -1,37 +1,26 @@
 class Dictionary
-  FIXTURE_FILE = File.join(Rails.root, "db/fixtures", "#{self.to_s.pluralize.underscore}.csv")
-
-  def self.dict
-    @dict ||= load
-  end
-
-  def self.load
-    skip_header = true
-    File.read(FIXTURE_FILE).lines.each_with_object({}) do |line, dictionary|
-      if skip_header
-        skip_header = false
-        next
-      end
-      next if line.blank? || line.starts_with?("#")
-
-      typ, name, text, locale = line.chomp.split(',')
-      dictionary.store_path(locale.strip, "dictionary", typ.strip, name.strip, text.strip)
-    end
-  end
-
   def self.gettext(text, opts = {})
-    opts[:locale]   ||= "en"
-    opts[:type]     ||= :column
+    opts[:type] ||= :column
 
-    t1, t2  = text.split("__")
-    result  = dict.fetch_path(opts[:locale], "dictionary", opts[:type].to_s, t1.split(".").last)
-    result += " (#{t2.titleize})" if result && t2
+    key, suffix = text.split("__")  # HACK: Sometimes we need to add a suffix to report columns, this should probably be moved into the presenter.
+    result      = i18n_lookup(opts[:type], key)
+    result    ||= i18n_lookup(opts[:type], key.split(".").last)
+    result     << " (#{suffix.titleize})" if result && suffix  # HACK: continued.  i.e. Adding (Min) or (Max) to a column name.
 
     return result if result
     return text unless opts[:notfound]
 
     col = text.split(".").last
-    col = col[2..-1] if col.starts_with?("v_")
-    col.send(opts[:notfound]) if opts[:notfound].to_sym == :titleize
+
+    # HACK: Strip off the 'v_' for virtual columns if titleizing
+    col = col[2..-1] if col.starts_with?("v_") && opts[:notfound].to_sym == :titleize
+
+    col.send(opts[:notfound])
   end
+
+  def self.i18n_lookup(type, text)
+    result = I18n.t("dictionary.#{type}.#{text}")
+    result.start_with?("translation missing:") ? nil : result
+  end
+  private_class_method :i18n_lookup
 end
