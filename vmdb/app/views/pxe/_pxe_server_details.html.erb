@@ -4,38 +4,37 @@
     <div id="pxe_info_div">
       <% unless @edit %>
         <%= render(:partial=>"layouts/flash_msg") %>
-
-          <p class="legend">Basic Information</p>
-          <table class="style1">
-            <tr>
-              <td class="key">URI Prefix</td>
-              <td><%= h(@ps.uri_prefix) %></td>
-            </tr>
-            <tr>
-              <td class="key">URI</td>
-              <td><%= h(@ps.uri) %></td>
-            </tr>
-            <tr>
-              <td class="key">Access URL</td>
-              <td><%= h(@ps.access_url) %></td>
-            </tr>
-            <tr>
-              <td class="key">PXE Directory</td>
-              <td><%= h(@ps.pxe_directory) %></td>
-            </tr>
-            <tr>
-              <td class="key">Windows Images Directory</td>
-              <td><%= h(@ps.windows_images_directory) %></td>
-            </tr>
-            <tr>
-              <td class="key">Customization Directory</td>
-              <td><%= h(@ps.customization_directory) %></td>
-            </tr>
-            <tr>
-              <td class="key">Last Refreshed On</td>
-              <td><%= h(@ps.last_refresh_on) %></td>
-            </tr>
-          </table>
+        <p class="legend">Basic Information</p>
+        <table class="style1">
+          <tr>
+            <td class="key">URI Prefix</td>
+            <td><%= h(@ps.uri_prefix) %></td>
+          </tr>
+          <tr>
+            <td class="key">URI</td>
+            <td><%= h(@ps.uri) %></td>
+          </tr>
+          <tr>
+            <td class="key">Access URL</td>
+            <td><%= h(@ps.access_url) %></td>
+          </tr>
+          <tr>
+            <td class="key">PXE Directory</td>
+            <td><%= h(@ps.pxe_directory) %></td>
+          </tr>
+          <tr>
+            <td class="key">Windows Images Directory</td>
+            <td><%= h(@ps.windows_images_directory) %></td>
+          </tr>
+          <tr>
+            <td class="key">Customization Directory</td>
+            <td><%= h(@ps.customization_directory) %></td>
+          </tr>
+          <tr>
+            <td class="key">Last Refreshed On</td>
+            <td><%= h(@ps.last_refresh_on) %></td>
+          </tr>
+        </table>
 
         <% if @ps.pxe_menus.count > 0 %>
           <hr>
@@ -47,85 +46,82 @@
               </tr>
             </table>
 
-          <% if false %>
-            <%# this code can be uncommented when we have multiple pxe_menus %>
-            <% if !@ps.pxe_menus.empty? %>
-              <hr>
-              <p class="legend">PXE Image Menus</p>
-                <table class="style3">
-                  <thead>
-                  <tr>
-                    <th>Filename</th>
+        <% if false %>
+          <%# this code can be uncommented when we have multiple pxe_menus %>
+          <% if !@ps.pxe_menus.empty? %>
+            <hr>
+            <p class="legend">PXE Image Menus</p>
+              <table class="style3">
+                <thead>
+                <tr>
+                  <th>Filename</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @ps.pxe_menus.sort{|a,b| a.file_name <=> b.file_name}.each do |menu| %>
+                  <tr class="<%= cycle('row0', 'row1') %>">
+                    <td><%= h(menu.file_name) %></td>
                   </tr>
-                  </thead>
-                  <tbody>
-                  <% @ps.pxe_menus.sort{|a,b| a.file_name <=> b.file_name}.each do |menu| %>
-                    <tr class="<%= cycle('row0', 'row1') %>">
-                      <td><%= h(menu.file_name) %></td>
-                    </tr>
-                  <% end %>
-                  </tbody>
-                </table>
- 
+                <% end %>
+                </tbody>
+              </table>
             <% end %>
           <% end %>
         <% end %>
         <% unless @ps.pxe_images.empty? %>
           <hr>
-            <p class="legend">PXE Images</p>
-            <table class="style3">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Kernel</th>
-                  <th>Windows Boot Env</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @ps.pxe_images.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |i| %>
-                  <tr class="<%= cycle('row0', 'row1') %>"
-                    onclick="cfmeDynatree_activateNode('pxe_servers_tree', 'pi-<%= to_cid(i.id) %>');"
-                    onmouseover="this.style.cursor='pointer'" title="View this PXE Image">
-                    <td><%= h(i.name) %></td>
-                    <td><%= h(i.description) %></td>
-                    <td><%= h(i.kernel) %></td>
-                    <td style="text-align: center;"><%= h(i.default_for_windows ? "Yes" : "") %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-
-        <% end %>
-        <% unless @ps.windows_images.empty? %>
-          <hr>
-            <p class="legend">Windows Images</p>
-            <table class="style3">
-              <thead>
+          <p class="legend">PXE Images</p>
+          <table class="style3">
+            <thead>
               <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Path</th>
-                <th>Index</th>
+                <th>Kernel</th>
+                <th>Windows Boot Env</th>
               </tr>
-              </thead>
-              <tbody>
-              <% @ps.windows_images.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |i| %>
+            </thead>
+            <tbody>
+              <% @ps.pxe_images.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |i| %>
                 <tr class="<%= cycle('row0', 'row1') %>"
-                    onclick="cfmeDynatree_activateNode('pxe_servers_tree', 'wi-<%= to_cid(i.id) %>');"
-                    onmouseover="this.style.cursor='pointer'" title="View this Windows Image">
+                  onclick="cfmeDynatree_activateNode('pxe_servers_tree', 'pi-<%= to_cid(i.id) %>');"
+                  onmouseover="this.style.cursor='pointer'" title="View this PXE Image">
                   <td><%= h(i.name) %></td>
                   <td><%= h(i.description) %></td>
-                  <td><%= h(i.path) %></td>
-                  <td style="text-align: center;"><%= h(i.index) %></td>
+                  <td><%= h(i.kernel) %></td>
+                  <td style="text-align: center;"><%= h(i.default_for_windows ? "Yes" : "") %></td>
                 </tr>
               <% end %>
-              </tbody>
-            </table>
-
+            </tbody>
+          </table>
+        <% end %>
+        <% unless @ps.windows_images.empty? %>
+          <hr>
+          <p class="legend">Windows Images</p>
+          <table class="style3">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Path</th>
+              <th>Index</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @ps.windows_images.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |i| %>
+              <tr class="<%= cycle('row0', 'row1') %>"
+                  onclick="cfmeDynatree_activateNode('pxe_servers_tree', 'wi-<%= to_cid(i.id) %>');"
+                  onmouseover="this.style.cursor='pointer'" title="View this Windows Image">
+                <td><%= h(i.name) %></td>
+                <td><%= h(i.description) %></td>
+                <td><%= h(i.path) %></td>
+                <td style="text-align: center;"><%= h(i.index) %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
         <% end %>
       <% else %>
-        <%= render(:partial=>"pxe_form") %>
+        <%= render(:partial => "pxe_form") %>
       <% end %>
     </div>
   <% end %>
@@ -133,34 +129,33 @@
   <% if @img %>
     <div id="pxe_img__info_div">
       <% unless @edit %>
-        <%= render(:partial=>"layouts/flash_msg") %>
-
-          <p class="legend">Basic Information</p>
-          <table class="style1">
-            <tr>
-              <td class="key">Name</td>
-              <td><%= h(@img.name) %></td>
-            </tr>
-            <tr>
-              <td class="key">Description</td>
-              <td><%= h(@img.description) %></td>
-            </tr>
-            <tr>
-              <td class="key">Type</td>
-              <td><%= h(@img.pxe_image_type ? @img.pxe_image_type.name : "") %></td>
-            </tr>
-            <tr>
-              <td class="key">Kernel</td>
-              <td><%= h(@img.kernel) %></td>
-            </tr>
-            <tr>
-              <td class="key">Windows Boot Environment</td>
-              <td><%= h(@img.default_for_windows ? "Yes" : "") %></td>
-            </tr>
-          </table>
+        <%= render(:partial => "layouts/flash_msg") %>
+        <p class="legend">Basic Information</p>
+        <table class="style1">
+          <tr>
+            <td class="key">Name</td>
+            <td><%= h(@img.name) %></td>
+          </tr>
+          <tr>
+            <td class="key">Description</td>
+            <td><%= h(@img.description) %></td>
+          </tr>
+          <tr>
+            <td class="key">Type</td>
+            <td><%= h(@img.pxe_image_type ? @img.pxe_image_type.name : "") %></td>
+          </tr>
+          <tr>
+            <td class="key">Kernel</td>
+            <td><%= h(@img.kernel) %></td>
+          </tr>
+          <tr>
+            <td class="key">Windows Boot Environment</td>
+            <td><%= h(@img.default_for_windows ? "Yes" : "") %></td>
+          </tr>
+        </table>
 
       <% else %>
-        <%= render(:partial=>"pxe_img_form") %>
+        <%= render(:partial => "pxe_img_form") %>
       <% end %>
     </div>
   <% end %>
@@ -168,7 +163,7 @@
   <% if @wimg %>
     <div id="pxe_wimg__info_div">
       <% unless @edit %>
-        <%= render(:partial=>"layouts/flash_msg") %>
+        <%= render(:partial => "layouts/flash_msg") %>
           <p class="legend">Basic Information</p>
           <table class="style1">
             <tr>
@@ -194,7 +189,7 @@
           </table>
 
       <% else %>
-        <%= render(:partial=>"pxe_wimg_form") %>
+        <%= render(:partial => "pxe_wimg_form") %>
       <% end %>
     </div>
   <% end %>

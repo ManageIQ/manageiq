@@ -2,21 +2,19 @@
 	<%# if PXE Server is sleted %>
 	<% if @pxe_image_type %>
     <% unless @edit %>
-
-        <p class="legend">Basic Information</p>
-        <table class="style1">
-          <tr>
-            <td class="key">Name</td>
-            <td><%= h(@pxe_image_type.name) %></td>
-          </tr>
-          <tr>
-            <td class="key">Provision Type</td>
-            <td><%= h(@pxe_image_type.provision_type) %></td>
-          </tr>
-        </table>
-
+      <p class="legend">Basic Information</p>
+      <table class="style1">
+        <tr>
+          <td class="key">Name</td>
+          <td><%= h(@pxe_image_type.name) %></td>
+        </tr>
+        <tr>
+          <td class="key">Provision Type</td>
+          <td><%= h(@pxe_image_type.provision_type) %></td>
+        </tr>
+      </table>
     <% else %>
-      <%= render(:partial=>"pxe_image_type_form") %>
+      <%= render(:partial => "pxe_image_type_form") %>
     <% end %>
 	<% end %>
 </div>
