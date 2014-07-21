@@ -1279,7 +1279,7 @@ module VmCommon
   alias miq_template_edit edit
 
   def build_edit_screen
-    drop_breadcrumb( {:name=>"Edit VM '" + @record.name + "'", :url=>"/vm/edit"} )
+    drop_breadcrumb( {:name => "Edit VM '" + @record.name + "'", :url => "/vm/edit"} ) unless @explorer
     session[:edit] = @edit
     @in_a_form = true
     @tabs = [ ["edit", @record.id.to_s], ["edit", "Information"] ]
