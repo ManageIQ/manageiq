@@ -371,6 +371,7 @@ module VMDB
       valid
     end
 
+
     def ldap_verify
       @errors = {}
 
@@ -462,22 +463,6 @@ module VMDB
         return true if product[:automate]
       end
       false
-    end
-
-    def self.schema_update
-      $log.info("MIQ(config-schema_update) updating database schema from version [#{SchemaMigration.schema_version}] to version [#{SchemaMigration.latest_migration}]")
-      begin
-        result = `rake db:migrate --trace`
-      rescue => err
-        $log.error("MIQ(config-schema_update) update failed, #{err}")
-        return
-      end
-
-      if $?.exitstatus == 0
-        result.split("\n").each {|m| $log.info("MIQ(config-schema_update) #{m}")}
-      else
-        result.split("\n").each {|m| $log.error("MIQ(config-schema_update) #{m}")}
-      end
     end
 
     def self.db_schema_up_to_date?
