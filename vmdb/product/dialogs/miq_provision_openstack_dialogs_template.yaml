@@ -1,103 +1,103 @@
---- 
+---
 :name: miq_provision_openstack_dialogs_template
 :description: Sample Openstack Instance Provisioning Dialog
 :dialog_type: MiqProvisionWorkflow
-:content: 
-  :buttons: 
+:content:
+  :buttons:
   - :submit
   - :cancel
-  :dialogs: 
-    :requester: 
+  :dialogs:
+    :requester:
       :description: Request
-      :fields: 
-        :owner_phone: 
+      :fields:
+        :owner_phone:
           :description: Phone
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_country: 
+        :owner_country:
           :description: Country/Region
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_phone_mobile: 
+        :owner_phone_mobile:
           :description: Mobile
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_title: 
+        :owner_title:
           :description: Title
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_first_name: 
+        :owner_first_name:
           :description: First Name
           :required: true
           :display: :edit
           :data_type: :string
-        :owner_manager: 
+        :owner_manager:
           :description: Name
           :required: false
           :display: :edit
           :data_type: :string
-        :owner_address: 
+        :owner_address:
           :description: Address
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_company: 
+        :owner_company:
           :description: Company
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_last_name: 
+        :owner_last_name:
           :description: Last Name
           :required: true
           :display: :edit
           :data_type: :string
-        :owner_manager_mail: 
+        :owner_manager_mail:
           :description: E-Mail
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_city: 
+        :owner_city:
           :description: City
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_department: 
+        :owner_department:
           :description: Department
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_load_ldap: 
-          :pressed: 
+        :owner_load_ldap:
+          :pressed:
             :method: :retrieve_ldap
           :description: Look Up LDAP Email
           :required: false
           :display: :show
           :data_type: :button
-        :owner_manager_phone: 
+        :owner_manager_phone:
           :description: Phone
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_state: 
+        :owner_state:
           :description: State
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_office: 
+        :owner_office:
           :description: Office
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_zip: 
+        :owner_zip:
           :description: Zip code
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_email: 
+        :owner_email:
           :description: E-Mail
           :required: true
           :display: :edit
@@ -108,15 +108,15 @@
           :display: :edit
           :data_type: :string
       :display: :show
-      :field_order: 
-    :purpose: 
+      :field_order:
+    :purpose:
       :description: Purpose
-      :fields: 
-        :vm_tags: 
+      :fields:
+        :vm_tags:
           :required_method: :validate_tags
           :description: Tags
           :required: false
-          :options: 
+          :options:
             :include: []
 
             :order: []
@@ -130,12 +130,12 @@
 
           :data_type: :integer
       :display: :show
-      :field_order: 
-    :environment: 
+      :field_order:
+    :environment:
       :description: Environment
       :fields:
-        :placement_auto: 
-          :values: 
+        :placement_auto:
+          :values:
             false: 0
             true: 1
           :description: Choose Automatically
@@ -143,8 +143,8 @@
           :display: :edit
           :default: false
           :data_type: :boolean
-        :placement_availability_zone: 
-          :values_from: 
+        :placement_availability_zone:
+          :values_from:
             :method: :allowed_availability_zones
           :auto_select_single: false
           :description: Availability Zones
@@ -162,7 +162,7 @@
           :required: false
           :display: :edit
           :data_type: :integer
-        :security_groups: 
+        :security_groups:
           :values_from:
             :method: :allowed_security_groups
           :description: Security Groups
@@ -179,12 +179,12 @@
           :display: :edit
           :data_type: :integer
       :display: :show
-    :service: 
+    :service:
       :description: Catalog
-      :fields: 
-        :number_of_vms: 
-          :values_from: 
-            :options: 
+      :fields:
+        :number_of_vms:
+          :values_from:
+            :options:
               :max: 50
             :method: :allowed_number_of_vms
           :description: Count
@@ -192,14 +192,14 @@
           :display: :edit
           :default: 1
           :data_type: :integer
-        :vm_description: 
+        :vm_description:
           :description: Instance Description
           :required: false
           :display: :edit
           :data_type: :string
-          :min_length: 
+          :min_length:
           :max_length: 100
-        :vm_prefix: 
+        :vm_prefix:
           :description: Instance Name Prefix/Suffix
           :required_method: :validate_vm_name
           :required: false
@@ -213,26 +213,26 @@
             :method: :allowed_templates
           :description: Name
           :required: true
-          :notes: 
+          :notes:
           :display: :edit
           :data_type: :integer
           :notes_display: :show
-        :vm_name: 
+        :vm_name:
           :description: Instance Name
           :required_method: :validate_vm_name
           :required: true
-          :notes: 
+          :notes:
           :display: :edit
           :data_type: :string
           :notes_display: :show
-          :min_length: 
+          :min_length:
           :max_length:
       :display: :show
-    :schedule: 
+    :schedule:
       :description: Schedule
-      :fields: 
-        :schedule_type: 
-          :values: 
+      :fields:
+        :schedule_type:
+          :values:
             schedule: Schedule
             immediately: Immediately on Approval
           :description: When to Provision
@@ -240,17 +240,17 @@
           :display: :edit
           :default: immediately
           :data_type: :string
-        :schedule_time: 
-          :values_from: 
-            :options: 
+        :schedule_time:
+          :values_from:
+            :options:
               :offset: 1.day
             :method: :default_schedule_time
           :description: Provision on
           :required: false
           :display: :edit
           :data_type: :time
-        :retirement: 
-          :values: 
+        :retirement:
+          :values:
             0: Indefinite
             1.month: 1 Month
             3.months: 3 Months
@@ -260,10 +260,10 @@
           :display: :edit
           :default: 0
           :data_type: :integer
-        :retirement_warn: 
-          :values_from: 
-            :options: 
-              :values: 
+        :retirement_warn:
+          :values_from:
+            :options:
+              :values:
                 1.week: 1 Week
                 2.weeks: 2 Weeks
                 30.days: 30 Days
@@ -276,9 +276,9 @@
           :default: 1.week
           :data_type: :integer
       :display: :show
-    :hardware: 
+    :hardware:
       :description: Properties
-      :fields: 
+      :fields:
         :instance_type:
           :values_from:
             :method: :allowed_instance_types
@@ -286,7 +286,7 @@
           :required: true
           :display: :edit
           :data_type: :integer
-        :guest_access_key_pair: 
+        :guest_access_key_pair:
           :values_from:
             :method: :allowed_guest_access_key_pairs
           :description: Guest Access Key Pair
@@ -362,7 +362,7 @@
           :display: :edit
           :data_type: :string
       :display: :show
-  :dialog_order: 
+  :dialog_order:
   - :requester
   - :purpose
   - :service
