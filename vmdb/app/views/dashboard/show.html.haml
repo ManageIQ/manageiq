@@ -1,0 +1,21 @@
+#modules
+  .yui-b
+    .yui-gb
+      #col1.yui-u.first{:style => "position:relative;min-height:500px;"}
+        - @sb[:dashboards][@sb[:active_db]][:col1].each do |w|
+          - widget = MiqWidget.find_by_id(w)
+          - if widget && widget.enabled && @temp[:available_widgets].include?(widget.id)
+            = render(:partial => 'widget', :locals => {:widget => widget})
+      #col2.yui-u{:style => "position:relative;min-height:500px;"}
+        - @sb[:dashboards][@sb[:active_db]][:col2].each do |w|
+          - widget = MiqWidget.find_by_id(w)
+          - if widget && widget.enabled && @temp[:available_widgets].include?(widget.id)
+            = render(:partial => 'widget', :locals => {:widget => widget})
+      #col3.yui-u{:style => "position:relative;min-height:500px;"}
+        - @sb[:dashboards][@sb[:active_db]][:col3].each do |w|
+          - widget = MiqWidget.find_by_id(w)
+          - if widget && widget.enabled && @temp[:available_widgets].include?(widget.id)
+            = render(:partial => 'widget', :locals => {:widget => widget})
+- if @chart_data
+  :javascript
+    miq_chart_data = #{{"widgetchart" => @chart_data}.to_json.html_safe};

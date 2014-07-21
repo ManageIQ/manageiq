@@ -160,48 +160,59 @@ class DashboardController < ApplicationController
     @tabs = []
     db_order.each_with_index do |d, i|
       db = MiqWidgetSet.find_by_id(d)
-      # load first one on intial load, or load tab from params[:tab] changed, or when coming back from another screen load active tab from sandbox
+      # load first one on intial load, or load tab from params[:tab] changed,
+      # or when coming back from another screen load active tab from sandbox
       if (!params[:tab] && !@sb[:active_db_id] && i == 0) || (params[:tab] && params[:tab] == db.id.to_s) ||
-         (!params[:tab] && @sb[:active_db_id] && @sb[:active_db_id].to_s == db.id.to_s)
+         (!params[:tab] && @sb[:active_db_id] && @sb[:active_db_id].to_s == db.id.to_s) ||
+         (!db_order.include?(@sb[:active_db_id]) && !db_order.empty? && i == 0)
         @tabs.unshift([db.id.to_s, ""])
         @sb[:active_db]    = db.name
         @sb[:active_db_id] = db.id
       end
-      @tabs.push([db.id.to_s,db.description])
+      @tabs.push([db.id.to_s, db.description])
+      # check this only first time when user logs in comes to dashboard show
 
-      unless @sb[:dashboards] # check this only first time when user logs in comes to dashboard show
-        # get user dashboard version
-        ws = MiqWidgetSet.where_unique_on(db.name, session[:group], session[:userid]).first
-        # update user's copy if group dashboard has been updated by admin
-        if ws && ws.set_data && (!ws.set_data[:last_group_db_updated] || (ws.set_data[:last_group_db_updated] && db.updated_on > ws.set_data[:last_group_db_updated]))
-          #if group dashboard was locked earlier but now it is unlocked, reset everything  OR if admin makes changes to a locked db do a reset on user's copies
-          if (db.set_data[:locked] && !ws.set_data[:locked]) || (db.set_data[:locked] && ws.set_data[:locked])
-            ws.set_data = db.set_data
-            ws.set_data[:last_group_db_updated] = db.updated_on
-            ws.save
-          # if group dashboard was unloacked earlier but now it is locked, only change locked flag of users dashboard version
-          elsif !db.set_data[:locked] && ws.set_data[:locked]
-            ws.set_data[:locked] = db.set_data[:locked]
-            ws.set_data[:last_group_db_updated] = db.updated_on if !ws.set_data[:last_group_db_updated]
-            ws.save
-          end
+      next if @sb[:dashboards]
+      # get user dashboard version
+      ws = MiqWidgetSet.where_unique_on(db.name, session[:group], session[:userid]).first
+      # update user's copy if group dashboard has been updated by admin
+      if ws && ws.set_data && (!ws.set_data[:last_group_db_updated] ||
+         (ws.set_data[:last_group_db_updated] && db.updated_on > ws.set_data[:last_group_db_updated]))
+        # if group dashboard was locked earlier but now it is unlocked,
+        # reset everything  OR if admin makes changes to a locked db do a reset on user's copies
+        if (db.set_data[:locked] && !ws.set_data[:locked]) || (db.set_data[:locked] && ws.set_data[:locked])
+          ws.set_data = db.set_data
+          ws.set_data[:last_group_db_updated] = db.updated_on
+          ws.save
+        # if group dashboard was unloacked earlier but now it is locked,
+        # only change locked flag of users dashboard version
+        elsif !db.set_data[:locked] && ws.set_data[:locked]
+          ws.set_data[:locked] = db.set_data[:locked]
+          ws.set_data[:last_group_db_updated] = db.updated_on unless ws.set_data[:last_group_db_updated]
+          ws.save
         end
       end
     end
 
     @sb[:dashboards] ||= {}
     ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
-    if ws.nil? # if all of user groups dashboards have been deleted and they are logged in, need to reset active_db_id
+
+    # if all of user groups dashboards have been deleted and they are logged in, need to reset active_db_id
+    if ws.nil?
       wset = MiqWidgetSet.find_by_id(@sb[:active_db_id])
       @sb[:active_db_id] = nil if wset.nil?
     end
-    ws = create_user_dashboard(@sb[:active_db_id]) if ws.nil?   # Create default dashboard for this user, if not present
 
-    if db_order.empty?    # Set tabs now if user's group didnt have any dashboards using default dashboard
+    # Create default dashboard for this user, if not present
+    ws = create_user_dashboard(@sb[:active_db_id]) if ws.nil?
+
+    # Set tabs now if user's group didnt have any dashboards using default dashboard
+    if db_order.empty?
       db = MiqWidgetSet.find_by_id(@sb[:active_db_id])
       @tabs.unshift([ws.id.to_s, ""])
       @tabs.push([ws.id.to_s, db.description])
-    else                # User's group has dashboards, delete userid|default dashboard if it exists, dont need to keep that
+    # User's group has dashboards, delete userid|default dashboard if it exists, dont need to keep that
+    else
       db = MiqWidgetSet.where_unique_on("default", session[:group], session[:userid]).first
       db.destroy if db.present?
     end
