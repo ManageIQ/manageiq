@@ -12,6 +12,9 @@ class MiqAeNamespace < ActiveRecord::Base
   validate :uniqueness_of_fqname
 
   def self.find_by_fqname(fqname, include_classes = true)
+    return nil if fqname.blank?
+
+    fqname   = fqname[1..-1] if fqname[0] == '/'
     fqname   = fqname.downcase
     last     = fqname.split('/').last
     low_name = arel_table[:name].lower
@@ -22,6 +25,7 @@ class MiqAeNamespace < ActiveRecord::Base
   def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
+    fqname   = fqname[1..-1] if fqname[0] == '/'
     found = find_by_fqname(fqname, include_classes)
     return found unless found.nil?
 
