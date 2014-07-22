@@ -128,10 +128,6 @@ module VMDB
           valid = false; errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
         end
 
-        unless ["any", "external"].include?(data.log_network_address)
-          valid = false; errors << [:log_network_address, "log_network_address, \"#{data.log_network_address}\", invalid. Should be one of \"any\", \"external\""]
-        end
-
         return valid, errors
       end
 

@@ -470,20 +470,6 @@ module VMDB
       URI::Generic.build(proxy)
     end
 
-    def self.log_network_address
-      log_network_address = self.new("vmdb").config[:server][:log_network_address]
-      log_network_address ||= "any"
-      log_network_address.downcase!
-      case log_network_address.to_sym
-      when :any
-        return :any
-      when :external
-        return :external
-      else
-        raise "log_network_address, \"#{log_network_address}\", invalid. Should be one of \"any\", \"external\""
-      end
-    end
-
     def self.available_config_names
       return {
         "vmdb" => " EVM Server Main Configuration", # Name includes space so it is first in UI select box

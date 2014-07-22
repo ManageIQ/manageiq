@@ -174,7 +174,6 @@ server:
     :disk_usage_gt_percent: 80
   host:
   listening_port: '443'
-  log_network_address: any
   mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
   mks_version: 2.1.0.0
   name: EVM
