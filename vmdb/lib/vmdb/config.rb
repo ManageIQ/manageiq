@@ -352,23 +352,6 @@ module VMDB
       Activator.new(self).activate
     end
 
-    def amazon_verify
-      @errors = {}
-
-      auth = @config[:authentication]
-      begin
-        amazon_auth = AmazonAuth.new(:auth=>auth)
-        result = amazon_auth.admin_connect
-      rescue Exception => err
-        result = false
-        @errors[[:authentication, auth[:mode]].join("_")] = err.message
-      else
-        @errors[[:authentication, auth[:mode]].join("_")] = "Authentication failed" unless result
-      end
-
-      result
-    end
-
     def self.refresh_configs
       log_header = "MIQ(Config.refresh_configs)"
 

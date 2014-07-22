@@ -220,13 +220,16 @@ module OpsController::Settings::Common
     @validate.config.each_key do |category|
       @validate.config[category] = @edit[:new][category].dup
     end
-    if @validate.amazon_verify
+
+    valid, errors = AmazonAuth.validate_connection(@validate.config)
+    if valid
       add_flash(I18n.t("flash.ops.settings.amazon_settings_validated"))
     else
-      @validate.errors.each do |field,msg|
+      errors.each do |field,msg|
         add_flash("#{field.titleize}: #{msg}", :error)
       end
     end
+
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end

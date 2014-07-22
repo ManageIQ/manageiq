@@ -1,6 +1,22 @@
 require 'Amazon/amazon_iam'
 
 class AmazonAuth
+  def self.validate_connection(config)
+    errors = {}
+
+    auth = config[:authentication]
+    begin
+      amazon_auth = AmazonAuth.new(:auth=>auth)
+      result = amazon_auth.admin_connect
+    rescue Exception => err
+      result = false
+      errors[[:authentication, auth[:mode]].join("_")] = err.message
+    else
+      errors[[:authentication, auth[:mode]].join("_")] = "Authentication failed" unless result
+    end
+
+    return result, errors
+  end
 
   def initialize(options = {})
     log_prefix = "MIQ(AmazonAuth.initialize)"
