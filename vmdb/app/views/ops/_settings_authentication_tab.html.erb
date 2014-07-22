@@ -191,7 +191,7 @@
         <td class="wide">
           <%= password_field_tag("authentication_bind_pwd",
                               @edit[:new][:authentication][:bind_pwd],
-                              :maxlength=>50,
+                              :maxlength=>128,
                               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
         </td>
       </tr>
