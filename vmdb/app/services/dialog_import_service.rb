@@ -1,4 +1,4 @@
-class DialogImporter
+class DialogImportService
   class ImportNonYamlError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
 

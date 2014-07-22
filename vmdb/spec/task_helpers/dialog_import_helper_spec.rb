@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe TaskHelpers::DialogImportHelper do
-  let(:dialog_importer) { instance_double("DialogImporter") }
-  let(:dialog_import_helper) { described_class.new(dialog_importer) }
+  let(:dialog_import_service) { instance_double("DialogImportService") }
+  let(:dialog_import_helper) { described_class.new(dialog_import_service) }
 
   describe "#import" do
     let(:filename) { "filename" }
@@ -13,13 +13,13 @@ describe TaskHelpers::DialogImportHelper do
     end
 
     it "logs a message for yielded results" do
-      dialog_importer.stub(:import_from_file).with(filename).and_yield({"label" => "label"})
+      dialog_import_service.stub(:import_from_file).with(filename).and_yield({"label" => "label"})
       $log.should_receive(:info).with("Skipping importing of dialog with label label as it already exists")
       dialog_import_helper.import(filename)
     end
 
-    it "delegates to the dialog_importer" do
-      dialog_importer.should_receive(:import_from_file).with(filename).and_yield({"label" => "label"})
+    it "delegates to the dialog_import_service" do
+      dialog_import_service.should_receive(:import_from_file).with(filename).and_yield({"label" => "label"})
       dialog_import_helper.import(filename)
     end
   end

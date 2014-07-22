@@ -51,7 +51,7 @@ class MiqAeCustomizationController < ApplicationController
       add_flash("Use the browse button to locate an import file", :warning)
     else
       begin
-        import_file_upload_id = dialog_importer.store_for_import(params[:upload][:file].read)
+        import_file_upload_id = dialog_import_service.store_for_import(params[:upload][:file].read)
         add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
         redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue DialogImportValidator::ImportNonYamlError
@@ -72,7 +72,7 @@ class MiqAeCustomizationController < ApplicationController
     import_file_upload = ImportFileUpload.first(:conditions => {:id => params[:import_file_upload_id]})
 
     if import_file_upload
-      dialog_importer.import_service_dialogs(import_file_upload, params[:dialogs_to_import])
+      dialog_import_service.import_service_dialogs(import_file_upload, params[:dialogs_to_import])
       add_flash(I18n.t("flash.service_dialog.import_successful"), :info)
     else
       add_flash(I18n.t("flash.service_dialog.import_file_upload_expired"), :error)
@@ -89,7 +89,7 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def cancel_import
-    dialog_importer.cancel_import(params[:import_file_upload_id])
+    dialog_import_service.cancel_import(params[:import_file_upload_id])
     add_flash(I18n.t("flash.service_dialog.import_cancelled"), :info)
 
     respond_to do |format|
@@ -209,8 +209,8 @@ class MiqAeCustomizationController < ApplicationController
 
   private
 
-  def dialog_importer
-    @dialog_importer ||= DialogImporter.new
+  def dialog_import_service
+    @dialog_import_service ||= DialogImportService.new
   end
 
   def replace_right_cell(nodetype, replace_trees = [])
