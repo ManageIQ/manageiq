@@ -567,17 +567,6 @@ module VMDB
       URI::Generic.build(proxy)
     end
 
-    def self.queue_size(data)
-      case data.to_s.downcase
-      when "small"  then 2
-      when "medium" then 4
-      when "large"  then 6
-      else
-        return data.to_i if data.to_i > 0
-        raise "Invalid value [#{data}] from queue_size"
-      end
-    end
-
     def self.log(data, mode = "activate")
       case mode
       when "activate"
