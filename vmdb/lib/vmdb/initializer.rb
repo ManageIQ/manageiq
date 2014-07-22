@@ -59,25 +59,5 @@ module VMDB
         Thread.new { ws_worker.run }
       end
     end
-
-    def self.get_network
-      # to call this method use: VMDB::Initializer.get_network
-      retVal = {}
-      miqnet = "/bin/miqnet.sh"
-
-      if File.exists?(miqnet)
-        # Make a call to the virtual appliance to get the network information
-        cmd     = "#{miqnet} -GET"
-        netinfo = `#{cmd}`
-        raise "Unable to execute command: #{cmd}" if netinfo.nil?
-        netinfo = netinfo.split
-
-        [:hostname, :macaddress, :ipaddress, :netmask, :gateway, :primary_dns, :secondary_dns].each do |type|
-          retVal[type] = netinfo.shift
-        end
-      end
-
-      retVal
-    end
   end
 end

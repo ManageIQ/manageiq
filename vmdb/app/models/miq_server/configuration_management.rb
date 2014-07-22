@@ -19,12 +19,6 @@ module MiqServer::ConfigurationManagement
 
       return cfg
     end
-
-    def log_configurations
-      VMDB::Config.log_config(:logger => $log, :startup => true)
-      VMDB::Config.log_server_identity
-      VMDB::Config.log_diagnostics
-    end
   end
 
   def get_config(typ = "vmdb", force_reload = false)
