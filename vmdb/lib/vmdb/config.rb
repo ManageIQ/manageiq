@@ -344,25 +344,13 @@ module VMDB
     end
 
     def validate
-      @errors = {}
-      valid = true
-      @config.each_key {|k|
-        if Config.respond_to?(k.to_s)
-          ost = OpenStruct.new(@config[k].stringify_keys)
-          section_valid, errors = Config.send(k.to_s, ost, "validate")
-
-          if !section_valid
-            errors.each {|e|
-              key, msg = e
-              @errors[[k, key].join("_")] = msg
-            }
-            valid = false
-          end
-        end
-      }
+      valid, @errors = Validator.new(self).validate
       valid
     end
 
+    def activate
+      Activator.new(self).activate
+    end
 
     def ldap_verify
       @errors = {}
@@ -401,17 +389,6 @@ module VMDB
       end
 
       result
-    end
-
-    def activate
-      raise "configuration invalid, see errors for details" if !self.validate
-
-      @config.each_key {|k|
-        if Config.respond_to?(k.to_s)
-          ost = OpenStruct.new(@config[k].stringify_keys)
-          Config.send(k.to_s, ost)
-        end
-      }
     end
 
     def self.refresh_configs
@@ -477,80 +454,6 @@ module VMDB
       }
     end
 
-    def self.webservices(data, mode="activate")
-      valid, errors = [true, []]
-      if !["invoke", "disable"].include?(data.mode)
-        valid = false; errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
-      end
-      if !["ipaddress", "hostname"].include?(data.contactwith)
-        valid = false; errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
-      end
-      if ![true, false].include?(data.nameresolution)
-        valid = false; errors << [:nameresolution, "webservices nameresolution, \"#{data.nameresolution}\", invalid. Should be one of: true or false"]
-      end
-      unless data.timeout.is_a?(Fixnum)
-        valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
-      end
-
-      case mode
-      when "activate"
-        raise message unless valid
-      when "validate"
-        return [valid, errors]
-      end
-    end
-
-    AUTH_TYPES = %w(ldap ldaps httpd amazon database none)
-    def self.authentication(data, mode="activate")
-      valid, errors = [true, []]
-      unless AUTH_TYPES.include?(data.mode)
-        valid = false
-        errors << [:mode, "authentication type, \"#{data.mode}\", invalid. Should be one of: #{AUTH_TYPES.join(", ")}"]
-      end
-
-      if data.mode == "ldap"
-        if data.ldaphost.blank?
-          valid = false; errors << [:ldaphost, "ldaphost can't be blank"]
-        else
-          # # XXXX Test connection to ldap host
-          # # ldap=Net::LDAP.new( {:host => data.ldaphost, :port => 389} )
-          # begin
-          #   # ldap.bind
-          #   sock = TCPSocket.new(data.ldaphost, 389)
-          #   sock.close
-          # rescue => err
-          #   valid = false; errors << [:ldaphost, "unable to establish an ldap connection to host \"#{data.ldaphost}\", \"#{err}\""]
-          # end
-        end
-      elsif data.mode == "amazon"
-        if data.amazon_key.blank?
-          valid = false; errors << [:amazon_key, "amazon key can't be blank"]
-        end
-        if data.amazon_secret.blank?
-          valid = false; errors << [:amazon_secret, "amazon secret can't be blank"]
-        end
-      end
-
-      case mode
-      when "activate"
-        raise message unless valid
-      when "validate"
-        return [valid, errors]
-      else
-        raise "mode, \"#{mode}\", is invalid, should be \"activate\" or \"validate\""
-      end
-
-      case data.mode
-      when "ldap", "ldaps"
-        User.ldaphost data.ldaphost
-        User.basedn   data.basedn
-      when "database"
-        User.ldaphost "database"
-      when "none"
-        User.ldaphost ""
-      end
-    end
-
     def self.http_proxy_uri
       proxy = self.new("vmdb").config[:http_proxy] || {}
       return nil unless proxy[:host]
@@ -566,115 +469,6 @@ module VMDB
 
       URI::Generic.build(proxy)
     end
-
-    def self.log(data, mode = "activate")
-      case mode
-      when "activate"
-        Vmdb::Logging.init
-      when "validate"
-        data = data.instance_variable_get(:@table) if data.kind_of?(OpenStruct)
-        Vmdb::Logging.validate_config(data)
-      else
-        raise "mode, \"#{mode}\", is invalid, should be \"activate\" or \"validate\""
-      end
-    end
-
-    def self.session(data, mode="activate")
-      valid, errors = [true, []]
-      unless data.timeout.is_a?(Fixnum)
-        valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
-      end
-
-      unless data.interval.is_a?(Fixnum)
-        valid, key, message = [false, :interval, "interval, \"#{data.interval}\", invalid.  invalid. Should be numeric"]
-      end
-
-      if data.timeout == 0
-        valid = false; errors << [:timeout, "timeout can't be zero"]
-      end
-
-      if data.interval == 0
-        valid = false; errors << [:interval, "interval can't be zero"]
-      end
-
-      case mode
-      when "activate"
-        if valid
-          Session.timeout data.timeout
-          Session.interval data.interval
-        else
-          raise message
-        end
-      when "validate"
-        [valid, errors]
-      else
-        raise "mode, \"#{mode}\", is invalid, should be \"activate\" or \"validate\""
-      end
-    end
-
-    def self.server(data, mode="activate")
-      valid, errors = [true, []]
-      unless is_numeric?(data.listening_port) || data.listening_port.blank?
-        valid = false; errors << [:listening_port, "listening_port, \"#{data.listening_port}\", invalid. Should be numeric"]
-      end
-
-      unless ["sql", "memory", "cache"].include?(data.session_store)
-        valid = false; errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
-      end
-
-      unless ["any", "external"].include?(data.log_network_address)
-        valid = false; errors << [:log_network_address, "log_network_address, \"#{data.log_network_address}\", invalid. Should be one of \"any\", \"external\""]
-      end
-
-      case mode
-      when "activate"
-        if valid
-          MiqServer.my_server.config_updated(data, mode) unless MiqServer.my_server.nil? rescue nil
-        else
-          raise message
-        end
-      when "validate"
-        [valid, errors]
-      else
-        raise "mode, \"#{mode}\", is invalid, should be \"activate\" or \"validate\""
-      end
-    end
-
-    # SMTP Settings
-    def self.smtp(data, mode="activate")
-      valid, errors = [true, []]
-      #host
-      #domain
-      #password
-
-      #authentication
-      if !["login", "plain", "none"].include?(data.authentication)
-        valid = false; errors << [:mode, "authentication, \"#{data.mode}\", invalid. Should be one of: login, plain, or none"]
-      end
-
-      #user_name
-      if data.user_name.blank? && data.authentication == "login"
-        valid = false; errors << [:user_name, "cannot be blank for 'login' authentication"]
-      end
-
-      #port
-      unless data.port.to_s =~ /^[0-9]*$/
-        valid = false; errors << [:port, "\"#{data.port}\", invalid. Should be numeric"]
-      end
-
-      #from
-      unless data.from =~ %r{^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$}i
-        valid = false; errors << [:from, "\"#{data.from}\", invalid. Should be a valid email address"]
-      end
-
-      case mode
-      when "activate"
-        raise message unless valid
-      when "validate"
-        return [valid, errors]
-      end
-    end
-    # end SMTP Settings
 
     def self.log_network_address
       log_network_address = self.new("vmdb").config[:server][:log_network_address]
