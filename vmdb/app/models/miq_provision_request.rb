@@ -11,7 +11,9 @@ class MiqProvisionRequest < MiqRequest
   ACTIVE_STATES     = %w{ migrated } + self.base_class::ACTIVE_STATES
 
   validates_inclusion_of :request_type,   :in => REQUEST_TYPES,                          :message => "should be #{REQUEST_TYPES.join(", ")}"
-  validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
+  validates_inclusion_of :request_state,
+                         :in      => %w(pending provisioned finished) + ACTIVE_STATES,
+                         :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"
   validates_presence_of  :source_id,      :message => "must have valid template"
   validate               :must_have_valid_vm
   validate               :must_have_user
