@@ -18,6 +18,9 @@ class Zone < ActiveRecord::Base
   has_many :storage_managers
   has_many :ldap_regions
 
+  virtual_has_many :hosts,             :uses => {:ext_management_systems => :hosts}
+  virtual_has_many :vms_and_templates, :uses => {:ext_management_systems => :vms_and_templates}
+
   include ReportableMixin
 
   before_destroy :check_zone_in_use_on_destroy

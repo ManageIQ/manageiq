@@ -35,6 +35,14 @@ describe Zone do
       @zone2.miq_proxies.should be_empty
     end
 
+    it "hosts in virtual reflections" do
+      described_class.all(:include => :aggregate_cpu_speed).should_not be_nil
+    end
+
+    it "vms_and_templates in virtual reflections" do
+      described_class.all(:include => :aggregate_vm_cpus).should_not be_nil
+    end
+
     context "with two vdi farms in different zones via vdi_desktop_pools" do
       before(:each) do
         @farm1 = FactoryGirl.create(:vdi_farm_citrix)
