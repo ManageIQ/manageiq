@@ -32,7 +32,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
-    Flavor.count.should              == 29
+    Flavor.count.should              == 38
     AvailabilityZone.count.should    == 3
     FloatingIp.count.should          == 1
     AuthPrivateKey.count.should      == 2
@@ -61,7 +61,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       :uid_ems     => nil
     )
 
-    @ems.flavors.size.should            == 29
+    @ems.flavors.size.should            == 38
     @ems.availability_zones.size.should == 3
     @ems.floating_ips.size.should       == 1
     @ems.key_pairs.size.should          == 2
@@ -76,11 +76,11 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     @flavor.should be_kind_of(FlavorAmazon)
     @flavor.should have_attributes(
       :name            => "t1.micro",
-      :description     => "Micro Instance",
+      :description     => "T1 Micro",
       :enabled         => true,
       :cpus            => 1,
       :cpu_cores       => 1,
-      :memory          => 615.megabytes.to_i,
+      :memory          => 613.megabytes.to_i,
       :supports_32_bit => true,
       :supports_64_bit => true
     )
@@ -227,7 +227,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       :bios               => nil,
       :annotation         => nil,
       :numvcpus           => 1,
-      :memory_cpu         => 615, # MB
+      :memory_cpu         => 613, # MB
       :disk_capacity      => 0, # TODO: Change to a flavor that has disks
       :bitness            => 64
     )

@@ -137,8 +137,7 @@ module EmsRefresh::Parsers
     def parse_flavor(flavor)
       name = uid = flavor[:name]
 
-      cpus = flavor[:cpu_total]
-      cpus = cpus.to_a.mean.to_i if cpus.kind_of?(Range)
+      cpus = flavor[:vcpu]
 
       new_result = {
         :type            => "FlavorAmazon",
@@ -147,7 +146,7 @@ module EmsRefresh::Parsers
         :description     => flavor[:description],
         :enabled         => !flavor[:disabled],
         :cpus            => cpus,
-        :cpu_cores       => flavor[:cpu_cores],
+        :cpu_cores       => 1,
         :memory          => flavor[:memory],
         :supports_32_bit => flavor[:architecture].include?(:i386),
         :supports_64_bit => flavor[:architecture].include?(:x86_64),
