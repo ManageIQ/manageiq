@@ -29,7 +29,7 @@
             <div id="message_off">
           <% end %>
             <%= select_tag('file_name',
-                          options_for_select(VMDB::Config.available_config_names.invert.sort, session[:config_file_name]),
+                          options_for_select(AVAILABLE_CONFIG_NAMES_FOR_SELECT, session[:config_file_name]),
                           "data-miq_sparkle_on"  => true, 
                           "data-miq_sparkle_off" => true,
                           "data-miq_observe"     => {:url => url}.to_json)
@@ -39,7 +39,7 @@
       </tr>
     </table>
     <hr>
-    <p class="legend">Editing <%= h(VMDB::Config.available_config_names[session[:config_file_name]]) %> File<font color="red">*</font></p>
+    <p class="legend">Editing <%= h(AVAILABLE_CONFIG_NAMES[session[:config_file_name]]) %> File<font color="red">*</font></p>
     <%= text_area_tag("file_data",
                       @edit[:new][:file_data],
                       :style => "display:none;")

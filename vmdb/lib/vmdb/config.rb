@@ -437,15 +437,6 @@ module VMDB
       }
     end
 
-    def self.available_config_names
-      return {
-        "vmdb" => " EVM Server Main Configuration", # Name includes space so it is first in UI select box
-        "event_handling" => "Event Handler Configuration",
-        "broker_notify_properties" => "EVM Vim Broker Notification Properties",
-        "capacity" => "EVM Capacity Management Configuration"
-      }
-    end
-
     def self.get_file(name)
       Vmdb::ConfigurationEncoder.dump(self.new(name.to_s).config)
     end
