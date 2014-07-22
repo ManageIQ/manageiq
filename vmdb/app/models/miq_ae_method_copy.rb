@@ -31,6 +31,18 @@ class MiqAeMethodCopy
     copy
   end
 
+  def self.copy_multiple(ids, domain, ns = nil, overwrite = false)
+    nids = []
+    MiqAeMethod.transaction do
+      ids.each do |id|
+        method_obj = MiqAeMethod.find(id)
+        new_method = new(method_obj.fqname).to_domain(domain, ns, overwrite)
+        nids << new_method.id if new_method
+      end
+    end
+    nids
+  end
+
   private
 
   def find_or_create_class

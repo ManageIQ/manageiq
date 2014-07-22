@@ -96,6 +96,23 @@ describe MiqAeInstanceCopy do
     end
   end
 
+  context 'copy multiple' do
+    it 'instances' do
+      domain = 'Fred'
+      fqname = 'test1'
+      ids    = [1, 2, 3]
+      ins_copy = mock(MiqAeInstanceCopy)
+      ins = mock_model(MiqAeInstance)
+      ins_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { ins }
+      new_ids = [ins.id] * ids.length
+      ins.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
+      MiqAeInstance.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { ins }
+      MiqAeInstanceCopy.should_receive(:new).with(fqname, true).exactly(1).times { ins_copy }
+      MiqAeInstanceCopy.should_receive(:new).with(fqname, false).exactly(ids.length - 1).times { ins_copy }
+      MiqAeInstanceCopy.copy_multiple(ids, domain).should match_array(new_ids)
+    end
+  end
+
   def validate_instance(instance1, instance2, status)
     obj = MiqAeInstanceCompareValues.new(instance1, instance2)
     obj.compare

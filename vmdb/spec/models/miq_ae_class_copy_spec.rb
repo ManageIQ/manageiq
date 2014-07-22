@@ -98,6 +98,22 @@ describe MiqAeClassCopy do
     end
   end
 
+  context 'copy multiple' do
+    it 'classes' do
+      domain = 'Fred'
+      fqname = 'test1'
+      ids    = [1, 2, 3]
+      miq_ae_class_copy = mock(MiqAeClassCopy)
+      miq_ae_class = mock_model(MiqAeClass)
+      new_ids = [miq_ae_class.id] * ids.length
+      miq_ae_class_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_class }
+      miq_ae_class.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
+      MiqAeClass.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { miq_ae_class }
+      MiqAeClassCopy.should_receive(:new).with(anything).exactly(ids.length).times { miq_ae_class_copy }
+      MiqAeClassCopy.copy_multiple(ids, domain).should match_array(new_ids)
+    end
+  end
+
   def class_check_status(class1, class2, status)
     diff_obj = MiqAeClassCompareFields.new(class1, class2)
     diff_obj.compare
