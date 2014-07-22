@@ -34,7 +34,7 @@ class EmsAmazon < EmsCloud
 
   def self.raw_connect(access_key_id, secret_access_key, service = nil, region = nil, proxy_uri = nil)
     service   ||= "EC2"
-    proxy_uri ||= VMDB::Config.http_proxy_uri
+    proxy_uri ||= VMDB::Util.http_proxy_uri
     AmazonConnection.raw_connect(access_key_id, secret_access_key, service, region, proxy_uri)
   end
 

@@ -437,22 +437,6 @@ module VMDB
       }
     end
 
-    def self.http_proxy_uri
-      proxy = self.new("vmdb").config[:http_proxy] || {}
-      return nil unless proxy[:host]
-      proxy = proxy.dup
-
-      user     = proxy.delete(:user)
-      password = proxy.delete(:password)
-      userinfo = "#{user}:#{password}".chomp(":") unless user.blank?
-
-      proxy[:userinfo]   = userinfo
-      proxy[:scheme]   ||= "http"
-      proxy[:port]     &&= proxy[:port].to_i
-
-      URI::Generic.build(proxy)
-    end
-
     def self.available_config_names
       return {
         "vmdb" => " EVM Server Main Configuration", # Name includes space so it is first in UI select box
