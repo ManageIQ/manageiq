@@ -12,7 +12,7 @@ module MiqServer::ConfigurationManagement
       cfg = VMDB::Config.new("vmdb")
       cfg.activate
 
-      up_to_date, *message = VMDB::Config.db_schema_up_to_date?
+      up_to_date, *message = SchemaMigration.up_to_date?
       message.to_miq_a.each { |msg| $log.send(up_to_date ? :info : :warn, "#{log_prefix} #{msg}") }
 
       VMDB::Config.refresh_configs
