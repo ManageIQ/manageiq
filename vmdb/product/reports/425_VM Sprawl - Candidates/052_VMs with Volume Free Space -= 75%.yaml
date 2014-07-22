@@ -19,7 +19,7 @@ updated_on: 2009-11-10 20:10:42.138343 Z
 order: Descending
 graph: 
   :other: true
-  :type: PieThreed
+  :type: Pie
   :count: 10
 generate_rows: 
 menu_name: "VMs with Volume Free Space >= 75%"

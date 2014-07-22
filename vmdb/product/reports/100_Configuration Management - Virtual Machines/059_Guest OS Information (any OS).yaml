@@ -6,7 +6,7 @@ conditions:
 updated_on: 2008-08-14 15:18:19.546191 Z
 order: Ascending
 graph: 
-  :type: PieThreed
+  :type: Pie
   :count: 10
   :other: true
 menu_name: "Guest OS Information - any OS"

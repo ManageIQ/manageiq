@@ -18,7 +18,7 @@ updated_on: 2009-11-10 21:28:30.163529 Z
 order: Ascending
 graph: 
   :other: true
-  :type: PieThreed
+  :type: Pie
   :count: 10
 generate_rows: 
 menu_name: "Summary of VM Create and Deletes"
