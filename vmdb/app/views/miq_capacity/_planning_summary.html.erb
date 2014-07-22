@@ -7,7 +7,7 @@
   <% if @perf_record %>
     <p class="legend">Display Options</p>
       <dl class="dl-horizontal">
-      <dt>Limit Chart to</dt>
+        <dt>Limit Chart to</dt>
         <dd>
           <%= select_tag("display_vms",
                          options_for_select(Array.new(10) {|i| (i+1)*10},
@@ -18,7 +18,7 @@
           VMs
         </dd>
       </dl>
-
+      <hr>
     <% if @sb[:planning] && @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"] %>
       <%= render(:partial => "layouts/perf_charts",
                  :locals  => {:charts       => @sb[:planning][:charts], 
@@ -34,19 +34,20 @@
       </div>
       
     <% end %>
-
+<br clear="all">
+<hr>
     <% if @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"] %>
       <p class="legend">Eligible <%= ui_lookup(:models => @sb[:planning][:options][:target_typ]) %></p>
       <table class="style3">
         <thead>
           <tr>
-            <th nowrap>
+            <th>
               Rank
             </th>
-            <th nowrap>
+            <th>
               Name
             </th>
-            <th nowrap>
+            <th>
               Max VMs
             </th>
           </tr>
