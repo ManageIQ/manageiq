@@ -748,10 +748,10 @@ module EmsRefresh::Parsers::Rhevm
 
     custom_attrs.each do |ca|
       new_result = {
-        :section  => 'custom_field',
-        :name  => ca[:name],
-        :value => ca[:value] ,
-        :source => "VC",
+        :section => 'custom_field',
+        :name    => ca[:name],
+        :value   => ca[:value].try(:truncate, 255),
+        :source  => "VC",
       }
       result << new_result
     end
