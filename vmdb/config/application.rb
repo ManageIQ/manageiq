@@ -106,7 +106,7 @@ module Vmdb
     config.colorize_logging = false
 
     config.after_initialize do
-      VMDB::Initializer.init
+      Vmdb::Initializer.init
     end
   end
 end

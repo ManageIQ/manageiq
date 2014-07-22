@@ -1,7 +1,7 @@
-module VMDB
+module Vmdb
   module Initializer
     def self.init
-      log_prefix = "VMDB::Initializer.init"
+      log_prefix = "Vmdb::Initializer.init"
       $log.info "#{log_prefix} - Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
 
       if MiqEnvironment::Process.is_web_server_worker?
