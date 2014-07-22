@@ -8,6 +8,28 @@ class MiqLdap
 
   attr_accessor :basedn
 
+  def self.validate_connection(config)
+    errors = {}
+
+    auth = config[:authentication]
+    begin
+      ldap = new(
+        :host => auth[:ldaphost],
+        :port => auth[:ldapport],
+        :mode => auth[:mode]
+      )
+      ldap.ldap.auth(auth[:bind_dn], auth[:bind_pwd]) if auth[:ldap_role] == true
+      result = ldap.ldap.bind
+    rescue Exception => err
+      result = false
+      errors[[:authentication, auth[:mode]].join("_")] = err.message
+    else
+      errors[[:authentication, auth[:mode]].join("_")] = "Authentication failed" unless result
+    end
+
+    return result, errors
+  end
+
   def initialize(options = {})
     log_prefix = "MIQ(MiqLdap.initialize)"
     @auth = options[:auth] || VMDB::Config.new("vmdb").config[:authentication]
