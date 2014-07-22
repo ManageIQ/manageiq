@@ -341,9 +341,6 @@ module VMDB
 
       @config_mtime   = @@cached_configs[@name][:mtime]
       @template_mtime = @@cached_configs[@name][:mtime_tmpl]
-
-      #TODO: the log_limit method should really register a callback that the update_cache method then loops over
-      $log.on_config_change(@@cached_configs[@name][:data]) if $log.respond_to?(:on_config_change)
     end
 
     def validate
@@ -511,14 +508,6 @@ module VMDB
       fh.info "VMDB settings:"
       vmdb_config = Config.new("vmdb").config
       VMDBLogger.log_hashes(fh, vmdb_config, :filter => "bind_pwd")
-
-      line_limit = vmdb_config[:log][:line_limit].to_i
-      if line_limit > 0
-        line_limit = 132 if line_limit < 132
-        fh.info "Log line is trimmed to #{line_limit} symbols"
-      else
-        fh.info "Log line size is set not to be trimmed."
-      end
       fh.info "VMDB settings END"
 
       fh.info "---"
