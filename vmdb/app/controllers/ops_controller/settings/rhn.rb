@@ -226,8 +226,7 @@ module OpsController::Settings::RHN
   end
 
   def repo_default_name
-    register_to_from_edit = session.fetch_path(:edit, :new, :register_to)
-    params[:repo_name] = MiqDatabase.registration_default_value_for_update_repo_name(register_to_from_edit)
+    reset_repo_name_from_default
     settings_form_field_changed
   end
 
@@ -330,5 +329,12 @@ module OpsController::Settings::RHN
     }
 
     replace_right_cell('rhn')
+  end
+
+  private
+
+  def reset_repo_name_from_default
+    register_to_from_edit = session.fetch_path(:edit, :new, :register_to)
+    session.store_path(:edit, :new, :repo_name, MiqDatabase.registration_default_value_for_update_repo_name(register_to_from_edit))
   end
 end
