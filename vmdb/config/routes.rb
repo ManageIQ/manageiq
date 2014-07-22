@@ -1722,6 +1722,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        launch_vmware_console
         protect
         show
         tagging_edit
@@ -1769,7 +1770,6 @@ Vmdb::Application.routes.draw do
         groups
         guest_applications
         kernel_drivers
-        launch_vmware_console
         linux_initprocesses
         ontap_file_shares
         ontap_logical_disks

@@ -37,6 +37,7 @@ describe VmOrTemplateController do
     drift_to_csv
     drift_to_pdf
     drift_to_txt
+    launch_vmware_console
     vm_show
   ).each do |path|
     describe "##{path}" do
@@ -67,7 +68,6 @@ describe VmOrTemplateController do
     groups
     guest_applications
     kernel_drivers
-    launch_vmware_console
     linux_initprocesses
     ontap_file_shares
     ontap_logical_disks

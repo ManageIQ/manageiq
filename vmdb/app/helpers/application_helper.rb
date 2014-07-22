@@ -1288,7 +1288,7 @@ module ApplicationHelper
       when "vm_collect_running_processes", "vm_vdi_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vdi_console", "vm_vmrc_console", "vm_vdi_vmrc_console"
-        if !is_browser?(%w(explorer firefox mozilla)) ||
+        if !is_browser?(%w(explorer firefox mozilla chrome)) ||
           !is_browser_os?(%w(windows linux))
           return "The web-based console is only available on IE, Firefox or Chrome (Windows/Linux)"
         end
