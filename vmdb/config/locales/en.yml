@@ -624,3 +624,923 @@ en:
     miq_policy: Policy
     miq_alert: Alert
     condition: Condition
+
+  dictionary:
+    column:
+      # "." character not allowed in column key
+      availability_zone:
+        total_vms: Total Instances
+
+      ems_cloud:
+        total_miq_templates: Total Images
+        total_vms:           Total Instances
+
+      EmsClusterPerformance:
+        cpu_usage_rate_average:                                                CPU - Aggregate Usage Rate for Child Hosts for Collected Intervals (%)
+        derived_cpu_available:                                                 CPU - Total Installed - Sum of Child Hosts (MHz)
+        disk_usage_rate_average:                                               Disk I/O - Aggregate of Avg for Child Hosts (KBps)
+        max_cpu_usage_rate_average:                                            CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals (%)
+        max_cpu_usage_rate_average_avg_over_time_period:                       CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day Avg (%)
+        max_cpu_usage_rate_average_avg_over_time_period_without_overhead:      CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host Overhead 30 Day Avg (%)
+        max_cpu_usage_rate_average_high_over_time_period:                      CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day High Avg (%)
+        max_cpu_usage_rate_average_high_over_time_period_without_overhead:     CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host Overhead 30 Day High Avg (%)
+        max_cpu_usage_rate_average_low_over_time_period:                       CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day Low Avg (%)
+        max_cpu_usage_rate_average_low_over_time_period_without_overhead:      CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host Overhead 30 Day Low Avg (%)
+        max_cpu_usagemhz_rate_average:                                         CPU - Peak Usage Rate Avg for Child Hosts for Collected intervals (MHz)
+        max_disk_usage_rate_average:                                           Disk I/O - Peak Avg for Child Hosts  for Collected Intervals (KBps)
+        max_mem_usage_absolute_average:                                        Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals (%)
+        max_mem_usage_absolute_average_avg_over_time_period:                   Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals 30 Day Avg (%)
+        max_mem_usage_absolute_average_avg_over_time_period_without_overhead:  Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals Without Host Overhead 30 Day Avg (%)
+        max_mem_usage_absolute_average_high_over_time_period:                  Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals 30 Day High Avg (%)
+        max_mem_usage_absolute_average_high_over_time_period_without_overhead: Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals Without Host Overhead 30 Day High Avg (%)
+        max_mem_usage_absolute_average_low_over_time_period:                   Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals 30 Day Low Avg (%)
+        max_mem_usage_absolute_average_low_over_time_period_without_overhead:  Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals Without Host Overhead 30 Day Low Avg (%)
+        max_net_usage_rate_average:                                            Network I/O - Peak Avg for Child Hosts for Collected Intervals (KBps)
+        mem_usage_absolute_average:                                            Memory - Avg Usage of Total Allocated for Collected Intervals (%)
+        min_cpu_usage_rate_average:                                            CPU - Min Usage Rate Avg for Child Hosts for Collected Intervals (%)
+        min_cpu_usagemhz_rate_average:                                         CPU - Min Usage Rate Avg for Child Hosts for Collected Intervals (MHz)
+        min_disk_usage_rate_average:                                           Disk I/O - Min Avg for Child Hosts for Collected Intervals (KBps)
+        min_mem_usage_absolute_average:                                        Memory - Min Aggregate Usage of Allocated for Child Hosts for Collected Intervals (%)
+        min_net_usage_rate_average:                                            Network I/O - Min Avg for Child Hosts for Collected Intervals (KBps)
+        net_usage_rate_average:                                                Network I/O - Aggregate of Avg for Child Hosts (KBps)
+
+      flavor:
+        total_vms: Total Instances
+
+      HostPerformance:
+        derived_cpu_available: CPU - Total Installed - from Host Analysis (MHz)
+
+      StoragePerformance:
+        max_derived_storage_total: Disk Space Max Total
+
+      Vm:
+        cpu_usagemhz_rate_average_avg_over_time_period:  CPU - Usage Rate for Collected Intervals 30 Day Avg (MHz)
+        cpu_usagemhz_rate_average_high_over_time_period: CPU - Usage Rate for Collected Intervals 30 Day High Avg (MHz)
+        cpu_usagemhz_rate_average_low_over_time_period:  CPU - Usage Rate for Collected Intervals 30 Day Low Avg (MHz)
+        derived_memory_used_avg_over_time_period:        Memory - Avg Used for Collected Intervals 30 Day Avg (MB)
+        derived_memory_used_high_over_time_period:       Memory - Avg Used for Collected Intervals 30 Day High Avg (MB)
+        derived_memory_used_low_over_time_period:        Memory - Avg Used for Collected Intervals 30 Day Low Avg (MB)
+
+      VmPerformance:
+        cpu_ready_delta_summation:     CPU - Time Spent In Ready State (ms)
+        cpu_system_delta_summation:    CPU - Time Spent in System State (ms)
+        cpu_usagemhz_rate_average:     CPU - Usage Rate for Collected Intervals (MHz)
+        cpu_used_delta_summation:      CPU - Time Used (ms)
+        cpu_wait_delta_summation:      CPU - Time Spent in Wait State (ms)
+        derived_cpu_available:         CPU - Total - from VM Analysis (MHz)
+        derived_cpu_reserved:          CPU - Reserved (MHz)
+        derived_memory_available:      Memory - Total Allocated (MB)
+        derived_memory_reserved:       Memory - Reserved (MB)
+        derived_memory_used:           Memory - Avg Used for Collected Intervals (MB)
+        max_derived_cpu_reserved:      CPU Max Reserved MHz
+        max_derived_memory_available:  Memory Max Allocated
+        max_derived_memory_reserved:   Memory Max Reserved
+        max_derived_memory_used:       Memory - Peak Avg Used for Collected Intervals (MB)
+        min_derived_memory_used:       Memory - Minimum Avg Used for Collected Intervals (MB)
+        v_derived_cpu_reserved_pct:    CPU - Reserved (%)
+        v_derived_memory_reserved_pct: Memory - Reserved (%)
+
+      abs_max_cpu_usage_rate_average_timestamp: CPU - Absolute Max Usage Rate (Timestamp)
+      abs_max_cpu_usage_rate_average_value: CPU - Absolute Max Usage Rate (%)
+      abs_max_disk_usage_rate_average_timestamp: Disk I/O - Absolute Max Usage Rate (Timestamp)
+      abs_max_disk_usage_rate_average_value: Disk I/O - Absolute Max Usage Rate (KBps)
+      abs_max_mem_usage_absolute_average_timestamp: Memory - Absolute Max Usage Rate (Timestamp)
+      abs_max_mem_usage_absolute_average_value: Memory - Absolute Max Usage Rate (%)
+      abs_max_net_usage_rate_average_timestamp: Network I/O - Absolute Max Usage Rate (Timestamp)
+      abs_max_net_usage_rate_average_value: Network I/O - Absolute Max Usage Rate (KBps)
+      abs_min_cpu_usage_rate_average_timestamp: CPU - Absolute Min Usage Rate (Timestamp)
+      abs_min_cpu_usage_rate_average_value: CPU - Absolute Min Usage Rate (%)
+      abs_min_disk_usage_rate_average_timestamp: Disk I/O - Absolute Min Usage Rate (Timestamp)
+      abs_min_disk_usage_rate_average_value: Disk I/O - Absolute Min Usage Rate (KBps)
+      abs_min_mem_usage_absolute_average_timestamp: Memory - Absolute Min Usage Rate (Timestamp)
+      abs_min_mem_usage_absolute_average_value: Memory - Absolute Min Usage Rate (%)
+      abs_min_net_usage_rate_average_timestamp: Network I/O - Absolute Min Usage Rate (Timestamp)
+      abs_min_net_usage_rate_average_value: Network I/O - Absolute Min Usage Rate (KBps)
+      acctid: Account ID
+      accttype: Account Type
+      action_type_description: Type
+      active: Active
+      admin_disabled: Lockdown Mode
+      aggregate_cpu_speed: Total CPU Speed
+      aggregate_logical_cpus: Total Number of Logical CPUs
+      aggregate_memory: Total Memory
+      aggregate_physical_cpus: Total Number of Physical CPUs
+      allocated_memory: Allocated Memory
+      allocated_storage: Allocated Storage
+      allocated_vcpu: Allocated vCPU
+      avg_latency: Usage (All) - Latency in MicroSeconds for All Operations Avg
+      avg_latency_max: Usage (All) - Latency in MicroSeconds for All Operations Avg Max
+      avg_latency_min: Usage (All) - Latency in MicroSeconds for All Operations Avg Min
+      bios: BIOS
+      bios_location: BIOS Location
+      chain_id: Chain ID
+      cifs_other_latency: Usage (CIFS) - Time for Other Operations Avg
+      cifs_other_latency_max: Usage (CIFS) - Time for Other Operations Avg Max
+      cifs_other_latency_min: Usage (CIFS) - Time for Other Operations Avg Min
+      cifs_other_ops: Usage (CIFS) - Number of Other Operations per Second
+      cifs_other_ops_max: Usage (CIFS) - Number of Other Operations per Second Max
+      cifs_other_ops_min: Usage (CIFS) - Number of Other Operations per Second Min
+      cifs_read_data: Usage (CIFS) - Bytes Read per Second
+      cifs_read_data_max: Usage (CIFS) - Bytes Read per Second Max
+      cifs_read_data_min: Usage (CIFS) - Bytes Read per Second Min
+      cifs_read_latency: Usage (CIFS) - Time for Reads Avg
+      cifs_read_latency_max: Usage (CIFS) - Time for Reads Avg Max
+      cifs_read_latency_min: Usage (CIFS) - Time for Reads Avg Min
+      cifs_read_ops: Usage (CIFS) - Number of Reads per Second
+      cifs_read_ops_max: Usage (CIFS) - Number of Reads per Second Max
+      cifs_read_ops_min: Usage (CIFS) - Number of Reads per Second Min
+      cifs_write_data: Usage (CIFS) - Bytes Written per Second
+      cifs_write_data_max: Usage (CIFS) - Bytes Written per Second Max
+      cifs_write_data_min: Usage (CIFS) - Bytes Written per Second Min
+      cifs_write_latency: Usage (CIFS) - Time for Writes Avg
+      cifs_write_latency_max: Usage (CIFS) - Time for Writes Avg Max
+      cifs_write_latency_min: Usage (CIFS) - Time for Writes Avg Min
+      cifs_write_ops: Usage (CIFS) - Number of Writes per Second
+      cifs_write_ops_max: Usage (CIFS) - Number of Writes per Second Max
+      cifs_write_ops_min: Usage (CIFS) - Number of Writes per Second Min
+      config_xml: Configuration XML
+      count_of_trend: Data Points
+      cpu_affinity: CPU Affinity
+      cpu_limit: CPU Limit
+      cpu_ready_delta_summation: CPU - Aggregate Time Child VMs Spent in Ready State (ms)
+      cpu_reserve: CPU Reserve
+      cpu_reserve_expand: CPU Reserve Expand
+      cpu_shares: CPU Shares
+      cpu_shares_level: CPU Shares Level
+      cpu_speed: CPU Speed
+      cpu_system_delta_summation: CPU - Aggregate Time Child VMs Spent in System State (ms)
+      cpu_time: CPU Time
+      cpu_type: CPU Type
+      cpu_usage_rate_average: CPU - Usage Rate for Collected Intervals (%)
+      cpu_usagemhz_rate_average: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals (MHz)
+      cpu_usagemhz_rate_average_avg_over_time_period: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Avg (MHz)
+      cpu_usagemhz_rate_average_high_over_time_period: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day High Avg (MHz)
+      cpu_usagemhz_rate_average_low_over_time_period: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Low Avg (MHz)
+      cpu_usagemhz_rate_average_max_over_time_period: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Max (MHz)
+      cpu_used_delta_summation: CPU - Aggregate Time Used for Child VMs (ms)
+      cpu_wait_delta_summation: CPU - Aggregate Time Spent in Wait State for Child VMs (ms)
+      created_at: Date Created
+      created_on: Date Created
+      depend_on_group: Depends on Group
+      depend_on_service: Depends on Service
+      derived_cpu_available: CPU Total Installed
+      derived_cpu_reserved: CPU - Available (MHz)
+      derived_host_count_off: State - Number of Hosts Powered Off  - Hourly Count / Daily Avg
+      derived_host_count_on: State - Number of Hosts Powered On  - Hourly Count / Daily Avg
+      derived_memory_available: Memory - Total Allocated for Child VMs (MB)
+      derived_memory_reserved: Memory - Available (MB)
+      derived_memory_used: Memory - Aggregate Used for Child VMs for Collected Intervals (MB)
+      derived_memory_used_avg_over_time_period: Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Avg (MB)
+      derived_memory_used_high_over_time_period: Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day High Avg (MB)
+      derived_memory_used_low_over_time_period: Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Low Avg (MB)
+      derived_memory_used_max_over_time_period: Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Max (MB)
+      derived_storage_disk_managed: Content - Avg of Total Size of Managed VMs Disk Files (B)
+      derived_storage_disk_registered: Content - Avg of Total Size of Registered VMs Disk Files (B)
+      derived_storage_disk_unmanaged: Content - Avg of Total Size of Unmanaged VMs Disk Files (B)
+      derived_storage_disk_unregistered: Content - Avg of Total Size of Unregistered VMs Disk Files (B)
+      derived_storage_free: Capacity - Avg Free Space for Collected Intervals (B)
+      derived_storage_mem_managed: Content - Avg of Total Size of Managed VMs Memory Files (B)
+      derived_storage_mem_registered: Content - Avg of Total Size of Registered VMs Memory Files (B)
+      derived_storage_mem_unmanaged: Content - Avg of Total Size of Unmanaged VMs Memory Files (B)
+      derived_storage_mem_unregistered: Content - Avg of Total Size of Unregistered VMs Memory Files (B)
+      derived_storage_snapshot_managed: Content - Avg of Total Size of Managed VMs Snapshot Files (B)
+      derived_storage_snapshot_registered: Content - Avg of Total Size of Registered VMs Snapshot Files (B)
+      derived_storage_snapshot_unmanaged: Content - Avg of Total Size of Unmanaged VMs Snapshot Files (B)
+      derived_storage_snapshot_unregistered: Content - Avg of Total Size of Unregistered VMs Snapshot Files (B)
+      derived_storage_total: Capacity - Total Space (B)
+      derived_storage_used_managed: Content - Avg Space Used by Managed VMs for Collected Intervals (B)
+      derived_storage_used_registered: Content - Avg Space Used by Registered VMs for Collected Intervals (B)
+      derived_storage_used_unmanaged: Content - Avg Space Used by Unmanaged VMs for Collected Intervals (B)
+      derived_storage_used_unregistered: Content - Avg Space Used by Unregistered VMs for Collected Intervals (B)
+      derived_storage_vm_count_managed: Content - Avg Count of Managed VMs
+      derived_storage_vm_count_registered: Content - Avg Count of Registered VMs
+      derived_storage_vm_count_unmanaged: Content - Avg Count of Unmanaged VMs
+      derived_storage_vm_count_unregistered: Content - Avg Count of Unregistered VMs
+      derived_vm_count_off: State - Peak Avg VMs Powered-off - Hourly Count / Daily Avg
+      derived_vm_count_on: State - Peak Avg VMs Powered-On - Hourly Count / Daily Avg
+      dest_host_name: Destination Host Name
+      dest_vm_location: Destination VM Location
+      dest_vm_name: Destination VM Name
+      dhcp_enabled: DHCP Enabled
+      dhcp_server: DHCP Server
+      direction_of_trend: Trend
+      disk_devicelatency_absolute_average: Disk Latency - Avg (ms)
+      disk_kernellatency_absolute_average: Disk Kernel Latency - Avg (ms)
+      disk_queuelatency_absolute_average: Disk Queue Latency - Avg (ms)
+      disk_usage_rate_average: Disk I/O - Avg (KBps)
+      disks_aligned: Disks Aligned
+      dns_server: DNS Server
+      effective_cpu: CPU - Effective
+      effective_memory: Memory - Effective
+      ems_cluster_name: Cluster
+      emstype_description: Type
+      enabled: Active
+      end_trend_value: End
+      evaluation_description: What is evaluated
+      event_src: Event Source
+      filename: File Name
+      fqname: Fully Qualified Name
+      guest_os: Guest OS
+      guid: EVM Unique ID (Guid)
+      has_rdm_disk: Has an RDM Disk?
+      homedir: Home Directory
+      host_name: Parent Host
+      hostnames: Host Names
+      ip_address: IP Address
+      ip_addresses: IP Addresses
+      ipaddress: IP Address
+      ipaddresses: IP Addresses
+      ipmi_address: IPMI IP Address
+      ipmi_enabled: IPMI Enabled
+      is_evm_appliance: Is an EVM Appliance?
+      last_scan_attempt_on: Last Analysis Attempt On
+      last_scan_on: Last Analysis Time
+      last_sync_on: Last Sync Time
+      last_update_status_str: Last Update Status
+      ldap_group: LDAP Group
+      logical_cpus: Number of CPU Cores
+      mac_address: MAC Address
+      mac_addresses: MAC Addresses
+      macaddress: MAC Address
+      macaddresses: MAC Addresses
+      max_cpu_usage_rate_average: CPU - Peak Usage Rate Avg for Collected Intervals (%)
+      max_cpu_usage_rate_average_avg_over_time_period: CPU - Peak Usage Rate Avg for Collected Intervals 30 Day Avg (%)
+      max_cpu_usage_rate_average_avg_over_time_period_without_overhead: CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day Avg (%)
+      max_cpu_usage_rate_average_high_over_time_period: CPU - Peak Usage Rate Avg for Collected Intervals 30 Day High Avg (%)
+      max_cpu_usage_rate_average_high_over_time_period_without_overhead: CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day High Avg (%)
+      max_cpu_usage_rate_average_low_over_time_period: CPU - Peak Usage Rate Avg for Collected Intervals 30 Day Low Avg (%)
+      max_cpu_usage_rate_average_low_over_time_period_without_overhead: CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day Low Avg (%)
+      max_cpu_usage_rate_average_max_over_time_period: CPU - Peak Usage Rate for Collected Intervals 30 Day Max (%)
+      max_cpu_usage_rate_average_max_over_time_period_without_overhead: CPU - Peak Usage Rate for Collected Intervals Without Host Overhead 30 Day Max (%)
+      max_cpu_usagemhz_rate_average: CPU - Peak Usage Rate for Collected Intervals (MHz)
+      max_derived_cpu_available: CPU Max Total MHz
+      max_derived_cpu_reserved: CPU Max Available MHz
+      max_derived_host_count_off: State - Peak Number of Hosts Powered Off  - Hourly Count / Daily Avg
+      max_derived_host_count_on: State - Peak Number of Hosts Powered On  - Hourly Count / Daily Avg
+      max_derived_memory_available: Memory Max Total
+      max_derived_memory_reserved: Memory Max Available
+      max_derived_memory_used: Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB)
+      max_derived_storage_free: Disk Space Max Free
+      max_derived_storage_total: Disk Space Max Total
+      max_derived_vm_count_off: State - Peak Number of VMs Powered Off  - Hourly Count / Daily Avg
+      max_derived_vm_count_on: State - Peak Number of VMs Powered On  - Hourly Count / Daily Avg
+      max_disk_usage_rate_average: Disk I/O - Peak Avg for Collected Intervals (KBps)
+      max_mem_swapin_absolute_average: Memory - Swap In Max Average
+      max_mem_swapout_absolute_average: Memory - Swap Out Max Average
+      max_mem_swapped_absolute_average: Memory - Swapped Max Average
+      max_mem_swaptarget_absolute_average: Memory - Swap Target Max Average
+      max_mem_usage_absolute_average: Memory - Peak Usage of Allocated for Collected Intervals (%)
+      max_mem_usage_absolute_average_avg_over_time_period: Memory - Peak Usage of Allocated for Collected Intervals 30 Day Avg (%)
+      max_mem_usage_absolute_average_avg_over_time_period_without_overhead: Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day Avg (%)
+      max_mem_usage_absolute_average_high_over_time_period: Memory - Peak Usage of Allocated for Collected Intervals 30 Day High Avg (%)
+      max_mem_usage_absolute_average_high_over_time_period_without_overhead: Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day High Avg (%)
+      max_mem_usage_absolute_average_low_over_time_period: Memory - Peak Usage of Allocated for Collected Intervals 30 Day Low Avg (%)
+      max_mem_usage_absolute_average_low_over_time_period_without_overhead: Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day Low Avg (%)
+      max_mem_usage_absolute_average_max_over_time_period: Memory - Peak Usage of Allocated for Collected Intervals 30 Day Max (%)
+      max_mem_usage_absolute_average_max_over_time_period_without_overhead: Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead 30 Day Max (%)
+      max_mem_vmmemctl_absolute_average: Memory - Balloon Max Average
+      max_mem_vmmemctltarget_absolute_average: Memory - Balloon Target Max Average
+      max_net_usage_rate_average: Network I/O - Peak Avg for Collected Intervals (KBps)
+      max_sys_uptime_absolute_latest: Uptime - Peak Uptime for Collected Intervals (Seconds)
+      max_trend_value: Max
+      max_v_derived_storage_used: Disk Space Max Used
+      mem_cpu: Memory
+      mem_swapin_absolute_average: Memory - Swap In Average
+      mem_swapout_absolute_average: Memory - Swap Out Average
+      mem_swapped_absolute_average: Memory - Swapped Average
+      mem_swaptarget_absolute_average: Memory - Swap Target Average
+      mem_usage_absolute_average: Memory - Usage of Total Allocated (%)
+      mem_vmmemctl_absolute_average: Memory - Balloon Average
+      mem_vmmemctltarget_absolute_average: Memory - Balloon Target Average
+      memory_cpu: RAM
+      memory_size: Memory Usage
+      min_cpu_usage_rate_average: CPU - Min Usage Rate for Collected Intervals (%)
+      min_cpu_usagemhz_rate_average: CPU - Min Usage for Collected Intervals (MHz)
+      min_derived_host_count_off: State - Min Number of Hosts Powered Off  - Hourly Count / Daily Avg
+      min_derived_host_count_on: State - Min Number of Hosts Powered On  - Hourly Count / Daily Avg
+      min_derived_memory_used: Memory - Minimum Aggregate Avg Used for Child VMs for Collected Intervals (MB)
+      min_derived_storage_free: Disk Space Min Free
+      min_derived_vm_count_off: State - Min Number of VMs Powered Off  - Hourly Count / Daily Avg
+      min_derived_vm_count_on: State - Min Number of VMs Powered On  - Hourly Count / Daily Avg
+      min_disk_usage_rate_average: Disk I/O - Min Avg for Collected Intervals (KBps)
+      min_mem_swapin_absolute_average: Memory - Swap In Min Average
+      min_mem_swapout_absolute_average: Memory - Swap Out Min Average
+      min_mem_swapped_absolute_average: Memory - Swapped Min Average
+      min_mem_swaptarget_absolute_average: Memory - Swap Min Target Average
+      min_mem_usage_absolute_average: Memory - Min Usage of Allocated for Collected Intervals (%)
+      min_mem_vmmemctl_absolute_average: Memory - Balloon Min Average
+      min_mem_vmmemctltarget_absolute_average: Memory - Balloon Target Min Average
+      min_net_usage_rate_average: Network I/O - Min Avg for Collected Intervals (KBps)
+      min_sys_uptime_absolute_latest: Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)
+      min_trend_value: Min
+      min_v_derived_storage_used: Disk Space Min Used
+      mode: Type
+      multiplehostaccess: Multiple Host Access
+      net_usage_rate_average: Network I/O - Avg (KBps)
+      nfs_other_latency: Usage (NFS) - Time for Other Operations Avg
+      nfs_other_latency_max: Usage (NFS) - Time for Other Operations Avg Max
+      nfs_other_latency_min: Usage (NFS) - Time for Other Operations Avg Min
+      nfs_other_ops: Usage (NFS) - Number of Other Operations per Second
+      nfs_other_ops_max: Usage (NFS) - Number of Other Operations per Second Max
+      nfs_other_ops_min: Usage (NFS) - Number of Other Operations per Second Min
+      nfs_read_data: Usage (NFS) - Bytes Read per Second
+      nfs_read_data_max: Usage (NFS) - Bytes Read per Second Max
+      nfs_read_data_min: Usage (NFS) - Bytes Read per Second Min
+      nfs_read_latency: Usage (NFS) - Time for Reads Avg
+      nfs_read_latency_max: Usage (NFS) - Time for Reads Avg Max
+      nfs_read_latency_min: Usage (NFS) - Time for Reads Avg Min
+      nfs_read_ops: Usage (NFS) - Number of Reads per Second
+      nfs_read_ops_max: Usage (NFS) - Number of Reads per Second Max
+      nfs_read_ops_min: Usage (NFS) - Number of Reads per Second Min
+      nfs_write_data: Usage (NFS) - Bytes Written per Second
+      nfs_write_data_max: Usage (NFS) - Bytes Written per Second Max
+      nfs_write_data_min: Usage (NFS) - Bytes Written per Second Min
+      nfs_write_latency: Usage (NFS) - Time for Writes Avg
+      nfs_write_latency_max: Usage (NFS) - Time for Writes Avg Max
+      nfs_write_latency_min: Usage (NFS) - Time for Writes Avg Min
+      nfs_write_ops: Usage (NFS) - Number of Writes per Second
+      nfs_write_ops_max: Usage (NFS) - Number of Writes per Second Max
+      nfs_write_ops_min: Usage (NFS) - Number of Writes per Second Min
+      notify_automate: Management Event Raised
+      notify_email: Email
+      notify_evm_event: Event on Timeline
+      notify_snmp: SNMP
+      num_cpu: Number of CPUs
+      num_disks: Number of Disks
+      num_hard_disks: Number of Hard Disks
+      numvcpus: Number of CPUs
+      os_image_name: OS Name
+      other_latency: Usage (Other) - Time for Other Operations Avg
+      other_latency_max: Usage (Other) - Time for Other Operations Avg Max
+      other_latency_min: Usage (Other) - Time for Other Operations Avg Min
+      other_ops: Usage (Other) - Number of Other Operations per Second
+      other_ops_max: Usage (Other) - Number of Other Operations per Second Max
+      other_ops_min: Usage (Other) - Number of Other Operations per Second Miin
+      overallocated_mem_pct: Memory - % Overallocated
+      overallocated_vcpus_pct: CPU - % Overallocated
+      owned_by_current_ldap_group: In My LDAP Group?
+      owned_by_current_user: Owned by Me?
+      owning_ldap_group: LDAP Group
+      parent_blue_folder_1_name: Folder Name (VMs & Templates) 1
+      parent_blue_folder_2_name: Folder Name (VMs & Templates) 2
+      parent_blue_folder_3_name: Folder Name (VMs & Templates) 3
+      parent_blue_folder_4_name: Folder Name (VMs & Templates) 4
+      parent_blue_folder_5_name: Folder Name (VMs & Templates) 5
+      parent_blue_folder_6_name: Folder Name (VMs & Templates) 6
+      parent_blue_folder_7_name: Folder Name (VMs & Templates) 7
+      parent_blue_folder_8_name: Folder Name (VMs & Templates) 8
+      parent_blue_folder_9_name: Folder Name (VMs & Templates) 9
+      partitions_aligned: Partitions Aligned
+      percent_cpu: CPU %
+      percent_memory: Memory %
+      pid: PID
+      provisioned_storage: Total Provisioned Space
+      ram_size: RAM Size (MB)
+      read_data: Usage (Other) - Bytes Read per Second
+      read_data_max: Usage (Other) - Bytes Read per Second Max
+      read_data_min: Usage (Other) - Bytes Read per Second Min
+      read_latency: Usage (Other) - Time for Reads Avg
+      read_latency_max: Usage (Other) - Time for Reads Avg Max
+      read_latency_min: Usage (Other) - Time for Reads Avg Min
+      read_ops: Usage (Other) - Number of Reads per Second
+      read_ops_max: Usage (Other) - Number of Reads per Second Max
+      read_ops_min: Usage (Other) - Number of Reads per Second Min
+      resource_name: Asset Name
+      total_vms_never: Total VMs Powered Never
+      total_vms_off: Total VMs Powered Off
+      total_vms_on: Total VMs Powered On
+      total_vms_suspended: Total VMs Power Suspended
+      total_vms_unknown: Total VMs Powered Unknown
+      v_derived_cpu_reserved_pct: CPU - Available (%)
+      v_derived_host_count: State - Number of Hosts  - Hourly Count / Daily Avg
+      v_derived_memory_reserved_pct: Memory - Available (%)
+      v_derived_vm_count: State - Peak Avg VMs - Hourly Count / Daily Avg
+
+      # Right-Sizing Recommendations
+      aggressive_mem_recommended_change: Memory - Aggressive Recommendation Savings
+      aggressive_mem_recommended_change_pct: Memory - Aggressive Recommendation Savings (%)
+      aggressive_recommended_mem: Memory - Aggressive Recommendation
+      aggressive_recommended_vcpus: CPU - Aggressive Recommendation
+      aggressive_vcpus_recommended_change: CPU - Aggressive Recommendation Savings
+      aggressive_vcpus_recommended_change_pct: CPU - Aggressive Recommendation Savings (%)
+      capacity_profile_1_available_host_memory: Capacity - Profile 1 - Total Memory with HA
+      capacity_profile_1_available_host_vcpu: Capacity - Profile 1 - Total CPU with HA
+      capacity_profile_1_memory_commitment_ratio: Capacity - Profile 1 - Memory Commitment Ratio
+      capacity_profile_1_memory_maximum: Capacity - Profile 1 - Maximum Memory per VM
+      capacity_profile_1_memory_method: Capacity - Profile 1 - Memory Calculation Method
+      capacity_profile_1_memory_minimum: Capacity - Profile 1 - Minimum Memory per VM
+      capacity_profile_1_memory_per_vm: Capacity - Profile 1 - Memory per VM
+      capacity_profile_1_memory_per_vm_with_min_max: Capacity - Profile 1 - Memory per VM Used in Calculation
+      capacity_profile_1_projected_vm_count_based_on_all: Capacity - Profile 1 - VM Count (combined)
+      capacity_profile_1_projected_vm_count_based_on_memory: Capacity - Profile 1 - VM Count based on Memory
+      capacity_profile_1_projected_vm_count_based_on_vcpu: Capacity - Profile 1 - VM Count based on vCPU
+      capacity_profile_1_remaining_host_memory: Capacity - Profile 1 - Available Memory for New VMs
+      capacity_profile_1_remaining_host_vcpu: Capacity - Profile 1 - Available vCPUs for New VMs
+      capacity_profile_1_remaining_vm_count_based_on_all: Capacity - Profile 1 - Available VM Count (combined)
+      capacity_profile_1_remaining_vm_count_based_on_memory: Capacity - Profile 1 - Available VM Count based on Memory
+      capacity_profile_1_remaining_vm_count_based_on_vcpu: Capacity - Profile 1 - Available VM Count based on vCPU
+      capacity_profile_1_vcpu_commitment_ratio: Capacity - Profile 1 - vCPU Commitment Ratio
+      capacity_profile_1_vcpu_maximum: Capacity - Profile 1 - Maximum vCPU per VM
+      capacity_profile_1_vcpu_method: Capacity - Profile 1 - vCPU Calculation Method
+      capacity_profile_1_vcpu_minimum: Capacity - Profile 1 - Minimum vCPU per VM
+      capacity_profile_1_vcpu_per_vm: Capacity - Profile 1 - Number of vCPUs per VM
+      capacity_profile_1_vcpu_per_vm_with_min_max: Capacity - Profile 1 - Number of vCPUs per VM Used in Calculation
+      capacity_profile_2_available_host_memory: Capacity - Profile 2 - Memory Effective with HA
+      capacity_profile_2_available_host_vcpu: Capacity - Profile 2 - CPU Effective with HA (Mhz)
+      capacity_profile_2_memory_commitment_ratio: Capacity - Profile 2 - Memory Commitment Ratio
+      capacity_profile_2_memory_maximum: Capacity - Profile 2 - Maximum Memory per VM
+      capacity_profile_2_memory_method: Capacity - Profile 2 - Memory Calculation Method
+      capacity_profile_2_memory_minimum: Capacity - Profile 2 - Minimum Memory per VM
+      capacity_profile_2_memory_per_vm: Capacity - Profile 2 - Memory per VM
+      capacity_profile_2_memory_per_vm_with_min_max: Capacity - Profile 2 - Memory per VM Used in Calculation
+      capacity_profile_2_projected_vm_count_based_on_all: Capacity - Profile 2 - VM Count (combined)
+      capacity_profile_2_projected_vm_count_based_on_memory: Capacity - Profile 2 - VM Count based on Memory
+      capacity_profile_2_projected_vm_count_based_on_vcpu: Capacity - Profile 2 - VM Count based on vCPU
+      capacity_profile_2_remaining_host_memory: Capacity - Profile 2 - Available Memory for New VMs
+      capacity_profile_2_remaining_host_vcpu: Capacity - Profile 2 - Available vCPUs for New VMs (Mhz)
+      capacity_profile_2_remaining_vm_count_based_on_all: Capacity - Profile 2 - Available VM Count (combined)
+      capacity_profile_2_remaining_vm_count_based_on_memory: Capacity - Profile 2 - Available VM Count based on Memory
+      capacity_profile_2_remaining_vm_count_based_on_vcpu: Capacity - Profile 2 - Available VM Count based on vCPU
+      capacity_profile_2_vcpu_commitment_ratio: Capacity - Profile 2 - vCPU Commitment Ratio
+      capacity_profile_2_vcpu_maximum: Capacity - Profile 2 - Maximum vCPU per VM (Mhz)
+      capacity_profile_2_vcpu_method: Capacity - Profile 2 - vCPU Calculation Method
+      capacity_profile_2_vcpu_minimum: Capacity - Profile 2 - Minimum vCPU per VM (Mhz)
+      capacity_profile_2_vcpu_per_vm: Capacity - Profile 2 - CPU Peak Avg per VM (Mhz)
+      capacity_profile_2_vcpu_per_vm_with_min_max: Capacity - Profile 2 - CPU Peak Avg per VM Used in Calculation (Mhz)
+      conservative_mem_recommended_change: Memory - Conservative Recommendation Savings
+      conservative_mem_recommended_change_pct: Memory - Conservative Recommendation Savings (%)
+      conservative_recommended_mem: Memory - Conservative Recommendation
+      conservative_recommended_vcpus: CPU - Conservative Recommendation
+      conservative_vcpus_recommended_change: CPU - Conservative Recommendation Savings
+      conservative_vcpus_recommended_change_pct: CPU - Conservative Recommendation Savings (%)
+      ems_created_on: Created on Time
+      moderate_mem_recommended_change: Memory - Moderate Recommendation Savings
+      moderate_mem_recommended_change_pct: Memory - Moderate Recommendation Savings (%)
+      moderate_recommended_mem: Memory - Moderate Recommendation
+      moderate_recommended_vcpus: CPU - Moderate Recommendation
+      moderate_vcpus_recommended_change: CPU - Moderate Recommendation Savings
+      moderate_vcpus_recommended_change_pct: CPU - Moderate Recommendation Savings (%)
+      recommended_mem: Memory - Recommendation
+      recommended_vcpus: CPU - Recommendation
+      san_other_latency: Usage (Other) - Time for Other Block Protocol Operations Avg
+      san_other_latency_max: Usage (Other) - Time for Other Block Protocol Operations Avg Max
+      san_other_latency_min: Usage (Other) - Time for Other Block Protocol Operations Avg Min
+      san_other_ops: Usage (Block Protocol) - Number of Other Operations per Second
+      san_other_ops_max: Usage (Block Protocol) - Number of Other Operations per Second Max
+      san_other_ops_min: Usage (Block Protocol) - Number of Other Operations per Second Min
+      san_read_data: Usage (Block Protocol) - Bytes Read per Second
+      san_read_data_max: Usage (Block Protocol) - Bytes Read per Second Max
+      san_read_data_min: Usage (Block Protocol) - Bytes Read per Second Min
+      san_read_latency: Usage (Block Protocol) - Time for Reads Avg
+      san_read_latency_max: Usage (Block Protocol) - Time for Reads Avg Max
+      san_read_latency_min: Usage (Block Protocol) - Time for Reads Avg Min
+      san_read_ops: Usage (Block Protocol) - Number of Reads per Second
+      san_read_ops_max: Usage (Block Protocol) - Number of Reads per Second Max
+      san_read_ops_min: Usage (Block Protocol) - Number of Reads per Second Min
+      san_write_data: Usage (Block Protocol) - Bytes Written per Second
+      san_write_data_max: Usage (Block Protocol) - Bytes Written per Second Max
+      san_write_data_min: Usage (Block Protocol) - Bytes Written per Second Min
+      san_write_latency: Usage (Block Protocol) - Time for Writes Avg
+      san_write_latency_max: Usage (Block Protocol) - Time for Writes Avg Max
+      san_write_latency_min: Usage (Block Protocol) - Time for Writes Avg Min
+      san_write_ops: Usage (Block Protocol) - Number of Writes per Second
+      san_write_ops_max: Usage (Block Protocol) - Number of Writes per Second Max
+      san_write_ops_min: Usage (Block Protocol) - Number of Writes per Second Min
+      slope: Slope
+      src_host_name: Source Host Name
+      src_vm_location: Source VM Location
+      src_vm_name: Source VM Name
+      ssh_permit_root_login: SSH Root Access
+      start_trend_value: Start
+      svc_type: Service Type
+      sys_uptime_absolute_latest: Asset - Uptime (Seconds)
+      thin_provisioned: Thin Provisioned
+      timestamp: Activity Sample - Timestamp (Day/Time)
+      total_ops: Usage (All) - Number of Operations per Second
+      total_ops_max: Usage (All) - Number of Operations per Second Max
+      total_ops_min: Usage (All) - Number of Operations per Second Min
+      trend_cpu_usagemhz_rate_average: CPU Average Used MHz Trend
+      trend_derived_memory_used: Memory Average Used Trend
+      trend_max_cpu_usagemhz_rate_average: CPU Max Used MHz Trend
+      trend_max_derived_memory_used: Memory Max Used Trend
+      trend_max_disk_usage_rate_average: Disk I/O Max Trend
+      trend_max_net_usage_rate_average: Network I/O Max Trend
+      trend_max_v_derived_storage_used: Disk Space Max Trend
+      trend_v_derived_storage_used: Disk Space Average Trend
+      typename: Type Name
+      uid: UID
+      uncommitted_storage: Uncommitted Space
+      updated_at: Date Updated
+      updated_on: Date Updated
+      used_disk_storage: Total Used Disk Space
+      used_percent_of_provisioned: Percent Used Provisioned Space
+      used_storage_by_state: Currently Used Space
+      v_arch: Architecture
+      v_cpu_vr_ratio: CPU Cores Virtual to Real Ratio
+      v_datastore_path: Datastore Path
+      v_date: Activity Sample - Day (MM DD YY)
+      v_debris_percent_of_used: Non-VM Files Percent of Used
+      v_derived_storage_used: Capacity - Used Space (B)
+      v_direct_vms: Direct VMs
+      v_disk_percent_of_used: Disk Files Percent of Used
+      v_free_space_percent_of_total: Free Space Percent of Total
+      v_host_vmm_product: Parent Host Platform
+      v_is_a_template: Is a Template
+      v_memory_percent_of_used: VM Memory Files Percent of Used
+      v_message: Message
+      v_owning_blue_folder: Parent Folder (VMs & Templates)
+      v_owning_blue_folder_path: Parent Folder Path (VMs & Templates)
+      v_owning_cluster: Parent Cluster
+      v_owning_datacenter: Parent Datacenter
+      v_owning_folder: Parent Folder (Hosts & Clusters)
+      v_owning_folder_path: Parent Folder Path (Hosts & Clusters)
+      v_owning_resource_pool: Parent Resource Pool
+      v_parent_cluster: Parent Cluster
+      v_parent_datacenter: Parent Datacenter
+      v_parent_folder: Parent Folder
+      v_parent_host: Parent Host
+      v_parent_resource_pool: Parent Resource Pool
+      v_pct_cpu_ready_delta_summation: CPU - % Ready
+      v_pct_cpu_used_delta_summation: CPU - % Used
+      v_pct_cpu_wait_delta_summation: CPU - % Wait
+      v_pct_free_disk_space: Pct Free Disk
+      v_provisioned_percent_of_total: Provisioned Space Percent of Total
+      v_qualified_desc: Cluster in Datacenter
+      v_ram_vr_ratio: Memory Virtual to Real Ratio
+      v_size_numeric: Size
+      v_snapshot_percent_of_used: Snapshot Files Percent of Used
+      v_time: Activity Sample - Time (HH MM SS)
+      v_total_debris_size: Size of Non-VM Files
+      v_total_disk_size: Size of VM Provisioned Disk Files
+      v_total_hosts: Total Hosts
+      v_total_memory_size: Size of VM Memory Files
+      v_total_provisioned: Total Provisioned Space
+      v_total_snapshot_size: Size of VM Snapshot Files
+      v_total_snapshots: Total Snapshots
+      v_total_storages: Total Datastores
+      v_total_vm_misc_size: Size of Other VM Files
+      v_total_vm_ram_size: Size of VM Memory Files
+      v_total_vms: Total VMs
+      v_used_space: Used Space
+      v_used_space_percent_of_total: Used Space Percent of Total
+      v_vm_misc_percent_of_used: Other VM Files Percent of Used
+      virtual_hw_version: Virtual Hardware Version
+      vmm_buildnumber: VMM Build Number
+      vmm_product: VMM Platform
+      vmm_vendor: VMM Vendor
+      vmm_version: VMM Version
+      vmsafe_agent_address: VMsafe Agent Address
+      vmsafe_agent_port: VMsafe Agent Port
+      vmsafe_enable: VMsafe Enable
+      vmsafe_fail_open: VMsafe Fail Open
+      vmsafe_immutable_vm: VMsafe Immutable VM
+      vmsafe_timeout_ms: VMsafe Timeout (ms)
+      write_data: Usage (All) - Bytes Written per Second
+      write_data_max: Usage (All) - Bytes Written per Second Max
+      write_data_min: Usage (All) - Bytes Written per Second Min
+      write_latency: Usage (All) - Time for Writes Avg
+      write_latency_max: Usage (All) - Time for Writes Avg Max
+      write_latency_min: Usage (All) - Time for Writes Avg Min
+      write_ops: Usage (All) - Number of Writes per Second
+      write_ops_max: Usage (All) - Number of Writes per Second Max
+      write_ops_min: Usage (All) - Number of Writes per Second Min
+      ws_port: Web Services Port
+      zone_name: EVM Zone
+
+      # Chargeback
+      cpu_allocated_cost:       vCPUs Allocated Cost
+      cpu_allocated_metric:     vCPUs Allocated over Time Period
+      cpu_cost:                 CPU Total Cost
+      cpu_metric:               CPU Total
+      cpu_used_cost:            CPU Used Cost
+      cpu_used_metric:          CPU Used
+      disk_io_cost:             Disk I/O Total Cost
+      disk_io_metric:           Disk I/O Total
+      disk_io_used_cost:        Disk I/O Used Cost
+      disk_io_used_metric:      Disk I/O Used
+      display_range:            Date Range
+      fixed_compute_1_cost:     Fixed Compute Cost 1
+      fixed_compute_2_cost:     Fixed Compute Cost 2
+      fixed_cost:               Fixed Total Cost
+      fixed_storage_1_cost:     Fixed Storage Cost 1
+      fixed_storage_2_cost:     Fixed Storage Cost 2
+      memory_allocated_cost:    Memory Allocated Cost
+      memory_allocated_metric:  Memory Allocated over Time Period
+      memory_cost:              Memory Total Cost
+      memory_metric:            Memory Total
+      memory_used_cost:         Memory Used Cost
+      memory_used_metric:       Memory Used
+      net_io_cost:              Network I/O Total Cost
+      net_io_metric:            Network I/O Total
+      net_io_used_cost:         Network I/O Used Cost
+      net_io_used_metric:       Network I/O Used
+      owner_name:               Owner
+      storage_allocated_cost:   Storage Allocated Cost
+      storage_allocated_metric: Storage Allocated
+      storage_cost:             Storage Total Cost
+      storage_metric:           Storage Total
+      storage_used_cost:        Storage Used Cost
+      storage_used_metric:      Storage Used
+      total_cost:               Total Cost
+      vm_name:                  VM Name
+
+      # Storage derived statistic columns
+      avg_read_size:               Average Read Size
+      avg_write_size:              Average Write Size
+      interval:                    Interval
+      k_bytes_read_per_sec:        Read (KBps)
+      k_bytes_transferred_per_sec: Transferred (KBps)
+      k_bytes_written_per_sec:     Written (KBps)
+      pct_hit:                     Hit %
+      pct_read:                    Read %
+      pct_write:                   Write %
+      queue_depth:                 Queue Depth
+      read_hit_ios_per_sec:        Read Hit (IOPS)
+      read_ios_per_sec:            Read (IOPS)
+      response_time_sec:           Response Time (Seconds)
+      service_time_sec:            Service Time (Seconds)
+      statistic_time:              Activity Sample - Timestamp (Day/Time)
+      total_ios_per_sec:           Total (IOPS)
+      utilization:                 Utilization %
+      v_statistic_date:            Activity Sample - Day (MM DD YY)
+      v_statistic_time:            Activity Sample - Time (HH MM SS)
+      wait_time_sec:               Wait Time (Seconds)
+      write_hit_ios_per_sec:       Write Hit (IOPS)
+      write_ios_per_sec:           Write (IOPS)
+
+    compare:
+      Host:         Host Properties
+      Vm:           VM Properties
+      VmOrTemplate: Workload
+
+    discover_types:
+      esx:             ESX
+      hyperv:          Hyper-V
+      ipmi:            IPMI
+      kvm:             KVM
+      msvirtualserver: MS vCenter
+      rhevm:           Red Hat Enterprise Virtualization Manager
+      scvmm:           Microsoft System Center VMM
+      virtualcenter:   VMware vCenter
+      vmwareserver:    VMware Server
+
+    host_os_type:
+      linux_generic:   Linux
+      windows_generic: Windows
+
+    model:
+      AuditEvent:               EVM Audit Event
+      AvailabilityZone:         Availability Zone
+      Chargeback:               Chargeback
+      ChargebackRate:           Chargeback Rate
+      CimStorageExtent:         Storage - Extent
+      Classification:           Category
+      Compliance:               Compliance History
+      Compliances:              Compliance History
+      Condition:                Condition
+      CustomButton:             Button
+      CustomButtonSet:          Buttons Group
+      EmsCloud:                 Cloud Provider
+      EmsCluster:               Cluster
+      EmsClusterPerformance:    Performance - Cluster
+      EmsEvent:                 Management Event
+      EmsFolder:                Folder
+      EmsInfra:                 Infrastructure Provider
+      ExtManagementSystem:      Provider
+      FileDepotFtp:             FTP
+      FileDepotFtpAnonymous:    Anonymous FTP
+      FileDepotNfs:             NFS
+      FileDepotSmb:             Samba
+      Filesystem:               File
+      Flavor:                   Flavor
+      HostPerformance:          Performance - Host
+      IsoDatastore:             ISO Datastore
+      IsoImage:                 ISO Image
+      LdapDomain:               LDAP Domain
+      LdapRegion:               LDAP Region
+      LdapServer:               LDAP Server
+      MiqAction:                Action
+      MiqAeClass:               Automate Class
+      MiqAeDomain:              Automate Domain
+      MiqAeInstance:            Automate Instance
+      MiqAeMethod:              Automate Method
+      MiqAeNamespace:           Automate Namespace
+      MiqAlert:                 Alert
+      MiqAlertSet:              Alert Profile
+      MiqDialog:                Dialog
+      MiqEnterprise:            Enterprise
+      MiqGroup:                 EVM Group
+      MiqPolicy:                Policy
+      MiqPolicySet:             Policy Profile
+      MiqProvision:             Provision
+      MiqProxy:                 SmartProxy
+      MiqRegion:                Region
+      MiqReport:                Report
+      MiqRequest:               Request
+      MiqSchedule:              Schedule
+      MiqSearch:                Search
+      MiqServer:                Server
+      MiqSmisAgent:             SMI-S Agent
+      MiqTemplate:              VM Template and Image
+      MiqUserRole:              Role
+      MiqWidget:                Widget
+      MiqWorker:                EVM Worker
+      NetappRemoteService:      NetApp Remote Service
+      OntapConcreteExtent:      Storage - Aggregate
+      OntapFileShare:           Storage - File Share
+      OntapLogicalDisk:         Storage - Volume
+      OntapPlexExtent:          Storage - Plex
+      OntapRaidGroupExtent:     Storage - Raid Group
+      OntapStorageSystem:       Storage - Filer
+      OntapStorageVolume:       Storage - LUN
+      OntapVolumeMetricsRollup: Storage Performance - Volumes
+      ProductUpdate:            Product Update
+      PxeCustomizationTemplate: Customization Template
+      PxeImage:                 PXE Image
+      PxeImageType:             System Image Type
+      PxeServer:                PXE Server
+      ResourcePool:             Resource Pool
+      ScanItem:                 Scan Item
+      ScanItemSet:              Analysis Profile
+      Service:                  Service
+      ServiceTemplate:          Service Catalog Item
+      ServiceTemplateCatalog:   Catalog
+      SniaLocalFileSystem:      Storage - Local File System
+      Storage:                  Datastore
+      StorageFile:              Datastore File
+      StorageManager:           Storage Manager
+      StoragePerformance:       Performance - Datastore
+      TemplateCloud:            Image
+      TemplateInfra:            Template
+      TimeProfile:              Time Profile
+      User:                     EVM User
+      VdiController:            VDI - Controller
+      VdiDesktop:               VDI - Desktop
+      VdiDesktopPool:           VDI - Desktop Pool
+      VdiEndpointDevice:        VDI - Endpoint Device
+      VdiFarm:                  VDI - Farm
+      VdiSession:               VDI - Session
+      VdiUser:                  VDI - User
+      VimPerformanceTrend:      Performance Trend
+      Vm:                       VM and Instance
+      VmCloud:                  Instance
+      VmdbTable:                VMDB Table
+      VmInfra:                  Virtual Machine
+      VmOrTemplate:             VM or Template
+      VmPerformance:            Performance - VM
+      VmVdi:                    VDI - VM
+      Zone:                     Zone
+
+    option:
+      email:          E-Mail
+      name_prefix:    VM Name/Prefix
+      number_of_vms:  Number of VMs
+      source_vm_id:   Source VM
+      storage:        Datastore
+      time_to_live:   Time until Retirement
+      ttl_warning:    Retirement Warning
+      vm_description: VM Description
+
+    rate_detail_group:
+      cpu:     CPU
+      disk_io: Disk I/O
+      fixed:   Fixed
+      memory:  Memory
+      net_io:  Network I/O
+      storage: Storage
+
+    table:
+      availability_zone:           Availability Zone
+      cdroms:                      CD/DVD Drives
+      cim_base_storage_extent:     Base Extents
+      compliance_details:          Details
+      compliances:                 Compliance History
+      custom_button:               Button
+      custom_button_set:           Buttons Group
+      ems_cloud:                   Cloud Provider
+      ems_clouds:                  Cloud Providers
+      ems_cluster:                 Cluster
+      ems_clusters:                Clusters
+      ems_custom_attribute:        VC Custom Attribute
+      ems_custom_attributes:       VC Custom Attributes
+      ems_event:                   Management Event
+      ems_events:                  Management Events
+      ems_folder:                  Folder
+      ems_folders:                 Folders
+      ems_infra:                   Infrastructure Provider
+      ems_infras:                  Infrastructure Providers
+      evm_owner:                   EVM Owner
+      ext_management_system:       Cloud/Infrastructure Provider
+      ext_management_systems:      Cloud/Infrastructure Providers
+      filesystem_drivers:          File System Drivers
+      filesystems:                 Files
+      flavor:                      Flavor
+      flavors:                     Flavors
+      floppies:                    Floppy Drives
+      guest_devices:               Devices
+      host_services:               Services
+      iso_datastore:               ISO Datastore
+      iso_image:                   ISO Image
+      lans:                        vLANs
+      last_compliance:             Last Compliance History
+      ldap:                        LDAP
+      ldap_domain:                 LDAP Domain
+      ldap_region:                 LDAP Region
+      ldap_server:                 LDAP Server
+      linux_initprocesses:         Linux Init Processes
+      miq_approval_stamps:         Stamped Approvals
+      miq_approvals:               Approvals
+      miq_custom_attribute:        EVM Custom Attribute
+      miq_custom_attributes:       EVM Custom Attributes
+      miq_event:                   Event
+      miq_provision:               Provision
+      miq_provision_template:      Provisioned From Template
+      miq_provision_vms:           Provisioned VMs
+      miq_provisions:              Provisions
+      miq_proxy:                   SmartProxy
+      miq_proxy_builds:            SmartProxy Builds
+      miq_region:                  Region
+      miq_regions:                 Regions
+      miq_request:                 Request
+      miq_requests:                Requests
+      miq_schedules:               Schedules
+      miq_scsi_luns:               SCSI LUNs
+      miq_server:                  Server
+      miq_servers:                 Servers
+      miq_task:                    Task
+      miq_template:                VM Template
+      miq_worker:                  EVM Worker
+      miq_workers:                 EVM Workers
+      nics:                        Network Adapters
+      ontap_concrete_extents:      Storage - Aggregates
+      ontap_file_share:            File Shares
+      ontap_file_shares:           Storage - File Shares
+      ontap_logical_disk:          Volumes
+      ontap_logical_disks:         Storage - Volumes
+      ontap_plex_extents:          Storage - Plexes
+      ontap_raid_group_extents:    Storage - Raid Groups
+      ontap_storage_system:        Filers
+      ontap_storage_systems:       Storage - Filers
+      ontap_storage_volume:        LUNs
+      ontap_storage_volumes:       Storage - LUNs
+      ontap_volume_metrics_rollup: Storage Performance - Volumes
+      operating_system:            OS
+      registry_items:              Registry
+      resource_pools:              Resource Pools
+      server_builds:               EVM Builds
+      service_template:            Catalog Item
+      service_template_catalog:    Catalog
+      snia_local_file_system:      Storage - Local File Systems
+      storage:                     Datastore
+      storage_file:                Datastore File
+      storage_files:               Datastore Files
+      storages:                    Datastores
+      switches:                    vSwitches
+      template_cloud:              Image
+      template_infra:              Template
+      vdi_controller:              Broker
+      vdi_desktop:                 Desktop
+      vdi_desktop_pool:            Desktop Pool
+      vdi_endpoint_device:         Endpoint Device
+      vdi_farm:                    Farm
+      vdi_session:                 VDI Session
+      vdi_user:                    VDI User
+      vm:                          VM and Instance
+      vm_cloud:                    Instance
+      vm_infra:                    Virtual Machine
+      vm_or_template:              Virtual Machine
+      vm_vdi:                      VDI VM
+      vms:                         VMs
+      zone:                        Zone
+      zones:                       Zones
+
+    task:
+      check_compliance_queue: check compliance
+      destroy:                delete
+      reboot_guest:           restart guest
+      retire_now:             retirement
+      scan:                   analysis
+
+    ui_action:
+      advanced_settings:   Advanced Settings
+      disks:               Number of Disks
+      drift_history:       Drift History
+      event_logs:          Event Logs
+      filesystem_drivers:  Filesystem Drivers
+      filesystems:         Filesystems
+      groups:              Groups
+      guest_applications:  Guest Applications
+      hv_info:             Container
+      kernel_drivers:      Kernel Drivers
+      linux_initprocesses: Init Processes
+      os_info:             OS Info
+      parent_vm:           Parent VM
+      patches:             Patches
+      processes:           Running Processes
+      registry_items:      Registry Items
+      resources_info:      Resources
+      scan_history:        Scan History
+      snapshot_info:       Snapshots
+      users:               Users
+      vmtree_info:         Genealogy
+      win32_services:      Win32 Services
