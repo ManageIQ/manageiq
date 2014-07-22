@@ -2422,8 +2422,8 @@ class ApplicationController < ActionController::Base
     # Set version info, if it doesn't exist
     if session[:vmdb] == nil
       session[:vmdb] = Hash.new
-      session[:vmdb][:version] = VMDB::Config.VERSION
-      session[:vmdb][:build]   = VMDB::Config.BUILD_NUMBER
+      session[:vmdb][:version] = Vmdb::Appliance.VERSION
+      session[:vmdb][:build]   = Vmdb::Appliance.BUILD_NUMBER
     end
 
     # Get customer name

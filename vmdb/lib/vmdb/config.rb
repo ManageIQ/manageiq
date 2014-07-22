@@ -424,18 +424,6 @@ module VMDB
       end
     end
 
-    def self.VERSION
-      @@EVM_VERSION ||= File.read(File.join(File.expand_path(Rails.root), "VERSION")).strip
-    end
-
-    def self.BUILD
-      @@EVM_BUILD ||= Config.get_build
-    end
-
-    def self.BUILD_NUMBER
-      @@EVM_BUILD_NUMBER ||= Config.BUILD.nil? ? "N/A" : Config.BUILD.split("-").last   # Grab the build number after the last hyphen
-    end
-
     def self.SOAP_VERSION
       @@SOAP_VERSION ||= SOAP::VERSION
     end
@@ -475,20 +463,6 @@ module VMDB
     end
 
     private
-
-    def self.get_build
-      build_file = File.join(File.expand_path(Rails.root), "BUILD")
-
-      if File.exists?(build_file)
-        build = File.read(build_file).strip.split("-").last
-      else
-        date  = Time.now.strftime("%Y%m%d%H%M%S")
-        sha   = `git rev-parse --short HEAD`.chomp
-        build = "#{date}_#{sha}"
-      end
-
-      build
-    end
 
     def self.log_config(*args)
       options = args.extract_options!

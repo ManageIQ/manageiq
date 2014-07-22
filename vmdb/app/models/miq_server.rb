@@ -105,8 +105,8 @@ class MiqServer < ActiveRecord::Base
     self.stopped_on = ""
     self.status     = "starting"
     self.pid        = Process.pid
-    self.build      = VMDB::Config.BUILD
-    self.version    = VMDB::Config.VERSION
+    self.build      = Vmdb::Appliance.BUILD
+    self.version    = Vmdb::Appliance.VERSION
     self.is_master  = false
     self.sql_spid   = ActiveRecord::Base.connection.spid
     self.save

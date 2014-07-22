@@ -1,7 +1,7 @@
 class ScheduleWorker < WorkerBase
   class Jobs
-    def vmdb_config_log_config
-      queue_work(:class_name  => "VMDB::Config", :method_name => "log_config", :server_guid => MiqServer.my_guid)
+    def vmdb_appliance_log_config
+      queue_work(:class_name  => "Vmdb::Appliance", :method_name => "log_config", :server_guid => MiqServer.my_guid)
     end
 
     def vmdb_database_log_all_database_statistics

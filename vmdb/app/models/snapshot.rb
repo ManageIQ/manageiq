@@ -68,7 +68,7 @@ class Snapshot < ActiveRecord::Base
   end
 
   def self.evm_snapshot_description(jobid, type)
-    "Snapshot for scan job: #{jobid}, EVM Server build: #{VMDB::Config.BUILD} #{type} Server Time: #{Time.now.utc.iso8601}"
+    "Snapshot for scan job: #{jobid}, EVM Server build: #{Vmdb::Appliance.BUILD} #{type} Server Time: #{Time.now.utc.iso8601}"
   end
 
   def self.parse_evm_snapshot_description(description)
