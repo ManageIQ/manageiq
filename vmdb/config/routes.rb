@@ -1468,6 +1468,7 @@ Vmdb::Application.routes.draw do
         retire
         right_size
         show
+        show_list
       ),
       :post => %w(
         edit_vm
