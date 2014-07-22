@@ -3,26 +3,26 @@
 <% if chart_data[chart_index][:xml2] %>
   <fieldset style="width: <%=width %>px; height: <%=height+20%>px; float:left; border: none">
     <p class="legend"><%= charts[chart_index][:title] %></p>
-
-        <%= chart_no_url(
-                      :id      => "miq_#{chart_set}_#{chart_index}",
-                      :width   => width,
-                      :height  => height*70/100) %>
-
-        <div>
-        <%= chart_no_url(
-                      :id      => "miq_#{chart_set}_#{chart_index}_2",
-                      :width   => width,
-                      :height  => height*30/100) %>
-        </div>
-
+    <%= chart_no_url(:id     => "miq_#{chart_set}_#{chart_index}",
+                     :bgcolor => "#f2f2f2",
+                     :width  => width,
+                     :height => height*70/100) 
+    %>
+    <div>
+      <%= chart_no_url(:id     => "miq_#{chart_set}_#{chart_index}_2",
+                       :bgcolor => "#f2f2f2",
+                       :width  => width,
+                       :height => height*30/100)
+      %>
+    </div>
   </fieldset>
 <% else %>
   <fieldset style="width: <%=width %>px; height: <%=height+20%>px; float:left;border: none">
     <p class="legend"><%= charts[chart_index][:title] %></p>
-    <%= chart_no_url(
-                  :id      => "miq_#{chart_set}_#{chart_index}",
-                  :width   => width,
-                  :height  => height) %>
+    <%= chart_no_url(:id     => "miq_#{chart_set}_#{chart_index}",
+                     :bgcolor => "#f2f2f2",
+                     :width  => width,
+                     :height => height)
+    %>
   </fieldset>
 <% end %>
