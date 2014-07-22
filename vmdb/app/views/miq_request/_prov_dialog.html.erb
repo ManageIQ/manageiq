@@ -68,7 +68,7 @@
         <%= render(:partial=>"#{prefix}prov_dialog_fieldset", :locals=>{:workflow=>wf, :dialog=>dialog, :label=>"Datastore", :prefix=>prefix, :keys=>keys, :extra_table_attributes=>"width=100%"}) %>
       <% end %>
       <% if wf.kind_of?(MiqProvisionCloudWorkflow) %>
-        <% keys = [:availability_zone_filter, :placement_availability_zone, :cloud_network, :cloud_subnet, :security_groups, :floating_ip_address] %>
+        <% keys = [:cloud_tenant, :availability_zone_filter, :placement_availability_zone, :cloud_network, :cloud_subnet, :security_groups, :floating_ip_address] %>
         <%= render(:partial=>"#{prefix}prov_dialog_fieldset", :locals=>{:workflow=>wf, :dialog=>dialog, :label=>"Placement - Options", :prefix=>prefix, :keys=>keys, :extra_table_attributes=>"width=100%"}) %>
       <% end %>
 		<% end %>

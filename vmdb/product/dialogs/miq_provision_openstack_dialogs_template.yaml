@@ -153,6 +153,13 @@
           :display: :edit
           :data_type: :integer
           :required_description: Availability Zone Name
+        :cloud_tenant:
+          :values_from:
+            :method: :allowed_cloud_tenants
+          :description: Cloud Tenant
+          :required: false
+          :display: :edit
+          :data_type: :integer
         :cloud_network:
           :values_from:
             :method: :allowed_cloud_networks
