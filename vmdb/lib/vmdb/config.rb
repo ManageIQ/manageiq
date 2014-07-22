@@ -1,10 +1,5 @@
 module VMDB
   class Config
-    @@hostwsdisabled = false
-    @@wscontactwith = "ipaddress"
-    @@wsnameresolution = false
-    @@listening_port = 80
-    @@wstimeout = 120
     @@sync_cfile = Sync.new()
     @@cached_configs = {}
 
@@ -661,46 +656,24 @@ module VMDB
     def self.webservices(data, mode="activate")
       valid, errors = [true, []]
       if !["invoke", "disable"].include?(data.mode)
-        valid = false; errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke of disable"]
+        valid = false; errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
+      end
+      if !["ipaddress", "hostname"].include?(data.contactwith)
+        valid = false; errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
+      end
+      if ![true, false].include?(data.nameresolution)
+        valid = false; errors << [:nameresolution, "webservices nameresolution, \"#{data.nameresolution}\", invalid. Should be one of: true or false"]
       end
       unless data.timeout.is_a?(Fixnum)
         valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
       end
+
       case mode
       when "activate"
         raise message unless valid
       when "validate"
         return [valid, errors]
       end
-
-      case data.mode
-      when "invoke"
-        Config.hostwsdisabled false
-      when "disable"
-        Config.hostwsdisabled true
-      else
-        raise "mode, \"#{mode}\", is invalid, should be \"activate\" or \"validate\""
-      end
-
-      case data.contactwith
-      when "ipaddress"
-        Config.wscontactwith "ipaddress"
-      when "hostname"
-        Config.wscontactwith "hostname"
-      else
-        raise "contactwith, \"#{data.contactwith}\", is invalid, should be \"ipaddress\" or \"hostname\""
-      end
-
-      case data.nameresolution
-      when true
-        Config.wsnameresolution true
-      when false
-        Config.wsnameresolution false
-      else
-        raise "nameresolution, \"#{data.nameresolution}\", is invalid, should be \"true\" or \"false\""
-      end
-
-      Config.wstimeout data.timeout
     end
 
     AUTH_TYPES = %w(ldap ldaps httpd amazon database none)
@@ -793,26 +766,6 @@ module VMDB
       end
     end
 
-    def self.hostwsdisabled(value=nil)
-      @@hostwsdisabled = value unless value==nil
-      return @@hostwsdisabled
-    end
-
-    def self.wscontactwith(value=nil)
-      @@wscontactwith = value unless value==nil
-      return @@wscontactwith
-    end
-
-    def self.wsnameresolution(value=nil)
-      @@wsnameresolution = value unless value==nil
-      return @@wsnameresolution
-    end
-
-    def self.wstimeout(value=nil)
-      @@wstimeout = value unless value==nil
-      return @@wstimeout
-    end
-
     def self.session(data, mode="activate")
       valid, errors = [true, []]
       unless data.timeout.is_a?(Fixnum)
@@ -863,7 +816,6 @@ module VMDB
       case mode
       when "activate"
         if valid
-          Config.listening_port data.listening_port
           MiqServer.my_server.config_updated(data, mode) unless MiqServer.my_server.nil? rescue nil
         else
           raise message
@@ -873,11 +825,6 @@ module VMDB
       else
         raise "mode, \"#{mode}\", is invalid, should be \"activate\" or \"validate\""
       end
-    end
-
-    def self.listening_port(value=nil)
-      @@listening_port = value unless value==nil
-      return @@listening_port
     end
 
     # SMTP Settings
