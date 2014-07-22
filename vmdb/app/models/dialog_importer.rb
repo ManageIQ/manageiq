@@ -60,7 +60,7 @@ class DialogImporter
 
   def create_import_file_upload(file_contents)
     ImportFileUpload.create.tap do |import_file_upload|
-      import_file_upload.store_service_dialog_import_data(file_contents)
+      import_file_upload.store_binary_data_as_yml(file_contents, "Service dialog import")
     end
   end
 

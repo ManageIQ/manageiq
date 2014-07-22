@@ -245,7 +245,7 @@ describe DialogImporter do
     before do
       MiqQueue.stub(:put)
       ImportFileUpload.stub(:create).and_return(import_file_upload)
-      import_file_upload.stub(:store_service_dialog_import_data)
+      import_file_upload.stub(:store_binary_data_as_yml)
     end
 
     context "when the imported file does not raise any errors while determining validity" do
@@ -254,7 +254,7 @@ describe DialogImporter do
       end
 
       it "stores the data" do
-        import_file_upload.should_receive(:store_service_dialog_import_data).with("the data")
+        import_file_upload.should_receive(:store_binary_data_as_yml).with("the data", "Service dialog import")
         dialog_importer.store_for_import("the data")
       end
 

@@ -297,7 +297,7 @@ describe WidgetImporter do
 
     before do
       ImportFileUpload.stub(:create).and_return(import_file_upload)
-      import_file_upload.stub(:store_widget_import_data)
+      import_file_upload.stub(:store_binary_data_as_yml)
       MiqQueue.stub(:put)
     end
 
@@ -307,7 +307,7 @@ describe WidgetImporter do
       end
 
       it "stores the data" do
-        import_file_upload.should_receive(:store_widget_import_data).with("the data")
+        import_file_upload.should_receive(:store_binary_data_as_yml).with("the data", "Widget import")
         widget_importer.store_for_import("the data")
       end
 

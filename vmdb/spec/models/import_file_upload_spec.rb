@@ -121,9 +121,9 @@ describe ImportFileUpload do
     end
   end
 
-  describe "#store_policy_import_data" do
+  describe "#store_binary_data_as_yml" do
     before do
-      import_file_upload.store_policy_import_data("123")
+      import_file_upload.store_binary_data_as_yml("123", "the name")
     end
 
     it "stores the binary blob binary data" do
@@ -131,47 +131,11 @@ describe ImportFileUpload do
     end
 
     it "stores the binary blob name" do
-      import_file_upload.binary_blob.name.should == "Policy import"
+      import_file_upload.binary_blob.name.should == "the name"
     end
 
     it "stores the binary blob data type" do
       import_file_upload.binary_blob.data_type.should == "yml"
-    end
-  end
-
-  describe "#store_service_dialog_import_data" do
-    before do
-      import_file_upload.store_service_dialog_import_data("123")
-    end
-
-    it "stores the binary blob binary data" do
-      import_file_upload.binary_blob.binary.should == "123"
-    end
-
-    it "stores the binary blob name" do
-      import_file_upload.binary_blob.name.should == "Service Dialog import"
-    end
-
-    it "stores the binary blob data type" do
-      import_file_upload.binary_blob.data_type.should == "yml"
-    end
-  end
-
-  describe "#store_widget_import_data" do
-    before do
-      import_file_upload.store_widget_import_data("123")
-    end
-
-    it "stores the binary blob binary data" do
-      expect(import_file_upload.binary_blob.binary).to eq("123")
-    end
-
-    it "stores the binary blob name" do
-      expect(import_file_upload.binary_blob.name).to eq("Widget import")
-    end
-
-    it "stores the binary blob data type" do
-      expect(import_file_upload.binary_blob.data_type).to eq("yml")
     end
   end
 
