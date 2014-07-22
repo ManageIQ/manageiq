@@ -29,6 +29,7 @@ module OpsController::Settings::Common
       end
     when 'settings_rhn_edit'
       if params[:use_proxy] || params[:register_to] || ['rhn_default_server', 'repo_default_name'].include?(params[:action])
+        reset_repo_name_from_default if params[:register_to]
         @refresh_div     = 'settings_rhn'
         @refresh_partial = 'settings_rhn_edit_tab'
       else
