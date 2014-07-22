@@ -79,28 +79,5 @@ module VMDB
 
       retVal
     end
-
-    def self.set_network(options)
-      raise ":mode parameter missing in options." if options.nil? or options[:mode].nil?
-
-      # Make a call to the virtual appliance to set the network information
-      if options[:mode] == "DHCP"
-        retVal = `/bin/miqnet.sh -DHCP > /dev/null 2>&1 ; echo $?`.chomp
-      elsif options[:mode] == "STATIC"
-        staticParams = ""
-
-        [:ipaddress, :netmask, :gateway, :primary_dns, :secondary_dns].each do |type|
-          raise "#{type} is required." if type != :secondary_dns and options[type].blank?
-          staticParams += options[type] + " "
-        end
-
-        retVal = `/bin/miqnet.sh -STATIC ${staticParams} > /dev/null 2>&1 ; echo $?`.chomp
-      else
-        raise ":mode must be 'DHCP' or 'STATIC'."
-      end
-
-      retVal == 0
-    end
-
   end
 end
