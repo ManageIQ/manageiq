@@ -36,6 +36,13 @@
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
+    - :button: miq_ae_class_copy
+      :image: copy
+      :text: 'Copy selected Classes'
+      :title: 'Select Classes to copy'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
     - :button: miq_ae_namespace_delete
       :image: delete
       :text: 'Remove selected Items'
