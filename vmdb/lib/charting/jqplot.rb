@@ -90,7 +90,10 @@ class Jqplot
       else
         {
           :data    => [[nil]],
-          :options => {:title => "Invalid char type #{chart_type}"}
+          :options => {
+            :title  => "Invalid char type #{chart_type}",
+            :series => []
+          }
         }
       end
     end

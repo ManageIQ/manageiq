@@ -18,7 +18,7 @@ updated_on: 2009-10-19 22:17:09.677000 Z
 order: Descending
 graph: 
   :other: false
-  :type: PieThreed
+  :type: Pie
   :count: "8"
 menu_name: "VMs w/Free Space > 75% by LOB"
 rpt_group: Custom

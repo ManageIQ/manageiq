@@ -17,7 +17,7 @@ conditions: !ruby/object:MiqExpression
 updated_on: 2009-05-08 23:53:31.651481 Z
 order: Descending
 graph: 
-  :type: PieThreed
+  :type: Pie
   :count: "8"
   :other: false
 menu_name: "VMs with Free Space > 50% by Department"

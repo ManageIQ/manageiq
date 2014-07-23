@@ -14,7 +14,7 @@ updated_on: 2009-11-12 22:51:43.435616 Z
 order: Ascending
 graph: 
   :other: true
-  :type: PieThreed
+  :type: Pie
   :count: 10
 generate_rows: 
 menu_name: "VC Snapshot Events by User"
