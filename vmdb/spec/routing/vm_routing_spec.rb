@@ -12,6 +12,7 @@ describe VmOrTemplateController do
     retire
     right_size
     show
+    show_list
   ).each do |path|
     describe "##{path}" do
       it "routes with GET" do
