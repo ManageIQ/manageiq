@@ -226,7 +226,6 @@ module OpsController::Settings::RHN
   end
 
   def repo_default_name
-    reset_repo_name_from_default
     settings_form_field_changed
   end
 
@@ -327,14 +326,15 @@ module OpsController::Settings::RHN
       :proxy_password    => proxy_password,
       :proxy_verify      => '',
     }
-
+    @edit[:key] = "#{@sb[:active_tab]}__rhn_edit"
+    @edit[:current] = copy_hash(@edit[:new])
+    reset_repo_name_from_default
     replace_right_cell('rhn')
   end
 
   private
 
   def reset_repo_name_from_default
-    register_to_from_edit = session.fetch_path(:edit, :new, :register_to)
-    session.store_path(:edit, :new, :repo_name, MiqDatabase.registration_default_value_for_update_repo_name(register_to_from_edit))
+    MiqDatabase.registration_default_value_for_update_repo_name(@edit[:new][:register_to])
   end
 end
