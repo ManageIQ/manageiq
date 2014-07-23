@@ -59,4 +59,23 @@ describe EmsRefresh::Parsers::Rhevm do
 
   end
 
+  context "#vm_inv_to_custom_attribute_hashes" do
+    it "should truncate the custom attribute value" do
+      inv = {
+        :custom_attributes => [
+          :name  => 'custom_attribute',
+          :value => "0" * 1000
+        ]
+      }
+      result = EmsRefresh::Parsers::Rhevm.vm_inv_to_custom_attribute_hashes(inv)
+      result.should == [
+        {
+          :section => "custom_field",
+          :name    => "custom_attribute",
+          :value   => "#{"0" * 252}...",
+          :source  => "VC"
+        }
+      ]
+    end
+  end
 end
