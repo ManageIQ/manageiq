@@ -29,7 +29,6 @@ module OpsController::Settings::Common
       end
     when 'settings_rhn_edit'
       if params[:use_proxy] || params[:register_to] || ['rhn_default_server', 'repo_default_name'].include?(params[:action])
-        reset_repo_name_from_default if params[:register_to]
         @refresh_div     = 'settings_rhn'
         @refresh_partial = 'settings_rhn_edit_tab'
       else
@@ -627,11 +626,12 @@ module OpsController::Settings::Common
       for key in [:proxy_address, :use_proxy, :proxy_userid, :proxy_password, :proxy_verify,
                   :register_to, :server_url, :repo_name, :customer_org,
                   :customer_userid, :customer_password, :customer_verify]
-        if params[key]
-          @edit[:new][key] = params[key]
-          @changed = true
-        end
+        @edit[:new][key] = params[key] if params[key]
       end
+      if params[:register_to] || params[:action] == "repo_default_name"
+        @edit[:new][:repo_name] = reset_repo_name_from_default
+      end
+      @changed = (@edit[:new] != @edit[:current])
     when "settings_server"                                                # Server Settings tab
       if !params[:smtp_test_to].nil? && params[:smtp_test_to] != ""
         @sb[:new_to] = params[:smtp_test_to]
@@ -862,7 +862,7 @@ module OpsController::Settings::Common
       return unless load_edit("#{@sb[:active_tab]}_edit__#{@sb[:selected_zone_id]}","replace_cell__explorer")
       @prev_selected_svr = session[:edit][:new][:selected_server]
     elsif @sb[:active_tab] == 'settings_rhn_edit'
-      @edit = session[:edit]
+      return unless load_edit("#{@sb[:active_tab]}__#{params[:id]}", "replace_cell__explorer")
     else
       if ["settings_server","settings_authentication","settings_workers",
               "settings_database","settings_host","settings_custom_logos",

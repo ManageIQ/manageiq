@@ -30,7 +30,7 @@
               =button_tag('Default',
                         :id      => 'rhn_default_button',
                         :class   => 'upload',
-                        :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_default_server')}');")
+                        :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_default_server', :id => 'rhn_edit')}');")
 
         %tr
           %td.key Repository Name:
@@ -40,7 +40,7 @@
             =button_tag('Default',
                       :id      => 'repo_default_name',
                       :class   => 'upload',
-                      :onclick => "miqAjaxButton('#{url_for( :action => 'repo_default_name')}');")
+                      :onclick => "miqAjaxButton('#{url_for(:action => 'repo_default_name', :id => 'rhn_edit')}');")
 
         %tr
           %td.key HTTP Proxy:
@@ -60,7 +60,7 @@
 
           = render :partial => '/layouts/auth_credentials2',
                    :locals  => { :prefix     => 'proxy', :record_id => 'new',
-                                 :change_url => 'settings_form_field_changed',
+                                 :change_url => url,
                                  :validate   => false }
 
     %br
@@ -69,7 +69,7 @@
       %table.style1
         = render :partial => '/layouts/auth_credentials2',
                  :locals  => { :prefix       => 'customer', :record_id => 'new',
-                               :change_url   => 'settings_form_field_changed',
+                               :change_url   => url,
                                :validate_url => 'rhn_validate',
                                :validate     => rhn_validate_enabled,
                                :labels       => { :user => 'Login' } }
