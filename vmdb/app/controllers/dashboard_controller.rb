@@ -709,7 +709,7 @@ class DashboardController < ApplicationController
         get_vmdb_config[:product][:maindb] &&
           ! Vm.first &&
           ! Host.first
-        @flash_msg = "The system has not been configured, please contact the administrator"
+        @flash_msg = "Logins not allowed, no providers are being managed yet. Please contact the administrator"
         return nil
       end
 
