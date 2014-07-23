@@ -42,7 +42,7 @@ en:
       utilization_data_not_available: "No Utilization data available to generate planning results"
     copy:
       cancelled: 'Copy %{model} was cancelled by the user'
-      copied: 'Selected %{model} were copied'
+      copied: 'Copy selected %{model} was saved'
     edit:
       at_least_1:
         configured: "At least one %{field} must be configured"

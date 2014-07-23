@@ -1978,6 +1978,7 @@ exit MIQ_OK"
     @changed = (@edit[:new] != @edit[:current])
     @changed = @edit[:new][:override_source] if @edit[:new][:namespace].nil?
     render :update do |page|                    # Use JS to update the display
+      page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       page.replace("form_div", :partial => "copy_objects_form") if params[:domain] || params[:override_source]
       page << javascript_for_miq_button_visibility(@changed)
     end
@@ -2062,7 +2063,7 @@ private
       res = @edit[:typ].copy(@edit[:selected_items].keys,
                              domain.name,
                              @edit[:new][:namespace],
-                             @edit[:new][:overwrite_location]
+                             @edit[:new][:override_existing]
       )
     rescue StandardError => bang
       add_flash(I18n.t("flash.error_during",
