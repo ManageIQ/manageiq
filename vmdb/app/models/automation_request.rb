@@ -20,7 +20,7 @@ class AutomationRequest < MiqRequest
 
     options = {}
     requester_options = MiqRequestWorkflow.parse_ws_string(requester)
-    auto_approve = (requester_options[:auto_approve] == 'true')
+    auto_approve = (requester_options[:auto_approve] == 'true' || requester_options[:auto_approve] == true)
     unless requester_options[:user_name].blank?
       userid = requester_options[:user_name]
       $log.warn "#{log_header} Web-service requester changed to <#{userid}>"
