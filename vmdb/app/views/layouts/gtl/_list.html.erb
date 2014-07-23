@@ -17,34 +17,34 @@
     %>
     <%# don't need a row url to be AJAX when displaying a list of other CI's inside explorer %>
     <%= render(:partial => 'layouts/dhtmlxgrid',
-               :locals => {:options => {:grid_id => "list_grid",
-                                        :grid_name => "gtl_list_grid",
-                                        :grid_xml => @grid_xml,
-                                        :row_url => url,
-                                        :row_url_ajax => ajax_url,
-                                        :action_url => action_url,
-                                        :save_col_widths => true,
-                                        :autosize => true,  # Need this when list_grid div has no width/height specified
-                                        :skin => "style3",
-                                        :sortcol => @sortcol ? @sortcol + 2 : nil,
-                                        :sortdir => @sortdir ? @sortdir[0..2]: nil,
-                                        :alt_row => true
+               :locals  => {:options => {:grid_id         => "list_grid",
+                                         :grid_name       => "gtl_list_grid",
+                                         :grid_xml        => @grid_xml,
+                                         :row_url         => url,
+                                         :row_url_ajax    => ajax_url,
+                                         :action_url      => action_url,
+                                         :save_col_widths => true,
+                                         :autosize        => true,  # Need this when list_grid div has no width/height specified
+                                         :skin            => "style3",
+                                         :sortcol         => @sortcol ? @sortcol + 2 : nil,
+                                         :sortdir         => @sortdir ? @sortdir[0..2]: nil,
+                                         :alt_row         => true
                                         }})
     %>
   <% else %>
     <%# substracting leftcol 219 from @winW to calculate width of div %>
     <div id="list_grid" style="width:<%= @winW - 219 %>;height:<%= center_div_height %>px;cursor:hand;overflow-x:auto;overflow-y:auto"></div>
     <%= render(:partial => 'layouts/dhtmlxgrid',
-               :locals => {:options => {:grid_id => "list_grid",
-                                        :grid_name => "gtl_list_grid",
-                                        :grid_xml => @grid_xml,
-                                        :row_url => url,
-                                        :action_url => action_url,
+               :locals  => {:options => {:grid_id        => "list_grid",
+                                        :grid_name       => "gtl_list_grid",
+                                        :grid_xml        => @grid_xml,
+                                        :row_url         => url,
+                                        :action_url      => action_url,
                                         :save_col_widths => true,
-                                        :skin => "style3",
-                                        :sortcol => @sortcol ? @sortcol + 2 : nil,
-                                        :sortdir => @sortdir ? @sortdir[0..2] : nil,
-                                        :alt_row => true
+                                        :skin            => "style3",
+                                        :sortcol         => @sortcol ? @sortcol + 2 : nil,
+                                        :sortdir         => @sortdir ? @sortdir[0..2] : nil,
+                                        :alt_row         => true
                                         }})
     %>
   <% end %>
@@ -71,18 +71,22 @@
                   <% end %>
                 >
                   <%= link_to(h(h),
-                            {:action => action_url, :sort_choice => h},
-                            "data-miq_sparkle_on" => true,
-                            "data-miq_sparkle_off" => true,
-                            :remote => true) %>
+                              {:action      => action_url, 
+                               :sort_choice => h},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote                => true) 
+                  %>
                 </th>
               <% else %>
                 <th nowrap>
                   <%= link_to(h(h),
-                          {:action => action_url, :sort_choice => h},
-                          "data-miq_sparkle_on" => true,
+                          {:action      => action_url, 
+                           :sort_choice => h},
+                          "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
-                          :remote => true) %>
+                          :remote                => true) 
+                  %>
                </th>
                <% end %>
             <% else %><%# Disable column sorting when embedded , for now %>
@@ -108,25 +112,30 @@
                   <% if false %>
                     <div id="filterbox"><%# Name based search box %>
                       <%= text_field("filter", "text", :id => "filter_text",
-                                  :onkeypress => "if(miqEnterPressed(event)) miqSearchByName();",
-                                  :value => @sb[:filter_text], :alt => "Filter by IPAdrress within results",
-                                  :title => "Filter by IPAdrress within results", "data-miq_focus" => true) %>
+                                     :onkeypress      => "if(miqEnterPressed(event)) miqSearchByName();",
+                                     :value           => @sb[:filter_text], :alt => "Filter by IPAdrress within results",
+                                     :title           => "Filter by IPAdrress within results", 
+                                     "data-miq_focus" => true)
+                      %>
                       <%= link_to(image_tag('/images/layout/search.gif',
-                                            :id => "filtericon", :name => "search_button",
-                                            :alt => "Filter by IPAdrress within results",
+                                            :id    => "filtericon", 
+                                            :name  => "search_button",
+                                            :alt   => "Filter by IPAdrress within results",
                                             :class => "nameonly"),
-                                  {:action => "list_view_filter", :button => "search_button"},
+                                  {:action => "list_view_filter", 
+                                   :button => "search_button"},
                                   "data-miq_sparkle_on" => true,
-                                  "data-submit" => 'filterbox',
-                                  :remote => true,
-                                  :title => "Filter by IPAdrress within results")
+                                  "data-submit"         => 'filterbox',
+                                  :remote               => true,
+                                  :title                => "Filter by IPAdrress within results")
                       %>
                     </div>
                   <% end %>
                 <% elsif col == "zone.name" %>
                   <%= select_tag('zone_name',
                                  options_for_select([["<All>", "all"]] + @zones, @sb[:zone_name]),
-                                 "data-miq_observe" => {:url => url}.to_json) %>
+                                 "data-miq_observe" => {:url => url}.to_json) 
+                  %>
                 <% elsif col == "miq_worker.type" %>
                   <%#= select_tag('worker_type',
                                  options_for_select(["<Choose>",nil] + @workers),
@@ -146,7 +155,12 @@
             <% cursor = ["MiqEvent", "MiqTask", "VmdbDatabaseConnection", "VmdbDatabaseSetting"].include?(view.db) ? "default" : "pointer" %>
             <% unless @embedded || @no_checkboxes %>
               <td class="checkbox" style="cursor:<%=cursor%>;">
-                <%= check_box_tag("check_#{@id}", value=1, checked=false, :id => "listcheckbox", :onclick => "miqUpdateButtons(this,'#{button_div}');") %>
+                <%= check_box_tag("check_#{@id}", 
+                                  value=1,
+                                  checked=false, 
+                                  :id      => "listcheckbox", 
+                                  :onclick => "miqUpdateButtons(this,'#{button_div}');") 
+                %>
               </td>
             <% end %>
             <% unless @no_listicon %>
@@ -230,7 +244,11 @@
                   <% end %>
                 <% end %>
                 nowrap>
-                <%= render(:partial => "layouts/listicon", :locals => {:db => view.db, :row => row, :icon_image => listicon_image}) %>
+                <%= render(:partial   => "layouts/listicon", 
+                          :locals     => {:db         => view.db, 
+                                          :row        => row, 
+                                          :icon_image => listicon_image})
+                %>
               </td>
             <% end %>
             <% view.col_order.each do |col| %>
