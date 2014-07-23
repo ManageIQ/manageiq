@@ -92,7 +92,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_other
-      mri.chart.update(Jqplot.basic_chart(mri.graph[:type]))
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
     end
 

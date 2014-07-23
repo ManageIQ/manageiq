@@ -26,6 +26,10 @@ class Jqplot
       chart
     end
 
+    def basic_chart_fallback(chart_type)
+      basic_chart(chart_type == 'PieThreed' ? 'Pie' : chart_type)
+    end
+
     def basic_chart(chart_type)
       case chart_type
       when 'Bar'
@@ -90,7 +94,10 @@ class Jqplot
       else
         {
           :data    => [[nil]],
-          :options => {:title => "Invalid char type #{chart_type}"}
+          :options => {
+            :title  => "Invalid char type #{chart_type}",
+            :series => []
+          }
         }
       end
     end
