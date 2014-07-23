@@ -35,17 +35,17 @@
     <%# substracting leftcol 219 from @winW to calculate width of div %>
     <div id="list_grid" style="width:<%= @winW - 219 %>;height:<%= center_div_height %>px;cursor:hand;overflow-x:auto;overflow-y:auto"></div>
     <%= render(:partial => 'layouts/dhtmlxgrid',
-               :locals  => {:options => {:grid_id        => "list_grid",
-                                        :grid_name       => "gtl_list_grid",
-                                        :grid_xml        => @grid_xml,
-                                        :row_url         => url,
-                                        :action_url      => action_url,
-                                        :save_col_widths => true,
-                                        :skin            => "style3",
-                                        :sortcol         => @sortcol ? @sortcol + 2 : nil,
-                                        :sortdir         => @sortdir ? @sortdir[0..2] : nil,
-                                        :alt_row         => true
-                                        }})
+               :locals  => {:options => {:grid_id         => "list_grid",
+                                         :grid_name       => "gtl_list_grid",
+                                         :grid_xml        => @grid_xml,
+                                         :row_url         => url,
+                                         :action_url      => action_url,
+                                         :save_col_widths => true,
+                                         :skin            => "style3",
+                                         :sortcol         => @sortcol ? @sortcol + 2 : nil,
+                                         :sortdir         => @sortdir ? @sortdir[0..2] : nil,
+                                         :alt_row         => true
+                                         }})
     %>
   <% end %>
 <% else %>
@@ -111,9 +111,11 @@
                 <% if col == 'address'  %>
                   <% if false %>
                     <div id="filterbox"><%# Name based search box %>
-                      <%= text_field("filter", "text", :id => "filter_text",
+                      <%= text_field("filter", "text", 
+                                     :id              => "filter_text",
                                      :onkeypress      => "if(miqEnterPressed(event)) miqSearchByName();",
-                                     :value           => @sb[:filter_text], :alt => "Filter by IPAdrress within results",
+                                     :value           => @sb[:filter_text], 
+                                     :alt             => "Filter by IPAdrress within results",
                                      :title           => "Filter by IPAdrress within results", 
                                      "data-miq_focus" => true)
                       %>
