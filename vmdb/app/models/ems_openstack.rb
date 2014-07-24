@@ -50,6 +50,10 @@ class EmsOpenstack < EmsCloud
     end
   end
 
+  def reset_openstack_handle
+    @openstack_handle = nil
+  end
+
   def connect(options = {})
     openstack_handle(options).connect(options)
   end
