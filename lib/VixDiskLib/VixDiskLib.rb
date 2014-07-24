@@ -37,8 +37,8 @@ class VixDiskLib
 
   def self.connect(connect_parms)
     @connection_lock.synchronize(:EX) do
-      raise VixDiskLibError, "VixDiskLibClient.connect() failed: VixDiskLib not initialized" if @initialized.nil?
-      raise VixDiskLibError, "VixDiskLibClient.connect() aborting: VixDiskLib shutting down" if @shutting_down
+      raise VixDiskLibError, "VixDiskLib.connect() failed: VixDiskLib not initialized" if @initialized.nil?
+      raise VixDiskLibError, "VixDiskLib.connect() aborting: VixDiskLib shutting down" if @shutting_down
       vix_disk_lib_service = start_service
       @drb_services << vix_disk_lib_service
       #
@@ -55,7 +55,7 @@ class VixDiskLib
           retry_limit -= 1
           retry
         else
-          raise VixDiskLibError, "VixDiskLibClient.connect() failed: #{e} on VixDiskLib.init()"
+          raise VixDiskLibError, "VixDiskLib.connect() failed: #{e} on VixDiskLib.init()"
         end
       end
       vix_disk_lib_service.connect(connect_parms)
@@ -122,7 +122,7 @@ class VixDiskLib
       sleep 1
       vix_disk_lib_service = DRbObject.new(nil, get_uri(reader))
     rescue DRb::DRbConnError => e
-      raise VixDiskLibError, "ERROR: VixDiskLibClient.connect() got #{e} on DRbObject.new_with_uri()" if retry_num == 0
+      raise VixDiskLibError, "ERROR: VixDiskLib.connect() got #{e} on DRbObject.new_with_uri()" if retry_num == 0
       retry_num -= 1 && retry
     end
     vix_disk_lib_service
@@ -133,11 +133,11 @@ class VixDiskLib
       #
       # Error - unable to read the port number written into the pipe by the child (Server).
       #
-      raise VixDiskLibError, "ERROR: VixDiskLibClient.connect() Unable to determine port used by VixDiskLib Server."
+      raise VixDiskLibError, "ERROR: VixDiskLib.connect() Unable to determine port used by VixDiskLib Server."
     end
     uri_selected = reader.gets.split("URI:")
     if uri_selected.length != 2
-      raise VixDiskLibError, "ERROR: VixDiskLibClient.connect() Unable to determine port used by VixDiskLib Server."
+      raise VixDiskLibError, "ERROR: VixDiskLib.connect() Unable to determine port used by VixDiskLib Server."
     end
     uri_selected[1].chomp
   end
