@@ -3,6 +3,10 @@ require 'sync'
 require 'VixDiskLib_FFI/const'
 require 'VixDiskLib_FFI/enum'
 #
+# The path to the VixDiskLib directory to be added to the process' LD_LIBRARY_PATH
+#
+VIXDISKLIB_PATH = "/usr/lib/vmware-vix-disklib/lib64"
+#
 # Alias the New FFI Binding Class Name to the old C Binding Class Name
 #
 VixDiskLib_raw = FFI::VixDiskLib::API
@@ -92,6 +96,7 @@ class VixDiskLib
     vars_to_clear.each do |key|
       my_env.delete(key)
     end
+    my_env["LD_LIBRARY_PATH"] = my_env["LD_LIBRARY_PATH"] + ":" + VIXDISKLIB_PATH
     my_env
   end
 
