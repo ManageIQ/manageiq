@@ -159,4 +159,49 @@ describe MiqAeClass do
       @inst4_list.should match_array(x)
     end
   end
+
+  context "#copy" do
+    before do
+      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
+      @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
+      @cls2 = FactoryGirl.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
+
+      @d2 = FactoryGirl.create(:miq_ae_namespace,
+                               :name      => "domain2",
+                               :parent_id => nil,
+                               :priority  => 2,
+                               :system    => false)
+      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+    end
+
+    it "copies classes under specified namespace" do
+      domain             = @d2.name
+      namespace          = @ns2.name
+      overwrite_location = false
+      selected_items     = [@cls1.id, @cls2.id]
+
+      res = MiqAeClass.copy(selected_items, domain, namespace, overwrite_location)
+      res.count.should eq(2)
+    end
+
+    it "copy classes under same namespace raise error when class exists" do
+      domain             = @d1.name
+      namespace          = @ns1.name
+      overwrite_location = false
+      selected_items     = [@cls1.id, @cls2.id]
+
+      expect { MiqAeClass.copy(selected_items, domain, namespace, overwrite_location) }.to raise_error(RuntimeError)
+    end
+
+    it "replaces classes under same namespace when class exists" do
+      domain             = @d2.name
+      namespace          = @ns2.name
+      selected_items     = [@cls1.id, @cls2.id]
+      overwrite_location = true
+
+      res = MiqAeClass.copy(selected_items, domain, namespace, overwrite_location)
+      res.count.should eq(2)
+    end
+  end
 end
