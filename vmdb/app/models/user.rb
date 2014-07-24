@@ -543,7 +543,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.authenticate_with_http_basic(username, password)
+  def self.authenticate_with_http_basic(username, password, request = nil)
     u = username.dup
     user = User.find_by_userid(u)
     if user.nil? && u.include?('\\')
@@ -556,9 +556,14 @@ class User < ActiveRecord::Base
       u = "#{username}@#{suffix}"
       user = User.find_by_userid(u)
     end
-    result = user.nil? ? nil : User.authenticate(u, password)
+
+    begin
+      result = user.nil? ? nil : User.authenticate(u, password, request)
+    rescue MiqException::MiqEVMLoginError
+    end
+
     AuditEvent.failure(:userid => username, :message=>"Authentication failed for user #{u}") if result.nil?
-    return !result.nil?, u
+    return !!result, u
   end
 
   def logoff

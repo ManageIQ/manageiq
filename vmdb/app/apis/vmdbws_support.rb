@@ -1,6 +1,8 @@
 require 'actionwebservice'
 
 module VmdbwsSupport
+  SYSTEM_USER = "system"
+
   class MiqActionWebServiceStruct < ActionWebService::Struct
     def to_h
       ret = {}

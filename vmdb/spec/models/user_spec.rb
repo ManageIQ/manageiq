@@ -468,6 +468,23 @@ describe User do
     end
   end
 
+  context ".authenticate_with_http_basic" do
+    let(:user) { FactoryGirl.create(:user, :password => "dummy") }
+
+    it "should login with good username/password" do
+      User.authenticate_with_http_basic(user.userid, user.password).should eq([true, user.userid])
+    end
+
+    it "should fail with bad username" do
+      bad_userid = "bad_userid"
+      User.authenticate_with_http_basic(bad_userid, user.password).should eq([false, bad_userid])
+    end
+
+    it "should fail with bad password" do
+      User.authenticate_with_http_basic(user.userid, "bad_pwd").should eq([false, user.userid])
+    end
+  end
+
   context ".seed" do
     before { MiqRegion.seed }
 
