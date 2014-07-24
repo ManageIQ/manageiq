@@ -50,11 +50,11 @@ module EmsRefresh::Parsers
     private
 
     def servers
-      @servers ||= @connection.servers_for_accessable_tenants
+      @servers ||= @connection.servers_for_accessible_tenants
     end
 
     def security_groups
-      @security_groups ||= @network_service.security_groups_for_accessable_tenants
+      @security_groups ||= @network_service.security_groups_for_accessible_tenants
     end
 
     def networks
@@ -126,7 +126,7 @@ module EmsRefresh::Parsers
     # end
 
     def get_images
-      images = @image_service.images_for_accessable_tenants
+      images = @image_service.images_for_accessible_tenants
       process_collection(images, :vms) { |image| parse_image(image) }
     end
 
@@ -156,7 +156,7 @@ module EmsRefresh::Parsers
 
     # maintained for legacy nova network support
     def floating_ips_nova
-      @network_service.addresses_for_accessable_tenants
+      @network_service.addresses_for_accessible_tenants
     end
 
     def link_vm_genealogy

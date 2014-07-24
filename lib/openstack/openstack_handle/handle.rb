@@ -70,28 +70,35 @@ module OpenstackHandle
     def connect(options = {})
       opts = options.dup
       service  = (opts.delete(:service) || "Compute").to_s.camelize
-      if (tenant = opts.delete(:tenant_name))
-        opts[:openstack_tenant] = tenant
+      tenant = opts.delete(:tenant_name)
+      unless tenant
+        tenant = "any_tenant" if service == "Identity"
+        tenant ||= default_tenant_name
       end
-      auth_url = self.class.auth_url(address, port)
-      opts[:connection_options] = connection_options if connection_options
+      opts[:openstack_tenant] = tenant unless service == "Identity"
 
-      svc = self.class.raw_connect(username, password, auth_url, service, opts)
-      OpenstackHandle.const_get("#{service}Delegate").new(svc, self)
+      svc_cache = (@connection_cache[service] ||= {})
+      svc_cache[tenant] ||= begin
+        auth_url = self.class.auth_url(address, port)
+        opts[:connection_options] = connection_options if connection_options
+
+        svc = self.class.raw_connect(username, password, auth_url, service, opts)
+        OpenstackHandle.const_get("#{service}Delegate").new(svc, self)
+      end
     end
 
     def compute_service(tenant_name = nil)
-      connect_cache("Compute", tenant_name)
+      connect(:service => "Compute", :tenant_name => tenant_name)
     end
     alias_method :connect_compute, :compute_service
 
     def identity_service
-      @identity_service ||= connect(:service => "Identity")
+      connect(:service => "Identity")
     end
     alias_method :connect_identity, :identity_service
 
     def network_service(tenant_name = nil)
-      connect_cache("Network", tenant_name)
+      connect(:service => "Network", :tenant_name => tenant_name)
     end
     alias_method :connect_network, :network_service
 
@@ -104,7 +111,7 @@ module OpenstackHandle
     end
 
     def image_service(tenant_name = nil)
-      connect_cache("Image", tenant_name)
+      connect(:service => "Image", :tenant_name => tenant_name)
     end
     alias_method :connect_image, :image_service
 
@@ -117,7 +124,7 @@ module OpenstackHandle
     end
 
     def volume_service(tenant_name = nil)
-      connect_cache("Volume", tenant_name)
+      connect(:service => "Volume", :tenant_name => tenant_name)
     end
     alias_method :connect_volume, :volume_service
 
@@ -130,7 +137,7 @@ module OpenstackHandle
     end
 
     def storage_service(tenant_name = nil)
-      connect_cache("Storage", tenant_name)
+      connect(:service => "Storage", :tenant_name => tenant_name)
     end
     alias_method :connect_storage, :storage_service
 
@@ -143,7 +150,7 @@ module OpenstackHandle
     end
 
     def detect_service(service, tenant_name = nil)
-      svc = connect_cache(service, tenant_name)
+      svc = connect(:service => service, :tenant_name => tenant_name)
       @service_names[service] = SERVICE_NAME_MAP[service]
       svc
     rescue MiqException::ServiceNotAvailable
@@ -151,7 +158,7 @@ module OpenstackHandle
         @service_names[service] = :none
         return nil
       end
-      svc = connect_cache(fbs, tenant_name)
+      svc = connect(:service => fbs, :tenant_name => tenant_name)
       @service_names[service] = SERVICE_NAME_MAP[fbs]
       svc
     end
@@ -175,7 +182,7 @@ module OpenstackHandle
         begin
           compute_service(t.name)
           true
-        rescue # Excon::Errors::Unauthorized
+        rescue Excon::Errors::Unauthorized
           false
         end
       end
@@ -186,6 +193,7 @@ module OpenstackHandle
     end
 
     def default_tenant_name
+      return @default_tenant_name ||= "admin" if accessible_tenant_names.include?("admin")
       @default_tenant_name ||= accessible_tenant_names.detect { |tn| tn != "services" }
     end
 
@@ -199,20 +207,12 @@ module OpenstackHandle
       end
     end
 
-    def accessor_for_accessable_tenants(service, accessor, uniq_id)
+    def accessor_for_accessible_tenants(service, accessor, uniq_id)
       ra = []
       service_for_each_accessible_tenant(service) do |svc|
         ra.concat(svc.send(accessor).to_a)
       end
       ra.uniq { |i| i.send(uniq_id) }
-    end
-
-    private
-
-    def connect_cache(service, tenant_name)
-      tenant_name ||= default_tenant_name
-      svc_cache = (@connection_cache[service] ||= {})
-      svc_cache[tenant_name] ||= connect(:service => service, :tenant_name => tenant_name)
     end
   end
 end

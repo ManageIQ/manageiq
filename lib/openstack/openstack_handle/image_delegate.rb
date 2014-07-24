@@ -7,8 +7,8 @@ module OpenstackHandle
       @os_handle = os_handle
     end
 
-    def images_for_accessable_tenants
-      @os_handle.accessor_for_accessable_tenants(SERVICE_NAME, :images, :id)
+    def images_for_accessible_tenants
+      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :images, :id)
     end
   end
 end

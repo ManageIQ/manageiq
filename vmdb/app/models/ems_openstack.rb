@@ -44,7 +44,9 @@ class EmsOpenstack < EmsCloud
 
       username = options[:user] || self.authentication_userid(options[:auth_type])
       password = options[:pass] || self.authentication_password(options[:auth_type])
-      OpenstackHandle::Handle.new(username, password, address, port)
+      osh = OpenstackHandle::Handle.new(username, password, address, port)
+      osh.connection_options = {:instrumentor => $fog_log}
+      osh
     end
   end
 
