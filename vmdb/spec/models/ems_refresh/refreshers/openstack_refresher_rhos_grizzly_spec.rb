@@ -10,11 +10,17 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   it "will perform a full refresh against RHOS Grizzly" do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
+      # Caching OpenStack info between runs causes the tests to fail with:
+      #   VCR::Errors::UnusedHTTPInteractionError
+      # Reset the cache so HTTP interactions are the same between runs.
+      @ems.reset_openstack_handle
 
       # We need VCR to match requests differently here because fog adds a dynamic
       #   query param to avoid HTTP caching - ignore_awful_caching##########
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
-      VCR.use_cassette("#{described_class.name.underscore}_rhos_grizzly", :match_requests_on => [:method, :host, :path]) do
+      VCR.use_cassette("#{described_class.name.underscore}_rhos_grizzly",
+                       :allow_unused_http_interactions => false,  # don't rely on default (differs, local vs Travis)
+                       :match_requests_on              => [:method, :host, :path]) do
         EmsRefresh.refresh(@ems)
       end
       @ems.reload
