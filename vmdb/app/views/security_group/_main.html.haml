@@ -9,3 +9,4 @@
         = render :partial => "shared/summary/textual", :locals => { :title => "Relationships",         :items => textual_group_relationships }
       %dd
         = render :partial => "shared/summary/textual_firewall_rules", :locals => { :title => "Firewall Rules", :items => textual_group_firewall, :labels => ["Network Protocol", "Host Protocol", "Direction", "Port", "End Port", "Source"]}
+        = render :partial => "shared/summary/textual_tags", :locals => { :title => "Smart Management", :items => textual_group_tags }
