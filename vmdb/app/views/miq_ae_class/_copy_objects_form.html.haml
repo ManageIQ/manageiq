@@ -17,21 +17,14 @@
               @edit[:new][:domain]),
               "data-miq_observe" => {:url => url}.to_json)
       %tr
-        %td.key Copy will override Source
+        %td.key Copy to same path
         %td
           = check_box_tag("override_source",
                           value   = "1",
                           checked = @edit[:new][:override_source],
                           :id                         => "override_source",
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
-      - unless @edit[:new][:override_source]
-        %tr
-          %td.key Namespace
-          %td.wider
-            = text_field_tag("namespace",
-                             @edit[:new][:namespace],
-                             :onFocus => 'miqShowAE_Tree("namespace");miqButtons(false);')
-      - if %w(MiqAeInstance MiqAeMethod).include?(@edit[:typ].to_s) && @edit[:new][:namespace]
+      - if %w(MiqAeInstance MiqAeMethod).include?(@edit[:typ].to_s)
         %tr
           %td.key Replace items if they already exist?
           %td
@@ -40,6 +33,13 @@
                            checked = @edit[:new][:override_existing],
                            :id => "override_existing",
                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+      - unless @edit[:new][:override_source]
+        %tr
+          %td.key Namespace
+          %td.wider
+            = text_field_tag("namespace",
+                             @edit[:new][:namespace],
+                             :onFocus => 'miqShowAE_Tree("namespace");miqButtons(false);')
   %p
     %table.style3
       %thead
