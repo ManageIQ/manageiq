@@ -118,7 +118,7 @@ module ApplicationController::MiqRequestMethods
         else
           render :update do |page|
             page.redirect_to :controller     => @redirect_controller,
-                             :action         => @refresh_partial,
+                             :action         => "prov_edit",
                              :src_vm_id      => @src_vm_id,
                              :org_controller => "vm",
                              :vdi_users      => @vdi_users
