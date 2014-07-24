@@ -7,7 +7,6 @@ class EvmDatabase
     Zone
     MiqServer
     ServerRole
-    UiTask
     MiqProductFeature
     MiqUserRole
     MiqGroup
