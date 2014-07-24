@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: best_fit_with_tags
+    name: vmware_best_fit_least_utilized
     inherits: 
     description: 
   fields:
   - meth5:
-      value: best_fit_with_tags
+      value: vmware_best_fit_least_utilized

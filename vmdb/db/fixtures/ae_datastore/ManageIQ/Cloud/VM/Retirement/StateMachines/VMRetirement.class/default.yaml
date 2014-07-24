@@ -8,8 +8,6 @@ object:
     inherits: 
     description: 
   fields:
-  - UnregisterFromProvider:
-      value: ! '#/Cloud/VM/Retirement/StateMachines/Methods/UnregisterFromProvider'
   - DeleteFromProvider:
       value: /Cloud/VM/Retirement/StateMachines/Methods/DeleteFromProvider
   - CheckUnregisteredFromProvider:
