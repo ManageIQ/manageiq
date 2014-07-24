@@ -555,25 +555,28 @@ class User < ActiveRecord::Base
 
   def self.authenticate_with_http_basic(username, password, request = nil, options = {})
     options[:require_user] ||= false
-    u = username.dup
-    user = User.find_by_userid(u)
-    if user.nil? && u.include?('\\')
-      parts = username.split('\\')
-      u = "#{parts.last}@#{parts.first}"
-      user = User.find_by_userid(u)
-    end
-    if user.nil? && !u.include?('@') && MiqLdap.using_ldap?
-      suffix = VMDB::Config.new("vmdb").config.fetch_path(:authentication, :user_suffix)
-      u = "#{username}@#{suffix}"
-      user = User.find_by_userid(u)
-    end
+    user, username = find_by_principalname(username)
+    result = nil
     begin
-      result = user.nil? ? nil : User.authenticate(u, password, request, options)
+      result = user.nil? ? nil : User.authenticate(username, password, request, options)
     rescue MiqException::MiqEVMLoginError
     end
+    AuditEvent.failure(:userid => username, :message => "Authentication failed for user #{username}") if result.nil?
+    [!!result, username]
+  end
 
-    AuditEvent.failure(:userid => username, :message=>"Authentication failed for user #{u}") if result.nil?
-    return !!result, u
+  def self.find_by_principalname(username)
+    unless (user = User.find_by_userid(username))
+      if username.include?('\\')
+        parts = username.split('\\')
+        username = "#{parts.last}@#{parts.first}"
+      elsif !username.include?('@') && MiqLdap.using_ldap?
+        suffix = VMDB::Config.new("vmdb").config.fetch_path(:authentication, :user_suffix)
+        username = "#{username}@#{suffix}"
+      end
+      user = User.find_by_userid(username)
+    end
+    [user, username]
   end
 
   def logoff
