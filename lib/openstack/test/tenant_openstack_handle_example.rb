@@ -17,16 +17,18 @@ CREDS = [
 
 ACCESSORS = [
   ['Compute', 'servers',                                nil],
-  ['Compute', 'servers_for_accessable_tenants',         nil],
+  ['Compute', 'servers_for_accessible_tenants',         nil],
   ['Compute', 'flavors',                                nil],
   ['Compute', 'tenants',                                nil],
   ['Compute', 'key_pairs',                              nil],
   ['Network', 'security_groups',                        nil],
-  ['Network', 'security_groups_for_accessable_tenants', nil],
+  ['Network', 'security_groups_for_accessible_tenants', nil],
   ['Network', 'networks',                               :neutron],
   ['Network', 'floating_ips',                           :neutron],
+  ['Compute', 'addresses',                              nil],
+  ['Compute', 'addresses_for_accessible_tenants',       nil],
   ['Image',   'images',                                 nil],
-  ['Image',   'images_for_accessable_tenants',          nil]
+  ['Image',   'images_for_accessible_tenants',          nil]
 ]
 
 require 'bundler_setup'

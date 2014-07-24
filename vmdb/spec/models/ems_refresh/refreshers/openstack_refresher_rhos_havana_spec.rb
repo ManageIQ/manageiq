@@ -50,21 +50,21 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     FirewallRule.count.should        == 30
     CloudNetwork.count.should        == 4
     CloudSubnet.count.should         == 4
-    VmOrTemplate.count.should        == 13
-    Vm.count.should                  == 7
+    VmOrTemplate.count.should        == 14
+    Vm.count.should                  == 8
     MiqTemplate.count.should         == 6
 
     CustomAttribute.count.should     == 0
-    Disk.count.should                == 15
+    Disk.count.should                == 16
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 7
+    Hardware.count.should            == 8
     Network.count.should             == 8
     OperatingSystem.count.should     == 0
     Snapshot.count.should            == 0
     SystemService.count.should       == 0
 
-    Relationship.count.should        == 11
-    MiqQueue.count.should            == 15
+    Relationship.count.should        == 12
+    MiqQueue.count.should            == 16
   end
 
   def assert_ems
@@ -78,8 +78,8 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.floating_ips.size.should       == 4
     @ems.key_pairs.size.should          == 1
     @ems.security_groups.size.should    == 4
-    @ems.vms_and_templates.size.should  == 13
-    @ems.vms.size.should                == 7
+    @ems.vms_and_templates.size.should  == 14
+    @ems.vms.size.should                == 8
     @ems.miq_templates.size.should      == 6
   end
 

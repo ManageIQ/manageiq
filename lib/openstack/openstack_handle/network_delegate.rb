@@ -7,8 +7,8 @@ module OpenstackHandle
       @os_handle = os_handle
     end
 
-    def security_groups_for_accessable_tenants
-      @os_handle.accessor_for_accessable_tenants(SERVICE_NAME, :security_groups, :id)
+    def security_groups_for_accessible_tenants
+      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :security_groups, :id)
     end
   end
 end
