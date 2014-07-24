@@ -28,7 +28,7 @@
     %fieldset
       %p.legend Import Service Dialogs
 
-      %label(for='toggle-all') Check/Uncheck all
+      %label(for='toggle-all') All
       %input#toggle-all(type='checkbox')
 
       #import-grid
@@ -51,5 +51,6 @@
       miqSparkleOn();
     });
 
-    setUpClickHandlers();
+    listenForDialogPostMessages();
+    setUpImportClickHandlers('import_service_dialogs');
   });

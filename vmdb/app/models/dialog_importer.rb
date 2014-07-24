@@ -52,8 +52,6 @@ class DialogImporter
     @dialog_import_validator.determine_validity(import_file_upload)
 
     import_file_upload
-  rescue
-    raise
   ensure
     queue_deletion(import_file_upload.id)
   end

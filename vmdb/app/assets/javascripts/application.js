@@ -1,5 +1,6 @@
 //= require cfme_application
 //= require dialog_import_export
+//= require widget_import_export
 //= require jquery.jqplot
 //= require jqplot-plugins/jqplot.pieRenderer
 //= require jqplot-plugins/jqplot.barRenderer

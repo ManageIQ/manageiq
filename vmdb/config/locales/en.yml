@@ -278,6 +278,9 @@ en:
       widget_generation_error: "Widget content generation error: "
       widget_generation_started: "Content generation for this Widget has been initiated"
       import_file_empty_error: "Import file cannot be empty"
+      widget_import_cancelled: "Widget import cancelled"
+      widget_import_successful: "Widgets imported successfully"
+      widget_import_file_upload_expired: "Error: Widget import file upload expired"
 
     request:
       cannot_create_workflow: 'Cannot create Request Info, error: '
@@ -459,7 +462,7 @@ en:
     edit_tags: 'Edit Tags for %{model}'
     evm_relationship: 'Edit CFME Server Relationship for %{model} "%{name}"'
     filtered_model_records: '%{model} - Filtered by "%{filter}"'
-    import_export_reports: "Import / Export Custom Reports"
+    import_export_reports: "Import / Export"
     miq_request_new: 'Provision %{model}'
     model: "%{model}"
     model_assignments: ' %{model} Assignments'

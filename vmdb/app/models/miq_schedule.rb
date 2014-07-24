@@ -1,8 +1,8 @@
 class MiqSchedule < ActiveRecord::Base
-  validates_uniqueness_of   :name, :scope => :userid
-  validates_presence_of     :name, :description, :towhat, :run_at
-  validate                  :validate_run_at, :validate_file_depot
-  has_one                   :file_depot, :as => :resource, :dependent => :destroy
+  validates_uniqueness_of :name, :scope => [:userid, :towhat]
+  validates_presence_of   :name, :description, :towhat, :run_at
+  validate                :validate_run_at, :validate_file_depot
+  has_one                 :file_depot, :as => :resource, :dependent => :destroy
 
   include ReportableMixin
 

@@ -22,20 +22,36 @@ class ImportFileUpload < ActiveRecord::Base
     service_dialogs.to_json
   end
 
+  def widget_json
+    sorted_widgets = uploaded_yaml_content.sort_by do |widget_contents|
+      widget_contents["MiqWidget"]["title"].downcase
+    end
+
+    widgets = sorted_widgets.collect.with_index do |widget, index|
+      status_icon = MiqWidget.exists?(:title => widget["MiqWidget"]["title"]) ? "checkmark" : "equal-green"
+      status = determine_status(status_icon)
+
+      {
+        :id          => index,
+        :name        => widget["MiqWidget"]["title"],
+        :status_icon => status_icon,
+        :status      => status
+      }
+    end
+
+    widgets.to_json
+  end
+
   def store_policy_import_data(binary_data)
-    create_binary_blob(
-      :binary    => binary_data,
-      :name      => "Policy import",
-      :data_type => "String"
-    )
+    store_binary_data(binary_data, "Policy import")
   end
 
   def store_service_dialog_import_data(binary_data)
-    create_binary_blob(
-      :binary    => binary_data,
-      :name      => "Service Dialog import",
-      :data_type => "yml"
-    )
+    store_binary_data(binary_data, "Service Dialog import")
+  end
+
+  def store_widget_import_data(binary_data)
+    store_binary_data(binary_data, "Widget import")
   end
 
   def uploaded_content
@@ -48,12 +64,20 @@ class ImportFileUpload < ActiveRecord::Base
 
   private
 
+  def store_binary_data(binary_data, name)
+    create_binary_blob(
+      :binary    => binary_data,
+      :name      => name,
+      :data_type => "yml"
+    )
+  end
+
   def determine_status(status_icon)
     case status_icon
     when "checkmark"
-      "Service dialog already exists"
+      "This object already exists in the database with the same name"
     when "equal-green"
-      "New service dialog"
+      "New object"
     end
   end
 end
