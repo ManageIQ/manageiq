@@ -106,9 +106,6 @@ namespace :build do
         lib/disk/modules/MiqLargeFileLinux.d
         lib/SlpLib/SlpLib_raw/
         lib/NetappManageabilityAPI/NmaCore/NmaCore_raw
-        lib/VixDiskLib/VixDiskLib_raw/v1_2/
-        lib/VixDiskLib/VixDiskLib_raw/v5_0/
-        lib/VixDiskLib/VixDiskLib_raw/v5_1/
       )
 
       artifacts_dirs.each do |dir|
@@ -126,7 +123,6 @@ namespace :build do
         lib/disk/modules/
         lib/SlpLib/lib/
         lib/NetappManageabilityAPI/NmaCore/
-        lib/VixDiskLib/lib/
       )
 
       so_dirs.each do |dir|
@@ -231,32 +227,6 @@ namespace :build do
       )
     else
       puts "** Skipping build of NmaCore_raw.so due to missing header or library."
-    end
-
-    #
-    # VixDiskLib
-    #
-
-    { # VDL version => library version
-      "5.1" => "5.1.0",
-      "5.0" => "5.0.0",
-      "1.2" => "1.1.2"
-    }.each do |vdl_version, lib_version|
-      vdl_version_underscore = vdl_version.gsub(".", "_")
-
-      include_dir = Pathname.new(ENV["VDL_#{vdl_version_underscore}_INCLUDE"] || "/usr/lib/vmware-vix-disklib/include")
-      lib_dir     = Pathname.new(ENV["VDL_#{vdl_version_underscore}_LIB"]     || "/usr/lib/vmware-vix-disklib/lib64")
-      so_name     = "VixDiskLib_raw.#{vdl_version}.so"
-      if Dir.exist?(include_dir) && Dir.exist?(lib_dir) && File.exist?(lib_dir.join("libvixDiskLib.so.#{lib_version}"))
-        build_shared_objects(
-          so_name,
-          base.join("lib/VixDiskLib/VixDiskLib_raw/v#{vdl_version_underscore}/"),
-          base.join("lib/VixDiskLib/lib/#{platform}/ruby#{RUBY_VERSION}/"),
-          "--with-vixDiskLib-include #{include_dir} --with-vixDiskLib-lib #{lib_dir}"
-        )
-      else
-        puts "** Skipping build of #{so_name} due to missing header or library."
-      end
     end
   end
 end
