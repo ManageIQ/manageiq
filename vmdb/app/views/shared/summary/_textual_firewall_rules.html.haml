@@ -1,10 +1,12 @@
 - if items
-  .modbox{:style => "margin: 0px 0px 20px 30px"}
-    %h2.modtitle= title
-    %table.style3
-      - labels.each do |label|
-        %td.label= label
-      - items.each do |item|
-        %tr{:class => cycle('row0', 'row1', :name => title)}
-          - item.each do |value|
-            %td= value
+  %table.style3
+    %thead
+      %tr
+        %th{:colspan => 6, :align => "left"}
+          =title
+    - labels.each do |label|
+      %td.label= label
+    - items.each do |item|
+      %tr{:class => cycle('row0', 'row1', :name => title)}
+        - item.each do |value|
+          %td= value
