@@ -1953,4 +1953,14 @@ class VmOrTemplate < ActiveRecord::Base
   def self.includes_template?(ids)
     MiqTemplate.where(:id => ids).exists?
   end
+
+  def self.cloneable?(ids)
+    vms = VmOrTemplate.where(:id => ids)
+    return false if vms.blank?
+    vms.all?(&:cloneable?)
+  end
+
+  def cloneable?
+    false
+  end
 end

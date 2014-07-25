@@ -1720,7 +1720,7 @@ describe ApplicationHelper do
         @user.stub(:role_allows?).and_return(true)
       end
 
-      ["vm_clone","vm_migrate", "vm_publish","vm_reconfigure"].each do |id|
+      %w(vm_migrate vm_publish vm_reconfigure).each do |id|
         context "and id = #{id}" do
           before { @id = id }
 
@@ -1733,6 +1733,20 @@ describe ApplicationHelper do
             @record.stub(:vendor => "Vmware")
             subject.should == false
           end
+        end
+      end
+
+      context "and id = vm_clone" do
+        before { @id = "vm_clone" }
+
+        it "record is not cloneable" do
+          @record = Vm.create(:type => "VmMicrosoft", :name => "vm", :location => "l2", :vendor => "microsoft")
+          subject.should == true
+        end
+
+        it "record is cloneable" do
+          @record = Vm.create(:type => "VmRedhat", :name => "rh", :location => "l1", :vendor => "redhat")
+          subject.should == false
         end
       end
 
@@ -1997,13 +2011,19 @@ describe ApplicationHelper do
           @id = "miq_template_clone"
         end
 
-        it "and vendor = Redhat" do
-          @record.stub(:vendor => "Redhat")
+        it "record is not cloneable" do
+          @record =  MiqTemplate.create(:type     => "TemplateRedhat",
+                                        :name     => "rh",
+                                        :location => "loc1",
+                                        :vendor   => "redhat")
           subject.should == true
         end
 
-        it "and vendor != Redhat" do
-          @record.stub(:vendor => "Vmware")
+        it "record is cloneable" do
+          @record =  MiqTemplate.create(:type     => "TemplateVmware",
+                                        :name     => "vm",
+                                        :location => "loc2",
+                                        :vendor   => "vmware")
           subject.should == false
         end
       end

@@ -24,4 +24,8 @@ class VmRedhat < VmInfra
   def has_required_host?
     true
   end
+
+  def cloneable?
+    true
+  end
 end
