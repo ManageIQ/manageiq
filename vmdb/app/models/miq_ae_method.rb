@@ -88,7 +88,7 @@ class MiqAeMethod < ActiveRecord::Base
     field.attributes
   end
 
-  def copy(domain, namespace, overwrite_location)
-    MiqAeMethodCopy.new(fqname).to_domain(domain, namespace, overwrite_location)
+  def self.copy(ids, domain, namespace, overwrite_location)
+    MiqAeMethodCopy.copy_multiple(ids, domain, namespace, overwrite_location)
   end
 end

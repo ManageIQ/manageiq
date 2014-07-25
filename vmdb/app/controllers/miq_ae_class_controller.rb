@@ -268,6 +268,12 @@ class MiqAeClassController < ApplicationController
     existing_node = find_existing_node(parents)
     return nil if existing_node.nil?
     children = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], existing_node)
+    # set x_node after building tree nodes so parent node of new nodes can be selected in the tree.
+    if @record.kind_of?(MiqAeClass)
+      self.x_node = "aen-#{to_cid(@record.namespace_id)}"
+    else
+      self.x_node = "aec-#{to_cid(@record.class_id)}"
+    end
     {:key => existing_node, :children => children}
   end
 
@@ -299,13 +305,12 @@ class MiqAeClassController < ApplicationController
 
     @in_a_form = @in_a_form_fields = @in_a_form_props = false if params[:button] == "cancel" ||
                     (["save","add"].include?(params[:button]) && replace_trees)
+    add_nodes = open_parent_nodes(@record) if params[:button] == "copy"
     get_node_info(x_node) if !@in_a_form && @button != "reset"
     ae_tree = build_ae_tree if replace_trees
 
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename) if !@in_a_form
     h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb")
-
-    add_nodes = open_parent_nodes(@record) if params[:button] == "copy"
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
@@ -1928,8 +1933,32 @@ exit MIQ_OK"
     end
   end
 
+  def objects_to_copy
+    ids = find_checked_items
+    if ids
+      items_without_prefix = []
+      ids.each do |item|
+        values = item.split("-")
+        # remove any namespaces that were selected in grid
+        items_without_prefix.push(values.last) unless values.first == "aen"
+      end
+      items_without_prefix
+    else
+      [params[:id]]
+    end
+  end
+
   def copy_objects
-    id = find_checked_items ? find_checked_items.first.split("-").last : params[:id]
+    ids = objects_to_copy
+    if ids.blank?
+      add_flash(I18n.t("flash.button.task_does_not_apply_to_model",
+                       :task  => "Copy",
+                       :model => ui_lookup(:model => "MiqAeNamespace")), :error)
+      @sb[:action] = session[:edit] = nil
+      @in_a_form = false
+      replace_right_cell
+      return
+    end
     case params[:button]
     when "cancel"
       copy_cancel
@@ -1938,7 +1967,7 @@ exit MIQ_OK"
     when "reset", nil # Reset or first time in
       action = params[:pressed] || @sb[:action]
       typ = action.split("_").first(3).join("_").camelcase.constantize
-      copy_reset(typ, id, action)
+      copy_reset(typ, ids, action)
     end
   end
 
@@ -1949,6 +1978,7 @@ exit MIQ_OK"
     @changed = (@edit[:new] != @edit[:current])
     @changed = @edit[:new][:override_source] if @edit[:new][:namespace].nil?
     render :update do |page|                    # Use JS to update the display
+      page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       page.replace("form_div", :partial => "copy_objects_form") if params[:domain] || params[:override_source]
       page << javascript_for_miq_button_visibility(@changed)
     end
@@ -2030,7 +2060,11 @@ private
     @record = @edit[:typ].find_by_id(@edit[:rec_id])
     domain = MiqAeDomain.find_by_id(@edit[:new][:domain])
     begin
-      res = @record.copy(domain.name, @edit[:new][:namespace], @edit[:new][:overwrite_location])
+      res = @edit[:typ].copy(@edit[:selected_items].keys,
+                             domain.name,
+                             @edit[:new][:namespace],
+                             @edit[:new][:override_existing]
+      )
     rescue StandardError => bang
       add_flash(I18n.t("flash.error_during",
                        :task => "#{ui_lookup(:model => "#{@edit[:typ]}")} copy") << bang.message, :error)
@@ -2038,19 +2072,20 @@ private
         page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       end
     else
-      add_flash(I18n.t("flash.copy.copied", :model => ui_lookup(:model => "#{@edit[:typ]}")))
-      @record = res
-      self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(res.id)}"
+      model = @edit[:selected_items].count > 1 ? :models : :model
+      add_flash(I18n.t("flash.copy.copied", :model => ui_lookup(model => "#{@edit[:typ]}")))
+      @record = @edit[:typ].find_by_id(res.first)
+      self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(res.first)}"
       @in_a_form = @changed = session[:changed] = false
       @sb[:action] = @edit = session[:edit] = nil
       replace_right_cell
     end
   end
 
-  def copy_reset(typ, id, button_pressed)
+  def copy_reset(typ, ids, button_pressed)
     assert_privileges(button_pressed)
     @changed = session[:changed] = @in_a_form = true
-    copy_objects_edit_screen(typ, id, button_pressed)
+    copy_objects_edit_screen(typ, ids, button_pressed)
     if params[:button] == "reset"
       add_flash(I18n.t("flash.edit.reset"), :warning)
     end
@@ -2061,26 +2096,42 @@ private
   def copy_cancel
     assert_privileges(@sb[:action])
     @record = session[:edit][:typ].find_by_id(session[:edit][:rec_id])
+    model = @edit[:selected_items].count > 1 ? :models : :model
     @sb[:action] = session[:edit] = nil # clean out the saved info
     add_flash(I18n.t("flash.copy.cancelled",
-                     :model => ui_lookup(:model => "#{@edit[:typ]}")
+                     :model => ui_lookup(model => "#{@edit[:typ]}")
               )
     )
     @in_a_form = false
     replace_right_cell
   end
 
-  def copy_objects_edit_screen(typ, id, button_pressed)
+  def copy_objects_edit_screen(typ, ids, button_pressed)
     domains = {}
-    @record = typ.find_by_id(from_cid(id))
+    selected_items = {}
+    ids.each_with_index do |id, i|
+      record = typ.find_by_id(from_cid(id))
+      selected_items[record.id] = record.name
+      @record = record if i == 0
+    end
     MiqAeDomain.all_unlocked.collect { |domain| domains[domain.id] = domain_display_name(domain) }
+    initialize_copy_edit_vars(typ, button_pressed, domains, selected_items)
+    @sb[:domain_id] = domains.first.first
+    @edit[:current] = copy_hash(@edit[:new])
+    model = @edit[:selected_items].count > 1 ? :models : :model
+    @right_cell_text = "Copy #{ui_lookup(model => "#{typ}")}"
+    session[:edit] = @edit
+  end
+
+  def initialize_copy_edit_vars(typ, button_pressed, domains, selected_items)
     @edit = {
-      :typ        => typ,
-      :action     => button_pressed,
-      :rec_id     => from_cid(id),
-      :key        => "copy_objects__#{from_cid(id)}",
-      :domains    => domains,
-      :namespaces => {}
+      :typ            => typ,
+      :action         => button_pressed,
+      :rec_id         => from_cid(@record.id),
+      :key            => "copy_objects__#{from_cid(@record.id)}",
+      :domains        => domains,
+      :selected_items => selected_items,
+      :namespaces     => {}
     }
     @edit[:new] = {
       :domain            => domains.first.first,
@@ -2088,10 +2139,6 @@ private
       :namespace         => nil,
       :override_existing => false
     }
-    @sb[:domain_id] = domains.first.first
-    @edit[:current] = copy_hash(@edit[:new])
-    @right_cell_text = "Copy of #{ui_lookup(:model => "#{typ}")}"
-    session[:edit] = @edit
   end
 
   def create_action_url(node)

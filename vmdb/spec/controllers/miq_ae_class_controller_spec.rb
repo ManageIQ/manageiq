@@ -97,12 +97,14 @@ describe MiqAeClassController do
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :overwrite_location => false}
+      selected_items = {cls1.id => cls1.name}
       edit = {
-        :new     => new,
-        :typ     => MiqAeClass,
-        :rec_id  => cls1.id,
-        :key     => "copy_objects__#{cls1.id}",
-        :current => new,
+        :new            => new,
+        :typ            => MiqAeClass,
+        :rec_id         => cls1.id,
+        :key            => "copy_objects__#{cls1.id}",
+        :current        => new,
+        :selected_items => selected_items,
       }
       controller.instance_variable_set(:@_params, :button => "copy", :id => cls1.id)
       controller.instance_variable_set(:@edit, edit)
@@ -111,7 +113,7 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.send(:copy_objects)
       controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("Automate Class was copied")
+      assigns(:flash_array).first[:message].should include("Copy selected Automate Class was saved")
       MiqAeClass.find_by_name_and_namespace_id(cls1.name, ns2.id).should_not be_nil
     end
 
@@ -151,12 +153,14 @@ describe MiqAeClassController do
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :overwrite_location => true}
+      selected_items = {cls1.id => cls1.name}
       edit = {
-        :new     => new,
-        :typ     => MiqAeClass,
-        :rec_id  => cls1.id,
-        :key     => "copy_objects__#{cls1.id}",
-        :current => new,
+        :new            => new,
+        :typ            => MiqAeClass,
+        :rec_id         => cls1.id,
+        :key            => "copy_objects__#{cls1.id}",
+        :current        => new,
+        :selected_items => selected_items,
       }
       controller.instance_variable_set(:@_params, :button => "copy", :id => cls1.id)
       controller.instance_variable_set(:@edit, edit)
@@ -165,7 +169,7 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.send(:copy_objects)
       controller.send(:flash_errors?).should be_false
-      assigns(:flash_array).first[:message].should include("Automate Class was copied")
+      assigns(:flash_array).first[:message].should include("Copy selected Automate Class was saved")
     end
 
   end

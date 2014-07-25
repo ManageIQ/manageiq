@@ -115,8 +115,8 @@ class MiqAeInstance < ActiveRecord::Base
     value.attributes
   end
 
-  def copy(domain, namespace, overwrite_location)
-    MiqAeInstanceCopy.new(fqname).to_domain(domain, namespace, overwrite_location)
+  def self.copy(ids, domain, namespace, overwrite_location)
+    MiqAeInstanceCopy.copy_multiple(ids, domain, namespace, overwrite_location)
   end
 
   private

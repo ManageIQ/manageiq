@@ -106,8 +106,8 @@ function cfmeDynatree_activateNode(tree, key) {
 function cfmeDynatree_activateNodeSilently(tree, key) {
   var node = $j("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
   if (node != null) { // Only try to activate node if it is in the tree
-    node.expand();
     node.activateSilently();
+    node.expand();
     node.focus();
   }
 }

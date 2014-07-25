@@ -39,11 +39,11 @@
       :onwhen: '1'
     - :button: miq_ae_instance_copy
       :image: copy
-      :text: 'Copy a single Instance'
-      :title: 'Select a single Instance to copy'
+      :text: 'Copy selected Instances'
+      :title: 'Select Instances to copy'
       :url_parms: 'main_div'
       :enabled: 'false'
-      :onwhen: '1'
+      :onwhen: '1+'
     - :button: miq_ae_instance_delete
       :image: remove
       :text: 'Remove Instances'
