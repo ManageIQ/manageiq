@@ -6,7 +6,8 @@ class Zone < ActiveRecord::Base
 
   serialize :settings, Hash
 
-  belongs_to :log_file_depot, :class_name => "FileDepot"
+  belongs_to      :log_file_depot, :class_name => "FileDepot"
+  alias_attribute :log_depot, :log_file_depot
 
   has_many :miq_servers
   has_many :active_miq_servers, :class_name => "MiqServer", :conditions => {:status => MiqServer::STATUSES_ACTIVE}

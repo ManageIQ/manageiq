@@ -1499,6 +1499,16 @@ module ApplicationHelper
         end
       end
     end
+
+    collect_log_buttons = %w(support_vmdb_choice__collect_logs
+                             support_vmdb_choice__collect_current_logs
+                             support_vmdb_choice__zone_collect_logs
+                             support_vmdb_choice__zone_collect_current_logs
+    )
+
+    if tb_buttons[button][:name].in?(collect_log_buttons) && @record.try(:log_depot).try(:requires_support_case?)
+      tb_buttons[button][:prompt] = true
+    end
     eval("parms = \"#{item[:url_parms]}\"") if item[:url_parms]
     tb_buttons[button][:url_parms] = parms if item[:url_parms]
     # doing eval for ui_lookup in confirm message
