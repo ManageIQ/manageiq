@@ -53,15 +53,15 @@ class MiqAeMethod < ActiveRecord::Base
 
   def to_export_xml(options = {})
     require 'builder'
-    xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
+    xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
     xml_attrs = { :name => self.name, :language => self.language, :scope => self.scope, :location => self.location }
 
     self.class.column_names.each { |cname|
       # Remove any columns that we do not want to export
-      next if ["id", "created_on", "updated_on", "updated_by", "reserved"].include?(cname) || cname.ends_with?("_id")
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
 
       # Skip any columns that we process explicitly
-      next if ["name", "language", "scope", "location", "data"].include?(cname)
+      next if %w(name language scope location data).include?(cname)
 
       # Process the column
       xml_attrs[cname.to_sym]  = self.send(cname)   unless self.send(cname).blank?

@@ -75,15 +75,15 @@ class MiqAeInstance < ActiveRecord::Base
 
   def to_export_xml(options = {})
     require 'builder'
-    xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
+    xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
     xml_attrs = { :name => self.name }
 
     self.class.column_names.each { |cname|
       # Remove any columns that we do not want to export
-      next if ["id", "created_on", "updated_on", "updated_by", "reserved"].include?(cname) || cname.ends_with?("_id")
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
 
       # Skip any columns that we process explicitly
-      next if ["name"].include?(cname)
+      next if %w(name).include?(cname)
 
       # Process the column
       xml_attrs[cname.to_sym]  = self.send(cname)   unless self.send(cname).blank?
@@ -95,7 +95,9 @@ class MiqAeInstance < ActiveRecord::Base
   end
 
   def ae_values_sorted
-   self.ae_class.ae_fields.sort_by { |field| field.priority }.collect { |field| self.ae_values.find_by_field_id(field.id) }.compact
+    ae_class.ae_fields.sort_by(&:priority).collect { |field|
+      ae_values.select { |value| value.field_id == field.id }.first
+    }.compact
   end
 
   def editable?

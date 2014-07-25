@@ -1,23 +1,23 @@
+require "builder"
+
 module MiqAeDatastore
   class XmlExport
     def self.to_xml
       $log.info("MIQ(MiqAeDatastore) Exporting to XML") if $log
-      require 'builder'
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
       xml.MiqAeDatastore(:version => '1.0') do
-        MiqAeClass.all.sort_by(&:fqname).each do |c|
-          c.to_export_xml(:builder => xml, :skip_instruct => true, :indent => 2)
+        MiqAeClass.all.sort_by(&:fqname).each do |miq_ae_class|
+          miq_ae_class.to_export_xml(:builder => xml, :skip_instruct => true, :indent => 2)
         end
-        CustomButton.all.each do |b|
-          b.to_export_xml(:builder => xml, :skip_instruct => true, :indent => 2)
+        CustomButton.all.each do |custom_button|
+          custom_button.to_export_xml(:builder => xml, :skip_instruct => true, :indent => 2)
         end
       end
     end
 
     def self.class_to_xml(ns, class_name)
       $log.info("MIQ(MiqAeDatastore) Exporting class: #{class_name} to XML") if $log
-      require 'builder'
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
       xml.MiqAeDatastore(:version => '1.0') do
@@ -36,7 +36,6 @@ module MiqAeDatastore
 
     def self.namespace_to_xml(namespace)
       $log.info("MIQ(MiqAeDatastore) Exporting namespace: #{namespace} to XML") if $log
-      require 'builder'
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
       rec = MiqAeNamespace.find_by_fqname(namespace)

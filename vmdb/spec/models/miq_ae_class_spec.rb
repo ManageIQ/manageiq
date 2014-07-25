@@ -204,4 +204,68 @@ describe MiqAeClass do
       res.count.should eq(2)
     end
   end
+
+  describe "#to_export_xml" do
+    let(:miq_ae_class) do
+      described_class.new(
+        :ae_fields    => ae_fields,
+        :ae_instances => [ae_instance1, ae_instance2],
+        :ae_methods   => [ae_method1, ae_method2],
+        :created_on   => Time.now,
+        :id           => 123,
+        :namespace_id => 321,
+        :updated_by   => "me",
+        :updated_on   => Time.now
+      )
+    end
+
+    let(:ae_method1) { MiqAeMethod.new }
+    let(:ae_method2) { MiqAeMethod.new }
+
+    let(:ae_instance1) { MiqAeInstance.new }
+    let(:ae_instance2) { MiqAeInstance.new }
+
+    before do
+      ae_method1.stub(:fqname).and_return("z")
+      ae_method2.stub(:fqname).and_return("a")
+      ae_method1.stub(:to_export_xml) { |options| options[:builder].ae_method1 }
+      ae_method2.stub(:to_export_xml) { |options| options[:builder].ae_method2 }
+
+      ae_instance1.stub(:fqname).and_return("z")
+      ae_instance2.stub(:fqname).and_return("a")
+      ae_instance1.stub(:to_export_xml) { |options| options[:builder].ae_instance1 }
+      ae_instance2.stub(:to_export_xml) { |options| options[:builder].ae_instance2 }
+    end
+
+    context "when the class has ae_fields" do
+      let(:ae_fields) { [ae_field1, ae_field2] }
+      let(:ae_field1) { MiqAeField.new(:priority => 100) }
+      let(:ae_field2) { MiqAeField.new(:priority => 1) }
+
+      before do
+        ae_field1.stub(:to_export_xml) { |options| options[:builder].ae_field1 }
+        ae_field2.stub(:to_export_xml) { |options| options[:builder].ae_field2 }
+      end
+
+      it "produces the expected xml" do
+        expected_xml = <<-XML
+<MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><MiqAeSchema><ae_field2/><ae_field1/></MiqAeSchema><ae_instance2/><ae_instance1/></MiqAeClass>
+        XML
+
+        expect(miq_ae_class.to_export_xml).to eq(expected_xml.chomp)
+      end
+    end
+
+    context "when the class does not have ae_fields" do
+      let(:ae_fields) { [] }
+
+      it "produces the expected xml" do
+        expected_xml = <<-XML
+<MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><ae_instance2/><ae_instance1/></MiqAeClass>
+        XML
+
+        expect(miq_ae_class.to_export_xml).to eq(expected_xml.chomp)
+      end
+    end
+  end
 end
