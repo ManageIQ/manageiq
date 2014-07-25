@@ -5,16 +5,18 @@ class OpenstackResourceQuota < CloudResourceQuota
   # if no method is provided for a quota type, then -1 is returned by
   # method_missing (see parent)
 
+  VMS_POWER_FILTER = "power_state != 'unknown'"
+
   def cores_quota_used
-    Hardware.joins(:vm).where(:vms => {:cloud_tenant_id => cloud_tenant_id, :power_state => "on"}).sum(:numvcpus)
+    Hardware.joins(:vm).where(:vms => {:cloud_tenant_id => cloud_tenant_id}).where("vms.#{VMS_POWER_FILTER}").sum(:numvcpus)
   end
 
   def instances_quota_used
-    cloud_tenant.vms.where("power_state != ?", "unknown").count
+    cloud_tenant.vms.where(VMS_POWER_FILTER).count
   end
 
   def ram_quota_used
-    Hardware.joins(:vm).where(:vms => {:cloud_tenant_id => cloud_tenant_id, :power_state => "on"}).sum(:memory_cpu)
+    Hardware.joins(:vm).where(:vms => {:cloud_tenant_id => cloud_tenant_id}).where("vms.#{VMS_POWER_FILTER}").sum(:memory_cpu)
   end
 
   # nova
