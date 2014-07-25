@@ -85,6 +85,8 @@
 
       <% keys = [:cpu_reserve, :memory_reserve] %>
       <%= render(:partial=>"#{prefix}prov_dialog_fieldset", :locals=>{:workflow=>wf, :dialog=>dialog, :label=>"VM Reservations", :prefix=>prefix, :keys=>keys}) %>
+    <% else %>
+	  <%= render(:partial => "#{prefix}prov_dialog_cloud_quota", :locals => {:workflow => wf, :dialog => dialog, :prefix => prefix, :keys => keys}) %>
     <% end %>
 	<% when :network %>
 		<% keys = [:vlan, :mac_address] %>
