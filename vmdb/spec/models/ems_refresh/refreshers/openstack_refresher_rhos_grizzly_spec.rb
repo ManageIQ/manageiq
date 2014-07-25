@@ -18,9 +18,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       # We need VCR to match requests differently here because fog adds a dynamic
       #   query param to avoid HTTP caching - ignore_awful_caching##########
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
-      VCR.use_cassette("#{described_class.name.underscore}_rhos_grizzly",
-                       :allow_unused_http_interactions => false,  # don't rely on default (differs, local vs Travis)
-                       :match_requests_on              => [:method, :host, :path]) do
+      VCR.use_cassette("#{described_class.name.underscore}_rhos_grizzly", :match_requests_on => [:method, :host, :path]) do
         EmsRefresh.refresh(@ems)
       end
       @ems.reload
