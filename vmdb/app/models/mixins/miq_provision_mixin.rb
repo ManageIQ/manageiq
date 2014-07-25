@@ -45,15 +45,15 @@ module MiqProvisionMixin
     end
   end
 
-  def workflow(flags = {})
-    MiqProvisionWorkflow.class_for_source(source).new(options, userid, flags)
+  def workflow(prov_options = options, flags = {})
+    MiqProvisionWorkflow.class_for_source(source).new(prov_options, userid, flags)
   end
 
   def eligible_resources(rsc_type)
     log_header = "MIQ(#{self.class.name}.eligible_resources)"
-    options = self.options.dup
-    options[:placement_auto] = [false, 0]
-    prov_wf = workflow(:skip_dialog_load => true)
+    prov_options = options.dup
+    prov_options[:placement_auto] = [false, 0]
+    prov_wf = workflow(prov_options, :skip_dialog_load => true)
 
     klass = case rsc_type
       when :clusters                then EmsCluster
