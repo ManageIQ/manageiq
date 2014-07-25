@@ -36,8 +36,15 @@ namespace :build do
     File.write(FilePaths::HOST_VERSION, "#{ConfigOptions.version}\n")
   end
 
+  task :precompile_assets do
+    Dir.chdir(File.expand_path(File.join(File.dirname(__FILE__), '..', 'vmdb')))
+    load 'Rakefile'
+    Rake::Task["evm:compile_assets"].invoke
+    Dir.chdir(File.dirname(__FILE__))
+  end
+
   desc "Builds a tarball."
-  task :tar => [:version_files, :build_file] do
+  task :tar => [:version_files, :build_file, :precompile_assets] do
     include_file = Build::Productization.file_for("config/tarball/include")
     exclude_file = Build::Productization.file_for("config/tarball/exclude")
     pkg_path     = Pathname.new(File.dirname(__FILE__)).join("pkg")
