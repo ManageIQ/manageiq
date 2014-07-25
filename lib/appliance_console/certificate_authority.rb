@@ -62,7 +62,7 @@ module ApplianceConsole
         FileUtils.mkdir_p(PSQL_CLIENT_DIR, :mode => 700)
         extract(tmp_file.path, "root", %w(root.crt postgresql.crt postgresql.key), PSQL_CLIENT_DIR)
         extract(tmp_file.path, "postgres.postgres", %w(postgres.crt postgres.key), CFME_DIR)
-        # the ca's root certificate is publically viewable (postgres server needs to view it)
+        # no need to make the ca's root certificate private. Also, postgres server needs to view it
         FileUtils.chmod 0622 , "CFME_DIR/root.crt"
 
         # now that there are certs, enable port 8443
