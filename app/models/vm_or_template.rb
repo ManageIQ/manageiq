@@ -871,7 +871,7 @@ class VmOrTemplate < ActiveRecord::Base
     return self.class.proxy_host_for_repository_scans
   end
 
-  DEFAULT_SCAN_VIA_HOST = true
+  DEFAULT_SCAN_VIA_HOST = false
   cache_with_timeout(:scan_via_host?, 30.seconds) do
     via_host = VMDB::Config.new("vmdb").config.fetch_path(:coresident_miqproxy, :scan_via_host)
     via_host = DEFAULT_SCAN_VIA_HOST unless (via_host.class == TrueClass) || (via_host.class == FalseClass)
