@@ -53,26 +53,6 @@ object:
       max_time: 
   - field:
       aetype: relationship
-      name: where_availability_zone
-      display_name: 
-      datatype: string
-      priority: 3
-      owner: 
-      default_value: /Infrastructure/VM/Provisioning/Placement/best_fit_availability_zone#create
-      substitute: true
-      message: get_availability_zone
-      visibility: 
-      collect: /availability_zone = availability_zone
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
       name: where_cluster
       display_name: 
       datatype: string
