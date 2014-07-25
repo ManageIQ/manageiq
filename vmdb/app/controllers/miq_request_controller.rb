@@ -5,6 +5,8 @@ class MiqRequestController < ApplicationController
   after_filter :cleanup_action
   after_filter :set_session_data
 
+  helper CloudResourceQuotaHelper
+
   def index
 #   show_list
 #   render :action=>"show_list"
