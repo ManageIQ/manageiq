@@ -1,0 +1,40 @@
+<%# wf				The workflow object currently in use %>
+<%# dialog			The name (symbol) of the selected dialog %>
+<%# prefix			view prefix %>
+<%# keys			field keys %>
+
+<% cloud_tenant_name = @edit[:new][:cloud_tenant][1] %>
+<% cloud_tenant_id   = @edit[:new][:cloud_tenant][0] %>
+<% instance_type     = @edit[:new][:instance_type][1] %>
+
+<%# [:service, :quota_name, "label"] %>
+<% quotas = [
+	[:compute, :instances, "instances"],
+	[:compute, :cores, "vcpus"],
+	[:compute, :ram, "(MB) memory"]]
+%>
+<% quotas = quotas.each_with_object({}) { |q, h| h[q[2]] = lookup_quota(cloud_tenant_id, q[0], q[1]) } %>
+
+<div id="cloud_quota">
+	<p class="legend">Cloud Quota</p>
+
+	<% if cloud_tenant_name %>
+		Cloud Tenant: <strong><%= cloud_tenant_name %></strong>
+	<% else %>
+		Please select a Cloud Tenant from the Environment Tab
+	<% end %>
+	<br/>
+	<% if instance_type %>
+		Instance Type: <strong><%= instance_type %></strong>
+	    <br/>
+		<% quotas.each do |label, quota| %>
+			<% if quota %>
+				<%= quota.value - quota.used %> <%= label %> available
+				<br/>
+			<% end %>
+		<% end %>
+	<% else %>
+		Please select an Instance Type from above
+	<% end %>
+	<br/>
+</div>
