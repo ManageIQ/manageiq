@@ -11,7 +11,7 @@ require 'excon'
 require 'openstack_handle'
 
 begin
-  os_handle = OpenstackHandle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
+  os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
   os_handle.connection_options = {:instrumentor => Excon::StandardInstrumentor}
 
   puts "**** Tenants:"

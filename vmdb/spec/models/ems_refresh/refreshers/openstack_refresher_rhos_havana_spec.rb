@@ -10,6 +10,10 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   it "will perform a full refresh against RHOS Havana" do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
+      # Caching OpenStack info between runs causes the tests to fail with:
+      #   VCR::Errors::UnusedHTTPInteractionError
+      # Reset the cache so HTTP interactions are the same between runs.
+      @ems.reset_openstack_handle
 
       # We need VCR to match requests differently here because fog adds a dynamic
       #   query param to avoid HTTP caching - ignore_awful_caching##########
@@ -43,28 +47,28 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   def assert_table_counts
     ExtManagementSystem.count.should == 1
     Flavor.count.should              == 6
-    AvailabilityZone.count.should    == 2 # nova AZ and null_az
+    AvailabilityZone.count.should    == 2
     FloatingIp.count.should          == 4
     AuthPrivateKey.count.should      == 1
     SecurityGroup.count.should       == 4
     FirewallRule.count.should        == 30
     CloudNetwork.count.should        == 4
     CloudSubnet.count.should         == 4
-    VmOrTemplate.count.should        == 12
-    Vm.count.should                  == 6
+    VmOrTemplate.count.should        == 14
+    Vm.count.should                  == 8
     MiqTemplate.count.should         == 6
 
     CustomAttribute.count.should     == 0
-    Disk.count.should                == 14
+    Disk.count.should                == 16
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 6
+    Hardware.count.should            == 8
     Network.count.should             == 8
     OperatingSystem.count.should     == 0
     Snapshot.count.should            == 0
     SystemService.count.should       == 0
 
-    Relationship.count.should        == 10
-    MiqQueue.count.should            == 14
+    Relationship.count.should        == 12
+    MiqQueue.count.should            == 16
   end
 
   def assert_ems
@@ -74,12 +78,12 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     )
 
     @ems.flavors.size.should            == 6
-    @ems.availability_zones.size.should == 2 #null AZ and nova az
+    @ems.availability_zones.size.should == 2
     @ems.floating_ips.size.should       == 4
     @ems.key_pairs.size.should          == 1
     @ems.security_groups.size.should    == 4
-    @ems.vms_and_templates.size.should  == 12
-    @ems.vms.size.should                == 6
+    @ems.vms_and_templates.size.should  == 14
+    @ems.vms.size.should                == 8
     @ems.miq_templates.size.should      == 6
   end
 
