@@ -1,4 +1,8 @@
 class GraphicalSummaryPresenter < SummaryPresenter
+  def call_items(items)
+    items.collect { |m| self.send("graphical_#{m}") }.flatten.compact
+  end
+
   def graphical_advanced_settings
     num = @record.number_of(:advanced_settings)
     h = {:label => "Advanced Settings", :image => "advancedsetting", :value => num}
