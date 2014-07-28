@@ -4,9 +4,11 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: best_fit_with_tags
+    name: redhat_best_fit_cluster
     inherits: 
     description: 
   fields:
   - meth5:
-      value: best_fit_with_tags
+      value: redhat_best_fit_cluster
+  - rel6:
+      collect: cluster = cluster

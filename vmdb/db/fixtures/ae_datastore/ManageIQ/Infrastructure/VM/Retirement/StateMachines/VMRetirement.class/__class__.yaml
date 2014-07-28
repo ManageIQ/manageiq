@@ -41,7 +41,7 @@ object:
       datatype: string
       priority: 2
       owner: 
-      default_value: ! '#/Integration/CMDB/Deactivate'
+      default_value:  
       substitute: true
       message: create
       visibility: 
@@ -64,7 +64,7 @@ object:
       datatype: string
       priority: 3
       owner: 
-      default_value: ! '#/Integration/IPAM/UnregisterDHCP'
+      default_value: 
       substitute: true
       message: create
       visibility: 
@@ -87,7 +87,7 @@ object:
       datatype: string
       priority: 4
       owner: 
-      default_value: ! '#/Integration/IPAM/UnregisterAD'
+      default_value: 
       substitute: true
       message: create
       visibility: 
@@ -110,7 +110,7 @@ object:
       datatype: string
       priority: 5
       owner: 
-      default_value: ! '#/Integration/IPAM/UnregisterDNS'
+      default_value: 
       substitute: true
       message: create
       visibility: 
@@ -133,7 +133,7 @@ object:
       datatype: string
       priority: 6
       owner: 
-      default_value: ! '#/Integration/IPAM/ReleaseMACAddress'
+      default_value: 
       substitute: true
       message: create
       visibility: 
@@ -156,7 +156,7 @@ object:
       datatype: string
       priority: 7
       owner: 
-      default_value: ! '#/Integration/IPAM/ReleaseIPAddress'
+      default_value: 
       substitute: true
       message: create
       visibility: 

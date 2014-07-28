@@ -36,75 +36,6 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: AcquireIPAddress
-      display_name: 
-      datatype: string
-      priority: 2
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_provision_status(status => 'Acquiring IP Address',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Acquired IP Address',status_state
-        => 'on_exit')
-      on_error: update_provision_status(status => 'error in Acquiring IP Address',status_state
-        => 'on_error')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: AcquireMACAddress
-      display_name: 
-      datatype: string
-      priority: 3
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_provision_status(status => 'Acquiring MAC Address',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Acquired MAC Address',status_state
-        => 'on_exit')
-      on_error: update_provision_status(status => 'error in Acquiring MAC Address',status_state
-        => 'on_error')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: RegisterDNS
-      display_name: 
-      datatype: string
-      priority: 4
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_provision_status(status => 'Registering DNS',status_state =>
-        'on_entry')
-      on_exit: update_provision_status(status => 'Registered DNS',status_state =>
-        'on_exit')
-      on_error: update_provision_status(status => 'error in Registering DNS',status_state
-        => 'on_error')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
       name: RegisterCMDB
       display_name: 
       datatype: string
@@ -123,29 +54,6 @@ object:
       on_exit: update_provision_status(status => 'Registered CMDB',status_state =>
         'on_exit')
       on_error: update_provision_status(status => 'error in Registering CMDB',status_state
-        => 'on_error')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: RegisterAD
-      display_name: 
-      datatype: string
-      priority: 6
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_provision_status(status => 'Registering ActiveDirectory',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Registered ActiveDirectory',status_state
-        => 'on_exit')
-      on_error: update_provision_status(status => 'error in Registering ActiveDirectory',status_state
         => 'on_error')
       max_retries: '100'
       max_time: 
@@ -236,29 +144,6 @@ object:
       on_error: update_provision_status(status => 'error in Applying PostProvision
         Customizations',status_state => 'on_error')
       max_retries: 
-      max_time: 
-  - field:
-      aetype: state
-      name: RegisterDHCP
-      display_name: 
-      datatype: string
-      priority: 11
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_provision_status(status => 'Registering DHCP',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Registered DHCP',status_state =>
-        'on_exit')
-      on_error: update_provision_status(status => 'error in Registering DHCP',status_state
-        => 'on_error')
-      max_retries: '100'
       max_time: 
   - field:
       aetype: state
