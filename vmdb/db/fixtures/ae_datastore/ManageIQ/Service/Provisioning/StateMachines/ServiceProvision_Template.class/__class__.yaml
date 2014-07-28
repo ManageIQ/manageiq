@@ -26,10 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Processing Pre1',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Processed Pre1',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error processing Pre1',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Pre1')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre1')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre1')
       max_retries: '100'
       max_time: 
   - field:
@@ -47,10 +46,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Processing Pre2',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Processed Pre2',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error processing Pre2',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Pre2')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre2')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre2')
       max_retries: '100'
       max_time: 
   - field:
@@ -68,10 +66,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Processing Pre3',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Processed Pre3',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error processing Pre3',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Pre3')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre3')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre3')
       max_retries: '100'
       max_time: 
   - field:
@@ -89,10 +86,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Processing Pre4',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Processed Pre4',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error processing Pre4',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Pre4')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre4')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre4')
       max_retries: '100'
       max_time: 
   - field:
@@ -110,10 +106,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Processing Pre5',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Processed Pre5',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error processing Pre5',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Pre5')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre5')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre5')
       max_retries: '100'
       max_time: 
   - field:
@@ -151,12 +146,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Creating Service',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Created Service',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error Creating Service',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Creating Service')
+      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_error: update_serviceprovision_status(status => 'Error Creating Service')
       max_retries: '100'
       max_time: 
   - field:
@@ -175,10 +167,8 @@ object:
       description: 
       condition: 
       on_entry: 
-      on_exit: update_serviceprovision_status(status => 'Checking Service Creation',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => '${/#ae_reason}',status_state
-        => 'on_error')
+      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_error: update_serviceprovision_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
   - field:
@@ -196,12 +186,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Applying Post1 Customizations',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Applied Post1 Customizations',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error Applying Post1
-        Customizations',status_state => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Post1 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post1 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post1
+        Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -219,12 +207,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Applying Post2 Customizations',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Applied Post2 Customizations',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error Applying Post2
-        Customizations',status_state => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Post2 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post2 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post2
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -242,12 +228,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Applying Post3 Customizations',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Applied Post3 Customizations',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error Applying Post3
-        Customizations',status_state => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Post3 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post3 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post3
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -265,12 +249,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Applying Post4 Customizations',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Applied Post4 Customizations',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error Applying Post4
-        Customizations',status_state => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Post4 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post4 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post4
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -288,12 +270,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Applying Post5 Customizations',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Applied Post5 Customizations',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error Applying Post5
-        Customizations',status_state => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Processing Post5 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post5 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post5
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -311,11 +291,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Emailing Owner',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'service_provision_complete',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'Error Emailing Owner',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Emailing Owner')
+      on_exit: update_serviceprovision_status(status => 'service_provision_complete')
+      on_error: update_serviceprovision_status(status => 'Error Emailing Owner')
       max_retries: '100'
       max_time: 

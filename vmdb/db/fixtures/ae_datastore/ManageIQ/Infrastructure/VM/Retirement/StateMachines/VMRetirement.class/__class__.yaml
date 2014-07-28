@@ -26,12 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Powering Off VM',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Powered Off VM',status_state =>
-        'on_exit')
-      on_error: update_retirement_status(status => 'Error in Powering Off VM',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Powering Off VM')
+      on_exit: update_retirement_status(status => 'Powered Off VM')
+      on_error: update_retirement_status(status => 'Error Powering Off VM')
       max_retries: '100'
       max_time: 
   - field:
@@ -41,7 +38,7 @@ object:
       datatype: string
       priority: 2
       owner: 
-      default_value:  
+      default_value: 
       substitute: true
       message: create
       visibility: 
@@ -49,12 +46,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Deactivating from CMDB',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Deactivated from CMDB',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Deactivating from CMDB',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Deactivating from CMDB')
+      on_exit: update_retirement_status(status => 'Deactivated from CMDB')
+      on_error: update_retirement_status(status => 'Error Deactivating from CMDB')
       max_retries: '100'
       max_time: 
   - field:
@@ -72,12 +66,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Unregistering from DHCP',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Unregistered from DHCP',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Unregistering from DHCP',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Unregistering from DHCP')
+      on_exit: update_retirement_status(status => 'Unregistered from DHCP')
+      on_error: update_retirement_status(status => 'Error Unregistering from DHCP')
       max_retries: '100'
       max_time: 
   - field:
@@ -95,12 +86,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Unregistering from AD',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Unregistered from AD',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Unregistering from AD',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Unregistering from AD')
+      on_exit: update_retirement_status(status => 'Unregistered from AD')
+      on_error: update_retirement_status(status => 'Error Unregistering from AD')
       max_retries: '100'
       max_time: 
   - field:
@@ -118,12 +106,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Unregistering from DNS',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Unregistered from DNS',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Unregistering from DNS',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Unregistering from DNS')
+      on_exit: update_retirement_status(status => 'Unregistered from DNS')
+      on_error: update_retirement_status(status => 'Error Unregistering from DNS')
       max_retries: '100'
       max_time: 
   - field:
@@ -141,12 +126,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Releasing MAC Address',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Released MAC Address',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Releasing MAC Address',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Releasing MAC Address')
+      on_exit: update_retirement_status(status => 'Released MAC Address')
+      on_error: update_retirement_status(status => 'Error Releasing MAC Address')
       max_retries: '100'
       max_time: 
   - field:
@@ -164,12 +146,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Releasing IP Address',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Released IP Address',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Releasing IP Address',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Releasing IP Address')
+      on_exit: update_retirement_status(status => 'Released IP Address')
+      on_error: update_retirement_status(status => 'Error Releasing IP Address')
       max_retries: '100'
       max_time: 
   - field:
@@ -187,12 +166,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Notifying VM Owner',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Notified VM Owner',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Notifying VM Owner',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Notifying VM Owner')
+      on_exit: update_retirement_status(status => 'Notified VM Owner')
+      on_error: update_retirement_status(status => 'Error Notifying VM Owner')
       max_retries: '100'
       max_time: 
   - field:
@@ -210,12 +186,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Unregistering from Provider',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Unregistered from Provider',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Unregistering from Provider',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Unregistering from Provider')
+      on_exit: update_retirement_status(status => 'Unregistered from Provider')
+      on_error: update_retirement_status(status => 'Error Unregistering from Provider')
       max_retries: '100'
       max_time: 
   - field:
@@ -233,12 +206,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Executing PreDelete from Provider',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Executed PreDelete from Provider',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Executing PreDelete from
-        Provider',status_state => 'on_error')
+      on_entry: update_retirement_status(status => 'Executing PreDelete from Provider')
+      on_exit: update_retirement_status(status => 'Executed PreDelete from Provider')
+      on_error: update_retirement_status(status => 'Error Executing PreDelete from
+        Provider')
       max_retries: '100'
       max_time: 
   - field:
@@ -256,12 +227,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Deleting from Provider',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Deleted from Provider',status_state =>
-        'on_exit')
-      on_error: update_retirement_status(status => 'Error in Deleting from Provider',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Deleting from Provider')
+      on_exit: update_retirement_status(status => 'Deleted from Provider')
+      on_error: update_retirement_status(status => 'Error Deleting from Provider')
       max_retries: '100'
       max_time: 
   - field:
@@ -279,12 +247,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Emailing VM Owner',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Emailed VM Owner',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Emailing VM Owner',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Emailing VM Owner')
+      on_exit: update_retirement_status(status => 'Emailed VM Owner')
+      on_error: update_retirement_status(status => 'Error Emailing VM Owner')
       max_retries: '100'
       max_time: 
   - field:
@@ -302,12 +267,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Checking Unregistration from Provider',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Checked Unregistration from Provider',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Checking Unregistration
-        from Provider',status_state => 'on_error')
+      on_entry: update_retirement_status(status => 'Checking Unregistration from Provider')
+      on_exit: update_retirement_status(status => 'Checked Unregistration from Provider')
+      on_error: update_retirement_status(status => 'Error Checking Unregistration
+        from Provider')
       max_retries: '100'
       max_time: 
   - field:
@@ -325,11 +288,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Removing from VMDB',status_state
-        => 'on_entry')
-      on_exit: update_retirement_status(status => 'Removed from VMDB',status_state
-        => 'on_exit')
-      on_error: update_retirement_status(status => 'Error in Removing from VMDB',status_state
-        => 'on_error')
+      on_entry: update_retirement_status(status => 'Removing from VMDB')
+      on_exit: update_retirement_status(status => 'Removed from VMDB')
+      on_error: update_retirement_status(status => 'Error Removing from VMDB')
       max_retries: '100'
       max_time: 
