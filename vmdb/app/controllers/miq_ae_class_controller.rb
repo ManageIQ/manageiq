@@ -186,6 +186,12 @@ class MiqAeClassController < ApplicationController
           @temp[:ae_class_id]   = @ae_class.id
           @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
           @sb[:active_tab]      = "instances"
+          @domain_overrides = {}
+          overrides = MiqAeClass.find_homonymic_instances_across_domains(@record.fqname)
+          overrides.each do |instance|
+            domain = MiqAeDomain.find_by_name(instance.fqname.split('/').first)
+            @domain_overrides[domain.id] = domain_display_name(domain)
+          end
           set_right_cell_text(x_node, @record)
         end
       when "aem"

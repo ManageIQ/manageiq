@@ -1,3 +1,20 @@
+<% if @domain_overrides.count > 1 %>
+  <p class = "legend">Domain overrides by priority</p>
+  <table class = "style3">
+    <tbody>
+      <% @domain_overrides.each do |id, name| %>
+        <tr class = "<%= cycle('row0', 'row1') %>"
+            onclick = "cfmeDynatree_activateNode('ae_tree', 'aen-<%= to_cid(id) %>');"
+            onmouseover = "this.style.cursor='pointer'" title = "Click to view Automate Domain">
+          <td>
+            <%= name %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+<p class="legend">Fields</p>
 <div id="instance_fields_div">
 <% if !@in_a_form %>
 	<%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"_instance_fields"}  %>
