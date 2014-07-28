@@ -56,7 +56,7 @@ class EmsMicrosoft < EmsInfra
     raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(options[:auth_type])
 
     begin
-      run_dos_command("uname -a")
+      run_dos_command("hostname")
     rescue WinRM::WinRMHTTPTransportError # Error 401
       raise MiqException::MiqHostError, "Login failed due to a bad username or password."
     end
