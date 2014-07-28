@@ -1,8 +1,4 @@
-require "util/MiqDumpObj"
-
 class NetappRemoteService < StorageManager
-
-  include MiqDumpObj
 
   has_many  :top_managed_elements,
         :class_name   => "MiqCimInstance",
@@ -524,10 +520,6 @@ class NetappRemoteService < StorageManager
   def set_ts_data(type, data)
     type_spec_data[type] = data
     self.save
-  end
-
-  def dump_ts_data
-    dumpObj(type_spec_data)
   end
 
   def verify_credentials(auth_type=nil)
