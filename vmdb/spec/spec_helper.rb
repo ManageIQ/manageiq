@@ -90,7 +90,7 @@ VCR.configure do |c|
 
   c.allow_http_connections_when_no_cassette = false
   c.default_cassette_options = {
-    :allow_unused_http_interactions => !ENV['CI']
+    :allow_unused_http_interactions => false
   }
 
   #c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")

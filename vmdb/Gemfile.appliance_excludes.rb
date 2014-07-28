@@ -10,7 +10,7 @@ end
 group :test do
   gem "brakeman",         "~>2.0",    :require => false
 
-  gem "vcr",              "~>2.4.0",  :require => false
+  gem "vcr",              "~>2.6",    :require => false
   gem "webmock",          "~>1.11.0", :require => false # Although VCR complains, we're forced to use 1.11.0 since we're locked
                                                         #   on excon 0.20.0.  webmock 1.11.0 is the only version that works
                                                         #   properly against excon 0.20.0.
