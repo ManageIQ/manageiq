@@ -44,8 +44,18 @@ module MiqAeEngine
       inputs = Hash.new
 
       aem.inputs.each { |f|
-        key = f.name
-        inputs[key] = args[key] || obj.attributes[key] || MiqAeObject.convert_value_based_on_datatype(f.default_value, f["datatype"])
+        key   = f.name
+        value = args[key]
+        value = obj.attributes[key] || f.default_value if value.nil?
+        inputs[key] = MiqAeObject.convert_value_based_on_datatype(value, f["datatype"])
+
+        if obj.attributes[key] && f["datatype"] != "string"
+          # the attributes data in the object start as string
+          # if the datatype of the value stored in the object should be converted,
+          # then update the object with the converted value
+          obj.attributes[key] = MiqAeObject.convert_value_based_on_datatype(obj.attributes[key], f["datatype"])
+        end
+
         raise MiqAeException::MethodParmMissing, "Method [#{aem.fqname}] requires parameter [#{f.name}]" if inputs[key].nil?
       }
 

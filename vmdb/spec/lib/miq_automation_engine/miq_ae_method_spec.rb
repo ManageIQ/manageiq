@@ -95,6 +95,18 @@ module MiqAeMethodSpec
       ws.root("current_method").should eql('test')
     end
 
+    it "handles datatype conversion" do
+      EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_method_spec5"), @domain)
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?flag=false&flag2=true&int=5&float=5.87&symbol=test&array=1,2,3")
+
+      expect(ws.root("flag")).to   be_false
+      expect(ws.root("flag2")).to  be_true
+      expect(ws.root("int")).to    eq(5)
+      expect(ws.root("float")).to  eq(5.87)
+      expect(ws.root("symbol")).to eq(:test)
+      expect(ws.root("array")).to  match_array(%w(1 2 3))
+    end
+
     it "properly processes console web services" do
       # These tests are meant to be run manually (for now) via script/console.
       # They require that the EVM Server be up and running to provide web services
