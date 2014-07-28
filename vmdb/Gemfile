@@ -56,8 +56,6 @@ gem "ovirt_metrics",                  "~>1.0.1",      :require => false
 gem "pg",                             "~>0.12.2",     :require => false
 gem "rack",                           "~>1.4.1",      :require => false
 
-# Doesn't compile on ruby 1.9
-#gem "ruby-oci8",                      "=2.0.3",       :require => false if ENV.has_key?('ORACLE_HOME')
 gem "ruby-plsql",                     "=0.4.1",       :require => false
 gem "ruby-progressbar",               "~>0.0.10",     :require => false
 gem "rufus-scheduler",                "~>2.0.19",     :require => false
@@ -89,8 +87,6 @@ unless ENV['APPLIANCE']
     gem "ruby-prof",                    :require => false
     gem "win32console",                 :require => false if RUBY_PLATFORM =~ /mingw/
 
-    # gruff
-    # rmagick (~>2.13.1)
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
   end
 
@@ -98,10 +94,7 @@ unless ENV['APPLIANCE']
     gem "brakeman",         "~>2.0",    :require => false
 
     gem "vcr",              "~>2.6",    :require => false
-    gem "webmock",          "~>1.11.0", :require => false # Although VCR complains, we're forced to use 1.11.0 since we're locked
-                                                          #   on excon 0.20.0.  webmock 1.11.0 is the only version that works
-                                                          #   properly against excon 0.20.0.
-
+    gem "webmock",                      :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
     gem "factory_girl",     "~>4.1.0",  :require => false
 
