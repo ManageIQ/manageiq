@@ -26,12 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Customizing Request',status_state
-        => 'on_entry')
-      on_exit: update_migration_status(status => 'Customized Request',status_state
-        => 'on_error')
-      on_error: update_migration_status(status => 'error in Customizing Request',status_state
-        => 'on_error')
+      on_entry: update_migration_status(status => 'Customizing Request')
+      on_exit: update_migration_status(status => 'Customized Request')
+      on_error: update_migration_status(status => 'Error Customizing Request')
       max_retries: '100'
       max_time: 
   - field:
@@ -49,12 +46,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Determining Best Host',status_state
-        => 'on_entry')
-      on_exit: update_migration_status(status => 'Determined Best Host',status_state
-        => 'on_error')
-      on_error: update_migration_status(status => 'error in Best Host',status_state
-        => 'on_error')
+      on_entry: update_migration_status(status => 'Determining Best Host')
+      on_exit: update_migration_status(status => 'Determined Best Host')
+      on_error: update_migration_status(status => 'Error Determining Best Host')
       max_retries: '100'
       max_time: 
   - field:
@@ -72,12 +66,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Determining Best Storage',status_state
-        => 'on_entry')
-      on_exit: update_migration_status(status => 'Determined Best Storage',status_state
-        => 'on_error')
-      on_error: update_migration_status(status => 'error in Best Storage',status_state
-        => 'on_error')
+      on_entry: update_migration_status(status => 'Determining Best Storage')
+      on_exit: update_migration_status(status => 'Determined Best Storage')
+      on_error: update_migration_status(status => 'Error Determining Best Storage')
       max_retries: '100'
       max_time: 
   - field:
@@ -95,12 +86,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Applying PreMigration Customizations',status_state
-        => 'on_entry')
-      on_exit: update_migration_status(status => 'Applied PreMigration Customizations',status_state
-        => 'on_exit')
-      on_error: update_migration_status(status => 'error in Applying PreMigration
-        Customizations',status_state => 'on_error')
+      on_entry: update_migration_status(status => 'Applying PreMigration Customizations')
+      on_exit: update_migration_status(status => 'Applied PreMigration Customizations')
+      on_error: update_migration_status(status => 'Error Applying Applying PreMigration
+        Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -118,10 +107,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Migrating VM',status_state => 'on_entry')
-      on_exit: update_migration_status(status => 'Migrated VM',status_state => 'on_exit')
-      on_error: update_migration_status(status => 'error in Migrating VM',status_state
-        => 'on_error')
+      on_entry: update_migration_status(status => 'Migrating VM')
+      on_exit: update_migration_status(status => 'Migrated VM')
+      on_error: update_migration_status(status => 'Error Migrating VM')
       max_retries: '100'
       max_time: 
   - field:
@@ -140,9 +128,8 @@ object:
       description: 
       condition: 
       on_entry: 
-      on_exit: update_migration_status(status => 'Migrating VM',status_state => 'on_exit')
-      on_error: update_migration_status(status => '${/#ae_reason}',status_state =>
-        'on_error')
+      on_exit: update_migration_status(status => 'Migrating VM')
+      on_error: update_migration_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
   - field:
@@ -160,12 +147,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Applying PostMigration Customizations',status_state
-        => 'on_entry')
-      on_exit: update_migration_status(status => 'Applied PostMigration Customizations',status_state
-        => 'on_exit')
-      on_error: update_migration_status(status => 'error in Applying PostMigration
-        Customizations',status_state => 'on_error')
+      on_entry: update_migration_status(status => 'Applying PostMigration Customizations')
+      on_exit: update_migration_status(status => 'Applied PostMigration Customizations')
+      on_error: update_migration_status(status => 'Error Applying PostMigration
+        Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -183,12 +168,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Activating CMDB',status_state =>
-        'on_entry')
-      on_exit: update_migration_status(status => 'Activated CMDB',status_state =>
-        'on_exit')
-      on_error: update_migration_status(status => 'error in Activating CMDB',status_state
-        => 'on_error')
+      on_entry: update_migration_status(status => 'Activating CMDB')
+      on_exit: update_migration_status(status => 'Activated CMDB')
+      on_error: update_migration_status(status => 'Error Activating CMDB')
       max_retries: '100'
       max_time: 
   - field:
@@ -206,11 +188,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_migration_status(status => 'Emailing Owner',status_state =>
-        'on_entry')
-      on_exit: update_migration_status(status => 'migration_complete',status_state
-        => 'on_exit')
-      on_error: update_migration_status(status => 'error in Emailing Owner',status_state
-        => 'on_error')
+      on_entry: update_migration_status(status => 'Emailing Owner')
+      on_exit: update_migration_status(status => 'migration_complete')
+      on_error: update_migration_status(status => 'Error Emailing Owner')
       max_retries: '100'
       max_time: 
