@@ -173,4 +173,60 @@ describe MiqAeClassController do
     end
 
   end
+
+  context "#get_instance_node_info" do
+    context "when record does not exist" do
+      it "sets active node back to root" do
+        id = %w(aei some_id)
+        controller.instance_variable_set(:@sb,
+                                         :active_tree => :ae_tree,
+                                         :trees       => {:ae_tree => {:active_node => "aei-some_id"}})
+        controller.instance_variable_set(:@temp, {})
+        controller.send(:get_instance_node_info, id)
+        assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
+      end
+    end
+
+    context "when the record exists" do
+      let(:miq_ae_domain) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname", :id => 1) }
+      let(:miq_ae_domain2) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname2", :id => 2) }
+      let(:miq_ae_class) { active_record_instance_double("MiqAeClass",
+                                                         :id        => 1,
+                                                         :fqname    => "yet_another_fqname/cls_fqname",
+                                                         :ae_fields => []
+        )
+      }
+      let(:miq_ae_instance) { active_record_instance_double("MiqAeInstance",
+                                                            :id           => 123,
+                                                            :display_name => "some name",
+                                                            :name         => "some_name",
+                                                            :fqname       => "fqname",
+                                                            :created_on   => Time.now,
+                                                            :updated_by   => "some_user"
+        )
+      }
+      let(:override) { active_record_instance_double("MiqAeClass", :fqname => "another_fqname/fqname") }
+      let(:override2) { active_record_instance_double("MiqAeClass", :fqname => "another_fqname2/fqname") }
+
+      before do
+        MiqAeInstance.stub(:find_by_id).with(123).and_return(miq_ae_instance)
+        miq_ae_instance.stub(:ae_class).and_return(miq_ae_class)
+        MiqAeClass.stub(:find_homonymic_instances_across_domains).with("fqname").and_return([override, override2])
+        MiqAeDomain.stub(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
+        MiqAeDomain.stub(:find_by_name).with("another_fqname2").and_return(miq_ae_domain2)
+      end
+
+      it "return instance record and check count of override instances being returned" do
+        id = ["aei", miq_ae_instance.id]
+        controller.instance_variable_set(:@sb,
+                                         :active_tree => :ae_tree,
+                                         :trees       => {:ae_tree => {:active_node => id.join("-")}})
+        controller.instance_variable_set(:@temp, {})
+        controller.send(:get_instance_node_info, id)
+        assigns(:record).name.should eq(miq_ae_instance.name)
+        assigns(:domain_overrides).count.should eq(2)
+        assigns(:right_cell_text).should include("Automate Instance [#{miq_ae_instance.display_name}")
+      end
+    end
+  end
 end
