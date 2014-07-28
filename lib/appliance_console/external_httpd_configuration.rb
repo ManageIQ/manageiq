@@ -22,6 +22,9 @@ EOS
       SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
 
       INTERCEPT_FORM      = "/dashboard/authenticate"
+      INTERNAL_LOGIN      = "admin"
+
+      TIMESTAMP_FORMAT    = "%Y%m%d_%H%M%S"
 
       LDAP_ATTRS          = {
         "mail"        => "REMOTE_USER_EMAIL",
@@ -52,30 +55,75 @@ EOS
         AwesomeSpawn.run(IPA_INSTALL_COMMAND, :params => [:uninstall, :unattended])
       end
 
+      def unconfigure_httpd
+        timestamp = Time.now.strftime(TIMESTAMP_FORMAT)
+
+        say("Unconfiguring httpd ...")
+        config = config_file_read(HTTPD_CONFIG)
+        unconfigure_httpd_application(config)
+        config_file_write(config, HTTPD_CONFIG, timestamp)
+
+        say("Restarting httpd ...")
+        LinuxAdmin::Service.new("httpd").restart
+      end
+
       #
       # HTTPD Configuration Methods
       #
       def httpd_mod_intercept_config
-        config = "
+        "
 LoadModule authnz_pam_module modules/mod_authnz_pam.so
 LoadModule intercept_form_submit_module modules/mod_intercept_form_submit.so
 LoadModule lookup_identity_module modules/mod_lookup_identity.so
+LoadModule authn_anon_module modules/mod_authn_anon.so
+#{httpd_mod_intercept_config_ui}
+#{httpd_mod_intercept_config_api}
+"
+      end
 
+      def httpd_mod_intercept_config_ui
+        "
 <Location #{INTERCEPT_FORM}>
   InterceptFormPAMService #{PAM_MODULE}
   InterceptFormLogin      user_name
   InterceptFormPassword   user_password
-  InterceptFormLoginSkip  admin
+  InterceptFormLoginSkip  #{INTERNAL_LOGIN}
   InterceptFormClearRemoteUserForSkipped on
 </Location>
 
 <Location #{INTERCEPT_FORM}>
+#{httpd_mod_intercept_config_attrs}
+</Location>
 "
+      end
+
+      def httpd_mod_intercept_config_api
+        "
+<LocationMatch ^/api|^/vmdbws/wsdl|^/vmdbws/api>
+  AuthType Basic
+  AuthName \"External Authentication (httpd) for API\"
+  AuthBasicProvider anon PAM
+
+  AuthPAMService #{PAM_MODULE}
+  Require valid-user
+
+  Anonymous_NoUserID off
+  Anonymous_MustGiveEmail off
+  Anonymous_VerifyEmail off
+  Anonymous_LogEmail off
+  Anonymous #{INTERNAL_LOGIN}
+
+#{httpd_mod_intercept_config_attrs}
+</LocationMatch>
+"
+      end
+
+      def httpd_mod_intercept_config_attrs
+        config = ""
         LDAP_ATTRS.each { |ldap, http| config << "  LookupUserAttr #{ldap} #{http}\n" }
         config << "
   LookupUserGroups        REMOTE_USER_GROUPS \":\"
   LookupDbusTimeout       5000
-</Location>
 "
       end
 
@@ -96,6 +144,17 @@ LoadModule lookup_identity_module modules/mod_lookup_identity.so
           config[/RequestHeader unset X_REMOTE_USER(\n.*)+env=REMOTE_USER_GROUPS/] = httpd_external_auth_config
         else
           config[/set X_FORWARDED_PROTO 'https'(\n)/, 1] = "\n\n#{httpd_external_auth_config}\n"
+        end
+      end
+
+      def unconfigure_httpd_application(config)
+        ext_auth_include = "Include #{EXTERNAL_AUTH_FILE}"
+        if config.include?(ext_auth_include)
+          config[/#{ext_auth_include}\n\n/] = ""
+        end
+
+        if config.include?("set X_REMOTE_USER")
+          config[/RequestHeader unset X_REMOTE_USER(\n.*)+env=REMOTE_USER_GROUPS\n\n/] = ""
         end
       end
 
@@ -163,6 +222,7 @@ LoadModule lookup_identity_module modules/mod_lookup_identity.so
           show_current_configuration
           return false unless agree("\nIPA Client already configured on this Appliance, Un-Configure first? (Y/N): ")
           ipa_client_unconfigure
+          unconfigure_httpd
           return false unless agree("\nProceed with External Authentication Configuration? (Y/N): ")
         end
         true

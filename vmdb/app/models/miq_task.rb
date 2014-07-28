@@ -217,11 +217,19 @@ class MiqTask < ActiveRecord::Base
     task.id
   end
 
-  def self.wait_for_taskid(task_id, options = {:sleep_time => 1})
+  def self.wait_for_taskid(task_id, options = {})
+    options[:sleep_time] ||= 1
+    options[:timeout]    ||= 0
     task = MiqTask.find(task_id)
     return nil if task.nil?
-    while task.state != STATE_FINISHED
-      sleep(options[:sleep_time])
+    begin
+      Timeout.timeout(options[:timeout]) do
+        while task.state != STATE_FINISHED
+          sleep(options[:sleep_time])
+          task.reload
+        end
+      end
+    rescue Timeout::Error
       task.reload
     end
     task
