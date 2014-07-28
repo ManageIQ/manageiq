@@ -4,7 +4,7 @@
 #
 # Notes: This method updates retirement status
 #
-# Required inputs: status, status_state
+# Required inputs: status
 #
 ###################################
 begin
@@ -29,8 +29,8 @@ begin
   # Get status from input field status
   status = $evm.inputs['status']
 
-  # Get status_state ['on_entry', 'on_exit', 'on_error'] from input field
-  status_state = $evm.inputs['status_state']
+  # Get status_state ['on_entry', 'on_exit', 'on_error']
+  status_state = $evm.root['ae_status_state']
 
   $evm.log("info", "#{@method} - Server:<#{server.name}> Ae_Result:<#{$evm.root['ae_result']}> State:<#{state}> Step:<#{step}> Status_State:<#{status_state}> Status:<#{status}>")
 

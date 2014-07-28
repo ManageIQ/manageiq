@@ -26,11 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'pre1',status_state =>
-        'on_entry')
-      on_exit: update_service_retirement_status(status => 'pre1',status_state => 'on_exit')
-      on_error: update_service_retirement_status(status => 'pre1',status_state =>
-        'on_error')
+      on_entry: update_service_retirement_status(status => 'pre1')
+      on_exit: update_service_retirement_status(status => 'pre1')
+      on_error: update_service_retirement_status(status => 'pre1')
       max_retries: '3'
       max_time: 
   - field:
@@ -48,11 +46,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'pre2',status_state =>
-        'on_entry')
-      on_exit: update_service_retirement_status(status => 'pre2',status_state => 'on_exit')
-      on_error: update_service_retirement_status(status => 'pre2',status_state =>
-        'on_error')
+      on_entry: update_service_retirement_status(status => 'pre2')
+      on_exit: update_service_retirement_status(status => 'pre2')
+      on_error: update_service_retirement_status(status => 'pre2')
       max_retries: '3'
       max_time: 
   - field:
@@ -70,12 +66,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'Retiring Service Vms',status_state
-        => 'on_entry')
-      on_exit: update_service_retirement_status(status => 'Retiring Service VMs',status_state
-        => 'on_exit')
-      on_error: update_service_retirement_status(status => 'Retiring Service Vms',status_state
-        => 'on_error')
+      on_entry: update_service_retirement_status(status => 'Retiring Service VMs')
+      on_exit: update_service_retirement_status(status => 'Retired Service VMs')
+      on_error: update_service_retirement_status(status => 'Error Retiring Service VMs')
       max_retries: '3'
       max_time: 
   - field:
@@ -93,13 +86,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'Checking Service VM retirement',status_state
-        => 'on_entry')update_service_retirement_status(status => 'Removing Service
-        from VMDB',status_state => 'on_entry')
-      on_exit: update_service_retirement_status(status => 'Checking Service VM retirement',status_state
-        => 'on_exit')
-      on_error: update_service_retirement_status(status => 'Checking Service VM retirement',status_state
-        => 'on_error')
+      on_entry: update_service_retirement_status(status => 'Checking Service VM retirement')
+      on_exit: update_service_retirement_status(status => 'Checked Service VM retirement')
+      on_error: update_service_retirement_status(status => 'Error Checking Service VM retirement')
       max_retries: '3'
       max_time: 
   - field:
@@ -117,12 +106,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'Marking Service as retired',status_state
-        => 'on_entry')
-      on_exit: update_service_retirement_status(status => 'Marking Service as retired',status_state
-        => 'on_exit')
-      on_error: update_service_retirement_status(status => 'Marking Service as retired',status_state
-        => 'on_error')
+      on_entry: update_service_retirement_status(status => 'Marking Service as retired')
+      on_exit: update_service_retirement_status(status => 'Marked Service as retired')
+      on_error: update_service_retirement_status(status => 'Error Marking Service as retired')
       max_retries: '3'
       max_time: 
   - field:
@@ -141,10 +127,10 @@ object:
       description: 
       condition: 
       on_entry: update_service_retirement_status(status => 'Deleting Retired Service
-        from VMDB',status_state => 'on_entry')
-      on_exit: update_service_retirement_status(status => 'Deleting Retired Service
-        from VMDB',status_state => 'on_exit')
-      on_error: update_service_retirement_status(status => 'Deleting Retired Service
-        from VMDB',status_state => 'on_error')
+        from VMDB')
+      on_exit: update_service_retirement_status(status => 'Deleted Retired Service
+        from VMDB')
+      on_error: update_service_retirement_status(status => 'Error Deleting Retired Service
+        from VMDB')
       max_retries: '3'
       max_time: 

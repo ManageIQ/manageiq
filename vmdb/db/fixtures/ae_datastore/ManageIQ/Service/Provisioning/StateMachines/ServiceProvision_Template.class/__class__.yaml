@@ -26,10 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'pre1',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'pre1',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in pre1',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'pre1')
+      on_exit: update_serviceprovision_status(status => 'pre1')
+      on_error: update_serviceprovision_status(status => 'Error in pre1')
       max_retries: '100'
       max_time: 
   - field:
@@ -47,10 +46,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'pre2',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'pre2',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in pre2',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'pre2')
+      on_exit: update_serviceprovision_status(status => 'pre2')
+      on_error: update_serviceprovision_status(status => 'Error in pre2')
       max_retries: '100'
       max_time: 
   - field:
@@ -88,12 +86,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Creating Service',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Creating Service',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in Cloning Service',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Creating Service')
+      on_exit: update_serviceprovision_status(status => 'Created Service')
+      on_error: update_serviceprovision_status(status => 'Error Creating Service')
       max_retries: '100'
       max_time: 
   - field:
@@ -112,10 +107,8 @@ object:
       description: 
       condition: 
       on_entry: 
-      on_exit: update_serviceprovision_status(status => 'Cloning Service',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => '${/#ae_reason}',status_state
-        => 'on_error')
+      on_exit: update_serviceprovision_status(status => 'Cloning Service')
+      on_error: update_serviceprovision_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
   - field:
@@ -133,12 +126,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Applying Post1 Customizations',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Applied Post1 Customizations',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in Applying Post1
-        Customizations',status_state => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Applying Post1 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Applied Post1 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Applying Post1
+        Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -196,11 +187,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Emailing Owner',status_state
-        => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'service_provision_complete',status_state
-        => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in Emailing Owner',status_state
-        => 'on_error')
+      on_entry: update_serviceprovision_status(status => 'Emailing Owner')
+      on_exit: update_serviceprovision_status(status => 'service_provision_complete')
+      on_error: update_serviceprovision_status(status => 'Error Emailing Owner')
       max_retries: '100'
       max_time: 
