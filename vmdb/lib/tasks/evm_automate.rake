@@ -72,6 +72,7 @@ namespace :evm do
       puts " Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false"
       puts " Restore         - Usage: rake evm:automate:restore BACKUP_ZIP_FILE=filename"
       puts " Clear           - Usage: rake evm:automate:clear"
+      puts " Convert         - Usage: rake evm:automate:convert DOMAIN=domain_name FILE=db/fixtures/automation_base.xml EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
       puts " Reset           - Usage: rake evm:automate:reset"
       puts " Simulate        - Usage: rake evm:automate:simulate DOMAIN=domain_name NAMESPACE=sample CLASS=Methods INSTANCE=Inspectme"
       puts " Extract Methods - Usage: rake evm:automate:extract_methods FOLDER=automate_methods"
