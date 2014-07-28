@@ -178,22 +178,7 @@ class MiqAeClassController < ApplicationController
           set_right_cell_text(x_node,@ae_class)
         end
       when "aei"
-        @record = MiqAeInstance.find_by_id(from_cid(id[1]))
-        if @record.nil?
-          set_root_node
-        else
-          @ae_class             = @record.ae_class
-          @temp[:ae_class_id]   = @ae_class.id
-          @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
-          @sb[:active_tab]      = "instances"
-          @domain_overrides = {}
-          overrides = MiqAeClass.find_homonymic_instances_across_domains(@record.fqname)
-          overrides.each do |instance|
-            domain = MiqAeDomain.find_by_name(instance.fqname.split('/').first)
-            @domain_overrides[domain.id] = domain_display_name(domain)
-          end
-          set_right_cell_text(x_node, @record)
-        end
+        get_instance_node_info(id)
       when "aem"
         @record = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
         if @ae_method.nil?
@@ -2822,6 +2807,25 @@ private
     domain        = MiqAeNamespace.find_by_id(domain_id)
     domain.system = lock_value
     domain.save!
+  end
+
+  def get_instance_node_info(id)
+    @record = MiqAeInstance.find_by_id(from_cid(id[1]))
+    if @record.nil?
+      set_root_node
+    else
+      @ae_class             = @record.ae_class
+      @temp[:ae_class_id]   = @ae_class.id
+      @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
+      @sb[:active_tab]      = "instances"
+      @domain_overrides = {}
+      overrides = MiqAeClass.find_homonymic_instances_across_domains(@record.fqname)
+      overrides.each do |instance|
+        domain = MiqAeDomain.find_by_name(instance.fqname.split('/').first)
+        @domain_overrides[domain.id] = domain_display_name(domain)
+      end
+      set_right_cell_text(x_node, @record)
+    end
   end
 
   def get_session_data
