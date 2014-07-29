@@ -62,6 +62,8 @@ RSpec.configure do |config|
   config.include ControllerSpecHelper, :type => :controller
   config.include ViewSpecHelper, :type => :view
   config.include UiConstants, :type => :controller
+  config.include AuthHelper,  :type => :controller
+  config.include AuthRequestHelper, :type => :request
   config.include UiConstants, :type => :view
 
   config.include AutomationSpecHelper, :type => :automation

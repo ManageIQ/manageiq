@@ -10,16 +10,18 @@ class VmdbwsController < ApplicationController
   protected
 
   def authenticate
+    ws_security = get_vmdb_config.fetch_path(:webservices, :integrate, :security)
     # require client side cert, so let them through
-    return [true, VmdbwsSupport::SYSTEM_USER] if request.headers["SERVER_PORT"] == "8443"
+    if request.headers["SERVER_PORT"] == "8443" || ws_security == 'none'
+      @username = VmdbwsSupport::SYSTEM_USER
+      return true
+    end
 
-    case get_vmdb_config.fetch_path(:webservices, :integrate, :security)
-    when 'none' then return
-    else
-      # Default to basic authentication
-      authenticate_or_request_with_http_basic do |username, password|
-        User.authenticate_with_http_basic(username, password)
-      end
+    # Default to basic authentication
+    # Block must return false to fail authentication
+    authenticate_or_request_with_http_basic do |username, password|
+      authenticated, @username = User.authenticate_with_http_basic(username, password, request)
+      authenticated
     end
   end
 end
