@@ -35,6 +35,8 @@ class ApiController < ApplicationController
   include_concern 'Generic'
   include_concern 'ServiceTemplates'
   include_concern 'Tags'
+  include_concern 'ProvisionRequests'
+  include_concern 'RequestTasks'
 
   #
   # Api Controller Hooks
