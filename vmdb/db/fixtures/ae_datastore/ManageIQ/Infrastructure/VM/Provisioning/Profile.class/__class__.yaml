@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: /Infrastructure/VM/Provisioning/Placement/best_placement_with_scope#create
+      default_value: /Infrastructure/VM/Provisioning/Placement/redhat_best_fit_cluster#create
       substitute: true
       message: get_placement
       visibility: 
@@ -38,71 +38,11 @@ object:
       datatype: string
       priority: 2
       owner: 
-      default_value: /Infrastructure/VM/Provisioning/Placement/best_fit_with_scope#create
+      default_value: /Infrastructure/VM/Provisioning/Placement/vmware_best_fit_least_utilized#create
       substitute: true
       message: get_host_and_storage
       visibility: 
       collect: /host = host; /storage = storage
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: where_availability_zone
-      display_name: 
-      datatype: string
-      priority: 3
-      owner: 
-      default_value: /Infrastructure/VM/Provisioning/Placement/best_fit_availability_zone#create
-      substitute: true
-      message: get_availability_zone
-      visibility: 
-      collect: /availability_zone = availability_zone
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: where_cluster
-      display_name: 
-      datatype: string
-      priority: 3
-      owner: 
-      default_value: /Infrastructure/VM/Provisioning/Placement/best_fit_cluster#create
-      substitute: true
-      message: get_cluster
-      visibility: 
-      collect: /cluster = cluster
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: domains
-      display_name: 
-      datatype: string
-      priority: 4
-      owner: 
-      default_value: #/Infrastructure/VM/Provisioning/Domain/*#create
-      substitute: true
-      message: get_domains
-      visibility: 
-      collect: /domains = domain
       scope: 
       description: 
       condition: 
