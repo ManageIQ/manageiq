@@ -26,9 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'pre1',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'pre1',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in pre1',status_state
+      on_entry: update_serviceprovision_status(status => 'Processing Pre1',status_state => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre1',status_state => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error processing Pre1',status_state
         => 'on_error')
       max_retries: '100'
       max_time: 
@@ -47,9 +47,72 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'pre2',status_state => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'pre2',status_state => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in pre2',status_state
+      on_entry: update_serviceprovision_status(status => 'Processing Pre2',status_state => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre2',status_state => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error processing Pre2',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre3
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre3',status_state => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre3',status_state => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error processing Pre3',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre4
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre4',status_state => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre4',status_state => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error processing Pre4',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre5
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre5',status_state => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre5',status_state => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error processing Pre5',status_state
         => 'on_error')
       max_retries: '100'
       max_time: 
@@ -58,7 +121,7 @@ object:
       name: configurechilddialog
       display_name: 
       datatype: string
-      priority: 3
+      priority: 6
       owner: 
       default_value: ! '#/Service/Provisioning/StateMachines/Methods/ConfigureChildDialog'
       substitute: true
@@ -78,7 +141,7 @@ object:
       name: provision
       display_name: 
       datatype: string
-      priority: 4
+      priority: 7
       owner: 
       default_value: /Service/Provisioning/StateMachines/Methods/Provision
       substitute: true
@@ -90,9 +153,9 @@ object:
       condition: 
       on_entry: update_serviceprovision_status(status => 'Creating Service',status_state
         => 'on_entry')
-      on_exit: update_serviceprovision_status(status => 'Creating Service',status_state
+      on_exit: update_serviceprovision_status(status => 'Created Service',status_state
         => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in Cloning Service',status_state
+      on_error: update_serviceprovision_status(status => 'Error Creating Service',status_state
         => 'on_error')
       max_retries: '100'
       max_time: 
@@ -101,7 +164,7 @@ object:
       name: checkprovisioned
       display_name: 
       datatype: string
-      priority: 5
+      priority: 8
       owner: 
       default_value: /Service/Provisioning/StateMachines/Methods/CheckProvisioned
       substitute: true
@@ -112,7 +175,7 @@ object:
       description: 
       condition: 
       on_entry: 
-      on_exit: update_serviceprovision_status(status => 'Cloning Service',status_state
+      on_exit: update_serviceprovision_status(status => 'Checking Service Creation',status_state
         => 'on_exit')
       on_error: update_serviceprovision_status(status => '${/#ae_reason}',status_state
         => 'on_error')
@@ -123,7 +186,7 @@ object:
       name: post1
       display_name: 
       datatype: string
-      priority: 6
+      priority: 9
       owner: 
       default_value: 
       substitute: true
@@ -137,7 +200,7 @@ object:
         => 'on_entry')
       on_exit: update_serviceprovision_status(status => 'Applied Post1 Customizations',status_state
         => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in Applying Post1
+      on_error: update_serviceprovision_status(status => 'Error Applying Post1
         Customizations',status_state => 'on_error')
       max_retries: '100'
       max_time: 
@@ -146,7 +209,7 @@ object:
       name: post2
       display_name: 
       datatype: string
-      priority: 7
+      priority: 10
       owner: 
       default_value: 
       substitute: true
@@ -156,9 +219,12 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
+      on_entry: update_serviceprovision_status(status => 'Applying Post2 Customizations',status_state
+        => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Applied Post2 Customizations',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error Applying Post2
+        Customizations',status_state => 'on_error')
       max_retries: 
       max_time: 
   - field:
@@ -166,7 +232,7 @@ object:
       name: post3
       display_name: 
       datatype: string
-      priority: 8
+      priority: 11
       owner: 
       default_value: 
       substitute: true
@@ -176,9 +242,58 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
+      on_entry: update_serviceprovision_status(status => 'Applying Post3 Customizations',status_state
+        => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Applied Post3 Customizations',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error Applying Post3
+        Customizations',status_state => 'on_error')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: post4
+      display_name: 
+      datatype: string
+      priority: 12
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Applying Post4 Customizations',status_state
+        => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Applied Post4 Customizations',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error Applying Post4
+        Customizations',status_state => 'on_error')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: post5
+      display_name: 
+      datatype: string
+      priority: 13
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Applying Post5 Customizations',status_state
+        => 'on_entry')
+      on_exit: update_serviceprovision_status(status => 'Applied Post5 Customizations',status_state
+        => 'on_exit')
+      on_error: update_serviceprovision_status(status => 'Error Applying Post5
+        Customizations',status_state => 'on_error')
       max_retries: 
       max_time: 
   - field:
@@ -186,7 +301,7 @@ object:
       name: EmailOwner
       display_name: 
       datatype: string
-      priority: 9
+      priority: 14
       owner: 
       default_value: /Service/Provisioning/Email/ServiceProvision_complete?event=service_provisioned
       substitute: true
@@ -200,7 +315,7 @@ object:
         => 'on_entry')
       on_exit: update_serviceprovision_status(status => 'service_provision_complete',status_state
         => 'on_exit')
-      on_error: update_serviceprovision_status(status => 'error in Emailing Owner',status_state
+      on_error: update_serviceprovision_status(status => 'Error Emailing Owner',status_state
         => 'on_error')
       max_retries: '100'
       max_time: 
