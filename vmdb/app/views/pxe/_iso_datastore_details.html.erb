@@ -3,8 +3,8 @@
 	<% if @isd %>
 		<div id="iso_datastore_info_div">
 			<% unless @edit %>
-			  <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
-        <fieldset>
+			  <%= render(:partial=>"layouts/flash_msg") %>
+
           <p class="legend">Basic Information</p>
           <table class="style1">
             <tr>
@@ -16,9 +16,9 @@
               <td><%= h(@isd.last_refresh_on) %></td>
             </tr>
           </table>
-        </fieldset>
+
         <% unless @isd.iso_images.empty? %>
-          <fieldset>
+
           <p class="legend">ISO Images</p>
             <table class="style3">
               <thead>
@@ -36,7 +36,7 @@
                 <% end %>
               </tbody>
             </table>
-          </fieldset>
+
         <% end %>
 			<% else %>
 				<%= render(:partial=>"iso_datastore_form") %>
@@ -48,9 +48,9 @@
 	<% if @img %>
 		<div id="iso_img_info_div">
 			<% unless @edit %>
-				<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+				<%= render(:partial=>"layouts/flash_msg") %>
 
-					<fieldset>
+
 						<p class="legend">Basic Information</p>
 						<table class="style1">
               <tr>
@@ -62,7 +62,7 @@
                 <td><%= h(@img.pxe_image_type ? @img.pxe_image_type.name : "") %></td>
               </tr>
 						</table>
-					</fieldset>
+
 
 			<% else %>
 				<%= render(:partial=>"iso_img_form") %>

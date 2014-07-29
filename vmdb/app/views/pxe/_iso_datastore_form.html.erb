@@ -1,7 +1,7 @@
 <% url = url_for(:action=>'iso_datastore_form_field_changed', :id=>"#{@isd.id || "new"}") %>
 <div id="form_div">
 	<%= render :partial => "layouts/flash_msg" %>
-  <fieldset>
+
     <p class="legend">Basic Information</p>
     <table class="style1">
       <tbody>
@@ -16,5 +16,5 @@
           </tr>
       </tbody>
     </table>
-  </fieldset>
+
 </div>
