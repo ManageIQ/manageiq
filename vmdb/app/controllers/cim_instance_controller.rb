@@ -56,12 +56,17 @@ class CimInstanceController < ApplicationController
                    "#{pfx}_retire","#{pfx}_protect","#{pfx}_ownership","#{pfx}_right_size",
                    "#{pfx}_refresh", "#{pfx}_reconfigure", "storage_tag"].include?(params[:pressed]) &&
                     @flash_array == nil
-
-        if !["host_edit","#{pfx}_edit","#{pfx}_miq_request_new","#{pfx}_clone","#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
-          @refresh_div = "main_div"
-          @refresh_partial = "layouts/gtl"
-          show                                                        # Handle EMS buttons
-        end
+      end
+      params[:page] = @current_page if @current_page.present?                     # Save current page for list refresh
+      unless ["host_edit",
+              "#{pfx}_edit",
+              "#{pfx}_miq_request_new",
+              "#{pfx}_clone",
+              "#{pfx}_migrate",
+              "#{pfx}_publish"].include?(params[:pressed])
+        @refresh_div = "main_div"
+        @refresh_partial = "layouts/gtl"
+        show                                                        # Handle EMS buttons
       end
     else
       tag(self.class.model) if params[:pressed] == button_name("tag")
@@ -115,7 +120,8 @@ class CimInstanceController < ApplicationController
             else
               if ["vms","hosts","storages"].include?(@display)  # If displaying vms, action_url s/b show
                 page << "miqReinitToolbar('center_tb');"
-                page.replace_html("main_div", :partial=>"layouts/gtl", :locals=>{:action_url=>"show/#{@ems.id}"})
+                page.replace_html("main_div", :partial => "layouts/gtl",
+                                              :locals  => {:action_url => "show/#{@record.id}"})
               else
                 page.replace_html(@refresh_div, :partial=>@refresh_partial)
               end
