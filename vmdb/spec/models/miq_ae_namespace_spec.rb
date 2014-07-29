@@ -61,4 +61,14 @@ describe MiqAeNamespace do
     n1.should be_editable
   end
 
+  it 'find_by_fqname works with and without leading slash' do
+    n1 = MiqAeNamespace.find_or_create_by_fqname("foo/bar")
+    MiqAeNamespace.find_by_fqname('/foo/bar').id == n1.id
+  end
+
+  it 'empty namespace string should return nil' do
+    MiqAeNamespace.find_by_fqname(nil).should be_nil
+    MiqAeNamespace.find_by_fqname('').should be_nil
+  end
+
 end
