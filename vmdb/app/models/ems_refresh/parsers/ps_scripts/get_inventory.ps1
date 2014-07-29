@@ -11,8 +11,10 @@ function get_vm_temps {
   $id = $_.ID
   
   $vm_hash["Properties"] = $_
-  $networks = Read-SCGuestInfo -VM $_ -Key "NetworkAddressIPv4"
-  $vm_hash["Networks"] = $networks.KvpMap["NetworkAddressIPv4"]
+  if ($_.StatusString -ne "Host Not Responding"){
+   $networks = Read-SCGuestInfo -VM $_ -Key "NetworkAddressIPv4"
+   $vm_hash["Networks"] = $networks.KvpMap["NetworkAddressIPv4"]
+  }
   $dvds = Get-SCVirtualDVDDrive -VM $_ | Select-Object -ExpandProperty "ISO"
   $vm_hash["DVDs"] = $dvds
   $results[$id]= $vm_hash
