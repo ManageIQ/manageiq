@@ -4,8 +4,8 @@ version: 1.0
 object:
   attributes:
     name: ManageIQ
-    description: 
-    display_name: 
+    description: Base domain
+    display_name:
     system: true
     priority: 0
     enabled: true
