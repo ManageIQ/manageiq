@@ -1,24 +1,22 @@
 <div id="iso_datastore_details_div" style="width:100%;height:100%;overflow:auto;position:relative;"><%# Added position:relative so dhtmlxtree scrolls properly in IE7 %>
-	<%# if PXE Server is sleted %>
-	<% if @isd %>
-		<div id="iso_datastore_info_div">
-			<% unless @edit %>
-			  <%= render(:partial=>"layouts/flash_msg") %>
-
-          <p class="legend">Basic Information</p>
-          <table class="style1">
-            <tr>
-              <td class="key"><%= ui_lookup(:table => "ext_management_system")%></td>
-              <td><%= h(@isd.name) %></td>
-            </tr>
-            <tr>
-              <td class="key">Last Refreshed On</td>
-              <td><%= h(@isd.last_refresh_on) %></td>
-            </tr>
-          </table>
+  <%# if PXE Server is selected %>
+  <% if @isd %>
+    <div id="iso_datastore_info_div">
+      <% unless @edit %>
+        <%= render(:partial => "layouts/flash_msg") %>
+        <p class="legend">Basic Information</p>
+        <table class="style1">
+          <tr>
+            <td class="key"><%= ui_lookup(:table => "ext_management_system")%></td>
+            <td><%= h(@isd.name) %></td>
+          </tr>
+          <tr>
+            <td class="key">Last Refreshed On</td>
+            <td><%= h(@isd.last_refresh_on) %></td>
+          </tr>
+        </table>
 
         <% unless @isd.iso_images.empty? %>
-
           <p class="legend">ISO Images</p>
             <table class="style3">
               <thead>
@@ -31,43 +29,39 @@
                   <tr class="<%= cycle('row0', 'row1') %>"
                     onclick="cfmeDynatree_activateNode('iso_datastores_tree', 'isi-<%= to_cid(i.id) %>');"
                     onmouseover="this.style.cursor='pointer'" title="View this ISO Image">
-                    <td><%= h(i.name) %></td></td>
+                    <td><%= h(i.name) %></td>
                   </tr>
                 <% end %>
               </tbody>
             </table>
-
         <% end %>
-			<% else %>
-				<%= render(:partial=>"iso_datastore_form") %>
-			<% end %>
-		</div>
-	<% end %>
 
-	<%# PXE Image is selected %>
-	<% if @img %>
-		<div id="iso_img_info_div">
-			<% unless @edit %>
-				<%= render(:partial=>"layouts/flash_msg") %>
+      <% else %>
+        <%= render(:partial => "iso_datastore_form") %>
+      <% end %>
+    </div>
+  <% end %>
 
+  <%# PXE Image is selected %>
+  <% if @img %>
+    <div id="iso_img_info_div">
+      <% unless @edit %>
+        <%= render(:partial => "layouts/flash_msg") %>
+        <p class="legend">Basic Information</p>
+        <table class="style1">
+          <tr>
+            <td class="key">Name</td>
+            <td><%= h(@img.name) %></td>
+          </tr>
+          <tr>
+            <td class="key">Type</td>
+            <td><%= h(@img.pxe_image_type ? @img.pxe_image_type.name : "") %></td>
+          </tr>
+        </table>
 
-						<p class="legend">Basic Information</p>
-						<table class="style1">
-              <tr>
-                <td class="key">Name</td>
-                <td><%= h(@img.name) %></td>
-              </tr>
-              <tr>
-                <td class="key">Type</td>
-                <td><%= h(@img.pxe_image_type ? @img.pxe_image_type.name : "") %></td>
-              </tr>
-						</table>
-
-
-			<% else %>
-				<%= render(:partial=>"iso_img_form") %>
-			<% end %>
-		</div>
-	<% end %>
+      <% else %>
+        <%= render(:partial => "iso_img_form") %>
+      <% end %>
+    </div>
+  <% end %>
 </div>
-
