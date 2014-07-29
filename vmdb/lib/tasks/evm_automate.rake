@@ -44,6 +44,7 @@ namespace :evm do
 
     desc 'Backup all automate domains to a zip file or backup folder.'
     task :backup => :environment do
+      raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
       puts "Datastore backup starting"
       zip_file       = ENV['BACKUP_ZIP_FILE']
       begin
@@ -66,7 +67,8 @@ namespace :evm do
     task :usage => :environment do
       puts "The following automate tasks are available"
       puts " Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name " \
-                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename "
+                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename " \
+                                "SYSTEM=true|false ENABLED=true|false"
       puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name "  \
                                "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
       puts " Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false"
@@ -145,6 +147,12 @@ namespace :evm do
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['YAML_FILE']}"
           import_options['yaml_file']   = ENV['YAML_FILE']
         end
+        %w(SYSTEM ENABLED).each do |name|
+          if ENV[name].present?
+            raise "#{name} must be true or false" unless %w(true false).include?(ENV[name])
+            import_options[name.downcase] = ENV[name]
+          end
+        end
         MiqAeImport.new(ENV['DOMAIN'], import_options).import
       rescue => err
         STDERR.puts err.backtrace
@@ -195,6 +203,7 @@ namespace :evm do
         MiqAeDatastore.reset
         MiqAeImport.new("*",
           'preview'  => false,
+          'restore'  => true,
           'mode'     => 'add',
           'zip_file' => ENV['BACKUP_ZIP_FILE']
         ).import
