@@ -8,7 +8,7 @@ module OpenstackHandle
     end
 
     def volumes_for_accessible_tenants
-    	volumes.all(:detailed => true, :all_tenants => true)
+      volumes.all(:detailed => true, :all_tenants => true)
     end
 
     def snapshots_for_accessible_tenants
