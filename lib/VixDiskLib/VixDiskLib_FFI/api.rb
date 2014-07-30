@@ -15,12 +15,17 @@ module FFI
       # Make sure we load one and only one version of VixDiskLib
       #
       version_load_order = %w( 5.5.2 5.5.1 5.5.0 5.1.3 5.1.2 5.1.1 5.1.0 5.0.4 5.0.0 1.2.0 1.1.2 )
-      load_errors = []
-      loaded_library = ""
+      bad_versions       = {"5.1.0" => "Disk Open May Core Dump without an SSL Thumbprint"}
+      load_errors        = []
+      loaded_library     = ""
       version_load_order.each do |version|
         begin
           loaded_library = ffi_lib ["vixDiskLib.so.#{version}"]
           VERSION_MAJOR, VERSION_MINOR = loaded_library.first.name.split(".")[2, 2].collect(&:to_i)
+          if bad_versions.keys.include?(version)
+            loaded_library = ""
+            raise LoadError, "VixDiskLib #{version} is not supported: #{bad_versions[version]}"
+          end
           break
         rescue LoadError => err
           load_errors << "ffi-vixdisklib: failed to load #{version} version with error: #{err.message}."
