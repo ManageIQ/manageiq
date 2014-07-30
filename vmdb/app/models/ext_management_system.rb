@@ -185,14 +185,8 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.refresh_all_ems_timer
-    ems_ids = []
-
-    MiqServer.my_server.zone.ext_management_systems.each do |ems|
-      ems.reset_vim_cache_queue if ems.respond_to?(:reset_vim_cache_queue)
-      ems_ids << ems.id
-    end
-
-    self.refresh_ems(ems_ids) unless ems_ids.empty?
+    ems_ids = self.where(:zone_id => MiqServer.my_server.zone.id).pluck(:id)
+    self.refresh_ems(ems_ids, true) unless ems_ids.empty?
   end
 
   def self.refresh_ems(ems_ids, reload = false)

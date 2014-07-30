@@ -52,14 +52,14 @@ describe ExtManagementSystem do
     it "refresh_all_ems_timer will refresh for all emses in zone1" do
       @ems1 = @zone1.ext_management_systems.first
       MiqServer.stub(:my_server).and_return(@zone1.miq_servers.first)
-      ExtManagementSystem.should_receive(:refresh_ems).with([@ems1.id])
+      ExtManagementSystem.should_receive(:refresh_ems).with([@ems1.id], true)
       ExtManagementSystem.refresh_all_ems_timer
     end
 
     it "refresh_all_ems_timer will refresh for all emses in zone2" do
       @ems2 = @zone2.ext_management_systems.first
       MiqServer.stub(:my_server).and_return(@zone2.miq_servers.first)
-      ExtManagementSystem.should_receive(:refresh_ems).with([@ems2.id])
+      ExtManagementSystem.should_receive(:refresh_ems).with([@ems2.id], true)
       ExtManagementSystem.refresh_all_ems_timer
     end
   end
