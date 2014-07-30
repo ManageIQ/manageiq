@@ -43,6 +43,14 @@ class MiqAeMethod < ActiveRecord::Base
     "#{self.ae_class.fqname}/#{self.name}"
   end
 
+  def self.default_method_text
+    <<-DEFAULT_METHOD_TEXT
+#
+# Description: <Method description here>
+#
+    DEFAULT_METHOD_TEXT
+  end
+
   def to_export_yaml
     export_attributes
   end
