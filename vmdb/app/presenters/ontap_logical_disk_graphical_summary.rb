@@ -1,4 +1,4 @@
-class OntapLogicalDiskGraphicalSummaryPresenter < GraphicalSummaryPresenter
+class OntapLogicalDiskGraphicalSummaryPresenter < StorageGraphicalSummaryPresenter
   #
   # Groups
   #

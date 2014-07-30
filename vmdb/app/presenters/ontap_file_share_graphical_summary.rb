@@ -1,4 +1,4 @@
-class OntapFileShareGraphicalSummaryPresenter < GraphicalSummaryPresenter
+class OntapFileShareGraphicalSummaryPresenter < StorageGraphicalSummaryPresenter
   #
   # Groups
   #
@@ -36,16 +36,6 @@ class OntapFileShareGraphicalSummaryPresenter < GraphicalSummaryPresenter
     h     = {:label => label , :image => "ontap_logical_disk", :value =>(ld.blank? ? "None" : ld.evm_display_name)}
     if !ld.blank? && role_allows(:feature=>"ontap_logical_disk_show")
       h[:link]  = link_to("", {:action => 'show', :controller=>"ontap_logical_disk", :id => ld.id}, :title => "Show #{label} '#{ld.evm_display_name}'")
-    end
-    h
-  end
-
-  def graphical_base_storage_extents
-    label = ui_lookup(:tables=>"cim_base_storage_extent")
-    num   = @record.base_storage_extents_size
-    h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
-      h[:link]  = link_to("",{:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name}, :title => "Show all #{label}")
     end
     h
   end
