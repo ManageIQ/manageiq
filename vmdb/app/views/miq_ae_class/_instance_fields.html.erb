@@ -2,10 +2,15 @@
   <p class = "legend">Domain overrides by priority</p>
   <table class = "style3">
     <tbody>
-      <% @domain_overrides.each do |id, name| %>
-        <tr class = "<%= cycle('row0', 'row1') %>"
-            onclick = "cfmeDynatree_activateNode('ae_tree', 'aen-<%= to_cid(id) %>');"
-            onmouseover = "this.style.cursor='pointer'" title = "Click to view Automate Domain">
+      <% @domain_overrides.each do |name, id| %>
+        <% if id %>
+          <tr class="<%= cycle('row0', 'row1') %>"
+            onclick="<%= remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
+                                         :url     => "/miq_ae_class/x_show?id=aei-#{to_cid(id)}") %>"
+            onmouseover="this.style.cursor='pointer'" title="Click to view this Automate Instance">
+        <% else %>
+          <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
+        <% end %>
           <td>
             <%= name %>
           </td>

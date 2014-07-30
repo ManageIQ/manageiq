@@ -260,10 +260,12 @@ class MiqAeClassController < ApplicationController
     return nil if existing_node.nil?
     children = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], existing_node)
     # set x_node after building tree nodes so parent node of new nodes can be selected in the tree.
-    if @record.kind_of?(MiqAeClass)
-      self.x_node = "aen-#{to_cid(@record.namespace_id)}"
-    else
-      self.x_node = "aec-#{to_cid(@record.class_id)}"
+    unless params[:action] == "x_show"
+      if @record.kind_of?(MiqAeClass)
+        self.x_node = "aen-#{to_cid(@record.namespace_id)}"
+      else
+        self.x_node = "aec-#{to_cid(@record.class_id)}"
+      end
     end
     {:key => existing_node, :children => children}
   end
@@ -296,7 +298,8 @@ class MiqAeClassController < ApplicationController
 
     @in_a_form = @in_a_form_fields = @in_a_form_props = false if params[:button] == "cancel" ||
                     (["save","add"].include?(params[:button]) && replace_trees)
-    add_nodes = open_parent_nodes(@record) if params[:button] == "copy"
+    add_nodes = open_parent_nodes(@record) if params[:button] == "copy" ||
+                                              params[:action] == "x_show"
     get_node_info(x_node) if !@in_a_form && @button != "reset"
     ae_tree = build_ae_tree if replace_trees
 
@@ -1994,6 +1997,12 @@ exit MIQ_OK"
     session[:edit] = @edit
   end
 
+  def x_show
+    typ, id = params[:id].split("-")
+    @record = X_TREE_NODE_PREFIXES[typ].constantize.find_by_id(from_cid(id))
+    tree_select
+  end
+
 private
 
   def initial_setup_for_instances_form_vars(ae_inst_id)
@@ -2842,13 +2851,25 @@ private
       @temp[:ae_class_id]   = @ae_class.id
       @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
       @sb[:active_tab]      = "instances"
-      @domain_overrides = {}
-      overrides = MiqAeClass.find_homonymic_instances_across_domains(@record.fqname)
-      overrides.each do |instance|
-        domain = MiqAeDomain.find_by_name(instance.fqname.split('/').first)
-        @domain_overrides[domain.id] = domain_display_name(domain)
-      end
+      domain_overrides
       set_right_cell_text(x_node, @record)
+    end
+  end
+
+  def domain_overrides
+    @domain_overrides = {}
+    typ, id = x_node.split('-')
+    if typ == 'aec'
+      method = 'get_homonymic_classes_across_domains'
+    elsif typ == 'aei'
+      method = 'get_homonymic_instances_across_domains'
+    elsif typ == 'aem'
+      method = 'get_homonymic_methods_across_domains'
+    end
+    overrides = X_TREE_NODE_PREFIXES[typ].constantize.send(method, @record.fqname)
+    overrides.each do |obj|
+      display_name, id = domain_display_name_using_name(obj, @record.fqname.split('/').first)
+      @domain_overrides[display_name] = id
     end
   end
 
