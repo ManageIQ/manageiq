@@ -19,6 +19,10 @@ module EmsRefresh::Parsers
       @network_service_name = @os_handle.network_service_name
       @image_service        = @os_handle.detect_image_service
       @image_service_name   = @os_handle.image_service_name
+      @volume_service       = @os_handle.detect_volume_service
+      @volume_service_name  = @os_handle.volume_service_name
+      @storage_service      = @os_handle.detect_storage_service
+      @storage_service_name = @os_handle.storage_service_name
     end
 
     def ems_inv_to_hashes
@@ -75,7 +79,7 @@ module EmsRefresh::Parsers
     end
 
     def volumes
-      @volumes ||= @volume_service.volumes.all(:detailed => true, :all_tenants => true)
+      @volumes ||= @volume_service.volumes_for_accessible_tenants
     end
 
     def get_flavors
@@ -148,33 +152,14 @@ module EmsRefresh::Parsers
     def get_snapshots
       # TODO: support snapshots through :nova as well?
       return unless @volume_service_name == :cinder
-      # TODO: Implement :all_tenants flag for snapshots in Fog.
-      snapshots = []
-      @identity_service.tenants.each do |t|
-        next if t.name == "services"
-        begin
-          volume_service_for_tenant = @ems.connect(:service => 'Volume', :extra_opts => {:openstack_tenant => t.name})
-        rescue Excon::Errors::Unauthorized => eeu_err
-          next
-        end
-        snapshots += volume_service_for_tenant.list_snapshots.body['snapshots']
-      end
-      process_collection(snapshots, :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
+      process_collection(@volume_service.snapshots_for_accessible_tenants,
+                         :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
     end
 
     def get_object_store
       return unless @storage_service_name == :swift
-      # TODO: Implement :all_tenants flag for object store (Storage) in Fog,
-      # if Swift supports it.
-      @identity_service.tenants.each do |t|
-        next if t.name == "services"
-        begin
-          storage_service_for_tenant = @ems.connect(:service => 'Storage', :extra_opts => {:openstack_tenant => t.name})
-        rescue Excon::Errors::Unauthorized => eeu_err
-          next
-        end
-
-        storage_service_for_tenant.directories.each do |fd|
+      @os_handle.service_for_each_accessible_tenant('Storage') do |svc, t|
+        svc.directories.each do |fd|
           result = process_collection_item(fd, :cloud_object_store_containers) { |c| parse_container(c, t) }
           process_collection(fd.files, :cloud_object_store_objects) { |o| parse_object(o, result, t) }
         end

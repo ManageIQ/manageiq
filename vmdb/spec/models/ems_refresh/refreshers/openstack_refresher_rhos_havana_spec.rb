@@ -59,7 +59,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     MiqTemplate.count.should         == 6
 
     CustomAttribute.count.should     == 0
-    Disk.count.should                == 16
+    Disk.count.should                == 17
     GuestDevice.count.should         == 0
     Hardware.count.should            == 8
     Network.count.should             == 8
