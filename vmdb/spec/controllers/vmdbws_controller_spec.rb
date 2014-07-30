@@ -25,6 +25,7 @@ describe VmdbwsController do
     http_login user.userid, user.password
 
     controller.should_receive(:get_vmdb_config).and_return(double(:fetch_path => "basic"))
+    controller.should_receive(:get_vmdb_config).and_return(double(:fetch_path => "30.seconds"))
 
     expect(controller.send(:authenticate)).to eq(true)
     expect(assigns(:username)).to eq(user.userid)

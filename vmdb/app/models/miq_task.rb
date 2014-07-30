@@ -218,6 +218,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def self.wait_for_taskid(task_id, options = {})
+    options = options.dup
     options[:sleep_time] ||= 1
     options[:timeout]    ||= 0
     task = MiqTask.find(task_id)
@@ -230,6 +231,7 @@ class MiqTask < ActiveRecord::Base
         end
       end
     rescue Timeout::Error
+      update_status(task_id, STATE_FINISHED, STATUS_TIMEOUT, "Timed out stalled task.")
       task.reload
     end
     task

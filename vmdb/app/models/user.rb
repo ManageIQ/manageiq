@@ -214,6 +214,7 @@ class User < ActiveRecord::Base
   end
 
   def self.authenticate(username, password, request = nil, options = {})
+    options = options.dup
     options[:require_user] ||= false
     fail_message = "Authentication failed"
     mode = self.mode
@@ -240,7 +241,7 @@ class User < ActiveRecord::Base
 
     if options[:require_user] && !user_or_taskid.kind_of?(self)
       task = MiqTask.wait_for_taskid(user_or_taskid, options)
-      unless task && task.state == MiqTask::STATE_FINISHED && task.status == MiqTask::STATUS_OK
+      if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
         raise MiqException::MiqEVMLoginError, fail_message
       end
       user_or_taskid = find_by_userid(task.userid)

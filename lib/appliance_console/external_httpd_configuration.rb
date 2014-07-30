@@ -71,18 +71,19 @@ EOS
       # HTTPD Configuration Methods
       #
       def httpd_mod_intercept_config
-        "
+        <<EOS
+
 LoadModule authnz_pam_module modules/mod_authnz_pam.so
 LoadModule intercept_form_submit_module modules/mod_intercept_form_submit.so
 LoadModule lookup_identity_module modules/mod_lookup_identity.so
-LoadModule authn_anon_module modules/mod_authn_anon.so
 #{httpd_mod_intercept_config_ui}
 #{httpd_mod_intercept_config_api}
-"
+EOS
       end
 
       def httpd_mod_intercept_config_ui
-        "
+        <<EOS
+
 <Location #{INTERCEPT_FORM}>
   InterceptFormPAMService #{PAM_MODULE}
   InterceptFormLogin      user_name
@@ -94,28 +95,30 @@ LoadModule authn_anon_module modules/mod_authn_anon.so
 <Location #{INTERCEPT_FORM}>
 #{httpd_mod_intercept_config_attrs}
 </Location>
-"
+EOS
       end
 
       def httpd_mod_intercept_config_api
-        "
+        <<EOS
+
 <LocationMatch ^/api|^/vmdbws/wsdl|^/vmdbws/api>
+  SetEnvIf Authorization '^Basic +YWRtaW46' let_admin_in
+  SetEnvIf X-Auth-Token  '^.+$'             let_api_token_in
+
   AuthType Basic
-  AuthName \"External Authentication (httpd) for API\"
-  AuthBasicProvider anon PAM
+  AuthName "External Authentication (httpd) for API"
+  AuthBasicProvider PAM
 
   AuthPAMService #{PAM_MODULE}
   Require valid-user
-
-  Anonymous_NoUserID off
-  Anonymous_MustGiveEmail off
-  Anonymous_VerifyEmail off
-  Anonymous_LogEmail off
-  Anonymous #{INTERNAL_LOGIN}
+  Order Allow,Deny
+  Allow from env=let_admin_in
+  Allow from env=let_api_token_in
+  Satisfy Any
 
 #{httpd_mod_intercept_config_attrs}
 </LocationMatch>
-"
+EOS
       end
 
       def httpd_mod_intercept_config_attrs
