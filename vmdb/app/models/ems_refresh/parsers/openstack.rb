@@ -103,7 +103,7 @@ module EmsRefresh::Parsers
     end
 
     def get_tenants
-      @tenants = @identity_service.tenants
+      @tenants = @os_handle.tenants.select {|t| t.name != "services" }
       process_collection(@tenants, :cloud_tenants) { |tenant| parse_tenant(tenant) }
     end
 
