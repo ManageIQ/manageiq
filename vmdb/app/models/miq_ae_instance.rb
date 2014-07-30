@@ -121,6 +121,10 @@ class MiqAeInstance < ActiveRecord::Base
     MiqAeInstanceCopy.copy_multiple(ids, domain, namespace, overwrite_location)
   end
 
+  def self.get_homonymic_across_domains(fqname, enabled = nil)
+    MiqAeDatastore.get_homonymic_across_domains(::MiqAeInstance, fqname, enabled)
+  end
+
   private
 
   def validate_field(field)

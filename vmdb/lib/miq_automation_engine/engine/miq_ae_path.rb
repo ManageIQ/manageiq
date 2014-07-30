@@ -52,5 +52,14 @@ module MiqAeEngine
       return false if path.nil?
       return path.last == "*"
     end
+
+    def self.get_domain_ns_klass_inst(fqname, options = {})
+      path = MiqAeUri.path(fqname, "miqaedb")
+      ns, klass, inst = split(path, options)
+      ns_parts = ns.split('/')
+      domain   = ns_parts.shift
+      ns_sans_domain = ns_parts.join('/')
+      return domain, ns_sans_domain, klass, inst
+    end
   end
 end

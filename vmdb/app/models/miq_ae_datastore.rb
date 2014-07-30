@@ -186,4 +186,33 @@ module MiqAeDatastore
       end
     end
   end
+
+  def self.get_homonymic_across_domains(arclass, fqname, enabled = nil)
+    return [] if fqname.blank?
+    options = arclass == ::MiqAeClass ? {:has_instance_name => false} : {}
+    _, ns, klass, name = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(fqname, options)
+    name = klass if arclass == ::MiqAeClass
+    MiqAeDatastore.get_sorted_matching_objects(arclass, ns, klass, name, enabled)
+  end
+
+  def self.get_sorted_matching_objects(arclass, ns, klass, name, enabled)
+    options = arclass == ::MiqAeClass ? {:has_instance_name => false} : {}
+    matches = arclass.where("lower(name) = ?", name.downcase).collect do |obj|
+      get_domain_priority_object(obj, klass, ns, enabled, options)
+    end.compact
+    matches.sort { |a, b| b[:priority] <=> a[:priority] }.collect { |v| v[:obj] }
+  end
+
+  def self.get_domain_priority_object(obj, klass, ns, enabled, options)
+    domain, nsd, klass_name, _ = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(obj.fqname, options)
+    return if !klass_name.casecmp(klass).zero? || !nsd.casecmp(ns).zero?
+    domain_obj = get_domain_object(domain, enabled)
+    {:obj => obj, :priority => domain_obj.priority} if domain_obj
+  end
+
+  def self.get_domain_object(name, enabled)
+    arel = MiqAeDomain.where("lower(name) = ?", name.downcase)
+    arel = arel.where(:enabled => enabled) unless enabled.nil?
+    arel.first
+  end
 end # module MiqAeDatastore
