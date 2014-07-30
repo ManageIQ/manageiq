@@ -12,11 +12,31 @@ object:
     owner: 
   schema:
   - field:
+      aetype: attribute
+      name: approval_type
+      display_name: 
+      datatype: 
+      priority: 1
+      owner: 
+      default_value: auto
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
       aetype: state
       name: ValidateRequest
       display_name: 
       datatype: string
-      priority: 1
+      priority: 2
       owner: 
       default_value: 
       substitute: true
@@ -36,7 +56,7 @@ object:
       name: ApproveRequest
       display_name: 
       datatype: string
-      priority: 2
+      priority: 3
       owner: 
       default_value: 
       substitute: true
