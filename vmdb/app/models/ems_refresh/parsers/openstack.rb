@@ -19,6 +19,10 @@ module EmsRefresh::Parsers
       @network_service_name = @os_handle.network_service_name
       @image_service        = @os_handle.detect_image_service
       @image_service_name   = @os_handle.image_service_name
+      @volume_service       = @os_handle.detect_volume_service
+      @volume_service_name  = @os_handle.volume_service_name
+      @storage_service      = @os_handle.detect_storage_service
+      @storage_service_name = @os_handle.storage_service_name
     end
 
     def ems_inv_to_hashes
@@ -31,16 +35,17 @@ module EmsRefresh::Parsers
       get_key_pairs
       get_security_groups
       get_networks
-      # TODO: Collect volumes when we can figure out how to link them to
-      #       something, perhaps through availability zone
-      # get_volumes
       # get_hosts
       get_images
       get_servers
+      get_volumes
+      get_snapshots
+      get_object_store
       get_floating_ips
       $fog_log.info("#{log_header}...Complete")
 
       link_vm_genealogy
+      link_storage_associations
       filter_unused_disabled_flavors
       clean_up_extra_flavor_keys
 
@@ -48,6 +53,18 @@ module EmsRefresh::Parsers
     end
 
     private
+
+    def detect_volume_service
+      [@ems.connect_volume, :cinder]
+    rescue MiqException::ServiceNotAvailable
+      [@connection, :nova]
+    end
+
+    def detect_storage_service
+      [@ems.connect_storage, :swift]
+    rescue MiqException::ServiceNotAvailable
+      [nil, :none]
+    end
 
     def servers
       @servers ||= @connection.servers_for_accessible_tenants
@@ -61,6 +78,10 @@ module EmsRefresh::Parsers
       @networks ||= @network_service.networks
     end
 
+    def volumes
+      @volumes ||= @volume_service.volumes_for_accessible_tenants
+    end
+
     def get_flavors
       flavors = @connection.flavors
       process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
@@ -72,7 +93,9 @@ module EmsRefresh::Parsers
     end
 
     def get_availability_zones
-      azs = servers.collect(&:availability_zone).compact.uniq
+      azs = servers.collect(&:availability_zone)
+      azs.concat(volumes.collect(&:availability_zone)).compact!
+      azs.uniq!
       azs << nil # force the null availability zone for openstack
       process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
     end
@@ -120,10 +143,28 @@ module EmsRefresh::Parsers
     #   process_collection(hosts, :hosts) { |host| parse_host(host) }
     # end
 
-    # def get_volumes
-    #   volumes = @connection.volumes
-    #   process_collection(volumes, :storages) { |volume| parse_volume(volume) }
-    # end
+    def get_volumes
+      # TODO: support volumes through :nova as well?
+      return unless @volume_service_name == :cinder
+      process_collection(volumes, :cloud_volumes) { |volume| parse_volume(volume) }
+    end
+
+    def get_snapshots
+      # TODO: support snapshots through :nova as well?
+      return unless @volume_service_name == :cinder
+      process_collection(@volume_service.snapshots_for_accessible_tenants,
+                         :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
+    end
+
+    def get_object_store
+      return unless @storage_service_name == :swift
+      @os_handle.service_for_each_accessible_tenant('Storage') do |svc, t|
+        svc.directories.each do |fd|
+          result = process_collection_item(fd, :cloud_object_store_containers) { |c| parse_container(c, t) }
+          process_collection(fd.files, :cloud_object_store_objects) { |o| parse_object(o, result, t) }
+        end
+      end
+    end
 
     def get_images
       images = @image_service.images_for_accessible_tenants
@@ -134,15 +175,18 @@ module EmsRefresh::Parsers
       process_collection(servers, :vms) { |server| parse_server(server) }
     end
 
-    def process_collection(collection, key)
+    def process_collection(collection, key, &block)
+      collection.each { |item| process_collection_item(item, key, &block) }
+    end
+
+    def process_collection_item(item, key)
       @data[key] ||= []
 
-      collection.each do |item|
-        uid, new_result = yield(item)
+      uid, new_result = yield(item)
 
-        @data[key] << new_result
-        @data_index.store_path(key, uid, new_result)
-      end
+      @data[key] << new_result
+      @data_index.store_path(key, uid, new_result)
+      new_result
     end
 
     def get_floating_ips
@@ -164,6 +208,18 @@ module EmsRefresh::Parsers
         parent_vm_uid = vm.delete(:parent_vm_uid)
         parent_vm = @data_index.fetch_path(:vms, parent_vm_uid)
         vm[:parent_vm] = parent_vm unless parent_vm.nil?
+      end
+    end
+
+    def link_storage_associations
+      @data[:cloud_volumes].each do |cv|
+        #
+        # Associations between volumes and the snapshots on which
+        # they are based, if any.
+        #
+        base_snapshot_uid = cv.delete(:snapshot_uid)
+        base_snapshot = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot_uid)
+        cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
       end
     end
 
@@ -292,14 +348,87 @@ module EmsRefresh::Parsers
       }
     end
 
-    # def parse_volume(volume)
-    #   uid = volume.id
-    #   new_result = {
-    #     :ems_ref => uid,
-    #     :name    => volume.name,
-    #   }
-    #   return uid, new_result
-    # end
+    def parse_volume(volume)
+      if (attachment = volume.attachments.first)
+        server_id = attachment["server_id"]
+        vm = @data_index.fetch_path(:vms, server_id)
+      end
+      uid = volume.id
+      new_result = {
+        :ems_ref           => uid,
+        :name              => volume.display_name,
+        :status            => volume.status,
+        :bootable          => volume.attributes['bootable'],
+        :creation_time     => volume.created_at,
+        :description       => volume.display_description,
+        :volume_type       => volume.volume_type,
+        :snapshot_uid      => volume.snapshot_id,
+        :size              => volume.size.to_i.gigabytes,
+        :tenant            => @data_index.fetch_path(:cloud_tenants, volume.attributes['os-vol-tenant-attr:tenant_id']),
+        :availability_zone => @data_index.fetch_path(:availability_zones, volume.availability_zone || "null_az"),
+      }
+
+      volume.attachments.each do |a|
+        dev = File.basename(a['device'])
+        vm = @data_index.fetch_path(:vms, a['server_id'])
+        disks = vm[:hardware][:disks]
+
+        if (disk = disks.detect { |d| d[:location] == dev })
+          disk[:size] = new_result[:size]
+        else
+          disk = add_instance_disk(disks, new_result[:size], dev, "OpenStack Volume")
+        end
+
+        if disk
+          disk[:backing]      = new_result
+          disk[:backing_type] = 'CloudVolume'
+        end
+      end
+
+      return uid, new_result
+    end
+
+    def parse_snapshot(snap)
+      uid = snap['id']
+      new_result = {
+        :ems_ref       => uid,
+        :name          => snap['display_name'],
+        :status        => snap['status'],
+        :creation_time => snap['created_at'],
+        :description   => snap['display_description'],
+        :size          => snap['size'].to_i.gigabytes,
+        :tenant        => @data_index.fetch_path(:cloud_tenants, snap['os-extended-snapshot-attributes:project_id']),
+        :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id'])
+      }
+      return uid, new_result
+    end
+
+    def parse_container(container, tenant)
+      uid = "#{tenant.id}/#{container.key}"
+      new_result = {
+        :ems_ref      => uid,
+        :key          => container.key,
+        :object_count => container.count,
+        :bytes        => container.bytes,
+        :tenant       => @data_index.fetch_path(:cloud_tenants, tenant.id)
+      }
+      return uid, new_result
+    end
+
+    def parse_object(obj, container, tenant)
+      uid = obj.etag
+      new_result = {
+        :ems_ref        => uid,
+        :etag           => obj.etag,
+        :last_modified  => obj.last_modified,
+        :content_length => obj.content_length,
+        :key            => obj.key,
+        :content_type   => obj.content_type,
+        :container      => container,
+        :tenant         => @data_index.fetch_path(:cloud_tenants, tenant.id)
+      }
+      return uid, new_result
+    end
 
     def parse_image(image)
       uid = image.id
@@ -383,9 +512,17 @@ module EmsRefresh::Parsers
       new_result[:parent_vm_uid] = parent_image_uid unless parent_image_uid.nil?
 
       disks = new_result[:hardware][:disks]
-      add_instance_disk(disks, flavor[:root_disk],      0, "Root disk")
-      add_instance_disk(disks, flavor[:ephemeral_disk], 1, "Ephemeral disk")
-      add_instance_disk(disks, flavor[:swap_disk],      2, "Swap disk")
+      dev = "vda"
+
+      # TODO: flavor[:root_disk] == 0 should take root disk size from image size.
+      if (sz = flavor[:root_disk]) == 0
+        sz = 1.gigabytes
+      end
+      add_instance_disk(disks, sz, dev.dup,       "Root disk")
+      sz = flavor[:ephemeral_disk]
+      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
+      sz = flavor[:swap_disk]
+      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")      unless sz.zero?
 
       return uid, new_result
     end

@@ -28,7 +28,13 @@ ACCESSORS = [
   ['Compute', 'addresses',                              nil],
   ['Compute', 'addresses_for_accessible_tenants',       nil],
   ['Image',   'images',                                 nil],
-  ['Image',   'images_for_accessible_tenants',          nil]
+  ['Image',   'images_for_accessible_tenants',          nil],
+  ['Volume',  'volumes',                                nil],
+  ['Volume',  'volumes_for_accessible_tenants',         nil],
+  ['Volume',  'list_snapshots',                         nil],
+  ['Volume',  'snapshots_for_accessible_tenants',       nil],
+  ['Storage', 'directories',                            nil],
+  ['Storage', 'directories_for_accessible_tenants',     nil]
 ]
 
 require 'bundler_setup'
@@ -65,11 +71,12 @@ begin
       tota = []
       os_handle.service_for_each_accessible_tenant(service) do |svc, t|
         ret = svc.send(method)
+        ret = ret.body['snapshots'] if ret.kind_of?(Excon::Response) # only one for now
         puts "\t\t#{t.name} (#{svc.class.name}): #{ret.length}"
         tota.concat(ret)
       end
       puts "\t\t\t* Total:  #{tota.length}"
-      puts "\t\t\t* Unique: #{tota.uniq { |e| e.id }.length}"
+      puts "\t\t\t* Unique: #{tota.uniq { |e| e.kind_of?(Hash) ? e['id'] : e.id }.length}" unless service == 'Storage'
     end
   end
 rescue => err
