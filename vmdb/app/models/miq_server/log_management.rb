@@ -125,6 +125,8 @@ module MiqServer::LogManagement
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
     raise "Log depot settings not configured" unless self.log_depot_configured?
+    log_depot.update_attributes(:support_case => options[:support_case].presence)
+
     self.post_historical_logs(taskid) unless options[:only_current]
     self.post_current_logs(taskid)
     task.update_status("Finished", "Ok", "Log files were successfully collected")
@@ -225,6 +227,10 @@ module MiqServer::LogManagement
   def log_collection_active?
     return true if self.log_files.exists?(:state => "collecting")
     return MiqTask.exists?(["miq_server_id = ? and name like ? and state != ?", self.id, "Zipped log retrieval for %", "Finished"])
+  end
+
+  def log_depot
+    log_file_depot || zone.log_file_depot
   end
 
   def log_depot_uri

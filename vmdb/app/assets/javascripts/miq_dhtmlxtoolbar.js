@@ -159,6 +159,17 @@ function miqToolbarOnClick(id){
 		else
 			tb_url += button.pressed;
 	}
+
+  collect_log_buttons = ['support_vmdb_choice__collect_logs',
+                         'support_vmdb_choice__collect_current_logs',
+                         'support_vmdb_choice__zone_collect_logs',
+                         'support_vmdb_choice__zone_collect_current_logs'
+  ]
+  if (collect_log_buttons.indexOf(button.name) >= 0 && button.prompt) {
+    tb_url = miqSupportCasePrompt(tb_url);
+    if (!tb_url) return false;
+  }
+
 	// put url_parms into params var, if defined
 	var params;
 	if (typeof button.url_parms != "undefined") {
@@ -207,6 +218,20 @@ function miqToolbarOnClick(id){
 	}	}
 	return false;
 }
+
+function miqSupportCasePrompt(tb_url) {
+  var support_case = prompt('Enter Support Case:', '');
+  if (support_case == null) return false;
+  else if (support_case.trim() == '') {
+    alert('Support Case must be provided to collect logs');
+    return false;
+  }
+  else {
+    tb_url = tb_url + '&support_case=' + encodeURIComponent(support_case);
+    return tb_url;
+  }
+}
+
 
 // Handle chart context menu clicks
 function miqWidgetToolbarClick(itemId, itemValue) {

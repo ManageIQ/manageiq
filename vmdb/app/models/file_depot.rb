@@ -16,6 +16,10 @@ class FileDepot < ActiveRecord::Base
     true
   end
 
+  def requires_support_case?
+    false
+  end
+
   def depot_hash=(hsh = {})
     return if hsh == self.depot_hash
     self.update_authentication( {:default => {:userid => hsh[:username], :password => hsh[:password]} } )

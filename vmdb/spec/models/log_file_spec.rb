@@ -5,6 +5,8 @@ describe LogFile do
   context "With server and zone" do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server.create_log_file_depot!(:type => "FileDepotFtpAnonymous", :uri => "test")
+      @miq_server.save
     end
 
     it "logs_from_server will queue _request_logs with correct args" do
@@ -99,7 +101,6 @@ describe LogFile do
           it "#post_logs will only post current logs if flag enabled" do
             message.deliver
             message.args.first[:only_current] = true
-            MiqServer.any_instance.stub(:log_depot_configured?).and_return(true)
             MiqServer.any_instance.should_receive(:post_historical_logs).never
             MiqServer.any_instance.should_receive(:post_current_logs).once
             message.delivered(*message.deliver)
@@ -107,7 +108,6 @@ describe LogFile do
 
           it "#post_logs will post both historical and current logs if flag nil" do
             message.deliver
-            MiqServer.any_instance.stub(:log_depot_configured?).and_return(true)
             MiqServer.any_instance.should_receive(:post_historical_logs).once
             MiqServer.any_instance.should_receive(:post_current_logs).once
             message.delivered(*message.deliver)
@@ -116,7 +116,6 @@ describe LogFile do
           it "#post_logs will post both historical and current logs if flag false" do
             message.deliver
             message.args.first[:only_current] = false
-            MiqServer.any_instance.stub(:log_depot_configured?).and_return(true)
             MiqServer.any_instance.should_receive(:post_historical_logs).once
             MiqServer.any_instance.should_receive(:post_current_logs).once
             message.delivered(*message.deliver)
