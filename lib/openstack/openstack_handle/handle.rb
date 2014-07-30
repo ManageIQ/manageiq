@@ -212,6 +212,7 @@ module OpenstackHandle
       service_for_each_accessible_tenant(service) do |svc|
         ra.concat(svc.send(accessor).to_a)
       end
+      return ra unless uniq_id
       ra.uniq { |i| i.send(uniq_id) }
     end
   end

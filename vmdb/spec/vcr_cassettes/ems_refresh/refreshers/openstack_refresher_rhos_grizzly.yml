@@ -23,16 +23,16 @@ http_interactions:
       Content-Length:
       - '329'
       Date:
-      - Thu, 24 Jul 2014 19:19:39 GMT
+      - Wed, 30 Jul 2014 02:43:20 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:39.510898",
-        "expires": "2014-07-25T19:19:39Z", "id": "f7264ac702474dcca95fc84007e565eb"},
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:20.073061",
+        "expires": "2014-07-31T02:43:20Z", "id": "319915020f434bc996d830f34544ab28"},
         "serviceCatalog": [], "user": {"username": "admin", "roles_links": [], "id":
         "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [], "name": "admin"}, "metadata":
         {"is_admin": 0, "roles": []}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:48 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:37 GMT
 - request:
     method: get
     uri: http://1.2.3.4:5000/v2.0/tenants
@@ -47,7 +47,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - f7264ac702474dcca95fc84007e565eb
+      - 319915020f434bc996d830f34544ab28
   response:
     status:
       code: 200
@@ -60,7 +60,7 @@ http_interactions:
       Content-Length:
       - '361'
       Date:
-      - Thu, 24 Jul 2014 19:19:39 GMT
+      - Wed, 30 Jul 2014 02:43:20 GMT
     body:
       encoding: US-ASCII
       string: ! '{"tenants_links": [], "tenants": [{"description": "test1 tenant",
@@ -69,13 +69,13 @@ http_interactions:
         "name": "test2"}, {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:48 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:37 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: US-ASCII
-      string: ! '{"auth":{"token":{"id":"f7264ac702474dcca95fc84007e565eb"},"tenantName":"test1"}}'
+      string: ! '{"auth":{"token":{"id":"319915020f434bc996d830f34544ab28"},"tenantName":"test1"}}'
     headers:
       User-Agent:
       - fog/1.19.0
@@ -93,11 +93,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:39 GMT
+      - Wed, 30 Jul 2014 02:43:20 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:39.773912",
-        "expires": "2014-07-25T19:19:39Z", "id": "612d9f21f24d49b1b9d32a568a12889b",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:20.305649",
+        "expires": "2014-07-31T02:43:20Z", "id": "c76cac00b7fa4f2497426892d153adbc",
         "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
@@ -128,7 +128,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:48 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:37 GMT
 - request:
     method: get
     uri: http://1.2.3.4:35357/v2.0/tenants
@@ -143,7 +143,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 612d9f21f24d49b1b9d32a568a12889b
+      - c76cac00b7fa4f2497426892d153adbc
   response:
     status:
       code: 200
@@ -156,7 +156,7 @@ http_interactions:
       Content-Length:
       - '494'
       Date:
-      - Thu, 24 Jul 2014 19:19:39 GMT
+      - Wed, 30 Jul 2014 02:43:20 GMT
     body:
       encoding: US-ASCII
       string: ! '{"tenants_links": [], "tenants": [{"description": "Tenant for the
@@ -167,7 +167,7 @@ http_interactions:
         "test1"}, {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:48 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:38 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -191,13 +191,13 @@ http_interactions:
       Content-Length:
       - '116'
       Date:
-      - Thu, 24 Jul 2014 19:19:42 GMT
+      - Wed, 30 Jul 2014 02:43:22 GMT
     body:
       encoding: US-ASCII
       string: ! '{"error": {"message": "The request you have made requires authentication.",
         "code": 401, "title": "Not Authorized"}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:51 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:40 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -221,11 +221,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:42 GMT
+      - Wed, 30 Jul 2014 02:43:22 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:42.499669",
-        "expires": "2014-07-25T19:19:42Z", "id": "feac9f7f5a0f42518b669193c4213aa2",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:22.628221",
+        "expires": "2014-07-31T02:43:22Z", "id": "a12d14ab9cfc4c7697273ee137f7d5a1",
         "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
@@ -256,7 +256,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:51 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:40 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -280,11 +280,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:42 GMT
+      - Wed, 30 Jul 2014 02:43:22 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:42.714916",
-        "expires": "2014-07-25T19:19:42Z", "id": "a377b92957a8471eb0580d9d875e132c",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:22.857711",
+        "expires": "2014-07-31T02:43:22Z", "id": "608f49a92d7947178f143fb811ed4617",
         "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
@@ -315,7 +315,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:51 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:40 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -339,11 +339,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:42 GMT
+      - Wed, 30 Jul 2014 02:43:23 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:42.959681",
-        "expires": "2014-07-25T19:19:42Z", "id": "05250f2d0591489281d172bbe29b5ee4",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:23.078011",
+        "expires": "2014-07-31T02:43:23Z", "id": "e486d7a9fb4345ca81573e14fb4e4ffd",
         "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
@@ -374,7 +374,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:52 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:40 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -398,11 +398,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:44 GMT
+      - Wed, 30 Jul 2014 02:43:24 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:44.981151",
-        "expires": "2014-07-25T19:19:44Z", "id": "7ab2296db561454caf4ca4c3798ec97c",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:24.797357",
+        "expires": "2014-07-31T02:43:24Z", "id": "02c2563a30834c0eb867a82e23cac589",
         "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
@@ -433,13 +433,13 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:54 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:42 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: US-ASCII
-      string: ! '{"auth":{"token":{"id":"7ab2296db561454caf4ca4c3798ec97c"},"tenantName":"admin"}}'
+      string: ! '{"auth":{"token":{"id":"02c2563a30834c0eb867a82e23cac589"},"tenantName":"admin"}}'
     headers:
       User-Agent:
       - fog/1.19.0
@@ -457,11 +457,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:45 GMT
+      - Wed, 30 Jul 2014 02:43:24 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:45.145286",
-        "expires": "2014-07-25T19:19:44Z", "id": "abb6cb213f96447bad54da2ea41bc3dd",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:24.946374",
+        "expires": "2014-07-31T02:43:24Z", "id": "57c4f47074194f92a62adb9883e55881",
         "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
@@ -492,7 +492,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:54 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:42 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -516,11 +516,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:45 GMT
+      - Wed, 30 Jul 2014 02:43:25 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:45.443903",
-        "expires": "2014-07-25T19:19:45Z", "id": "480a18bcc83e4193af458059167498c5",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:25.408630",
+        "expires": "2014-07-31T02:43:25Z", "id": "81d72f160a934c439533425f936f3603",
         "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
@@ -551,7 +551,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:54 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:43 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -566,7 +566,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 480a18bcc83e4193af458059167498c5
+      - 81d72f160a934c439533425f936f3603
   response:
     status:
       code: 300
@@ -577,7 +577,7 @@ http_interactions:
       Content-Length:
       - '446'
       Date:
-      - Thu, 24 Jul 2014 19:19:45 GMT
+      - Wed, 30 Jul 2014 02:43:25 GMT
     body:
       encoding: US-ASCII
       string: ! '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -587,7 +587,125 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:54 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:43 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Wed, 30 Jul 2014 02:43:26 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:26.060438",
+        "expires": "2014-07-31T02:43:26Z", "id": "4928930e402247df8378cac46f667b25",
+        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:43 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Wed, 30 Jul 2014 02:43:26 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:26.605918",
+        "expires": "2014-07-31T02:43:26Z", "id": "304fa2a6b8a443579b39156833ae336a",
+        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/detail.json
@@ -602,20 +720,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-4ca8157a-d8d4-463c-9d2a-7d29090fa65b
+      - req-5942b798-2540-4321-92b3-fc116e7f8f87
       Content-Type:
       - application/json
       Content-Length:
       - '5125'
       Date:
-      - Thu, 24 Jul 2014 19:19:46 GMT
+      - Wed, 30 Jul 2014 02:43:26 GMT
     body:
       encoding: US-ASCII
       string: ! '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
@@ -668,7 +786,7 @@ http_interactions:
         1, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "feb39543-3a95-4144-8e6d-c56021967619"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:55 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/detail.json
@@ -683,20 +801,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-dab41fa4-5d0c-4f3d-bb97-46a5788d9896
+      - req-73f9ac45-20c8-433c-b24e-4daff5a62940
       Content-Type:
       - application/json
       Content-Length:
       - '14069'
       Date:
-      - Thu, 24 Jul 2014 19:19:46 GMT
+      - Wed, 30 Jul 2014 02:43:27 GMT
     body:
       encoding: US-ASCII
       string: ! '{"servers": [{"status": "PAUSED", "updated": "2014-07-18T01:37:31Z",
@@ -837,7 +955,7 @@ http_interactions:
         "OS-DCF:diskConfig": "MANUAL", "accessIPv4": "", "accessIPv6": "", "OS-EXT-STS:power_state":
         4, "config_drive": "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:56 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/servers/detail.json
@@ -852,20 +970,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - a377b92957a8471eb0580d9d875e132c
+      - 608f49a92d7947178f143fb811ed4617
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-99f1c55f-a7a5-44e6-9d2b-2f8db82c8b87
+      - req-127146f3-2fd2-40b0-ac47-c484472df40b
       Content-Type:
       - application/json
       Content-Length:
       - '1537'
       Date:
-      - Thu, 24 Jul 2014 19:19:48 GMT
+      - Wed, 30 Jul 2014 02:43:27 GMT
     body:
       encoding: US-ASCII
       string: ! '{"servers": [{"status": "ACTIVE", "updated": "2014-06-26T18:38:13Z",
@@ -885,7 +1003,7 @@ http_interactions:
         "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state": 1, "config_drive":
         "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:57 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754/servers/detail.json
@@ -900,25 +1018,145 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 05250f2d0591489281d172bbe29b5ee4
+      - e486d7a9fb4345ca81573e14fb4e4ffd
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-2f91ca52-ee61-4a1f-ac46-cdfd4707e612
+      - req-9922982f-c12e-4998-b2d8-fe06eea15b0c
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Thu, 24 Jul 2014 19:19:49 GMT
+      - Wed, 30 Jul 2014 02:43:27 GMT
     body:
       encoding: US-ASCII
       string: ! '{"servers": []}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:58 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:45 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2/volumes/detail?all_tenants=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 4928930e402247df8378cac46f667b25
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-de81e342-b455-4ed7-b7b9-985e8be2d852
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '7745'
+      Date:
+      - Wed, 30 Jul 2014 02:43:28 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"volumes": [{"status": "in-use", "display_name": "", "attachments":
+        [{"device": "vda", "server_id": "0d76c0a4-b8d4-43cf-a12f-5fd853015e76", "id":
+        "3a906198-4348-4161-85ee-3ec204ea3007", "volume_id": "3a906198-4348-4161-85ee-3ec204ea3007"}],
+        "availability_zone": "nova", "bootable": "false", "created_at": "2014-07-07T21:05:34.000000",
+        "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "display_description":
+        "", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type": "None", "snapshot_id":
+        "50e9f1ad-a404-42a0-9f89-097d62d70343", "source_volid": null, "metadata":
+        {}, "id": "3a906198-4348-4161-85ee-3ec204ea3007", "size": 5}, {"status": "in-use",
+        "display_name": "rpo-boot-vol", "attachments": [{"device": "vda", "server_id":
+        "3579c238-0495-4273-8c88-cdc4b2951f38", "id": "5ee03a4c-84d8-4355-b9b5-d21eff7cbe65",
+        "volume_id": "5ee03a4c-84d8-4355-b9b5-d21eff7cbe65"}], "availability_zone":
+        "nova", "bootable": "false", "created_at": "2014-06-09T21:30:47.000000", "os-vol-tenant-attr:tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "display_description": "Bootable volume",
+        "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type": "None", "snapshot_id":
+        null, "source_volid": null, "metadata": {}, "id": "5ee03a4c-84d8-4355-b9b5-d21eff7cbe65",
+        "size": 5}, {"status": "available", "display_name": "bd_test_vol", "attachments":
+        [], "availability_zone": "nova", "bootable": "false", "created_at": "2014-06-09T20:33:31.000000",
+        "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "display_description":
+        "", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type": "None", "snapshot_id":
+        null, "source_volid": null, "metadata": {}, "id": "1e161dd9-8cc9-4607-861b-cba2fc1dbd98",
+        "size": 5}, {"status": "available", "display_name": null, "attachments": [],
+        "availability_zone": "nova", "bootable": "false", "created_at": "2014-06-06T21:20:30.000000",
+        "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "display_description":
+        null, "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type": "None",
+        "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "0387e1b2-42d8-4bc8-bcf8-5cdd94cee133",
+        "size": 1}, {"status": "available", "display_name": "test1-volume2-snap1-volume2",
+        "attachments": [], "availability_zone": "nova", "bootable": "false", "created_at":
+        "2014-05-07T21:21:10.000000", "os-vol-tenant-attr:tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
+        "display_description": "", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
+        "test", "snapshot_id": "72d6abb0-336a-4543-9c10-3d60e1cffa51", "source_volid":
+        null, "metadata": {}, "id": "1748e5c8-282a-44f1-b728-a63f324c388a", "size":
+        1}, {"status": "available", "display_name": "test1-volume2-snap1-volume1",
+        "attachments": [], "availability_zone": "nova", "bootable": "false", "created_at":
+        "2014-05-07T21:15:06.000000", "os-vol-tenant-attr:tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
+        "display_description": "Volume based on test1-volume2-snap1", "os-vol-host-attr:host":
+        "rdo1.manageiq.com", "volume_type": "test", "snapshot_id": "72d6abb0-336a-4543-9c10-3d60e1cffa51",
+        "source_volid": null, "metadata": {}, "id": "9b71b64f-002f-49c8-879a-552d3db2a068",
+        "size": 1}, {"status": "available", "display_name": "test1-volume2", "attachments":
+        [], "availability_zone": "nova", "bootable": "false", "created_at": "2014-05-01T20:05:13.000000",
+        "os-vol-tenant-attr:tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5", "display_description":
+        "test volume", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
+        "test", "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "facbebd9-a272-4b51-9ee5-cf489c32ea62",
+        "size": 1}, {"status": "available", "display_name": "test1-volume1", "attachments":
+        [], "availability_zone": "nova", "bootable": "false", "created_at": "2014-05-01T20:04:24.000000",
+        "os-vol-tenant-attr:tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5", "display_description":
+        "test volume", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
+        "test", "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "ea6db204-6262-4f2a-be6e-8c33431a3380",
+        "size": 1}, {"status": "available", "display_name": "test2-volume2", "attachments":
+        [], "availability_zone": "nova", "bootable": "false", "created_at": "2014-05-01T20:03:29.000000",
+        "os-vol-tenant-attr:tenant_id": "af041f5a5e214930980603e26a63f754", "display_description":
+        "test volume", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
+        "test", "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "f24e1260-9c9a-4a44-adaf-51eaf521d9ac",
+        "size": 1}, {"status": "available", "display_name": "test2-volume1", "attachments":
+        [], "availability_zone": "nova", "bootable": "false", "created_at": "2014-05-01T20:02:51.000000",
+        "os-vol-tenant-attr:tenant_id": "af041f5a5e214930980603e26a63f754", "display_description":
+        "test volume", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
+        "test", "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "c16086aa-3fea-4cf7-b892-e0cdc77a9b5e",
+        "size": 1}, {"status": "available", "display_name": "mgfsmoketestvolume",
+        "attachments": [], "availability_zone": "nova", "bootable": "false", "created_at":
+        "2014-03-03T15:10:30.000000", "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "display_description": "", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
+        "None", "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "99504cca-b9a2-4f7e-a93a-388fd8ac656f",
+        "size": 1}, {"status": "in-use", "display_name": "", "attachments": [{"device":
+        "vda", "server_id": "b111e7d6-a2c5-485d-9a27-2ce1bb83c2a7", "id": "dd775255-e0e7-4853-9a71-b79c3117c950",
+        "volume_id": "dd775255-e0e7-4853-9a71-b79c3117c950"}], "availability_zone":
+        "nova", "bootable": "false", "created_at": "2013-09-11T07:00:43.000000", "os-vol-tenant-attr:tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "display_description": "", "os-vol-host-attr:host":
+        "rdo1.manageiq.com", "volume_type": "None", "snapshot_id": "4dac9c48-db35-4a34-b1b5-a18fdce72965",
+        "source_volid": null, "metadata": {}, "id": "dd775255-e0e7-4853-9a71-b79c3117c950",
+        "size": 1}, {"status": "available", "display_name": "EmsRefreshSpec-Volume-FromSnapshot",
+        "attachments": [], "availability_zone": "nova", "bootable": "false", "created_at":
+        "2013-09-11T05:14:04.000000", "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "display_description": "EmsRefreshSpec-Volume-FromSnapshot", "os-vol-host-attr:host":
+        "rdo1.manageiq.com", "volume_type": "None", "snapshot_id": null, "source_volid":
+        null, "metadata": {}, "id": "7070f0c2-f6b2-44ad-a6d3-2afe131a0e5e", "size":
+        1}, {"status": "in-use", "display_name": "EmsRefreshSpec-Volume", "attachments":
+        [{"device": "vda", "server_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8", "id":
+        "6b01f23f-6840-44d2-b697-20b5287e567a", "volume_id": "6b01f23f-6840-44d2-b697-20b5287e567a"}],
+        "availability_zone": "nova", "bootable": "false", "created_at": "2013-09-11T04:50:01.000000",
+        "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "display_description":
+        "EmsRefreshSpec-Volume", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
+        "None", "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "6b01f23f-6840-44d2-b697-20b5287e567a",
+        "size": 1}, {"status": "available", "display_name": "jf-vol1", "attachments":
+        [], "availability_zone": "nova", "bootable": "false", "created_at": "2013-08-21T21:26:14.000000",
+        "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "display_description":
+        "", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type": "None", "snapshot_id":
+        null, "source_volid": null, "metadata": {}, "id": "57f66bda-9241-46ed-b66b-d718f9b60f12",
+        "size": 1}]}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:5000/v2.0/tenants
@@ -933,7 +1171,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
@@ -946,7 +1184,7 @@ http_interactions:
       Content-Length:
       - '361'
       Date:
-      - Thu, 24 Jul 2014 19:19:49 GMT
+      - Wed, 30 Jul 2014 02:43:29 GMT
     body:
       encoding: US-ASCII
       string: ! '{"tenants_links": [], "tenants": [{"description": "test1 tenant",
@@ -955,7 +1193,7 @@ http_interactions:
         "name": "test2"}, {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:25:58 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-keypairs.json
@@ -970,26 +1208,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-5c0af4b6-80ef-43bc-8678-33145303c128
+      - req-6ba74362-b9f5-4f5a-99c7-ffb690b0cd27
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Thu, 24 Jul 2014 19:19:51 GMT
+      - Wed, 30 Jul 2014 02:43:29 GMT
     body:
       encoding: US-ASCII
       string: ! '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA190WUrN+04ktr3bwWBq5y2jRRYa1BYMlepBCad1meBPGZxfiR4AFAnKrKYEDN8GlhRouzNifzK99Q3DWAzJm06baR+1pd0r7zWqYW1GK6+epNiuhVzxIxKMbsZcUd4L8nS8/P5MNhlR3JVHz5RPKAKHGk1X4p19a2gyqIdZWwoW1UV+V4gfpoJs4sYtLfiZyiS4s1F0YPVSvonqp1qBiT9GVh7iQUuMVWy7AoMmotfPqLLBYX6JbLZn6oyyJpHZ+rVXkWxR7DT98R5Xxo7AOd52BeLhvUbTX49nqBFCM7CBAG3F2b/rV0mExRoGcmMx/+ujr7LQfmNeaZmsqdPq+Dw==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "5e:51:73:2d:71:14:94:34:97:4c:e8:e5:92:49:9e:9e"}}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:00 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-security-groups.json
@@ -1004,20 +1242,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d6becc99-3ab4-4a01-b30e-9ca91d67a9d0
+      - req-7a2a0e84-026f-40cb-979c-89c7cbc4551c
       Content-Type:
       - application/json
       Content-Length:
       - '2584'
       Date:
-      - Thu, 24 Jul 2014 19:19:51 GMT
+      - Wed, 30 Jul 2014 02:43:29 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -1054,7 +1292,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 3, "name": "test_2", "description":
         "test_2"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:01 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/os-security-groups.json
@@ -1069,26 +1307,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - a377b92957a8471eb0580d9d875e132c
+      - 608f49a92d7947178f143fb811ed4617
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a427d3f2-08ec-4d29-b36e-e3f6edcb0c13
+      - req-08b9e606-1383-4100-95a2-1a1e50c821b2
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:19:52 GMT
+      - Wed, 30 Jul 2014 02:43:29 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "id": 7, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:01 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754/os-security-groups.json
@@ -1103,26 +1341,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 05250f2d0591489281d172bbe29b5ee4
+      - e486d7a9fb4345ca81573e14fb4e4ffd
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-cd58b9d5-1599-46ac-a1c8-d0512733b0b1
+      - req-81e8b736-abe9-46f1-b9a8-fd665a4f7c47
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:19:52 GMT
+      - Wed, 30 Jul 2014 02:43:29 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "af041f5a5e214930980603e26a63f754",
         "id": 8, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:01 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail
@@ -1135,7 +1373,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 480a18bcc83e4193af458059167498c5
+      - 81d72f160a934c439533425f936f3603
   response:
     status:
       code: 200
@@ -1146,9 +1384,9 @@ http_interactions:
       Content-Length:
       - '7030'
       X-Openstack-Request-Id:
-      - req-2b1a51b6-221f-4fb0-a080-29c902a5c017
+      - req-8d398cac-40e0-47d7-a578-add936de1618
       Date:
-      - Thu, 24 Jul 2014 19:19:54 GMT
+      - Wed, 30 Jul 2014 02:43:30 GMT
     body:
       encoding: US-ASCII
       string: ! '{"images": [{"status": "active", "name": "rpo-test-snap", "deleted":
@@ -1235,7 +1473,7 @@ http_interactions:
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {}, "size": 9761280}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:03 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:47 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1259,11 +1497,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:54 GMT
+      - Wed, 30 Jul 2014 02:43:30 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:54.339915",
-        "expires": "2014-07-25T19:19:54Z", "id": "0057753dce6e40f2b986ccf6ad917397",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:30.499688",
+        "expires": "2014-07-31T02:43:30Z", "id": "a7eb0c7ca0114c7e8b4453e14b6d2b1d",
         "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
@@ -1294,7 +1532,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:03 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:48 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -1309,7 +1547,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 0057753dce6e40f2b986ccf6ad917397
+      - a7eb0c7ca0114c7e8b4453e14b6d2b1d
   response:
     status:
       code: 300
@@ -1320,7 +1558,7 @@ http_interactions:
       Content-Length:
       - '446'
       Date:
-      - Thu, 24 Jul 2014 19:19:54 GMT
+      - Wed, 30 Jul 2014 02:43:30 GMT
     body:
       encoding: US-ASCII
       string: ! '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -1330,7 +1568,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:03 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:48 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail
@@ -1343,7 +1581,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 0057753dce6e40f2b986ccf6ad917397
+      - a7eb0c7ca0114c7e8b4453e14b6d2b1d
   response:
     status:
       code: 200
@@ -1354,9 +1592,9 @@ http_interactions:
       Content-Length:
       - '2870'
       X-Openstack-Request-Id:
-      - req-71dbd07c-42fe-4e73-8ab0-8184e78b6841
+      - req-3ec58faf-4daf-4ba0-883e-bd377d930531
       Date:
-      - Thu, 24 Jul 2014 19:19:54 GMT
+      - Wed, 30 Jul 2014 02:43:30 GMT
     body:
       encoding: US-ASCII
       string: ! '{"images": [{"status": "active", "name": "rpo-vol-instance-snap",
@@ -1393,7 +1631,7 @@ http_interactions:
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {}, "size": 9761280}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:03 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:48 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1417,11 +1655,11 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Thu, 24 Jul 2014 19:19:55 GMT
+      - Wed, 30 Jul 2014 02:43:30 GMT
     body:
       encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-07-24T19:19:55.240705",
-        "expires": "2014-07-25T19:19:55Z", "id": "a27a2361acb64a3d9a72cb81a86e4215",
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:30.991851",
+        "expires": "2014-07-31T02:43:30Z", "id": "d704cd3cecd14aba92023578ef6e262a",
         "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
@@ -1452,7 +1690,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:04 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:48 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -1467,7 +1705,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - a27a2361acb64a3d9a72cb81a86e4215
+      - d704cd3cecd14aba92023578ef6e262a
   response:
     status:
       code: 300
@@ -1478,7 +1716,7 @@ http_interactions:
       Content-Length:
       - '446'
       Date:
-      - Thu, 24 Jul 2014 19:19:55 GMT
+      - Wed, 30 Jul 2014 02:43:31 GMT
     body:
       encoding: US-ASCII
       string: ! '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -1488,7 +1726,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:04 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:48 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail
@@ -1501,7 +1739,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - a27a2361acb64a3d9a72cb81a86e4215
+      - d704cd3cecd14aba92023578ef6e262a
   response:
     status:
       code: 200
@@ -1512,9 +1750,9 @@ http_interactions:
       Content-Length:
       - '2870'
       X-Openstack-Request-Id:
-      - req-f7131d25-320b-479c-a955-df58279c753d
+      - req-13169cb7-3c6e-47b2-b715-813edf798864
       Date:
-      - Thu, 24 Jul 2014 19:19:55 GMT
+      - Wed, 30 Jul 2014 02:43:31 GMT
     body:
       encoding: US-ASCII
       string: ! '{"images": [{"status": "active", "name": "rpo-vol-instance-snap",
@@ -1551,7 +1789,7 @@ http_interactions:
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {}, "size": 9761280}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:04 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:48 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -1566,20 +1804,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-147bf94c-90b0-4fb8-a4b6-60a412914f99
+      - req-f99944cd-bdba-44f7-9a87-0a5008c3745f
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:19:57 GMT
+      - Wed, 30 Jul 2014 02:43:31 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -1594,7 +1832,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:06 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/83de8005-7138-4005-b4a9-980d0df622ff/os-security-groups.json
@@ -1609,20 +1847,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3a037333-a73b-4817-80f0-44333cf0a2e6
+      - req-4a7a2016-8c96-4248-8bfe-b134f77c136e
       Content-Type:
       - application/json
       Content-Length:
       - '2076'
       Date:
-      - Thu, 24 Jul 2014 19:19:57 GMT
+      - Wed, 30 Jul 2014 02:43:32 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -1652,7 +1890,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
         "description": "EmsRefreshSpec-SecurityGroup"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:06 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -1667,20 +1905,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-73a2fdec-c4ab-4642-a952-0119bc12f38d
+      - req-dbb5c582-7c0b-4837-9cf7-042720926be9
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:19:57 GMT
+      - Wed, 30 Jul 2014 02:43:32 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -1695,7 +1933,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:07 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/0d76c0a4-b8d4-43cf-a12f-5fd853015e76/os-security-groups.json
@@ -1710,26 +1948,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c4db4588-86fd-46ef-9bb8-b2edacf52111
+      - req-6b4ebe58-f75f-46bd-b3c8-61bb372b2470
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:19:58 GMT
+      - Wed, 30 Jul 2014 02:43:32 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:07 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -1744,20 +1982,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-2451aa26-e622-40ba-83f6-921a6b4ff90d
+      - req-50eba030-4e17-468b-ba5e-32c839fb6796
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:19:58 GMT
+      - Wed, 30 Jul 2014 02:43:32 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -1772,7 +2010,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:07 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/084c8010-4a0d-4fa7-aae9-a632a8b6fed5/os-security-groups.json
@@ -1787,26 +2025,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-afe58603-0f5d-4370-a58b-179b7755db08
+      - req-661027ce-8aab-4b21-ad54-ec3cba59c8c8
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:19:59 GMT
+      - Wed, 30 Jul 2014 02:43:32 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:08 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -1821,20 +2059,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-0fe8fbc3-9fcc-4685-b6cf-d8f022300412
+      - req-5837061c-aa4d-4c6c-8a3c-6f3354863fe0
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:19:59 GMT
+      - Wed, 30 Jul 2014 02:43:32 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -1849,7 +2087,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:08 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/3579c238-0495-4273-8c88-cdc4b2951f38/os-security-groups.json
@@ -1864,26 +2102,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-bc3e3026-f2ab-41d9-9b5b-9a0147588be1
+      - req-b3630d17-801e-45d7-bdb3-a6d968de42e3
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:19:59 GMT
+      - Wed, 30 Jul 2014 02:43:33 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:08 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -1898,20 +2136,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-9e8e42bb-9194-4755-af51-e5eaf3e8c5c8
+      - req-37183305-c29f-423d-b877-685a5450add9
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:19:59 GMT
+      - Wed, 30 Jul 2014 02:43:33 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -1926,7 +2164,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:08 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/365f07e9-a834-447d-9446-cdbe4bb62734/os-security-groups.json
@@ -1941,26 +2179,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a5343963-f8c1-4ba6-af83-93dd9e118a20
+      - req-fbaa6d2d-0a70-4f2a-8a65-56bf45d466ac
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:19:59 GMT
+      - Wed, 30 Jul 2014 02:43:33 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:08 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -1975,20 +2213,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c52afd18-3a9a-4357-b3fc-b8a2e4182686
+      - req-bf7a6f51-1baa-4747-92c7-7f20f0178711
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:19:59 GMT
+      - Wed, 30 Jul 2014 02:43:33 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -2003,7 +2241,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:09 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/ed1056c3-53b1-4cec-af88-a6e6a6be1d44/os-security-groups.json
@@ -2018,20 +2256,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-09d16dc7-d6b8-4bf9-b8f0-b1e8824fda18
+      - req-6a695a41-91b2-4ee2-aaac-7bb5d0b28724
       Content-Type:
       - application/json
       Content-Length:
       - '2076'
       Date:
-      - Thu, 24 Jul 2014 19:20:00 GMT
+      - Wed, 30 Jul 2014 02:43:34 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -2061,7 +2299,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
         "description": "EmsRefreshSpec-SecurityGroup"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:09 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2076,20 +2314,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-861aff3a-e85a-45e5-a217-8ed55ae2c6f1
+      - req-4aa60dc4-da98-43e1-a218-72cfcdd414c4
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:20:00 GMT
+      - Wed, 30 Jul 2014 02:43:34 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -2104,7 +2342,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:09 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/b111e7d6-a2c5-485d-9a27-2ce1bb83c2a7/os-security-groups.json
@@ -2119,20 +2357,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7375cc3c-2a40-42f4-a047-d91efe3fbd82
+      - req-9835395e-ff76-41bf-ae3a-f2d788ddd19f
       Content-Type:
       - application/json
       Content-Length:
       - '2076'
       Date:
-      - Thu, 24 Jul 2014 19:20:01 GMT
+      - Wed, 30 Jul 2014 02:43:34 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -2162,7 +2400,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
         "description": "EmsRefreshSpec-SecurityGroup"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:10 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2177,20 +2415,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8be474c2-3ecf-46c2-ab13-5891d6f64dc1
+      - req-7dcdb0ad-8f02-4d4d-8f32-4058692c0acd
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:20:01 GMT
+      - Wed, 30 Jul 2014 02:43:34 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -2205,7 +2443,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:10 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/4bb8d624-a3a5-421c-9e14-8a6eaa16aed8/os-security-groups.json
@@ -2220,20 +2458,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-75769b10-41ea-45d2-a318-c5b1765df42d
+      - req-65c884e5-1da9-45df-94de-1676dd99d55c
       Content-Type:
       - application/json
       Content-Length:
       - '2238'
       Date:
-      - Thu, 24 Jul 2014 19:20:01 GMT
+      - Wed, 30 Jul 2014 02:43:35 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -2265,7 +2503,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 5, "name": "EmsRefreshSpec-SecurityGroup2",
         "description": "EmsRefreshSpec-SecurityGroup2"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:10 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2280,20 +2518,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a27988f6-db48-4063-8bc7-55bc0afd6dac
+      - req-28b1d8d1-f7c6-4c49-add7-206962fd9aac
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:20:01 GMT
+      - Wed, 30 Jul 2014 02:43:35 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -2308,7 +2546,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:11 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:53 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/bd356ece-8cdb-4580-952a-362c5844fa07/os-security-groups.json
@@ -2323,26 +2561,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-69ff8c25-edca-4929-99a4-8126c6d622c9
+      - req-34eb0164-60c3-4897-a6b1-34d2320744b0
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:20:02 GMT
+      - Wed, 30 Jul 2014 02:43:35 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:11 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:53 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/os-floating-ips.json
@@ -2357,25 +2595,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - a377b92957a8471eb0580d9d875e132c
+      - 608f49a92d7947178f143fb811ed4617
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-f4c38f81-5749-4755-a1ec-3af22821a210
+      - req-d1ab4b13-a7b7-4478-a94b-53d8c7006048
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Thu, 24 Jul 2014 19:20:02 GMT
+      - Wed, 30 Jul 2014 02:43:35 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": []}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:11 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:53 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/servers/b6b0783e-3388-4a2b-92b9-3c667db84e7c/os-security-groups.json
@@ -2390,26 +2628,726 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - a377b92957a8471eb0580d9d875e132c
+      - 608f49a92d7947178f143fb811ed4617
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-49487fb5-1f07-438a-9279-e0df575a5b9c
+      - req-a7583e7d-0119-4805-ad75-c8c3e0020d30
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Thu, 24 Jul 2014 19:20:02 GMT
+      - Wed, 30 Jul 2014 02:43:35 GMT
     body:
       encoding: US-ASCII
       string: ! '{"security_groups": [{"rules": [], "tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "id": 7, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:11 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:53 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2/snapshots/detail
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 4928930e402247df8378cac46f667b25
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-9481a167-c39b-446c-a8b5-93131d59e57d
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2125'
+      Date:
+      - Wed, 30 Jul 2014 02:43:36 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"snapshots": [{"status": "available", "display_name": "snapshot
+        for EmsRefreshSpec-Snapshot", "created_at": "2013-09-11T06:56:05.000000",
+        "display_description": "EmsRefreshSpec-Volume", "os-extended-snapshot-attributes:progress":
+        "100%", "volume_id": "6b01f23f-6840-44d2-b697-20b5287e567a", "os-extended-snapshot-attributes:project_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "metadata": {}, "id": "4dac9c48-db35-4a34-b1b5-a18fdce72965",
+        "size": 1}, {"status": "available", "display_name": "snapshot for rpo-vol-instance-snap",
+        "created_at": "2014-07-07T20:49:45.000000", "display_description": "Bootable
+        volume", "os-extended-snapshot-attributes:progress": "100%", "volume_id":
+        "5ee03a4c-84d8-4355-b9b5-d21eff7cbe65", "os-extended-snapshot-attributes:project_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "metadata": {}, "id": "50e9f1ad-a404-42a0-9f89-097d62d70343",
+        "size": 5}, {"status": "available", "display_name": "EmsRefreshSpec-VolumeSnapshot",
+        "created_at": "2013-09-11T05:07:33.000000", "display_description": "EmsRefreshSpec-VolumeSnapshot",
+        "os-extended-snapshot-attributes:progress": "100%", "volume_id": "6b01f23f-6840-44d2-b697-20b5287e567a",
+        "os-extended-snapshot-attributes:project_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "metadata": {}, "id": "6872ad8d-0cb2-47e8-ab5d-5e01caa8b3b7", "size": 1},
+        {"status": "available", "display_name": "snapshot for rpo-vol-instance-snap2",
+        "created_at": "2014-07-07T20:55:43.000000", "display_description": "Bootable
+        volume", "os-extended-snapshot-attributes:progress": "100%", "volume_id":
+        "5ee03a4c-84d8-4355-b9b5-d21eff7cbe65", "os-extended-snapshot-attributes:project_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "metadata": {}, "id": "b255ccac-2399-4625-a64b-98ddaf79d2ee",
+        "size": 5}, {"status": "available", "display_name": "jf-vol1-snapshot", "created_at":
+        "2013-08-21T21:26:27.000000", "display_description": "", "os-extended-snapshot-attributes:progress":
+        "100%", "volume_id": "57f66bda-9241-46ed-b66b-d718f9b60f12", "os-extended-snapshot-attributes:project_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "metadata": {}, "id": "f14fcaa5-e416-4b6f-8854-79824d83a894",
+        "size": 1}]}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:53 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Wed, 30 Jul 2014 02:43:36 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:36.254097",
+        "expires": "2014-07-31T02:43:36Z", "id": "a773a21212854dceb894390c6844241f",
+        "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+        "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:53 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5/snapshots/detail
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - a773a21212854dceb894390c6844241f
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-533f9ce4-c5f7-424f-892a-7ae1f3fe57cb
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1662'
+      Date:
+      - Wed, 30 Jul 2014 02:43:36 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"snapshots": [{"status": "available", "display_name": "test1-volume1-snap2",
+        "created_at": "2014-05-07T21:18:53.000000", "display_description": "Snapshot
+        2 of test1-volume1", "os-extended-snapshot-attributes:progress": "100%", "volume_id":
+        "ea6db204-6262-4f2a-be6e-8c33431a3380", "os-extended-snapshot-attributes:project_id":
+        "ac0a6059e6d545cf98b9b5e9913936e5", "metadata": {}, "id": "3d5dba9e-c262-4140-8a3c-d0995005524b",
+        "size": 1}, {"status": "available", "display_name": "test1-volume2-snap1",
+        "created_at": "2014-05-07T21:10:08.000000", "display_description": "", "os-extended-snapshot-attributes:progress":
+        "100%", "volume_id": "facbebd9-a272-4b51-9ee5-cf489c32ea62", "os-extended-snapshot-attributes:project_id":
+        "ac0a6059e6d545cf98b9b5e9913936e5", "metadata": {}, "id": "72d6abb0-336a-4543-9c10-3d60e1cffa51",
+        "size": 1}, {"status": "available", "display_name": "test1-volume2-snap2",
+        "created_at": "2014-05-07T21:17:10.000000", "display_description": "Snapshot
+        2 of test1-volume2", "os-extended-snapshot-attributes:progress": "100%", "volume_id":
+        "facbebd9-a272-4b51-9ee5-cf489c32ea62", "os-extended-snapshot-attributes:project_id":
+        "ac0a6059e6d545cf98b9b5e9913936e5", "metadata": {}, "id": "c3f1923e-c29a-4c9a-9665-c477550be5a7",
+        "size": 1}, {"status": "available", "display_name": "test1-volume1-snap1",
+        "created_at": "2014-05-01T20:15:40.000000", "display_description": "test snapshot",
+        "os-extended-snapshot-attributes:progress": "100%", "volume_id": "ea6db204-6262-4f2a-be6e-8c33431a3380",
+        "os-extended-snapshot-attributes:project_id": "ac0a6059e6d545cf98b9b5e9913936e5",
+        "metadata": {}, "id": "e6a69ec8-aafc-4249-a108-ce4d650b3b1f", "size": 1}]}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:54 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Wed, 30 Jul 2014 02:43:36 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:36.768653",
+        "expires": "2014-07-31T02:43:36Z", "id": "e17f04b650c4425ba267d51e54c956ef",
+        "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+        "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:54 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754/snapshots/detail
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - e17f04b650c4425ba267d51e54c956ef
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-6525a9de-03f8-4d72-a4c1-f351ad2f63ce
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '17'
+      Date:
+      - Wed, 30 Jul 2014 02:43:36 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"snapshots": []}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:54 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2/?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 304fa2a6b8a443579b39156833ae336a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '55'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1375393932.04455'
+      X-Account-Bytes-Used:
+      - '263633'
+      X-Account-Container-Count:
+      - '1'
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Account-Object-Count:
+      - '2'
+      Date:
+      - Wed, 30 Jul 2014 02:43:37 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[{"count": 2, "bytes": 263633, "name": "bd-container"}]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:54 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2/bd-container?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 304fa2a6b8a443579b39156833ae336a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '366'
+      X-Container-Object-Count:
+      - '2'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1377012174.25410'
+      X-Container-Bytes-Used:
+      - '263633'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Wed, 30 Jul 2014 02:43:37 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[{"hash": "69c8c4275fc8a06771ee8309ae3b8f2f", "last_modified": "2013-08-20T15:23:25.392790",
+        "bytes": 146977, "name": "Bandwidth report", "content_type": "application/octet-stream"},
+        {"hash": "87d0052378cc6d28e703229b427f83f6", "last_modified": "2013-08-20T15:24:00.913070",
+        "bytes": 116656, "name": "Bandwidth report 2", "content_type": "application/octet-stream"}]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:55 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Wed, 30 Jul 2014 02:43:37 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:37.799709",
+        "expires": "2014-07-31T02:43:37Z", "id": "cb0b90ccf03b4c82991371331ccaba9b",
+        "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+        "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:55 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5/?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - cb0b90ccf03b4c82991371331ccaba9b
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '108'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1398974379.44923'
+      X-Account-Bytes-Used:
+      - '0'
+      X-Account-Container-Count:
+      - '2'
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Account-Object-Count:
+      - '0'
+      Date:
+      - Wed, 30 Jul 2014 02:43:37 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[{"count": 0, "bytes": 0, "name": "test1-container1"}, {"count":
+        0, "bytes": 0, "name": "test1-container2"}]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:55 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5/test1-container1?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - cb0b90ccf03b4c82991371331ccaba9b
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '2'
+      X-Container-Object-Count:
+      - '0'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1398974434.96606'
+      X-Container-Bytes-Used:
+      - '0'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Wed, 30 Jul 2014 02:43:38 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:55 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5/test1-container2?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - cb0b90ccf03b4c82991371331ccaba9b
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '2'
+      X-Container-Object-Count:
+      - '0'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1398974449.84369'
+      X-Container-Bytes-Used:
+      - '0'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Wed, 30 Jul 2014 02:43:38 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:56 GMT
+- request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: US-ASCII
+      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2830'
+      Date:
+      - Wed, 30 Jul 2014 02:43:38 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '{"access": {"token": {"issued_at": "2014-07-30T02:43:38.576459",
+        "expires": "2014-07-31T02:43:38Z", "id": "eff3ad44725540d29c83110e9f837afa",
+        "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+        "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
+        "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8080", "region": "RegionOne", "internalURL": "http://1.2.3.4:8080",
+        "id": "4931e0267b6f430b894d9a83a8ace70a", "publicURL": "http://1.2.3.4:8080"}],
+        "endpoints_links": [], "type": "s3", "name": "swift_s3"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9292", "region": "RegionOne", "internalURL": "http://1.2.3.4:9292",
+        "id": "7640852c0c6241959f2de7b40f248542", "publicURL": "http://1.2.3.4:9292"}],
+        "endpoints_links": [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754",
+        "id": "3e3a227e29f44714b82960529fedd1d0", "publicURL": "http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "f4b62c9037a74061812d73c82c45b454",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8080/",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754",
+        "id": "880b7f1f3eb0414c90bf8d23df9f4ff1", "publicURL": "http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "1658fd60a69d4730bda7e886d9977d79",
+        "publicURL": "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "admin", "roles_links":
+        [], "id": "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [{"name": "_member_"},
+        {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
+        ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:56 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754/?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - eff3ad44725540d29c83110e9f837afa
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '108'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1398974469.62571'
+      X-Account-Bytes-Used:
+      - '0'
+      X-Account-Container-Count:
+      - '2'
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Account-Object-Count:
+      - '0'
+      Date:
+      - Wed, 30 Jul 2014 02:43:38 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[{"count": 0, "bytes": 0, "name": "test2-container1"}, {"count":
+        0, "bytes": 0, "name": "test2-container2"}]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:56 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754/test2-container1?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - eff3ad44725540d29c83110e9f837afa
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '2'
+      X-Container-Object-Count:
+      - '0'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1398974482.35743'
+      X-Container-Bytes-Used:
+      - '0'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Wed, 30 Jul 2014 02:43:38 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:56 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754/test2-container2?format=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.19.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - eff3ad44725540d29c83110e9f837afa
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Length:
+      - '2'
+      X-Container-Object-Count:
+      - '0'
+      Accept-Ranges:
+      - bytes
+      X-Timestamp:
+      - '1398974495.27225'
+      X-Container-Bytes-Used:
+      - '0'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Wed, 30 Jul 2014 02:43:39 GMT
+    body:
+      encoding: US-ASCII
+      string: ! '[]'
+    http_version: 
+  recorded_at: Wed, 30 Jul 2014 02:49:56 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2424,20 +3362,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - feac9f7f5a0f42518b669193c4213aa2
+      - a12d14ab9cfc4c7697273ee137f7d5a1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-2f985c35-6e9a-4cf6-a3bd-8ec3f3d2f28e
+      - req-daa4a2b4-fdfa-4d16-b1a3-a7985b6ad0e7
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Thu, 24 Jul 2014 19:20:02 GMT
+      - Wed, 30 Jul 2014 02:43:39 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -2452,7 +3390,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:11 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:56 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/os-floating-ips.json
@@ -2467,25 +3405,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - a377b92957a8471eb0580d9d875e132c
+      - 608f49a92d7947178f143fb811ed4617
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-097c85e8-f464-40dc-b99c-e8c3d3daabbe
+      - req-e6454592-3406-4fcc-a23c-3bb78b3d4e5c
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Thu, 24 Jul 2014 19:20:02 GMT
+      - Wed, 30 Jul 2014 02:43:39 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": []}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:11 GMT
+  recorded_at: Wed, 30 Jul 2014 02:49:56 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754/os-floating-ips.json
@@ -2500,23 +3438,23 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 05250f2d0591489281d172bbe29b5ee4
+      - e486d7a9fb4345ca81573e14fb4e4ffd
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-004a003e-d6f7-4ca9-bef1-a301d694e0b8
+      - req-35d0d77f-5c63-4a6e-94e9-6342bc5c9a8e
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Thu, 24 Jul 2014 19:20:02 GMT
+      - Wed, 30 Jul 2014 02:43:39 GMT
     body:
       encoding: US-ASCII
       string: ! '{"floating_ips": []}'
     http_version: 
-  recorded_at: Thu, 24 Jul 2014 19:26:12 GMT
-recorded_with: VCR 2.4.0
+  recorded_at: Wed, 30 Jul 2014 02:49:57 GMT
+recorded_with: VCR 2.9.2
