@@ -99,4 +99,8 @@ class MiqAeMethod < ActiveRecord::Base
   def self.copy(ids, domain, namespace, overwrite_location)
     MiqAeMethodCopy.copy_multiple(ids, domain, namespace, overwrite_location)
   end
+
+  def self.get_homonymic_across_domains(fqname, enabled = nil)
+    MiqAeDatastore.get_homonymic_across_domains(::MiqAeMethod, fqname, enabled)
+  end
 end
