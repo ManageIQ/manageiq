@@ -1673,7 +1673,7 @@ module ApplicationController::CiProcessing
   end
 
   def analyze_check_compliance_hosts
-    assert_privileges("host_analyze_and_check_compliance")
+    assert_privileges("host_analyze_check_compliance")
     host_button_operation('scan_and_check_compliance_queue', 'Analyze and Compliance Check')
   end
 
