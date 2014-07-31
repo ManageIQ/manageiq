@@ -1,20 +1,21 @@
-<% url = url_for(:action=>'iso_datastore_form_field_changed', :id=>"#{@isd.id || "new"}") %>
+<% url = url_for(:action => 'iso_datastore_form_field_changed', 
+                 :id     => "#{@isd.id || "new"}") 
+%>
 <div id="form_div">
 	<%= render :partial => "layouts/flash_msg" %>
-  <fieldset>
-    <p class="legend">Basic Information</p>
-    <table class="style1">
-      <tbody>
-        <tr>
-            <td class="key"><%= ui_lookup(:table => "ext_management_system")%></td>
-            <td class="wide">
-                <%= select_tag("ems_id",
-                                options_for_select([["<Choose>",nil]] + @edit[:emses].sort,
-                                  @edit[:new][:ems_id]),
-                                "data-miq_observe"=>{:url=>url}.to_json) %>
-              </td>
-          </tr>
-      </tbody>
-    </table>
-  </fieldset>
+  <p class="legend">Basic Information</p>
+  <table class="style1">
+    <tbody>
+      <tr>
+          <td class="key"><%= ui_lookup(:table => "ext_management_system")%></td>
+          <td class="wide">
+            <%= select_tag("ems_id",
+                           options_for_select([["<Choose>",nil]] + @edit[:emses].sort,
+                           @edit[:new][:ems_id]),
+                           "data-miq_observe" => {:url => url}.to_json) 
+            %>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 </div>
