@@ -1,0 +1,143 @@
+- if @pages && @items_per_page != ONE_MILLION && @pages[:items] > 0
+  - button_div ||= "center_tb"
+  - action_url ||= "explorer"
+  - pages = @pages
+  - view ||= @view
+  - db = view.db
+  - headers = view.headers
+  - if action_url.include?("/")
+    - action_method = action_url.split("/").first
+    - action_id = action_url.split("/").last
+    - db ||= nil
+  - url = action_id ? url_for(:action=>action_method, :id=>action_id) : url_for(:action=>action_url)
+  - @pc_occ ||= 0; @pc_occ+=1
+  %div{:id => "pc_div_#{@pc_occ.to_s}"}
+    %table{:border      => "0",
+           :cellpadding => "0",
+           :cellspacing => "0",
+           :style       => "\n\t\t\t\t\theight: 33px;\n\t\t\t\t\tbackground: url('/assets/dhtmlx_gpl_36/imgs/dhxlayout_dhx_miq/dhxlayout_bg.png') top left repeat-x;\n\t\t\t\t\tpadding-bottom: 3px;\n\t\t\t\t\t",
+           :width       => "100%"}
+      %tr
+        - if @pc_occ == 1
+          - if ! @no_checkall && ! @no_checkboxes
+            %td{:nowrap => "", :style => "padding: 4px 2px 4px 2px;", :width => "4%"}
+              %input#masterToggle{:name    => "masterToggle",
+                                  :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);",
+                                  :type    => "checkbox"}
+              (Check All)
+          %td{:nowrap => "", :style => "padding: 4px 2px 4px 20px;", :width => "4%"}
+            Sorted by
+            - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? "Asc." : "Desc."})"
+            - if @gtl_type != "list" && @view
+              = select_tag("sort_choice",
+                           options_for_select([sort_text] + @view.headers),
+                           "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
+                           "data-miq_observe"    => {:url => url}.to_json)
+            - elsif @gtl_type == "list" && @view
+              = h(sort_text)
+        - else
+          - if @bottom_msg
+            = h(@bottom_msg)
+        %td{:align => "right", :valign => "middle"}
+          %table{:align => "right", :border => "0", :cellpadding => "0", :cellspacing => "0"}
+            %tr
+              %td{:nowrap => "", :style => "padding: 4px 2px 4px 2px;"} Per page:
+              %td{:style  => "padding: 4px 2px 4px 2px;"}
+                = select_tag("ppsetting",
+                             options_for_select(@pp_choices, pages[:perpage]),
+                             "data-miq_sparkle_on"  => true,
+                             "data-miq_sparkle_off" => true,
+                             "data-miq_observe"     => {:url => url}.to_json)
+              %td{:nowrap => ""}
+                / first button
+                - if pages[:current] > 1
+                  - if @ajax_paging_buttons
+                    = link_to(image_tag('/images/toolbars/first.png',
+                                        :border=>"0",
+                                        :class=>"rollover small"),
+                              {:action => action_url,
+                               :id     => action_id,
+                               :page   => 1},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote                => true,
+                              :title                 => "")
+                    = link_to(image_tag('/images/toolbars/previous.png',
+                              :border => "0",
+                              :class  => "rollover small"),
+                              {:action => action_url,
+                               :id     => action_id,
+                               :page   => pages[:current] - 1},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote                =>true,
+                              :title                 =>"")
+                  - elsif action_id
+                    = link_to(image_tag('/images/toolbars/first.png',
+                                        :border => "0",
+                                        :class => "rollover small"),
+                              {:action => action_method,
+                               :id=>action_id,
+                               :page=>1})
+                    = link_to(image_tag('/images/toolbars/previous.png',
+                                        :border => "0",
+                                        :class  => "rollover small"),
+                             {:action => action_method,
+                              :id     => action_id,
+                              :page   => pages[:current] - 1})
+                  - else
+                    = link_to(image_tag('/images/toolbars/first.png',
+                                        :border => "0",
+                                        :class  => "rollover small"),
+                              {:action => action_url,
+                               :page   => 1})
+                    = link_to(image_tag('/images/toolbars/previous.png',
+                                        :border => "0",
+                                        :class  => "rollover small"),
+                              {:action => action_url,
+                               :page   => pages[:current] - 1})
+                - else
+                  = image_tag('/images/toolbars/first.png', :class=>"dimmed small")
+                  = image_tag('/images/toolbars/previous.png', :class=>"dimmed small")
+                - if pages[:current] < pages[:total]
+                  - if @ajax_paging_buttons
+                    = link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
+                      {:action=>action_url, :id=>action_id, :page=>pages[:current] + 1},
+                      "data-miq_sparkle_on" => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote=>true,
+                      :title=>"")
+                    -#
+                    = link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
+                      {:action=>action_url, :id=>action_id, :page=>pages[:total]},
+                      "data-miq_sparkle_on" => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote=>true,
+                      :title=>"")
+                  - elsif action_id
+                    = link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
+                      {:action=>action_method, :id=>action_id, :page=>pages[:current] + 1})
+                    -#
+                    = link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
+                      {:action=>action_method, :id=>action_id, :page=>pages[:total]})
+                  - else
+                    = link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
+                      {:action=>action_url, :page=>pages[:current] + 1})
+                    -#
+                    = link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
+                      {:action=>action_url, :page=>pages[:total]})
+                - else
+                  = image_tag('/images/toolbars/next.png', :class=>"dimmed small")
+                  = image_tag('/images/toolbars/last.png', :class=>"dimmed small")
+              %td{:style => "padding: 4px; padding-right: 20px", :valign => "middle"}
+                - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
+                - end_number = pages[:perpage] * pages[:current]
+                - if start_number == pages[:items]
+                  = "(#{start_number} of #{pages[:items]})"
+                - else
+                  - if end_number > pages[:items]
+                    = "(#{start_number}-#{pages[:items]} of #{pages[:items]})"
+                  - else
+                    = "(#{start_number}-#{end_number} of #{pages[:items]})"
+                %input{:name => "limitstart", :type => "hidden", :value => "0"}/
+= render(:partial => '/layouts/x_form_buttons')

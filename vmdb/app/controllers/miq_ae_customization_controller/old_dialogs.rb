@@ -168,6 +168,7 @@ module MiqAeCustomizationController::OldDialogs
                      :partial => "layouts/x_gtl",
                      :locals  => {:action_url => "old_dialogs_list",
                                   :button_div => 'policy_bar'})
+        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false)"
       end
     end
