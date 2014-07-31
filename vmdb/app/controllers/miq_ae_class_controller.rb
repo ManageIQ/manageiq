@@ -1096,19 +1096,7 @@ class MiqAeClassController < ApplicationController
     @edit[:new][:location] = @ae_method.location == nil ? "inline" : @ae_method.location
     @edit[:new][:data] = @ae_method.data.to_s
     if @edit[:new][:location] == "inline" && !@ae_method.data
-      @edit[:new][:data] = "#
-#            Automate Method
-#
-$evm.log(\"info\", \"Automate Method Started\")
-#
-#            Method Code Goes here
-#
-
-#
-#
-#
-$evm.log(\"info\", \"Automate Method Ended\")
-exit MIQ_OK"
+      @edit[:new][:data] = MiqAeMethod.default_method_text
     end
     @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
     @edit[:new][:fields] = []
@@ -1244,19 +1232,7 @@ exit MIQ_OK"
       end
       if @edit[:new][:location] == "inline" && !params[:cls_method_data] && !params[:method_data] && !params[:transOne]
         if !@edit[:method_prev_data]
-        @edit[:new][:data] = "#
-  #            Automate Method
-  #
-  $evm.log(\"info\", \"Automate Method Started\")
-  #
-  #            Method Code Goes here
-  #
-
-  #
-  #
-  #
-  $evm.log(\"info\", \"Automate Method Ended\")
-  exit MIQ_OK"
+          @edit[:new][:data] = MiqAeMethod.default_method_text
         else
           @edit[:new][:data] = @edit[:method_prev_data]
         end
