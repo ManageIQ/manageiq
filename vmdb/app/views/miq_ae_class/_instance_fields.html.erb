@@ -1,24 +1,4 @@
-<% if @domain_overrides.count > 1 %>
-  <p class = "legend">Domain overrides by priority</p>
-  <table class = "style3">
-    <tbody>
-      <% @domain_overrides.each do |name, id| %>
-        <% if id %>
-          <tr class="<%= cycle('row0', 'row1') %>"
-            onclick="<%= remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
-                                         :url     => "/miq_ae_class/x_show?id=aei-#{to_cid(id)}") %>"
-            onmouseover="this.style.cursor='pointer'" title="Click to view this Automate Instance">
-        <% else %>
-          <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
-        <% end %>
-          <td>
-            <%= name %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+<%= render :partial => "domain_overrides", :locals=>{:node_prefix=>"aei", :model => "Automate Instance"}  %>
 <p class="legend">Fields</p>
 <div id="instance_fields_div">
 <% if !@in_a_form %>
