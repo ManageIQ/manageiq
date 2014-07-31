@@ -104,6 +104,13 @@ module MiqAeStateMachineSpec
       ws.root("test_root_object_attribute").should == "update_provision_status"
     end
 
+    it "sets ae_status_state properly" do
+      EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
+
+      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning")
+      ws.root['ae_status_state'].should == 'on_exit'
+    end
+
     it "executes on_entry fully qualified class methods properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
 

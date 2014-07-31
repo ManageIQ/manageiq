@@ -444,6 +444,7 @@ module MiqAeEngine
           method = substitute_value(method.strip)
           unless method.blank? || method.lstrip[0,1] == '#'
             $miq_ae_logger.info "In State=[#{f['name']}], invoking [#{method_name}] method=[#{method}]"
+            @workspace.root['ae_status_state'] = method_name
             process_method_raw(method)
           end
         end unless f[method_name].blank?
