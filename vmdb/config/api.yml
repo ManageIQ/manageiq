@@ -3,13 +3,12 @@
   :module: api
   :name: CFME API
   :description: CloudForms Management Engine REST API
-  :version: '0.1'
+  :version: '1.0'
 :version:
   :regex: !ruby/regexp /^v[0-9]+\.[0-9]+$/
   :definitions:
   - :name: '1.0'
     :ident: v1.0
-  - :name: '0.1'
 :method:
   :names:
   - :get
