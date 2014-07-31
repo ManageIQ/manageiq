@@ -165,33 +165,11 @@ class MiqAeClassController < ApplicationController
     @sb[:row_selected] = nil if params[:action] == "tree_select"
     case id[0]
       when "aec"
-        @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
-        @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
-        @temp[:ae_class_id] = @ae_class.id
-        if @ae_class.nil?
-          set_root_node
-        else
-          @temp[:grid_inst_list_xml] = build_details_grid(@ae_class.ae_instances)
-          @temp[:combo_xml] = get_combo_xml(@ae_class.ae_fields)
-          @temp[:dtype_combo_xml] = get_dtype_combo_xml(@ae_class.ae_fields)    # passing fields because that's how many combo boxes we need
-          @temp[:grid_methods_list_xml] = build_details_grid(@ae_class.ae_methods)
-          set_right_cell_text(x_node,@ae_class)
-        end
+        get_class_node_info(id)
       when "aei"
         get_instance_node_info(id)
       when "aem"
-        @record = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
-        if @ae_method.nil?
-          set_root_node
-        else
-          @ae_class = @ae_method.ae_class
-          @temp[:ae_class_id] = @ae_class.id
-          inputs = @ae_method.inputs
-          @temp[:grid_methods_xml] = inputs.blank? ? nil : build_methods_grid(inputs)
-          @sb[:squash_state] = true
-          @sb[:active_tab] = "methods"
-          set_right_cell_text(x_node, @ae_method)
-        end
+        get_method_node_info(id)
       when "aen"
         @record = MiqAeNamespace.find_by_id(from_cid(id[1]))
         if @record.nil?
@@ -2832,17 +2810,43 @@ private
     end
   end
 
+  def get_method_node_info(id)
+    @record = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
+    if @ae_method.nil?
+      set_root_node
+    else
+      @ae_class = @ae_method.ae_class
+      @temp[:ae_class_id] = @ae_class.id
+      inputs = @ae_method.inputs
+      @temp[:grid_methods_xml] = inputs.blank? ? nil : build_methods_grid(inputs)
+      @sb[:squash_state] = true
+      @sb[:active_tab] = "methods"
+      domain_overrides
+      set_right_cell_text(x_node, @ae_method)
+    end
+  end
+
+
+  def get_class_node_info(id)
+    @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
+    @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
+    @temp[:ae_class_id] = @ae_class.id
+    if @ae_class.nil?
+      set_root_node
+    else
+      @temp[:grid_inst_list_xml] = build_details_grid(@ae_class.ae_instances)
+      @temp[:combo_xml] = get_combo_xml(@ae_class.ae_fields)
+      @temp[:dtype_combo_xml] = get_dtype_combo_xml(@ae_class.ae_fields)    # passing fields because that's how many combo boxes we need
+      @temp[:grid_methods_list_xml] = build_details_grid(@ae_class.ae_methods)
+      domain_overrides
+      set_right_cell_text(x_node,@ae_class)
+    end
+  end
+
   def domain_overrides
     @domain_overrides = {}
-    typ, id = x_node.split('-')
-    if typ == 'aec'
-      method = 'get_homonymic_classes_across_domains'
-    elsif typ == 'aei'
-      method = 'get_homonymic_instances_across_domains'
-    elsif typ == 'aem'
-      method = 'get_homonymic_methods_across_domains'
-    end
-    overrides = X_TREE_NODE_PREFIXES[typ].constantize.send(method, @record.fqname)
+    typ, _ = x_node.split('-')
+    overrides = X_TREE_NODE_PREFIXES[typ].constantize.get_homonymic_across_domains(@record.fqname)
     overrides.each do |obj|
       display_name, id = domain_display_name_using_name(obj, @record.fqname.split('/').first)
       @domain_overrides[display_name] = id
