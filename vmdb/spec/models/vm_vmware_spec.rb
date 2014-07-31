@@ -46,4 +46,12 @@ describe VmVmware do
       include_examples "Vm operation is available when powered on"
     end
   end
+
+  context "#cloneable?" do
+    let(:vm_vmware) { VmVmware.new }
+
+    it "returns true" do
+      expect(vm_vmware.cloneable?).to eq(true)
+    end
+  end
 end

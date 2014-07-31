@@ -340,4 +340,29 @@ describe VmOrTemplate do
       expect(Vm.includes(:groups, :users).where(:accounts => {:name => 'dev'}).count).to eq(1)
     end
   end
+
+  describe ".cloneable?" do
+    context "when the vm_or_template does not exist" do
+
+      it "returns false" do
+        expect(VmOrTemplate.cloneable?(111)).to eq(false)
+      end
+    end
+
+    context "when the vm_or_template does exist but is not cloneable" do
+      let(:vm_or_template) { VmOrTemplate.create(:type => "TemplateRedhat", :name => "aaa", :location => "bbb", :vendor => "redhat") }
+
+      it "returns false" do
+        expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(false)
+      end
+    end
+
+    context "when the vm_or_template exists and is cloneable" do
+      let(:vm_or_template) { VmRedhat.create(:type => "VmRedhat", :name => "aaa", :location => "bbb", :vendor   => "redhat") }
+
+      it "returns true" do
+        expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(true)
+      end
+    end
+  end
 end

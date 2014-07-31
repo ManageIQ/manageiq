@@ -19,4 +19,7 @@ class VmVmware < VmInfra
     true
   end
 
+  def cloneable?
+    true
+  end
 end

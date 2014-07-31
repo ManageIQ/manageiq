@@ -936,7 +936,9 @@ module ApplicationHelper
       end
     when "Vm"
       case id
-      when "vm_clone", "vm_publish"
+      when "vm_clone"
+        return true unless @record.cloneable?
+      when "vm_publish"
         return true if @record.vendor.downcase == "redhat"
       when "vm_collect_running_processes", "vm_vdi_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
@@ -972,7 +974,7 @@ module ApplicationHelper
     when "MiqTemplate"
       case id
       when "miq_template_clone"
-        return true if @record.vendor.downcase == "redhat"
+        return true unless @record.cloneable?
       when "miq_template_policy_sim", "miq_template_protect"
         return true if @record.host && @record.host.vmm_product.downcase == "workstation"
       when "miq_template_refresh"

@@ -2231,10 +2231,12 @@ class ApplicationController < ActionController::Base
     if typ  # we need to do this check before doing anything to prevent
             # history being updated
       vm_ids = find_checked_items.map(&:to_i).uniq
-      if VmOrTemplate.includes_template?(vm_ids)
-        add_flash(I18n.t("flash.button.task_does_not_apply_to_model", :model => ui_lookup(:table => "miq_template"),
-                         :task => typ.capitalize), :error)
-        render_flash { |page| page << '$(\'main_div\').scrollTop = 0;' }
+      if !typ.eql?("clone") && VmOrTemplate.includes_template?(vm_ids)
+        render_flash_not_applicable_to_model(typ)
+        return
+      end
+      if typ.eql?("clone") && vm_ids.present? && !VmOrTemplate.cloneable?(vm_ids)
+        render_flash_not_applicable_to_model(typ)
         return
       end
       if 'publish' == typ && VmOrTemplate.where(:id => vm_ids, :type => 'VmRedhat').exists?
@@ -2812,5 +2814,12 @@ class ApplicationController < ActionController::Base
     else
       controller_name
     end
+  end
+
+  def render_flash_not_applicable_to_model(type)
+    add_flash(I18n.t("flash.button.task_does_not_apply_to_model",
+                     :model => ui_lookup(:table => "miq_template"),
+                     :task  => type.capitalize), :error)
+    render_flash { |page| page << '$(\'main_div\').scrollTop = 0;' }
   end
 end

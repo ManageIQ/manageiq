@@ -46,4 +46,12 @@ describe VmRedhat do
       include_examples "Vm operation is available when powered on"
     end
   end
+
+  context "#cloneable?" do
+    let(:vm_redhat) { VmRedhat.new }
+
+    it "returns true" do
+      expect(vm_redhat.cloneable?).to eq(true)
+    end
+  end
 end
