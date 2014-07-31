@@ -573,23 +573,23 @@ function wrapFish() {
 var miq_chart_data;
 function Loaded_Chart(chart_id){
   if ((miq_browser != 'Explorer') && (typeof(miq_chart_data) !== 'undefined'))
-    doLoadChart(chart_id);
+    doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
 }
 
-function doLoadChart(chart_id) {
+function doLoadChart(chart_id, chart_object) {
   var id_splitted = chart_id.split('_');
   set  = id_splitted[1];
   idx  = id_splitted[2];
   comp = id_splitted[3];
   if (typeof(comp) === 'undefined')
-    document.getElementsByName(chart_id)[0].Update_XML(miq_chart_data[set][idx].xml, false);
+    chart_object.Update_XML(miq_chart_data[set][idx].xml, false);
   else
-    document.getElementsByName(chart_id)[0].Update_XML(miq_chart_data[set][idx].xml2, false);
+    chart_object.Update_XML(miq_chart_data[set][idx].xml2, false);
 }
 
 // Load XML/SWF charts data (IE)
 function miqLoadCharts() {
-  if ((typeof(miq_chart_data) !== 'undefined') && (miq_browser == 'Explorer')) {
+  if (typeof miq_chart_data != 'undefined' && miq_browser == 'Explorer') {
     for (var set in miq_chart_data) {
       var mcd = miq_chart_data[set];
       for (var i = 0; i < mcd.length; i = i + 1) {
@@ -602,11 +602,15 @@ function miqLoadCharts() {
 }
 
 function miqLoadChart(chart_id) {
-  if ((typeof($j('#'+chart_id)) === 'undefined') ||
-      (typeof($j('#'+chart_id).Update_XML) === 'undefined'))
-    self.setTimeout(function() { miqLoadChart(chart_id); }, 100);
-  else
-    doLoadChart(chart_id);
+  var chart_object = 'undefined';
+  if (typeof document.getElementById(chart_id) != 'undefined' &&
+      typeof document.getElementById(chart_id).Update_XML != 'undefined') { //Verify with console.log after sleep
+    chart_object = document.getElementById(chart_id);
+  } else if (typeof document.getElementsByName(chart_id)[0] != 'undefined' &&
+             typeof document.getElementsByName(chart_id)[0].Update_XML != 'undefined') {
+    chart_object = document.getElementsByName(chart_id)[0];
+  }
+  chart_object == 'undefined' ? self.setTimeout(function() { miqLoadChart(chart_id); }, 100) : doLoadChart(chart_id, chart_object);
 }
 
 function miqChartLinkData(col, row, value, category, series, id, message) {
