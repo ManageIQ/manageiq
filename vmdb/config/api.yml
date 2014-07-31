@@ -363,8 +363,12 @@
     :description: Service Requests
     :options:
     - :collection
+    - :subcollection
     :methods: *70174834086080
     :klass: ServiceTemplateProvisionRequest
+    :subcollections:
+    - :request_tasks
+    - :tasks
   :service_templates:
     :description: Service Templates
     :options:
@@ -376,6 +380,7 @@
     :klass: ServiceTemplate
     :subcollections:
     - :tags
+    - :service_requests
     :collection_actions:
       :post:
       - :name: edit
