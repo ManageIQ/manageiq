@@ -5,7 +5,7 @@ describe WidgetImporter do
   let(:widget_import_validator) { instance_double("WidgetImporter::Validator") }
 
   before do
-    MiqServer.stub(:my_server).and_return(instance_double("MiqServer", :zone_id => 1))
+    MiqServer.stub(:my_server).and_return(active_record_instance_double("MiqServer", :zone_id => 1))
   end
 
   describe "#cancel_import" do
