@@ -170,33 +170,13 @@ class VmScan < Job
   def call_scan
     $log.info "action-call_scan: Enter"
 
-    self.options[:categories] ||= VmOrTemplate.default_scan_categories_no_profile()
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
       vm = VmOrTemplate.find(self.target_id)
       # Send down metadata to allow the host to make decisions.
-      self.options[:ems_list] = ems_list = vm.ems_host_list
-      ems_list['connect_to'] = 'host'
-
-      config = VMDB::Config.new('vmdb').config
-      snapshot = {"use_existing"=>self.options[:use_existing_snapshot], "description"=>self.options[:snapshot_description]}
-      snapshot['create_free_percent'] = config.fetch_path(:snapshots, :create_free_percent) || 100
-      snapshot['remove_free_percent'] = config.fetch_path(:snapshots, :remove_free_percent) || 100
-
-      scan_args = {"ems"=>ems_list, "snapshot"=> snapshot}
-      # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
-      scan_args["vmScanProfiles"] = self.options[:scan_profiles].nil? ? vm.scan_profile_list : self.options[:scan_profiles]
-      if vm.scan_via_ems?
-        scan_args['snapshot']['forceFleeceDefault'] = false if vm.template?
-        ems_list['connect_to'] = 'ems'
-      end
-      if vm.vendor.to_s == 'RedHat'
-        scan_args['permissions'] = {'group' => 36}
-        # Disable connecting to EMS for COS SmartProxy.  Embedded Proxy will
-        # enable this if needed in the scan_sync_vm method in server_smart_proxy.rb.
-        ems_list['connect'] = false
-      end
-      scan_args_yaml = [YAML.dump(scan_args)]
+      scan_args = create_scan_args(vm)
+      self.options[:ems_list] = ems_list = scan_args["ems"]
+      self.options[:categories] = vm.scan_profile_categories(scan_args["vmScanProfiles"])
 
       # If the host supports VixDisk Lib then we need to validate that the host has the required credentials set.
       if vm.vendor.to_s == 'VMware'
@@ -206,8 +186,9 @@ class VmScan < Job
           raise "no credentials defined for #{scan_ci_type} #{ems_list[scan_ci_type][:hostname]}"
         end
       end
+
       $log.info "MIQ(scan-action-call_scan) [#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if self.agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
-      vm.scan_metadata(self.options[:categories], "taskid" => jobid, "host" => host,"args" => scan_args_yaml)
+      vm.scan_metadata(self.options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
     rescue TimeoutError
       message = "timed out attempting to scan, aborting"
       $log.error("MIQ(scan-action-call_scan) #{message}")
@@ -220,6 +201,35 @@ class VmScan < Job
     end
 
     set_status("Scanning for metadata from VM")
+  end
+
+  def config_snapshot
+    config = VMDB::Config.new('vmdb').config
+    snapshot = { "use_existing" => self.options[:use_existing_snapshot],
+                 "description"  => self.options[:snapshot_description]}
+    snapshot['create_free_percent'] = config.fetch_path(:snapshots, :create_free_percent) || 100
+    snapshot['remove_free_percent'] = config.fetch_path(:snapshots, :remove_free_percent) || 100
+    snapshot
+  end
+
+  def config_ems_list(vm)
+    ems_list = vm.ems_host_list
+    ems_list['connect_to'] = vm.scan_via_ems? ? 'ems' : 'host'
+
+    # Disable connecting to EMS for COS SmartProxy.  Embedded Proxy will
+    # enable this if needed in the scan_sync_vm method in server_smart_proxy.rb.
+    ems_list['connect'] = false if vm.vendor.to_s == 'RedHat'
+    ems_list
+  end
+
+  def create_scan_args(vm)
+    scan_args = { "ems" => config_ems_list(vm), "snapshot" => config_snapshot }
+
+    # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
+    scan_args["vmScanProfiles"] = self.options[:scan_profiles] || vm.scan_profile_list
+    scan_args['snapshot']['forceFleeceDefault'] = false if vm.scan_via_ems? && vm.template?
+    scan_args['permissions'] = { 'group' => 36 } if vm.vendor.to_s == 'RedHat'
+    scan_args
   end
 
   def call_snapshot_delete
@@ -268,7 +278,6 @@ class VmScan < Job
   def call_synchronize
     $log.info "action-call_synchronize: Enter"
 
-    self.options[:categories] ||= %w{vmconfig vmevents accounts software services system}
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
       vm = VmOrTemplate.find(self.target_id)

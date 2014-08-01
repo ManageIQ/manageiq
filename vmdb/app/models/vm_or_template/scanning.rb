@@ -128,7 +128,6 @@ module VmOrTemplate::Scanning
       :target_class => self.class.base_class.name,
       :name => "Scan from Vm #{self.name}",
       :userid => userid,
-      :categories => self.scan_profile_categories(),
       :sync_key => self.guid
     }.merge(options)
     options[:zone] = self.ext_management_system.my_zone unless self.ext_management_system.nil?
@@ -193,16 +192,16 @@ module VmOrTemplate::Scanning
     ScanItem.get_default_profiles
   end
 
-  def scan_profile_categories
+  def scan_profile_categories(scan_profiles)
     cat_scan_list = []
     begin
       # Loop over all profiles and add category scan items to the array
-      scan_profile_list.to_miq_a.each do |p|
+      scan_profiles.to_miq_a.each do |p|
         p["definition"].each do |d|
           if d["item_type"] == "category"
             d["definition"]["content"].to_miq_a.each {|item| cat_scan_list << item["target"]}
           else
-            cat_scan_list << "profiles" unless cat_scan_list.include?("profiles")
+            cat_scan_list |= ["profiles"]
           end
         end
       end
