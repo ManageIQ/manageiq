@@ -121,17 +121,19 @@
   </table>
 
   <div id="formbuttonplacement">
-    <%= image_submit_tag("/images/formbuttons/start.png", 
-                         :name  => "start",
-                         :class => "button", 
-                         :alt   => "Start the Host Discovery", 
-                         :title => "Start the Host Discovery")
+    <%= button_tag("Start", 
+                   :class => "btn btn-primary",
+                   :name  => "start", 
+                   :alt   => "Start the Host Discovery", 
+                   :title => "Start the Host Discovery",
+                   :type  => "submit") 
     %>
-    <%= image_submit_tag("/images/formbuttons/cancel.png",
-                         :name  => "cancel", 
-                         :class => "button", 
-                         :alt   => "Cancel", 
-                         :title => "Cancel")
+    <%= button_tag("Cancel",
+                   :class => "btn btn-default",
+                   :name  => "cancel", 
+                   :alt   => "Cancel", 
+                   :title => "Cancel",
+                   :type  => "submit") 
     %>
   </div>
 <% end %>

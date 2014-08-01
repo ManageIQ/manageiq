@@ -53,26 +53,24 @@
 				<tr>
 					<td align="right">
 						<div id="submit_on" style='display:none'>
-							<ul id="form_buttons">
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/submit.png",
-                                        :border=>"0", :alt=>"Run a Database Backup Now"),
+
+									<%= link_to(button_tag("Submit",
+                                         :class => "btn btn-primary",
+                                         :alt   => "Run a Database Backup Now"),
 																				{:action=>'db_backup'},
-																				"data-miq_sparkle_on" => true,
-																				:confirm=>'Are you sure you want to Run a Database Backup Now?',
-																				:remote=>true,
-																				:title=>"Run a Database Backup Now"
-                                        )
+															"data-miq_sparkle_on" => true,
+															:confirm              => 'Are you sure you want to Run a Database Backup Now?',
+															:remote               => true,
+															:title                => "Run a Database Backup Now")
 									%>
-								</li>
-							</ul>
+
 						</div>
 						<div id="submit_off">
-							<ul id="form_buttons">
-								<li>
-									<%= image_tag("/images/formbuttons/submit.png",	:class=>"dimmed", :alt=>"No Backup Schedules are defined", :title=>"No Backup Schedules are defined") %>
-								</li>
-							</ul>
+							<%= button_tag("Submit",	
+							               :class => "btn btn-primary btn-disabled", 
+							               :alt   => "No Backup Schedules are defined", 
+							               :title => "No Backup Schedules are defined")
+							%>
 						</div>
 					</td>
 				</tr>
@@ -91,19 +89,17 @@
 				<tr>
 					<td align="right">
 						<div id="gc_submit_on">
-							<ul id="form_buttons">
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/submit.png",
-																:border=>"0", :alt=>"Run Database Garbage Collection Now"),
-																{:action=>'db_gc_collection'},
-																"data-miq_sparkle_on" => true,
-																:confirm=>'Are you sure you want to Run Database Garbage Collection Now?',
-																:remote=>true,
-																:title=>"Run Database Garbage Collection Now"
-															)
+
+									<%= link_to(button_tag("Submit",
+										                    :class => "btn btn-primary",
+																        :alt   => "Run Database Garbage Collection Now"),
+														  {:action => 'db_gc_collection'},
+															"data-miq_sparkle_on" => true,
+															:confirm              => 'Are you sure you want to Run Database Garbage Collection Now?',
+															:remote               => true,
+															:title                => "Run Database Garbage Collection Now")
 									%>
-								</li>
-							</ul>
+
 						</div>
 					</td>
 				</tr>

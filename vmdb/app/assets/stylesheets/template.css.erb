@@ -20,6 +20,61 @@ strong {font-family: OpenSansSemibold,Arial,Helvetica,sans-serif;font-weight:nor
 
 /* begin modified Patternfly code */
 
+.btn {
+    display: inline-block;
+    margin-bottom: 0px;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid;
+    white-space: nowrap;
+    padding: 2px 6px;
+    font-size: 12px;
+    line-height: 1.66667;
+    border-radius: 1px;
+    -moz-user-select: none;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-default {
+    background-color: #EEE;
+    background-image: linear-gradient(to bottom, #FAFAFA 0px, #EDEDED 100%);
+    background-repeat: repeat-x;
+    border-color: #B7B7B7;
+    color: #4D5258;
+}
+
+.btn-primary {
+    background-color: #189AD1;
+    background-image: linear-gradient(to bottom, #1CACE8 0px, #1998CC 100%);
+    background-repeat: repeat-x;
+    border-color: #267DA1;
+    color: #FFF;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+    background-color: #EEE;
+    background-image: none;
+    border-color: #B7B7B7;
+    color: #4D5258;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+    background-color: #189AD1;
+    background-image: none;
+    border-color: #267DA1;
+    color: #FFF;
+}
+
+.btn-disabled {
+  opacity:0.4; 
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)"; 
+  filter:alpha(opacity=40);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
+}
+
 p.legend {
   margin-top: 9.5px;
   margin-bottom: 12px;
@@ -316,7 +371,7 @@ input.button, .button, ul #form_buttons .dimmed { background: url(/images/formbu
 input.button, .button, ul #form_buttons { width: 80px; height: 30px;outline: none;background: url(/images/formbuttons/formbutton.png) no-repeat top left;}
 input.button:hover, .button img:hover, .listbutton { background: url(/images/formbuttons/formbutton-hover.png) no-repeat top left;}
 
-button {  /*** form button replacement ***/
+button.old {  /*** form button replacement ***/
   height: 22px !important; 
   padding: 0 1.1em 0 1.1em !important;
   border: 1px solid #333;
@@ -335,9 +390,9 @@ button {  /*** form button replacement ***/
   background: linear-gradient(to bottom,  #7f7e7e 0%,#767575 26%,#6c6b6b 47%,#636262 63%,#525152 84%,#484848 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7f7e7e', endColorstr='#484848',GradientType=0 ); /* IE6-9 */
 }
-button:hover {box-shadow: 0px 0px 2px #000;}
-button:disabled {margin:3px 0 4px 2px;opacity:.50;filter: alpha(opacity=50);box-shadow: 0px 0px 0px #000;}
-.ie8 button[disabled] {-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";}
+button.old:hover {box-shadow: 0px 0px 2px #000;}
+button.old:disabled {margin:3px 0 4px 2px;opacity:.50;filter: alpha(opacity=50);box-shadow: 0px 0px 0px #000;}
+.ie8 button.old[disabled] {-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";}
 
 #policy_bar img, #policy_bar2  img { width: 35px; height: 35px; border: 1px #ccc solid;}
 #policy_bar  img:hover, #policy_bar2  img:hover, #policy_bar .active img, #policy_bar2 .active img { background: #e4e4e4;}

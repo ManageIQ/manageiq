@@ -76,55 +76,62 @@
         </tr>
         <tr>
           <td></td>
-          <td align="left">
-            <ul id="form_buttons">
+          <td align="right">
+
               <div id="buttons_off">
-                <li><%= image_tag("/images/formbuttons/apply.png",  :class=>"dimmed formbutton") %></li>
-                <li><%= image_tag("/images/formbuttons/reset.png",  :class=>"dimmed formbutton") %></li>
-                <li>
-                  <%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
-                                              :alt=>"Set filters to default"),
-                                        {:action=>"tasks_button", :button=>"default"},
-                                        "data-miq_sparkle_on" => true,
-                                        "data-miq_sparkle_off" => true,
-                                        :remote=>true,
-                                        :title=>"Set filters to default")
+                <%= button_tag("Apply", :class => "btn btn-primary btn-disabled")%>
+                <%= button_tag("Reset", :class => "btn btn-default btn-disabled")%>
+                
+                  <%= link_to(button_tag('Default', 
+                                         :class => "btn btn-default",
+                                         :alt   => "Set filters to default"),
+                              {:action => "tasks_button", 
+                               :button => "default"},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote                => true,
+                              :title                 => "Set filters to default")
                   %>
-                </li>
+            
+
               </div>
               <div id="buttons_on" style="display:none">
-                <li>
-                    <%= link_to(image_tag("/images/formbuttons/apply.png", :border=>"0", :class=>"button formbutton",
-                                                :alt=>"Apply the selected filters"),
-                                          {:action=>"tasks_button", :button=>"apply"},
-                                          "data-miq_sparkle_on" => true,
-                                          "data-miq_sparkle_off" => true,
-                                          :remote=>true,
-                                          :title=>"Apply the selected filters")
+              
+                    <%= link_to(button_tag('Apply', 
+                                           :class => "btn btn-primary",
+                                           :alt   => "Apply the selected filters"),
+                                {:action => "tasks_button", 
+                                 :button => "apply"},
+                                "data-miq_sparkle_on"  => true,
+                                "data-miq_sparkle_off" => true,
+                                :remote                => true,
+                                :title                 => "Apply the selected filters")
                     %>
-                </li>
-                <li>
-                  <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button formbutton",
-                                              :alt=>"Reset filter changes"),
-                                        {:action=>"tasks_button", :button=>"reset"},
-                                        "data-miq_sparkle_on" => true,
-                                        "data-miq_sparkle_off" => true,
-                                        :remote=>true,
-                                        :title=>"Reset filter changes")
+            
+                  <%= link_to(button_tag('Reset',
+                                         :class => "btn btn-default",
+                                         :alt   => "Reset filter changes"),
+                              {:action => "tasks_button", 
+                               :button => "reset"},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote                => true,
+                              :title                 => "Reset filter changes")
                   %>
-                </li>
-                <li>
-                  <%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
-                                              :alt=>"Set filters to default"),
-                                          {:action=>"tasks_button", :button=>"default"},
-                                          "data-miq_sparkle_on" => true,
-                                          "data-miq_sparkle_off" => true,
-                                          :remote=>true,
-                                          :title=>"Set filters to default")
+             
+                  <%= link_to(button_tag('Default',
+                                         :class => "btn btn-default",
+                                         :alt   => "Set filters to default"),
+                              {:action => "tasks_button", 
+                               :button => "default"},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              :remote                => true,
+                              :title                 => "Set filters to default")
                   %>
-                </li>
+               
               </div>
-            </ul>
+        
           </td>
         </tr>
       </tbody>

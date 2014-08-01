@@ -120,18 +120,17 @@
                                       "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
                   </td>
                   <td  valign="bottom" align="right">
-											<ul id="form_buttons">
-												<li>
-                        <%= link_to(image_tag("/images/formbuttons/retrieve.png", :border=>"0", :class=>"button formbutton", :alt=>"LDAP Group Lookup"),
-																	{:action=>"rbac_group_user_lookup",
-                                      :button=>"submit",
-                                      :id=>"#{@edit[:group_id] || "new"}"},
-																	"data-miq_sparkle_on" => true,
-																	"data-miq_sparkle_off" => true,
-																	:remote=>true,
-																	:title=>"LDAP Group Lookup") %>
-										   </li>
-											</ul>
+                    <%= link_to(button_tag("Retrieve",
+                                           :class => "btn btn-primary", 
+                                           :alt   => "LDAP Group Lookup"),
+  														  {:action => "rbac_group_user_lookup",
+                                 :button => "submit",
+                                 :id     => "#{@edit[:group_id] || "new"}"},
+  														  "data-miq_sparkle_on"  => true,
+  														  "data-miq_sparkle_off" => true,
+  														  :remote                => true,
+  														  :title                 => "LDAP Group Lookup")
+                    %>
                   </td>
                 </tr>
             </table>

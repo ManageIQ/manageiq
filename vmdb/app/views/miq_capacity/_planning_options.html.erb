@@ -288,38 +288,46 @@
 </div>
 <div id="left_cell_bottom" align="center">
   <div id="buttons_on" style="display:<%= session[:changed] ? "display" : "none" %>;">
-    <ul id="form_buttons">
-      <li>
-        <%= link_to(image_tag("/images/formbuttons/submit.png", :border=>"0", :class=>"button", :alt=>"Submit Planning options"),
-                    {:action=>"planning", :button=>"submit"},
-                    "data-miq_sparkle_on" => true,
-                    :remote=>true,
-                    :title=>"Submit Planning options") %>
-      </li>
-      <li>
-        <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button", :alt=>"Reset all Planning options"),
-                    {:action=>"planning", :button=>"reset"},
-                    "data-miq_sparkle_on" => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote=>true,
-                    :title=>"Reset all Planning options") %>
-      </li>
-    </ul>
+        <%= link_to(button_tag("Submit", 
+                                :class => "btn btn-primary", 
+                                :alt   => "Submit Planning options"),
+                      {:action => "planning", 
+                       :button => "submit"},
+                      "data-miq_sparkle_on" => true,
+                      :remote               => true,
+                      :title                => "Submit Planning options")
+        %>
+
+        <%= link_to(button_tag("Reset", 
+                                :class => "btn btn-default", 
+                                :alt   => "Reset all Planning options"),
+                      {:action => "planning", 
+                       :button => "reset"},
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote                => true,
+                      :title                 => "Reset all Planning options")
+        %>
+
   </div>
   <div id="buttons_off" style="display:<%= session[:changed] ? "none" : "display" %>;">
-    <ul id="form_buttons">
-      <li>
-        <%= image_tag("/images/formbuttons/submit.png",	:class=>"dimmed", :title=>"Select a reference VM or Manual Input source to Submit the Planning Options") %>
-      </li>
-      <li>
-        <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button", :alt=>"Reset all Planning options"),
-                    {:action=>"planning", :button=>"reset"},
-                    "data-miq_sparkle_on" => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote=>true,
-                    :title=>"Reset all Planning options") %>
-      </li>
-    </ul>
+
+    <%= button_tag("Submit",	
+                   :class => "btn btn-primary btn-disabled", 
+                   :title => "Select a reference VM or Manual Input source to Submit the Planning Options")
+    %>
+
+    <%= link_to(button_tag("Reset", 
+                           :class => "btn btn-default", 
+                           :alt   => "Reset all Planning options"),
+                {:action => "planning", 
+                 :button => "reset"},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :remote                => true,
+                :title                 => "Reset all Planning options") 
+    %>
+
   </div>
 </div>
 <%# Need this to bind checkbox observers when under DHTMLX tabs %>
