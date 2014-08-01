@@ -3,11 +3,6 @@
 # Required inputs: status
 #
 
-$evm.log("info", "===========================================")
-$evm.log("info", "Listing ROOT Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
-$evm.log("info", "===========================================")
-
 prov = $evm.root['service_template_provision_task']
 
 # Get status from input field status
