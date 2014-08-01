@@ -116,7 +116,7 @@ class StorageManagerController < ApplicationController
       end
     when "validate"
       # Need to pass in smtype so the proper mixins are loaded.
-      if @edit[:new][:sm_type].nil?
+      if @edit[:new][:sm_type].blank?
         add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
