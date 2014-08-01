@@ -32,35 +32,42 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       assert_specific_vm_powered_off
       assert_specific_vm_on_cloud_network
       assert_specific_vm_in_other_region
+      assert_specific_orchestration_template
+      assert_specific_orchestration_stack
       assert_relationship_tree
     end
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should == 1
-    Flavor.count.should              == 38
-    AvailabilityZone.count.should    == 5
-    FloatingIp.count.should          == 4
-    AuthPrivateKey.count.should      == 6
-    CloudNetwork.count.should        == 1
-    CloudSubnet.count.should         == 2
-    SecurityGroup.count.should       == 9
-    FirewallRule.count.should        == 35
-    VmOrTemplate.count.should        == 42
-    Vm.count.should                  == 23
-    MiqTemplate.count.should         == 19
+    ExtManagementSystem.count.should         == 1
+    Flavor.count.should                      == 38
+    AvailabilityZone.count.should            == 5
+    FloatingIp.count.should                  == 5
+    AuthPrivateKey.count.should              == 7
+    CloudNetwork.count.should                == 3
+    CloudSubnet.count.should                 == 4
+    OrchestrationTemplate.count.should       == 2
+    OrchestrationStack.count.should          == 2
+    OrchestrationStackParameter.count.should == 5
+    OrchestrationStackOutput.count.should    == 1
+    OrchestrationStackResource.count.should  == 24
+    SecurityGroup.count.should               == 13
+    FirewallRule.count.should                == 43
+    VmOrTemplate.count.should                == 46
+    Vm.count.should                          == 27
+    MiqTemplate.count.should                 == 19
 
-    CustomAttribute.count.should     == 0
-    Disk.count.should                == 15
-    GuestDevice.count.should         == 0
-    Hardware.count.should            == 42
-    Network.count.should             == 27
-    OperatingSystem.count.should     == 0 # TODO: Should this be 13 (set on all vms)?
-    Snapshot.count.should            == 0
-    SystemService.count.should       == 0
+    CustomAttribute.count.should             == 0
+    Disk.count.should                        == 14
+    GuestDevice.count.should                 == 0
+    Hardware.count.should                    == 46
+    Network.count.should                     == 15
+    OperatingSystem.count.should             == 0 # TODO: Should this be 13 (set on all vms)?
+    Snapshot.count.should                    == 0
+    SystemService.count.should               == 0
 
-    Relationship.count.should        == 22
-    MiqQueue.count.should            == 44
+    Relationship.count.should                == 25
+    MiqQueue.count.should                    == 48
   end
 
   def assert_ems
@@ -69,15 +76,16 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       :uid_ems     => nil
     )
 
-    @ems.flavors.size.should            == 38
-    @ems.availability_zones.size.should == 5
-    @ems.floating_ips.size.should       == 4
-    @ems.key_pairs.size.should          == 6
-    @ems.cloud_networks.size.should     == 1
-    @ems.security_groups.size.should    == 9
-    @ems.vms_and_templates.size.should  == 42
-    @ems.vms.size.should                == 23
-    @ems.miq_templates.size.should      == 19
+    @ems.flavors.size.should              == 38
+    @ems.availability_zones.size.should   == 5
+    @ems.floating_ips.size.should         == 5
+    @ems.key_pairs.size.should            == 7
+    @ems.cloud_networks.size.should       == 3
+    @ems.security_groups.size.should      == 13
+    @ems.vms_and_templates.size.should    == 46
+    @ems.vms.size.should                  == 27
+    @ems.miq_templates.size.should        == 19
+    @ems.orchestration_stacks.size.should == 2
   end
 
   def assert_specific_flavor
@@ -288,7 +296,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
 
     v.ext_management_system.should  == @ems
     v.availability_zone.should      == @az
-    v.floating_ip.should            == @ip
+    #v.floating_ip.should            == @ip
     v.flavor.should                 == @flavor
     v.key_pairs.should              == [@kp]
     v.cloud_network.should          be_nil
@@ -423,6 +431,90 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     v.cloud_network.should     == @cn
     v.cloud_subnet.should      == @subnet
     v.security_groups.should   == [@sg_on_cn]
+  end
+
+  def assert_specific_orchestration_template
+    @orch_template = OrchestrationTemplate.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
+    @orch_template.should have_attributes(
+      :format  => "CFN",
+      :ems_ref => "e929859521d64ac28ee29f8526d33e8f",
+    )
+    @orch_template.description.should start_with("AWS CloudFormation Sample Template WordPress_Simple:")
+    @orch_template.template.should start_with("{\n  \"AWSTemplateFormatVersion\" : \"2010-09-09\",")
+  end
+
+  def assert_specific_orchestration_stack
+    @orch_stack = OrchestrationStack.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
+    @orch_stack.should have_attributes(
+      :type    => "OrchestrationStackAmazon",
+      :status  => "CREATE_COMPLETE",
+      :ems_ref => "arn:aws:cloudformation:us-east-1:123456789012:stack/cloudformation-spec-WebServerInstance-QS899ZNAHZU6/1dedba70-5322-11e4-b33b-50e241629418",
+    )
+    @orch_stack.description.should start_with("AWS CloudFormation Sample Template WordPress_Simple:")
+
+    assert_specific_orchestration_stack_parameters
+    assert_specific_orchestration_stack_resources
+    assert_specific_orchestration_stack_outputs
+    assert_specific_orchestration_stack_associations
+  end
+
+  def assert_specific_orchestration_stack_parameters
+    parameters = @orch_stack.parameters.all(:order => "name")
+    parameters.should have(2).items
+
+    # assert one of the parameter models
+    parameters[1].should have_attributes(
+      :name  => "InstanceType",
+      :value => "t1.micro"
+    )
+  end
+
+  def assert_specific_orchestration_stack_resources
+    resources = @orch_stack.resources.all(:order => "logical_resource")
+    resources.should have(4).items
+
+    # assert one of the resource models
+    resources[2].should have_attributes(
+      :logical_resource       => "WebServer",
+      :physical_resource      => "i-b98fdd57",
+      :resource_category      => "AWS::EC2::Instance",
+      :resource_status        => "CREATE_COMPLETE",
+      :resource_status_reason => nil,
+    )
+  end
+
+  def assert_specific_orchestration_stack_outputs
+    outputs = @orch_stack.outputs
+    outputs.should have(1).items
+    outputs[0].should have_attributes(
+      :key         => "WebsiteURL",
+      :value       => "http://ec2-54-205-248-16.compute-1.amazonaws.com/wordpress",
+      :description => "WordPress Website"
+    )
+  end
+
+  def assert_specific_orchestration_stack_associations
+    # orchestration stack belongs to a provider
+    @orch_stack.ext_management_system.should == @ems
+
+    # orchestration stack belongs to an orchestration template
+    @orch_stack.template.should == @orch_template
+
+    # orchestration stack can be nested
+    parent_stack = OrchestrationStack.where(:name => "cloudformation-spec").first
+    @orch_stack.parent.should == parent_stack
+
+    # orchestration stack can have vms
+    vm = Vm.where(:name => "i-b98fdd57").first
+    vm.orchestration_stack.should == @orch_stack
+
+    # orchestration stack can have security groups
+    sg = SecurityGroup.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6-WebServerSecurityGroup-F458PFAVKR11").first
+    sg.orchestration_stack.should == @orch_stack
+
+    # orchestration stack can have cloud networks
+    vpc = CloudNetwork.where(:name => "vpc-5b6fe83e").first
+    vpc.orchestration_stack.should == parent_stack
   end
 
   def assert_specific_vm_in_other_region

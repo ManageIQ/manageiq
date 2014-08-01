@@ -5,6 +5,8 @@
 #   - availability_zones
 #   - cloud_tenants
 #   - key_pairs
+#   - orchestration_templates
+#   - orchestration_stacks
 #   - cloud_networks
 #     - cloud_subnets
 #   - security_groups
@@ -47,6 +49,8 @@ module EmsRefresh::SaveInventoryCloud
       :availability_zones,
       :cloud_tenants,
       :key_pairs,
+      :orchestration_templates,
+      :orchestration_stacks,
       :cloud_networks,
       :security_groups,
       :cloud_volumes,
@@ -154,6 +158,7 @@ module EmsRefresh::SaveInventoryCloud
 
 
   def save_cloud_networks_inventory(ems, hashes, target = nil)
+    $log.info("SAVE_CLOUD_NETWORS_INVENTORY")
     return if hashes.nil?
     target = ems if target.nil?
 
@@ -165,11 +170,19 @@ module EmsRefresh::SaveInventoryCloud
     end
 
     hashes.each do |h|
-      h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id)
+      h[:cloud_tenant_id]        = h.fetch_path(:cloud_tenant, :id)
+      h[:orchestration_stack_id] = h.fetch_path(:orchestration_stack, :id)
     end
 
-    self.save_inventory_multi(:cloud_networks, CloudNetwork, ems, hashes, deletes, :ems_ref, :cloud_subnets, :cloud_tenant)
-    self.store_ids_for_new_records(ems.cloud_networks, hashes, :ems_ref)
+    save_inventory_multi(:cloud_networks,
+                         CloudNetwork,
+                         ems,
+                         hashes,
+                         deletes,
+                         :ems_ref,
+                         :cloud_subnets,
+                         [:cloud_tenant, :orchestration_stack])
+    store_ids_for_new_records(ems.cloud_networks, hashes, :ems_ref)
   end
 
   def save_cloud_subnets_inventory(cloud_network, hashes)
@@ -198,12 +211,19 @@ module EmsRefresh::SaveInventoryCloud
     end
 
     hashes.each do |h|
-      h[:cloud_network_id] = h.fetch_path(:cloud_network, :id)
-      h[:cloud_tenant_id]  = h.fetch_path(:cloud_tenant, :id)
+      h[:cloud_network_id]       = h.fetch_path(:cloud_network, :id)
+      h[:cloud_tenant_id]        = h.fetch_path(:cloud_tenant, :id)
+      h[:orchestration_stack_id] = h.fetch_path(:orchestration_stack, :id)
     end
 
-    self.save_inventory_multi(:security_groups, SecurityGroup, ems, hashes, deletes, :ems_ref, :firewall_rules, [:cloud_network, :cloud_tenant])
-    self.store_ids_for_new_records(ems.security_groups, hashes, :ems_ref)
+    save_inventory_multi(:security_groups,
+                         SecurityGroup,
+                         ems, hashes,
+                         deletes,
+                         :ems_ref,
+                         :firewall_rules,
+                         [:cloud_network, :cloud_tenant, :orchestration_stack])
+    store_ids_for_new_records(ems.security_groups, hashes, :ems_ref)
 
     # Reset the source_security_group_id for the firewall rules after all
     #   security groups have been saved and ids obtained.
@@ -235,6 +255,96 @@ module EmsRefresh::SaveInventoryCloud
 
     self.save_inventory_multi(:floating_ips, FloatingIp, ems, hashes, deletes, :ems_ref, nil, [:vm, :cloud_tenant])
     self.store_ids_for_new_records(ems.floating_ips, hashes, :ems_ref)
+  end
+
+  def save_orchestration_templates_inventory(_ems, hashes, _target = nil)
+    return if hashes.nil?
+
+    # cloud_stack_template does not belong to an ems;
+    # only to create new if necessary, but not to update existing template
+    templates = OrchestrationTemplate.find_or_create_by_contents(hashes)
+    hashes.zip(templates).each { |hash, template| hash[:id] = template.id }
+  end
+
+  def save_orchestration_stacks_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.orchestration_stacks(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+      ems.orchestration_stacks.dup
+    else
+      []
+    end
+
+    hashes.each do |h|
+      h[:template_id] = h.fetch_path(:template, :id)
+    end
+
+    save_inventory_multi(:orchestration_stacks,
+                         OrchestrationStack,
+                         ems,
+                         hashes,
+                         deletes,
+                         :ems_ref,
+                         [:parameters, :outputs, :resources],
+                         [:nest_parent, :template])
+    store_ids_for_new_records(ems.orchestration_stacks, hashes, :ems_ref)
+
+    save_orchestration_stack_nesting(hashes)
+  end
+
+  def save_orchestration_stack_nesting(hashes)
+    # collect all ids of child/parent nesting stacks, and find them from DB with one query
+    stack_ids = []
+    hashes.each do |h|
+      if h.key?(:nest_parent)
+        stack_ids << h[:id]
+        stack_ids << h.fetch_path(:nest_parent, :id)
+      end
+    end
+    stacks_hash = OrchestrationStack.find(stack_ids).each_with_object({}) { |stack, h| h[stack.id] = stack }
+
+    stack_ids.each_slice(2) do |child_id, parent_id|
+      stacks_hash[child_id].parent = stacks_hash[parent_id]
+      stacks_hash[child_id].save!
+    end
+  end
+
+  def save_parameters_inventory(orchestration_stack, hashes)
+    return if hashes.nil?
+    deletes = orchestration_stack.parameters(true).dup
+
+    save_inventory_multi(:parameters,
+                         OrchestrationStackParameter,
+                         orchestration_stack,
+                         hashes,
+                         deletes,
+                         :name)
+  end
+
+  def save_outputs_inventory(orchestration_stack, hashes)
+    return if hashes.nil?
+    deletes = orchestration_stack.outputs(true).dup
+
+    save_inventory_multi(:outputs,
+                         OrchestrationStackOutput,
+                         orchestration_stack,
+                         hashes,
+                         deletes,
+                         :key)
+  end
+
+  def save_resources_inventory(orchestration_stack, hashes)
+    return if hashes.nil?
+    deletes = orchestration_stack.resources(true).dup
+
+    save_inventory_multi(:resources,
+                         OrchestrationStackResource,
+                         orchestration_stack,
+                         hashes,
+                         deletes,
+                         [:physical_resource, :logical_resource])
   end
 
   def save_cloud_volumes_inventory(ems, hashes, target = nil)

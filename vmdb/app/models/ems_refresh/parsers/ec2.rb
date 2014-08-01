@@ -7,11 +7,13 @@ module EmsRefresh::Parsers
     end
 
     def initialize(ems, options = nil)
-      @ems           = ems
-      @connection    = ems.connect
-      @data          = {}
-      @data_index    = {}
-      @known_flavors = Set.new
+      @ems             = ems
+      @connection      = ems.connect
+      @cloud_formation = ems.cloud_formation
+      @data            = {}
+      @data_index      = {}
+      @known_flavors   = Set.new
+      @nested_stacks   = []
 
       @options    = options || {}
       # Default the collection of images unless explicitly declined
@@ -28,6 +30,7 @@ module EmsRefresh::Parsers
         get_flavors
         get_availability_zones
         get_key_pairs
+        get_stacks
         get_cloud_networks
         get_security_groups
         get_private_images if @options["get_private_images"]
@@ -112,6 +115,32 @@ module EmsRefresh::Parsers
       process_collection(images, :vms) { |image| parse_image(image, is_public) }
     end
 
+    def get_stacks
+      stacks = @cloud_formation.stacks
+      process_collection(stacks, :orchestration_stacks) { |stack| parse_stack(stack) }
+      associate_nested_stacks unless @nested_stacks.empty?
+    end
+
+    def get_stack_parameters(stack_id, parameters)
+      process_collection(parameters, :orchestration_stack_parameters) do |para_key_val_pair, sequence|
+        parse_stack_parameter(para_key_val_pair, stack_id, sequence)
+      end
+    end
+
+    def get_stack_outputs(stack_id, outputs)
+      process_collection(outputs, :orchestration_stack_outputs) do |output, sequence|
+        parse_stack_output(output, stack_id, sequence)
+      end
+    end
+
+    def get_stack_resources(resources)
+      process_collection(resources, :orchestration_stack_resources) { |resource| parse_stack_resource(resource) }
+    end
+
+    def get_stack_template(stack)
+      process_collection([stack], :orchestration_templates) { |the_stack| parse_stack_template(the_stack) }
+    end
+
     def get_instances
       instances = @connection.instances
       process_collection(instances, :vms) { |instance| parse_instance(instance) }
@@ -125,8 +154,8 @@ module EmsRefresh::Parsers
     def process_collection(collection, key)
       @data[key] ||= []
 
-      collection.each do |item|
-        uid, new_result = yield(item)
+      collection.each_with_index do |item, index|
+        uid, new_result = yield(item, index)
         next if uid.nil?
 
         @data[key] << new_result
@@ -192,15 +221,14 @@ module EmsRefresh::Parsers
       cloud_subnets = vpc.subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.id) }
 
       new_result = {
-        :ems_ref => uid,
-        :name    => name,
-        :cidr    => vpc.cidr_block,
-        :status  => status,
-        :enabled => true,
-
-        :cloud_subnets => cloud_subnets,
+        :ems_ref             => uid,
+        :name                => name,
+        :cidr                => vpc.cidr_block,
+        :status              => status,
+        :enabled             => true,
+        :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, vpc.tags["aws:cloudformation:stack-id"]),
+        :cloud_subnets       => cloud_subnets,
       }
-
       return uid, new_result
     end
 
@@ -229,7 +257,8 @@ module EmsRefresh::Parsers
     def parse_security_group(sg)
       uid, new_result = super
 
-      new_result[:cloud_network] = @data_index.fetch_path(:cloud_networks, sg.vpc_id)
+      new_result[:cloud_network]       = @data_index.fetch_path(:cloud_networks, sg.vpc_id)
+      new_result[:orchestration_stack] = @data_index.fetch_path(:orchestration_stacks, sg.tags["aws:cloudformation:stack-id"])
 
       return uid, new_result
     end
@@ -343,12 +372,13 @@ module EmsRefresh::Parsers
           :networks            => [], # Filled in later conditionally on what's available
         },
 
-        :availability_zone => @data_index.fetch_path(:availability_zones, instance.availability_zone),
-        :flavor            => flavor,
-        :cloud_network     => @data_index.fetch_path(:cloud_networks, instance.vpc_id),
-        :cloud_subnet      => @data_index.fetch_path(:cloud_subnets, instance.subnet_id),
-        :key_pairs         => [@data_index.fetch_path(:key_pairs, instance.key_name)].compact,
-        :security_groups   => instance.security_groups.to_a.collect { |sg| @data_index.fetch_path(:security_groups, sg.id) }.compact,
+        :availability_zone   => @data_index.fetch_path(:availability_zones, instance.availability_zone),
+        :flavor              => flavor,
+        :cloud_network       => @data_index.fetch_path(:cloud_networks, instance.vpc_id),
+        :cloud_subnet        => @data_index.fetch_path(:cloud_subnets, instance.subnet_id),
+        :key_pairs           => [@data_index.fetch_path(:key_pairs, instance.key_name)].compact,
+        :security_groups     => instance.security_groups.to_a.collect { |sg| @data_index.fetch_path(:security_groups, sg.id) }.compact,
+        :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, instance.tags["aws:cloudformation:stack-id"]),
       }
       new_result[:location] = public_network[:hostname] if public_network[:hostname]
       new_result[:hardware][:networks] << private_network.merge(:description => "private") unless private_network.blank?
@@ -391,6 +421,102 @@ module EmsRefresh::Parsers
       return uid, new_result
     end
 
+    def parse_stack(stack)
+      new_result = {
+        :type        => "OrchestrationStackAmazon",
+        :name        => stack.name,
+        :description => stack.description,
+        :status      => stack.status,
+        :ems_ref     => stack.stack_id,
+        :template    => find_stack_template(stack),
+        :outputs     => find_stack_outputs(stack),
+        :resources   => find_stack_resources(stack),
+        :parameters  => find_stack_parameters(stack)
+      }
+      return stack.stack_id, new_result
+    end
+
+    def find_stack_template(stack)
+      get_stack_template(stack)
+      @data_index.fetch_path(:orchestration_templates, stack.stack_id)
+    end
+
+    def find_stack_parameters(stack)
+      parameters = stack.parameters
+      get_stack_parameters(stack.stack_id, parameters)
+      parameters.collect.with_index do |_parameter, index|
+        @data_index.fetch_path(:orchestration_stack_parameters, compose_sequence_uid(stack.stack_id, index))
+      end
+    end
+
+    def find_stack_outputs(stack)
+      outputs = stack.outputs
+      get_stack_outputs(stack.stack_id, outputs)
+      outputs.collect.with_index do |_output, index|
+        @data_index.fetch_path(:orchestration_stack_outputs, compose_sequence_uid(stack.stack_id, index))
+      end
+    end
+
+    def find_stack_resources(stack)
+      resources = stack.resource_summaries
+      get_stack_resources(resources)
+      resources.collect do |resource|
+        if resource[:resource_type] == "AWS::CloudFormation::Stack"
+          @nested_stacks << [resource[:physical_resource_id], stack.stack_id]
+        end
+        @data_index.fetch_path(:orchestration_stack_resources, resource[:physical_resource_id])
+      end
+    end
+
+    def parse_stack_template(stack)
+      new_result = {
+        :name          => stack.name,
+        :description   => stack.description,
+        :format        => "CFN",
+        :template      => stack.template,
+      }
+      return stack.stack_id, new_result
+    end
+
+    def parse_stack_parameter(para_key_val_pair, stack_id, sequence)
+      new_result = {
+        :name  => para_key_val_pair[0],
+        :value => para_key_val_pair[1]
+      }
+      return compose_sequence_uid(stack_id, sequence), new_result
+    end
+
+    def parse_stack_output(output, stack_id, sequence)
+      new_result = {
+        :key         => output.key,
+        :value       => output.value,
+        :description => output.description
+      }
+      return compose_sequence_uid(stack_id, sequence), new_result
+    end
+
+    def parse_stack_resource(resource)
+      new_result = {
+        :logical_resource       => resource[:logical_resource_id],
+        :physical_resource      => resource[:physical_resource_id],
+        :resource_category      => resource[:resource_type],
+        :resource_status        => resource[:resource_status],
+        :resource_status_reason => resource[:resource_status_reason],
+        :last_updated_timestamp => resource[:last_updated_timestamp]
+      }
+      return resource[:physical_resource_id], new_result
+    end
+
+    def associate_nested_stacks
+      @nested_stacks.each do |child_stack_id, parent_stack_id|
+        child_stack  = @data_index.fetch_path(:orchestration_stacks, child_stack_id)
+        parent_stack = @data_index.fetch_path(:orchestration_stacks, parent_stack_id)
+
+        # child_stack may not actually exists, for example, it may result from a failed parent
+        child_stack[:nest_parent] = parent_stack unless child_stack.nil?
+      end
+    end
+
     #
     # Helper methods
     #
@@ -413,6 +539,11 @@ module EmsRefresh::Parsers
 
     def add_instance_disk(disks, size, name, location)
       super(disks, size, name, location, "amazon")
+    end
+
+    # When there is no unique identify such as ems_ref, append a sequence number to generate a unique id
+    def compose_sequence_uid(id, seq)
+      "#{id}_#{seq}"
     end
   end
 end
