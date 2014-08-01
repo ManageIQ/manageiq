@@ -1,12 +1,7 @@
 #
 # Description: This method updates the service provisioning status
-# Required inputs: status, status_state
+# Required inputs: status
 #
-
-$evm.log("info", "===========================================")
-$evm.log("info", "Listing ROOT Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
-$evm.log("info", "===========================================")
 
 prov = $evm.root['service_template_provision_task']
 
