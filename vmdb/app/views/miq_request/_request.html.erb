@@ -8,13 +8,33 @@
       <dd>
         <table class="style1">
           <tr>
-            <td class="key">Requested by</td>
+            <td class="key">Request ID</td>
+            <td class="wide" nowrap>
+              <%= h(number_with_delimiter(@miq_request.id)) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Status</td>
+            <td class="wide" nowrap>
+              <%= h(@miq_request.status) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="key">Request State</td>
+            <td class="wide" nowrap><%= h(@miq_request.state.titleize) %></td>
+          </tr>
+          <tr>
+            <td class="key">Requester</td>
             <td class="wide" nowrap>
               <% if @miq_request.requester %>
                 <%= h(@miq_request.requester_name) %>
               <% end %>
             </td>
           </tr>
+        </table>
+      </dd>
+      <dd>
+        <table class="style1">
           <tr>
             <td class="key">Submitted On</td>
             <td class="wide" nowrap><%= h(format_timezone(@miq_request.created_on)) %></td>
@@ -23,10 +43,6 @@
             <td class="key">Last Update</td>
             <td class="wide" nowrap><%= h(format_timezone(@miq_request.updated_on)) %></td>
           </tr>
-        </table>
-      </dd>
-      <dd>
-        <table class="style1">
           <tr>
             <td class="key">Last Message</td>
             <td class="wide"><%= h(@miq_request.message) %></td>
@@ -38,10 +54,6 @@
                 <%= h(format_timezone(@miq_request.fulfilled_on)) %>
               <% end %>
             </td>
-          </tr>
-          <tr>
-            <td class="key">Status</td>
-            <td class="wide" nowrap><%= h(@miq_request.state.titleize) %></td>
           </tr>
           <!-- <tr>
             <td class="key">Approver</td>
@@ -55,6 +67,12 @@
       </dd>
       <dd>
         <table class="style1">
+          <tr>
+            <td class="key">Approval State</td>
+            <td class="wide" nowrap>
+              <%= h(@miq_request.approval_state.titleize) %>
+            </td>
+          </tr>
           <tr>
             <td class="key">Approved/Denied by</td>
             <td class="wide" nowrap>
