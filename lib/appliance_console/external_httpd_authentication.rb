@@ -4,21 +4,26 @@ module ApplianceConsole
   class ExternalHttpdAuthentication
     include ExternalHttpdConfiguration
 
-    def initialize(host = nil)
+    def initialize(host = nil, options = {})
       @ipaserver, @domain, @password = nil
-      @domain    = host.gsub(/^([^.]+\.)/, '') if host && host.include?('.')
-      @principal = "admin"
+      @host      = host
+      @domain    = options[:domain] || domain_from_host(host)
+      @ipaserver = options[:ipaserver]
+      @principal = options[:principal] || "admin"
+      @password  = options[:password]
       @timestamp = Time.now.strftime("%Y%m%d_%H%M%S")
+
+      @ipaserver = fqdn(@ipaserver, @domain)
     end
 
     def ask_for_parameters
       say("\nIPA Server Parameters:\n\n")
-      @ipaserver = ask_for_hostname("IPA Server Hostname")
+      @ipaserver = ask_for_hostname("IPA Server Hostname", @ipaserver)
       @domain    = ask_for_domain("IPA Server Domain", @domain)
       @principal = just_ask("IPA Server Principal", @principal)
-      @password  = ask_for_password("IPA Server Principal Password")
+      @password  = ask_for_password("IPA Server Principal Password", @password)
 
-      @ipaserver = "#{@ipaserver}.#{@domain}" unless @ipaserver.include?(".")
+      @ipaserver = fqdn(@ipaserver, @domain)
     end
 
     def show_parameters
@@ -40,13 +45,16 @@ module ApplianceConsole
       say("  Domain:         #{fetch_ipa_configuration("ipa_domain", config)}\n")
     end
 
-    def activate
+    def ask_questions
       return false unless valid_environment?
       ask_for_parameters
       show_parameters
       return false unless agree("\nProceed? (Y/N): ")
       return false unless valid_parameters?(@ipaserver)
+      true
+    end
 
+    def activate
       begin
         configure_ipa
         configure_pam
@@ -73,6 +81,14 @@ module ApplianceConsole
 
     def domain_naming_context
       @domain.split(".").collect { |s| "dc=#{s}" }.join(",")
+    end
+
+    def domain_from_host(host)
+      host.gsub(/^([^.]+\.)/, '') if host && host.include?('.')
+    end
+
+    def fqdn(host, domain)
+      (host && domain && !host.include?(".")) ? "#{host}.#{domain}" : host
     end
 
     def realm

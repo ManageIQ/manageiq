@@ -1,13 +1,22 @@
 require 'trollop'
+require 'pathname'
 require 'appliance_console/env'
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
 require 'appliance_console/database_configuration'
 require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
+require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/service_group'
 require 'appliance_console/key_configuration'
 require 'appliance_console/certificate_authority'
+
+# support for appliance_console methods
+unless defined?(say)
+  def say(*args)
+    puts(*args)
+  end
+end
 
 module ApplianceConsole
   class Cli
@@ -53,7 +62,7 @@ module ApplianceConsole
       self.options = Trollop.options(args) do
         banner "Usage: appliance_console_cli [options]"
 
-        opt :host,     "/etc/host name",     :type => :string,  :short => 'H'
+        opt :host,     "/etc/hosts name",    :type => :string,  :short => 'H'
         opt :region,   "Region Number",      :type => :integer, :short => "r"
         opt :internal, "Internal Database",                     :short => 'i'
         opt :hostname, "Database Hostname",  :type => :string,  :short => 'h'
@@ -66,6 +75,10 @@ module ApplianceConsole
         opt :company,  "CA company name",    :type => :string,  :short => nil, :default => "cfme demo"
         opt :causer,   "CA User",            :type => :string,                 :default => "root"
         opt :dbdisk,   "Database Disk Path", :type => :string
+        opt :uninstall_ipa, "Uninstall IPA Client", :type => :boolean,         :default => false
+        opt :ipaserver,  "IPA Server FQDN",  :type => :string
+        opt :ipaprincipal,  "IPA Server principal", :type => :string,          :default => "admin"
+        opt :ipapassword,   "IPA Server password",  :type => :string
       end
       Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && hostname && local?
       self
@@ -76,6 +89,8 @@ module ApplianceConsole
       create_key if key?
       set_ca if options[:ca]
       set_db if hostname
+      uninstall_ipa if options[:uninstall_ipa]
+      install_ipa if options[:ipaserver]
     end
 
     def set_db
@@ -133,6 +148,22 @@ module ApplianceConsole
       else
         ca.remote(cahost, options[:causer]).run
       end
+    end
+
+    def install_ipa
+      config = ExternalHttpdAuthentication.new(
+        options[:host] || Env["HOST"],
+        :ipaserver => options[:ipaserver],
+        :principal => options[:ipaprincipal],
+        :password  => options[:ipapassword],
+      )
+
+      config.post_activation if config.activate
+    end
+
+    def uninstall_ipa
+      config = ExternalHttpdAuthentication.new
+      config.ipa_client_unconfigure if config.ipa_client_configured?
     end
 
     def self.parse(args)
