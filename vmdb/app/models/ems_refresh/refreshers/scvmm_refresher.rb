@@ -7,7 +7,7 @@ module EmsRefresh::Refreshers
   class ScvmmRefresher < BaseRefresher
     def refresh
       log_header = "MIQ(#{self.class.name}.refresh)"
-      $log.info "#{log_header} Refreshing all targets..."
+      $log.info "#{log_header} Refreshing Scvmm..."
 
       @targets_by_ems_id.each do |ems_id, targets|
         # Get the ems object
@@ -35,7 +35,7 @@ module EmsRefresh::Refreshers
         end
       end
 
-      $log.info "#{log_header} Refreshing all targets...Complete"
+      $log.info "#{log_header} Refreshing Scvmm...Complete"
     end
   end
 end
