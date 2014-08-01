@@ -1,5 +1,5 @@
-- if @domain_overrides.count > 1
-  %p.legend Domain overrides by priority
+- if @domain_overrides && @domain_overrides.count > 1
+  %p.legend Domain Overrides (by priority)
   %table.style3
     %thead
       %tr
@@ -12,7 +12,7 @@
                                           :complete => "miqSparkle(false);",
                                           :url     => "/miq_ae_class/x_show?id=#{node_prefix}-#{to_cid(id)}"),
               :onmouseover => "this.style.cursor='pointer'",
-              :title => "Click to view this #{model}"}
+              :title => "Click to view this #{model} in the \"#{name}\" Domain"}
             %td
               =name
         - else

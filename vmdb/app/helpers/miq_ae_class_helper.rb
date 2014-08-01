@@ -8,7 +8,7 @@ module MiqAeClassHelper
   end
 
   def domain_display_name_using_name(record, current_domain_name)
-    domain_name = record.fqname.split('/').first
+    domain_name = record.domain.name
     if domain_name == current_domain_name
       return "#{domain_name} (Same Domain)", nil
     else

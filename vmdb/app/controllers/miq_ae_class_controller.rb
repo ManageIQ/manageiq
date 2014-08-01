@@ -2065,7 +2065,7 @@ private
     selected_items = {}
     ids.each_with_index do |id, i|
       record = typ.find_by_id(from_cid(id))
-      selected_items[record.id] = record.name
+      selected_items[record.id] = record.display_name.blank? ? record.name : "#{record.display_name} (#{record.name})"
       @record = record if i == 0
     end
     MiqAeDomain.all_unlocked.collect { |domain| domains[domain.id] = domain_display_name(domain) }
@@ -2848,7 +2848,7 @@ private
     typ, _ = x_node.split('-')
     overrides = X_TREE_NODE_PREFIXES[typ].constantize.get_homonymic_across_domains(@record.fqname)
     overrides.each do |obj|
-      display_name, id = domain_display_name_using_name(obj, @record.fqname.split('/').first)
+      display_name, id = domain_display_name_using_name(obj, @record.domain.name)
       @domain_overrides[display_name] = id
     end
   end

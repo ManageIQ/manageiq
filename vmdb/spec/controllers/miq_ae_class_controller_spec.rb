@@ -185,7 +185,8 @@ describe MiqAeClassController do
                                                        :name         => "foo",
                                                        :ae_fields    => [],
                                                        :ae_instances => [],
-                                                       :ae_methods   => []
+                                                       :ae_methods   => [],
+                                                       :domain       => miq_ae_domain2
       )
     }
 
@@ -195,7 +196,8 @@ describe MiqAeClassController do
                                                           :name         => "some_name",
                                                           :fqname       => "fqname",
                                                           :created_on   => Time.now,
-                                                          :updated_by   => "some_user"
+                                                          :updated_by   => "some_user",
+                                                          :domain       => miq_ae_domain
       )
     }
 
@@ -206,12 +208,23 @@ describe MiqAeClassController do
                                                         :name         => "some_name",
                                                         :fqname       => "fqname",
                                                         :created_on   => Time.now,
-                                                        :updated_by   => "some_user"
+                                                        :updated_by   => "some_user",
+                                                        :domain       => miq_ae_domain
       )
     }
 
-    let(:override) { active_record_instance_double("MiqAeClass", :fqname => "another_fqname/fqname", :id => 1) }
-    let(:override2) { active_record_instance_double("MiqAeClass", :fqname => "another_fqname2/fqname", :id => 2) }
+    let(:override) { active_record_instance_double("MiqAeClass",
+                                                   :fqname => "another_fqname/fqname",
+                                                   :id     => 1,
+                                                   :domain => miq_ae_domain
+      )
+    }
+    let(:override2) { active_record_instance_double("MiqAeClass",
+                                                    :fqname => "another_fqname2/fqname",
+                                                    :id     => 2,
+                                                    :domain => miq_ae_domain2
+      )
+    }
 
     before do
       MiqAeDomain.stub(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
