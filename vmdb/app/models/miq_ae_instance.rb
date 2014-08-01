@@ -63,6 +63,10 @@ class MiqAeInstance < ActiveRecord::Base
     "#{self.ae_class.fqname}/#{self.name}"
   end
 
+  def domain
+    ae_class.domain
+  end
+
   def export_ae_fields
     ae_values_sorted.collect(&:to_export_yaml).compact
   end

@@ -88,10 +88,15 @@ class MiqAeNamespace < ActiveRecord::Base
   end
 
   def domain_name
-    return name if domain?
-    ns = ancestors.last
-    return nil if ns.nil? || !ns.domain?
-    ns.name
+    domain.try(:name)
+  end
+
+  def domain
+    if domain?
+      self
+    elsif (ns = ancestors.last) && ns.domain?
+      ns
+    end
   end
 
   def domain?

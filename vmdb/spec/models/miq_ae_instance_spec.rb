@@ -238,4 +238,11 @@ describe MiqAeInstance do
       res.count.should eq(2)
     end
   end
+
+  it "#domain" do
+    n1 = FactoryGirl.create(:miq_ae_domain, :name => 'dom1', :priority => 10, :system => true)
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+    i1.domain.name.should eql('dom1')
+  end
 end

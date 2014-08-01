@@ -268,4 +268,9 @@ describe MiqAeClass do
       end
     end
   end
+
+  it "#domain" do
+    c1 = MiqAeClass.create(:namespace => "TEST/ABC", :name => "oleg")
+    c1.domain.name.should eql('TEST')
+  end
 end
