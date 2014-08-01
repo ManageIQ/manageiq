@@ -1,8 +1,8 @@
 require "spec_helper"
 
-describe WidgetImporter do
-  let(:widget_importer) { described_class.new(widget_import_validator) }
-  let(:widget_import_validator) { instance_double("WidgetImporter::Validator") }
+describe WidgetImportService do
+  let(:widget_import_service) { described_class.new(widget_import_validator) }
+  let(:widget_import_validator) { instance_double("WidgetImportValidator") }
 
   before do
     MiqServer.stub(:my_server).and_return(active_record_instance_double("MiqServer", :zone_id => 1))
@@ -21,7 +21,7 @@ describe WidgetImporter do
 
     it "destroys the import file upload" do
       import_file_upload.should_receive(:destroy)
-      widget_importer.cancel_import("42")
+      widget_import_service.cancel_import("42")
     end
 
     it "destroys the queued deletion" do
@@ -30,7 +30,7 @@ describe WidgetImporter do
         :instance_id => 42,
         :method_name => "destroy"
       )
-      widget_importer.cancel_import("42")
+      widget_import_service.cancel_import("42")
     end
   end
 
@@ -92,10 +92,10 @@ describe WidgetImporter do
       MiqQueue.stub(:unqueue)
     end
 
-    shared_examples_for "WidgetImporter#import_widgets that destroys temporary data" do
+    shared_examples_for "WidgetImportService#import_widgets that destroys temporary data" do
       it "destroys the import file upload" do
         import_file_upload.should_receive(:destroy)
-        widget_importer.import_widgets(import_file_upload, widgets_to_import)
+        widget_import_service.import_widgets(import_file_upload, widgets_to_import)
       end
 
       it "unqueues the miq_queue item" do
@@ -104,13 +104,13 @@ describe WidgetImporter do
           :instance_id => 42,
           :method_name => "destroy"
         )
-        widget_importer.import_widgets(import_file_upload, widgets_to_import)
+        widget_import_service.import_widgets(import_file_upload, widgets_to_import)
       end
     end
 
-    shared_examples_for "WidgetImporter#import_widgets with a non existing widget" do
+    shared_examples_for "WidgetImportService#import_widgets with a non existing widget" do
       it "builds a new widget" do
-        widget_importer.import_widgets(import_file_upload, widgets_to_import)
+        widget_import_service.import_widgets(import_file_upload, widgets_to_import)
         MiqWidget.first.should_not be_nil
       end
     end
@@ -125,10 +125,10 @@ describe WidgetImporter do
           end
         end
 
-        it_behaves_like "WidgetImporter#import_widgets that destroys temporary data"
+        it_behaves_like "WidgetImportService#import_widgets that destroys temporary data"
 
         it "overwrites the existing widget" do
-          widget_importer.import_widgets(import_file_upload, widgets_to_import)
+          widget_import_service.import_widgets(import_file_upload, widgets_to_import)
           expect(MiqWidget.where(:description => "Test2").first.title).to eq("potato")
         end
       end
@@ -153,10 +153,10 @@ describe WidgetImporter do
               end
             end
 
-            it_behaves_like "WidgetImporter#import_widgets with a non existing widget"
+            it_behaves_like "WidgetImportService#import_widgets with a non existing widget"
 
             it "does not update the rss feed" do
-              widget_importer.import_widgets(import_file_upload, widgets_to_import)
+              widget_import_service.import_widgets(import_file_upload, widgets_to_import)
               expect(RssFeed.first.title).to eq("old title")
             end
           end
@@ -169,10 +169,10 @@ describe WidgetImporter do
               end
             end
 
-            it_behaves_like "WidgetImporter#import_widgets with a non existing widget"
+            it_behaves_like "WidgetImportService#import_widgets with a non existing widget"
 
             it "builds a new RssFeed" do
-              widget_importer.import_widgets(import_file_upload, widgets_to_import)
+              widget_import_service.import_widgets(import_file_upload, widgets_to_import)
               expect(RssFeed.first.title).to eq("new title")
             end
           end
@@ -193,11 +193,11 @@ describe WidgetImporter do
             end
           end
 
-          it_behaves_like "WidgetImporter#import_widgets that destroys temporary data"
-          it_behaves_like "WidgetImporter#import_widgets with a non existing widget"
+          it_behaves_like "WidgetImportService#import_widgets that destroys temporary data"
+          it_behaves_like "WidgetImportService#import_widgets with a non existing widget"
 
           it "uses the existing report" do
-            widget_importer.import_widgets(import_file_upload, widgets_to_import)
+            widget_import_service.import_widgets(import_file_upload, widgets_to_import)
             widget = MiqWidget.first
             expect(widget.resource).to eq(MiqReport.first)
             expect(MiqReport.first.title).to eq("original report title")
@@ -212,11 +212,11 @@ describe WidgetImporter do
             end
           end
 
-          it_behaves_like "WidgetImporter#import_widgets that destroys temporary data"
-          it_behaves_like "WidgetImporter#import_widgets with a non existing widget"
+          it_behaves_like "WidgetImportService#import_widgets that destroys temporary data"
+          it_behaves_like "WidgetImportService#import_widgets with a non existing widget"
 
           it "builds a report associated to the widget" do
-            widget_importer.import_widgets(import_file_upload, widgets_to_import)
+            widget_import_service.import_widgets(import_file_upload, widgets_to_import)
             widget = MiqWidget.first
             expect(widget.resource).to eq(MiqReport.first)
           end
@@ -230,10 +230,10 @@ describe WidgetImporter do
             end
           end
 
-          it_behaves_like "WidgetImporter#import_widgets with a non existing widget"
+          it_behaves_like "WidgetImportService#import_widgets with a non existing widget"
 
           it "builds a new miq schedule associated to the widget" do
-            widget_importer.import_widgets(import_file_upload, widgets_to_import)
+            widget_import_service.import_widgets(import_file_upload, widgets_to_import)
             widget = MiqWidget.first
             expect(widget.miq_schedule.description).to eq("new schedule description")
           end
@@ -258,10 +258,10 @@ describe WidgetImporter do
             end
           end
 
-          it_behaves_like "WidgetImporter#import_widgets with a non existing widget"
+          it_behaves_like "WidgetImportService#import_widgets with a non existing widget"
 
           it "uses the existing schedule" do
-            widget_importer.import_widgets(import_file_upload, widgets_to_import)
+            widget_import_service.import_widgets(import_file_upload, widgets_to_import)
             widget = MiqWidget.first
             expect(widget.miq_schedule.description).to eq("old schedule description")
           end
@@ -271,10 +271,10 @@ describe WidgetImporter do
       context "when the list of widgets is nil" do
         let(:widgets_to_import) { nil }
 
-        it_behaves_like "WidgetImporter#import_widgets that destroys temporary data"
+        it_behaves_like "WidgetImportService#import_widgets that destroys temporary data"
 
         it "does not error" do
-          expect { widget_importer.import_widgets(import_file_upload, widgets_to_import) }.to_not raise_error
+          expect { widget_import_service.import_widgets(import_file_upload, widgets_to_import) }.to_not raise_error
         end
       end
     end
@@ -285,8 +285,8 @@ describe WidgetImporter do
       end
 
       it "raises a ParsedNonWidgetYamlError" do
-        expect { widget_importer.import_widgets(import_file_upload, widgets_to_import) }.to raise_error(
-          WidgetImporter::ParsedNonWidgetYamlError
+        expect { widget_import_service.import_widgets(import_file_upload, widgets_to_import) }.to raise_error(
+          WidgetImportService::ParsedNonWidgetYamlError
         )
       end
     end
@@ -308,11 +308,11 @@ describe WidgetImporter do
 
       it "stores the data" do
         import_file_upload.should_receive(:store_binary_data_as_yml).with("the data", "Widget import")
-        widget_importer.store_for_import("the data")
+        widget_import_service.store_for_import("the data")
       end
 
       it "returns the imported file upload" do
-        expect(widget_importer.store_for_import("the data")).to eq(import_file_upload)
+        expect(widget_import_service.store_for_import("the data")).to eq(import_file_upload)
       end
 
       it "queues a deletion" do
@@ -324,21 +324,21 @@ describe WidgetImporter do
             :method_name => "destroy"
           )
 
-          widget_importer.store_for_import("the data")
+          widget_import_service.store_for_import("the data")
         end
       end
     end
 
     context "when the imported file raises an error while determining validity" do
       before do
-        error_to_be_raised = WidgetImporter::Validator::NonYamlError.new("Test message")
+        error_to_be_raised = WidgetImportValidator::NonYamlError.new("Test message")
         widget_import_validator.stub(:determine_validity).with(import_file_upload).and_raise(error_to_be_raised)
       end
 
       it "reraises with the original error" do
         expect {
-          widget_importer.store_for_import("the data")
-        }.to raise_error(WidgetImporter::Validator::NonYamlError, "Test message")
+          widget_import_service.store_for_import("the data")
+        }.to raise_error(WidgetImportValidator::NonYamlError, "Test message")
       end
 
       it "queues a deletion" do
@@ -351,8 +351,8 @@ describe WidgetImporter do
           )
 
           begin
-            widget_importer.store_for_import("the data")
-          rescue WidgetImporter::Validator::NonYamlError
+            widget_import_service.store_for_import("the data")
+          rescue WidgetImportValidator::NonYamlError
             nil
           end
         end

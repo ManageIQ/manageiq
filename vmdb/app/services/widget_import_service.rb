@@ -1,9 +1,9 @@
-require "widget_importer/validator"
+require "widget_import_validator"
 
-class WidgetImporter
+class WidgetImportService
   class ParsedNonWidgetYamlError < StandardError; end
 
-  def initialize(widget_import_validator = WidgetImporter::Validator.new)
+  def initialize(widget_import_validator = WidgetImportValidator.new)
     @widget_import_validator = widget_import_validator
   end
 

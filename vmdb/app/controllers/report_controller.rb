@@ -283,10 +283,10 @@ class ReportController < ApplicationController
       add_flash("Use the browse button to locate an import file", :warning)
     else
       begin
-        import_file_upload_id = widget_importer.store_for_import(upload_file.read)
+        import_file_upload_id = widget_import_service.store_for_import(upload_file.read)
         add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
         redirect_options[:import_file_upload_id] = import_file_upload_id
-      rescue WidgetImporter::Validator::NonYamlError
+      rescue WidgetImportValidator::NonYamlError
         add_flash(I18n.t("flash.service_dialog.unsupported_import_format"), :error)
       end
     end
@@ -301,7 +301,7 @@ class ReportController < ApplicationController
 
     if import_file_upload
       $log.info("[#{session[:userid]}] initiated import")
-      widget_importer.import_widgets(import_file_upload, params[:widgets_to_import])
+      widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
       add_flash(I18n.t("flash.report.widget_import_successful"), :info)
     else
       add_flash(I18n.t("flash.report.widget_import_file_upload_expired"), :error)
@@ -326,7 +326,7 @@ class ReportController < ApplicationController
   end
 
   def cancel_import
-    widget_importer.cancel_import(params[:import_file_upload_id])
+    widget_import_service.cancel_import(params[:import_file_upload_id])
     add_flash(I18n.t("flash.report.widget_import_cancelled"), :info)
 
     respond_to do |format|
@@ -970,7 +970,7 @@ class ReportController < ApplicationController
     session[:report_folders]    = @folders
   end
 
-  def widget_importer
-    @widget_importer ||= WidgetImporter.new
+  def widget_import_service
+    @widget_import_service ||= WidgetImportService.new
   end
 end

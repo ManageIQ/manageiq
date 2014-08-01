@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe WidgetImporter::Validator do
+describe WidgetImportValidator do
   let(:widget_import_validator) { described_class.new }
 
   describe "#determine_validity" do
@@ -19,10 +19,10 @@ describe WidgetImporter::Validator do
     context "when the yaml is invalid yaml" do
       let(:uploaded_content) { "-\nbad yaml" }
 
-      it "raises a WidgetImporter::Validator::NonYamlError" do
+      it "raises a WidgetImportValidator::NonYamlError" do
         expect {
           widget_import_validator.determine_validity(import_file_upload)
-        }.to raise_error(WidgetImporter::Validator::NonYamlError)
+        }.to raise_error(WidgetImportValidator::NonYamlError)
       end
     end
   end
