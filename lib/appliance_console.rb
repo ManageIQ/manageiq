@@ -366,7 +366,7 @@ Date and Time Configuration
           say("#{selection}\n\n")
 
           httpd_auth = ExternalHttpdAuthentication.new(host)
-          if httpd_auth.activate
+          if httpd_auth.ask_questions && httpd_auth.activate
             httpd_auth.post_activation
             say("\nExternal Authentication configured successfully.\n")
             press_any_key
