@@ -81,7 +81,7 @@ describe DialogImportService do
 
         it "yields the given block" do
           block_called = false
-          dialog_import_service.import_from_file(filename) do |dialog|
+          dialog_import_service.import_from_file(filename) do |_|
             block_called = true
           end
 
@@ -135,7 +135,9 @@ describe DialogImportService do
       end
 
       it "raises a ParsedNonDialogYamlError" do
-        expect { dialog_import_service.import_from_file(filename) }.to raise_error(DialogImportService::ParsedNonDialogYamlError)
+        expect {
+          dialog_import_service.import_from_file(filename)
+        }.to raise_error(DialogImportService::ParsedNonDialogYamlError)
       end
     end
   end
@@ -221,7 +223,9 @@ describe DialogImportService do
         it_behaves_like "DialogImportService#import_service_dialogs that destroys temporary data"
 
         it "does not error" do
-          expect { dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import) }.to_not raise_error
+          expect {
+            dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
+          }.to_not raise_error
         end
       end
     end
