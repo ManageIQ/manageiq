@@ -26,12 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_provision_status(status => 'Customizing Request',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Customized Request',status_state
-        => 'on_exit')
-      on_error: update_provision_status(status => 'error in Customizing Request',status_state
-        => 'on_error')
+      on_entry: update_provision_status(status => 'Customizing Request')
+      on_exit: update_provision_status(status => 'Customized Request')
+      on_error: update_provision_status(status => 'Error Customizing Request')
       max_retries: '100'
       max_time: 
   - field:
@@ -49,12 +46,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_provision_status(status => 'Registering CMDB',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Registered CMDB',status_state =>
-        'on_exit')
-      on_error: update_provision_status(status => 'error in Registering CMDB',status_state
-        => 'on_error')
+      on_entry: update_provision_status(status => 'Registering CMDB')
+      on_exit: update_provision_status(status => 'Registered CMDB')
+      on_error: update_provision_status(status => 'Error Registering CMDB')
       max_retries: '100'
       max_time: 
   - field:
@@ -72,12 +66,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_provision_status(status => 'Applying PreProvision Customizations',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Applied PreProvision Customizations',status_state
-        => 'on_exit')
-      on_error: update_provision_status(status => 'error in Applying PreProvision
-        Customizations',status_state => 'on_error')
+      on_entry: update_provision_status(status => 'Applying PreProvision Customizations')
+      on_exit: update_provision_status(status => 'Applied PreProvision Customizations')
+      on_error: update_provision_status(status => 'Error Applying PreProvision
+        Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -95,10 +87,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_provision_status(status => 'Creating VM',status_state => 'on_entry')
-      on_exit: update_provision_status(status => 'Creating VM',status_state => 'on_exit')
-      on_error: update_provision_status(status => 'error in Cloning VM',status_state
-        => 'on_error')
+      on_entry: update_provision_status(status => 'Creating Template')
+      on_exit: update_provision_status(status => 'Creating Template')
+      on_error: update_provision_status(status => 'Error Creating Template')
       max_retries: '100'
       max_time: 
   - field:
@@ -117,9 +108,8 @@ object:
       description: 
       condition: 
       on_entry: 
-      on_exit: update_provision_status(status => 'Cloning VM',status_state => 'on_exit')
-      on_error: update_provision_status(status => '${/#ae_reason}',status_state =>
-        'on_error')
+      on_exit: update_provision_status(status => 'Creating Template')
+      on_error: update_provision_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
   - field:
@@ -137,12 +127,10 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_provision_status(status => 'Applying PostProvision Customizations',status_state
-        => 'on_entry')
-      on_exit: update_provision_status(status => 'Applied PostProvision Customizations',status_state
-        => 'on_exit')
-      on_error: update_provision_status(status => 'error in Applying PostProvision
-        Customizations',status_state => 'on_error')
+      on_entry: update_provision_status(status => 'Applying PostProvision Customizations')
+      on_exit: update_provision_status(status => 'Applied PostProvision Customizations')
+      on_error: update_provision_status(status => 'Error Applying PostProvision
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -160,12 +148,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_provision_status(status => 'Activating CMDB',status_state =>
-        'on_entry')
-      on_exit: update_provision_status(status => 'Activated CMDB',status_state =>
-        'on_exit')
-      on_error: update_provision_status(status => 'error in Activating CMDB',status_state
-        => 'on_error')
+      on_entry: update_provision_status(status => 'Activating CMDB')
+      on_exit: update_provision_status(status => 'Activated CMDB')
+      on_error: update_provision_status(status => 'Error Activating CMDB')
       max_retries: '100'
       max_time: 
   - field:
@@ -183,11 +168,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_provision_status(status => 'Emailing Owner',status_state =>
-        'on_entry')
-      on_exit: update_provision_status(status => 'provision_complete',status_state
-        => 'on_exit')
-      on_error: update_provision_status(status => 'error in Emailing Owner',status_state
-        => 'on_error')
+      on_entry: update_provision_status(status => 'Emailing Owner')
+      on_exit: update_provision_status(status => 'provision_complete')
+      on_error: update_provision_status(status => 'Error Emailing Owner')
       max_retries: '100'
       max_time: 
