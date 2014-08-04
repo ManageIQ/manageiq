@@ -58,6 +58,14 @@ class EmsOpenstack < EmsCloud
     openstack_handle(options).connect(options)
   end
 
+  def connect_volume
+    connect(:service => "Volume")
+  end
+
+  def connect_identity
+    connect(:service => "Identity")
+  end
+
   def event_monitor_options
     @event_monitor_options ||= begin
       opts = {:hostname => self.ipaddress}

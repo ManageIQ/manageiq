@@ -9,7 +9,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w{availability_zones flavors security_groups instances images}
+    items = %w{availability_zones cloud_tenants flavors security_groups instances images}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -36,7 +36,7 @@ module EmsCloudHelper::TextualSummary
     return nil if @ems.kind_of?(EmsAmazon)
     {:label => "IP Address", :value => @ems.ipaddress}
   end
-  
+
   def textual_type
     {:label => "Type", :value => @ems.emstype_description}
   end
@@ -78,6 +78,17 @@ module EmsCloudHelper::TextualSummary
     if num > 0 && role_allows(:feature => "availability_zone_show_list")
       h[:title] = "Show all #{label}"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'availability_zones')
+    end
+    h
+  end
+
+  def textual_cloud_tenants
+    label = ui_lookup(:tables => "cloud_tenants")
+    num   = @record.number_of(:cloud_tenants)
+    h     = {:label => label, :image => "cloud_tenants", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
     end
     h
   end

@@ -53,6 +53,7 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_volume_snapshots,
       :vms,
       :floating_ips,
+      :cloud_resource_quotas,
       :cloud_object_store_containers,
       :cloud_object_store_objects
     ]
@@ -115,6 +116,25 @@ module EmsRefresh::SaveInventoryCloud
 
     self.save_inventory_multi(:cloud_tenants, CloudTenant, ems, hashes, deletes, :ems_ref)
     self.store_ids_for_new_records(ems.cloud_tenants, hashes, :ems_ref)
+  end
+
+  def save_cloud_resource_quotas_inventory(ems, hashes, target = nil)
+    return unless hashes
+    target ||= ems
+
+    ems.cloud_resource_quotas(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+      ems.cloud_resource_quotas.dup
+    else
+      []
+    end
+
+    hashes.each do |h|
+      h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id)
+    end
+
+    self.save_inventory_multi(:cloud_resource_quotas, CloudResourceQuota, ems, hashes, deletes, [:ems_ref, :name], nil, :cloud_tenant)
+    self.store_ids_for_new_records(ems.cloud_resource_quotas, hashes, [:ems_ref, :name])
   end
 
   def save_key_pairs_inventory(ems, hashes, target = nil)

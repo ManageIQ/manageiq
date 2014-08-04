@@ -38,6 +38,11 @@
             <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
               <%= h(row.operating_system.try(:product_name)) %>
             </td>
+            <% if row.respond_to?(:cloud_tenant) %>
+              <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
+                <%= h(row.try(:cloud_tenant).try(:name)) %>
+              </td>
+            <% end %>
             <td onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);">
               <%= h(row.platform) %>
             </td>

@@ -144,6 +144,22 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :cloud_tenant            => {
+      :get => %w(
+        index
+        show
+        show_list
+        edit
+      ),
+      :post => %w(
+        button
+        show
+        show_list
+        update
+        panel_control
+      )
+    },
+
     :configuration => {
       # TODO: routes for new/edit/copy buttons need to be revisited
       # TODO: so they can be changed to send up POST request instead of GET

@@ -1,0 +1,85 @@
+<% if @record && @record.name != nil%>
+  <div id="accordion">
+    <div class="panel">
+      <div class="topbar">
+        <%= link_to(h(@record.name.length < trunc_at ? @record.name : @record.name[0...trunc_to] + "..."),
+                          {:action=>'panel_control', :panel=>'icon'},
+                          :remote=>true,
+                          :title=>"#{h(@record.name)}") %>
+      </div>
+      <div id="icon" style="display:<%= @panels["icon"] ? '' : 'none' %>">
+        <div class="panecontent">
+              <%= render(:partial=>"layouts/quadicon",
+                          :locals=>{:mode=>:icon,
+                          :item=>@record,
+                          :size=>72,
+                          :typ=>:listnav} )
+              %>
+        </div>
+      </div>
+
+      <div class="topbar">
+        <%= link_to("Properties", {:action=>'panel_control', :panel=>'ems_prop'}, :remote=>true) %>
+      </div>
+
+      <div id="ems_prop" style="display:<%= @panels["ems_prop"] ? '' : 'none' %>">
+        <div class="panecontent">
+          <%= link_to_with_icon('Summary', {:action=>'show', :id=>@record, :display=>'main'},
+                                :title=>"Show Summary") %>
+        </div>
+      </div>
+
+      <div class="topbar">
+        <%= link_to("Relationships", {:action=>'panel_control', :panel=>'ems_rel'}, :remote=>true) %>
+      </div>
+
+      <div id="ems_rel" style="display:<%= @panels["ems_rel"] ? '' : 'none' %>">
+        <div class="panecontent">
+
+          <% if role_allows(:feature=>"ems_cloud_show")  %>
+            <% if @record.ext_management_system %>
+              <%= link_to_with_icon("#{ui_lookup(:table=>"ext_management_systems")}: #{@record.ext_management_system.name}",
+                                    {:controller=>"ems_cloud", :action=>'show',
+                                     :id=>@record.ext_management_system.id.to_s},
+                                    {:title=>"Show this Cloud Tenant's parent #{ui_lookup(:table=>"ems_cloud")}"},
+                                    '/images/icons/16/link_external.gif') %>
+            <% end %>
+		<% end %>
+
+          <% if role_allows(:feature=>"security_group_show_list") %>
+            <% unless @record.number_of(:security_groups) == 0 %>
+              <%= link_to_with_icon("Security Groups (#{@record.number_of(:security_groups)})",
+                                    {:action=>'show', :id=>@record, :display=>'security_groups'},
+                                    :title=>"Show all Security Groups") %>
+            <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              Security Groups (<%= @record.number_of(:security_groups) %>)<br/>
+            <% end %>
+          <% end %>
+
+          <% if role_allows(:feature=>"vm_show_list") %>
+            <% unless @record.number_of(:vms) == 0 %>
+              <%= link_to_with_icon("Instances (#{@record.number_of(:vms)})",
+                                    {:action=>'show', :id=>@record, :display=>'instances'},
+                                    :title=>"Show all Instances") %>
+            <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              Instances (<%= @record.number_of(:vms) %>)<br/>
+            <% end %>
+          <% end %>
+
+          <% if role_allows(:feature=>"miq_template_show_list") %>
+            <% unless @record.number_of(:miq_templates) == 0 %>
+              <%= link_to_with_icon("Images (#{@record.number_of(:miq_templates)})",
+                                    {:action=>'show', :id=>@record, :display=>'images'},
+                                    :title=>"Show all Images") %>
+            <% else %>
+              <img src="/images/icons/16/link_none.gif"/>
+              Images (<%= @record.number_of(:miq_templates) %>)<br/>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
