@@ -41,6 +41,11 @@ class VDDKFactory
   end
 
   def connect(connect_parms)
+    load_error = FFI::VixDiskLib::API.load_error
+    unless load_error.nil?
+      @shutdown = true
+      raise VixDiskLibError, load_error
+    end
     @running = true
     VixDiskLibServer.connect(connect_parms)
   end
