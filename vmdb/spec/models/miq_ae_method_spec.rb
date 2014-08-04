@@ -107,4 +107,17 @@ describe MiqAeMethod do
       expect(miq_ae_method.to_export_xml).to eq(expected_xml.chomp)
     end
   end
+
+  it "#domain" do
+    d1 = FactoryGirl.create(:miq_ae_domain, :name => 'dom1', :priority => 10, :system => true)
+    n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    m1 = FactoryGirl.create(:miq_ae_method,
+                            :class_id => c1.id,
+                            :name     => "foo_method",
+                            :scope    => "instance",
+                            :language => "ruby",
+                            :location => "inline")
+    m1.domain.name.should eql('dom1')
+  end
 end

@@ -71,4 +71,8 @@ describe MiqAeNamespace do
     MiqAeNamespace.find_by_fqname('').should be_nil
   end
 
+  it "#domain" do
+    n1 = MiqAeNamespace.find_or_create_by_fqname("System/TEST")
+    n1.domain.name.should eql('System')
+  end
 end

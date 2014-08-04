@@ -43,6 +43,10 @@ class MiqAeMethod < ActiveRecord::Base
     "#{self.ae_class.fqname}/#{self.name}"
   end
 
+  def domain
+    ae_class.domain
+  end
+
   def self.default_method_text
     <<-DEFAULT_METHOD_TEXT
 #

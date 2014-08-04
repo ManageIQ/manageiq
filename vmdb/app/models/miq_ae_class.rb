@@ -76,6 +76,10 @@ class MiqAeClass < ActiveRecord::Base
     return self.class.fqname(self.namespace, self.name)
   end
 
+  def domain
+    ae_namespace.domain
+  end
+
   def namespace
     return nil if self.ae_namespace.nil?
     return self.ae_namespace.fqname
