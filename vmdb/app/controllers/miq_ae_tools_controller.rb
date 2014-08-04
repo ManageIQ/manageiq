@@ -259,6 +259,7 @@ class MiqAeToolsController < ApplicationController
         @resolve[:new][:target_id] = nil
       end
     end
+    @resolve[:new][:target_id] = nil if params[:target_class] == ""
     @resolve[:new][:target_id] = params[:target_id] if params.has_key?(:target_id)
     @resolve[:button_text] = params[:button_text] if params.has_key?(:button_text)
     @resolve[:button_number] = params[:button_number] if params.has_key?(:button_number)
