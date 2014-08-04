@@ -8,7 +8,10 @@ class OpenstackResourceQuota < CloudResourceQuota
   VMS_POWER_FILTER = "power_state != 'unknown'"
 
   def cores_quota_used
-    Hardware.joins(:vm).where(:vms => {:cloud_tenant_id => cloud_tenant_id}).where("vms.#{VMS_POWER_FILTER}").sum(:numvcpus)
+    Hardware.joins(:vm).
+      where(:vms => {:cloud_tenant_id => cloud_tenant_id}).
+      where("vms.#{VMS_POWER_FILTER}").
+      sum(:numvcpus)
   end
 
   def instances_quota_used
@@ -16,7 +19,10 @@ class OpenstackResourceQuota < CloudResourceQuota
   end
 
   def ram_quota_used
-    Hardware.joins(:vm).where(:vms => {:cloud_tenant_id => cloud_tenant_id}).where("vms.#{VMS_POWER_FILTER}").sum(:memory_cpu)
+    Hardware.joins(:vm).
+      where(:vms => {:cloud_tenant_id => cloud_tenant_id}).
+      where("vms.#{VMS_POWER_FILTER}").
+      sum(:memory_cpu)
   end
 
   # nova
@@ -42,7 +48,11 @@ class OpenstackResourceQuota < CloudResourceQuota
 
   # neutron
   def security_group_rule_quota_used
-    FirewallRule.joins("inner join security_groups on security_groups.id = firewall_rules.resource_id and firewall_rules.resource_type = 'SecurityGroup'").where("security_groups.cloud_tenant_id" => cloud_tenant_id).count
+    join = "inner join security_groups on security_groups.id = firewall_rules.resource_id "
+    join += "and firewall_rules.resource_type = 'SecurityGroup'"
+    FirewallRule.joins(join).
+      where("security_groups.cloud_tenant_id" => cloud_tenant_id).
+      count
   end
 
   # nova
