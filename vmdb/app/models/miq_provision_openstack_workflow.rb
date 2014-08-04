@@ -10,11 +10,11 @@ class MiqProvisionOpenstackWorkflow < MiqProvisionCloudWorkflow
 
   def allowed_cloud_tenants(options={})
     source = load_ar_obj(get_source_vm)
-    ems = source.try(:ext_management_system)
-
-    return {} unless ems
-
-    ems.cloud_tenants.each_with_object({}) { |f, h| h[f.id] = f.name }
+    if ems = source.try(:ext_management_system)
+      ems.cloud_tenants.each_with_object({}) { |f, h| h[f.id] = f.name }
+    else
+      {}
+    end
   end
 
   private
