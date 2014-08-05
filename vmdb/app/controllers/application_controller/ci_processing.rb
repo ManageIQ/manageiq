@@ -788,7 +788,7 @@ module ApplicationController::CiProcessing
     assert_privileges("#{controller_name}_discover")
     session[:type] = params[:discover_type] if params[:discover_type]
     title = set_discover_title(session[:type],request.parameters[:controller])
-    if params["cancel.x"]
+    if params["cancel"]
       redirect_to :action => 'show_list', :flash_msg=>I18n.t("flash.edit.task_cancelled", :task=>"#{title} Discovery")
     end
     @userid = ""
@@ -801,7 +801,7 @@ module ApplicationController::CiProcessing
     end
     discover_type = Array.new
     @discover_type_checked = Array.new        # to keep track of checked items when start button is pressed
-    if params["start.x"]
+    if params["start"]
       audit = {:event=>"ms_and_host_discovery", :target_class=>"Host", :userid => session[:userid]}
       if request.parameters[:controller] != "ems_cloud"
         from_ip = params[:from_first].to_s + "." + params[:from_second].to_s + "." + params[:from_third].to_s + "." + params[:from_fourth]

@@ -2,41 +2,67 @@
   <% if entry == "new" %>
     <tr id="new_tr" class="<%= cycle('row0', 'row1') %>">
       <td>
-        <%= image_submit_tag("/images/toolbars/import.png",
-                             :class=>"rollover small",
-                             :id=>"accept", :name=>"accept", :alt=>"Add this LDAP Server", :title=>"Add this LDAP Server") %>
+        <%= button_tag("Import",
+                       :class => "btn btn-primary",
+                       :id    => "accept", 
+                       :name  => "accept", 
+                       :alt   => "Add this LDAP Server", 
+                       :title => "Add this LDAP Server",
+                       :type  => "submit") 
+        %>
       </td>
       <td class="all">
-        <%= text_field("entry", "hostname", :maxlength=>MAX_NAME_LEN) %>
+        <%= text_field("entry", "hostname", :maxlength => MAX_NAME_LEN) %>
       </td>
       <td>
-        <% url1 = url_for(:action =>'ldap_entry_changed', :id=>"#{@edit[:ldap_domain_id] || "new"}") %>
+        <% url1 = url_for(:action => 'ldap_entry_changed', 
+                          :id     => "#{@edit[:ldap_domain_id] || "new"}")
+        %>
         <%= select_tag('entry_mode',
                        options_for_select([["LDAP","ldap"],["LDAPS","ldaps"]],"ldaps"),
-                       "data-miq_observe"=>{:url=>url1}.to_json) %>
+                       "data-miq_observe"=>{:url=>url1}.to_json) 
+        %>
       </td>
       <td class="all" >
-        <%= text_field("entry", "port", :maxlength=>6, :value=>"636") %>
+        <%= text_field("entry", "port", 
+                       :maxlength => 6, 
+                       :value     => "636") 
+        %>
       </td>
     </tr>
   <% else %>
     <tr id="<%= "#{entry[:id]}_tr" %>" class="<%= cycle('row0', 'row1') %>">
       <td>
-        <%= image_submit_tag("/images/toolbars/import.png",
-                             :class=>"rollover small",
-                             :id=>"accept", :name=>"accept", :alt=>"Update this LDAP Server", :title=>"Update this LDAP Server",:domain_id=>domain_id) %>
+        <%= button_tag("Import",
+                       :class     => "btn btn-primary",
+                       :id        => "accept", 
+                       :name      => "accept", 
+                       :alt       => "Update this LDAP Server", 
+                       :title     => "Update this LDAP Server",
+                       :domain_id => domain_id,
+                       :type      => "submit") 
+        %>
       </td>
       <td class="all">
-        <%= text_field("entry", "hostname", :maxlength=>MAX_NAME_LEN, "value"=>entry[:hostname]) %>
+        <%= text_field("entry", "hostname", 
+                       :maxlength => MAX_NAME_LEN, 
+                       "value"    => entry[:hostname])
+        %>
       </td>
       <td>
-        <% url1 = url_for(:action =>'ldap_entry_changed', :id=>"#{@edit[:ldap_domain_id] || "new"}") %>
+        <% url1 = url_for(:action => 'ldap_entry_changed', 
+                          :id     => "#{@edit[:ldap_domain_id] || "new"}")
+        %>
         <%= select_tag('entry_mode',
                        options_for_select([["LDAP","ldap"],["LDAPS","ldaps"]],entry[:mode]),
-                       "data-miq_observe"=>{:url=>url1}.to_json) %>
+                       "data-miq_observe" => {:url => url1}.to_json)
+        %>
       </td>
       <td class="all">
-        <%= text_field("entry", "port", :maxlength=>6, "value"=>entry[:port]) %>
+        <%= text_field("entry", "port", 
+                       :maxlength => 6, 
+                       "value"    => entry[:port])
+        %>
       </td>
       <%= hidden_field("entry", "idx", "value"=>entry_idx) %>
     </tr>
@@ -67,13 +93,18 @@
         <%= entry[:port] %>
       </td>
       <td title="Click to update this LDAP Server">
-        <%= link_to(image_submit_tag('/images/formbuttons/verify.png',
-                              :class=>"listbutton",:alt=>"Validate the LDAP Settings by binding with the Host"),
-                    {:action=>"ldap_domain_edit", :button=>"verify", :id=>entry_idx, :domain_id=>domain_id},
-                    "data-miq_sparkle_on" => true,
+        <%= link_to(button_tag('Validate',
+                               :class => "btn btn-primary",
+                               :alt   => "Validate the LDAP Settings by binding with the Host"),
+                    {:action    => "ldap_domain_edit", 
+                     :button    => "verify", 
+                     :id        => entry_idx, 
+                     :domain_id => domain_id},
+                    "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
-                    :remote=>true,
-                    :title=>"Validate the LDAP Settings by binding with the Host")
+                    :remote                => true,
+                    :title                 => "Validate the LDAP Settings by binding with the Host",
+                    :type                  => "submit")
         %>
       </td>
     </tr>

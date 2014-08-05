@@ -132,13 +132,13 @@ describe ApplicationController do
       from_second = "1"
       from_third = "1"
       controller.instance_variable_set(:@_params,
-                                            :from_first => from_first,
-                                            :from_second => from_second,
-                                            :from_third => from_third,
-                                            :from_fourth => "1",
-                                            :to_fourth => "0",
-                                            "discover_type_virtualcenter" => "1",
-                                            "start.x" => "45"
+                                       :from_first                   => from_first,
+                                       :from_second                  => from_second,
+                                       :from_third                   => from_third,
+                                       :from_fourth                  => "1",
+                                       :to_fourth                    => "0",
+                                       "discover_type_virtualcenter" => "1",
+                                       "start"                       => "45"
                                       )
       controller.stub(:drop_breadcrumb)
       controller.should_receive(:render)
