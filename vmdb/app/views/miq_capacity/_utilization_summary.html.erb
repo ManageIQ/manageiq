@@ -11,8 +11,9 @@
                             :chart_data   => @sb[:util][:chart_data]["utilts"], 
                             :perf_options => @sb[:util][:options]}) 
     %>
+    <br clear="all">
+    <hr>
     <% if @sb[:util][:summary][:cpu] && !@sb[:util][:summary][:cpu].empty? %>
-      <hr>
       <table class="style3">
         <thead>
           <tr><th colspan="2" align="left">CPU</th></tr>
@@ -77,5 +78,6 @@
   <% if @sb[:util] &&@sb[:util][:trend_rpt] %>
     <hr>
     * Information shown is based on available trend data from <%= format_timezone(@sb[:util][:options][:trend_start],@sb[:util][:options][:tz],"date") %> to <%= format_timezone(@sb[:util][:options][:trend_end],@sb[:util][:options][:tz],"date") %> in the <%= @sb[:util][:options][:time_profile_tz] || @sb[:util][:options][:tz] %> time zone.
+    <p></p><br/>
   <% end %>
 </div>

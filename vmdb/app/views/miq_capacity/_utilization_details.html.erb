@@ -22,7 +22,9 @@
   <% end %>
 
   <% if @sb[:util] &&@sb[:util][:trend_rpt] %>
+    <br clear="all"/>
     <hr>
     * Information shown is based on available trend data from <%= format_timezone(@sb[:util][:options][:trend_start],@sb[:util][:options][:tz],"date") %> to <%= format_timezone(@sb[:util][:options][:trend_end],@sb[:util][:options][:tz],"date") %> in the <%= @sb[:util][:options][:time_profile_tz] || @sb[:util][:options][:tz] %> time zone.
+    <p></p><br/>
   <% end %>
 </div>
