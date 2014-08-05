@@ -1194,10 +1194,6 @@ module OpsController::OpsRbac
       add_flash(I18n.t("flash.ops.settings.user_group_assign_role"), :error)
       valid = false
     end
-    if params[:button] == "add" && MiqGroup.find_by_description(@edit[:new][:description])
-      add_flash(I18n.t("flash.already_taken", :field=>"Description"), :error)
-      valid = false
-    end
     return valid
   end
 end
