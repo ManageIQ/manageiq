@@ -9,3 +9,15 @@
 *Gemfile.appliance_excludes.rb
 *test.rb
 .git
+*vmdb/Gemfile.lock
+*vmdb/.bundle
+*vmdb/bin
+*vmdb/config/database.yml
+*vmdb/log/*.log
+*vmdb/tmp/miq_temp
+*lib/disk/modules/MiqBlockDevOps/Makefile
+*lib/disk/modules/MiqBlockDevOps/MiqBlockDevOps.o
+*lib/disk/modules/MiqBlockDevOps.so
+*lib/disk/modules/MiqLargeFileLinux.d/Makefile
+*lib/disk/modules/MiqLargeFileLinux.d/MiqLargeFileLinux.o
+*lib/disk/modules/ruby1.9.3
