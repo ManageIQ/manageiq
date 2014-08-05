@@ -165,42 +165,11 @@ class MiqAeClassController < ApplicationController
     @sb[:row_selected] = nil if params[:action] == "tree_select"
     case id[0]
       when "aec"
-        @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
-        @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
-        @temp[:ae_class_id] = @ae_class.id
-        if @ae_class.nil?
-          set_root_node
-        else
-          @temp[:grid_inst_list_xml] = build_details_grid(@ae_class.ae_instances)
-          @temp[:combo_xml] = get_combo_xml(@ae_class.ae_fields)
-          @temp[:dtype_combo_xml] = get_dtype_combo_xml(@ae_class.ae_fields)    # passing fields because that's how many combo boxes we need
-          @temp[:grid_methods_list_xml] = build_details_grid(@ae_class.ae_methods)
-          set_right_cell_text(x_node,@ae_class)
-        end
+        get_class_node_info(id)
       when "aei"
-        @record = MiqAeInstance.find_by_id(from_cid(id[1]))
-        if @record.nil?
-          set_root_node
-        else
-          @ae_class             = @record.ae_class
-          @temp[:ae_class_id]   = @ae_class.id
-          @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
-          @sb[:active_tab]      = "instances"
-          set_right_cell_text(x_node, @record)
-        end
+        get_instance_node_info(id)
       when "aem"
-        @record = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
-        if @ae_method.nil?
-          set_root_node
-        else
-          @ae_class = @ae_method.ae_class
-          @temp[:ae_class_id] = @ae_class.id
-          inputs = @ae_method.inputs
-          @temp[:grid_methods_xml] = inputs.blank? ? nil : build_methods_grid(inputs)
-          @sb[:squash_state] = true
-          @sb[:active_tab] = "methods"
-          set_right_cell_text(x_node, @ae_method)
-        end
+        get_method_node_info(id)
       when "aen"
         @record = MiqAeNamespace.find_by_id(from_cid(id[1]))
         if @record.nil?
@@ -269,10 +238,12 @@ class MiqAeClassController < ApplicationController
     return nil if existing_node.nil?
     children = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], existing_node)
     # set x_node after building tree nodes so parent node of new nodes can be selected in the tree.
-    if @record.kind_of?(MiqAeClass)
-      self.x_node = "aen-#{to_cid(@record.namespace_id)}"
-    else
-      self.x_node = "aec-#{to_cid(@record.class_id)}"
+    unless params[:action] == "x_show"
+      if @record.kind_of?(MiqAeClass)
+        self.x_node = "aen-#{to_cid(@record.namespace_id)}"
+      else
+        self.x_node = "aec-#{to_cid(@record.class_id)}"
+      end
     end
     {:key => existing_node, :children => children}
   end
@@ -305,7 +276,8 @@ class MiqAeClassController < ApplicationController
 
     @in_a_form = @in_a_form_fields = @in_a_form_props = false if params[:button] == "cancel" ||
                     (["save","add"].include?(params[:button]) && replace_trees)
-    add_nodes = open_parent_nodes(@record) if params[:button] == "copy"
+    add_nodes = open_parent_nodes(@record) if params[:button] == "copy" ||
+                                              params[:action] == "x_show"
     get_node_info(x_node) if !@in_a_form && @button != "reset"
     ae_tree = build_ae_tree if replace_trees
 
@@ -1979,6 +1951,12 @@ class MiqAeClassController < ApplicationController
     session[:edit] = @edit
   end
 
+  def x_show
+    typ, id = params[:id].split("-")
+    @record = X_TREE_NODE_PREFIXES[typ].constantize.find_by_id(from_cid(id))
+    tree_select
+  end
+
 private
 
   def initial_setup_for_instances_form_vars(ae_inst_id)
@@ -2087,7 +2065,7 @@ private
     selected_items = {}
     ids.each_with_index do |id, i|
       record = typ.find_by_id(from_cid(id))
-      selected_items[record.id] = record.name
+      selected_items[record.id] = record.display_name.blank? ? record.name : "#{record.display_name} (#{record.name})"
       @record = record if i == 0
     end
     MiqAeDomain.all_unlocked.collect { |domain| domains[domain.id] = domain_display_name(domain) }
@@ -2816,6 +2794,63 @@ private
     domain        = MiqAeNamespace.find_by_id(domain_id)
     domain.system = lock_value
     domain.save!
+  end
+
+  def get_instance_node_info(id)
+    @record = MiqAeInstance.find_by_id(from_cid(id[1]))
+    if @record.nil?
+      set_root_node
+    else
+      @ae_class             = @record.ae_class
+      @temp[:ae_class_id]   = @ae_class.id
+      @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
+      @sb[:active_tab]      = "instances"
+      domain_overrides
+      set_right_cell_text(x_node, @record)
+    end
+  end
+
+  def get_method_node_info(id)
+    @record = @ae_method = MiqAeMethod.find_by_id(from_cid(id[1]))
+    if @record.nil?
+      set_root_node
+    else
+      @ae_class = @record.ae_class
+      @temp[:ae_class_id] = @ae_class.id
+      inputs = @record.inputs
+      @temp[:grid_methods_xml] = inputs.blank? ? nil : build_methods_grid(inputs)
+      @sb[:squash_state] = true
+      @sb[:active_tab] = "methods"
+      domain_overrides
+      set_right_cell_text(x_node, @record)
+    end
+  end
+
+  def get_class_node_info(id)
+    @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
+    @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
+    @temp[:ae_class_id] = @record.id
+    if @record.nil?
+      set_root_node
+    else
+      @temp[:grid_inst_list_xml] = build_details_grid(@record.ae_instances)
+      @temp[:combo_xml] = get_combo_xml(@record.ae_fields)
+      # passing fields because that's how many combo boxes we need
+      @temp[:dtype_combo_xml] = get_dtype_combo_xml(@record.ae_fields)
+      @temp[:grid_methods_list_xml] = build_details_grid(@record.ae_methods)
+      domain_overrides
+      set_right_cell_text(x_node, @record)
+    end
+  end
+
+  def domain_overrides
+    @domain_overrides = {}
+    typ, _ = x_node.split('-')
+    overrides = X_TREE_NODE_PREFIXES[typ].constantize.get_homonymic_across_domains(@record.fqname)
+    overrides.each do |obj|
+      display_name, id = domain_display_name_using_name(obj, @record.domain.name)
+      @domain_overrides[display_name] = id
+    end
   end
 
   def get_session_data

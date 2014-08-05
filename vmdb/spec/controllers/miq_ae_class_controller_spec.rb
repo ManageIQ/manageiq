@@ -173,4 +173,163 @@ describe MiqAeClassController do
     end
 
   end
+
+  context "get selected Class/Instance/Method record back" do
+    let(:miq_ae_domain) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname", :id => 1) }
+    let(:miq_ae_domain2) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname2", :id => 2) }
+
+    let(:miq_ae_class) { active_record_instance_double("MiqAeClass",
+                                                       :id           => 1,
+                                                       :fqname       => "cls_fqname",
+                                                       :display_name => "FOO",
+                                                       :name         => "foo",
+                                                       :ae_fields    => [],
+                                                       :ae_instances => [],
+                                                       :ae_methods   => [],
+                                                       :domain       => miq_ae_domain2
+      )
+    }
+
+    let(:miq_ae_instance) { active_record_instance_double("MiqAeInstance",
+                                                          :id           => 123,
+                                                          :display_name => "some name",
+                                                          :name         => "some_name",
+                                                          :fqname       => "fqname",
+                                                          :created_on   => Time.now,
+                                                          :updated_by   => "some_user",
+                                                          :domain       => miq_ae_domain
+      )
+    }
+
+    let(:miq_ae_method) { active_record_instance_double("MiqAeMethod",
+                                                        :id           => 123,
+                                                        :display_name => "some name",
+                                                        :inputs       => [],
+                                                        :name         => "some_name",
+                                                        :fqname       => "fqname",
+                                                        :created_on   => Time.now,
+                                                        :updated_by   => "some_user",
+                                                        :domain       => miq_ae_domain
+      )
+    }
+
+    let(:override) { active_record_instance_double("MiqAeClass",
+                                                   :fqname => "another_fqname/fqname",
+                                                   :id     => 1,
+                                                   :domain => miq_ae_domain
+      )
+    }
+    let(:override2) { active_record_instance_double("MiqAeClass",
+                                                    :fqname => "another_fqname2/fqname",
+                                                    :id     => 2,
+                                                    :domain => miq_ae_domain2
+      )
+    }
+
+    before do
+      MiqAeDomain.stub(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
+      MiqAeDomain.stub(:find_by_name).with("another_fqname2").and_return(miq_ae_domain2)
+    end
+
+    context "#get_instance_node_info" do
+      context "when record does not exist" do
+        it "sets active node back to root" do
+          id = %w(aei some_id)
+          controller.instance_variable_set(:@sb,
+                                           :active_tree => :ae_tree,
+                                           :trees       => {:ae_tree => {:active_node => "aei-some_id"}})
+          controller.instance_variable_set(:@temp, {})
+          controller.send(:get_instance_node_info, id)
+          assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
+        end
+      end
+
+      context "when the record exists" do
+        before do
+          MiqAeInstance.stub(:find_by_id).with(123).and_return(miq_ae_instance)
+          miq_ae_instance.stub(:ae_class).and_return(miq_ae_class)
+          MiqAeInstance.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+        end
+
+        it "return instance record and check count of override instances being returned" do
+          id = ["aei", miq_ae_instance.id]
+          controller.instance_variable_set(:@sb,
+                                           :active_tree => :ae_tree,
+                                           :trees       => {:ae_tree => {:active_node => id.join("-")}})
+          controller.instance_variable_set(:@temp, {})
+          controller.send(:get_instance_node_info, id)
+          assigns(:record).name.should eq(miq_ae_instance.name)
+          assigns(:domain_overrides).count.should eq(2)
+          assigns(:right_cell_text).should include("Automate Instance [#{miq_ae_instance.display_name}")
+        end
+      end
+    end
+
+    context "#get_class_node_info" do
+      context "when record does not exist" do
+        it "sets active node back to root" do
+          id = %w(aec some_id)
+          controller.instance_variable_set(:@sb,
+                                           :active_tree => :ae_tree,
+                                           :trees       => {:ae_tree => {:active_node => "aec-some_id"}})
+          controller.instance_variable_set(:@temp, {})
+          controller.send(:get_instance_node_info, id)
+          assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
+        end
+      end
+
+      context "when the record exists" do
+        before do
+          MiqAeClass.stub(:find_by_id).with(1).and_return(miq_ae_class)
+          MiqAeClass.stub(:get_homonymic_across_domains).with("cls_fqname").and_return([override, override2])
+        end
+
+        it "returns class record and check count of override classes being returned" do
+          id = ["aec", miq_ae_class.id]
+          controller.instance_variable_set(:@sb,
+                                           :active_tree => :ae_tree,
+                                           :trees       => {:ae_tree => {:active_node => id.join("-")}})
+          controller.instance_variable_set(:@temp, {})
+          controller.send(:get_class_node_info, id)
+          assigns(:record).name.should eq(miq_ae_class.name)
+          assigns(:domain_overrides).count.should eq(2)
+          assigns(:right_cell_text).should include(miq_ae_class.display_name)
+        end
+      end
+    end
+
+    context "#get_method_node_info" do
+      context "when record does not exist" do
+        it "sets active node back to root" do
+          id = %w(aem some_id)
+          controller.instance_variable_set(:@sb,
+                                           :active_tree => :ae_tree,
+                                           :trees       => {:ae_tree => {:active_node => "aem-some_id"}})
+          controller.instance_variable_set(:@temp, {})
+          controller.send(:get_instance_node_info, id)
+          assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
+        end
+      end
+
+      context "when the record exists" do
+        before do
+          MiqAeMethod.stub(:find_by_id).with(123).and_return(miq_ae_method)
+          miq_ae_method.stub(:ae_class).and_return(miq_ae_class)
+          MiqAeMethod.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+        end
+
+        it "returns method record and check count of override methods being returned" do
+          id = ["aem", miq_ae_method.id]
+          controller.instance_variable_set(:@sb,
+                                           :active_tree => :ae_tree,
+                                           :trees       => {:ae_tree => {:active_node => id.join("-")}})
+          controller.instance_variable_set(:@temp, {})
+          controller.send(:get_method_node_info, id)
+          assigns(:record).name.should eq(miq_ae_method.name)
+          assigns(:domain_overrides).count.should eq(2)
+          assigns(:right_cell_text).should include("Automate Method [#{miq_ae_method.display_name}")
+        end
+      end
+    end
+  end
 end

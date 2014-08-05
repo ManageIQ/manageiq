@@ -31,6 +31,7 @@
           <td class="wide"><%= h(format_timezone(@ae_method.created_on,Time.zone,"gtl")) %></td>
         </tr>
       </table>
+    <%= render :partial => "domain_overrides", :locals=>{:node_prefix=>"aem", :model => "Method"}  %>
       <p class="legend">Data</p>
         <% if @ae_method.location == "inline" %>
           <%= text_area("method1",

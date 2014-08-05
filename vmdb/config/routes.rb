@@ -584,6 +584,7 @@ Vmdb::Application.routes.draw do
         x_button
         x_history
         x_settings_changed
+        x_show
       )
     },
     :miq_ae_customization => {
