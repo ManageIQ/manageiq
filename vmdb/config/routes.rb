@@ -662,6 +662,7 @@ Vmdb::Application.routes.draw do
         import_export
         log
         resolve
+        review_import
       ),
       :post => %w(
         button
@@ -669,6 +670,7 @@ Vmdb::Application.routes.draw do
         reset_datastore
         resolve
         upload
+        upload_import_file
         wait_for_task
       )
     },

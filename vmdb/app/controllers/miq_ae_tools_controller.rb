@@ -94,6 +94,29 @@ class MiqAeToolsController < ApplicationController
     render :action=>"show"
   end
 
+  def upload_import_file
+    redirect_options = {:action => :review_import}
+
+    upload_file = params.fetch_path(:upload, :file)
+
+    if upload_file.nil?
+      add_flash("Use the browse button to locate an import file", :warning)
+    else
+      import_file_upload_id = automate_import_service.store_for_import(upload_file.read)
+      add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
+      redirect_options[:import_file_upload_id] = import_file_upload_id
+    end
+
+    redirect_options[:message] = @flash_array.first.to_json
+
+    redirect_to redirect_options
+  end
+
+  def review_import
+    @import_file_upload_id = params[:import_file_upload_id]
+    @message = params[:message]
+  end
+
   # Import classes
   def upload
     if params[:upload] && !params[:upload][:datastore].blank?
@@ -144,6 +167,10 @@ class MiqAeToolsController < ApplicationController
   end
 
   private ###########################
+
+  def automate_import_service
+    @automate_import_service ||= AutomateImportService.new
+  end
 
   def ws_text_from_xml(xml, depth=0)
     txt = ""
