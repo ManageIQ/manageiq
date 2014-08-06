@@ -31,21 +31,31 @@
               <% end %>
             </td>
           </tr>
+          <tr>
+            <td class="key">Request Type</td>
+            <td class="wide" nowrap>
+              <%= h(@miq_request.request_type_display) %>
+            </td>
+          </tr>
         </table>
       </dd>
       <dd>
         <table class="style1">
           <tr>
-            <td class="key">Submitted On</td>
+            <td class="key">Description</td>
+            <td class="wide" nowrap><%= h(@miq_request.description) %></td>
+          </tr>
+          <tr>
+            <td class="key">Last Message</td>
+            <td class="wide"><%= h(@miq_request.message) %></td>
+          </tr>
+          <tr>
+            <td class="key">Created On</td>
             <td class="wide" nowrap><%= h(format_timezone(@miq_request.created_on)) %></td>
           </tr>
           <tr>
             <td class="key">Last Update</td>
             <td class="wide" nowrap><%= h(format_timezone(@miq_request.updated_on)) %></td>
-          </tr>
-          <tr>
-            <td class="key">Last Message</td>
-            <td class="wide"><%= h(@miq_request.message) %></td>
           </tr>
           <tr>
             <td class="key">Completed</td>
