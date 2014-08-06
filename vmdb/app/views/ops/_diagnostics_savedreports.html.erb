@@ -1,8 +1,11 @@
 	<%= render :partial => "layouts/flash_msg" %>
-	<fieldset>
+
 		<p class="legend">Report Results by User</p>
 		<% if @sb[:orphaned_records].blank? %>
-			No Records Found
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+        <strong>No Records Found</strong>
+      </div>
 		<% else %>
 			<table class="style3">
 				<thead>
@@ -14,7 +17,7 @@
 				</thead>
 				<tbody>
 					<% for rec in @sb[:orphaned_records] %>
-						<tr class="<%= cycle('row0', 'row1') %>">
+						<tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
 							<td onclick="<%= remote_function(:url=>{:action=>'orphaned_records_delete', :userid=>rec[:userid]}, :confirm=>"Are you sure you want to delete orphaned records for user '#{rec[:userid]}'?") %>" title="Click to delete Orphaned Records for this user">
 								<%= image_tag("/images/toolbars/delete.png", :class=>"rollover small") %>
 							</td>
@@ -23,8 +26,8 @@
 						</tr>
 					<% end %>
 				</tbody>
-				<tfoot><tr><td colspan="40"></td></tr></tfoot>
+
 			</table>
 		<% end %>
-	</fieldset>
+
 
