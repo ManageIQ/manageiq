@@ -34,6 +34,7 @@ class MiqPassword
 
       decrypt_method = "decrypt_version_#{ver}"
       raise "unknown encryption version, '#{ver}'" if ver.nil? || !self.respond_to?(decrypt_method, true)
+      raise "no encryption key v#{ver}_key" unless self.class.send("v#{ver}_key")
 
       send(decrypt_method, enc)
     end
