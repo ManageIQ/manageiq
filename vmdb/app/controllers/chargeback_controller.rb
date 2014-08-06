@@ -605,23 +605,18 @@ class ChargebackController < ApplicationController
     @edit[:current] = HashWithIndifferentAccess.new
     @edit[:current_assignment] = ChargebackRate.get_assignments(x_node.split('-').last)
     unless @edit[:current_assignment].empty?
-      ems_classes = EmsInfra::SUBCLASSES + EmsCloud::SUBCLASSES
-      kls = @edit[:current_assignment][0][:object].class
-
-      @edit[:new][:cbshow_typ] =  case kls.name
-                                  when "NilClass"
-                                    "#{@edit[:current_assignment][0][:tag][1]}-tags"
-                                  when "MiqEnterprise"
+      @edit[:new][:cbshow_typ] =  case @edit[:current_assignment][0][:object]
+                                  when EmsCluster
+                                    "ems_cluster"
+                                  when ExtManagementSystem
+                                    "ext_management_system"
+                                  when MiqEnterprise
                                     "enterprise"
-                                  when "EmsCluster"
-                                    kls.name.underscore
+                                  when NilClass
+                                    "#{@edit[:current_assignment][0][:tag][1]}-tags"
                                   else
-                                    if ems_classes.include?(kls.to_s)
-                                      kls.base_class.name.underscore
-                                    else
-                                      kls.name.downcase
-                                    end
-                                end
+                                    @edit[:current_assignment][0][:object].class.name.downcase
+                                  end
     end
     if @edit[:new][:cbshow_typ] && @edit[:new][:cbshow_typ].ends_with?("-tags")
       get_categories_all
