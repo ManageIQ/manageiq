@@ -50,26 +50,26 @@
     <% end %>
     <tr>
       <td></td>
-      <td align="right">
+      <td align="left">
         <div id="validate_button_on" style="display:<%= @edit[:new][:password] == @edit[:new][:verify] ? "display" : "none" %>;">
-          <ul id="form_buttons">
-            <li>
-              <%= image_tag('/images/formbuttons/verify.png', :border=>"0", :class=>"button", :style=>"width: 80px; height: 30px",
+
+
+              <%= button_tag('Validate', :class=>"btn btn-primary", 
                             :alt=>"Validate Database Configuration", :title=>"Validate Database Configuration",
                             :onclick=>"miqAjaxButton('#{url_for(:action=>"settings_update",
                                                                 :id=>@sb[:active_tab].split('_').last,
                                                                 :button=>"db_verify")}');")
               %>
-            </li>
-          </ul>
+
+
         </div>
         <div id="validate_button_off" style="display:<%= @edit[:new][:password] != @edit[:new][:verify] ? "display" : "none" %>;">
-          <ul id="form_buttons">
-            <li>
-              <%= image_tag("/images/formbuttons/verify.png", :class=>"dimmed", :style=>"width: 80px; height: 30px",
+
+
+              <%= button_tag("Validate", :class=>"btn btn-primary btn-disabled", 
                             :alt=>"Password fields must match to Validate Database Configuration", :title=>"Password fields must match to Validate Database Configuration",) %>
-            </li>
-          </ul>
+
+
         </div>
       </td>
     </tr>

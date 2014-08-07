@@ -3,14 +3,16 @@
 <% else %>
 	<div id="verify_button_on" style="display:none">
 <% end %>
-	<%#= image_submit_tag("/images/formbuttons/verify.png", :width=>"80", :height=>"35", :id=> "verify", :name=>"verify", :alt=>"Validate", :title=>"Validate the LDAP Settings by binding with the Host", :class=>"button") %>
-	<%= link_to(image_tag('/images/formbuttons/verify.png',
-												:border=>"0", :class=>"formbutton",:alt=>"Validate the LDAP Settings by binding with the Host"),
-											{:action=>"settings_update", :button=>"verify", :id=>id},
-												"data-miq_sparkle_on" => true,
-												"data-miq_sparkle_off" => true,
-												:remote=>true,
-												:title=>"Validate the LDAP Settings by binding with the Host")
+	<%= link_to(button_tag('Validate',
+												 :class => "btn btn-primary",
+												 :alt   => "Validate the LDAP Settings by binding with the Host"),
+							{:action => "settings_update", 
+							 :button => "verify", 
+							 :id     => id},
+							"data-miq_sparkle_on"  => true,
+							"data-miq_sparkle_off" => true,
+							:remote                => true,
+							:title                 => "Validate the LDAP Settings by binding with the Host")
 							%>
 </div>
 
@@ -19,5 +21,8 @@
 <% else %>
 	<div id="verify_button_off">
 <% end %>
-	<%= image_tag("/images/formbuttons/verify.png",	:width=>"80", :height=>"35", :class=>"dimmed formbutton", :title=> "LDAP Host Name and Port fields are needed to perform verification of LDAP Settings", :style=>"opacity: 0.5") %>
+	<%= button_tag("Validate",
+	               :class => "btn btn-primary btn-disabled", 
+	               :title => "LDAP Host Name and Port fields are needed to perform verification of LDAP Settings") 
+	%>
 </div>

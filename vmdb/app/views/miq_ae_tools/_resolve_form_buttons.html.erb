@@ -1,47 +1,47 @@
-<div id="left_cell_bottom" align="center">
+<div id="left_cell_bottom" align="right">
   <div id="throw_on" style="display:<%= @resolve[:throw_ready] ? "display" : "none" %>;">
-    <ul id="form_buttons">
-      <li>
-        <%= link_to(image_tag("/images/formbuttons/submit.png", :border=>"0", :class=>"button",
+
+
+        <%= link_to(button_tag("Submit", :class=>"btn btn-primary",
                               :alt=>"Submit Automation Simulation with the specified options"),
                     {:action=>"resolve", :button=>"throw"},
                     "data-miq_sparkle_on" => true,
                     :remote=>true,
                     :title=>"Submit Automation Simulation with the specified options") %>
-      </li>
-      <li>
-        <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button", :alt=>"Reset all options"),
+
+
+        <%= link_to(button_tag("Reset", :class=>"btn btn-default", :alt=>"Reset all options"),
                     {:action=>"resolve", :button=>"reset"},
                     "data-miq_sparkle_on" => true,
                     "data-miq_sparkle_off" => true,
                     :remote=>true,
                     :title=>"Reset all options") %>
-      </li>
+
       <% if @resolve[:lastaction] == "simulate" %>
-        <%= link_to(image_tag("/images/formbuttons/cancel.png", :border=>"0", :class=>"button", :alt=>"Cancel Simulation to go back to Button details"),
+        <%= link_to(button_tag("Cancel", :class=>"btn btn-default", :alt=>"Cancel Simulation to go back to Button details"),
                     {:action=>"explorer", :button=>"cancel_simulation", :controller=>"miq_ae_customization"},
                     :title=>"Cancel Simulation to go back to Button details") %>
       <% end %>
-    </ul>
+
   </div>
   <div id="throw_off" style="display:<%= @resolve[:throw_ready] ? "none" : "display" %>;">
-    <ul id="form_buttons">
-      <li>
-        <%= image_tag("/images/formbuttons/submit.png",	:class=>"dimmed", :title=>"Starting process must be specified") %>
-      </li>
-      <li>
-        <%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button", :alt=>"Reset all options"),
+
+
+        <%= button_tag("Submit",	:class=>"btn btn-primary btn-disabled", :title=>"Starting process must be specified") %>
+
+
+        <%= link_to(button_tag("Reset",:class=>"btn btn-default", :alt=>"Reset all options"),
                     {:action=>"resolve", :button=>"reset"},
                     "data-miq_sparkle_on" => true,
                     "data-miq_sparkle_off" => true,
                     :remote=>true,
                     :title=>"Reset all options") %>
-      </li>
+
       <% if @resolve[:lastaction] == "simulate" %>
-        <%= link_to(image_tag("/images/formbuttons/cancel.png", :border=>"0", :class=>"button", :alt=>"Cancel Simulation to go back to Button details"),
+        <%= link_to(button_tag("Cancel", :class=>"btn btn-default", :alt=>"Cancel Simulation to go back to Button details"),
                     {:action=>"explorer", :button=>"cancel_simulation", :controller=>"miq_ae_customization"},
                     :title=>"Cancel Simulation to go back to Button details") %>
       <% end %>
-    </ul>
+
   </div>
 </div>
