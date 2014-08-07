@@ -24,66 +24,66 @@
 		<td align="<%= align %>">
       <% if action_url && !export_button %>
         <div id="buttons_on" style="display:<%= session[:changed] ? "display" : "none" %>;">
-					<ul id="form_buttons">
+					
 						<% if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil? %>
-							<li>
-								<%= image_tag('/images/formbuttons/add.png', :border=>"0", :class=>"button",
+							
+								<%= button_tag('Add',  :class=>"btn btn-primary",
 															:alt=>"Add", :title=>"Add",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																	:button=>"add")}', #{serialize});")
 								%>
-							</li>
+							
 						<% else %>
-							<li>
+							
                 <% if apply_button %>
-                  <%= link_to(image_tag("/images/formbuttons/apply.png", :border=>"0",
-                              :class=>"button", :alt=>apply_text),
+                  <%= link_to(button_tag("Apply", 
+                              :class=>"btn btn-primary", :alt=>apply_text),
                               {:action=>action_url, :button=>"apply", :id=>record_id},
                               :title=>apply_text) %>
                 <% elsif export_button %>
-                  <%= link_to(image_tag("/images/formbuttons/export.png", :class=>"button", :border=>"0", :type=>"application/txt",
+                  <%= link_to(button_tag("Export", :class=>"btn btn-primary",  :type=>"application/txt",
                                         :alt=>"Download Report to YAML"),
                               {:action=>action_url},
                               {:title=>"Download Report to YAML"})
                   %>
                 <% elsif download_button %>
                   <% if @build.component.downcase != "smartproxy" %>
-                    <%= image_tag('/images/formbuttons/download.png', :border=>"0", :class=>"button",
+                    <%= button_tag('Download',  :class=>"btn btn-primary",
                                   :alt=>"Download", :title=>download_text,
                                   :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
                                                           :id=>record_id,
                                                           :button=>"download")}');")
                     %>
                   <% else %>
-                    <%= link_to(image_tag("/images/formbuttons/download.png", :class=>"button", :border=>"0", :type=>"application/txt",
+                    <%= link_to(button_tag("Download", :class=>"btn btn-primary",  :type=>"application/txt",
                                           :alt=>"Download SmartProxy version for manual installation"),
                                 {:action=>'fetch_build', :id=>record_id},
                                 {:title=>"Download SmartProxy version for manual installation"})
                     %>
                   <% end %>
 								<% elsif submit_button %>
-									<%= image_tag('/images/formbuttons/submit.png', :border=>"0", :class=>"button",
+									<%= button_tag('Submit',  :class=>"btn btn-primary",
 																:alt=>"Submit", :title=>"Submit",
 																:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																		:id=>record_id,
 																																		:button=>"submit")}');")
 									%>
                 <% elsif continue_button %>
-                  <%= image_tag('/images/formbuttons/continue.png', :border=>"0", :class=>"button",
+                  <%= button_tag('Continue',  :class=>"btn btn-primary",
                                 :alt=>"Submit", :title=>"Continue",
                                 :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
                                                                     :id=>record_id,
                                                                     :button=>"continue")}');")
                   %>
 								<% elsif create_button %>
-									<%= image_tag('/images/formbuttons/create.png', :border=>"0", :class=>"button",
+									<%= button_tag('Create',  :class=>"btn btn-primary",
 																:alt=>"Create", :title=>"Create",
 																:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																		:id=>record_id,
 																																		:button=>"create")}',true);")
 									%>
                 <% elsif copy_button %>
-                  <%= image_tag('/images/formbuttons/copy.png', :border=>"0", :class=>"button",
+                  <%= button_tag('Copy',  :class=>"btn btn-primary",
                                 :alt=>"Copy", :title=>"Copy",
                                 :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
                                                                     :id=>record_id,
@@ -91,15 +91,15 @@
                   %>
 								<% else %>
                   <% unless save_confirm_text %>
-                    <%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
+                    <%= button_tag('Save', :class=>"btn btn-primary",
                                   :alt=>"Save Changes", :title=>"Save Changes",
                                   :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
                                                                       :id=>record_id,
                                                                       :button=>"save")}', #{serialize});")
                     %>
                   <% else %><%# Ask for confirmation before saving %>
-                    <%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
-                                  :style=>"width: 80px; height: 30px",
+                    <%= button_tag('Save',  :class=>"btn primary",
+
                                   :alt=>save_text, :title=>save_text,
                                   :onclick=>"if (confirm('#{save_confirm_text}'))
                                                 miqAjaxButton('#{url_for(:action=>action_url,
@@ -108,140 +108,139 @@
                     %>
                   <% end %>
 							<% end %>
-							</li>
+							
 							<% if !no_reset %>
-								<li>
-									<%= image_tag('/images/formbuttons/reset.png', :border=>"0", :class=>"button",
+								
+									<%= button_tag('Reset',  :class=>"btn btn-default",
 																:alt=>"Reset Changes", :title=>"Reset Changes",
 																:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																		:id=>record_id,
 																																		:button=>"reset")}');")
 									%>
-								</li>
+								
 							<% end %>
 						<% end %>
             <% if default_button %>
-              <li>
-                <%= image_tag('/images/formbuttons/default.png', :border=>"0", :class=>"button",
+              
+                <%= button_tag('Default',  :class=>"btn btn-default",
                               :alt=>"Reset All menus to CFME defaults", :title=>"Reset All menus to CFME defaults",
                               :onclick=>"miqAjaxButton('#{url_for(:action=>"menu_update",
                                                                   :button=>"default")}');")
                 %>
-              </li>
+              
             <% end %>
             <% if !no_cancel %>
-              <li>
-                <%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+              
+                <%= button_tag('Cancel',  :class=>"btn btn-default",
                               :alt=>"Cancel", :title=>"Cancel",
                               :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
                                                                   :id=>record_id,
                                                                   :button=>"cancel")}');")
                 %>
-              </li>
+              
             <% end %>
-					</ul>
+					
 				</div>
 
         <div id="buttons_off" style="display:<%= session[:changed] ? "none" : "display" %>;">
-					<ul id="form_buttons">
+					
 						<% if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil? %>
-							<li>
-								<%= image_tag("/images/formbuttons/add.png",	:class=>"dimmed") %>
-							</li>
+
+								<%= button_tag("Add",	:class=>"btn btn-primary btn-disabled") %>
+
 						<% else %>
-							<li>
+
                 <% if apply_button %>
-                  <%= image_tag("/images/formbuttons/apply.png",	:class=>"dimmed") %>
+                  <%= button_tag("Apply",	:class=>"btn btn-primary btn-disabled") %>
                 <% elsif submit_button %>
                   <% title = submit_text ? submit_text : "" %>
-                  <%= image_tag("/images/formbuttons/submit.png",	:class=>"dimmed",:alt=>title, :title=>title) %>
+                  <%= button_tag("Submit",	:class=>"btn btn-primary btn-disabled") %>
                 <% elsif continue_button %>
-                  <%= image_tag("/images/formbuttons/continue.png",	:class=>"dimmed") %>
+                  <%= button_tag("Continue",	:class=>"btn btn-primary btn-disabled") %>
                 <% elsif copy_button %>
-                  <%= image_tag("/images/formbuttons/copy.png",	:class=>"dimmed") %>
+                  <%= button_tag("Copy",	:class=>"btn btn-primary btn-disabled") %>
                 <% else %>
-								  <%= image_tag("/images/formbuttons/save.png",	:class=>"dimmed") %>
+								  <%= button_tag("Save",	:class=>"btn btn-primary btn-disabled") %>
                 <% end %>
-							</li>
+
 							<% if !no_reset %>
-								<li>
-									<%= image_tag("/images/formbuttons/reset.png",	 :class=>"dimmed") %>
-								</li>
+
+									<%= button_tag("Reset",	 :class=>"btn btn-default btn-disabled") %>
+
 							<% end %>
 						<% end %>
             <% if default_button %>
-              <li>
-                <%= image_tag('/images/formbuttons/default.png', :border=>"0", :class=>"button",
+              
+                <%= button_tag('Default',  :class=>"btn btn-default",
                               :alt=>"Reset All menus to CFME defaults", :title=>"Reset All menus to CFME defaults",
                               :onclick=>"miqAjaxButton('#{url_for(:action=>"menu_update",
                                                                   :button=>"default")}');")
                 %>
-              </li>
+              
             <% end %>
             <% if !no_cancel %>
-              <li>
-                <%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+              
+                <%= button_tag('Cancel',  :class=>"btn btn-default",
                               :alt=>"Cancel", :title=>"Cancel",
                               :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
                                                                   :id=>record_id,
                                                                   :button=>"cancel")}');")
                 %>
-              </li>
+              
             <% end %>
-					</ul>
+					
 				</div>
       <% elsif record_id || export_button %>
 				<%# show button to go back %>
 				<div id="buttons">
-					<ul id="form_buttons">
-						<li>
+					
+						
 							<% if params[:action] == "policies" %>
 								<%# Button to go back to policy simulation screen from 1 VMs policies %>
-								<%= image_tag('/images/formbuttons/back2.png', :border=>"0", :class=>"button",
+								<%= button_tag('Back...',  :class=>"btn btn-default",
 															:alt=>"Back", :title=>"Back",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>"policy_sim",
 																																	:continue=>true)}');")
 								%>
 							<% elsif %w(drift policy_sim right_size).include?(@sb[:action]) %>
 								<%# Button to cancel policy simulation/drift and return to latest tree node %>
-								<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+								<%= button_tag('Cancel',  :class=>"btn btn-default",
 															:alt=>"Cancel", :title=>"Cancel",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>"x_history",
 																																	:item=>0)}');")
 								%>
               <% elsif export_button %>
-                <%= image_tag("/images/formbuttons/export.png",
-                              :class  => "button dimmed",
-                              :border => "0",
+                <%= button_tag("Export",
+                              :class  => "btn btn-default btn-disabled",
                               :type   => "application/txt",
                               :id     => "export_button",
                               :alt    => "Download Report to YAML")
 
                 %>
 							<% else %>
-								<%#= image_tag('/images/formbuttons/back2.png', :border=>"0", :class=>"button",
+								<%#= button_tag('Back...',  :class=>"btn btn-default",
 															:alt=>"Back", :title=>"Back",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>"x_show",
 																																	:id=>record_id,
 																																	:button=>"back")}');")
 								%>
 							<% end %>
-						</li>
-					</ul>
+						
+					
 				</div>
 
 			<% elsif ["compare"].include?(@sb[:action]) %>
 				<div id="buttons">
-					<ul id="form_buttons">
-						<li>
+					
+						
 							<%# Button to cancel policy simulation and return to latest tree node %>
-							<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+							<%= button_tag('Cancel',  :class=>"btn btn-default",
 														:alt=>"Cancel", :title=>"Cancel",
 														:onclick=>"miqAjaxButton('#{url_for(:action=>"x_history",
 																																:item=>0)}');")
 							%>
-						</li>
-					</ul>
+						
+					
 				</div>
 			<% end %>
 		</td>
