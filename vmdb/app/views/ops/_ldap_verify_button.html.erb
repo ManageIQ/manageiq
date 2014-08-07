@@ -1,28 +1,28 @@
 <% if !@edit[:new][:authentication][:ldaphost].empty? && @edit[:new][:authentication][:ldapport] != nil %>
-	<div id="verify_button_on">
+  <div id="verify_button_on">
 <% else %>
-	<div id="verify_button_on" style="display:none">
+  <div id="verify_button_on" style="display:none">
 <% end %>
-	<%= link_to(button_tag('Validate',
-												 :class => "btn btn-primary",
-												 :alt   => "Validate the LDAP Settings by binding with the Host"),
-							{:action => "settings_update", 
-							 :button => "verify", 
-							 :id     => id},
-							"data-miq_sparkle_on"  => true,
-							"data-miq_sparkle_off" => true,
-							:remote                => true,
-							:title                 => "Validate the LDAP Settings by binding with the Host")
-							%>
+  <%= link_to(button_tag('Validate',
+                         :class => "btn btn-primary",
+                         :alt   => "Validate the LDAP Settings by binding with the Host"),
+              {:action => "settings_update", 
+               :button => "verify", 
+               :id     => id},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true,
+              :title                 => "Validate the LDAP Settings by binding with the Host")
+              %>
 </div>
 
 <% if !@edit[:new][:authentication][:ldaphost].empty? && @edit[:new][:authentication][:ldapport] != nil %>
-	<div id="verify_button_off" style="display:none">
+  <div id="verify_button_off" style="display:none">
 <% else %>
-	<div id="verify_button_off">
+  <div id="verify_button_off">
 <% end %>
-	<%= button_tag("Validate",
-	               :class => "btn btn-primary btn-disabled", 
-	               :title => "LDAP Host Name and Port fields are needed to perform verification of LDAP Settings") 
-	%>
+  <%= button_tag("Validate",
+                 :class => "btn btn-primary btn-disabled", 
+                 :title => "LDAP Host Name and Port fields are needed to perform verification of LDAP Settings") 
+  %>
 </div>

@@ -1,4 +1,6 @@
-<% url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}") %>
+<% url = url_for(:action => 'settings_form_field_changed', 
+                 :id     => "#{@sb[:active_tab].split('_').last}") 
+%>
 <% if @sb[:active_tab] == "settings_database" %>
   <%= render :partial => "layouts/flash_msg" %>
   <div class="alert alert-danger">
@@ -15,8 +17,9 @@
       <td>
         <%= select_tag('production_dbtype',
                         options_for_select(MiqDbConfig.get_db_types.invert.sort, @edit[:new][:name]),
-                        "data-miq_focus"=>true,
-                        "data-miq_observe"=>{:url=>url}.to_json) %>
+                        "data-miq_focus"   => true,
+                        "data-miq_observe" => {:url => url}.to_json) 
+        %>
       </td>
     </tr>
     <% @options.each do |option| %>
@@ -25,14 +28,17 @@
         <td>
           <% if option[:name].to_s == "password" %>
             <%= password_field_tag("production_#{option[:name]}",
-                                h(@edit[:new][option[:name]]),
-                                :maxlength=>50,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                   h(@edit[:new][option[:name]]),
+                                   :maxlength         => 50,
+                                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json) 
+            %>
           <% else %>
             <%= text_field_tag("production_#{option[:name]}",
-                                h(@edit[:new][option[:name]]),
-                                :maxlength=>50,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                               h(@edit[:new][option[:name]]),
+                               :maxlength         => 50,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
           <% end %>
         </td>
       </tr>
@@ -41,9 +47,11 @@
           <td class="key">Verify Password</td>
           <td>
             <%= password_field_tag("production_verify",
-                                h(@edit[:new][:verify]),
-                                :maxlength=>50,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                   h(@edit[:new][:verify]),
+                                   :maxlength         => 50,
+                                   "data-miq_observe" => {:interval => '.5', 
+                                                          :url      => url}.to_json)
+            %>
           </td>
         </tr>
       <% end %>
@@ -52,24 +60,21 @@
       <td></td>
       <td align="left">
         <div id="validate_button_on" style="display:<%= @edit[:new][:password] == @edit[:new][:verify] ? "display" : "none" %>;">
-
-
-              <%= button_tag('Validate', :class=>"btn btn-primary", 
-                            :alt=>"Validate Database Configuration", :title=>"Validate Database Configuration",
-                            :onclick=>"miqAjaxButton('#{url_for(:action=>"settings_update",
-                                                                :id=>@sb[:active_tab].split('_').last,
-                                                                :button=>"db_verify")}');")
-              %>
-
-
+          <%= button_tag('Validate', 
+                         :class   => "btn btn-primary", 
+                         :alt     => "Validate Database Configuration", 
+                         :title   => "Validate Database Configuration",
+                         :onclick => "miqAjaxButton('#{url_for(:action => "settings_update",
+                                                               :id     => @sb[:active_tab].split('_').last,
+                                                               :button => "db_verify")}');")
+          %>
         </div>
         <div id="validate_button_off" style="display:<%= @edit[:new][:password] != @edit[:new][:verify] ? "display" : "none" %>;">
-
-
-              <%= button_tag("Validate", :class=>"btn btn-primary btn-disabled", 
-                            :alt=>"Password fields must match to Validate Database Configuration", :title=>"Password fields must match to Validate Database Configuration",) %>
-
-
+          <%= button_tag("Validate", 
+                         :class => "btn btn-primary btn-disabled", 
+                         :alt   => "Password fields must match to Validate Database Configuration", 
+                         :title => "Password fields must match to Validate Database Configuration") 
+          %>
         </div>
       </td>
     </tr>
