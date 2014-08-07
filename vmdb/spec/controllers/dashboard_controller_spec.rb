@@ -7,10 +7,55 @@ describe DashboardController do
 
   context "POST authenticate" do
     it "validates user" do
-      user = FactoryGirl.create(:user, :userid => 'wilma')
+      role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
+      group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
+      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
       User.stub(:authenticate).and_return(user)
+      cfg = {:product => {:vdi => true}}
+      controller.stub(:get_vmdb_config).and_return(cfg)
+      controller.stub(:start_url_for_user).and_return('some_url')
       post :authenticate, :user_name => user.userid, :user_password => 'secret'
       session[:userid].should == user.userid
+    end
+  end
+
+  context "#validate_user" do
+    let(:server) { instance_double("MiqServer", :logon_status => :ready) }
+
+    before do
+      MiqServer.stub(:my_server).with(true).and_return(server)
+    end
+
+    it "returns flash message when user's group is missing" do
+      user = FactoryGirl.create(:user, :userid => 'wilma')
+      User.stub(:authenticate).and_return(user)
+      controller.send(:validate_user, user)
+      assigns(:flash_msg).should include('User\'s Group is missing')
+    end
+
+    it "returns flash message when user's role is missing" do
+      group = FactoryGirl.create(:miq_group, :description => 'test_group')
+      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      User.stub(:authenticate).and_return(user)
+      controller.send(:validate_user, user)
+      session[:group].should eq(group.id)
+      assigns(:flash_msg).should include('User\'s Role is missing')
+    end
+
+    it "returns url for the user and sets user's group/role id in session" do
+      role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
+      group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
+      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      User.stub(:authenticate).and_return(user)
+
+      cfg = {:product => {:vdi => true}}
+      controller.stub(:get_vmdb_config).and_return(cfg)
+      controller.stub(:start_url_for_user).and_return('some_url')
+      url = controller.send(:validate_user, user)
+      session[:group].should eq(group.id)
+      session[:role].should eq(role.id)
+      assigns(:flash_msg).should be_nil
+      url.should eq('some_url')
     end
   end
 

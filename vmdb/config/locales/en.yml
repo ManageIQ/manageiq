@@ -12,6 +12,7 @@ en:
       
     authentication:
       error: "Sorry, the username or password you entered is incorrect."
+      missing_role_or_group: "Login not allowed, User's %{model} is missing. Please contact the administrator"
       session_timed_out: "Session was timed out due to inactivity. Please log in again."
 
     automate:

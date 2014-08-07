@@ -39,22 +39,24 @@
                 <td class="key">Role</td>
                 <td style="<%=@edit ? 'padding: 0px' : ''%>">
                   <% unless @edit %>
-                    <table cellpadding="0" cellspacing="0">
-                      <tr
-                        onclick="cfmeDynatree_activateNode('rbac_tree', 'ur-<%= to_cid(@group.miq_user_role.id) %>');"
-                        onmouseover="this.style.cursor='pointer'" title="View this Role">
-                        <td class="image">
-                          <ul class="icons">
-                            <li>
-                              <span class="product product-role"></span>
-                            </li>
-                          </ul>
-                        </td>
-                        <td>
-                          <%= h(@group.miq_user_role.name) %>
-                        </td>
-                      </tr>
-                    </table>
+                    <% if @group.miq_user_role %>
+                      <table cellpadding="0" cellspacing="0">
+                        <tr
+                          onclick="cfmeDynatree_activateNode('rbac_tree', 'ur-<%= to_cid(@group.miq_user_role.id) %>');"
+                          onmouseover="this.style.cursor='pointer'" title="View this Role">
+                          <td class="image">
+                            <ul class="icons">
+                              <li>
+                                <span class="product product-role"></span>
+                              </li>
+                            </ul>
+                          </td>
+                          <td>
+                            <%= h(@group.miq_user_role.name) %>
+                          </td>
+                        </tr>
+                      </table>
+                    <% end %>
                   <% else %>
                     <%= select_tag('group_role',
                                    options_for_select(@edit[:roles].sort, @edit[:new][:role]),
