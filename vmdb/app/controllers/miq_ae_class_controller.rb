@@ -1625,21 +1625,21 @@ class MiqAeClassController < ApplicationController
       parent_id = @edit[:typ] == "MiqAeDomain" ? nil : from_cid(x_node.split('-')[1])
       add_ae_ns = @edit[:typ].constantize.new(:parent_id => parent_id)
       ns_set_record_vars(add_ae_ns)      # Set the record variables, but don't save
-      begin
-        add_ae_ns.save
-      rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task => "add") << bang.message, :error)
-        render :update do |page|
-          page.replace("flash_msg_div_ns_list",
-                       :partial => "layouts/flash_msg",
-                       :locals  => {:div_num => "_ns_list"})
-        end
-      else
+      if add_ae_ns.valid? && !flash_errors? && add_ae_ns.save
         add_flash(I18n.t("flash.add.added",
                          :model => ui_lookup(:model => add_ae_ns.class.name),
                          :name  => add_ae_ns.name))
         @in_a_form = false
         replace_right_cell([:ae])
+      else
+        add_ae_ns.errors.each do |field,msg|
+          add_flash("#{field.to_s.capitalize} #{msg}", :error)
+        end
+        render :update do |page|
+          page.replace("flash_msg_div_ns_list",
+                       :partial => "layouts/flash_msg",
+                       :locals  => {:div_num => "_ns_list"})
+        end
       end
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])

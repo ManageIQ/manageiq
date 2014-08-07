@@ -9,7 +9,7 @@ class MiqAeNamespace < ActiveRecord::Base
 
   validates_presence_of   :name
   validates_format_of     :name, :with => /\A[A-Za-z0-9_\.\-\$]+\z/i
-  validate :uniqueness_of_fqname
+  validates_uniqueness_of :name, :scope => :parent_id
 
   def self.find_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
@@ -103,10 +103,4 @@ class MiqAeNamespace < ActiveRecord::Base
     parent_id.nil? && name != '$'
   end
 
-  protected
-
-  def uniqueness_of_fqname
-    found = self.class.find_by_fqname(self.fqname)
-    errors[:base] << "fqname must be unique" unless found.nil? || found.id == self.id
-  end
 end
