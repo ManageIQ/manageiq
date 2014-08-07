@@ -619,7 +619,11 @@ module MiqAeEngine
         value = value.gsub(RE_SUBST) { |s|
           subst   = uri2value($1)
           subst &&= subst.to_s
-          subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
+          # This encoding of relationship is not needed, until we can get a valid use case
+          # Based on RFC 3986 Section 2.4 "When to Encode or Decode"
+          # We are properly encoding when we send URL requests to external systems
+          # or building an automate request
+          # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
           subst
         } unless value.nil?
         return value

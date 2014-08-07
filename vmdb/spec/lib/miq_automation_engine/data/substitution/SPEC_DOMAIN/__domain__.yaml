@@ -7,5 +7,5 @@ object:
     description: 
     display_name: 
     system: 
-    priority: 100
-    enabled: 
+    priority: 2
+    enabled: true
