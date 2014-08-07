@@ -49,8 +49,6 @@ class VimPerformanceTag < MetricRollup
       h
     end
 
-    interval = recs.first.capture_interval_name == "daily" ? 1.day : 1.hour
-
     results[:res].each do |rec|
       # Default nil values in tag cols to 0 for records with timestamp that falls inside the time profile
       results[:tcols].each {|c| rec.send("#{c}=", 0) if rec.send(c).nil?} if rec.inside_time_profile == true
