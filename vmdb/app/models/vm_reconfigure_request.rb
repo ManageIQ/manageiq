@@ -29,7 +29,7 @@ class VmReconfigureRequest < MiqRequest
       :min__number_of_cpus => 1,
       :max__number_of_cpus => nil,
       :min__vm_memory      => 4,
-      :max__vm_memory      => (16 * 1.gigabyte) / 1.megabyte
+      :max__vm_memory      => (255 * 1.gigabyte) / 1.megabyte
     }
 
     # TODO: Add logic to determine :max__vm_memory value based on selected VMs/Hosts
