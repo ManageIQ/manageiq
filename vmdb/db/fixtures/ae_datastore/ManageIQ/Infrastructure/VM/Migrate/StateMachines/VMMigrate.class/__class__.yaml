@@ -88,8 +88,7 @@ object:
       condition: 
       on_entry: update_migration_status(status => 'Applying PreMigration Customizations')
       on_exit: update_migration_status(status => 'Applied PreMigration Customizations')
-      on_error: update_migration_status(status => 'Error Applying PreMigration
-        Customizations')
+      on_error: update_migration_status(status => 'Error Applying PreMigration Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -149,8 +148,7 @@ object:
       condition: 
       on_entry: update_migration_status(status => 'Applying PostMigration Customizations')
       on_exit: update_migration_status(status => 'Applied PostMigration Customizations')
-      on_error: update_migration_status(status => 'Error Applying PostMigration
-        Customizations')
+      on_error: update_migration_status(status => 'Error Applying PostMigration Customizations')
       max_retries: '100'
       max_time: 
   - field:

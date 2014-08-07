@@ -10,5 +10,3 @@ object:
   fields:
   - logical_event:
       value: vm_create
-  - rel5:
-      value: 

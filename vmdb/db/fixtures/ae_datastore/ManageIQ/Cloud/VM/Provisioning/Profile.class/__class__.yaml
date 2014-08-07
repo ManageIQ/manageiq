@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     description: Profile
-    display_name:
+    display_name: 
     name: Profile
     type: 
     inherits: 

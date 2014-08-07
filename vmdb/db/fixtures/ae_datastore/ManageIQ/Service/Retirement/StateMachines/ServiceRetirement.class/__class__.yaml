@@ -68,7 +68,8 @@ object:
       condition: 
       on_entry: update_service_retirement_status(status => 'Retiring Service VMs')
       on_exit: update_service_retirement_status(status => 'Retired Service VMs')
-      on_error: update_service_retirement_status(status => 'Error Retiring Service VMs')
+      on_error: update_service_retirement_status(status => 'Error Retiring Service
+        VMs')
       max_retries: '3'
       max_time: 
   - field:
@@ -88,7 +89,8 @@ object:
       condition: 
       on_entry: update_service_retirement_status(status => 'Checking Service VM retirement')
       on_exit: update_service_retirement_status(status => 'Checked Service VM retirement')
-      on_error: update_service_retirement_status(status => 'Error Checking Service VM retirement')
+      on_error: update_service_retirement_status(status => 'Error Checking Service
+        VM retirement')
       max_retries: '3'
       max_time: 
   - field:
@@ -108,7 +110,8 @@ object:
       condition: 
       on_entry: update_service_retirement_status(status => 'Marking Service as retired')
       on_exit: update_service_retirement_status(status => 'Marked Service as retired')
-      on_error: update_service_retirement_status(status => 'Error Marking Service as retired')
+      on_error: update_service_retirement_status(status => 'Error Marking Service
+        as retired')
       max_retries: '3'
       max_time: 
   - field:
@@ -130,7 +133,7 @@ object:
         from VMDB')
       on_exit: update_service_retirement_status(status => 'Deleted Retired Service
         from VMDB')
-      on_error: update_service_retirement_status(status => 'Error Deleting Retired Service
-        from VMDB')
+      on_error: update_service_retirement_status(status => 'Error Deleting Retired
+        Service from VMDB')
       max_retries: '3'
       max_time: 

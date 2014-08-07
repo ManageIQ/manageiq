@@ -58,7 +58,7 @@ object:
       datatype: string
       priority: 5
       owner: 
-      default_value: #/Infrastructure/VM/Provisioning/Network/*#create
+      default_value: 
       substitute: true
       message: get_networks
       visibility: 
