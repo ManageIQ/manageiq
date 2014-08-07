@@ -64,7 +64,7 @@ module ApplianceConsole
       log_and_feedback(__method__) do
         prep_database_mount_point
         run_initdb
-        relabel_postgresql_log_dir
+        relabel_postgresql_dir
         configure_postgres
         start_postgres
         create_postgres_root_user
@@ -183,8 +183,8 @@ module ApplianceConsole
       AwesomeSpawn.run("su", :params => {"-" => nil, nil => "postgres", "-c" => "#{SCL_ENABLE_PREFIX} \"#{cmd}\""})
     end
 
-    def relabel_postgresql_log_dir
-      LinuxAdmin.run!("/sbin/restorecon -R -v #{DATABASE_DISK_MOUNT_POINT.join('pg_log')}")
+    def relabel_postgresql_dir
+      LinuxAdmin.run!("/sbin/restorecon -R -v #{DATABASE_DISK_MOUNT_POINT}")
     end
   end
 end
