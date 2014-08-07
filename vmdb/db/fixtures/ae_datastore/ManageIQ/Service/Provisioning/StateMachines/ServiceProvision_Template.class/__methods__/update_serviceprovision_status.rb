@@ -12,7 +12,7 @@ status = $evm.inputs['status']
 if $evm.root['ae_result'] == 'ok'
 
   # Check to see if provisioning is complete
-  if status == 'provision_complete'
+  if status == 'service_provision_complete'
     message = 'Service Provisioned Successfully'
     prov.finished(message)
   end
