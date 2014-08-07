@@ -126,8 +126,8 @@
     %table(width = "100%")
       %tr
         %td(align = "center")
-          = link_to(image_tag('/images/formbuttons/apply.png',
-                              :border => "0", 
+          = link_to(button_tag('Apply',
+                              :class  => "btn btn-primary",  
                               :alt    => 'Apply sections'),
                     {:action => 'sections_field_changed', 
                      :check  => "#{@lastaction}"},
