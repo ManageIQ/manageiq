@@ -13,6 +13,13 @@ result = task.status
 
 $evm.log('info', "Service ProvisionCheck returned <#{result}> for state <#{task.state}> and status <#{task_status}>")
 
+if result == 'ok'
+  if task.miq_request_tasks.any? { |t| t.state != 'finished' }
+    result = 'retry'
+    $evm.log('info', "Child tasks not finished. Setting retry for task: #{task.id} ")
+  end
+end
+
 case result
 when 'error'
   $evm.root['ae_result'] = 'error'
