@@ -15,13 +15,13 @@
           %td
             =button_tag('Refresh List',
                       :id      => 'rhn_refresh_button',
-                      :class   => 'upload',
+                      :class   => 'btn btn-default',
                       :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
                                                              :button => 'refresh')}');")
           %td
             =button_tag('Check for Updates',
                       :id       => 'rhn_check_updates_button_on_1',
-                      :class    => 'upload',
+                      :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
                       :onclick  => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
                                                               :button => 'check')}',
@@ -29,7 +29,7 @@
           %td
             =button_tag('Register',
                       :id       => 'rhn_register_button_on_1',
-                      :class    => 'upload',
+                      :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
                       :onclick  => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
                                                               :button => 'register')}',
@@ -37,7 +37,7 @@
           %td
             =button_tag('Apply CFME Update',
                       :id       => 'rhn_update_button_on_1',
-                      :class    => 'upload',
+                      :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
                       :onclick  => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
                                                               :button => 'update')}',

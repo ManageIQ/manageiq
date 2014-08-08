@@ -2,7 +2,7 @@
 <div id="tab_div">
   <%= render :partial => "layouts/flash_msg" %>
   <% disabled = @tp_restricted %>
-  <fieldset>
+
     <p class="legend">Time Profile Information</p>
     <table class="style1">
       <tbody>
@@ -66,28 +66,24 @@
         <% end %>
       </tbody>
     </table>
-  </fieldset>
+
 
   <% if ["timeprofile_new", "timeprofile_copy","timeprofile_create"].include?(controller.action_name) %>
-    <div id="buttons_on">
-      <ul id="form_buttons">
-        <li>
-          <%= image_tag('/images/formbuttons/add.png', :border=>"0", :class=>"button",
+    <div id="buttons_on" style="float: right">
+
+          <%= button_tag('Add', :class=>"btn btn-primary",
                       :alt=>"Add this Time Profile", :title=>"Add this Time Profile",
                       :onclick=>"miqAjaxButton('#{url_for(:action=>"timeprofile_create",
                                                           :id=>"new",
                                                           :button=>"add")}');")
           %>
-        </li>
-        <li>
-          <%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+          <%= button_tag('Cancel', :class=>"btn btn-default",
                         :alt=>"Cancel", :title=>"Cancel",
                         :onclick=>"miqAjaxButton('#{url_for(:action=>"timeprofile_create",
                                                             :id=>"new",
                                                             :button=>"cancel")}');")
           %>
-        </li>
-      </ul>
+
     </div>
   <% else %>
     <%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:record_id=>@timeprofile.id, :action_url=>'timeprofile_update', :ajax_buttons=>true})%>

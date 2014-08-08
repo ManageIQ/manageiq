@@ -1,40 +1,42 @@
 <% url = url_for(:action=>'export_field_changed') %>
 <div id="profile_export_div">
   <%= render :partial=>"layouts/flash_msg" %>
-  <fieldset>
+
     <p class="legend">Import</p>
     <% if @sb[:hide] %>
       <table width="100%">
         <tr>
           <td align="right">
             <div id="buttons">
-              <ul id="form_buttons">
-                <li>
-                  <% if @sb[:conflict] %>
-                    <%= image_tag("/images/formbuttons/commit.png", :class=>"dimmed",
-                      :title=>"Resolve conflicts to import the file", :alt=>"Resolve conflicts to import the file") %>
-                  <% else %>
-                    <%= link_to(image_tag('/images/formbuttons/commit.png',
-                            :border=>"0", :alt=>"Commit Import"),
-                            {:action=>"export", :button=>"import", :commit=>true},
-                            "data-miq_sparkle_on" => true,
+              <% if @sb[:conflict] %>
+                <%= button_tag("Commit", 
+                               :class => "btn btn-primary btn-disabled",
+                               :title => "Resolve conflicts to import the file", 
+                               :alt   => "Resolve conflicts to import the file") 
+                %>
+              <% else %>
+                <%= link_to(button_tag('Commit',
+                                       :class => "btn btn-primary",
+                                       :alt   => "Commit Import"),
+                            {:action => "export", 
+                             :button => "import", 
+                             :commit => true},
+                            "data-miq_sparkle_on"  => true,
                             "data-miq_sparkle_off" => true,
-                            :remote=>true,
-                            :title=>"Commit Import")
-                    %>
-                  <% end %>
-                </li>
-                <li>
-                  <%= link_to(image_tag('/images/formbuttons/cancel.png',
-                          :border=>"0", :alt=>"Cancel Changes"),
-                          {:action=>"export", :button=>"cancel_import"},
-                          "data-miq_sparkle_on" => true,
-                          "data-miq_sparkle_off" => true,
-                          :remote=>true,
-                          :title=>"Cancel Import")
-                  %>
-                </li>
-              </ul>
+                            :remote                => true,
+                            :title                 => "Commit Import")
+                %>
+              <% end %>
+                <%= link_to(button_tag('Cancel',
+                                       :class => "btn btn-default",
+                                       :alt   => "Cancel Changes"),
+                           {:action => "export", 
+                            :button => "cancel_import"},
+                           "data-miq_sparkle_on"  => true,
+                           "data-miq_sparkle_off" => true,
+                           :remote                => true,
+                           :title                 => "Cancel Import")
+                %>
             </div>
           </td>
         </tr>
@@ -48,9 +50,9 @@
       <% end %>
       </div>
     <% end %>
-  </fieldset>
+
   <% if @sb[:hide] == false %>
-    <fieldset>
+      <hr>
       <p class="legend">Export</p>
       <%# title = @sb[:dbtype] == "pp" ? "Profiles" : "Policies" %>
       <% title = case @sb[:dbtype]
@@ -86,23 +88,25 @@
         <tr>
           <td align="right">
             <div id="buttons">
-              <ul id="form_buttons">
-                <li>
-                  <%= link_to(image_tag('/images/formbuttons/export.png',
-                          :border=>"0", :alt=>"Export Selected #{title}"),
-                          {:action=>"export", :button=>"export"},
-                          "data-miq_sparkle_on" => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"=>"profile_export_div",
-                          :remote=>true,
-                          :title=>"Export Selected #{title}")
+
+
+                  <%= link_to(button_tag('Export',
+                                         :class => "btn btn-primary",
+                                         :alt   => "Export Selected #{title}"),
+                              {:action => "export", 
+                               :button => "export"},
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              "data-submit"          => "profile_export_div",
+                              :remote                => true,
+                              :title                 => "Export Selected #{title}")
                   %>
-                </li>
-              </ul>
+
+
             </div>
           </td>
         </tr>
       </table>
-    </fieldset>
+
   <% end %>
 </div>

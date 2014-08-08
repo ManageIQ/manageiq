@@ -8,20 +8,19 @@
 
 = render :partial => 'layouts/flash_msg'
 
-%fieldset
-  %p{:class => 'legend'}
-    Red Hat Software Updates
-  %table{:class => 'style1'}
-    - if @customer.registered
-      = render :partial => 'ops/rhn/info_subscribed'
-    - else
-      = render :partial => 'ops/rhn/info_unsubscribed'
-    %tr
-      %td{:colspan => 2}
-        =button_tag('Edit Registration',
-                    :id      => 'settings_rhn_edit',
-                    :class   => 'upload',
-                    :onclick => "miqAjaxButton('#{url_for(:action => 'edit_rhn')}');")
+%p{:class => 'legend'}
+  Red Hat Software Updates
+%table{:class => 'style1'}
+  - if @customer.registered
+    = render :partial => 'ops/rhn/info_subscribed'
+  - else
+    = render :partial => 'ops/rhn/info_unsubscribed'
+  %tr
+    %td{:colspan => 2}
+      =button_tag('Edit Registration',
+                  :id      => 'settings_rhn_edit',
+                  :class   => 'btn btn-default',
+                  :onclick => "miqAjaxButton('#{url_for(:action => 'edit_rhn')}');")
 
 - if @customer.registered
   = render :partial => 'ops/rhn/server_table'
