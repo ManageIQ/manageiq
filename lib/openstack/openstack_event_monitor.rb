@@ -2,6 +2,8 @@
 # subclass as a plugin based on the #available? class method implemented in each
 # subclass
 class OpenstackEventMonitor
+  DEFAULT_AMQP_PORT = 5672
+
   def self.new(options={})
     # plugin initializer
     self == OpenstackEventMonitor ? select_event_monitor(options) : super
