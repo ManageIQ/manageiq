@@ -12,7 +12,7 @@ describe OpenstackQpidConnection do
 
     OpenstackQpidConnection.stub(:available?).and_return(true)
     OpenstackQpidConnection.any_instance.stub(:create_connection).and_return(@qconnection)
-    @connection = OpenstackQpidConnection.new(:hostname => "hostname")
+    @connection = OpenstackQpidConnection.new(:hostname => "hostname", :port => 5672)
   end
 
   it "complains that host and port are not provided when they are not included in options" do
