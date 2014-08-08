@@ -31,6 +31,7 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
 
   def initialize(options = {})
     @options = options
+    @options[:port] ||= DEFAULT_AMQP_PORT
     @receiver_options = options.slice(:duration, :capacity)
     @collecting_events = false
   end
