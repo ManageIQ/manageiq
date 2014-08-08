@@ -125,9 +125,9 @@ describe "MiqWorker Monitor" do
           @worker.messages.should        have_same_elements @messages
           @worker.active_messages.should have_same_elements @actives
 
-          Timecop.travel 5.minutes
-          @worker.validate_active_messages
-          Timecop.return
+          Timecop.travel 5.minutes do
+            @worker.validate_active_messages
+          end
 
           @worker.reload
           (@messages - @worker.messages).length.should        == 1
@@ -150,9 +150,9 @@ describe "MiqWorker Monitor" do
           actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
           actives.length.should == @actives.length
 
-          Timecop.travel 5.minutes
-          @miq_server.validate_active_messages
-          Timecop.return
+          Timecop.travel 5.minutes do
+            @miq_server.validate_active_messages
+          end
 
           actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
           actives.length.should == @actives.length - 1
@@ -175,9 +175,9 @@ describe "MiqWorker Monitor" do
           actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
           actives.length.should == @actives.length
 
-          Timecop.travel 5.minutes
-          @miq_server.validate_active_messages
-          Timecop.return
+          Timecop.travel 5.minutes do
+            @miq_server.validate_active_messages
+          end
 
           actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
           actives.length.should == @actives.length - 1
@@ -185,9 +185,9 @@ describe "MiqWorker Monitor" do
 
           @miq_server2.update_attribute(:status, 'stopped')
 
-          Timecop.travel 5.minutes
-          @miq_server.validate_active_messages
-          Timecop.return
+          Timecop.travel 5.minutes do
+            @miq_server.validate_active_messages
+          end
 
           actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
           actives.length.should == 0

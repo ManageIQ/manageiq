@@ -96,16 +96,8 @@ describe MiqAlert do
           @alert.options.store_path(:notifications, :delay_next_evaluation, 5.minutes)
         end
 
-        context "in 4 minutes" do
-          before(:each) do
-            Timecop.travel 4.minutes
-          end
-
-          after(:each) do
-            Timecop.return
-          end
-
-          it "should always perform evaluation if not previously evaluated" do
+        it "should always perform evaluation if not previously evaluated (after 4 minutes)" do
+          Timecop.travel 4.minutes do
             @alert.postpone_evaluation?(@vm).should be_false
           end
         end
@@ -166,30 +158,14 @@ describe MiqAlert do
           @alert.save
         end
 
-        context "in 10 minutes" do
-          before(:each) do
-            Timecop.travel 10.minutes
-          end
-
-          after(:each) do
-            Timecop.return
-          end
-
-          it "should retry evaluation" do
+        it "should retry evaluation (after 10 minutes)" do
+          Timecop.travel 10.minutes do
             @alert.postpone_evaluation?(@vm).should be_false
           end
         end
 
-        context "in 4 minutes" do
-          before(:each) do
-            Timecop.travel 4.minutes
-          end
-
-          after(:each) do
-            Timecop.return
-          end
-
-          it "should skip evaluation" do
+        it "should skip evaluation (after 4 minutes)" do
+          Timecop.travel 4.minutes do
             @alert.postpone_evaluation?(@vm).should be_true
           end
         end
