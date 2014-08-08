@@ -1632,7 +1632,7 @@ class MiqAeClassController < ApplicationController
         @in_a_form = false
         replace_right_cell([:ae])
       else
-        add_ae_ns.errors.each do |field,msg|
+        add_ae_ns.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         render :update do |page|
