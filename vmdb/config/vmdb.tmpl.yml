@@ -281,7 +281,7 @@ workers:
           :quantum: "notifications.*"
         :duration: 10.seconds
         :capacity: 50
-        :amqp_port: 5671
+        :amqp_port: 5672
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
