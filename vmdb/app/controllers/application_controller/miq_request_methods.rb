@@ -430,9 +430,11 @@ module ApplicationController::MiqRequestMethods
       "v_total_snapshots"=>"Snapshots"
     }                                                         #Using it to get column display name on screen to show sort by
 
-    @edit[:vm_headers]["cloud_tenant"] = "Tenant" if vms.first.respond_to?(:cloud_tenant) # add tenant column to cloud workflows only
+    # add tenant column header to cloud workflows only
+    @edit[:vm_headers]["cloud_tenant"] = "Tenant" if vms.any? { |vm| vm.respond_to?(:cloud_tenant) }
     @edit[:vm_columns] = ["name","operating_system.product_name","platform","num_cpu","mem_cpu","allocated_disk_storage","ext_management_system.name","v_total_snapshots"]      #Using it to get column names for sort
-    @edit[:vm_columns].insert(2, "cloud_tenant") if vms.first.respond_to?(:cloud_tenant) # add tenant column to cloud workflows only
+    # add tenant column to cloud workflows only
+    @edit[:vm_columns].insert(2, "cloud_tenant") if vms.any? { |vm| vm.respond_to?(:cloud_tenant) }
     @edit[:vm_sortcol] = sort_by                  # in case sort column is not set, set the defaults
     integer_fields = ["allocated_disk_storage","mem_cpu","num_cpu","v_total_snapshots"]
     post_sort_method = integer_fields.include?(sort_by) ? :to_i : :downcase # no downcase needed for sorting int fields, aded to to_i to avoid situation where space was nil
