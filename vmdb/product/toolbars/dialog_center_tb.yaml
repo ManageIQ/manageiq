@@ -32,7 +32,7 @@
   - :buttonSelect: dialog_add_choice
     :image: new
     :title: Add
-    :enabled: 'true'    
+    :enabled: 'true'
     :items:
     - :button: dialog_add_tab
       :image: new
