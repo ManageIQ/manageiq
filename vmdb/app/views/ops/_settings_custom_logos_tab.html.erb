@@ -1,4 +1,6 @@
-<% url = url_for(:action=>'settings_form_field_changed',:id=>"#{@sb[:active_tab].split('_')[1]}_#{@sb[:active_tab].split('_').last}") %>
+<% url = url_for(:action => 'settings_form_field_changed',
+                 :id     => "#{@sb[:active_tab].split('_')[1]}_#{@sb[:active_tab].split('_').last}")
+%>
 <% if @sb[:active_tab] == "settings_custom_logos" %>
   <%= render :partial => "layouts/flash_msg" %>
   <p class="legend">Custom Logo Image (Shown on top right of all screens)</p>
@@ -12,7 +14,11 @@
   <% end %>
   <%= form_tag({:action=>"upload_logo"}, :multipart => true) do %>
     <%= file_field("upload", "logo") %>
-    <%= submit_tag("Upload", :id=>"upload", :class => "upload"  ) %> * Requirements: File-type - PNG; Dimensions - 350x70.
+    <%= submit_tag("Upload", 
+                   :id    => "upload", 
+                   :class => "upload") 
+    %>
+    * Requirements: File-type - PNG; Dimensions - 350x70.
   <% end %>
   <% if File.exists?(@logo_file) %>
     <br/>
@@ -22,7 +28,8 @@
         <td>
           <%= check_box_tag("server_uselogo", value="1",
                             checked=@edit[:new][:server][:custom_logo],
-                            "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+          %>
         </td>
       </tr>
     </table>
@@ -30,7 +37,10 @@
   <hr>
   <p class="legend">Custom Login Background Image</p>
   <% if File.exists?(@login_logo_file) %>
-    <%= image_tag("/upload/custom_login_logo.png?#{rand(99999999).to_s}", :height=>400, :width=>675) %>
+    <%= image_tag("/upload/custom_login_logo.png?#{rand(99999999).to_s}", 
+                  :height => 400, 
+                  :width  => 675)
+    %>
     <br/><br/>* Image shown at 25% of actual size<br/><br/>
   <% else %>
     <div class="alert alert-info">
@@ -38,9 +48,14 @@
       <strong>No custom login image has been uploaded yet.</strong>
     </div>
   <% end %>
-  <%= form_tag({:action=>"upload_login_logo"}, :multipart => true) do %>
+  <%= form_tag({:action    => "upload_login_logo"}, 
+                :multipart => true) do %>
     <%= file_field("login", "logo") %>
-    <%= submit_tag("Upload", :id=>"login_logo", :class => "upload") %> * Requirements: File-type - PNG; Dimensions - 1280x1000.
+    <%= submit_tag("Upload", 
+                   :id    => "login_logo", 
+                   :class => "upload") 
+    %>
+    * Requirements: File-type - PNG; Dimensions - 1280x1000.
   <% end %>
   <% if File.exists?(@login_logo_file) %>
     <br/>
@@ -48,9 +63,11 @@
       <tr>
         <td class="key">Use Custom Login Background Image</td>
         <td>
-          <%= check_box_tag("server_useloginlogo", value="1",
+          <%= check_box_tag("server_useloginlogo", 
+                            value="1",
                             checked=@edit[:new][:server][:custom_login_logo],
-                            "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+          %>
         </td>
       </tr>
     </table>
@@ -59,24 +76,27 @@
   <p class="legend">Custom Login Panel Text (<span id="text_count"><%= @edit[:new][:notes] ? @edit[:new][:notes].length : 0 %></span> / 500)</p>
 
     <%= text_area_tag("login_text",
-                        @edit[:new][:server][:custom_login_text], :rows=>5,
-                        :maxlength=>"500",
-                        :counter=>"text_count",
-                        "data-miq_check_max_length"=>true,
-                        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                      @edit[:new][:server][:custom_login_text], 
+                      :rows                       => 5,
+                      :maxlength                  => "500",
+                      :counter                    => "text_count",
+                      "data-miq_check_max_length" => true,
+                      "data-miq_observe"          => {:interval => '.5', :url => url}.to_json) 
+    %>
 
   <br/>
   <table class="style1">
     <tr>
       <td class="key">Use Custom Login Text</td>
       <td>
-        <%= check_box_tag("server_uselogintext", value="1",
-                            checked=@edit[:new][:server][:use_custom_login_text],
-                            "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+        <%= check_box_tag("server_uselogintext", 
+                          value="1",
+                          checked=@edit[:new][:server][:use_custom_login_text],
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+        %>
       </td>
     </tr>
   </table>
-  <div style="padding-bottom:20px;"></div>
   <%# Need this to bind checkbox observers when under DHTMLX tabs %>
   <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
   <script>miqObserveCheckboxes();</script>
