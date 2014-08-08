@@ -13,7 +13,13 @@
       </table>
       <hr>
     <% if @build.component.downcase != "smartproxy" %>
-      *** CAUTION: Pressing the Activate button <b>will shut down</b> and restart the Server! ***
+      <div class="alert alert-warning">
+        <span class="pficon-layered">
+          <span class="pficon pficon-warning-triangle"></span>
+          <span class="pficon pficon-warning-exclamation"></span>
+        </span>
+        <strong>CAUTION: Pressing the Activate button <b>will shut down</b> and restart the Server!</strong>
+      </div>
     <% end %>
   <% else %>
     <p class="legend">Upload a New Product Update</p>

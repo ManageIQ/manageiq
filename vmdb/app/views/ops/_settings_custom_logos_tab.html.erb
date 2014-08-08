@@ -5,7 +5,10 @@
   <% if File.exists?(@logo_file) %>
     <%= image_tag("/upload/custom_logo.png?#{rand(99999999).to_s}") %>
   <% else %>
-    No custom logo image has been uploaded yet.
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>No custom logo image has been uploaded yet.</strong>
+    </div>
   <% end %>
   <%= form_tag({:action=>"upload_logo"}, :multipart => true) do %>
     <%= file_field("upload", "logo") %>
@@ -30,7 +33,10 @@
     <%= image_tag("/upload/custom_login_logo.png?#{rand(99999999).to_s}", :height=>400, :width=>675) %>
     <br/><br/>* Image shown at 25% of actual size<br/><br/>
   <% else %>
-    No custom login image has been uploaded yet.
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>No custom login image has been uploaded yet.</strong>
+    </div>
   <% end %>
   <%= form_tag({:action=>"upload_login_logo"}, :multipart => true) do %>
     <%= file_field("login", "logo") %>
