@@ -367,19 +367,8 @@ module MiqAeCustomizationController::Dialogs
     end
     dialog_edit_build_tree
     dialog_edit_set_form_vars
-    render :update do |page|                    # Use JS to update the display
-      session[:changed] = changed = (@edit[:new] != @edit[:current])
-      if params[:widget_id]
-        page.replace_html("dialog_edit_tree_div", :partial => "dialog_edit_tree")
-        page.replace_html("custom_left_cell_div", :partial=>"dialog_edit_tree")
-        page.replace_html("main_div", :partial => "dialog_form")
-        # url to be used in url in miqDropComplete method
-        page << "miq_widget_dd_url = 'miq_ae_customization/dialog_res_reorder'"
-        page << "miqInitDashboardCols();"
-      end
-      page << javascript_for_miq_button_visibility(changed)
-      page << "miqSparkle(false);"
-    end
+
+    replace_right_cell(x_node, [:dialog_edit])
   end
 
   # Reorder dialog resources
