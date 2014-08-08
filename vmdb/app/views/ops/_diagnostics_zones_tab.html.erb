@@ -1,34 +1,36 @@
 <% if @sb[:active_tab] == "diagnostics_zones" %>
-	<% if @zones %>
-		<%= render(:partial=>"layouts/flash_msg") %>
-	<% if @zones.empty? %>
-			<br/><strong>* No Zones found.</strong>
-		<% else %>
-			<table class="style3">
-				<thead>
-					<th class="icon"></th><th></th>
-				</thead>
-				<tbody>
-				<% @zones.sort{|a,b| a.name <=> b.name}.each do |z| %>
-					<tr class="<%= cycle('row0', 'row1') %>"
-						onclick="cfmeDynatree_activateNode('diagnostics_tree','z-<%= to_cid(z.id) %>');"
-						onmouseover="this.style.cursor='pointer'" title="View this Zone">
-						<td  nowrap>
-								<img src="/images/icons/new/zone.png" valign="middle" border="0" height="20" width="20" />
-						</td>
-						<td>
-							<% if @sb[:my_zone] == z.name %>
-								<b><%= h(ui_lookup(:model=>z.class.to_s)) %>: <%= h(z.description) %> (current)</b>
-							<% else %>
-								<%= h(ui_lookup(:model=>z.class.to_s)) %>: <%= h(z.description) %>
-							<% end %>
-						</td>
-					</tr>
-				<% end %>
-				</tbody>
-			</table>
-		<% end %>
-	<% end %>
-	<div style="padding-bottom:20px;"></div>
+  <% if @zones %>
+    <%= render(:partial => "layouts/flash_msg") %>
+  <% if @zones.empty? %>
+     <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      <strong>No Zones found.</strong>
+    </div>
+    <% else %>
+      <table class="style3">
+        <thead>
+          <th class="icon"></th><th></th>
+        </thead>
+        <tbody>
+        <% @zones.sort{|a,b| a.name <=> b.name}.each do |z| %>
+          <tr class="<%= cycle('row0', 'row1') %>"
+            onclick="cfmeDynatree_activateNode('diagnostics_tree','z-<%= to_cid(z.id) %>');"
+            onmouseover="this.style.cursor='pointer'" title="View this Zone">
+            <td  nowrap>
+                <img src="/images/icons/new/zone.png" valign="middle" border="0" height="20" width="20" />
+            </td>
+            <td>
+              <% if @sb[:my_zone] == z.name %>
+                <b><%= h(ui_lookup(:model => z.class.to_s)) %>: <%= h(z.description) %> (current)</b>
+              <% else %>
+                <%= h(ui_lookup(:model => z.class.to_s)) %>: <%= h(z.description) %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  <% end %>
+  <div style="padding-bottom:20px;"></div>
 <% end %>
-

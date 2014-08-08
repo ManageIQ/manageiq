@@ -6,18 +6,26 @@
       <table class="style1">
         <% @sb[:buildinfo].each do |item| %>
         <tr>
-          <td class="key"><%= h(item.first) %></td><td class="wide"><%= h(item.last) %></td>
+          <td class="key"><%= h(item.first) %></td>
+          <td class="wide"><%= h(item.last) %></td>
           </td>
         </tr>
         <% end %>
       </table>
       <hr>
     <% if @build.component.downcase != "smartproxy" %>
-      *** CAUTION: Pressing the Activate button <b>will shut down</b> and restart the Server! ***
+      <div class="alert alert-warning">
+        <span class="pficon-layered">
+          <span class="pficon pficon-warning-triangle"></span>
+          <span class="pficon pficon-warning-exclamation"></span>
+        </span>
+        <strong>Pressing the Activate button <b>will shut down</b> and restart the Server!</strong>
+      </div>
     <% end %>
   <% else %>
     <p class="legend">Upload a New Product Update</p>
-    <%= form_tag({:action=>"upload_updates"}, :multipart => true) do %>
+    <%= form_tag({:action    => "upload_updates"}, 
+                  :multipart => true) do %>
       <table class="style1">
         <tr>
           <td>
@@ -32,7 +40,9 @@
     [Server '<%= @temp[:selected_server].name %>' is currently running Version <%= @temp[:selected_server].version %>]</p>
     Select a product update to view activation options
     <div id='main_div'>
-      <%= render :partial => 'layouts/x_gtl', :locals=>{:action_url=>"product_updates_list"} %>
+      <%= render :partial => 'layouts/x_gtl', 
+                 :locals  => {:action_url => "product_updates_list"}
+      %>
     </div>
   <% end %>
 <% end %>
