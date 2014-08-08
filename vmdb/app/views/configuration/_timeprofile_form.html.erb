@@ -10,11 +10,13 @@
           <td class="key">Description</td>
           <td class="wider">
             <%= text_field_tag("description",
-                                @edit[:new][:description],
-                                :disabled => disabled,
-                                :maxlength=>50,
-                                "data-miq_focus"=>true,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                               @edit[:new][:description],
+                               :disabled          => disabled,
+                               :maxlength         => 50,
+                               "data-miq_focus"   => true,
+                               "data-miq_observe" => {:interval => '.5',           
+                                                      :url      => url}.to_json) 
+            %>
           </td>
         </tr>
         <% if session[:userrole] == "super_administrator" || session[:userrole] == "administrator" %>
@@ -22,27 +24,33 @@
             <td class="key">Scope</td>
             <td>
               <%= select_tag("profile_type",
-                                options_for_select([["All Users","global"],["Current User","user"]],
-                                  @edit[:new][:profile_type]),
-                                :disabled => disabled,
-                                "data-miq_observe"=>{:url=>url}.to_json) %>
+                             options_for_select([["All Users","global"],
+                                                 ["Current User","user"]],
+                                                @edit[:new][:profile_type]),
+                             :disabled          => disabled,
+                             "data-miq_observe" => {:url => url}.to_json) 
+              %>
             </td>
           </tr>
         <% end %>
       </tbody>
     </table>
-    <%= render(:partial=>'timeprofile_days_hours', :locals => {:disabled => disabled})%>
+    <%= render(:partial =>'timeprofile_days_hours', 
+               :locals  => {:disabled => disabled})
+    %>
     <table class="style1">
       <tbody>
         <tr>
           <td class="key">Timezone</td>
           <td>
             <%= select_tag("profile_tz",
-                              options_for_select([["<Determine at Run Time>", nil]] + ALL_TIMEZONES,
-                                @edit[:new][:profile][:tz]),
-                              :disabled => disabled,
-                              "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select([["<Determine at Run Time>", nil]] + ALL_TIMEZONES,
+                                              @edit[:new][:profile][:tz]),
+                           :disabled              => disabled,
+                           "data-miq_sparkle_on"  => true, 
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => url}.to_json) 
+            %>
           </td>
         </tr>
         <% if ["super_administrator", "administrator"].include?(session[:userrole]) %>
@@ -54,10 +62,12 @@
             <td class="key">Roll Up Daily Performance</td>
             <td>
               <% rollup_disabled = !@timeprofile.miq_reports.empty? ? true : disabled %>
-              <%= check_box_tag("rollup_daily", value="1",
-                                  checked=@edit[:new][:rollup_daily],
-                                  :disabled => rollup_disabled,
-                                  "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+              <%= check_box_tag("rollup_daily", 
+                                value="1",
+                                checked=@edit[:new][:rollup_daily],
+                                :disabled                   => rollup_disabled,
+                                "data-miq_observe_checkbox" => {:url => url}.to_json) 
+              %>
               <% unless @timeprofile.miq_reports.empty? %>
                 <div class = "note">In use by <%= @timeprofile.miq_reports.count%> reports, cannot be disabled</div>
               <% end %>
@@ -70,23 +80,29 @@
 
   <% if ["timeprofile_new", "timeprofile_copy","timeprofile_create"].include?(controller.action_name) %>
     <div id="buttons_on" style="float: right">
-
-          <%= button_tag('Add', :class=>"btn btn-primary",
-                      :alt=>"Add this Time Profile", :title=>"Add this Time Profile",
-                      :onclick=>"miqAjaxButton('#{url_for(:action=>"timeprofile_create",
-                                                          :id=>"new",
-                                                          :button=>"add")}');")
-          %>
-          <%= button_tag('Cancel', :class=>"btn btn-default",
-                        :alt=>"Cancel", :title=>"Cancel",
-                        :onclick=>"miqAjaxButton('#{url_for(:action=>"timeprofile_create",
-                                                            :id=>"new",
-                                                            :button=>"cancel")}');")
-          %>
-
+      <%= button_tag('Add', 
+                     :class   => "btn btn-primary",
+                     :alt     => "Add this Time Profile", 
+                     :title   => "Add this Time Profile",
+                     :onclick => "miqAjaxButton('#{url_for(:action => "timeprofile_create",
+                                                           :id     => "new",
+                                                           :button => "add")}');")
+      %>
+      <%= button_tag('Cancel', 
+                     :class  => "btn btn-default",
+                     :alt    => "Cancel", 
+                     :title  => "Cancel",
+                     :onclick => "miqAjaxButton('#{url_for(:action => "timeprofile_create",
+                                                           :id     => "new",
+                                                           :button => "cancel")}');")
+      %>
     </div>
   <% else %>
-    <%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:record_id=>@timeprofile.id, :action_url=>'timeprofile_update', :ajax_buttons=>true})%>
+    <%= render(:partial => '/layouts/edit_form_buttons', 
+               :locals  => {:record_id    => @timeprofile.id, 
+                            :action_url   => 'timeprofile_update', 
+                            :ajax_buttons => true})
+    %>
   <% end %>
 
   <% unless @timeprofile.miq_reports.empty? %>
