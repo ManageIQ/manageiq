@@ -470,10 +470,11 @@ class CatalogController < ApplicationController
     end
   end
 
-  def get_ae_tree_edit_key
-    case @edit[:ae_field_typ]
-    when 'provision' then :fqname
-    when 'retire'    then :retire_fqname
+  def get_ae_tree_edit_key(type)
+    case type
+    when 'provision'   then :fqname
+    when 'retire'      then :retire_fqname
+    when 'reconfigure' then :reconfigure_fqname
     end
   end
   hide_action :get_ae_tree_edit_key
@@ -481,33 +482,24 @@ class CatalogController < ApplicationController
   def ae_tree_select_toggle
     @edit = session[:edit]
     self.x_active_tree = :sandt_tree
-    at_tree_select_toggle(get_ae_tree_edit_key)
+    at_tree_select_toggle(get_ae_tree_edit_key(@edit[:ae_field_typ]))
     x_node_set(@edit[:active_id], :automate_tree) if params[:button] == 'submit'
     session[:edit] = @edit
   end
 
   def ae_tree_select_discard
+    ae_tree_key = get_ae_tree_edit_key(params[:typ])
     @edit = session[:edit]
-    if params[:typ] == "provision"
-      @edit[:new][:fqname] = ""
-    else
-      @edit[:new][:retire_fqname] = ""
-    end
+    @edit[:new][ae_tree_key] = ''
     #build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree unless @edit[:ae_tree_select]
     render :update do |page|
       @changed = (@edit[:new] != @edit[:current])
       x_node_set(@edit[:active_id], :automate_tree)
       page << "$('ae_tree_select_div').hide();"
       page << "$('blocker_div').hide();"
-      if params[:typ] == "provision"
-        page << "$('fqname_div').hide();"
-        page << "$('fqname').value = '#{@edit[:new][:fqname]}';"
-        page << "$('fqname').title = '#{@edit[:new][:fqname]}';"
-      else
-        page << "$('retire_fqname_div').hide();"
-        page << "$('retire_fqname').value = '#{@edit[:new][:retire_fqname]}';"
-        page << "$('retire_fqname').title = '#{@edit[:new][:retire_fqname]}';"
-      end
+      page << "$('#{ae_tree_key}_div').hide();"
+      page << "$('#{ae_tree_key}').value = '#{@edit[:new][ae_tree_key]}';"
+      page << "$('#{ae_tree_key}').title = '#{@edit[:new][ae_tree_key]}';"
       @edit[:ae_tree_select] = false
       page << javascript_for_miq_button_visibility(@changed)
       page << "automate_tree.selectItem('root');"
@@ -519,7 +511,7 @@ class CatalogController < ApplicationController
 
   def ae_tree_select
     @edit = session[:edit]
-    at_tree_select(get_ae_tree_edit_key)
+    at_tree_select(get_ae_tree_edit_key(@edit[:ae_field_typ]))
     session[:edit] = @edit
   end
 
@@ -784,28 +776,20 @@ class CatalogController < ApplicationController
 
   def set_resource_action(st)
     d = @edit[:new][:dialog_id].nil? ? nil : Dialog.find_by_id(@edit[:new][:dialog_id])
-    st_action = st.resource_actions.find_by_action("Provision")
-    if st_action.nil?
-      attrs = {:action=>"Provision",:dialog=>d}
-      ra = st.resource_actions.build(attrs)
-      ra.fqname = @edit[:new][:fqname] if !@edit[:new][:fqname].nil?
-      ra
-    else
-      st_action.dialog = d
-      st_action.fqname = @edit[:new][:fqname] if !@edit[:new][:fqname].nil?
-      st_action.save!
-    end
-
-    retirement_st_action = st.resource_actions.find_by_action("Retirement")
-    if retirement_st_action.nil?
-      attrs = {:action=>"Retirement",:dialog=>d}
-      ra = st.resource_actions.build(attrs)
-      ra.fqname = @edit[:new][:retire_fqname] if !@edit[:new][:retire_fqname].nil?
-      ra
-    else
-      retirement_st_action.dialog = d
-      retirement_st_action.fqname = @edit[:new][:retire_fqname] if !@edit[:new][:retire_fqname].nil?
-      retirement_st_action.save!
+    actions = [
+      {:name => 'Provision', :edit_key => :fqname},
+      {:name => 'Reconfigure', :edit_key => :reconfigure_fqname},
+      {:name => 'Retirement', :edit_key => :retire_fqname}
+    ]
+    actions.each do |action|
+      ra = st.resource_actions.find_by_action(action[:name])
+      unless ra
+        attrs = {:action => action[:name]}
+        ra = st.resource_actions.build(attrs)
+      end
+      ra.dialog = d
+      ra.fqname = @edit[:new][action[:edit_key]] unless @edit[:new][action[:edit_key]].nil?
+      ra.save!
     end
   end
 
@@ -869,14 +853,15 @@ class CatalogController < ApplicationController
       @edit[:new][:available_catalogs].push([stc.name,stc.id])
     end
     @edit[:new][:available_catalogs].sort!                  # Sort the available fields array
-    #initialize fqname/retire_fqname
-    @edit[:new][:fqname] = @edit[:new][:retire_fqname] = ""
+    # initialize fqnames
+    @edit[:new][:fqname] = @edit[:new][:reconfigure_fqname] = @edit[:new][:retire_fqname] = ""
     @record.resource_actions.each do |ra|
       if ra.action.downcase == "provision"
         @edit[:new][:dialog_id] = ra.dialog_id.to_i
         @edit[:new][:fqname] = ra.fqname
+      elsif ra.action.downcase == 'reconfigure'
+        @edit[:new][:reconfigure_fqname] = ra.fqname
       elsif ra.action.downcase == "retirement"
-        @edit[:new][:dialog_id] = ra.dialog_id.to_i
         @edit[:new][:retire_fqname] = ra.fqname
       end
     end
@@ -1188,10 +1173,16 @@ class CatalogController < ApplicationController
               end
               @sb[:dialog_label] = "No Dialog"
               @record.resource_actions.each do |ra|
-                d = Dialog.find_by_id(ra.dialog_id.to_i)
-                @sb[:dialog_label] = d.label if ["provision","retirement"].include?(ra.action.downcase) && d
-                @sb[:fqname] = ra.fqname if ra.action.downcase == "provision"
-                @sb[:retire_fqname] = ra.fqname if ra.action.downcase == "retirement"
+                case ra.action.downcase
+                when 'provision'
+                  d = Dialog.find_by_id(ra.dialog_id.to_i)
+                  @sb[:dialog_label] = d.label if d
+                  @sb[:fqname] = ra.fqname
+                when 'reconfigure'
+                  @sb[:reconfigure_fqname] = ra.fqname
+                when 'retirement'
+                  @sb[:retire_fqname] = ra.fqname
+                end
               end
               #saving values of ServiceTemplate catalog id and resource that are needed in view to build the link
               @sb[:stc_nodes] = Hash.new

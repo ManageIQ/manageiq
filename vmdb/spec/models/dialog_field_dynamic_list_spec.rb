@@ -101,13 +101,6 @@ describe DialogFieldDynamicList do
           @df.initialize_with_values({}).should == [[nil, "<None>"]]
         end
 
-        it "load_values_on_init is true without default value" do
-          @df.stub(:load_values_on_init?).and_return(true)
-          @ws_attributes.merge!({"values" => [[1, "one"]]})
-          @df.resource_action.stub(:deliver_to_automate_from_dialog_field).and_return(@ws)
-          @df.initialize_with_values({}).should be_nil
-        end
-
         it "load_values_on_init is true with default value" do
           @df.stub(:load_values_on_init?).and_return(true)
           @ws_attributes.merge!({"values" => [[1, "one"]], "default_value" => 1})

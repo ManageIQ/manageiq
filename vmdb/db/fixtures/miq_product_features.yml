@@ -814,6 +814,10 @@
         :description: Set Ownership of VMs
         :feature_type: control
         :identifier: service_ownership
+      - :name: Reconfigure Services
+        :description: Reconfigure Services Options
+        :feature_type: admin
+        :identifier: service_reconfigure
     - :name: Operate
       :description: Perform Operations on Services
       :feature_type: control

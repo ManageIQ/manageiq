@@ -1,0 +1,13 @@
+#main_div
+  - s = @miq_request.source
+  - st = s.service_template
+  - ra = st.resource_actions.find_by_action('Reconfigure') if st
+  - if ra && ra.dialog
+    - values = @miq_request.options[:dialog]
+    - opts = {}
+    %fieldset
+      %p.legend Dialog Options
+      %dl.col1
+        %dd
+          = render :partial => "shared/dialogs/dialog_provision",
+                   :locals  => {:wf => ResourceActionWorkflow.new(values, session[:userid], ra, opts)}

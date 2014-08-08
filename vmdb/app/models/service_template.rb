@@ -49,8 +49,9 @@ class ServiceTemplate < ActiveRecord::Base
     "clone_to_service"
   end
 
-  def create_service(parent_svc=nil)
+  def create_service(service_task, parent_svc = nil)
     nh = self.attributes.dup
+    nh['options'][:dialog] = service_task.options[:dialog]
     (nh.keys - Service.column_names + %w{created_at guid service_template_id updated_at id type prov_type}).each {|key| nh.delete(key)}
 
     # Hide child services by default
@@ -113,7 +114,7 @@ class ServiceTemplate < ActiveRecord::Base
 
   def create_tasks_for_service(service_task, parent_svc)
     tasks = []
-    svc = self.create_service(parent_svc)
+    svc = create_service(service_task, parent_svc)
 
     user = User.find_by_userid(service_task.userid)
     self.set_ownership(svc, user) unless user.nil?

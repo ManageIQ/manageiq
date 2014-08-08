@@ -8,6 +8,11 @@ class DialogFieldTextBox < DialogField
     self.options[:protected] == true
   end
 
+  def value_from_dialog_fields(dialog_values)
+    value = dialog_values[automate_key_name]
+    self.protected? ? MiqPassword.decrypt(value) : value
+  end
+
   def automate_output_value
     return MiqPassword.encrypt(value) if self.protected?
     value

@@ -6,12 +6,13 @@ class ServiceController < ApplicationController
   after_filter :set_session_data
 
   SERVICE_X_BUTTON_ALLOWED_ACTIONS = {
-    'service_delete'     => :service_delete,
-    'service_edit'       => :service_edit,
-    'service_ownership'  => :service_ownership,
-    'service_tag'        => :service_tag,
-    'service_retire'     => :service_retire,
-    'service_retire_now' => :service_retire_now,
+    'service_delete'      => :service_delete,
+    'service_edit'        => :service_edit,
+    'service_ownership'   => :service_ownership,
+    'service_tag'         => :service_tag,
+    'service_retire'      => :service_retire,
+    'service_retire_now'  => :service_retire_now,
+    'service_reconfigure' => :service_reconfigure
   }
 
   def button
@@ -40,7 +41,7 @@ class ServiceController < ApplicationController
     @sb[:action] = action
 
     performed_action = whitelisted_action(params[:pressed])
-    return if [:service_delete, :service_edit].include?(performed_action)
+    return if [:service_delete, :service_edit, :service_reconfigure].include?(performed_action)
 
     if @refresh_partial
       replace_right_cell(action)
@@ -191,6 +192,27 @@ class ServiceController < ApplicationController
         @changed = session[:changed] = false
         replace_right_cell("service_edit")
         return
+    end
+  end
+
+  def service_reconfigure
+    s = Service.find_by_id(from_cid(params[:id]))
+    st = s.service_template
+    ra = st.resource_actions.find_by_action('Reconfigure') if st
+    if ra && ra.dialog_id
+      @right_cell_text = I18n.t("cell_header.task_model_record",
+                                :task  => "Reconfigure",
+                                :name  => st.name,
+                                :model => ui_lookup(:model => "Service"))
+      @explorer = true
+      options = {
+        :header      => @right_cell_text,
+        :target_id   => s.id,
+        :target_kls  => s.class.name,
+        :dialog      => s.options[:dialog],
+        :dialog_mode => :reconfigure
+      }
+      dialog_initialize(ra, options)
     end
   end
 

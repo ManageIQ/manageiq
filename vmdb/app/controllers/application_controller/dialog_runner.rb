@@ -22,7 +22,7 @@ module ApplicationController::DialogRunner
         begin
           result = @edit[:wf].submit_request(session[:userid])
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task=>"Provsioning") << bang.message, :error)
+          add_flash(I18n.t("flash.error_during", :task => "Provisioning") << bang.message, :error)
           render :update do |page|                    # Use RJS to update the display
             page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
           end
@@ -200,9 +200,10 @@ module ApplicationController::DialogRunner
 
   def dialog_initialize(ra, options)
     @edit = Hash.new
-    opts = Hash.new
-    @edit[:new] = Hash.new
-    opts[:target] = options[:target_kls].constantize.find_by_id(options[:target_id])
+    @edit[:new] = options[:dialog] || {}
+    opts = {
+      :target => options[:target_kls].constantize.find_by_id(options[:target_id])
+    }
     @edit[:wf] = ResourceActionWorkflow.new(@edit[:new],session[:userid],ra,opts)
     @record = Dialog.find_by_id(ra.dialog_id.to_i)
     @edit[:rec_id]   = @record.id
@@ -210,6 +211,7 @@ module ApplicationController::DialogRunner
     @edit[:explorer] = @explorer ? @explorer : false
     @edit[:target_id] = options[:target_id]
     @edit[:target_kls] = options[:target_kls]
+    @edit[:dialog_mode] = options[:dialog_mode]
     @edit[:current] = copy_hash(@edit[:new])
     @edit[:right_cell_text] = options[:header].to_s
     build_sample_tree

@@ -1,0 +1,125 @@
+- if @edit && @edit[:stamp_typ]
+  - url = url_for(:action => 'stamp_field_changed', :id => @edit[:request].id)
+#request_div
+  %fieldset
+    %p.legend Request Details
+    %dl.col3
+      %dd
+        %table.style1
+          %tr
+            %td.key Request ID
+            %td.wide:nowrap
+              = h(number_with_delimiter(@miq_request.id))
+          %tr
+            %td.key Status
+            %td.wide:nowrap
+              = h(@miq_request.status)
+          %tr
+            %td.key Request State
+            %td.wide:nowrap
+              = h(@miq_request.state.titleize)
+          %tr
+            %td.key Requester
+            %td.wide:nowrap
+              - if @miq_request.requester
+                = h(@miq_request.requester_name)
+          %tr
+            %td.key Request Type
+            %td.wide:nowrap
+              = h(@miq_request.request_type_display)
+      %dd
+        %table.style1
+          %tr
+            %td.key Description
+            %td.wide:nowrap
+              = h(@miq_request.description)
+          %tr
+            %td.key Last Message
+            %td.wide
+              = h(@miq_request.message)
+          %tr
+            %td.key Created On
+            %td.wide:nowrap
+              = h(format_timezone(@miq_request.created_on))
+          %tr
+            %td.key Last Update
+            %td.wide:nowrap
+              = h(format_timezone(@miq_request.updated_on))
+          %tr
+            %td.key Completed
+            %td.wide:nowrap
+              - if @miq_request.fulfilled_on
+                = h(format_timezone(@miq_request.fulfilled_on))
+      %dd
+        %table.style1
+          %tr
+            %td.key Approval State
+            %td.wide:nowrap
+              = h(@miq_request.approval_state.titleize)
+          %tr
+            %td.key Approved/Denied by
+            %td.wide:nowrap
+              - if @miq_request.stamped_by
+                = h(@miq_request.stamped_by + (@temp[:user] && " (#{@temp[:user].name})"))
+          %tr
+            %td.key Date Approved/Denied
+            %td.wide:nowrap
+              = h(format_timezone(@miq_request.stamped_on))
+          %tr
+            %td.key Reason
+            - if @edit && @edit[:stamp_typ]
+              %td.wide:nowrap
+                = text_field_tag("reason",
+                                 @edit[:reason],
+                                 :maxlength         => MAX_NAME_LEN,
+                                 "data-miq_focus"   => true,
+                                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            - else
+              %td
+                = h(@miq_request.reason)
+          - if !@edit && @miq_request.approval_state.downcase == "approved"
+            - if @miq_request.resource_type == "MiqProvisionRequest" &&  @miq_request.resource.miq_provisions.length > 0
+              %tr
+                %td.key Provisioned VMs
+                %td{:class       => "#{cycle('row0','row1', :name => 'rel')} hover-text", 
+                    :onclick     => "DoNav('#{"/miq_request/show/" << @miq_request.id.to_s << "?display=miq_provisions"}');",
+                    :onmouseover => "this.style.cursor='pointer'",
+                    :title       => "Click to view details"}
+                  = h(@miq_request.resource.miq_provisions.length)
+            - if @miq_request.resource_type == "MiqHostProvisionRequest" &&  @miq_request.resource.miq_host_provisions.length > 0
+              %tr
+                %td.key Provisioned Hosts
+                %td{:class       => "#{cycle('row0','row1',:name => 'rel')} hover-text",
+                    :onclick     => "DoNav('#{"/miq_request/show/" << @miq_request.id.to_s << "?display=miq_provisions"}');",
+                    :onmouseover => "this.style.cursor='pointer'",
+                    :title       => "Click to view details"}
+                  = h(@miq_request.resource.miq_host_provisions.length)
+  - if @edit && @edit[:stamp_typ]
+    %table{:width => "100%"}
+      %tr
+        %td{:align => 'left'}
+          %b
+            = "* Enter a reason for this #{@edit[:stamp_typ] == "a" ? "approval" : "denial"} and press Submit"
+        %td{:align => 'right'}
+          %span#buttons_on{:style => 'display:none'}
+            = link_to(image_tag('/images/formbuttons/submit.png',
+                                :border => "0", :class => "button", :alt => "Submit"),
+                      {:action => 'stamp', :button => "submit", :disabled => true},
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote                => true,
+                      :title                 => "Submit")
+          %span#buttons_off
+            = image_tag("/images/formbuttons/submit.png", :class => "dimmed")
+  %br
+  - if @miq_request.workflow_class
+    = render :partial => "prov_wf", :locals => {:wf => @miq_request.workflow_class.new({:src_vm_id => @miq_request.source_id},session[:userid]), :show => true}
+  - elsif @miq_request.type == 'ServiceTemplateProvisionRequest'
+    = render :partial => "st_prov_show"
+  - elsif @miq_request.type == 'ServiceReconfigureRequest'
+    = render :partial => "service_reconfigure_show"
+  - elsif @miq_request.type == "AutomationRequest"
+    = render :partial => "ae_prov_show"
+  - else
+    = render :partial => "reconfigure_show"
+

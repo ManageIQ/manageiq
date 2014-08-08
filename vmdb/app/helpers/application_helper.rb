@@ -625,6 +625,15 @@ module ApplicationHelper
     end
   end
 
+  def build_toolbar_hide_button_service(id)
+    case id
+    when "service_reconfigure"
+      ra = @record.service_template.resource_actions.find_by_action('Reconfigure')
+      return true if ra.nil? || ra.fqname.blank?
+    end
+    false
+  end
+
   # Determine if a button should be hidden
   def build_toolbar_hide_button(id)
     return true if id == "blank_button" # Always hide the blank button placeholder
@@ -633,9 +642,10 @@ module ApplicationHelper
     # TODO: extend .is_available? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
 
-    # hide edit button for MiqRequest instances of type ServiceTemplateProvisionRequest
+    # hide edit button for MiqRequest instances of type ServiceReconfigureRequest/ServiceTemplateProvisionRequest
     # TODO: extend .is_available? support via refactoring task to cover this scenario
-    return true if id == 'miq_request_edit' && @miq_request.try(:type) == 'ServiceTemplateProvisionRequest'
+    return true if id == 'miq_request_edit' &&
+                   %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
 
     # only hide gtl button if they are not in @temp
     return @temp[:gtl_buttons].include?(id) ? false : true if @temp &&
@@ -896,7 +906,8 @@ module ApplicationHelper
         return true if !@record.host.smart? || params[:action] == "log_viewer"
       end
     when "MiqProvisionRequest", "MiqHostProvisionRequest", "VmReconfigureRequest",
-        "VmMigrateRequest", "AutomationRequest", "ServiceTemplateProvisionRequest"
+        "VmMigrateRequest", "AutomationRequest",
+        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest"
 
       # Don't hide certain buttons on AutomationRequest screen
       return true if @record.resource_type == "AutomationRequest" &&
@@ -934,6 +945,8 @@ module ApplicationHelper
       when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
         return true
       end
+    when "Service"
+      return build_toolbar_hide_button_service(id)
     when "Vm"
       case id
       when "vm_clone"

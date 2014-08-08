@@ -35,57 +35,63 @@ class MiqRequest < ActiveRecord::Base
   include MiqRequestMixin
 
   MODEL_REQUEST_TYPES = {
-    :Vm => {
-      :MiqProvisionRequest => {
+    :Vm                => {
+      :MiqProvisionRequest             => {
         :template          => "VM Provision",
         :clone_to_vm       => "VM Clone",
         :clone_to_template => "VM Publish",
       },
-      :VmReconfigureRequest => {
-        :vm_reconfigure    => "VM Reconfigure"
+      :VmReconfigureRequest            => {
+        :vm_reconfigure => "VM Reconfigure"
       },
-      :VmMigrateRequest => {
-        :vm_migrate        => "VM Migrate"
+      :VmMigrateRequest                => {
+        :vm_migrate => "VM Migrate"
       },
       :ServiceTemplateProvisionRequest => {
-        :clone_to_service  => "Service Provision"
+        :clone_to_service => "Service Provision"
+      },
+      :ServiceReconfigureRequest       => {
+        :service_reconfigure => "Service Reconfigure"
       }
     },
-    :Host => {
+    :Host              => {
       :MiqHostProvisionRequest => {
-        :host_pxe_install  => "Host Provision"
+        :host_pxe_install => "Host Provision"
       },
     },
     :AutomationRequest => {
       :AutomationRequest => {
-        :automation        => "Automation"
+        :automation => "Automation"
       }
     }
   }
 
   REQUEST_TYPES = {
-    :MiqProvisionRequest => {
+    :MiqProvisionRequest             => {
       :template          => "VM Provision",
       :clone_to_vm       => "VM Clone",
       :clone_to_template => "VM Publish",
     },
-    :MiqProvisionRequestTemplate => {
-      :template          => "VM Provision Template"
+    :MiqProvisionRequestTemplate     => {
+      :template => "VM Provision Template"
     },
-    :MiqHostProvisionRequest => {
-      :host_pxe_install  => "Host Provision"
+    :MiqHostProvisionRequest         => {
+      :host_pxe_install => "Host Provision"
     },
-    :VmReconfigureRequest => {
-      :vm_reconfigure    => "VM Reconfigure"
+    :VmReconfigureRequest            => {
+      :vm_reconfigure => "VM Reconfigure"
     },
-    :VmMigrateRequest => {
-      :vm_migrate        => "VM Migrate"
+    :VmMigrateRequest                => {
+      :vm_migrate => "VM Migrate"
     },
-    :AutomationRequest => {
-      :automation        => "AutomationRequest"
+    :AutomationRequest               => {
+      :automation => "AutomationRequest"
     },
     :ServiceTemplateProvisionRequest => {
-      :clone_to_service  => "Service Provision"
+      :clone_to_service => "Service Provision"
+    },
+    :ServiceReconfigureRequest       => {
+      :service_reconfigure => "Service Reconfigure"
     }
   }
 

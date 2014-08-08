@@ -29,6 +29,22 @@ module MiqAeMethodService
       ar_method { MiqAeServiceModelBase.wrap_results(Service.create!(attributes)) }
     end
 
+    def dialog_options
+      @object.options[:dialog] || {}
+    end
+
+    def get_dialog_option(key)
+      dialog_options[key]
+    end
+
+    def set_dialog_option(key, value)
+      ar_method do
+        @object.options[:dialog] ||= {}
+        @object.options[:dialog][key] = value
+        @object.update_attribute(:options, @object.options)
+      end
+    end
+
     def name=(new_name)
       ar_method do
         @object.name = new_name
