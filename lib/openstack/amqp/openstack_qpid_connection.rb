@@ -17,14 +17,13 @@ class OpenstackQpidConnection
 
   # options
   # * :hostname     => openstack server hostname [REQUIRED]
-  # * :port         => openstack server amqp port [default 5672]
+  # * :port         => openstack server amqp port [REQUIRED]
   # * :username     => amqp username [REQUIRED - if authentication is enabled]
   # * :password     => amqp password [REQUIRED - if authentication is enabled]
   def initialize(options = {})
     raise "qpid_messaging is not available" unless self.class.available?
 
-    def_options = {:port => 5671} # assume ssl
-    @options = options.merge(def_options)
+    @options = options
   end
 
   # Opens the qpid connection
