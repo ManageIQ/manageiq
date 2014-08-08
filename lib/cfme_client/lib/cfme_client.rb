@@ -7,7 +7,6 @@ require 'faraday'
 require 'faraday_middleware'
 require 'uri'
 require 'active_support/all'
-require 'more_core_extensions/all'
 
 require 'cfme_client/net'
 

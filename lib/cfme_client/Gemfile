@@ -4,7 +4,7 @@ gem "rack"
 gem "faraday"
 gem "faraday_middleware"
 gem "activesupport", "~>3.2.17"
-gem "more_core_extensions", "~>1.2.0"
+gem "more_core_extensions", "~>1.2.0", :require => "more_core_extensions/all"
 
 group :test do
   gem "rspec",      "~>2.12.0", :require => false

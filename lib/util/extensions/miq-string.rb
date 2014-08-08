@@ -2,7 +2,6 @@ $:.push("#{File.dirname(__FILE__)}/..")
 require 'miq-encode'
 
 require 'active_support/inflector'
-require 'more_core_extensions/core_ext/string'
 
 class String
   alias original_less_than_less_than <<

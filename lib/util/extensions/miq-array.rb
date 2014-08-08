@@ -1,5 +1,3 @@
-require 'more_core_extensions/core_ext/array'
-
 class Object #:nodoc:
   def to_miq_a
     [*self]

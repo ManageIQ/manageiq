@@ -1,5 +1,3 @@
-require 'more_core_extensions/core_ext/hash'
-
 class Hash #:nodoc:
 
   # The following fixes a bug in Ruby where if subclasses of String are
