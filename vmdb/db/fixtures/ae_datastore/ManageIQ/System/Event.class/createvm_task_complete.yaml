@@ -10,5 +10,3 @@ object:
   fields:
   - logical_event:
       value: NOT_vm_created
-  - rel5:
-      value: 

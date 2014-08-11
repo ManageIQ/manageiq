@@ -5,7 +5,7 @@ object:
   attributes:
     name: ManageIQ
     description: Base domain
-    display_name:
+    display_name: 
     system: true
     priority: 0
     enabled: true

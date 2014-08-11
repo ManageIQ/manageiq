@@ -148,8 +148,7 @@ object:
       condition: 
       on_entry: update_provision_status(status => 'Applying PreProvision Customizations')
       on_exit: update_provision_status(status => 'Applied PreProvision Customizations')
-      on_error: update_provision_status(status => 'Error Applying PreProvision
-        Customizations')
+      on_error: update_provision_status(status => 'Error Applying PreProvision Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -209,8 +208,7 @@ object:
       condition: 
       on_entry: update_provision_status(status => 'Applying PostProvision Customizations')
       on_exit: update_provision_status(status => 'Applied PostProvision Customizations')
-      on_error: update_provision_status(status => 'Error Applying PostProvision
-        Customizations')
+      on_error: update_provision_status(status => 'Error Applying PostProvision Customizations')
       max_retries: 
       max_time: 
   - field:
