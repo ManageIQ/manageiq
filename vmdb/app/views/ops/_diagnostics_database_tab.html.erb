@@ -3,7 +3,7 @@
   <%= render :partial => "layouts/flash_msg" , 
              :locals  => {:div_num => "database"} 
   %>
-  <fieldset>
+
     <p class="legend">Basic Info</p>
     <table class="style1">
       <tr>
@@ -24,10 +24,10 @@
         </td>
       </tr>
     </table>
-  </fieldset>
+
   <% if DatabaseBackup.backup_supported? %>
     <% url = url_for(:action =>'db_backup_form_field_changed') %>
-    <fieldset>
+    <hr>
     <p class="legend">Run a Database Backup Now</p>
 
       <fieldset>
@@ -80,10 +80,10 @@
           </td>
         </tr>
       </table>
-    </fieldset>
+
   <% end %>
   <% if DatabaseBackup.gc_supported? %>
-    <fieldset>
+    <hr>
       <p class="legend">Run Database Garbage Collection Now</p>
       <table class="style1">
         <tr>
@@ -109,6 +109,6 @@
           </td>
         </tr>
       </table>
-    </fieldset>
+
   <% end %>
 <% end %>

@@ -1,4 +1,4 @@
-<div style="padding-top:10px;"></div>
+
 <% if @sb[:active_tab] == "diagnostics_servers_roles" %>
 	<%= render(:partial=>"layouts/flash_msg") %>
 	<% if @temp[:server_tree] %>
@@ -11,6 +11,9 @@
 				</dd>
 			</dl>
 	<% else %>
-		No Servers found
+	  <div class="alert alert-info">
+	    <span class="pficon pficon-info"></span>
+	    <strong>No Servers found.</strong>
+	  </div>
 	<% end %>
 <% end %>

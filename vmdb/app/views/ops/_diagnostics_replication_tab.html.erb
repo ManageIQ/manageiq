@@ -1,7 +1,7 @@
 	<% if @sb[:active_tab] == "diagnostics_replication" %>
 		<%= render :partial => "layouts/flash_msg" %>
-		<div style="padding-bottom:20px;"></div>
-		<fieldset>
+
+
 			<p class="legend">Replication Process</p>
 			<table class="style1">
 				<tr>
@@ -17,6 +17,6 @@
 					<td class="wide"><%= h(MiqReplicationWorker.current_backlog.to_i) %></td>
 				</tr>
 			</table>
-		</fieldset>	
+
 	<% end %>
 

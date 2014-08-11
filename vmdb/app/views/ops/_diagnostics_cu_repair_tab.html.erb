@@ -6,10 +6,10 @@
     var miq_cal_dateFrom = null;
     var miq_cal_dateTo = new Date();
   </script>
-  <div style="padding-top:10px;"></div>
+
   <%= render :partial => "layouts/flash_msg", :locals=>{:div_num=>"cu_repair"} %>
 
-  <fieldset>
+
     <p class="legend">Collection Options</p>
     <table class="style1">
       <tr>
@@ -41,5 +41,5 @@
       </tr>
     </table>
     <div class="note">Note: Gap Collection is only available for VMware vSphere Infrastructures</div>
-  </fieldset>
+
 <% end %>
