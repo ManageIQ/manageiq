@@ -112,4 +112,17 @@ module PxeHelper::TextualSummary
   def textual_template_type
     {:label => "Type", :value => @ct.type.sub("CustomizationTemplate", "")}
   end
+
+  def textual_sysimg_type_basicinfo
+    items = %w(name provision_type)
+    items.collect { |m| send("textual_sysimg_type_#{m}") }.flatten.compact
+  end
+
+  def textual_sysimg_type_name
+    {:label => "Name", :value => @pxe_image_type.name}
+  end
+
+  def textual_sysimg_type_provision_type
+    {:label => "Provision Type", :value => @pxe_image_type.provision_type}
+  end
 end
