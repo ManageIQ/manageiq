@@ -29,7 +29,7 @@
   - job_all_smartproxy
   - job_my_smartproxy
   - miq_ae_class_explorer
-  - miq_ae_customization
+  - miq_ae_customization_explorer
   - miq_ae_class_import_export
   - miq_ae_class_log
   - miq_ae_class_simulation
