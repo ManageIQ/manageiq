@@ -191,20 +191,7 @@ module ApplicationController::MiqRequestMethods
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
       @edit = session[:edit] =  nil                                               # Clear out session[:edit]
       @breadcrumbs.pop if @breadcrumbs
-      if @explorer
-        @sb[:action] = nil
-        replace_right_cell
-      else
-        render :update do |page|
-          if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
-            page.redirect_to :action =>"show_list", :controller=>"vm"
-          else
-            #had to get id from breadcrumbs url, because there is no params[:id] when cancel is pressed on copy Request screen.
-            url = @breadcrumbs.last[:url].split('/')
-            page.redirect_to :controller=>url[1], :action =>url[2], :id=>url[3]
-          end
-        end
-      end
+      prov_request_cancel_submit_response
     elsif params[:button] == "submit"                           # Update or create the request from the workflow with the new options
       prov_req_submit
     else                                                        # First time in, build provision request screen
@@ -537,6 +524,24 @@ module ApplicationController::MiqRequestMethods
     end
   end
 
+  def prov_request_cancel_submit_response
+    if @explorer
+      @sb[:action] = nil
+      replace_right_cell
+    else
+      render :update do |page|
+        if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
+          page.redirect_to :action => "show_list", :controller => "vm"
+        else
+          # had to get id from breadcrumbs url,
+          # because there is no params[:id] when cancel is pressed on copy Request screen.
+          url = @breadcrumbs.last[:url].split('/')
+          page.redirect_to :controller => url[1], :action => url[2], :id => url[3]
+        end
+      end
+    end
+  end
+
   def prov_req_submit
     id = session[:edit][:req_id] || "new"
     return unless load_edit("prov_edit__#{id}","show_list")
@@ -557,8 +562,16 @@ module ApplicationController::MiqRequestMethods
       flash = @edit[:req_id] == nil ? I18n.t("flash.request.request_submitted", :typ=>@edit[:prov_type], :title=>title) : I18n.t("flash.request.request_resubmitted", :typ=>@edit[:prov_type], :title=>title)
       @explorer = @edit[:explorer] ? @edit[:explorer] : false
       @sb[:action] = @edit = session[:edit] =  nil                                                # Clear out session[:edit]
-      render :update do |page|
-        page.redirect_to :controller=>'miq_request', :action => 'show_list', :flash_msg=>flash, :typ=>typ # redirect to miq_request show_list screen
+      if role_allows(:feature => "miq_request_show_list", :any => true)
+        render :update do |page|
+          page.redirect_to :controller => 'miq_request',
+                           :action     => 'show_list',
+                           :flash_msg  => flash,
+                           :typ        => typ
+        end
+      else
+        add_flash(flash)
+        prov_request_cancel_submit_response
       end
     else
       @edit[:new][:current_tab_key] = @error_div.split('_')[0].to_sym if @error_div
