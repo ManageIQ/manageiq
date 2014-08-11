@@ -4,48 +4,14 @@
     <div id="pxe_info_div">
       <% unless @edit %>
         <%= render(:partial=>"layouts/flash_msg") %>
-        <p class="legend">Basic Information</p>
-        <table class="style1">
-          <tr>
-            <td class="key">URI Prefix</td>
-            <td><%= h(@ps.uri_prefix) %></td>
-          </tr>
-          <tr>
-            <td class="key">URI</td>
-            <td><%= h(@ps.uri) %></td>
-          </tr>
-          <tr>
-            <td class="key">Access URL</td>
-            <td><%= h(@ps.access_url) %></td>
-          </tr>
-          <tr>
-            <td class="key">PXE Directory</td>
-            <td><%= h(@ps.pxe_directory) %></td>
-          </tr>
-          <tr>
-            <td class="key">Windows Images Directory</td>
-            <td><%= h(@ps.windows_images_directory) %></td>
-          </tr>
-          <tr>
-            <td class="key">Customization Directory</td>
-            <td><%= h(@ps.customization_directory) %></td>
-          </tr>
-          <tr>
-            <td class="key">Last Refreshed On</td>
-            <td><%= h(@ps.last_refresh_on) %></td>
-          </tr>
-        </table>
-
+        <%= render :partial => "shared/summary/textual",
+                   :locals  => {:title => "Basic Information",
+                                :items => textual_group_basicinfo} %>
         <% if @ps.pxe_menus.count > 0 %>
           <hr>
-            <p class="legend">PXE Image Menus</p>
-            <table class="style1">
-              <tr>
-                <td class="key">Filename</td>
-                <td><%= h(@ps.pxe_menus[0].file_name) %></td>
-              </tr>
-            </table>
-
+          <%= render :partial => "shared/summary/textual",
+                     :locals  => {:title => "PXE Image Menus",
+                                  :items => textual_group_pxe_image_menus} %>
         <% if false %>
           <%# this code can be uncommented when we have multiple pxe_menus %>
           <% if !@ps.pxe_menus.empty? %>
@@ -130,30 +96,9 @@
     <div id="pxe_img__info_div">
       <% unless @edit %>
         <%= render(:partial => "layouts/flash_msg") %>
-        <p class="legend">Basic Information</p>
-        <table class="style1">
-          <tr>
-            <td class="key">Name</td>
-            <td><%= h(@img.name) %></td>
-          </tr>
-          <tr>
-            <td class="key">Description</td>
-            <td><%= h(@img.description) %></td>
-          </tr>
-          <tr>
-            <td class="key">Type</td>
-            <td><%= h(@img.pxe_image_type ? @img.pxe_image_type.name : "") %></td>
-          </tr>
-          <tr>
-            <td class="key">Kernel</td>
-            <td><%= h(@img.kernel) %></td>
-          </tr>
-          <tr>
-            <td class="key">Windows Boot Environment</td>
-            <td><%= h(@img.default_for_windows ? "Yes" : "") %></td>
-          </tr>
-        </table>
-
+        <%= render :partial => "shared/summary/textual",
+                   :locals  => {:title => "Basic Information",
+                                :items => textual_pxe_img_basicinfo} %>
       <% else %>
         <%= render(:partial => "pxe_img_form") %>
       <% end %>
@@ -164,30 +109,9 @@
     <div id="pxe_wimg__info_div">
       <% unless @edit %>
         <%= render(:partial => "layouts/flash_msg") %>
-          <p class="legend">Basic Information</p>
-          <table class="style1">
-            <tr>
-              <td class="key">Name</td>
-              <td><%= h(@wimg.name) %></td>
-            </tr>
-            <tr>
-              <td class="key">Description</td>
-              <td><%= h(@wimg.description) %></td>
-            </tr>
-            <tr>
-              <td class="key">Type</td>
-              <td><%= h(@wimg.pxe_image_type ? @wimg.pxe_image_type.name : "") %></td>
-            </tr>
-            <tr>
-              <td class="key">Path</td>
-              <td><%= h(@wimg.path) %></td>
-            </tr>
-            <tr>
-              <td class="key">Index</td>
-              <td><%= h(@wimg.index) %></td>
-            </tr>
-          </table>
-
+        <%= render :partial => "shared/summary/textual",
+                   :locals  => {:title => "Basic Information",
+                                :items => textual_win_img_basicinfo} %>
       <% else %>
         <%= render(:partial => "pxe_wimg_form") %>
       <% end %>
