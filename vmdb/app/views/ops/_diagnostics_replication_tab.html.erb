@@ -1,22 +1,18 @@
-	<% if @sb[:active_tab] == "diagnostics_replication" %>
-		<%= render :partial => "layouts/flash_msg" %>
-		<div style="padding-bottom:20px;"></div>
-		<fieldset>
-			<p class="legend">Replication Process</p>
-			<table class="style1">
-				<tr>
-					<td class="key">Replicate to Host</td>
-					<td class="wide"><%= h(MiqReplicationWorker.destination_host.to_s) %></td>
-				</tr>
-				<tr>
-					<td class="key">Status</td>
-					<td class="wide"><%= h(MiqReplicationWorker.replication_active? ? "Active" : "Inactive") %></td>
-				</tr>
-				<tr>
-					<td class="key">Current Backlog</td>
-					<td class="wide"><%= h(MiqReplicationWorker.current_backlog.to_i) %></td>
-				</tr>
-			</table>
-		</fieldset>	
-	<% end %>
-
+<% if @sb[:active_tab] == "diagnostics_replication" %>
+  <%= render :partial => "layouts/flash_msg" %>
+  <p class="legend">Replication Process</p>
+  <table class="style1">
+    <tr>
+      <td class="key">Replicate to Host</td>
+      <td class="wide"><%= h(MiqReplicationWorker.destination_host.to_s) %></td>
+    </tr>
+    <tr>
+      <td class="key">Status</td>
+      <td class="wide"><%= h(MiqReplicationWorker.replication_active? ? "Active" : "Inactive") %></td>
+    </tr>
+    <tr>
+      <td class="key">Current Backlog</td>
+      <td class="wide"><%= h(MiqReplicationWorker.current_backlog.to_i) %></td>
+    </tr>
+  </table>
+<% end %>
