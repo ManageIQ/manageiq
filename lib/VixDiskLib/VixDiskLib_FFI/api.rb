@@ -11,6 +11,10 @@ module FFI
         warn "unable to attach #{args.first}"
       end
 
+      def self.load_error
+        @load_error
+      end
+
       #
       # Make sure we load one and only one version of VixDiskLib
       #
@@ -24,7 +28,7 @@ module FFI
           VERSION_MAJOR, VERSION_MINOR = loaded_library.first.name.split(".")[2, 2].collect(&:to_i)
           if bad_versions.keys.include?(version)
             loaded_library = ""
-            raise LoadError, "VixDiskLib #{version} is not supported: #{bad_versions[version]}"
+            @load_error = "VixDiskLib #{version} is not supported: #{bad_versions[version]}"
           end
           break
         rescue LoadError => err
@@ -33,9 +37,9 @@ module FFI
         end
       end
 
-      unless loaded_library.length > 0
+      unless @load_error || loaded_library.length > 0
         STDERR.puts load_errors.join("\n")
-        raise LoadError, "ffi-vixdisklib: failed to load any version of VixDiskLib!"
+        @load_error = "ffi-vixdisklib: failed to load any version of VixDiskLib!"
       end
       LOADED_LIBRARY = loaded_library
 
