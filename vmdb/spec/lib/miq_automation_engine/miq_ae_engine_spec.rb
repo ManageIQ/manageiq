@@ -650,6 +650,16 @@ module MiqAeEngineSpec
       b9 = a9.children[0]
       b9.attributes["attr1"].should == "foo"
 
+      ws = MiqAeEngine.instantiate("/EVM/A/a10")
+      ws.should_not be_nil
+      roots = ws.roots
+      roots.should_not be_nil
+      roots.should be_a_kind_of(Array)
+      roots.length.should eql(1)
+      a10 = roots[0]
+      b10 = a10.children[0]
+      b10.attributes["attr1"].should eql('Bamm Bamm Rubble')
+      b10.attributes["attr3"].should eql('Pearl/Slaghoople')
     end
 
     it "properly processes substitution with methods" do
