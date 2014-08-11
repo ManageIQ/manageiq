@@ -4,99 +4,98 @@
 
 #rhn_form_div
   = render :partial => 'layouts/flash_msg'
-  %fieldset
-    %p.legend
-      Red Hat Software Updates
-    The Subscription Management Service you register with will provide your systems with updates and allow additional management.
-    %br
-    %br
-      %table.style1
-        %tr
-          %td.key Register to
-          %td
-            = select_tag('register_to',
-              options_for_select(rhn_subscription_types, @edit[:new][:register_to]),
-              'data-miq_sparkle_on'  => true,
-              'data-miq_sparkle_off' => true,
-              'data-miq_observe'     => url_jsh)
+  %p.legend
+    Red Hat Software Updates
+  The Subscription Management Service you register with will provide your systems with updates and allow additional management.
+  %br
+  %br
+    %table.style1
+      %tr
+        %td.key Register to
+        %td
+          = select_tag('register_to',
+            options_for_select(rhn_subscription_types, @edit[:new][:register_to]),
+            'data-miq_sparkle_on'  => true,
+            'data-miq_sparkle_off' => true,
+            'data-miq_observe'     => url_jsh)
 
-        %tr
-          %td.key
-            = rhn_address_string
-          %td.wide
-            = text_field_tag('server_url', @edit[:new][:server_url], :maxlength => 200, 
-              'data-miq_observe' => url_int_jsh, :id => 'server_url')
-            - if rhn_default_enabled
-              =button_tag('Default',
-                        :id      => 'rhn_default_button',
-                        :class   => 'upload',
-                        :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_default_server', :id => 'rhn_edit')}');")
-
-        %tr
-          %td.key Repository Name:
-          %td.wide
-            = text_field_tag('repo_name', @edit[:new][:repo_name], :maxlength => 200,
-              'data-miq_observe' => url_int_jsh, :id => 'repo_name')
+      %tr
+        %td.key
+          = rhn_address_string
+        %td.wide
+          = text_field_tag('server_url', @edit[:new][:server_url], :maxlength => 200, 
+            'data-miq_observe' => url_int_jsh, :id => 'server_url')
+          - if rhn_default_enabled
             =button_tag('Default',
-                      :id      => 'repo_default_name',
-                      :class   => 'upload',
-                      :onclick => "miqAjaxButton('#{url_for(:action => 'repo_default_name', :id => 'rhn_edit')}');")
+                      :id      => 'rhn_default_button',
+                      :class   => 'btn btn-default',
+                      :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_default_server', :id => 'rhn_edit')}');")
 
+      %tr
+        %td.key Repository Name:
+        %td.wide
+          = text_field_tag('repo_name', @edit[:new][:repo_name], :maxlength => 200,
+            'data-miq_observe' => url_int_jsh, :id => 'repo_name')
+          =button_tag('Default',
+                    :id      => 'repo_default_name',
+                    :class   => 'btn btn-default',
+                    :onclick => "miqAjaxButton('#{url_for(:action => 'repo_default_name', :id => 'rhn_edit')}');")
+
+      %tr
+        %td.key HTTP Proxy:
+        %td
+          = check_box_tag('use_proxy', 1, @edit[:new][:use_proxy].to_i == 1,
+            'data-miq_sparkle_on'       => true,
+            'data-miq_sparkle_off'      => true,
+            'data-miq_observe_checkbox' => url_jsh)
+          Use HTTP Proxy
+
+      - if @edit[:new][:use_proxy].to_i == 1
         %tr
-          %td.key HTTP Proxy:
+          %td.key HTTP Proxy Address
           %td
-            = check_box_tag('use_proxy', 1, @edit[:new][:use_proxy].to_i == 1,
-              'data-miq_sparkle_on'       => true,
-              'data-miq_sparkle_off'      => true,
-              'data-miq_observe_checkbox' => url_jsh)
-            Use HTTP Proxy
+            = text_field_tag('proxy_address', @edit[:new][:proxy_address], :maxlength => 200,
+                             'data-miq_observe' => url_int_jsh)
 
-        - if @edit[:new][:use_proxy].to_i == 1
-          %tr
-            %td.key HTTP Proxy Address
-            %td
-              = text_field_tag('proxy_address', @edit[:new][:proxy_address], :maxlength => 200,
-                               'data-miq_observe' => url_int_jsh)
-
-          = render :partial => '/layouts/auth_credentials2',
-                   :locals  => { :prefix     => 'proxy', :record_id => 'new',
-                                 :change_url => url,
-                                 :validate   => false }
-
-    %br
-      = rhn_account_info_string
-    %br
-      %table.style1
         = render :partial => '/layouts/auth_credentials2',
-                 :locals  => { :prefix       => 'customer', :record_id => 'new',
-                               :change_url   => url,
-                               :validate_url => 'rhn_validate',
-                               :validate     => rhn_validate_enabled,
-                               :labels       => { :user => 'Login' } }
+                 :locals  => { :prefix     => 'proxy', :record_id => 'new',
+                               :change_url => url,
+                               :validate   => false }
 
-        - if 'rhn_satellite' == @edit[:new][:register_to]
-          %tr
-            %td.key Organization ID
-            %td
-              = text_field_tag('customer_org', @edit[:new][:customer_org], :maxlength => 200,
-                               'data-miq_observe' => url_int_jsh)
-        - elsif 'rhn_satellite6' == @edit[:new][:register_to] && !@edit[:organizations].blank?
-          %tr
-            %td.key Organization
-            %td
-              - if @edit[:organizations].length == 1
-                = @edit[:new][:customer_org]
-              -else
-                = select_tag('customer_org',
-                  options_for_select((@edit[:new][:customer_org] ? [] : [["<Choose>", nil]]) + @edit[:organizations],
-                                     @edit[:new][:customer_org]),
-                  'data-miq_sparkle_on'  => true,
-                  'data-miq_sparkle_off' => true,
-                  'data-miq_observe'     => url_jsh)
+  %br
+    = rhn_account_info_string
+  %br
+    %table.style1
+      = render :partial => '/layouts/auth_credentials2',
+               :locals  => { :prefix       => 'customer', :record_id => 'new',
+                             :change_url   => url,
+                             :validate_url => 'rhn_validate',
+                             :validate     => rhn_validate_enabled,
+                             :labels       => { :user => 'Login' } }
 
-      Forgot your login or password? Look it up at
-      %a{:target => 'rh_lost_passwd', :href => 'http://redhat.com/forgot_password'}
-        http://redhat.com/forgot_password
+      - if 'rhn_satellite' == @edit[:new][:register_to]
+        %tr
+          %td.key Organization ID
+          %td
+            = text_field_tag('customer_org', @edit[:new][:customer_org], :maxlength => 200,
+                             'data-miq_observe' => url_int_jsh)
+      - elsif 'rhn_satellite6' == @edit[:new][:register_to] && !@edit[:organizations].blank?
+        %tr
+          %td.key Organization
+          %td
+            - if @edit[:organizations].length == 1
+              = @edit[:new][:customer_org]
+            -else
+              = select_tag('customer_org',
+                options_for_select((@edit[:new][:customer_org] ? [] : [["<Choose>", nil]]) + @edit[:organizations],
+                                   @edit[:new][:customer_org]),
+                'data-miq_sparkle_on'  => true,
+                'data-miq_sparkle_off' => true,
+                'data-miq_observe'     => url_jsh)
+
+    Forgot your login or password? Look it up at
+    %a{:target => 'rh_lost_passwd', :href => 'http://redhat.com/forgot_password'}
+      http://redhat.com/forgot_password
 
 -# Need this to bind checkbox observers when under DHTMLX tabs
 -# TODO: Remove when DHTMLX tabs are converted to jQuery tabs
