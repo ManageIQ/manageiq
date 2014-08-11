@@ -4,18 +4,9 @@
     <div id="iso_datastore_info_div">
       <% unless @edit %>
         <%= render(:partial => "layouts/flash_msg") %>
-        <p class="legend">Basic Information</p>
-        <table class="style1">
-          <tr>
-            <td class="key"><%= ui_lookup(:table => "ext_management_system")%></td>
-            <td><%= h(@isd.name) %></td>
-          </tr>
-          <tr>
-            <td class="key">Last Refreshed On</td>
-            <td><%= h(@isd.last_refresh_on) %></td>
-          </tr>
-        </table>
-
+        <%= render :partial => "shared/summary/textual",
+                   :locals  => {:title => "Basic Information",
+                                :items => textual_iso_datastore_basicinfo} %>
         <% unless @isd.iso_images.empty? %>
           <p class="legend">ISO Images</p>
             <table class="style3">
@@ -47,18 +38,9 @@
     <div id="iso_img_info_div">
       <% unless @edit %>
         <%= render(:partial => "layouts/flash_msg") %>
-        <p class="legend">Basic Information</p>
-        <table class="style1">
-          <tr>
-            <td class="key">Name</td>
-            <td><%= h(@img.name) %></td>
-          </tr>
-          <tr>
-            <td class="key">Type</td>
-            <td><%= h(@img.pxe_image_type ? @img.pxe_image_type.name : "") %></td>
-          </tr>
-        </table>
-
+        <%= render :partial => "shared/summary/textual",
+                   :locals  => {:title => "Basic Information",
+                                :items => textual_iso_img_info} %>
       <% else %>
         <%= render(:partial => "iso_img_form") %>
       <% end %>

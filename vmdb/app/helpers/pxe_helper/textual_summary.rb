@@ -125,4 +125,30 @@ module PxeHelper::TextualSummary
   def textual_sysimg_type_provision_type
     {:label => "Provision Type", :value => @pxe_image_type.provision_type}
   end
+
+  def textual_iso_datastore_basicinfo
+    items = %w(name last_refresh_on)
+    items.collect { |m| send("textual_iso_datastore_#{m}") }.flatten.compact
+  end
+
+  def textual_iso_datastore_name
+    {:label => ui_lookup(:table => "ext_management_system"), :value => @isd.name}
+  end
+
+  def textual_iso_datastore_last_refresh_on
+    {:label => "Last Refreshed On", :value => @isd.last_refresh_on}
+  end
+
+  def textual_iso_img_info
+    items = %w(name type)
+    items.collect { |m| send("textual_iso_img_info_#{m}") }.flatten.compact
+  end
+
+  def textual_iso_img_info_name
+    {:label => "Name", :value => @img.name}
+  end
+
+  def textual_iso_img_info_type
+    {:label => "Type", :value => @img.pxe_image_type ? @img.pxe_image_type.name : ""}
+  end
 end
