@@ -19,7 +19,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   # It creates a test mock point for specs
   def self.connect(options={})
     connection_options = {:host => options[:hostname]}
-    connection_options[:port] ||= 5671 # default to ssl port
+    connection_options[:port] = options[:port] || DEFAULT_AMQP_PORT
     if options.key? :username
       connection_options[:username] = options[:username]
       connection_options[:password] = options[:password]
@@ -45,7 +45,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
 
   def initialize(options = {})
     @options = options
-    @options[:port] ||= 5671 # default to ssl port
+    @options[:port] ||= DEFAULT_AMQP_PORT
     @collecting_events = false
     @events = []
     #protect threaded access to the events array
