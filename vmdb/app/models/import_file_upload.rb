@@ -42,16 +42,12 @@ class ImportFileUpload < ActiveRecord::Base
     widgets.to_json
   end
 
-  def store_policy_import_data(binary_data)
-    store_binary_data(binary_data, "Policy import")
-  end
-
-  def store_service_dialog_import_data(binary_data)
-    store_binary_data(binary_data, "Service Dialog import")
-  end
-
-  def store_widget_import_data(binary_data)
-    store_binary_data(binary_data, "Widget import")
+  def store_binary_data_as_yml(binary_data, name)
+    create_binary_blob(
+      :binary    => binary_data,
+      :name      => name,
+      :data_type => "yml"
+    )
   end
 
   def uploaded_content
@@ -63,14 +59,6 @@ class ImportFileUpload < ActiveRecord::Base
   end
 
   private
-
-  def store_binary_data(binary_data, name)
-    create_binary_blob(
-      :binary    => binary_data,
-      :name      => name,
-      :data_type => "yml"
-    )
-  end
 
   def determine_status(status_icon)
     case status_icon

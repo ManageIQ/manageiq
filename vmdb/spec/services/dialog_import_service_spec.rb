@@ -2,12 +2,12 @@ require "spec_helper"
 require "dialog_field_importer"
 require "dialog_import_validator"
 
-describe DialogImporter do
-  let(:dialog_importer) { described_class.new(dialog_field_importer, dialog_import_validator) }
+describe DialogImportService do
+  let(:dialog_import_service) { described_class.new(dialog_field_importer, dialog_import_validator) }
   let(:dialog_field_importer) { instance_double("DialogFieldImporter") }
   let(:dialog_import_validator) { instance_double("DialogImportValidator") }
 
-  shared_context "DialogImporter dialog setup" do
+  shared_context "DialogImportService dialog setup" do
     let(:dialog_fields) do
       [{"name" => "FavoriteColor", "label" => "Favorite Color"}]
     end
@@ -46,7 +46,7 @@ describe DialogImporter do
 
     it "destroys the import file upload" do
       import_file_upload.should_receive(:destroy)
-      dialog_importer.cancel_import("123")
+      dialog_import_service.cancel_import("123")
     end
 
     it "destroys the queued deletion" do
@@ -55,12 +55,12 @@ describe DialogImporter do
         :instance_id => 123,
         :method_name => "destroy"
       )
-      dialog_importer.cancel_import("123")
+      dialog_import_service.cancel_import("123")
     end
   end
 
   describe "#import_from_file" do
-    include_context "DialogImporter dialog setup"
+    include_context "DialogImportService dialog setup"
 
     let(:filename) { "filename" }
 
@@ -75,13 +75,13 @@ describe DialogImporter do
         end
 
         it "does not create a third dialog" do
-          dialog_importer.import_from_file(filename)
+          dialog_import_service.import_from_file(filename)
           Dialog.count.should == 2
         end
 
         it "yields the given block" do
           block_called = false
-          dialog_importer.import_from_file(filename) do |dialog|
+          dialog_import_service.import_from_file(filename) do |_|
             block_called = true
           end
 
@@ -91,25 +91,25 @@ describe DialogImporter do
 
       context "when there is not an existing dialog" do
         it "builds a new dialog" do
-          dialog_importer.import_from_file(filename)
+          dialog_import_service.import_from_file(filename)
           Dialog.first.should_not be_nil
         end
 
         it "builds a dialog tab associated to the dialog" do
-          dialog_importer.import_from_file(filename)
+          dialog_import_service.import_from_file(filename)
           dialog = Dialog.first
           DialogTab.first.dialog.should == dialog
         end
 
         it "builds a dialog group associated to the dialog tab" do
-          dialog_importer.import_from_file(filename)
+          dialog_import_service.import_from_file(filename)
           dialog_tab = DialogTab.first
           DialogGroup.first.dialog_tab.should == dialog_tab
         end
 
         it "imports the dialog fields" do
           dialog_field_importer.should_receive(:import_field).with(dialog_fields[0])
-          dialog_importer.import_from_file(filename)
+          dialog_import_service.import_from_file(filename)
         end
       end
     end
@@ -124,7 +124,7 @@ describe DialogImporter do
 
       it "re-raises" do
         expect {
-          dialog_importer.import_from_file(filename)
+          dialog_import_service.import_from_file(filename)
         }.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError, "Custom Message")
       end
     end
@@ -135,13 +135,15 @@ describe DialogImporter do
       end
 
       it "raises a ParsedNonDialogYamlError" do
-        expect { dialog_importer.import_from_file(filename) }.to raise_error(DialogImporter::ParsedNonDialogYamlError)
+        expect {
+          dialog_import_service.import_from_file(filename)
+        }.to raise_error(DialogImportService::ParsedNonDialogYamlError)
       end
     end
   end
 
   describe "#import_service_dialogs" do
-    include_context "DialogImporter dialog setup"
+    include_context "DialogImportService dialog setup"
 
     let(:miq_queue) { active_record_instance_double("MiqQueue") }
     let(:yaml_data) { "the yaml" }
@@ -155,10 +157,10 @@ describe DialogImporter do
       MiqQueue.stub(:unqueue)
     end
 
-    shared_examples_for "DialogImporter#import_service_dialogs that destroys temporary data" do
+    shared_examples_for "DialogImportService#import_service_dialogs that destroys temporary data" do
       it "destroys the import file upload" do
         import_file_upload.should_receive(:destroy)
-        dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
+        dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
       end
 
       it "unqueues the miq_queue item" do
@@ -167,7 +169,7 @@ describe DialogImporter do
           :instance_id => 123,
           :method_name => "destroy"
         )
-        dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
+        dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
       end
     end
 
@@ -181,47 +183,49 @@ describe DialogImporter do
           Dialog.create!(:label => "Test2", :description => "not potato")
         end
 
-        it_behaves_like "DialogImporter#import_service_dialogs that destroys temporary data"
+        it_behaves_like "DialogImportService#import_service_dialogs that destroys temporary data"
 
         it "overwrites the existing dialog" do
-          dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
+          dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           Dialog.where(:label => "Test2").first.description.should == "potato"
         end
       end
 
       context "when the list of dialogs to import from the yaml do not include an existing dialog" do
-        it_behaves_like "DialogImporter#import_service_dialogs that destroys temporary data"
+        it_behaves_like "DialogImportService#import_service_dialogs that destroys temporary data"
 
         it "builds a new dialog" do
-          dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
+          dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           Dialog.first.should_not be_nil
         end
 
         it "builds a dialog tab associated to the dialog" do
-          dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
+          dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           dialog = Dialog.first
           DialogTab.first.dialog.should == dialog
         end
 
         it "builds a dialog group associated to the dialog tab" do
-          dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
+          dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           dialog_tab = DialogTab.first
           DialogGroup.first.dialog_tab.should == dialog_tab
         end
 
         it "imports the dialog fields" do
           dialog_field_importer.should_receive(:import_field).with(dialog_fields[0])
-          dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
+          dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
         end
       end
 
       context "when the list of dialogs is nil" do
         let(:dialogs_to_import) { nil }
 
-        it_behaves_like "DialogImporter#import_service_dialogs that destroys temporary data"
+        it_behaves_like "DialogImportService#import_service_dialogs that destroys temporary data"
 
         it "does not error" do
-          expect { dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import) }.to_not raise_error
+          expect {
+            dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
+          }.to_not raise_error
         end
       end
     end
@@ -233,8 +237,8 @@ describe DialogImporter do
 
       it "raises a ParsedNonDialogYamlError" do
         expect {
-          dialog_importer.import_service_dialogs(import_file_upload, dialogs_to_import)
-        }.to raise_error(DialogImporter::ParsedNonDialogYamlError)
+          dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
+        }.to raise_error(DialogImportService::ParsedNonDialogYamlError)
       end
     end
   end
@@ -245,7 +249,7 @@ describe DialogImporter do
     before do
       MiqQueue.stub(:put)
       ImportFileUpload.stub(:create).and_return(import_file_upload)
-      import_file_upload.stub(:store_service_dialog_import_data)
+      import_file_upload.stub(:store_binary_data_as_yml)
     end
 
     context "when the imported file does not raise any errors while determining validity" do
@@ -254,12 +258,12 @@ describe DialogImporter do
       end
 
       it "stores the data" do
-        import_file_upload.should_receive(:store_service_dialog_import_data).with("the data")
-        dialog_importer.store_for_import("the data")
+        import_file_upload.should_receive(:store_binary_data_as_yml).with("the data", "Service dialog import")
+        dialog_import_service.store_for_import("the data")
       end
 
       it "returns the imported file upload" do
-        dialog_importer.store_for_import("the data").should == import_file_upload
+        dialog_import_service.store_for_import("the data").should == import_file_upload
       end
 
       it "queues a deletion" do
@@ -271,7 +275,7 @@ describe DialogImporter do
             :method_name => "destroy"
           )
 
-          dialog_importer.store_for_import("the data")
+          dialog_import_service.store_for_import("the data")
         end
       end
     end
@@ -284,7 +288,7 @@ describe DialogImporter do
 
       it "reraises with the original error" do
         expect {
-          dialog_importer.store_for_import("the data")
+          dialog_import_service.store_for_import("the data")
         }.to raise_error(DialogImportValidator::InvalidDialogFieldTypeError, "Test message")
       end
 
@@ -298,7 +302,7 @@ describe DialogImporter do
           )
 
           begin
-            dialog_importer.store_for_import("the data")
+            dialog_import_service.store_for_import("the data")
           rescue DialogImportValidator::InvalidDialogFieldTypeError
             nil
           end

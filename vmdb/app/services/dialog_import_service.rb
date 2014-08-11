@@ -1,4 +1,4 @@
-class DialogImporter
+class DialogImportService
   class ImportNonYamlError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
 
@@ -60,21 +60,19 @@ class DialogImporter
 
   def create_import_file_upload(file_contents)
     ImportFileUpload.create.tap do |import_file_upload|
-      import_file_upload.store_service_dialog_import_data(file_contents)
+      import_file_upload.store_binary_data_as_yml(file_contents, "Service dialog import")
     end
   end
 
   def import_from_dialogs(dialogs)
-    begin
-      raise ParsedNonDialogYamlError if dialogs.empty?
+    raise ParsedNonDialogYamlError if dialogs.empty?
 
-      dialogs.each do |dialog|
-        new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
-        new_or_existing_dialog.update_attributes(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))
-      end
-    rescue DialogFieldImporter::InvalidDialogFieldTypeError
-      raise
+    dialogs.each do |dialog|
+      new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
+      new_or_existing_dialog.update_attributes(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))
     end
+  rescue DialogFieldImporter::InvalidDialogFieldTypeError
+    raise
   end
 
   def build_dialog_tabs(dialog)

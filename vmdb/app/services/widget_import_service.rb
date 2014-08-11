@@ -1,9 +1,9 @@
-require "widget_importer/validator"
+require "widget_import_validator"
 
-class WidgetImporter
+class WidgetImportService
   class ParsedNonWidgetYamlError < StandardError; end
 
-  def initialize(widget_import_validator = WidgetImporter::Validator.new)
+  def initialize(widget_import_validator = WidgetImportValidator.new)
     @widget_import_validator = widget_import_validator
   end
 
@@ -56,7 +56,7 @@ class WidgetImporter
 
   def create_import_file_upload(file_contents)
     ImportFileUpload.create.tap do |import_file_upload|
-      import_file_upload.store_widget_import_data(file_contents)
+      import_file_upload.store_binary_data_as_yml(file_contents, "Widget import")
     end
   end
 

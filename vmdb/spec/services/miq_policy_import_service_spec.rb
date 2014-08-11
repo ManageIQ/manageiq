@@ -74,7 +74,7 @@ describe MiqPolicyImportService do
     end
 
     it "stores the import file upload" do
-      import_file_upload.should_receive(:store_policy_import_data).with("---\n:uploaded: content\n")
+      import_file_upload.should_receive(:store_binary_data_as_yml).with("---\n:uploaded: content\n", "Policy import")
       miq_policy_import_service.store_for_import(file_contents)
     end
 

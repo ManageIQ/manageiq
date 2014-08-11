@@ -257,7 +257,7 @@ describe MiqAeCustomizationController do
   describe "#upload_import_file" do
     include_context "valid session"
 
-    let(:dialog_importer) { instance_double("DialogImporter") }
+    let(:dialog_import_service) { instance_double("DialogImportService") }
 
     before do
       bypass_rescue
@@ -279,12 +279,12 @@ describe MiqAeCustomizationController do
       let(:params) { {:upload => {:file => file}} }
 
       before do
-        DialogImporter.stub(:new).and_return(dialog_importer)
+        DialogImportService.stub(:new).and_return(dialog_import_service)
       end
 
       context "when the dialog importer does not raise an error" do
         before do
-          dialog_importer.stub(:store_for_import).with("the yaml data").and_return(123)
+          dialog_import_service.stub(:store_for_import).with("the yaml data").and_return(123)
           file.stub(:read).and_return("the yaml data")
         end
 
@@ -298,14 +298,14 @@ describe MiqAeCustomizationController do
         end
 
         it "imports the dialogs" do
-          dialog_importer.should_receive(:store_for_import).with("the yaml data")
+          dialog_import_service.should_receive(:store_for_import).with("the yaml data")
           xhr :post, :upload_import_file, params
         end
       end
 
       context "when the dialog importer raises an import error" do
         before do
-          dialog_importer.stub(:store_for_import).and_raise(DialogImportValidator::ImportNonYamlError)
+          dialog_import_service.stub(:store_for_import).and_raise(DialogImportValidator::ImportNonYamlError)
         end
 
         it "redirects with an error message" do
@@ -322,7 +322,7 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer raises a parse non dialog yaml error" do
         before do
-          dialog_importer.stub(:store_for_import).and_raise(DialogImportValidator::ParsedNonDialogYamlError)
+          dialog_import_service.stub(:store_for_import).and_raise(DialogImportValidator::ParsedNonDialogYamlError)
         end
 
         it "redirects with an error message" do
@@ -339,7 +339,7 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer raises an invalid dialog field type error" do
         before do
-          dialog_importer.stub(:store_for_import).and_raise(DialogImportValidator::InvalidDialogFieldTypeError)
+          dialog_import_service.stub(:store_for_import).and_raise(DialogImportValidator::InvalidDialogFieldTypeError)
         end
 
         it "redirects with an error message" do
@@ -371,13 +371,13 @@ describe MiqAeCustomizationController do
   describe "#import_service_dialogs" do
     include_context "valid session"
 
-    let(:dialog_importer) { instance_double("DialogImporter") }
+    let(:dialog_import_service) { instance_double("DialogImportService") }
     let(:params) { {:import_file_upload_id => "123", :dialogs_to_import => ["potato"]} }
 
     before do
       bypass_rescue
       ImportFileUpload.stub(:first).with(:conditions => {:id => "123"}).and_return(import_file_upload)
-      DialogImporter.stub(:new).and_return(dialog_importer)
+      DialogImportService.stub(:new).and_return(dialog_import_service)
     end
 
     shared_examples_for "MiqAeCustomizationController#import_service_dialogs" do
@@ -393,13 +393,13 @@ describe MiqAeCustomizationController do
       end
 
       before do
-        dialog_importer.stub(:import_service_dialogs)
+        dialog_import_service.stub(:import_service_dialogs)
       end
 
       it_behaves_like "MiqAeCustomizationController#import_service_dialogs"
 
       it "imports the data" do
-        dialog_importer.should_receive(:import_service_dialogs).with(import_file_upload, ["potato"])
+        dialog_import_service.should_receive(:import_service_dialogs).with(import_file_upload, ["potato"])
         xhr :post, :import_service_dialogs, params
       end
 
@@ -445,16 +445,16 @@ describe MiqAeCustomizationController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:dialog_importer) { instance_double("DialogImporter") }
+    let(:dialog_import_service) { instance_double("DialogImportService") }
 
     before do
       bypass_rescue
-      DialogImporter.stub(:new).and_return(dialog_importer)
-      dialog_importer.stub(:cancel_import)
+      DialogImportService.stub(:new).and_return(dialog_import_service)
+      dialog_import_service.stub(:cancel_import)
     end
 
     it "cancels the import" do
-      dialog_importer.should_receive(:cancel_import).with("123")
+      dialog_import_service.should_receive(:cancel_import).with("123")
       xhr :post, :cancel_import, params
     end
 

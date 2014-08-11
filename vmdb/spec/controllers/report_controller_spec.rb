@@ -913,7 +913,7 @@ describe ReportController do
   describe "#upload_widget_import_file" do
     include_context "valid session"
 
-    let(:widget_importer) { instance_double("WidgetImporter") }
+    let(:widget_import_service) { instance_double("WidgetImportService") }
 
     before do
       bypass_rescue
@@ -935,12 +935,12 @@ describe ReportController do
       let(:params) { {:upload => {:file => file}} }
 
       before do
-        WidgetImporter.stub(:new).and_return(widget_importer)
+        WidgetImportService.stub(:new).and_return(widget_import_service)
       end
 
       context "when the widget importer does not raise an error" do
         before do
-          widget_importer.stub(:store_for_import).with("the yaml data").and_return(123)
+          widget_import_service.stub(:store_for_import).with("the yaml data").and_return(123)
           file.stub(:read).and_return("the yaml data")
         end
 
@@ -954,14 +954,14 @@ describe ReportController do
         end
 
         it "imports the widgets" do
-          widget_importer.should_receive(:store_for_import).with("the yaml data")
+          widget_import_service.should_receive(:store_for_import).with("the yaml data")
           xhr :post, :upload_widget_import_file, params
         end
       end
 
       context "when the widget importer raises an import error" do
         before do
-          widget_importer.stub(:store_for_import).and_raise(WidgetImporter::Validator::NonYamlError)
+          widget_import_service.stub(:store_for_import).and_raise(WidgetImportValidator::NonYamlError)
         end
 
         it "redirects with an error message" do
@@ -1032,16 +1032,16 @@ describe ReportController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:widget_importer) { instance_double("WidgetImporter") }
+    let(:widget_import_service) { instance_double("WidgetImportService") }
 
     before do
       bypass_rescue
-      WidgetImporter.stub(:new).and_return(widget_importer)
-      widget_importer.stub(:cancel_import)
+      WidgetImportService.stub(:new).and_return(widget_import_service)
+      widget_import_service.stub(:cancel_import)
     end
 
     it "cancels the import" do
-      widget_importer.should_receive(:cancel_import).with("123")
+      widget_import_service.should_receive(:cancel_import).with("123")
       xhr :post, :cancel_import, params
     end
 
@@ -1059,13 +1059,13 @@ describe ReportController do
   describe "#import_widgets" do
     include_context "valid session"
 
-    let(:widget_importer) { instance_double("WidgetImporter") }
+    let(:widget_import_service) { instance_double("WidgetImportService") }
     let(:params) { {:import_file_upload_id => "123", :widgets_to_import => ["potato"]} }
 
     before do
       bypass_rescue
       ImportFileUpload.stub(:where).with(:id => "123").and_return([import_file_upload])
-      WidgetImporter.stub(:new).and_return(widget_importer)
+      WidgetImportService.stub(:new).and_return(widget_import_service)
     end
 
     shared_examples_for "ReportController#import_widgets" do
@@ -1081,13 +1081,13 @@ describe ReportController do
       end
 
       before do
-        widget_importer.stub(:import_widgets)
+        widget_import_service.stub(:import_widgets)
       end
 
       it_behaves_like "ReportController#import_widgets"
 
       it "imports the data" do
-        widget_importer.should_receive(:import_widgets).with(import_file_upload, ["potato"])
+        widget_import_service.should_receive(:import_widgets).with(import_file_upload, ["potato"])
         xhr :post, :import_widgets, params
       end
 
