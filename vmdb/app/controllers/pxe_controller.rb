@@ -283,7 +283,7 @@ class PxeController < ApplicationController
         when :pxe_image_types_tree
           "pxe_image_type_edit"
         else
-          ["template_create_update", true]
+          "template_create_update"
         end
 
         presenter[:update_partials][:form_buttons_div] = r[
