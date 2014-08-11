@@ -91,4 +91,25 @@ module PxeHelper::TextualSummary
   def textual_win_img_index
     {:label => "Index", :value => @wimg.index}
   end
+
+  def textual_template_basicinfo
+    items = %w(name description img_type type)
+    items.collect { |m| send("textual_template_#{m}") }.flatten.compact
+  end
+
+  def textual_template_name
+    {:label => "Name", :value => @ct.name}
+  end
+
+  def textual_template_description
+    {:label => "Description", :value => @ct.description}
+  end
+
+  def textual_template_img_type
+    {:label => "Image Type", :value => @ct.pxe_image_type ? "#{@ct.pxe_image_type.name}" : ""}
+  end
+
+  def textual_template_type
+    {:label => "Type", :value => @ct.type.sub("CustomizationTemplate", "")}
+  end
 end
