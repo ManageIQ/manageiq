@@ -702,7 +702,11 @@ class DashboardController < ApplicationController
       db_user = User.find_by_userid(user[:name])
 
       start_url = session[:start_url] # Hang on to the initial start URL
-      session_reset(db_user)          # Reset/recreate the session hash
+      unless session_reset(db_user)          # Reset/recreate the session hash
+        @flash_msg = I18n.t("flash.authentication.missing_role_or_group",
+                            :model => session[:group] ? "Role" : "Group")
+        return nil
+      end
 
       # If a main db is specified, don't allow logins until super admin has set up the system
       if session[:userrole] != 'super_administrator' &&
@@ -794,9 +798,11 @@ class DashboardController < ApplicationController
     session[:username] = db_user.name
 
     # set group and role ids
+    return nil unless db_user.current_group
     session[:group] = db_user.current_group.id              # Set the user's group id
     session[:group_description] = db_user.current_group.description # and description
     role = db_user.current_group.miq_user_role
+    return nil unless db_user.current_group.miq_user_role
     session[:role] = role.id                            # Set the group's role id
 
     # Build pre-sprint 69 role name if this is an EvmRole read_only role
@@ -813,6 +819,7 @@ class DashboardController < ApplicationController
         @current_page = @search_text = @detail_sortcol = @detail_sortdir =
             @exp_key = @server_options = @tl_options =
                 @pp_choices = @panels = @breadcrumbs = nil
+    true
   end
 
   # Initialize session hash variables for the logged in user
