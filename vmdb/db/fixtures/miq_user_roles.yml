@@ -789,6 +789,8 @@
   - miq_report_saved_reports
   - miq_report_schedules
   - miq_report_view
+  - miq_request_admin
+  - miq_request_view
   - miq_template_check_compliance
   - miq_template_compare
   - miq_template_drift
