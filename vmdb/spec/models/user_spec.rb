@@ -500,7 +500,6 @@ describe User do
     end
 
     it "with role and MiqGroup seeded" do
-      UiTask.seed_roles
       MiqUserRole.seed
       MiqGroup.seed
       User.seed

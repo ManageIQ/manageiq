@@ -85,17 +85,11 @@ class MiqGroup < ActiveRecord::Base
         seq = 1
         order.each do |g|
           group = self.find_by_description(g) || self.new(:description => g)
-          role  = UiTaskSet.find_by_name(groups_to_roles[g])
-          if role.nil?
-            $log.warn("#{log_prefix} Unable to find role '#{groups_to_roles[group]}' for group '#{g}'")
-            next
-          end
           user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
           if user_role.nil?
             $log.warn("#{log_prefix} Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
             next
           end
-          group.role          = role
           group.miq_user_role = user_role
           group.sequence      = seq
           group.filters       = ldap_to_filters[g]
@@ -103,7 +97,7 @@ class MiqGroup < ActiveRecord::Base
 
           mode = group.new_record? ? "Created" : "Added"
           group.save!
-          $log.info("#{log_prefix} #{mode} Group: #{group.description} with Role: #{role.name}")
+          $log.info("#{log_prefix} #{mode} Group: #{group.description} with Role: #{user_role.name}")
 
           seq += 1
         end
