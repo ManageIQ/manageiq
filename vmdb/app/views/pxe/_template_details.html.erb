@@ -4,27 +4,9 @@
   <div id="template_info_div">
     <% unless @edit %>
       <%= render(:partial => "layouts/flash_msg") %>
-
-          <p class="legend">Basic Information</p>
-          <table class="style1">
-            <tr>
-              <td class="key">Name</td>
-                <td><%= h(@ct.name) %></td>
-            </tr>
-            <tr>
-              <td class="key">Description</td>
-                <td><%= h(@ct.description) %></td>
-            </tr>
-            <tr>
-              <td class="key">Image Type</td>
-                <td><%= h(@ct.pxe_image_type ? @ct.pxe_image_type.name : "") %></td>
-            </tr>
-            <tr>
-              <td class="key">Type</td>
-                <td><%= h(@ct.type.sub("CustomizationTemplate", "")) %>
-                </td>
-            </tr>
-          </table>
+      <%= render :partial => "shared/summary/textual",
+                 :locals  => {:title => "Basic Information",
+                              :items => textual_template_basicinfo} %>
           <hr>
           <p class="legend">Script</p>
                   <%= text_area("script1","data",
