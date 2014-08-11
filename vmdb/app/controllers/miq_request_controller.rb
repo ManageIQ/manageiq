@@ -47,7 +47,15 @@ class MiqRequestController < ApplicationController
         end
       end
     elsif params[:pressed] == "miq_request_reload"
-      if params[:display] == "miq_provisions"
+      if @display == "main" && params[:id].present?
+        show
+        c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+        render :update do |page|
+          page.replace("request_div", :partial => "miq_request/request")
+          page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
+          page << "$('center_buttons_div').show();"
+        end
+      elsif @display == "miq_provisions"
         show
         render :update do |page|
           page.replace("gtl_div", :partial=>"layouts/gtl")  # Replace the provisioned vms list
