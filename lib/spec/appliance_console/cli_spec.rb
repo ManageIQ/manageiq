@@ -23,11 +23,27 @@ describe ApplianceConsole::Cli do
     subject.should_receive(:disk_from_string).and_return('x')
     ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
       .with(:region      => 1,
+            :database    => 'vmdb_production',
+            :username    => 'root',
             :interactive => false,
             :disk        => 'x')
       .and_return(stub(:activate => true, :post_activation => true))
 
     subject.parse(%w{--internal -r 1 --dbdisk x}).run
+  end
+
+  it "should pass username and password when configuring database locally" do
+    subject.should_receive(:disk_from_string).and_return('x')
+    ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
+      .with(:region      => 1,
+            :database    => 'vmdb_production',
+            :username    => 'user',
+            :password    => 'pass',
+            :interactive => false,
+            :disk        => 'x')
+      .and_return(stub(:activate => true, :post_activation => true))
+
+    subject.parse(%w(--internal --username user --password pass -r 1 --dbdisk x)).run
   end
 
   it "should handle remote databases (and setup region)" do
@@ -47,7 +63,6 @@ describe ApplianceConsole::Cli do
     ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
       .with(:host        => 'host',
             :database    => 'db',
-            :region      => nil,
             :username    => 'user',
             :password    => 'pass',
             :interactive => false)

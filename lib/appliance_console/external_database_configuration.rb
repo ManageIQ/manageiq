@@ -18,16 +18,8 @@ module ApplianceConsole
     def ask_questions
       create_new_region_questions if create_or_join_region_question == :create
       clear_screen
-      ask_for_database_credentials
-    end
-
-    def ask_for_database_credentials
       say("Database Configuration\n")
-
-      self.host     = ask_for_ip_or_hostname("database hostname or IP address", host)
-      self.database = just_ask("name of the database on #{@host}", database)
-      self.username = just_ask("username", username) unless local?
-      self.password = ask_for_password_or_none("password ('none' for no value)", password) unless local?
+      ask_for_database_credentials
     end
 
     def create_or_join_region_question
