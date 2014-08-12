@@ -27,7 +27,7 @@ describe ApplianceConsole::Cli do
             :username    => 'root',
             :interactive => false,
             :disk        => 'x')
-      .and_return(stub(:activate => true, :post_activation => true))
+      .and_return(double(:activate => true, :post_activation => true))
 
     subject.parse(%w{--internal -r 1 --dbdisk x}).run
   end
@@ -54,7 +54,7 @@ describe ApplianceConsole::Cli do
             :username    => 'user',
             :password    => 'pass',
             :interactive => false)
-      .and_return(stub(:activate => true, :post_activation => true))
+      .and_return(double(:activate => true, :post_activation => true))
 
     subject.parse(%w{--hostname host --dbname db --username user --password pass -r 1}).run
   end
@@ -66,7 +66,7 @@ describe ApplianceConsole::Cli do
             :username    => 'user',
             :password    => 'pass',
             :interactive => false)
-      .and_return(stub(:activate => true, :post_activation => true))
+      .and_return(double(:activate => true, :post_activation => true))
 
     subject.parse(%w{--hostname host --dbname db --username user --password pass}).run
   end

@@ -6,7 +6,7 @@ require 'MiqVim'
 describe MiqVimVm do
   context 'snapshot disk size check' do
     before(:each) do
-      @inv_obj = mock
+      @inv_obj = double
       @inv_obj.stub(:sic).and_return(nil)
       @inv_obj.stub(:localVmPath).and_return('/test-vm/test-vm.vmx')
 
@@ -93,12 +93,12 @@ describe MiqVimVm do
 
       it "check_disk_space - 0 percent" do
         max_disk_space_in_kb = 10000
-        lambda{ @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 0)}.should_not raise_error(MiqException::MiqVmSnapshotError)
+        lambda{ @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 0)}.should_not raise_error
       end
 
       it "check_disk_space - 10 percent" do
         max_disk_space_in_kb = 10000
-        lambda{ @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 10)}.should_not raise_error(MiqException::MiqVmSnapshotError)
+        lambda{ @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 10)}.should_not raise_error
       end
 
     end

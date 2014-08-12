@@ -276,7 +276,7 @@ describe ApplianceConsole::Prompts do
 
     context "with one disk" do
       before do
-        LinuxAdmin::Disk.stub(:local => mock(:select => [first_disk]))
+        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk]))
       end
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }
 
@@ -293,7 +293,7 @@ describe ApplianceConsole::Prompts do
 
     context "with disks" do
       before do
-        LinuxAdmin::Disk.stub(:local => mock(:select => [first_disk, second_disk]))
+        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk, second_disk]))
       end
 
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }

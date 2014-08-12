@@ -6,7 +6,7 @@ require 'rhevm_template'
 
 describe RhevmTemplate do
   before do
-    @service = mock('service')
+    @service = double('service')
     @template = RhevmTemplate.new(@service, {
        :id                => "128f9ffd-b82c-41e4-8c00-9742ed173bac",
        :href              => "/api/vms/128f9ffd-b82c-41e4-8c00-9742ed173bac",
@@ -48,9 +48,9 @@ describe RhevmTemplate do
         :cpu               => {:topology => {:sockets => 1, :cores => 1}},
         :high_availability => {:priority => 1, :enabled => false},
         :os_type           => "rhel5_64"}
-      @template.stub!(:nics).and_return([])
-      @template.stub!(:disks).and_return([])
-      @service.stub!(:blank_template).and_return(mock('blank template'))
+      @template.stub(:nics).and_return([])
+      @template.stub(:disks).and_return([])
+      @service.stub(:blank_template).and_return(double('blank template'))
       @service.blank_template.should_receive(:create_vm).once.with(expected_data)
       @template.create_vm(options)
     end
@@ -108,7 +108,7 @@ EOX
         })
         @template.stub(:disks).and_return([@disk])
 
-        @vm = mock('rhevm_vm')
+        @vm = double('rhevm_vm')
       end
 
       it "without a storage override" do
