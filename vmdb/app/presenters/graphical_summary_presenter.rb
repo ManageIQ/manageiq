@@ -7,7 +7,7 @@ class GraphicalSummaryPresenter < SummaryPresenter
     num = @record.number_of(:advanced_settings)
     h = {:label => "Advanced Settings", :image => "advancedsetting", :value => num}
     if num > 0
-      h[:link] = link_to("", {:action => 'advanced_settings', :id => @record, :db => controller.controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'Advanced Setting')} on this VM")
+      h[:link] = link_to("", {:action => 'advanced_settings', :id => @record, :db => controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'Advanced Setting')} on this VM")
     end
     h
   end
@@ -122,7 +122,7 @@ class GraphicalSummaryPresenter < SummaryPresenter
     num = @record.number_of(:groups)
     h = {:label => "Groups", :image => "group", :value => num}
     if num > 0
-      h[:link] = link_to("", {:action => 'groups', :id => @record, :db => controller.controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'group')} defined on this VM")
+      h[:link] = link_to("", {:action => 'groups', :id => @record, :db => controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'group')} defined on this VM")
     end
     h
   end
@@ -179,7 +179,7 @@ class GraphicalSummaryPresenter < SummaryPresenter
     num = @record.number_of(:patches)
     h = {:label => "Patches", :image => "patch", :value => num}
     if num > 0
-      h[:link] = link_to("", {:action => 'patches', :id => @record, :db => controller.controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'Patch')} defined on this VM")
+      h[:link] = link_to("", {:action => 'patches', :id => @record, :db => controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'Patch')} defined on this VM")
     end
     h
   end
@@ -242,7 +242,7 @@ class GraphicalSummaryPresenter < SummaryPresenter
     num = @record.number_of(:users)
     h = {:label => "Users", :image => "user", :value => num}
     if num > 0
-      h[:link] = link_to("", {:action => 'users', :id => @record, :db => controller.controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'user')} defined on this VM")
+      h[:link] = link_to("", {:action => 'users', :id => @record, :db => controller_name}, :remote => @explorer, :title => "Show the #{pluralize(num, 'user')} defined on this VM")
     end
     h
   end

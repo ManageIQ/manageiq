@@ -16,7 +16,7 @@ module VmHelper::TextualSummary
 
     methods.each do |method|
       define_method(method) do
-        VmTextualSummaryPresenter.new(@record, params, session).send(method.to_sym)
+        VmTextualSummaryPresenter.new(self, @record).send(method.to_sym)
       end
     end
   end

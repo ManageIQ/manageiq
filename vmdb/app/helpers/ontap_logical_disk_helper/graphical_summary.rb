@@ -6,7 +6,7 @@ module OntapLogicalDiskHelper::GraphicalSummary
 
     methods.each do |method|
       define_method(method) do
-        OntapLogicalDiskGraphicalSummaryPresenter.new(@record, params, session).send(method.to_sym)
+        OntapLogicalDiskGraphicalSummaryPresenter.new(self, @record).send(method.to_sym)
       end
     end
   end

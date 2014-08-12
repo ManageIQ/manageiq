@@ -9,7 +9,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the advanced settings on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:action => 'advanced_settings', :id => @record, :db => controller.controller_name)
+      h[:link]  = url_for(:action => 'advanced_settings', :id => @record, :db => controller_name)
     end
     h
   end
@@ -32,7 +32,7 @@ class TextualSummaryPresenter < SummaryPresenter
       h[:value] = "Available"
       h[:title] = "Show Compliance History of this VM (Last 10 Checks)"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history')
+      h[:link]  = url_for(:controller => controller_name, :action => 'show', :id => @record, :display => 'compliance_history')
     end
     h
   end
@@ -48,7 +48,7 @@ class TextualSummaryPresenter < SummaryPresenter
       h[:value] = "#{"Non-" unless compliant}Compliant as of #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago"
       h[:title] = "Show Details of Compliance Check on #{format_timezone(date)}"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history', :count => 1)
+      h[:link]  = url_for(:controller => controller_name, :action => 'show', :id => @record, :display => 'compliance_history', :count => 1)
     end
     h
   end
@@ -92,7 +92,7 @@ class TextualSummaryPresenter < SummaryPresenter
       h[:value] = num
       h[:title] = "Show virtual machine drift history"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'drift_history', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'drift_history', :id => @record)
     end
     h
   end
@@ -109,7 +109,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show Event Logs on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'event_logs', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'event_logs', :id => @record)
     end
     h
   end
@@ -123,7 +123,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'File System Driver')} installed on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'filesystem_drivers', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'filesystem_drivers', :id => @record)
     end
     h
   end
@@ -134,7 +134,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'File')} installed on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'filesystems', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'filesystems', :id => @record)
     end
     h
   end
@@ -197,7 +197,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'group')} defined on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:action => 'groups', :id => @record, :db => controller.controller_name)
+      h[:link]  = url_for(:action => 'groups', :id => @record, :db => controller_name)
     end
     h
   end
@@ -211,7 +211,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, label)} installed on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'guest_applications', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'guest_applications', :id => @record)
     end
     h
   end
@@ -229,7 +229,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'Init Process')} installed on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'linux_initprocesses', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'linux_initprocesses', :id => @record)
     end
     h
   end
@@ -248,7 +248,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'Kernel Driver')} installed on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'kernel_drivers', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'kernel_drivers', :id => @record)
     end
     h
   end
@@ -305,7 +305,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'Patch')} defined on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:action => 'patches', :id => @record, :db => controller.controller_name)
+      h[:link]  = url_for(:action => 'patches', :id => @record, :db => controller_name)
     end
     h
   end
@@ -328,7 +328,7 @@ class TextualSummaryPresenter < SummaryPresenter
       h[:value] = "From #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago"
       h[:title] = "Show Running Processes on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'processes', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'processes', :id => @record)
     end
     h
   end
@@ -362,7 +362,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'Registry Item')} installed on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'registry_items', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'registry_items', :id => @record)
     end
     h
   end
@@ -385,7 +385,7 @@ class TextualSummaryPresenter < SummaryPresenter
       h[:value] = num
       h[:title] = "Show virtual machine analysis history"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'scan_histories', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'scan_histories', :id => @record)
     end
     h
   end
@@ -423,7 +423,7 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'user')} defined on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:action => 'users', :id => @record, :db => controller.controller_name)
+      h[:link]  = url_for(:action => 'users', :id => @record, :db => controller_name)
     end
     h
   end
@@ -466,9 +466,18 @@ class TextualSummaryPresenter < SummaryPresenter
     if num > 0
       h[:title] = "Show the #{pluralize(num, 'Win32 Service')} installed on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'win32_services', :id => @record)
+      h[:link]  = url_for(:controller => controller_name, :action => 'win32_services', :id => @record)
     end
     h
   end
 
+  def textual_cloud_network
+    return nil unless @record.kind_of?(VmAmazon)
+    {:label => "Virtual Private Cloud", :value => @record.cloud_network ? @record.cloud_network.name : 'None'}
+  end
+
+  def textual_cloud_subnet
+    return nil unless @record.kind_of?(VmAmazon)
+    {:label => "Cloud Subnet", :value => @record.cloud_subnet ? @record.cloud_subnet.name : 'None'}
+  end
 end

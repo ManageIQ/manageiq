@@ -10,7 +10,7 @@ module VmHelper::GraphicalSummary
 
     methods.each do |method|
       define_method(method) do
-        VmGraphicalSummaryPresenter.new(@record, params, session).send(method.to_sym)
+        VmGraphicalSummaryPresenter.new(self, @record).send(method.to_sym)
       end
     end
   end

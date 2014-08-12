@@ -9,7 +9,7 @@ module VmCloudHelper::GraphicalSummary
 
     methods.each do |method|
       define_method(method) do
-        VmCloudGraphicalSummaryPresenter.new(@record, params, session).send(method.to_sym)
+        VmCloudGraphicalSummaryPresenter.new(self, @record).send(method.to_sym)
       end
     end
   end

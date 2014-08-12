@@ -159,7 +159,7 @@ class VmGraphicalSummaryPresenter < GraphicalSummaryPresenter
   end
 
   def graphical_vdi_desktop
-    return nil unless get_vmdb_config[:product][:vdi]
+    return nil unless get_vmdb_config[:product][:vdi] # FIXME: move out, unforward method
     vdi_desktop = @record.vdi_desktop
     label = ui_lookup(:table=>"vdi_desktop")
     h = {:label => label, :image => "vdi_desktop", :value => (vdi_desktop.nil? ? "None" : vdi_desktop.name.truncate(13))}
