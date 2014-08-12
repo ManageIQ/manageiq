@@ -1,169 +1,179 @@
 <%# Set the JS type vars if a saved expression atom already exists when first showing the editor %>
 <% if @edit && @edit.fetch_path(@expkey,:val1,:type) %>
-	<%= javascript_tag("miq_val1_type = '#{@edit[@expkey][:val1][:type].to_s}';") %>
-	<%= javascript_tag("miq_val1_title = '#{@edit[@expkey][:val1][:title]}';") %>
+  <%= javascript_tag("miq_val1_type = '#{@edit[@expkey][:val1][:type].to_s}';") %>
+  <%= javascript_tag("miq_val1_title = '#{@edit[@expkey][:val1][:title]}';") %>
 <% end %>
 <% if @edit && @edit.fetch_path(@expkey,:val2,:type) %>
-	<%= javascript_tag("miq_val2_type = '#{@edit[@expkey][:val2][:type].to_s}';") %>
-	<%= javascript_tag("miq_val2_title = '#{@edit[@expkey][:val2][:title]}';") %>
+  <%= javascript_tag("miq_val2_type = '#{@edit[@expkey][:val2][:type].to_s}';") %>
+  <%= javascript_tag("miq_val2_title = '#{@edit[@expkey][:val2][:title]}';") %>
 <% end %>
 
 <div id="exp_editor_div">
-	<fieldset style="width:auto; height; padding-left: 6px; padding-top: 6px">
-	<ul id="searchtoolbar">
-		<% if @edit[@expkey][:exp_idx] > 0 %>
-		<li>
-			<%= link_to(image_tag('/images/toolbars/undo.png',
-									:alt=>'Undo the previous change'),
-									{:action=>'exp_button', :pressed=>'undo'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>'Undo the previous change')
-			%>
-		</li>
-		<% else %>
-		<li class="dimmed">
-			<%= image_tag("/images/toolbars/undo.png") %>
-		</li>			
-		<% end %>
-		<% if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1 %>
-		<li>
-			<%= link_to(image_tag('/images/toolbars/redo.png',
-									:alt=>'Redo the next change'),
-									{:action=>'exp_button', :pressed=>'redo'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>'Redo the next change')
-			%>
-		</li>
-		<% else %>
-		<li class="dimmed">
-			<%= image_tag("/images/toolbars/redo.png") %>
-		</li>
-		<% end %>
+  <fieldset style="width:auto; height; padding-left: 6px; padding-top: 6px">
+  <ul id="searchtoolbar">
+    <% if @edit[@expkey][:exp_idx] > 0 %>
+    <li>
+      <%= link_to(image_tag('/images/toolbars/undo.png',
+                            :alt => 'Undo the previous change'),
+                  {:action  => 'exp_button', 
+                   :pressed =>'undo'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => 'Undo the previous change')
+      %>
+    </li>
+    <% else %>
+    <li class="dimmed">
+      <%= image_tag("/images/toolbars/undo.png") %>
+    </li>     
+    <% end %>
+    <% if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1 %>
+    <li>
+      <%= link_to(image_tag('/images/toolbars/redo.png',
+                            :alt => 'Redo the next change'),
+                  {:action  => 'exp_button', 
+                   :pressed => 'redo'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => 'Redo the next change')
+      %>
+    </li>
+    <% else %>
+    <li class="dimmed">
+      <%= image_tag("/images/toolbars/redo.png") %>
+    </li>
+    <% end %>
 
-
-	<span id='exp_buttons_off'>
-		<li class="dimmed">
-			<%= image_tag("/images/toolbars/and.png") %>
-		</li>
-		<li class="dimmed">
-			<%= image_tag("/images/toolbars/or.png") %>
-		</li>
-		<li class="dimmed">								
-			<%= image_tag("/images/toolbars/not.png") %>
-		</li>
-		<li class="dimmed">								
-			<%= image_tag("/images/toolbars/discard.png") %>
-		</li>
-	</span>
-	<span id='exp_buttons_not' style="display:none">
-		<li>
-			<%= link_to(image_tag('/images/toolbars/and.png',
-									:alt=>'AND with a new expression element'),
-									{:action=>'exp_button', :pressed=>'and'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>'AND with a new expression element')
-			%>
-			</li>
-			<li>
-
-			<%= link_to(image_tag('/images/toolbars/or.png',
-									:alt=>'OR with a new expression element'),
-									{:action=>'exp_button', :pressed=>'or'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>'OR with a new expression element')
-			%>
-		</li>
-		<li class="dimmed">
-			<%= image_tag("/images/toolbars/not.png") %>
-		</li>
-		<li>
-			<%= link_to(image_tag('/images/toolbars/discard.png',
-									:alt=>"Remove this expression element"),
-									{:action=>'exp_button', :pressed => 'remove'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>"Remove this expression element")
-			%>
-		</li>
-	</span>
-	<span id='exp_buttons_on' style="display:none">
-		<li>
-			<%= link_to(image_tag('/images/toolbars/and.png',
-									:alt=>'AND with a new expression element'),
-									{:action=>'exp_button', :pressed=>'and'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>'AND with a new expression element')
-			%>
-		</li>
-		<li>
-			<%= link_to(image_tag('/images/toolbars/or.png',
-									:alt=>'OR with a new expression element'),
-									{:action=>'exp_button', :pressed=>'or'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>'OR with a new expression element')
-			%>
-		</li>
-		<li>
-			<%= link_to(image_tag('/images/toolbars/not.png',
-									:alt=>'Wrap this expression element with a NOT'),
-									{:action=>'exp_button', :pressed=>'not'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>'Wrap this expression element with a NOT')
-			%>
-		</li>
-		<li>
-			<%= link_to(image_tag('/images/toolbars/discard.png',
-									:alt=>"Remove this expression element"),
-									{:action=>'exp_button', :pressed => 'remove'},
-									"data-miq_sparkle_on" => true,
-									"data-miq_sparkle_off" => true,
-									:remote=>true,
-									:title=>"Remove this expression element")
-			%>
-		</li>
-	</span>
-	</ul>
-	<div style="padding:10px">
-		<% @edit[@expkey][:exp_table].each do |token| %>
-			<% if ! ["AND", "OR", "(", ")", "???"].include?([token].flatten.first) %>
-				<%= link_to(token.first,
-										{:action=>'exp_token_pressed', :token=>token.last},
-										:style=>"color: black",
-										"data-miq_sparkle_on" => true,
-										"data-miq_sparkle_off" => true,
-										:remote=>true,
-										:id=>"exp_#{token.last}") %>
-			<% elsif [token].flatten.first == "???" %>
-				<%= link_to(token.first,
-										{:action=>'exp_token_pressed', :token=>token.last},
-										:style=>"color: black; background-color: yellow",
-										"data-miq_sparkle_on" => true,
-										"data-miq_sparkle_off" => true,
-										:remote=>true,
-										:id=>"exp_#{token.last}") %>
-			<% else %>
-				 <font color="red"><b><%= token %></b></font>
-			<% end %>
-			
-		<% end %>
-	</div>
-	</fieldset>
-	<% if @edit[@expkey][:exp_token] %>
-		<%= render(:partial => 'layouts/exp_atom/editor') %>
-	<% end %>
+  <span id='exp_buttons_off'>
+    <li class="dimmed">
+      <%= image_tag("/images/toolbars/and.png") %>
+    </li>
+    <li class="dimmed">
+      <%= image_tag("/images/toolbars/or.png") %>
+    </li>
+    <li class="dimmed">               
+      <%= image_tag("/images/toolbars/not.png") %>
+    </li>
+    <li class="dimmed">               
+      <%= image_tag("/images/toolbars/discard.png") %>
+    </li>
+  </span>
+  <span id='exp_buttons_not' style="display:none">
+    <li>
+      <%= link_to(image_tag('/images/toolbars/and.png',
+                            :alt => 'AND with a new expression element'),
+                  {:action  => 'exp_button', 
+                   :pressed => 'and'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => 'AND with a new expression element')
+      %>
+    </li>
+    <li>
+      <%= link_to(image_tag('/images/toolbars/or.png',
+                            :alt => 'OR with a new expression element'),
+                  {:action  => 'exp_button', 
+                   :pressed => 'or'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => 'OR with a new expression element')
+      %>
+    </li>
+    <li class="dimmed">
+      <%= image_tag("/images/toolbars/not.png") %>
+    </li>
+    <li>
+      <%= link_to(image_tag('/images/toolbars/discard.png',
+                            :alt => "Remove this expression element"),
+                 {:action  => 'exp_button', 
+                  :pressed => 'remove'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => "Remove this expression element")
+      %>
+    </li>
+  </span>
+  <span id='exp_buttons_on' style="display:none">
+    <li>
+      <%= link_to(image_tag('/images/toolbars/and.png',
+                            :alt => 'AND with a new expression element'),
+                  {:action  => 'exp_button', 
+                   :pressed => 'and'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => 'AND with a new expression element')
+      %>
+    </li>
+    <li>
+      <%= link_to(image_tag('/images/toolbars/or.png',
+                            :alt => 'OR with a new expression element'),
+                  {:action  => 'exp_button', 
+                   :pressed =>'or'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => 'OR with a new expression element')
+      %>
+    </li>
+    <li>
+      <%= link_to(image_tag('/images/toolbars/not.png',
+                            :alt => 'Wrap this expression element with a NOT'),
+                  {:action  => 'exp_button', 
+                   :pressed => 'not'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => 'Wrap this expression element with a NOT')
+      %>
+    </li>
+    <li>
+      <%= link_to(image_tag('/images/toolbars/discard.png',
+                            :alt => "Remove this expression element"),
+                  {:action  => 'exp_button', 
+                   :pressed => 'remove'},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => "Remove this expression element")
+      %>
+    </li>
+  </span>
+  </ul>
+  <div style="padding:10px">
+    <% @edit[@expkey][:exp_table].each do |token| %>
+      <% if ! ["AND", "OR", "(", ")", "???"].include?([token].flatten.first) %>
+        <%= link_to(token.first,
+                    {:action => 'exp_token_pressed', 
+                     :token  => token.last},
+                    :style                 =>"color: black",
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote                => true,
+                    :id                    => "exp_#{token.last}") 
+        %>
+      <% elsif [token].flatten.first == "???" %>
+        <%= link_to(token.first,
+                    {:action => 'exp_token_pressed', 
+                     :token  => token.last},
+                    :style                 => "color: black; background-color: yellow !important",
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote                => true,
+                    :id                    => "exp_#{token.last}") %>
+      <% else %>
+         <font color="red"><b><%= token %></b></font>
+      <% end %>
+      
+    <% end %>
+  </div>
+</fieldset>
+<% if @edit[@expkey][:exp_token] %>
+  <%= render(:partial => 'layouts/exp_atom/editor') %>
+<% end %>
 </div>
