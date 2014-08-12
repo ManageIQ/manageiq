@@ -238,7 +238,7 @@ describe ApplianceConsole::DatabaseConfiguration do
     end
 
     it "normal case" do
-      expected_logging = mock
+      expected_logging = double
       expected_logging.should_receive(:info).twice
       @config.logger = expected_logging
       @config.should_receive(:say_info).with(:some_method, "starting")
@@ -248,7 +248,7 @@ describe ApplianceConsole::DatabaseConfiguration do
 
     context "raising exception:" do
       before do
-        expected_logging = mock
+        expected_logging = double
         expected_logging.should_receive(:info).once
         @config.logger = expected_logging
         @backtrace = [
