@@ -954,6 +954,9 @@ event_handling:
   NETWORK_UPDATE_TEMPLATE_INTERFACE:
   - refresh:
     - src_vm
+  NETWORK_UPDATE_VM_INTERFACE:
+  - refresh:
+    - src_vm:
   PowerOnVM_Task_Complete:
   - policy:
     - src_vm
