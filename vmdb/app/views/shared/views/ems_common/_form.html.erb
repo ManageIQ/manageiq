@@ -41,7 +41,7 @@
         <td class="wide">
           <%= text_field_tag("port",
                              @edit[:new][:port],
-                             :maxlength => 15,
+                             :maxlength         => 15,
                              "data-miq_observe" => {:interval => '.5', 
                                                     :url      => url}.to_json) 
           %>
@@ -60,10 +60,10 @@
             %>
           <% else %>
             <%= select_tag("server_zone",
-                          options_for_select(@edit[:server_zones].sort,
-                          @edit[:new][:zone]),
-                          "data-miq_observe" => {:url => url}.to_json) 
-          %>
+                           options_for_select(@edit[:server_zones].sort,
+                                             @edit[:new][:zone]),
+                           "data-miq_observe" => {:url => url}.to_json) 
+            %>
           <% end %>
         </td>
       </tr>
@@ -73,16 +73,16 @@
           <td>
             <%= text_field_tag("host_default_vnc_port_start",
                                @edit[:new][:host_default_vnc_port_start],
-                               :maxlength => 6, 
-                               :size      => 6,
+                               :maxlength         => 6, 
+                               :size              => 6,
                                "data-miq_observe" => {:interval => '.5', 
                                                       :url      => url}.to_json) 
             %>
             -
             <%= text_field_tag("host_default_vnc_port_end",
                                @edit[:new][:host_default_vnc_port_end],
-                               :maxlength => 6, 
-                               :size      => 6,
+                               :maxlength         => 6, 
+                               :size              => 6,
                                "data-miq_observe" => {:interval => '.5', 
                                                       :url      => url}.to_json) 
             %>
@@ -94,7 +94,7 @@
   <hr>
 
       <%= render :partial => "/layouts/multi_auth_credentials",
-                 :locals  => {:record=>@ems} %>
+                 :locals  => {:record => @ems} %>
 
     <% if @edit[:ems_id].nil? %>
       <table width="100%">
