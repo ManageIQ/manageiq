@@ -102,11 +102,14 @@ module ApplianceConsole
     end
 
     def set_internal_db
-      config = ApplianceConsole::InternalDatabaseConfiguration.new(
+      config = ApplianceConsole::InternalDatabaseConfiguration.new({
+        :database    => options[:dbname],
         :region      => options[:region],
+        :username    => options[:username],
+        :password    => options[:password],
         :interactive => false,
         :disk        => disk_from_string(options[:dbdisk])
-      )
+      }.delete_if { |_n, v| v.nil? })
 
       # create partition, pv, vg, lv, ext4, update fstab, mount disk
       # initdb, relabel log directory for selinux, update configs,
@@ -119,14 +122,14 @@ module ApplianceConsole
     end
 
     def set_external_db
-      config = ApplianceConsole::ExternalDatabaseConfiguration.new(
+      config = ApplianceConsole::ExternalDatabaseConfiguration.new({
         :host        => options[:hostname],
         :database    => options[:dbname],
         :region      => options[:region],
         :username    => options[:username],
         :password    => options[:password],
         :interactive => false,
-      )
+      }.delete_if { |_n, v| v.nil? })
 
       # call create_or_join_region (depends on region value)
       config.activate

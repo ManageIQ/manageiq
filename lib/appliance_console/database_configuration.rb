@@ -113,6 +113,13 @@ module ApplianceConsole
       raise MiqSignalError if warn && !agree(CREATE_REGION_AGREE)
     end
 
+    def ask_for_database_credentials
+      self.host     = ask_for_ip_or_hostname("database hostname or IP address", host) if host.blank? || !local?
+      self.database = just_ask("name of the database on #{host}", database) unless local?
+      self.username = just_ask("username", username) unless local?
+      self.password = ask_for_password_or_none("database password on #{host}", password)
+    end
+
     def friendly_inspect
       output = <<-FRIENDLY
 Host:     #{host}
