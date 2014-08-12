@@ -21,77 +21,93 @@
 			<tr>
 				<td align="left">
 					<div id="buttons">
-						<ul id="form_buttons">
-							<li>
+
+
 								<% if @edit[@expkey][:exp_search_expressions].blank? && report_expressions.blank? %>
-									<%= image_tag("/images/formbuttons/load2.png",	:class=>"dimmed",
-																:alt=>'No saved filters or report filters are available to load',
-																:title=>'No saved filters or report filters are available to load') %>
+									<%= button_tag("Load...",	
+										             :class => "btn btn-primary button-disabled",
+																 :alt   => 'No saved filters or report filters are available to load',
+																 :title => 'No saved filters or report filters are available to load')
+									%>
 								<% else %>
-									<%= link_to(image_tag('/images/formbuttons/load2.png', :border=>"0",
-																							:class=>"button", :alt=>'Load a filter'),
-																		{:action=>"adv_search_button", :button=>"load"},
-																		:remote=>true,
-																		:title=>"Load a filter") %>
+									<%= link_to(button_tag('Load...',
+																				 :class   => "btn btn-primary", 
+																				 :alt     => 'Load a filter'),
+																		     {:action => "adv_search_button"},
+															:remote => true,
+															:title  => "Load a filter")
+									%>
 								<% end %>
-						</li>
+
 					</div>
 				</td>
 				<td align="right">
 					<div id="buttons">
-						<ul id="form_buttons">
-							<li>
+
+
 								<% if @edit[@expkey][:exp_table].flatten.first == "???" %>
-									<%= image_tag("/images/formbuttons/apply.png",	:class=>"dimmed") %>
+									<%= button_tag("Apply",	:class=>"btn btn-primary btn-disabled") %>
 								<% else %>
-									<%= link_to(image_tag('/images/formbuttons/apply.png', :border=>"0",
-																							:class=>"button", :alt=>'Apply the current filter'),
-																		{:action=>"adv_search_button", :button=>"apply"},
-																		"data-miq_sparkle_on" => true,
-																		"data-miq_sparkle_off" => true,
-																		:remote=>true,
-																		:title=>"Apply the current filter") %>
+									<%= link_to(button_tag('Apply',
+																				 :class => "btn btn-primary", 
+																				 :alt   => 'Apply the current filter'),
+															{:action => "adv_search_button", 
+															 :button => "apply"},
+															"data-miq_sparkle_on"  => true,
+															"data-miq_sparkle_off" => true,
+															:remote                => true,
+															:title                 => "Apply the current filter") 
+									%>
 								<% end %>
-							</li>
+
 							<%#  Donot show delete button if search type is not default or All has been selected %>
 							<% if @edit[@expkey][:selected] && @edit[@expkey][:selected][:typ] != "default" &&
 									 @edit[@expkey][:selected][:id] != 0 %>
 								<%#  show delete button if user is super admin/admin for global searches %>
 								<% if (session[:userrole] == "super_administrator" || session[:userrole] == "administrator") ||
 										(session[:userrole] != "super_administrator" && session[:userrole] != "administrator" && @edit[@expkey][:selected][:typ] == "user") %>
-										<li>
-											<%= link_to(image_tag('/images/formbuttons/delete.png', :border=>"0",
-																									:class=>"button", :alt=>"Delete the filter named #{@edit[@expkey][:selected][:description]}"),
-																				{:action=>"adv_search_button", :button=>"delete"},
-																				:confirm=>"Delete the #{ui_lookup(:model=>@edit[@expkey][:exp_model])} filter named #{@edit[:adv_search_name]}?",
-																				:remote=>true,
-																				:title=>"Delete the filter named #{@edit[@expkey][:selected][:description]}") %>
-										</li>
+
+											<%= link_to(button_tag('Delete', 
+																						 :class   => "btn btn-default", 
+																						 :alt     => "Delete the filter named #{@edit[@expkey][:selected][:description]}"),
+																				     {:action => "adv_search_button", 
+																				     	:button => "delete"},
+																	:confirm => "Delete the #{ui_lookup(:model=>@edit[@expkey][:exp_model])} filter named #{@edit[:adv_search_name]}?",
+																	:remote  => true,
+																  :title   => "Delete the filter named #{@edit[@expkey][:selected][:description]}") 
+											%>
+
 								<% end %>
 							<% end %>
-							<li>
+
 								<% if @edit[@expkey][:exp_table].flatten.first == "???" %>
-									<%= image_tag("/images/formbuttons/save2.png",	:class=>"dimmed") %>
+									<%= button_tag("Save...",	:class=>"btn btn-primary btn-disabled") %>
 								<% else %>
-									<%= link_to(image_tag('/images/formbuttons/save2.png', :border=>"0",
-																							:class=>"button", :alt=>'Save the current filter'),
-																		{:action=>"adv_search_button", :button=>"save"},
-																		:remote=>true,
-																		:title=>"Save the current filter") %>
+									<%= link_to(button_tag('Save...',
+																				 :class => "btn btn-primary", 
+																				 :alt   => 'Save the current filter'),
+															{:action => "adv_search_button", 
+															 :button => "save"},
+															:remote => true,
+															:title  => "Save the current filter") 
+									%>
 								<% end %>
-							</li>
-							<li>
+
+
 								<% if @edit[@expkey][:exp_table].flatten.first == "???" %>
-									<%= image_tag("/images/formbuttons/reset.png",	:class=>"dimmed") %>
+									<%= button_tag("Reset",	:class=>"btn btn-default btn-disabled") %>
 								<% else %>
-									<%= link_to(image_tag('/images/formbuttons/reset.png', :border=>"0",
-																							:class=>"button", :alt=>'Reset the filter'),
-																		{:action=>"adv_search_button", :button=>"reset"},
-																		:remote=>true,
-																		:title=>"Reset the filter") %>
+									<%= link_to(button_tag('Reset',
+																				 :class => "btn btn-default", 
+																				 :alt   => 'Reset the filter'),
+															{:action => "adv_search_button", 
+															 :button => "reset"},
+															:remote => true,
+															:title  => "Reset the filter") 
+									%>
 								<% end %>
-							</li>
-						</ul>
+
+
 					</div>
 				</td>
 			</tr>
@@ -158,28 +174,36 @@
 			<tr>
 				<td align="left">
 					<div id="buttons">
-						<ul id="form_buttons">
-							<li>
+
+
 								<% if @edit[@expkey][:exp_chosen_report] == nil && @edit[@expkey][:exp_chosen_search] == nil %>
-									<%= image_tag("/images/formbuttons/load.png",	:class=>"dimmed",
-																:alt=>"Choose a saved filter or report filter to load",
-																:title=>"Choose a saved filter or report filter to load") %>
+									<%= button_tag("Load",	
+										             :class => "btn btn-primary btn-disabled",
+																 :alt   => "Choose a saved filter or report filter to load",
+																 :title => "Choose a saved filter or report filter to load")
+									%>
 								<% else %>
-									<%= link_to(image_tag('/images/formbuttons/load.png', :border=>"0",
-																							:class=>"button", :alt=>'Load the filter shown above'),
-																		{:action=>"adv_search_button", :button=>"loadit"},
-																		:remote=>true,
-																		:title=>"Load the filter shown above") %>
+									<%= link_to(button_tag('Load',
+																				 :class => "btn btn-primary", 
+																				 :alt   => 'Load the filter shown above'),
+														  {:action => "adv_search_button", 
+														   :button => "loadit"},
+															:remote => true,
+															:title  => "Load the filter shown above") 
+									%>
 								<% end %>
-							</li>
-							<li>
-								<%= link_to(image_tag('/images/formbuttons/cancel.png', :border=>"0",
-																						:class=>"button", :alt=>'Cancel the load'),
-																	{:action=>"adv_search_button", :button=>"cancel"},
-																	:remote=>true,
-																	:title=>"Cancel the load") %>
-							</li>
-						</ul>
+
+
+								<%= link_to(button_tag('Cancel', 
+																			 :class => "btn btn-default", 
+																			 :alt   => 'Cancel the load'),
+														{:action => "adv_search_button", 
+														 :button => "cancel"},
+														:remote => true,
+														:title  => "Cancel the load") 
+								%>
+
+
 					</div>
 				</td>
 			</tr>
@@ -242,22 +266,26 @@
 			<tr>
 				<td align="right">
 					<div id="buttons">
-						<ul id="form_buttons">
-							<li>
-								<%= link_to(image_tag('/images/formbuttons/save.png', :border=>"0",
-																						:class=>"button", :alt=>'Save the current search'),
-																	{:action=>"adv_search_button", :button=>"saveit"},
-																	:remote=>true,
-																	:title=>"Save the current search") %>
-							</li>
-							<li>
-								<%= link_to(image_tag('/images/formbuttons/cancel.png', :border=>"0",
-																						:class=>"button", :alt=>'Cancel the save'),
-																	{:action=>"adv_search_button", :button=>"cancel"},
-																	:remote=>true,
-																	:title=>"Cancel the save") %>
-							</li>
-						</ul>
+
+
+								<%= link_to(button_tag('Save',
+																			 :class => "btn btn-primary", 
+																			 :alt   => 'Save the current search'),
+														{:action => "adv_search_button", 
+														 :button => "saveit"},
+														:remote => true,
+														:title  => "Save the current search") 
+								%>
+
+								<%= link_to(button_tag('Cancel',
+																			 :class => "btn btn-default", 
+																			 :alt   => 'Cancel the save'),
+														{:action => "adv_search_button", 
+														 :button => "cancel"},
+														:remote => true,
+														:title  => "Cancel the save")
+								%>
+
 					</div>
 				</td>
 			</tr>
