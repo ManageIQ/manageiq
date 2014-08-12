@@ -176,7 +176,7 @@ module OpsController::Settings::Ldap
       end
 
       if !@edit[:new][:bind_pwd].blank? && @edit[:new][:bind_dn].blank?
-        add_flash(I18n.t("flash.edit.userid_pwd_required", :error))
+        add_flash(I18n.t("flash.edit.userid_pwd_required"), :error)
       end
 
       if @flash_array

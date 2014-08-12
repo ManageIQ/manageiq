@@ -279,7 +279,8 @@ class ChargebackController < ApplicationController
       replace_right_cell([:cb_rates])
     else # showing 1 rate, delete it
       if params[:id] == nil || ChargebackRate.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.no_longer_exists", :model=>ui_lookup(:model=>"ChargebackRate")), :error)
+        add_flash(I18n.t("flash.record.no_longer_exists",
+                         :model => ui_lookup(:model => "ChargebackRate")), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end

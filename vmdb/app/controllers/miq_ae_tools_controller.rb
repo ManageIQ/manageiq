@@ -168,7 +168,7 @@ class MiqAeToolsController < ApplicationController
     if params[:upload] && !params[:upload][:datastore].blank?
       begin
         MiqAeDatastore.upload(params[:upload][:datastore])
-        add_flash(I18n.t("flash.automate.datastore_import_success"))
+        add_flash(I18n.t("flash.automate.datastore_import_success", stat_options))
         redirect_to :action => 'import_export', :flash_msg=>@flash_array[0][:message]         # redirect to build the retire screen
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task=>"upload") << bang.message, :error)

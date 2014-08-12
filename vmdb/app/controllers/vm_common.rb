@@ -1526,9 +1526,9 @@ module VmCommon
         options[:where_clause] =
           ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
         process_show_list(options)  # Get all VMs & Templates
+        # :model=>ui_lookup(:models=>"VmOrTemplate"))
+        # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
         @right_cell_text = I18n.t("cell_header.all_model_records",
-#                                 :model=>ui_lookup(:models=>"VmOrTemplate"))
-# TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
                                   :model=>title ? "#{title}" : "VMs & Templates")
       else
         if X_TREE_NODE_PREFIXES[@nodetype] == "Hash"

@@ -693,8 +693,10 @@ module ApplicationController::Filter
       begin
         s.destroy                                                   # Delete the record
       rescue StandardError => bang
-        add_flash(I18n.t("flash.record.error_during",
-                        :model=>ui_lookup(:model=>"MiqSearch"), :name=>sname, :task=>"delete") << bang.message,
+        add_flash(I18n.t("flash.record.error_during_task",
+                         :model => ui_lookup(:model => "MiqSearch"),
+                         :name  => sname,
+                         :task  => "delete") << bang.message,
                   :error)
       else
         if @settings[:default_search] && @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym] # See if a default search exists

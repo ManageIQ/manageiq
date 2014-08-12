@@ -1359,7 +1359,7 @@ module ApplicationController::CiProcessing
             add_flash(I18n.t("flash.vm.power_off_to_delete_blackbox", :name=>@vm.name), :error)
           end
         else
-          add_flash(I18n.t("flash.vm.no_blackbox"), :error)
+          add_flash(I18n.t("flash.vm.no_blackbox", :name => @vm.name), :error)
         end
         i += 1
       end

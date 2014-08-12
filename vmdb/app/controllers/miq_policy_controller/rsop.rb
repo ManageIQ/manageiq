@@ -30,7 +30,7 @@ module MiqPolicyController::Rsop
       else
         miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
         if miq_task.task_results.blank?               # Check to see if any results came back
-          add_flash(I18n.t("flash.policy.simulations_generation_error") << miq_task.message, :error)
+          add_flash(I18n.t("flash.policy.simulation_generation_error") << miq_task.message, :error)
         else
           @sb[:rsop][:results] = miq_task.task_results
           session[:rsop_tree] = rsop_build_tree

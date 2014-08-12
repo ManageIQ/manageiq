@@ -719,7 +719,8 @@ module ApplicationController::Buttons
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.top", :field=>"fields"), :error)
+      add_flash(I18n.t("flash.edit.select_fields_to_move.to_the_top",
+                       :field => "fields"), :error)
     else
       if first_idx > 0
         @edit[:new][:fields][first_idx..last_idx].reverse.each do |field|
@@ -740,7 +741,8 @@ module ApplicationController::Buttons
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.bottom", :field=>"fields"), :error)
+      add_flash(I18n.t("flash.edit.select_fields_to_move.to_the_bottom",
+                       :field => "fields"), :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
         @edit[:new][:fields][first_idx..last_idx].each do |field|
