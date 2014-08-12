@@ -193,6 +193,13 @@ describe 'routes for CatalogController' do
     end
   end
 
+  describe '#sort_pxe_img_grid' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/sort_pxe_img_grid"))
+      .to route_to("#{controller_name}#sort_pxe_img_grid")
+    end
+  end
+
   describe '#sort_vm_grid' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/sort_vm_grid"))
