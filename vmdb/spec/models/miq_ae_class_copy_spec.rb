@@ -103,7 +103,7 @@ describe MiqAeClassCopy do
       domain = 'Fred'
       fqname = 'test1'
       ids    = [1, 2, 3]
-      miq_ae_class_copy = mock(MiqAeClassCopy)
+      miq_ae_class_copy = double(MiqAeClassCopy)
       miq_ae_class = mock_model(MiqAeClass)
       new_ids = [miq_ae_class.id] * ids.length
       miq_ae_class_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_class }

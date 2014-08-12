@@ -754,7 +754,7 @@ describe ApplicationHelper do
     subject { build_toolbar_hide_button(@id) }
     before do
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
-      @record = mock("record")
+      @record = double("record")
       User.stub(:current_user).and_return(@user)
       @settings = { :views => {:dashboards => 'textual',
                                :compare => 'compressed',
@@ -1922,11 +1922,11 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:host => stub(:vmm_product => "Server"))
+            @record.stub(:host => double(:vmm_product => "Server"))
           end
 
           it "and @record.host.vmm_product = workstation" do
-            @record.stub(:host => stub(:vmm_product => "Workstation"))
+            @record.stub(:host => double(:vmm_product => "Workstation"))
             subject.should == true
           end
 
@@ -1945,11 +1945,11 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:host => stub(:vmm_product => "Workstation"), :ext_management_system => true)
+            @record.stub(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
           end
 
           it "and !@record.ext_management_system & @record.host.vmm_product.downcase != workstation" do
-            @record.stub(:host => stub(:vmm_product => "Server"), :ext_management_system => false)
+            @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
             subject.should == true
           end
 
@@ -2032,11 +2032,11 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:host => stub(:vmm_product => "Server"))
+            @record.stub(:host => double(:vmm_product => "Server"))
           end
 
           it "and @record.host.vmm_product = workstation" do
-            @record.stub(:host => stub(:vmm_product => "Workstation"))
+            @record.stub(:host => double(:vmm_product => "Workstation"))
             subject.should == true
           end
 
@@ -2054,11 +2054,11 @@ describe ApplicationHelper do
       context "and id = miq_template_refresh" do
         before do
           @id = "miq_template_refresh"
-          @record.stub(:host => stub(:vmm_product => "Workstation"), :ext_management_system => true)
+          @record.stub(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
         end
 
         it "and !@record.ext_management_system & @record.host.vmm_product != workstation" do
-          @record.stub(:host => stub(:vmm_product => "Server"), :ext_management_system => false)
+          @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
           subject.should == true
         end
 
@@ -2185,14 +2185,14 @@ describe ApplicationHelper do
           end
 
           it "and @usage_options[:report].table.data is empty" do
-            table = stub(:data => '')
-            @usage_options = { :report => stub(:table => table) }
+            table = double(:data => '')
+            @usage_options = { :report => double(:table => table) }
             subject.should == true
           end
 
           it "and @usage_options[:report].table.data not empty" do
-            table = stub(:data => 'something interesting')
-            @usage_options = { :report => stub(:table => table) }
+            table = double(:data => 'something interesting')
+            @usage_options = { :report => double(:table => table) }
             subject.should == false
           end
         end
@@ -2275,17 +2275,17 @@ describe ApplicationHelper do
           @message = "This Role is already active on this Server"
           @id = "role_start"
 
-          @record.stub(:miq_server => stub(:started? => true), :active => true, :server_role=>@server_role )
+          @record.stub(:miq_server => double(:started? => true), :active => true, :server_role=>@server_role )
         end
 
         it "when miq server not started" do
-          @record.stub(:miq_server => stub(:started? => false))
+          @record.stub(:miq_server => double(:started? => false))
           subject.should == @message
         end
 
         it "when miq server started but not active" do
           @record.stub(:active => false)
-          @record.stub(:miq_server => stub(:started? => false))
+          @record.stub(:miq_server => double(:started? => false))
           subject.should == "Only available Roles on active Servers can be started"
         end
 
@@ -2311,7 +2311,7 @@ describe ApplicationHelper do
         end
 
         it "when miq_server not started or not active" do
-          @record.stub(:miq_server => stub(:started? => false), :active => false)
+          @record.stub(:miq_server => double(:started? => false), :active => false)
           subject.should == "Only active Roles on active Servers can be suspended"
         end
       end
@@ -2519,15 +2519,15 @@ describe ApplicationHelper do
           @id = "miq_proxy_deploy"
         end
         it "when host state not blank and host not on" do
-          @record.stub(:host => stub(:state => 'suspend'))
+          @record.stub(:host => double(:state => 'suspend'))
           subject.should == "The SmartProxy can not be managed because the Host is not powered on"
         end
 
         context "when host state blank or host is on" do
-          before { @record.stub(:host => stub(:state => 'on', :available_builds => ['1.1'] )) }
+          before { @record.stub(:host => double(:state => 'on', :available_builds => ['1.1'] )) }
 
           it "and no available builds for the host" do
-            @record.stub(:host => stub(:state => 'on', :available_builds => [] ))
+            @record.stub(:host => double(:state => 'on', :available_builds => [] ))
             subject.should == "Host OS is unknown or there are no available SmartProxy versions for the Host's OS"
           end
           it_behaves_like 'default case'
@@ -2583,7 +2583,7 @@ describe ApplicationHelper do
         end
 
         it "when a provision dialog is available" do
-          @record.stub(:resource_actions => [ stub(:action => 'Provision', :dialog_id => '10')] )
+          @record.stub(:resource_actions => [ double(:action => 'Provision', :dialog_id => '10')] )
           Dialog.stub(:find_by_id => 'some thing')
           subject.should be_false
         end
@@ -3092,7 +3092,7 @@ describe ApplicationHelper do
 
   describe "#build_toolbar_save_button" do
     before(:each) do
-      @record = stub(:id => 'record_id_xxx_001', :class => 'record_xxx_class')
+      @record = double(:id => 'record_id_xxx_001', :class => 'record_xxx_class')
       btn_num = "x_button_id_001"
       desc = 'the description for the button'
       @item = { :button=>"custom_#{btn_num}",
@@ -3500,12 +3500,12 @@ describe ApplicationHelper do
       @min = "14"
       @run_at = { :start_time => "2012-06-28 11:14:00",
                   :interval => {:value => @interval }}
-      @schedule = stub( :run_at => @run_at )
+      @schedule = double( :run_at => @run_at )
     end
 
     describe "when schedule.run_at == nil" do
       it "sets defaults" do
-        schedule = stub(:run_at => nil)
+        schedule = double(:run_at => nil)
         set_edit_timer_from_schedule schedule
         @edit[:new].should include(
           :timer_typ => "Once",

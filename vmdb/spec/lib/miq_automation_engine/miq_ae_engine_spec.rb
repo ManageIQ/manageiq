@@ -83,7 +83,7 @@ module MiqAeEngineSpec
         context "with ae_result of 'error'" do
           before(:each) do
             root = { 'ae_result' => 'error' }
-            @ws = mock('ws')
+            @ws = double('ws')
             @ws.stub(:root => root)
             MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
           end
@@ -99,7 +99,7 @@ module MiqAeEngineSpec
         context "with ae_result of 'ok'" do
           before(:each) do
             root = { 'ae_result' => 'ok' }
-            @ws = mock('ws')
+            @ws = double('ws')
             @ws.stub(:root => root)
             MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
           end
@@ -124,7 +124,7 @@ module MiqAeEngineSpec
         context "with ae_result of 'retry'" do
           before(:each) do
             root = { 'ae_result' => 'retry' }
-            @ws = mock('ws')
+            @ws = double('ws')
             @ws.stub(:root => root)
             MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
           end

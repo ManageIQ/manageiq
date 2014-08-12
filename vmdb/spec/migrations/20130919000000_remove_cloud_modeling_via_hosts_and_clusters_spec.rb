@@ -35,7 +35,7 @@ describe RemoveCloudModelingViaHostsAndClusters do
         end
 
         should_not_be_deleted.each do |obj|
-          lambda { obj.reload }.should_not raise_error(ActiveRecord::RecordNotFound)
+          lambda { obj.reload }.should_not raise_error
         end
       end
 
@@ -51,7 +51,7 @@ describe RemoveCloudModelingViaHostsAndClusters do
         end
 
         should_not_be_deleted.each do |obj|
-          lambda { obj.reload }.should_not raise_error(ActiveRecord::RecordNotFound)
+          lambda { obj.reload }.should_not raise_error
         end
       end
     end
@@ -78,7 +78,7 @@ describe RemoveCloudModelingViaHostsAndClusters do
         end
 
         should_not_be_deleted.each do |obj|
-          lambda { obj.reload }.should_not raise_error(ActiveRecord::RecordNotFound)
+          lambda { obj.reload }.should_not raise_error
         end
       end
 
@@ -94,7 +94,7 @@ describe RemoveCloudModelingViaHostsAndClusters do
         end
 
         should_not_be_deleted.each do |obj|
-          lambda { obj.reload }.should_not raise_error(ActiveRecord::RecordNotFound)
+          lambda { obj.reload }.should_not raise_error
         end
       end
     end

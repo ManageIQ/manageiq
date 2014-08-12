@@ -4,37 +4,37 @@ describe StorageFile do
 
   context "#is_snapshot_disk_file" do
     it "false if NOT .vmdk extension" do
-      stub_file = stub(:ext_name => 'txt')
+      stub_file = double(:ext_name => 'txt')
       described_class.is_snapshot_disk_file(stub_file).should be_false
     end
 
     it "true for hyphened-and-ending-with-delta.vmdk" do
-      stub_file = stub(:ext_name => 'vmdk', :name => 'xx-xx-xxx-delta.vmdk')
+      stub_file = double(:ext_name => 'vmdk', :name => 'xx-xx-xxx-delta.vmdk')
       described_class.is_snapshot_disk_file(stub_file).should be_true
     end
 
     it "true for delta.vmdk" do
-      stub_file = stub(:ext_name => 'vmdk', :name => 'delta.vmdk')
+      stub_file = double(:ext_name => 'vmdk', :name => 'delta.vmdk')
       described_class.is_snapshot_disk_file(stub_file).should be_true
     end
 
     it "true for hyphened-and-ending-with-6-digits.vmdk" do
-      stub_file = stub(:ext_name => 'vmdk', :name => 'xxx-123456.vmdk')
+      stub_file = double(:ext_name => 'vmdk', :name => 'xxx-123456.vmdk')
       described_class.is_snapshot_disk_file(stub_file).should be_true
     end
 
     it "true for named-with-6-digits.vmdk" do
-      stub_file = stub(:ext_name => 'vmdk', :name => '654321.vmdk')
+      stub_file = double(:ext_name => 'vmdk', :name => '654321.vmdk')
       described_class.is_snapshot_disk_file(stub_file).should be_true
     end
 
     it "false for not-ending-with-delta.vmdk" do
-      stub_file = stub(:ext_name => 'vmdk', :name => 'xxx-notdelta-but-anything.vmdk')
+      stub_file = double(:ext_name => 'vmdk', :name => 'xxx-notdelta-but-anything.vmdk')
       described_class.is_snapshot_disk_file(stub_file).should be_false
     end
 
     it "false for not-ending-with-6-digits.vmdk" do
-      stub_file = stub(:ext_name => 'vmdk', :name => 'xxx-12345678.vmdk')
+      stub_file = double(:ext_name => 'vmdk', :name => 'xxx-12345678.vmdk')
       described_class.is_snapshot_disk_file(stub_file).should be_false
     end
 
@@ -42,51 +42,51 @@ describe StorageFile do
 
   context "#split_file_types" do
     it "marks as a snapshot file for file delta.vmdk and hyphened-and-ending-with-delta.vmdk" do
-      stub_file1 = stub(:ext_name => 'vmdk', :name => 'xxx-delta.vmdk')
-      stub_file2 = stub(:ext_name => 'vmdk', :name => 'delta.vmdk')
+      stub_file1 = double(:ext_name => 'vmdk', :name => 'xxx-delta.vmdk')
+      stub_file2 = double(:ext_name => 'vmdk', :name => 'delta.vmdk')
       result = described_class.split_file_types([stub_file1, stub_file2])
       result[:snapshot].should have(2).items
 
     end
 
     it "marks as a snapshot file for file 123456.vmdk and hyphened-and-ending-with-6-digits.vmdk" do
-      stub_file1 = stub(:ext_name => 'vmdk', :name => '123456.vmdk')
-      stub_file2 = stub(:ext_name => 'vmdk', :name => 'xxx-123456.vmdk')
+      stub_file1 = double(:ext_name => 'vmdk', :name => '123456.vmdk')
+      stub_file2 = double(:ext_name => 'vmdk', :name => 'xxx-123456.vmdk')
       result = described_class.split_file_types([stub_file1, stub_file2])
       result[:snapshot].should have(2).items
     end
 
     it "marks as a disk file for file hyphened-but-not-ending-with-delta.vmdk" do
-      stub_file1 = stub(:ext_name => 'vmdk', :name => 'xx-xxx-notdelta.vmdk')
-      stub_file2 = stub(:ext_name => 'vmdk', :name => 'anything.vmdk')
+      stub_file1 = double(:ext_name => 'vmdk', :name => 'xx-xxx-notdelta.vmdk')
+      stub_file2 = double(:ext_name => 'vmdk', :name => 'anything.vmdk')
       result = described_class.split_file_types([stub_file1, stub_file2])
       result[:disk].should have(2).items
     end
 
     it "marks as a disk file for file hyphened-but-not-ending-with-6-digits.vmdk" do
-      stub_file1 = stub(:ext_name => 'vmdk', :name => 'x-xxx-12345678.vmdk')
-      stub_file2 = stub(:ext_name => 'vmdk', :name => '1234.vmdk')
+      stub_file1 = double(:ext_name => 'vmdk', :name => 'x-xxx-12345678.vmdk')
+      stub_file2 = double(:ext_name => 'vmdk', :name => '1234.vmdk')
       result = described_class.split_file_types([stub_file1, stub_file2])
       result[:disk].should have(2).items
     end
 
     it "marks as a snapshot file for files with extenstion .vmsd and .vmsn" do
       files = []
-      %w[vmsd vmsn].each { |f| files << stub(:ext_name => f) }
+      %w[vmsd vmsn].each { |f| files << double(:ext_name => f) }
       result = described_class.split_file_types(files)
       result[:snapshot].should have(2).items
     end
 
     it "marks as vm_ram for files with extension .nvram and .vswp" do
       files = []
-      %w[nvram vswp].each { |f| files << stub(:ext_name => f) }
+      %w[nvram vswp].each { |f| files << double(:ext_name => f) }
       result = described_class.split_file_types(files)
       result[:vm_ram].should have(2).items
     end
 
     it "marks as vm_misc for files with extension .vmx, .vmtx, .vmxf, .log and .hlog" do
       files = []
-      %w[vmx vmtx vmxf log hlog].each { |f| files << stub(:ext_name => f) }
+      %w[vmx vmtx vmxf log hlog].each { |f| files << double(:ext_name => f) }
       result = described_class.split_file_types(files)
       result[:vm_misc].should have(5).items
     end

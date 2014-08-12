@@ -260,7 +260,7 @@ describe ScheduleWorker do
             @ldap_synchronization_collection = { :ldap_synchronization_schedule => "0 2 * * *" }
             config                           = { :ldap_synchronization => @ldap_synchronization_collection }
 
-            vmdb_config = mock("vmdb_config")
+            vmdb_config = double("vmdb_config")
             vmdb_config.stub(:config => config)
             vmdb_config.stub(:merge_from_template_if_missing)
             VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
@@ -310,7 +310,7 @@ describe ScheduleWorker do
             @metrics_history    = { :purge_schedule => "50 * * * *" }
             database_config     = { :metrics_collection => @metrics_collection, :metrics_history => @metrics_history }
             config              = { :database => database_config }
-            vmdb_config = mock("vmdb_config")
+            vmdb_config = double("vmdb_config")
             vmdb_config.stub(:config => config)
             vmdb_config.stub(:merge_from_template_if_missing)
             VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)

@@ -101,7 +101,7 @@ describe MiqAeInstanceCopy do
       domain = 'Fred'
       fqname = 'test1'
       ids    = [1, 2, 3]
-      ins_copy = mock(MiqAeInstanceCopy)
+      ins_copy = double(MiqAeInstanceCopy)
       ins = mock_model(MiqAeInstance)
       ins_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { ins }
       new_ids = [ins.id] * ids.length

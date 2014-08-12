@@ -9,7 +9,7 @@ describe MiqReport do
 
       it "known taskid" do
         task = MiqTask.create
-        -> { MiqReport._async_generate_tables(task.id)}.should_not raise_error(MiqException::Error)
+        -> { MiqReport._async_generate_tables(task.id)}.should_not raise_error
       end
     end
   end

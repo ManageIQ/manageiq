@@ -7,7 +7,7 @@ describe MigrateAutomateToCustomerDomain do
 
   migration_context :up do
     before(:all) do
-      miq_ae_namespace_stub.create!(:name => '$')
+      migration_stub(:MiqAeNamespace).create!(:name => '$')
     end
 
     context 'migrates root namespace to customer domain' do
@@ -77,7 +77,7 @@ describe MigrateAutomateToCustomerDomain do
 
   migration_context :down do
     before(:all) do
-      miq_ae_namespace_stub.create!(:name => '$')
+      migration_stub(:MiqAeNamespace).create!(:name => '$')
     end
 
     context 'migrates customer domain to root namespaces' do

@@ -126,7 +126,7 @@ describe AutomationRequest do
     before(:each) do
       @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
       root = { 'ae_result' => 'ok' }
-      ws = mock('ws')
+      ws = double('ws')
       ws.stub(:root => root)
       AutomationRequest.any_instance.stub(:call_automate_event).and_return(ws)
 

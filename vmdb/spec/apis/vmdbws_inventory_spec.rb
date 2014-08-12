@@ -93,7 +93,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it 'should not raise error for valid ems guid for FindEmsByGuid' do
-      lambda {invoke(:FindEmsByGuid,ExtManagementSystem.first.guid)}.should_not raise_error(RuntimeError)
+      lambda {invoke(:FindEmsByGuid,ExtManagementSystem.first.guid)}.should_not raise_error
     end
 
     it 'should raise an error for invalid ems guid for EmsGetTags' do
@@ -174,7 +174,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it 'should not raise error for valid host guid for FindHostByGuid' do
-      lambda {invoke(:FindHostByGuid,Host.first.guid)}.should_not raise_error(RuntimeError)
+      lambda {invoke(:FindHostByGuid,Host.first.guid)}.should_not raise_error
     end
 
     it 'should raise an error for invalid host guid for HostGetTags' do
@@ -279,7 +279,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it 'should not raise error for valid cluster id for FindClusterById' do
-      lambda {invoke(:FindClustersById,EmsCluster.first.id)}.should_not raise_error(RuntimeError)
+      lambda {invoke(:FindClustersById,EmsCluster.first.id)}.should_not raise_error
     end
 
     it 'should raise an error for invalid cluster id for ClusterGetTags' do
@@ -354,7 +354,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it 'should not raise error for valid resource pool id for FindResourcePoolById' do
-      lambda {invoke(:FindResourcePoolsById, ResourcePool.first.id)}.should_not raise_error(RuntimeError)
+      lambda {invoke(:FindResourcePoolsById, ResourcePool.first.id)}.should_not raise_error
     end
 
     it 'should raise an error for invalid resource pool id for ResourcePoolGetTags' do
@@ -448,7 +448,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it 'should not raise error for valid datastore id for FindDatastoresById' do
-      lambda {invoke(:FindDatastoresById,Storage.first.id)}.should_not raise_error(RuntimeError)
+      lambda {invoke(:FindDatastoresById,Storage.first.id)}.should_not raise_error
     end
 
     it 'should raise an error for invalid datastore id for DatastoreGetTags' do

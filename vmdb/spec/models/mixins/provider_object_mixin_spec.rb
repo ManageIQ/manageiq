@@ -12,8 +12,8 @@ describe ProviderObjectMixin do
   end
 
   def mock_ems_with_connection
-    @ems        = mock("ems")
-    @connection = mock("connection")
+    @ems        = double("ems")
+    @connection = double("connection")
     @ems.should_receive(:with_provider_connection).and_yield(@connection)
     TestClass.any_instance.stub(:ext_management_system => @ems)
   end
@@ -25,7 +25,7 @@ describe ProviderObjectMixin do
 
   context "when provider_object is written" do
     before do
-      @provider_object = mock("provider_object")
+      @provider_object = double("provider_object")
       TestClass.any_instance.stub(:provider_object => @provider_object)
     end
 

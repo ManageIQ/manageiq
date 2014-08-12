@@ -49,13 +49,13 @@ describe Volume do
 
   context "#find_disk_by_controller" do
     it "nil when controller NOT like 'scsi0:0:0'" do
-      described_class.find_disk_by_controller(mock, 'wrong_format').should be_false
+      described_class.find_disk_by_controller(double, 'wrong_format').should be_false
     end
 
     it "disk_id when controller like 'scsi0:0:0'" do
-      parent = disk = mock()
+      parent = disk = double()
       disk.stub(:find_by_controller_type_and_location).with('scsi', '0:1').and_return('001')
-      parent.stub(:hardware => stub(:disks => disk))
+      parent.stub(:hardware => double(:disks => disk))
       described_class.find_disk_by_controller(parent, 'scsi0:1:1').should == '001'
     end
   end

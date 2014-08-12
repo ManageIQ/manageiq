@@ -61,7 +61,7 @@ describe VimBrokerWorker do
 
       it "should not raise error when MiqVimBroker.getMiqVim raises HTTPClient::ConnectTimeoutError" do
         require 'httpclient'  # needed for exception classes
-        @miq_vim_broker = mock('miq_vim_broker')
+        @miq_vim_broker = double('miq_vim_broker')
         MiqVimBroker.stub(:new).and_return(@miq_vim_broker)
         @miq_vim_broker.stub(:getMiqVim).and_raise(HTTPClient::ConnectTimeoutError)
         lambda { @vim_broker_worker.start_broker_server(@worker_record.class.emses_to_monitor) }.should_not raise_error
@@ -69,7 +69,7 @@ describe VimBrokerWorker do
     end
 
     it "#after_sync_config" do
-      @vim_broker_worker.instance_variable_set(:@vim_broker_server, mock('miq_vim_broker'))
+      @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
       @vim_broker_worker.should_receive(:reset_broker_update_sleep_interval).once
       @vim_broker_worker.after_sync_config
     end
@@ -77,23 +77,23 @@ describe VimBrokerWorker do
     context "#after_sync_active_roles" do
       it "on initialization" do
         MiqVimBroker.cacheScope = :cache_scope_core
-        @vim_broker_worker.instance_variable_set(:@vim_broker_server, mock('miq_vim_broker'))
+        @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar'])
 
-        lambda { @vim_broker_worker.after_sync_active_roles }.should_not raise_error(SystemExit)
+        lambda { @vim_broker_worker.after_sync_active_roles }.should_not raise_error
       end
 
       it "with role change not including 'ems_inventory' role" do
         MiqVimBroker.cacheScope = :cache_scope_core
-        @vim_broker_worker.instance_variable_set(:@vim_broker_server, mock('miq_vim_broker'))
+        @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar'])
 
-        lambda { @vim_broker_worker.after_sync_active_roles }.should_not raise_error(SystemExit)
+        lambda { @vim_broker_worker.after_sync_active_roles }.should_not raise_error
       end
 
       it "adding 'ems_inventory' role" do
         MiqVimBroker.cacheScope = :cache_scope_core
-        @vim_broker_worker.instance_variable_set(:@vim_broker_server, mock('miq_vim_broker'))
+        @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar', 'ems_inventory'])
 
         lambda { @vim_broker_worker.after_sync_active_roles }.should raise_error(SystemExit)
@@ -101,7 +101,7 @@ describe VimBrokerWorker do
 
       it "removing 'ems_inventory' role" do
         MiqVimBroker.cacheScope = :cache_scope_ems_refresh
-        @vim_broker_worker.instance_variable_set(:@vim_broker_server, mock('miq_vim_broker'))
+        @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar'])
 
         lambda { @vim_broker_worker.after_sync_active_roles }.should raise_error(SystemExit)
@@ -172,8 +172,8 @@ describe VimBrokerWorker do
     end
 
     it "#preload" do
-      @miq_vim_broker = mock('miq_vim_broker')
-      @vim_handle     = mock('vim_handle')
+      @miq_vim_broker = double('miq_vim_broker')
+      @vim_handle     = double('vim_handle')
       @vim_broker_worker.instance_variable_set(:@vim_broker_server, @miq_vim_broker)
       @miq_vim_broker.should_receive(:getMiqVim).once.with(@ems.address, *@ems.auth_user_pwd).and_return(@vim_handle)
       @vim_handle.should_receive(:disconnect).once
@@ -199,7 +199,7 @@ describe VimBrokerWorker do
     context "#drain_event" do
       context "instance with update notification enabled" do
         before(:each) do
-          @vim_broker_worker.instance_variable_set(:@vim_broker_server, stub('dummy_broker_server').as_null_object)
+          @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('dummy_broker_server').as_null_object)
           @vim_broker_worker.instance_variable_set(:@active_roles, ['ems_inventory'])
           @vim_broker_worker.instance_variable_set(:@queue, Queue.new)
           @vim_broker_worker.enable_broker_update_notification

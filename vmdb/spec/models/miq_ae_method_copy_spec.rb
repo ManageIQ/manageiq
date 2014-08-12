@@ -92,7 +92,7 @@ describe MiqAeMethodCopy do
       domain = 'Fred'
       fqname = 'test1'
       ids    = [1, 2, 3]
-      miq_ae_method_copy = mock(MiqAeMethodCopy)
+      miq_ae_method_copy = double(MiqAeMethodCopy)
       miq_ae_method = mock_model(MiqAeMethod)
       miq_ae_method_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_method }
       new_ids = [miq_ae_method.id] * ids.length

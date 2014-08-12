@@ -100,7 +100,7 @@ describe MiqProvisionRedhat do
 
       context "with a destination vm" do
         before do
-          rhevm_vm = mock(:attributes => {:status => {:state => "down"}})
+          rhevm_vm = double(:attributes => {:status => {:state => "down"}})
           @vm_prov.stub(:get_provider_destination).and_return(rhevm_vm)
         end
 

@@ -54,7 +54,7 @@ describe YAMLImportExportMixin do
 
     it "valid YAML file" do
       @fd = StringIO.new("---\na:")
-      lambda { subject }.should_not raise_error("Invalid YAML file")
+      lambda { subject }.should_not raise_error
     end
 
     it "invalid YAML file" do

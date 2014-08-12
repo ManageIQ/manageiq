@@ -5,14 +5,14 @@ module MiqAeServiceSpec
 
   describe MiqAeServiceObject do
     before do
-      @object = mock('object')
-      @service = mock('service')
+      @object = double('object')
+      @service = double('service')
       @service_object = MiqAeServiceObject.new(@object, @service)
     end
 
     context "#attributes" do
       before do
-        @object.stub!(:attributes).and_return({
+        @object.stub(:attributes).and_return({
           'true'     => true,
           'false'    => false,
           'time'     => Time.parse('Aug 30, 2013'),
