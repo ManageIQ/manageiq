@@ -81,6 +81,7 @@ en:
         third: "Styling for '%{field}', third value is in error: "
       field_syntax_error:
         yaml: "Syntax error in YAML file: "
+        yaml_file_could_not_be_saved: "Configuration file changes could not be saved due to syntax error: "
       filter:
         current_search_reset: "The current search details have been reset"
         field_value_error: "%{field} Value Error: %{msg}"
