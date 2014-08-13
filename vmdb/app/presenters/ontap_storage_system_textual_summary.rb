@@ -12,7 +12,6 @@ class OntapStorageSystemTextualSummaryPresenter < StorageTextualSummaryPresenter
     call_items(items)
   end
 
-
   #
   # Items
   #
@@ -20,10 +19,7 @@ class OntapStorageSystemTextualSummaryPresenter < StorageTextualSummaryPresenter
     {:label => "Vendor", :value => @record.vendor}
   end
 
-  def textual_description
-    {:label => "Description", :value => @record.description}
-  end
-
+  # FIXME: unused?
   def textual_operational_status
     {:label => "Operational Status", :value => @record.operational_status_str}
   end
@@ -68,7 +64,7 @@ class OntapStorageSystemTextualSummaryPresenter < StorageTextualSummaryPresenter
     h = {:label => label, :image => "snia_local_file_system", :value => num}
     if num > 0 && role_allows(:feature=>"snia_local_file_system_show")
       h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'snia_local_file_systems', :id => @record, :db => controller.controller_name)
+      h[:link]  = url_for(:action => 'snia_local_file_systems', :id => @record, :db => controller_name)
     end
     h
   end
@@ -80,17 +76,6 @@ class OntapStorageSystemTextualSummaryPresenter < StorageTextualSummaryPresenter
     if num > 0 && role_allows(:feature=>"ontap_logical_disk_show")
       h[:title] = "Show all #{label}"
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => @record, :display => 'ontap_logical_disks')
-    end
-    h
-  end
-
-  def textual_base_storage_extents
-    label = ui_lookup(:tables=>"cim_base_storage_extent")
-    num   = @record.base_storage_extents_size
-    h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
     end
     h
   end

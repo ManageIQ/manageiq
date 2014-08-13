@@ -35,7 +35,7 @@ class OntapLogicalDiskGraphicalSummaryPresenter < StorageGraphicalSummaryPresent
     lfs   = @record.file_system
     h     = {:label => label, :image => "snia_local_file_system", :value =>(lfs.blank? ? "None" : lfs.evm_display_name)}
     if !lfs.blank? && role_allows(:feature=>"snia_local_file_system_show")
-      h[:link]  = link_to("",{:action => 'snia_local_file_systems', :id => @record, :show => lfs.id, :db => controller.controller_name}, :title => "Show #{label} '#{lfs.evm_display_name}'")
+      h[:link]  = link_to("",{:action => 'snia_local_file_systems', :id => @record, :show => lfs.id, :db => controller_name}, :title => "Show #{label} '#{lfs.evm_display_name}'")
     end
     h
   end

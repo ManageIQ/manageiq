@@ -23,20 +23,11 @@ class OntapLogicalDiskTextualSummaryPresenter < StorageTextualSummaryPresenter
     call_items(items)
   end
 
-
   #
   # Items
   #
   def textual_caption
     {:label => "Caption", :value => @record.caption}
-  end
-
-  def textual_description
-    {:label => "Description", :value => @record.description}
-  end
-
-  def textual_operational_status_str
-    {:label => "Operational Status", :value => @record.operational_status_str}
   end
 
   def textual_health_state_str
@@ -90,10 +81,6 @@ class OntapLogicalDiskTextualSummaryPresenter < StorageTextualSummaryPresenter
 
   def textual_primordial?
     {:label => "Primordial", :value => @record.primordial?}
-  end
-
-  def textual_last_update_status_str
-    {:label => "Last Update Status", :value => @record.last_update_status_str}
   end
 
   def textual_state
@@ -192,7 +179,7 @@ class OntapLogicalDiskTextualSummaryPresenter < StorageTextualSummaryPresenter
     h = {:label => label, :image => "snia_local_file_system", :value =>(lfs.blank? ? "None" : lfs.evm_display_name)}
     if !lfs.blank? && role_allows(:feature=>"snia_local_file_system_show")
       h[:title] = "Show #{label} '#{lfs.evm_display_name}'"
-      h[:link]  = url_for(:db => controller.controller_name, :action => 'snia_local_file_systems', :id => @record, :show=>lfs.id)
+      h[:link]  = url_for(:db => controller_name, :action => 'snia_local_file_systems', :id => @record, :show=>lfs.id)
     end
     h
   end

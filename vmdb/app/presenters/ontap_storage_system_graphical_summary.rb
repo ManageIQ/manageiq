@@ -35,7 +35,7 @@ class OntapStorageSystemGraphicalSummaryPresenter < StorageGraphicalSummaryPrese
     num   = @record.local_file_systems_size
     h     = {:label => label, :image => "snia_local_file_system", :value => num}
     if num > 0 && role_allows(:feature=>"snia_local_file_system_show")
-      h[:link]  = link_to("",{:action => 'snia_local_file_systems', :id => @record, :db => controller.controller_name}, :title => "Show all #{label}")
+      h[:link]  = link_to("",{:action => 'snia_local_file_systems', :id => @record, :db => controller_name}, :title => "Show all #{label}")
     end
     h
   end

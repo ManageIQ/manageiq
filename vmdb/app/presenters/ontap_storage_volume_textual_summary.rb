@@ -22,14 +22,6 @@ class OntapStorageVolumeTextualSummaryPresenter < StorageTextualSummaryPresenter
     {:label => "Caption", :value => @record.caption}
   end
 
-  def textual_description
-    {:label => "Description", :value => @record.description}
-  end
-
-  def textual_operational_status_str
-    {:label => "Operational Status", :value => @record.operational_status_str}
-  end
-
   def textual_health_state_str
     {:label => "Health State", :value => @record.health_state_str}
   end
@@ -83,10 +75,6 @@ class OntapStorageVolumeTextualSummaryPresenter < StorageTextualSummaryPresenter
     {:label => "Primordial", :value => @record.primordial?}
   end
 
-  def textual_last_update_status_str
-    {:label => "Last Update Status", :value => @record.last_update_status_str}
-  end
-
   def textual_storage_system
     label = ui_lookup(:table => "ontap_storage_system")
     ss   = @record.storage_system
@@ -94,17 +82,6 @@ class OntapStorageVolumeTextualSummaryPresenter < StorageTextualSummaryPresenter
     if role_allows(:feature => "ontap_storage_system_show")
       h[:title] = "Show #{label} '#{ss.evm_display_name}'"
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => ss.id)
-    end
-    h
-  end
-
-  def textual_base_storage_extents
-    label = ui_lookup(:tables=>"cim_base_storage_extent")
-    num   = @record.base_storage_extents_size
-    h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
     end
     h
   end

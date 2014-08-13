@@ -12,16 +12,11 @@ class OntapFileShareTextualSummaryPresenter < StorageTextualSummaryPresenter
     call_items(items)
   end
 
-
   #
   # Items
   #
   def textual_caption
     {:label => "Caption", :value => @record.caption}
-  end
-
-  def textual_operational_status_str
-    {:label => "Operational Status", :value => @record.operational_status_str}
   end
 
   def textual_instance_id
@@ -30,10 +25,6 @@ class OntapFileShareTextualSummaryPresenter < StorageTextualSummaryPresenter
 
   def textual_sharing_directory?
     {:label => "Sharing Directory", :value => @record.sharing_directory?}
-  end
-
-  def textual_last_update_status_str
-    {:label => "Last Update Status", :value => @record.last_update_status_str}
   end
 
   def textual_storage_system
@@ -54,7 +45,7 @@ class OntapFileShareTextualSummaryPresenter < StorageTextualSummaryPresenter
     if !lfs.blank? && role_allows(:feature => "snia_local_file_system_show")
       h[:title] = "Show #{label} '#{lfs.evm_display_name}'"
      # h[:link]  = url_for(:controller => 'snia_local_file_system', :action => 'show', :id => lfs.id)
-      h[:link]  = url_for(:action => 'snia_local_file_systems', :id => @record, :show=>lfs.id, :db => controller.controller_name)
+      h[:link]  = url_for(:action => 'snia_local_file_systems', :id => @record, :show=>lfs.id, :db => controller_name)
     end
     h
   end
@@ -66,17 +57,6 @@ class OntapFileShareTextualSummaryPresenter < StorageTextualSummaryPresenter
     if !ld.blank? && role_allows(:feature => "ontap_logical_disk_show")
       h[:title] = "Show #{label} '#{ld.evm_display_name}'"
       h[:link]  = url_for(:controller => 'ontap_logical_disk', :action => 'show', :id => ld.id)
-    end
-    h
-  end
-
-  def textual_base_storage_extents
-    label = ui_lookup(:tables=>"cim_base_storage_extent")
-    num   = @record.base_storage_extents_size
-    h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
     end
     h
   end

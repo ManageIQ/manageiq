@@ -67,4 +67,26 @@ class StorageTextualSummaryPresenter < TextualSummaryPresenter
     {:label => "Zone Name", :value => @record.zone_name}
   end
 
+  def textual_base_storage_extents
+    label = ui_lookup(:tables=>"cim_base_storage_extent")
+    num   = @record.base_storage_extents_size
+    h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
+    if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller_name)
+    end
+    h
+  end
+
+  def textual_description
+    {:label => "Description", :value => @record.description}
+  end
+
+  def textual_last_update_status_str
+    {:label => "Last Update Status", :value => @record.last_update_status_str}
+  end
+
+  def textual_operational_status_str
+    {:label => "Operational Status", :value => @record.operational_status_str}
+  end
 end
