@@ -157,50 +157,22 @@ module OpsController::OpsRbac
 
   def rbac_role_delete
     assert_privileges("rbac_role_delete")
-    roles = Array.new
-    unless params[:id] # showing a list
-      ids = find_checked_items.collect{|r| from_cid(r.split("-").last)}
-      roles = MiqUserRole.find_all_by_id(ids).compact
-      if roles.empty?
-        add_flash(I18n.t("flash.cant_delete_read_only", :model=>ui_lookup(:model=>"MiqUserRole"), :in_use_by=>ui_lookup(:models=>"MiqGroup")), :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-        return
-      else
-        to_delete = Array.new
-        roles.each do |r|
-          role = MiqUserRole.find(r)
-          if role.read_only || role.group_count > 0
-            to_delete.push(r)
-          end
-        end
-        add_flash(I18n.t("flash.cant_delete_read_only", :model=>ui_lookup(:models=>"MiqUserRole"), :in_use_by=>ui_lookup(:models=>"MiqGroup")), :error) if !to_delete.empty?
-        #deleting elements in temporary array, had to create temp array to hold id's to be delete, .each gets confused if i deleted them in above loop
-        to_delete.each do |r|
-          roles.delete(r)
-        end
-      end
+    roles = []
+    if !params[:id] # showing a role list
+      ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
+      roles = MiqUserRole.find_all_by_id(ids)
       process_roles(roles, "destroy") unless roles.empty?
     else # showing 1 role, delete it
-      if params[:id] == nil || MiqUserRole.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>"Role"), :error)
-      elsif MiqUserRole.find_by_id(params[:id]).read_only
-        add_flash(I18n.t("flash.ops.rbac.read_only_role_cannot_delete"), :error)
+      if params[:id].nil? || MiqUserRole.find_by_id(params[:id]).nil?
+        add_flash(I18n.t("flash.record.no_longer_exists", :model => "Role"), :error)
       else
         roles.push(params[:id])
       end
-      if @flash_array
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-        return
-      end
       process_roles(roles, "destroy") unless roles.empty?
-      self.x_node  = "xx-ur"  # reset node to show list
+      self.x_node  = "xx-ur" if MiqUserRole.find_by_id(params[:id]).nil? # reset node to show list
     end
     get_node_info(x_node)
-    replace_right_cell(x_node,[:rbac])
+    replace_right_cell(x_node, [:rbac])
   end
 
   # Show the main Users/Groups/Roles list view
