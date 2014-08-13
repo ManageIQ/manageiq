@@ -45,26 +45,6 @@ class String
     self.original_plus(str.message)
   end
 
-  unless method_defined?(:each)
-    include Enumerable
-
-    def respond_to?(symbol, include_private=false)
-      method = symbol.to_sym
-      return false if method == :each || method == :to_a
-      super
-    end
-
-    def each(*args, &block)
-      if !defined?(Rails) || !Rails.env.production?
-        msg = "[DEPRECATION] String#each has been removed from ruby 1.9.  Please use String#each_line instead.  At #{caller[0]}"
-        $log.warn msg if $log
-        Kernel.warn msg
-      end
-
-      self.each_line(*args, &block)
-    end
-  end
-
   unless method_defined?(:ord)
     def ord
       raise ArgumentError, "empty string" if self.length == 0
