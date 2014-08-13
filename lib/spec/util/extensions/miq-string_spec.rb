@@ -9,49 +9,6 @@ describe String do
       Kernel.should_receive(:warn).never
       Array('somestring')
     end
-
-    context 'Enumerable' do
-      it 'included' do
-        String.include?(Enumerable).should be_true
-      end
-
-      it '#any? warns' do
-        Kernel.should_receive(:warn).once
-        "one\ntwo".any? { |str| str == 'two'}.should be_true
-      end
-
-      context '#to_a' do
-        it 'defined' do
-          String.method_defined?(:to_a).should be_true
-        end
-
-        it 'does not respond' do
-          String.respond_to?(:to_a).should_not be_true
-        end
-
-        it 'warns' do
-          Kernel.should_receive(:warn).once
-          "one\ntwo".to_a.should == ["one\n", 'two']
-        end
-      end
-    end
-
-    context '#each' do
-      it 'defined' do
-        String.method_defined?(:each).should be_true
-      end
-
-      it 'does not respond' do
-        String.respond_to?(:each).should_not be_true
-      end
-
-      it 'calls each_line and warns' do
-        str = 'one\ntwo'
-        str.should_receive(:each_line).once
-        Kernel.should_receive(:warn).once
-        str.each { |s| s }
-      end
-    end
   end
 
   it '#<<(exception)' do
