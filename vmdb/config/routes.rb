@@ -1514,6 +1514,7 @@ Vmdb::Application.routes.draw do
         retire
         retire_date_changed
         right_size
+        show_list
       )
     },
 
