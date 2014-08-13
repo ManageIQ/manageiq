@@ -14,11 +14,12 @@ module OpenstackHandle
     }
 
     SERVICE_NAME_MAP = {
-      "Compute" => :nova,
-      "Network" => :neutron,
-      "Image"   => :glance,
-      "Volume"  => :cinder,
-      "Storage" => :swift
+      "Compute"  => :nova,
+      "Network"  => :neutron,
+      "Image"    => :glance,
+      "Volume"   => :cinder,
+      "Storage"  => :swift,
+      "Metering" => :ceilometer
     }
 
     def self.raw_connect(username, password, auth_url, service = "Compute", extra_opts = nil)
