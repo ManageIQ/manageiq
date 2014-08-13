@@ -465,7 +465,7 @@ class MiqProxyController < ApplicationController
   end
 
   def edit
-    assert_privileges("miq_task_edit")
+    assert_privileges("miq_proxy_edit")
     identify_miq_proxy
     set_form_vars
     @in_a_form = true
