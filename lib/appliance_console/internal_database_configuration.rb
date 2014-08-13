@@ -40,6 +40,7 @@ module ApplianceConsole
       # TODO: Assume we want to create a region for a new internal database disk
       # until we allow for the internal selection against an already initialized disk.
       create_new_region_questions(false)
+      ask_for_database_credentials
     end
 
     def choose_disk
