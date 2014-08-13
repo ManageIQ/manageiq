@@ -8,5 +8,8 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
-      value: PreProvision
+  - amazon_meth1:
+      value: amazon_PreProvision
+  - openstack_meth1:
+      value: openstack_PreProvision
+      

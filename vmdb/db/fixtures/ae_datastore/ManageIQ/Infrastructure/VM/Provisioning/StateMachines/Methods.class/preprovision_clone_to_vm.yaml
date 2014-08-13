@@ -8,5 +8,7 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
-      value: PreProvision_Clone_to_VM
+  - vmware_meth1:
+      value: vmware_PreProvision_Clone_to_VM
+  - redhat_meth1:
+      value: redhat_PreProvision_Clone_to_VM

@@ -8,5 +8,7 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
-      value: CustomizeRequest
+  - vmware_meth1:
+      value: vmware_CustomizeRequest
+  - redhat_meth1:
+      value: redhat_CustomizeRequest

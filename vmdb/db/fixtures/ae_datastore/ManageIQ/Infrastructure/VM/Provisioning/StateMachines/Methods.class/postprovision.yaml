@@ -8,5 +8,7 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
-      value: PostProvision
+  - vmware_meth1:
+      value: vmware_PostProvision
+  - redhat_meth1:
+      value: redhat_PostProvision

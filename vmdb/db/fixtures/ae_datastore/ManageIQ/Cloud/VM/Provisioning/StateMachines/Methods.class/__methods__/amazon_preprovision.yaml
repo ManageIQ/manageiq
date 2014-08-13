@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: PreProvision
+    name: amazon_PreProvision
     display_name: 
     description: 
     scope: instance
