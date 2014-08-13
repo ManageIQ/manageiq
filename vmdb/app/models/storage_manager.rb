@@ -13,6 +13,8 @@ class StorageManager < ActiveRecord::Base
 
   belongs_to  :zone
 
+  validates_presence_of   :name
+
   serialize :type_spec_data
 
   virtual_column :zone_name,              :type => :string, :uses => :zone
