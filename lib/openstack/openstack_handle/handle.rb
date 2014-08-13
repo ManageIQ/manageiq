@@ -7,10 +7,11 @@ module OpenstackHandle
     attr_writer   :default_tenant_name
 
     SERVICE_FALL_BACK = {
-      "Network" => "Compute",
-      "Image"   => "Compute",
-      "Volume"  => "Compute",
-      "Storage" => nil
+      "Network"  => "Compute",
+      "Image"    => "Compute",
+      "Volume"   => "Compute",
+      "Storage"  => nil,
+      "Metering" => nil
     }
 
     SERVICE_NAME_MAP = {
