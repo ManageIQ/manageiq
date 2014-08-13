@@ -2,7 +2,7 @@
 <% url = url_for(:action=>'prov_change_options') %>
 <div id="prov_options_div">
 	<%= form_tag( {:action => 'prov_show_option'}, {:id => "prov_form"}) do %>
-	<fieldset>
+
 		<p class="legend">Filter By</p>
 		<table class="style1">
 				<% res_type = @sb[:prov_options][@sb[:prov_options][:resource_type]] %>
@@ -65,10 +65,10 @@
 					<td align="left">
 						<ul id="form_buttons">
 							<div id="buttons_off">
-								<li><%= image_tag("/images/formbuttons/apply.png", :id=>"apply",	:class=>"dimmed formbutton") %></li>
-								<li><%= image_tag("/images/formbuttons/reset.png",	:class=>"dimmed formbutton") %></li>
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
+								    <%= button_tag("Apply", :id=>"apply",	:class=>"btn btn-primary btn-disabled") %>
+								    <%= button_tag("Reset",	:class=>"btn btn-default btn-disabled") %>
+
+									<%= link_to(button_tag("Default", :class=>"btn btn-default",
 																							:id=>"apply",:alt=>"Set filters to default"),
 																		{:action=>"prov_button", :button=>"default"},
                                     "data-miq_sparkle_on" => true,
@@ -76,11 +76,11 @@
                                     :remote=>true,
 																		:title=>"Set filters to default")
 									%>
-								</li>
+
 							</div>
 							<div id="buttons_on" style="display:none">
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/apply.png", :border=>"0", :class=>"button formbutton",
+
+									<%= link_to(button_tag("Apply",:class=>"btn btn-primary",
 																								:alt=>"Apply the selected filters"),
 																			{:action=>"prov_button", :button=>"apply"},
                                       "data-miq_sparkle_on" => true,
@@ -88,9 +88,9 @@
                                       :remote=>true,
 																			:title=>"Apply the selected filters")
 										%>
-								</li>
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button formbutton",
+
+
+									<%= link_to(button_tag("Reset", :class=>"btn btn-default",
 																							:alt=>"Reset filter changes"),
 																		{:action=>"prov_button", :button=>"reset"},
                                     "data-miq_sparkle_on" => true,
@@ -98,9 +98,9 @@
                                     :remote=>true,
 																		:title=>"Reset filter changes")
 									%>
-								</li>
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
+
+
+									<%= link_to(button_tag("Default", :class=>"btn btn-default",
 											:alt=>"Set filters to default"),
 																		{:action=>"prov_button", :button=>"default"},
                                     "data-miq_sparkle_on" => true,
@@ -108,13 +108,13 @@
                                     :remote=>true,
 																		:title=>"Set filters to default")
 									%>
-								</li>
+
 							</div>
-						</ul>
+
 					</td>
 				</tr>
 		</table>
-	</fieldset>
+    <hr>
   <%# Need this to bind checkbox observers when under DHTMLX tabs %>
   <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
   <script>miqObserveCheckboxes();</script>

@@ -280,20 +280,14 @@
   </dl>
   <% unless @explorer %>
     <div id="buttons_on">
-      <ul id="form_buttons">
-        <li>
-          <%= image_tag('/images/formbuttons/cancel.png',
-                        :border  => "0",
-                        :class   => "button",
-                        :style   => "width: 80px; height: 30px",
-                        :alt     => "Cancel",
-                        :title   => "Cancel",
-                        :onclick => "miqAjaxButton('#{url_for(:action => "right_size",
-                                                              :id     => @record_id,
-                                                              :button => "cancel")}');")
-          %>
-        </li>
-      </ul>
+      <%= button_tag('Cancel',
+                      :class   => 'btn btn-default',
+                      :alt     => 'Cancel', 
+                      :title   => 'Cancel',
+                      :onclick => "miqAjaxButton('#{url_for(:action => "right_size",
+                                                            :id     => @record_id,
+                                                            :button => "cancel")}');")
+      %>
     </div>
   <% end %>
 </div>

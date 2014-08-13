@@ -4,10 +4,10 @@
 
 	<%= render :partial => "layouts/flash_msg" %>
 
-		<dl class="col2">
+
 			<% if ["new","create"].include?(controller.action_name) %>
-				<dd>
-					<fieldset>
+
+
 						<p class="legend">Select SmartProxy Host</p>
 						<table class="style1">
 								<tr>
@@ -20,11 +20,11 @@
 									</td>
 								</tr>
 						</table>
-					</fieldset>
-				</dd>
+
+
 			<% else %>
-				<dd>
-					<fieldset>
+
+
 						<p class="legend">Settings</p>
 						<table class="style1">
 								<tr>
@@ -105,8 +105,8 @@
 									</td>
 								</tr>
 						</table>
-					</fieldset>
-				</dd>
+
+
 			<% end %>
 
 
@@ -115,13 +115,13 @@
 		<tr>
 			<td align="right">
 				<div id="buttons_on">
-					<%= image_tag('/images/formbuttons/add.png', :border=>"0", :class=>"button",
+					<%= button_tag('Add', :class=>"btn btn-primary",
 									:alt=>"Add this SmartProxy", :title=>"Add this SmartProxy",
 									:onclick=>"miqAjaxButton('#{url_for(:action=>"create",
 																											:id=>"new",
 																											:button=>"add")}');")
 					%>
-					<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+					<%= button_tag('Cancel', :class=>"btn btn-default",
 												:alt=>"Cancel", :title=>"Cancel",
 												:onclick=>"miqAjaxButton('#{url_for(:action=>"create",
 																														:id=>"new",
