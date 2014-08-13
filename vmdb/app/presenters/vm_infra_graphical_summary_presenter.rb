@@ -1,4 +1,4 @@
-class VmCloudGraphicalSummaryPresenter < GraphicalSummaryPresenter
+class VmInfraGraphicalSummaryPresenter < GraphicalSummaryPresenter
   # TODO: Verify why there are onclick events with miqCheckForChanges(), but only on some links.
 
   #

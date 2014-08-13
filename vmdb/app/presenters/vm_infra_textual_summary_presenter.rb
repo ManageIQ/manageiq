@@ -1,4 +1,4 @@
-class VmCloudTextualSummaryPresenter < TextualSummaryPresenter
+class VmInfraTextualSummaryPresenter < TextualSummaryPresenter
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
 
   #

@@ -1,6 +1,6 @@
 module VmHelper
-  include_concern 'TextualSummary'
-  include_concern 'GraphicalSummary'
+  include_summary_presenter(VmTextualSummaryPresenter)
+  include_summary_presenter(VmGraphicalSummaryPresenter)
 
   # TODO: These methods can be removed once the Summary and ListNav data layer is consolidated.
   def last_date(request_type)
