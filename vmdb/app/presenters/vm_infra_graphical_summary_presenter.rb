@@ -112,7 +112,7 @@ class VmInfraGraphicalSummaryPresenter < GraphicalSummaryPresenter
   end
 
   def graphical_genealogy
-    {:label => "VM Genealogy", :image => "genealogy", :link => link_to("", {:controller => controller.controller_name, :action => 'show', :display => 'vmtree_info', :id => @record}, :remote => @explorer, :title => "Show virtual machine genealogy")}
+    {:label => "VM Genealogy", :image => "genealogy", :link => link_to("", {:controller => controller_name, :action => 'show', :display => 'vmtree_info', :id => @record}, :remote => @explorer, :title => "Show virtual machine genealogy")}
   end
 
   def graphical_vdi_desktop

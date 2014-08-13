@@ -1,46 +1,23 @@
-module OntapStorageSystemHelper::TextualSummary
+class OntapStorageSystemTextualSummaryPresenter < StorageTextualSummaryPresenter
   #
   # Groups
   #
-
   def textual_group_properties
     items = %w{name element_name vendor zone_name description operational_status health_state other_identifying_info last_update_status}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    call_items(items)
   end
 
   def textual_group_relationships
     items = %w{storage_volumes hosted_file_shares local_file_systems logical_disks base_storage_extents}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    call_items(items)
   end
 
-  def textual_group_infrastructure_relationships
-    items = %w{vms hosts datastores}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
-  def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
 
   #
   # Items
   #
-
-  def textual_name
-    {:label => "Name", :value => @record.evm_display_name}
-  end
-
-  def textual_element_name
-    {:label => "Element Name", :value => @record.element_name}
-  end
-
   def textual_vendor
     {:label => "Vendor", :value => @record.vendor}
-  end
-
-  def textual_zone_name
-    {:label => "Zone Name", :value => @record.zone_name}
   end
 
   def textual_description
@@ -114,52 +91,6 @@ module OntapStorageSystemHelper::TextualSummary
     if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
       h[:title] = "Show all #{label}"
       h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
-    end
-    h
-  end
-
-  def textual_hosts
-    label = "Hosts"
-    num   = @record.hosts_size
-    h     = {:label => label, :image => "host", :value => num}
-    if num > 0 && role_allows(:feature => "host_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hosts')
-    end
-    h
-  end
-
-  def textual_datastores
-    label = ui_lookup(:tables=>"storages")
-    num   = @record.storages_size
-    h     = {:label => label, :image => "storage", :value => num}
-    if num > 0 && role_allows(:feature => "storage_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'storages')
-    end
-    h
-  end
-
-  def textual_vms
-    label = "VMs"
-    num   = @record.vms_size
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
-    end
-    h
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h     = {:label => label}
-    tags  = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
     end
     h
   end

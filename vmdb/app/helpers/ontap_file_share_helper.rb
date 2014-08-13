@@ -1,4 +1,4 @@
 module OntapFileShareHelper
-  include_concern 'TextualSummary'
+  include_summary_presenter(OntapFileShareTextualSummaryPresenter)
   include_summary_presenter(OntapFileShareGraphicalSummaryPresenter)
 end

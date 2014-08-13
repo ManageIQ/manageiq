@@ -179,7 +179,7 @@ class VmInfraTextualSummaryPresenter < TextualSummaryPresenter
 
   def textual_genealogy
     {:label => "Genealogy", :image => "genealogy", :value => "Show parent and child VMs", :title => "Show virtual machine genealogy",
-      :explorer => true, :link => url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "vmtree_info")}
+      :explorer => true, :link => url_for(:controller => controller_name, :action => 'show', :id => @record, :display => "vmtree_info")}
   end
 
   def textual_vdi_desktop
@@ -200,7 +200,7 @@ class VmInfraTextualSummaryPresenter < TextualSummaryPresenter
     if num > 0
       h[:title] = "Show disks on this VM"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "disks")
+      h[:link]  = url_for(:controller => controller_name, :action => 'show', :id => @record, :display => "disks")
     end
     h
   end
@@ -280,7 +280,7 @@ class VmInfraTextualSummaryPresenter < TextualSummaryPresenter
     if num > 0 && role_allows(:feature => "ontap_storage_system_show_list")
       h[:title] = "Show all #{label}"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_systems")
+      h[:link]  = url_for(:controller => controller_name, :action => 'show', :id => @record, :display => "ontap_storage_systems")
     end
     h
   end
@@ -292,7 +292,7 @@ class VmInfraTextualSummaryPresenter < TextualSummaryPresenter
     if num > 0 && role_allows(:feature => "ontap_storage_volume_show_list")
       h[:title] = "Show all #{label}"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_volumes")
+      h[:link]  = url_for(:controller => controller_name, :action => 'show', :id => @record, :display => "ontap_storage_volumes")
     end
     h
   end
@@ -304,7 +304,7 @@ class VmInfraTextualSummaryPresenter < TextualSummaryPresenter
     if num > 0 && role_allows(:feature => "ontap_file_share_show_list")
       h[:title] = "Show all #{label}"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_file_shares")
+      h[:link]  = url_for(:controller => controller_name, :action => 'show', :id => @record, :display => "ontap_file_shares")
     end
     h
   end
@@ -316,7 +316,7 @@ class VmInfraTextualSummaryPresenter < TextualSummaryPresenter
     if num > 0 && role_allows(:feature => "ontap_logical_disk_show_list")
       h[:title] = "Show all #{label}"
       h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_logical_disks")
+      h[:link]  = url_for(:controller => controller_name, :action => 'show', :id => @record, :display => "ontap_logical_disks")
     end
     h
   end
