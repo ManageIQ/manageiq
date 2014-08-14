@@ -7,18 +7,20 @@ module OpenstackHandle
     attr_writer   :default_tenant_name
 
     SERVICE_FALL_BACK = {
-      "Network" => "Compute",
-      "Image"   => "Compute",
-      "Volume"  => "Compute",
-      "Storage" => nil
+      "Network"  => "Compute",
+      "Image"    => "Compute",
+      "Volume"   => "Compute",
+      "Storage"  => nil,
+      "Metering" => nil
     }
 
     SERVICE_NAME_MAP = {
-      "Compute" => :nova,
-      "Network" => :neutron,
-      "Image"   => :glance,
-      "Volume"  => :cinder,
-      "Storage" => :swift
+      "Compute"  => :nova,
+      "Network"  => :neutron,
+      "Image"    => :glance,
+      "Volume"   => :cinder,
+      "Storage"  => :swift,
+      "Metering" => :ceilometer
     }
 
     def self.raw_connect(username, password, auth_url, service = "Compute", extra_opts = nil)
@@ -82,8 +84,15 @@ module OpenstackHandle
         auth_url = self.class.auth_url(address, port)
         opts[:connection_options] = connection_options if connection_options
 
-        svc = self.class.raw_connect(username, password, auth_url, service, opts)
-        OpenstackHandle.const_get("#{service}Delegate").new(svc, self)
+        raw_service = self.class.raw_connect(username, password, auth_url, service, opts)
+        service_wrapper_name = "#{service}Delegate"
+        # Allow openstack to define new services without explicitly requiring a
+        # service wrapper.
+        if OpenstackHandle.const_defined?(service_wrapper_name)
+          OpenstackHandle.const_get(service_wrapper_name).new(raw_service, self)
+        else
+          raw_service
+        end
       end
     end
 
