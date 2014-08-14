@@ -19,29 +19,28 @@ module MiqProvisionVmware::Placement
 
   def manual_placement
     log_header = "MIQ(#{self.class.name}.manual_placement)"
-
-    raise MiqException::MiqProvisionError, "Destination host not provided"      if get_option(:placement_host_name).blank?
-    raise MiqException::MiqProvisionError, "Destination datastore not provided" if get_option(:placement_ds_name).blank?
-    host_id      = get_option(:placement_host_name)
-    datastore_id = get_option(:placement_ds_name)
-
-    $log.info("#{log_header} Using selected host and datastore for new VM, Host Id: [#{host_id}], Datastore Id: [#{datastore_id}]")
-    host      = Host.find_by_id(host_id)
-    datastore = Storage.find_by_id(datastore_id)
-    return host, datastore
+    $log.info("#{log_header} Manual placement...")
+    return selected_placement_obj(:placement_host_name, Host),
+           selected_placement_obj(:placement_ds_name, Storage)
   end
 
   def automatic_placement
     log_header = "MIQ(#{self.class.name}.automatic_placement)"
-
     # get most suitable host and datastore for new VM
-    $log.info("#{log_header} Getting most suitable host and datastore for new VM...")
-    host, datastore = self.get_most_suitable_host_and_storage
-    raise MiqException::MiqProvisionError, "Unable to find a suitable host"    if host.nil?
-    raise MiqException::MiqProvisionError, "Unable to find a suitable storage" if datastore.nil?
-    self.options[:placement_host_name] = [host.id, host.name]
-    self.options[:placement_ds_name]   = [datastore.id, datastore.name]
-    $log.info("#{log_header} Getting most suitable host and datastore for new VM...Complete, Host Id: [#{host.id}], Name: [#{host.name}], Datastore Id: [#{datastore.id}], Name: [#{datastore.name}]")
+    $log.info("#{log_header} Getting most suitable host and datastore for new VM from automate...")
+    host, datastore = get_most_suitable_host_and_storage
+    $log.info("#{log_header} Host Name: [#{host.name}] Id: [#{host.id}]") if host
+    $log.info("#{log_header} Datastore Name: [#{datastore.name}] ID : [#{datastore.id}]") if datastore
+    host      ||= selected_placement_obj(:placement_host_name, Host)
+    datastore ||= selected_placement_obj(:placement_ds_name, Storage)
     return host, datastore
+  end
+
+  def selected_placement_obj(key, klass)
+    klass.where(:id => get_option(key)).first.tap do |obj|
+      raise MiqException::MiqProvisionError, "Destination #{key} not provided" unless obj
+      log_header = "MIQ(#{self.class.name}.selected_placement_obj)"
+      $log.info("#{log_header} Using selected #{key} : [#{obj.name}] id : [#{obj.id}]")
+    end
   end
 end

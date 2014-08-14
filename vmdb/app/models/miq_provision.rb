@@ -48,6 +48,7 @@ class MiqProvision < MiqRequestTask
   virtual_belongs_to :vm_template
 
   virtual_column     :provision_type,       :type => :string
+  virtual_column     :placement_auto,       :type => :boolean
 
   def self.base_model
     MiqProvision
@@ -73,6 +74,10 @@ class MiqProvision < MiqRequestTask
 
   def do_request
     signal :run_provision
+  end
+
+  def placement_auto
+    get_option(:placement_auto)
   end
 
   def after_request_task_create
