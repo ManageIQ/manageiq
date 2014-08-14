@@ -1,140 +1,159 @@
-<% url = url_for(:action => 'form_field_changed', :id=>"#{@miq_proxy.id || "new"}") %>
+<% url = url_for(:action => 'form_field_changed', 
+                 :id     => "#{@miq_proxy.id || "new"}") %>
 <!--[form:miq_proxy]-->
 <div id="form_div">
+  <%= render :partial => "layouts/flash_msg" %>
+  <% if ["new","create"].include?(controller.action_name) %>
+    <p class="legend">Select SmartProxy Host</p>
+    <table class="style1">
+        <tr>
+          <td class="key">Name (from chosen Host)</td>
+          <td class="wide" colspan="2">
+            <%= select_tag("host",
+                           options_for_select([["<Choose>", 
+                                                "<Choose>"]] + Array(@edit[:avail_hosts].invert).sort{|a,b| a[0].downcase<=>b[0].downcase},
+                                              @edit[:host]),
+                           "data-miq_observe" => {:url => url}.to_json) 
+            %>
+          </td>
+        </tr>
+    </table>
+  <% else %>
+    <p class="legend">Settings</p>
+    <table class="style1">
+      <tr>
+        <td class="key">Heartbeat Frequency</td>
+        <td width="70">
+          <%= select_tag("hb_freq_mins",
+                         options_for_select(Array.new(61) {|i| i}, 
+                                            @edit[:new][:hb_freq_mins]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
+        </td>
+        <td>
+          <%= select_tag("hb_freq_secs",
+                         options_for_select(Array.new(12) {|i| i*5}, 
+                                            @edit[:new][:hb_freq_secs]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
+        </td>
+      </tr>
+    <% if false %><%# Not in use, hiding for now - Sprint 41 %>
+      <tr>
+        <td class="key">Self Update Frequency</td>
+        <td width="70">
+          <%= select_tag("update_freq_days",
+                         options_for_select(Array.new(15) {|i| i}, 
+                                            @edit[:new][:update_freq_days]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
+        </td>
+        <td>
+          <%= select_tag("update_freq_hours",
+                         options_for_select(Array.new(24) {|i| i}, 
+                                            @edit[:new][:update_freq_hours]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
+        </td>
+      </tr>
+    <% end %>
 
-	<%= render :partial => "layouts/flash_msg" %>
+      <tr>
+        <td class="key">Read Only Mode</td>
+        <td colspan="2">
+          <%= check_box_tag("readonly", 
+                            value="1",
+                            checked=@edit[:new][:readonly],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json) 
+          %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Web Services Listen Port</td>
+        <td class="wide" colspan="2">
+          <%= text_field_tag("ws_port",
+                             @edit[:new][:ws_port],
+                             :maxlength         => 6,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json) 
+          %>
+          (max 6 digits)
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Log Level</td>
+        <td class="wide" colspan="2">
+          <%= select_tag("log_level",
+                         options_for_select(["fatal","error","warn","info","debug"], 
+                         @edit[:new][:log_level]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Log Wrap Size</td>
+        <td class="wide" colspan="2">
+          <%= text_field_tag("log_wrapsize",
+                             @edit[:new][:log_wrapsize],
+                             :maxlength         => 3,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json) 
+          %>
+          (1-999 MB)
+        </td>
+      </tr>
+      <tr>
+        <td class="key">Log Wrap Time</td>
+        <td width="70">
+          <%= select_tag("log_wraptime_days",
+                         options_for_select(Array.new(31) {|i| i}, 
+                         @edit[:new][:log_wraptime_days]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
+        </td>
+        <td>
+          <%= select_tag("log_wraptime_hours",
+                         options_for_select(Array.new(24) {|i| i}, 
+                         @edit[:new][:log_wraptime_hours]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
 
 
-			<% if ["new","create"].include?(controller.action_name) %>
-
-
-						<p class="legend">Select SmartProxy Host</p>
-						<table class="style1">
-								<tr>
-									<td class="key">Name (from chosen Host)</td>
-									<td class="wide" colspan="2">
-                    <%= select_tag("host",
-                                    options_for_select([["<Choose>", "<Choose>"]] + Array(@edit[:avail_hosts].invert).sort{|a,b| a[0].downcase<=>b[0].downcase},
-                                      @edit[:host]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-									</td>
-								</tr>
-						</table>
-
-
-			<% else %>
-
-
-						<p class="legend">Settings</p>
-						<table class="style1">
-								<tr>
-									<td class="key">Heartbeat Frequency</td>
-									<td width="70">
-                    <%= select_tag("hb_freq_mins",
-                                    options_for_select(Array.new(61) {|i| i}, @edit[:new][:hb_freq_mins]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-									</td>
-									<td>
-                    <%= select_tag("hb_freq_secs",
-                                    options_for_select(Array.new(12) {|i| i*5}, @edit[:new][:hb_freq_secs]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-									</td>
-								</tr>
-<% if false %><%# Not in use, hiding for now - Sprint 41 %>
-								<tr>
-									<td class="key">Self Update Frequency</td>
-									<td width="70">
-                    <%= select_tag("update_freq_days",
-                                    options_for_select(Array.new(15) {|i| i}, @edit[:new][:update_freq_days]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-									</td>
-									<td>
-                    <%= select_tag("update_freq_hours",
-                                    options_for_select(Array.new(24) {|i| i}, @edit[:new][:update_freq_hours]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-									</td>
-								</tr>
-<% end %>
-								<tr>
-									<td class="key">Read Only Mode</td>
-									<td colspan="2">
-                    <%= check_box_tag("readonly", value="1",
-                                        checked=@edit[:new][:readonly],
-                                        "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
-                  </td>
-								</tr>
-								<tr>
-									<td class="key">Web Services Listen Port</td>
-									<td class="wide" colspan="2">
-                    <%= text_field_tag("ws_port",
-                                        @edit[:new][:ws_port],
-                                        :maxlength=>6,
-                                        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-										(max 6 digits)
-									</td>
-								</tr>
-								<tr>
-									<td class="key">Log Level</td>
-									<td class="wide" colspan="2">
-                    <%= select_tag("log_level",
-                                    options_for_select(["fatal","error","warn","info","debug"], @edit[:new][:log_level]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-                  </td>
-								</tr>
-								<tr>
-									<td class="key">Log Wrap Size</td>
-									<td class="wide" colspan="2">
-                    <%= text_field_tag("log_wrapsize",
-                                          @edit[:new][:log_wrapsize],
-                                          :maxlength=>3,
-                                          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-										(1-999 MB)
-									</td>
-								</tr>
-								<tr>
-									<td class="key">Log Wrap Time</td>
-									<td width="70">
-                    <%= select_tag("log_wraptime_days",
-                                    options_for_select(Array.new(31) {|i| i}, @edit[:new][:log_wraptime_days]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-									</td>
-									<td>
-                    <%= select_tag("log_wraptime_hours",
-                                    options_for_select(Array.new(24) {|i| i}, @edit[:new][:log_wraptime_hours]),
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
-									</td>
-								</tr>
-						</table>
-
-
-			<% end %>
-
-
-	<% if ["new", "create"].include?(controller.action_name) %>
-	<table width="100%">
-		<tr>
-			<td align="right">
-				<div id="buttons_on">
-					<%= button_tag('Add', :class=>"btn btn-primary",
-									:alt=>"Add this SmartProxy", :title=>"Add this SmartProxy",
-									:onclick=>"miqAjaxButton('#{url_for(:action=>"create",
-																											:id=>"new",
-																											:button=>"add")}');")
-					%>
-					<%= button_tag('Cancel', :class=>"btn btn-default",
-												:alt=>"Cancel", :title=>"Cancel",
-												:onclick=>"miqAjaxButton('#{url_for(:action=>"create",
-																														:id=>"new",
-																														:button=>"cancel")}');")
-					%>
-				</div>
-			</td>
-		</tr>
-	</table>
-	<% else %>
-		<%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:record_id=>@miq_proxy.id, :ajax_buttons=>true})%>
-	<% end %>
-	</dl>
+  <% if ["new", "create"].include?(controller.action_name) %>
+  <table width="100%">
+    <tr>
+      <td align="right">
+        <div id="buttons_on">
+          <%= button_tag('Add', 
+                         :class   => "btn btn-primary",
+                         :alt     => "Add this SmartProxy", 
+                         :title   => "Add this SmartProxy",
+                         :onclick => "miqAjaxButton('#{url_for(:action => "create",
+                                                               :id     => "new",
+                                                               :button => "add")}');")
+          %>
+          <%= button_tag('Cancel', 
+                         :class   => "btn btn-default",
+                         :alt     => "Cancel", 
+                         :title   => "Cancel",
+                         :onclick => "miqAjaxButton('#{url_for(:action => "create",
+                                                               :id     => "new",
+                                                               :button => "cancel")}');")
+          %>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <% else %>
+    <%= render(:partial => '/layouts/edit_form_buttons',
+               :locals  => {:record_id    => @miq_proxy.id, 
+                            :ajax_buttons => true})
+    %>
+  <% end %>
 </div>
 <%# Need this to bind checkbox observers when under DHTMLX tabs %>
 <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>

@@ -11,11 +11,11 @@
         <td class="key">Name</td>
         <td class="wide">
           <%= text_field_tag("name",
-                            @edit[:new][:name],
-                            :maxlength         => MAX_NAME_LEN,
-                            "data-miq_focus"   => true,
-                            "data-miq_observe" => {:interval => '.5', 
-                                                   :url      => url}.to_json)
+                             @edit[:new][:name],
+                             :maxlength         => MAX_NAME_LEN,
+                             "data-miq_focus"   => true,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json)
           %>
         </td>
       </tr>
@@ -48,7 +48,7 @@
                              @edit[:new][:custom_1],
                              :maxlength         => 50,
                              "data-miq_observe" => {:interval => '.5', 
-                                                    :url      => url}.to_json)
+                                                    :url      => url}.to_json) 
           %>
         </td>
       </tr>
@@ -59,7 +59,8 @@
             <%= select_tag("user_assigned_os",
                            options_for_select([["<not specified>", nil]] + Host.host_platforms.to_a,
                                               @edit[:new][:user_assigned_os]),
-                           "data-miq_observe" => {:url => url}.to_json) %>
+                           "data-miq_observe" => {:url => url}.to_json) 
+            %>
           </td>
         </tr>
       <% end %>
@@ -97,7 +98,6 @@
       <tr>
         <td align="right">
           <div id="buttons_on">
-            
             <%= button_tag('Add',
                             :class   => 'btn btn-primary',
                             :alt     => "Add this Host", 

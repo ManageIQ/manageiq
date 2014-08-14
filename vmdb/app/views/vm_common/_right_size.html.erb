@@ -6,7 +6,7 @@
       <p class="legend">Normal Operating Ranges (up to 30 days' data)</p>
         <table class="style3">
           <thead><tr><th colspan="2"></th></tr></thead>
-          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name => 'vmsafe')%>">
             <td class="label" valign="middle"> CPU</td>
             <td>
               <table style="line-height:5px;white-space: nowrap">
@@ -34,56 +34,56 @@
               </table>
             </td>
           </tr>
-          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name => 'vmsafe')%>">
             <td class="label" valign="middle">CPU Usage</td>
             <td>
               <table style="line-height:5px;white-space: nowrap">
                 <tr>
                   <td>Max</td>
                   <td><%= @record.max_cpu_usage_rate_average_max_over_time_period ?
-                        "#{number_to_percentage(@record.max_cpu_usage_rate_average_max_over_time_period,:precision=>2)}" :
+                        "#{number_to_percentage(@record.max_cpu_usage_rate_average_max_over_time_period,:precision => 2)}" :
                         "Not Available" %>
                   </td>
                 </tr>
                 <tr>
                   <td>High</td>
                   <td><%= @record.max_cpu_usage_rate_average_high_over_time_period ?
-                        "#{number_to_percentage(@record.max_cpu_usage_rate_average_high_over_time_period,:precision=>2)}" :
+                        "#{number_to_percentage(@record.max_cpu_usage_rate_average_high_over_time_period,:precision => 2)}" :
                         "Not Available" %>
                   </td>
                 </tr>
                 <tr>
                   <td>Average</td>
                   <td><%= @record.max_cpu_usage_rate_average_avg_over_time_period ?
-                    "#{number_to_percentage(@record.max_cpu_usage_rate_average_avg_over_time_period,:precision=>2)}" :
+                    "#{number_to_percentage(@record.max_cpu_usage_rate_average_avg_over_time_period,:precision => 2)}" :
                     "Not Available" %>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name => 'vmsafe')%>">
             <td class="label" valign="middle">Memory</td>
             <td>
               <table style="line-height:5px;white-space: nowrap">
                 <tr>
                   <td>Max</td>
                   <td><%= @record.derived_memory_used_max_over_time_period ?
-                        number_to_human_size(@record.derived_memory_used_max_over_time_period * 1024 * 1024,:precision=>2) :
+                        number_to_human_size(@record.derived_memory_used_max_over_time_period * 1024 * 1024,:precision => 2) :
                         "Not Available" %>
                   </td>
                 </tr>
                 <tr>
                   <td>High</td>
                   <td><%= @record.derived_memory_used_high_over_time_period ?
-                        number_to_human_size(@record.derived_memory_used_high_over_time_period * 1024 * 1024,:precision=>2) :
+                        number_to_human_size(@record.derived_memory_used_high_over_time_period * 1024 * 1024,:precision => 2) :
                         "Not Available" %>
                   </td>
                 </tr>
                 <tr>
                   <td>Average</td>
                   <td><%= @record.derived_memory_used_avg_over_time_period ?
-                        number_to_human_size(@record.derived_memory_used_avg_over_time_period * 1024 * 1024,:precision=>2) :
+                        number_to_human_size(@record.derived_memory_used_avg_over_time_period * 1024 * 1024,:precision => 2) :
                         "Not Available" %>
                   </td>
                 </tr>
@@ -91,28 +91,28 @@
             </td>
           </tr>
 
-          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'vmsafe')%>">
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name => 'vmsafe')%>">
             <td class="label" valign="middle">Memory Usage</td>
             <td>
               <table style="line-height:5px;white-space: nowrap">
                 <tr>
                   <td>Max</td>
                   <td><%= @record.max_mem_usage_absolute_average_max_over_time_period ?
-                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_max_over_time_period,:precision=>2)}" :
+                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_max_over_time_period,:precision => 2)}" :
                         "Not Available" %>
                   </td>
                 </tr>
                 <tr>
                   <td>High</td>
                   <td><%= @record.max_mem_usage_absolute_average_high_over_time_period ?
-                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_high_over_time_period,:precision=>2)}" :
+                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_high_over_time_period,:precision => 2)}" :
                         "Not Available" %>
                   </td>
                 </tr>
                 <tr>
                   <td>Average</td>
                   <td><%= @record.max_mem_usage_absolute_average_avg_over_time_period ?
-                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_avg_over_time_period,:precision=>2)}" :
+                        "#{number_to_percentage(@record.max_mem_usage_absolute_average_avg_over_time_period,:precision => 2)}" :
                         "Not Available" %>
                   </td>
                 </tr>
