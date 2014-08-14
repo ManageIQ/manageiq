@@ -1992,7 +1992,7 @@ private
   end
 
   def copy_objects_get_form_vars
-    %w(domain override_existing override_source namespace).each do |field|
+    %w(domain override_existing override_source namespace new_name).each do |field|
       fld = field.to_sym
       if %w(override_existing override_source).include?(field)
         @edit[:new][fld] = params[fld] == "1" if params[fld]
@@ -2003,6 +2003,7 @@ private
           # save domain in sandbox, treebuilder doesnt have access to @edit
           @sb[:domain_id]         = params[fld]
           @edit[:new][:namespace] = nil
+          @edit[:new][:new_name]  = nil
         end
       end
     end
@@ -2013,11 +2014,14 @@ private
     return unless load_edit("copy_objects__#{params[:id]}", "replace_cell__explorer")
     @record = @edit[:typ].find_by_id(@edit[:rec_id])
     domain = MiqAeDomain.find_by_id(@edit[:new][:domain])
+    @edit[:new][:new_name] = nil if @edit[:new][:new_name] == @edit[:old_name]
     begin
       res = @edit[:typ].copy(@edit[:selected_items].keys,
                              domain.name,
                              @edit[:new][:namespace],
-                             @edit[:new][:override_existing]
+                             @edit[:new][:override_existing],
+                             @edit[:new][:new_name],
+                             @edit[:fqname]
       )
     rescue StandardError => bang
       add_flash(I18n.t("flash.error_during",
@@ -2028,8 +2032,8 @@ private
     else
       model = @edit[:selected_items].count > 1 ? :models : :model
       add_flash(I18n.t("flash.copy.copied", :model => ui_lookup(model => "#{@edit[:typ]}")))
-      @record = @edit[:typ].find_by_id(res.first)
-      self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(res.first)}"
+      @record = res.kind_of?(Array) ? @edit[:typ].find_by_id(res.first) : res
+      self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(@record.id)}"
       @in_a_form = @changed = session[:changed] = false
       @sb[:action] = @edit = session[:edit] = nil
       replace_right_cell
@@ -2081,6 +2085,10 @@ private
     @edit = {
       :typ            => typ,
       :action         => button_pressed,
+      :domain_name    => @record.domain.name,
+      :domain_id      => @record.domain.id,
+      :old_name       => @record.name,
+      :fqname         => @record.fqname,
       :rec_id         => from_cid(@record.id),
       :key            => "copy_objects__#{from_cid(@record.id)}",
       :domains        => domains,
@@ -2091,6 +2099,7 @@ private
       :domain            => domains.first.first,
       :override_source   => true,
       :namespace         => nil,
+      :new_name          => nil,
       :override_existing => false
     }
   end

@@ -100,8 +100,12 @@ class MiqAeMethod < ActiveRecord::Base
     field.attributes
   end
 
-  def self.copy(ids, domain, namespace, overwrite_location)
-    MiqAeMethodCopy.copy_multiple(ids, domain, namespace, overwrite_location)
+  def self.copy(ids, domain, namespace, overwrite_location, new_name, fqname)
+    if new_name
+      MiqAeMethodCopy.new(fqname).as(new_name, namespace, overwrite_location)
+    else
+      MiqAeMethodCopy.copy_multiple(ids, domain, namespace, overwrite_location)
+    end
   end
 
   def self.get_homonymic_across_domains(fqname, enabled = nil)
