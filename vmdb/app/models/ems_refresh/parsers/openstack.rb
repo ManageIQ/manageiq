@@ -217,6 +217,7 @@ module EmsRefresh::Parsers
     end
 
     def process_collection(collection, key, &block)
+      @data[key] ||= []
       collection.each { |item| process_collection_item(item, key, &block) }
     end
 
@@ -261,7 +262,7 @@ module EmsRefresh::Parsers
         base_snapshot_uid = cv.delete(:snapshot_uid)
         base_snapshot = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot_uid)
         cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
-      end
+      end if @data[:cloud_volumes]
     end
 
     def parse_flavor(flavor)
