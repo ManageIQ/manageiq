@@ -188,49 +188,23 @@ module OpsController::OpsRbac
 
   def rbac_group_delete
     assert_privileges("rbac_group_delete")
-    groups = Array.new
-    unless params[:id] # showing a list
-      ids = find_checked_items.collect{|r| from_cid(r.split("-").last)}
-      groups = MiqGroup.find_all_by_id(ids).compact
-      if groups.empty?
-        add_flash(I18n.t("flash.cant_delete_read_only", :model=>ui_lookup(:model=>"MiqGroup"), :in_use_by=>ui_lookup(:models=>"User")), :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-        return
-      else
-        to_delete = Array.new
-        groups.each do |g|
-          group = MiqGroup.find(g)
-          if group.read_only
-            to_delete.push(g)
-          end
-        end
-        add_flash(I18n.t("flash.cant_delete_read_only", :model=>ui_lookup(:models=>"MiqGroup"), :in_use_by=>ui_lookup(:models=>"User")), :error) if !to_delete.empty?
-        #deleting elements in temporary array, had to create temp array to hold id's to be delete, .each gets confused if i deleted them in above loop
-        to_delete.each do |g|
-          groups.delete(g)
-        end
-      end
+    groups = []
+    if !params[:id] # showing a list
+      ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
+      groups = MiqGroup.find_all_by_id(ids)
       process_groups(groups, "destroy") unless groups.empty?
       self.x_node  = "xx-g"  # reset node to show list
-    else # showing 1 user, delete it
-      if params[:id] == nil || MiqGroup.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>"MiqGroup"), :error)
+    else # showing 1 group, delete it
+      if params[:id].nil? || MiqGroup.find_by_id(params[:id]).nil?
+        add_flash(I18n.t("flash.record.no_longer_exists", :model => "MiqGroup"), :error)
       else
         groups.push(params[:id])
       end
-      if @flash_array
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-        return
-      end
       process_groups(groups, "destroy") unless groups.empty?
-      self.x_node  = "xx-g"  # reset node to show list
+      self.x_node  = "xx-g" if MiqGroup.find_by_id(params[:id]).nil? # reset node to show list
     end
     get_node_info(x_node)
-    replace_right_cell(x_node,[:rbac])
+    replace_right_cell(x_node, [:rbac])
   end
 
   def rbac_group_seq_edit

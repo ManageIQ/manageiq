@@ -20,7 +20,10 @@ class MiqGroup < ActiveRecord::Base
   validates_presence_of   :description, :guid #, :ui_task_set_id
   validates_uniqueness_of :description, :guid
 
-  before_destroy { |g| raise "Still has users assigned." unless g.users.empty? }
+  before_destroy do |g|
+    raise "Still has users assigned." unless g.users.empty?
+    raise "A read only group cannot be deleted." if g.read_only
+  end
 
   serialize :filters
   serialize :settings
