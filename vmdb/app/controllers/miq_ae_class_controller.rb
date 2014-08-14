@@ -2015,14 +2015,17 @@ private
     @record = @edit[:typ].find_by_id(@edit[:rec_id])
     domain = MiqAeDomain.find_by_id(@edit[:new][:domain])
     @edit[:new][:new_name] = nil if @edit[:new][:new_name] == @edit[:old_name]
+    options = {
+      :ids                => @edit[:selected_items].keys,
+      :domain             => domain.name,
+      :namespace          => @edit[:new][:namespace],
+      :overwrite_location => @edit[:new][:override_existing],
+      :new_name           => @edit[:new][:new_name],
+      :fqname             => @edit[:fqname]
+    }
+
     begin
-      res = @edit[:typ].copy(@edit[:selected_items].keys,
-                             domain.name,
-                             @edit[:new][:namespace],
-                             @edit[:new][:override_existing],
-                             @edit[:new][:new_name],
-                             @edit[:fqname]
-      )
+      res = @edit[:typ].copy(options)
     rescue StandardError => bang
       add_flash(I18n.t("flash.error_during",
                        :task => "#{ui_lookup(:model => "#{@edit[:typ]}")} copy") << bang.message, :error)

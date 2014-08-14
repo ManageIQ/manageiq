@@ -49,30 +49,36 @@ describe MiqAeMethod do
     end
 
     it "copies instances under specified namespace" do
-      domain             = @d2.name
-      namespace          = nil
-      overwrite_location = false
-      selected_items     = [@m1.id, @m2.id]
+      options = {
+        :domain             => @d2.name,
+        :namespace          => nil,
+        :overwrite_location => false,
+        :ids                => [@m1.id, @m2.id]
+      }
 
-      res = MiqAeMethod.copy(selected_items, domain, namespace, overwrite_location)
+      res = MiqAeMethod.copy(options)
       res.count.should eq(2)
     end
 
     it "copy instances under same namespace raise error when class exists" do
-      domain             = @d1.name
-      namespace          = @ns1.fqname
-      overwrite_location = false
-      selected_items     = [@m1.id, @m2.id]
-      expect { MiqAeMethod.copy(selected_items, domain, namespace, overwrite_location) }.to raise_error(RuntimeError)
+      options = {
+        :domain             => @d1.name,
+        :namespace          => @ns1.fqname,
+        :overwrite_location => false,
+        :ids                => [@m1.id, @m2.id]
+      }
+      expect { MiqAeMethod.copy(options) }.to raise_error(RuntimeError)
     end
 
     it "replaces instances under same namespace when class exists" do
-      domain             = @d2.name
-      namespace          = @ns2.name
-      overwrite_location = true
-      selected_items     = [@m1.id, @m2.id]
+      options = {
+        :domain             => @d2.name,
+        :namespace          => @ns2.name,
+        :overwrite_location => true,
+        :ids                => [@m1.id, @m2.id]
+      }
 
-      res = MiqAeMethod.copy(selected_items, domain, namespace, overwrite_location)
+      res = MiqAeMethod.copy(options)
       res.count.should eq(2)
     end
   end

@@ -124,12 +124,14 @@ describe MiqAeClassController do
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
       new = {:domain => d1.id, :namespace => ns1.fqname, :overwrite_location => false}
+      selected_items = {cls1.id => cls1.name}
       edit = {
-        :new     => new,
-        :typ     => MiqAeClass,
-        :rec_id  => cls1.id,
-        :key     => "copy_objects__#{cls1.id}",
-        :current => new,
+        :new            => new,
+        :typ            => MiqAeClass,
+        :rec_id         => cls1.id,
+        :key            => "copy_objects__#{cls1.id}",
+        :current        => new,
+        :selected_items => selected_items,
       }
       controller.instance_variable_set(:@_params, :button => "copy", :id => cls1.id)
       controller.instance_variable_set(:@edit, edit)
@@ -152,7 +154,7 @@ describe MiqAeClassController do
                               :name => "domain2", :parent_id => nil, :priority => 2, :system => false)
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
-      new = {:domain => d2.id, :namespace => ns2.fqname, :overwrite_location => true}
+      new = {:domain => d2.id, :namespace => ns2.fqname, :override_existing => true}
       selected_items = {cls1.id => cls1.name}
       edit = {
         :new            => new,
@@ -178,10 +180,7 @@ describe MiqAeClassController do
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_namespace,
-                              :name => "domain2", :parent_id => nil, :priority => 2, :system => false)
-
-      new = {:domain => d1.id, :namespace => ns1.fqname, :overwrite_location => true, :new_name => 'foo'}
+      new = {:domain => d1.id, :namespace => ns1.fqname, :override_existing => true, :new_name => 'foo'}
       selected_items = {cls1.id => cls1.name}
       edit = {
         :new            => new,
