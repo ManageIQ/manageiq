@@ -415,6 +415,8 @@ class ServiceController < ApplicationController
             locals = {:action_url => action, :record_id => @record ? @record.id : nil}
             locals[:no_reset] = true
             locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
+            date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
+            page << "miq_cal_dateFrom = new Date('#{date_tz}');"
             page << "miqBuildCalendar();"
           elsif action == "tag"
             locals = {:action_url => action_url}
