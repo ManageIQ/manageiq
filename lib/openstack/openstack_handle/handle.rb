@@ -32,6 +32,12 @@ module OpenstackHandle
       }
       opts.merge!(extra_opts) if extra_opts
 
+      # Workaround for a bug in Fog
+      # https://github.com/fog/fog/issues/3112
+      # Ensure the that if the Storage service is not available, it will not
+      # throw an error trying to build an connection error message.
+      opts[:openstack_service_type] = ["object-store"] if service == "Storage"
+
       Fog.const_get(service).new(opts)
     rescue Fog::Errors::NotFound => err
       raise MiqException::ServiceNotAvailable if err.message.include?("Could not find service")
