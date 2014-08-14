@@ -1,7 +1,22 @@
 #
 # Description: This method is used to find all hosts, datastores that are the least utilized
 #
+def root_folder(host, data_center)
+  host.ext_management_system.ems_folders.detect { |f| f.folder_path == "Datacenters/#{data_center}/vm" }
+end
 
+def set_folder(prov, host, vm)
+  host_dc = host.ems_cluster.v_parent_datacenter
+  $evm.log("info", "selected datacenter [#{host_dc}]")
+  matching_folder = vm.v_owning_blue_folder_path.sub("/#{vm.v_owning_datacenter}/", "/#{host_dc}/")
+  folder = prov.eligible_folders.detect { |f| f.folder_path == matching_folder }
+  folder ||= root_folder(host, host_dc)
+  if folder
+    $evm.log("info", "selected folder [#{folder.folder_path}]")
+    # prov.set_folder is not being used intentionally since it currently does not support root vm folders
+    prov.set_option(:placement_folder_name, [folder.id, folder.name])
+  end
+end
 $evm.log("info", "Args:    #{MIQ_ARGS.inspect}")
 
 # Get variables
@@ -30,8 +45,12 @@ prov.eligible_hosts.each do |h|
 end
 
 # Set host and storage
-obj = $evm.object
-obj["host"]    = host    unless host.nil?
-obj["storage"] = storage unless storage.nil?
+if host
+  prov.set_host(host)
+  # set folder if it is not set already
+  set_folder(prov, host, vm) if prov.get_option(:placement_folder_name).nil?
+end
+
+prov.set_storage(storage) if storage
 
 $evm.log("info", "vm=[#{vm.name}] host=[#{host}] storage=[#{storage}]")

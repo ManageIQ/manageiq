@@ -1,5 +1,5 @@
 #
-# Description: This method sets the ems_cluster
+# Description: This method sets the cluster based on source template
 #
 
 # Get variables
@@ -14,9 +14,9 @@ raise "EMS not found for VM [#{vm.name}" if ems.nil?
 $evm.log("info", "vm=[#{vm.name}]")
 
 cluster = vm.ems_cluster
-current_obj = $evm.current
 $evm.log("info", "Selected Cluster: [#{cluster.nil? ? "nil" : cluster.name}]")
 
 # Set cluster
-current_obj["cluster"] = cluster unless cluster.nil?
+prov.set_cluster(cluster) if cluster
+
 $evm.log("info", "vm=[#{vm.name}] cluster=[#{cluster}]")
