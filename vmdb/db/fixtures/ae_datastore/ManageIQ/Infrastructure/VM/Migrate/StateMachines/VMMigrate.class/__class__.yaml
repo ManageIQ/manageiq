@@ -191,3 +191,23 @@ object:
       on_error: update_migration_status(status => 'Error Emailing Owner')
       max_retries: '100'
       max_time: 
+  - field:
+      aetype: state
+      name: Finished
+      display_name: 
+      datatype: string
+      priority: 10
+      owner: 
+      default_value: /System/CommonMethods/StateMachineMethods/vm_migrate_finished
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: '100'
+      max_time: 
