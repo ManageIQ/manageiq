@@ -262,6 +262,7 @@ module UiConstants
     :quadicons => { # Show quad icons, by resource type
       :service        =>  true,
       :ems            =>  true,
+      :ems_cloud      =>  true,
       :host           =>  true,
       :miq_template   =>  true,
       :storage        =>  true,
