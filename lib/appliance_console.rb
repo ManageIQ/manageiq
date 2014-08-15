@@ -157,7 +157,6 @@ require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/env'
 require 'appliance_console/key_configuration'
-require 'appliance_console/certificate_authority'
 
 require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
@@ -347,20 +346,6 @@ Date and Time Configuration
             Env['TIME'] = new_date, new_time unless Env.error?
           end
 
-        when I18n.t("advanced_settings.ca")
-          say("#{selection}\n\n")
-          ca = CertificateAuthority.new(host, ip)
-
-          cahost = ask_for_ip_or_hostname("host or ip of the identity server", "localhost")
-          if cahost == "localhost"
-            company = just_ask("company identifier", "cfme demo")
-            KeyConfiguration.new.create_key(false)
-            ca.local(company).create.run
-          else
-            causer = just_ask("username", "root")
-            ca.remote(cahost, causer).run
-          end
-          press_any_key
 
         when I18n.t("advanced_settings.httpdauth")
           say("#{selection}\n\n")
