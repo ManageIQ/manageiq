@@ -1,4 +1,4 @@
 # TYPE  DATABASE USER  ADDRESS       METHOD
 local   all      all                 peer map=usermap
 <%= "#" if ssl%>host    all      all   all           md5
-<%= "#" unless ssl %>hostssl all      all   all           cert map=sslmap
+<%= "#" unless ssl %>hostssl all      all   all           md5
