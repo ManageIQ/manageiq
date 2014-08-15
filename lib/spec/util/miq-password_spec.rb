@@ -172,6 +172,20 @@ describe MiqPassword do
     end
   end
 
+  context "with missing v1_key" do
+    it "should report decent error when decryption with missing an encryption key" do
+      MiqPassword.v1_key = nil
+      File.should_receive(:exist?).with(/v1_key/).and_return false
+      expect { described_class.decrypt("v1:{KSOqhNiOWJbR0lz7v6PTJg==}") }.to raise_error("no encryption key v1_key")
+    end
+
+    it "should remember keyfile is not found" do
+      MiqPassword.v1_key = nil
+      File.should_receive(:exist?).with(/v1_key/).and_return false
+      expect(MiqPassword.v1_key).to be_false
+    end
+  end
+
   context ".md5crypt" do
     it "with an unencrypted string" do
       expect(MiqPassword.md5crypt("password")).to eq("$1$miq$Ho9GNOzRsxMpJSsgwG/y01")
