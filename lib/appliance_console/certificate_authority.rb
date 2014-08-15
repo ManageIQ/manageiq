@@ -1,114 +1,136 @@
 require 'fileutils'
-require 'util/miq-password'
 require 'tempfile'
+require 'appliance_console/principal'
+require 'appliance_console/certificate'
 
 module ApplianceConsole
+  # configure ssl certificates for postgres communication
+  # and appliance to appliance communications
   class CertificateAuthority
-    CA_SCRIPTS      = "/var/www/miq/ca"
     TEMPLATES       = "/var/www/miq/system/TEMPLATE/"
 
     CFME_DIR        = "/var/www/miq/vmdb/certs"
     PSQL_CLIENT_DIR = "/root/.postgresql"
-    CA_DIR          = "/var/www/miq/ca/root"
 
-    CA_SIGN         = "#{CA_SCRIPTS}/so_sign.sh"
-    CA_CREATE       = "bash #{CA_SCRIPTS}/so_ca.sh"
-    CA_ROOT         = "#{CA_SCRIPTS}/root"
+    # hostname of current machine
+    attr_accessor :hostname
+    # name of certificate authority
+    attr_accessor :ca_name
+    # true if we should configure postgres client
+    attr_accessor :pgclient
+    # true if we should configure postgres server
+    attr_accessor :pgserver
+    # true if we should configure api endpoint
+    attr_accessor :api
+    attr_accessor :verbose
 
-    # local hostname and ip address
-    attr_accessor :host, :ip
-
-    attr_accessor :cahost, :causer
-    attr_accessor :company
-
-    def initialize(host = nil, ip = nil)
-      @host     = host
-      @ip       = ip
+    def initialize(options = {})
+      options.each { |n, v| public_send("#{n}=", v) }
+      @ca_name ||= "ipa"
     end
 
-    def remote(cahost, causer)
-      @cahost     = cahost
-      @causer     = causer
-      self
+    def activate
+      valid_environment?
+
+      configure_pgclient if pgclient
+      configure_pgserver if pgserver
+      configure_api if api
+
+      status_string
     end
 
-    def local(company)
-      company = "/O=#{company}" unless company.include?("/O=")
-      self.company = company
-      self
+    def valid_environment?
+      if ipa? && !ExternalHttpdAuthentication.ipa_client_configured?
+        raise ArgumentError, "ipa client not configured"
+      end
+
+      raise ArgumentError, "hostname needs to be defined" unless hostname
     end
 
-    def local?
-      !!company
+    def configure_pgclient
+      unless File.exist?(PSQL_CLIENT_DIR)
+        FileUtils.mkdir_p(PSQL_CLIENT_DIR, :mode => 0700)
+        AwesomeSpawn.run!("/sbin/restorecon -R #{PSQL_CLIENT_DIR}")
+      end
+
+      self.pgclient = Certificate.new(
+        :cert_filename => "#{PSQL_CLIENT_DIR}/postgresql.crt",
+        :root_filename => "#{PSQL_CLIENT_DIR}/root.crt",
+        :service       => "manageiq",
+        :extensions    => %w(client),
+        :ca_name       => ca_name,
+        :hostname      => hostname,
+      ).request.status
     end
 
-    def local_dir?
-      File.exist?(CA_ROOT)
+    def configure_pgserver
+      cert = Certificate.new(
+        :cert_filename => "#{CFME_DIR}/postgres.crt",
+        :root_filename => "#{CFME_DIR}/root.crt",
+        :service       => "postgresql",
+        :extensions    => %w(server),
+        :ca_name       => ca_name,
+        :hostname      => hostname,
+        :owner         => "postgres.postgres"
+      ).request
+
+      if cert.complete?
+        say "configuring postgres to use certs"
+        # only telling postgres to rewrite server configuration files
+        # no need for username/password since not writing database.yml
+        InternalDatabaseConfiguration.new(:ssl => true).configure_postgres
+        LinuxAdmin::Service.new(ApplianceConsole::POSTGRESQL_SERVICE).restart
+      end
+      self.pgserver = cert.status
     end
 
-    def run
-      tmp_file = Tempfile.new(%w(cert_auth .tgz))
-      begin
-        fetch [
-          "OU=postgres client #{ip}/CN=root", "postgresql",
-          "OU=restclient/CN=#{ip}",           "apiclient",
-          "OU=restserver/CN=#{ip}",           "apiserver",
-          "OU=postgres/CN=#{ip}",             "postgres"
-        ], tmp_file.path
-
-        extract(tmp_file.path, "root", %w(root.crt apiclient.crt apiclient.key apiserver.crt apiserver.key), CFME_DIR)
-        # local system already has keys, so only extract if not a local ca
-        extract(tmp_file.path, "root", 'v*_key*', CFME_DIR) unless local?
-        FileUtils.mkdir_p(PSQL_CLIENT_DIR, :mode => 700)
-        extract(tmp_file.path, "root", %w(root.crt postgresql.crt postgresql.key), PSQL_CLIENT_DIR)
-        extract(tmp_file.path, "postgres.postgres", %w(postgres.crt postgres.key), CFME_DIR)
-        # no need to make the ca's root certificate private. Also, postgres server needs to view it
-        FileUtils.chmod 0622 , "CFME_DIR/root.crt"
-
-        # now that there are certs, enable port 8443
+    def configure_api
+      Certificate.new(
+        :cert_filename => "#{CFME_DIR}/apiclient.crt",
+        :root_filename => "#{CFME_DIR}/root.crt",
+        :service       => "manageiq",
+        :extensions    => %w(client),
+        :ca_name       => ca_name,
+        :hostname      => hostname,
+        :owner         => "apache.apache"
+      ).request
+      cert = Certificate.new(
+        :cert_filename => "#{CFME_DIR}/apiserver.crt",
+        :root_filename => "#{CFME_DIR}/root.crt",
+        :service       => "HTTP",
+        :extensions    => %w(server),
+        :ca_name       => ca_name,
+        :hostname      => hostname,
+        :owner         => "apache.apache",
+      ).request
+      if cert.complete?
+        say "configuring apache to use certs"
         FileUtils.cp("#{TEMPLATES}/etc/httpd/conf.d/cfme-https-cert.conf", "/etc/httpd/conf.d/cfme-https-cert.conf")
-      ensure
-        tmp_file.unlink
+        LinuxAdmin::Service.new("httpd").restart
       end
+      self.api = cert.status
     end
 
-    def fetch(args, target_file)
-      if local?
-        fetch_local(args, target_file)
-      else
-        fetch_remote(args, target_file)
-      end
+    def status
+      {"pgclient" => pgclient, "pgserver" => pgserver, "api" => api}.delete_if { |_n, v| !v }
     end
 
-    # not packaging up keys
-    def fetch_local(args, target_file)
-      AwesomeSpawn.run!(CA_SIGN, :params => {"-r" => CA_ROOT, "-t" => target_file, "-c" => 'root.crt', nil => args})
+    def status_string
+      status.collect { |n, v| "#{n}: #{v}" }.join " "
     end
 
-    # packaging up keys
-    # streaming over ssh, to a local file
-    def fetch_remote(args, target_file)
-      cmd = AwesomeSpawn.build_command_line(CA_SIGN, "-r" => CA_ROOT, "-t" => "-", "-c" => 'root.crt', "-k" => nil, nil => args)
-      system("(ssh #{causer}@#{cahost} '#{cmd}') > #{target_file}")
+    def complete?
+      !status.values.detect { |v| v != ApplianceConsole::Certificate::STATUS_COMPLETE }
     end
 
-    def create
-      raise "Create only works on a local company" unless local?
-      AwesomeSpawn.run!(CA_CREATE, :params => {"-r" => CA_ROOT, "-C" => company})
-      self
+    def ipa?
+      ca_name == "ipa"
     end
 
-    # currently duplicated in KeyConfiguration. this will leave here once we go to a different ca
-    # dump the files into the approperiate directory
-    def extract(tar_name, owner, files, target_dir)
-      AwesomeSpawn.run!("tar", :params => {"-xzf" => tar_name, "-C" => target_dir, nil => files})
-      Array(files).each do |file|
-        Dir["#{target_dir}/#{file}"].each do |file_with_path|
-          FileUtils.chmod 0600, file_with_path
-          FileUtils.chown owner.split(".").first, owner.split(".")[1], file_with_path if owner
-          AwesomeSpawn.run!("/sbin/restorecon", :params => {"-v" => file_with_path})
-        end
-      end
+    private
+
+    def log
+      say yield if verbose && block_given?
     end
   end
 end
