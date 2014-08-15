@@ -620,8 +620,13 @@ class ChargebackController < ApplicationController
     end
     if @edit[:new][:cbshow_typ] && @edit[:new][:cbshow_typ].ends_with?("-tags")
       get_categories_all
-      @edit[:new][:cbtag_cat] = @edit[:current_assignment][0][:tag][0]["parent_id"].to_s
-      get_tags_all(@edit[:current_assignment][0][:tag][0]["parent_id"])
+      tag = @edit[:current_assignment][0][:tag][0]
+      if tag
+        @edit[:new][:cbtag_cat] = tag["parent_id"].to_s
+        get_tags_all(tag["parent_id"])
+      else
+        @edit[:current_assignment] = []
+      end
     elsif @edit[:new][:cbshow_typ]
       get_cis_all
     end
@@ -654,7 +659,8 @@ class ChargebackController < ApplicationController
 
   def get_tags_all(category)
     @edit[:cb_assign][:tags] = Hash.new
-    Classification.find(category.to_s).entries.each{|e| @edit[:cb_assign][:tags][e.id.to_s] = e.description}
+    classification = Classification.find_by_id(category.to_s)
+    classification.entries.each { |e| @edit[:cb_assign][:tags][e.id.to_s] = e.description } if classification
   end
 
   def get_cis_all
