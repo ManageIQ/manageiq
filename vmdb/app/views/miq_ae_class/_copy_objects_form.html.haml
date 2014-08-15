@@ -7,7 +7,11 @@
     %p
     %table.style1
       %tr
-        %td.key Domain
+        %td.key From Domain
+        %td.wide
+          = @edit[:domain_name]
+      %tr
+        %td.key To Domain
         %td.wide
           - if @edit[:domains].length == 1
             = @edit[:domains].first.last
@@ -16,6 +20,13 @@
               options_for_select(Array(@edit[:domains].invert).sort,
               @edit[:new][:domain]),
               "data-miq_observe" => {:url => url}.to_json)
+      - if @edit[:selected_items].length == 1 && @edit[:new][:domain].to_i == @edit[:domain_id]
+        %tr
+          %td.key New Name
+          %td.wider
+            = text_field_tag("new_name", @edit[:new][:new_name],
+              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+
       %tr
         %td.key Copy to same path
         %td

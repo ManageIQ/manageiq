@@ -131,8 +131,19 @@ class MiqAeClass < ActiveRecord::Base
     field.attributes
   end
 
-  def self.copy(ids, domain, namespace, overwrite_location)
-    MiqAeClassCopy.copy_multiple(ids, domain, namespace, overwrite_location)
+  def self.copy(options)
+    if options[:new_name]
+      MiqAeClassCopy.new(options[:fqname]).as(options[:new_name],
+                                              options[:namespace],
+                                              options[:overwrite_location]
+      )
+    else
+      MiqAeClassCopy.copy_multiple(options[:ids],
+                                   options[:domain],
+                                   options[:namespace],
+                                   options[:overwrite_location]
+      )
+    end
   end
 
   private
