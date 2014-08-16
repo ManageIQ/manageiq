@@ -895,11 +895,11 @@ module OpsController::OpsRbac
 
   # Set user record variables to new values
   def rbac_user_set_record_vars(user)
-    user.name = @edit[:new][:name]
-    user.userid = @edit[:new][:userid]
-    user.email = @edit[:new][:email]
-    user.miq_groups = [MiqGroup.find_by_id(@edit[:new][:group])]
-    user.password = @edit[:new][:password]
+    user.name       = @edit[:new][:name]
+    user.userid     = @edit[:new][:userid]
+    user.email      = @edit[:new][:email]
+    user.miq_groups = [MiqGroup.find_by_id(@edit[:new][:group])].compact
+    user.password   = @edit[:new][:password]
   end
 
   # Validate some of the user fields
