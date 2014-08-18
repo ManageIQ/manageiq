@@ -119,7 +119,7 @@ describe MiqApproval do
     end
 
     it "#approve" do
-      lambda {@approval.approve(@user.userid, 'Why Not')}.should_not raise_error(RuntimeError, "not authorized")
+      lambda {@approval.approve(@user.userid, 'Why Not')}.should_not raise_error
     end
   end
 end

@@ -38,7 +38,7 @@ describe VmdbTable do
     it "adds new indexes" do
       index_names = ['flintstones']
       index_results = index_names.collect do |i|
-        index = mock('sql_index')
+        index = double('sql_index')
         index.stub(:name).and_return(i)
         index
       end
@@ -62,7 +62,7 @@ describe VmdbTable do
     it "finds existing indexes" do
       index_names = ['flintstones']
       index_results = index_names.collect do |i|
-        index = mock('sql_index')
+        index = double('sql_index')
         index.stub(:name).and_return(i)
         index
       end

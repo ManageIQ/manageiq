@@ -29,7 +29,7 @@ describe ExpandDialogFieldDefaultValueSize do
       migrate
  
       expect { reserved1.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { reserved2.reload }.to_not raise_error(ActiveRecord::RecordNotFound)
+      expect { reserved2.reload }.to_not raise_error
       field1.reload.default_value.should == val1
       field2.reload.default_value.should == val2
       field3.reload.default_value.should == val3

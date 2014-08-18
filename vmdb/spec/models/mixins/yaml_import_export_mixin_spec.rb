@@ -50,16 +50,18 @@ describe YAMLImportExportMixin do
   end
 
   context ".import" do
-    subject { TestClass.import(@fd) }
+    subject { TestClass }
 
     it "valid YAML file" do
       @fd = StringIO.new("---\na:")
-      lambda { subject }.should_not raise_error("Invalid YAML file")
+      # if it gets to import_from_array, then it did not choke on yml
+      expect(subject).to receive(:import_from_array)
+      subject.import(@fd)
     end
 
     it "invalid YAML file" do
       @fd = StringIO.new("---\na:\nb")
-      lambda { subject }.should raise_error("Invalid YAML file")
+      lambda { subject.import(@fd) }.should raise_error("Invalid YAML file")
     end
   end
 end

@@ -182,7 +182,7 @@ EOX
 </action>
 EOX
 
-      rest_client = mock('rest_client').as_null_object
+      rest_client = double('rest_client').as_null_object
       rest_client.should_receive(:post) do |&block|
         return_data.stub(:code).and_return(409)
         block.call(return_data)

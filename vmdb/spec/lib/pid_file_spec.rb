@@ -51,7 +51,7 @@ describe PidFile do
       File.stub(:dirname).with(@fname).and_return(@dirname)
       FileUtils.should_receive(:mkdir_p).with(@dirname).once
 
-      @fhandle = mock('file_handle')
+      @fhandle = double('file_handle')
       @fhandle.should_receive(:write).with(Process.pid).once
       File.stub(:open).with(@fname, 'w').and_yield(@fhandle)
 

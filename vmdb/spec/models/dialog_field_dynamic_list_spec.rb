@@ -90,8 +90,8 @@ describe DialogFieldDynamicList do
 
     context "with values returned from automate" do
       before(:each) do
-        @ws = mock
-        @ws.stub(:root).and_return(@root = mock)
+        @ws = double
+        @ws.stub(:root).and_return(@root = double)
         @root.stub(:attributes).and_return(@ws_attributes = {})
       end
 

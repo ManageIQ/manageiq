@@ -11,10 +11,10 @@ describe RequestRefererService do
   let(:controller_name_no_params) { 'vm_infra' }
   let(:action_name_no_params)     { 'explorer' }
 
-  let(:get_request)          { stub(:request_method => 'GET',  :parameters => {'id' => 1}, :xml_http_request? => false) }
-  let(:post_request)         { stub(:request_method => 'POST', :parameters => {'id' => 1}, :xml_http_request? => false) }
-  let(:get_request_no_id)    { stub(:request_method => 'GET',  :parameters => {},          :xml_http_request? => false) }
-  let(:get_request_xml_http) { stub(:request_method => 'GET',  :parameters => {'id' => 1}, :xml_http_request? => true)  }
+  let(:get_request)          { double(:request_method => 'GET',  :parameters => {'id' => 1}, :xml_http_request? => false) }
+  let(:post_request)         { double(:request_method => 'POST', :parameters => {'id' => 1}, :xml_http_request? => false) }
+  let(:get_request_no_id)    { double(:request_method => 'GET',  :parameters => {},          :xml_http_request? => false) }
+  let(:get_request_xml_http) { double(:request_method => 'GET',  :parameters => {'id' => 1}, :xml_http_request? => true)  }
 
   describe "#referer_valid?" do
     let(:referer) { "PotatoHead" }

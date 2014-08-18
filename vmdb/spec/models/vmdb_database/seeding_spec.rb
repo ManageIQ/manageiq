@@ -4,7 +4,7 @@ describe VmdbDatabase do
   context "::Seeding" do
     it ".seed" do
       MiqDatabase.seed
-      vmdb_database = mock('vmdb_database')
+      vmdb_database = double('vmdb_database')
       described_class.stub(:seed_self).and_return(vmdb_database)
       vmdb_database.should_receive(:seed)
       described_class.seed

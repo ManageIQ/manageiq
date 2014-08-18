@@ -63,7 +63,7 @@ describe ApplicationController do
       msg = "The user is not authorized for this task or item."
       lambda do
         controller.send(:assert_privileges, "host_new")
-      end.should_not raise_error(MiqException::RbacPrivilegeException, msg)
+      end.should_not raise_error
     end
 
     it "should raise an error for feature that user does not have acces to" do

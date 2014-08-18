@@ -158,13 +158,13 @@ EOF
     subject { described_class.new(:name => "internal").save_internal }
 
     it "returns saved VMDB::Config" do
-      described_class.should_receive(:backup_file).any_number_of_times
+      described_class.stub(:backup_file)
       VMDB::Config.any_instance.should_receive(:save_file)
       expect(subject.config.fetch_path(:production, :host)).to be_nil
     end
 
     it "resets cache" do
-      described_class.should_receive(:backup_file).any_number_of_times
+      described_class.stub(:backup_file)
       VMDB::Config.any_instance.should_receive(:save_file)
       subject
       expect(described_class.raw_config.fetch_path('production')).to eq(
@@ -181,7 +181,7 @@ EOF
       subject { described_class.new(:name => "internal", :host => 'localhost', :password => "x").save_internal }
 
       it "should save password to database.yml" do
-        described_class.should_receive(:backup_file).any_number_of_times
+        described_class.stub(:backup_file)
         VMDB::Config.any_instance.should_receive(:save_file)
         subject
         expect(described_class.raw_config.fetch_path('production')).to eq(

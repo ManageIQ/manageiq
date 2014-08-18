@@ -16,7 +16,7 @@ describe EmsVmware do
 
     it "not raise for api_version == 5.0" do
       @ems.update_attributes(:api_version => "5.0", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      lambda { @ems.validate_remote_console_vmrc_support}.should_not raise_error MiqException::RemoteConsoleNotSupportedError
+      lambda { @ems.validate_remote_console_vmrc_support}.should_not raise_error
     end
 
     it "raise for api_version == 4.0" do

@@ -32,7 +32,7 @@ describe OpsController do
 
     context "normal case" do
       before do
-        server = mock
+        server = double
         server.stub(:zone_id => 1)
         MiqServer.stub(:my_server).and_return(server)
 
