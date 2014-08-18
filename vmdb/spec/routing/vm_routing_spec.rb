@@ -39,7 +39,9 @@ describe VmOrTemplateController do
     retire
     retire_date_changed
     right_size
+    set_checked_items
     show_list
+    vmtree_selected
   ).each do |path|
     describe "##{path}" do
       it "routes with POST" do
