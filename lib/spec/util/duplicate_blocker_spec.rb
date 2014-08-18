@@ -24,7 +24,8 @@ describe DuplicateBlocker do
       end
 
       dedup_handler do |handler|
-        handler.logger              = Logger.new(STDOUT)
+        require 'stringio'
+        handler.logger              = Logger.new(StringIO.new)
         handler.duplicate_threshold = THRESHOLD
         handler.duplicate_window    = TIME_WINDOW
         handler.window_slot_width   = SLOT_WIDTH
