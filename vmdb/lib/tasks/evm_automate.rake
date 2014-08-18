@@ -200,14 +200,7 @@ namespace :evm do
       begin
         raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
         puts "Importing automate domains from file #{ENV['BACKUP_ZIP_FILE']}"
-
-        MiqAeDatastore.reset
-        MiqAeImport.new("*",
-          'preview'  => false,
-          'restore'  => true,
-          'mode'     => 'add',
-          'zip_file' => ENV['BACKUP_ZIP_FILE']
-        ).import
+        MiqAeDatastore.restore(ENV['BACKUP_ZIP_FILE'])
       rescue => err
         STDERR.puts err.message
         exit(1)
