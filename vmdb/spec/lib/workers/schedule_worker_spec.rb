@@ -96,7 +96,6 @@ describe ScheduleWorker do
         before(:each) do
           rufus_frequency = 0.00001  # How often rufus will check for jobs to do
           require 'rufus/scheduler'
-          RufusSchedulerHelper.patch_for_job_callback
           @schedule_worker.instance_eval do
             @system_scheduler = Rufus::Scheduler.start_new(:frequency => rufus_frequency)
             @user_scheduler   = Rufus::Scheduler.start_new(:frequency => rufus_frequency)
