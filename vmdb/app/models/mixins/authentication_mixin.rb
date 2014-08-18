@@ -75,9 +75,18 @@ module AuthenticationMixin
 
     data.each_pair do |type, value|
       cred = self.authentication_type(type, AUTH_DEFAULT_CLASS)
+      cred_exts = cred.extensions if cred
       current = {:new=>nil, :old => nil}
-      current[:new] = {:user=>value[:userid], :password=>value[:password]} unless value[:userid].blank?
+      current[:new] = {:user=>value[:userid], :password=>value[:password]}
       current[:old] = {:user=>cred.userid, :password=>cred.password} if cred
+
+      value[:ext].each do |ext, value|
+        current.store_path(:new, :ext, ext, value)
+      end unless value[:ext].blank?
+
+      cred_exts.each do |cred_ext|
+        current.store_path(:old, :ext, cred_ext.key, cred_ext.value)
+      end if cred_exts
 
       # Raise an error if required fields are blank
       Array(options[:required]).each { |field| raise(ArgumentError, "#{field} is required") if value[field].blank? }
@@ -86,7 +95,7 @@ module AuthenticationMixin
       next if current[:old] == current[:new]
 
       # Check if it is a delete
-      if value[:userid].blank?
+      if value[:userid].blank? && value[:ext].blank?
         current[:new] = nil
         next if options[:save] == false
         self.authentication_delete(type, AUTH_DEFAULT_CLASS)
@@ -98,6 +107,17 @@ module AuthenticationMixin
       cred.userid, cred.password = value[:userid], value[:password]
 
       cred.save if options[:save] && id
+
+      # TODO: extract and save any authentication extensions here
+      extensions = value.key?(:ext) ? value[:ext] : {}
+      extensions.each do |ext_key, value|
+        ext_type = AuthenticationExtensionType.find_by_authtype_and_key(type, ext_key)
+        # TODO: need to bail here if there is no ext_type for this (auth)type and ext_key
+        authext = AuthenticationExtension.where(:authentication_id => cred, :authentication_extension_type_id => ext_type.id).first
+        authext = AuthenticationExtension.new(:authentication => cred, :authentication_extension_type => ext_type) unless authext
+        authext.value = value
+        authext.save
+      end
     end
 
     # Invoke callback
@@ -229,6 +249,25 @@ module AuthenticationMixin
       auth.validation_failed(:invalid)
     end
     return result
+  end
+
+  # The list of extensions available for this object by authentication type.
+  #
+  # Only extensions that have been already provided a value are saved.  This
+  # list includes the extensions that have values, as well as any extensions
+  # that can be provided for this authentication's type.
+  #
+  # The returned extensions are a list of AuthenticationExtension objects.
+  # Those that have been saved have an id.  While extensions that have never
+  # been provided have a +nil+ id.
+  def authentication_extensions(authtype)
+    authtype = authtype.to_sym
+    auth = self.authentication_type(authtype.to_sym)
+    extensions = auth ? auth.extensions : []
+
+    authext_map = extensions.each_with_object({}) { |e,h| h[e.authentication_extension_type.id] = e }
+    ext_types = AuthenticationExtensionType.where(:authtype => authtype)
+    ext_types.map { |type| authext_map[type.id] || AuthenticationExtension.new({:authentication => auth, :authentication_extension_type => type}) }
   end
 
   private

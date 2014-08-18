@@ -1,0 +1,19 @@
+<% change_url ||= "form_field_changed" %>
+<% authtype ||= "" %>
+<% record ||= nil %>
+<% authext ||= nil %>
+<% fieldname ||= nil %>
+<% rec_id = record && record.id ? "#{record.id}" : "new" %>
+<% url = url_for(:action=>change_url, :id=>"#{rec_id}") %>
+<% fieldname = "#{authtype}_ext_#{authext.key}" %>
+
+  <tr>
+      <td class="key"><%= authext.name %></td>
+      <td>
+        <%= check_box_tag(fieldname,
+                          checked=authext.value,
+                          @edit[:new][fieldname],
+                          "data-miq_observe"=>{:url=>url}.to_json)
+        %>
+      </td>
+  </tr>

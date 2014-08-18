@@ -1,0 +1,14 @@
+<% change_url ||= "form_field_changed" %>
+<% authtype ||= "" %>
+<% record ||= nil %>
+<% auth_extensions ||= record ? record.authentication_extensions(authtype) : [] %>
+<% rec_id ||= record && record.id ? "#{record.id}" : "new" %>
+<% url = url_for(:action=>change_url, :id=>"#{rec_id}") %>
+
+<% auth_extensions.each do |ext| %>
+  <%= render(:partial=>"/layouts/auth_extensions/#{auth_partial_for(ext)}",
+                      :locals=>{:authtype=>authtype,
+                                :change_url=>change_url,
+                                :record=>record,
+                                :authext=>ext}) %>
+<% end %>

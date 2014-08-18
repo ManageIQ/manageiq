@@ -25,6 +25,10 @@ class ExtManagementSystem < ActiveRecord::Base
     nil
   end
 
+  def self.additional_authentication_types
+    @additional_authentication_types ||= [].freeze
+  end
+
   def emstype
     self.class.ems_type
   end

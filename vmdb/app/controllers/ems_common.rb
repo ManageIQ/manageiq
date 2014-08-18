@@ -475,12 +475,30 @@ module EmsCommon
       @edit[:metrics_verify_status] = (@edit[:new][:metrics_password] == @edit[:new][:metrics_verify])
     end
 
-    # check if any of amqp_userid, amqp_password, amqp_verify, :ipaddress, :emstype are blank
-    if any_blank_fields?(@edit[:new], [:amqp_userid, :amqp_password, :amqp_verify, :ipaddress, :emstype])
-      @edit[:amqp_verify_status] = false
-    else
-      @edit[:amqp_verify_status] = (@edit[:new][:amqp_password] == @edit[:new][:amqp_verify])
-    end
+    @edit[:amqp_verify_status] = amqp_verify_status
+  end
+
+  def amqp_verify_status
+    # allow user to verify amqp as long as:
+    # * emstype is provided
+    # * all of userid, password, password_verify are provided or empty
+    # * amqp_password matches amqp_verify (short circuited by previous statement)
+    # * either ipaddress or alternate ip address is provided
+    status = !@edit[:new][:emstype].blank?
+    status &&= all_or_no_blank_fields?(@edit[:new], :amqp_userid, :amqp_password, :amqp_verify)
+    status &&= (@edit[:new][:amqp_password] == @edit[:new][:amqp_verify])
+    status &&= [@edit[:new][:ipaddress], @edit[:new][:amqp_ext_alt_ip]].one? { |f| !f.blank? }
+    status
+  end
+
+  def set_auth_extensions
+    # amqp auth extensions
+    # TODO: want this to be more dynamic and react to new fields, but that's
+    # hard to do with the current structure of this form
+    @edit[:new][:amqp_ext_alt_ip] = params[:amqp_ext_alt_ip] if params[:amqp_ext_alt_ip]
+    @edit[:new][:amqp_ext_impl] = params[:amqp_ext_impl] if params[:amqp_ext_impl]
+    # this will only be captured when the checkbox is clicked
+    @edit[:new][:amqp_ext_ssl] = params[:amqp_ext_ssl] == "on" if params[:amqp_ext_ssl]
   end
 
   # Build the tree object to display the ems datacenter info
@@ -610,6 +628,21 @@ module EmsCommon
 
     @edit[:current] = @edit[:new].dup
     session[:edit] = @edit
+
+    set_form_vars_auth_extensions
+  end
+
+  def set_form_vars_auth_extensions
+    @ems.class.additional_authentication_types.each do |authtype|
+      @ems.authentication_extensions(authtype).each do |ext|
+        # TODO: provide a shared way to create this fieldname ... it's also used
+        # in the layouts/_auth_extension.html.erb view
+        fieldname = "#{ext.authtype}_ext_#{ext.key}"
+        value = ext.value || ""
+        @edit[:new][fieldname.to_sym] = value
+        @edit[:new]["#{fieldname}_verify".to_sym] = value if ext.data_type == "password"
+      end
+    end
   end
 
   def get_amazon_regions
@@ -654,6 +687,8 @@ module EmsCommon
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
+
+    set_auth_extensions
     set_verify_status
   end
 
@@ -672,11 +707,18 @@ module EmsCommon
 
     creds = Hash.new
     creds[:default] = {:userid=>@edit[:new][:default_userid], :password=>@edit[:new][:default_password]} unless @edit[:new][:default_userid].blank?
+    # TODO: push some of this logic back into the model ... let the model tell
+    # the controller which authentication types the EMS supports and let the
+    # controller be more dynamic in how it builds the @edit form information
     if ems.emstype == "rhevm" && !@edit[:new][:metrics_userid].blank?
       creds[:metrics] = {:userid=>@edit[:new][:metrics_userid], :password=>@edit[:new][:metrics_password]}
     end
-    if ems.emstype == "openstack" && !@edit[:new][:amqp_userid].blank?
+    if ems.emstype == "openstack"
       creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
+      AuthenticationExtensionType.find_all_by_authtype(:amqp).each do |ext_type|
+        creds[:amqp][:ext] ||= Hash.new
+        creds[:amqp][:ext][ext_type.key] = @edit[:new]["amqp_ext_#{ext_type.key}".to_sym]
+      end
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
   end
@@ -830,5 +872,10 @@ module EmsCommon
   def any_blank_fields?(hash, fields)
     fields = [fields] unless fields.is_a? Array
     fields.any? {|f| !hash.has_key?(f) || hash[f].blank? }
+  end
+
+  def all_or_no_blank_fields?(hash, *fields)
+    fields = [*fields]
+    fields.all? { |f| hash.key?(f) && hash[f].blank? } || !fields.any? { |f| hash.key?(f) && hash[f].blank? }
   end
 end
