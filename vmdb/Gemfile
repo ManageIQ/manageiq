@@ -10,6 +10,8 @@ MiqBundler.include_gemfile("../lib/Gemfile", binding)
 gem "prototype-rails", "~>3.2.1"
 # gem 'jquery-rails'
 
+gem "sprockets-sass",  "~>1.2.0"
+
 # Vendored and required
 # TODO: Fix AWS tests now that our api specs and the soap4r 1.6.0 specs pass on 1.8.7/1.9.3
 gem "rails",                          "=3.2.17",                         :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-6"
