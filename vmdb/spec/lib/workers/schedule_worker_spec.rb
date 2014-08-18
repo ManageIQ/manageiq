@@ -528,28 +528,6 @@ describe ScheduleWorker do
             end
           end
         end
-
-        it "will run a schedule and update last_run_on only after run" do
-          exp = MiqExpression.new({"="=>{"field"=>"Vm-name", "value"=>"test"}})
-          @schedule = FactoryGirl.create(:miq_schedule, :filter => exp, :towhat => 'Vm', :sched_action =>  {:method => 'check_compliance' } )
-          @schedule.stub(:action_check_compliance).and_return(true)
-
-          at = Time.now + 1.minute
-          @schedule_worker.rufus_add_schedule(:method => :schedule_every, :interval => "#{10.minutes}s", :schedule_id => @schedule.id, :first_at => at , :tags => "miq_schedules_1")
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(1.minute) }
-          @schedule_worker.queue_length.should == 1
-
-          method_to_send, *args = @schedule_worker.instance_variable_get(:@queue).deq
-          ScheduleWorker::Jobs.new.public_send(method_to_send, *args)
-
-          # Queueing should not update last_run_on
-          @schedule.reload.last_run_on.should be_nil
-
-          # Running the action to completion should update last_run_on
-          MiqQueue.first.deliver
-          @schedule.reload.last_run_on.should > at.utc
-        end
       end
 
       it "should never sync_all_user_schedules if scheduler role disabled" do
