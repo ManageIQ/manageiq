@@ -621,21 +621,6 @@ describe ScheduleWorker do
           end
         end
 
-        it "will create an internal queue item every 10 minutes" do
-          @schedule_worker.queue_length.should == 0
-          first_at = Time.now + 1.minutes
-          @schedule_worker.rufus_add_schedule(:method => :schedule_every, :interval => "#{10.minutes}s", :schedule_id => 1, :first_at => first_at , :tags => "miq_schedules_1")
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(1.minute) }
-          @schedule_worker.queue_length.should == 1
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(10.minutes) }
-          @schedule_worker.queue_length.should == 2
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(10.minutes) }
-          @schedule_worker.queue_length.should == 3
-        end
-
         it "will run a schedule and update last_run_on only after run" do
           exp = MiqExpression.new({"="=>{"field"=>"Vm-name", "value"=>"test"}})
           @schedule = FactoryGirl.create(:miq_schedule, :filter => exp, :towhat => 'Vm', :sched_action =>  {:method => 'check_compliance' } )
