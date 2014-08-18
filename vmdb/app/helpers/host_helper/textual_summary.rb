@@ -218,7 +218,7 @@ module HostHelper::TextualSummary
     cluster = @record.ems_cluster
     h = {:label => "Cluster", :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
-      h[:title] = "Show this VM's Cluster"
+      h[:title] = "Show this Host's Cluster"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
     end
     h
