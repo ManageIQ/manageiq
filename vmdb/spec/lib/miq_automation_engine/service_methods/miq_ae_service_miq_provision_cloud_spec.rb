@@ -269,6 +269,34 @@ module MiqAeServiceMiqProvisionCloudSpec
             end
           end
         end
+
+        if t == 'openstack'
+          context "cloud_tenants" do
+            it "workflow exposes allowed_cloud_tenants" do
+              workflow_klass.instance_methods.should include(:allowed_cloud_tenants)
+            end
+
+            context "with a cloud_tenant" do
+              before do
+                @ct = FactoryGirl.create("cloud_tenant")
+                workflow_klass.any_instance.stub(:allowed_cloud_tenants).and_return(@ct.id => @ct.name)
+              end
+
+              it "#eligible_cloud_tenants" do
+                result = ae_svc_prov.eligible_cloud_tenants
+
+                result.should be_kind_of(Array)
+                result.first.class.should eq("MiqAeMethodService::MiqAeServiceCloudTenant".constantize)
+              end
+
+              it "#set_cloud_tenant" do
+                ae_svc_prov.eligible_cloud_tenants.each { |rsc| ae_svc_prov.set_cloud_tenant(rsc) }
+
+                @miq_provision.reload.options[:cloud_tenant].should eq([@ct.id, @ct.name])
+              end
+            end
+          end
+        end
       end
     end
   end

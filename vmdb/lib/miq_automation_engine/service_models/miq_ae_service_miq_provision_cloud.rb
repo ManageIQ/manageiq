@@ -7,5 +7,6 @@ module MiqAeMethodService
     expose_eligible_resources :cloud_networks
     expose_eligible_resources :cloud_subnets
     expose_eligible_resources :guest_access_key_pairs
+    expose_eligible_resources :cloud_tenants
   end
 end
