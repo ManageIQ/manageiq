@@ -96,7 +96,6 @@ describe ScheduleWorker do
         before(:each) do
           rufus_frequency = 0.00001  # How often rufus will check for jobs to do
           require 'rufus/scheduler'
-          RufusSchedulerHelper.patch_for_job_callback
           @schedule_worker.instance_eval do
             @system_scheduler = Rufus::Scheduler.start_new(:frequency => rufus_frequency)
             @user_scheduler   = Rufus::Scheduler.start_new(:frequency => rufus_frequency)
@@ -443,98 +442,6 @@ describe ScheduleWorker do
             @schedule_worker.instance_variable_set(:@active_roles, [])
           end
 
-          context "#schedules_for_ems_metrics_coordinator_role" do
-            before(:each) do
-              @schedule_worker.instance_variable_set(:@active_roles, ["ems_metrics_coordinator"])
-            end
-
-            it "queue perf_capture_timer every 3 minutes, first in 5 minutes" do
-              Zone.any_instance.stub(:role_active?).with("ems_metrics_coordinator").and_return(true)
-              queue_conditions = {
-                :class_name  => "Metric::Capture",
-                :method_name => "perf_capture_timer",
-                :role        => "ems_metrics_coordinator",
-                :priority    => MiqQueue::HIGH_PRIORITY,
-              }
-              @schedule_worker.worker_settings[:performance_collection_start_delay] = nil
-              @schedule_worker.worker_settings[:performance_collection_interval] = nil
-
-              @schedule_worker.schedules_for_ems_metrics_coordinator_role
-              MiqQueue.where(queue_conditions).count.should == 0
-
-              RufusSchedulerHelper.wait_for_job { Timecop.travel(5.minutes) }
-              @schedule_worker.do_work
-              MiqQueue.where(queue_conditions).count.should == 1
-              MiqQueue.destroy_all
-
-              RufusSchedulerHelper.wait_for_job { Timecop.travel(5.minutes) }
-              @schedule_worker.do_work
-              MiqQueue.where(queue_conditions).count.should == 1
-            end
-
-            context "ems_metrics_processor" do
-              before(:each) do
-                Zone.any_instance.stub(:role_active?).with("ems_metrics_processor").and_return(true)
-              end
-
-              it "queue purge_realtime_timer every 15 minutes, first in 5 minutes" do
-                queue_conditions = {
-                  :class_name  => "Metric::Purging",
-                  :method_name => "purge_realtime_timer",
-                }
-                @schedule_worker.worker_settings[:performance_realtime_purging_start_delay] = nil
-                @schedule_worker.worker_settings[:performance_realtime_purging_interval] = nil
-
-                @schedule_worker.schedules_for_ems_metrics_coordinator_role
-                MiqQueue.where(queue_conditions).count.should == 0
-
-                RufusSchedulerHelper.wait_for_job { Timecop.travel(5.minutes) }
-                @schedule_worker.do_work
-                MiqQueue.where(queue_conditions).count.should == 1
-                MiqQueue.destroy_all
-
-                RufusSchedulerHelper.wait_for_job { Timecop.travel(15.minutes) }
-                @schedule_worker.do_work
-                MiqQueue.where(queue_conditions).count.should == 1
-                MiqQueue.destroy_all
-
-                RufusSchedulerHelper.wait_for_job { Timecop.travel(15.minutes) }
-                @schedule_worker.do_work
-                MiqQueue.where(queue_conditions).count.should == 1
-              end
-
-              it "queue purge_rollup_timer every 4 hours, first in 5 minutes" do
-                queue_conditions = {
-                  :class_name  => "Metric::Purging",
-                  :method_name => "purge_rollup_timer",
-                }
-                @schedule_worker.worker_settings[:performance_rollup_purging_start_delay] = nil
-                @schedule_worker.worker_settings[:performance_rollup_purging_interval] = nil
-
-                @schedule_worker.schedules_for_ems_metrics_coordinator_role
-
-                # Unschedule other ems_metrics_coordinator jobs not under test
-                @system.find_by_tag(:ems_metrics_coordinator).each { |job| job.unschedule unless job.tags.include?(:purge_rollup_timer)}
-
-                MiqQueue.where(queue_conditions).count.should == 0
-
-                RufusSchedulerHelper.wait_for_job { Timecop.travel(5.minutes) }
-                @schedule_worker.do_work
-                MiqQueue.where(queue_conditions).count.should == 1
-                MiqQueue.destroy_all
-
-                RufusSchedulerHelper.wait_for_job { Timecop.travel(4.hours) }
-                @schedule_worker.do_work
-                MiqQueue.where(queue_conditions).count.should == 1
-                MiqQueue.destroy_all
-
-                RufusSchedulerHelper.wait_for_job { Timecop.travel(4.hours) }
-                @schedule_worker.do_work
-                MiqQueue.where(queue_conditions).count.should == 1
-              end
-            end
-          end
-
           context "#schedules_for_all_roles"  do
             before(:each) do
               @schedule_worker.instance_variable_set(:@active_roles, [])
@@ -619,43 +526,6 @@ describe ScheduleWorker do
               job.unschedule
             end
           end
-        end
-
-        it "will create an internal queue item every 10 minutes" do
-          @schedule_worker.queue_length.should == 0
-          first_at = Time.now + 1.minutes
-          @schedule_worker.rufus_add_schedule(:method => :schedule_every, :interval => "#{10.minutes}s", :schedule_id => 1, :first_at => first_at , :tags => "miq_schedules_1")
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(1.minute) }
-          @schedule_worker.queue_length.should == 1
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(10.minutes) }
-          @schedule_worker.queue_length.should == 2
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(10.minutes) }
-          @schedule_worker.queue_length.should == 3
-        end
-
-        it "will run a schedule and update last_run_on only after run" do
-          exp = MiqExpression.new({"="=>{"field"=>"Vm-name", "value"=>"test"}})
-          @schedule = FactoryGirl.create(:miq_schedule, :filter => exp, :towhat => 'Vm', :sched_action =>  {:method => 'check_compliance' } )
-          @schedule.stub(:action_check_compliance).and_return(true)
-
-          at = Time.now + 1.minute
-          @schedule_worker.rufus_add_schedule(:method => :schedule_every, :interval => "#{10.minutes}s", :schedule_id => @schedule.id, :first_at => at , :tags => "miq_schedules_1")
-
-          RufusSchedulerHelper.wait_for_job { Timecop.travel(1.minute) }
-          @schedule_worker.queue_length.should == 1
-
-          method_to_send, *args = @schedule_worker.instance_variable_get(:@queue).deq
-          ScheduleWorker::Jobs.new.public_send(method_to_send, *args)
-
-          # Queueing should not update last_run_on
-          @schedule.reload.last_run_on.should be_nil
-
-          # Running the action to completion should update last_run_on
-          MiqQueue.first.deliver
-          @schedule.reload.last_run_on.should > at.utc
         end
       end
 
