@@ -24,6 +24,7 @@ require 'rubygems'
 require 'bcrypt'
 require 'linux_admin'
 require 'util/vmdb-logger'
+require 'awesome_spawn'
 include HighLine::SystemExtensions
 
 require 'i18n'
@@ -88,6 +89,7 @@ require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/key_configuration'
 require 'appliance_console/scap'
+require 'appliance_console/certificate_authority'
 
 require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
@@ -320,6 +322,27 @@ Date and Time Configuration
           say("\nExternal Authentication configuration failed!\n")
           press_any_key
           raise MiqSignalError
+        end
+
+      when I18n.t("advanced_settings.ca")
+        say("#{selection}\n\n")
+        begin
+          ca = CertificateAuthority.new(:hostname => host)
+          if ca.ask_questions && ca.activate
+            say "\ncertificate result: #{ca.status_string}"
+            unless ca.complete?
+              say "After the certificates are retrieved, rerun to update service configuration files"
+            end
+            press_any_key
+          else
+            say("\nCertificates not fetched.\n")
+            press_any_key
+          end
+        rescue AwesomeSpawn::CommandResultError => e
+          say e.result.output
+          say e.result.error
+          say ""
+          press_any_key
         end
 
       when I18n.t("advanced_settings.evmstop")
