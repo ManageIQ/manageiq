@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: PostProvision
+    name: openstack_PostProvision
     display_name: 
     description: 
     scope: instance

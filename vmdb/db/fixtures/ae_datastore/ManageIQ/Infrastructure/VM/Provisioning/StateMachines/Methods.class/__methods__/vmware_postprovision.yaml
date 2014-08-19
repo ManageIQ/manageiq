@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: PreProvision_Clone_to_VM
+    name: vmware_PostProvision
     display_name: 
     description: 
     scope: instance

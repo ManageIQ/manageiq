@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: /Cloud/VM/Provisioning/StateMachines/Methods/CustomizeRequest
+      default_value: /Cloud/VM/Provisioning/StateMachines/Methods/CustomizeRequest#${/#miq_provision.source.vendor}
       substitute: true
       message: create
       visibility: 
@@ -138,7 +138,7 @@ object:
       datatype: string
       priority: 7
       owner: 
-      default_value: /Cloud/VM/Provisioning/StateMachines/Methods/PreProvision
+      default_value: /Cloud/VM/Provisioning/StateMachines/Methods/PreProvision#${/#miq_provision.source.vendor}
       substitute: true
       message: create
       visibility: 
@@ -198,7 +198,7 @@ object:
       datatype: string
       priority: 10
       owner: 
-      default_value: /Cloud/VM/Provisioning/StateMachines/Methods/PostProvision
+      default_value: /Cloud/VM/Provisioning/StateMachines/Methods/PostProvision#${/#miq_provision.source.vendor}
       substitute: true
       message: create
       visibility: 

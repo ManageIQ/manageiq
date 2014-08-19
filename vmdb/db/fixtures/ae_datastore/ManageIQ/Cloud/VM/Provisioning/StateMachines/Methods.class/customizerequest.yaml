@@ -8,5 +8,7 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
-      value: CustomizeRequest
+  - amazon_meth1:
+      value: amazon_CustomizeRequest
+  - openstack_meth1:
+      value: openstack_CustomizeRequest
