@@ -971,14 +971,12 @@ module VMDB
     end
 
     def self.load_and_validate_raw_contents(name, contents)
-      begin
-        current = self.new(name.to_s)
-        current.config = Vmdb::ConfigurationEncoder.load(contents)
-        valid = current.validate
-        return valid ? [true, current] : [false, current.errors]
-      rescue StandardError, SyntaxError => err
-        return [false, [[:contents, "File contents are malformed, '#{err.message}'"]]]
-      end
+      current = self.new(name.to_s)
+      current.config = Vmdb::ConfigurationEncoder.load(contents)
+      valid = current.validate
+      return valid ? [true, current] : [false, current.errors]
+    rescue StandardError, SyntaxError => err
+      return [false, [[:contents, "File contents are malformed, '#{err.message}'"]]]
     end
   end
 end
