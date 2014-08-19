@@ -53,10 +53,30 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: PreProvision
+      name: Placement
       display_name: 
       datatype: string
       priority: 3
+      owner: 
+      default_value: /Infrastructure/VM/Provisioning/Placement/default#${/#miq_provision.source.vendor}
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Starting Placement')
+      on_exit: update_provision_status(status => 'Placement Complete')
+      on_error: update_provision_status(status => 'Error in Placement')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: PreProvision
+      display_name: 
+      datatype: string
+      priority: 4
       owner: 
       default_value: /Infrastructure/VM/Provisioning/StateMachines/Methods/PreProvision_Clone_to_Template
       substitute: true
@@ -76,7 +96,7 @@ object:
       name: Provision
       display_name: 
       datatype: string
-      priority: 4
+      priority: 5
       owner: 
       default_value: /Infrastructure/VM/Provisioning/StateMachines/Methods/Provision
       substitute: true
@@ -96,7 +116,7 @@ object:
       name: CheckProvisioned
       display_name: 
       datatype: string
-      priority: 5
+      priority: 6
       owner: 
       default_value: /Infrastructure/VM/Provisioning/StateMachines/Methods/CheckProvisioned
       substitute: true
@@ -116,7 +136,7 @@ object:
       name: PostProvision
       display_name: 
       datatype: string
-      priority: 6
+      priority: 7
       owner: 
       default_value: 
       substitute: true
@@ -136,7 +156,7 @@ object:
       name: ActivateCMDB
       display_name: 
       datatype: string
-      priority: 7
+      priority: 8
       owner: 
       default_value: 
       substitute: true
@@ -156,7 +176,7 @@ object:
       name: EmailOwner
       display_name: 
       datatype: string
-      priority: 8
+      priority: 9
       owner: 
       default_value: /Infrastructure/VM/Provisioning/Email/MiqProvision_complete?event=template_provisioned
       substitute: true

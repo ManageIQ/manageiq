@@ -13,50 +13,10 @@ object:
   schema:
   - field:
       aetype: relationship
-      name: placement
-      display_name: 
-      datatype: string
-      priority: 1
-      owner: 
-      default_value: /Infrastructure/VM/Provisioning/Placement/redhat_best_fit_cluster#create
-      substitute: true
-      message: get_placement
-      visibility: 
-      collect: /host = host; /storage = storage; /cluster = cluster
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: where
-      display_name: 
-      datatype: string
-      priority: 2
-      owner: 
-      default_value: /Infrastructure/VM/Provisioning/Placement/vmware_best_fit_least_utilized#create
-      substitute: true
-      message: get_host_and_storage
-      visibility: 
-      collect: /host = host; /storage = storage
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
       name: networks
       display_name: 
       datatype: string
-      priority: 5
+      priority: 1
       owner: 
       default_value: 
       substitute: true
@@ -76,7 +36,7 @@ object:
       name: vmname
       display_name: 
       datatype: string
-      priority: 6
+      priority: 2
       owner: 
       default_value: /Infrastructure/VM/Provisioning/Naming/Default#create
       substitute: true
@@ -96,7 +56,7 @@ object:
       name: pre_dialog_name
       display_name: 
       datatype: string
-      priority: 7
+      priority: 3
       owner: 
       default_value: 
       substitute: true
@@ -116,7 +76,7 @@ object:
       name: get_dialog_name
       display_name: 
       datatype: string
-      priority: 8
+      priority: 4
       owner: 
       default_value: 
       substitute: true
@@ -136,7 +96,7 @@ object:
       name: vm_dialog_name_prefix
       display_name: 
       datatype: string
-      priority: 9
+      priority: 5
       owner: 
       default_value: vm_dialog_name_prefix
       substitute: true
@@ -156,7 +116,7 @@ object:
       name: dialog_name
       display_name: 
       datatype: string
-      priority: 10
+      priority: 6
       owner: 
       default_value: ${#dialog_name_prefix}_${/#dialog_input_request_type}
       substitute: true
@@ -176,7 +136,7 @@ object:
       name: auto_approval_state_machine
       display_name: 
       datatype: string
-      priority: 11
+      priority: 7
       owner: 
       default_value: ProvisionRequestApproval
       substitute: true
@@ -196,7 +156,7 @@ object:
       name: quota_state_machine
       display_name: 
       datatype: string
-      priority: 12
+      priority: 8
       owner: 
       default_value: ProvisionRequestQuotaVerification
       substitute: true
@@ -216,7 +176,7 @@ object:
       name: state_machine
       display_name: 
       datatype: string
-      priority: 13
+      priority: 9
       owner: 
       default_value: VMProvision_${/#miq_provision.target_type}
       substitute: true

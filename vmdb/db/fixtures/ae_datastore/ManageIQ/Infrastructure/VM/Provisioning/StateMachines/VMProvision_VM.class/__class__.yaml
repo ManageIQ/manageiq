@@ -133,10 +133,30 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: PreProvision
+      name: Placement
       display_name: 
       datatype: string
       priority: 7
+      owner: 
+      default_value: /Infrastructure/VM/Provisioning/Placement/default#${/#miq_provision.source.vendor}
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_provision_status(status => 'Starting Placement')
+      on_exit: update_provision_status(status => 'Finished Placement')
+      on_error: update_provision_status(status => 'Error in Placement')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: PreProvision
+      display_name: 
+      datatype: string
+      priority: 8
       owner: 
       default_value: /Infrastructure/VM/Provisioning/StateMachines/Methods/PreProvision
       substitute: true
@@ -156,7 +176,7 @@ object:
       name: Provision
       display_name: 
       datatype: string
-      priority: 8
+      priority: 9
       owner: 
       default_value: /Infrastructure/VM/Provisioning/StateMachines/Methods/Provision
       substitute: true
@@ -176,7 +196,7 @@ object:
       name: CheckProvisioned
       display_name: 
       datatype: string
-      priority: 9
+      priority: 10
       owner: 
       default_value: /Infrastructure/VM/Provisioning/StateMachines/Methods/CheckProvisioned
       substitute: true
@@ -196,7 +216,7 @@ object:
       name: PostProvision
       display_name: 
       datatype: string
-      priority: 10
+      priority: 11
       owner: 
       default_value: /Infrastructure/VM/Provisioning/StateMachines/Methods/PostProvision
       substitute: true
@@ -216,7 +236,7 @@ object:
       name: RegisterDHCP
       display_name: 
       datatype: string
-      priority: 11
+      priority: 12
       owner: 
       default_value: 
       substitute: true
@@ -236,7 +256,7 @@ object:
       name: ActivateCMDB
       display_name: 
       datatype: string
-      priority: 12
+      priority: 13
       owner: 
       default_value: 
       substitute: true
@@ -256,7 +276,7 @@ object:
       name: EmailOwner
       display_name: 
       datatype: string
-      priority: 15
+      priority: 14
       owner: 
       default_value: /Infrastructure/VM/Provisioning/Email/MiqProvision_Complete?event=vm_provisioned
       substitute: true

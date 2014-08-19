@@ -4,9 +4,11 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: vmware_best_fit_least_utilized
+    name: default
     inherits: 
     description: 
   fields:
-  - meth5:
+  - redhat:
+      value: redhat_best_fit_cluster
+  - vmware:
       value: vmware_best_fit_least_utilized

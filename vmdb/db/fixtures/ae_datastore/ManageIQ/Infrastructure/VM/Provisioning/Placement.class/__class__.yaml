@@ -12,11 +12,31 @@ object:
     owner: 
   schema:
   - field:
+      aetype: assertion
+      name: placement
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: ${/#miq_provision.placement_auto}
+      substitute: true
+      message: ! '*'
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
       aetype: attribute
       name: vm
       display_name: 
       datatype: vm
-      priority: 1
+      priority: 2
       owner: 
       default_value: 
       substitute: true
@@ -36,7 +56,7 @@ object:
       name: host
       display_name: 
       datatype: host
-      priority: 2
+      priority: 3
       owner: 
       default_value: 
       substitute: true
@@ -56,7 +76,7 @@ object:
       name: storage
       display_name: 
       datatype: storage
-      priority: 3
+      priority: 4
       owner: 
       default_value: 
       substitute: true
@@ -76,7 +96,7 @@ object:
       name: storage_max_vms
       display_name: 
       datatype: integer
-      priority: 4
+      priority: 5
       owner: 
       default_value: 
       substitute: true
@@ -96,26 +116,6 @@ object:
       name: storage_max_pct_used
       display_name: 
       datatype: integer
-      priority: 5
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: assertion
-      name: guard
-      display_name: 
-      datatype: 
       priority: 6
       owner: 
       default_value: 
@@ -133,14 +133,14 @@ object:
       max_time: 
   - field:
       aetype: method
-      name: on_entry
+      name: redhat
       display_name: 
-      datatype: 
+      datatype: string
       priority: 7
       owner: 
       default_value: 
       substitute: true
-      message: create
+      message: redhat
       visibility: 
       collect: 
       scope: 
@@ -152,355 +152,15 @@ object:
       max_retries: 
       max_time: 
   - field:
-      aetype: relationship
-      name: rel1
+      aetype: method
+      name: vmware
       display_name: 
-      datatype: 
+      datatype: string
       priority: 8
       owner: 
       default_value: 
       substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth1
-      display_name: 
-      datatype: 
-      priority: 9
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel2
-      display_name: 
-      datatype: 
-      priority: 10
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth2
-      display_name: 
-      datatype: 
-      priority: 11
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel3
-      display_name: 
-      datatype: 
-      priority: 12
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth3
-      display_name: 
-      datatype: 
-      priority: 13
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel4
-      display_name: 
-      datatype: 
-      priority: 14
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth4
-      display_name: 
-      datatype: 
-      priority: 15
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel5
-      display_name: 
-      datatype: 
-      priority: 16
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth5
-      display_name: 
-      datatype: 
-      priority: 17
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel6
-      display_name: 
-      datatype: 
-      priority: 18
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: host = host; storage = storage
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth6
-      display_name: 
-      datatype: 
-      priority: 19
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel7
-      display_name: 
-      datatype: 
-      priority: 20
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth7
-      display_name: 
-      datatype: 
-      priority: 21
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel8
-      display_name: 
-      datatype: 
-      priority: 22
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: meth8
-      display_name: 
-      datatype: 
-      priority: 23
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
-      name: rel9
-      display_name: 
-      datatype: 
-      priority: 24
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
-      name: on_exit
-      display_name: 
-      datatype: 
-      priority: 25
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
+      message: vmware
       visibility: 
       collect: 
       scope: 

@@ -11,28 +11,38 @@ module MiqProvisionRedhat::Placement
       object = desired[key]
       next if object.nil?
       $log.info("#{log_header} Using #{key.to_s.titleize} Id: [#{object.id}], Name: [#{object.name}]")
-      self.options["dest_#{key}".to_sym] = [object.id, object.name]
+      options["dest_#{key}".to_sym] = [object.id, object.name]
     end
   end
 
   private
 
   def manual_placement
-    desired = {}
-    cluster_id = get_option(:placement_cluster_name)
-    raise MiqException::MiqProvisionError, "Destination cluster not provided" if cluster_id.blank?
-    desired[:cluster] = EmsCluster.find_by_id(cluster_id)
+    update_placement_info
+  end
 
-    datastore_id = get_option(:placement_ds_name)
-    desired[:storage] = Storage.find_by_id(datastore_id)
+  def selected_placement_host
+    Host.where(:id => get_option(:placement_host_name)).first
+  end
 
-    host_id = get_option(:placement_host_name)
-    desired[:host] = Host.find_by_id(host_id)
+  def selected_placement_ds
+    Storage.where(:id => get_option(:placement_ds_name)).first
+  end
 
-    desired
+  def selected_placement_cluster
+    EmsCluster.where(:id => get_option(:placement_cluster_name)).first.tap do |cluster|
+      raise MiqException::MiqProvisionError, 'Destination cluster not provided' unless cluster
+    end
   end
 
   def automatic_placement
-    self.get_placement_via_automate
+    update_placement_info(get_placement_via_automate)
+  end
+
+  def update_placement_info(result = {})
+    result[:cluster] = selected_placement_cluster if result[:cluster].nil?
+    result[:host]    = selected_placement_host    if result[:host].nil?
+    result[:storage] = selected_placement_ds      if result[:storage].nil?
+    result
   end
 end
