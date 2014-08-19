@@ -12,7 +12,7 @@
         <td class="wide">
           <%= text_field_tag("name",
                             @edit[:new][:name],
-                            :maxlength => MAX_NAME_LEN,
+                            :maxlength         => MAX_NAME_LEN,
                             "data-miq_focus"   => true,
                             "data-miq_observe" => {:interval => '.5', 
                                                    :url      => url}.to_json)
@@ -23,10 +23,10 @@
         <td class="key">Host Name</td>
         <td class="wide">
           <%= text_field_tag("hostname",
-                            @edit[:new][:hostname],
-                            :maxlength => MAX_HOSTNAME_LEN,
-                            "data-miq_observe" => {:interval => '.5', 
-                                                   :url      => url}.to_json)
+                             @edit[:new][:hostname],
+                             :maxlength         => MAX_HOSTNAME_LEN,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json)
           %>
         </td>
       </tr>
@@ -34,10 +34,10 @@
         <td class="key">IP Address</td>
         <td class="wide">
           <%= text_field_tag("ipaddress",
-                            @edit[:new][:ipaddress],
-                            :maxlength => 15,
-                            "data-miq_observe" => {:interval => '.5', 
-                                                   :url      => url}.to_json)
+                             @edit[:new][:ipaddress],
+                             :maxlength         => 15,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json)
           %>
         </td>
       </tr>
@@ -45,10 +45,11 @@
         <td class="key">Custom Identifier</td>
         <td class="wide">
           <%= text_field_tag("custom_1",
-                            @edit[:new][:custom_1],
-                            :maxlength => 50,
-                            "data-miq_observe" => {:interval => '.5', 
-                                                   :url      => url}.to_json) %>
+                             @edit[:new][:custom_1],
+                             :maxlength         => 50,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json)
+          %>
         </td>
       </tr>
       <% if @host.operating_system.nil? || @host.operating_system.product_name.nil? %>
@@ -56,9 +57,9 @@
           <td class="key">Host Platform</td>
           <td class="wide">
             <%= select_tag("user_assigned_os",
-                          options_for_select([["<not specified>", nil]] + Host.host_platforms.to_a,
-                                            @edit[:new][:user_assigned_os]),
-                          "data-miq_observe" => {:url => url}.to_json) %>
+                           options_for_select([["<not specified>", nil]] + Host.host_platforms.to_a,
+                                              @edit[:new][:user_assigned_os]),
+                           "data-miq_observe" => {:url => url}.to_json) %>
           </td>
         </tr>
       <% end %>
@@ -66,10 +67,10 @@
         <td class="key">IPMI IP Address</td>
         <td class="wide">
           <%= text_field_tag("ipmi_address",
-                            @edit[:new][:ipmi_address],
-                            :maxlength => 15,
-                            "data-miq_observe" => {:interval => '.5', 
-                                                   :url      => url}.to_json)
+                             @edit[:new][:ipmi_address],
+                             :maxlength         => 15,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json)
           %>
         </td>
       </tr>
@@ -77,10 +78,10 @@
         <td class="key">MAC Address</td>
         <td class="wide">
           <%= text_field_tag("mac_address",
-                            @edit[:new][:mac_address],
-                            :maxlength => MAX_NAME_LEN,
-                            "data-miq_observe" => {:interval => '.5', 
-                                                   :url      => url}.to_json)
+                             @edit[:new][:mac_address],
+                             :maxlength         => MAX_NAME_LEN,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                   :url       => url}.to_json)
           %>
         </td>
       </tr>
@@ -96,30 +97,25 @@
       <tr>
         <td align="right">
           <div id="buttons_on">
-            <ul id="form_buttons">
-              <li>
-                <%= image_tag('/images/formbuttons/add.png', 
-                              :border  => "0", 
-                              :class   => "button",
-                              :alt     => "Add this Host", 
-                              :title   => "Add this Host",
-                              :onclick => "miqAjaxButton('#{url_for(:action => "create",
-                                                                    :id     => "new",
-                                                                    :button => "add")}');")
-                %>
-              </li>
-              <li>
-                <%= image_tag('/images/formbuttons/cancel.png', 
-                              :border  => "0",
-                              :class   => "button",
-                              :alt     => "Cancel", 
-                              :title   => "Cancel",
-                              :onclick => "miqAjaxButton('#{url_for(:action => "create",
-                                                                    :id     => "new",
-                                                                    :button => "cancel")}');")
-                %>
-              </li>
-            </ul>
+
+            <%= button_tag('Add',
+                            :class   => 'btn btn-primary',
+                            :alt     => "Add this Host", 
+                            :title   => "Add this Host",
+                            :onclick => "miqAjaxButton('#{url_for(:action => "create",
+                                                                  :id     => "new",
+                                                                  :button => "add")}');")
+            %>
+
+            <%= button_tag('Cancel',
+                            :class   => 'btn btn-default',
+                            :alt     => 'Cancel', 
+                            :title   => 'Cancel',
+                            :onclick => "miqAjaxButton('#{url_for(:action => 'create',
+                                                                  :id     => 'new',
+                                                                  :button => 'cancel')}');")
+            %>
+
           </div>
         </td>
       </tr>
@@ -142,7 +138,7 @@
             <% if session[:host_items] %>
               <% @embedded = true %>
               <% @gtl_type = @settings[:views][:host] %>
-              <%= render :partial=>"layouts/gtl" %>
+              <%= render :partial => "layouts/gtl" %>
             <% end %>
           </td>
         </tr>
