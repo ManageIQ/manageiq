@@ -392,6 +392,13 @@ module OpsController::Settings::Common
       replace_right_cell(@nodetype)
       return
     when "settings_advanced"                                          # Advanced manual yaml editor tab
+      begin
+        YAML.parse(@edit[:new][:file_data])
+      rescue YAML::SyntaxError => ex
+        add_flash("#{I18n.t("flash.edit.field_syntax_error.yaml_file_could_not_be_saved")}#{ex.message}", :error)
+        render_flash
+        return
+      end
       result = VMDB::Config.save_file(session[:config_file_name], @edit[:new][:file_data])  # Save the config file
       if result != true                                         # Result contains errors?
         result.each do |field,msg|
