@@ -91,7 +91,46 @@ class MiqAeToolsController < ApplicationController
     drop_breadcrumb( {:name=>"Import / Export", :url=>"/miq_ae_tools/import_export"} )
     @lastaction = "import_export"
     @layout = "miq_ae_export"
+    @importable_domain_options = MiqAeDomain.all.collect { |domain| [domain.name, domain.name] }
     render :action=>"show"
+  end
+
+  def automate_json
+    automate_json = automate_import_json_serializer.serialize(ImportFileUpload.find(params[:import_file_upload_id]))
+
+    respond_to do |format|
+      format.json { render :json => automate_json }
+    end
+  end
+
+  def cancel_import
+    automate_import_service.cancel_import(params[:import_file_upload_id])
+    add_flash(I18n.t("flash.automate.datastore_import_cancelled"), :info)
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
+  end
+
+  def import_automate_datastore
+    import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
+
+    if import_file_upload
+      automate_import_service.import_datastore(
+        import_file_upload,
+        params[:selected_domain_to_import_from],
+        params[:selected_domain_to_import_to],
+        params[:selected_namespaces]
+      )
+
+      add_flash(I18n.t("flash.automate.datastore_import_success"), :info)
+    else
+      add_flash(I18n.t("flash.automate.datastore_import_expired"), :error)
+    end
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
   end
 
   def upload_import_file
@@ -167,6 +206,10 @@ class MiqAeToolsController < ApplicationController
   end
 
   private ###########################
+
+  def automate_import_json_serializer
+    @automate_import_json_serializer ||= AutomateImportJsonSerializer.new
+  end
 
   def automate_import_service
     @automate_import_service ||= AutomateImportService.new

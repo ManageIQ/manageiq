@@ -657,6 +657,7 @@ Vmdb::Application.routes.draw do
 
     :miq_ae_tools => {
       :get => %w(
+        automate_json
         export_datastore
         fetch_log
         import_export
@@ -666,7 +667,9 @@ Vmdb::Application.routes.draw do
       ),
       :post => %w(
         button
+        cancel_import
         form_field_changed
+        import_automate_datastore
         reset_datastore
         resolve
         upload

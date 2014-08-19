@@ -50,10 +50,6 @@ class ImportFileUpload < ActiveRecord::Base
     )
   end
 
-  def store_binary_data_as_yml(binary_data, name)
-
-  end
-
   def uploaded_content
     binary_blob.binary
   end

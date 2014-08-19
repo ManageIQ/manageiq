@@ -189,6 +189,8 @@ class MiqAeYamlImport
   end
 
   def new_domain_name_valid?
+    return true if @options['overwrite']
+
     domain_obj = MiqAeDomain.find_by_fqname(@options['import_as'], false)
     if domain_obj
       $log.info("#{self.class} Cannot import - A domain exists with new domain name: #{@options['import_as']}.")

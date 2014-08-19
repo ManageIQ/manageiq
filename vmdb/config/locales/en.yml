@@ -21,6 +21,8 @@ en:
       button_set: "Automate button %{btn_num} has been set to %{btn_txt}"
       custom_button_error: 'Error executing: "%{name}" '
       custom_button_executed: '"%{name}" was executed'
+      datastore_import_cancelled: "Datastore import was cancelled"
+      datastore_import_expired: "Error: Datastore import file upload expired"
       datastore_import_success: "Datastore import was successful"
       reset_to_default: "All custom classes and instances have been reset to default"
       simulation_started: "Automation Simulation has been run"

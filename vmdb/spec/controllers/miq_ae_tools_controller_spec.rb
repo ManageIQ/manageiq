@@ -20,6 +20,118 @@ describe MiqAeToolsController do
     end
   end
 
+  describe "#cancel_import" do
+    include_context "valid session"
+
+    let(:params) { {:import_file_upload_id => "123"} }
+    let(:automate_import_service) { instance_double("AutomateImportService") }
+
+    before do
+      bypass_rescue
+      AutomateImportService.stub(:new).and_return(automate_import_service)
+      automate_import_service.stub(:cancel_import)
+    end
+
+    it "cancels the import" do
+      automate_import_service.should_receive(:cancel_import).with("123")
+      xhr :post, :cancel_import, params
+    end
+
+    it "returns a 200" do
+      xhr :post, :cancel_import, params
+      expect(response.status).to eq(200)
+    end
+
+    it "returns the flash messages" do
+      xhr :post, :cancel_import, params
+      expect(response.body).to eq([{:message => "Datastore import was cancelled", :level => :info}].to_json)
+    end
+  end
+
+  describe "#automate_json" do
+    include_context "valid session"
+
+    let(:automate_import_json_serializer) { instance_double("AutomateImportJsonSerializer") }
+    let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+    let(:params) { {:import_file_upload_id => "123"} }
+
+    before do
+      bypass_rescue
+      AutomateImportJsonSerializer.stub(:new).and_return(automate_import_json_serializer)
+      ImportFileUpload.stub(:find).with("123").and_return(import_file_upload)
+      automate_import_json_serializer.stub(:serialize).with(import_file_upload).and_return("the json")
+    end
+
+    it "returns the expected json" do
+      xhr :get, :automate_json, params
+      expect(response.body).to eq("the json")
+    end
+  end
+
+  describe "#import_automate_datastore" do
+    include_context "valid session"
+
+    let(:params) do
+      {
+        :import_file_upload_id          => "123",
+        :selected_domain_to_import_from => "potato",
+        :selected_domain_to_import_to   => "tomato",
+        :selected_namespaces            => ["datastore_namespace"]
+      }
+    end
+    let(:automate_import_service) { instance_double("AutomateImportService") }
+
+    before do
+      bypass_rescue
+      ImportFileUpload.stub(:where).with(:id => "123").and_return([import_file_upload])
+      AutomateImportService.stub(:new).and_return(automate_import_service)
+    end
+
+    context "when the import file exists" do
+      let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+
+      before do
+        automate_import_service.stub(:import_datastore)
+      end
+
+      it "imports the data" do
+        automate_import_service.should_receive(:import_datastore).with(
+          import_file_upload,
+          "potato",
+          "tomato",
+          ["datastore_namespace"]
+        )
+        xhr :post, :import_automate_datastore, params
+      end
+
+      it "returns with a 200 status" do
+        xhr :post, :import_automate_datastore, params
+        expect(response.status).to eq(200)
+      end
+
+      it "returns the flash message" do
+        xhr :post, :import_automate_datastore, params
+        expect(response.body).to eq([{:message => "Datastore import was successful", :level => :info}].to_json)
+      end
+    end
+
+    context "when the import file does not exist" do
+      let(:import_file_upload) { nil }
+
+      it "returns with a 200 status" do
+        xhr :post, :import_automate_datastore, params
+        expect(response.status).to eq(200)
+      end
+
+      it "returns the flash message" do
+        xhr :post, :import_automate_datastore, params
+        expect(response.body).to eq(
+          [{:message => "Error: Datastore import file upload expired", :level => :error}].to_json
+        )
+      end
+    end
+  end
+
   describe "#review_import" do
     include_context "valid session"
 

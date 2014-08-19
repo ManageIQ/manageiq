@@ -46,6 +46,28 @@ class MiqAeYamlImportZipfs < MiqAeYamlImport
     @sorted_entries.select { |entry| File.fnmatch(glob_str, entry.name, @fn_flags) }.sort.collect(&:name)
   end
 
+  def all_namespace_files
+    @sorted_entries.select { |entry| entry.name.match(NAMESPACE_YAML_FILENAME) }
+  end
+
+  def remove_unrelated_entries(domain_name)
+    unrelated_entries = @sorted_entries.reject { |entry| entry.name.match(domain_name) }
+
+    unrelated_entries.each do |entry|
+      remove_entry(entry)
+    end
+
+    update_sorted_entries
+  end
+
+  def remove_entry(entry)
+    @zip.remove(entry)
+  end
+
+  def update_sorted_entries
+    @sorted_entries = @zip.entries.sort
+  end
+
   def class_files(namespace_folder)
     glob_str = File.join(namespace_folder, "*", CLASS_YAML_FILENAME)
     @sorted_entries.select { |entry| File.fnmatch(glob_str, entry.name, @fn_flags) }.sort.collect(&:name)
