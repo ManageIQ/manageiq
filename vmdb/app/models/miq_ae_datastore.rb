@@ -85,7 +85,7 @@ module MiqAeDatastore
   def self.restore(fname)
     $log.info("MIQ(MiqAeDatastore.restore) Restore from #{fname}...Starting")
     MiqAeDatastore.reset
-    MiqAeImport.new(ALL_DOMAINS, 'zip_file' => fname, 'preview' => false).import
+    MiqAeImport.new(ALL_DOMAINS, 'zip_file' => fname, 'preview' => false, 'restore' => true).import
     $log.info("MIQ(MiqAeDatastore.restore) Restore from #{fname}...Complete")
   end
 
@@ -99,7 +99,7 @@ module MiqAeDatastore
 
   def self.import_yaml_dir(dirname, domain)
     t = Benchmark.realtime_block(:total_time) do
-      import_options = {'import_dir' => dirname, 'preview' => false, 'mode' => 'add'}
+      import_options = {'import_dir' => dirname, 'preview' => false, 'mode' => 'add', 'restore' => true}
       MiqAeImport.new(domain, import_options).import
     end
     $log.info("MIQ(MiqAeDatastore.import) Import from #{dirname}...Complete - Benchmark: #{t.inspect}")

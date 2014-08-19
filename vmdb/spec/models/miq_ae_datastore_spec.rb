@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'miq_ae_yaml_import_zipfs'
 
 describe MiqAeDatastore do
   before(:each) do
@@ -78,13 +79,6 @@ describe MiqAeDatastore do
     MiqAeDatastore.backup('zip_file'  => 'dummy', 'overwrite' => true)
   end
 
-  it ".restore" do
-    dummy_zipfile = File.expand_path(File.join(File.dirname(__FILE__), "/miq_ae_datastore/data/dummy.zip"))
-    MiqAeYamlImport.any_instance.should_receive(:import).once
-
-    MiqAeDatastore.restore(dummy_zipfile)
-  end
-
   it ".upload" do
     fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
     import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
@@ -114,6 +108,28 @@ describe MiqAeDatastore do
     MiqAeDatastore.should_receive(:import_yaml_zip).with(import_file, "*").once
     MiqAeDatastore.upload(fd, "dummy.zip")
     File.exist?(import_file).should be_false
+  end
+
+  describe "restore" do
+
+    let(:miq_ae_yaml_import_zipfs)  { instance_double("MiqAeYamlImportZipfs") }
+    let(:dummy_zipfile) { File.expand_path(File.join(File.dirname(__FILE__), "/miq_ae_datastore/data/dummy.zip")) }
+
+    before do
+      MiqAeImport.stub(:new).and_return(miq_ae_yaml_import_zipfs)
+      miq_ae_yaml_import_zipfs.stub(:import)
+    end
+
+    it "validate arguments" do
+      options_hash = {'restore' => true, 'preview' => false, 'zip_file' => dummy_zipfile}
+      MiqAeImport.should_receive(:new).with("*", options_hash)
+      MiqAeDatastore.restore(dummy_zipfile)
+    end
+
+    it "imports" do
+      miq_ae_yaml_import_zipfs.should_receive(:import).once
+      MiqAeDatastore.restore(dummy_zipfile)
+    end
   end
 
 end
