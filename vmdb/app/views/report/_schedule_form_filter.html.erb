@@ -1,4 +1,6 @@
-<% url = url_for(:action=>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}") %>
+<% url = url_for(:action => 'schedule_form_field_changed', 
+                 :id     => "#{@schedule.id || "new"}") 
+%>
 <div id="form_filter_div">
   <p class="legend">Report Selection</p>
   <table class="style1">
@@ -6,27 +8,40 @@
       <tr>
         <td class="key" rowspan="3">Filter</td>
         <td>
-          <%= select_tag('filter_typ', options_for_select(["<Choose>"] + @folders, @edit[:new][:filter]),
-                            { :multiple=> false, :class=>"widthed",:disabled =>true } ) %>
+          <%= select_tag('filter_typ', 
+                         options_for_select(["<Choose>"] + @folders, 
+                                            @edit[:new][:filter]),
+                         {:multiple => false, 
+                          :class    => "widthed",
+                          :disabled => true })
+          %>
         </td>
       </tr>
         <% if @sub_folders && !@sub_folders.empty? %>
         <tr>
-
           <td>
-            <%= select_tag('subfilter_typ', options_for_select(["<Choose>"] + @sub_folders, @edit[:new][:subfilter]),
-                              { :multiple=> false, :class=>"widthed",:disabled =>true } ) %>
+            <%= select_tag('subfilter_typ', 
+                           options_for_select(["<Choose>"] + @sub_folders, 
+                                              @edit[:new][:subfilter]),
+                           {:multiple => false, 
+                            :class    => "widthed",
+                            :disabled => true }) 
+            %>
           </td>
         </tr>
         <% end %>
         <% if @reps && !@reps.empty? %>
-        <tr>
-
-          <td>
-            <%= select_tag('repfilter_typ', options_for_select(["<Choose>"] + @reps, @edit[:new][:repfilter]),
-                              { :multiple=> false, :class=>"widthed",:disabled =>true } ) %>
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <%= select_tag('repfilter_typ', 
+                             options_for_select(["<Choose>"] + @reps, 
+                                                @edit[:new][:repfilter]),
+                             {:multiple => false, 
+                              :class    => "widthed",
+                              :disabled => true }) 
+              %>
+            </td>
+          </tr>
         <% end %>
       </tr>
     <% else %>
@@ -34,10 +49,14 @@
         <td class="key" rowspan="3">Filter</td>
         <td>
           <%= select_tag("filter_typ",
-                          options_for_select(["<Choose>"] + @folders, @edit[:new][:filter]),
-                          :multiple=>false, :class=>"widthed",
-                          "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                          "data-miq_observe"=>{:url=>url}.to_json) %>
+                          options_for_select(["<Choose>"] + @folders, 
+                                             @edit[:new][:filter]),
+                          :multiple              => false, 
+                          :class                 => "widthed",
+                          "data-miq_sparkle_on"  => true, 
+                          "data-miq_sparkle_off" => true,
+                          "data-miq_observe"     => {:url => url}.to_json) 
+          %>
         </td>
       </tr>
         <% if @sub_folders && !@sub_folders.empty? %>
@@ -45,10 +64,13 @@
 
           <td>
             <%= select_tag("subfilter_typ",
-                            options_for_select(["<Choose>"] + @sub_folders, @edit[:new][:subfilter]),
-                            :multiple=>false, :class=>"widthed",
-                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(["<Choose>"] + @sub_folders, 
+                                              @edit[:new][:subfilter]),
+                           :multiple              => false, 
+                           :class                 => "widthed",
+                           "data-miq_sparkle_on"  => true, 
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url=>url}.to_json) %>
           </td>
         </tr>
         <% end %>
@@ -57,10 +79,14 @@
 
           <td>
             <%= select_tag("repfilter_typ",
-                            options_for_select(["<Choose>"] + @reps, @edit[:new][:repfilter]),
-                            :multiple=>false, :class=>"widthed",
-                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json) %>
+                            options_for_select(["<Choose>"] + @reps, 
+                                               @edit[:new][:repfilter]),
+                            :multiple              => false, 
+                            :class                 => "widthed",
+                            "data-miq_sparkle_on"  => true, 
+                            "data-miq_sparkle_off" => true,
+                            "data-miq_observe"     => {:url => url}.to_json)
+            %>
           </td>
         </tr>
         <% end %>
