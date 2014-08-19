@@ -33,6 +33,22 @@ describe VMDB::Config do
     end
   end
 
+  context "load_and_validate_raw_contents" do
+    it "normal" do
+      validated, result = VMDB::Config.load_and_validate_raw_contents("vmdb", "---\n'a':\n  'b': 1\n")
+      expect(validated).to eql(true)
+      expect(result).to be_kind_of(VMDB::Config)
+    end
+
+    it "catches syntax errors" do
+      validated, result = VMDB::Config.load_and_validate_raw_contents("vmdb", "---\n'a':\n  'b':1\n")
+      expect(validated).to eql(false)
+      error = result.first
+      expect(error[0]).to eql(:contents)
+      expect(error[1]).to match(/\AFile contents are malformed/)
+    end
+  end
+
   context ".http_proxy_uri" do
     it "without config settings" do
       VMDB::Config.any_instance.stub(:config => {})
