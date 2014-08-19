@@ -47,6 +47,12 @@ class JqplotCharting < Charting
     ["Pie (2D)",              "Pie"],
   ]
 
+  def chart_themes_for_select
+    CHART_THEMES.collect { |name| [name, name] }
+  end
+
+  CHART_THEMES = ['none']
+
   private
 
   def add_sample_chart_data(options, chart)

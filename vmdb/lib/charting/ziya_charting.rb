@@ -111,6 +111,10 @@ class ZiyaCharting < Charting
     ["Pie (3D)",               "PieThreed"]
   ]
 
+  def chart_themes_for_select
+    ZTHEMES.collect { |name| [name, name] }
+  end
+
   def self.priority
     100
   end

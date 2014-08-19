@@ -35,6 +35,10 @@ class Charting
     instance.chart_names_for_select
   end
 
+  def self.chart_themes_for_select
+    instance.chart_themes_for_select
+  end
+
   # discovery
   #
   #
