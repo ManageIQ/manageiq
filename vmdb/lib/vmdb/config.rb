@@ -976,7 +976,7 @@ module VMDB
         current.config = Vmdb::ConfigurationEncoder.load(contents)
         valid = current.validate
         return valid ? [true, current] : [false, current.errors]
-      rescue => err
+      rescue StandardError, SyntaxError => err
         return [false, [[:contents, "File contents are malformed, '#{err.message}'"]]]
       end
     end
