@@ -101,5 +101,10 @@ class Jqplot
         }
       end
     end
+
+    def apply_theme(chart, report_theme)
+      Rails.logger.error(['Jqplot apply_theme', chart, report_theme].inspect)
+      chart
+    end
   end
 end

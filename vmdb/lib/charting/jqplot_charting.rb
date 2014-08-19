@@ -82,6 +82,7 @@ class JqplotCharting < Charting
     chart = Jqplot.basic_chart(options[:graph_type])
     chart = Jqplot.horizontal_legend(
       Jqplot.horizontal_line_cursor(chart)) unless options[:graph_type] == 'Pie'
+    chart = Jqplot.apply_theme(chart, report_theme)
     chart
   end
 
