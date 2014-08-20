@@ -84,7 +84,7 @@ describe MiqProvisionVmware do
       end
 
       it "eligible_resources with bad resource" do
-        lambda { @vm_prov.eligible_resources(:bad_resource_name) }.should raise_error MiqException::MiqProvisionError
+        expect { @vm_prov.eligible_resources(:bad_resource_name) }.to raise_error(NameError)
       end
 
       it "disable customization_spec" do

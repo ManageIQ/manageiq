@@ -1,4 +1,27 @@
 module MiqProvisionMixin
+  RESOURCE_CLASS_KEY_MAP = {
+    # Infrastructure
+    "Host"                  => [:hosts,                   :placement_host_name],
+    "Storage"               => [:storages,                :placement_ds_name],
+    "EmsCluster"            => [:clusters,                :placement_cluster_name],
+    "ResourcePool"          => [:resource_pools,          :placement_rp_name],
+    "EmsFolder"             => [:folders,                 :placement_folder_name],
+    "PxeServer"             => [:pxe_servers,             :pxe_server_id],
+    "PxeImage"              => [:pxe_images,              :pxe_image_id],
+    "WindowsImage"          => [:windows_images,          :pxe_image_id],
+    "CustomizationTemplate" => [:customization_templates, :customization_template_id],
+    "IsoImage"              => [:iso_images,              :iso_image_id],
+
+    # Cloud
+    "AvailabilityZone"      => [:availability_zones,      :placement_availability_zone],
+    "CloudTenant"           => [:cloud_tenants,           :cloud_tenant],
+    "CloudNetwork"          => [:cloud_networks,          :cloud_network],
+    "CloudSubnet"           => [:cloud_subnets,           :cloud_subnet],
+    "SecurityGroup"         => [:security_groups,         :security_groups],
+    "FloatingIp"            => [:floating_ip_addresses,   :floating_ip_address],
+    "Flavor"                => [:instance_types,          :instance_type],
+    "AuthKeyPairCloud"      => [:guest_access_key_pairs,  :guest_access_key_pair]
+  }.freeze
 
   def tag_ids
     self.options[:vm_tags]
@@ -54,29 +77,17 @@ module MiqProvisionMixin
     prov_options = options.dup
     prov_options[:placement_auto] = [false, 0]
     prov_wf = workflow(prov_options, :skip_dialog_load => true)
+    klass = resource_type_to_class(rsc_type)
 
-    klass = case rsc_type
-      when :clusters                then EmsCluster
-      when :resource_pools          then ResourcePool
-      when :folders                 then EmsFolder
-      when :hosts                   then Host
-      when :storages                then Storage
-      when :pxe_servers             then PxeServer
-      when :pxe_images              then PxeImage
-      when :windows_images          then WindowsImage
-      when :customization_templates then CustomizationTemplate
-      when :iso_images              then IsoImage
-      else nil
-    end
-    raise MiqException::MiqProvisionError, "Unsupported resource type <#{rsc_type}> passed to eligible_resources for provisioning." if klass.nil?
-    raise MiqException::MiqProvisionError, "Provision workflow does not contain the expected method <allowed_#{rsc_type}>" unless prov_wf.respond_to?("allowed_#{rsc_type}")
+    allowed_method = "allowed_#{rsc_type}"
+    raise MiqException::MiqProvisionError, "Provision workflow does not contain the expected method <#{allowed_method}>" unless prov_wf.respond_to?(allowed_method)
 
-    result = prov_wf.send("allowed_#{rsc_type}")
+    result = prov_wf.send(allowed_method)
     result = result.collect {|rsc| eligible_resource_lookup(klass, rsc)}
 
-    data = result.collect {|rsc| "#{rsc.id}:#{rsc.name}"}
+    data = result.collect { |rsc| "#{rsc.id}:#{resource_display_name(rsc)}" }
     $log.info("#{log_header} returning <#{rsc_type}>:<#{data.join(', ')}>")
-    return result
+    result
   end
 
   # Helper method to determines the ID for a resource and load the active-record object.
@@ -93,33 +104,20 @@ module MiqProvisionMixin
   def set_resource(rsc, options={})
     log_header = "MIQ(#{self.class.name}.set_resource)"
     return if rsc.nil?
-    rsc_class = $1 if rsc.class.base_class.name =~ /::MiqAeService(.*)/
 
-    rsc_type, key = case rsc_class
-            when "Host"         then [:hosts,          :placement_host_name]
-            when "Storage"      then [:storages,       :placement_ds_name]
-            when "EmsCluster"   then [:clusters,       :placement_cluster_name]
-            when "ResourcePool" then [:resource_pools, :placement_rp_name]
-            when "EmsFolder"    then [:folders,        :placement_folder_name]
-            when "PxeServer"    then [:pxe_servers,    :pxe_server_id]
-            when "PxeImage"     then [:pxe_images,     :pxe_image_id]
-            when "WindowsImage" then [:windows_images, :pxe_image_id]
-            when "CustomizationTemplate" then [:customization_templates, :customization_template_id]
-            when "IsoImage"     then [:iso_images,     :iso_image_id]
-            else nil
-            end
-
+    rsc_class = resource_class(rsc)
+    rsc_type, key = class_to_resource_type_and_key(rsc_class)
     raise "Unsupported resource type <#{rsc.class.base_class.name}> passed to set_resource for provisioning." if rsc_type.nil?
-    rsc_id = rsc.attributes['id']
-    result = self.eligible_resources(rsc_type).any? {|r| r.id == rsc_id}
-    raise "Resource <#{rsc_class}> <#{rsc_id}:#{rsc.name}> is not an eligible resource for this provisioning instance." if result == false
 
-    value = [rsc_id, rsc.name]
-    value[0] = "#{rsc_class}::#{value.first}" if key == :pxe_image_id
+    rsc_name = resource_display_name(rsc)
+    result   = eligible_resources(rsc_type).any? { |r| r.id == rsc.id }
+    raise "Resource <#{rsc_class}> <#{rsc.id}:#{rsc_name}> is not an eligible resource for this provisioning instance." if result == false
+
+    value = construct_value(key, rsc_class, rsc.id, rsc_name)
     $log.info("#{log_header} option <#{key}> being set to <#{value.inspect}>")
     self.options[key] = value
 
-    post_customization_templates(rsc_id) if rsc_type == :customization_templates
+    post_customization_templates(rsc.id) if rsc_type == :customization_templates
 
     self.update_attribute(:options, self.options)
   end
@@ -290,5 +288,34 @@ module MiqProvisionMixin
     return nil if value.blank?
     value = value.iso8601 if value.kind_of?(Time)
     {:key => key.to_s, :value => value.to_s}
+  end
+
+  private
+
+  def resource_type_to_class(rsc_type)
+    RESOURCE_CLASS_KEY_MAP.detect { |_k, v| v.first == rsc_type }.first.to_s.constantize
+  end
+
+  def class_to_resource_type_and_key(rsc_class)
+    RESOURCE_CLASS_KEY_MAP[rsc_class]
+  end
+
+  def resource_display_name(rsc)
+    return rsc.address if rsc.respond_to?(:address)
+    return rsc.name    if rsc.respond_to?(:name)
+    ""
+  end
+
+  def construct_value(key, rsc_class, rsc_id, rsc_name)
+    case key
+    when :security_groups then [rsc_id]
+    when :pxe_image_id    then ["#{rsc_class}::#{rsc_id}", rsc_name]
+    else [rsc_id, rsc_name]
+    end
+  end
+
+  def resource_class(rsc)
+    return "AuthKeyPairCloud" if rsc.kind_of?(MiqAeMethodService::MiqAeServiceAuthKeyPairCloud)
+    $1 if rsc.class.base_class.name =~ /::MiqAeService(.*)/
   end
 end
