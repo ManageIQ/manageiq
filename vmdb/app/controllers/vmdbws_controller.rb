@@ -20,7 +20,12 @@ class VmdbwsController < ApplicationController
     # Default to basic authentication
     # Block must return false to fail authentication
     authenticate_or_request_with_http_basic do |username, password|
-      authenticated, @username = User.authenticate_with_http_basic(username, password, request)
+      authenticate_options = {:require_user => true}
+
+      timeout = get_vmdb_config.fetch_path(:webservices, :authentication_timeout)
+      authenticate_options[:timeout] = timeout.to_i_with_method if timeout
+
+      authenticated, @username = User.authenticate_with_http_basic(username, password, request, authenticate_options)
       authenticated
     end
   end

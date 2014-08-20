@@ -22,6 +22,7 @@
 api:
   token_ttl: 10.minutes
   token_cleanup_interval: 2.minutes
+  authentication_timeout: 30.seconds
 authentication:
   basedn:
   bind_dn:
@@ -241,6 +242,7 @@ webservices:
   security: none
   timeout: 120
   use_vim_broker: true
+  authentication_timeout: 30.seconds
 workers:
   worker_base:
     :defaults:

@@ -213,7 +213,9 @@ class User < ActiveRecord::Base
     raise MiqException::MiqEVMLoginError, "authentication failed" unless ldap.bind(fq_user, password)
   end
 
-  def self.authenticate(username, password, request = nil)
+  def self.authenticate(username, password, request = nil, options = {})
+    options = options.dup
+    options[:require_user] ||= false
     fail_message = "Authentication failed"
     mode = self.mode
 
@@ -235,6 +237,14 @@ class User < ActiveRecord::Base
     rescue Exception => err
       $log.log_backtrace(err)
       raise MiqException::MiqEVMLoginError, err.message
+    end
+
+    if options[:require_user] && !user_or_taskid.kind_of?(self)
+      task = MiqTask.wait_for_taskid(user_or_taskid, options)
+      if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
+        raise MiqException::MiqEVMLoginError, fail_message
+      end
+      user_or_taskid = find_by_userid(task.userid)
     end
 
     if user_or_taskid.kind_of?(self)
@@ -534,7 +544,7 @@ class User < ActiveRecord::Base
       user = find_by_userid(username) || new(:userid => username)
       user.update_attrs_from_httpd(user_attrs)
       user.save_successful_logon(matching_groups, audit, task)
-    rescue err
+    rescue => err
       $log.log_backtrace(err)
       task.error(err.message)
       AuditEvent.failure(audit.merge(:message => err.message))
@@ -543,7 +553,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.authenticate_with_http_basic(username, password, request = nil)
+  def self.authenticate_with_http_basic(username, password, request = nil, options = {})
+    options[:require_user] ||= false
     u = username.dup
     user = User.find_by_userid(u)
     if user.nil? && u.include?('\\')
@@ -556,9 +567,8 @@ class User < ActiveRecord::Base
       u = "#{username}@#{suffix}"
       user = User.find_by_userid(u)
     end
-
     begin
-      result = user.nil? ? nil : User.authenticate(u, password, request)
+      result = user.nil? ? nil : User.authenticate(u, password, request, options)
     rescue MiqException::MiqEVMLoginError
     end
 

@@ -11,7 +11,7 @@ module ApplianceConsole
       @ipaserver = options[:ipaserver]
       @principal = options[:principal] || "admin"
       @password  = options[:password]
-      @timestamp = Time.now.strftime("%Y%m%d_%H%M%S")
+      @timestamp = Time.now.strftime(TIMESTAMP_FORMAT)
 
       @ipaserver = fqdn(@ipaserver, @domain)
     end

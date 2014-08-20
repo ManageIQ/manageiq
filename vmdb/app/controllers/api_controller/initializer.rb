@@ -55,7 +55,7 @@ class ApiController
         $api_log.info("Static Configuration")
         base_config.each { |key, val| log_kv(key, val) }
 
-        [:token_ttl, :token_cleanup_interval].each do |key|
+        [:token_ttl, :token_cleanup_interval, :authentication_timeout].each do |key|
           cfg.merge_from_template_if_missing([mod.to_sym] + [key])
         end
 

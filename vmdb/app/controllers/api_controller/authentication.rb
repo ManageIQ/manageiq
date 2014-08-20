@@ -37,7 +37,12 @@ class ApiController
           @auth_user_obj = userid_to_userobj(@auth_user)
         end
       else
-        if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p) })
+        authenticate_options = {
+          :require_user => true,
+          :timeout      => @api_config[:authentication_timeout].to_i_with_method
+        }
+
+        if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) })
           @auth_user     = user.userid
           @auth_user_obj = userid_to_userobj(@auth_user)
         else
