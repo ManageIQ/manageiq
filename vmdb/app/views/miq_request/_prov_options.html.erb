@@ -1,123 +1,138 @@
 <%= render :partial => "layouts/flash_msg" %>
-<% url = url_for(:action=>'prov_change_options') %>
+<% url = url_for(:action => 'prov_change_options') %>
 <div id="prov_options_div">
-	<%= form_tag( {:action => 'prov_show_option'}, {:id => "prov_form"}) do %>
-	<fieldset>
-		<p class="legend">Filter By</p>
-		<table class="style1">
-				<% res_type = @sb[:prov_options][@sb[:prov_options][:resource_type]] %>
-				<tr>
-					<td class="key">Requester:</td>
-					<td>
-						<% if res_type[:users].length > 1 %>
-              <%= select_tag("user_choice",
-                              options_for_select([["All", "all"]] + res_type[:users].invert.sort, res_type[:user_choice].to_i),
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
-						<% else %>
-              <%= res_type[:users] && !res_type[:users].empty? ? res_type[:users].first[1] : "None Available" %>
-						<% end %>
-					</td>
-				</tr>
+  <%= form_tag( {:action => 'prov_show_option'}, 
+                {:id     => "prov_form"}) do %>
 
-				<tr>
-					<td class="key">Approval State:</td>
-					<td>
-						<% res_type[:states].sort.each_with_index do |(state, display_name), i| %>
-							<div style="padding: 0px 5px 0px 0px; float:left;">
-                <%= check_box_tag("state_choice__#{state}", value="1",
-                                    checked=@sb[:def_prov_options][@sb[:prov_options][:resource_type]][:applied_states].include?(state),
-                                    "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
-									<%= h(display_name) %>
-							</div>
-						<% end %>
-					</td>
-				</tr>
-				<tr>
-					<td class="key">Type:</td>
-					<td>
-						<% if res_type[:types].length > 1 %>
+    <p class="legend">Filter By</p>
+    <table class="style1">
+        <% res_type = @sb[:prov_options][@sb[:prov_options][:resource_type]] %>
+        <tr>
+          <td class="key">Requester:</td>
+          <td>
+            <% if res_type[:users].length > 1 %>
+              <%= select_tag("user_choice",
+                             options_for_select([["All", "all"]] + res_type[:users].invert.sort, 
+                                                res_type[:user_choice].to_i),
+                             "data-miq_observe" => {:url => url}.to_json) 
+              %>
+            <% else %>
+              <%= res_type[:users] && !res_type[:users].empty? ? res_type[:users].first[1] : "None Available" %>
+            <% end %>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key">Approval State:</td>
+          <td>
+            <% res_type[:states].sort.each_with_index do |(state, display_name), i| %>
+              <div style="padding: 0px 5px 0px 0px; float:left;">
+                <%= check_box_tag("state_choice__#{state}", 
+                                  value="1",
+                                  checked=@sb[:def_prov_options][@sb[:prov_options][:resource_type]][:applied_states].include?(state),
+                                  "data-miq_observe_checkbox" => {:url => url}.to_json) 
+                %>
+                <%= h(display_name) %>
+              </div>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Type:</td>
+          <td>
+            <% if res_type[:types].length > 1 %>
               <%= select_tag("type_choice",
-                              options_for_select([["All", "all"]] + res_type[:types].invert.sort, res_type[:type_choice].to_sym),
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
-						<% else %>
-							<%= h(Array(res_type[:types])[0].last) %>
-						<% end %>
-					</td>
-				</tr>
-				<tr>
-					<td class="key">Request Date:</td>
-					<td>
+                             options_for_select([["All", "all"]] + res_type[:types].invert.sort, 
+                             res_type[:type_choice].to_sym),
+                             "data-miq_observe" => {:url => url}.to_json) 
+              %>
+            <% else %>
+              <%= h(Array(res_type[:types])[0].last) %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Request Date:</td>
+          <td>
             <%= select_tag("time_period",
-                              options_for_select(Array(PROV_TIME_PERIODS.invert).sort{|a,b|a.last<=>b.last}, res_type[:time_period]),
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
-					</td>
-				</tr>
-				<tr>
-					<td class="key">Reason:</td>
-					<td>
+                           options_for_select(Array(PROV_TIME_PERIODS.invert).sort{|a,b|a.last<=>b.last}, 
+                                              res_type[:time_period]),
+                           "data-miq_observe" => {:url => url}.to_json) 
+            %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Reason:</td>
+          <td>
             <%= text_field_tag("reason_text",
-                                res_type[:reason_text],
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td align="left">
-						<ul id="form_buttons">
-							<div id="buttons_off">
-								<li><%= image_tag("/images/formbuttons/apply.png", :id=>"apply",	:class=>"dimmed formbutton") %></li>
-								<li><%= image_tag("/images/formbuttons/reset.png",	:class=>"dimmed formbutton") %></li>
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
-																							:id=>"apply",:alt=>"Set filters to default"),
-																		{:action=>"prov_button", :button=>"default"},
-                                    "data-miq_sparkle_on" => true,
-                                    "data-miq_sparkle_off" => true,
-                                    :remote=>true,
-																		:title=>"Set filters to default")
-									%>
-								</li>
-							</div>
-							<div id="buttons_on" style="display:none">
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/apply.png", :border=>"0", :class=>"button formbutton",
-																								:alt=>"Apply the selected filters"),
-																			{:action=>"prov_button", :button=>"apply"},
-                                      "data-miq_sparkle_on" => true,
-                                      "data-miq_sparkle_off" => true,
-                                      :remote=>true,
-																			:title=>"Apply the selected filters")
-										%>
-								</li>
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/reset.png", :border=>"0", :class=>"button formbutton",
-																							:alt=>"Reset filter changes"),
-																		{:action=>"prov_button", :button=>"reset"},
-                                    "data-miq_sparkle_on" => true,
-                                    "data-miq_sparkle_off" => true,
-                                    :remote=>true,
-																		:title=>"Reset filter changes")
-									%>
-								</li>
-								<li>
-									<%= link_to(image_tag("/images/formbuttons/default.png", :border=>"0", :class=>"button formbutton",
-											:alt=>"Set filters to default"),
-																		{:action=>"prov_button", :button=>"default"},
-                                    "data-miq_sparkle_on" => true,
-                                    "data-miq_sparkle_off" => true,
-                                    :remote=>true,
-																		:title=>"Set filters to default")
-									%>
-								</li>
-							</div>
-						</ul>
-					</td>
-				</tr>
-		</table>
-	</fieldset>
+                               res_type[:reason_text],
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td align="left">
+            <div id="buttons_off">
+              <%= button_tag("Apply", 
+                             :id    => "apply", 
+                             :class => "btn btn-primary btn-disabled") 
+              %>
+              <%= button_tag("Reset", 
+                             :class => "btn btn-default btn-disabled") 
+              %>
+              <%= link_to(button_tag("Default", 
+                                     :class => "btn btn-default",
+                                     :id    => "apply",
+                                     :alt   => "Set filters to default"),
+                          {:action => "prov_button", 
+                           :button => "default"},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "Set filters to default")
+              %>
+            </div>
+            <div id="buttons_on" style="display:none">
+
+              <%= link_to(button_tag("Apply",
+                                     :class => "btn btn-primary",
+                                     :alt   => "Apply the selected filters"),
+                          {:action => "prov_button", 
+                           :button => "apply"},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "Apply the selected filters")
+                %>
+              <%= link_to(button_tag("Reset", 
+                                     :class => "btn btn-default",
+                                     :alt   => "Reset filter changes"),
+                          {:action => "prov_button", 
+                           :button => "reset"},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "Reset filter changes")
+              %>
+              <%= link_to(button_tag("Default", 
+                                     :class => "btn btn-default",
+                                     :alt   => "Set filters to default"),
+                          {:action => "prov_button", 
+                           :button => "default"},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "Set filters to default")
+              %>
+            </div>
+          </td>
+        </tr>
+    </table>
+    <hr>
   <%# Need this to bind checkbox observers when under DHTMLX tabs %>
   <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
   <script>miqObserveCheckboxes();</script>
-	<% end %>
+  <% end %>
 </div>
-
