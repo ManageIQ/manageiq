@@ -142,8 +142,6 @@ module ApplicationController::Automate
   end
   private :resolve_button_reset_or_none
 
-  # Perform AE resolution
-  # this method is called when "Paste" button is pressed in customization explorer
   def resolve
     custom_button_redirect = params[:button] == 'simulate' || params[:simulate] == 'simulate'
     assert_privileges(custom_button_redirect ? 'ab_button_simulate' : 'miq_ae_class_simulation')
