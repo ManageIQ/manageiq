@@ -82,9 +82,9 @@ module EmsRefresh::SaveInventoryInfra
 
     hashes.each do |h|
       found = if h[:location]
-        locs.detect { |s| s.location == h[:location] }
+        locs.detect { |s| s.location == h[:location] && s.ems_ref == h[:ems_ref] }
       else
-        names.detect { |s| s.name == h[:name] }
+        names.detect { |s| s.name == h[:name] && s.ems_ref == h[:ems_ref] }
       end
 
       if found.nil?
