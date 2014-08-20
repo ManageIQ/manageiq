@@ -1030,7 +1030,8 @@ module MiqAeCustomizationController::Dialogs
         :field_description    => field[:description],
         :field_typ            => field[:typ],
         :field_default_value  => field[:default_value],
-        :field_reconfigurable => field[:reconfigurable]
+        :field_reconfigurable => field[:reconfigurable],
+        :field_required       => field[:required]
       )
 
       if field[:typ].include?('TextBox')
@@ -1161,6 +1162,7 @@ module MiqAeCustomizationController::Dialogs
 
             elsif f.type == "DialogFieldCheckBox"
               fld[:default_value] = f.default_value.to_s != "f"
+              fld[:required] = !!f.required
 
             elsif f.type.include?("Text")
               if f.type.include?('TextBox')
@@ -1258,6 +1260,7 @@ module MiqAeCustomizationController::Dialogs
 
                   elsif field[:typ] == "DialogFieldCheckBox"
                     fld[:default_value] = field[:default_value]
+                    fld[:required] = field[:required]
 
                   elsif field[:typ] =~ /Text/
                     if field[:typ].include?('TextBox')
