@@ -177,7 +177,7 @@ module SharedOps
 				statusCode = 16 if categoriesProcessed.zero?
 				scanMessage = lastErr.to_s
         $log.error "ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr.to_s}]"
-        lastErr.backtrace.each {|m| $log.debug m} if categoriesProcessed.zero?
+        lastErr.backtrace.each {|m| $log.debug m} if $log.debug?
 			end
 			xmlNodeScan.add_attributes("end_time"=>Time.now.utc.iso8601, "status"=>status, "status_code"=>statusCode.to_s, "message"=>scanMessage)
 			#File.open("d:/temp/#{Time.now.iso8601.gsub(":", "")} scan summary.xml", "w") {|f| xml_summary.write(f, 0)}
