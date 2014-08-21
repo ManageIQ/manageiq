@@ -40,7 +40,6 @@ module ApplianceConsole
       # TODO: Assume we want to create a region for a new internal database disk
       # until we allow for the internal selection against an already initialized disk.
       create_new_region_questions(false)
-      ask_for_database_credentials
     end
 
     def choose_disk
@@ -78,6 +77,14 @@ module ApplianceConsole
       copy_template "postgresql.conf.erb", POSTGRESQL_TEMPLATE
       copy_template "pg_hba.conf.erb",     POSTGRESQL_TEMPLATE
       copy_template "pg_ident.conf"
+
+      # not sure if this logic should live here or elsewhere
+      if ssl
+        FileUtils.cp CERT_LOCATION.join("root.crt"),            DATABASE_DISK_MOUNT_POINT
+        FileUtils.mv CERT_LOCATION.join("postgres.key"),        DATABASE_DISK_MOUNT_POINT
+        FileUtils.mv CERT_LOCATION.join("postgres.crt"),        DATABASE_DISK_MOUNT_POINT
+        FileUtils.chown "postgres", "postgres", DATABASE_DISK_MOUNT_POINT.join("root.crt")
+      end
     end
 
     def post_activation

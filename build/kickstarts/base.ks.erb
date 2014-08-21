@@ -86,11 +86,6 @@ mod_authnz_pam
 mod_lookup_identity
 mod_lookup_identity-selinux      # Only needed for CentOS 6.5.  It will not be needed on CentOS 6.6 and later.
 
-# IPA RPMs for certificate support
-ipa-admintools
-certmonger
-sneakernet_ca
-
 # bundler has some downstream patches we need or shared objects are not found
 ruby193-rubygem-bundler
 ruby193-rubygem-net-http-persistent # bundler rpm dependency
@@ -232,5 +227,5 @@ export LC_ALL=en_US.UTF-8
 sysctl -p "/etc/sysctl.conf"
 
 [[ -s /etc/default/evm ]] && source /etc/default/evm
-appliance_console_cli --region 0 --internal --key --password smartvm
+appliance_console_cli --region 0 --internal --key
 %end

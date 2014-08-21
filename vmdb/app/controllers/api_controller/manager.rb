@@ -89,27 +89,15 @@ class ApiController
     end
 
     def get_and_update_one_collection(is_subcollection, target, type, id)
-      resource = json_body_resource
+      resource = json_body["resource"]
       update_one_collection(is_subcollection, target, type, id, resource) unless resource.blank?
     end
 
     def get_and_update_multiple_collections(is_subcollection, target, type)
       resources = []
-      if json_body.key?("resources")
-        resources += json_body["resources"]
-      else
-        resources << json_body_resource
-      end
+      resources << json_body["resource"]  if json_body["resource"]
+      resources += json_body["resources"] if json_body["resources"]
       update_multiple_collections(is_subcollection, target, type, resources)
-    end
-
-    def json_body_resource
-      resource = json_body["resource"]
-      unless resource
-        resource = json_body.dup
-        resource.delete("action")
-      end
-      resource
     end
 
     def update_one_collection(is_subcollection, target, type, id, resource)
@@ -122,8 +110,6 @@ class ApiController
     end
 
     def update_multiple_collections(is_subcollection, target, type, resources)
-      action = @req[:action]
-
       processed = 0
       results = resources.each.collect do |r|
         next if r.blank?

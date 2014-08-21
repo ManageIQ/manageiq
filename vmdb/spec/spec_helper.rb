@@ -4,7 +4,6 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/autorun'
 require 'rspec/rails'
 require 'rspec/fire'
-require 'vcr'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -91,7 +90,7 @@ VCR.configure do |c|
 
   c.allow_http_connections_when_no_cassette = false
   c.default_cassette_options = {
-    :allow_unused_http_interactions => false
+    :allow_unused_http_interactions => !ENV['CI']
   }
 
   #c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")

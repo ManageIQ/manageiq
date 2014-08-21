@@ -148,7 +148,7 @@ describe ApplianceConsole::DatabaseConfiguration do
       subject.password = nil
 
       subject.should_receive(:just_ask).with(/hostname/i, "defaulthost", anything, anything).and_return("newhost")
-      subject.should_receive(:just_ask).with(/the database/i, "defaultdb").and_return("x")
+      subject.should_receive(:just_ask).with(/database/i, "defaultdb").and_return("x")
       subject.should_receive(:just_ask).with(/user/i, "defaultuser").and_return("x")
       subject.should_receive(:just_ask).with(/password/i, nil).and_return("x")
 
@@ -159,7 +159,7 @@ describe ApplianceConsole::DatabaseConfiguration do
       subject.password = "defaultpass"
 
       subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("x")
-      subject.should_receive(:just_ask).with(/the database/i, anything).and_return("x")
+      subject.should_receive(:just_ask).with(/database/i, anything).and_return("x")
       subject.should_receive(:just_ask).with(/user/i,     anything).and_return("x")
       subject.should_receive(:just_ask).with(/password/i, "********").and_return("********")
 
@@ -168,33 +168,18 @@ describe ApplianceConsole::DatabaseConfiguration do
 
     it "should ask for user/password if not local" do
       subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("host")
-      subject.should_receive(:just_ask).with(/the database/i, anything).and_return("x")
+      subject.should_receive(:just_ask).with(/database/i, anything).and_return("x")
       subject.should_receive(:just_ask).with(/user/i,     anything).and_return("x")
       subject.should_receive(:just_ask).with(/password/i, anything).and_return("*****")
 
       subject.ask_for_database_credentials
     end
 
-    it "should only ask for password if local" do
+    it "should not ask for user/password if local" do
       subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("localhost")
-      subject.should_receive(:just_ask).with(/password/i, anything).and_return("the password")
-
-      subject.ask_for_database_credentials
-    end
-  end
-
-  context "#ask_for_database_credentials (internal)" do
-    subject do
-      Class.new(ApplianceConsole::InternalDatabaseConfiguration) do
-        include ApplianceConsole::Prompts
-        # global variable
-        def say(*_args)
-        end
-      end.new
-    end
-
-    it "should ask for password if local" do
-      subject.should_receive(:just_ask).with(/password/i, anything).and_return("the password")
+      subject.should_receive(:just_ask).with(/database/i, anything).and_return("x")
+      subject.should_not_receive(:just_ask).with(/user/i,     anything)
+      subject.should_not_receive(:just_ask).with(/password/i, anything)
 
       subject.ask_for_database_credentials
     end
@@ -238,7 +223,7 @@ describe ApplianceConsole::DatabaseConfiguration do
     end
 
     it "normal case" do
-      expected_logging = double
+      expected_logging = mock
       expected_logging.should_receive(:info).twice
       @config.logger = expected_logging
       @config.should_receive(:say_info).with(:some_method, "starting")
@@ -248,7 +233,7 @@ describe ApplianceConsole::DatabaseConfiguration do
 
     context "raising exception:" do
       before do
-        expected_logging = double
+        expected_logging = mock
         expected_logging.should_receive(:info).once
         @config.logger = expected_logging
         @backtrace = [

@@ -3,7 +3,6 @@
 #
 
 export RAILS_ENV=production
-export APPLIANCE=true
 export HOME=${HOME:-/root}
 export ORACLE_HOME=/usr/lib/oracle/11.2/client64/lib
 # workaround for virtual memory spike observed with RHEL6

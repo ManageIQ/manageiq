@@ -2,28 +2,23 @@ require_relative "external_httpd_configuration"
 
 module ApplianceConsole
   class ExternalHttpdAuthentication
-    include ExternalHttpdConfiguration
+    include ApplianceConsole::ExternalHttpdConfiguration
 
-    def initialize(host = nil, options = {})
+    def initialize(host = nil)
       @ipaserver, @domain, @password = nil
-      @host      = host
-      @domain    = options[:domain] || domain_from_host(host)
-      @ipaserver = options[:ipaserver]
-      @principal = options[:principal] || "admin"
-      @password  = options[:password]
+      @domain    = host.gsub(/^([^.]+\.)/, '') if host && host.include?('.')
+      @principal = "admin"
       @timestamp = Time.now.strftime("%Y%m%d_%H%M%S")
-
-      @ipaserver = fqdn(@ipaserver, @domain)
     end
 
     def ask_for_parameters
       say("\nIPA Server Parameters:\n\n")
-      @ipaserver = ask_for_hostname("IPA Server Hostname", @ipaserver)
+      @ipaserver = ask_for_hostname("IPA Server Hostname")
       @domain    = ask_for_domain("IPA Server Domain", @domain)
       @principal = just_ask("IPA Server Principal", @principal)
-      @password  = ask_for_password("IPA Server Principal Password", @password)
+      @password  = ask_for_password("IPA Server Principal Password")
 
-      @ipaserver = fqdn(@ipaserver, @domain)
+      @ipaserver = "#{@ipaserver}.#{@domain}" unless @ipaserver.include?(".")
     end
 
     def show_parameters
@@ -36,25 +31,13 @@ module ApplianceConsole
       say("  Principal:      #{@principal}\n")
     end
 
-    def show_current_configuration
-      return unless ipa_client_configured?
-      config = config_file_read(SSSD_CONFIG)
-      say("\nCurrent External Authentication (httpd) Configuration:\n")
-      say("IPA Server Details:\n")
-      say("  Hostname:       #{fetch_ipa_configuration("ipa_server", config)}\n")
-      say("  Domain:         #{fetch_ipa_configuration("ipa_domain", config)}\n")
-    end
-
-    def ask_questions
+    def activate
       return false unless valid_environment?
       ask_for_parameters
       show_parameters
       return false unless agree("\nProceed? (Y/N): ")
       return false unless valid_parameters?(@ipaserver)
-      true
-    end
 
-    def activate
       begin
         configure_ipa
         configure_pam
@@ -81,14 +64,6 @@ module ApplianceConsole
 
     def domain_naming_context
       @domain.split(".").collect { |s| "dc=#{s}" }.join(",")
-    end
-
-    def domain_from_host(host)
-      host.gsub(/^([^.]+\.)/, '') if host && host.include?('.')
-    end
-
-    def fqdn(host, domain)
-      (host && domain && !host.include?(".")) ? "#{host}.#{domain}" : host
     end
 
     def realm

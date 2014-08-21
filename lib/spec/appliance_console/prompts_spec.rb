@@ -211,22 +211,16 @@ describe ApplianceConsole::Prompts do
     end
 
     context "#or_none" do
-      it "should not append none if no default password" do
-        say "secret"
-        expect(subject.ask_for_password_or_none("prompt", nil)).to eq("secret")
-        expect_heard ["Enter the prompt: ", "******", ""]
-      end
-
       it "should not botch passwords" do
         say "secret"
         expect(subject.ask_for_password_or_none("prompt", "defaultpass")).to eq("secret")
-        expect_heard ["Enter the prompt ('none' for no value): |********| ", "******", ""]
+        expect_heard ["Enter the prompt: |********| ", "******", ""]
       end
 
       it "should support 'none' password" do
         say "none"
         expect(subject.ask_for_password_or_none("prompt", "defaultpass")).to eq("")
-        expect_heard ["Enter the prompt ('none' for no value): |********| ", "****", ""]
+        expect_heard ["Enter the prompt: |********| ", "****", ""]
       end
     end
   end
@@ -276,7 +270,7 @@ describe ApplianceConsole::Prompts do
 
     context "with one disk" do
       before do
-        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk]))
+        LinuxAdmin::Disk.stub(:local => mock(:select => [first_disk]))
       end
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }
 
@@ -293,7 +287,7 @@ describe ApplianceConsole::Prompts do
 
     context "with disks" do
       before do
-        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk, second_disk]))
+        LinuxAdmin::Disk.stub(:local => mock(:select => [first_disk, second_disk]))
       end
 
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }

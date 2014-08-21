@@ -146,18 +146,18 @@ class ApiController
     end
 
     def validate_post_api_action(cname, mname, cspec, type, target)
-      # for basic HTTP POST, default action is "create" with data being the POST body
-      aname = @req[:action] = json_body["action"] || "create"
+      if json_body.key?("action")
+        aname = @req[:action] = json_body["action"]
+        aspecnames = "#{target}_actions"
+        raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec.key?(aspecnames.to_sym)
 
-      aspecnames = "#{target}_actions"
-      raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec.key?(aspecnames.to_sym)
+        aspec = cspec[aspecnames.to_sym]
+        action_hash = fetch_action_hash(aspec, mname, aname)
+        raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
+        raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
 
-      aspec = cspec[aspecnames.to_sym]
-      action_hash = fetch_action_hash(aspec, mname, aname)
-      raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
-      raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
-
-      validate_post_api_action_as_subcollection(cname, mname, aname)
+        validate_post_api_action_as_subcollection(cname, mname, aname)
+      end
     end
 
     def validate_api_request_collection

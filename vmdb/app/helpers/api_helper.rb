@@ -29,10 +29,6 @@ module ApiHelper
     end
   end
 
-  def hash_fetch(hash, element, default = {})
-    hash[element] || default
-  end
-
   def sqlfilter_param
     params['sqlfilter']
   end

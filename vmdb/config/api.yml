@@ -20,9 +20,6 @@
   :sets:
     :g: &70174834086080
     - :get
-    :gp: &70174834085860
-    - :get
-    - :post
     :gpd: &70174834085620
     - :get
     - :post
@@ -39,18 +36,6 @@
     :options:
     - :primary
     :methods: *70174834086080
-  :automation_requests:
-    :description: Automation Requests
-    :options:
-    - :collection
-    :methods: *70174834085860
-    :klass: AutomationRequest
-    :subcollections:
-    - :request_tasks
-    - :tasks
-    :collection_actions:
-      :post:
-      - :name: create
   :clusters:
     :description: Clusters
     :options:
@@ -261,24 +246,10 @@
         :identifier: ems_infra_tag
       - :name: unassign
         :identifier: ems_infra_tag
-  :provision_requests:
-    :description: Provision Requests
-    :options:
-    - :collection
-    :methods: *70174834085860
-    :klass: MiqProvisionRequest
-    :subcollections:
-    - :request_tasks
-    - :tasks
-    :collection_actions:
-      :post:
-      - :name: create
-        :identifier: vm_miq_request_new
   :request_tasks:
     :description: Request Tasks
     :options:
     - :collection
-    - :subcollection
     :methods: *70174834086080
     :klass: MiqRequestTask
   :requests:
@@ -364,12 +335,8 @@
     :description: Service Requests
     :options:
     - :collection
-    - :subcollection
     :methods: *70174834086080
     :klass: ServiceTemplateProvisionRequest
-    :subcollections:
-    - :request_tasks
-    - :tasks
   :service_templates:
     :description: Service Templates
     :options:
@@ -381,7 +348,6 @@
     :klass: ServiceTemplate
     :subcollections:
     - :tags
-    - :service_requests
     :collection_actions:
       :post:
       - :name: edit
@@ -470,12 +436,6 @@
       :post:
       - :name: assign
       - :name: unassign
-  :tasks:
-    :description: Request Tasks
-    :options:
-    - :subcollection
-    :methods: *70174834086080
-    :klass: MiqRequestTask
   :templates:
     :description: Templates
     :options:

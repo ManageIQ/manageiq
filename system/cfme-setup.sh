@@ -31,18 +31,11 @@ cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
 EOF
 
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
-/usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/log
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /etc/sysconfig
-[ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/certs
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
 /usr/sbin/semanage fcontext -a -t var_log_t "/opt/rh/postgresql92/root/var/lib/pgsql/data/pg_log(/.*)?"
-# setup label for postgres client certs, but relabel after dir is created
-/usr/sbin/semanage fcontext -a -t cert_t "/root/.postgresql(/.*)?"
-# will remove this once app is no longer running as root
-/usr/sbin/semanage fcontext -a -t user_home_dir_t "/root(/)?"
-/sbin/restorecon /root
 
 # Copy the postgres template yml to database.yml if it doesn't exist
 db_yml="/var/www/miq/vmdb/config/database.yml"
