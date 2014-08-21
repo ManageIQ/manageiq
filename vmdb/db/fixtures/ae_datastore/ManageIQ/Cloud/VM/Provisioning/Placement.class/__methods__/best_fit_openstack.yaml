@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: best_fit_availability_zone
+    name: best_fit_openstack
     display_name: 
     description: 
     scope: instance
