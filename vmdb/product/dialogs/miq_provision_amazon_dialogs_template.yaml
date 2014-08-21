@@ -148,7 +148,7 @@
             :method: :allowed_availability_zones
           :description: Availability Zone
           :required_method: :validate_placement
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :integer
           :required_description: Availability Zone Name
@@ -173,7 +173,7 @@
           :values_from:
             :method: :allowed_security_groups
           :description: Security Groups
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :integer
         :floating_ip_address:
