@@ -17,6 +17,7 @@ class Storage < ActiveRecord::Base
   has_many :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
   has_many :files,               -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
   has_many :hosts_storages
+  has_many :iso_images
 
   has_one  :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
 
