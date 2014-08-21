@@ -215,6 +215,7 @@ class MiqExpression
     "MiqTemplate", "miq_template",
     "Repository", "repository",
     "ResourcePool", "resource_pool",
+    "Service", "service",
     "Storage", "storage",
     "TemplateCloud", "miq_template",
     "TemplateInfra", "miq_template",
