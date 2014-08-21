@@ -80,8 +80,6 @@ module MiqOntapClient
       @username = username
       @password = password
 
-      @agent = NetappRemoteService.add(@server, @username, @password, NetappRemoteService::DEFAULT_AGENT_TYPE)
-
       @conn = NmaClient.new { |c|
         c.server    = @server
         c.auth_style  = NmaClient::NA_STYLE_LOGIN_PASSWORD
@@ -89,6 +87,10 @@ module MiqOntapClient
         c.password    = @password
       }
       @version_string = @conn.system_get_version.version
+    end
+
+    def agent
+      @agent ||= NetappRemoteService.add(@server, @username, @password, NetappRemoteService::DEFAULT_AGENT_TYPE)
     end
 
     def updateOntap
@@ -555,14 +557,14 @@ module MiqOntapClient
         node.obj_name_str     = objNameStr
         node.obj          = obj
         node.type_spec_obj      = typeSpecObj
-        node.source         = @agent.agent_type
+        node.source         = agent.agent_type
         node.is_top_managed_element = topMe
         node.top_managed_element  = @topMeNode unless topMe
-        node.agent          = @agent
-        node.zone_id        = @agent.zone_id
+        node.agent          = agent
+        node.zone_id        = agent.zone_id
         node.last_update_status   = STORAGE_UPDATE_OK
         node.type         = typeForNode(node)
-        @agent.top_managed_elements << node if topMe
+        agent.top_managed_elements << node if topMe
         @topMeNode.elements_with_metrics << node if CLASS_TO_PERF_OBJECT_NAMES[className]
         node.save
 
@@ -583,10 +585,10 @@ module MiqOntapClient
       prior_status = node.last_update_status
       node.obj        = obj
       node.type_spec_obj    = typeSpecObj
-      node.agent        = @agent
-      node.zone_id      = @agent.zone_id
+      node.agent        = agent
+      node.zone_id      = agent.zone_id
       # add node to agent's top_managed_elements list
-      node.agent_top_id   = @agent.id if topMe
+      node.agent_top_id   = agent.id if topMe
       node.last_update_status = STORAGE_UPDATE_OK
       node.save
 
@@ -710,7 +712,7 @@ module MiqOntapClient
       @metricIdByKey = {}
       perfHash = collectPerf(statistic_time)
 
-      topMe = @agent.top_managed_elements.first
+      topMe = agent.top_managed_elements.first
       topMe.elements_with_metrics.each do |se|
         updateMetricsForNode(se, perfHash)
       end unless topMe.nil?
