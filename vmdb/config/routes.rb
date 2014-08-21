@@ -1149,6 +1149,7 @@ Vmdb::Application.routes.draw do
         iso_datastore_create
         iso_datastore_form_field_changed
         iso_datastore_list
+        iso_image_edit
         iso_img_form_field_changed
         log_depot_validate
         pxe_image_edit
