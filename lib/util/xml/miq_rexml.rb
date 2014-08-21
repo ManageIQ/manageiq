@@ -127,7 +127,12 @@ module REXML
         bracket_equal_old(name.to_s, value)
       rescue => err
         if err.class == ::Encoding::CompatibilityError
-          bracket_equal_old(name.to_s, value.dup.force_encoding('UTF-8'))
+          nv = value.dup.force_encoding('UTF-8')
+          unless nv.valid_encoding?
+            nv.force_encoding('UTF-16')
+            nv.encode!('UTF-8', 'UTF-16', :invalid => :replace, :replace => '')
+          end
+          bracket_equal_old(name.to_s, nv)
         else
           raise
         end
