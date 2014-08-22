@@ -26,7 +26,7 @@ module MiqProvisionAmazon::Cloning
     clone_options[:image_id]           = self.source.ems_ref
     clone_options[:instance_type]      = instance_type.name
     clone_options[:subnet]             = cloud_subnet.try(:ems_ref)
-    clone_options[:security_group_ids] = security_groups.collect(&:ems_ref)
+    clone_options[:security_group_ids] = security_groups.collect(&:ems_ref) if security_groups
 
     # CloudWatch
     #   true  => Advanced Monitoring
@@ -41,7 +41,11 @@ module MiqProvisionAmazon::Cloning
 
     $log.info("#{log_header} Provisioning [#{self.source.name}] to [#{dest_name}]")
     $log.info("#{log_header} Source Template:                 [#{self[:options][:src_vm_id].last}]")
-    $log.info("#{log_header} Destination Availability Zone:   [#{dest_availability_zone.name} (#{dest_availability_zone.ems_ref})]")
+    if dest_availability_zone
+      $log.info("#{log_header} Destination Availability Zone:   [#{dest_availability_zone.name} (#{dest_availability_zone.ems_ref})]")
+    else
+      $log.info("#{log_header} Destination Availability Zone:  Default selection from provider")
+    end
     $log.info("#{log_header} Guest Access Key Pair:           [#{clone_options[:key_name].inspect}]")
     $log.info("#{log_header} Security Group:                  [#{clone_options[:security_group_ids].inspect}]")
     $log.info("#{log_header} Instance Type:                   [#{clone_options[:instance_type].inspect}]")

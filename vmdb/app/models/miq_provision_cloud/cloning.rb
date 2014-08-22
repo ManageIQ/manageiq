@@ -12,10 +12,9 @@ module MiqProvisionCloud::Cloning
   def prepare_for_clone_task
     validate_dest_name
 
-    clone_options = {
-      :key_name          => guest_access_key_pair.try(:name),
-      :availability_zone => dest_availability_zone.try(:ems_ref)
-    }
+    clone_options = {}
+    clone_options[:key_name]          = guest_access_key_pair.try(:name) if guest_access_key_pair
+    clone_options[:availability_zone] = dest_availability_zone.ems_ref   if dest_availability_zone
 
     user_data = userdata_payload
     clone_options[:user_data] = user_data unless user_data.blank?

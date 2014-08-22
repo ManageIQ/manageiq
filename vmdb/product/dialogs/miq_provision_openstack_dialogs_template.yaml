@@ -165,8 +165,8 @@
             :method: :allowed_cloud_networks
           :description: Cloud Network
           :auto_select_single: false
-          :default: nil
-          :required: false
+          :required: true
+          :required_method: :validate_placement
           :display: :edit
           :data_type: :integer
         :security_groups:
