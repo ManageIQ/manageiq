@@ -203,7 +203,7 @@ module ApiHelper
     #
     def expand_actions(json, type, opts)
       if render_attr("actions")
-        href   = json.attributes!["id"]
+        href   = "#{type}/#{json.attributes!["id"]}"
         aspecs = get_aspecs(type, opts[:resource_actions], :resource, opts[:is_subcollection], href)
         add_actions(json, aspecs, type)
       end
