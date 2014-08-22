@@ -51,10 +51,8 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def address
-    case VMDB::Config.wscontactwith
-    when "hostname" then self.host.hostname
-    else self.host.ipaddress
-    end
+    contact_with = VMDB::Config.new("vmdb").config.fetch_path(:webservices, :contactwith)
+    contact_with == 'hostname' ? self.host.hostname : self.host.ipaddress
   end
 
   # What MiqVerbs accepts
@@ -75,7 +73,9 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def call_ws(ost)
-    self.host.resolve_hostname! if VMDB::Config.wsnameresolution
+    config = VMDB::Config.new("vmdb").config[:webservices]
+
+    self.host.resolve_hostname! if config[:nameresolution]
 
     ost.host = self.address
     ost.port = self.myport
@@ -83,7 +83,7 @@ class MiqProxy < ActiveRecord::Base
     ost.method_name = self.class.normalize_method_name(ost.method_name)
 
     # If host ws are disabled, add the command to the queue of things that "should be run"
-    if VMDB::Config.hostwsdisabled  || ost.useHostQueue == true
+    if config[:mode] == "disable" || ost.useHostQueue == true
       @@host_ws_tasks << ost
       $log.info "MIQ(proxy-call_ws): Task queued [#{@@host_ws_tasks.length}]: [#{ost.marshal_dump.inspect}]"
       ost2 = ost.clone
@@ -99,9 +99,10 @@ class MiqProxy < ActiveRecord::Base
     require 'WebSvcOps'
     begin
       # set timeout values
-      ost.connect_timeout = VMDB::Config.wstimeout
-      ost.send_timeout = VMDB::Config.wstimeout
-      ost.receive_timeout = VMDB::Config.wstimeout
+      timeout = config[:timeout] || 120
+      ost.connect_timeout = timeout
+      ost.send_timeout    = timeout
+      ost.receive_timeout = timeout
 
       ws = WebSvcOps.new(ost)
       ret = ws.send(ost.method_name.to_sym, ost)
@@ -972,7 +973,7 @@ class MiqProxy < ActiveRecord::Base
       vmdbHost = zone.settings[:proxy_server_ip] unless zone.settings.blank? || zone.settings[:proxy_server_ip].blank?
       vmdbHost ||= VMDB::Config.new("vmdb").config[:server][:host]
       vmdbHost ||= MiqSockUtil.getIpAddr
-      vmdbPort = VMDB::Config.listening_port
+      vmdbPort = VMDB::Config.new("vmdb").config.fetch_path(:server, :listening_port) || 80
       $log.info "deploy_agent_to_linux: Installing on #{ssu.host}, Server Host: [#{vmdbHost}], Server Port: [#{vmdbPort}]..."
       ssu.shell_exec("#{dfile} -h #{vmdbHost} -p #{vmdbPort} install", "Installation complete.")
       $log.info "deploy_agent_to_linux: Install on #{ssu.host} complete."

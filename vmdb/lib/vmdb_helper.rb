@@ -40,7 +40,6 @@ end
 
 require 'vmdb/config'
 require 'vmdb/initializer'
-require 'vmdb/miq_appliance'
 require 'vmdb/util'
 
 require 'vmdb/global_methods'

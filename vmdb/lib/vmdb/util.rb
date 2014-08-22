@@ -8,6 +8,22 @@ module VMDB
       end
     end
 
+    def self.http_proxy_uri
+      proxy = VMDB::Config.new("vmdb").config[:http_proxy] || {}
+      return nil unless proxy[:host]
+      proxy = proxy.dup
+
+      user     = proxy.delete(:user)
+      password = proxy.delete(:password)
+      userinfo = "#{user}:#{password}".chomp(":") unless user.blank?
+
+      proxy[:userinfo]   = userinfo
+      proxy[:scheme]   ||= "http"
+      proxy[:port]     &&= proxy[:port].to_i
+
+      URI::Generic.build(proxy)
+    end
+
     def self.compressed_log_patterns
       # From a log file such as production.log-20090504.gz,
       # create an array of strings containing the date patterns:

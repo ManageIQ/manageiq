@@ -21,8 +21,8 @@ class SupportController < ApplicationController
 #   @tabs ||= [ ["1", ""] ]
 #   @tabs.push( ["1", "Help"] )
     session[:vmdb] ||= Hash.new
-    session[:vmdb][:version] ||= VMDB::Config.VERSION
-    session[:vmdb][:build]   ||= VMDB::Config.BUILD
+    session[:vmdb][:version] ||= Vmdb::Appliance.VERSION
+    session[:vmdb][:build]   ||= Vmdb::Appliance.BUILD
     @temp[:user_role] = User.current_user.miq_user_role_name
     @layout = "about"
   end

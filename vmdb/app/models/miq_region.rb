@@ -145,7 +145,8 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def remote_ws_address
-    (VMDB::Config.wscontactwith == 'hostname') ? self.remote_ws_hostname : self.remote_ws_ipaddress
+    contact_with = VMDB::Config.new("vmdb").config.fetch_path(:webservices, :contactwith)
+    contact_with == 'hostname' ? self.remote_ws_hostname : self.remote_ws_ipaddress
   end
 
   def remote_ws_ipaddress

@@ -1,7 +1,7 @@
-module VMDB
+module Vmdb
   module Initializer
     def self.init
-      log_prefix = "VMDB::Initializer.init"
+      log_prefix = "Vmdb::Initializer.init"
       $log.info "#{log_prefix} - Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
 
       if MiqEnvironment::Process.is_web_server_worker?
@@ -59,48 +59,5 @@ module VMDB
         Thread.new { ws_worker.run }
       end
     end
-
-    def self.get_network
-      # to call this method use: VMDB::Initializer.get_network
-      retVal = {}
-      miqnet = "/bin/miqnet.sh"
-
-      if File.exists?(miqnet)
-        # Make a call to the virtual appliance to get the network information
-        cmd     = "#{miqnet} -GET"
-        netinfo = `#{cmd}`
-        raise "Unable to execute command: #{cmd}" if netinfo.nil?
-        netinfo = netinfo.split
-
-        [:hostname, :macaddress, :ipaddress, :netmask, :gateway, :primary_dns, :secondary_dns].each do |type|
-          retVal[type] = netinfo.shift
-        end
-      end
-
-      retVal
-    end
-
-    def self.set_network(options)
-      raise ":mode parameter missing in options." if options.nil? or options[:mode].nil?
-
-      # Make a call to the virtual appliance to set the network information
-      if options[:mode] == "DHCP"
-        retVal = `/bin/miqnet.sh -DHCP > /dev/null 2>&1 ; echo $?`.chomp
-      elsif options[:mode] == "STATIC"
-        staticParams = ""
-
-        [:ipaddress, :netmask, :gateway, :primary_dns, :secondary_dns].each do |type|
-          raise "#{type} is required." if type != :secondary_dns and options[type].blank?
-          staticParams += options[type] + " "
-        end
-
-        retVal = `/bin/miqnet.sh -STATIC ${staticParams} > /dev/null 2>&1 ; echo $?`.chomp
-      else
-        raise ":mode must be 'DHCP' or 'STATIC'."
-      end
-
-      retVal == 0
-    end
-
   end
 end

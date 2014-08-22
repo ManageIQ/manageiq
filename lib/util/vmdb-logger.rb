@@ -171,11 +171,6 @@ class VMDBLogger < Logger
     self.class.log_hashes(self, h, options)
   end
 
-  def on_config_change(config)
-    limit = config.fetch_path(:log, :line_limit)
-    @formatter.line_limit = limit.to_i if limit
-  end
-
   private
 
   def format_message(severity, datetime, progname, msg, msgnum)
@@ -185,19 +180,6 @@ class VMDBLogger < Logger
   class Formatter < Logger::Formatter
     Format = "[%s] %s, [%s#%d:%x] %5s -- %s: %s\n"
 
-    def initialize
-      super
-      self.line_limit = 0
-    end
-
-    def line_limit
-      @line_limit
-    end
-
-    def line_limit=(value)
-      @line_limit = value.to_i
-    end
-
     def call(severity, time, progname, msg, msgnum)
       msg = msg2str(msg)
 
@@ -206,9 +188,6 @@ class VMDBLogger < Logger
         prefix = "Q-task_id([#{$_miq_worker_current_msg.task_id}])"
         msg = "#{prefix} #{msg}" unless msg.include?(prefix)
       end
-
-      # Honor the line limit
-      msg = msg[0...line_limit] unless line_limit == 0
 
       Format % [msgnum || "----", severity[0..0], format_datetime(time), $$, Thread.current.object_id, severity, progname, msg]
     end

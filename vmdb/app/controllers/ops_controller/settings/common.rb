@@ -198,13 +198,16 @@ module OpsController::Settings::Common
     @validate.config.each_key do |category|
       @validate.config[category] = @edit[:new][category].dup
     end
-    if @validate.ldap_verify
+
+    valid, errors = MiqLdap.validate_connection(@validate.config)
+    if valid
       add_flash(I18n.t("flash.ops.settings.ldap_settings_validated"))
     else
-      @validate.errors.each do |field, msg|
+      errors.each do |field, msg|
         add_flash("#{field.titleize}: #{msg}", :error)
       end
     end
+
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
@@ -217,13 +220,16 @@ module OpsController::Settings::Common
     @validate.config.each_key do |category|
       @validate.config[category] = @edit[:new][category].dup
     end
-    if @validate.amazon_verify
+
+    valid, errors = AmazonAuth.validate_connection(@validate.config)
+    if valid
       add_flash(I18n.t("flash.ops.settings.amazon_settings_validated"))
     else
-      @validate.errors.each do |field,msg|
+      errors.each do |field,msg|
         add_flash("#{field.titleize}: #{msg}", :error)
       end
     end
+
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
@@ -399,7 +405,7 @@ module OpsController::Settings::Common
         end
         @changed = (@edit[:new] != @edit[:current])
       else
-        add_flash(I18n.t("flash.ops.settings.advanced_settings_saved", :filename=>VMDB::Config.available_config_names[session[:config_file_name]]))
+        add_flash(I18n.t("flash.ops.settings.advanced_settings_saved", :filename=>AVAILABLE_CONFIG_NAMES[session[:config_file_name]]))
         @changed = false
       end
 #     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
@@ -1081,7 +1087,7 @@ module OpsController::Settings::Common
       session[:edit] = @edit
       @in_a_form = true
     when "settings_advanced"                                  # Advanced yaml editor
-      session[:config_file_name] ||= VMDB::Config.available_config_names.invert.sort.first.last # Start with first config file name
+      session[:config_file_name] ||= AVAILABLE_CONFIG_NAMES_FOR_SELECT.first.last # Start with first config file name
       @edit = Hash.new
       @edit[:current]={:file_data=>VMDB::Config.get_file(session[:config_file_name])}
       @edit[:new] = copy_hash(@edit[:current])

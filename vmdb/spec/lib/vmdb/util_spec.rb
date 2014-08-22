@@ -1,6 +1,48 @@
 require "spec_helper"
 
 describe VMDB::Util do
+  context ".http_proxy_uri" do
+    it "without config settings" do
+      VMDB::Config.any_instance.stub(:config => {})
+      described_class.http_proxy_uri.should be_nil
+    end
+
+    it "without a host" do
+      VMDB::Config.any_instance.stub(:config => {:http_proxy => {}})
+      described_class.http_proxy_uri.should be_nil
+    end
+
+    it "with host" do
+      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
+      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4")
+    end
+
+    it "with host, port" do
+      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil}})
+      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
+    end
+
+    it "with host, port, user" do
+      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => nil}})
+      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser")
+    end
+
+    it "with host, port, user, password" do
+      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
+      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
+    end
+
+    it "with user missing" do
+      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => "secret"}})
+      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
+    end
+
+    it "with scheme overridden" do
+      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
+      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
+    end
+  end
+
   context ".log_duration" do
     shared_examples_for "log_duration timestamps" do |file_content, type|
       it "#{file_content.lines.count} lines, #{type == :normal_case ? 'normal case' : 'no leading timestamps'}" do

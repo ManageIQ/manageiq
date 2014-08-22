@@ -91,8 +91,8 @@ class ScheduleWorker < WorkerBase
 
     # Schedule - Log current system configuration
     every = worker_setting_or_default(:log_active_configuration_interval, 1.days)
-    @schedules[:all] << self.system_schedule_every(every, :tags => [:vmdb_config_log_config, schedule_category]) do |rufus_job|
-      @queue.enq :vmdb_config_log_config
+    @schedules[:all] << self.system_schedule_every(every, :tags => [:vmdb_appliance_log_config, schedule_category]) do |rufus_job|
+      @queue.enq :vmdb_appliance_log_config
     end
 
     # Schedule - Log current database statistics and bloat

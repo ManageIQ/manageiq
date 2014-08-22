@@ -20,7 +20,7 @@ when 'vm'
 
   descs = []
   vms.each do
-    descs << "Snapshot for scan job: #{MiqUUID.new_guid}, EVM Server build: #{VMDB::Config.BUILD}  Server Time: #{Time.now.utc.iso8601}"
+    descs << "Snapshot for scan job: #{MiqUUID.new_guid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
   end
 when 'job'
   jobs = Job.find_all_by_id(ids)
@@ -31,7 +31,7 @@ when 'job'
   descs = []
   jobs.each do |job|
     vms   << Object.const_get(job.target_class).find(job.target_id)
-    descs << "Snapshot for scan job: #{job.guid}, EVM Server build: #{VMDB::Config.BUILD}  Server Time: #{Time.now.utc.iso8601}"
+    descs << "Snapshot for scan job: #{job.guid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
   end
 else
   usage

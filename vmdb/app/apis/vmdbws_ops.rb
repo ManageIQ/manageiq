@@ -783,7 +783,7 @@ module VmdbwsOps
 
   def Version
     # Return version information as an array of strings
-    VMDB::Config.VERSION.split(".") << VMDB::Config.BUILD
+    Vmdb::Appliance.VERSION.split(".") << Vmdb::Appliance.BUILD
   end
 
   #

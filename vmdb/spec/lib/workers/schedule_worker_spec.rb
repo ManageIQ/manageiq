@@ -453,7 +453,7 @@ describe ScheduleWorker do
                 @schedule_worker.schedules_for_all_roles
 
                 first_in_expectations = {
-                  :vmdb_config_log_config      => 5,
+                  :vmdb_appliance_log_config   => 5,
                   :log_all_database_statistics => 5,
                   :status_update               => 5,
                   :log_status                  => 5,

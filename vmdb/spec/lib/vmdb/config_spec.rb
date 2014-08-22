@@ -48,46 +48,4 @@ describe VMDB::Config do
       expect(error[1]).to match(/\AFile contents are malformed/)
     end
   end
-
-  context ".http_proxy_uri" do
-    it "without config settings" do
-      VMDB::Config.any_instance.stub(:config => {})
-      VMDB::Config.http_proxy_uri.should be_nil
-    end
-
-    it "without a host" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {}})
-      VMDB::Config.http_proxy_uri.should be_nil
-    end
-
-    it "with host" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
-      VMDB::Config.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4")
-    end
-
-    it "with host, port" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil}})
-      VMDB::Config.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
-    end
-
-    it "with host, port, user" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => nil}})
-      VMDB::Config.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser")
-    end
-
-    it "with host, port, user, password" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
-      VMDB::Config.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
-    end
-
-    it "with user missing" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => "secret"}})
-      VMDB::Config.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
-    end
-
-    it "with scheme overridden" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
-      VMDB::Config.http_proxy_uri.should == URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
-    end
-  end
 end

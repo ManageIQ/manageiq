@@ -738,6 +738,14 @@ module UiConstants
   }
 
   MIQ_AE_COPY_ACTIONS = %w(miq_ae_class_copy miq_ae_instance_copy miq_ae_method_copy)
+
+  AVAILABLE_CONFIG_NAMES = {
+    "vmdb"                     => " EVM Server Main Configuration", # Name includes space so it is first in UI select box
+    "event_handling"           => "Event Handler Configuration",
+    "broker_notify_properties" => "EVM Vim Broker Notification Properties",
+    "capacity"                 => "EVM Capacity Management Configuration"
+  }.freeze
+  AVAILABLE_CONFIG_NAMES_FOR_SELECT = AVAILABLE_CONFIG_NAMES.invert.sort.freeze
 end
 
 # Make these constants globally available

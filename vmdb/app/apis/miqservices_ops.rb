@@ -161,7 +161,7 @@ module MiqservicesOps
     end
 
     # Update the return hash with current time and vmdb build number
-    ret.merge!({:server_time=>Time.now.utc.iso8601, :server_build=>VMDB::Config.BUILD}) if (ret.class == Hash)
+    ret.merge!({:server_time=>Time.now.utc.iso8601, :server_build=>Vmdb::Appliance.BUILD}) if (ret.class == Hash)
 
     return YAML.dump(ret)
   end
