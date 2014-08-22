@@ -90,4 +90,12 @@ class VmAmazon < VmCloud
     with_provider_object { |ec2_instance| ec2_instance.tags[attribute] = value }
   end
 
+  def self.calculate_power_state(raw_power_state)
+    case raw_power_state
+    when "running"                  then "on"
+    when "shutting_down", "pending" then "suspended"
+    when "terminated"               then "terminated"
+    else                                 "off"
+    end
+  end
 end
