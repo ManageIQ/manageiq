@@ -137,3 +137,23 @@ object:
         Service from VMDB')
       max_retries: '3'
       max_time: 
+  - field:
+      aetype: state
+      name: Finished
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: '100'
+      max_time: 

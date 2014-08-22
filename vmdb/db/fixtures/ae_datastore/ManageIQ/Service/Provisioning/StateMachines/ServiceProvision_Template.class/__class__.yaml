@@ -287,7 +287,27 @@ object:
       description: 
       condition: 
       on_entry: update_serviceprovision_status(status => 'Emailing Owner')
-      on_exit: update_serviceprovision_status(status => 'service_provision_complete')
+      on_exit: update_serviceprovision_status(status => 'Emailed Owner')
       on_error: update_serviceprovision_status(status => 'Error Emailing Owner')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: Finished
+      display_name: 
+      datatype: string
+      priority: 15
+      owner: 
+      default_value: /System/CommonMethods/StateMachineMethods/service_provision_finished
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
       max_retries: '100'
       max_time: 

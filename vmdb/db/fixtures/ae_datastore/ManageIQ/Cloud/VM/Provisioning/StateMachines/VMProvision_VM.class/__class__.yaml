@@ -267,7 +267,27 @@ object:
       description: 
       condition: 
       on_entry: update_provision_status(status => 'Emailing Owner')
-      on_exit: update_provision_status(status => 'provision_complete')
+      on_exit: update_provision_status(status => 'Emailed Owner')
       on_error: update_provision_status(status => 'Error Emailing Owner')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: Finished
+      display_name: 
+      datatype: string
+      priority: 16
+      owner: 
+      default_value: /System/CommonMethods/StateMachineMethods/vm_provision_finished
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
       max_retries: '100'
       max_time: 
