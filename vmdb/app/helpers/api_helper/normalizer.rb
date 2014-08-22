@@ -38,8 +38,6 @@ module ApiHelper
         normalize_attr(type, :time, value)
       elsif self.class.attr_type_hash(:url).key?(attr.to_s)
         normalize_attr(type, :url,  value)
-      elsif self.class.attr_type_hash(:id).key?(attr.to_s)
-        normalize_attr(type, :id,   value)
       else
         value
       end
@@ -66,13 +64,6 @@ module ApiHelper
       svalue = value.to_s
       pref   = "#{@req[:base]}#{@req[:prefix]}"
       svalue.match(pref) ? svalue : "#{pref}/#{svalue}"
-    end
-
-    #
-    # Normalize Id's, <type>/<id>
-    #
-    def normalize_id(type, value)
-      normalize_url(type, "#{type}/#{value}")
     end
   end
 end
