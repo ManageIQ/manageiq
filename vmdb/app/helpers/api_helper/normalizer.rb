@@ -67,7 +67,7 @@ module ApiHelper
     end
 
     def normalize_url_from_id(_type, _resource_id)
-      normalize_url(type, "#{_type}/#{_resource_id}")
+      normalize_url(_type, "#{_type}/#{_resource_id}")
     end
 
   end
