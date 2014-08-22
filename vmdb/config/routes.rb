@@ -409,6 +409,7 @@ Vmdb::Application.routes.draw do
         compare_to_csv
         compare_to_pdf
         compare_to_txt
+        download_data
         index
         show
         show_list
