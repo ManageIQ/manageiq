@@ -399,7 +399,7 @@ class ReportController < ApplicationController
     end
   end
 
-  def determine_g_node_info
+  def determine_g_node_info(nodeid)
     if x_active_tree == :roles_tree
       @sb[:menu_buttons] = true
       get_menu(nodeid) unless nodeid.blank?
@@ -525,7 +525,7 @@ class ReportController < ApplicationController
     when "root"
       determine_root_node_info
     when "g"
-      determine_g_node_info
+      determine_g_node_info(nodeid)
     when "xx"
       determine_xx_node_info
     when "rr"
