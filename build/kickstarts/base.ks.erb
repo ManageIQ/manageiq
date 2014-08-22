@@ -2,14 +2,24 @@
 
 #version=DEVEL
 install
+
+# build time repos
+# these repos are used to install the initial packages
+
+# repo to install the OS
 url --url=http://mirror.centos.org/centos/6/os/x86_64/
+
+# repos to install packages in %packages section
 repo --name=extras --baseurl=http://mirror.centos.org/centos/6/extras/x86_64/
 repo --name=epel --baseurl=http://dl.fedoraproject.org/pub/epel/6Server/x86_64/
 # http://wiki.centos.org/AdditionalResources/Repositories/SCL
 repo --name=SCL --baseurl=http://mirror.centos.org/centos/6/SCL/x86_64/
 
+# repos to install packages not found in the os
+# Please also add to "post install repos" around line 210.
 repo --name=manageiq-scl --baseurl=http://copr-be.cloud.fedoraproject.org/results/jrafanie/manageiq-scl/epel-6-x86_64/
 repo --name=ipa --baseurl=http://copr-be.cloud.fedoraproject.org/results/adelton/identity_demo/epel-6-x86_64/
+repo --name=certmonger --baseurl=http://copr-be.cloud.fedoraproject.org/results/nalin/certmonger/epel-6-x86_64/
 
 lang en_US.UTF-8
 keyboard us
@@ -197,10 +207,14 @@ popd
 cp -vr system/COPY/etc /
 popd
 
-# Add copr repository for any updates
+# post install repos
+# yum update uses these repos to update and reinstall packages.
+# Please also add to "build time repos" around line 20
+
 pushd /etc/yum.repos.d/
   wget http://copr.fedoraproject.org/coprs/jrafanie/manageiq-scl/repo/epel-6-x86_64/jrafanie-manageiq-scl-epel-6-x86_64.repo
   wget http://copr.fedoraproject.org/coprs/adelton/identity_demo/repo/epel-6/adelton-identity_demo-epel-6.repo
+  wget http://copr.fedoraproject.org/coprs/nalin/certmonger/repo/epel-6/nalin-certmonger-epel-6.repo
 popd
 
 # Add the rubygems binary path to the PATH so we can find bundle and friends:
