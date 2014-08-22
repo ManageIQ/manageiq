@@ -57,9 +57,9 @@ var Automate = {
     $.each(domains, function(index, child) {
       $('.importing-domains').append(
         $('<option>', {
-        value: child.title,
-        text: child.title
-      })
+          value: child.title,
+          text: child.title
+        })
       );
     });
   },
