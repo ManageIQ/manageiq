@@ -58,7 +58,7 @@ module ApiHelper
           if opts[:expand_resources]
             add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
           else
-            json.href normalize_id(reftype, resource["id"])
+            json.href normalize_url_from_id(reftype, resource["id"])
           end
         end
         aspecs = get_aspecs(type, opts[:collection_actions], :collection, opts[:is_subcollection], reftype)
@@ -234,7 +234,7 @@ module ApiHelper
             if expand?(sc) || scr["id"].nil?
               add_child js, normalize_hash(sctype, scr)
             else
-              js.child! { |jsc| jsc.href normalize_id(sctype, scr["id"]) }
+              js.child! { |jsc| jsc.href normalize_url_from_id(sctype, scr["id"]) }
             end
           end
         end
