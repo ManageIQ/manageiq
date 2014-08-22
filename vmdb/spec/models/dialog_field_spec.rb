@@ -26,6 +26,57 @@ describe DialogField do
     @df.default_value.should == str
   end
 
+  describe "#validate" do
+    let(:dialog_field) do
+      described_class.new(:label    => 'dialog_field',
+                          :name     => 'dialog_field',
+                          :required => required,
+                          :value    => value)
+    end
+    let(:dialog_tab)   { active_record_instance_double('DialogTab',   :label => 'tab') }
+    let(:dialog_group) { active_record_instance_double('DialogGroup', :label => 'group') }
+
+    shared_examples_for "DialogField#validate that returns nil" do
+      it "returns nil" do
+        dialog_field.validate(dialog_tab, dialog_group).should be_nil
+      end
+    end
+
+    context "when required is true" do
+      let(:required) { true }
+
+      context "with a blank value" do
+        let(:value) { "" }
+
+        it "returns error message" do
+          dialog_field.validate(dialog_tab, dialog_group).should eq("tab/group/dialog_field is required")
+        end
+      end
+
+      context "with a non-blank value" do
+        let(:value) { "test value" }
+
+        it_behaves_like "DialogField#validate that returns nil"
+      end
+    end
+
+    context "when required is false" do
+      let(:required) { false }
+
+      context "with a blank value" do
+        let(:value) { "" }
+
+        it_behaves_like "DialogField#validate that returns nil"
+      end
+
+      context "with a non-blank value" do
+        let(:value) { "test value" }
+
+        it_behaves_like "DialogField#validate that returns nil"
+      end
+    end
+  end
+
   describe "#initialize_with_values" do
     it "uses #automate_key_name for extracting initial dialog values" do
       dialog_value = "dummy dialog value"
