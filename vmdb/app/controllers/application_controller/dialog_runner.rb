@@ -269,6 +269,10 @@ module ApplicationController::DialogRunner
           @edit[:wf].set_value(field_name,"#{date_val[0]} #{start_hour}:#{p[1]}")
         end
 
+      elsif @edit[:wf].dialog.field(p[0]).try(:type) == "DialogFieldCheckBox"
+        checkbox_value = p[1] == "1" ? "t" : "f"
+        @edit[:wf].set_value(p[0], checkbox_value) if @record.field_name_exist?(p[0])
+
       else
         @edit[:wf].set_value(p[0],p[1]) if @record.field_name_exist?(p[0])
       end

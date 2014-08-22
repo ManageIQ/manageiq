@@ -79,9 +79,7 @@ class DialogField < ActiveRecord::Base
   end
 
   def validate(dialog_tab, dialog_group)
-    if self.required?
-      return "#{dialog_tab.label}/#{dialog_group.label}/#{self.label} is required" if self.value.blank?
-    end
+    validate_error_message(dialog_tab, dialog_group) if required? && required_value_error?
   end
 
   def resource
@@ -89,6 +87,14 @@ class DialogField < ActiveRecord::Base
   end
 
   private
+
+  def validate_error_message(dialog_tab, dialog_group)
+    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required"
+  end
+
+  def required_value_error?
+    value.blank?
+  end
 
   def value_from_dialog_fields(dialog_values)
     dialog_values[automate_key_name]
