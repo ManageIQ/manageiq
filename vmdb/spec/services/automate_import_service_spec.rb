@@ -33,7 +33,7 @@ describe AutomateImportService do
     let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :binary_blob => binary_blob) }
     let(:binary_blob) { active_record_instance_double("BinaryBlob", :binary => "binary") }
 
-    let(:miq_ae_import) { instance_double("MiqAeYamlImportZipfs") }
+    let(:miq_ae_import) { instance_double("MiqAeYamlImportZipfs", :import_stats => "import stats") }
 
     let(:removable_entry) { double(:name => "carrot/something_else") }
 
@@ -72,6 +72,12 @@ describe AutomateImportService do
     it "calls import" do
       miq_ae_import.should_receive(:import)
       automate_import_service.import_datastore(import_file_upload, "carrot", "potato", ["starch"])
+    end
+
+    it "returns the import stats" do
+      expect(automate_import_service.import_datastore(import_file_upload, "carrot", "potato", ["starch"])).to eq(
+        "import stats"
+      )
     end
   end
 

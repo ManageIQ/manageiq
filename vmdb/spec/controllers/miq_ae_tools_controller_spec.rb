@@ -76,47 +76,85 @@ describe MiqAeToolsController do
         :import_file_upload_id          => "123",
         :selected_domain_to_import_from => "potato",
         :selected_domain_to_import_to   => "tomato",
-        :selected_namespaces            => ["datastore_namespace"]
+        :selected_namespaces            => selected_namespaces
       }
     end
-    let(:automate_import_service) { instance_double("AutomateImportService") }
 
     before do
       bypass_rescue
-      ImportFileUpload.stub(:where).with(:id => "123").and_return([import_file_upload])
-      AutomateImportService.stub(:new).and_return(automate_import_service)
     end
 
-    context "when the import file exists" do
-      let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+    context "when the selected namespaces is not nil" do
+      let(:automate_import_service) { instance_double("AutomateImportService") }
+      let(:selected_namespaces) { ["datastore/namespace", "datastore/namespace/test"] }
 
       before do
-        automate_import_service.stub(:import_datastore)
+        ImportFileUpload.stub(:where).with(:id => "123").and_return([import_file_upload])
+        AutomateImportService.stub(:new).and_return(automate_import_service)
       end
 
-      it "imports the data" do
-        automate_import_service.should_receive(:import_datastore).with(
-          import_file_upload,
-          "potato",
-          "tomato",
-          ["datastore_namespace"]
-        )
-        xhr :post, :import_automate_datastore, params
+      context "when the import file exists" do
+        let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+        let(:import_stats) do
+          {
+            :namespace => {:test => 2, :test2 => 2},
+            :class     => {:test => 3, :test2 => 3},
+            :instance  => {},
+            :method    => {:test => 5, :test2 => 5},
+          }
+        end
+
+        before do
+          automate_import_service.stub(:import_datastore).and_return(import_stats)
+        end
+
+        it "imports the data" do
+          automate_import_service.should_receive(:import_datastore).with(
+            import_file_upload,
+            "potato",
+            "tomato",
+            ["datastore", "datastore/namespace", "datastore/namespace/test"]
+          )
+          xhr :post, :import_automate_datastore, params
+        end
+
+        it "returns with a 200 status" do
+          xhr :post, :import_automate_datastore, params
+          expect(response.status).to eq(200)
+        end
+
+        it "returns the flash message" do
+          xhr :post, :import_automate_datastore, params
+          expected_message = <<-MESSAGE
+Datastore import was successful.
+Namespaces updated/added: 4
+Classes updated/added: 6
+Instances updated/added: 0
+Methods updated/added: 10
+          MESSAGE
+          expect(response.body).to eq([{:message => expected_message.chomp, :level => :info}].to_json)
+        end
       end
 
-      it "returns with a 200 status" do
-        xhr :post, :import_automate_datastore, params
-        expect(response.status).to eq(200)
-      end
+      context "when the import file does not exist" do
+        let(:import_file_upload) { nil }
 
-      it "returns the flash message" do
-        xhr :post, :import_automate_datastore, params
-        expect(response.body).to eq([{:message => "Datastore import was successful", :level => :info}].to_json)
+        it "returns with a 200 status" do
+          xhr :post, :import_automate_datastore, params
+          expect(response.status).to eq(200)
+        end
+
+        it "returns the flash message" do
+          xhr :post, :import_automate_datastore, params
+          expect(response.body).to eq(
+            [{:message => "Error: Datastore import file upload expired", :level => :error}].to_json
+          )
+        end
       end
     end
 
-    context "when the import file does not exist" do
-      let(:import_file_upload) { nil }
+    context "when the selected namepsaces is nil" do
+      let(:selected_namespaces) { nil }
 
       it "returns with a 200 status" do
         xhr :post, :import_automate_datastore, params
@@ -126,7 +164,7 @@ describe MiqAeToolsController do
       it "returns the flash message" do
         xhr :post, :import_automate_datastore, params
         expect(response.body).to eq(
-          [{:message => "Error: Datastore import file upload expired", :level => :error}].to_json
+          [{:message => "You must select at least one namespace to import", :level => :info}].to_json
         )
       end
     end

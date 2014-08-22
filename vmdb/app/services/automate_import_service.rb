@@ -21,6 +21,8 @@ class AutomateImportService
     ae_import.import
 
     File.delete("automate_temporary_zip.zip")
+
+    ae_import.import_stats
   end
 
   def store_for_import(file_contents)

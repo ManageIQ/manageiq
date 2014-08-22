@@ -91,7 +91,7 @@ class MiqAeToolsController < ApplicationController
     drop_breadcrumb( {:name=>"Import / Export", :url=>"/miq_ae_tools/import_export"} )
     @lastaction = "import_export"
     @layout = "miq_ae_export"
-    @importable_domain_options = MiqAeDomain.all.collect { |domain| [domain.name, domain.name] }
+    @importable_domain_options = MiqAeDomain.all_unlocked.collect { |domain| [domain.name, domain.name] }
     render :action=>"show"
   end
 
@@ -113,19 +113,26 @@ class MiqAeToolsController < ApplicationController
   end
 
   def import_automate_datastore
-    import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
+    if params[:selected_namespaces]
+      selected_namespaces = determine_all_included_namespaces(params[:selected_namespaces])
+      import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
 
-    if import_file_upload
-      automate_import_service.import_datastore(
-        import_file_upload,
-        params[:selected_domain_to_import_from],
-        params[:selected_domain_to_import_to],
-        params[:selected_namespaces]
-      )
+      if import_file_upload
+        import_stats = automate_import_service.import_datastore(
+          import_file_upload,
+          params[:selected_domain_to_import_from],
+          params[:selected_domain_to_import_to],
+          selected_namespaces.sort
+        )
 
-      add_flash(I18n.t("flash.automate.datastore_import_success"), :info)
+        stat_options = generate_stat_options(import_stats)
+
+        add_flash(I18n.t("flash.automate.datastore_import_success", stat_options), :info)
+      else
+        add_flash(I18n.t("flash.automate.datastore_import_expired"), :error)
+      end
     else
-      add_flash(I18n.t("flash.automate.datastore_import_expired"), :error)
+      add_flash(I18n.t("flash.automate.datastore_import_at_least_one"), :info)
     end
 
     respond_to do |format|
@@ -213,6 +220,43 @@ class MiqAeToolsController < ApplicationController
 
   def automate_import_service
     @automate_import_service ||= AutomateImportService.new
+  end
+
+  def add_stats(stats_hash)
+    stats_hash.inject(0) do |result, key_value|
+      result + key_value[1]
+    end
+  end
+
+  def determine_all_included_namespaces(namespaces)
+    namespaces.each do |namespace|
+      potentially_missed_namespaces = determine_missed_namespaces(namespace)
+      namespaces += potentially_missed_namespaces
+    end
+
+    namespaces.uniq
+  end
+
+  def generate_stat_options(import_stats)
+    namespace_stats = add_stats(import_stats[:namespace])
+    class_stats     = add_stats(import_stats[:class])
+    instance_stats  = add_stats(import_stats[:instance])
+    method_stats    = add_stats(import_stats[:method])
+
+    {
+      :namespace_stats => namespace_stats,
+      :class_stats     => class_stats,
+      :instance_stats  => instance_stats,
+      :method_stats    => method_stats
+    }
+  end
+
+  def determine_missed_namespaces(namespace)
+    if namespace.match("/")
+      [namespace, determine_missed_namespaces(namespace.split("/")[0..-2].join("/"))].flatten
+    else
+      [namespace]
+    end
   end
 
   def ws_text_from_xml(xml, depth=0)

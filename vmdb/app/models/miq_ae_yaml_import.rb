@@ -1,6 +1,8 @@
 class MiqAeYamlImport
   include MiqAeYamlImportExportMixin
 
+  attr_reader :import_stats
+
   def initialize(domain, options)
     @domain_name = domain
     @options     = options

@@ -40,6 +40,9 @@
       %select.importing-domains(name="selected_domain_to_import_from")
 
       %p.import-label Select namespaces you wish to import:
+      %input#toggle-all(type="checkbox")
+      %label(for="toggle-all") Toggle All/None
+
       .domain-tree(name="selected_namespaces[]")
 
       %table(width="100%")
@@ -60,6 +63,6 @@
       miqSparkleOn();
     });
 
-    listenForAutomatePostMessages();
-    setUpAutomateImportClickHandlers();
+    Automate.listenForAutomatePostMessages();
+    Automate.setUpAutomateImportClickHandlers();
   });
