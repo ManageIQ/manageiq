@@ -629,7 +629,7 @@ module ApplicationHelper
   def build_toolbar_hide_button_service(id)
     case id
     when "service_reconfigure"
-      ra = @record.service_template.resource_actions.find_by_action('Reconfigure')
+      ra = @record.service_template.resource_actions.find_by_action('Reconfigure') if @record.service_template
       return true if ra.nil? || ra.fqname.blank?
     end
     false
