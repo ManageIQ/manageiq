@@ -6,91 +6,91 @@
 	<tr>
 		<td align="<%= align %>">
       <div id="buttons_on" style="display:<%= session[:changed] ? "display" : "none" %>;">
-				<ul id="form_buttons">
+
 					<% buttons.each do |b| %>
 						<% case b %>
 						<% when "save" %>
-							<li>
-								<%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
+
+								<%= button_tag('Save',  :class=>"btn btn-primary",
 															:alt=>"Save Changes", :title=>"Save Changes",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																	:id=>record_id,
 																																	:button=>"save")}');")
 								%>
-							</li>
+
 						<% when "submit" %>
-							<li>
-								<%= image_tag('/images/formbuttons/submit.png', :border=>"0", :class=>"button",
+	
+								<%= button_tag('Submit',  :class=>"btn btn-primary",
 															:alt=>"Submit", :title=>"Submit",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																	:id=>record_id,
 																																	:button=>"submit")}');")
 								%>
-							</li>
+
 						<% when "continue" %>
-							<li>
-								<%= image_tag('/images/formbuttons/continue.png', :border=>"0", :class=>"button",
+
+								<%= button_tag('Continue',  :class=>"btn btn-default",
 															:alt=>"Continue", :title=>"Continue",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																	:id=>record_id,
 																																	:button=>"continue")}');")
 								%>
-							</li>
+
 						<% when "reset" %>
-							<li>
-								<%= image_tag('/images/formbuttons/reset.png', :border=>"0", :class=>"button",
+
+								<%= button_tag('Reset',  :class=>"btn btn-default",
 															:alt=>"Reset Changes", :title=>"Reset Changes",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																	:id=>record_id,
 																																	:button=>"reset")}');")
 								%>
-							</li>
+
 						<% when "cancel" %>
-							<li>
-								<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+
+								<%= button_tag('Cancel',  :class=>"btn btn-default",
 															:alt=>"Cancel", :title=>"Cancel",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																	:id=>record_id,
 																																	:button=>"cancel")}');")
 								%>
-							</li>
+
 						<% end %>
 					<% end %>
-				</ul>
+
 			</div>
 
       <div id="buttons_off" style="display:<%= session[:changed] ? "none" : "display" %>;">
-				<ul id="form_buttons">
+
 					<% buttons.each do |b| %>
 						<% case b %>
 						<% when "save" %>
-							<li>
-								<%= image_tag("/images/formbuttons/save.png",	:class=>"dimmed") %>
-							</li>
+
+								<%= button_tag("Save",	:class=>"btn btn-primary btn-disabled") %>
+
 						<% when "submit" %>
-							<li>
-								<%= image_tag("/images/formbuttons/submit.png",	:class=>"dimmed") %>
-							</li>
+	
+								<%= button_tag("Submit",	:class=>"btn btn-primary btn-disabled") %>
+	
 						<% when "continue" %>
-							<li>
-								<%= image_tag("/images/formbuttons/continue.png",	:class=>"dimmed") %>
-							</li>
+	
+								<%= button_tag("Continue",	:class=>"btn btn-default btn-disabled") %>
+
 						<% when "reset" %>
-							<li>
-								<%= image_tag("/images/formbuttons/reset.png",	 :class=>"dimmed") %>
-							</li>
+
+								<%= button_tag("Reset",	 :class=>"btn btn-default btn-disabled") %>
+
 						<% when "cancel" %>
-							<li>
-								<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+
+								<%= button_tag('Cancel',  :class=>"btn btn-default",
 															:alt=>"Cancel", :title=>"Cancel",
 															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
 																																	:id=>record_id,
 																																	:button=>"cancel")}');")
 								%>
-							</li>
+	
 						<% end %>
 					<% end %>
-				</ul>
+
 			</div>
 		</td>
 	</tr>

@@ -8,75 +8,86 @@
 	<tr>
 		<td align="<%= align %>">
       <div id="buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
-				<ul id="form_buttons">
+
+
 					<% if record_id.blank? %>
-						<li>
-							<%= image_tag('/images/formbuttons/add.png', :border=>"0", :class=>"button",
-														:alt=>"Add", :title=>"Add",
-														:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																																:button=>"add")}');")
-							%>
-						</li>
+
+            <%= button_tag('Add',
+                            :class   => 'btn btn-primary',
+                            :alt     => "Add", 
+                            :title   => "Add",
+														:onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																																  :button => "add")}');")
+            %>
+
 					<% else %>
-						<li>
-							<%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
-														:alt=>"Save Changes", :title=>"Save Changes",
-														:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																																:id=>record_id,
-																																:button=>"save")}');")
-							%>
-						</li>
+
+            <%= button_tag('Save',
+                            :class   => 'btn btn-primary',
+                            :alt     => "Save Changes", 
+                            :title   => "Save Changes",
+														:onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																																  :id     => record_id,
+																															   	:button => "save")}');")
+            %>
+
 						<% unless noreset %>
-							<li>
-								<%= image_tag('/images/formbuttons/reset.png', :border=>"0", :class=>"button",
-															:alt=>"Reset Changes", :title=>"Reset Changes",
-															:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																																	:id=>record_id,
-																																	:button=>"reset")}');")
-								%>
-							</li>
+
+	            <%= button_tag('reset',
+	                            :class   => 'btn btn-default',
+	                            :alt     => "Reset Changes", 
+	                            :title   => "Reset Changes",
+															:onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																																		:id     => record_id,
+																																		:button => "reset")}');")
+	            %>
+
 						<% end %>
 					<% end %>
-					<li>
-						<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
-													:alt=>"Cancel", :title=>"Cancel",
-													:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																															:id=>record_id,
-																															:button=>"cancel")}');")
-						%>
-					</li>
-				</ul>
+
+          <%= button_tag('Cancel',
+                          :class   => 'btn btn-default',
+                          :alt     => "Cancel", 
+                          :title   => "Cancel",
+												  :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																														    :id     => record_id,
+																														    :button => "cancel")}');")
+          %>
+
 			</div>
 
       <div id="buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
-				<ul id="form_buttons">
+
 					<% if record_id.blank? %>
-						<li>
-              <%= image_tag('/images/formbuttons/add.png', :border=>"0", :class=>"button",
-                            :alt=>"Add", :title=>"Add",
-                            :onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-                                                                :button=>"add")}');")
-              %>
-						</li>
+
+	          <%= button_tag('Add',
+	                          :class   => 'btn btn-default',
+	                          :alt     => "Add", 
+	                          :title   => "Add",
+                            :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+                                                                  :button => "add")}');")
+	          %>
+
 					<% else %>
-						<li>
-							<%= image_tag("/images/formbuttons/save.png",	:class=>"dimmed") %>
-						</li>
+							<%= button_tag("Save", 
+							               :class => "btn btn-primary btn-disabled")
+					    %>
 						<% unless noreset %>
-							<li>
-								<%= image_tag("/images/formbuttons/reset.png",	 :class=>"dimmed") %>
-							</li>
+							<%= button_tag("Verify", 
+							               :class => "btn btn-primary btn-disabled")
+					    %>
 						<% end %>
 					<% end %>
-					<li>
-						<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
-													:alt=>"Cancel", :title=>"Cancel",
-													:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																															:id=>record_id,
-																															:button=>"cancel")}');")
-						%>
-					</li>
-				</ul>
+
+          <%= button_tag('Cancel',
+                          :class   => 'btn btn-default',
+                          :alt     => "Cancel", 
+                          :title   => "Cancel",
+											  	:onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																													    	:id     => record_id,
+																													    	:button => "cancel")}');")
+          %>
+
 			</div>
 		</td>
 	</tr>

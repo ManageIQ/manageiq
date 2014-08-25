@@ -8,94 +8,125 @@
 	<tr>
 		<td align="right">
   <div id="buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
-		<ul id="form_buttons">
 			<% if ajax_buttons %>
 				<% if serialize %>
-					<li>
-						<%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
-													:alt=>save_text, :title=>save_text,
-													:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																															:id=>record_id,
-																															:button=>"save")}', true);")
-						%>
-					</li>
+	        <%= button_tag('Save',
+			                    :class   => 'btn btn-primary',
+				                  :alt     => save_text, 
+				                  :title   => save_text,
+													:onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																																:id     => record_id,
+																																:button => "save")}', true);")
+	        %>
+
 				<% else %>
 					<% if show_validate_button %>
-						<li>
-							<%= image_tag('/images/formbuttons/verify.png', :border=>"0", :class=>"button",
-														:alt=>"Validate", :title=>"Validate",
-														:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																																:button=>"db_verify")}');")
-							%>
-						</li>
+		        <%= button_tag('Validate',
+				                    :class   => 'btn btn-primary',
+					                  :alt     => "Validate",
+					                  :title   => "Validate",
+														:onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																																	:button => "db_verify")}');")
+		        %>
+
 					<% end %>
-					<li>
-						<%= image_tag('/images/formbuttons/save.png', :border=>"0", :class=>"button",
-													:alt=>save_text, :title=>save_text,
-													:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																															:button=>"save")}');")
-						%>
-					</li>
+		        <%= button_tag('Save',
+				                    :class   => 'btn btn-primary',
+					                  :alt     => save_text, 
+					                  :title   => save_text,
+														:onclick => "miqAjaxButton('#{url_for(:action => action_url,
+																																	:button => "save")}');")
+		        %>
+
 				<% end %>
 			<% else %>
 				<% if show_validate_button %>
-					<li>
-						<%= image_submit_tag("/images/formbuttons/verify.png", :id=> "db_verify", :name=>"db_verify", :alt=>"Validate", :title=>"Validate Database Settings for the Server", :class=>"button") %>
-					</li>
+		      <%= button_tag("Verify",
+					               :id      => "db_verify",
+					               :class   => "btn btn-primary",
+					               :name    => "save", 
+					               :alt     => "Validate", 
+					               :title   => "Validate Database Settings for the Server",
+					               :type    => "submit")
+			     %>
 				<% end %>
 				<% unless save_confirm_text %>
-					<li>
-						<%= image_submit_tag("/images/formbuttons/save.png",  :id=> "save", :name=>"save", :alt=>save_text, :title=>save_text, :class=>"button") %>
-					</li>
+		      <%= button_tag("Save",
+					               :id      => "save",
+					               :class   => "btn btn-primary",
+					               :name    => "save", 
+					               :alt     => save_text, 
+					               :title   => save_text,
+					               :type    => "submit")
+			     %>
+
 				<% else %>
-					<li>
-						<%= image_submit_tag("/images/formbuttons/save.png", :id=> "save", :name=>"save", :alt=>save_text, :title=>save_text, :class=>"button",
-															:confirm=>save_confirm_text) %>
-					</li>
+		     <%= button_tag("Save",
+				               :id      => "save",
+				               :class   => "btn btn-primary",
+				               :name    => "save", 
+				               :alt     => save_text, 
+				               :title   => save_text,
+				               :type    => "submit",
+		                   :confirm => save_confirm_text)
+				 %>
 				<% end %>
 			<% end %>
 			<% if ajax_buttons %>
-				<li>
-					<%= image_tag('/images/formbuttons/reset.png', :border=>"0", :class=>"button",
-												:alt=>"Reset Changes", :title=>"Reset Changes",
-												:onclick=>"miqAjaxButton('#{url_for(:action=>action_url,
-																														:button=>"reset")}');")
-					%>
-				</li>
+        <%= button_tag('Reset',
+			                 :class   => 'btn btn-default',
+			                 :alt     => "Reset Changes", 
+			                 :title   => "Reset Changes",
+										 	 :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+										 																			   :button => "reset")}');")
+        %>
 			<% else %>
-				<li>
-					<%= image_submit_tag("/images/formbuttons/reset.png", :id=> "reset", :name=>"reset", :alt=>"Reset Changes", :title=>"Reset Changes",	:class=>"button") %>
-				</li>
+	      <%= button_tag("Reset",
+					             :id      => "reset",
+					             :class   => "btn btn-default",
+					             :name    => "reset", 
+					             :alt     => "Reset Changes",
+					             :title   => "Reset Changes",
+					             :type    => "submit")
+	      %>
+
 			<% end %>
 			<%# if @layout != "configuration" || ["user_edit", "user_update"].include?(controller.action_name) %>
 			<% unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"  %>
-				<li>
-					<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
-				</li>
+		     <%= button_tag("Cancel",
+					              :id      => "cancel",
+					              :class   => "btn btn-default",
+					              :name    => "cancel", 
+					              :alt     => "Cancel",
+					              :title   => "Cancel",
+					              :type    => "submit")
+				 %>
 			<% end %>
-		</ul>
 	</div>
 
   <div id="buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
-		<ul id="form_buttons">
-			<% if show_validate_button %>
-				<li>
-					<%= image_tag("/images/formbuttons/verify.png",	:class=>"dimmed", :title=> "All fields are needed to perform verification of Database Settings", :style=>"opacity: 0.5") %>
-				</li>
-			<% end %>
-			<li>
-				<%= image_tag("/images/formbuttons/save.png", :class=>"dimmed") %>
-			</li>
-			<li>
-				<%= image_tag("/images/formbuttons/reset.png", :class=>"dimmed") %>
-			</li>
-			<%# if @layout != "configuration" || ["user_edit", "user_update"].include?(controller.action_name) %>
-			 <% unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"  %>
-				<li>
-					<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
-				</li>
-			<% end %>
-		</ul>
+
+		<% if show_validate_button %>
+			<%= button_tag("Verify", 
+			               :class => "btn btn-primary btn-disabled",
+	                   :title => "All fields are needed to perform verification of Database Settings")
+	    %>
+		<% end %>
+	  <%= button_tag("Save", :class => "btn btn-primary btn-disabled")%>
+	  <%= button_tag("Reset", :class => "btn btn-default btn-disabled")%>
+
+		<%# if @layout != "configuration" || ["user_edit", "user_update"].include?(controller.action_name) %>
+		 <% unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"  %>
+		   <%= button_tag("Cancel",
+									    :id      => "cancel",
+									    :class   => "btn btn-default",
+									    :name    => "cancel", 
+									    :alt     => "Cancel",
+									    :title   => "Cancel",
+									    :type    => "submit")
+			 %>
+		<% end %>
+
 	</div>
 		</td>
 	</tr>
