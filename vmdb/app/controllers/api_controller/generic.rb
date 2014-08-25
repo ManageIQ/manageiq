@@ -24,11 +24,11 @@ class ApiController
     def destroy_generic(type)
       validate_api_action
       if @req[:subcollection]
-        delete_subcollection_resource @req[:subcollection].to_sym, @req[:s_id]
+        render_normal_destroy type, delete_subcollection_resource(
+          @req[:subcollection].to_sym, @req[:s_id])
       else
-        delete_resource type, @req[:c_id]
+        render_normal_destroy type, delete_resource(type, @req[:c_id])
       end
-      render_normal_destroy
     end
 
     #
@@ -75,8 +75,9 @@ class ApiController
       id  ||= @req[:c_id]
       if id
         api_log_info("Destroying #{type} id #{id}")
-        resource_search(id, type, klass)
+        resource = resource_search(id, type, klass)
         klass.destroy(id)
+        resource
       else
         raise BadRequestError, "Must specify and id for destroying a #{type} resource"
       end

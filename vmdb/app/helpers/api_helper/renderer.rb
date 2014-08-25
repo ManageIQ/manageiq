@@ -140,10 +140,10 @@ module ApiHelper
     end
 
     #
-    # Render nothing for normal resource deletes.
+    # Return the deleted resource. 
     #
-    def render_normal_destroy
-      render :nothing => true, :status => 204
+    def render_normal_destroy(type, res = {})
+      render_resource type, res
     end
 
     #
