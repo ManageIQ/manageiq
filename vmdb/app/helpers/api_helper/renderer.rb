@@ -40,7 +40,8 @@ module ApiHelper
     #
     def render_resource(type, resource, opts = {})
       validate_response_format
-      render :json => resource_to_jbuilder(type, type, resource, opts).target!
+      reftype = opts[:is_subcollection] ? "#{@req[:collection]}/#{@req[:c_id]}/#{type}" : type
+      render :json => resource_to_jbuilder(type, reftype, resource, opts).target!
     end
 
     # Methods for Serialization as Jbuilder Objects.
