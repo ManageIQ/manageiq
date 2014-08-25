@@ -285,7 +285,7 @@ class DashboardController < ApplicationController
     ws = create_user_dashboard(@sb[:active_db_id])
     @sb[:dashboards] = nil  # Reset dashboards hash so it gets recreated
     render :update do |page|
-      ie8_safe_redirect(page, url_for(:controller => params[:controller], :action => 'show'))
+      page.redirect_to :action => 'show'
     end
   end
 
@@ -367,7 +367,7 @@ class DashboardController < ApplicationController
       ws.remove_member(w) if w
       save_user_dashboards
       render :update do |page|
-        ie8_safe_redirect(page, url_for(:controller => params[:controller], :action => 'show'))
+        page.redirect_to :action => 'show'
       end
     else
       render :nothing=>true               # We have nothing to say  :)
@@ -393,7 +393,7 @@ class DashboardController < ApplicationController
       save_user_dashboards
       w.create_initial_content_for_user(session[:userid])
       render :update do |page|
-        ie8_safe_redirect(page, url_for(:controller => params[:controller], :action => 'show'))
+        page.redirect_to :action => 'show'
       end
     else
       render :nothing=>true               # We have nothing to say  :)
@@ -471,8 +471,7 @@ class DashboardController < ApplicationController
       render :update do |page|
         if url  # User is logged in, redirect to URL
           session['referer'] = request.base_url + '/'
-
-          ie8_safe_redirect(page, url)
+          page.redirect_to(url)
         else    # No URL, show error msg
           @flash_msg ||= "Error: Authentication failed"
           session[:userid], session[:username], session[:user_tags] = nil
@@ -621,9 +620,9 @@ class DashboardController < ApplicationController
     url = start_url_for_user(nil)
     render :update do |page|
       if url
-        ie8_safe_redirect(page, url)
+        page.redirect_to(url)
       else
-        ie8_safe_redirect(page, url_for(:controller => params[:controller], :action => 'show'))
+        page.redirect_to :action => 'show'
       end
     end
   end

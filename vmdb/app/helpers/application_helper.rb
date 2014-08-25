@@ -2553,17 +2553,4 @@ module ApplicationHelper
   def pdf_page_size_style
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
-
-  # TODO: Remove when IE8 is no longer supported
-  # IE8 does not pass referer information via page.redirect_to, here's the ugly workaround.
-  def ie8_safe_redirect(page, url)
-    if request.headers['HTTP_USER_AGENT'].downcase.include?("msie 8")
-      page << "var refererLink = document.createElement('a');"
-      page << "refererLink.setAttribute('href', '#{url}');"
-      page << "document.body.appendChild(refererLink);"
-      page << "refererLink.click();"
-    else
-      page.redirect_to(url)
-    end
-  end
 end

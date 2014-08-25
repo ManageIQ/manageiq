@@ -17,13 +17,16 @@ describe RequestRefererService do
   let(:get_request_xml_http) { double(:request_method => 'GET',  :parameters => {'id' => 1}, :xml_http_request? => true)  }
 
   describe "#referer_valid?" do
-    let(:referer) { "PotatoHead" }
+    let(:referer)    { "PotatoHead" }
+    let(:useragent)  { {"HTTP_USER_AGENT" => "Tater"} }
+    let(:controller) { "DarthTater" }
+    let(:action)     { "SpuddaFett" }
 
     describe "when the referer starts with the given string" do
       let(:string_to_test) { "Potato" }
 
       it "returns true" do
-        request_referer_service.referer_valid?(referer, string_to_test).should be_true
+        request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_true
       end
     end
 
@@ -31,7 +34,29 @@ describe RequestRefererService do
       let(:string_to_test) { "Tomato" }
 
       it "returns false" do
-        request_referer_service.referer_valid?(referer, string_to_test).should be_false
+        request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_false
+      end
+
+      describe "when the controller and action are on the IE8 exception list" do
+        let(:string_to_test) { "Tomato" }
+        let(:useragent)      { {"HTTP_USER_AGENT" => "MSIE 8"} }
+        let(:controller)     { "availability_zone" }
+        let(:action)         { "download_data" }
+
+        it "returns true" do
+          request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_true
+        end
+      end
+
+      describe "when the controller and action are not on the IE8 exception list" do
+        let(:string_to_test) { "Tomato" }
+        let(:useragent)      { {"HTTP_USER_AGENT" => "MSIE 8"} }
+        let(:controller)     { "DarthTater" }
+        let(:action)         { "SpuddaFett" }
+
+        it "returns false" do
+          request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_false
+        end
       end
     end
   end
