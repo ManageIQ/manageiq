@@ -31,10 +31,11 @@ module MiqAeMethodService
 
     def initialize(ws)
       @drb_server_references = []
-      @inputs         = {}
-      @workspace      = ws
-      @preamble_lines = 0
-      @body           = []
+      @inputs                = {}
+      @workspace             = ws
+      @preamble_lines        = 0
+      @body                  = []
+      @persist_state_hash    = ws.persist_state_hash
       self.class.add(self)
     end
 
@@ -112,6 +113,18 @@ module MiqAeMethodService
 
     def log(level, msg)
       $miq_ae_logger.send(level, "<AEMethod #{current_method}> #{msg}")
+    end
+
+    def set_state_var(name, value)
+      @persist_state_hash[name] = value
+    end
+
+    def state_var_exist?(name)
+      @persist_state_hash.key?(name)
+    end
+
+    def get_state_var(name)
+      @persist_state_hash[name]
     end
 
     def instantiate(uri)
