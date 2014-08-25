@@ -33,58 +33,58 @@ class RequestRefererService
     end.freeze
 
   IE8_EXCEPTIONS = {
-      # white list controller/action pairs that throw 403 Forbidden errors in IE8
-      # due to the referer not being passed by IE8 itself.
-      :availability_zone    => %w(
-        download_data
-        show_list
-      ),
-      :catalog              => %w(download_data),
-      :chargeback           => %w(
-        render_csv
-        render_txt
-        report_only
-      ),
-      :configuration        => %w(
-        change_tab
-        timeprofile_copy
-        timeprofile_edit
-        timeprofile_new
-      ),
-      :dashboard            => %w(
-        change_group
-        reset_widgets
-        show
-        widget_add
-        widget_close
-      ),
-      :ems_cloud            => %w(
-        download_data
-        show_list
-      ),
-      :ems_cluster          => %w(download_data),
-      :ems_infra            => %w(
-        download_data
-        show_list
-      ),
-      :flavor               => %w(
-        download_data
-        show_list
-      ),
-      :host                 => %w(download_data),
-      :miq_ae_tools         => %w(fetch_log),
-      :miq_capacity         => %w(planning_report_download),
-      :miq_policy           => %w(fetch_log),
-      :ontap_file_share     => %w(show_list),
-      :ontap_logical_disk   => %w(show_list),
-      :ontap_storage_system => %w(show_list),
-      :ontap_storage_volume => %w(show_list),
-      :repository           => %w(show_list),
-      :resource_pool        => %w(show_list),
-      :storage_manager      => %w(show_list),
-      :vm_cloud             => %w(download_data),
-      :vm_infra             => %w(download_data),
-      :vm_or_template       => %w(download_data)
+    # white list controller/action pairs that throw 403 Forbidden errors in IE8
+    # due to the referer not being passed by IE8 itself.
+    :availability_zone    => %w(
+      download_data
+      show_list
+    ),
+    :catalog              => %w(download_data),
+    :chargeback           => %w(
+      render_csv
+      render_txt
+      report_only
+    ),
+    :configuration        => %w(
+      change_tab
+      timeprofile_copy
+      timeprofile_edit
+      timeprofile_new
+    ),
+    :dashboard            => %w(
+      change_group
+      reset_widgets
+      show
+      widget_add
+      widget_close
+    ),
+    :ems_cloud            => %w(
+      download_data
+      show_list
+    ),
+    :ems_cluster          => %w(download_data),
+    :ems_infra            => %w(
+      download_data
+      show_list
+    ),
+    :flavor               => %w(
+      download_data
+      show_list
+    ),
+    :host                 => %w(download_data),
+    :miq_ae_tools         => %w(fetch_log),
+    :miq_capacity         => %w(planning_report_download),
+    :miq_policy           => %w(fetch_log),
+    :ontap_file_share     => %w(show_list),
+    :ontap_logical_disk   => %w(show_list),
+    :ontap_storage_system => %w(show_list),
+    :ontap_storage_volume => %w(show_list),
+    :repository           => %w(show_list),
+    :resource_pool        => %w(show_list),
+    :storage_manager      => %w(show_list),
+    :vm_cloud             => %w(download_data),
+    :vm_infra             => %w(download_data),
+    :vm_or_template       => %w(download_data)
   }.freeze
 
   def allowed_access?(request, controller_name, action_name, referer)
