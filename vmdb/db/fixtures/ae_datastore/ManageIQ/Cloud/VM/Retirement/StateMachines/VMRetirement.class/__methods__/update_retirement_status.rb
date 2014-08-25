@@ -6,7 +6,8 @@
 server = $evm.root['miq_server']
 
 # Get State Machine
-state = $evm.current_object.class_name
+state  = $evm.current_object.class_name
+status = $evm.inputs['status']
 
 # Get current step
 step = $evm.current_object.current_field_name
