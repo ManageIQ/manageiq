@@ -53,11 +53,12 @@ module ApiHelper
         json.ignore_nil!
         [:name, :count, :subcount].each do |opt_name|
           json.set! "#{opt_name}", opts[opt_name] if opts[opt_name]
-        end
+        end        
         json.resources resources.collect do |resource|
           if opts[:expand_resources]
             add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
           end
+          json.href normalize_url_from_id(reftype, resource["id"])
         end
         aspecs = get_aspecs(type, opts[:collection_actions], :collection, opts[:is_subcollection], reftype)
       end
