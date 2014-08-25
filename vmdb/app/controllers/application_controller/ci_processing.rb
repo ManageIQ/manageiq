@@ -482,18 +482,8 @@ module ApplicationController::CiProcessing
 
       if @edit[:req_id] ? VmReconfigureRequest.update_request(@edit[:req_id],options, session[:userid]) : VmReconfigureRequest.create_request(options, session[:userid])
         flash = I18n.t("flash.vm.reconfigure_saved")
-        if @edit[:explorer]
-          add_flash(flash)
-          @sb[:action] = nil
-          replace_right_cell
-        else
-          render :update do |page|
-            if url[2] == "show"
-              page.redirect_to :controller=>url[1], :action =>url[2], :id=>url[3], :flash_msg=>flash
-            else
-              page.redirect_to :action=>@lastaction, :flash_msg=>flash
-            end
-          end
+        render :update do |page|
+          page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
         end
       else
         @edit[:errors].each { |msg| add_flash(msg, :error) }
