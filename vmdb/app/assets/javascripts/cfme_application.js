@@ -527,7 +527,7 @@ function miqPassFields(url,args) {
   for(var i=0; i<args.length; i=i+2) {
   url += args[i] + "=" + args[i+1] + "&";
   }
-  new Ajax.Request(encodeURI(url), {asynchronous:true, evalScripts:false});
+  new Ajax.Request(encodeURI(url), {asynchronous:true, evalScripts:false, type:'POST'});
 }
 
 // Create a new div to put the notification area at the bottom of the screen whenever the page loads
@@ -1321,8 +1321,8 @@ Ajax.Responders.register({
     var csrf_meta_tag = $$('meta[name=csrf-token]')[0];
 
     if (csrf_meta_tag) {
-      var header = 'X-CSRF-Token',
-        token = csrf_meta_tag.readAttribute('content');
+      var header = 'X-CSRF-Token';
+      var token = csrf_meta_tag.readAttribute('content');
 
       if (!request.options.requestHeaders) {
         request.options.requestHeaders = {};
