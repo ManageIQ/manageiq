@@ -6,6 +6,8 @@ class MiqExpression
     AuditEvent
     BottleneckEvent
     Chargeback
+    CloudResourceQuota
+    CloudTenant
     Compliance
     EmsCluster
     EmsClusterPerformance
@@ -59,6 +61,8 @@ class MiqExpression
   @@include_tables = %w{
     advanced_settings
     audit_events
+    cloud_resource_quotas
+    cloud_tenants
     compliances
     compliance_details
     disks
