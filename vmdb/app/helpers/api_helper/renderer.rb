@@ -61,7 +61,6 @@ module ApiHelper
           json.href normalize_url_from_id(reftype, resource["id"])
         end
         aspecs = get_aspecs(type, opts[:collection_actions], :collection, opts[:is_subcollection], reftype)
-        add_actions(json, aspecs, reftype)
       end
     end
 
@@ -86,7 +85,6 @@ module ApiHelper
           expand_subcollection(json, sc, sctype, subresources)
         end
       end
-      expand_actions(json, type, opts)
       json
     end
 
@@ -195,25 +193,6 @@ module ApiHelper
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?
 
       Rbac.search(options).first
-    end
-
-    #
-    # Let's expand actions
-    #
-    def expand_actions(json, type, opts)
-      if render_attr("actions")
-        href   = "#{type}/#{json.attributes!["id"]}"
-        aspecs = get_aspecs(type, opts[:resource_actions], :resource, opts[:is_subcollection], href)
-        add_actions(json, aspecs, type)
-      end
-    end
-
-    def add_actions(json, aspecs, type)
-      if aspecs && aspecs.size > 0
-        json.actions do |js|
-          aspecs.each { |action_spec| add_child js, normalize_hash(type, action_spec) }
-        end
-      end
     end
 
     #
