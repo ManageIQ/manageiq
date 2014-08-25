@@ -5,7 +5,7 @@ module ServiceHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name description}
+    items = %w(name description guid)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -47,6 +47,10 @@ module ServiceHelper::TextualSummary
 
   def textual_description
     {:label => "Description", :value => @record.description}
+  end
+
+  def textual_guid
+    {:label => "Management Engine GUID", :value => @record.guid}
   end
 
   def textual_aggregate_all_vm_cpus
