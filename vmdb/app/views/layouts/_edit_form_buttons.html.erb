@@ -15,235 +15,230 @@
   <tr>
     <td align="<%= align %>">
       <div id="buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
+        <% if ["miq_proxy","miq_ae_class","pxe","miq_ae_tools"].include?(@layout) || ajax_buttons  %>
 
-          <% if ["miq_proxy","miq_ae_class","pxe","miq_ae_tools"].include?(@layout) || ajax_buttons  %>
+          <% if serialize %>
+            <%= button_tag('Save',
+                            :class   => 'btn btn-primary',
+                            :alt     => save_text, 
+                            :title   => save_text,
+                            :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+                                                                  :id     => record_id,
+                                                                  :button => "save")}', true);")
+              %>
 
-            <% if serialize %>
-              <%= button_tag('Save',
+          <% else %>
+            <% if show_validate_button %>
+              <%= button_tag('Validate',
+                              :class   => 'btn btn-primary',
+                              :alt     => "Validate", 
+                              :title   => "Validate",
+                              :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+                                                                    :id     => record_id,
+                                                                    :button => "db_verify")}');")
+                %>
+            <% end %>
+
+            <% unless save_confirm_text %>
+              <% if continue_button %>
+
+               <%= button_tag('Continue',
+                              :class   => 'btn btn-primary',
+                              :alt     => "Continue", 
+                              :title   => "Continue",
+                              :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+                                                                    :id     => record_id,
+                                                                    :button => "continue")}');")
+               %>
+
+              <% else %>
+
+                <%= button_tag('Save',
                               :class   => 'btn btn-primary',
                               :alt     => save_text, 
                               :title   => save_text,
                               :onclick => "miqAjaxButton('#{url_for(:action => action_url,
                                                                     :id     => record_id,
-                                                                    :button => "save")}', true);")
+                                                                    :button => "save")}');")
                 %>
-   
-            <% else %>
-              <% if show_validate_button %>
-                <%= button_tag('Validate',
-                                :class   => 'btn btn-primary',
-                                :alt     => "Validate", 
-                                :title   => "Validate",
-                                :onclick => "miqAjaxButton('#{url_for(:action => action_url,
-                                                                      :id     => record_id,
-                                                                      :button => "db_verify")}');")
-                  %>
-              <% end %>
-
-              <% unless save_confirm_text %>
-                <% if continue_button %>
-
-                 <%= button_tag('Continue',
-                                :class   => 'btn btn-primary',
-                                :alt     => "Continue", 
-                                :title   => "Continue",
-                                :onclick => "miqAjaxButton('#{url_for(:action => action_url,
-                                                                      :id     => record_id,
-                                                                      :button => "continue")}');")
-                 %>
-
-                <% else %>
-
-                  <%= button_tag('Save',
-                                :class   => 'btn btn-primary',
-                                :alt     => save_text, 
-                                :title   => save_text,
-                                :onclick => "miqAjaxButton('#{url_for(:action => action_url,
-                                                                      :id     => record_id,
-                                                                      :button => "save")}');")
-                  %>
-
-                <% end %>
-              <% else %><%# Ask for confirmation before saving %>
-                  <%= button_tag('Save',
-                                :class   => 'btn btn-primary',
-                                :alt     => save_text, 
-                                :title   => save_text,
-                                :onclick => "if (confirm('#{save_confirm_text}'))
-                                                 miqAjaxButton('#{url_for(:action => action_url,
-                                                                          :id     => record_id,
-                                                                          :button => "save")}');")
-                  %>
 
               <% end %>
+            <% else %><%# Ask for confirmation before saving %>
+                <%= button_tag('Save',
+                              :class   => 'btn btn-primary',
+                              :alt     => save_text, 
+                              :title   => save_text,
+                              :onclick => "if (confirm('#{save_confirm_text}'))
+                                               miqAjaxButton('#{url_for(:action => action_url,
+                                                                        :id     => record_id,
+                                                                        :button => "save")}');")
+                %>
 
             <% end %>
+
+          <% end %>
+        <% else %>
+
+            <% if continue_button %>
+              <%= link_to(button_tag("Continue", 
+                                     :class => "btn btn-primary", 
+                                     :alt   => "Continue"),
+                          {:action => action_url, 
+                           :button => "continue", 
+                           :id     => record_id},
+                          :title => "Continue", 
+                          :method => :post) 
+              %>
+            <% else %>
+              <%= link_to(button_tag("Save",
+                                     :class => "btn btn-primary", 
+                                     :alt   => save_text),
+                          {:action => action_url, 
+                           :button => "save", 
+                           :id     => record_id},
+                          :title  => save_text, 
+                          :method => :post)
+              %>
+            <% end %>
+
+        <% end %>
+        <% unless noreset %>
+
+          <% if @layout == "report" && @sb[:menu_buttons] %>
+            <%= button_tag('Reset',
+                          :class   => 'btn btn-default',
+                          :alt     => "Reset Changes",
+                          :title   => "Reset Changes",
+                          :onclick => "miqAjaxButton('#{url_for(:action => "menu_update",
+                                                                :button => "reset")}');")
+            %>
+            <%= button_tag('Default',
+                          :class   => 'btn btn-primary',
+                          :alt     => "Reset All menus to defaults",
+                          :title   => "Reset All menus to defaults",
+                          :onclick => "miqAjaxButton('#{url_for(:action => "menu_update",
+                                                                :button => "default")}');")
+            %>
           <% else %>
+            <% if @layout == "miq_ae_class" || (ajax_buttons  && params[:action] != "tagging_edit") %>
 
-              <% if continue_button %>
-                <%= link_to(button_tag("Continue", 
-                                       :class => "btn btn-primary", 
-                                       :alt   => "Continue"),
-                            {:action => action_url, 
-                             :button => "continue", 
-                             :id     => record_id},
-                            :title => "Continue", 
-                            :method => :post) 
-                %>
-              <% else %>
-                <%= link_to(button_tag("Save",
-                                       :class => "btn btn-primary", 
-                                       :alt   => save_text),
-                            {:action => action_url, 
-                             :button => "save", 
-                             :id     => record_id},
-                            :title  => save_text, 
-                            :method => :post)
-                %>
-              <% end %>
-
-          <% end %>
-          <% unless noreset %>
-
-            <% if @layout == "report" && @sb[:menu_buttons] %>
               <%= button_tag('Reset',
-                            :class   => 'btn btn-default',
-                            :alt     => "Reset Changes",
-                            :title   => "Reset Changes",
-                            :onclick => "miqAjaxButton('#{url_for(:action => "menu_update",
-                                                                  :button => "reset")}');")
+                             :class   => 'btn btn-default',
+                             :alt     => "Reset Changes",
+                             :title   => "Reset Changes",
+                             :onclickb => "miqAjaxButton('#{url_for(:action  => action_url,
+                                                                    :id      => record_id,
+                                                                    :button  => "reset")}');")
               %>
-              <%= button_tag('Default',
-                            :class   => 'btn btn-primary',
-                            :alt     => "Reset All menus to defaults",
-                            :title   => "Reset All menus to defaults",
-                            :onclick => "miqAjaxButton('#{url_for(:action => "menu_update",
-                                                                  :button => "default")}');")
-              %>
+
             <% else %>
-              <% if @layout == "miq_ae_class" || (ajax_buttons  && params[:action] != "tagging_edit") %>
-
-                <%= button_tag('Reset',
-                               :class   => 'btn btn-default',
-                               :alt     => "Reset Changes",
-                               :title   => "Reset Changes",
-                               :onclickb => "miqAjaxButton('#{url_for(:action  => action_url,
-                                                                      :id      => record_id,
-                                                                      :button  => "reset")}');")
-                %>
-
-              <% else %>
-                <%# needed non-ajax reset button for tagging screen for the main CI's %>
-                <%= link_to(button_tag("Reset", 
-                                       :class => "btn btn-default", 
-                                       :alt => "Reset Changes"),
-                            {:action => action_url, 
-                             :button => "reset", 
-                             :id     => record_id},
-                            :title  => "Reset Changes", 
-                            :method => :post)
-                %>
-              <% end %>
+              <%# needed non-ajax reset button for tagging screen for the main CI's %>
+              <%= link_to(button_tag("Reset", 
+                                     :class => "btn btn-default", 
+                                     :alt => "Reset Changes"),
+                          {:action => action_url, 
+                           :button => "reset", 
+                           :id     => record_id},
+                          :title  => "Reset Changes", 
+                          :method => :post)
+              %>
             <% end %>
-  
           <% end %>
-          <% unless (
-                    (@layout == "ops" && !force_cancel_button) ||
-                    (@layout == "configuration" && !show_cancel_button.include?(controller.action_name)) ||
-                    (@layout == "report" && !@sb[:menu_buttons] &&
-                      !%w(edit update schedule_edit schedule_update", "widget_edit widget_update db_seq_edit db_form_field_changed db_edit db_update db_widget_remove).include?(controller.action_name) &&
-                      "edit" != @lastaction)
-                    ) %>
 
-              <% if @layout == "miq_ae_class" || ajax_buttons %>
+        <% end %>
+        <% unless (
+                  (@layout == "ops" && !force_cancel_button) ||
+                  (@layout == "configuration" && !show_cancel_button.include?(controller.action_name)) ||
+                  (@layout == "report" && !@sb[:menu_buttons] &&
+                    !%w(edit update schedule_edit schedule_update", "widget_edit widget_update db_seq_edit db_form_field_changed db_edit db_update db_widget_remove).include?(controller.action_name) &&
+                    "edit" != @lastaction)
+                  ) %>
 
-                <%= button_tag('Cancel',
-                               :class   => 'btn btn-default',
-                               :alt     => "Cancel Changes",
-                               :title   => "Cancel Changes",
-                               :onclick => "miqAjaxButton('#{url_for(:action => action_url,
-                                                                     :id     => record_id,
-                                                                     :button => "cancel")}');")
-                %>
+            <% if @layout == "miq_ae_class" || ajax_buttons %>
 
-              <% else %>
-                <%= link_to(button_tag("Cancel", 
-                                       :class => "btn btn-default", 
-                                       :alt   => "Cancel Changes"),
-                            {:action => action_url, 
-                             :button => "cancel", 
-                             :id     => record_id},
-                            :title  => "Cancel Changes", 
-                            :method => :post)
-                 %>
-              <% end %>
-          <% end %>
+              <%= button_tag('Cancel',
+                             :class   => 'btn btn-default',
+                             :alt     => "Cancel Changes",
+                             :title   => "Cancel Changes",
+                             :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+                                                                   :id     => record_id,
+                                                                   :button => "cancel")}');")
+              %>
+
+            <% else %>
+              <%= link_to(button_tag("Cancel", 
+                                     :class => "btn btn-default", 
+                                     :alt   => "Cancel Changes"),
+                          {:action => action_url, 
+                           :button => "cancel", 
+                           :id     => record_id},
+                          :title  => "Cancel Changes", 
+                          :method => :post)
+               %>
+            <% end %>
+        <% end %>
       </div>
 
       <div id="buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
 
-          <% if show_validate_button %>
-            <%= button_tag("Validate", 
-                           :class => "btn btn-primary btn-disabled")
+        <% if show_validate_button %>
+          <%= button_tag("Validate", :class => "btn btn-primary btn-disabled")
+          %>
+        <% end %>
+          <% if continue_button %>
+            <%= button_tag("Continue", :class => "btn btn-primary btn-disabled")
+            %>
+          <% else %>
+            <%= button_tag("Save", :class => "btn btn-primary btn-disabled")
             %>
           <% end %>
-            <% if continue_button %>
-              <%= button_tag("Continue", 
-                             :class => "btn btn-primary btn-disabled")
+        <% unless noreset %>
+          <%= button_tag("Reset", 
+               :class => "btn btn-default btn-disabled")
+          %>
+          <% if @layout == "report" && @sb[:menu_buttons] %>
+            <%= button_tag('Default',
+                            :class   => 'btn btn-primary',
+                            :alt     => "Reset All menus to defaults", 
+                            :title   => "Reset All menus to defaults",
+                            :onclick => "miqAjaxButton('#{url_for(:action => "menu_update",
+                                                                  :button => "default")}');")
+            %>
+          <% end %>
+
+        <% end %>
+        <% unless (
+                  (@layout == "ops" && !force_cancel_button) ||
+                  (@layout == "configuration" && !show_cancel_button.include?(controller.action_name)) ||
+                  (@layout == "report" && !@sb[:menu_buttons] &&
+                    !%w(edit update schedule_edit schedule_update widget_edit widget_update db_seq_edit db_form_field_changed db_edit db_update db_widget_remove).include?(controller.action_name) &&
+                    "edit" != @lastaction)
+                  ) %>
+
+            <% if @layout == "miq_ae_class" || ajax_buttons %>
+
+              <%= button_tag('Cancel',
+                              :class   => 'btn btn-default',
+                              :alt     => "Cancel", 
+                              :title   => "Cancel",
+                              :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+                                                                    :id     => record_id,
+                                                                    :button => "cancel")}');")
               %>
+
             <% else %>
-              <%= button_tag("Save", 
-                             :class => "btn btn-primary btn-disabled")
-              %>
-            <% end %>
-          <% unless noreset %>
-            <%= button_tag("Reset", 
-                 :class => "btn btn-default btn-disabled")
-            %>
-            <% if @layout == "report" && @sb[:menu_buttons] %>
-              <%= button_tag('Default',
-                              :class   => 'btn btn-primary',
-                              :alt     => "Reset All menus to defaults", 
-                              :title   => "Reset All menus to defaults",
-                              :onclick => "miqAjaxButton('#{url_for(:action => "menu_update",
-                                                                    :button => "default")}');")
+              <%= link_to(button_tag("Cancel",
+                                     :class => "btn btn-default", 
+                                     :alt   => "Cancel"),
+                          {:action => action_url, 
+                           :button => "cancel", 
+                           :id     => record_id}, 
+                           :title  => "Cancel", 
+                           :method => :post)
               %>
             <% end %>
 
-          <% end %>
-          <% unless (
-                    (@layout == "ops" && !force_cancel_button) ||
-                    (@layout == "configuration" && !show_cancel_button.include?(controller.action_name)) ||
-                    (@layout == "report" && !@sb[:menu_buttons] &&
-                      !%w(edit update schedule_edit schedule_update widget_edit widget_update db_seq_edit db_form_field_changed db_edit db_update db_widget_remove).include?(controller.action_name) &&
-                      "edit" != @lastaction)
-                    ) %>
-
-              <% if @layout == "miq_ae_class" || ajax_buttons %>
-
-                <%= button_tag('Cancel',
-                                :class   => 'btn btn-default',
-                                :alt     => "Cancel", 
-                                :title   => "Cancel",
-                                :onclick => "miqAjaxButton('#{url_for(:action => action_url,
-                                                                      :id     => record_id,
-                                                                      :button => "cancel")}');")
-                %>
-
-              <% else %>
-                <%= link_to(button_tag("Cancel",
-                                       :class => "btn btn-default", 
-                                       :alt   => "Cancel"),
-                            {:action => action_url, 
-                             :button => "cancel", 
-                             :id     => record_id}, 
-                             :title  => "Cancel", 
-                             :method => :post)
-                %>
-              <% end %>
-
-          <% end %>
-
+        <% end %>
       </div>
     </td>
   </tr>
