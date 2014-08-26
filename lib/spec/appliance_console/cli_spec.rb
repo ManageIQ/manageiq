@@ -97,8 +97,9 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
+                :realm     => 'domain.com',
                 :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
-      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass)).run
+      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm domain.com)).run
     end
 
     it "should not post_activate install ipa (aside: testing passing in host" do
@@ -109,6 +110,7 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
+                :realm     => nil,
                 :password  => 'pass').and_return(double(:activate => false))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com)).run
     end
@@ -130,6 +132,7 @@ describe ApplianceConsole::Cli do
       ApplianceConsole::CertificateAuthority.should_receive(:new)
         .with(
           :hostname => "client.domain.com",
+          :realm    => nil,
           :ca_name  => "ipa",
           :pgclient => true,
           :pgserver => false,
@@ -148,6 +151,7 @@ describe ApplianceConsole::Cli do
       ApplianceConsole::CertificateAuthority.should_receive(:new)
         .with(
           :hostname => "client.domain.com",
+          :realm    => "realm.domain.com",
           :ca_name  => "super",
           :pgclient => false,
           :pgserver => true,
@@ -155,7 +159,7 @@ describe ApplianceConsole::Cli do
           :verbose  => true,
         ).and_return(double(:activate => true, :status_string => "good", :complete? => false))
 
-      subject.parse(%w(--postgres-server-cert --verbose --ca super)).run
+      subject.parse(%w(--postgres-server-cert --verbose --ca super --iparealm realm.domain.com)).run
     end
   end
 

@@ -13,6 +13,7 @@ module ApplianceConsole
     def initialize(options = {})
       options.each { |n, v| public_send("#{n}=", v) }
       @ca_name ||= "ipa"
+      @realm = @realm.upcase if @realm
       @name ||= "#{service}/#{hostname}@#{realm}"
     end
 
