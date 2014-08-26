@@ -67,7 +67,9 @@ class ApiController
             "Must specify and id for destroying a #{type} subcollection resource" if id.nil?
 
       parent_resource = parent_resource_obj
-      typed_target    = "delete_resource_#{type}"
+
+      # prepending {type} to keep it consistent with the '_create_resource'
+      typed_target    = "#{type}_delete_resource" 
       raise BadRequestError,
             "Cannot delete subcollection resources of type #{type}" unless respond_to?(typed_target)
 
