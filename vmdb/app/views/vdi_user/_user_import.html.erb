@@ -1,7 +1,8 @@
-<% url = url_for(:action=>'user_import_form_field_changed',:id=>"import_edit__new") %>
+<% url = url_for(:action => 'user_import_form_field_changed',         
+                 :id     => "import_edit__new") 
+%>
 <div id="form_div">
 <%= render :partial => "layouts/flash_msg" %>
-
 <fieldset>
 	<p class="legend">LDAP Search Options</p>
 	<table class="style1">
@@ -9,8 +10,10 @@
       <td class="key">LDAP Region</td>
       <td class="wide">
         <%= select_tag('ldap_region',
-                       options_for_select([["<Choose>",nil]] + @edit[:ldap_regions].sort, @edit[:new][:ldap_region_id]),
-                       "data-miq_observe"=>{:url=>url}.to_json) %>
+                       options_for_select([["<Choose>",nil]] + @edit[:ldap_regions].sort, 
+                                          @edit[:new][:ldap_region_id]),
+                       "data-miq_observe" => {:url => url}.to_json) 
+        %>
       </td>
     </tr>
     <% unless @edit[:ldap_domains].nil? %>
@@ -18,8 +21,10 @@
         <td class="key">LDAP Domain</td>
         <td class="wide">
           <%= select_tag('ldap_domain',
-                         options_for_select([["<All>",nil]] + @edit[:ldap_domains].sort, @edit[:new][:ldap_domain_id]),
-                         "data-miq_observe"=>{:url=>url}.to_json) %>
+                         options_for_select([["<All>",nil]] + @edit[:ldap_domains].sort, 
+                         @edit[:new][:ldap_domain_id]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
         </td>
       </tr>
      <% end %>
@@ -34,7 +39,7 @@
         <tr>
           <td>
             <%#= render(:partial=>"layouts/gtl") %>
-            <%= render(:partial=>"users_list") %>
+            <%= render(:partial => "users_list") %>
           </td>
         </tr>
       </tbody>

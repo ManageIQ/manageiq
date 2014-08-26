@@ -1,112 +1,125 @@
 <% url = url_for(:action=>'reconfigure_field_changed', :id=>"new") %>
 <div id="form_div">
-	<%= render :partial => "layouts/flash_msg" %>
+  <%= render :partial => "layouts/flash_msg" %>
+  <p class="legend">Options</p>
+  <table class="style1">
+    <tr>
+      <td class="key">Memory</td>
+      <td>
+        <table style="line-height:1px;white-space: nowrap">
+          <tr>
+            <td>
+              <%= check_box_tag("cb_memory", 
+                                value                       = "1",
+                                checked                     = @edit[:new][:cb_memory],
+                                "data-miq_sparkle_on"       => true, 
+                                "data-miq_sparkle_off"      => true,
+                                "data-miq_observe_checkbox" => {:url=>url}.to_json) 
+              %>
+            </td>
+            <td>
+              <% display = @edit[:new][:cb_memory] ? "" : "display:none" %>
+              <div id="memory_div" style="<%=display%>">
+                <%= text_field_tag("memory",
+                                   @edit[:new][:memory],
+                                   :maxlength         => MAX_NAME_LEN,
+                                   "data-miq_observe" => {:interval => '.5', 
+                                                          :url      => url}.to_json) 
+                %>
+                <%= select_tag("mem_typ",
+                               options_for_select(["MB","GB"],
+                               @edit[:new][:mem_typ]),
+                               "data-miq_sparkle_on"  => true, 
+                               "data-miq_sparkle_off" => true,
+                               "data-miq_observe"     => {:url => url}.to_json)
+                %>
+                 (<%=@edit[:memory_note]%>)
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="key">Processors</td>
+      <td>
+        <table style="line-height:1px;white-space: nowrap">
+          <tr>
+            <td>
+              <%= check_box_tag("cb_cpu", 
+                                value                       = "1",
+                                checked                     = @edit[:new][:cb_cpu],
+                                "data-miq_sparkle_on"       => true, 
+                                "data-miq_sparkle_off"      => true,
+                                "data-miq_observe_checkbox" => {:url=>url}.to_json) 
+              %>
+            </td>
+            <td>
+              <% display = @edit[:new][:cb_cpu] ? "" : "display:none" %>
+              <div id="cpu_div" style="<%=display%>">
+                <% if @edit[:cpu_options].length > 1 %>
+                  <%= select_tag("cpu_count",
+                                 options_for_select((@edit[:new][:cpu_count].nil? ? [["<Choose>",nil]] : []) + @edit[:cpu_options], 
+                                                    @edit[:new][:cpu_count].to_i),
+                                "data-miq_sparkle_on"  => true, 
+                                "data-miq_sparkle_off" => true,
+                                "data-miq_observe"     => {:url => url}.to_json) 
+                  %>
+                <% else %>
+                  <%= @edit[:cpu_options][0] %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 
-		<p class="legend">Options</p>
-		<table class="style1">
-			<tr>
-				<td class="key">Memory</td>
-				<td>
-					<table style="line-height:1px;white-space: nowrap">
-						<tr>
-							<td>
-                <%= check_box_tag("cb_memory", value="1",
-                                    checked=@edit[:new][:cb_memory],
-                                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                    "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
-							</td>
-							<td>
-								<% display = @edit[:new][:cb_memory] ? "" : "display:none" %>
-								<div id="memory_div" style="<%=display%>">
-                  <%= text_field_tag("memory",
-                                      @edit[:new][:memory],
-                                      :maxlength=>MAX_NAME_LEN,
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-                  <%= select_tag("mem_typ",
-                                  options_for_select(["MB","GB"], @edit[:new][:mem_typ]),
-                                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                  "data-miq_observe"=>{:url=>url}.to_json) %> (<%=@edit[:memory_note]%>)
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td class="key">Processors</td>
-				<td>
-					<table style="line-height:1px;white-space: nowrap">
-						<tr>
-							<td>
-                <%= check_box_tag("cb_cpu", value="1",
-                                    checked=@edit[:new][:cb_cpu],
-                                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                    "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
-							</td>
-							<td>
-								<% display = @edit[:new][:cb_cpu] ? "" : "display:none" %>
-								<div id="cpu_div" style="<%=display%>">
-									<% if @edit[:cpu_options].length > 1 %>
-                    <%= select_tag("cpu_count",
-                                  options_for_select((@edit[:new][:cpu_count].nil? ? [["<Choose>",nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
-                                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                  "data-miq_observe"=>{:url=>url}.to_json) %>
-									<% else %>
-										<%= @edit[:cpu_options][0] %>
-									<% end %>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-
-	<% if !@edit[:explorer] %>
-		<%#= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:action_url=>'reconfigure_update',:ajax_buttons=>true, :id=>"new"})%>
-		<div id="buttons_div">
-			<table width="100%">
-			<tr>
-				<td align="right">
-					<div>
-
-
-								<%= image_tag('Submit', :class=>"btn btn-primary",
-														:alt=>"Submit this reconfigure request", :title=>"Submit this reconfigure request",
-														:onclick=>"miqAjaxButton('#{url_for(:action=>'reconfigure_update',
-																																:id=>"new",
-																																:button=>"submit")}');")
-								%>
-
-
-								<%= image_tag('Cancel', :class=>"btn btn-default",
-												:alt=>"Cancel Changes", :title=>"Cancel Changes",
-												:onclick=>"miqAjaxButton('#{url_for(:action=>"reconfigure_update",
-												:id=>"new",:button=>"cancel")}');")
-								%>
-
-
-					</div>
-				</td>
-			</tr>
-		</table>
-		</div>
-	<% end %>
+  <% if !@edit[:explorer] %>
+    <%#= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:action_url=>'reconfigure_update',:ajax_buttons=>true, :id=>"new"})%>
+    <div id="buttons_div">
+      <table width="100%">
+      <tr>
+        <td align="right">
+          <div>
+            <%= button_tag('Submit', 
+                           :class   => "btn btn-primary",
+                           :alt     => "Submit this reconfigure request", 
+                           :title   => "Submit this reconfigure request",
+                           :onclick => "miqAjaxButton('#{url_for(:action => 'reconfigure_update',
+                                                                 :id     => "new",
+                                                                 :button => "submit")}');")
+            %>
+            <%= button_tag('Cancel', 
+                           :class   => "btn btn-default",
+                           :alt     => "Cancel Changes", 
+                           :title   => "Cancel Changes",
+                           :onclick => "miqAjaxButton('#{url_for(:action => "reconfigure_update",
+                                                                 :id     => "new",
+                                                                 :button => "cancel")}');")
+            %>
+          </div>
+        </td>
+      </tr>
+    </table>
+    </div>
+  <% end %>
   <hr>
-	<p class="legend">Affected VMs</p>
-	<table class="admintable" height="75">
-		<tbody>
-			<tr>
-				<td>
-					<% if @reconfigureitems %>
-						<% @embedded = true %>
-						<% @gtl_type = "list" %>
-						<%= render :partial=>"layouts/gtl" %>
-					<% end %>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+  <p class="legend">Affected VMs</p>
+  <table class="admintable" height="75">
+    <tbody>
+      <tr>
+        <td>
+          <% if @reconfigureitems %>
+            <% @embedded = true %>
+            <% @gtl_type = "list" %>
+            <%= render :partial => "layouts/gtl" %>
+          <% end %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
 </div>
 <%# Need this to bind checkbox observers when under DHTMLX tabs %>
