@@ -20,7 +20,7 @@ describe WimParser do
         "version"                     => 68864,
         "flags"                       => 0x00020082,
         "compression_size"            => 32768,
-        "wim_guid"                    => "N\x91-\xF7a'\x8D@\x9A0\xC5\xF1~\xD7X\x16".force_encoding("ASCII-8BIT"), # real GUID is pending adding support for winnt.h GUID strucutre parsing
+        "wim_guid"                    => "N\x91-\xF7a'\x8D@\x9A0\xC5\xF1~\xD7X\x16".force_encoding("ASCII-8BIT"), # real GUID is pending adding support for winnt.h GUID structure parsing
         "part_number"                 => 1,
         "total_parts"                 => 1,
         "image_count"                 => 2,
