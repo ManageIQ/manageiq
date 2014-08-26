@@ -231,7 +231,7 @@ class ConfigurationController < ApplicationController
   end
 
   def update
-    if params["save.x"]
+    if params["save"]
       get_form_vars if @tabform != "ui_3"
       case @tabform
       when "ui_1"                                                 # Visual tab
@@ -344,7 +344,7 @@ class ConfigurationController < ApplicationController
         build_tabs
         render :action=>"show"
       end
-    elsif params["reset.x"]
+    elsif params["reset"]
       edit
       add_flash(I18n.t("flash.edit.reset"), :warning)
       render :action=>"show"

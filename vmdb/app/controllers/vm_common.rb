@@ -804,7 +804,7 @@ module VmCommon
 
   def snap_vm
     @vm = @record = identify_record(params[:id], VmOrTemplate)
-    if params["cancel.x"] || params[:button] == "cancel"
+    if params["cancel"] || params[:button] == "cancel"
       flash = I18n.t("flash.edit.task_cancelled", :task=>"Snapshot of VM #{@record.name}")
       if session[:edit] && session[:edit][:explorer]
         add_flash(flash)
