@@ -1,34 +1,61 @@
-<%= form_tag({:action => 'snap_vm', :id => @record}, {:id => "vm_snap_form"}) do %>
-	<%= render :partial => "layouts/flash_msg" %>
-	<div id="form_div">
-				<fieldset>
-					<p class="legend">Snapshot Information</p>
-					<table class="style1">
-						<tbody>
-							<tr>
-								<td class="key">Name</td>
-								<td><%= text_field_tag("name", @name, :maxlength=>MAX_NAME_LEN, "data-miq_focus"=>true) %></td>
-							</tr>
-							<tr>
-								<td class="key">Description</td>
-								<td><%= text_area_tag("description", @description, :size=>"50x4") %></td>
-							</tr>
-							<tr>
-								<td class="key">Snapshot VM memory</td>
-								<td><%= check_box_tag("snap_memory", value="1", checked=false)%></td>
-							</tr>
-						</tbody>
-					</table>
-				</fieldset>
-	</div>
-	<% if !@edit %>
-		<table width="100%">
-			<tr>
-				<td align="right">
-					<%= image_submit_tag("/images/formbuttons/create.png",  :width=>"80", :height=>"35", :name=>"create", :class=>"button", :alt=>"Create snapshot", :title=>"Create snapshot") %>
-					<%= image_submit_tag("/images/formbuttons/cancel.png",  :width=>"80", :height=>"35", :name=>"cancel", :class=>"button", :alt=>"Cancel", :title=>"Cancel") %>
-				</td>
-			</tr>
-		</table>
-	<% end %>
+<%= form_tag({:action => 'snap_vm', 
+              :id     => @record}, 
+             {:id => "vm_snap_form"}) do %>
+  <%= render :partial => "layouts/flash_msg" %>
+  <div id="form_div">
+    <p class="legend">Snapshot Information</p>
+    <table class="style1">
+      <tbody>
+        <tr>
+          <td class="key">Name</td>
+          <td>
+            <%= text_field_tag("name", @name, 
+                               :maxlength       => MAX_NAME_LEN, 
+                               "data-miq_focus" => true) 
+            %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Description</td>
+          <td>
+            <%= text_area_tag("description", @description, 
+                              :size => "50x4") 
+            %>
+          </td>
+        </tr>
+        <tr>
+          <td class="key">Snapshot VM memory</td>
+          <td>
+            <%= check_box_tag("snap_memory", 
+                              value   = "1", 
+                              checked = false)
+            %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <% if !@edit %>
+    <hr>
+    <table width="100%">
+      <tr>
+        <td align="right">
+          <%= button_tag("Create",  
+                         :name  => "create", 
+                         :class => "button", 
+                         :alt   => "Create snapshot", 
+                         :title => "Create snapshot",
+                         :type  => "submit") 
+          %>
+          <%= button_tag("Cancel",  
+                         :name  => "cancel", 
+                         :class => "button", 
+                         :alt   => "Cancel", 
+                         :title => "Cancel",
+                         :type  => "submit") 
+          %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
 <% end %>

@@ -1,7 +1,8 @@
-<% url = url_for(:action=>'user_import_form_field_changed',:id=>"import_edit__new") %>
+<% url = url_for(:action => 'user_import_form_field_changed',         
+                 :id     => "import_edit__new") 
+%>
 <div id="form_div">
 <%= render :partial => "layouts/flash_msg" %>
-
 <fieldset>
 	<p class="legend">LDAP Search Options</p>
 	<table class="style1">
@@ -9,8 +10,10 @@
       <td class="key">LDAP Region</td>
       <td class="wide">
         <%= select_tag('ldap_region',
-                       options_for_select([["<Choose>",nil]] + @edit[:ldap_regions].sort, @edit[:new][:ldap_region_id]),
-                       "data-miq_observe"=>{:url=>url}.to_json) %>
+                       options_for_select([["<Choose>",nil]] + @edit[:ldap_regions].sort, 
+                                          @edit[:new][:ldap_region_id]),
+                       "data-miq_observe" => {:url => url}.to_json) 
+        %>
       </td>
     </tr>
     <% unless @edit[:ldap_domains].nil? %>
@@ -18,8 +21,10 @@
         <td class="key">LDAP Domain</td>
         <td class="wide">
           <%= select_tag('ldap_domain',
-                         options_for_select([["<All>",nil]] + @edit[:ldap_domains].sort, @edit[:new][:ldap_domain_id]),
-                         "data-miq_observe"=>{:url=>url}.to_json) %>
+                         options_for_select([["<All>",nil]] + @edit[:ldap_domains].sort, 
+                         @edit[:new][:ldap_domain_id]),
+                         "data-miq_observe" => {:url => url}.to_json) 
+          %>
         </td>
       </tr>
      <% end %>
@@ -34,7 +39,7 @@
         <tr>
           <td>
             <%#= render(:partial=>"layouts/gtl") %>
-            <%= render(:partial=>"users_list") %>
+            <%= render(:partial => "users_list") %>
           </td>
         </tr>
       </tbody>
@@ -46,29 +51,39 @@
     <td align="right">
       <% buttons_show = @edit[:selected_users] && !@edit[:selected_users].empty? %>
       <div id="import_buttons_on" style="display:<%= buttons_show ? "display" : "none" %>;">
-        <%= link_to(image_tag('/images/formbuttons/import.png',:class=>"button",
-                              :border=>"0", :alt=>"Import"),
-                    {:action=>"user_import", :button=>"import",:id=>"import_edit__new"},
+        <%= link_to(button_tag('Import',
+                               :class => "btn btn-primary",
+                               :alt   => "Import"),
+                    {:action => "user_import", 
+                     :button => "import",
+                     :id     => "import_edit__new"},
                     "data-miq_sparkle_on" => true,
-                    :title=>"Import selected Users")
+                    :title                => "Import selected Users")
         %>
-        <%= link_to(image_tag('/images/formbuttons/cancel.png',
-                              :class=>"button",:border=>"0", :alt=>"Cancel Import",:class=>"button"),
-                    {:action=>"user_import", :button=>"cancel"},
-                    "data-miq_sparkle_on" => true,
+        <%= link_to(button_tag('Cancel',
+                               :class => "btn btn-default", 
+                               :alt   => "Cancel Import"),
+                    {:action => "user_import", 
+                     :button => "cancel"},
+                    "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
-                    :title=>"Cancel Import")
+                    :title                 => "Cancel Import")
         %>
       </div>
       <div id="import_buttons_off" style="display:<%= buttons_show ? "none" : "display" %>;">
-        <%= image_tag("/images/formbuttons/import.png",	:class=>"dimmed",
-                        :title=>"Select Users to import", :alt=>"Select Users to import") %>
-        <%= link_to(image_tag('/images/formbuttons/cancel.png',
-                              :class=>"button",:border=>"0", :alt=>"Cancel Import",:class=>"button"),
-                    {:action=>"user_import", :button=>"cancel"},
-                    "data-miq_sparkle_on" => true,
+        <%= button_tag("Import",	
+                       :class => "btn btn-primary btn-disabled",
+                       :title => "Select Users to import", 
+                       :alt   => "Select Users to import") 
+        %>
+        <%= link_to(button_tag('Cancel',
+                               :alt   => "Cancel Import",
+                               :class => "btn btn-primary"),
+                    {:action => "user_import", 
+                     :button => "cancel"},
+                    "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
-                    :title=>"Cancel Import")
+                    :title                 => "Cancel Import")
         %>
       </div>
     </td>
