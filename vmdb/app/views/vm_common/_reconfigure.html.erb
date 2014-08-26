@@ -1,7 +1,7 @@
 <% url = url_for(:action=>'reconfigure_field_changed', :id=>"new") %>
 <div id="form_div">
 	<%= render :partial => "layouts/flash_msg" %>
-	<fieldset>
+
 		<p class="legend">Options</p>
 		<table class="style1">
 			<tr>
@@ -61,7 +61,7 @@
 				</td>
 			</tr>
 		</table>
-	</fieldset>
+
 	<% if !@edit[:explorer] %>
 		<%#= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:action_url=>'reconfigure_update',:ajax_buttons=>true, :id=>"new"})%>
 		<div id="buttons_div">
@@ -69,30 +69,30 @@
 			<tr>
 				<td align="right">
 					<div>
-						<ul id="form_buttons">
-							<li>
-								<%= image_tag('/images/formbuttons/submit.png', :border=>"0", :class=>"button",
+
+
+								<%= image_tag('Submit', :class=>"btn btn-primary",
 														:alt=>"Submit this reconfigure request", :title=>"Submit this reconfigure request",
 														:onclick=>"miqAjaxButton('#{url_for(:action=>'reconfigure_update',
 																																:id=>"new",
 																																:button=>"submit")}');")
 								%>
-							</li>
-							<li>
-								<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
+
+
+								<%= image_tag('Cancel', :class=>"btn btn-default",
 												:alt=>"Cancel Changes", :title=>"Cancel Changes",
 												:onclick=>"miqAjaxButton('#{url_for(:action=>"reconfigure_update",
 												:id=>"new",:button=>"cancel")}');")
 								%>
-							</li>
-						</ul>
+
+
 					</div>
 				</td>
 			</tr>
 		</table>
 		</div>
 	<% end %>
-<fieldset>
+  <hr>
 	<p class="legend">Affected VMs</p>
 	<table class="admintable" height="75">
 		<tbody>
@@ -107,7 +107,7 @@
 			</tr>
 		</tbody>
 	</table>
-</fieldset>
+
 </div>
 <%# Need this to bind checkbox observers when under DHTMLX tabs %>
 <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>

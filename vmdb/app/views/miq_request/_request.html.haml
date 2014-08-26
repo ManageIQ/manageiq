@@ -102,15 +102,18 @@
             = "* Enter a reason for this #{@edit[:stamp_typ] == "a" ? "approval" : "denial"} and press Submit"
         %td{:align => 'right'}
           %span#buttons_on{:style => 'display:none'}
-            = link_to(image_tag('/images/formbuttons/submit.png',
-                                :border => "0", :class => "button", :alt => "Submit"),
-                      {:action => 'stamp', :button => "submit", :disabled => true},
+            = link_to(button_tag('Submit',
+                                 :class => "btn btn-primary", 
+                                 :alt   => "Submit"),
+                      {:action  => 'stamp', 
+                       :button  => "submit", 
+                       :disabled => true},
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
                       :title                 => "Submit")
           %span#buttons_off
-            = image_tag("/images/formbuttons/submit.png", :class => "dimmed")
+            = button_tag("Submit", :class => "btn btn-primary btn-disabled")
   %br
   - if @miq_request.workflow_class
     = render :partial => "prov_wf", :locals => {:wf => @miq_request.workflow_class.new({:src_vm_id => @miq_request.source_id},session[:userid]), :show => true}

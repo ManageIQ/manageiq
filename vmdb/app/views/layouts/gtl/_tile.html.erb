@@ -165,15 +165,16 @@
                 </table>
                 <% if @row_button %>
                   <div align="right" style="width: inherit;">
-                    <ul id="form_buttons">
-                      <li>
-                        <%= image_tag("/images/formbuttons/#{@row_button[:image]}.png",
-                                      :border=>"0", :class=>"button",
-                                      :alt=>@row_button[:title], :title=>@row_button[:title],
-                                      :onclick=>"#{@row_button[:function]}('#{@id}');")
+
+
+                        <%= button_tag("#{@row_button[:image]}",
+                                       :class   => "btn btn-primary",
+                                       :alt     => @row_button[:title], 
+                                       :title   => @row_button[:title],
+                                       :onclick => "#{@row_button[:function]}('#{@id}');")
                         %>
-                      </li>
-                    </ul>
+
+
                   </div>
                 <% end %>
               </td>

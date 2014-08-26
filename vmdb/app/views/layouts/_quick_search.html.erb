@@ -66,11 +66,11 @@
             <ul id="form_buttons">
               <li>
                 <span id="buttons_off">
-                  <%= image_tag("/images/formbuttons/apply.png",	:class=>"dimmed") %>
+                  <%= button_tag("Apply",	:class=>"btn btn-primary btn-disabled") %>
                 </span>
                 <span id="buttons_on" style="display:none;">
-                  <%= link_to(image_tag('/images/formbuttons/apply.png', :border => 0,
-                                        :class => "button", :alt => 'Apply the current filter (Enter)'),
+                  <%= link_to(button_tag('Apply', 
+                                        :class => "btn btn-primary", :alt => 'Apply the current filter (Enter)'),
                               {:action => "quick_search", :button => "apply"},
                               "data-miq_sparkle_on"  => true,
                               "data-miq_sparkle_off" => true,
@@ -81,8 +81,8 @@
                 </span>
               </li>
               <li>
-                <%= link_to(image_tag('/images/formbuttons/cancel.png', :border => 0,
-                                      :class => "button", :alt => 'Cancel (Esc)'),
+                <%= link_to(button_tag('Cancel', 
+                                      :class => "btn btn-default", :alt => 'Cancel (Esc)'),
                             {:action => "quick_search", :button => "cancel"},
                             :remote  => true,
                             :method => :post,

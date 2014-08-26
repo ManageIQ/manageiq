@@ -58,10 +58,24 @@
 	</div>
 
 <% if false %>
-	<%= image_submit_tag("/images/formbuttons/save.png", :id=> "save", :name=>"save",
-											:alt=>"Install Selected SmartProxy Build",
-											:title=>"Install Selected SmartProxy Build", :class=>"button") %>
-	<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
+	<%= button_tag("Save", 
+											 :id    => "save", 
+											 :name  => "save",
+									 		 :alt   => "Install Selected SmartProxy Build",
+											 :title => "Install Selected SmartProxy Build", 
+											 :class => "button",
+											 :type  => "submit"
+											 ) 
+	%>
+	<%= button_submit_tag("Cancel", 
+	                     :id    => "cancel", 
+	                     :name  => "cancel", 
+	                     :alt   => "Cancel", 
+	                     :title => "Cancel", 
+	                     :class => "button",
+	                     :type  => "submit"
+	                     ) 
+	%>
 <% end %>
 	<%= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:record_id=>@miq_proxy.id, :action_url=>"install_007", :align=>"left"})%>
 <% end %>

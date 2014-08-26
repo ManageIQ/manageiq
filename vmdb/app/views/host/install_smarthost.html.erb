@@ -16,7 +16,20 @@
 
 		<%= "Pressing 'Save' will install the chosen SmartHost build on this Host" %>
 	</div>
-	<%= image_submit_tag("/images/formbuttons/save.png", :id=> "save", :name=>"save",
-																	:alt=>"Install Selected SmartHost Build", :title=>"Install Selected SmartHost Build", :class=>"button") %>
-	<%= image_submit_tag("/images/formbuttons/cancel.png", :id=>"cancel", :name=>"cancel", :alt=>"Cancel", :title=>"Cancel", :class=>"button") %>
+	<%= button_tag("Save", 
+	               :id    => "save", 
+		             :name  => "save",
+								 :alt   => "Install Selected SmartHost Build", 
+								 :title => "Install Selected SmartHost Build", 
+								 :class => "button",
+								 :type  => "submit") 
+	%>
+	<%= button_tag("Cancel", 
+								 :id    => "cancel", 
+								 :name  => "cancel", 
+								 :alt   => "Cancel", 
+								 :title => "Cancel", 
+								 :class => "button",
+								 :type  => "submit") 
+	%>
 <% end %>

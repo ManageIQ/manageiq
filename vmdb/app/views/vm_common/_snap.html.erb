@@ -25,8 +25,20 @@
 		<table width="100%">
 			<tr>
 				<td align="right">
-					<%= image_submit_tag("/images/formbuttons/create.png",  :width=>"80", :height=>"35", :name=>"create", :class=>"button", :alt=>"Create snapshot", :title=>"Create snapshot") %>
-					<%= image_submit_tag("/images/formbuttons/cancel.png",  :width=>"80", :height=>"35", :name=>"cancel", :class=>"button", :alt=>"Cancel", :title=>"Cancel") %>
+					<%= button_tag("Create",  
+		                     :name  => "create", 
+		                     :class => "button", 
+		                     :alt   => "Create snapshot", 
+		                     :title => "Create snapshot",
+                         :type  => "submit") 
+					%>
+					<%= button_tag("Cancel",  
+												 :name  => "cancel", 
+												 :class => "button", 
+												 :alt   => "Cancel", 
+												 :title => "Cancel",
+												 :type  => "submit") 
+					%>
 				</td>
 			</tr>
 		</table>
