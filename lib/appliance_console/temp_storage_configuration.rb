@@ -10,22 +10,18 @@ module ApplianceConsole
 
     include ApplianceConsole::Logging
 
-    def process_menus
-      say("#{I18n.t("advanced_settings.tmp_config")}\n\n")
-      disk = ask_questions
-      if disk && are_you_sure?("configure #{disk.path} as temp storage")
-        say("Configuring #{disk.path} as temp storage...")
-        add_temp_disk(disk)
-        say("Done.")
-        press_any_key
-      else
-        say("Canceled...")
-        press_any_key
-      end
+    def initialize(config = {})
+      @disk = config[:disk]
+    end
+
+    def activate
+      say("Configuring #{disk.path} as temp storage...")
+      add_temp_disk(disk)
     end
 
     def ask_questions
-      ask_for_disk("temp storage disk")
+      @disk = ask_for_disk("temp storage disk")
+      disk && are_you_sure?("configure #{disk.path} as temp storage")
     end
 
     def add_temp_disk(disk)

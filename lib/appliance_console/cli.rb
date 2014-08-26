@@ -8,6 +8,7 @@ require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
 require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/service_group'
+require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/key_configuration'
 require 'appliance_console/principal'
 require 'appliance_console/certificate'
@@ -79,6 +80,7 @@ module ApplianceConsole
         opt :key,      "Create master key",  :type => :boolean, :short => "k"
         opt :verbose,  "Verbose",            :type => :boolean, :short => "v"
         opt :dbdisk,   "Database Disk Path", :type => :string
+        opt :tmpdisk,   "Temp storage Disk Path", :type => :string
         opt :uninstall_ipa, "Uninstall IPA Client", :type => :boolean,         :default => false
         opt :ipaserver,  "IPA Server FQDN",  :type => :string
         opt :ipaprincipal,  "IPA Server principal", :type => :string,          :default => "admin"
@@ -96,6 +98,7 @@ module ApplianceConsole
       Env[:host] = options[:host] if options[:host]
       create_key if key?
       set_db if hostname
+      config_tmp_disk if options[:tmpdisk]
       uninstall_ipa if options[:uninstall_ipa]
       install_ipa if options[:ipaserver]
       install_certs if certs?
@@ -194,6 +197,17 @@ module ApplianceConsole
       say "Uninstalling IPA-client"
       config = ExternalHttpdAuthentication.new
       config.ipa_client_unconfigure if config.ipa_client_configured?
+    end
+
+    def config_tmp_disk
+      say "creating temp disk"
+      if (tmp_disk = disk_from_string(options[:tmpdisk]))
+        config = ApplianceConsole::TempStorageConfiguration.new(:disk => tmp_disk)
+        config.activate
+      else
+        say "could not find disk #{options[:tmpdisk]}"
+        say "if you pass auto, it will choose: #{disk.try(:path) || "no disks with a free partition"}"
+      end
     end
 
     def self.parse(args)
