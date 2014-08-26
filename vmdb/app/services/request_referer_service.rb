@@ -38,6 +38,7 @@ class RequestRefererService
     :availability_zone    => %w(
       download_data
       show_list
+      tagging_edit
     ),
     :catalog              => %w(download_data),
     :chargeback           => %w(
@@ -59,29 +60,90 @@ class RequestRefererService
       widget_close
     ),
     :ems_cloud            => %w(
+      discover
       download_data
+      edit
+      new
+      protect
       show_list
+      tagging_edit
     ),
-    :ems_cluster          => %w(download_data),
-    :ems_infra            => %w(
+    :ems_cluster          => %w(
+      compare_miq
       download_data
+      protect
+      tagging_edit
+    ),
+    :ems_infra            => %w(
+      discover
+      download_data
+      edit
+      new
+      protect
+      show
       show_list
+      tagging_edit
     ),
     :flavor               => %w(
       download_data
       show_list
+      tagging_edit
     ),
-    :host                 => %w(download_data),
+    :host                 => %w(
+      discover
+      download_data
+      new
+      protect
+      tagging_edit
+    ),
     :miq_ae_tools         => %w(fetch_log),
-    :miq_capacity         => %w(planning_report_download),
+    :miq_capacity         => %w(
+      planning_report_download
+      util_report_download
+    ),
     :miq_policy           => %w(fetch_log),
-    :ontap_file_share     => %w(show_list),
-    :ontap_logical_disk   => %w(show_list),
-    :ontap_storage_system => %w(show_list),
-    :ontap_storage_volume => %w(show_list),
-    :repository           => %w(show_list),
-    :resource_pool        => %w(show_list),
-    :storage_manager      => %w(show_list),
+    :ontap_file_share     => %w(
+      download_data
+      show_list
+      tagging_edit
+    ),
+    :ontap_logical_disk   => %w(
+      show_list
+      tagging_edit
+    ),
+    :ontap_storage_system => %w(
+      show_list
+      tagging_edit
+    ),
+    :ontap_storage_volume => %w(
+      download_data
+      show_list
+    ),
+    :repository           => %w(
+      edit
+      new
+      protect
+      show_list
+    ),
+    :resource_pool        => %w(
+      protect
+      show_list
+      tagging_edit
+    ),
+    :security_group       => %w(
+      show
+      tagging_edit
+    ),
+    :storage              => %w(
+      download_data
+      tagging_edit
+    ),
+    :storage_manager      => %w(
+      download_data
+      edit
+      new
+      show_list
+    ),
     :vm_cloud             => %w(download_data),
     :vm_infra             => %w(download_data),
     :vm_or_template       => %w(download_data)
