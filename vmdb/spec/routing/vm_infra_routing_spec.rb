@@ -127,6 +127,12 @@ describe 'routes for VmInfra' do
     end
   end
 
+  describe '#sort_iso_img_grid' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/sort_iso_img_grid")).to route_to("#{controller_name}#sort_iso_img_grid")
+    end
+  end
+
   describe '#vmrc_console' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/vmrc_console")).to route_to("#{controller_name}#vmrc_console")
