@@ -1721,6 +1721,7 @@ Vmdb::Application.routes.draw do
         snap_vm
         sort_ds_grid
         sort_host_grid
+        sort_iso_img_grid
         sort_vm_grid
         squash_toggle
         tagging_edit
