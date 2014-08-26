@@ -1250,6 +1250,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        protect
         show
         show_list
       ),
@@ -1277,6 +1278,7 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         quick_search
         panel_control
+        protect
         save_col_widths
         save_default_search
         show
