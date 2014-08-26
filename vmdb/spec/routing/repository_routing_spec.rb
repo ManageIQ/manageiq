@@ -8,6 +8,7 @@ describe "routes for AvailabilityZoneController" do
   it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has download_data routes"
+  it_behaves_like "A controller that has policy protect routes"
   it_behaves_like "A controller that has show list routes"
   it_behaves_like "A controller that has CRUD routes"
 
