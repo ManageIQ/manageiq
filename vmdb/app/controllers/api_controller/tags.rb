@@ -81,8 +81,6 @@ class ApiController
         Classification.classify(ci, category, name)
         return true
       end
-      raise BadRequestError,
-        "The tag already exists.  Ignoring request."
     end
 
     def ci_unset_tag(ci, category, name)
@@ -90,8 +88,6 @@ class ApiController
         Classification.unclassify(ci, category, name)
         return true
       end
-      raise BadRequestError,
-        "The tag does not exist on this resource.  Ignoring request."
     end
   end
 end
