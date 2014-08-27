@@ -980,7 +980,7 @@
     :vendor: microsoft
     :name: Win7Test
     :uid_ems: 3c75233f-bd78-4090-8a98-9dd476eb75b7
-    :power_state: 'off'
+    :raw_power_state: 'PowerOff'
     :location: hyper-v/Win7Test/Virtual%20Machines/3C75233F-BD78-4090-8A98-9DD476EB75B7.xml
     :type: "VmMicrosoft"
   - &57531080
@@ -999,7 +999,7 @@
     :vendor: microsoft
     :name: Windows_2012_Server
     :uid_ems: 385f6280-07a7-4f8a-9fe3-d3020d553b6c
-    :power_state: 'off'
+    :raw_power_state: 'PowerOff'
     :location: hyper-v/Windows_2012_Server/Virtual%20Machines/385F6280-07A7-4F8A-9FE3-D3020D553B6C.xml
     :type: "VmMicrosoft"
   - &57523820
@@ -1022,7 +1022,7 @@
     :name: Ubuntu12.04
     :uid_ems: 8a7628a6-c02a-420d-8c5d-ab2b1da3c47e
     :boot_time: 2013-09-12 15:27:27.000000000 Z
-    :power_state: 'on'
+    :raw_power_state: 'Running'
     :location: hyper-v/Ubuntu12.04/Virtual%20Machines/8A7628A6-C02A-420D-8C5D-AB2B1DA3C47E.xml
     :type: "VmMicrosoft"
   :ipaddress: 192.168.253.110

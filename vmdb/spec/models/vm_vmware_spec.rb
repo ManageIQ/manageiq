@@ -2,9 +2,11 @@ require "spec_helper"
 
 describe VmVmware do
   context "#is_available?" do
-    let (:ems)  { FactoryGirl.create(:ems_vmware) }
-    let (:host) { FactoryGirl.create(:host_vmware_esx, :ext_management_system => ems) }
-    let (:vm)   { FactoryGirl.create(:vm_vmware, :ext_management_system => ems, :host => host) }
+    let(:ems)  { FactoryGirl.create(:ems_vmware) }
+    let(:host) { FactoryGirl.create(:host_vmware_esx, :ext_management_system => ems) }
+    let(:vm)   { FactoryGirl.create(:vm_vmware, :ext_management_system => ems, :host => host) }
+    let(:power_state_on)        { "poweredOn" }
+    let(:power_state_suspended) { "poweredOff" }
 
     context("with :start") do
       let(:state) { :start }

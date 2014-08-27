@@ -24,7 +24,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
       context "with 2 cos based proxies, a 'running' vmware vm on one of them, and both hosts are on vm's storage, " do
         before(:each) do
           @vms_host, other_host = @hosts[0..1]
-          @vm.state = "on"
+          @vm.state = "poweredOn"
           @vm.host = @vms_host
           @vm.save
           vm_storage = @vm.storage
@@ -70,7 +70,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
           @vm.stub(:storage2active_proxies => [@host])
           @vm.stub(:storage2proxies => [@host])
           @vm.host = @vms_host
-          @vm.state = "on"
+          @vm.state = "poweredOn"
           @vm.save
         end
 

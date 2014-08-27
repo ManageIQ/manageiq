@@ -2,8 +2,10 @@ require "spec_helper"
 
 describe VmOpenstack do
   context "#is_available?" do
-    let (:ems) { FactoryGirl.create(:ems_openstack) }
-    let (:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
+    let(:ems) { FactoryGirl.create(:ems_openstack) }
+    let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
+    let(:power_state_on)        { "RUNNING" }
+    let(:power_state_suspended) { "SUSPENDED" }
 
     context("with :start") do
       let(:state) { :start }
