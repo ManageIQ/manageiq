@@ -1,6 +1,7 @@
 class ApiController
   module Manager
     def update_collection(type, id, is_subcollection = false)
+      api_log_info("\n\n >>>>>>>>>>>>>>>>>>>>>> #{type}, #{id}, #{is_subcollection}")
       if @req[:method] == :put || @req[:method] == :patch
         raise BadRequestError,
               "Must specify a resource id for the #{@req[:method]} HTTP method" if id.blank?
@@ -44,9 +45,15 @@ class ApiController
     def patch_resource(type, id)
       patched_attrs = {}
       json_body.each do |patch_cmd|
-        action = patch_cmd["action"]
-        path   = patch_cmd["path"]
-        value  = patch_cmd["value"]
+        if patch_cmd.is_a?(Array) && patch_cmd.length == 2
+          action = "edit"
+          path, value = patch_cmd
+        else
+          action = patch_cmd["action"]
+          path   = patch_cmd["path"]  
+          value  = patch_cmd["value"]  
+        end
+
         if action.nil?
           api_log_info("Must specify an attribute action for each path command for the resource #{type}/#{id}")
         elsif path.nil?
