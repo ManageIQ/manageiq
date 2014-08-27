@@ -4,7 +4,7 @@ FactoryGirl.define do
     location        { |x| "[storage] #{x.name}/#{x.name}.vmx" }
     uid_ems         { MiqUUID.new_guid }
     vendor          "redhat"
-    power_state     "on"
+    raw_power_state "up"
     template        false
   end
 end

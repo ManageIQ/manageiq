@@ -5,7 +5,7 @@ FactoryGirl.define do
     uid_ems         { MiqUUID.new_guid }
     vendor          "vmware"
     template        false
-    state           "on"
+    raw_power_state "poweredOn"
   end
 
   factory :vm_with_ref, :parent => :vm_vmware do
@@ -24,7 +24,7 @@ FactoryGirl.define do
   # Factories for perf_capture_timer and perf_capture_gap testing
   factory :vm_target_vmware, :parent => :vm_vmware do
     after(:create) do |x|
-      x.state = (toggle_on_name_seq(x) ? "on" : "off")
+      x.raw_power_state = (toggle_on_name_seq(x) ? "poweredOn" : "poweredOff")
     end
   end
 end

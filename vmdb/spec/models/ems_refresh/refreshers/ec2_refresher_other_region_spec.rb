@@ -182,7 +182,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-OtherRegion", :power_state => "on").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-OtherRegion", :raw_power_state => "running").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "i-dc1ee486",
