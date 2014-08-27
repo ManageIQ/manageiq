@@ -30,13 +30,17 @@ class ApiController
 
     def tag_requested(id, data)
       klass  = collection_config[:tags][:klass].constantize
-      return klass.find(id) if id.to_i > 0
+      tag = klass.find(id) if id.to_i > 0 || false
      
       if !data["category"].nil? && !data["name"].nil?
         tag_name = [TAG_NAMESPACE, data["category"], data["name"]].join("/")
-        return Tag.find_by_name(tag_name)
+        tag = klass.find_by_name(tag_name)
       end
 
+      if tag
+        tag[:href] = @req[:url] + tag.id.to_s
+        return tag
+      end
       false
     end
 
