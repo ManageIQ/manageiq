@@ -25,7 +25,7 @@ describe VmRedhat do
 
     context("with :pause") do
       let(:state) { :pause }
-      include_examples "Vm operation is available when powered on"
+      include_examples "Vm operation is not available"
     end
 
     context("with :shutdown_guest") do
@@ -35,17 +35,17 @@ describe VmRedhat do
 
     context("with :standby_guest") do
       let(:state) { :standby_guest }
-      include_examples "Vm operation is available when powered on"
+      include_examples "Vm operation is not available"
     end
 
     context("with :reboot_guest") do
       let(:state) { :reboot_guest }
-      include_examples "Vm operation is available when powered on"
+      include_examples "Vm operation is not available"
     end
 
     context("with :reset") do
       let(:state) { :reset }
-      include_examples "Vm operation is available when powered on"
+      include_examples "Vm operation is not available"
     end
   end
 
