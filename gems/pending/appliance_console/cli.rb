@@ -39,6 +39,10 @@ module ApplianceConsole
       name.presence.in?(["localhost", "127.0.0.1", nil])
     end
 
+    def set_host?
+      options[:host]
+    end
+
     def key?
       options[:key] || options[:fetch_key] || (local_database? && !key_configuration.key_exist?)
     end
@@ -48,11 +52,23 @@ module ApplianceConsole
     end
 
     def local_database?
-      hostname && local?(hostname)
+      database? && local?(hostname)
     end
 
     def certs?
       options[:postgres_client_cert] || options[:postgres_server_cert] || options[:http_cert]
+    end
+
+    def uninstall_ipa?
+      options[:uninstall_ipa]
+    end
+
+    def install_ipa?
+      options[:ipaserver]
+    end
+
+    def tmp_disk?
+      options[:tmpdisk]
     end
 
     def initialize(options = {})
@@ -108,12 +124,12 @@ module ApplianceConsole
     end
 
     def run
-      Env[:host] = options[:host] if options[:host]
+      Env[:host] = options[:host] if set_host?
       create_key if key?
-      set_db if hostname
-      config_tmp_disk if options[:tmpdisk]
-      uninstall_ipa if options[:uninstall_ipa]
-      install_ipa if options[:ipaserver]
+      set_db if database?
+      config_tmp_disk if tmp_disk?
+      uninstall_ipa if uninstall_ipa?
+      install_ipa if install_ipa?
       install_certs if certs?
     rescue AwesomeSpawn::CommandResultError => e
       say e.result.output
