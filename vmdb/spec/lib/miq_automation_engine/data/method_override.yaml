@@ -1,187 +1,4 @@
 ---
-MIQ:
-  __domain__.yaml:
-    object_type: domain
-    version: 1.0
-    object:
-      attributes:
-        name: MIQ
-        description: 
-        display_name: 
-        system: 
-        priority: 1
-        enabled: 
-  EVM:
-    __namespace__.yaml:
-      object_type: namespace
-      version: 1.0
-      object:
-        attributes:
-          name: EVM
-          description: 
-          display_name: 
-          system: 
-          priority: 
-          enabled: 
-    SAMPLE.class:
-      __class__.yaml:
-        object_type: class
-        version: 1.0
-        object:
-          attributes:
-            description: 
-            display_name: 
-            name: SAMPLE
-            type: 
-            inherits: 
-            visibility: 
-            owner: 
-          schema:
-          - field:
-              aetype: attribute
-              name: attr1
-              display_name: Attribute1
-              datatype: string
-              priority: 1
-              owner: 
-              default_value: Barney
-              substitute: true
-              message: create
-              visibility: 
-              collect: 
-              scope: 
-              description: 
-              condition: 
-              on_entry: 
-              on_exit: 
-              on_error: 
-              max_retries: 
-              max_time: 
-          - field:
-              aetype: attribute
-              name: attr2
-              display_name: Attribute2
-              datatype: string
-              priority: 2
-              owner: 
-              default_value: Fred
-              substitute: true
-              message: create
-              visibility: 
-              collect: 
-              scope: 
-              description: 
-              condition: 
-              on_entry: 
-              on_exit: 
-              on_error: 
-              max_retries: 
-              max_time: 
-          - field:
-              aetype: method
-              name: method1
-              display_name: Method Connection
-              datatype: string
-              priority: 3
-              owner: 
-              default_value: 
-              substitute: true
-              message: create
-              visibility: 
-              collect: 
-              scope: 
-              description: 
-              condition: 
-              on_entry: 
-              on_exit: 
-              on_error: 
-              max_retries: 
-              max_time: 
-      test1.yaml:
-        object_type: instance
-        version: 1.0
-        object:
-          attributes:
-            display_name: 
-            name: test1
-            inherits: 
-            description: 
-          fields:
-          - method1:
-              value: evm1
-      __methods__:
-        evm1.rb: ! '$evm.root[''method_executed'']  = ''miq''
-
-'
-        evm1.yaml:
-          object_type: method
-          version: 1.0
-          object:
-            attributes:
-              name: evm1
-              display_name: 
-              description: 
-              scope: instance
-              language: ruby
-              location: inline
-            inputs:
-            - field:
-                aetype: 
-                name: offspring
-                display_name: 
-                datatype: 
-                priority: 1
-                owner: 
-                default_value: Bamm-Bamm
-                substitute: true
-                message: create
-                visibility: 
-                collect: 
-                scope: 
-                description: 
-                condition: 
-                on_entry: 
-                on_exit: 
-                on_error: 
-                max_retries: 
-                max_time: 
-        evm2.rb: ! '$evm.root[''method_executed''] = $evm.object[''attr1'']
-
-          exit MIQ_OK
-
-'
-        evm2.yaml:
-          object_type: method
-          version: 1.0
-          object:
-            attributes:
-              name: evm2
-              display_name: 
-              description: 
-              scope: instance
-              language: ruby
-              location: inline
-            inputs:
-            - field:
-                aetype: 
-                name: CatchPhrase
-                display_name: 
-                datatype: 
-                priority: 1
-                owner: 
-                default_value: Yabba Dabba Doo
-                substitute: true
-                message: create
-                visibility: 
-                collect: 
-                scope: 
-                description: 
-                condition: 
-                on_entry: 
-                on_exit: 
-                on_error: 
-                max_retries: 
-                max_time: 
 RHT:
   __domain__.yaml:
     object_type: domain
@@ -193,7 +10,7 @@ RHT:
         display_name: 
         system: 
         priority: 2
-        enabled: 
+        enabled: true
   EVM:
     __namespace__.yaml:
       object_type: namespace
@@ -293,15 +110,15 @@ RHT:
           - method1:
               value: evm2
       __methods__:
-        evm1.rb: ! '$evm.root[''method_executed'']  = $evm.inputs[''nickname'']
+        EvM1.rb: ! '$evm.root[''method_executed'']  = $evm.inputs[''nickname'']
 
 '
-        evm1.yaml:
+        EvM1.yaml:
           object_type: method
           version: 1.0
           object:
             attributes:
-              name: evm1
+              name: EvM1
               display_name: 
               description: 
               scope: instance
@@ -328,53 +145,236 @@ RHT:
                 on_error: 
                 max_retries: 
                 max_time: 
+MIQ:
+  __domain__.yaml:
+    object_type: domain
+    version: 1.0
+    object:
+      attributes:
+        name: MIQ
+        description: 
+        display_name: 
+        system: 
+        priority: 1
+        enabled: true
+  EVM:
+    __namespace__.yaml:
+      object_type: namespace
+      version: 1.0
+      object:
+        attributes:
+          name: EVM
+          description: 
+          display_name: 
+          system: 
+          priority: 
+          enabled: 
+    SAMPLE.class:
+      __class__.yaml:
+        object_type: class
+        version: 1.0
+        object:
+          attributes:
+            description: 
+            display_name: 
+            name: SAMPLE
+            type: 
+            inherits: 
+            visibility: 
+            owner: 
+          schema:
+          - field:
+              aetype: attribute
+              name: attr1
+              display_name: Attribute1
+              datatype: string
+              priority: 1
+              owner: 
+              default_value: Barney
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: attribute
+              name: attr2
+              display_name: Attribute2
+              datatype: string
+              priority: 2
+              owner: 
+              default_value: Fred
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+          - field:
+              aetype: method
+              name: method1
+              display_name: Method Connection
+              datatype: string
+              priority: 3
+              owner: 
+              default_value: 
+              substitute: true
+              message: create
+              visibility: 
+              collect: 
+              scope: 
+              description: 
+              condition: 
+              on_entry: 
+              on_exit: 
+              on_error: 
+              max_retries: 
+              max_time: 
+      test1.yaml:
+        object_type: instance
+        version: 1.0
+        object:
+          attributes:
+            display_name: 
+            name: test1
+            inherits: 
+            description: 
+          fields:
+          - method1:
+              value: evm1
+      __methods__:
+        EvM1.rb: ! '$evm.root[''method_executed'']  = ''miq''
+
+'
+        EvM1.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: EvM1
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: offspring
+                display_name: 
+                datatype: 
+                priority: 1
+                owner: 
+                default_value: Bamm-Bamm
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
+        EvM2.rb: ! '$evm.root[''method_executed''] = $evm.object[''attr1'']
+
+          exit MIQ_OK
+
+'
+        EvM2.yaml:
+          object_type: method
+          version: 1.0
+          object:
+            attributes:
+              name: EvM2
+              display_name: 
+              description: 
+              scope: instance
+              language: ruby
+              location: inline
+            inputs:
+            - field:
+                aetype: 
+                name: CatchPhrase
+                display_name: 
+                datatype: 
+                priority: 1
+                owner: 
+                default_value: Yabba Dabba Doo
+                substitute: true
+                message: create
+                visibility: 
+                collect: 
+                scope: 
+                description: 
+                condition: 
+                on_entry: 
+                on_exit: 
+                on_error: 
+                max_retries: 
+                max_time: 
   .manifest.yaml:
     __domain__.yaml:
       classes: 2
       instances: 2
       method_files: 3
       method_instances: 3
-      created_on: 2014-06-26 14:55:22.563391000 Z
-      updated_on: 2014-06-26 14:55:22.563391000 Z
-      size: 153
-      sha1: 9Uw1gnbk3buA6tWGz5nlNGP+dRA=
+      created_on: 2014-08-27 15:59:59.751854000 Z
+      updated_on: 2014-08-27 16:09:07.955505000 Z
+      size: 157
+      sha1: 5HH31tawUMfeuJBVd5BswNpQ3O0=
     EVM/__namespace__.yaml:
-      created_on: 2014-06-26 14:55:22.586085000 Z
-      updated_on: 2014-06-26 14:55:22.586085000 Z
+      created_on: 2014-08-27 15:59:59.873716000 Z
+      updated_on: 2014-08-27 15:59:59.873716000 Z
       size: 155
       sha1: sRy02EsdO3HlNqjIjlMq4Hek8YU=
     EVM/SAMPLE.class/__class__.yaml:
-      created_on: 2014-06-26 14:55:22.597728000 Z
-      updated_on: 2014-06-26 14:55:22.597728000 Z
-      size: 1337
-      sha1: gsGXg9GTsTxhi8DRXE1LK9jHYIc=
-    EVM/SAMPLE.class/test1.yaml:
-      created_on: 2014-06-26 14:55:22.472359000 Z
-      updated_on: 2014-06-26 14:55:22.472359000 Z
-      size: 170
-      sha1: 29Ii+59/jpz1iTkMLcpzAerXoeE=
-    EVM/SAMPLE.class/__methods__/evm1.rb:
-      created_on: 2014-06-26 14:55:22.619601000 Z
-      updated_on: 2014-06-26 14:59:46.483104000 Z
-      size: 56
-      sha1: ey72xIGcrUidZihDZKEjv3qn08A=
-    EVM/SAMPLE.class/__methods__/evm1.yaml:
-      created_on: 2014-06-26 14:55:22.619601000 Z
-      updated_on: 2014-06-26 14:59:46.483104000 Z
-      size: 550
-      sha1: REFHs1Kgu36Y5+mc3RcT/EPG+Wg=
-    EVM/SAMPLE.class/__methods__/evm2.rb:
-      created_on: 2014-06-26 14:55:22.555586000 Z
-      updated_on: 2014-06-26 14:59:14.512727000 Z
-      size: 64
-      sha1: Gkqcfk8D1PKBlYqOfHkzhlHepGw=
-    EVM/SAMPLE.class/__methods__/evm2.yaml:
-      created_on: 2014-06-26 14:55:22.555586000 Z
-      updated_on: 2014-06-26 14:59:14.512727000 Z
-      size: 557
-      sha1: Y/m6D/N2D3EM7idqrx1mTwuwkjA=
+      created_on: 2014-08-27 15:59:59.950467000 Z
+      updated_on: 2014-08-27 15:59:59.950467000 Z
+      size: 1333
+      sha1: wDpfEI7ijFdDEV1ZoUzajDlqmtM=
     EVM/SAMPLE.class/test2.yaml:
-      created_on: 2014-06-26 14:55:22.611646000 Z
-      updated_on: 2014-06-26 14:55:22.611646000 Z
+      created_on: 2014-08-27 16:00:00.144171000 Z
+      updated_on: 2014-08-27 16:00:00.144171000 Z
       size: 170
       sha1: O87SckuVvWx5FIJPmtyYUS9ycmM=
+    EVM/SAMPLE.class/__methods__/EvM1.rb:
+      created_on: 2014-08-27 16:00:00.082719000 Z
+      updated_on: 2014-08-27 16:01:08.357682000 Z
+      size: 38
+      sha1: 3o4bUWLxLcP4zECJVGhutRtWqx0=
+    EVM/SAMPLE.class/__methods__/EvM1.yaml:
+      created_on: 2014-08-27 16:00:00.082719000 Z
+      updated_on: 2014-08-27 16:01:08.357682000 Z
+      size: 549
+      sha1: 7l/4Re5Uk/NER6NInhckHva/ic4=
+    EVM/SAMPLE.class/test1.yaml:
+      created_on: 2014-08-27 16:00:00.047218000 Z
+      updated_on: 2014-08-27 16:00:00.047218000 Z
+      size: 170
+      sha1: 29Ii+59/jpz1iTkMLcpzAerXoeE=
+    EVM/SAMPLE.class/__methods__/EvM2.rb:
+      created_on: 2014-08-27 16:00:00.092927000 Z
+      updated_on: 2014-08-27 16:01:25.200929000 Z
+      size: 64
+      sha1: Gkqcfk8D1PKBlYqOfHkzhlHepGw=
+    EVM/SAMPLE.class/__methods__/EvM2.yaml:
+      created_on: 2014-08-27 16:00:00.092927000 Z
+      updated_on: 2014-08-27 16:01:25.200929000 Z
+      size: 557
+      sha1: G+C0xA4RDy/B+rc4P48WjdvoWsg=

@@ -118,4 +118,9 @@ class MiqAeMethod < ActiveRecord::Base
   def self.get_homonymic_across_domains(fqname, enabled = nil)
     MiqAeDatastore.get_homonymic_across_domains(::MiqAeMethod, fqname, enabled)
   end
+
+  def self.find_by_class_id_and_name(class_id, name)
+    ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name)
+    ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id).first
+  end
 end
