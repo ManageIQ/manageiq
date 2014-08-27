@@ -53,7 +53,7 @@
   <td align="right">
     <% buttons_show = @edit[:new][:ldap_region_id] && @filterby1 != NOTHING_STRING && !@edit[:new][:filter_value1].blank? %>
     <div id="buttons_on" style="display:<%= buttons_show ? "display" : "none" %>;">
-      <%= link_to(image_tag('/images/formbuttons/search.png',
+      <%= link_to(button_tag('/images/formbuttons/search.png',
                    :style=>"height: 30px; width: 80px; margin-top: 1px", :alt=>"Import",:class=>"button"),
                   {:action=>"user_import", :button=>"search",:id=>"import_edit__new"},
                   "data-miq_sparkle_on" => true,
@@ -62,7 +62,7 @@
       %>
     </div>
     <div id="buttons_off" style="display:<%= buttons_show ? "none" : "display" %>;">
-      <%= image_tag("/images/formbuttons/search.png",	:class=>"dimmed",
+      <%= button_tag("/images/formbuttons/search.png",	:class=>"dimmed",
                     :style=>"height: 30px; width: 80px; margin-top: 1px",
                     :title=>"Select LDAP Server, search option to search",
                     :alt=>"Select LDAP Server, search option to search") %>

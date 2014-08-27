@@ -84,21 +84,17 @@ pfx = "miq_request/"
           <% if field == :owner_email
                fh = wf.get_field(:owner_load_ldap, dialog)
                if @edit && field_hash[:display] == :edit && fh[:display] == :show && !@edit[:stamp_typ] %>
-                 <ul id="form_buttons">
-                   <li>
-                     <%= image_tag('/images/formbuttons/lookup.png',
-                           :border  => "0",
-                           :class   => "button",
-                           :style   => "height: 30px; width: 80px; margin-top: 1px",
-                           :alt     => "LDAP Group Lookup",
-                           :title   => "LDAP Group Lookup",
-                           :onclick => "miqAjaxButton('#{url_for(
-                                                         :controller => "miq_request",
-                                                         :action     => 'retrieve_email',
-                                                         :field      => fh[:pressed][:method],
-                                                         :button     => "submit")}');") %>
-                   </li>
-                 </ul>
+
+                 <%= button_tag('Lookup',
+                       :class   => "btn btn-primary",
+                       :alt     => "LDAP Group Lookup",
+                       :title   => "LDAP Group Lookup",
+                       :onclick => "miqAjaxButton('#{url_for(
+                                                     :controller => "miq_request",
+                                                     :action     => 'retrieve_email',
+                                                     :field      => fh[:pressed][:method],
+                                                     :button     => "submit")}');") %>
+
             <% end %>
           <% end %>
         </td>

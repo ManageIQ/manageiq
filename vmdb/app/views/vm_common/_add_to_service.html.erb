@@ -18,8 +18,20 @@
 
 <div id="formbuttonplacement">
 
+	<%= button_tag("Add",
+											 :name  => "add", 
+											 :class => "btn btn-primary", 
+											 :alt   => "Add VM to the selected Service", 
+											 :title => "Add VM to the selected Service",
+											 :type  => "submit") 
+	%>
+	<%= button_tag("Cancel",
+	                     :name  => "cancel", 
+	                     :class => "btn btn-default", 
+	                     :alt   => "Cancel",
+                       :type  => "submit")
 
-			<%= image_submit_tag("/images/formbuttons/add.png",  :width=>"80", :height=>"35", :name=>"add", :class=>"button", :alt=>"Add VM to the selected Service", :title=>"Add VM to the selected Service") %>
-			<%= image_submit_tag("/images/formbuttons/cancel.png",  :width=>"80", :height=>"35", :name=>"cancel", :class=>"button", :alt=>"Cancel", :title=>"Cancel") %>
-			<% end %>
+	%>
+
 </div>
+<% end %>
