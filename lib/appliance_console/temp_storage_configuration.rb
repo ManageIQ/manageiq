@@ -41,18 +41,16 @@ module ApplianceConsole
       # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(TEMP_DISK_MOUNT_POINT)
       FileUtils.mkdir_p(TEMP_DISK_MOUNT_POINT)
-      LinuxAdmin.run!("mount",
-                      :params => {
-                        "-t"  => TEMP_DISK_FILESYSTEM_TYPE,
-                        "-o"  => TEMP_DISK_MOUNT_OPTS,
-                        nil   => [partition.path, TEMP_DISK_MOUNT_POINT]
-                      }
-      )
+      LinuxAdmin.run!("mount", :params => {
+                        "-t" => TEMP_DISK_FILESYSTEM_TYPE,
+                        "-o" => TEMP_DISK_MOUNT_OPTS,
+                        nil  => [partition.path, TEMP_DISK_MOUNT_POINT]
+                      })
     end
 
     def update_fstab(partition)
       fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find { |e| e.mount_point == TEMP_DISK_MOUNT_POINT }
+      return if fstab.entries.detect { |e| e.mount_point == TEMP_DISK_MOUNT_POINT }
 
       entry = LinuxAdmin::FSTabEntry.new(
         :device        => partition.path,
