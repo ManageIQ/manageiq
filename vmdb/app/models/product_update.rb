@@ -351,7 +351,7 @@ class ProductUpdate < ActiveRecord::Base
   end
 
   def self.get_smartproxy_version(filename)
-    Zip::ZipFile.open(filename) {|z| z.file.read("/host/miqhost/VERSION")}
+    Zip::ZipFile.open(filename) { |z| z.file.read("/host/miqhost/VERSION").strip }
   rescue => err
     raise "Error <#{err}> for file <#{filename}>"
   end
