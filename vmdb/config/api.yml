@@ -420,9 +420,10 @@
         :identifier: catalogitem_delete
     :tags_subcollection_actions:
       :post:
-      - :name: assign
+      - :name: create
         :identifier: catalogitem_tag
-      - :name: unassign
+      :delete:
+      - :name: delete
         :identifier: catalogitem_tag
   :services:
     :description: Services
@@ -463,12 +464,14 @@
     :klass: Tag
     :subcollection_actions:
       :post:
-      - :name: assign
-      - :name: unassign
+      - :name: create
+      :delete:
+      - :name: delete
     :subresource_actions:
       :post:
-      - :name: assign
-      - :name: unassign
+      - :name: create
+      :delete:
+      - :name: delete
   :tasks:
     :description: Request Tasks
     :options:
@@ -503,7 +506,7 @@
         :identifier: miq_template_delete
     :tags_subcollection_actions:
       :post:
-      - :name: assign
+      - :name:  
         :identifier: miq_template_tag
       - :name: unassign
         :identifier: miq_template_tag
