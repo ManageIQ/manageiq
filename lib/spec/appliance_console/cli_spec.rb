@@ -20,14 +20,14 @@ describe ApplianceConsole::Cli do
   end
 
   it "should set database host to localhost if running locally" do
-    subject.should_receive(:disk_from_string).and_return('x')
+    subject.should_receive(:disk_from_string).with('x').and_return('/dev/x')
     subject.should_receive(:say)
     ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
       .with(:region      => 1,
             :database    => 'vmdb_production',
             :username    => 'root',
             :interactive => false,
-            :disk        => 'x')
+            :disk        => '/dev/x')
       .and_return(double(:activate => true, :post_activation => true))
 
     subject.parse(%w(--internal -r 1 --dbdisk x)).run
@@ -156,6 +156,18 @@ describe ApplianceConsole::Cli do
         ).and_return(double(:activate => true, :status_string => "good", :complete? => false))
 
       subject.parse(%w(--postgres-server-cert --verbose --ca super)).run
+    end
+  end
+
+  context "#config_tmp_disk" do
+    it "configures disk" do
+      subject.should_receive(:disk_from_string).with('x').and_return('/dev/x')
+      subject.should_receive(:say)
+      ApplianceConsole::TempStorageConfiguration.should_receive(:new)
+        .with(:disk      => '/dev/x')
+      .and_return(double(:activate => true))
+
+      subject.parse(%w(--tmpdisk x)).run
     end
   end
 

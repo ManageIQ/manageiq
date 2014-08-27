@@ -10,22 +10,18 @@ module ApplianceConsole
 
     include ApplianceConsole::Logging
 
-    def process_menus
-      say("#{I18n.t("advanced_settings.tmp_config")}\n\n")
-      disk = ask_questions
-      if disk && are_you_sure?("configure #{disk.path} as temp storage")
-        say("Configuring #{disk.path} as temp storage...")
-        add_temp_disk(disk)
-        say("Done.")
-        press_any_key
-      else
-        say("Canceled...")
-        press_any_key
-      end
+    def initialize(config = {})
+      @disk = config[:disk]
+    end
+
+    def activate
+      say("Configuring #{disk.path} as temp storage...")
+      add_temp_disk(disk)
     end
 
     def ask_questions
-      ask_for_disk("temp storage disk")
+      @disk = ask_for_disk("temp storage disk", false)
+      disk && are_you_sure?("configure #{disk.path} as temp storage")
     end
 
     def add_temp_disk(disk)
@@ -45,18 +41,16 @@ module ApplianceConsole
       # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(TEMP_DISK_MOUNT_POINT)
       FileUtils.mkdir_p(TEMP_DISK_MOUNT_POINT)
-      LinuxAdmin.run!("mount",
-                      :params => {
-                        "-t"  => TEMP_DISK_FILESYSTEM_TYPE,
-                        "-o"  => TEMP_DISK_MOUNT_OPTS,
-                        nil   => [partition.path, TEMP_DISK_MOUNT_POINT]
-                      }
-      )
+      LinuxAdmin.run!("mount", :params => {
+                        "-t" => TEMP_DISK_FILESYSTEM_TYPE,
+                        "-o" => TEMP_DISK_MOUNT_OPTS,
+                        nil  => [partition.path, TEMP_DISK_MOUNT_POINT]
+                      })
     end
 
     def update_fstab(partition)
       fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find { |e| e.mount_point == TEMP_DISK_MOUNT_POINT }
+      return if fstab.entries.detect { |e| e.mount_point == TEMP_DISK_MOUNT_POINT }
 
       entry = LinuxAdmin::FSTabEntry.new(
         :device        => partition.path,

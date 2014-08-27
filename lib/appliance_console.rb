@@ -470,7 +470,16 @@ Date and Time Configuration
           end
 
         when I18n.t("advanced_settings.tmp_config")
-          ApplianceConsole::TempStorageConfiguration.new.process_menus
+          say("#{selection}\n\n")
+          tmp_config = ApplianceConsole::TempStorageConfiguration.new
+          if tmp_config.ask_questions && tmp_config.activate
+            say("Temp storage disk configured")
+            press_any_key
+          else
+            say("Temp storage disk not configured")
+            press_any_key
+            raise MiqSignalError
+          end
 
         when I18n.t("advanced_settings.restart")
           case ask_with_menu("Restart Option", RE_OPTIONS, nil, false)
