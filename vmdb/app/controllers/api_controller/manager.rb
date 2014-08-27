@@ -1,7 +1,6 @@
 class ApiController
   module Manager
     def update_collection(type, id, is_subcollection = false)
-      api_log_info("\n\n >>>>>>>>>>>>>>>>>>>>>> #{type}, #{id}, #{is_subcollection}")
       if @req[:method] == :put || @req[:method] == :patch
         raise BadRequestError,
               "Must specify a resource id for the #{@req[:method]} HTTP method" if id.blank?
