@@ -346,10 +346,12 @@
     - :service_templates
     :collection_actions:
       :post:
-      - :name: add
+      - :name: create       
         :identifier: st_catalog_new
+      :patch:
       - :name: edit
         :identifier: st_catalog_edit
+      :delete:
       - :name: delete
         :identifier: st_catalog_delete
     :resource_actions:
