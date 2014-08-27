@@ -111,10 +111,8 @@ class HostVmwareEsx < HostVmware
 
     begin
       with_provider_connection(:use_broker => false, :auth_type => auth_type) {}
-    rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH, SOAP::FaultError
+    rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
       raise MiqException::MiqUnreachableError, $!.message
-    rescue SOAP::FaultError
-      raise $!.message
     rescue Handsoap::Fault
       $log.warn("MIQ(Host-verify_credentials_with_ws): #{$!.inspect}")
       if $!.respond_to?(:reason)
