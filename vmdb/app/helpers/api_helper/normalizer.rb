@@ -67,7 +67,7 @@ module ApiHelper
     end
 
     def normalize_url_from_id(_type = nil, _resource_id = nil)
-      return "" if _type.nil? || _resource_id.nil?
+      return nil if _type.nil? || _resource_id.nil?
       normalize_url(_type, "#{_type}/#{_resource_id}")
     end
 
