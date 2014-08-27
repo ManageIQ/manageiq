@@ -186,7 +186,7 @@ module ApplicationController::MiqRequestMethods
   def prov_edit
     if params[:button] == "cancel"
       req = MiqRequest.find_by_id(from_cid(session[:edit][:req_id])) if session[:edit] && session[:edit][:req_id]
-      add_flash(req && req.id ? I18n.t("flash.edit.cancelled", :model=>"#{session[:edit][:prov_type]} Request", :name=>req.description) : I18n.t("flash.add.cancelled", :model=>"#{session[:edit][:prov_type]} Request"))
+      add_flash(req && req.id ? I18n.t("flash.edit.cancelled", :model=>"#{session[:edit][:prov_type]} Request", :name=>req.description) : I18n.t("flash.provision.cancelled", :model=>"#{session[:edit][:prov_type]} Request"))
       session[:flash_msgs] = @flash_array.dup unless session[:edit][:explorer]  # Put msg in session for next transaction to display
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
       @edit = session[:edit] =  nil                                               # Clear out session[:edit]

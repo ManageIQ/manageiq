@@ -244,6 +244,9 @@ en:
       export_generation_error: "Export generation returned: Status [%{status}] Message [%{message}]"
       tags_saved: "Tag edits were successfully saved"
 
+    provision: 
+      cancelled: "Provision %{model} was cancelled by the user"
+
     policy:
       alert_profile_assignments_saved: 'Alert Profile "%{name}" assignments succesfully saved'
       task_cancelled_by_user: "%{task} cancelled by user"
