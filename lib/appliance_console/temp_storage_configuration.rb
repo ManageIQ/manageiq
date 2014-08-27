@@ -20,7 +20,7 @@ module ApplianceConsole
     end
 
     def ask_questions
-      @disk = ask_for_disk("temp storage disk")
+      @disk = ask_for_disk("temp storage disk", false)
       disk && are_you_sure?("configure #{disk.path} as temp storage")
     end
 

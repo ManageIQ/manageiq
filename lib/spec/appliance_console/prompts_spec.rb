@@ -272,6 +272,13 @@ describe ApplianceConsole::Prompts do
           "Are you sure you don't want to partion the special disk? (Y/N): ",
         ]
       end
+
+      it "can skip confirmation prompt" do
+        expect(subject.ask_for_disk("database disk", false)).to be_nil
+        expect_heard [
+          "No partition found for database disk. You probably want to add an unpartitioned disk and try again.", ""
+        ]
+      end
     end
 
     context "with one disk" do

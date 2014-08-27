@@ -109,7 +109,7 @@ module ApplianceConsole
       just_ask(prompt, nil, INT_REGEXP, "an integer", Integer) { |q| q.in = range if range }
     end
 
-    def ask_for_disk(disk_name)
+    def ask_for_disk(disk_name, verify = true)
       require "linux_admin"
       disks = LinuxAdmin::Disk.local.select { |d| d.partitions.empty? }
 
@@ -126,7 +126,7 @@ module ApplianceConsole
         end
       end
 
-      if disk.nil?
+      if verify && disk.nil?
         say ""
         raise MiqSignalError unless are_you_sure?(" you don't want to partion the #{disk_name}")
       end
