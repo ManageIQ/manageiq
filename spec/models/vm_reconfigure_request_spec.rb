@@ -84,4 +84,101 @@ describe VmReconfigureRequest do
   def stub_get_next_vm_name(vm_name = "New VM")
     allow(MiqProvision).to receive(:get_next_vm_name).and_return(vm_name)
   end
+
+  context ".request_limits" do
+    subject { described_class.request_limits(@options) }
+
+    context "RHEV only" do
+      before do
+        @vm   = FactoryGirl.create(:vm_redhat)
+        @options = {:src_ids => [@vm.id]}
+      end
+
+      it "single vm" do
+        expect(subject[:min__number_of_sockets]).to eq(1)
+        expect(subject[:max__number_of_sockets]).to eq(16)
+        expect(subject[:min__total_vcpus]).to eq(1)
+        expect(subject[:max__total_vcpus]).to eq(160)
+        expect(subject[:min__vm_memory]).to      eq(4)
+        expect(subject[:max__vm_memory]).to      eq(2.terabyte / 1.megabyte)
+      end
+
+      it "multiple vms" do
+        vm2   = FactoryGirl.create(:vm_redhat)
+        @options[:src_ids] << vm2.id
+
+        expect(subject[:min__number_of_sockets]).to eq(1)
+        expect(subject[:max__number_of_sockets]).to eq(16)
+        expect(subject[:min__total_vcpus]).to eq(1)
+        expect(subject[:max__total_vcpus]).to eq(160)
+        expect(subject[:min__vm_memory]).to      eq(4)
+        expect(subject[:max__vm_memory]).to      eq(2.terabyte / 1.megabyte)
+      end
+    end
+
+    context "Vmware only" do
+      before do
+        @host = FactoryGirl.create(:host,
+                                   :hardware => FactoryGirl.create(:hardware,
+                                                                   :logical_cpus     => 40,
+                                                                   :numvcpus         => 10,
+                                                                   :cores_per_socket => 4,
+                                                                   :virtual_hw_version => "07"
+                                                                  )
+                                  )
+        @vm   = FactoryGirl.create(:vm_vmware, :host => @host, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07"))
+        @options = {:src_ids => [@vm.id]}
+      end
+
+      it "single vm" do
+        expect(subject[:min__number_of_sockets]).to eq(1)
+        expect(subject[:max__number_of_sockets]).to eq(8)
+        expect(subject[:min__total_vcpus]).to eq(1)
+        expect(subject[:max__total_vcpus]).to eq(8)
+        expect(subject[:min__vm_memory]).to      eq(4)
+        expect(subject[:max__vm_memory]).to      eq(255.gigabyte / 1.megabyte)
+      end
+
+      it "multiple vms" do
+        host2 = FactoryGirl.create(:host,
+                                   :hardware => FactoryGirl.create(:hardware,
+                                                                   :logical_cpus     => 30,
+                                                                   :numvcpus         => 15,
+                                                                   :cores_per_socket => 2,
+                                                                   :virtual_hw_version => "07"
+                                                                  )
+                                  )
+        vm2   = FactoryGirl.create(:vm_vmware, :host => host2, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07"))
+        @options[:src_ids] << vm2.id
+
+        expect(subject[:min__number_of_sockets]).to eq(1)
+        expect(subject[:max__number_of_sockets]).to eq(8)
+        expect(subject[:min__total_vcpus]).to eq(1)
+        expect(subject[:max__total_vcpus]).to eq(8)
+        expect(subject[:min__vm_memory]).to      eq(4)
+        expect(subject[:max__vm_memory]).to      eq(255.gigabyte / 1.megabyte)
+      end
+    end
+
+    it "hybrid" do
+      vm1  = FactoryGirl.create(:vm_redhat)
+      host = FactoryGirl.create(:host,
+                                :hardware => FactoryGirl.create(:hardware,
+                                                                :logical_cpus     => 30,
+                                                                :numvcpus         => 15,
+                                                                :cores_per_socket => 2,
+                                                                :virtual_hw_version => "07"
+                                                               )
+                               )
+      vm2  = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07"))
+      @options = {:src_ids => [vm1.id, vm2.id]}
+
+      expect(subject[:min__number_of_sockets]).to eq(1)
+      expect(subject[:max__number_of_sockets]).to eq(8)
+      expect(subject[:min__total_vcpus]).to eq(1)
+      expect(subject[:max__total_vcpus]).to eq(8)
+      expect(subject[:min__vm_memory]).to      eq(4)
+      expect(subject[:max__vm_memory]).to      eq(255.gigabyte / 1.megabyte)
+    end
+  end
 end
