@@ -61,6 +61,13 @@ class ApiController
       klass.find(rsc.id)
     end
 
+    #
+    # Alias for the 'add' resource method in order to handle the default
+    # 'create' POST calls when no 'action' key is specified
+    def create_resource(type, _id, data)
+        add_resource(type, _id, data)
+    end
+
     def edit_resource(type, id, data)
       cspec = collection_config[type]
       klass = cspec[:klass].constantize
