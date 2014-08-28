@@ -1159,7 +1159,7 @@ class MiqRequestWorkflow
 
   def ci_to_datacenter(src, ci, ci_type)
     sources = src[ci].nil? ? find_all_ems_of_type(ci_type) : [src[ci]]
-    sources.collect {|c| find_datacenter_for_ci(c)}.uniq.inject({}) {|r, c| r[c.id] = c.name; r}
+    sources.collect {|c| find_datacenter_for_ci(c)}.compact.uniq.inject({}) {|r, c| r[c.id] = c.name; r}
   end
 
   def respool_to_cluster(src)
