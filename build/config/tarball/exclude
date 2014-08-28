@@ -13,6 +13,7 @@
 *vmdb/.bundle
 *vmdb/bin
 *vmdb/config/database.yml
+*vmdb/certs/v2_key
 *vmdb/log/*.log
 *vmdb/tmp/miq_temp
 *lib/disk/modules/MiqBlockDevOps/Makefile
