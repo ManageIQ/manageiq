@@ -327,9 +327,9 @@ describe "Server Monitor" do
         context "where Non-Master is not responding" do
           before(:each) do
             @miq_server1.monitor_servers
-            Timecop.travel 5.minutes
-            @miq_server1.monitor_servers
-            Timecop.return
+            Timecop.travel 5.minutes do
+              @miq_server1.monitor_servers
+            end
           end
 
           it "should mark server as not responding" do

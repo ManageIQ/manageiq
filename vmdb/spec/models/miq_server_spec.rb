@@ -234,9 +234,9 @@ describe MiqServer do
         @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
         @miq_server.quiesce_workers_loop_timeout?.should_not be_true
 
-        Timecop.travel 10.minutes
-        @miq_server.quiesce_workers_loop_timeout?.should be_true
-        Timecop.return
+        Timecop.travel 10.minutes do
+          @miq_server.quiesce_workers_loop_timeout?.should be_true
+        end
       end
 
       it "quiesce_workers_loop_timeout? will return false if timeout is not reached" do
@@ -258,11 +258,10 @@ describe MiqServer do
         MiqWorker.any_instance.stub(:quiesce_time_allowance).and_return(10.minutes)
         @miq_server.kill_timed_out_worker_quiesce
 
-        Timecop.travel 10.minutes
-        MiqWorker.any_instance.should_receive(:kill).once
-        @miq_server.kill_timed_out_worker_quiesce
-
-        Timecop.return
+        Timecop.travel 10.minutes do
+          MiqWorker.any_instance.should_receive(:kill).once
+          @miq_server.kill_timed_out_worker_quiesce
+        end
       end
 
       context "with an active messsage and a second server" do
