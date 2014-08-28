@@ -447,6 +447,16 @@ Date and Time Configuration
             raise MiqSignalError
           end
 
+        when I18n.t("advanced_settings.key_gen")
+          say("#{selection}\n\n")
+          key_config = ApplianceConsole::KeyConfiguration.new
+
+          if !key_config.key_exist? || agree("Overwrite existing v2_key? (Y/N): ")
+            key_config.create_key(true)
+            say("\nCustom encryption Key generated\n")
+            press_any_key
+          end
+
         when I18n.t("advanced_settings.db_config")
           say("#{selection}\n\n")
           loc_selection = ask_with_menu("Database Location", %w(Internal External), nil, false)

@@ -9,6 +9,7 @@ en:
     - datetime
     - dbrestore
     - httpdauth
+    - key_gen
     - evmstop
     - evmstart
     - restart
@@ -23,6 +24,7 @@ en:
     dbrestore: Restore Database From Backup
     httpdauth: Configure External Authentication (httpd)
     evmstop: Stop EVM Server Processes
+    key_gen: Generate Custom Encryption Key
     evmstart: Start EVM Server Processes
     restart: Restart Appliance
     shutdown: Shut Down Appliance

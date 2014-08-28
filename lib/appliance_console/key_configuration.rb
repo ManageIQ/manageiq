@@ -7,8 +7,12 @@ module ApplianceConsole
   KEY_FILE = "#{CERT_DIR}/v2_key"
 
   class KeyConfiguration
+    def key_exist?
+      File.exist?(KEY_FILE)
+    end
+
     def create_key(force = true)
-      if File.exist?(KEY_FILE)
+      if key_exist?
         return self unless force
         FileUtils.rm(KEY_FILE)
       end
