@@ -8,6 +8,7 @@ module ApplianceConsole
       @ipaserver, @domain, @password = nil
       @host      = host
       @domain    = options[:domain] || domain_from_host(host)
+      @realm     = options[:realm]
       @ipaserver = options[:ipaserver]
       @principal = options[:principal] || "admin"
       @password  = options[:password]
@@ -20,6 +21,7 @@ module ApplianceConsole
       say("\nIPA Server Parameters:\n\n")
       @ipaserver = ask_for_hostname("IPA Server Hostname", @ipaserver)
       @domain    = ask_for_domain("IPA Server Domain", @domain)
+      @realm     = ask_for_realm("IPA Server Realm", realm)
       @principal = just_ask("IPA Server Principal", @principal)
       @password  = ask_for_password("IPA Server Principal Password", @password)
 
@@ -62,6 +64,12 @@ module ApplianceConsole
         configure_httpd_external_auth
         configure_httpd
         configure_selinux
+      rescue AwesomeSpawn::CommandResultError => e
+        say e.result.output
+        say e.result.error
+        say ""
+        say("Failed to Configure External Authentication - #{e}")
+        return false
       rescue => e
         say("Failed to Configure External Authentication - #{e}")
         return false
@@ -92,7 +100,7 @@ module ApplianceConsole
     end
 
     def realm
-      @domain.upcase
+      (@realm || @domain).upcase
     end
 
     def configure_ipa

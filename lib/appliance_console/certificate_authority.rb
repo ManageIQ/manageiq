@@ -14,6 +14,7 @@ module ApplianceConsole
 
     # hostname of current machine
     attr_accessor :hostname
+    attr_accessor :realm
     # name of certificate authority
     attr_accessor :ca_name
     # true if we should configure postgres client
@@ -60,6 +61,7 @@ module ApplianceConsole
         :extensions    => %w(client),
         :ca_name       => ca_name,
         :hostname      => hostname,
+        :realm         => realm,
       ).request.status
     end
 
@@ -71,6 +73,7 @@ module ApplianceConsole
         :extensions    => %w(server),
         :ca_name       => ca_name,
         :hostname      => hostname,
+        :realm         => realm,
         :owner         => "postgres.postgres"
       ).request
 

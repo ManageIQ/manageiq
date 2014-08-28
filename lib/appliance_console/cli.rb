@@ -85,6 +85,7 @@ module ApplianceConsole
         opt :ipaserver,  "IPA Server FQDN",  :type => :string
         opt :ipaprincipal,  "IPA Server principal", :type => :string,          :default => "admin"
         opt :ipapassword,   "IPA Server password",  :type => :string
+        opt :iparealm,      "IPA Server realm (optional)", :type => :string
         opt :ca,                   "CA name used for certmonger",       :type => :string,  :default => "ipa"
         opt :postgres_client_cert, "install certs for postgres client", :type => :boolean
         opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
@@ -167,6 +168,7 @@ module ApplianceConsole
       say "creating ssl certificates"
       config = CertificateAuthority.new(
         :hostname => host,
+        :realm    => options[:iparealm],
         :ca_name  => options[:ca],
         :pgclient => options[:postgres_client_cert],
         :pgserver => options[:postgres_server_cert],
@@ -186,6 +188,7 @@ module ApplianceConsole
       config = ExternalHttpdAuthentication.new(
         host,
         :ipaserver => options[:ipaserver],
+        :realm     => options[:iparealm],
         :principal => options[:ipaprincipal],
         :password  => options[:ipapassword],
       )

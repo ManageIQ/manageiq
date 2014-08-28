@@ -17,6 +17,7 @@ describe ApplianceConsole::Certificate do
     described_class.new(:ca_name       => 'ipa',
                         :hostname      => host,
                         :service       => service,
+                        :realm         => realm,
                         :cert_filename => cert_filename)
   end
 
