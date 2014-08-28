@@ -4,17 +4,17 @@
   <div id="email_verify_button_on" style="display:none">
 <% end %>
 
-      <%= link_to(button_tag('Approval',
-                             :class => "btn btn-primary",
-                             :alt   => "Send test email"),
-                  {:action => "settings_update", 
-                   :button => "email_verify", 
-                   :id     => id},
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  :remote                => true,
-                  :title                 => "Send test email")
-      %>
+    <%= link_to(button_tag('Approval',
+                           :class => "btn btn-primary",
+                           :alt   => "Send test email"),
+                {:action => "settings_update", 
+                 :button => "email_verify", 
+                 :id     => id},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :remote                => true,
+                :title                 => "Send test email")
+    %>
   </div>
 
 <% if @test_email_button %>

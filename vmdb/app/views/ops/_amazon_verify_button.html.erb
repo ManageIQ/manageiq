@@ -8,12 +8,12 @@
                          :alt   => "Validate the Amazon Settings"),
               {:action => "settings_update", 
                :button => "amazon_verify", 
-               :id => id},
+               :id     => id},
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
               :remote                => true,
               :title                 => "Validate the Amazon Settings")
-              %>
+  %>
 </div>
 
 <% if @edit[:new][:authentication][:amazon_key] != nil && @edit[:new][:authentication][:amazon_secret] != nil %>
@@ -22,7 +22,7 @@
   <div id="amazon_verify_button_off">
 <% end %>
   <%= button_tag("Validate",
-                :class => "btn btn-primary btn-disabled", 
-                :title => "Amazon access key and secret are needed to validate Amazon Settings") 
+                 :class => "btn btn-primary btn-disabled", 
+                 :title => "Amazon access key and secret are needed to validate Amazon Settings") 
   %>
 </div>

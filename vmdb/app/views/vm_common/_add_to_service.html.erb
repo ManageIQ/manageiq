@@ -1,37 +1,41 @@
 <%= render :partial => "layouts/flash_msg" %>
 
 <ul id="tab">
-	<li class="active"><a class="active"><%= @title %></a>
-	</li>
+  <li class="active"><a class="active"><%= @title %></a>
+  </li>
 </ul>
 
-<%= form_tag(:action => 'add_vm_to_service', :id => @vm) do %>
-			<fieldset>
-				<p class="legend">Service Selection</p>
-				<table class="style1">
-						<tr>
-							<td class="key">Service</td>
-							<td><%= select_tag('chosen_service', options_for_select(@svcs.sort), { :multiple=> false, :class=>"widthed","data-miq_focus"=>true } ) %></td>
-						</tr>
-				</table>
-			</fieldset>
+<%= form_tag(:action => 'add_vm_to_service', 
+             :id     => @vm) do %>
+             
+  <p class="legend">Service Selection</p>
+  <table class="style1">
+      <tr>
+        <td class="key">Service</td>
+        <td>
+          <%= select_tag('chosen_service', 
+                         options_for_select(@svcs.sort), 
+                         {:multiple        => false, 
+                          :class           => "widthed",
+                          "data-miq_focus" => true }) 
+          %>
+        </td>
+      </tr>
+  </table>
 
-<div id="formbuttonplacement">
-
-	<%= button_tag("Add",
-											 :name  => "add", 
-											 :class => "btn btn-primary", 
-											 :alt   => "Add VM to the selected Service", 
-											 :title => "Add VM to the selected Service",
-											 :type  => "submit") 
-	%>
-	<%= button_tag("Cancel",
-	                     :name  => "cancel", 
-	                     :class => "btn btn-default", 
-	                     :alt   => "Cancel",
-                       :type  => "submit")
-
-	%>
-
-</div>
+  <div id="formbuttonplacement">
+    <%= button_tag("Add",
+                   :name  => "add", 
+                   :class => "btn btn-primary", 
+                   :alt   => "Add VM to the selected Service", 
+                   :title => "Add VM to the selected Service",
+                   :type  => "submit") 
+    %>
+    <%= button_tag("Cancel",
+                   :name  => "cancel", 
+                   :class => "btn btn-default", 
+                   :alt   => "Cancel",
+                   :type  => "submit")
+    %>
+  </div>
 <% end %>

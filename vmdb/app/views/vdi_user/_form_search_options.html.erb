@@ -1,16 +1,23 @@
-<% url = url_for(:action=>'user_import_form_field_changed', :id=>"import_edit__new") %>
+<% url = url_for(:action => 'user_import_form_field_changed', 
+                 :id     => "import_edit__new") 
+%>
 <tr>
   <td class="key">Filter 1</td>
   <td>
-    <%= select_tag('chosen_filter1', options_for_select([NOTHING_STRING] + @filters1, @filterby1),
-                  :multiple=>false, :class=>"widthed",
-                  "data-miq_sparkle_on"=>true,
-                  "data-miq_observe"=>{:url=>url}.to_json) %>
+    <%= select_tag('chosen_filter1', 
+                   options_for_select([NOTHING_STRING] + @filters1, @filterby1),
+                   :multiple             => false, 
+                   :class                => "widthed",
+                   "data-miq_sparkle_on" => true,
+                   "data-miq_observe"    => {:url => url}.to_json) 
+    %>
     <% if @filterby1 != NOTHING_STRING %>
       = <%= text_field_tag("filter_value1",
                            @edit[:new][:filter_value1],
-                           :maxlength=>255,
-                           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                           :maxlength         => 255,
+                           "data-miq_observe" => {:interval => '.5', 
+                                                  :url      => url}.to_json) 
+        %>
     <% end %>
   </td>
 </tr>
@@ -18,15 +25,21 @@
   <tr>
     <td class="key">Filter 2</td>
     <td>
-      <%= select_tag('chosen_filter2', options_for_select([NOTHING_STRING] + @filters2, @filterby2),
-                    :multiple=>false, :class=>"widthed",
-                    "data-miq_sparkle_on"=>true,
-                    "data-miq_observe"=>{:url=>url}.to_json) %>
+      <%= select_tag('chosen_filter2', 
+                     options_for_select([NOTHING_STRING] + @filters2, @filterby2),
+                     :multiple             => false,
+                     :class                => "widthed",
+                     "data-miq_sparkle_on" => true,
+                     "data-miq_observe"    => {:url => url}.to_json) 
+      %>
       <% if @filterby2 != NOTHING_STRING %>
-      = <%= text_field_tag("filter_value2",
+      = 
+        <%= text_field_tag("filter_value2",
                            @edit[:new][:filter_value2],
-                           :maxlength=>255,
-                           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                           :maxlength         => 255,
+                           "data-miq_observe" => {:interval => '.5', 
+                                                  :url      => url}.to_json) 
+        %>
       <% end %>
     </td>
   </tr>
@@ -34,15 +47,21 @@
     <tr>
       <td class="key">Filter 3</td>
       <td>
-        <%= select_tag('chosen_filter3', options_for_select([NOTHING_STRING] + @filters3, @filterby3),
-                      :multiple=>false, :class=>"widthed",
-                      "data-miq_sparkle_on"=>true,
-                      "data-miq_observe"=>{:url=>url}.to_json) %>
+        <%= select_tag('chosen_filter3', 
+                       options_for_select([NOTHING_STRING] + @filters3, @filterby3),
+                       :multiple             => false, 
+                       :class                => "widthed",
+                       "data-miq_sparkle_on" => true,
+                       "data-miq_observe"    => {:url => url}.to_json) 
+        %>
         <% if @filterby3 != NOTHING_STRING %>
-          = <%= text_field_tag("filter_value3",
-                               @edit[:new][:filter_value3],
-                               :maxlength=>255,
-                               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          = 
+          <%= text_field_tag("filter_value3",
+                             @edit[:new][:filter_value3],
+                             :maxlength         => 255,
+                             "data-miq_observe" => {:interval => '.5', 
+                                                    :url      => url}.to_json) 
+          %>
         <% end %>
       </td>
     </tr>
@@ -53,19 +72,23 @@
   <td align="right">
     <% buttons_show = @edit[:new][:ldap_region_id] && @filterby1 != NOTHING_STRING && !@edit[:new][:filter_value1].blank? %>
     <div id="buttons_on" style="display:<%= buttons_show ? "display" : "none" %>;">
-      <%= link_to(button_tag('/images/formbuttons/search.png',
-                   :style=>"height: 30px; width: 80px; margin-top: 1px", :alt=>"Import",:class=>"button"),
-                  {:action=>"user_import", :button=>"search",:id=>"import_edit__new"},
+      <%= link_to(button_tag('Search',
+                             :alt   => "Import",
+                             :class => "btn btn-primary"),
+                  {:action => "user_import", 
+                   :button => "search",
+                   :id     => "import_edit__new"},
                   "data-miq_sparkle_on" => true,
-                  :remote=>true,
-                  :title=>"Search VDI Users to import")
+                  :remote               => true,
+                  :title                => "Search VDI Users to import")
       %>
     </div>
     <div id="buttons_off" style="display:<%= buttons_show ? "none" : "display" %>;">
-      <%= button_tag("/images/formbuttons/search.png",	:class=>"dimmed",
-                    :style=>"height: 30px; width: 80px; margin-top: 1px",
-                    :title=>"Select LDAP Server, search option to search",
-                    :alt=>"Select LDAP Server, search option to search") %>
+      <%= button_tag("Search",	
+                     :class => "btn btn-primary btn-disabled",
+                     :title => "Select LDAP Server, search option to search",
+                     :alt   => "Select LDAP Server, search option to search") 
+      %>
     </div>
   </td>
 </tr>
