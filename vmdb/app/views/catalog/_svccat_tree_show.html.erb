@@ -19,31 +19,26 @@
           </br></br>
           <%# show order now button %>
           <div id="buttons">
-            <ul id="form_buttons">
-              <li>
-                <% d = nil %>
-                <% @record.resource_actions.each do |ra| %>
-                  <% d = Dialog.find_by_id(ra.dialog_id.to_i) if ra.action.downcase == "provision" %>
-                <% end %>
-                <% if d.nil? %>
-                  <%= image_tag("/images/formbuttons/order.png",
-                                :alt   => "No Ordering Dialog is available",
-                                :title => "No Ordering Dialog is available",	
-                                :class => "dimmed")
-                  %>
-                <% else %>
-                  <%= image_tag('/images/formbuttons/order.png', 
-                                :border  => "0", 
-                                :class   => "button",
-                                :alt     => "Order this Service", 
-                                :title   => "Order this Service",
-                                :onclick => "miqAjaxButton('#{url_for(:action => "svc_catalog_provision",
-                                                                      :id     => @record.id,
-                                                                      :button => "order")}');")
-                  %>
-                <% end %>
-              </li>
-            </ul>
+            <% d = nil %>
+            <% @record.resource_actions.each do |ra| %>
+              <% d = Dialog.find_by_id(ra.dialog_id.to_i) if ra.action.downcase == "provision" %>
+            <% end %>
+            <% if d.nil? %>
+              <%= button_tag("Order",
+                             :class => "btn btn-default btn-disabled",
+                             :alt   => "No Ordering Dialog is available",
+                             :title => "No Ordering Dialog is available")
+              %>
+            <% else %>
+              <%= button_tag('Order', 
+                             :class   => "btn btn-default",
+                             :alt     => "Order this Service", 
+                             :title   => "Order this Service",
+                             :onclick => "miqAjaxButton('#{url_for(:action => "svc_catalog_provision",
+                                                                   :id     => @record.id,
+                                                                   :button => "order")}');")
+              %>
+            <% end %>
           </div>
         </td>
         <td valign="top">

@@ -1,4 +1,6 @@
-<% url = url_for(:action => 'prov_field_changed', :id=>"#{@edit[:req_id] || "new"}") if @edit %>
+<% url = url_for(:action => 'prov_field_changed', 
+                 :id     => "#{@edit[:req_id] || "new"}") if @edit 
+%>
 <%
 # wf          The workflow object currently in use
 # dialog      Dialog name (symbol)
@@ -11,7 +13,9 @@ disabled ||= false
 pfx = "miq_request/"
 %>
 <% unless field_hash[:display] == :hide || field_hash[:display] == :ignore %>
-<%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
+<%= render :partial => "layouts/dhtmlx_tags", 
+           :locals  => {:control => "calendar"} 
+%>
 <script type="text/javascript">
   <%# Create from/to date JS vars to limit calendar starting from %>
   var miq_cal_dateFrom = miqCalendarDateConversion("<%= @timezone_offset%>");
@@ -19,8 +23,12 @@ pfx = "miq_request/"
   <% if ![:cluster_filter,:ds_filter,:host_filter,:rp_filter,:vm_filter].include?(field) %>
     <tr>
       <td class="key" valign="top"><%= field_hash[:description] %>
-          <% if @edit && @edit[:new] && [:vm_description].include?(field) %> (<span id="description_count"><%= @edit[:new][:vm_description] ? @edit[:new][:vm_description].length : 0 %></span> / <%=  field_hash[:max_length]%>)<% end%>
-          <% if @edit && field_hash[:required] && field_hash[:display] == :edit%> *<%  end %></td>
+        <% if @edit && @edit[:new] && [:vm_description].include?(field) %> (<span id="description_count"><%= @edit[:new][:vm_description] ? @edit[:new][:vm_description].length : 0 %></span> / <%=  field_hash[:max_length]%>)
+        <% end%>
+        <% if @edit && field_hash[:required] && field_hash[:display] == :edit%> 
+          *
+        <%  end %>
+      </td>
       <%# ### Text fields %>
       <% if [
               :cpu_limit,:cpu_reserve,:dns_servers,:dns_suffixes,:gateway,:hostname,:ip_addr,:linux_host_name,:linux_domain_name,:mac_address,:new_datastore_grow_increment,
@@ -34,31 +42,39 @@ pfx = "miq_request/"
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
             <% if [:root_password,:sysprep_password,:sysprep_domain_password].include?(field) %>
               <%= password_field_tag(field_id,
-                                  options[field],
-                                  :maxlength=>MAX_NAME_LEN,
-                                  :disabled=>disabled,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                     options[field],
+                                     :maxlength         => MAX_NAME_LEN,
+                                     :disabled          => disabled,
+                                     "data-miq_observe" => {:interval => '.5', 
+                                                            :url      => url}.to_json) 
+              %>
             <% elsif [:request_notes,:vm_description].include?(field) %>
               <%= text_area_tag(field_id,
                                 options[field],
-                                :maxlength=>field_hash[:max_length],
-                                :size=>"25x4",
-                                :counter=>"description_count",
-                                "data-miq_check_max_length"=>true,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                :maxlength                     => field_hash[:max_length],
+                                :size                          => "25x4",
+                                :counter                       => "description_count",
+                                "data-miq_check_max_length"    => true,
+                                "data-miq_observe" => {:interval => '.5', 
+                                                       :url      => url}.to_json) 
+              %>
             <% elsif [:vdi_desktop_pool_user_list].include?(field) %>
               <%= text_area_tag(field_id,
                                 options[field],
-                                :maxlength=>field_hash[:max_length],
-                                :size=>"25x4",
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                :maxlength         => field_hash[:max_length],
+                                :size              => "25x4",
+                                "data-miq_observe" => {:interval => '.5', 
+                                                       :url      => url}.to_json) 
+              %>
             <% else %>
               <% len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN %>
               <%= text_field_tag(field_id,
-                                  options[field],
-                                  :maxlength=>len,
-                                  :disabled=>disabled,
-                                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                                 options[field],
+                                 :maxlength         => len,
+                                 :disabled          => disabled,
+                                 "data-miq_observe" => {:interval => '.5', 
+                                                        :url      => url}.to_json) 
+              %>
             <% end %>
           <% else %>                                      <%# Just show the field value %>
             <% if [:root_password,:sysprep_password,:sysprep_domain_password].include?(field) %>
@@ -84,21 +100,17 @@ pfx = "miq_request/"
           <% if field == :owner_email
                fh = wf.get_field(:owner_load_ldap, dialog)
                if @edit && field_hash[:display] == :edit && fh[:display] == :show && !@edit[:stamp_typ] %>
-                 <ul id="form_buttons">
-                   <li>
-                     <%= image_tag('/images/formbuttons/lookup.png',
-                           :border  => "0",
-                           :class   => "button",
-                           :style   => "height: 30px; width: 80px; margin-top: 1px",
-                           :alt     => "LDAP Group Lookup",
-                           :title   => "LDAP Group Lookup",
-                           :onclick => "miqAjaxButton('#{url_for(
-                                                         :controller => "miq_request",
-                                                         :action     => 'retrieve_email',
-                                                         :field      => fh[:pressed][:method],
-                                                         :button     => "submit")}');") %>
-                   </li>
-                 </ul>
+
+                 <%= button_tag('Lookup',
+                       :class   => "btn btn-primary",
+                       :alt     => "LDAP Group Lookup",
+                       :title   => "LDAP Group Lookup",
+                       :onclick => "miqAjaxButton('#{url_for(
+                                                     :controller => "miq_request",
+                                                     :action     => 'retrieve_email',
+                                                     :field      => fh[:pressed][:method],
+                                                     :button     => "submit")}');") %>
+
             <% end %>
           <% end %>
         </td>
@@ -107,16 +119,20 @@ pfx = "miq_request/"
         <td class="wide">
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
             <%= text_field_tag(field_id,
-                                options[field],
-                                :maxlength=>MAX_NAME_LEN,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                               options[field],
+                               :maxlength         => MAX_NAME_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
             _(VM Number)_
             <% field_id1 = dialog.to_s + "__vm_suffix" %>
             <%#= h(i) %>
             <%= text_field_tag(field_id1,
-                                options[:vm_suffix],
-                                :maxlength=>MAX_NAME_LEN,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                               options[:vm_suffix],
+                               :maxlength         => MAX_NAME_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                                                      :url      => url}.to_json) 
+            %>
           <% else %>                                      <%# Just show the field value %>
             <% i = field.to_s.split('_').last %>
             <%= options[field] %>_(VM Number)_<%= options[:vm_suffix]%>
@@ -131,18 +147,22 @@ pfx = "miq_request/"
         <td class="wide">
           <% if @edit && field_hash[:display] == :edit && !field_hash[:values] && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
             <%= text_field_tag(field_id,
-                                options[field].kind_of?(Array) ? options[field].last : options[field],
-                                :maxlength=>MAX_NAME_LEN,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                               options[field].kind_of?(Array) ? options[field].last : options[field],
+                               :maxlength         => MAX_NAME_LEN,
+                               "data-miq_observe" => {:interval => '.5', 
+                               :url               => url}.to_json) 
+            %>
           <% elsif @edit && field_hash[:display] == :edit && field_hash[:values] && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
             <%= select_tag(field_id,
-                            options_for_select(
-                              (!field_hash[:values].blank?  ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<No Choices Available>",nil]]) +
-                                (Array(field_hash[:values].invert).sort{|a, b| a.first.to_i <=> b.first.to_i}),
-                              options[field].is_a?(Array) ? options[field].first : options[field]),
-                            :disabled=>disabled,
-                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(
+                           (!field_hash[:values].blank?  ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<No Choices Available>",nil]]) +
+                           (Array(field_hash[:values].invert).sort{|a, b| a.first.to_i <=> b.first.to_i}),
+                           options[field].is_a?(Array) ? options[field].first : options[field]),
+                           :disabled=>disabled,
+                           "data-miq_sparkle_on"  => true, 
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => url}.to_json) 
+            %>
           <% else %>                                      <%# Just show the field value %>
             <%= options[field].kind_of?(Array) ? options[field].last : options[field] %>
           <% end %>
@@ -154,8 +174,11 @@ pfx = "miq_request/"
       <%# text Area field to display uploaded file contents %>
       <% elsif [:customization_template_script,:sysprep_upload_text].include?(field) %>
         <td class="wide">
-          <%= text_area_tag(field_id, options[field],
-                                :readonly=>"readonly", :style=>"width:600px;height:250px;") %>
+          <%= text_area_tag(field_id, 
+                            options[field],
+                            :readonly => "readonly", 
+                            :style    => "width:600px;height:250px;") 
+          %>
         </td>
       <%# ### dhtmlxree control for tags fields %>
       <% elsif [:ldap_ous].include?(field) %>
@@ -163,17 +186,14 @@ pfx = "miq_request/"
           <% tree_id = "ldap_ous_treebox" %>
           <div id="<%= tree_id%>" style="color:#000; overflow: hidden"></div>
           <%= render(:partial => "layouts/dynatree",
-                     :locals => {
-                       :tree_id               => tree_id,
-                       :tree_name             => session[:tree_name],
-                       :json_tree             => @temp[:ldap_ous_tree],
-                       :onclick               => "miqOnClick_ProvLdapOus",
-                       :click_url             => "/miq_request/prov_field_changed/#{@edit && @edit[:req_id] ? @edit[:req_id] : @miq_request ? @miq_request.id : "new"}",
-                       :cfme_changes_check    => true,
-                       :cookie_id_prefix      => "prov_trees",
-                       :tree_state            => true
-                     }
-              )
+                     :locals => {:tree_id               => tree_id,
+                                 :tree_name             => session[:tree_name],
+                                 :json_tree             => @temp[:ldap_ous_tree],
+                                 :onclick               => "miqOnClick_ProvLdapOus",
+                                 :click_url             => "/miq_request/prov_field_changed/#{@edit && @edit[:req_id] ? @edit[:req_id] : @miq_request ? @miq_request.id : "new"}",
+                                 :cfme_changes_check    => true,
+                                 :cookie_id_prefix      => "prov_trees",
+                                 :tree_state            => true})
           %>
           <%#  Display notes if available %>
           <% unless field_hash[:notes_display] == :hide || field_hash[:notes].blank? %>
@@ -185,14 +205,16 @@ pfx = "miq_request/"
         <td class="wide">
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of this pulldown field %>
             <%= select_tag(field_id,
-                            options_for_select(
-                              (!field_hash[:values].blank?  ? (field_hash[:required] ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<None>",nil]]) : [["<No Choices Available>",nil]]) +
+                           options_for_select(
+                           (!field_hash[:values].blank?  ? (field_hash[:required] ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<None>",nil]]) : [["<No Choices Available>",nil]]) +
                                 (field_hash[:data_type] == :integer ? Array(field_hash[:values].invert).sort{|a,b|a.first<=>b.first} : Array(field_hash[:values].invert).sort{|a,b|a.first.downcase<=>b.first.downcase}),
-                            options[field].is_a?(Array) ? options[field].first : options[field]),
-                            :disabled=>disabled,
-                            :style=>"width:auto;",
-                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options[field].is_a?(Array) ? options[field].first : options[field]),
+                           :disabled              => disabled,
+                           :style                 => "width:auto;",
+                           "data-miq_sparkle_on"  => true, 
+                           "data-miq_sparkle_off" =>true,
+                           "data-miq_observe"     => {:url => url}.to_json) 
+            %>
           <% else %>                                      <%# Just show the field value %>
             <%= options[field].last %>                  <%# Description is in the second, last, array element %>
           <% end %>
@@ -211,14 +233,16 @@ pfx = "miq_request/"
         <td class="<%=td_class%>">
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of this pulldown field %>
             <%= select_tag(field_id,
-                            options_for_select(
-                              (!field_hash[:values].blank?  ? (field_hash[:required] ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<None>",nil]]) : [["<No Choices Available>",nil]]) +
-                                (field_hash[:data_type] == :integer ? Array(field_hash[:values].invert).sort{|a,b|a.last<=>b.last} : Array(field_hash[:values].invert).sort{|a,b|a.first.downcase<=>b.first.downcase}),
-                              options[field].is_a?(Array) && !multiple ? options[field].first : options[field]),
-                            :multiple => multiple,
-                            :disabled=>disabled,
-                            "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(
+                                              (!field_hash[:values].blank?  ? (field_hash[:required] ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<None>",nil]]) : [["<No Choices Available>",nil]]) +
+                                                (field_hash[:data_type] == :integer ? Array(field_hash[:values].invert).sort{|a,b|a.last<=>b.last} : Array(field_hash[:values].invert).sort{|a,b|a.first.downcase<=>b.first.downcase}),
+                                              options[field].is_a?(Array) && !multiple ? options[field].first : options[field]),
+                            :multiple              => multiple,
+                            :disabled              => disabled,
+                            "data-miq_sparkle_on"  => true, 
+                            "data-miq_sparkle_off" => true,
+                            "data-miq_observe"     => {:url => url}.to_json) 
+            %>
           <% else %>                            <%# Just show the field value %>
             <% if multiple %>
               <% options[field].each_with_index do |val, i| %>
@@ -240,21 +264,18 @@ pfx = "miq_request/"
           <% tree_id = "all_tags_treebox" %>
           <div id="<%=tree_id%>" style="color:#000; overflow: hidden"></div>
           <%= render(:partial => "layouts/dynatree",
-               :locals => {
-                 :tree_id                     => tree_id,
-                 :tree_name                   => "all_tags_tree",
-                 :json_tree                   => @temp[:all_tags_tree],
-                 :oncheck                     => "miqOnCheck_ProvTags",
-                 :check_url                   => "/miq_request/prov_field_changed/#{@edit && @edit[:req_id] ? @edit[:req_id] : @miq_request ? @miq_request.id : "new"}",
-                 :exp_tree                    => @edit ? false : true,
-                 :no_tree_lines               => true,
-                 :multi_lines                 => true,
-                 :checkboxes                  => true,
-                 :open_close_all_on_dbl_click => true,
-                 :cookie_id_prefix            => "prov_trees",
-                 :tree_state                  => true
-               }
-            )
+                     :locals  => {:tree_id => tree_id,
+                                  :tree_name                   => "all_tags_tree",
+                                  :json_tree                   => @temp[:all_tags_tree],
+                                  :oncheck                     => "miqOnCheck_ProvTags",
+                                  :check_url                   => "/miq_request/prov_field_changed/#{@edit && @edit[:req_id] ? @edit[:req_id] : @miq_request ? @miq_request.id : "new"}",
+                                  :exp_tree                    => @edit ? false : true,
+                                  :no_tree_lines               => true,
+                                  :multi_lines                 => true,
+                                  :checkboxes                  => true,
+                                  :open_close_all_on_dbl_click => true,
+                                  :cookie_id_prefix            => "prov_trees",
+                                  :tree_state                  => true})
           %>
           <%#  Display notes if available %>
           <% unless field_hash[:notes_display] == :hide || field_hash[:notes].blank? %>
@@ -271,40 +292,57 @@ pfx = "miq_request/"
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of this pulldown field %>
             <% if field == :src_vm_id %>
               <%#  grid for src_vm_id %>
-              <%= render(:partial => "#{pfx}prov_vm_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_vm_grid", 
+                         :locals  => {:field_id => field_id}) 
+              %>
             <% elsif field == :placement_host_name %>
               <%#  grid for hosts %>
-              <%= render(:partial => "#{pfx}prov_host_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_host_grid", 
+                         :locals  => {:field_id => field_id}) 
+              %>
             <% elsif field == :placement_ds_name %>
               <%#  grid for datastores %>
-              <%= render(:partial => "#{pfx}prov_ds_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_ds_grid", 
+                         :locals  => {:field_id => field_id}) 
+              %>
             <% elsif field == :attached_ds %>
               <%#  grid for datastores %>
-              <%= render(:partial => "#{pfx}prov_ds_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_ds_grid", 
+                         :locals  => {:field_id => field_id}) 
+              %>
             <% elsif field == :sysprep_custom_spec %>
               <%#  grid for sysprep_custom_spec %>
-              <%= render(:partial => "#{pfx}prov_vc_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_vc_grid", 
+                         :locals  => {:field_id => field_id}) 
+              %>
             <% elsif field == :customization_template_id %>
               <%#  grid for customization script %>
-              <%= render(:partial => "#{pfx}prov_template_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_template_grid", 
+                         :locals  => {:field_id => field_id}) 
+              %>
             <% elsif field == :pxe_image_id %>
               <%#  grid for pxe_images %>
-              <%= render(:partial => "#{pfx}prov_pxe_img_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_pxe_img_grid", 
+                        :locals   => {:field_id => field_id}) %>
             <% elsif field == :iso_image_id %>
               <%#  grid for iso_images %>
-              <%= render(:partial => "#{pfx}prov_iso_img_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_iso_img_grid", 
+                         :locals  => {:field_id => field_id}) %>
             <% elsif field == :windows_image_id %>
-              <%= render(:partial => "#{pfx}prov_windows_image_grid", :locals=>{:field_id=>field_id}) %>
+              <%= render(:partial => "#{pfx}prov_windows_image_grid", 
+                         :locals  => {:field_id => field_id}) 
+              %>
             <% else %>
               <%= select_tag(field_id,
-                              options_for_select(
-                                (!field_hash[:values].blank?  ? (field_hash[:required] ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<None>",nil]]) : [["<No Choices Available>",nil]]) +
-                                  Array(field_hash[:values].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
-                                options[field].is_a?(Array) ? options[field].first : options[field]),
-                              :style=>"width:auto;",
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_sparkle_off"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                             options_for_select(
+                                                (!field_hash[:values].blank?  ? (field_hash[:required] ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<None>",nil]]) : [["<No Choices Available>",nil]]) +
+                                                  Array(field_hash[:values].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
+                                                options[field].is_a?(Array) ? options[field].first : options[field]),
+                              :style                 => "width:auto;",
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              "data-miq_observe"     => {:url => url}.to_json) 
+              %>
             <% end %>
           <% else %>                                      <%# Just show the field value %>
             <% if field == :src_host_ids %>
@@ -329,12 +367,12 @@ pfx = "miq_request/"
                               options_for_select(
                                 (!field_hash[:values].blank?  ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<No Choices Available>",nil]]) +
                                   (field_hash[:data_type] == :integer ? Array(field_hash[:values].invert).sort{|a,b|a.last<=>b.last} : Array(field_hash[:values].invert).sort{|a,b|a.first<=>b.first}),
-                                options[field].is_a?(Array) ? options[field].first : options[field]
-                                ),
-                              :disabled=>disabled,
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_sparkle_off"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                                                 options[field].is_a?(Array) ? options[field].first : options[field]),
+                              :disabled              => disabled,
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              "data-miq_observe"     => {:url => url}.to_json) 
+              %>
           <% else %>                                      <%# Just show the field value %>
             <%= options[field].last %>                  <%# Description is in the second, last, array element %>
           <% end %>
@@ -351,14 +389,15 @@ pfx = "miq_request/"
               <%= options[field].last %>                <%# Description is in the second, last, array element %>
             <% else %>
               <%= select_tag(field_id,
-                              options_for_select(
+                             options_for_select(
                                 (!field_hash[:values].blank?  ? (field_hash[:required] ? (field_hash[:default] ? [] : [["<Choose>",nil]]) : [["<None>",nil]]) : [["<No Choices Available>",nil]]) +
                                   field_hash[:values],
-                                options[field].is_a?(Array) ? options[field].first : options[field]),
-                              :disabled=>disabled,
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_sparkle_off"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                                                options[field].is_a?(Array) ? options[field].first : options[field]),
+                              :disabled              => disabled,
+                              "data-miq_sparkle_on"  => true,
+                              "data-miq_sparkle_off" => true,
+                              "data-miq_observe"     => {:url => url}.to_json) 
+              %>
             <% end %>
           <% else %>                                      <%# Just show the field value %>
             <%= options[field].last %>                  <%# Description is in the second, last, array element %>
@@ -371,11 +410,14 @@ pfx = "miq_request/"
         <td style="vertical-align: top">
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
             <% checked = options[field] && options[field][0].to_s == "true" %>
-            <%= check_box_tag(field_id, value=true,
-                                checked=checked,
-                                :disabled=>disabled,
-                                "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                "data-miq_observe_checkbox"=>{:url=>url}.to_json) %>
+            <%= check_box_tag(field_id, 
+                              value                       =  true,
+                              checked                     =  checked,
+                              :disabled                   => disabled,
+                              "data-miq_sparkle_on"       => true, 
+                              "data-miq_sparkle_off"      => true,
+                              "data-miq_observe_checkbox" => {:url=>url}.to_json) 
+            %>
           <% else %>                                      <%# Just show the field value %>
             <% checked = options[field] && options[field][0].to_s == "true" %>
             <%= check_box_tag(field_id, value=true, checked=checked, :id=>field_id, :disabled=>true)%>
@@ -418,10 +460,11 @@ pfx = "miq_request/"
       <td>
         <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
           <%= text_field_tag("miq_date_1",
-                              options[:start_date],
-                              :class=>"css1",
-                              :readonly=>"true",
-                              "data-miq_observe_date"=>{:url=>url}.to_json) %>
+                             options[:start_date],
+                             :class                  => "css1",
+                             :readonly               => "true",
+                             "data-miq_observe_date" => {:url => url}.to_json) 
+          %>
         <% else %>
           <%= options[:start_date] %>
         <% end %>
@@ -432,11 +475,13 @@ pfx = "miq_request/"
         <td>
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
             <%= select_tag("start_hour",
-                              options_for_select(Array.new(24) {|i| i},options[:start_hour].to_i),
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(Array.new(24) {|i| i},options[:start_hour].to_i),
+                           "data-miq_observe" => {:url => url}.to_json) 
+            %>
             <%= select_tag("start_min",
-                              options_for_select(Array.new(12) {|i| i*5},options[:start_min].to_i),
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                           options_for_select(Array.new(12) {|i| i*5},options[:start_min].to_i),
+                           "data-miq_observe" => {:url => url}.to_json) 
+            %>
           <% else %>
             <%= options[:start_hour] %>h&nbsp;<%= options[:start_min] %>m
           <% end %>
@@ -445,7 +490,7 @@ pfx = "miq_request/"
         <td>
           <%= form_tag({:action=>"upload", :id=>"#{@edit[:req_id] || "new"}"}, :multipart => true) do %>
               <%= file_field("upload", "file") %>
-              <%= submit_tag("Upload", :class => "upload"  ) %>
+              <%= submit_tag("Upload", :class => "upload") %>
           <% end %>
           </td>
       <% end %>
@@ -458,12 +503,13 @@ pfx = "miq_request/"
         <td class="wide">
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of this pulldown field %>
               <%= select_tag(field_id,
-                              options_for_select([["<ALL>",0]] + (field_hash[:data_type] == :integer ? Array(field_hash[:values].invert).sort{|a,b|a.last<=>b.last} : Array(field_hash[:values].invert).sort{|a,b|a.first<=>b.first}),
-                                options[field].is_a?(Array) ? options[field].first : options[field]),
-                              :style=>"width:auto;",
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_sparkle_off"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                             options_for_select([["<ALL>",0]] + (field_hash[:data_type] == :integer ? Array(field_hash[:values].invert).sort{|a,b|a.last<=>b.last} : Array(field_hash[:values].invert).sort{|a,b|a.first<=>b.first}),
+                                                options[field].is_a?(Array) ? options[field].first : options[field]),
+                             :style                 => "width:auto;",
+                             "data-miq_sparkle_on"  => true,
+                             "data-miq_sparkle_off" => true,
+                             "data-miq_observe"     => {:url => url}.to_json) 
+              %>
           <% else %>                                      <%# Just show the field value %>
             <%= options[field].last %>                  <%# Description is in the second, last, array element %>
           <% end %>

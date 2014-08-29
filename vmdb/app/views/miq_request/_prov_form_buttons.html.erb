@@ -1,75 +1,81 @@
 <div id="buttons_div">
 <table width="100%">
-	<tr>
-		<td align="right">
-			<% if session[:changed] %>
-				<div id="buttons_on">
-			<% else %>
-				<div id="buttons_on" style="display:none">
-			<% end %>
-				<ul id="form_buttons">
-					<% @edit[:buttons].each do |button| %>
-						<% if button == :continue %>
-							<li>
-								<%= image_tag('/images/formbuttons/continue.png', :border=>"0", :class=>"button",
-															:alt=>"Continue this provisioning request", :title=>"Continue this provisioning request",
-															:onclick=>"miqAjaxButton('#{url_for(:action=>'prov_continue',
-																																	:id=>"#{@edit[:req_id] || "new"}",
-																																	:button=>"continue")}');")
-								%>
-							</li>
-						<% elsif button == :submit %>
-							<li>
-								<%= image_tag('/images/formbuttons/submit.png', :border=>"0", :class=>"button",
-														:alt=>"Submit this provisioning request", :title=>"Submit this provisioning request",
-														:onclick=>"miqAjaxButton('#{url_for(:action=>'prov_edit',
-																																:id=>"#{@edit[:req_id] || "new"}",
-																																:button=>"submit")}');")
-								%>
-							</li>
-						<% elsif button == :cancel %>
-							<li>
-								<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
-														:alt=>"Cancel this provisioning request", :title=>"Cancel this provisioning request",
-														:onclick=>"miqAjaxButton('#{url_for(:action=>'prov_edit',
-																																:id=>"#{@edit[:req_id] || "new"}",
-																																:button=>"cancel")}');")
-								%>
-							</li>
-						<% end %>
-					<% end %>
-				</ul>
-			</div>
+  <tr>
+    <td align="right">
+      <% if session[:changed] %>
+        <div id="buttons_on">
+      <% else %>
+        <div id="buttons_on" style="display:none">
+      <% end %>
 
-			<% if session[:changed] %>
-				<div id="buttons_off" style="display:none">
-			<% else %>
-				<div id="buttons_off">
-			<% end %>
-				<ul id="form_buttons">
-					<% @edit[:buttons].each do |button| %>
-						<% if button == :continue %>
-							<li>
-								<%= image_tag("/images/formbuttons/continue.png",	 :class=>"dimmed") %>
-							</li>
-						<% elsif button == :submit %>
-							<li>
-								<%= image_tag("/images/formbuttons/submit.png",	 :class=>"dimmed") %>
-							</li>
-						<% elsif button == :cancel %>
-							<li>
-								<%= image_tag('/images/formbuttons/cancel.png', :border=>"0", :class=>"button",
-														:alt=>"Cancel this provisioning request", :title=>"Cancel this provisioning request",
-														:onclick=>"miqAjaxButton('#{url_for(:action=>'prov_edit',
-																																:id=>"#{@edit[:req_id] || "new"}",
-																																:button=>"cancel")}');")
-								%>
-							</li>
-						<% end %>
-					<% end %>
-				</ul>
-			</div>
-		</td>
-	</tr>
+        <% @edit[:buttons].each do |button| %>
+          <% if button == :continue %>
+
+            <%= button_tag('Continue', 
+                           :class   => "btn btn-primary",
+                           :alt     => "Continue this provisioning request", 
+                           :title   => "Continue this provisioning request",
+                           :onclick => "miqAjaxButton('#{url_for(:action => 'prov_continue',
+                                                                 :id     => "#{@edit[:req_id] || "new"}",
+                                                                 :button => "continue")}');")
+            %>
+    
+          <% elsif button == :submit %>
+
+            <%= button_tag('Submit', 
+                           :class   => "btn btn-primary",
+                           :alt     => "Submit this provisioning request", 
+                           :title   => "Submit this provisioning request",
+                           :onclick => "miqAjaxButton('#{url_for(:action => 'prov_edit',
+                                                                 :id     => "#{@edit[:req_id] || "new"}",
+                                                                 :button => "submit")}');")
+            %>
+          
+          <% elsif button == :cancel %>
+        
+            <%= button_tag('Cancel', 
+                           :class   => "btn btn-default",
+                           :alt     => "Cancel this provisioning request", 
+                           :title   => "Cancel this provisioning request",
+                           :onclick => "miqAjaxButton('#{url_for(:action => 'prov_edit',
+                                                                 :id     => "#{@edit[:req_id] || "new"}",
+                                                                 :button => "cancel")}');")
+            %>
+      
+          <% end %>
+        <% end %>
+      </div>
+
+      <% if session[:changed] %>
+        <div id="buttons_off" style="display:none">
+      <% else %>
+        <div id="buttons_off">
+      <% end %>
+
+          <% @edit[:buttons].each do |button| %>
+            <% if button == :continue %>
+
+               <%= button_tag("Continue", :class => "btn btn-primary btn-disabled") %>
+
+            <% elsif button == :submit %>
+
+              <%= button_tag("Submit", :class => "btn btn-primary btn-disabled") %>
+
+            <% elsif button == :cancel %>
+
+              <%= button_tag('Cancel', 
+                             :class   => "btn btn-default",
+                             :alt     => "Cancel this provisioning request", 
+                             :title   => "Cancel this provisioning request",
+                             :onclick => "miqAjaxButton('#{url_for(:action  => 'prov_edit',
+                                                                   :id      => "#{@edit[:req_id] || "new"}",
+                                                                   :button  => "cancel")}');")
+              %>
+
+        <% end %>
+      <% end %>
+      </div>
+    </td>
+  </tr>
 </table>
 </div>
