@@ -30,6 +30,8 @@ module MiqAeEngine
       scheme = 'miqaews' if scheme.downcase == 'miqae'
       scheme.downcase!
       return scheme, userinfo, host, port, registry, path, opaque, query, fragment
+    rescue URI::Error => err
+      raise MiqAeException::InvalidPathFormat, err.message
     end
 
     def self.scheme_supported?(scheme)
