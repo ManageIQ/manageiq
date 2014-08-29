@@ -1,7 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', '..',
 '..', 'spec_helper'))
 
-describe "unregister_from_vc Method Validation" do
+describe "unregister_from_provider Method Validation" do
 
   before(:each) do
     @zone       = FactoryGirl.create(:zone)
@@ -12,18 +12,21 @@ describe "unregister_from_vc Method Validation" do
                  :registered => true)
   end
 
+  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider?Vm::vm=#{@vm_id}") }
+
   it "unregisters a vm" do
-    ws = MiqAeEngine.instantiate(
-    "/Factory/VM/UnregisterFromVC?Vm::vm=#{@vm.id}")
+    @vm_id = @vm.id
+
+    ws
 
     MiqQueue.exists?(:method_name => 'unregister', :instance_id => @vm.id,
     :role => 'ems_operations').should be_true
   end
 
   it "errors for a vm equal to nil" do
-    lambda{
-      MiqAeEngine.instantiate("/Factory/VM/UnregisterFromVC?Vm::vm=#{nil}")
-    }.should raise_error
+    @vm_id = nil
+
+    lambda { ws }.should raise_error
   end
 
 end

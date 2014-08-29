@@ -1,7 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', '..',
 '..', 'spec_helper'))
 
-describe "check_unregistered_from_vc Method Validation" do
+describe "check_unregistered_from_provider Method Validation" do
 
   before(:each) do
     @zone       = FactoryGirl.create(:zone)
@@ -12,10 +12,9 @@ describe "check_unregistered_from_vc Method Validation" do
                  :registered => false)
   end
 
-  it "returns 'ok' if the vm is unregisted" do
-    ws = MiqAeEngine.instantiate(
-    "/Factory/VM/CheckUnregisteredFromVC?Vm::vm=#{@vm.id}")
+  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/CheckUnregisteredFromProvider?Vm::vm=#{@vm.id}") }
 
+  it "returns 'ok' if the vm is unregisted" do
     ws.root['vm']['registered'].should  == false
     ws.root['ae_result'].should         == "ok"
   end
@@ -24,8 +23,6 @@ describe "check_unregistered_from_vc Method Validation" do
     @vm.update_attributes(:host =>@host,
                  :ems_id => @ems.id,
                  :registered => true)
-    ws = MiqAeEngine.instantiate(
-    "/Factory/VM/CheckUnregisteredFromVC?Vm::vm=#{@vm.id}")
 
     ws.root['ae_result'].should         == "retry"
     ws.root['vm']['registered'].should  == true
