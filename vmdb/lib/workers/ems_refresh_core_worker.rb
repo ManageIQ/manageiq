@@ -126,11 +126,7 @@ class EmsRefreshCoreWorker < WorkerBase
     props.each do |k, v|
       case k
       when "runtime.powerState"
-        case v
-        when "poweredOn";  v = "on"
-        when "poweredOff"; v = "off"
-        end
-        new_attrs[:state] = v
+        new_attrs[:raw_power_state] = v
       when "config.template"
         new_attrs[:template] = (v.to_s.downcase == "true")
       when "guest.net"
@@ -138,8 +134,8 @@ class EmsRefreshCoreWorker < WorkerBase
       end
     end
 
-    # Don't set the state directly for templates or templates-to-be
-    new_attrs.delete(:state) if new_attrs[:template] || (new_attrs[:template].nil? && vm.template?)
+    # Don't set the raw_power_state directly for templates or templates-to-be
+    new_attrs.delete(:raw_power_state) if new_attrs[:template] || (new_attrs[:template].nil? && vm.template?)
 
     unless new_attrs.blank?
       $log.info("#{self.log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following attributes: #{new_attrs.inspect}")

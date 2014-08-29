@@ -143,7 +143,7 @@ module EmsRefresh::Parsers
         :uid_ems          => uid,
         :type             => 'VmMicrosoft',
         :vendor           => "microsoft",
-        :power_state      => lookup_power_state(p[:VirtualMachineState][:ToString]),
+        :raw_power_state  => p[:VirtualMachineState][:ToString],
         :location         => p[:VMCPath].sub(DRIVE_LETTER, "").strip,
         :operating_system => process_vm_os(p[:OperatingSystem]),
         :connection_state => lookup_connected_state(connection_state),
@@ -170,7 +170,7 @@ module EmsRefresh::Parsers
         :vendor           => "microsoft",
         :operating_system => process_vm_os(p[:OperatingSystem]),
         :name             => p[:Name],
-        :power_state      => "never",
+        :raw_power_state  => "never",
         :template         => true,
         :storages         => process_vm_storages(p),
         :hardware         => {

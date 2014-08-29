@@ -329,12 +329,7 @@ module EmsRefresh::VcUpdates
   end
 
   def self.parse_vm_power_state(vm, val)
-    power_state = vm.template? ? "never" : val
-    case power_state
-    when "poweredOn"  then power_state = "on"
-    when "poweredOff" then power_state = "off"
-    end
-    vm.state = power_state
+    vm.raw_power_state = vm.template? ? "never" : val
   end
 
   def self.has_handler?(type, prop)

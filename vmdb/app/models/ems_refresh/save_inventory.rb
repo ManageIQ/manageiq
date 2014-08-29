@@ -1,4 +1,5 @@
 module EmsRefresh::SaveInventory
+
   def save_ems_inventory(ems, hashes, target = nil)
     case ems
     when EmsCloud;       save_ems_cloud_inventory(ems, hashes, target)
@@ -24,7 +25,7 @@ module EmsRefresh::SaveInventory
     end
 
     child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots]
-    extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :power_state, :parent_vm]
+    extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :raw_power_state, :parent_vm]
     extra_cloud_keys = [:flavor, :availability_zone, :cloud_tenant, :cloud_network, :cloud_subnet, :security_groups, :key_pairs]
     remove_keys = child_keys + extra_infra_keys + extra_cloud_keys
 
@@ -73,7 +74,7 @@ module EmsRefresh::SaveInventory
           # Handle the off chance that we are adding an "unknown" Vm to the db
           h[:location] = "unknown" if h[:location].blank?
 
-          # TODO: Change the create to be type specific
+          # build a type-specific vm or template
           found = ems.vms_and_templates.build(h)
         else
           vms.delete(found)
@@ -85,8 +86,8 @@ module EmsRefresh::SaveInventory
           disconnects.delete(found)
         end
 
-        # Set the power state
-        found.state = key_backup[:power_state] unless key_backup[:power_state].nil?
+        # Set the raw power state
+        found.raw_power_state = key_backup[:raw_power_state]
 
         link_habtm(found, key_backup[:storages], :storages, Storage)
         link_habtm(found, key_backup[:security_groups], :security_groups, SecurityGroup)

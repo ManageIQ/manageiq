@@ -471,12 +471,8 @@ module EmsRefresh::Parsers::Rhevm
 #      runtime = summary['runtime']
 #      guest = summary['guest']
 
-      template = vm_inv[:href].include?('/templates/')
-      power_state = template ? 'never' : vm_inv.attributes.fetch_path(:status, :state)
-      case power_state
-      when 'up'   then power_state = 'on'
-      when 'down' then power_state = 'off'
-      end
+      template        = vm_inv[:href].include?('/templates/')
+      raw_power_state = template ? "never" : vm_inv.attributes.fetch_path(:status, :state)
 
 #      affinity_set = config.fetch_path('cpuAffinity', 'affinitySet')
 #      # The affinity_set will be an array of integers if set
@@ -545,7 +541,7 @@ module EmsRefresh::Parsers::Rhevm
         :uid_ems => vm_inv[:id],
         :name => URI.decode(vm_inv[:name]),
         :vendor => "redhat",
-        :power_state => power_state,
+        :raw_power_state => raw_power_state,
         :location => "#{vm_inv[:id]}.ovf",
 #        :tools_status => tools_status,
         :boot_time => boot_time,
