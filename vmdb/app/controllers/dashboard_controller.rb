@@ -650,17 +650,22 @@ class DashboardController < ApplicationController
     ValidateResult.new(:pass)
   end
 
-  def validate_user_kick_off_task(user)
+  def validate_user_pre_auth_checks(user)
     # Pre_authenticate checks
     return ValidateResult.new(:fail, "Error: Name is required") if user.blank? || user[:name].blank?
 
     return ValidateResult.new(:fail, "Error: New password and verify password must be the same") if
       user[:new_password].present? && user[:new_password] != user[:verify_password]
 
-    return ValidateResult.new(:fail, "Error: New password can not be blank") if !user[:new_password].nil? && user[:new_password].blank?
+    return ValidateResult.new(:fail, "Error: New password can not be blank") if user[:new_password] == ''
 
     return ValidateResult.new(:fail, "Error: New password is the same as existing password") if
       user[:new_password].present? && user[:password] == user[:new_password]
+    nil
+  end
+
+  def validate_user_kick_off_task(user)
+    validate_user_pre_auth_checks(user).tap { |result| return result if result }
 
     # Call the authentication, use wait_for_task if a task is spawned
     begin
@@ -712,7 +717,7 @@ class DashboardController < ApplicationController
   # Validate user login credentials
   #   return <url for redirect> as part of the result
   #
-  def validate_user(user, task_id)
+  def validate_user(user, task_id = nil)
     if task_id.present?
       validation = validate_user_collect_task(user, task_id)
     else # First time thru, kick off authenticate task
