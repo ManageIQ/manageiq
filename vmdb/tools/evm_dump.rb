@@ -12,7 +12,7 @@ def log(level, msg)
 end
 
 def yml_fname(klass)
-  yml_fname = File.join(LOG_DIR, "#{klass.name.underscore}.yml")
+  File.join(LOG_DIR, "#{klass.name.underscore}.yml")
 end
 
 def yml_dump(yml_fname, items)
@@ -44,6 +44,8 @@ MODELS = [
 ]
 #
 
+MODELS += ARGV.collect { |model| Object.const_get(model) }
+
 MODELS.each do |klass|
   log :info, "Getting #{klass} objects"
   items = klass.find(:all)
@@ -60,8 +62,7 @@ end
 if yml_fnames.length > 0
   zip_fname = File.join(LOG_DIR, "evm_dump.zip")
   File.delete(zip_fname) if File.exists?(zip_fname)
-  cmdline = "zip #{zip_fname} #{logfile}"
-  yml_fnames.each { |fname| cmdline << " #{fname}" }
+  cmdline = "zip #{zip_fname} #{logfile} #{yml_fnames.join(' ')}"
   log :info, "Zipping dump into #{zip_fname}"
   system(cmdline)
   yml_fnames.each { |fname| File.delete(fname) }
