@@ -1367,12 +1367,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # See if there are any errors in the @flash_array
   def flash_errors?
-    unless @flash_array.blank?
-      @flash_array.each { |f| return true if f[:level] == :error }
-    end
-    return false
+    !!Array(@flash_array).detect { |f| f[:level] == :error }
   end
 
   # Handle the breadcrumb array by either adding, or resetting to, the passed in breadcrumb
