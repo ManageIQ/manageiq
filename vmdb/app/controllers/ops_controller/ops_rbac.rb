@@ -261,7 +261,7 @@ module OpsController::OpsRbac
       get_node_info(x_node)
       replace_right_cell(x_node)
     when "save"
-      return unless load_edit("rbac_group_edit__seq","replace_cell__explorer")
+      return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
       err = false
       @edit[:new][:ldap_groups_list].each_with_index do |grp, i|
         group = MiqGroup.find_by_description(grp)
@@ -314,7 +314,7 @@ module OpsController::OpsRbac
   end
 
   def move_cols_up
-    return unless load_edit("rbac_group_edit__seq","replace_cell__explorer")
+    return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
       add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
       return
@@ -336,7 +336,7 @@ module OpsController::OpsRbac
   end
 
   def move_cols_down
-    return unless load_edit("rbac_group_edit__seq","replace_cell__explorer")
+    return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
       add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
       return
@@ -376,9 +376,9 @@ module OpsController::OpsRbac
   end
 
   def rbac_group_user_lookup_field_changed
-    return unless load_edit("rbac_group_edit__#{params[:id]}","replace_cell__explorer")
-    @edit[:new][:user] = params[:user] if params[:user]
-    @edit[:new][:user_id] = params[:user_id] if params[:user_id]
+    return unless load_edit("rbac_group_edit__#{params[:id]}", "replace_cell__explorer")
+    @edit[:new][:user]     = params[:user]     if params[:user]
+    @edit[:new][:user_id]  = params[:user_id]  if params[:user_id]
     @edit[:new][:user_pwd] = params[:password] if params[:password]
   end
 
@@ -435,7 +435,7 @@ module OpsController::OpsRbac
     @object_ids = find_checked_items
     if params[:button] == "reset"
       id = params[:id] if params[:id]
-      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
+      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
       @object_ids = @edit[:object_ids]
       session[:tag_db] = @tagging = @edit[:tagging]
     else
@@ -469,7 +469,7 @@ module OpsController::OpsRbac
 
   def rbac_edit_tags_cancel
     id = params[:id]
-    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
+    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
     add_flash(I18n.t("flash.task_cancelled", :task=>"Tag Edit"))
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
@@ -484,7 +484,7 @@ module OpsController::OpsRbac
   def rbac_edit_cancel(what)
     key = what.to_sym
     id = params[:id] ? params[:id] : "new"
-    return unless load_edit("rbac_#{what}_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("rbac_#{what}_edit__#{id}", "replace_cell__explorer")
     case key
     when :role
       record_id = @edit[:role_id]
@@ -556,7 +556,7 @@ module OpsController::OpsRbac
     id          = params[:id] || "new"
     add_pressed = params[:button] == "add"
 
-    return unless load_edit("rbac_#{what}_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("rbac_#{what}_edit__#{id}", "replace_cell__explorer")
 
     record = case key
              when :role  then @edit[:role_id]  ? MiqUserRole.find_by_id(@edit[:role_id]) : MiqUserRole.new
