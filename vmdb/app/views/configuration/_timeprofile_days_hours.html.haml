@@ -1,0 +1,100 @@
+- url = url_for(:action => "timeprofile_field_changed")
+#timeprofile_days_hours_div
+  %table.style1
+    %tbody
+      %tr
+        %td.key Days
+        %td
+          %table
+            %tr
+              %td{:style => "width:50px", :align => "center"} (All)
+              %td{:style => "width:50px", :align => "center"} Sunday
+              %td{:style => "width:50px", :align => "center"} Monday
+              %td{:style => "width:50px", :align => "center"} Tuesday
+              %td{:style => "width:50px", :align => "center"} Wednesday
+              %td{:style => "width:50px", :align => "center"} Thursday
+              %td{:style => "width:50px", :align => "center"} Friday
+              %td{:style => "width:50px", :align => "center"} Saturday
+            %tr
+              %td{:align => "center"}
+                = check_box_tag("all_days",
+                                value = "1",
+                                checked = @edit[:all_days],
+                                :disabled => disabled,
+                                "data-miq_sparkle_on" => true,
+                                "data-miq_sparkle_off" => true,
+                                "data-miq_observe_checkbox" => {:url => url}.to_json)
+              - 7.times do |i|
+                %td{:align => "center"}
+                  = check_box_tag("days_#{i}",
+                                  value = "1",
+                                  checked = @edit[:new][:profile][:days].include?(i),
+                                  :disabled => disabled,
+                                  "data-miq_observe_checkbox" => {:url => url}.to_json)
+      %tr
+        %td.key Hours
+        %td
+          %table
+            %tr
+              %td{:style => "width:50px", :align => "center"} (All)
+              %td{:style => "width:35px", :align => "center"}
+                %b AM:
+              %td{:style => "width:35px", :align => "center"} 12-1
+              %td{:style => "width:35px", :align => "center"} 1-2
+              %td{:style => "width:35px", :align => "center"} 2-3
+              %td{:style => "width:35px", :align => "center"} 3-4
+              %td{:style => "width:35px", :align => "center"} 4-5
+              %td{:style => "width:35px", :align => "center"} 5-6
+              %td{:style => "width:35px", :align => "center"} 6-7
+              %td{:style => "width:35px", :align => "center"} 7-8
+              %td{:style => "width:35px", :align => "center"} 8-9
+              %td{:style => "width:35px", :align => "center"} 9-10
+              %td{:style => "width:35px", :align => "center"} 10-11
+              %td{:style => "width:35px", :align => "center"} 11-12
+            %tr
+              %td{:align => "center"}
+                = check_box_tag("all_hours",
+                                value = "1",
+                                checked = @edit[:all_hours],
+                                :disabled =>disabled,
+                                "data-miq_sparkle_on" => true,
+                                "data-miq_sparkle_off" =>true,
+                                "data-miq_observe_checkbox" => {:url => url}.to_json)
+              %td &nbsp;
+              - 12.times do |i|
+                %td{:align => "center"}
+                  = check_box_tag("hours_#{i}",
+                                  value = "1",
+                                  checked = @edit[:new][:profile][:hours].include?(i),
+                                  :disabled => disabled,
+                                  "data-miq_observe_checkbox" => {:url => url}.to_json)
+            %tr
+              %td &nbsp;
+              %td{:align => "center"}
+                %b PM:
+              %td{:align => "center"} 12-1
+              %td{:align => "center"} 1-2
+              %td{:align => "center"} 2-3
+              %td{:align => "center"} 3-4
+              %td{:align => "center"} 4-5
+              %td{:align => "center"} 5-6
+              %td{:align => "center"} 6-7
+              %td{:align => "center"} 7-8
+              %td{:align => "center"} 8-9
+              %td{:align => "center"} 9-10
+              %td{:align => "center"} 10-11
+              %td{:align => "center"} 11-12
+            %tr
+              %td &nbsp;
+              %td &nbsp;
+              - 12.times do |i|
+                - i += 12
+                %td{:align => "center"}
+                  = check_box_tag("hours_#{i}",
+                                  value = "1",
+                                  checked = @edit[:new][:profile][:hours].include?(i),
+                                  :disabled => disabled,
+                                  "data-miq_observe_checkbox" => {:url => url}.to_json)
+  -# Need this to bind checkbox observers when under DHTMLX tabs %>
+  -# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+  %script miqObserveCheckboxes();

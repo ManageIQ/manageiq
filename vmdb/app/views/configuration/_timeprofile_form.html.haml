@@ -1,0 +1,100 @@
+- url = url_for(:action => "timeprofile_field_changed")
+#tab_div
+  = render :partial => "layouts/flash_msg"
+  - disabled = @tp_restricted
+
+  %p.legend Time Profile Information
+  %table.style1
+    %tbody
+      %tr
+        %td.key Description
+        %td.wider
+          = text_field_tag("description",
+                           @edit[:new][:description],
+                           :disabled          => disabled,
+                           :maxlength         => 50,
+                           "data-miq_focus"   => true,
+                           "data-miq_observe" => {:interval => ".5",
+                                                  :url      => url}.to_json)
+      - if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
+        %tr
+          %td.key Scope
+          %td
+            = select_tag("profile_type",
+                         options_for_select([["All Users","global"],
+                                             ["Current User","user"]],
+                                            @edit[:new][:profile_type]),
+                         :disabled          => disabled,
+                         "data-miq_observe" => {:url => url}.to_json)
+  = render(:partial => "timeprofile_days_hours",
+           :locals  => {:disabled => disabled})
+  %table.style1
+    %tbody
+      %tr
+        %td.key Timezone
+        %td
+          = select_tag("profile_tz",
+                       options_for_select([["<Determine at Run Time>", nil]] + ALL_TIMEZONES,
+                                          @edit[:new][:profile][:tz]),
+                       :disabled              => disabled,
+                       "data-miq_sparkle_on"  => true,
+                       "data-miq_sparkle_off" => true,
+                       "data-miq_observe"     => {:url => url}.to_json)
+      - if ["super_administrator", "administrator"].include?(session[:userrole])
+        %tr#rollup_daily_tr{:style => ("display:none;" unless @edit[:new][:profile][:tz])}
+          %td.key Roll Up Daily Performance
+          %td
+            - rollup_disabled = !@timeprofile.miq_reports.empty? ? true : disabled
+            = check_box_tag("rollup_daily",
+                            value = "1",
+                            checked = @edit[:new][:rollup_daily],
+                            :disabled                   => rollup_disabled,
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+            - unless @timeprofile.miq_reports.empty?
+              .note In use by #{@timeprofile.miq_reports.count} reports, cannot be disabled
+
+
+  - if ["timeprofile_new", "timeprofile_copy", "timeprofile_create"].include?(controller.action_name)
+    #buttons_on{:style => "float: right"}
+      = button_tag("Add",
+                   :class   => "btn btn-primary",
+                   :alt     => "Add this Time Profile",
+                   :title   => "Add this Time Profile",
+                   :onclick => "miqAjaxButton('#{url_for(:action => "timeprofile_create",
+                                                         :id     => "new",
+                                                         :button => "add")}');")
+      = button_tag("Cancel",
+                   :class   => "btn btn-default",
+                   :alt     => "Cancel",
+                   :title   => "Cancel",
+                   :onclick => "miqAjaxButton('#{url_for(:action => "timeprofile_create",
+                                                         :id     => "new",
+                                                         :button => "cancel")}');")
+  - else
+    = render(:partial => "/layouts/edit_form_buttons",
+             :locals  => {:record_id    => @timeprofile.id,
+                          :action_url   => "timeprofile_update",
+                          :ajax_buttons => true})
+
+  - unless @timeprofile.miq_reports.empty?
+    %fieldset
+      %p.legend Reports Currently Using This Time Profile
+      %table.style3
+        %tr
+          %td{:width => "50%", :valign => "top"}
+            %table.admintable
+              %thead
+                %tr
+                  %th.icon
+                  %th.nowrap Name
+                  %th.nowrap Title
+              %tbody
+                = @timeprofile.miq_reports.sort_by{|a| a.name.downcase}.each do |r|
+                  %tr
+                    %td.icon
+                      %img{:src => "/images/icons/new/report.png", :valign => "middle", :border => "0", :height =>"20", :width => "20"}
+                    %td= r.name
+                    %td= r.title
+  -# Need this to bind checkbox observers when under DHTMLX tabs %>
+  -# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+  %script miqObserveCheckboxes();
