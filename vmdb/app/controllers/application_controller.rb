@@ -883,31 +883,47 @@ class ApplicationController < ActionController::Base
     return html
   end
 
-  def load_edit(key,lastaction=@lastaction)
-    # incase lastaction is nil set it to show_list
-    lastaction = lastaction ? (lastaction.split('__').first == "replace_cell" ? lastaction.split('__').last : (params[:id] == "new" ? "show_list" : lastaction)) : "show_list"
-    if session[:edit].nil? || (session[:edit] && session[:edit][:key] != key)
-      add_flash(I18n.t("flash.edit.aborted"), :error)
-      session[:flash_msgs] = @flash_array.dup
-      if request.xml_http_request?  # Is this an Ajax request?
-        if lastaction == "configuration"
-          edit
-          render :update do |page|                    # Use JS to update the display
-            page.redirect_to :action => "index", :id=>params[:id], :escape=>false, :load_edit_err=>true
-          end
-        else
-          render :update do |page|                    # Use JS to update the display
-            page.redirect_to :action => lastaction, :id=>params[:id], :escape=>false, :load_edit_err=>true
-          end
-        end
-      else
-        redirect_to :action => lastaction, :id=>params[:id], :escape=>false
-      end
-      return false
+  def calculate_lastaction(lastaction)
+    return 'show_list' unless lastaction
+
+    parts = lastaction.split('__')
+    if parts.first == "replace_cell"
+      parts.last
     else
-      @edit = session[:edit]
-      return true
+      params[:id] == 'new' ? 'show_list' : lastaction
     end
+  end
+  private :calculate_lastaction
+
+  def report_edit_aborted(lastaction)
+    add_flash(I18n.t("flash.edit.aborted"), :error)
+    session[:flash_msgs] = @flash_array.dup
+    if request.xml_http_request?  # Is this an Ajax request?
+      if lastaction == "configuration"
+        edit
+        redirect_to_action = 'index'
+      else
+        redirect_to_action = lastaction
+      end
+      render :update do |page|
+        page.redirect_to :action => "index", :id => params[:id], :escape => false, :load_edit_err => true
+      end
+    else
+      redirect_to :action => lastaction, :id => params[:id], :escape => false
+    end
+  end
+  private :report_edit_aborted
+
+  def load_edit(key, lastaction = @lastaction)
+    lastaction = calculate_lastaction(lastaction)
+
+    if session.fetch_path(:edit, :key) != key
+      report_edit_aborted(lastaction)
+      return false
+    end
+
+    @edit = session[:edit]
+    true
   end
 
   # Put all time profiles for the current user in session[:time_profiles] for pulldowns
