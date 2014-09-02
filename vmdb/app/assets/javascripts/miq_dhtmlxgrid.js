@@ -224,7 +224,7 @@ function miqGridSort(col_id, grid_obj, dir) {
 			if (typeof miq_parent_id != "undefined") {
 				url = "/" + miq_parent_class + "/" + url + "/" + miq_parent_id;
 			}
-			url = url + "?sortby=" + (col_id - 1);
+			url = url + "?sortby=" + (col_id - 1) + "&" + window.location.search.substring(1);
 			new Ajax.Request(encodeURI(url),
 											{asynchronous:true, evalScripts:true,
 											onLoading:function(request){miqSparkle(true);},
