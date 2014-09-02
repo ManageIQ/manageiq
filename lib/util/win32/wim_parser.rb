@@ -45,7 +45,7 @@ class WimParser
   ])
   SIZEOF_HEADER_V1_STRUCT = HEADER_V1_STRUCT.size
 
-  IMAGE_TAG = "MSWIM\0\0\0"
+  IMAGE_TAG = "MSWIM\0\0\0".force_encoding("ASCII-8BIT")
 
   # Flags values for the header struct
   FLAG_HEADER_RESERVED          = 0x00000001
