@@ -10,6 +10,7 @@ describe "routing for OpsController" do
     fetch_build
     fetch_log
     fetch_production_log
+    schedule_form_fields
     show_product_update
   ).each do |task|
     describe "##{task}" do
@@ -83,6 +84,7 @@ describe "routing for OpsController" do
     rhn_validate
     schedule_edit
     schedule_form_field_changed
+    schedule_form_filter_type_field_changed
     schedules_list
     schedule_update
     settings_form_field_changed
@@ -94,6 +96,7 @@ describe "routing for OpsController" do
     tl_chooser
     tree_autoload_dynatree
     tree_select
+    update
     upload_csv
     upload_form_field_changed
     upload_login_logo

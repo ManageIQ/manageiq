@@ -326,7 +326,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets filter values empty to true', function() {
-        expect($scope.filterValuesEmpty).toBe(true)
+        expect($scope.filterValuesEmpty).toBe(true);
       });
     });
 
@@ -338,7 +338,7 @@ describe('scheduleFormController', function() {
       describe('when the ajax request returns with success', function() {
         describe('when the item list is a single dimension array', function() {
           beforeEach(function() {
-            $httpBackend.whenPUT('/ops/schedule_form_filter_type_field_changed/new').respond(200, {filtered_item_list: ['lol', 'lol2']});
+            $httpBackend.whenPOST('/ops/schedule_form_filter_type_field_changed/new').respond(200, {filtered_item_list: ['lol', 'lol2']});
             $scope.filterTypeChanged();
             $httpBackend.flush();
           });
@@ -354,7 +354,7 @@ describe('scheduleFormController', function() {
 
         describe('when the item list is a multi dimension array', function() {
           beforeEach(function() {
-            $httpBackend.whenPUT('/ops/schedule_form_filter_type_field_changed/new').respond(200, {filtered_item_list: [['lolvalue', 'loloption'], ['lol2value', 'lol2option']]});
+            $httpBackend.whenPOST('/ops/schedule_form_filter_type_field_changed/new').respond(200, {filtered_item_list: [['lolvalue', 'loloption'], ['lol2value', 'lol2option']]});
             $scope.filterTypeChanged();
             $httpBackend.flush();
           });
