@@ -18,12 +18,12 @@ describe OpsController do
     before do
       params[:filter_type] = filter_type
       params[:id] = "123"
-      session[:edit] = {:new => {:filter_type => "test"}, :key => "schedule_edit__123"}
+      session[:edit] = {:new => {:filter_type => filter_type}, :key => "schedule_edit__123"}
     end
 
     shared_examples_for "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed" do
       it "assigns the filter type" do
-        assigns(:edit)[:new][:filter].should == filter_type
+        assigns(:edit)[:new][:filter_type].should == filter_type
       end
     end
 
@@ -33,7 +33,7 @@ describe OpsController do
 
       before do
         Vm.stub(:find).with(:all, {}).and_return([vm])
-        put :schedule_form_filter_type_field_changed, params, session
+        post :schedule_form_filter_type_field_changed, params, session
       end
 
       it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
@@ -50,7 +50,7 @@ describe OpsController do
 
       before do
         ExtManagementSystem.stub(:find).with(:all, {}).and_return([ext_management_system])
-        put :schedule_form_filter_type_field_changed, params, session
+        post :schedule_form_filter_type_field_changed, params, session
       end
 
       it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
@@ -68,7 +68,7 @@ describe OpsController do
       before do
         bypass_rescue
         EmsCluster.stub(:find).with(:all, {}).and_return([cluster])
-        put :schedule_form_filter_type_field_changed, params, session
+        post :schedule_form_filter_type_field_changed, params, session
       end
 
       it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
@@ -85,7 +85,7 @@ describe OpsController do
 
       before do
         Host.stub(:find).with(:all, {}).and_return([host])
-        put :schedule_form_filter_type_field_changed, params, session
+        post :schedule_form_filter_type_field_changed, params, session
       end
 
       it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
@@ -100,7 +100,7 @@ describe OpsController do
       let(:filter_type) { "global" }
 
       before do
-        put :schedule_form_filter_type_field_changed, params, session
+        post :schedule_form_filter_type_field_changed, params, session
       end
 
       it "responds with a filtered global filter list" do
@@ -112,7 +112,7 @@ describe OpsController do
       let(:filter_type) { "my" }
 
       before do
-        put :schedule_form_filter_type_field_changed, params, session
+        post :schedule_form_filter_type_field_changed, params, session
       end
 
       it "responds with a filtered my_filter list" do

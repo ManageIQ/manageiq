@@ -14,21 +14,21 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
       $scope.filterList.push(tempObj);
     });
-  }
+  };
 
   var oldScheduleFormValues = {};
 
   var testType = function(type) {
     return type.test($scope.actionType);
-  }
+  };
 
   var isVmType = function() {
     return testType(/^vm/);
-  }
+  };
 
   var isHostType = function() {
     return testType(/^host/);
-  }
+  };
 
   $scope.buildLegend = function() {
     var type;
@@ -48,7 +48,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     }
 
     return type + ' Selection';
-  }
+  };
 
   $scope.determineActionType = function() {
     if (isVmType()) {
@@ -58,11 +58,11 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else {
       return $scope.actionType;
     }
-  }
+  };
 
   $scope.sambaBackup = function() {
     return $scope.actionType === 'db_backup' && $scope.logProtocol === 'Samba';
-  }
+  };
 
   $scope.actionTypeChanged = function() {
     if ($scope.actionType === 'db_backup') {
@@ -71,18 +71,18 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.filterType = 'all';
       $scope.filterValuesEmpty = true;
     }
-  }
+  };
 
   $scope.filterTypeChanged = function() {
     if ($scope.filterType != 'all') {
-      $http.put('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.filterType}).success(function(data) {
+      $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.filterType}).success(function(data) {
         buildFilterList(data);
         $scope.filterValuesEmpty = false;
       });
     } else {
       $scope.filterValuesEmpty = true;
     }
-  }
+  };
 
   $scope.filterValueChanged = function() {
     if ($scope.formAltered) {
@@ -90,7 +90,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else {
       miqService.hideButtons();
     }
-  }
+  };
 
   $scope.scheduleTimerTypeChanged = function() {
     if ($scope.scheduleTimerType === 'Once') {
@@ -98,7 +98,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else {
       $scope.scheduleTimerValue = '1';
     }
-  }
+  };
 
   miqService.sparkleOn();
 
