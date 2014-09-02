@@ -11,6 +11,8 @@ describe "Quota Validation" do
     @vm1.miq_group = @group
   end
 
+  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Provisioning/StateMachines/ProvisionRequestQuotaVerification/Default?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&MiqRequest::miq_request=#{@miq_provision_request.id}&max_group_cpu=#{@max_group_cpu}") }
+
   context "validate vcpus quota limit, using number of cpus" do
     before do
       prov_options = {:number_of_vms => 1, :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_sockets => [2, '2'], :cores_per_socket => [2, '2'], :number_of_cpus => [2, '2']}
@@ -20,7 +22,8 @@ describe "Quota Validation" do
     end
 
     it "quota failure" do
-      ws = MiqAeEngine.instantiate("Factory/StateMachines/ProvisionRequestQuotaVerification/Default?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&MiqRequest::miq_request=#{@miq_provision_request.id}&max_group_cpu=1")
+      @max_group_cpu = 1
+
       root = ws.root
       root['ae_result'].should == 'error'
       root['ae_state'].should  == 'ValidateQuotas'
@@ -28,7 +31,8 @@ describe "Quota Validation" do
     end
 
     it "quota success" do
-      ws = MiqAeEngine.instantiate("Factory/StateMachines/ProvisionRequestQuotaVerification/Default?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&MiqRequest::miq_request=#{@miq_provision_request.id}&max_group_cpu=2")
+      @max_group_cpu = 2
+
       ws.root['ae_result'].should == 'ok'
     end
   end
@@ -42,7 +46,8 @@ describe "Quota Validation" do
     end
 
     it "quota failure" do
-      ws = MiqAeEngine.instantiate("Factory/StateMachines/ProvisionRequestQuotaVerification/Default?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&MiqRequest::miq_request=#{@miq_provision_request.id}&max_group_cpu=1")
+      @max_group_cpu = 1
+
       root = ws.root
       root['ae_result'].should == 'error'
       root['ae_state'].should  == 'ValidateQuotas'
@@ -50,7 +55,8 @@ describe "Quota Validation" do
     end
 
     it "quota success" do
-      ws = MiqAeEngine.instantiate("Factory/StateMachines/ProvisionRequestQuotaVerification/Default?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&MiqRequest::miq_request=#{@miq_provision_request.id}&max_group_cpu=4")
+      @max_group_cpu = 4
+
       ws.root['ae_result'].should == 'ok'
     end
   end

@@ -5,11 +5,9 @@ module RSpec::Rails
     included do
       metadata[:type] = :automation
 
-      let(:automation_filename) { Rails.root.join('db', 'fixtures', 'automation_base.xml') }
-
       before(:all) do
         MiqAeDatastore.reset
-        MiqAeDatastore.import(automation_filename)
+        MiqAeDatastore.reset_manageiq_domain
       end
 
       after(:all) do
