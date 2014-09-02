@@ -23,49 +23,36 @@
         <tr>
           <td align="right">
             <div id="buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
-
-
-                  <%= link_to(button_tag('Apply',
-                                         :class => "btn btn-primary", 
-                                         :alt   => 'Apply'),
-                              {:action => "ae_tree_select_toggle", 
-                               :button => "submit"},
-                              :remote => true,
-                              :title  => "Apply") 
-                  %>
-
-
-                  <%= link_to(button_tag('Cancel',
-                                         :class => "btn btn-default", 
-                                         :alt   => 'Cancel'),
-                              {:action => "ae_tree_select_toggle", 
-                               :button => "cancel"},
-                              :remote => true,
-                              :title  => "Cancel") 
-                  %>
-
-
+              <%= link_to(button_tag('Apply',
+                                     :class => "btn btn-primary", 
+                                     :alt   => 'Apply'),
+                          {:action => "ae_tree_select_toggle", 
+                           :button => "submit"},
+                          :remote => true,
+                          :title  => "Apply") 
+              %>
+              <%= link_to(button_tag('Cancel',
+                                     :class => "btn btn-default", 
+                                     :alt   => 'Cancel'),
+                          {:action => "ae_tree_select_toggle", 
+                           :button => "cancel"},
+                          :remote => true,
+                          :title  => "Cancel") 
+              %>
             </div>
             <div id="buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
-
-
-                  <%= button_tag("Apply",	:class => "btn btn-primary btn-disabled") %>
-
-
-                  <%= link_to(button_tag('Cancel', 
-                                         :class => "btn btn-disabled", 
-                                         :alt   => 'Cancel'),
-                              {:action => "ae_tree_select_toggle", 
-                               :button => "cancel"},
-                              :remote => true,
-                              :title  => "Cancel") 
-                  %>
-
-
+              <%= button_tag("Apply",	:class => "btn btn-primary btn-disabled") %>
+              <%= link_to(button_tag('Cancel', 
+                                     :class => "btn btn-disabled", 
+                                     :alt   => 'Cancel'),
+                          {:action => "ae_tree_select_toggle", 
+                           :button => "cancel"},
+                          :remote => true,
+                          :title  => "Cancel") 
+              %>
             </div>
           </td>
         </tr>
       </table>
     </div>
-
 </div>
