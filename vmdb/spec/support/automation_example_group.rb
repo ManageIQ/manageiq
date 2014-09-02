@@ -7,7 +7,7 @@ module RSpec::Rails
 
       before(:all) do
         MiqAeDatastore.reset
-        MiqAeDatastore.reset_to_defaults
+        MiqAeDatastore.reset_manageiq_domain
       end
 
       after(:all) do

@@ -3,6 +3,7 @@ module MiqAeDatastore
   XML_VERSION_MIN_SUPPORTED = "1.0"
   MANAGEIQ_DOMAIN = "ManageIQ"
   MANAGEIQ_PRIORITY = 0
+  DATASTORE_DIRECTORY = Rails.root.join('db/fixtures/ae_datastore')
   DEFAULT_OBJECT_NAMESPACE = "$"
   TEMP_DOMAIN_PREFIX = "TEMP_DOMAIN"
   ALL_DOMAINS = "*"
@@ -145,6 +146,10 @@ module MiqAeDatastore
     end
   end
 
+  def self.reset_manageiq_domain
+    reset_domain(DATASTORE_DIRECTORY, MANAGEIQ_DOMAIN)
+  end
+
   def self.seed_default_namespace
     default_ns   = MiqAeNamespace.create!(:name => DEFAULT_OBJECT_NAMESPACE)
     object_class = default_ns.ae_classes.create!(:name => 'Object')
@@ -161,11 +166,10 @@ module MiqAeDatastore
   end
 
   def self.reset_to_defaults
-    ds_dir = File.expand_path(File.join(Rails.root, 'db/fixtures/ae_datastore'))
-    raise "Datastore directory [#{ds_dir}] not found" unless Dir.exist?(ds_dir)
-    Dir.glob("#{ds_dir}/*/#{MiqAeDomain::DOMAIN_YAML_FILENAME}").each do |domain_file|
+    raise "Datastore directory [#{DATASTORE_DIRECTORY}] not found" unless Dir.exist?(DATASTORE_DIRECTORY)
+    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).each do |domain_file|
       domain_name = File.basename(File.dirname(domain_file))
-      reset_domain(ds_dir, domain_name)
+      reset_domain(DATASTORE_DIRECTORY, domain_name)
     end
     reset_default_namespace
   end
