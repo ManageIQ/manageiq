@@ -1,4 +1,6 @@
-<% url = url_for(:action=>'form_field_changed', :id=>"#{@edit[:rpt_id] || "new"}") %>
+<% url = url_for(:action => 'form_field_changed', 
+                 :id     => "#{@edit[:rpt_id] || "new"}") 
+%>
 
 <%# JSON hash to hold text fields and types for miqValueStylePrefill %>
 <%= javascript_tag("miq_value_styles = {};") %>
@@ -37,8 +39,9 @@
                             options_for_select([[styles[s_idx] ? "<Remove>" : "<Normal>", nil]] +
                                               ReportHelper::STYLE_CLASSES.invert.to_a.sort{|a,b| a.first.downcase<=>b.first.downcase},
                                               styles[s_idx] ? styles[s_idx][:class] : nil),
-                            "data-miq_sparkle_on"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json) %>
+                            "data-miq_sparkle_on" => true,
+                            "data-miq_observe"    => {:url => url}.to_json) 
+              %>
             <% end %>
           </td>
           <td>
@@ -51,11 +54,13 @@
               <% end %>
               <% if styles[s_idx] && styles[s_idx][:class] %>
                 <%= select_tag("styleop_#{f_idx}_#{s_idx}",
-                              options_for_select([["Default", "DEFAULT"]] + MiqExpression.get_col_style_operators(f.last),
+                               options_for_select([["Default", "DEFAULT"]] + MiqExpression.get_col_style_operators(f.last),
                                                 styles[s_idx].nil? ? nil : styles[s_idx][:operator]),
-                              :multiple=>false, :class=>"widthed",
-                              "data-miq_sparkle_on"=>true,
-                              "data-miq_observe"=>{:url=>url}.to_json) %>
+                               :multiple             => false, 
+                               :class                => "widthed",
+                               "data-miq_sparkle_on" => true,
+                               "data-miq_observe"    => {:url => url}.to_json) 
+                %>
                 <% unless styles[s_idx][:operator] == nil ||
                           styles[s_idx][:operator] == "DEFAULT" ||
                           styles[s_idx][:operator].include?("NULL") ||
@@ -63,11 +68,13 @@
                   <% if field_type == :boolean %>
                     <% values = [["true","true"],["false","false"]] %>
                     <%= select_tag("styleval_#{f_idx}_#{s_idx}",
-                                  options_for_select(values,
-                                                    styles[s_idx][:value]),
-                                  :multiple=>false, :class=>"widthed",
-                                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                  "data-miq_observe"=>{:url=>url}.to_json) %>
+                                   options_for_select(values,
+                                                      styles[s_idx][:value]),
+                                   :multiple              => false, 
+                                   :class                 => "widthed",
+                                   "data-miq_sparkle_on"  => true, 
+                                   "data-miq_sparkle_off" => true,
+                                   "data-miq_observe"     => {:url => url}.to_json) %>
                   <% elsif [:datetime, :date].include?(field_type) %>
                     <%= select_tag("styleval_#{f_idx}_#{s_idx}",
                                   options_for_select((field_type == :datetime ? FROM_HOURS : []) +
@@ -77,25 +84,34 @@
                                                       FROM_QUARTERS +
                                                       FROM_YEARS,
                                                     styles[s_idx][:value]),
-                                  :multiple=>false,
-                                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                  "data-miq_observe"=>{:url=>url}.to_json) %>
+                                  :multiple              => false,
+                                  "data-miq_sparkle_on"  => true, 
+                                  "data-miq_sparkle_off" =>true,
+                                  "data-miq_observe"     => {:url=>url}.to_json) 
+                    %>
                   <% else %>
 
                     <%# Add the text field id and type into the JSON miq_value_styles hash for miqValueStylePrefill %>
                     <%= javascript_tag("miq_value_styles['styleval_#{f_idx}_#{s_idx}'] = '#{field_type}';") %>
 
-                    <%= text_field_tag("styleval_#{f_idx}_#{s_idx}", styles[s_idx][:value], :maxlength=>50,
-                                      "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                    <%= text_field_tag("styleval_#{f_idx}_#{s_idx}", 
+                                       styles[s_idx][:value], 
+                                       :maxlength         => 50,
+                                       "data-miq_observe" => {:interval => '.5', 
+                                                              :url      => url}.to_json) 
+                    %>
                     <% if field_type == :percent %>
                       %
                     <% elsif FORMAT_SUB_TYPES.fetch_path(field_type, :units) %>
                       <%= select_tag("stylesuffix_#{f_idx}_#{s_idx}",
-                                    options_for_select(FORMAT_SUB_TYPES[field_type][:units],
-                                                      styles[s_idx][:value_suffix]),
-                                    :multiple=>false, :class=>"widthed",
-                                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                    "data-miq_observe"=>{:url=>url}.to_json) %>
+                                     options_for_select(FORMAT_SUB_TYPES[field_type][:units],
+                                                        styles[s_idx][:value_suffix]),
+                                     :multiple              => false, 
+                                     :class                 => "widthed",
+                                     "data-miq_sparkle_on"  => true, 
+                                     "data-miq_sparkle_off" => true,
+                                     "data-miq_observe"     => {:url => url}.to_json) 
+                      %>
                     <% end %>
                   <% end %>
                 <% end %>
