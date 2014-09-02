@@ -3,6 +3,28 @@ class ApiController < ApplicationController
   class Forbidden                 < StandardError; end
   class BadRequestError           < StandardError; end
   class UnsupportedMediaTypeError < StandardError; end
+  class MethodNotAllowedError     < StandardError
+    def initialize(opts)
+      @opts = opts 
+    end
+
+    def name
+      self.class.name
+    end
+
+    def message
+      @opts[:msg]
+    end
+
+    def allowed_methods
+      methods = @opts[:allowed_methods] || []
+
+      if methods.kind_of?(Array)
+        return methods.unshift('GET') * ', '
+      end
+      'GET'
+    end
+  end 
 
   # Order *Must* be from most generic to most specific
   ERROR_MAPPING = {
@@ -16,6 +38,7 @@ class ApiController < ApplicationController
     ApiController::AuthenticationError       => :unauthorized,
     ApiController::Forbidden                 => :forbidden,
     ApiController::BadRequestError           => :bad_request,
+    ApiController::MethodNotAllowedError     => :method_not_allowed,
     ApiController::UnsupportedMediaTypeError => :unsupported_media_type
   }
 
