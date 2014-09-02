@@ -120,9 +120,8 @@
           = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
 
       - when 'DialogFieldButton'
-        = image_tag("/images/formbuttons/save.png",
-                    :class => edit ? 'button' : 'dimmed',
-                    :style => "width: 80px; height: 30px")
+        = button_tag("Save",
+                    :class => edit ? 'btn btn-primary' : 'btn btn-primary btn-disabled')
 
       - when 'DialogFieldTagControl'
         - category_tags = DialogFieldTagControl.category_tags(field.category).map { |cat| [cat[:description], cat[:id]] }

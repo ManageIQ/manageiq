@@ -81,12 +81,12 @@ var getAndRenderWidgetJson = function(importFileUploadId, message) {
 var setUpExportWidgetClickHandlers = function() {
   $j('.widget-export').change(function() {
     if ($j('.widget-export').val() !== null) {
-      if ($j('#export-widgets').hasClass('dimmed')) {
-        $j('#export-widgets').removeClass('dimmed');
+      if ($j('#export-widgets').hasClass('btn-disabled')) {
+        $j('#export-widgets').removeClass('btn-disabled');
       }
     } else {
-      if (!$j('#export-widgets').hasClass('dimmed')) {
-        $j('#export-widgets').addClass('dimmed');
+      if (!$j('#export-widgets').hasClass('btn-disabled')) {
+        $j('#export-widgets').addClass('btn-disabled');
       }
     }
   });

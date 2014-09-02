@@ -42,15 +42,19 @@
     <table width="100%">
       <tr>
         <td align="right">
-          <ul id="form_buttons">
-            <li>
-            <%= link_to(image_tag("/images/formbuttons/load.png", :border => "0", :class => "button formbuttons",
-                                  :style => "width: 80px", :alt => "Generate Report preview"),
-                      {:action => "show_preview", :id => "#{@edit[:rpt_id] || "new"}"},
-                      "data-miq_sparkle_on" => true, :remote => true,
-                      :title => "Generate Report preview") %>
-           </li>
-          </ul>
+
+
+            <%= link_to(button_tag("Load", 
+                                  :class => "btn btn-primary",
+                                  :alt   => "Generate Report preview"),
+                        {:action => "show_preview", 
+                         :id     => "#{@edit[:rpt_id] || "new"}"},
+                        "data-miq_sparkle_on" => true, 
+                        :remote               => true,
+                        :title                => "Generate Report preview") 
+              %>
+
+
         </td>
       </tr>
     </table>
