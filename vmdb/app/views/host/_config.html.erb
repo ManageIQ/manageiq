@@ -10,7 +10,7 @@
           </thead>
           <% unless @devices.empty? %>
             <% @devices.each do |item| %>
-              <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+              <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
                 <td class="label"><%= h(item[:device]) %></td>
                 <td><img src="/images/icons/new/hardware-<%= item[:icon].downcase%>.png" ><%= h(item[:description]) %></td>
               </tr>
@@ -26,16 +26,16 @@
               <tr><th colspan="2" align="left">OS Information</th></tr>
             </thead>
             <% @osinfo.each do |item| %>
-              <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+              <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
                 <td class="label"><%= h(item[:osinfo]) %></td>
                 <td><%= h(item[:description]) %></td>
               </tr>
             <% end %>
-            <tr class="<%= cycle('row0', 'row1') %>">
+            <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
               <td class="label">Hostname</td>
               <td><%= h(@host.hostname) %></td>
             </tr>
-            <tr class="<%= cycle('row0', 'row1') %>">
+            <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
               <td class="label">IP Address</td>
               <td><%= h(@host.ipaddress) %></td>
             </tr>
@@ -50,7 +50,7 @@
               <tr><th colspan="2" align="left">OS Information</th></tr>
             </thead>
             <% @vmminfo.each do |item| %>
-              <tr class="<%= cycle('row0', 'row1') %>">
+              <tr class="<%= cycle('row0 no-hover', 'row1 no-hover') %>">
                 <td  class="label"><%= h(item[:vmminfo]) %></td>
                 <td><%= h(item[:description]) %></td>
               </tr>
