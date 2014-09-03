@@ -2,10 +2,9 @@ require File.expand_path('../boot', __FILE__)
 require File.expand_path('../preinitializer', __FILE__)
 require 'rails/all'
 
-require File.expand_path('../../../lib/bundler_setup', __FILE__)
-
-CFME::BundlerSetup.system_require(ENV['BUNDLE_GEMFILE'],
-  *Rails.groups(:assets => %w(development test)))
+if defined?(Bundler)
+  Bundler.require *Rails.groups(:assets => %w(development test))
+end
 
 # Rails3 TODO: is this still required?
 require 'yaml'
