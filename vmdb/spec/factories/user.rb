@@ -20,7 +20,13 @@ FactoryGirl.define do
                                           :description   => "EvmGroup-super_administrator",
                                           :miq_user_role => FactoryGirl.create(:miq_user_role,
                                                                                :name => 'EvmRole-super_administrator'
-                                                                              ))]
-    }
+                                                                              ))]}
+  end
+
+  factory :user_miq_request_approver, :parent => :user do
+    sequence(:name)   { |n| "Request Approver #{n}" }
+    sequence(:userid) { |n| "request_approver_#{n}" }
+
+    miq_groups { [FactoryGirl.create(:miq_group_miq_request_approver)] }
   end
 end

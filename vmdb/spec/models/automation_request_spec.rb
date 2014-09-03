@@ -4,9 +4,8 @@ describe AutomationRequest do
   before(:each) do
     MiqServer.stub(:my_zone).and_return("default")
     User.any_instance.stub(:role).and_return("admin")
-    @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-    @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
-    UiTaskSet.stub(:find_by_name).and_return(@approver)
+    @user        = FactoryGirl.create(:user)
+    @approver    = FactoryGirl.create(:user_miq_request_approver)
 
     @version     = 1
     @ae_instance = "IIII"
