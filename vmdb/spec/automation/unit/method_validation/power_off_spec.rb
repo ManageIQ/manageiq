@@ -21,13 +21,11 @@ describe "power_off Method Validation" do
   end
 
   it "does not queue any operation for a vm in 'powered_off' state" do
-    @vm.update_attribute(:state, "off")
+    @vm.update_attribute(:state, "poweredOff")
 
     ws
 
-    MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id,
-    :role => 'ems_operations').should be_false
+    MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id, :role => 'ems_operations').should be_false
   end
 
 end
-
