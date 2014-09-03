@@ -24,7 +24,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => :ebs_only,
       :instance_store_volumes  => :ebs_only,
       :architecture            => [:i386, :x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => 2.5, # GHz
@@ -45,7 +45,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => :ebs_only,
       :instance_store_volumes  => :ebs_only,
       :architecture            => [:i386, :x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => 2.5, # GHz
@@ -66,7 +66,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => :ebs_only,
       :instance_store_volumes  => :ebs_only,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => 2.5, # GHz
@@ -87,7 +87,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 4.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -108,7 +108,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 32.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -129,7 +129,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 80.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -150,7 +150,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 160.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -171,7 +171,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 32.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon E5-2680v2",
       :processor_clock_speed   => 2.8, # GHz
@@ -192,7 +192,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 80.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon E5-2680v2",
       :processor_clock_speed   => 2.8, # GHz
@@ -213,7 +213,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 160.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2680v2",
       :processor_clock_speed   => 2.8, # GHz
@@ -234,7 +234,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 320.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2680v2",
       :processor_clock_speed   => 2.8, # GHz
@@ -255,7 +255,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 640.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon E5-2680v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -276,7 +276,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 60.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2670",
       :processor_clock_speed   => 2.6, # GHz
@@ -297,7 +297,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 32.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -318,7 +318,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 80.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -339,7 +339,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 160.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -360,7 +360,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 320.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -381,7 +381,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 640.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -402,7 +402,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 800.gigabytes,
       :instance_store_volumes  => 1, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -423,7 +423,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 1600.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -444,7 +444,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 3200.gigabytes,
       :instance_store_volumes  => 4, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -465,7 +465,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 6400.gigabytes,
       :instance_store_volumes  => 8, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon E5-2670v2",
       :processor_clock_speed   => 2.5, # GHz
@@ -486,7 +486,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 48.terabytes,
       :instance_store_volumes  => 24,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon E5-2650",
       :processor_clock_speed   => 2.0, # GHz
@@ -510,7 +510,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => :ebs_only,
       :instance_store_volumes  => :ebs_only,
       :architecture            => [:i386, :x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :very_low,
       :physical_processor      => "Variable",
       :processor_clock_speed   => nil,
@@ -531,7 +531,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 160.gigabytes,
       :instance_store_volumes  => 1,
       :architecture            => [:i386, :x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :low,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -552,7 +552,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 410.gigabytes,
       :instance_store_volumes  => 1,
       :architecture            => [:i386, :x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -573,7 +573,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 840.gigabytes,
       :instance_store_volumes  => 2,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -594,7 +594,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 1680.gigabytes,
       :instance_store_volumes  => 4,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -615,7 +615,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 350.gigabytes,
       :instance_store_volumes  => 1,
       :architecture            => [:i386, :x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -636,7 +636,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 1680.gigabytes,
       :instance_store_volumes  => 4,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -657,7 +657,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 3360.gigabytes,
       :instance_store_volumes  => 4,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon E5-2670",
       :processor_clock_speed   => 2.6, # GHz
@@ -678,7 +678,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 1680.gigabytes,
       :instance_store_volumes  => 2,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon x5570",
       :processor_clock_speed   => nil,
@@ -699,7 +699,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 420.gigabytes,
       :instance_store_volumes  => 1,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -720,7 +720,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 850.gigabytes,
       :instance_store_volumes  => 1,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -741,7 +741,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 1680.gigabytes,
       :instance_store_volumes  => 2,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual],
+      :virtualization_type     => [:paravirtual],
       :network_performance     => :high,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => nil,
@@ -762,7 +762,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 240.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon E5-2670",
       :processor_clock_speed   => nil,
@@ -783,7 +783,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 2.terabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:paravirtual, :hvm],
+      :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :very_high,
       :physical_processor      => "Intel Xeon Family",
       :processor_clock_speed   => 2.4, # GHz
@@ -809,7 +809,7 @@ module MiqEc2InstanceTypes
       :instance_store_size     => 1680.gigabytes,
       :instance_store_volumes  => 2,
       :architecture            => [:x86_64],
-      :virtualzation_type      => [:hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
       :physical_processor      => nil,
       :processor_clock_speed   => nil,
