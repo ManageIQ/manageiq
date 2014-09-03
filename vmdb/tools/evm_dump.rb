@@ -1,6 +1,6 @@
 LOG_DIR = "./"
 logfile = File.join(LOG_DIR, "evm_dump.log")
-File.delete(logfile) if File.exists?(logfile)
+File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
 $log.level = VMDBLogger.const_get("DEBUG")
 
@@ -16,14 +16,14 @@ def yml_fname(klass)
 end
 
 def yml_dump(yml_fname, items)
-  File.delete(yml_fname) if File.exists?(yml_fname)
+  File.delete(yml_fname) if File.exist?(yml_fname)
   File.open(yml_fname, "w") { |fd| fd.write(YAML.dump(items)) }
 end
 
 ### Main
 
 # verify we are in the vmdb directory
-unless File.exists?('app')
+unless File.exist?('app')
   log :error, "Please run this script using 'script/runner miq_queue_dump.rb' from vmdb directory"
   exit 1
 end
@@ -61,7 +61,7 @@ end
 
 if yml_fnames.length > 0
   zip_fname = File.join(LOG_DIR, "evm_dump.zip")
-  File.delete(zip_fname) if File.exists?(zip_fname)
+  File.delete(zip_fname) if File.exist?(zip_fname)
   cmdline = "zip #{zip_fname} #{logfile} #{yml_fnames.join(' ')}"
   log :info, "Zipping dump into #{zip_fname}"
   system(cmdline)
