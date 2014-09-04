@@ -459,6 +459,23 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.db_config")
           say("#{selection}\n\n")
+
+          key_config = ApplianceConsole::KeyConfiguration.new
+          unless key_config.key_exist?
+            say "No Encryption key is found.\n"
+            say "For migrations, please copy encryption key (v2_key) from a hardened appliance"
+            say "For worker and multi-region setups please copy key from another appliance\n"
+            say "If this is your first appliance, just generate one now\n\n"
+
+            if agree("Generate an encryption key now? (Y/N): ")
+              key_config.create_key(true)
+              say("\nCustom encryption Key generated\n")
+            else
+              press_any_key
+              raise MiqSignalError
+            end
+          end
+
           loc_selection = ask_with_menu("Database Location", %w(Internal External), nil, false)
 
           ApplianceConsole::Logging.logger = VMDBLogger.new(LOGFILE)
