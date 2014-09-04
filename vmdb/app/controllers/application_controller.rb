@@ -2369,7 +2369,8 @@ class ApplicationController < ActionController::Base
           :config_tab  => request.parameters["config_tab"],
           :support_tab => request.parameters["support_tab"],
           :rpt_group   => request.parameters["rpt_group"],
-          :rpt_index   => request.parameters["rpt_index"]
+          :rpt_index   => request.parameters["rpt_index"],
+          :typ         => request.parameters["typ"]
         }
       end
 
@@ -2387,12 +2388,15 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:con] = {:controller => controller_name, :action => action_name} if ["explorer","rsop","export","log"].include?(action_name)
       when "miq_capacity"
         session[:tab_url][:opt] = inbound_url if ["utilization","planning","bottlenecks","waste"].include?(action_name)
-      when "catalog","vm","vm_or_template","miq_request","miq_template","service"
+      when "catalog", "vm", "vm_or_template", "miq_template", "service"
         session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "availability_zone","ems_cloud","flavor","security_group","vm_cloud"
         session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "ems_cluster","ems_infra","host","miq_request","pxe","repository","resource_pool","storage","vm_infra"
+      when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
+      when "miq_request"
+        session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
+        session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
       end
     end
 
