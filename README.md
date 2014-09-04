@@ -23,7 +23,7 @@ cloud environments.  It has the following feature sets:
 *  [**Read** developer guides](https://github.com/ManageiQ/guides)
 *  [**Chat** with contributors on irc.freenode.net \#manageiq](http://manageiq.org/community/irc/)
 *  [**File or view bug reports and feature requests** using Issues on Github](https://github.com/ManageIQ/manageiq/issues?state=open)
-*  [**Ask** questions of ManageIQ experts](http://ask.manageiq.org/)
+*  [**Ask** questions of ManageIQ experts](http://talk.manageiq.org/)
 *  [**Discuss** ManageIQ with developers and power users](http://talk.manageiq.org/)
 
 We respectfully ask that you do not directly email any manageiq committers with
