@@ -13,13 +13,19 @@ class EvmWebservicesClient < ActionWebService::Client::Soap
     "#{protocol}://#{host_name}/#{self.endpoint_name}/api"
   end
 
-  def initialize(host_name, protocol = "https", options = {})
+  def initialize(host_name, protocol = nil, user = nil, password = nil, options = {})
+    config   = VMDB::Config.new("vmdb").config[:webservices] || {}
+    protocol ||= config[:consume_protocol] || "https"
+    security = config.fetch_path(:integrate, :security) || "basic"
+    url     = self.class.endpoint_url(host_name, protocol)
+
     driver_options = {
       'protocol.http.ssl_config.verify_mode'     => 'OpenSSL::SSL::VERIFY_NONE',
       'protocol.http.ssl_config.verify_callback' => method(:verify_callback).to_proc,
     }.merge(options)
 
-    super(self.class.api, self.class.endpoint_url(host_name, protocol), :driver_options => driver_options)
+    super(self.class.api, url, :driver_options => driver_options)
+    add_http_basic_auth(url, user, password) if security == "basic" && user
 
     enable_wiredump if $DEBUG
   end
@@ -33,13 +39,15 @@ class EvmWebservicesClient < ActionWebService::Client::Soap
     is_ok
   end
 
+  private
+
   def enable_wiredump
     @wd_file = File.new("wire_dump_#{self.class.endpoint_name}.out", "w")
     @wd_file.sync = true
     self.driver.wiredump_dev = @wd_file
   end
 
-  def add_http_basic_auth(user, pass, host_name, protocol = "https")
-    self.driver.options['protocol.http.basic_auth'] << [self.class.endpoint_url(host_name, protocol), user, pass]
+  def add_http_basic_auth(url, user, pass)
+    driver.options['protocol.http.basic_auth'] << [url, user, pass]
   end
 end

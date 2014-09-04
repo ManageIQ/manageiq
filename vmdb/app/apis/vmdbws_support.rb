@@ -2,6 +2,13 @@ require 'actionwebservice'
 
 module VmdbwsSupport
   SYSTEM_USER = "system"
+  SYSTEM_PASSWORD_ROOT = "password"
+
+  # used by region to region communication.
+  # since the encryption key used is different for each installation, the result is different per installation
+  def self.system_password
+    MiqPassword.encrypt(VmdbwsSupport::SYSTEM_PASSWORD_ROOT)
+  end
 
   class MiqActionWebServiceStruct < ActionWebService::Struct
     def to_h
