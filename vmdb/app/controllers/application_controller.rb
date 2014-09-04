@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
   include JsHelper
   helper JsHelper
+  helper ViewsConfigurationHelper
 
   include_concern 'Automate'
   include_concern 'CiProcessing'
