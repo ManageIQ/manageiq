@@ -140,20 +140,22 @@ module EmsRefresh::Parsers
       cpus = flavor[:vcpu]
 
       new_result = {
-        :type            => "FlavorAmazon",
-        :ems_ref         => uid,
-        :name            => name,
-        :description     => flavor[:description],
-        :enabled         => !flavor[:disabled],
-        :cpus            => cpus,
-        :cpu_cores       => 1,
-        :memory          => flavor[:memory],
-        :supports_32_bit => flavor[:architecture].include?(:i386),
-        :supports_64_bit => flavor[:architecture].include?(:x86_64),
+        :type                 => "FlavorAmazon",
+        :ems_ref              => uid,
+        :name                 => name,
+        :description          => flavor[:description],
+        :enabled              => !flavor[:disabled],
+        :cpus                 => cpus,
+        :cpu_cores            => 1,
+        :memory               => flavor[:memory],
+        :supports_32_bit      => flavor[:architecture].include?(:i386),
+        :supports_64_bit      => flavor[:architecture].include?(:x86_64),
+        :supports_hvm         => flavor[:virtualization_type].include?(:hvm),
+        :supports_paravirtual => flavor[:virtualization_type].include?(:paravirtual),
 
         # Extra keys
-        :disk_size       => flavor[:instance_store_size].to_i,
-        :disk_count      => flavor[:instance_store_volumes].to_i
+        :disk_size            => flavor[:instance_store_size].to_i,
+        :disk_count           => flavor[:instance_store_volumes].to_i
       }
 
       return uid, new_result
@@ -278,8 +280,9 @@ module EmsRefresh::Parsers
         :template    => true,
 
         :hardware    => {
-          :guest_os  => guest_os,
-          :bitness   => ARCHITECTURE_TO_BITNESS[image.architecture],
+          :guest_os            => guest_os,
+          :bitness             => ARCHITECTURE_TO_BITNESS[image.architecture],
+          :virtualization_type => image.virtualization_type,
         },
       }
 
@@ -316,6 +319,7 @@ module EmsRefresh::Parsers
       }.delete_nils
 
       parent_image = @data_index.fetch_path(:vms, instance.image_id)
+      virtualization_type = parent_image.fetch_path(:hardware, :virtualization_type) if parent_image
 
       new_result = {
         :type        => "VmAmazon",
@@ -326,14 +330,15 @@ module EmsRefresh::Parsers
         :power_state => power_state,
 
         :hardware    => {
-          :bitness          => ARCHITECTURE_TO_BITNESS[instance.architecture],
-          :numvcpus         => flavor[:cpus],
-          :cores_per_socket => 1,
-          :logical_cpus     => flavor[:cpus],
-          :memory_cpu       => flavor[:memory] / (1024 * 1024), # memory_cpu is in megabytes
-          :disk_capacity    => flavor[:disk_size],
-          :disks            => [], # Filled in later conditionally on flavor
-          :networks         => [], # Filled in later conditionally on what's available
+          :bitness             => ARCHITECTURE_TO_BITNESS[instance.architecture],
+          :virtualization_type => virtualization_type,
+          :numvcpus            => flavor[:cpus],
+          :cores_per_socket    => 1,
+          :logical_cpus        => flavor[:cpus],
+          :memory_cpu          => flavor[:memory] / (1024 * 1024), # memory_cpu is in megabytes
+          :disk_capacity       => flavor[:disk_size],
+          :disks               => [], # Filled in later conditionally on flavor
+          :networks            => [], # Filled in later conditionally on what's available
         },
 
         :availability_zone => @data_index.fetch_path(:availability_zones, instance.availability_zone),

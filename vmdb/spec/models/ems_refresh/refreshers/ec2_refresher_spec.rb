@@ -84,14 +84,16 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     @flavor = Flavor.where(:name => "t1.micro").first
     @flavor.should be_kind_of(FlavorAmazon)
     @flavor.should have_attributes(
-      :name            => "t1.micro",
-      :description     => "T1 Micro",
-      :enabled         => true,
-      :cpus            => 1,
-      :cpu_cores       => 1,
-      :memory          => 613.megabytes.to_i,
-      :supports_32_bit => true,
-      :supports_64_bit => true
+      :name                 => "t1.micro",
+      :description          => "T1 Micro",
+      :enabled              => true,
+      :cpus                 => 1,
+      :cpu_cores            => 1,
+      :memory               => 613.megabytes.to_i,
+      :supports_32_bit      => true,
+      :supports_64_bit      => true,
+      :supports_hvm         => false,
+      :supports_paravirtual => true
     )
 
     @flavor.ext_management_system.should == @ems
@@ -237,14 +239,15 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     @template.snapshots.size.should         == 0
 
     @template.hardware.should have_attributes(
-      :guest_os           => "linux",
-      :guest_os_full_name => nil,
-      :bios               => nil,
-      :annotation         => nil,
-      :numvcpus           => 1, # wtf
-      :memory_cpu         => nil,
-      :disk_capacity      => nil,
-      :bitness            => 64
+      :guest_os            => "linux",
+      :guest_os_full_name  => nil,
+      :bios                => nil,
+      :annotation          => nil,
+      :numvcpus            => 1, # wtf
+      :memory_cpu          => nil,
+      :disk_capacity       => nil,
+      :bitness             => 64,
+      :virtualization_type => "paravirtual"
     )
 
     @template.hardware.disks.size.should         == 0
@@ -299,14 +302,15 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     v.snapshots.size.should         == 0
 
     v.hardware.should have_attributes(
-      :guest_os           => "linux",
-      :guest_os_full_name => nil,
-      :bios               => nil,
-      :annotation         => nil,
-      :numvcpus           => 1,
-      :memory_cpu         => 613, # MB
-      :disk_capacity      => 0, # TODO: Change to a flavor that has disks
-      :bitness            => 64
+      :guest_os            => "linux",
+      :guest_os_full_name  => nil,
+      :bios                => nil,
+      :annotation          => nil,
+      :numvcpus            => 1,
+      :memory_cpu          => 613, # MB
+      :disk_capacity       => 0, # TODO: Change to a flavor that has disks
+      :bitness             => 64,
+      :virtualization_type => "paravirtual"
     )
 
     v.hardware.disks.size.should         == 0 # TODO: Change to a flavor that has disks
