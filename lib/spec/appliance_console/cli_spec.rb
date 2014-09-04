@@ -19,7 +19,15 @@ describe ApplianceConsole::Cli do
     subject.parse([]).run
   end
 
+  context "#database" do
+    it "requires v2_key" do
+      expect_any_instance_of(ApplianceConsole::KeyConfiguration).to receive(:key_exist?).and_return(false)
+      expect { subject.parse(%w(--internal -r 1 --dbdisk x)).run }.to raise_error("No v2_key present")
+    end
+  end
+
   it "should set database host to localhost if running locally" do
+    expect_v2_key
     subject.should_receive(:disk_from_string).with('x').and_return('/dev/x')
     subject.should_receive(:say)
     ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
@@ -34,6 +42,7 @@ describe ApplianceConsole::Cli do
   end
 
   it "should pass username and password when configuring database locally" do
+    expect_v2_key
     subject.should_receive(:disk_from_string).and_return('x')
     subject.should_receive(:say)
     ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
@@ -49,6 +58,7 @@ describe ApplianceConsole::Cli do
   end
 
   it "should handle remote databases (and setup region)" do
+    expect_v2_key
     subject.should_receive(:say)
     ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
       .with(:host        => 'host',
@@ -63,6 +73,7 @@ describe ApplianceConsole::Cli do
   end
 
   it "should handle remote databases (not setting up region)" do
+    expect_v2_key
     subject.should_receive(:say)
     ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
       .with(:host        => 'host',
@@ -267,4 +278,9 @@ describe ApplianceConsole::Cli do
     end
   end
 
+  private
+
+  def expect_v2_key
+    expect_any_instance_of(ApplianceConsole::KeyConfiguration).to receive(:key_exist?).and_return(true)
+  end
 end

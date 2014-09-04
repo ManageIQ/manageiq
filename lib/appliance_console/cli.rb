@@ -111,6 +111,7 @@ module ApplianceConsole
     end
 
     def set_db
+      raise "No v2_key present" unless KeyConfiguration.new.key_exist?
       if local?(hostname)
         set_internal_db
       else
