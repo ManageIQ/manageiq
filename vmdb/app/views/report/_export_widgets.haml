@@ -31,28 +31,30 @@
               :size     => 15,
               :style    => "min-width: 375px",
               :multiple => true)
-
-.widget-export-buttons
-  = image_tag("/images/formbuttons/export.png", :id => "export-widgets", :class => "button dimmed")
+              
+%table{:width => "100%"}
+  %tr
+    %td{:align => "right"}
+      .widget-export-buttons
+        = button_tag("Export", :id => "export-widgets", :class => "btn btn-primary btn-disabled")
 
 .import-data
   %form#import-form
-    %fieldset
-      %p.legend Import Widgets
+    %p.legend Import Widgets
 
-      %label(for='toggle-all') All
-      %input#toggle-all(type='checkbox')
+    %label(for='toggle-all') All
+    %input#toggle-all(type='checkbox')
 
-      #import-grid
+    #import-grid
 
-      = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
+    = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
 
-.widget-import-buttons
-  %ul#form_buttons
-    %li
-      = image_tag('/images/formbuttons/commit.png', :alt => "Commit Changes", :class => "button import-commit")
-    %li
-      = image_tag('/images/formbuttons/cancel.png', :alt => "Cancel Changes", :class => "button import-cancel")
+%table{:width => "100%"}
+  %tr
+    %td{:align => "right"}
+      .widget-import-buttons
+        = button_tag('Commit', :alt => "Commit Changes", :class => "btn btn-primary")
+        = button_tag('Cancel', :alt => "Cancel Changes", :class => "btn btn-default")
 
 :javascript
   $j(function() {

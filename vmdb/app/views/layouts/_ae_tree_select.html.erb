@@ -2,7 +2,7 @@
 <% entry_point ||= "Instance"  %>
 <div id="automate_tree_div">
   <%= hidden_field_tag(:ignore_form_changes) %>
-  <fieldset>
+
     <p class="legend">Select Entry Point <%=entry_point%></p>
     <div id="automate_tree_box"></div>
     <%= render(:partial => "layouts/dynatree",
@@ -23,40 +23,36 @@
         <tr>
           <td align="right">
             <div id="buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
-              <ul id="form_buttons">
-                <li>
-                  <%= link_to(image_tag('/images/formbuttons/apply.png', :border=>"0",
-                                        :class=>"button", :alt=>'Apply'),
-                              {:action=>"ae_tree_select_toggle", :button=>"submit"},
-                              :remote=>true,
-                              :title=>"Apply") %>
-                </li>
-                <li>
-                  <%= link_to(image_tag('/images/formbuttons/cancel.png', :border=>"0",
-                                        :class=>"button", :alt=>'Cancel'),
-                              {:action=>"ae_tree_select_toggle", :button=>"cancel"},
-                              :remote=>true,
-                              :title=>"Cancel") %>
-                </li>
-              </ul>
+              <%= link_to(button_tag('Apply',
+                                     :class => "btn btn-primary", 
+                                     :alt   => 'Apply'),
+                          {:action => "ae_tree_select_toggle", 
+                           :button => "submit"},
+                          :remote => true,
+                          :title  => "Apply") 
+              %>
+              <%= link_to(button_tag('Cancel',
+                                     :class => "btn btn-default", 
+                                     :alt   => 'Cancel'),
+                          {:action => "ae_tree_select_toggle", 
+                           :button => "cancel"},
+                          :remote => true,
+                          :title  => "Cancel") 
+              %>
             </div>
             <div id="buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
-              <ul id="form_buttons">
-                <li>
-                  <%= image_tag("/images/formbuttons/apply.png",	:class=>"dimmed", :style=>"width: 80px; height: 30px") %>
-                </li>
-                <li>
-                  <%= link_to(image_tag('/images/formbuttons/cancel.png', :border=>"0",
-                                        :class=>"button", :alt=>'Cancel'),
-                              {:action=>"ae_tree_select_toggle", :button=>"cancel"},
-                              :remote=>true,
-                              :title=>"Cancel") %>
-                </li>
-              </ul>
+              <%= button_tag("Apply",	:class => "btn btn-primary btn-disabled") %>
+              <%= link_to(button_tag('Cancel', 
+                                     :class => "btn btn-disabled", 
+                                     :alt   => 'Cancel'),
+                          {:action => "ae_tree_select_toggle", 
+                           :button => "cancel"},
+                          :remote => true,
+                          :title  => "Cancel") 
+              %>
             </div>
           </td>
         </tr>
       </table>
     </div>
-  </fieldset>
 </div>

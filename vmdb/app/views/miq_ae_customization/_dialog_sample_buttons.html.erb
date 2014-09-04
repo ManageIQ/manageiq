@@ -5,17 +5,12 @@
 			<tr>
 				<td align="right">
 					<div id="buttons">
-						<ul id="form_buttons">
-							<% @record.buttons.split(',').each do |b| %>
-								<li>
-									<%= image_tag("/images/formbuttons/#{b.strip}.png",	:class=>"dimmed", :style=>"width: 80px; height: 30px") %>
-								</li>
-							<% end %>
-						</ul>
+						<% @record.buttons.split(',').each do |b| %>
+							<%= button_tag("#{b.strip}",	:class=>"btn btn-default") %>
+						<% end %>
 					</div>
 				</td>
 			</tr>
 		</table>
 	<% end %>
 </div>
-
