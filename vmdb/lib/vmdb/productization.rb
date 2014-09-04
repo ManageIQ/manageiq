@@ -27,7 +27,7 @@ module Vmdb
       Rails.application.config.assets.precompile = [
         Proc.new do |path|
           include =
-            !File.extname(path).in?(['.js', '.css']) ||
+            !File.extname(path).in?(['.js', '.css', '']) ||
             path =~ /(?:\/|\\|\A)(application|productization)\.(css|js)$/
 
           resolved = Rails.application.assets.resolve(path)
