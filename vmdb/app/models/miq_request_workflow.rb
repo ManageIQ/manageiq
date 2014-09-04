@@ -50,6 +50,7 @@ class MiqRequestWorkflow
   end
 
   def create_request(values, requester_id, target_class, event_name, event_message, auto_approve=false)
+    log_header = "MIQ(#{self.class.name}#create_request)"
     @requester_id = requester_id
     return false unless validate(values)
 
@@ -61,7 +62,13 @@ class MiqRequestWorkflow
     yield if block_given?
 
     request = self.request_class.create({:options => values, :userid => requester_id, :request_type => self.request_type.to_s})
-    request.save!  # Force validation errors to raise now
+    begin
+      request.save!  # Force validation errors to raise now
+    rescue => err
+      $log.error "#{log_header} [#{err}]"
+      $log.error err.backtrace.join("\n")
+      return request
+    end
 
     request.set_description
     request.create_request

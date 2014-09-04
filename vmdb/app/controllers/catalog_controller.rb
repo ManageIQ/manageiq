@@ -643,7 +643,13 @@ class CatalogController < ApplicationController
     if @edit[:wf] && @edit[:new][:st_prov_type] != "generic"
       request = @edit[:req_id] ? @edit[:wf].update_request(@edit[:req_id], @edit[:new], session[:userid]) :
                                   @edit[:wf].create_request(@edit[:new], session[:userid])
-      validate_fields
+      if request.errors.present?
+        request.errors.each do |field, msg|
+          add_flash("#{field.to_s.capitalize} #{msg}", :error)
+        end
+      else
+        validate_fields
+      end
     end
 
     if @flash_array
