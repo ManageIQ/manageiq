@@ -32,8 +32,12 @@ class MiqDatabase < ActiveRecord::Base
   def self.registration_default_value_for_update_repo_name(type = "sm_hosted")
     case type
     when "rhn_satellite" then "rhel-x86_64-server-6-cf-me-3"
-    else                      "cf-me-5.3-for-rhel-6-rpms"
+    else                      "cf-me-5.3-for-rhel-6-rpms rhel-server-rhscl-6-rpms"
     end
+  end
+
+  def update_repo_names
+    update_repo_name.split
   end
 
   def self.seed
