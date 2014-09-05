@@ -1253,6 +1253,7 @@ Vmdb::Application.routes.draw do
         protect
         show
         show_list
+        tagging_edit
       ),
       :post => %w(
         adv_search_button
@@ -1283,6 +1284,8 @@ Vmdb::Application.routes.draw do
         save_default_search
         show
         show_list
+        tag_edit_form_field_changed
+        tagging_edit
         update
       )
     },
