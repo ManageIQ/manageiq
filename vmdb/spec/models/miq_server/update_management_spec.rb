@@ -80,15 +80,15 @@ describe MiqServer do
     it "should not try to enable the repo if already enabled" do
       @server.should_receive(:register).and_return(true)
       @server.should_receive(:attach_products)
-      @server.should_receive(:repo_enabled?).and_return(true)
-      @server.should_not_receive(:enable_repo)
+      @server.should_receive(:repos_enabled?).and_return(true)
+      @server.should_not_receive(:enable_repos)
 
       @server.attempt_registration
     end
 
     it "should enable the repo if not enabled" do
-      reg_system.should_receive(:enabled_repos).and_return([], [database.update_repo_name])
-      reg_system.should_receive(:enable_repo).once
+      reg_system.should_receive(:enabled_repos).and_return([])
+      reg_system.should_receive(:enable_repo).twice
       @server.should_receive(:register).and_return(true)
       @server.should_receive(:attach_products)
 
@@ -167,25 +167,24 @@ describe MiqServer do
 
   context "#repo_enabled?" do
     it "true" do
-      reg_system.should_receive(:enabled_repos).and_return(["abc", database.update_repo_name])
+      reg_system.should_receive(:enabled_repos).and_return(["abc", database.update_repo_names].flatten)
 
-      expect(@server.repo_enabled?).to be_true
+      expect(@server.repos_enabled?).to be_true
       expect(@server.upgrade_message).to eq("registered")
     end
 
     it "false" do
       reg_system.should_receive(:enabled_repos).and_return(["abc", "def"])
 
-      expect(@server.repo_enabled?).to be_false
+      expect(@server.repos_enabled?).to be_false
     end
   end
 
-  it "#enable_repo" do
-    reg_system.should_receive(:enable_repo).once
-    @server.should_receive(:repo_enabled?)
+  it "#enable_repos" do
+    reg_system.should_receive(:enable_repo).twice
 
-    @server.enable_repo
-    expect(@server.upgrade_message).to eq("enabling repo")
+    @server.enable_repos
+    expect(@server.upgrade_message).to eq("enabling repo rhel-server-rhscl-6-rpms")
   end
 
   it "#check_updates" do

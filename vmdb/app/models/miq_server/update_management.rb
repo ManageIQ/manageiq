@@ -57,8 +57,8 @@ module MiqServer::UpdateManagement
   def attempt_registration
     return unless register
     attach_products
-    return if repo_enabled?
-    enable_repo
+    return if repos_enabled?
+    enable_repos
   end
 
   def register
@@ -107,31 +107,28 @@ module MiqServer::UpdateManagement
     LinuxAdmin::RegistrationSystem.subscribe(assemble_registration_options)
   end
 
-  def repo_enabled?
-    desired = MiqDatabase.first.update_repo_name
+  def repos_enabled?
     enabled = LinuxAdmin::RegistrationSystem.enabled_repos
-
-    update_attributes(:rh_subscribed => enabled.include?(desired))
-
-    if rh_subscribed?
+    if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
+      update_attributes(:rh_subscribed => true)
       $log.info("MIQ(#{self.class.name}##{__method__}) Desired update repository is enabled")
       update_attributes(:upgrade_message => "registered")
+      return true
     end
-
-    rh_subscribed?
+    false
   end
 
-  def enable_repo
-    update_attributes(:upgrade_message => "enabling repo")
-    repo = MiqDatabase.first.update_repo_name
-    $log.info("MIQ(#{self.class.name}##{__method__}) Enabling Repository: #{repo}")
-    LinuxAdmin::RegistrationSystem.enable_repo(repo, assemble_registration_options)
-
-    repo_enabled?
-
-  rescue AwesomeSpawn::CommandResultError
-    $log.error("MIQ(#{self.class.name}##{__method__}) Failed to enable repo: #{repo}")
-    update_attributes(:upgrade_message => "failed to enable repo")
+  def enable_repos
+    MiqDatabase.first.update_repo_names.each do |repo|
+      update_attributes(:upgrade_message => "enabling repo #{repo}")
+      $log.info("MIQ(#{self.class.name}##{__method__}) Enabling Repository: #{repo}")
+      begin
+        LinuxAdmin::RegistrationSystem.enable_repo(repo, assemble_registration_options)
+      rescue AwesomeSpawn::CommandResultError
+        $log.error("MIQ(#{self.class.name}##{__method__}) Failed to enable repo: #{repo}")
+        update_attributes(:upgrade_message => "failed to enable repo #{repo}")
+      end
+    end
   end
 
   def cfme_available_update
