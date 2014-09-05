@@ -18,5 +18,12 @@ module MiqAeServiceFlavorSpec
       @service_flavor.should be_kind_of(MiqAeMethodService::MiqAeServiceFlavor)
     end
 
+    it "#ext_management_system" do
+      described_class.instance_methods.should include(:ext_management_system)
+    end
+
+    it "#vms" do
+      described_class.instance_methods.should include(:vms)
+    end
   end
 end
