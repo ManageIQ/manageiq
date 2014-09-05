@@ -255,8 +255,14 @@ class ApplicationController < ActionController::Base
   end
 
   # Send the current report in pdf format
-#  def render_pdf(rr=nil)
   def render_pdf(report = nil)
+    if session[:rpt_task_id]
+      miq_task = MiqTask.find(session[:rpt_task_id])
+      @report = miq_task.task_results
+    elsif session[:report_result_id]
+      rr = MiqReportResult.find(session[:report_result_id])
+      @report = rr.report_results
+    end
     if report || @report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
       rr =  (report || @report).build_create_results(:userid=>userid) # Create rr from the report object
