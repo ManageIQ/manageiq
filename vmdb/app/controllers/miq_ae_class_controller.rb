@@ -128,7 +128,7 @@ class MiqAeClassController < ApplicationController
           " - Updated " + format_timezone(rec.created_on, Time.zone, "gtl") +
           updated_by + "]"
     when "aen"
-      txt = ui_lookup(:model=>"MiqAeNamespace")
+      txt = ui_lookup(:model => rec.domain? ? "MiqAeDomain" : "MiqAeNamespace")
       @sb[:namespace_path] = rec.fqname
     end
     @sb[:namespace_path].gsub!(/\//," / ") if @sb[:namespace_path]
@@ -1402,7 +1402,7 @@ class MiqAeClassController < ApplicationController
     when "cancel"
       session[:edit] = nil  # clean out the saved info
       add_flash(I18n.t("flash.edit.cancelled",
-                       :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}"),
+                       :model => ui_lookup(:model => @edit[:typ]),
                        :name  => @ae_ns.name))
       @in_a_form = false
       replace_right_cell
@@ -1422,7 +1422,7 @@ class MiqAeClassController < ApplicationController
         end
       else
         add_flash(I18n.t("flash.edit.saved",
-                         :model => ui_lookup(:model => "#{ae_ns.domain? ? "MiqAeDomain" : "MiqAeNamespace"}"),
+                         :model => ui_lookup(:model => @edit[:typ]),
                          :name  => ae_ns.name))
         AuditEvent.success(build_saved_audit(ae_ns, @edit))
         session[:edit] = nil  # clean out the saved info
@@ -1618,7 +1618,7 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       add_flash(I18n.t("flash.add.cancelled",
-                       :model => ui_lookup(:model => "#{@edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace"}")))
+                       :model => ui_lookup(:model => @edit[:typ])))
       @in_a_form = false
       replace_right_cell
     when "add"
@@ -2743,7 +2743,7 @@ private
   end
 
   def ns_right_cell_text
-    model = ui_lookup(:model => @edit[:new][:domain] ? "MiqAeDomain" : "MiqAeNamespace")
+    model = ui_lookup(:model => @edit[:typ])
     name_for_msg = @edit[:rec_id].nil? ? "cell_header.adding_model_record" : "cell_header.editing_model_record"
     options = @edit[:rec_id].nil? ? {:model => model} : {:model => model, :name => @ae_ns.name}
     I18n.t(name_for_msg, options)
