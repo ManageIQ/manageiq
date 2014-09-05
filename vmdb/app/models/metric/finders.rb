@@ -42,7 +42,7 @@ module Metric::Finders
       res_cond << '(resource_type = ? AND resource_id IN (?))'
       res_params << t << id
     end
-    res_cond = res_cond.join(' AND ')
+    res_cond = res_cond.join(' OR ')
 
     cond.nil? ? cond = [res_cond] : cond[0] << " AND #{res_cond}"
     cond += res_params

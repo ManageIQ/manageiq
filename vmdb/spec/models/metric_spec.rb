@@ -602,6 +602,14 @@ describe Metric do
           Metric::Finders.find_all_by_day(@vm1, "2010-04-14T00:00:00Z", 'hourly', @time_profile).should == @vm1.metric_rollups.sort_by(&:timestamp)[1..5]
         end
 
+        it "should find multiple resource types" do
+          @host1.metric_rollups << FactoryGirl.create(:metric_rollup_host_hr,
+                                                      :resource  => @host1,
+                                                      :timestamp => "2010-04-14T22:00:00Z")
+          metrics = Metric::Finders.find_all_by_day([@vm1, @host1], "2010-04-14T00:00:00Z", 'hourly', @time_profile)
+          metrics.collect { |m| m.resource_type }.uniq.sort.should == %w(VmOrTemplate Host).uniq.sort
+        end
+
         context "calling perf_rollup to daily on the Vm" do
           before(:each) do
             @vm1.perf_rollup("2010-04-14T00:00:00Z", 'daily', @time_profile.id)
