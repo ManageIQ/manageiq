@@ -23,7 +23,7 @@ gem "httpclient",           "~>2.2.4",   :require => false
 gem "io-extra",             "=1.2.6",    :require => false
 gem "linux_admin",          "~>0.9",     :require => false
 gem "log4r",                "=1.1.8",    :require => false
-gem "more_core_extensions", "~>1.2.0",   :require => false
+gem "more_core_extensions", "~>1.2.0",   :require => "more_core_extensions/all"
 gem "nokogiri",             "~>1.5.0",   :require => false
 gem "parallel",             "~>0.5.21",  :require => false
 gem "Platform",             "=0.4.0",    :require => false
