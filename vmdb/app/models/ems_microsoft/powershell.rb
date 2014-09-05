@@ -11,9 +11,11 @@ class EmsMicrosoft
         log_header = "MIQ(#{self.class.name}.#{__method__})"
         File.open(script, "r") do |file|
           begin
-            connection.run_powershell_script(file)
+            results = connection.run_powershell_script(file)
+            log_dos_error_results(results)
+            results
           rescue Errno::ECONNREFUSED => err
-            $scvmm_log.error "MIQ(#{log_header} Unable to connect to VMM. #{err.message})"
+            $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
             raise
           end
         end
