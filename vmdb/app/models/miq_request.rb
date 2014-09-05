@@ -112,7 +112,7 @@ class MiqRequest < ActiveRecord::Base
     self.requester_name ||= self.requester.name                      if self.requester.kind_of?(User)
     self.requester      ||= User.find_by_name(self.requester_name)   if self.requester_name.kind_of?(String)
     self.approval_state ||= "pending_approval"
-    self.miq_approvals   << self.build_default_approval(UiTaskSet.find_by_name("approver"))
+    self.miq_approvals   << self.build_default_approval
   end
 
   # TODO: Move call_automate_event_queue from MiqProvisionWorkflow to be done here automagically
@@ -239,8 +239,8 @@ class MiqRequest < ActiveRecord::Base
     end
   end
 
-  def build_default_approval(approver)
-    MiqApproval.new(:description => "Default Approval", :approver => approver)
+  def build_default_approval
+    MiqApproval.new(:description => "Default Approval")
   end
 
   def self.requests_for_userid(userid)
@@ -263,20 +263,16 @@ class MiqRequest < ActiveRecord::Base
 
   # TODO: Helper methods to support UI in legacy mode - single approval by role
   #       These should be removed once multi-approver is fully supported.
+  def first_approval
+    self.miq_approvals.first || self.build_default_approval
+  end
+
   def approve(userid, reason)
     self.first_approval.approve(userid, reason) unless self.approved?
   end
 
   def deny(userid, reason)
     self.first_approval.deny(userid, reason)
-  end
-
-  def first_approval
-    self.miq_approvals.first || self.build_default_approval(UiTaskSet.find_by_name("approver"))
-  end
-
-  def approver_role
-    self.first_approval.approver.name
   end
 
   def stamped_by
@@ -292,8 +288,10 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def approver
-    self.first_approval.approver.name
+    self.first_approval.approver.try(:name)
   end
+
+  alias_method :approver_role, :approver  # TODO: Is this needed anymore?
 
   def requester_userid
     self.requester.userid
