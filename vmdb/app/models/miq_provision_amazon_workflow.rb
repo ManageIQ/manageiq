@@ -4,9 +4,12 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
     architecture = source.try(:hardware).try(:bitness)
+    virtualization_type = source.try(:hardware).try(:virtualization_type)
 
-    return {} if ems.nil? || !architecture.in?(32, 64)
-    available = ems.flavors.select { |f| f.send("supports_#{architecture}_bit?") }
+    return {} if ems.nil?
+    available = ems.flavors
+    methods = ["supports_#{architecture}_bit?".to_sym, "supports_#{virtualization_type}?".to_sym]
+    methods.each { |m| available = available.select(&m) if FlavorAmazon.method_defined?(m) }
     available.each_with_object({}) { |f, hash| hash[f.id] = display_name_for_name_description(f) }
   end
 

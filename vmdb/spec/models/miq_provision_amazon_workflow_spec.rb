@@ -195,6 +195,42 @@ describe MiqProvisionAmazonWorkflow do
           workflow.display_name_for_name_description(flavor).should == "test_flavor: Small"
         end
       end
+
+      context "with virtualization type" do
+        before do
+          @instance_types_32 = ['t2.micro']
+          @instance_types_64 = ['m1.medium', 'm1.large']
+          provider.flavors << FactoryGirl.create(:flavor,
+                                                 :name                 => "t2.micro",
+                                                 :supports_32_bit      => true,
+                                                 :supports_64_bit      => true,
+                                                 :supports_paravirtual => false,
+                                                 :supports_hvm         => true)
+          provider.flavors << FactoryGirl.create(:flavor,
+                                                 :name                 => "m1.large",
+                                                 :supports_32_bit      => false,
+                                                 :supports_64_bit      => true,
+                                                 :supports_paravirtual => true,
+                                                 :supports_hvm         => false)
+          provider.flavors << FactoryGirl.create(:flavor,
+                                                 :name                 => "m1.medium",
+                                                 :supports_32_bit      => true,
+                                                 :supports_64_bit      => true,
+                                                 :supports_paravirtual => true,
+                                                 :supports_hvm         => false)
+        end
+
+        it "#allowed_instance_types with 32-bit and hvm image" do
+          template.hardware = FactoryGirl.create(:hardware, :bitness => 32, :virtualization_type => 'hvm')
+          workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_32)
+        end
+
+        it "#allowed_instance_types with 64-bit and pv image" do
+          template.hardware = FactoryGirl.create(:hardware, :bitness => 64, :virtualization_type => 'paravirtual')
+          workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_64)
+        end
+
+      end
     end
   end
 end
