@@ -8,5 +8,7 @@ object:
     inherits: 
     description: 
   fields:
+  - rel4:
+      value: /System/Process/parse_provider_category
   - rel5:
-      value: /Alert/EmailNotifications/MiqProvision_Complete
+      value: /${/#ae_provider_category}/VM/Provisioning/Email/MiqProvision_Complete

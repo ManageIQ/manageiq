@@ -9,6 +9,6 @@ object:
     description: Emails for VM, Host, Cluster, Storage, EMS, MIQ Server
   fields:
   - rel1:
-      value: /Alert/Email_Alerts/Parse_Alerts
+      value: /Control/Email/Parse_Alerts
   - rel2:
-      value: /Alert/Email_Alerts/${/#object_type}_Alert
+      value: /Control/Email/${/#object_type}_Alert
