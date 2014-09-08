@@ -1128,11 +1128,7 @@ module ApplicationController::Buttons
         break
       end
     end
-    if last_idx - first_idx + 1 > params[:selected_fields].length
-      return [false, first_idx, last_idx]
-    else
-      return [true, first_idx, last_idx]
-    end
+    is_consecutive = last_idx - first_idx + 1 <= params[:selected_fields].length
+    [is_consecutive, first_idx, last_idx]
   end
-
 end
