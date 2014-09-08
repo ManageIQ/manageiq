@@ -1,4 +1,4 @@
 module OntapLogicalDiskHelper
-  include_concern 'TextualSummary'
-  include_concern 'GraphicalSummary'
+  include_summary_presenter(OntapLogicalDiskTextualSummaryPresenter)
+  include_summary_presenter(OntapLogicalDiskGraphicalSummaryPresenter)
 end

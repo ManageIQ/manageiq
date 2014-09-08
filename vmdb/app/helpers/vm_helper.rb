@@ -1,6 +1,6 @@
 module VmHelper
-  include_concern 'TextualSummary'
-  include_concern 'GraphicalSummary'
+  include_summary_presenter(VmTextualSummaryPresenter)
+  include_summary_presenter(VmGraphicalSummaryPresenter)
 
   # TODO: These methods can be removed once the Summary and ListNav data layer is consolidated.
   def last_date(request_type)
@@ -20,15 +20,5 @@ module VmHelper
     url = parent.vdi ? "vm_vdi" : request.parameters[:controller]
     action = parent.vdi ? "show" : "x_show"
     return url, action
-  end
-
-  def textual_cloud_network
-    return nil unless @record.kind_of?(VmAmazon)
-    {:label => "Virtual Private Cloud", :value => @record.cloud_network ? @record.cloud_network.name : 'None'}
-  end
-
-  def textual_cloud_subnet
-    return nil unless @record.kind_of?(VmAmazon)
-    {:label => "Cloud Subnet", :value => @record.cloud_subnet ? @record.cloud_subnet.name : 'None'}
   end
 end

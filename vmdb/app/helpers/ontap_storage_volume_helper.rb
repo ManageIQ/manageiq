@@ -1,4 +1,4 @@
 module OntapStorageVolumeHelper
-  include_concern 'TextualSummary'
-  include_concern 'GraphicalSummary'
+  include_summary_presenter(OntapStorageVolumeTextualSummaryPresenter)
+  include_summary_presenter(OntapStorageVolumeGraphicalSummaryPresenter)
 end

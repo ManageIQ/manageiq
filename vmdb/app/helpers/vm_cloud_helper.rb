@@ -1,5 +1,5 @@
 module VmCloudHelper
   include VmHelper
-  include_concern 'TextualSummary'
-  include_concern 'GraphicalSummary'
+  include_summary_presenter(VmCloudTextualSummaryPresenter)
+  include_summary_presenter(VmCloudGraphicalSummaryPresenter)
 end
