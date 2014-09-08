@@ -38,7 +38,6 @@ class ApiController
       end
 
       if tag
-        tag[:href] = @req[:url] + tag.id.to_s
         return tag
       end
       false
