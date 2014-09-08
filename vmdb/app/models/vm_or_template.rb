@@ -1691,7 +1691,7 @@ class VmOrTemplate < ActiveRecord::Base
   alias mem_cpu ram_size
 
   def num_cpu
-    return self.hardware.nil? ? 0 : self.hardware.numvcpus
+    return self.hardware.nil? ? 0 : self.hardware.logical_cpus
   end
 
   def num_disks

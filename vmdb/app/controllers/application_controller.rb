@@ -1636,8 +1636,8 @@ class ApplicationController < ActionController::Base
       db_notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
       # add processor entry to the device array
       @devices.push({ :device=>"Processors",
-                                      :description=>db_record.hardware.numvcpus,
-                                      :icon=>"processor" }) unless db_record.hardware.numvcpus.nil?
+                                      :description=>db_record.hardware.logical_cpus,
+                                      :icon=>"processor" }) unless db_record.hardware.logical_cpus.nil?
       # add cpu entries to the device array
       @devices.push({ :device => "CPU Type",
                               :description => db_record.hardware.cpu_type.to_s,
