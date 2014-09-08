@@ -126,6 +126,7 @@ module MiqAeEngineSpec
             root = { 'ae_result' => 'retry' }
             @ws = double('ws')
             @ws.stub(:root => root)
+            @ws.stub(:persist_state_hash => {})
             MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
           end
 

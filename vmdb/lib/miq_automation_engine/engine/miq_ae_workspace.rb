@@ -35,7 +35,7 @@ module MiqAeEngine
   end
 
   class MiqAeWorkspaceRuntime
-    attr_accessor :graph, :num_drb_methods, :class_methods, :datastore_cache
+    attr_accessor :graph, :num_drb_methods, :class_methods, :datastore_cache, :persist_state_hash
     DEFAULTS = {
       :readonly => false
     }
@@ -49,6 +49,7 @@ module MiqAeEngine
       @datastore_cache   = Hash.new
       @class_methods     = Hash.new
       @dom_search        = MiqAeDomainSearch.new
+      @persist_state_hash = HashWithIndifferentAccess.new
     end
 
     def readonly?
@@ -115,6 +116,9 @@ module MiqAeEngine
 
       message = fragment.blank? ? "create" : fragment.downcase
       args = MiqAeUri.query2hash(query)
+      if (ae_state_data = args.delete('ae_state_data'))
+        @persist_state_hash.merge!(YAML.load(ae_state_data))
+      end
 
       ns, klass, instance = MiqAePath.split(path)
       ns = overlay_namespace(scheme, uri, ns, klass, instance)
