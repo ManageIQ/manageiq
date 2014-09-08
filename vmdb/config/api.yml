@@ -355,7 +355,7 @@
       - :name: delete
         :identifier: st_catalog_delete
     :resource_actions:
-      :post:
+      :patch:
       - :name: edit
         :identifier: st_catalog_edit
       :delete:
@@ -383,49 +383,39 @@
     :subcollections:
     - :tags
     - :service_requests
-    :collection_actions:
+    #:collection_actions:
+      #:post:
+      #- :name: service_templates_order
+        #:identifier: svc_catalog_provision
+    :subcollection_actions:  # /api/<collection>/<id>/service_templates
       :post:
-      - :name: edit
-        :identifier: catalogitem_edit
-      - :name: delete
-        :identifier: catalogitem_delete
-    :subcollection_actions:
-      :post:
-      - :name: edit
-        :identifier: catalogitem_edit
-      - :name: delete
-        :identifier: catalogitem_delete
       - :name: order
         :identifier: svc_catalog_provision
-      - :name: assign
+      - :name: create #assign
         :identifier: st_catalog_edit
-      - :name: unassign
-        :identifier: st_catalog_edit
-    :resource_actions:
-      :post:
-      - :name: edit
       :delete:
-      - :name: delete
-        :identifier: catalogitem_delete
-    :subresource_actions:
-      :post:
-      - :name: edit
+      - :name: delete #unassign
+        :identifier: st_catalog_edit
+    :resource_actions:  #/api/service_templates/<id>
+      :patch: 
+      - :name: edit 
         :identifier: catalogitem_edit
-      - :name: order
-        :identifier: svc_catalog_provision
-      - :name: assign
-        :identifier: st_catalog_edit
-      - :name: unassign
-        :identifier: st_catalog_edit
-      :delete:
+      :delete: 
       - :name: delete
         :identifier: catalogitem_delete
-    :tags_subcollection_actions:
+    :subresource_actions:  #/api/<collection>/<id>/service_templates/<id>
       :post:
-      - :name: create
+      - :name: create #assign
+        :identifier: st_catalog_edit
+      :delete:
+      - :name: delete #unassign
+        :identifier: st_catalog_edit
+    :tags_subcollection_actions:  #/api/service_templates/<id>/tags
+      :post:
+      - :name: create #assign
         :identifier: catalogitem_tag
       :delete:
-      - :name: delete
+      - :name: delete #unassign
         :identifier: catalogitem_tag
   :services:
     :description: Services
@@ -436,11 +426,12 @@
     :subcollections:
     - :tags
     :collection_actions:
-      :post:
-      - :name: edit
-        :identifier: service_edit
-      - :name: retire
-        :identifier: service_retire
+      #:post:
+      #- :name: edit
+        #:identifier: service_edit
+      #- :name: retire
+        #:identifier: service_retire
+      :delete:
       - :name: delete
         :identifier: service_delete
     :resource_actions:
@@ -454,9 +445,10 @@
         :identifier: service_delete
     :tags_subcollection_actions:
       :post:
-      - :name: assign
+      - :name: create   #assign
         :identifier: service_tag
-      - :name: unassign
+      :delete:
+      - :name: delete   #unassign
         :identifier: service_tag
   :tags:
     :description: Tags
