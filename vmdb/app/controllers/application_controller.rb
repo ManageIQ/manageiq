@@ -647,14 +647,15 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def render_flash
+  def render_flash(add_flash_text = nil, severity = nil)
+    add_flash(add_flash_text, severity) if add_flash_text
     render :update do |page|
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       yield(page) if block_given?
     end
   end
 
-  private ############################
+  private
 
   def move_cols_left_right(direction)
     flds = direction == "right" ? "available_fields" : "selected_fields"
