@@ -64,7 +64,7 @@ class ApiController
 
     def validate_api_action
       return unless @req[:collection]
-      send("validate_#{@req[:method]}_method")
+      send("validate_#{@req[:method]}_method")    #ie. validate_patch_method
     end
 
     #
@@ -115,11 +115,11 @@ class ApiController
     # For Delete, Patch and Put, we need to make sure we're entitled for them.
     #
     def validate_patch_method
-      validate_method_action(:post, "edit")
+      validate_method_action(:patch, "edit")
     end
 
     def validate_put_method
-      validate_method_action(:post, "edit")
+      validate_method_action(:put, "edit")
     end
 
     def validate_delete_method
@@ -131,9 +131,22 @@ class ApiController
       cspec = collection_config[cname.to_sym]
       target = request_type_target.last
       aspec = cspec["#{target}_actions".to_sym]
+      if aspec.nil?
+        opts = {:attempted_method => @req[:method]}
+        raise MethodNotAllowedError.new(opts)
+      end
+
       action_hash = fetch_action_hash(aspec, method_name, action_name)
+      if action_hash.nil?
+        opts = {
+          :msg => "HTTP method '#{@req[:method].upcase}' is not allowed.",
+          :allowed_methods => aspec.keys.map { |k| k.to_s.upcase }
+        }
+        raise MethodNotAllowedError.new(opts)
+      end
+
       unless api_user_role_allows?(action_hash[:identifier])
-        raise Forbidden, "Use of the #{action_name} action is forbidden"
+        raise Forbidden, "Use of the '#{action_name}' action is forbidden"
       end
     end
 
@@ -208,6 +221,7 @@ class ApiController
     end
 
     def fetch_action_hash(aspec, method_name, action_name)
+
       Array(aspec[method_name]).detect { |h| h[:name] == action_name }
     end
   end
