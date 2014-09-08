@@ -8,14 +8,8 @@
         %td
           %table
             %tr
-              %td{:style => "width:50px", :align => "center"} (All)
-              %td{:style => "width:50px", :align => "center"} Sunday
-              %td{:style => "width:50px", :align => "center"} Monday
-              %td{:style => "width:50px", :align => "center"} Tuesday
-              %td{:style => "width:50px", :align => "center"} Wednesday
-              %td{:style => "width:50px", :align => "center"} Thursday
-              %td{:style => "width:50px", :align => "center"} Friday
-              %td{:style => "width:50px", :align => "center"} Saturday
+              - ["(All)", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].each do |day|
+                %td{:style => "width:50px", :align => "center"} #{day}
             %tr
               %td{:align => "center"}
                 = check_box_tag("all_days",
@@ -34,24 +28,15 @@
                                   "data-miq_observe_checkbox" => url_json)
       %tr
         %td.key Hours
+        - hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         %td
           %table
             %tr
               %td{:style => "width:50px", :align => "center"} (All)
               %td{:style => "width:35px", :align => "center"}
                 %b AM:
-              %td{:style => "width:35px", :align => "center"} 12-1
-              %td{:style => "width:35px", :align => "center"} 1-2
-              %td{:style => "width:35px", :align => "center"} 2-3
-              %td{:style => "width:35px", :align => "center"} 3-4
-              %td{:style => "width:35px", :align => "center"} 4-5
-              %td{:style => "width:35px", :align => "center"} 5-6
-              %td{:style => "width:35px", :align => "center"} 6-7
-              %td{:style => "width:35px", :align => "center"} 7-8
-              %td{:style => "width:35px", :align => "center"} 8-9
-              %td{:style => "width:35px", :align => "center"} 9-10
-              %td{:style => "width:35px", :align => "center"} 10-11
-              %td{:style => "width:35px", :align => "center"} 11-12
+              - 12.times do |i|
+                %td{:style => "width:35px", :align => "center"} #{hours[i-1]}-#{hours[i]}
             %tr
               %td{:align => "center"}
                 = check_box_tag("all_hours",
@@ -73,18 +58,8 @@
               %td &nbsp;
               %td{:align => "center"}
                 %b PM:
-              %td{:align => "center"} 12-1
-              %td{:align => "center"} 1-2
-              %td{:align => "center"} 2-3
-              %td{:align => "center"} 3-4
-              %td{:align => "center"} 4-5
-              %td{:align => "center"} 5-6
-              %td{:align => "center"} 6-7
-              %td{:align => "center"} 7-8
-              %td{:align => "center"} 8-9
-              %td{:align => "center"} 9-10
-              %td{:align => "center"} 10-11
-              %td{:align => "center"} 11-12
+              - 12.times do |i|
+                %td{:align => "center"} #{hours[i-1]}-#{hours[i]}
             %tr
               %td &nbsp;
               %td &nbsp;
