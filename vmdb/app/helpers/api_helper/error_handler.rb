@@ -28,13 +28,13 @@ module ApiHelper
       err = {
         :kind    => kind,
         :message => message,
-        :klass   => e_obj.name || e_obj.class.name
+        :klass   => e_obj.is_a?(Class) ? e_obj.name : e_obj.class.name
       }
       # We don't want to return the stack trace, but only log it in case of an internal error
       api_log_error("#{message}\n\n#{backtrace}") if kind == :internal_server_error && !backtrace.empty?
 
       if status == 405
-        response.headers['Allow'] = klass.allowed_methods
+        response.headers['Allow'] = e_obj.allowed_methods
       end
       render :json => {:error => err}, :status => status
     end
