@@ -1,4 +1,4 @@
-module ViewsConfigurationHelper
+module ConfigurationHelper::ConfigurationViewHelper
   def choose_view(resource, view)
     (case resource
      when :compare, :drift
