@@ -15,7 +15,8 @@ class ApiController
     def update_generic(type)
       validate_api_action
       if @req[:subcollection]
-        render_normal_update type, update_collection(@req[:subcollection].to_sym, @req[:s_id], true)
+        uc = update_collection(@req[:subcollection].to_sym, @req[:s_id], true)
+        render_normal_update type, uc
       else
         render_normal_update type, update_collection(type, @req[:c_id])
       end
@@ -24,8 +25,11 @@ class ApiController
     def destroy_generic(type)
       validate_api_action
       if @req[:subcollection]
-        render_normal_destroy type, delete_subcollection_resource(
-          @req[:subcollection].to_sym, @req[:s_id])
+        resource, subtype = delete_subcollection_resource(
+                              @req[:subcollection].to_sym,
+                              @req[:s_id])
+        type = subtype unless subtype.nil?
+        render_normal_destroy type, resource
       else
         render_normal_destroy type, delete_resource(type, @req[:c_id])
       end
