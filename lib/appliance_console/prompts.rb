@@ -105,6 +105,10 @@ module ApplianceConsole
       just_ask(prompt, nil, TIME_REGEXP)
     end
 
+    def ask_for_string(prompt, default = nil)
+      just_ask(prompt, default)
+    end
+
     def ask_for_integer(prompt, range = nil)
       just_ask(prompt, nil, INT_REGEXP, "an integer", Integer) { |q| q.in = range if range }
     end
