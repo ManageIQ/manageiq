@@ -46,14 +46,4 @@
           %>
         </td>
       </tr>
-      <tr>
-        <td class="key">Inherits From</td>
-        <td class="wide">
-          <%= select_tag('inherits_from',
-                         options_for_select([["<Choose>",""]] + @edit[:inherits_from].sort,
-                         @edit[:new][:inherits]),
-                         "data-miq_observe" => {:url => url}.to_json)
-          %>
-        </td>
-      </tr>
   </table>
