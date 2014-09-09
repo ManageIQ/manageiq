@@ -1,16 +1,16 @@
-<div id="view_buttons_div">
-		<% if render_gtl_view_tb? %>
-			<%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"gtl_view_tb"} %>
-    <% elsif @lastaction == "compare_miq" || @lastaction == "compare_compress" %>
-      <%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"compare_view_tb"} %>
-    <% elsif @lastaction == "drift" %>
-      <%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"drift_view_tb"} %>
-		<% elsif !["all_tasks","all_ui_tasks","timeline","diagnostics","my_tasks","my_ui_tasks","miq_server","usage"].include?(@layout) && !@layout.starts_with?("miq_request") && !@treesize_buttons && @display == "main" && @showtype == "main" && !@in_a_form %>
-			<%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"summary_view_tb"} %>
-		<% else %>
-			<%# fake table to keep center_tb aligned in case there is not view_tb to show %>
-			<table><tr><td width="5"></td></tr></table>
-		<% end %>
-
-
+<div id = "view_buttons_div">
+  <% if render_gtl_view_tb? %>
+    <%= render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "gtl_view_tb"} %>
+  <% elsif @lastaction == "compare_miq" || @lastaction == "compare_compress" %>
+    <%= render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "compare_view_tb"} %>
+  <% elsif @lastaction == "drift" %>
+    <%= render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "drift_view_tb"} %>
+  <% elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) &&
+           !@layout.starts_with?("miq_request") && !@treesize_buttons && @display == "main" &&
+           @showtype == "main" && !@in_a_form %>
+    <%= render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "summary_view_tb"} %>
+  <% else %>
+    <%# fake table to keep center_tb aligned in case there is not view_tb to show %>
+    <table><tr><td width = "5"></td></tr></table>
+  <% end %>
 </div>
