@@ -383,14 +383,12 @@
     :subcollections:
     - :tags
     - :service_requests
-    #:collection_actions:
-      #:post:
-      #- :name: service_templates_order
-        #:identifier: svc_catalog_provision
+    :collection_actions:
+      :post:
+      - :name: order 
+        :identifier: svc_catalog_provision
     :subcollection_actions:  # /api/<collection>/<id>/service_templates
       :post:
-      - :name: order
-        :identifier: svc_catalog_provision
       - :name: create #assign
         :identifier: st_catalog_edit
       :delete:
