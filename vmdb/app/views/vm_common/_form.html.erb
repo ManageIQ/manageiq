@@ -1,9 +1,6 @@
-<% url = url_for(:action => 'form_field_changed',
-                 :id     => "#{@record.id || "new"}")
-%>
-  <%= form_tag({:action => 'edit_vm', 
-                :id     => @record}, 
-               {:id => "vm_form"}) do 
+<div id = 'main_div'>
+  <% url = url_for(:action => 'form_field_changed',
+                   :id     => "#{@record.id || "new"}")
   %>
     <%= render :partial => "layouts/flash_msg" %>
     <p class="legend">Basic Information</p>
@@ -83,54 +80,42 @@
         </div>
       </td>
       <td width="20">
-        <% if !@edit[:explorer] %>
-          <%= image_submit_tag("/images/toolbars/right.png", 
-                               :name  => "right", 
-                               :class => "rollover small")
-          %>
-          <%= image_submit_tag("/images/toolbars/allright.png", 
-                               :name  => "allright", 
-                               :class => "rollover small")
-          %>
-          <%= image_submit_tag("/images/toolbars/left.png", 
-                               :name  => "left", 
-                               :class => "rollover small")
-          %>
-        <% else %>
-          <%= link_to(image_tag("/images/toolbars/right.png", 
-                                :class => "rollover small",
-                                :style => "width: 28px; height: 28px",
-                                :alt   => "Move selected VMs to right"),
-                      {:action => 'form_field_changed', 
-                       :button => 'right', 
-                       :id     => "#{@record.id || "new"}"},
-                      "data-submit" => 'main_div',
-                      :remote       => true,
-                      :title        => 'Move selected VMs to right')
-          %>
-          <%= link_to(image_tag("/images/toolbars/allright.png", 
-                                :class => "rollover small",
-                                :style => "width: 28px; height: 28px", 
-                                :alt   => "Move all VMs to right"),
-                      {:action => 'form_field_changed', 
-                       :button => 'allright', 
-                       :id     => "#{@record.id || "new"}"},
-                      "data-submit" => 'main_div',
-                      :remote       => true,
-                      :title        => 'Move all VMs to right')
-          %>
-          <%= link_to(image_tag("/images/toolbars/left.png",
-                                :class => "rollover small",
-                                :style => "width: 28px; height: 28px",
-                                :alt   => "Move selected VMs to left"),
-                      {:action => 'form_field_changed', 
-                       :button => 'left', 
-                       :id     => "#{@record.id || "new"}"},
-                      "data-submit" => 'main_div',
-                      :remote       => true,
-                      :title        => 'Move all selected VMs to left')
-          %>
-        <% end %>
+        <%= link_to(image_tag("/images/toolbars/right.png",
+                              :class => "rollover small",
+                              :style => "width: 28px; height: 28px",
+                              :alt   => "Move selected VMs to right"),
+                    {:action => 'form_field_changed',
+                     :button => 'right',
+                     :id     => "#{@record.id || "new"}"},
+                    "data-submit" => 'main_div',
+                    "data-miq_sparkle_on" => true,
+                    :remote       => true,
+                    :title        => 'Move selected VMs to right')
+        %>
+        <%= link_to(image_tag("/images/toolbars/allright.png",
+                              :class => "rollover small",
+                              :style => "width: 28px; height: 28px",
+                              :alt   => "Move all VMs to right"),
+                    {:action => 'form_field_changed',
+                     :button => 'allright',
+                     :id     => "#{@record.id || "new"}"},
+                    "data-submit" => 'main_div',
+                    "data-miq_sparkle_on" => true,
+                    :remote       => true,
+                    :title        => 'Move all VMs to right')
+        %>
+        <%= link_to(image_tag("/images/toolbars/left.png",
+                              :class => "rollover small",
+                              :style => "width: 28px; height: 28px",
+                              :alt   => "Move selected VMs to left"),
+                    {:action => 'form_field_changed',
+                     :button => 'left',
+                     :id     => "#{@record.id || "new"}"},
+                    "data-submit" => 'main_div',
+                    "data-miq_sparkle_on" => true,
+                    :remote       => true,
+                    :title        => 'Move all selected VMs to left')
+        %>
       </td>
       <td align="left" valign="top">
         <div style="
@@ -149,7 +134,6 @@
         </div>
       </td>
     </tr>
-    </div>
   </table>
 
     <% if !@edit[:explorer] %>
@@ -159,4 +143,4 @@
                               :record_id    => @record.id
                  } %>
     <% end %>
-<% end %>
+</div>
