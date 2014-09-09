@@ -4,9 +4,8 @@ describe MiqHostProvisionRequest do
   context "A new provision request," do
     before(:each) do
       User.any_instance.stub(:role).and_return("admin")
-      @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
-      UiTaskSet.stub(:find_by_name).and_return(@approver)
+      @user     = FactoryGirl.create(:user)
+      @approver = FactoryGirl.create(:user_miq_request_approver)
     end
 
     it "should not be created without userid being specified" do
@@ -37,13 +36,12 @@ describe MiqHostProvisionRequest do
         @pr.miq_request.valid?.should be_true
         @pr.miq_request.approval_state.should == "pending_approval"
         @pr.miq_request.resource.should == @pr
+        @pr.miq_request.requester_userid.should == @user.userid
+        @pr.miq_request.stamped_on.should be_nil
+
         @pr.miq_request.approved?.should be_false
         MiqApproval.count.should == 1
-        @pr.miq_request.requester_userid.should == @user.userid
-        @pr.miq_request.approver.should == @approver.name
-        @pr.miq_request.approver_role.should == @approver.name
         @pr.miq_request.first_approval.should == @approvals.first
-        @pr.miq_request.stamped_on.should be_nil
       end
 
       it "should return a workflow class" do

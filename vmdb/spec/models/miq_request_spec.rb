@@ -5,7 +5,6 @@ describe MiqRequest do
     before(:each) do
       @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       @barney        = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney')
-      @approver_role = UiTaskSet.create(:name => "approver", :description => "Approver")
       @requests_for_fred   = []
       @requests_for_barney = []
       @requests_for_fred   << FactoryGirl.create(:miq_request, :requester => @fred)
@@ -174,13 +173,9 @@ describe MiqRequest do
       end
 
       it "#build_default_approval" do
-        approval = @request.build_default_approval(@barney)
+        approval = @request.build_default_approval
         approval.description.should == "Default Approval"
-        approval.approver.should    == @barney
-
-        approval = @request.build_default_approval(@approver_role)
-        approval.description.should == "Default Approval"
-        approval.approver.should    == @approver_role
+        approval.approver.should    be_nil
       end
 
       it "#v_approved_by" do
@@ -243,14 +238,14 @@ describe MiqRequest do
       it "#approver" do
         @request.approver.should == @wilma.name
         @request.miq_approvals = []
-        @request.approver.should == @approver_role.name
+        @request.approver.should be_nil
       end
 
       # TODO: This is IDENTICAL to #approver method
       it "#approver_role" do
         @request.approver.should == @wilma.name
         @request.miq_approvals = []
-        @request.approver.should == @approver_role.name
+        @request.approver.should be_nil
       end
 
     end
