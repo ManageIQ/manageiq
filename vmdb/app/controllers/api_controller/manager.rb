@@ -137,7 +137,8 @@ class ApiController
         next if r.blank?
 
         collection, rid = parse_href(r["href"])
-        r.except!("id", "href") if collection == type && rid
+        r.except!("id") if collection == type && rid
+
         processed += 1
         update_one_collection(is_subcollection, target, type, rid, r)
       end
