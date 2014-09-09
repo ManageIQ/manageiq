@@ -1286,6 +1286,7 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
+        toggle_dash
         update
       )
     },
