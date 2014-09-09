@@ -33,6 +33,7 @@ include:
   hardware:
     columns:
     - bitness
+    - virtualization_type
 
 # Included tables and columns for query performance
 include_for_find:
@@ -48,6 +49,7 @@ col_order:
 - last_compliance_status
 - allocated_disk_storage
 - hardware.bitness
+- hardware.virtualization_type
 - last_scan_on
 - region_description
 
@@ -58,6 +60,7 @@ headers:
 - Compliant
 - Allocated Size
 - Architecture
+- Virtualization Type
 - Last Analysis Time
 - Region
 
