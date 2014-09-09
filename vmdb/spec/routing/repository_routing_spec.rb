@@ -11,6 +11,7 @@ describe "routes for AvailabilityZoneController" do
   it_behaves_like "A controller that has policy protect routes"
   it_behaves_like "A controller that has show list routes"
   it_behaves_like "A controller that has CRUD routes"
+  it_behaves_like "A controller that has tagging routes"
 
   describe "#button" do
     it "routes with POST" do
