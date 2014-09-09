@@ -194,10 +194,10 @@ module ApplicationController::CiProcessing
       return
     end
     # check to see if coming from show_list or drilled into vms from another CI
-    if request.parameters[:controller] == "vm" || ["all_vms","vms"].include?(params[:display])
+    if request.parameters[:controller] == "vm" || %w(all_vms instances vms).include?(params[:display])
       rec_cls = "vm"
     elsif request.parameters[:controller] == "service"
-    rec_cls =  "service"
+      rec_cls =  "service"
     else
       rec_cls = "vm_vdi"
     end

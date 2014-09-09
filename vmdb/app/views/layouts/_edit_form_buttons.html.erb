@@ -126,9 +126,9 @@
                              :class   => 'btn btn-default',
                              :alt     => "Reset Changes",
                              :title   => "Reset Changes",
-                             :onclickb => "miqAjaxButton('#{url_for(:action  => action_url,
-                                                                    :id      => record_id,
-                                                                    :button  => "reset")}');")
+                             :onclick => "miqAjaxButton('#{url_for(:action  => action_url,
+                                                                   :id      => record_id,
+                                                                   :button  => "reset")}');")
               %>
 
             <% else %>

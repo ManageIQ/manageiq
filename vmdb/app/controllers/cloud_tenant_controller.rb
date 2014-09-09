@@ -8,6 +8,34 @@ class CloudTenantController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
+  # handle buttons pressed on the button bar
+  def button
+    @edit = session[:edit]                                  # Restore @edit for adv search box
+    params[:display] = @display if %w(vms instances images).include?(@display)
+    params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
+    if params[:pressed].starts_with?("vm_") ||        # Handle buttons from sub-items screen
+      params[:pressed].starts_with?("miq_template_") ||
+      params[:pressed].starts_with?("guest_") ||
+      params[:pressed].starts_with?("image_") ||
+      params[:pressed].starts_with?("instance_")
+
+      pfx = pfx_for_vm_button_pressed(params[:pressed])
+      process_vm_buttons(pfx)
+      return if ["#{pfx}_policy_sim", "#{pfx}_compare", "#{pfx}_tag", "#{pfx}_retire",
+                 "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_refresh", "#{pfx}_right_size",
+                 "#{pfx}_reconfigure"].include?(params[:pressed]) &&
+                  @flash_array.nil?
+
+      unless ["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
+              "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
+        @refresh_div = "main_div"
+        @refresh_partial = "layouts/gtl"
+        show
+      end
+    end
+    render_button_partial(pfx)
+  end
+
   def show
     @display = params[:display] || "main" unless control_selected?
 
@@ -64,6 +92,49 @@ class CloudTenantController < ApplicationController
   end
 
   private
+
+  def render_button_partial(pfx)
+    if @flash_array && params[:pressed] == "#{@table_name}_delete" && @single_delete
+      render :update do |page|
+        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
+      end
+    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
+      if @redirect_controller
+        if ["#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
+          render :update do |page|
+            page.redirect_to :controller => @redirect_controller,
+                             :action     => @refresh_partial,
+                             :id         => @redirect_id,
+                             :prov_type  => @prov_type,
+                             :prov_id    => @prov_id
+          end
+        else
+          render :update do |page|
+            page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
+          end
+        end
+      else
+        render :update do |page|
+          page.redirect_to :action => @refresh_partial, :id => @redirect_id
+        end
+      end
+    else
+      if @refresh_div == "main_div" && @lastaction == "show_list"
+        replace_gtl_main_div
+      else
+        render :update do |page|                    # Use RJS to update the display
+          if ["vms"].include?(@display) && @refresh_div != "flash_msg_div"
+            page << "miqReinitToolbar('center_tb');"
+            page.replace_html("main_div", :partial => "layouts/gtl",
+                                          :locals  => {:action_url => "show/#{@cloud_tenant.id}"})
+          else
+            page.replace_html(@refresh_div, :partial => @refresh_partial)
+          end
+        end
+      end
+    end
+  end
 
   def get_session_data
     @title      = "Cloud Tenant"
