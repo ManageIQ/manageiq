@@ -6,7 +6,7 @@ module VmCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name region server description ipaddress custom_1 container tools_status osinfo architecture advanced_settings resources guid}
+    items = %w(name region server description ipaddress custom_1 container tools_status osinfo architecture advanced_settings resources guid virtualization_type)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -555,5 +555,11 @@ module VmCloudHelper::TextualSummary
       h[:link]  = url_for(:action => 'security_groups', :id => @record, :display => "security_groups")
     end
     h
+  end
+
+  def textual_virtualization_type
+    return nil if @record.kind_of?(VmOpenstack) || @record.kind_of?(TemplateOpenstack)
+    v_type = @record.hardware.try(:virtualization_type)
+    {:label => "Virtualization Type", :value => v_type.to_s}
   end
 end
