@@ -36,7 +36,7 @@ en:
       one_or_more_selected_for_task: "One or more %{model} must be selected to %{task}"
       record_gone: "%{model} no longer exists"
       task_does_not_apply_to_one_of_selected: "%{task} does not apply because you selected at least one %{model}"
-      task_does_not_apply_to_model: "%{task} does not apply to %{model}"
+      task_does_not_apply_to_model: "%{task} does not apply to selected %{model}"
 
     capacity:
       planning_reset: "Planning options have been reset by the user"

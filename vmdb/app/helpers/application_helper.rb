@@ -953,7 +953,7 @@ module ApplicationHelper
       when "vm_clone"
         return true unless @record.cloneable?
       when "vm_publish"
-        return true if @record.vendor.downcase == "redhat"
+        return true if %w(VmMicrosoft VmRedhat).include?(@record.type)
       when "vm_collect_running_processes", "vm_vdi_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_evm_relationship", "vm_right_size"
