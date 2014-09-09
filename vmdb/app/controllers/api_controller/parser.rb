@@ -108,7 +108,6 @@ class ApiController
       cname = @req[:subcollection] || @req[:collection]
       cspec = collection_config[cname.to_sym]
       type, target = request_type_target
-      is_method_allowed(target, cspec)
       validate_post_api_action(cname, @req[:method], cspec, type, target)
     end
 
@@ -140,7 +139,7 @@ class ApiController
       action_hash, temp = fetch_action_hash(aspec, method_name, action_name)
 
       if action_hash.nil?
-        is_method_allowed(target, cspec)
+        method_not_allowed(target, cspec)
       end
 
       unless api_user_role_allows?(action_hash[:identifier])
@@ -148,7 +147,7 @@ class ApiController
       end
     end
 
-    def is_method_allowed(target, cspec)
+    def method_not_allowed(target, cspec)
       opts = {
         :msg => "HTTP method '#{@req[:method].upcase}' is not allowed.",
         :allowed_methods => [] 
@@ -181,6 +180,9 @@ class ApiController
       
       # hack around the default 'create' action
       action_hash, @req[:action] = fetch_action_hash(aspec, mname, aname)
+      if action_hash.nil?
+        method_not_allowed(target, cspec)
+      end
       aname = @req[:action]
 
       raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
