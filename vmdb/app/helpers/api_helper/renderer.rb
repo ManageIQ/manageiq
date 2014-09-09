@@ -54,13 +54,9 @@ module ApiHelper
         json.ignore_nil!
         [:name, :count, :subcount].each do |opt_name|
           json.set! "#{opt_name}", opts[opt_name] if opts[opt_name]
-        end        
+        end
         json.resources resources.collect do |resource|
-          if opts[:expand_resources]
-            add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
-          end
-          json.href normalize_url_from_id(reftype, resource["id"])
-          json.id resource["id"]
+          add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
         end
         aspecs = get_aspecs(type, opts[:collection_actions], :collection, opts[:is_subcollection], reftype)
       end
@@ -70,7 +66,19 @@ module ApiHelper
       reftype = get_reftype(type, reftype, resource, opts)
       json    = Jbuilder.new
       json.ignore_nil!
-      json.href normalize_url_from_id(reftype, resource["id"])
+
+      if resource.respond_to?(:attributes)
+        json.href normalize_url_from_id(reftype, resource.id)
+      elsif resource.is_a?(Hash)
+        if resource.has_key?('results')
+          resource['results'].each do |r|
+            if r['href'].nil?
+              r['href'] = normalize_url_from_id(reftype, r.id)
+            end
+          end
+        end
+      end
+
       add_hash json, normalize_hash(reftype, resource), :render_attr
       #
       # Let's expand subcollections for objects if asked for
