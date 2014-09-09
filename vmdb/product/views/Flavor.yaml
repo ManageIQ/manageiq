@@ -27,6 +27,7 @@ cols:
 - supports_64_bit
 - supports_hvm
 - supports_paravirtual
+- block_storage_based_only
 - total_vms
 
 # Included tables (joined, has_one, has_many) and columns
@@ -50,6 +51,7 @@ col_order:
 - supports_64_bit
 - supports_hvm
 - supports_paravirtual
+- block_storage_based_only
 - total_vms
 
 col_formats:
@@ -70,6 +72,7 @@ headers:
 - 64 Bit Architecture
 - HVM (Hardware Virtual Machine)
 - Paravirtualization
+- Block Storage Based
 - Instances
 
 # Condition(s) string for the SQL query
