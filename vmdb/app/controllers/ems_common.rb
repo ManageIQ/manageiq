@@ -360,6 +360,8 @@ module EmsCommon
       refreshstorage if params[:pressed] == "storage_refresh"
       tag(Storage) if params[:pressed] == "storage_tag"
 
+      terminatevms if params[:pressed] == "instance_terminate"
+
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       # Handle Host power buttons
       if ["host_shutdown","host_reboot","host_standby","host_enter_maint_mode","host_exit_maint_mode",
@@ -397,15 +399,7 @@ module EmsCommon
       return if ["#{@table_name}_tag","#{@table_name}_protect"].include?(params[:pressed]) &&
                 @flash_array == nil # Tag screen showing, so return
 
-      if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-        add_flash(I18n.t("flash.button.not_implemented"), :error)
-        @refresh_partial = "layouts/flash_msg"
-        @refresh_div = "flash_msg_div"
-      elsif @flash_array && @lastaction == "show"
-        @ems = @record = identify_record(params[:id])
-        @refresh_partial = "layouts/flash_msg"
-        @refresh_div = "flash_msg_div"
-      end
+      show_button_not_implemented_msg?
     end
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete

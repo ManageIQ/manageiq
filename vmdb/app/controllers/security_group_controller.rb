@@ -62,6 +62,8 @@ class SecurityGroupController < ApplicationController
     if params[:pressed].starts_with?("image_") ||        # Handle buttons from sub-items screen
         params[:pressed].starts_with?("instance_")
 
+      terminatevms if params[:pressed] == "instance_terminate"
+
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       process_vm_buttons(pfx)
 
@@ -84,11 +86,7 @@ class SecurityGroupController < ApplicationController
           @flash_array == nil # Tag screen showing, so return
     end
 
-    if ! @refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    end
+    show_button_not_implemented_msg?
 
     if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new","#{pfx}_clone",
                                                 "#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])

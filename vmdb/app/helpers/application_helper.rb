@@ -1823,6 +1823,18 @@ module ApplicationHelper
     return celltext
   end
 
+  def show_button_not_implemented_msg?
+    if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
+      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = "flash_msg_div"
+    elsif @flash_array && @lastaction == "show"
+      @ems = @record = identify_record(params[:id])
+      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = "flash_msg_div"
+    end
+  end
+
   # Only show the background image with listnav splitter for some classic screens
   def show_page_content_background
     return false if @layout == "exception"

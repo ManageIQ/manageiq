@@ -64,6 +64,8 @@ class FlavorController < ApplicationController
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       process_vm_buttons(pfx)
 
+      terminatevms if params[:pressed] == "instance_terminate"
+
       # Control transferred to another screen, so return
       return if ["#{pfx}_policy_sim","#{pfx}_compare", "#{pfx}_tag",
                  "#{pfx}_retire","#{pfx}_protect","#{pfx}_ownership",
@@ -83,11 +85,7 @@ class FlavorController < ApplicationController
           @flash_array == nil # Tag screen showing, so return
     end
 
-    if ! @refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    end
+    show_button_not_implemented_msg?
 
     if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new","#{pfx}_clone",
                                                 "#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
