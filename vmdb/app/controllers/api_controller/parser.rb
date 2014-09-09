@@ -136,7 +136,8 @@ class ApiController
         raise MethodNotAllowedError.new(opts)
       end
 
-      action_hash = fetch_action_hash(aspec, method_name, action_name)
+      action_hash, temp = fetch_action_hash(aspec, method_name, action_name)
+
       if action_hash.nil?
         opts = {
           :msg => "HTTP method '#{@req[:method].upcase}' is not allowed.",
@@ -217,7 +218,7 @@ class ApiController
       aspec = cspec["#{cname}_subcollection_actions".to_sym]
       return unless aspec
 
-      action_hash = fetch_action_hash(aspec, mname, aname)
+      action_hash, temp = fetch_action_hash(aspec, mname, aname)
 
       unless api_user_role_allows?(action_hash[:identifier])
         raise Forbidden, "Use of Action #{aname} for the #{cname} sub-collection is forbidden"
