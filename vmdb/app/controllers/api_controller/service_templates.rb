@@ -9,6 +9,10 @@ class ApiController
       object ? klass.where(:service_template_catalog_id => object.id) : {}
     end
 
+    def service_templates_create_resource(object, _type, id = nil, _data = nil)
+      service_templates_assign_resource(object, _type, id, _data)
+    end
+
     def service_templates_assign_resource(object, _type, id = nil, _data = nil)
       klass = collection_config[:service_templates][:klass].constantize
       st    = klass.find(id)
@@ -18,6 +22,15 @@ class ApiController
       else
         st.update_attributes(:service_template_catalog_id => object.id)
       end
+
+      if _data.has_key?('href')
+        st['href'] = _data['href']
+      end
+      st
+    end
+
+    def service_templates_delete_resource(object, _type, id = nil, _data = nil)
+      service_templates_unassign_resource(object, _type, id, _data)
     end
 
     def service_templates_unassign_resource(object, _type, id = nil, _data = nil)
@@ -32,6 +45,18 @@ class ApiController
           st.update_attributes(:service_template_catalog_id => nil)
         end
       end
+      return st, :service_templates
+    end
+
+    # Method is called only when service_templates is a subcollection
+    def service_templates_create_resource(_object, _type, id = nil, data = nil)
+      service_templates_order_resource(_object, _type, id, data)
+    end
+
+    # Method for when service templates is a collection
+    def order_resource_service_templates(_type, id = nil, data = nil)
+      # first argument is nil since there is no parent object
+      service_templates_order_resource(nil, _type, id, data)
     end
 
     def service_templates_order_resource(_object, _type, id = nil, data = nil)
