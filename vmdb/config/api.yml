@@ -423,21 +423,16 @@
     :klass: Service
     :subcollections:
     - :tags
-    :collection_actions:
-      #:post:
-      #- :name: edit
-        #:identifier: service_edit
-      #- :name: retire
-        #:identifier: service_retire
-      :delete:
-      - :name: delete
-        :identifier: service_delete
     :resource_actions:
       :post:
-      - :name: edit
-        :identifier: service_edit
       - :name: retire
         :identifier: service_retire
+      :patch:
+      - :name: edit
+        :identifier: service_edit
+      :put:
+      - :name: edit
+        :identifier: service_edit
       :delete:
       - :name: delete
         :identifier: service_delete
