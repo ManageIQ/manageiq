@@ -190,25 +190,36 @@ describe ApplianceConsole::Cli do
     context "#hostname and local?" do
       it "should not default" do
         expect(subject.hostname).to be_nil
+        expect(subject).not_to be_database
+        expect(subject).not_to be_local_database # the main difference between local and local_database
+        expect(subject).to be_local
       end
 
       it "should have 'localhost' for internal databases" do
         subject.parse(%w(--internal --region 1))
         expect(subject.hostname).to eq("localhost")
+        expect(subject).to be_database
         expect(subject).to be_local
+        expect(subject).to be_local_database
       end
 
       it "should be local (even if explicitly setting hostname" do
         subject.parse(%w(--hostname localhost --region 1))
+        expect(subject).to be_database
         expect(subject).to be_local
+        expect(subject).to be_local_database
       end
 
       it "should respect parameter " do
         subject.parse(%w(--hostname abc  --region 1))
         expect(subject.hostname).to eq("abc")
+        expect(subject).to be_database
         expect(subject).not_to be_local
+        expect(subject).not_to be_local_database
       end
+    end
 
+    context "#local?" do
       ["localhost", "127.0.0.1", "", nil].each do |host|
         it "should know #{host} is local" do
           expect(subject).to be_local(host)

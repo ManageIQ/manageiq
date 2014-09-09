@@ -44,6 +44,14 @@ module ApplianceConsole
       options[:key]
     end
 
+    def database?
+      hostname
+    end
+
+    def local_database?
+      hostname && local?(hostname)
+    end
+
     def certs?
       options[:postgres_client_cert] || options[:postgres_server_cert] || options[:api_cert]
     end
@@ -91,7 +99,7 @@ module ApplianceConsole
         opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
         opt :api_cert,             "install certs for regional api",    :type => :boolean
       end
-      Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && hostname && local?
+      Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && local_database?
       self
     end
 
@@ -112,7 +120,7 @@ module ApplianceConsole
 
     def set_db
       raise "No v2_key present" unless KeyConfiguration.new.key_exist?
-      if local?(hostname)
+      if local?
         set_internal_db
       else
         set_external_db
