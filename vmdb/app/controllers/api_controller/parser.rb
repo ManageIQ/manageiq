@@ -149,11 +149,16 @@ class ApiController
     end
 
     def is_method_allowed(target, cspec)
-      aspec = cspec["#{target}_actions".to_sym]
       opts = {
         :msg => "HTTP method '#{@req[:method].upcase}' is not allowed.",
-        :allowed_methods => aspec.keys.map { |k| k.to_s.upcase }
+        :allowed_methods => [] 
       }
+
+      aspec = cspec["#{target}_actions".to_sym]
+      unless aspec.nil?
+        opts[:allowed_methods] = aspec.keys.map { |k| k.to_s.upcase }
+      end
+
       raise MethodNotAllowedError.new(opts)
     end
 
