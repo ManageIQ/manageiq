@@ -219,7 +219,7 @@ function miqGridSort(col_id, grid_obj, dir) {
 											onComplete:function(request){miqSparkle(false);}}
 			);
 	} else {
-		if (col_id > 1) {
+		if (grid_obj && col_id > 1) {
 			url = miq_action_url;
 			if (typeof miq_parent_id != "undefined") {
 				url = "/" + miq_parent_class + "/" + url + "/" + miq_parent_id;
