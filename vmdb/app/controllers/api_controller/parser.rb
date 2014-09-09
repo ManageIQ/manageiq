@@ -166,7 +166,11 @@ class ApiController
       raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec.key?(aspecnames.to_sym)
 
       aspec = cspec[aspecnames.to_sym]
-      action_hash = fetch_action_hash(aspec, mname, aname)
+      
+      # hack around the default 'create' action
+      action_hash, @req[:action] = fetch_action_hash(aspec, mname, aname)
+      aname = @req[:action]
+
       raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
       raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
 
@@ -222,7 +226,15 @@ class ApiController
 
     def fetch_action_hash(aspec, method_name, action_name)
 
-      Array(aspec[method_name]).detect { |h| h[:name] == action_name }
+      unless method_name.to_s == 'post'
+        return Array(aspec[method_name]).detect { |h| h[:name] == action_name }, action_name
+      end
+
+      # There should only be one 'action' per 'post' method.
+      #
+      # This should make it easier to remove the 'action name' from the api.yml
+      # config in the future. 
+      return aspec[:post][0], aspec[:post][0][:name]
     end
   end
 end
