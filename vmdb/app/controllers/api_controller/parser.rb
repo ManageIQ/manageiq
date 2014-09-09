@@ -108,6 +108,7 @@ class ApiController
       cname = @req[:subcollection] || @req[:collection]
       cspec = collection_config[cname.to_sym]
       type, target = request_type_target
+      is_method_allowed(target, cspec)
       validate_post_api_action(cname, @req[:method], cspec, type, target)
     end
 
@@ -139,16 +140,21 @@ class ApiController
       action_hash, temp = fetch_action_hash(aspec, method_name, action_name)
 
       if action_hash.nil?
-        opts = {
-          :msg => "HTTP method '#{@req[:method].upcase}' is not allowed.",
-          :allowed_methods => aspec.keys.map { |k| k.to_s.upcase }
-        }
-        raise MethodNotAllowedError.new(opts)
+        is_method_allowed(target, cspec)
       end
 
       unless api_user_role_allows?(action_hash[:identifier])
         raise Forbidden, "Use of the '#{action_name}' action is forbidden"
       end
+    end
+
+    def is_method_allowed(target, cspec)
+      aspec = cspec["#{target}_actions".to_sym]
+      opts = {
+        :msg => "HTTP method '#{@req[:method].upcase}' is not allowed.",
+        :allowed_methods => aspec.keys.map { |k| k.to_s.upcase }
+      }
+      raise MethodNotAllowedError.new(opts)
     end
 
     def request_type_target
