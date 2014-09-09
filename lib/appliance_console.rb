@@ -449,12 +449,15 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.key_gen")
           say("#{selection}\n\n")
-          key_config = ApplianceConsole::KeyConfiguration.new
 
-          if !key_config.key_exist? || agree("Overwrite existing v2_key? (Y/N): ")
-            key_config.create_key(true)
-            say("\nCustom encryption Key generated\n")
+          key_config = ApplianceConsole::KeyConfiguration.new
+          if key_config.ask_question_loop
+            say("\nEncryption key now configured.")
             press_any_key
+          else
+            say("\nEncryption key not configured.")
+            press_any_key
+            raise MiqSignalError
           end
 
         when I18n.t("advanced_settings.db_config")
@@ -462,15 +465,15 @@ Date and Time Configuration
 
           key_config = ApplianceConsole::KeyConfiguration.new
           unless key_config.key_exist?
-            say "No Encryption key is found.\n"
-            say "For migrations, please copy encryption key (v2_key) from a hardened appliance"
-            say "For worker and multi-region setups please copy key from another appliance\n"
-            say "If this is your first appliance, just generate one now\n\n"
+            say "No encryption key found.\n"
+            say "For migrations, copy encryption key from a hardened appliance."
+            say "For worker and multi-region setups, copy key from another appliance.\n"
+            say "If this is your first appliance, just generate one now.\n\n"
 
-            if agree("Generate an encryption key now? (Y/N): ")
-              key_config.create_key(true)
-              say("\nCustom encryption Key generated\n")
+            if key_config.ask_question_loop
+              say("\nEncryption key now configured.\n\n")
             else
+              say("\nEncryption key not configured.")
               press_any_key
               raise MiqSignalError
             end
