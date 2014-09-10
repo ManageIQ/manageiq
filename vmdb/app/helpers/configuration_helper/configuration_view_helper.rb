@@ -83,25 +83,19 @@ module ConfigurationHelper::ConfigurationViewHelper
   end
 
   def grid_view(resource)
-    [if resource != :catalog
-       active_icon("view_grid.png", "Grid View")
-     end,
+    [(active_icon("view_grid.png", "Grid View") if resource != :catalog),
      inactive_icon("view_tile.png", "Tile View", resource, "tile"),
      inactive_icon("view_list.png", "List View", resource, "list")].compact.join('')
   end
 
   def tile_view(resource)
-    [if resource != :catalog
-       inactive_icon("view_grid.png", "Grid View", resource, "grid")
-     end,
+    [(inactive_icon("view_grid.png", "Grid View", resource, "grid") if resource != :catalog),
      active_icon("view_tile.png", "Tile View"),
      inactive_icon("view_list.png", "List View", resource, "list")].compact.join('')
   end
 
   def list_view(resource)
-    [if resource != :catalog
-       inactive_icon("view_grid.png", "Grid View", resource, "grid")
-     end,
+    [(inactive_icon("view_grid.png", "Grid View", resource, "grid") if resource != :catalog),
      inactive_icon("view_tile.png", "Tile View", resource, "tile"),
      active_icon("view_list.png", "List View")].compact.join('')
   end
