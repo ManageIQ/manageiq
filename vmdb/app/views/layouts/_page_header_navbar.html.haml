@@ -258,23 +258,23 @@
       %li(class="#{primary_nav_class(:set)}")
         %a{:href=>"/dashboard/maintab/?tab=set"}Configure
         %ul(class="#{primary_nav_class(:set)}")
-          -if role_allows(:feature => 'about') 
 
-            -if role_allows(:feature => 'my_settings',:any => true)
-              %li(class="#{secondary_nav_class('configuration')}")
-                %a{:href=>'/configuration/index?config_tab=ui'}My Settings
+          -if role_allows(:feature => 'my_settings',:any => true)
+            %li(class="#{secondary_nav_class('configuration')}")
+              %a{:href=>'/configuration/index?config_tab=ui'}My Settings
 
-            -if role_allows(:feature => 'tasks',:any => true)
-              %li(class="#{secondary_nav_class(["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(@layout) ? @layout : "my_tasks")}")
-                %a{:href=>'/miq_proxy/index?jobs_tab=tasks'}Tasks
+          -if role_allows(:feature => 'tasks',:any => true)
+            %li(class="#{secondary_nav_class(["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(@layout) ? @layout : "my_tasks")}")
+              %a{:href=>'/miq_proxy/index?jobs_tab=tasks'}Tasks
 
-            -if role_allows(:feature => 'ops_explorer',:any => "true")
-              %li(class="#{secondary_nav_class('ops')}")
-                %a{:href=>'/ops/explorer'}Configuration
+          -if role_allows(:feature => 'ops_explorer',:any => "true")
+            %li(class="#{secondary_nav_class('ops')}")
+              %a{:href=>'/ops/explorer'}Configuration
 
-            -if role_allows(:feature => 'miq_proxy_show_list')
-              %li(class="#{secondary_nav_class('miq_proxy')}")
-                %a{:href=>'/miq_proxy'}SmartProxies
+          -if role_allows(:feature => 'miq_proxy_show_list')
+            %li(class="#{secondary_nav_class('miq_proxy')}")
+              %a{:href=>'/miq_proxy'}SmartProxies
 
+          -if role_allows(:feature => 'about')
             %li(class="#{secondary_nav_class('about')}")
               %a{:href=>'/support/index?support_tab=about'}About
