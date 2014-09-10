@@ -1234,7 +1234,11 @@ class ApplicationController < ActionController::Base
 
       if @row_button # Show a button in the last col
         cell = new_row.add_element('cell', 'title' => @row_button[:title], 'is_button' => 1)
-        cell.add_cdata("<img src='/images/formbuttons/#{@row_button[:image]}.png' class='listbutton' border=0 align='middle' alt='#{@row_button[:title]}' onclick='#{@row_button[:function]}(\"#{@id}\");'>")
+        cell.add_cdata("<button class   = 'btn btn-primary'
+                                title   = '#{@row_button[:title]}'
+                                onclick = '#{@row_button[:function]}(\"#{@id}\");'
+                                alt     = '#{@row_button[:title]}'>#{@row_button[:image]}
+                        </button>")
       end
     end
 

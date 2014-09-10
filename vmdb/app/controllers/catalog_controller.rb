@@ -702,7 +702,7 @@ class CatalogController < ApplicationController
     if x_active_tree == :svccat_tree
       @temp[:gtl_buttons] = ["view_list","view_tile"]
       @temp[:gtl_small_tiles] = true
-      @row_button = {:image=>"order", :function=>"miqOrderService", :title=>"Order this Service"} # Show a button instead of the checkbox
+      @row_button = {:image=>"Order", :function=>"miqOrderService", :title=>"Order this Service"} # Show a button instead of the checkbox
     end
     options[:model] = "ServiceCatalog" if !options[:model]
     options[:where_clause] = condition
