@@ -46,8 +46,8 @@
           %td
             - rollup_disabled = !@timeprofile.miq_reports.empty? || disabled
             = check_box_tag("rollup_daily",
-                            value = "1",
-                            checked = @edit[:new][:rollup_daily],
+                            "1",
+                            @edit[:new][:rollup_daily],
                             :disabled                   => rollup_disabled,
                             "data-miq_observe_checkbox" => {:url => url}.to_json)
             - unless @timeprofile.miq_reports.empty?

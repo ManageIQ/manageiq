@@ -35,7 +35,7 @@
               %td{:style => "width:50px", :align => "center"} (All)
               %td{:style => "width:35px", :align => "center"}
                 %b AM:
-              - 12.times do |i|
+              - hours.length.times do |i|
                 %td{:style => "width:35px", :align => "center"} #{hours[i-1]}-#{hours[i]}
             %tr
               %td{:align => "center"}
@@ -58,7 +58,7 @@
               %td &nbsp;
               %td{:align => "center"}
                 %b PM:
-              - 12.times do |i|
+              - hours.length.times do |i|
                 %td{:align => "center"} #{hours[i-1]}-#{hours[i]}
             %tr
               %td &nbsp;
