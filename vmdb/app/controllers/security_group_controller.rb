@@ -86,7 +86,7 @@ class SecurityGroupController < ApplicationController
           @flash_array == nil # Tag screen showing, so return
     end
 
-    show_button_not_implemented_msg?
+    check_if_button_is_implemented
 
     if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new","#{pfx}_clone",
                                                 "#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])

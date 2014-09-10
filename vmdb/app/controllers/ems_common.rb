@@ -399,7 +399,7 @@ module EmsCommon
       return if ["#{@table_name}_tag","#{@table_name}_protect"].include?(params[:pressed]) &&
                 @flash_array == nil # Tag screen showing, so return
 
-      show_button_not_implemented_msg?
+      check_if_button_is_implemented
     end
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete

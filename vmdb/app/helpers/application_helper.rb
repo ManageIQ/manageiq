@@ -1823,7 +1823,7 @@ module ApplicationHelper
     return celltext
   end
 
-  def show_button_not_implemented_msg?
+  def check_if_button_is_implemented
     if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
       add_flash(I18n.t("flash.button.not_implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
