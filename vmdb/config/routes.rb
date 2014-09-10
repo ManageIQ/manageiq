@@ -147,15 +147,34 @@ Vmdb::Application.routes.draw do
 
     :cloud_tenant            => {
       :get => %w(
+        compare_miq
+        compare_to_csv
+        compare_to_pdf
+        compare_to_txt
+        edit
         index
+        protect
         show
         show_list
-        edit
+        tagging_edit
       ),
       :post => %w(
         button
+        compare_choose_base
+        compare_compress
+        compare_miq
+        compare_miq_all
+        compare_miq_differences
+        compare_miq_same
+        compare_mode
+        compare_remove
+        compare_set_state
+        protect
+        sections_field_changed
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
         update
         panel_control
       )
