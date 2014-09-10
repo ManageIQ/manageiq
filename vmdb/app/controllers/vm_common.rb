@@ -1291,11 +1291,10 @@ module VmCommon
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("main_div", :partial=>"vm_common/form") if ["allright","left","right"].include?(params[:button])
-      if changed != session[:changed]
-        session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
-      end
+      page.replace_html("main_div",
+                        :partial => "vm_common/form") if %w(allright left right).include?(params[:button])
+      page << javascript_for_miq_button_visibility(changed) if changed
+      page << "miqSparkle(false);"
     end
   end
 
@@ -1378,7 +1377,6 @@ module VmCommon
         end
       end
     else
-      get_vm_child_selection if params["right.x"] || params["left.x"] || params["allright.x"]
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
       build_edit_screen
       if @edit[:explorer]
