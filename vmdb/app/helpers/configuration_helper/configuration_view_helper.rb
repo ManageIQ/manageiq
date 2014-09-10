@@ -20,248 +20,89 @@ module ConfigurationHelper::ConfigurationViewHelper
 
   private
 
-  def compare_or_drift_compressed(resource)
+  def active_icon(image, text)
+    content_tag(:li, :class => "active") do
+      image_tag("/images/toolbars/" + image,
+                :border => "0",
+                :alt    => text,
+                :title  => text)
+    end
+  end
+
+  def inactive_icon(image, text, resource, view)
     content_tag(:li) do
-      link_to(image_tag("/images/toolbars/view_expanded.png",
+      link_to(image_tag("/images/toolbars/" + image,
                         :border => "0",
-                        :alt    => t = "Expanded View"),
+                        :alt    => text),
               {:action   => "view_selected",
                :resource => resource,
-               :view     => "expanded"},
+               :view     => view},
               :remote => true,
-              :title  => t)
-    end +
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/view_compressed.png",
-                :border => "0",
-                :alt    => t = "Compressed View",
-                :title  => t)
+              :title  => text)
     end
+  end
+
+  def compare_or_drift_compressed(resource)
+    inactive_icon("view_expanded.png", "Expanded View", resource, "expanded") +
+    active_icon("view_compressed.png", "Compressed View")
   end
 
   def compare_or_drift_expanded(resource)
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/view_expanded.png",
-                :border => "0",
-                :alt    => t = "Expanded View",
-                :title  => t)
-    end +
-    content_tag(:li) do
-      link_to(image_tag("/images/toolbars/view_compressed.png",
-                        :border => "0",
-                        :alt    => t = "Compressed View"),
-              {:action   => "view_selected",
-               :resource => resource,
-               :view     => "compressed"},
-              :remote => true,
-              :title  => t)
-    end
+    active_icon("view_expanded.png", "Expanded View") +
+    inactive_icon("view_compressed.png", "Compressed View", resource, "compressed")
   end
 
   def compare_or_drift_mode_exists(resource)
-    content_tag(:li) do
-      link_to(image_tag("/images/toolbars/view_list.png",
-                        :border => "0",
-                        :alt    => t = "Details View"),
-              {:action   => "view_selected",
-               :resource => resource,
-               :view     => "details"},
-              :remote => true,
-              :title  => t)
-    end +
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/exists.png",
-                :border => "0",
-                :alt    => t = "Exists Mode",
-                :title  => t)
-    end
+    inactive_icon("view_list.png", "Details View", resource, "details") +
+    active_icon("exists.png", "Exist Mode")
   end
 
   def compare_or_drift_mode_details(resource)
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/view_list.png",
-                :border => "0",
-                :alt    => t = "Details Mode",
-                :title  => t)
-    end +
-    content_tag(:li) do
-      link_to(image_tag("/images/toolbars/exists.png",
-                        :border => "0",
-                        :alt    => t = "Exists Mode"),
-              {:action   => "view_selected",
-               :resource => resource,
-               :view     => "exists"},
-              :remote => true,
-              :title  => t)
-    end
+    active_icon("view_list.png", "Details Mode") +
+    inactive_icon("exists.png", "Exists Mode", resource, "exists")
   end
 
   def dashboards_textural
-    content_tag(:li) do
-      link_to(image_tag("/images/toolbars/view_graphical.png",
-                        :border => "0",
-                        :alt    => t = "Graphical View"),
-              {:action   => "view_selected",
-               :resource => :dashboards,
-               :view     => "graphical"},
-              :remote => true,
-              :title  => t)
-    end +
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/view_textual.png",
-                :border => "0",
-                :alt    => t = "Text View",
-                :title  => t)
-    end
+    inactive_icon("view_graphical.png", "Graphical View", resource, "dashboards") +
+    active_icon("view_textual.png", "Text View")
   end
 
   def dashboards_graphical
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/view_graphical.png",
-                :border => "0",
-                :alt    => t = "Graphical View",
-                :title  => t)
-    end +
-    content_tag(:li) do
-      link_to(image_tag("/images/toolbars/view_textual.png",
-                        :border => "0",
-                        :alt    => t = "Text View"),
-              {:action   => "view_selected",
-               :resource => :dashboards,
-               :view     => "textural"},
-              :remote => true,
-              :title  => t)
-    end
+    active_icon("view_graphical.png", "Graphical View") +
+    inactive_icon("view_textual.png", "Text View", :dashboards, "textural")
   end
 
   def treesize_small
-    content_tag(:li) do
-      link_to(image_tag("/images/toolbars/tree-large.png",
-                        :border => "0",
-                        :alt    => t = "Large Trees"),
-              {:action   => "view_selected",
-               :resource => :treesize,
-               :view     => "32"},
-              :remote => true,
-              :title  => t)
-    end +
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/tree-small.png",
-                :border => "0",
-                :alt    => t = "Small Trees",
-                :title  => t)
-    end
+    inactive_icon("tree-large.png", "Large Trees", :treesize, "32") +
+    active_icon("tree-small.png", "Small Trees")
   end
 
   def treesize_large
-    content_tag(:li, :class => "active") do
-      image_tag("/images/toolbars/tree-large.png",
-                :border => "0",
-                :alt    => t = "Large Trees",
-                :title  => t)
-    end +
-    content_tag(:li) do
-      link_to(image_tag("/images/toolbars/tree-small.png",
-                        :border => "0",
-                        :alt    => t = "Small Trees"),
-              {:action   => "view_selected",
-               :resource => :treesize,
-               :view     => "20"},
-              :remote => true,
-              :title  => t)
-    end
+    active_icon("tree-large.png", "Large Trees") +
+    inactive_icon("tree-small.png", "Small Trees", :treesize, "20")
   end
 
   def grid_view(resource)
     [if resource != :catalog
-       content_tag(:li, :class => "active") do
-         image_tag("/images/toolbars/view_grid.png",
-                   :border => "0",
-                   :alt    => t = "Grid View",
-                   :title  => t)
-       end
+       active_icon("view_grid.png", "Grid View")
      end,
-     content_tag(:li) do
-       link_to(image_tag("/images/toolbars/view_tile.png",
-                         :border => "0",
-                         :alt    => t = "Tile View"),
-               {:action   => "view_selected",
-                :resource => resource,
-                :view     => "tile"},
-               :remote => true,
-               :title  => t)
-     end,
-     content_tag(:li) do
-       link_to(image_tag("/images/toolbars/view_list.png",
-                         :border => "0",
-                         :alt    => t = "List View"),
-               {:action   => "view_selected",
-                :resource => resource,
-                :view     => "list"},
-               :remote => true,
-               :title  => t)
-     end].compact.join('')
+     inactive_icon("view_tile.png", "Tile View", resource, "tile"),
+     inactive_icon("view_list.png", "List View", resource, "list")].compact.join('')
   end
 
   def tile_view(resource)
     [if resource != :catalog
-       content_tag("li") do
-         link_to(image_tag("/images/toolbars/view_grid.png",
-                           :border => "0",
-                           :alt    => t = "Grid View"),
-                 {:action   => "view_selected",
-                  :resource => resource,
-                  :view     => "grid"},
-                 :remote => true,
-                 :title  => t)
-       end
+       inactive_icon("view_grid.png", "Grid View", resource, "grid")
      end,
-     content_tag(:li, :class => "active") do
-       image_tag("/images/toolbars/view_tile.png",
-                 :border => "0",
-                 :alt    => t = "Tile View",
-                 :title  => t)
-     end,
-     content_tag("li") do
-       link_to(image_tag("/images/toolbars/view_list.png",
-                         :border => "0",
-                         :alt    => t = "List View"),
-               {:action   => "view_selected",
-                :resource => resource,
-                :view     => "list"},
-               :remote => true,
-               :title  => t)
-     end].compact.join('')
+     active_icon("view_tile.png", "Tile View"),
+     inactive_icon("view_list.png", "List View", resource, "list")].compact.join('')
   end
 
   def list_view(resource)
     [if resource != :catalog
-       content_tag("li") do
-         link_to(image_tag("/images/toolbars/view_grid.png",
-                           :border => "0",
-                           :alt    => t = "Grid View"),
-                 {:action   => "view_selected",
-                  :resource => resource,
-                  :view     => "grid"},
-                 :remote => true,
-                 :title  => t)
-       end
+       inactive_icon("view_grid.png", "Grid View", resource, "grid")
      end,
-     content_tag("li") do
-       link_to(image_tag("/images/toolbars/view_tile.png",
-                         :border => "0",
-                         :alt    => t = "Tile View"),
-               {:action   => "view_selected",
-                :resource => resource,
-                :view     => "tile"},
-               :remote => true,
-               :title  => t)
-     end,
-     content_tag(:li, :class => "active") do
-       image_tag("/images/toolbars/view_list.png",
-                 :border => "0",
-                 :alt    => t = "List View",
-                 :title  => t)
-     end].compact.join('')
+     inactive_icon("view_tile.png", "Tile View", resource, "tile"),
+     active_icon("view_list.png", "List View")].compact.join('')
   end
 end
