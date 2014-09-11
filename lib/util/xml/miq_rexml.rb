@@ -263,10 +263,6 @@ module REXML
       String
     end
 
-    def saveFile(filename, indent=-1, transitive=false, ie_hack=false)
-      File.open(filename, "w") {|f| self.write(f, indent, transitive, ie_hack); f.close}
-    end
-
     def self.newNode(data=nil)
       self.new(data)
     end
@@ -386,10 +382,6 @@ module REXML
 
     def to_xml
       self
-    end
-
-    def saveFile(filename, indent=-1, transitive=false, ie_hack=false)
-      File.open(filename, "w") {|f| self.write(f, indent, transitive, ie_hack); f.close}
     end
 	end
 
