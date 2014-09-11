@@ -300,31 +300,4 @@ module MiqPowerShell
       end
     end
   end
-
-  #class Error < RuntimeError
-  #  attr_reader :exception, :category, :target_object, :details
-  #  def initialize(exception, category, target_object, details)
-  #    @exception = exception
-  #    @category  = category
-  #    @target    = target_object
-  #    @details   = details
-  #  end
-  #
-  #  def to_s
-  #    return @exception unless @exception.nil?
-  #    return @details
-  #  end
-  #
-  #  def self.from_xml(node)
-  #    eh = {}
-  #    node.root.elements[1].each_element {|e| eh[e.attributes['Name']] = e.text}
-  #    return self.new(eh['Exception'], eh['CategoryInfo'], eh['TargetObject'], eh['ErrorDetails'])
-  #  end
-  #
-  #  def self.is_error_object?(xml)
-  #    object_type = xml.root.elements[1].attributes['Type'] rescue ""
-  #    return true if !object_type.nil? && object_type.split('.').last == 'ErrorRecord'
-  #    return false
-  #  end
-  #end
 end
