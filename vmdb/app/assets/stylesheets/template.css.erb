@@ -87,6 +87,7 @@ strong {font-family: OpenSansSemibold,Arial,Helvetica,sans-serif;font-weight:nor
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)"; 
   filter:alpha(opacity=40);
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
+  cursor: default;
 }
 
 p.legend {
@@ -377,36 +378,8 @@ img.tiny { margin: 0; padding: 0;width:20px;height:20px; border: 0; vertical-ali
 
 
 /*** form buttons ***/ 
-DIV#form_buttons_div { background: url(/assets/dhtmlx_gpl_36/imgs/dhxlayout_dhx_miq/dhxlayout_bg.png);}
-#form_buttons, #formbuttonplacement {float:right;} 
-#form_buttons li{display: inline; margin: 0; width: 80px;height:30px;line-height: 0;}
-#form_buttons img:hover { background: url(/images/formbuttons/formbutton-hover.png) no-repeat top left;}
-input.button, .button, ul #form_buttons .dimmed { background: url(/images/formbuttons/formbutton-hover.png) no-repeat top left;} 
-input.button, .button, ul #form_buttons { width: 80px; height: 30px;outline: none;background: url(/images/formbuttons/formbutton.png) no-repeat top left;}
-input.button:hover, .button img:hover, .listbutton { background: url(/images/formbuttons/formbutton-hover.png) no-repeat top left;}
 
-button.old {  /*** form button replacement ***/
-  height: 22px !important; 
-  padding: 0 1.1em 0 1.1em !important;
-  border: 1px solid #333;
-  border-radius: 3px;
-  vertical-align: middle;
-  font-size: 12px; 
-  line-height: 8px;
-  color: #fff;
-  text-shadow: 0px 1px 1px #000; 
-  background: #7f7e7e; /* Old browsers */
-  background: -moz-linear-gradient(top,  #7f7e7e 0%, #767575 26%, #6c6b6b 47%, #636262 63%, #525152 84%, #484848 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7f7e7e), color-stop(26%,#767575), color-stop(47%,#6c6b6b), color-stop(63%,#636262), color-stop(84%,#525152), color-stop(100%,#484848)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #7f7e7e 0%,#767575 26%,#6c6b6b 47%,#636262 63%,#525152 84%,#484848 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #7f7e7e 0%,#767575 26%,#6c6b6b 47%,#636262 63%,#525152 84%,#484848 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #7f7e7e 0%,#767575 26%,#6c6b6b 47%,#636262 63%,#525152 84%,#484848 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #7f7e7e 0%,#767575 26%,#6c6b6b 47%,#636262 63%,#525152 84%,#484848 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7f7e7e', endColorstr='#484848',GradientType=0 ); /* IE6-9 */
-}
-button.old:hover {box-shadow: 0px 0px 2px #000;}
-button.old:disabled {margin:3px 0 4px 2px;opacity:.50;filter: alpha(opacity=50);box-shadow: 0px 0px 0px #000;}
-.ie8 button.old[disabled] {-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";}
+#formbuttonplacement {float:right;} 
 
 #policy_bar img, #policy_bar2  img { width: 35px; height: 35px; border: 1px #ccc solid;}
 #policy_bar  img:hover, #policy_bar2  img:hover, #policy_bar .active img, #policy_bar2 .active img { background: #e4e4e4;}
