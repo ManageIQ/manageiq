@@ -1726,6 +1726,7 @@ describe ApplicationHelper do
 
           it "and vendor is redhat" do
             @record.stub(:vendor => "Redhat")
+            @record.stub(:type   => "VmRedhat")
             subject.should == true
           end
 

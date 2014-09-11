@@ -2249,9 +2249,8 @@ class ApplicationController < ActionController::Base
         render_flash_not_applicable_to_model(typ)
         return
       end
-      if 'publish' == typ && VmOrTemplate.where(:id => vm_ids, :type => 'VmRedhat').exists?
-        add_flash(I18n.t("flash.button.task_does_not_apply_to_model", :model=>"RHEVM VM", :task=>"Publish"), :error)
-        render_flash { |page| page << '$(\'main_div\').scrollTop = 0;' }
+      if typ.eql?("publish") && VmOrTemplate.where(:id => vm_ids, :type => %w(VmMicrosoft VmRedhat)).exists?
+        render_flash_not_applicable_to_model(typ)
         return
       end
     end
