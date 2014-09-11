@@ -273,6 +273,12 @@
       :post:
       - :name: create
         :identifier: vm_miq_request_new
+  :reports:
+    :description: Reports
+    :options:
+    - :collection
+    :methods: *70174834085860
+    :klass: MiqReport
   :request_tasks:
     :description: Request Tasks
     :options:
