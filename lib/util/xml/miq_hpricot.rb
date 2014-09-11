@@ -28,10 +28,6 @@ begin
       def write(io_handle, indent=-1, transitive=false, ie_hack=false)
         io_handle.write(self.to_s)
       end
-
-      def saveFile(filename, indent=-1, transitive=false, ie_hack=false)
-        File.open(filename, "w") {|f| self.write(f, indent); f.close}
-      end
     end
 
     class Document

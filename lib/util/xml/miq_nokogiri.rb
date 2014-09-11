@@ -60,11 +60,6 @@ begin
           end
         end
 
-        def saveFile(filename, indent=-1, transitive=false, ie_hack=false)
-          options = {:indent => (indent >= 0 ? indent : 0)}
-          File.open(filename, "wb") {|f| self.write_xml_to(f, options); f.close}
-        end
-
         def each_element (xpath="*", &block)
           self.find_match(xpath).each {|n| yield n}
         end
@@ -121,11 +116,6 @@ begin
           else
             io_handle << self.to_xml(options)
           end
-        end
-
-        def saveFile(filename, indent=-1, transitive=false, ie_hack=false)
-          options = {:indent => (indent >= 0 ? indent : 0)}
-          File.open(filename, "wb") {|f| self.write_xml_to(f, options); f.close}
         end
 
         def miqEncode

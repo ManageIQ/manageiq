@@ -96,10 +96,6 @@ module XmlHash
       self[:child].each {|n| n.write(io, indent)}
     end
 
-    def saveFile(filename, indent=-1, transitive=false, ie_hack=false)
-      File.open(filename, "w") {|f| self.write(f, indent, transitive, ie_hack); f.close}
-    end
-
     def to_s()
       to_string()
     end
@@ -391,10 +387,6 @@ module XmlHash
 
     def write(*args)
       self.root.write(*args)
-    end
-
-    def saveFile(filename, indent=-1, transitive=false, ie_hack=false)
-      File.open(filename, "w") {|f| self.write(f, indent, transitive, ie_hack); f.close}
     end
 
     def to_xml(*args)
