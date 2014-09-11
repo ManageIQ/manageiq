@@ -5,13 +5,6 @@ require 'active_support/inflector'
 require 'more_core_extensions/core_ext/string'
 
 class String
-  unless method_defined?(:ord)
-    def ord
-      raise ArgumentError, "empty string" if self.length == 0
-      return self[0]
-    end
-  end
-
   def miqEncode
     MIQEncode.encode(self)
   end

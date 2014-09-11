@@ -10,10 +10,4 @@ describe String do
       Array('somestring')
     end
   end
-
-  it '#ord' do
-    "test".ord.should == 116
-    "t".ord.should == 116
-    lambda { "".ord }.should raise_error(ArgumentError)
-  end
 end
