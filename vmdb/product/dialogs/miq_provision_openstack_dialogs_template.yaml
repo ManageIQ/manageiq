@@ -166,7 +166,7 @@
           :description: Cloud Network
           :auto_select_single: false
           :required: true
-          :required_method: :validate_placement
+          :required_method: :validate_cloud_network
           :display: :edit
           :data_type: :integer
         :security_groups:

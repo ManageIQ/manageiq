@@ -17,6 +17,11 @@ class MiqProvisionOpenstackWorkflow < MiqProvisionCloudWorkflow
     end
   end
 
+  def validate_cloud_network(field, values, dlg, fld, value)
+    return nil if allowed_cloud_networks.length <= 1
+    validate_placement(field, values, dlg, fld, value)
+  end
+
   private
 
   def dialog_name_from_automate(message = 'get_dialog_name')
