@@ -72,13 +72,19 @@ module OpsController::Settings::Schedules
           return
         end
         uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
-        settings = {:uri => uri, :username => @edit[:new][:log_userid], :password => @edit[:new][:log_password] }
-        #only verify_depot_hash if anything has changed in depot settings
-        if @edit[:new][:uri_prefix] != @edit[:current][:uri_prefix] || @edit[:new][:uri] != @edit[:current][:uri] ||
-            @edit[:new][:log_userid] != @edit[:current][:log_userid] || @edit[:new][:log_password] != @edit[:current][:log_password]
-          @schedule.depot_hash=(settings) if MiqSchedule.verify_depot_hash(settings)
-        end
+        settings_new = {:uri      => uri,
+                        :username => @edit[:new][:log_userid],
+                        :password => @edit[:new][:log_password],
+                        :name     => @edit[:new][:depot_name]}
+        settings_current = {:uri      => @edit[:current][:uri],
+                            :username => @edit[:current][:log_userid],
+                            :password => @edit[:current][:log_password],
+                            :name     => @edit[:current][:depot_name]}
 
+        # only verify_depot_hash if anything has changed in depot settings
+        if settings_new != settings_current && MiqSchedule.verify_depot_hash(settings_new)
+          @schedule.depot_hash = settings_new
+        end
       end
       schedule_set_record_vars(@schedule)
       schedule_validate?(@schedule)
@@ -127,7 +133,10 @@ module OpsController::Settings::Schedules
       if params[:action_typ]
         @edit[:new][:action] = params[:action_typ]
         if params[:action_typ] == "db_backup"
-          page.replace("form_filter_div", :partial=>"layouts/edit_log_depot_settings", :locals=>{:action=>"schedule_depot_field_changed", :validate_url=>"log_depot_validate"})
+          page.replace("form_filter_div",
+                       :partial => "layouts/edit_log_depot_settings",
+                       :locals  => {:action       => "log_depot_field_changed",
+                                    :validate_url => "log_depot_validate"})
         else
           @edit[:new][:filter] = "all"
           page.replace("form_filter_div", :partial=>"schedule_form_filter")
