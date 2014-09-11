@@ -1,9 +1,8 @@
 import-module virtualmachinemanager
 $diskvols = @{}
 
-function get_vm_temps {
+function get_vms{
  $vms = $args[0]
- $type = $args[1]
  $results = @{}
 
  $vms | ForEach-Object {
@@ -13,11 +12,26 @@ function get_vm_temps {
   $vm_hash["Properties"] = $_
   if ($_.StatusString -ne "Host Not Responding"){
    $networks = Read-SCGuestInfo -VM $_ -Key "NetworkAddressIPv4"
-   $vm_hash["Networks"] = $networks.KvpMap["NetworkAddressIPv4"]
+   if ($networks -ne $null){
+    $vm_hash["Networks"] = $networks.KvpMap["NetworkAddressIPv4"]
+   }
   }
   $dvds = Get-SCVirtualDVDDrive -VM $_ | Select-Object -ExpandProperty "ISO"
   $vm_hash["DVDs"] = $dvds
   $results[$id]= $vm_hash
+ }
+ return $results
+}
+
+function get_images{
+ $ims = $args[0]
+ $results = @{}
+
+ $ims | ForEach-Object {
+  $i_hash = @{}
+  $id = $_.ID
+  $i_hash["Properties"] = $_
+  $results[$id]= $i_hash
  }
  return $results
 }
@@ -53,10 +67,10 @@ function get_clusters {
 $file = [System.IO.Path]::GetTempFileName()
 $r = @{}
 $v = Get-SCVirtualMachine -VMMServer "localhost"
-$r["vms"] = get_vm_temps($v) ("vm")
+$r["vms"] = get_vms($v)
 
 $i = Get-SCVMTemplate -VMMServer "localhost"
-$r["images"] = get_vm_temps ($i) ("image")
+$r["images"] = get_images($i)
 
 $h = Get-SCVMHost -VMMServer "localhost"
 $r["hosts"] = get_host_inventory($h)
