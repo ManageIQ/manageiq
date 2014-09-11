@@ -1,7 +1,5 @@
 <% url = url_for(:action =>'tasks_change_options') %>
 <div id="tasks_options_div">
-  <%= form_tag( {:action => 'tasks_show_option'}, 
-                {:id     => "tasks_form"}) do %>
     <p class="legend">Filter By</p>
     <table class="style1">
       <tbody>
@@ -155,5 +153,4 @@
   <%# Need this to bind checkbox observers when under DHTMLX tabs %>
   <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
   <script>miqObserveCheckboxes();</script>
-  <% end %>
 </div>
