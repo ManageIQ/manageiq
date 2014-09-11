@@ -154,12 +154,6 @@ class NokogiriXmlMethods < Test::Unit::TestCase
   def test_find_each()
     xml = @xml
     row_order = %w{8 7 6 4 5}
-    REXML::XPath::each(xml, "//row") do |e|
-      assert_equal(e.attributes["id"].to_s, row_order.delete_at(0))
-    end
-    assert_equal(0, row_order.length)
-
-    row_order = %w{8 7 6 4 5}
     xml.find_each("//row") do |e|
       assert_equal(e.attributes["id"].to_s, row_order.delete_at(0))
     end
@@ -168,10 +162,6 @@ class NokogiriXmlMethods < Test::Unit::TestCase
 
   def test_find_first()
     xml = @xml
-    x = REXML::XPath.first(xml, "//row")
-    assert_not_nil(x)
-    assert_equal("8", x.attributes["id"].to_s)
-
     x = xml.find_first("//row")
     assert_not_nil(x)
     assert_equal("8", x.attributes["id"].to_s)
@@ -179,12 +169,6 @@ class NokogiriXmlMethods < Test::Unit::TestCase
 
   def test_find_match()
     xml = @xml
-    x = REXML::XPath.match(xml, "//row")
-    assert_not_nil(x)
-    assert_equal(5, x.length)
-    assert_equal("8", x[0].attributes["id"].to_s)
-    assert_equal("4", x[3].attributes["id"].to_s)
-
     x = xml.find_match("//row")
     assert_not_nil(x)
     assert_equal(5, x.length)
