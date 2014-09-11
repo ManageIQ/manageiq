@@ -11,7 +11,7 @@
   <fieldset>
     <p class="legend">
       <%# Used for editing both database backup and log collection depot settings %>
-      <% if @sb[:active_tab] == "diagnostics_database" %>
+      <% if @sb[:active_tree] != :diagnostics_tree %>
         Database Backup Settings
       <% else %>
         Editing Log Depot Settings for <%= "#{Dictionary::gettext(record.class.name, :type => :model, :notfound => :titleize)}: #{@record.display_name}" %>

@@ -585,7 +585,10 @@ describe MiqSchedule do
       before(:each) do
         @valid_schedules = []
         @valid_run_ats.each do |run_at|
-          @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
+          @depot_hash = {:uri      => "smb://dev005.manageiq.com/share1",
+                         :username => "samba_one",
+                         :password => "Zug-drep5s",
+                         :name     => "ManageIQSamba1"}
           @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :depot_hash => @depot_hash, :sched_action=> {:method => "db_backup"}, :towhat => "DatabaseBackup")
         end
         @schedule = @valid_schedules.first

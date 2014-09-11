@@ -357,8 +357,11 @@ module OpsController::Diagnostics
       return
     end
     uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
-    settings = {:uri => uri, :username => @edit[:new][:log_userid], :password => @edit[:new][:log_password] }
-    #only verify_depot_hash if anything has changed in depot settings
+    settings = {:uri      => uri,
+                :username => @edit[:new][:log_userid],
+                :password => @edit[:new][:log_password],
+                :name     => @edit[:new][:depot_name]}
+    # only verify_depot_hash if anything has changed in depot settings
     if @edit[:new][:uri_prefix] != @edit[:current][:uri_prefix] || @edit[:new][:uri] != @edit[:current][:uri] ||
         @edit[:new][:log_userid] != @edit[:current][:log_userid] || @edit[:new][:log_password] != @edit[:current][:log_password]
       @schedule.depot_hash=(settings) if MiqSchedule.verify_depot_hash(settings)
@@ -545,6 +548,11 @@ module OpsController::Diagnostics
 
   def log_depot_get_form_vars_from_settings(settings)
     protocol, path = settings[:uri].to_s.split('://')
+    if @edit[:protocols_hash]
+      @edit[:protocol] = @edit[:protocols_hash][protocol]
+    end
+    @edit[:new][:requires_credentials] = protocol == "smb"
+    @edit[:new][:depot_name]   = settings[:name]
     @edit[:new][:uri_prefix]   = protocol
     @edit[:new][:uri]          = path
     @edit[:new][:log_userid]   = settings[:username]
@@ -570,10 +578,14 @@ module OpsController::Diagnostics
   end
 
   def log_depot_get_form_vars
-    @record = @sb[:selected_typ].classify.constantize.find_by_id(@sb[:selected_server_id])
+    unless @schedule
+      @record = @sb[:selected_typ].classify.constantize.find_by_id(@sb[:selected_server_id])
+    end
     @prev_uri_prefix = @edit[:new][:uri_prefix]
     @prev_protocol   = @edit[:protocol]
-    @edit[:protocol] = params[:log_protocol].presence if params[:log_protocol] # @edit[:protocol] holds the current value of the selector so that it is not reset when _field_changed is called
+    # @edit[:protocol] holds the current value of the selector so that it is not reset
+    # when _field_changed is called
+    @edit[:protocol] = params[:log_protocol].presence if params[:log_protocol]
     if @sb[:active_tab] == "diagnostics_collect_logs"
       file_depot_reset_form_vars if @prev_protocol != @edit[:protocol]
     else
@@ -583,7 +595,7 @@ module OpsController::Diagnostics
 
     @edit[:new][:depot_name] = params[:depot_name] if params[:depot_name]
     if @edit[:new][:uri_prefix].in?([nil, "nfs"]) || params[:backup_schedule] == ""
-      @edit[:new][:uri]          = params[:log_protocol] == "" ? nil : params[:uri]
+      @edit[:new][:uri]          = params[:uri] if params[:uri]
       @edit[:new][:log_userid]   = nil
       @edit[:new][:log_password] = nil
       @edit[:new][:log_verify]   = nil
