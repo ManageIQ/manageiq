@@ -279,6 +279,9 @@
     - :collection
     :methods: *70174834085860
     :klass: MiqReport
+    :resource_actions:
+      :post:
+      - :name: create
   :request_tasks:
     :description: Request Tasks
     :options:
