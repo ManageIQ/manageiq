@@ -11,27 +11,6 @@ describe String do
     end
   end
 
-  it '#<<(exception)' do
-    Kernel.should_receive(:warn).once
-    str = ""
-    str << StandardError.new("test")
-    str.should == "test"
-  end
-
-  it '#concat(exception)' do
-    Kernel.should_receive(:warn).once
-    str = ""
-    str.concat(StandardError.new("test"))
-    str.should == "test"
-  end
-
-  it '#+(exception)' do
-    Kernel.should_receive(:warn).once
-    str = ""
-    (str + StandardError.new("test")).should == "test"
-    str.should == ""
-  end
-
   it '#ord' do
     "test".ord.should == 116
     "t".ord.should == 116

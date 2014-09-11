@@ -5,46 +5,6 @@ require 'active_support/inflector'
 require 'more_core_extensions/core_ext/string'
 
 class String
-  alias original_less_than_less_than <<
-  alias original_concat concat
-  alias original_plus +
-
-  def <<(str)
-    return original_less_than_less_than(str) unless str.kind_of?(Exception)
-
-    if !defined?(Rails) || !Rails.env.production?
-      msg = "[DEPRECATION] String#<<(exception) should not be used.  Please use String#<<(exception.message) instead.  At #{caller[0]}"
-      $log.warn msg if $log
-      Kernel.warn msg
-    end
-
-    self.original_less_than_less_than(str.message)
-  end
-
-  def concat(str)
-    return original_concat(str) unless str.kind_of?(Exception)
-
-    if !defined?(Rails) || !Rails.env.production?
-      msg = "[DEPRECATION] String#concat(exception) should not be used.  Please use String#concat(exception.message) instead.  At #{caller[0]}"
-      $log.warn msg if $log
-      Kernel.warn msg
-    end
-
-    self.original_concat(str.message)
-  end
-
-  def +(str)
-    return original_plus(str) unless str.kind_of?(Exception)
-
-    if !defined?(Rails) || !Rails.env.production?
-      msg = "[DEPRECATION] String#+(exception) should not be used.  Please use String#+(exception.message) instead.  At #{caller[0]}"
-      $log.warn msg if $log
-      Kernel.warn msg
-    end
-
-    self.original_plus(str.message)
-  end
-
   unless method_defined?(:ord)
     def ord
       raise ArgumentError, "empty string" if self.length == 0
