@@ -4,7 +4,7 @@
   <div id="verify_button_on" style="display:none">
 <% end %>
   <%= link_to(button_tag('Validate',
-                         :class => "btn btn-primary",
+                         :class => "btn btn-primary btn-xs",
                          :alt   => "Validate the LDAP Settings by binding with the Host"),
               {:action => "settings_update", 
                :button => "verify", 
@@ -22,7 +22,7 @@
   <div id="verify_button_off">
 <% end %>
   <%= button_tag("Validate",
-                 :class => "btn btn-primary btn-disabled", 
+                 :class => "btn btn-primary btn-xs btn-disabled", 
                  :title => "LDAP Host Name and Port fields are needed to perform verification of LDAP Settings") 
   %>
 </div>

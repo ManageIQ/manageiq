@@ -4,8 +4,8 @@
   <div id="email_verify_button_on" style="display:none">
 <% end %>
 
-    <%= link_to(button_tag('Approval',
-                           :class => "btn btn-primary",
+    <%= link_to(button_tag('Verify',
+                           :class => "btn btn-primary btn-xs",
                            :alt   => "Send test email"),
                 {:action => "settings_update", 
                  :button => "email_verify", 
@@ -23,8 +23,8 @@
   <div id="email_verify_button_off">
 <% end %>
 
-  <%= button_tag("Approve", 
-                 :class  => "btn btn-primary btn-disabled", 
+  <%= button_tag("Verify", 
+                 :class  => "btn btn-primary btn-xs btn-disabled", 
                  :title  => "SMTP E-mail Server settings and Test E-mail Address are needed to send test email") 
   %>
 </div>
