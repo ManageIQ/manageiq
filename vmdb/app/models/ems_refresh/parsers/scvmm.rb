@@ -20,6 +20,10 @@ module EmsRefresh::Parsers
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
       $scvmm_log.info("#{log_header}...")
       @inventory = EmsMicrosoft.execute_powershell(@connection, INVENTORY_SCRIPT).first
+      if @inventory.empty?
+        $scvmm_log.warn("#{log_header}...Empty inventory set returned from SCVMM.")
+        return
+      end
 
       get_ems
       get_datastores
@@ -35,6 +39,8 @@ module EmsRefresh::Parsers
     private
 
     def get_ems
+      return if @inventory[:ems].nil?
+
       @ems.api_version = normalize_blank_property(@inventory[:ems][:Props][:ServerInterfaceVersion])
       @ems.uid_ems     = normalize_blank_property(@inventory[:ems][:Props][:ManagedComputer][0][:Props][:ID])
     end
@@ -525,6 +531,8 @@ module EmsRefresh::Parsers
 
     def process_collection(collection, key)
       @data[key] ||= []
+      return if collection.nil?
+
       collection.each do |item|
         uid, new_result = yield(item[1])
 
