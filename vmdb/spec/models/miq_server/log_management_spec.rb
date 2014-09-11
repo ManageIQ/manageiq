@@ -12,7 +12,12 @@ describe MiqServer do
     end
 
     context "#get_log_depot_settings" do
-      let(:depot_hash) { {:uri => uri, :username => "user", :password => "pass"} }
+      let(:depot_hash) do
+        {:uri      => uri,
+         :username => "user",
+         :password => "pass",
+         :name     => "File Depot"}
+      end
 
       it "set on miq_server" do
         @miq_server.update_attributes(:log_file_depot_id => depot.id)
