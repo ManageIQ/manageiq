@@ -23,8 +23,7 @@ class ApiController
 
       if result_report.nil?
         raise BadRequestError, "No reports were found.  " +
-          "If you want to run a report, pass in the following query param: " +
-          "run=true"
+          "If you want to run a report, make a POST call instead. "
       end
 
       disable_client_cache
