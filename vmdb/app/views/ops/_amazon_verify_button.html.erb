@@ -4,7 +4,7 @@
   <div id="amazon_verify_button_on" style="display:none">
 <% end %>
   <%= link_to(button_tag('Validate',
-                         :class => "btn btn-primary",
+                         :class => "btn btn-primary btn-xs",
                          :alt   => "Validate the Amazon Settings"),
               {:action => "settings_update", 
                :button => "amazon_verify", 
@@ -22,7 +22,7 @@
   <div id="amazon_verify_button_off">
 <% end %>
   <%= button_tag("Validate",
-                 :class => "btn btn-primary btn-disabled", 
+                 :class => "btn btn-primary btn-xs btn-disabled", 
                  :title => "Amazon access key and secret are needed to validate Amazon Settings") 
   %>
 </div>
