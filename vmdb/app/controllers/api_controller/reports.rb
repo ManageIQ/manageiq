@@ -36,14 +36,18 @@ class ApiController
     end
 
     def show_reports()
+      check_collection_id_exists
+      get_report
+    end
+
+    def update_reports()
+      check_collection_id_exists
+      run_report
+    end
+
+    def check_collection_id_exists
       if @req[:c_id].nil?
         raise BadRequestError, "missing report type ID"
-      end
-
-      if params[:run]
-        run_report()
-      else
-        get_report()
       end
     end
   end
