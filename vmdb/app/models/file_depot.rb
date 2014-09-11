@@ -21,16 +21,18 @@ class FileDepot < ActiveRecord::Base
   end
 
   def depot_hash=(hsh = {})
-    return if hsh == self.depot_hash
-    self.update_authentication( {:default => {:userid => hsh[:username], :password => hsh[:password]} } )
-    self.update_attribute(:uri, hsh[:uri])
+    return if hsh == depot_hash
+    update_authentication(:default => {:userid   => hsh[:username],
+                                       :password => hsh[:password]})
+    update_attribute(:uri, hsh[:uri])
+    update_attribute(:name, hsh[:name])
   end
 
   def depot_hash
-    { :username => self.authentication_userid,
-      :uri      => self.uri,
-      :password => self.authentication_password
-    }
+    {:username => authentication_userid,
+     :uri      => uri,
+     :password => authentication_password,
+     :name     => name}
   end
 
   def self.verify_depot_hash(hsh)
