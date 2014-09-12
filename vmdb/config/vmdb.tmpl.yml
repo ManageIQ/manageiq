@@ -176,9 +176,11 @@ server:
   listening_port: '443'
   mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
   mks_version: 2.1.0.0
+  monitor_poll: 5.seconds
   name: EVM
   remote_console_type: VMRC
   role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,web_services
+  server_dequeue_frequency: 5.seconds
   session_store: cache
   startup_timeout: 300
   timezone: UTC

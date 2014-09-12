@@ -318,7 +318,7 @@ class MiqServer < ActiveRecord::Base
   end
 
   def monitor_poll
-    ((@vmdb_config && @vmdb_config.config[:server][:monitor_poll]) || 15.seconds).to_i_with_method
+    ((@vmdb_config && @vmdb_config.config[:server][:monitor_poll]) || 5.seconds).to_i_with_method
   end
 
   def stop_poll
