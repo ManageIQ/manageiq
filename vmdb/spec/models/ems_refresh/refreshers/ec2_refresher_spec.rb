@@ -84,16 +84,17 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     @flavor = Flavor.where(:name => "t1.micro").first
     @flavor.should be_kind_of(FlavorAmazon)
     @flavor.should have_attributes(
-      :name                 => "t1.micro",
-      :description          => "T1 Micro",
-      :enabled              => true,
-      :cpus                 => 1,
-      :cpu_cores            => 1,
-      :memory               => 613.megabytes.to_i,
-      :supports_32_bit      => true,
-      :supports_64_bit      => true,
-      :supports_hvm         => false,
-      :supports_paravirtual => true
+      :name                     => "t1.micro",
+      :description              => "T1 Micro",
+      :enabled                  => true,
+      :cpus                     => 1,
+      :cpu_cores                => 1,
+      :memory                   => 613.megabytes.to_i,
+      :supports_32_bit          => true,
+      :supports_64_bit          => true,
+      :supports_hvm             => false,
+      :supports_paravirtual     => true,
+      :block_storage_based_only => true,
     )
 
     @flavor.ext_management_system.should == @ems
@@ -247,7 +248,8 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       :memory_cpu          => nil,
       :disk_capacity       => nil,
       :bitness             => 64,
-      :virtualization_type => "paravirtual"
+      :virtualization_type => "paravirtual",
+      :root_device_type    => "ebs"
     )
 
     @template.hardware.disks.size.should         == 0

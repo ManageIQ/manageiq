@@ -34,6 +34,7 @@ include:
     columns:
     - bitness
     - virtualization_type
+    - root_device_type
 
 # Included tables and columns for query performance
 include_for_find:
@@ -50,6 +51,7 @@ col_order:
 - allocated_disk_storage
 - hardware.bitness
 - hardware.virtualization_type
+- hardware.root_device_type
 - last_scan_on
 - region_description
 
@@ -61,6 +63,7 @@ headers:
 - Allocated Size
 - Architecture
 - Virtualization Type
+- Root Device Type
 - Last Analysis Time
 - Region
 

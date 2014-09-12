@@ -5,7 +5,7 @@ module FlavorHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(cpus cpu_cores memory supports_32_bit supports_64_bit supports_hvm supports_paravirtual)
+    items = %w(cpus cpu_cores memory supports_32_bit supports_64_bit supports_hvm supports_paravirtual block_storage_based_only)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -53,6 +53,11 @@ module FlavorHelper::TextualSummary
   def textual_supports_paravirtual
     return nil if @record.supports_paravirtual.nil?
     {:label => "Paravirtualization", :value => @record.supports_paravirtual?}
+  end
+
+  def textual_block_storage_based_only
+    return nil if @record.block_storage_based_only.nil?
+    {:label => "Block Storage Based", :value => @record.block_storage_based_only?}
   end
 
   def textual_ems_cloud
