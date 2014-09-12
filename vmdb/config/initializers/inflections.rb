@@ -23,4 +23,8 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.plural(/index$/, "indexes")         # for table name(s)
   inflect.plural(/VM and Instance$/, "VMs and Instances")
   inflect.plural(/VM Template and Image$/, "VM Templates and Images")
+  inflect.singular(/Queue$/, "Queue")       # for Class name(s)
+  inflect.plural(/Queue$/, "Queue")         # for Class name(s)
+  inflect.singular(/queue$/, "queue")       # for table name(s)
+  inflect.plural(/queue$/, "queue")         # for table name(s)
 end
