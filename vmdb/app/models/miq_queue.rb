@@ -3,7 +3,6 @@ require 'digest'
 
 class MiqQueue < ActiveRecord::Base
   include DontAutoSaveSerialized
-  self.table_name = "miq_queue"
 
   belongs_to :handler, :polymorphic => true
 
