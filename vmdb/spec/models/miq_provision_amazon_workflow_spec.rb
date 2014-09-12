@@ -200,19 +200,19 @@ describe MiqProvisionAmazonWorkflow do
         before do
           @instance_types_32 = ['t2.micro']
           @instance_types_64 = ['m1.medium', 'm1.large']
-          provider.flavors << FactoryGirl.create(:flavor,
+          provider.flavors << FactoryGirl.create(:flavor_amazon,
                                                  :name                 => "t2.micro",
                                                  :supports_32_bit      => true,
                                                  :supports_64_bit      => true,
                                                  :supports_paravirtual => false,
                                                  :supports_hvm         => true)
-          provider.flavors << FactoryGirl.create(:flavor,
+          provider.flavors << FactoryGirl.create(:flavor_amazon,
                                                  :name                 => "m1.large",
                                                  :supports_32_bit      => false,
                                                  :supports_64_bit      => true,
                                                  :supports_paravirtual => true,
                                                  :supports_hvm         => false)
-          provider.flavors << FactoryGirl.create(:flavor,
+          provider.flavors << FactoryGirl.create(:flavor_amazon,
                                                  :name                 => "m1.medium",
                                                  :supports_32_bit      => true,
                                                  :supports_64_bit      => true,
@@ -230,6 +230,49 @@ describe MiqProvisionAmazonWorkflow do
           workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_64)
         end
 
+      end
+
+      context "with root device type" do
+        before do
+          @instance_types_64 = ['t1.micro', 'm1.large']
+          provider.flavors << FactoryGirl.create(:flavor_amazon,
+                                                 :name                     => "t1.micro",
+                                                 :supports_32_bit          => true,
+                                                 :supports_64_bit          => true,
+                                                 :supports_paravirtual     => true,
+                                                 :supports_hvm             => false,
+                                                 :block_storage_based_only => true)
+          provider.flavors << FactoryGirl.create(:flavor_amazon,
+                                                 :name                     => "m1.large",
+                                                 :supports_32_bit          => false,
+                                                 :supports_64_bit          => true,
+                                                 :supports_paravirtual     => true,
+                                                 :supports_hvm             => false,
+                                                 :block_storage_based_only => false)
+          provider.flavors << FactoryGirl.create(:flavor_amazon,
+                                                 :name                     => "t2.medium",
+                                                 :supports_32_bit          => false,
+                                                 :supports_64_bit          => true,
+                                                 :supports_paravirtual     => false,
+                                                 :supports_hvm             => true,
+                                                 :block_storage_based_only => true)
+        end
+
+        it "#allowed_instance_types with 32-bit, pv and instance_store" do
+          template.hardware = FactoryGirl.create(:hardware,
+                                                 :bitness             => 32,
+                                                 :virtualization_type => 'paravirtual',
+                                                 :root_device_type    => 'instance_store')
+          workflow.allowed_instance_types.collect { |_, v| v }.should be_empty
+        end
+
+        it "#allowed_instance_types with 64-bit, pv and ebs" do
+          template.hardware = FactoryGirl.create(:hardware,
+                                                 :bitness             => 64,
+                                                 :virtualization_type => 'paravirtual',
+                                                 :root_device_type    => 'ebs')
+          workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_64)
+        end
       end
     end
   end
