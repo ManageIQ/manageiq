@@ -4,6 +4,7 @@ class MiqExpression
   @@proto = VMDB::Config.new("vmdb").config[:product][:proto]
   @@base_tables = %w{
     AuditEvent
+    AvailabilityZone
     BottleneckEvent
     Chargeback
     CloudResourceQuota
@@ -13,6 +14,7 @@ class MiqExpression
     EmsClusterPerformance
     EmsEvent
     ExtManagementSystem
+    Flavor
     Host
     HostPerformance
     MiqGroup
@@ -29,6 +31,7 @@ class MiqExpression
     PolicyEvent
     Repository
     ResourcePool
+    SecurityGroup
     Service
     ServiceTemplate
     Storage
@@ -61,6 +64,7 @@ class MiqExpression
   @@include_tables = %w{
     advanced_settings
     audit_events
+    availability_zones
     cloud_resource_quotas
     cloud_tenants
     compliances
@@ -75,6 +79,7 @@ class MiqExpression
     filesystem_drivers
     filesystems
     firewall_rules
+    flavors
     groups
     guest_applications
     hardwares
@@ -114,6 +119,7 @@ class MiqExpression
     registry_items
     repositories
     resource_pools
+    security_groups
     service_templates
     services
     snapshots
