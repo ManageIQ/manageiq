@@ -50,6 +50,28 @@
     :collection_actions:
       :post:
       - :name: create
+  :chargebacks:
+    :description: Chargeback Rates 
+    :options:
+    - :collection
+    - :show
+    :methods: *70174834084700
+    :klass: ChargebackRate
+    :subcollections:
+    - :rates
+    :resource_actions:
+      :patch:
+      - :name: edit
+  :rates:
+    :description: Chargeback Rate Details
+    :options:
+    - :subcollection
+    - :show
+    :methods: *70174834084700
+    :klass: ChargebackRateDetail
+    :subresource_actions:
+      :patch:
+      - :name: edit
   :clusters:
     :description: Clusters
     :options:
