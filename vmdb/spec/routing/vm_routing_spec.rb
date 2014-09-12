@@ -5,6 +5,7 @@ describe VmOrTemplateController do
   let(:controller_name) { "vm" }
 
   %w(
+    download_data
     edit
     ownership
     policy_sim

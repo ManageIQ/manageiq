@@ -1514,6 +1514,7 @@ Vmdb::Application.routes.draw do
 
     :vm                     => {
       :get  => %w(
+        download_data
         edit
         ownership
         policy_sim
