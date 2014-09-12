@@ -63,6 +63,7 @@ class ApiController < ApplicationController
   include_concern 'RequestTasks'
   include_concern 'ServiceRequests'
   include_concern 'Reports'
+  include_concern 'Chargebacks'
 
   #
   # Api Controller Hooks
