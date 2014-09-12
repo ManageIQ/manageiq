@@ -91,59 +91,6 @@ class ActiveSupport::TestCase
     assert_equal 0, leaks.length, "Expected no leaks, found: \n#{leaks.join("\n")}"
   end
 
-  def memprof_track_obj_stats(iterations)
-    begin
-      require 'memprof'
-    rescue LoadError
-      $log.warn("memprof not found, skipping. gem install memprof to run memprof on 64 bit linux/mac enviroments.")
-      return
-    else
-      $log.info("memprof tracking objects with #{iterations} iterations...")
-    end
-
-    begin
-      # Yield once to establish a baseline set of objects
-      yield
-
-      GC.start
-      GC.disable
-      Memprof.start
-
-      iterations.to_i.times { yield }
-    ensure
-      $log.info("=== Before GC")
-      Memprof.stats!
-
-      $log.info("=== After GC")
-      GC.enable
-      GC.start
-      Memprof.stats!
-      Memprof.stop
-    end
-  end
-
-  def memprof_trace_block(iterations)
-    begin
-      require 'memprof'
-    rescue LoadError
-      $log.warn("memprof not found, skipping. gem install memprof to run memprof on 64 bit linux/mac enviroments.")
-      return
-    else
-      $log.info("memprof tracking objects with #{iterations} iterations...")
-    end
-
-    begin
-      # Yield once to establish a baseline set of objects
-      yield
-
-      GC.start
-      GC.disable
-      Memprof.trace { iterations.to_i.times { yield } }
-
-      GC.enable
-      GC.start
-    end
-  end
 end
 
 def toggle_on_name_seq(x)
