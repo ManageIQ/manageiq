@@ -11,4 +11,4 @@ object:
   - rel4:
       value: /System/Process/parse_provider_category
   - rel5:
-      value: /${/#ae_provider_category}/Provisioning/${/#miq_request.type}/Email/${/#miq_request.type}_Pending
+      value: /System/Policy/${/#miq_request.type}_pending
