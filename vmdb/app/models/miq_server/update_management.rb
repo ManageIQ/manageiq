@@ -167,8 +167,8 @@ module MiqServer::UpdateManagement
 
     # MiqDatabase.cfme_package_name will update only the CFME package tree.  (Won't disturb the database)
     # "" will update everything
-    packages_to_update = EvmDatabase.local? ? MiqDatabase.cfme_package_name : ""
-    LinuxAdmin::Yum.update(packages_to_update)
+    packages_to_update = EvmDatabase.local? ? [MiqDatabase.cfme_package_name] : []
+    LinuxAdmin::Yum.update(*packages_to_update)
   end
 
   private

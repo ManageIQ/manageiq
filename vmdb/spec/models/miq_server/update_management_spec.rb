@@ -215,7 +215,7 @@ describe MiqServer do
       Dir.should_receive(:glob).and_return(["/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"])
       LinuxAdmin::Rpm.should_receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release").and_return(true)
       EvmDatabase.should_receive(:local?).and_return(false)
-      yum.should_receive(:update).once.with("")
+      yum.should_receive(:update).once.with(no_args)
 
       @server.apply_updates
     end
