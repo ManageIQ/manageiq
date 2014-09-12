@@ -20,6 +20,10 @@ describe Metric::CiMixin::Capture::Openstack do
     @vm.stub(:perf_init_openstack).and_return(@ems_openstack)
   end
 
+  after do
+    GC.enable
+  end
+
   context "with non-aggregated data" do
     before :each do
       @ems_openstack.stub(:get_statistics) { |name, options| OpenstackApiResult.new(@mock_stats_data.get_statistics(name)) }
