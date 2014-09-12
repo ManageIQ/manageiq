@@ -14,7 +14,7 @@
             <thead>
               <tr><th><th></tr>
             </thead>
-            <tr class="<%=cycle('row0','row1',:name => 'rel')%>">
+            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name => 'rel')%>">
               <td class="label">
                 <%= Dictionary::gettext('fqname',           
                                         :type     => :column, 
@@ -23,19 +23,19 @@
               </td>
               <td class="wide"><%= h(@sb[:namespace_path]) %></td>
             </tr>
-            <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
               <td class="label">Name</td>
               <td><%= @ae_class.name %></td>
             </tr>
-            <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
               <td class="label">Display Name</td>
               <td><%= @ae_class.display_name %></td>
             </tr>
-            <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
               <td class="label">Description</td>
               <td><%= @ae_class.description %></td>
             </tr>
-             <tr class="<%=cycle('row0','row1',:name=>'rel')%>">
+             <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
               <td class="label">Instances</td>
               <td><%= h(@ae_class.ae_instances.length) %></td>
             </tr>

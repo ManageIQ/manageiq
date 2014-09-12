@@ -17,7 +17,7 @@
         <tbody>
         <% @ae_class.ae_fields.each do |ae_field| %>
           <% image = ae_field.substitute ? "passed.png" : "failed.png" %>
-          <tr class="<%=cycle('row0','row1', :name => 'schema')%>">
+          <tr class="<%=cycle('row0 no-hover','row1 no-hover', :name => 'schema')%>">
             <% ['name', 'description', 'default_value', 'collect', 'message', 'on_entry', 'on_exit', 'on_error', 'max_retries', 'max_time'].each do |fname| %>
               <td>
                 <!-- Name is special processed -->
