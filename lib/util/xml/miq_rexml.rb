@@ -215,15 +215,15 @@ module REXML
 		end
 
 		def find_first(xpath, ns=nil)
-			REXML::XPath.first_orig(self, xpath, ns)
+			REXML::XPath.first(self, xpath, ns)
 		end
 
 		def find_each(name, &blk)
-			REXML::XPath.each_orig(self, name, &blk)
+			REXML::XPath.each(self, name, &blk)
 		end
 
 		def find_match(name, &blk)
-			REXML::XPath.match_orig(self, name, &blk)
+			REXML::XPath.match(self, name, &blk)
 		end
 
     alias :doc :document
@@ -360,11 +360,11 @@ module REXML
 		end
 
 		def find_first(xpath, ns=nil)
-			REXML::XPath.first_orig(self, xpath, ns)
+			REXML::XPath.first(self, xpath, ns)
 		end
 
 		def find_each(name, &blk)
-			REXML::XPath.each_orig(self, name, &blk)
+			REXML::XPath.each(self, name, &blk)
 		end
 
     def deep_clone()
@@ -384,25 +384,4 @@ module REXML
       self
     end
 	end
-
-  # Wrapper class.  Use this class to access the XPath functions.
-  class XPath
-    class << self
-      alias :first_orig :first
-      alias :each_orig :each
-      alias :match_orig :match
-
-      def XPath::first(*args)
-          args.delete_at(0).find_first(*args)
-      end
-
-      def XPath::each(*args, &block)
-          args.delete_at(0).find_each(*args, &block)
-      end
-
-      def XPath::match(*args)
-          args.delete_at(0).find_match(*args)
-      end
-    end
-  end
 end
