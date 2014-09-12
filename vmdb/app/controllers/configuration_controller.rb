@@ -190,30 +190,26 @@ class ConfigurationController < ApplicationController
 
   # Assign a tag to a set of objects
   def mytag_create
-    if params[:newtags] && params[:newtags] != ""     # If user entered tags
+    if params[:newtags] && !params[:newtags].blank?     # If user entered tags
       newtags = params[:newtags]
       invalid_chars = newtags.gsub(/[\w\s]/, "")
-      if invalid_chars != ""
+      if !invalid_chars.blank?
         invalid_chars = invalid_chars.split(//).uniq.join # Get the unique invalid characters
-        if invalid_chars.length > 1
-          msg = "Invalid characters"
-        else
-          msg = "Invalid character"
-        end
+        msg = "Invalid character".pluralize(invalid_chars.length)
         add_flash(msg + " #{invalid_chars} found in entered tags, only letters, numbers, and underscores are allowed.", :error)
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
       newtags = params[:newtags].split                      # Put tags in array
       newtags.each do |t|
-        Tag.add(t,:cat=>session[:userid]) # Add each tag
+        Tag.add(t, :cat => session[:userid]) # Add each tag
       end
-      session[:mytags] = Tag.all_tags(:cat=>session[:userid]).sort      # Get all of the users tags
+      session[:mytags] = Tag.all_tags(:cat => session[:userid]).sort      # Get all of the users tags
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page.replace("tab_div", :partial=>"configuration/ui_5")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace("tab_div", :partial => "configuration/ui_5")
         newtags.each do |tag|
           page << "$('mytag_#{tag}').visualEffect('pulsate');"
         end
