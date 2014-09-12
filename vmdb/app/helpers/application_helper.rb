@@ -2593,14 +2593,16 @@ module ApplicationHelper
     updated_query_string.merge!(update_this_param)
   end
 
+  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud
+                        ems_cluster ems_infra event flavor host miq_proxy miq_schedule miq_template offline
+                        ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume policy
+                        policy_group policy_profile repository resource_pool retired scan_profile service
+                        snia_local_file_system storage storage_manager templates vdi_controller vdi_desktop
+                        vdi_desktop_pool vdi_endpoint_device vdi_farm vdi_user vm vm_vdi)
+
   def render_gtl_view_tb?
-    %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud ems_cluster
-       ems_infra event flavor host miq_proxy miq_schedule miq_template offline ontap_file_share
-       ontap_logical_disk ontap_storage_system ontap_storage_volume policy policy_group policy_profile
-       repository resource_pool retired scan_profile service snia_local_file_system storage storage_manager
-       templates vdi_controller vdi_desktop vdi_desktop_pool vdi_endpoint_device vdi_farm vdi_user
-       vm vm_vdi).include?(@layout) && @gtl_type && !@tagitems &&
-      !@ownershipitems && !@retireitems && !@politems && !@new_policy &&
-      !@in_a_form && !@vdiitems
+    GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
+    !@ownershipitems && !@retireitems && !@politems && !@new_policy &&
+    !@in_a_form && !@vdiitems
   end
 end
