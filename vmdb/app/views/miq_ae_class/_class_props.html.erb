@@ -7,45 +7,45 @@
       <%= render :partial => "layouts/flash_msg",
                  :locals  => {:div_num => "_class_props"}
       %>
-      <dl class="col2">
-        <dd>
-          <p class="legend">Properties</p>
-          <table class="style3">
-            <thead>
-              <tr><th><th></tr>
-            </thead>
-            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name => 'rel')%>">
-              <td class="label">
-                <%= Dictionary::gettext('fqname',           
-                                        :type     => :column, 
-                                        :notfound => :titleize)
-                %>
-              </td>
-              <td class="wide"><%= h(@sb[:namespace_path]) %></td>
-            </tr>
-            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
-              <td class="label">Name</td>
-              <td><%= @ae_class.name %></td>
-            </tr>
-            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
-              <td class="label">Display Name</td>
-              <td><%= @ae_class.display_name %></td>
-            </tr>
-            <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
-              <td class="label">Description</td>
-              <td><%= @ae_class.description %></td>
-            </tr>
-             <tr class="<%=cycle('row0 no-hover','row1 no-hover',:name=>'rel')%>">
-              <td class="label">Instances</td>
-              <td><%= h(@ae_class.ae_instances.length) %></td>
-            </tr>
-          </table>
-        </dd>
-      </dl>
-      <%= render :partial => "domain_overrides", :locals=>{:node_prefix=>"aec", :model => "Class"}  %>
+
+      <p class="legend">Properties</p>
+      <table class="style3">
+        <thead>
+          <tr><th><th></tr>
+        </thead>
+        <tr class="<%=cycle('row0 no-hover','row1 no-hover', :name => 'rel')%>">
+          <td class="label">
+            <%= Dictionary::gettext('fqname',           
+                                    :type     => :column, 
+                                    :notfound => :titleize)
+            %>
+          </td>
+          <td class="wide"><%= h(@sb[:namespace_path]) %></td>
+        </tr>
+        <tr class="<%=cycle('row0 no-hover','row1 no-hover', :name => 'rel')%>">
+          <td class="label">Name</td>
+          <td><%= @ae_class.name %></td>
+        </tr>
+        <tr class="<%=cycle('row0 no-hover','row1 no-hover', :name =>'rel')%>">
+          <td class="label">Display Name</td>
+          <td><%= @ae_class.display_name %></td>
+        </tr>
+        <tr class="<%=cycle('row0 no-hover','row1 no-hover', :name => 'rel')%>">
+          <td class="label">Description</td>
+          <td><%= @ae_class.description %></td>
+        </tr>
+         <tr class="<%=cycle('row0 no-hover','row1 no-hover', :name => 'rel')%>">
+          <td class="label">Instances</td>
+          <td><%= h(@ae_class.ae_instances.length) %></td>
+        </tr>
+      </table>
+      <%= render :partial => "domain_overrides", 
+                 :locals  => {:node_prefix => "aec", 
+                              :model       => "Class"}  
+      %>
     <% else %>
       <div id="form_div">
-        <div style="padding-top:10px;"></div>
+      <div style="padding-top:10px;"></div>
         <%= render :partial => "layouts/flash_msg",
                    :locals  => {:div_num => "_class_props"}
         %>
