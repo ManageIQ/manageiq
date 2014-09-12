@@ -22,4 +22,8 @@ class VmVmware < VmInfra
   def cloneable?
     true
   end
+
+  def supports_snapshots?
+    true
+  end
 end

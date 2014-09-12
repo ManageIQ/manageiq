@@ -1,6 +1,6 @@
 module VmOrTemplate::Operations::Snapshot
   def validate_create_snapshot
-    return {:available=>false, :message=>"Create Snapshot Operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
+    return {:available=>false, :message=>"Create Snapshot operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
     msg = validate_vm_control
     return {:available=>msg[0], :message=>msg[1]} unless msg.nil?
     msg = {:available=>true, :message=>nil}
@@ -8,8 +8,8 @@ module VmOrTemplate::Operations::Snapshot
     return msg
   end
 
-  def validate_remove_snapshot
-    return {:available=>false, :message=>"Remove Snapshot Operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
+  def validate_remove_snapshot(task = 'Remove')
+    return {:available=>false, :message=>"#{task} Snapshot operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
     msg = validate_vm_control
     return {:available=>msg[0], :message=>msg[1]} unless msg.nil?
     msg = {:available=>true, :message=>nil}
@@ -26,7 +26,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def validate_revert_to_snapshot
-    return self.validate_remove_snapshot
+    return self.validate_remove_snapshot('Revert')
   end
 
   def raw_create_snapshot(name, desc = nil, memory)
@@ -107,10 +107,5 @@ module VmOrTemplate::Operations::Snapshot
 
   def revert_to_snapshot(snapshot_id)
     raw_revert_to_snapshot(snapshot_id)
-  end
-
-  def supports_snapshots?
-    # KVM systems do not support snapshots
-    return ['VMware', 'Microsoft'].include?(self.vendor)
   end
 end
