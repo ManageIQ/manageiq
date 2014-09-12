@@ -1,0 +1,76 @@
+- url = url_for(:action => "timeprofile_field_changed")
+- url_json = {:url => url}.to_json
+#timeprofile_days_hours_div
+  %table.style1
+    %tbody
+      %tr
+        %td.key Days
+        %td
+          %table
+            %tr
+              - ["(All)", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].each do |day|
+                %td{:style => "width:50px", :align => "center"} #{day}
+            %tr
+              %td{:align => "center"}
+                = check_box_tag("all_days",
+                                "1",
+                                @edit[:all_days],
+                                :disabled => disabled,
+                                "data-miq_sparkle_on" => true,
+                                "data-miq_sparkle_off" => true,
+                                "data-miq_observe_checkbox" => url_json)
+              - 7.times do |i|
+                %td{:align => "center"}
+                  = check_box_tag("days_#{i}",
+                                  "1",
+                                  @edit[:new][:profile][:days].include?(i),
+                                  :disabled => disabled,
+                                  "data-miq_observe_checkbox" => url_json)
+      %tr
+        %td.key Hours
+        - hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        %td
+          %table
+            %tr
+              %td{:style => "width:50px", :align => "center"} (All)
+              %td{:style => "width:35px", :align => "center"}
+                %b AM:
+              - hours.length.times do |i|
+                %td{:style => "width:35px", :align => "center"} #{hours[i-1]}-#{hours[i]}
+            %tr
+              %td{:align => "center"}
+                = check_box_tag("all_hours",
+                                "1",
+                                @edit[:all_hours],
+                                :disabled => disabled,
+                                "data-miq_sparkle_on" => true,
+                                "data-miq_sparkle_off" => true,
+                                "data-miq_observe_checkbox" => url_json)
+              %td &nbsp;
+              - 12.times do |i|
+                %td{:align => "center"}
+                  = check_box_tag("hours_#{i}",
+                                  "1",
+                                  @edit[:new][:profile][:hours].include?(i),
+                                  :disabled => disabled,
+                                  "data-miq_observe_checkbox" => url_json)
+            %tr
+              %td &nbsp;
+              %td{:align => "center"}
+                %b PM:
+              - hours.length.times do |i|
+                %td{:align => "center"} #{hours[i-1]}-#{hours[i]}
+            %tr
+              %td &nbsp;
+              %td &nbsp;
+              - 12.times do |i|
+                - i += 12
+                %td{:align => "center"}
+                  = check_box_tag("hours_#{i}",
+                                  "1",
+                                  @edit[:new][:profile][:hours].include?(i),
+                                  :disabled => disabled,
+                                  "data-miq_observe_checkbox" => url_json)
+  -# Need this to bind checkbox observers when under DHTMLX tabs %>
+  -# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
+  %script miqObserveCheckboxes();
