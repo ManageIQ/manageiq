@@ -223,7 +223,10 @@ module ApiHelper
             if expand?(sc) || scr["id"].nil?
               add_child js, normalize_hash(sctype, scr)
             end
-            js.child! { |jsc| jsc.href normalize_url_from_id(sctype, scr["id"]) }
+            js.child! { |jsc| 
+              jsc.href normalize_url_from_id(sctype, scr["id"]) 
+              jsc.id scr["id"]
+            }
           end
         end
       end
