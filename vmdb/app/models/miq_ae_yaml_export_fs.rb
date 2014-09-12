@@ -6,7 +6,7 @@ class MiqAeYamlExportFs < MiqAeYamlExport
     dom_name = options['export_as'].present? ? options['export_as'] : domain
     dir_name = File.join(options['export_dir'], dom_name)
     if Dir.exist?(dir_name) && !options['overwrite']
-      raise MiqAeException::DirectoryExists, "Directory [#{dir_name}] exists, use overwrite=true"
+      raise MiqAeException::DirectoryExists, "Directory [#{dir_name}] exists, use OVERWRITE=true"
     end
     super
   end
