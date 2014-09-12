@@ -571,6 +571,10 @@
       :feature_type: control
       :identifier: image_control
       :children:
+      - :name: Analysis
+        :description: Perform SmartState Analysis on Images
+        :feature_type: control
+        :identifier: image_scan
       - :name: Check Compliance
         :description: Check Compliance of Last Known Configuration
         :feature_type: control
