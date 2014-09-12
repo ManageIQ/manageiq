@@ -1368,7 +1368,7 @@ class ApplicationController < ActionController::Base
   end
 
   def flash_errors?
-    !!Array(@flash_array).detect { |f| f[:level] == :error }
+    Array(@flash_array).any? { |f| f[:level] == :error }
   end
 
   # Handle the breadcrumb array by either adding, or resetting to, the passed in breadcrumb
@@ -1999,8 +1999,8 @@ class ApplicationController < ActionController::Base
     # Build sorting keys - Use association name, if available, else dbname
     # need to add check for miqreportresult, need to use different sort in savedreports/report tree for saved reports list
     sort_prefix = association ? association : (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname)
-    sortcol_sym = (sort_prefix + "_sortcol").to_sym
-    sortdir_sym = (sort_prefix + "_sortdir").to_sym
+    sortcol_sym = "#{sort_prefix}_sortcol".to_sym
+    sortdir_sym = "#{sort_prefix}_sortdir".to_sym
 
     # Set up the list view type (grid/tile/list)
     @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
@@ -2074,7 +2074,7 @@ class ApplicationController < ActionController::Base
     # Set up the grid variables for list view, with exception models below
     if !["MiqTask", "Job", "ProductUpdate", "MiqProvision", "MiqReportResult"].include?(view.db) && 
       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
-      @grid_xml = view_to_xml(view, 0, -1, {:association => association})
+      @grid_xml = view_to_xml(view, 0, -1, :association => association)
     end
 
     [view, get_view_pages(dbname, view)]
@@ -2095,10 +2095,10 @@ class ApplicationController < ActionController::Base
       data_row      = report.table.data[data_idx]
 
       if typ == "bytag"
-        ['"' + model.downcase.pluralize + '".id IN (?)',
+        ["\"#{model.downcase.pluralize}\".id IN (?)",
           data_row["assoc_ids_#{report.extras[:group_by_tags][legend_idx]}"][model.downcase.to_sym][:on]]
       else
-        ['"' + model.downcase.pluralize + '".id IN (?)',
+        ["\"#{model.downcase.pluralize}\".id IN (?)",
           data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym]]
       end
     elsif options[:where_clause]
