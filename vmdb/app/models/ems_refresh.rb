@@ -54,12 +54,11 @@ module EmsRefresh
     targets = self.get_ar_objects(target, id)
 
     # Split the targets into refresher groups
-    groups = targets.each_with_object(Hash.new {|h, k| h[k] = Array.new}) do |t, h|
+    groups = targets.group_by do |t|
       # Determine the group
-      g = nil
       if t.kind_of?(ExtManagementSystem) || t.respond_to?(:ext_management_system)
         ems = t.kind_of?(ExtManagementSystem) ? t : t.ext_management_system
-        g = unless ems.nil?
+        unless ems.nil?
           ems.kind_of?(EmsVmware) ? :vc : ems.emstype.to_sym
         else
           # Differentiate non-ems from a disconnected host or vm
@@ -67,8 +66,6 @@ module EmsRefresh
           vendor == "amazon" ? :ec2 : :non_ems
         end
       end
-
-      h[g] << t
     end
 
     # Do the refreshes
