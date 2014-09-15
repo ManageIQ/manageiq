@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-NAS:
-  id: 1
-  name: "nas_repo"
-  relative_path: "//hostname/share/directory"
-VMFS:
-  id: 2
-  name: "vmfs_repo"
-  relative_path: "[Storage]directory/directory"
