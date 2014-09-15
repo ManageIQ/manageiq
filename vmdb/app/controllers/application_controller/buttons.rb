@@ -321,131 +321,124 @@ module ApplicationController::Buttons
     end
   end
 
+  def group_button_cancel
+    if typ == "update"
+      add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:current][:name]))
+    else
+      add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"CustomButtonSet")))
+    end
+    @edit = session[:edit] = nil  # clean out the saved info
+    ab_get_node_info(x_node) if x_active_tree == :ab_tree
+    replace_right_cell(x_node)
+  end
+  private :group_button_cancel
+
+  def group_button_add_save(typ)
+    assert_privileges(params[:button] == "add" ? "ab_group_new" : "ab_group_edit")
+    if @edit[:new][:name].blank?
+      render_flash(I18n.t("flash.edit.field_required", :field => "Name"), :error)
+      return
+    end
+    if @edit[:new][:description].blank?
+      render_flash(I18n.t("flash.edit.field_required", :field => "Description"), :error)
+      return
+    end
+    if @edit[:new][:button_image].blank? || @edit[:new][:button_image] == 0
+      render_flash(I18n.t("flash.edit.select_required", :selection=>"Button Image"), :error)
+      return
+    end
+    group_set_record_vars(@custom_button_set)
+
+    mems = []
+    @edit[:new][:fields].each_with_index do |field,idx|
+      uri = CustomButton.find(field[1])
+      uri.save
+      mems.push(uri)
+    end
+
+    if typ == "update"
+      org_mems = @custom_button_set.members   #clean up existing members
+      org_mems.each do |m|
+        uri = CustomButton.find(m.id)
+        uri.save
+      end
+
+      if @custom_button_set.save
+        if !mems.blank?       #replace children if members were added/updated
+          @custom_button_set.replace_children(mems)
+        else                  #remove members if nothing was selected
+          @custom_button_set.remove_all_children
+        end
+        add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:new][:description]))
+        @edit = session[:edit] = nil  # clean out the saved info
+        ab_get_node_info(x_node) if x_active_tree == :ab_tree
+        replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+      else
+        @custom_button_set.errors.each do |field, msg|
+          add_flash(I18n.t("flash.error_during", :task=>"edit") << "#{field.to_s.capitalize} #{msg}", :error)
+        end
+        @lastaction = "automate_button"
+        @layout     = "miq_ae_automate_button"
+        render_flash
+      end
+    else
+      #set group_index of new record being added and exiting ones so they are in order incase some were deleted
+      all_sets = CustomButtonSet.find_all_by_class_name(@edit[:new][:applies_to_class])
+      all_sets.each_with_index do |group, i|
+        group.set_data[:group_index] = i + 1
+        group.save!
+      end
+      @custom_button_set.set_data[:group_index] = all_sets.length+1
+      if @custom_button_set.save
+        @custom_button_set.replace_children(mems) unless mems.blank?
+        if x_active_tree == :sandt_tree
+          aset = CustomButtonSet.find_by_id(@custom_button_set.id)
+          #push new button at the end of button_order array
+          if aset
+            st = ServiceTemplate.find_by_id(@sb[:applies_to_id])
+            st.custom_button_sets.push(aset)
+            st.options[:button_order] ||= []
+            st.options[:button_order].push("cbg-#{aset.id}")
+            st.save
+          end
+        end
+
+        add_flash(I18n.t("flash.add.added", :model => ui_lookup(:model => "CustomButtonSet"), :name => @edit[:new][:description]))
+        @edit = session[:edit] = nil  # clean out the saved info
+        ab_get_node_info(x_node) if x_active_tree == :ab_tree
+        replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+      else
+        @custom_button_set.errors.each do |field,msg|
+          add_flash(I18n.t("flash.error_during", :task => "add") << "#{field.to_s.capitalize} #{msg}", :error)
+        end
+        @lastaction = "automate_button"
+        @layout     = "miq_ae_automate_button"
+        render_flash
+      end
+    end
+  end
+  private :group_button_add_save
+
+  def group_button_reset
+    group_set_form_vars
+    @changed = session[:changed] = false
+    add_flash(I18n.t("flash.edit.reset"), :warning)
+    @in_a_form  = true
+    @lastaction = "automate_button"
+    @layout     = "miq_ae_automate_button"
+    replace_right_cell("button_edit")
+  end
+  private :group_button_reset
+
   def group_create_update(typ)
     @edit = session[:edit]
     @record = @custom_button_set = @edit[:custom_button_set_id] ?
         CustomButtonSet.find_by_id(@edit[:custom_button_set_id]) : CustomButtonSet.new
     @changed = (@edit[:new] != @edit[:current])
-    if params[:button] == "cancel"
-      if typ == "update"
-        add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:current][:name]))
-      else
-        add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"CustomButtonSet")))
-      end
-      @edit = session[:edit] = nil  # clean out the saved info
-      ab_get_node_info(x_node) if x_active_tree == :ab_tree
-      replace_right_cell(x_node)
-    elsif ["add","save"].include?(params[:button])
-      assert_privileges(params[:button] == "add" ? "ab_group_new" : "ab_group_edit")
-      if @edit[:new][:name].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-        return
-      end
-      if @edit[:new][:description].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Description"), :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-        return
-      end
-      if @edit[:new][:button_image].blank? || @edit[:new][:button_image] == 0
-        add_flash(I18n.t("flash.edit.select_required", :selection=>"Button Image"), :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-        return
-      end
-      group_set_record_vars(@custom_button_set)
-
-      if typ == "update"
-        org_mems = @custom_button_set.members   #clean up existing members
-        org_mems.each do |m|
-          uri = CustomButton.find(m.id)
-          uri.save
-        end
-
-        mems = Array.new
-        @edit[:new][:fields].each_with_index do |field,idx|     #adding new members
-          uri = CustomButton.find(field[1])
-          uri.save
-          mems.push(uri)
-        end
-
-        if @custom_button_set.save
-          if !mems.blank?       #replace children if members were added/updated
-            @custom_button_set.replace_children(mems)
-          else                  #remove members if nothing was selected
-            @custom_button_set.remove_all_children
-          end
-          add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:new][:description]))
-          @edit = session[:edit] = nil  # clean out the saved info
-          ab_get_node_info(x_node) if x_active_tree == :ab_tree
-          replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
-        else
-          @custom_button_set.errors.each do |field,msg|
-            add_flash(I18n.t("flash.error_during", :task=>"edit") << "#{field.to_s.capitalize} #{msg}", :error)
-          end
-          @lastaction = "automate_button"
-          @layout = "miq_ae_automate_button"
-          render :update do |page|
-            page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-          end
-        end
-      else
-        mems = Array.new
-        @edit[:new][:fields].each_with_index do |field,idx|
-          uri = CustomButton.find(field[1])
-          uri.save
-          mems.push(uri)
-        end
-        #set group_index of new record being added and exiting ones so they are in order incase some were deleted
-        all_sets = CustomButtonSet.find_all_by_class_name(@edit[:new][:applies_to_class])
-        all_sets.each_with_index do |group,i|
-          group.set_data[:group_index] = i + 1
-          group.save!
-        end
-        @custom_button_set.set_data[:group_index] = all_sets.length+1
-        if @custom_button_set.save
-          @custom_button_set.replace_children(mems) if !mems.blank?
-          if x_active_tree == :sandt_tree
-            aset = CustomButtonSet.find_by_id(@custom_button_set.id)
-            #push new button at the end of button_order array
-            if aset
-              st = ServiceTemplate.find_by_id(@sb[:applies_to_id])
-              st.custom_button_sets.push(aset)
-              st.options[:button_order] ||= Array.new
-              st.options[:button_order].push("cbg-#{aset.id}")
-              st.save
-            end
-          end
-
-#       add_flash("Custom button Group [#{@edit[:new][:description]}] added successfully")
-          add_flash(I18n.t("flash.add.added", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:new][:description]))
-          @edit = session[:edit] = nil  # clean out the saved info
-          ab_get_node_info(x_node) if x_active_tree == :ab_tree
-          replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
-        else
-          @custom_button_set.errors.each do |field,msg|
-            add_flash(I18n.t("flash.error_during", :task=>"add") << "#{field.to_s.capitalize} #{msg}", :error)
-          end
-          @lastaction = "automate_button"
-          @layout = "miq_ae_automate_button"
-          render :update do |page|
-            page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-          end
-        end
-      end
-    elsif params[:button] == "reset"
-      group_set_form_vars
-      @changed = session[:changed] = false
-      add_flash(I18n.t("flash.edit.reset"), :warning)
-      @in_a_form = true
-      @lastaction = "automate_button"
-      @layout = "miq_ae_automate_button"
-      replace_right_cell("button_edit")
+    case params[:button]
+    when 'cancel'      then group_button_cancel
+    when 'add', 'save' then group_button_add_save(typ)
+    when 'reset'       then group_button_reset
     end
   end
 
@@ -1135,11 +1128,7 @@ module ApplicationController::Buttons
         break
       end
     end
-    if last_idx - first_idx + 1 > params[:selected_fields].length
-      return [false, first_idx, last_idx]
-    else
-      return [true, first_idx, last_idx]
-    end
+    is_consecutive = last_idx - first_idx + 1 <= params[:selected_fields].length
+    [is_consecutive, first_idx, last_idx]
   end
-
 end
