@@ -1963,4 +1963,8 @@ class VmOrTemplate < ActiveRecord::Base
   def cloneable?
     false
   end
+
+  def supports_snapshots?
+    false
+  end
 end
