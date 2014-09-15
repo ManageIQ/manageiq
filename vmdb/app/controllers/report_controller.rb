@@ -27,31 +27,31 @@ class ReportController < ApplicationController
   end
 
   REPORT_X_BUTTON_ALLOWED_ACTIONS = {
-     'miq_report_copy'             => :miq_report_copy,
-     'miq_report_delete'           => :miq_report_delete,
-     'miq_report_edit'             => :miq_report_edit,
-     'miq_report_new'              => :miq_report_new,
-     'miq_report_run'              => :miq_report_run,
-     'miq_report_schedule_add'     => :miq_report_schedule_add,
-     'miq_report_schedule_edit'    => :miq_report_schedule_edit,
-     'miq_report_schedule_delete'  => :miq_report_schedule_delete,
-     'miq_report_schedule_enable'  => :miq_report_schedule_enable,
-     'miq_report_schedule_disable' => :miq_report_schedule_disable,
-     'miq_report_schedule_run_now' => :miq_report_schedule_run_now,
-     'render_report_csv'           => :render_report_csv,
-     'render_report_pdf'           => :render_report_pdf,
-     'render_report_txt'           => :render_report_txt,
-     'saved_report_delete'         => :saved_report_delete,
-     'db_new'                      => :db_new,
-     'db_edit'                     => :db_edit,
-     'db_delete'                   => :db_delete,
-     'db_seq_edit'                 => :db_seq_edit,
-     'widget_refresh'              => :widget_refresh,
-     'widget_new'                  => :widget_new,
-     'widget_edit'                 => :widget_edit,
-     'widget_copy'                 => :widget_copy,
-     'widget_delete'               => :widget_delete,
-     'widget_generate_content'     => :widget_generate_content,
+    'miq_report_copy'             => :miq_report_copy,
+    'miq_report_delete'           => :miq_report_delete,
+    'miq_report_edit'             => :miq_report_edit,
+    'miq_report_new'              => :miq_report_new,
+    'miq_report_run'              => :miq_report_run,
+    'miq_report_schedule_add'     => :miq_report_schedule_add,
+    'miq_report_schedule_edit'    => :miq_report_schedule_edit,
+    'miq_report_schedule_delete'  => :miq_report_schedule_delete,
+    'miq_report_schedule_enable'  => :miq_report_schedule_enable,
+    'miq_report_schedule_disable' => :miq_report_schedule_disable,
+    'miq_report_schedule_run_now' => :miq_report_schedule_run_now,
+    'render_report_csv'           => :render_report_csv,
+    'render_report_pdf'           => :render_report_pdf,
+    'render_report_txt'           => :render_report_txt,
+    'saved_report_delete'         => :saved_report_delete,
+    'db_new'                      => :db_new,
+    'db_edit'                     => :db_edit,
+    'db_delete'                   => :db_delete,
+    'db_seq_edit'                 => :db_seq_edit,
+    'widget_refresh'              => :widget_refresh,
+    'widget_new'                  => :widget_new,
+    'widget_edit'                 => :widget_edit,
+    'widget_copy'                 => :widget_copy,
+    'widget_delete'               => :widget_delete,
+    'widget_generate_content'     => :widget_generate_content,
   }.freeze
 
   # handle buttons pressed on the center buttons toolbar
@@ -596,8 +596,7 @@ class ReportController < ApplicationController
       when :export_tree
         return "export"
       when :reports_tree
-        return params[:pressed] == "miq_report_schedule_add" ?
-            "schedule_list" : "report_list"
+        return params[:pressed] == "miq_report_schedule_add" ? "schedule_list" : "report_list"
       when :roles_tree
         return "role_list"
       when :savedreports_tree
