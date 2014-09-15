@@ -225,7 +225,15 @@ module OpenstackHandle
     def accessor_for_accessible_tenants(service, accessor, uniq_id)
       ra = []
       service_for_each_accessible_tenant(service) do |svc|
-        ra.concat(svc.send(accessor).to_a)
+        not_found_error = Fog.const_get(service)::OpenStack::NotFound
+        data_array = begin
+          svc.send(accessor).to_a
+        rescue not_found_error => e
+          $fog_log.warn("MIQ(#{self.class.name}.#{__method__}) HTTP 404 Error during OpenStack request. " \
+                        "Skipping inventory item #{service} #{accessor}\n#{e}")
+          []
+        end
+        ra.concat(data_array)
       end
       return ra unless uniq_id
       ra.uniq { |i| i.send(uniq_id) }
