@@ -190,30 +190,26 @@ class ConfigurationController < ApplicationController
 
   # Assign a tag to a set of objects
   def mytag_create
-    if params[:newtags] && params[:newtags] != ""     # If user entered tags
+    if params[:newtags] && params[:newtags].present?     # If user entered tags
       newtags = params[:newtags]
       invalid_chars = newtags.gsub(/[\w\s]/, "")
-      if invalid_chars != ""
+      if invalid_chars.present?
         invalid_chars = invalid_chars.split(//).uniq.join # Get the unique invalid characters
-        if invalid_chars.length > 1
-          msg = "Invalid characters"
-        else
-          msg = "Invalid character"
-        end
+        msg = "Invalid character".pluralize(invalid_chars.length)
         add_flash(msg + " #{invalid_chars} found in entered tags, only letters, numbers, and underscores are allowed.", :error)
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
       newtags = params[:newtags].split                      # Put tags in array
       newtags.each do |t|
-        Tag.add(t,:cat=>session[:userid]) # Add each tag
+        Tag.add(t, :cat => session[:userid]) # Add each tag
       end
-      session[:mytags] = Tag.all_tags(:cat=>session[:userid]).sort      # Get all of the users tags
+      session[:mytags] = Tag.all_tags(:cat => session[:userid]).sort      # Get all of the users tags
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page.replace("tab_div", :partial=>"configuration/ui_5")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace("tab_div", :partial => "configuration/ui_5")
         newtags.each do |tag|
           page << "$('mytag_#{tag}').visualEffect('pulsate');"
         end
@@ -223,10 +219,10 @@ class ConfigurationController < ApplicationController
 
   # Remove a tag from a set of objects
   def mytag_delete
-    Tag.remove(params[:tag], :cat=>session[:userid])
-    session[:mytags] = Tag.all_tags(:cat=>session[:userid]).sort      # Get all of the users tags
+    Tag.remove(params[:tag], :cat => session[:userid])
+    session[:mytags] = Tag.all_tags(:cat => session[:userid]).sort      # Get all of the users tags
     render :update do |page|
-      page.replace("tab_div", :partial=>"ui_5")
+      page.replace("tab_div", :partial => "ui_5")
     end
   end
 
@@ -258,12 +254,12 @@ class ConfigurationController < ApplicationController
           @css.merge!(@settings[:display])
           @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
           set_user_time_zone
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user=>session[:username]))
+          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user => session[:username]))
         else
           add_flash(I18n.t("flash.configuration.ui_settings_saved_for_session"))
         end
         edit
-        render :action=>"show"
+        render :action => "show"
         return                                                    # No config file for Visuals yet, just return
       when "ui_2"                                                 # Visual tab
         @settings.merge!(@edit[:new])                                   # Apply the new saved settings
@@ -283,12 +279,12 @@ class ConfigurationController < ApplicationController
           db_user.settings[:display].delete(:vm_summary_cool)     # :vm_summary_cool moved to :views hash
           db_user.settings[:views].delete(:vm_summary_cool)       # :views/:vm_summary_cool changed to :dashboards
           db_user.save
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user=>session[:username]))
+          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user => session[:username]))
         else
           add_flash(I18n.t("flash.configuration.ui_settings_saved_for_session"))
         end
         edit
-        render :action=>"show"
+        render :action => "show"
         return                                                      # No config file for Visuals yet, just return
       when "ui_3"                                                   # User Filters tab
         @edit = session[:edit]
@@ -305,7 +301,7 @@ class ConfigurationController < ApplicationController
         end
         add_flash(I18n.t("flash.configuration.default_filter_saved"))
         edit
-        render :action=>"show"
+        render :action => "show"
         return                                                      # No config file for Visuals yet, just return
       when "ui_4"                                                   # User Filters tab
         @edit = session[:edit]
@@ -322,7 +318,7 @@ class ConfigurationController < ApplicationController
         end
         add_flash(I18n.t("flash.configuration.default_filter_saved"))
         edit
-        render :action=>"show"
+        render :action => "show"
         return                                                      # No config file for Visuals yet, just return
       when "ui_5"                                                   # My tags, mytag_create method
       end
@@ -334,7 +330,7 @@ class ConfigurationController < ApplicationController
         AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
         add_flash(I18n.t("flash.configuration.config_settings_saved"))
         edit
-        render :action=>"show"
+        render :action => "show"
       else
         @update.errors.each do |field,msg|
           add_flash("#{field.titleize}: #{msg}", :error)
@@ -342,12 +338,12 @@ class ConfigurationController < ApplicationController
         @changed = true
         session[:changed] = @changed
         build_tabs
-        render :action=>"show"
+        render :action => "show"
       end
     elsif params["reset"]
       edit
       add_flash(I18n.t("flash.edit.reset"), :warning)
-      render :action=>"show"
+      render :action => "show"
     end
   end
 
@@ -395,61 +391,21 @@ class ConfigurationController < ApplicationController
         @temp[:timeprofile_details][timeprofile.description][:hours][0] = @temp[:timeprofile_details][timeprofile.description][:hours].last.split('-').first + '-' + @temp[:timeprofile_details][timeprofile.description][:hours].first.split('-').last
         @temp[:timeprofile_details][timeprofile.description][:hours].delete_at(@temp[:timeprofile_details][timeprofile.description][:hours].length-1)
       end
-      @temp[:timeprofile_details][timeprofile.description][:tz] = timeprofile.profile[:tz].nil? ? nil : timeprofile.profile[:tz]
+      @temp[:timeprofile_details][timeprofile.description][:tz] = timeprofile.profile[:tz]
     end
   end
 
   def get_hr_str(hr)
-    case hr.to_i
-    when 0
-      return "12AM-1AM"
-    when 1
-      return "1AM-2AM"
-    when 2
-      return "2AM-3AM"
-    when 3
-      return "3AM-4AM"
-    when 4
-      return "4AM-5AM"
-    when 5
-      return "5AM-6AM"
-    when 6
-      return "6AM-7AM"
-    when 7
-      return "7AM-8AM"
-    when 8
-      return "8AM-9AM"
-    when 9
-      return "9AM-10AM"
-    when 10
-      return "10AM-11AM"
-    when 11
-      return "11AM-12PM"
-    when 12
-      return "12PM-1PM"
-    when 13
-      return "1PM-2PM"
-    when 14
-      return "2PM-3PM"
-    when 15
-      return "3PM-4PM"
-    when 16
-      return "4PM-5PM"
-    when 17
-      return "5PM-6PM"
-    when 18
-      return "6PM-7PM"
-    when 19
-      return "7PM-8PM"
-    when 20
-      return "8PM-9PM"
-    when 21
-      return "9PM-10PM"
-    when 22
-      return "10PM-11PM"
-    when 23
-      return "11PM-12AM"
+    hours = (1..12).to_a
+    hour = hr.to_i
+    case hour
+    when 0..10  then from = to = "AM"
+    when 11     then from, to = ["AM", "PM"]
+    when 12..22 then from = to = "PM"
+    else             from, to = ["PM", "AM"]
     end
+    hour = hour >= 12 ? hour - 12 : hour
+    "#{hours[hour - 1]}#{from}-#{hours[hour]}#{to}"
   end
 
   def timeprofile_new
@@ -518,9 +474,9 @@ class ConfigurationController < ApplicationController
     @timeprofile = @edit[:timeprofile]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:profile_type] = params[:profile_type] if params[:profile_type]
-    @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.has_key?(:profile_tz)
-    @redraw = true if params.has_key?(:profile_tz)
-    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" ? true : nil if params.has_key?(:rollup_daily)
+    @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.key?(:profile_tz)
+    @redraw = true if params.key?(:profile_tz)
+    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params._key?(:rollup_daily)
     @edit[:new][:profile_key] = @edit[:new][:profile_type] == "user" ? session[:userid] : nil
     params.each do |var, val|
       vars=var.split("_")
@@ -558,7 +514,7 @@ class ConfigurationController < ApplicationController
       page.replace('timeprofile_days_hours_div',
                    :partial => "timeprofile_days_hours",
                    :locals  => {:disabled => false}) if @redraw
-      if params.has_key?(:profile_tz) && ["super_administrator", "administrator"].include?(session[:userrole])
+      if params.key?(:profile_tz) && ["super_administrator", "administrator"].include?(session[:userrole])
         if params[:profile_tz].blank?
           page << "$('rollup_daily_tr').hide();"
         else
