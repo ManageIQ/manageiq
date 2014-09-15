@@ -134,7 +134,6 @@ module EmsRefresh::Parsers
     def parse_vm(vm)
       p                = vm[:Properties][:Props]
       uid              = p[:ID]
-      os_hash, vendor  = process_vm_os(p)
       connection_state = p[:ServerConnection][:Props][:IsConnected].to_s
       host             = @data_index.fetch_path(:hosts_by_host_name, p[:HostName])
 
@@ -143,10 +142,10 @@ module EmsRefresh::Parsers
         :ems_ref          => uid,
         :uid_ems          => uid,
         :type             => 'VmMicrosoft',
-        :vendor           => vendor,
+        :vendor           => "microsoft",
         :power_state      => lookup_power_state(p[:VirtualMachineState][:ToString]),
         :location         => p[:VMCPath].sub(DRIVE_LETTER, "").strip,
-        :operating_system => os_hash,
+        :operating_system => process_vm_os(p[:OperatingSystem]),
         :connection_state => lookup_connected_state(connection_state),
         :tools_status     => process_tools_status(p),
 
@@ -163,14 +162,13 @@ module EmsRefresh::Parsers
     def parse_image(image)
       p               = image[:Properties][:Props]
       uid             = p[:ID]
-      os_hash, vendor = process_vm_os(p)
 
       new_result = {
         :type             => "TemplateMicrosoft",
         :uid_ems          => uid,
         :ems_ref          => uid,
-        :vendor           => vendor,
-        :operating_system => os_hash,
+        :vendor           => "microsoft",
+        :operating_system => process_vm_os(p[:OperatingSystem]),
         :name             => p[:Name],
         :power_state      => "never",
         :template         => true,
@@ -415,21 +413,12 @@ module EmsRefresh::Parsers
       }
     end
 
-    def process_vm_os(property_hash)
-      return nil, "unknown" if property_hash[:OperatingSystem].nil?
+    def process_vm_os(os)
+      return nil if os.nil?
 
-      name       = property_hash[:OperatingSystem][:Props][:Name]
-      vendor_obj = property_hash[:OperatingSystem][:Props][:OSType]
-
-      vendor = vendor_obj.kind_of?(Hash) ? vendor_obj[:ToString] : vendor_obj
-      vendor = "microsoft" if vendor.downcase == "windows"
-      vendor = "unknown" unless Host::VENDOR_TYPES.include?(vendor)
-
-      result = {
-        :product_name => name
+      {
+        :product_name => os[:Props][:Name]
       }
-
-      return result, vendor
     end
 
     def process_tools_status(property_hash)
