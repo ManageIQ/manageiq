@@ -293,7 +293,7 @@ module EmsRefresh::Parsers
           :name        => s[:Name],
           :description => s[:description],
           :create_time => s[:AddedTime],
-          :current     => s == last_restored_snapshot,
+          :current     => s[:CheckpointID] == last_restored_snapshot[:Props][:CheckpointID],
         }
         result << new_result
       end
