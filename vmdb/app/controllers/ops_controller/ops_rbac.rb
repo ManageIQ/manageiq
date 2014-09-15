@@ -42,12 +42,9 @@ module OpsController::OpsRbac
   def rbac_user_edit
     assert_privileges("rbac_user_edit")
     case params[:button]
-    when "cancel"
-      rbac_edit_cancel('user')
-    when "save", "add"
-      rbac_edit_save_or_add('user')
-    when "reset", nil # Reset or first time in
-      rbac_edit_reset('user', User)
+    when 'cancel'      then rbac_edit_cancel('user')
+    when 'save', 'add' then rbac_edit_save_or_add('user')
+    when 'reset', nil  then rbac_edit_reset('user', User) # Reset or first time in
     end
   end
 
@@ -60,12 +57,9 @@ module OpsController::OpsRbac
   def rbac_group_edit
     assert_privileges("rbac_group_edit")
     case params[:button]
-    when "cancel"
-      rbac_edit_cancel('group')
-    when "save", "add"
-      rbac_edit_save_or_add('group')
-    when "reset", nil # Reset or first time in
-      rbac_edit_reset('group', MiqGroup)
+    when 'cancel'      then rbac_edit_cancel('group')
+    when 'save', 'add' then rbac_edit_save_or_add('group')
+    when 'reset', nil  then rbac_edit_reset('group', MiqGroup) # Reset or first time in
     end
   end
 
@@ -84,12 +78,9 @@ module OpsController::OpsRbac
   def rbac_role_edit
     assert_privileges("rbac_role_edit")
     case params[:button]
-    when "cancel"
-      rbac_edit_cancel('role')
-    when "save", "add"
-      rbac_edit_save_or_add('role', 'miq_user_role')
-    when "reset", nil # Reset or first time in
-      rbac_edit_reset('role', MiqUserRole)
+    when 'cancel'      then rbac_edit_cancel('role')
+    when 'save', 'add' then rbac_edit_save_or_add('role', 'miq_user_role')
+    when 'reset', nil  then rbac_edit_reset('role', MiqUserRole) # Reset or first time in
     end
   end
 
@@ -270,7 +261,7 @@ module OpsController::OpsRbac
       get_node_info(x_node)
       replace_right_cell(x_node)
     when "save"
-      return unless load_edit("rbac_group_edit__seq","replace_cell__explorer")
+      return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
       err = false
       @edit[:new][:ldap_groups_list].each_with_index do |grp, i|
         group = MiqGroup.find_by_description(grp)
@@ -323,7 +314,7 @@ module OpsController::OpsRbac
   end
 
   def move_cols_up
-    return unless load_edit("rbac_group_edit__seq","replace_cell__explorer")
+    return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
       add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
       return
@@ -345,7 +336,7 @@ module OpsController::OpsRbac
   end
 
   def move_cols_down
-    return unless load_edit("rbac_group_edit__seq","replace_cell__explorer")
+    return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
       add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
       return
@@ -385,9 +376,9 @@ module OpsController::OpsRbac
   end
 
   def rbac_group_user_lookup_field_changed
-    return unless load_edit("rbac_group_edit__#{params[:id]}","replace_cell__explorer")
-    @edit[:new][:user] = params[:user] if params[:user]
-    @edit[:new][:user_id] = params[:user_id] if params[:user_id]
+    return unless load_edit("rbac_group_edit__#{params[:id]}", "replace_cell__explorer")
+    @edit[:new][:user]     = params[:user]     if params[:user]
+    @edit[:new][:user_id]  = params[:user_id]  if params[:user_id]
     @edit[:new][:user_pwd] = params[:password] if params[:password]
   end
 
@@ -444,7 +435,7 @@ module OpsController::OpsRbac
     @object_ids = find_checked_items
     if params[:button] == "reset"
       id = params[:id] if params[:id]
-      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
+      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
       @object_ids = @edit[:object_ids]
       session[:tag_db] = @tagging = @edit[:tagging]
     else
@@ -478,7 +469,7 @@ module OpsController::OpsRbac
 
   def rbac_edit_tags_cancel
     id = params[:id]
-    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
+    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
     add_flash(I18n.t("flash.task_cancelled", :task=>"Tag Edit"))
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
@@ -493,7 +484,7 @@ module OpsController::OpsRbac
   def rbac_edit_cancel(what)
     key = what.to_sym
     id = params[:id] ? params[:id] : "new"
-    return unless load_edit("rbac_#{what}_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("rbac_#{what}_edit__#{id}", "replace_cell__explorer")
     case key
     when :role
       record_id = @edit[:role_id]
@@ -561,47 +552,42 @@ module OpsController::OpsRbac
   end
 
   def rbac_edit_save_or_add(what, rbac_suffix = what)
-    key = what.to_sym
-    id = params[:id] ? params[:id] : "new"
-    return unless load_edit("rbac_#{what}_edit__#{id}","replace_cell__explorer")
-    case key
-    when :role
-      record = @edit[:role_id] ? MiqUserRole.find_by_id(@edit[:role_id]) : MiqUserRole.new
-    when :group
-      record = @edit[:group_id] ? MiqGroup.find_by_id(@edit[:group_id]) : MiqGroup.new
-    when :user
-      record = @edit[:user_id] ? User.find_by_id(@edit[:user_id]) : User.new
-    end
+    key         = what.to_sym
+    id          = params[:id] || "new"
+    add_pressed = params[:button] == "add"
+
+    return unless load_edit("rbac_#{what}_edit__#{id}", "replace_cell__explorer")
+
+    record = case key
+             when :role  then @edit[:role_id]  ? MiqUserRole.find_by_id(@edit[:role_id]) : MiqUserRole.new
+             when :group then @edit[:group_id] ? MiqGroup.find_by_id(@edit[:group_id])   : MiqGroup.new
+             when :user  then @edit[:user_id]  ? User.find_by_id(@edit[:user_id])        : User.new
+             end
+
     self.send("rbac_#{what}_set_record_vars", record)
-    self.send("rbac_#{what}_validate?",       record)
+    self.send("rbac_#{what}_validate?")
+
     if record.valid? && !flash_errors? && record.save
-      AuditEvent.success(build_saved_audit(record, params[:button] == "add"))
+      AuditEvent.success(build_saved_audit(record, add_pressed))
       subkey = (key == :group) ? :description : :name
-      add_flash(I18n.t("flash.edit.saved", :model=>what.titleize, :name=>@edit[:new][subkey]))
+      add_flash(I18n.t("flash.edit.saved", :model => what.titleize, :name => @edit[:new][subkey]))
       @edit = session[:edit] = nil  # clean out the saved info
-      if params[:button] == "add"
-        case rbac_suffix
-          when "group"
-            suffix = "g"
-          when "miq_user_role"
-            suffix = "ur"
-          when "user"
-            suffix = "u"
-        end
-        self.x_node  = "xx-#{suffix}"  # reset node to show list
+      if add_pressed
+        suffix = case rbac_suffix
+                 when "group"         then "g"
+                 when "miq_user_role" then "ur"
+                 when "user"          then "u"
+                 end
+        self.x_node = "xx-#{suffix}" # reset node to show list
         self.send("rbac_#{what.pluralize}_list")
       end
       # Get selected Node
       get_node_info(x_node)
       replace_right_cell(x_node, [:rbac])
     else
-      record.errors.each do |field,msg|
-        add_flash("#{field.to_s.capitalize} #{msg}", :error)
-      end
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      record.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
+      render_flash
     end
   end
 
@@ -903,7 +889,7 @@ module OpsController::OpsRbac
   end
 
   # Validate some of the user fields
-  def rbac_user_validate?(role)
+  def rbac_user_validate?
     valid = true
     if @edit[:new][:password] != @edit[:new][:password2]
       add_flash(I18n.t("flash.edit.passwords_mismatch"), :error)
@@ -913,7 +899,7 @@ module OpsController::OpsRbac
       add_flash(I18n.t("flash.ops.rbac.user_assigned_to_group"), :error)
       valid = false
     end
-    return valid
+    valid
   end
 
   # Get variables from group edit form
@@ -1175,25 +1161,25 @@ module OpsController::OpsRbac
   end
 
   # Validate some of the role fields
-  def rbac_role_validate?(role)
+  def rbac_role_validate?
     valid = true
     if @edit[:new][:features].empty?
       add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Product Feature"), :error)
       valid = false
     end
-    return valid
+    valid
   end
 
   # Validate some of the role fields
-  def rbac_group_validate?(role)
+  def rbac_group_validate?
     valid = true
     if @edit[:new][:filters].empty?
-      @assigned_filters = Array.new
+      @assigned_filters = []
     end
     if @edit[:new][:role].nil? || @edit[:new][:role] == ""
       add_flash(I18n.t("flash.ops.settings.user_group_assign_role"), :error)
       valid = false
     end
-    return valid
+    valid
   end
 end

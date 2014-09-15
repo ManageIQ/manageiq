@@ -884,31 +884,47 @@ class ApplicationController < ActionController::Base
     return html
   end
 
-  def load_edit(key,lastaction=@lastaction)
-    # incase lastaction is nil set it to show_list
-    lastaction = lastaction ? (lastaction.split('__').first == "replace_cell" ? lastaction.split('__').last : (params[:id] == "new" ? "show_list" : lastaction)) : "show_list"
-    if session[:edit].nil? || (session[:edit] && session[:edit][:key] != key)
-      add_flash(I18n.t("flash.edit.aborted"), :error)
-      session[:flash_msgs] = @flash_array.dup
-      if request.xml_http_request?  # Is this an Ajax request?
-        if lastaction == "configuration"
-          edit
-          render :update do |page|                    # Use JS to update the display
-            page.redirect_to :action => "index", :id=>params[:id], :escape=>false, :load_edit_err=>true
-          end
-        else
-          render :update do |page|                    # Use JS to update the display
-            page.redirect_to :action => lastaction, :id=>params[:id], :escape=>false, :load_edit_err=>true
-          end
-        end
-      else
-        redirect_to :action => lastaction, :id=>params[:id], :escape=>false
-      end
-      return false
+  def calculate_lastaction(lastaction)
+    return 'show_list' unless lastaction
+
+    parts = lastaction.split('__')
+    if parts.first == "replace_cell"
+      parts.last
     else
-      @edit = session[:edit]
-      return true
+      params[:id] == 'new' ? 'show_list' : lastaction
     end
+  end
+  private :calculate_lastaction
+
+  def report_edit_aborted(lastaction)
+    add_flash(I18n.t("flash.edit.aborted"), :error)
+    session[:flash_msgs] = @flash_array.dup
+    if request.xml_http_request?  # Is this an Ajax request?
+      if lastaction == "configuration"
+        edit
+        redirect_to_action = 'index'
+      else
+        redirect_to_action = lastaction
+      end
+      render :update do |page|
+        page.redirect_to :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
+      end
+    else
+      redirect_to :action => lastaction, :id => params[:id], :escape => false
+    end
+  end
+  private :report_edit_aborted
+
+  def load_edit(key, lastaction = @lastaction)
+    lastaction = calculate_lastaction(lastaction)
+
+    if session.fetch_path(:edit, :key) != key
+      report_edit_aborted(lastaction)
+      return false
+    end
+
+    @edit = session[:edit]
+    true
   end
 
   # Put all time profiles for the current user in session[:time_profiles] for pulldowns
@@ -1356,12 +1372,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # See if there are any errors in the @flash_array
   def flash_errors?
-    unless @flash_array.blank?
-      @flash_array.each { |f| return true if f[:level] == :error }
-    end
-    return false
+    Array(@flash_array).any? { |f| f[:level] == :error }
   end
 
   # Handle the breadcrumb array by either adding, or resetting to, the passed in breadcrumb
@@ -1900,105 +1912,17 @@ class ApplicationController < ActionController::Base
     { :class => object.class.name, :id => object.id }
   end
 
-  # Create view and paginator for a DB records with/without tags
-  def get_view(db, options={})
-    # Build db variables used as hash keys
-    dbname = options[:dbname] || db.to_s.split("::").last.downcase  # Get db name as text
-    db_sym = dbname.to_sym                                          # Get db name as symbol
-
-    # Determine if the view should be refreshed or use the existing view
-    unless session[:view] &&                              # A view exists and
-            session[:view].db.downcase == dbname &&       # the DB matches and
-            params[:refresh] != "y" &&                    # refresh not being forced and
-            (
-              params[:ppsetting] || params[:page] ||      # changed paging or
-#             params[:sortby] || params[:sort_choice] ||  #   sorting or
-#             params[:search] ||                          #   search or
-              params[:type]                               #   gtl type
-            )
-      @refresh_view = true
-      session[:menu_click] = params[:menu_click]      # Creating a new view, remember if came from a menu_click
-      session[:bc] = params[:bc]                      # Remember incoming breadcrumb as well
-    end
-
-    # Build the advanced search @edit hash
-    if (@explorer && !@in_a_form && !["adv_search_clear","tree_select"].include?(action_name))||
-       (action_name == "show_list" && !session[:menu_click])
-      adv_search_build(db.to_s.split("::").last)
-    end
-    if @edit && !@edit[:selected] &&                  # Load default search if search @edit hash exists
-        @settings[:default_search] && @settings[:default_search][db.to_s.to_sym]  # and item in listnav not selected
-      load_default_search(@settings[:default_search][db.to_s.to_sym])
-    end
-
-    parent = options[:parent] || nil                  # Get passed in parent object
-    @parent = parent if parent != nil                 # Save the parent object for the views to use
-    association = options[:association] || nil        # Get passed in association (i.e. "users")
-    view_suffix = options[:view_suffix] || nil        # Get passed in view_suffix (i.e. "VmReconfigureRequest")
-
-    # Build sorting keys - Use association name, if available, else dbname
-    # need to add check for miqreportresult, need to use different sort in savedreports/report tree for saved reports list
-    sortcol_sym = ((association ? association : (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname) ) + "_sortcol").to_sym # Get symbol for sortcol key
-    sortdir_sym = ((association ? association : (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname) ) + "_sortdir").to_sym # Get symbol for sortdir key
-
-    # Set up the list view type (grid/tile/list)
-    @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
-    @gtl_type = @settings[:views][db_sym] if !["scanitemset","miqschedule","pxeserver","customizationtemplate"].include?(db_sym.to_s)                     # Get the list view type
+  def get_view_calculate_gtl_type(db_sym)
+    @gtl_type = @settings[:views][db_sym] unless ['scanitemset', 'miqschedule', 'pxeserver', 'customizationtemplate'].include?(db_sym.to_s)
     # Force list view for certain types and areas
-    @gtl_type = "list" if ["filesystems", "registry_items","chargeback_rates","miq_request"].include?(@listicon)
-    @gtl_type = "list" if @gtl_type.nil? #&& ["scan_profile", "miq_schedule","ops","miq_policy"].include?(@layout)
-    @gtl_type = "grid" if ["vm"].include?(db_sym.to_s) && request.parameters[:controller] == "service"
+    @gtl_type = 'list' if ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(@listicon)
+    @gtl_type = 'list' if @gtl_type.nil?
+    @gtl_type = 'grid' if ['vm'].include?(db_sym.to_s) && request.parameters[:controller] == 'service'
+    @gtl_type
+  end
+  private :get_view_calculate_gtl_type
 
-    # Get the view for this db or use the existing one in the session
-    view = @refresh_view ? get_db_view(db.to_s.split("::").last, :association=>association, :view_suffix=>view_suffix) : session[:view]
-
-    # Check for changed settings in params
-    if params[:ppsetting]                           # User selected new per page value
-      if ["job", "miqtask"].include?(dbname)
-        @settings[:perpage][:job_task] = params[:ppsetting].to_i        # Save per page separate for job/task
-      else
-        @settings[:perpage][PERPAGE_TYPES[@gtl_type]] = params[:ppsetting].to_i # Set the per page setting for this gtl type
-      end
-    elsif params[:sortby] || params[:sort_choice]   # New sort order (by = col click, choice = pull down)
-      if params[:sort_choice]                       # If user chose new sortcol, set sortby parm
-        params[:sortby] = view.headers.index(params[:sort_choice])
-      else
-        params[:sortby] = params[:sortby].to_i - 1
-        params[:sort_choice] = view.headers[params[:sortby]]
-      end
-    end
-
-    # Get the current sort info, else get defaults from the view
-    @sortcol = session[sortcol_sym] == nil ?
-      (view.sortby.nil? ? view.col_order.index(view.col_order.first) : view.col_order.index(view.sortby.first)) :
-      session[sortcol_sym].to_i
-    @sortdir = session[sortdir_sym] == nil ?
-      (view.order == "Descending" ? "DESC" : "ASC") :
-      session[sortdir_sym]
-    # Set/reset the sortby column and order
-    get_sort_col                                  # set the sort column and direction
-    session[sortcol_sym] = @sortcol               # Save the new sort values
-    session[sortdir_sym] = @sortdir
-    view.sortby = [view.col_order[@sortcol]]      # Set sortby array in the view
-    view.order = @sortdir.downcase == "desc" ? "Descending" : "Ascending" # Normalize sort order
-
-    @items_per_page = ["job", "miqtask"].include?(dbname) ?
-      @settings[:perpage][:job_task] :            # Get per page for jobs/tasks
-      (request.parameters[:controller].downcase == "miq_policy" ? ONE_MILLION : @settings[:perpage][PERPAGE_TYPES[@gtl_type]]) # Get per page for this gtl type
-    @items_per_page = ONE_MILLION if ["vm"].include?(db_sym.to_s) && request.parameters[:controller] == "service"
-    if !options[:page].nil?
-      @current_page =  options[:page]
-    else
-      @current_page =  params[:page] == nil ? 1 : params[:page].to_i
-    end
-
-    view.conditions = options[:conditions]        # Get passed in conditions (i.e. tasks date filters)
-
-    # Get the advanced search filter
-    filter = @edit && @edit[:adv_search_applied] && !session[:menu_click] ?
-      MiqExpression.new(@edit[:adv_search_applied][:qs_exp] || @edit[:adv_search_applied][:exp]) :
-      nil
-
+  def get_view_process_search_text
     # Check for new search by name text entered
     if params[:search] &&
        # Disabled search for Storage CIs until backend is fixed to handle evm_display_name field
@@ -2007,21 +1931,26 @@ class ApplicationController < ActionController::Base
     elsif params[:search_text] && @explorer
       @search_text = params[:search_text].blank? ? nil : params[:search_text].strip
     end
+
     # Build sub_filter where clause from search text"OntapLogicalDisk
-    if (@search_text && !@parent && @lastaction == "show_list" && !session[:menu_click]) ||
-       (@search_text && @explorer && !session[:menu_click]) ||
-       (@search_text && @layout == "miq_policy")          # Added to handle search text from list views in control explorer
+    if @search_text && (
+        (!@parent && @lastaction == "show_list" && !session[:menu_click]) ||
+        (@explorer && !session[:menu_click]) ||
+        (@layout == "miq_policy")) # Added to handle search text from list views in control explorer
+
       stxt = @search_text.gsub("_", "`_")                 # Escape underscores
       stxt.gsub!("%", "`%")                               #   and percents
-      if stxt.starts_with?("*") && stxt.ends_with?("*")   # Replace beginning/ending * chars with % for SQL
-        stxt = "%#{stxt[1..-2]}%"
-      elsif stxt.starts_with?("*")
-        stxt = "%#{stxt[1..-1]}"
-      elsif stxt.ends_with?("*")
-        stxt = "#{stxt[0..-2]}%"
-      else
-        stxt = "%#{stxt}%"
-      end
+
+      stxt = if stxt.starts_with?("*") && stxt.ends_with?("*")   # Replace beginning/ending * chars with % for SQL
+               "%#{stxt[1..-2]}%"
+             elsif stxt.starts_with?("*")
+               "%#{stxt[1..-1]}"
+             elsif stxt.ends_with?("*")
+               "#{stxt[0..-2]}%"
+             else
+               "%#{stxt}%"
+             end
+
       if MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :case_sensitive_name_search)
         sub_filter = ["#{view.db_class.table_name}.#{view.col_order.first} like ? escape '`'", stxt]
       else
@@ -2029,46 +1958,113 @@ class ApplicationController < ActionController::Base
         sub_filter = ["lower(#{view.db_class.table_name}.#{view.col_order.first}) like ? escape '`'", stxt.downcase] if !@display
       end
     end
+    sub_filter
+  end
+  private :get_view_process_search_text
 
-    # If doing charts, limit the records to ones showing in the chart
-    if session[:menu_click] && session[:sandboxes][params[:sb_controller]][:chart_reports]
-      chart_reports = session[:sandboxes][params[:sb_controller]][:chart_reports]
-      legend_idx = session[:menu_click].split("_").last.split("-").first.to_i - 1
-      data_idx = session[:menu_click].split("_").last.split("-")[-2].to_i - 1
-      chart_idx = session[:menu_click].split("_").last.split("-").last.to_i
-      cmd, model, typ = session[:menu_click].split("_").first.split("-")
-      report = chart_reports.is_a?(Array) ? chart_reports[chart_idx] : chart_reports
-      data_row = report.table.data[data_idx]
-      if typ == "bytag"
-        where_clause = ['"' + model.downcase.pluralize + '".id IN (?)',
-                        data_row["assoc_ids_#{report.extras[:group_by_tags][legend_idx]}"][model.downcase.to_sym][:on] ]
-      else
-        where_clause = ['"' + model.downcase.pluralize + '".id IN (?)',
-                        data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym] ]
-      end
-    elsif options[:where_clause]
-      where_clause = options[:where_clause]
+  def perpage_key(dbbame)
+   ["job", "miqtask"].include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
+  end
+  private :perpage_key
+
+  # Create view and paginator for a DB records with/without tags
+  def get_view(db, options = {})
+    db     = db.to_s
+    dbname = options[:dbname] || db.split("::").last.downcase # Get db name as text
+    db_sym = dbname.to_sym                                    # Get db name as symbol
+
+    # Determine if the view should be refreshed or use the existing view
+    unless session[:view] &&                          # A view exists and
+            session[:view].db.downcase == dbname &&   # the DB matches and
+            params[:refresh] != "y" &&                # refresh not being forced and
+            (
+              params[:ppsetting] || params[:page] ||  # changed paging or
+              params[:type]                           # gtl type
+            )
+      @refresh_view = true
+      session[:menu_click] = params[:menu_click]      # Creating a new view, remember if came from a menu_click
+      session[:bc]         = params[:bc]              # Remember incoming breadcrumb as well
     end
 
-    # Make a copy of parent object (to avoid saving related objects)
-    parent_copy = parent ? minify_ar_object(parent) : nil
+    # Build the advanced search @edit hash
+    if (@explorer && !@in_a_form && !["adv_search_clear", "tree_select"].include?(action_name)) ||
+       (action_name == "show_list" && !session[:menu_click])
+      adv_search_build(db.split("::").last)
+    end
+    if @edit && !@edit[:selected] &&                  # Load default search if search @edit hash exists
+       @settings.fetch_path(:default_search, db.to_sym) # and item in listnav not selected
+      load_default_search(@settings[:default_search][db.to_sym])
+    end
 
-    # workaround to pass MiqExpression as a filter to paged_view_search for MiqRequest show_list, can't be used with advanced search or other list view screens
-    filter ||= options[:filter]
+    parent      = options[:parent] || nil             # Get passed in parent object
+    @parent     = parent if parent != nil             # Save the parent object for the views to use
+    association = options[:association] || nil        # Get passed in association (i.e. "users")
+    view_suffix = options[:view_suffix] || nil        # Get passed in view_suffix (i.e. "VmReconfigureRequest")
+
+    # Build sorting keys - Use association name, if available, else dbname
+    # need to add check for miqreportresult, need to use different sort in savedreports/report tree for saved reports list
+    sort_prefix = association ? association : (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname)
+    sortcol_sym = "#{sort_prefix}_sortcol".to_sym
+    sortdir_sym = "#{sort_prefix}_sortdir".to_sym
+
+    # Set up the list view type (grid/tile/list)
+    @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
+
+    @gtl_type = get_view_calculate_gtl_type(db_sym)
+
+    # Get the view for this db or use the existing one in the session
+    view = @refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
+
+    # Check for changed settings in params
+    if params[:ppsetting]                             # User selected new per page value
+      @settings[:perpage][perpage_key(dbname)] = params[:ppsetting].to_i
+    elsif params[:sortby]                             # New sort order (by = col click, choice = pull down)
+      params[:sortby]      = params[:sortby].to_i - 1
+      params[:sort_choice] = view.headers[params[:sortby]]
+    elsif params[:sort_choice]                        # If user chose new sortcol, set sortby parm
+      params[:sortby]      = view.headers.index(params[:sort_choice])
+    end
+
+    # Get the current sort info, else get defaults from the view
+    @sortcol = if session[sortcol_sym].nil?
+                 view.sortby.nil? ? view.col_order.index(view.col_order.first) : view.col_order.index(view.sortby.first)
+               else
+                 session[sortcol_sym].to_i
+               end
+    @sortdir = session[sortdir_sym] || (view.order == "Descending" ? "DESC" : "ASC")
+    # Set/reset the sortby column and order
+    get_sort_col                                  # set the sort column and direction
+    session[sortcol_sym] = @sortcol               # Save the new sort values
+    session[sortdir_sym] = @sortdir
+    view.sortby = [view.col_order[@sortcol]]      # Set sortby array in the view
+    view.order = @sortdir.downcase == "desc" ? "Descending" : "Ascending" # Normalize sort order
+
+    @items_per_page = if ["job", "miqtask"].include?(dbname)
+                        @settings[:perpage][:job_task]
+                      else
+                        # Get per page for this gtl type
+                        controller_name.downcase == "miq_policy" ? ONE_MILLION : @settings[:perpage][PERPAGE_TYPES[@gtl_type]]
+                      end
+    @items_per_page = ONE_MILLION if 'vm' == db_sym.to_s && controller_name == 'service'
+
+    @current_page = options[:page] || (params[:page].nil? ? 1 : params[:page].to_i)
+
+    view.conditions = options[:conditions] # Get passed in conditions (i.e. tasks date filters)
+
     # Save the paged_view_search_options for download buttons to use later
     session[:paged_view_search_options] = {
-      :parent=>parent_copy,
-      :parent_method=>options[:parent_method],
-      :targets_hash=>true,
-      :association=>association,
-      :filter=>filter,
-      :sub_filter=>sub_filter,
-      :page=>options[:all_pages] ? 1 : @current_page,
-      :per_page=>options[:all_pages] ? ONE_MILLION : @items_per_page,
-      :where_clause=>where_clause,
-      :named_scope=>options[:named_scope],
-      :display_filter_hash=>options[:display_filter_hash],
-      :userid=>session[:userid]
+      :parent              => parent ? minify_ar_object(parent) : nil, # Make a copy of parent object (to avoid saving related objects)
+      :parent_method       => options[:parent_method],
+      :targets_hash        => true,
+      :association         => association,
+      :filter              => get_view_filter(options),
+      :sub_filter          => get_view_process_search_text,
+      :page                => options[:all_pages] ? 1 : @current_page,
+      :per_page            => options[:all_pages] ? ONE_MILLION : @items_per_page,
+      :where_clause        => get_view_where_clause(options),
+      :named_scope         => options[:named_scope],
+      :display_filter_hash => options[:display_filter_hash],
+      :userid              => session[:userid]
     }
     # Call paged_view_search to fetch records and build the view.table and additional attrs
     view.table, attrs = view.paged_view_search(session[:paged_view_search_options])
@@ -2076,38 +2072,75 @@ class ApplicationController < ActionController::Base
     # adding filters/conditions for download reports
     view.user_categories = attrs[:user_filters]["managed"] if attrs && attrs[:user_filters] && attrs[:user_filters]["managed"]
 
-    view.extras[:total_count] = attrs[:total_count] if attrs[:total_count]
-    view.extras[:auth_count] = attrs[:auth_count] if attrs[:auth_count]
-
-    if attrs[:targets_hash]
-      @targets_hash = attrs[:targets_hash]
-    end
-
-    # Create the pages hash and return with the view
-    pages = Hash.new
-    if ["job", "miqtask"].include?(dbname)
-      pages[:perpage] = @settings[:perpage][:job_task]    # Set per page separate for job/task
-    else
-      pages[:perpage] = @settings[:perpage][PERPAGE_TYPES[@gtl_type]]
-    end
-    pages[:current] = params[:page] == nil ? 1 : params[:page].to_i
-    pages[:items] = view.extras[:auth_count] || view.extras[:total_count]
-    total = pages[:items] / pages[:perpage]
-    total += 1 if pages[:items] % pages[:perpage] != 0
-    pages[:total] = total
-
-# Don't set these, then the gtl view will show all rows (Sprint 66, paging moved to paged_view_search)
-#   @first_item = (pages[:current] - 1) * pages[:perpage]
-#   @last_item = @first_item + pages[:perpage] - 1
+    view.extras[:total_count] = attrs[:total_count]  if attrs[:total_count]
+    view.extras[:auth_count]  = attrs[:auth_count]   if attrs[:auth_count]
+    @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
     # Set up the grid variables for list view, with exception models below
-    unless ["MiqTask", "Job","ProductUpdate","MiqProvision","MiqReportResult"].include?(view.db) || view.db.ends_with?("Build") || @force_no_grid_xml
-      if @gtl_type == "list" || @force_grid_xml                                   # If list view, create XML for the grid
-        @grid_xml = view_to_xml(view, 0, -1, {:association => association})
-      end
+    if !["MiqTask", "Job", "ProductUpdate", "MiqProvision", "MiqReportResult"].include?(view.db) && 
+      !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
+      @grid_xml = view_to_xml(view, 0, -1, :association => association)
     end
-    return view, pages
+
+    [view, get_view_pages(dbname, view)]
   end
+
+  def get_view_where_clause(options)
+    # If doing charts, limit the records to ones showing in the chart
+    if session[:menu_click] && session[:sandboxes][params[:sb_controller]][:chart_reports]
+      menu_click_parts = session[:menu_click].split('_')
+      menu_click_last  = menu_click_parts.last.split('-')
+
+      chart_reports = session[:sandboxes][params[:sb_controller]][:chart_reports]
+      legend_idx    = menu_click_last.first.to_i - 1
+      data_idx      = menu_click_last[-2].to_i - 1
+      chart_idx     = menu_click_last.last.to_i
+      _, model, typ = menu_click_parts.first.split('-')
+      report        = chart_reports.is_a?(Array) ? chart_reports[chart_idx] : chart_reports
+      data_row      = report.table.data[data_idx]
+
+      if typ == "bytag"
+        ["\"#{model.downcase.pluralize}\".id IN (?)",
+          data_row["assoc_ids_#{report.extras[:group_by_tags][legend_idx]}"][model.downcase.to_sym][:on]]
+      else
+        ["\"#{model.downcase.pluralize}\".id IN (?)",
+          data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym]]
+      end
+    elsif options[:where_clause]
+      options[:where_clause]
+    end
+  end
+  private :get_view_where_clause
+
+  def get_view_filter(options)
+    # Get the advanced search filter
+    filter = nil
+    if @edit && @edit[:adv_search_applied] && !session[:menu_click]
+      filter = MiqExpression.new(@edit[:adv_search_applied][:qs_exp] || @edit[:adv_search_applied][:exp])
+    end
+
+    # workaround to pass MiqExpression as a filter to paged_view_search for MiqRequest
+    # show_list, can't be used with advanced search or other list view screens
+    filter ||= options[:filter]
+    filter
+  end
+  private :get_view_filter
+
+  # Create the pages hash and return with the view
+  def get_view_pages(dbname, view)
+    pages = {
+      :perpage => if ["job", "miqtask"].include?(dbname)
+                    @settings[:perpage][:job_task] # Set per page separate for job/task
+                  else
+                    @settings[:perpage][PERPAGE_TYPES[@gtl_type]]
+                  end,
+      :current => params[:page].nil? ? 1 : params[:page].to_i,
+      :items   => view.extras[:auth_count] || view.extras[:total_count]
+    }
+    pages[:total] = (pages[:items] + pages[:perpage] - 1) / pages[:perpage]
+    pages
+  end
+  private :get_view_pages
 
   # Generate an include string to append to "include_hash =" and eval'd
   # This routine is called recursively (passes in the include hash)
@@ -2621,12 +2654,6 @@ class ApplicationController < ActionController::Base
                                                           }.include?(action_name)
       end
     end
-
-# Commented 2.1.0
-#   # Capture new per page setting
-#   if @items_per_page != nil && @gtl_type != nil
-#     @settings[:perpage][@gtl_type.to_sym] = @items_per_page
-#   end
 
     # Save settings hash in the session
     session[:settings] = @settings
