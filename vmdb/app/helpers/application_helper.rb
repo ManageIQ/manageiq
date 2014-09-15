@@ -610,7 +610,6 @@ module ApplicationHelper
           when "view_graph","view_hybrid","view_tabular"
             return @ght_type && @report && @report.graph &&
                 (@zgraph || (@ght_type == "tabular" && @html)) ? false : true
-          return false
         end
       when :savedreports_tree
         case id
