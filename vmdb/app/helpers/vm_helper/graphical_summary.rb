@@ -93,7 +93,7 @@ module VmHelper::GraphicalSummary
 
   def graphical_snapshots
     h = {:label => "Snapshots", :value => @record.number_of(:snapshots), :image => "snapshot"}
-    if role_allows(:feature => "vm_snapshot_show_list")
+    if role_allows(:feature => "vm_snapshot_show_list") && @record.supports_snapshots?
       h[:link] = link_to("", {:action => 'show', :id => @record, :display => 'snapshot_info'}, :remote => @explorer, :title => "Show virtual machine snapshot information")
     end
     h

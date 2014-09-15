@@ -221,7 +221,7 @@ module VmHelper::TextualSummary
   def textual_snapshots
     num = @record.number_of(:snapshots)
     h = {:label => "Snapshots", :image => "snapshot", :value => (num == 0 ? "None" : num)}
-    if role_allows(:feature => "vm_snapshot_show_list")
+    if role_allows(:feature => "vm_snapshot_show_list") && @record.supports_snapshots?
       h[:title] = "Show the snapshot info for this VM"
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'snapshot_info')
