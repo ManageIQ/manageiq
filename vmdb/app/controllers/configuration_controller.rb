@@ -190,10 +190,10 @@ class ConfigurationController < ApplicationController
 
   # Assign a tag to a set of objects
   def mytag_create
-    if params[:newtags] && !params[:newtags].blank?     # If user entered tags
+    if params[:newtags] && params[:newtags].present?     # If user entered tags
       newtags = params[:newtags]
       invalid_chars = newtags.gsub(/[\w\s]/, "")
-      if !invalid_chars.blank?
+      if invalid_chars.present?
         invalid_chars = invalid_chars.split(//).uniq.join # Get the unique invalid characters
         msg = "Invalid character".pluralize(invalid_chars.length)
         add_flash(msg + " #{invalid_chars} found in entered tags, only letters, numbers, and underscores are allowed.", :error)
@@ -474,9 +474,9 @@ class ConfigurationController < ApplicationController
     @timeprofile = @edit[:timeprofile]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:profile_type] = params[:profile_type] if params[:profile_type]
-    @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.has_key?(:profile_tz)
-    @redraw = true if params.has_key?(:profile_tz)
-    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params.has_key?(:rollup_daily)
+    @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.key?(:profile_tz)
+    @redraw = true if params.key?(:profile_tz)
+    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params._key?(:rollup_daily)
     @edit[:new][:profile_key] = @edit[:new][:profile_type] == "user" ? session[:userid] : nil
     params.each do |var, val|
       vars=var.split("_")
@@ -514,7 +514,7 @@ class ConfigurationController < ApplicationController
       page.replace('timeprofile_days_hours_div',
                    :partial => "timeprofile_days_hours",
                    :locals  => {:disabled => false}) if @redraw
-      if params.has_key?(:profile_tz) && ["super_administrator", "administrator"].include?(session[:userrole])
+      if params.key?(:profile_tz) && ["super_administrator", "administrator"].include?(session[:userrole])
         if params[:profile_tz].blank?
           page << "$('rollup_daily_tr').hide();"
         else
