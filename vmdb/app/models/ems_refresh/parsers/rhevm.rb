@@ -168,10 +168,10 @@ module EmsRefresh::Parsers::Rhevm
       end
 
       new_result = {
+        :type => 'HostRedhat',
         :ems_ref => host_inv[:href],
         :ems_ref_obj => host_inv[:href],
         :name => host_inv[:name] || hostname,
-        :type => 'HostRedhat',
         :hostname => hostname,
         :ipaddress => ipaddress,
         :uid_ems => host_inv[:id],
@@ -539,6 +539,7 @@ module EmsRefresh::Parsers::Rhevm
 #      uid = hardware[:bios]
 
       new_result = {
+        :type => template ? "TemplateRedhat" : "VmRedhat",
         :ems_ref => vm_inv[:href],
         :ems_ref_obj => vm_inv[:href],
         :uid_ems => vm_inv[:id],
@@ -551,6 +552,7 @@ module EmsRefresh::Parsers::Rhevm
 #        :standby_action => standby_act,
         :connection_state => 'connected',
 #        :cpu_affinity => cpu_affinity,
+        :template => template,
 
 #        :memory_reserve => memory["reservation"],
 #        :memory_reserve_expand => memory["expandableReservation"].to_s.downcase == "true",
@@ -572,7 +574,6 @@ module EmsRefresh::Parsers::Rhevm
         :hardware => hardware,
         :custom_attributes => self.vm_inv_to_custom_attribute_hashes(vm_inv),
         :snapshots => self.vm_inv_to_snapshot_hashes(vm_inv),
-        :template => template,
       }
 
       # Attach to the cluster's default resource pool

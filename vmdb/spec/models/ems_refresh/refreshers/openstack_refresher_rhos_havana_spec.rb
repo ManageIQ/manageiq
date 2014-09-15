@@ -125,8 +125,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   # end
 
   def assert_specific_flavor
-    @flavor = Flavor.where(:name => "m1.ems_refresh_spec").first
-    @flavor.should be_kind_of(FlavorOpenstack)
+    @flavor = FlavorOpenstack.where(:name => "m1.ems_refresh_spec").first
     @flavor.should have_attributes(
       :name        => "m1.ems_refresh_spec",
       :description => nil,
@@ -165,8 +164,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_floating_ip
-    @ip = FloatingIp.where(:address => "10.8.97.2").first
-    @ip.should be_kind_of(FloatingIpOpenstack)
+    @ip = FloatingIpOpenstack.where(:address => "10.8.97.2").first
     @ip.should have_attributes(
       :address => "10.8.97.2",
     )
@@ -174,7 +172,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_key_pair
-    @kp = AuthPrivateKey.where(:name => "EmsRefreshSpec-KeyPair").first
+    @kp = AuthKeyPairOpenstack.where(:name => "EmsRefreshSpec-KeyPair").first
     @kp.should have_attributes(
       :name        => "EmsRefreshSpec-KeyPair",
       :fingerprint => "1d:e2:f2:f4:05:0c:d5:00:95:c5:78:22:9f:89:61:a5"
@@ -182,7 +180,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_security_group
-    @sg = SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup").first
+    @sg = SecurityGroupOpenstack.where(:name => "EmsRefreshSpec-SecurityGroup").first
     @sg.should have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup",
       :description => "EmsRefreshSpec-SecurityGroup description",
@@ -248,7 +246,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_template
-    @template = MiqTemplate.where(:name => "EmsRefreshSpec-Image").first
+    @template = TemplateOpenstack.where(:name => "EmsRefreshSpec-Image").first
     @template.should have_attributes(
       :template              => true,
       :ems_ref_obj           => nil,
@@ -284,7 +282,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_vm_powered_on
-    @vm = Vm.where(:name => "EmsRefreshSpec-PoweredOn").first
+    @vm = VmOpenstack.where(:name => "EmsRefreshSpec-PoweredOn").first
     @vm.should have_attributes(
       :template              => false,
       :ems_ref_obj           => nil,
@@ -366,18 +364,18 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_template_created_from_vm
-    @snap = MiqTemplate.where(:name => "EmsRefreshSpec-Snapshot").first
+    @snap = TemplateOpenstack.where(:name => "EmsRefreshSpec-Snapshot").first
     @snap.should_not be_nil
     #FIXME: @snap.parent.should == @vm
   end
 
   def assert_specific_vm_created_from_snapshot_template
-    t = Vm.where(:name => "EmsRefreshSpec-PoweredOn-FromSnapshot").first
+    t = VmOpenstack.where(:name => "EmsRefreshSpec-PoweredOn-FromSnapshot").first
     t.parent.should == @snap
   end
 
   def assert_specific_vm_paused
-    v = Vm.where(:name => "EmsRefreshSpec-Paused").first
+    v = VmOpenstack.where(:name => "EmsRefreshSpec-Paused").first
     v.should have_attributes(
       :template              => false,
       :ems_ref_obj           => nil,
@@ -453,7 +451,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_vm_suspended
-    v = Vm.where(:name => "EmsRefreshSpec-Suspended").first
+    v = VmOpenstack.where(:name => "EmsRefreshSpec-Suspended").first
     v.should have_attributes(
       :template              => false,
       :ems_ref_obj           => nil,

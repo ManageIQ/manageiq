@@ -1,12 +1,4 @@
 class EmsOpenstack < EmsCloud
-  def self.default_vm_type
-    @default_vm_type ||= "VmOpenstack".freeze
-  end
-
-  def self.default_template_type
-    @default_template_type ||= "TemplateOpenstack".freeze
-  end
-
   def self.ems_type
     @ems_type ||= "openstack".freeze
   end

@@ -1268,19 +1268,12 @@ class Host < ActiveRecord::Base
     return os_name, os_type
   end
 
-  def detect_type
-    klass = "Host#{self.vmm_vendor.to_s.downcase.classify}".constantize
-    return "HostVmwareEsx" if klass == HostVmware && ["esx", "esxi"].include?(self.vmm_product.to_s.downcase)
-    return klass.name
-  rescue NameError
-    return "Host"
-  end
-
   def detect_discovered_hypervisor(ost, ipaddr)
     log_header = 'MIQ(Host.detect_discovered_hypervisor)'
     find_method = :find_by_ipaddress
     if ost.hypervisor.include?(:hyperv)
       self.name        = "Microsoft Hyper-V (#{ipaddr})"
+      self.type        = "HostMicrosoft"
       self.ipaddress   = ipaddr
       self.vmm_vendor  = "microsoft"
       self.vmm_product = "Hyper-V"
@@ -1302,9 +1295,11 @@ class Host < ActiveRecord::Base
           $log.warn "#{log_header} Cannot connect to ESX Host with IP Address: [#{ipaddr}], Userid: [#{self.authentication_userid(:ws)}] because #{err.message}"
         end
       end
+      self.type = %w(esx esxi).include?(self.vmm_product.to_s.downcase) ? "HostVmwareEsx" : "HostVmware"
     elsif ost.hypervisor.include?(:ipmi)
       find_method       = :find_by_ipmi_address
       self.name         = "IPMI (#{ipaddr})"
+      self.type         = "Host"
       self.vmm_vendor   = "unknown"
       self.vmm_product  = nil
       self.ipmi_address = ipaddr
@@ -1312,8 +1307,8 @@ class Host < ActiveRecord::Base
       self.hostname     = nil
     else
       self.vmm_vendor   = ost.hypervisor.join(", ")
+      self.type         = "Host"
     end
-    self.type = detect_type
 
     find_method
   end

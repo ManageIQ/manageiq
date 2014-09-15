@@ -188,6 +188,7 @@ module EmsRefresh::Parsers::Vc
       end
 
       new_result = {
+        :type             => %w(esx esxi).include?(product_name.to_s.downcase) ? "HostVmwareEsx" : "HostVmware",
         :ems_ref          => mor,
         :ems_ref_obj      => mor,
         :name             => hostname,
@@ -728,6 +729,7 @@ module EmsRefresh::Parsers::Vc
       uid = hardware[:bios]
 
       new_result = {
+        :type             => template ? "TemplateVmware" : "VmVmware",
         :ems_ref          => mor,
         :ems_ref_obj      => mor,
         :uid_ems          => uid,

@@ -161,7 +161,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
   end
 
   def assert_specific_host
-    @host = Host.find_by_name("VI4ESXM1.manageiq.com")
+    @host = HostVmware.find_by_name("VI4ESXM1.manageiq.com")
     @host.should have_attributes(
       :ems_ref          => "host-9",
       :ems_ref_obj      => VimString.new("host-9", :HostSystem, :ManagedObjectReference),
@@ -317,7 +317,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
   end
 
   def assert_specific_vm
-    v = Vm.find_by_name("JoeF 4.0.1")
+    v = VmVmware.find_by_name("JoeF 4.0.1")
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "vm-11342",

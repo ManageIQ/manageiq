@@ -139,12 +139,6 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 
-  def detect_type
-    model_name = self.class.model_name_from_emstype(self.emstype)
-    return nil if model_name == "ExtManagementSystem"
-    return model_name
-  end
-
   def self.model_name_from_emstype(emstype)
     leaf_subclasses.each do |k|
       return k.name if k.ems_type == emstype.downcase

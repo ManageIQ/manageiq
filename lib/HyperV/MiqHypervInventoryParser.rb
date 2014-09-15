@@ -112,6 +112,7 @@ module MiqHypervInventoryParser
       storages = storage_uids[:storage_id].collect {|k,v| v}
 
       new_result = {
+        :type => "HostMicrosoft",
         :name => hostname,
         :hostname => hostname,
         :ipaddress => ipaddress,
@@ -477,6 +478,7 @@ module MiqHypervInventoryParser
 #      hardware[:networks] = self.vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
 
       new_result = {
+        :type => "VmMicrosoft",
         :uid_ems => mor,
         :name => URI.decode(vm_inv[:display_name].to_s.AsciiToUtf8),
         :vendor => "microsoft",

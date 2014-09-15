@@ -85,9 +85,6 @@ module EmsRefresh::SaveInventory
           disconnects.delete(found)
         end
 
-        # Make sure to set the type as VMs use Single-Table Inheritance (STI)
-        found.type ||= found.detect_type || (found.template? ? ems.class.default_template_type : ems.class.default_vm_type)
-
         # Set the power state
         found.state = key_backup[:power_state] unless key_backup[:power_state].nil?
 

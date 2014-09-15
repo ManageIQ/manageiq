@@ -4,18 +4,6 @@ class EmsVmware < EmsInfra
   before_save :stop_event_monitor_queue_on_change
   before_destroy :stop_event_monitor
 
-  def self.default_host_type
-    @default_host_type ||= "HostVmwareEsx".freeze
-  end
-
-  def self.default_vm_type
-    @default_vm_type ||= "VmVmware".freeze
-  end
-
-  def self.default_template_type
-    @default_template_type ||= "TemplateVmware".freeze
-  end
-
   def self.ems_type
     @ems_type ||= "vmwarews".freeze
   end

@@ -1,19 +1,6 @@
 $:.push(File.expand_path(File.join(Rails.root, %w{.. lib kvm} )))
 
 class EmsKvm < EmsInfra
-
-  def self.default_host_type
-    @default_host_type ||= "HostKvm".freeze
-  end
-
-  def self.default_vm_type
-    @default_vm_type ||= "VmKvm".freeze
-  end
-
-  def self.default_template_type
-    @default_template_type ||= "TemplateKvm".freeze
-  end
-
   def self.ems_type
     @ems_type ||= "kvm".freeze
   end

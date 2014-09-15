@@ -127,7 +127,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
   end
 
   def assert_specific_host
-    @host = Host.find_by_name("per410-rh1")
+    @host = HostRedhat.find_by_name("per410-rh1")
     @host.should have_attributes(
       :ems_ref          => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
       :ems_ref_obj      => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
@@ -228,7 +228,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
   end
 
   def assert_specific_vm_powered_on
-    v = Vm.find_by_name("EmsRefreshSpec-PoweredOn")
+    v = VmRedhat.find_by_name("EmsRefreshSpec-PoweredOn")
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876",
@@ -379,7 +379,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
   end
 
   def assert_specific_vm_powered_off
-    v = Vm.find_by_name("EmsRefreshSpec-PoweredOff")
+    v = VmRedhat.find_by_name("EmsRefreshSpec-PoweredOff")
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/26a050fb-62c3-4645-9088-be6efec860e1",
@@ -524,7 +524,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
   end
 
   def assert_specific_template
-    v = MiqTemplate.find_by_name("EmsRefreshSpec-Template")
+    v = TemplateRedhat.find_by_name("EmsRefreshSpec-Template")
     v.should have_attributes(
       :template              => true,
       :ems_ref               => "/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613",

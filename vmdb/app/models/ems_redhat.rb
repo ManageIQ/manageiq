@@ -1,16 +1,4 @@
 class EmsRedhat < EmsInfra
-  def self.default_host_type
-    @default_host_type ||= "HostRedhat".freeze
-  end
-
-  def self.default_vm_type
-    @default_vm_type ||= "VmRedhat".freeze
-  end
-
-  def self.default_template_type
-    @default_template_type ||= "TemplateRedhat".freeze
-  end
-
   def self.ems_type
     @ems_type ||= "rhevm".freeze
   end
