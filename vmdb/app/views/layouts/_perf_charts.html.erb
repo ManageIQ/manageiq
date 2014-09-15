@@ -30,9 +30,8 @@
 
         <% if @html %>
           <br clear="all"/>
-          <fieldset style="float:left;">
+          <hr>
           <%= @html.html_safe %>
-          </fieldset>
         <% end %>
       <% elsif perf_parent? %><%# Show side by side VM/Parent charts %>
         <% pcharts = @temp[:parent_charts] %>
@@ -120,9 +119,8 @@
 
           <% if @html %>
             <br clear="all"/>
-            <fieldset style="float:left;">
+            <hr>
             <%= @html.html_safe %>
-            </fieldset>
           <% end %>
         </td></tr>
         <tr><td>
@@ -154,9 +152,8 @@
 
           <% if @c_html %>
             <br clear="all"/>
-            <fieldset style="float:left;">
+            <hr>
             <%= @c_html.html_safe %>
-            </fieldset>
           <% end %>
         </td></tr></table>
       <% end %>
