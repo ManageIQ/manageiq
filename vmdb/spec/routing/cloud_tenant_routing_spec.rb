@@ -29,4 +29,10 @@ describe EmsCloudController do
       expect(post("/cloud_tenant/show_list")).to route_to("cloud_tenant#show_list")
     end
   end
+
+  describe "#download_data" do
+    it "routes with GET" do
+      expect(get("/cloud_tenant/download_data")).to route_to("cloud_tenant#download_data")
+    end
+  end
 end
