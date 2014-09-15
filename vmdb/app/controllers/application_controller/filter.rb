@@ -356,50 +356,10 @@ module ApplicationController::Filter
       # Check incoming date and time values
       # Copy FIND exp_skey to exp_key so following IFs work properly
       @edit[@expkey][:exp_key] = @edit[@expkey][:exp_skey] if @edit[@expkey][:exp_typ] == "FIND"
-      if params[:miq_date_1_0]                                # First date selector
-        if @edit[@expkey][:exp_value][0].to_s.include?(":")   # Already has a time, just swap in the date
-          @edit[@expkey][:exp_value][0] = params[:miq_date_1_0] + " " + @edit[@expkey][:exp_value][0].split(" ").last
-        else                                                  # No time already, add in midnight if needed
-          @edit[@expkey][:exp_value][0] = params[:miq_date_1_0] +
-            ((@edit[@expkey][:val1][:type] == :datetime && @edit[@expkey][:exp_key] != EXP_IS) ? " 00:00" : "")
-        end
-      end
-      if params[:miq_date_1_1]                                # 2nd date selector, only on FROM
-        if @edit[@expkey][:exp_value][1].to_s.include?(":")   # Already has a time, just swap in the date
-          @edit[@expkey][:exp_value][1] = params[:miq_date_1_1] + " " + @edit[@expkey][:exp_value][1].split(" ").last
-        else                                                  # No time already, add in midnight if needed
-          @edit[@expkey][:exp_value][1] = params[:miq_date_1_1] +
-            (@edit[@expkey][:val1][:type] == :datetime ? " 00:00" : "")
-        end
-      end
-      if params[:miq_date_2_0]                                # First date selector in FIND/CHECK
-        if @edit[@expkey][:exp_cvalue][0].to_s.include?(":")  # Already has a time, just swap in the date
-          @edit[@expkey][:exp_cvalue][0] = params[:miq_date_2_0] + " " + @edit[@expkey][:exp_cvalue][0].split(" ").last
-        else                                                  # No time already, add in midnight if needed
-          @edit[@expkey][:exp_cvalue][0] = params[:miq_date_2_0] +
-            ((@edit[@expkey][:val2][:type] == :datetime && @edit[@expkey][:exp_ckey] != EXP_IS) ? " 00:00" : "")
-        end
-      end
-      if params[:miq_date_2_1]                                # 2nd date selector, only on FROM
-        if @edit[@expkey][:exp_cvalue][1].to_s.include?(":")  # Already has a time, just swap in the date
-          @edit[@expkey][:exp_cvalue][1] = params[:miq_date_2_1] + " " + @edit[@expkey][:exp_cvalue][1].split(" ").last
-        else                                                  # No time already, add in midnight if needed
-          @edit[@expkey][:exp_cvalue][1] = params[:miq_date_2_1] +
-            (@edit[@expkey][:val2][:type] == :datetime ? " 00:00" : "")
-        end
-      end
-      if params[:miq_time_1_0]
-        @edit[@expkey][:exp_value][0] = @edit[@expkey][:exp_value][0].split(" ").first + " " + params[:miq_time_1_0]
-      end
-      if params[:miq_time_1_1]
-        @edit[@expkey][:exp_value][1] = @edit[@expkey][:exp_value][1].split(" ").first + " " + params[:miq_time_1_1]
-      end
-      if params[:miq_time_2_0]
-        @edit[@expkey][:exp_cvalue][0] = @edit[@expkey][:exp_cvalue][0].split(" ").first + " " + params[:miq_time_2_0]
-      end
-      if params[:miq_time_2_1]
-        @edit[@expkey][:exp_cvalue][1] = @edit[@expkey][:exp_cvalue][1].split(" ").first + " " + params[:miq_time_2_1]
-      end
+      process_datetime_selector("1_0", :exp_key)  # First date selector
+      process_datetime_selector("1_1")            # 2nd date selector, only on FROM
+      process_datetime_selector("2_0", :exp_ckey) # First date selector in FIND/CHECK
+      process_datetime_selector("2_1")            # 2nd date selector, only on FROM
 
       # Check incoming FROM/THROUGH date/time choice values
       if params[:chosen_from_1]
@@ -1820,5 +1780,28 @@ module ApplicationController::Filter
     end
   end
   private :process_datetime_expression_field
+
+  def process_datetime_selector(param_key_suffix, exp_key = nil)
+    param_date_key  = "miq_date_#{param_key_suffix}".to_sym
+    param_time_key  = "miq_time_#{param_key_suffix}".to_sym
+    return unless params[param_date_key] || params[param_time_key]
+
+    exp_value_index = param_key_suffix[-1].to_i
+    value_key       = "val#{param_key_suffix[0]}".to_sym
+    exp_value_key   = param_key_suffix.starts_with?("1") ? :exp_value : :exp_cvalue
+    exp             = @edit[@expkey]
+
+    date = params[param_date_key] || exp[exp_value_key][exp_value_index].split(' ').first
+    time = params[param_time_key] || exp[exp_value_key][exp_value_index].split(' ').last
+
+    if time.to_s.blank? && exp[value_key][:type] == :datetime && exp[exp_key] != EXP_IS
+      time = "00:00" # If time is blank, add in midnight if needed
+    end
+
+    time = " #{time}" unless time.to_s.blank? # Prepend a blank, if time is non-blank
+
+    exp[exp_value_key][exp_value_index] = "#{date}#{time}"
+  end
+  private :process_datetime_selector
 
 end
