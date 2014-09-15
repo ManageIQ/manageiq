@@ -4,16 +4,9 @@ require "spec_helper"
 
 describe Metric do
   before(:each) do
-    GC.disable
-
     MiqRegion.seed
 
     guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-  end
-
-  after(:each) do
-    GC.enable
-    GC.start
   end
 
   context "as vmware" do
