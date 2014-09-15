@@ -83,10 +83,10 @@ module ReportFormatter
           end
 
           if row == 0
-            output << '<tr class="row0">'
+            output << '<tr class="row0 no-hover">'
             row = 1
           else
-            output << '<tr class="row1">'
+            output << '<tr class="row1 no-hover">'
             row = 0
           end
           mri.col_formats ||= Array.new                 # Backward compat - create empty array for formats
@@ -149,10 +149,10 @@ module ReportFormatter
 
         if mri.db == "VimUsage"                   # Output usage totals
           if row == 0
-            output << '<tr class="row0">'
+            output << '<tr class="row0 no-hover">'
             row = 1
           else
-            output << '<tr class="row1">'
+            output << '<tr class="row1 no-hover">'
             row = 0
           end
           output << "<td><strong>Totals:</strong></td>"
