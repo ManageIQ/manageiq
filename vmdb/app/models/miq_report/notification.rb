@@ -80,9 +80,9 @@ module MiqReport::Notification
 
   def notify_email_body(url, result, recipients)
     if self.table_has_records?
-      "Please find attached scheduled report \"#{self.name}\"<br/><br/>This report was sent to: #{recipients.join(", ")}<br/><br/>"
+      "Please find attached scheduled report \"#{name}\". This report was sent to: #{recipients.join(", ")}."
     else
-      "No records found for scheduled report \"#{self.name}\""
+      "No records found for scheduled report \"#{name}\""
     end
   end
 end
