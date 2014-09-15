@@ -400,9 +400,9 @@ class ConfigurationController < ApplicationController
     hour = hr.to_i
     case hour
     when 0..10  then from = to = "AM"
-    when 11     then from = "AM"; to = "PM"
+    when 11     then from, to = ["AM", "PM"]
     when 12..22 then from = to = "PM"
-    else             from = "PM"; to = "AM"
+    else             from, to = ["PM", "AM"]
     end
     hour = hour >= 12 ? hour - 12 : hour
     "#{hours[hour - 1]}#{from}-#{hours[hour]}#{to}"
