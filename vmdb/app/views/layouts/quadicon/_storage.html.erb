@@ -2,7 +2,7 @@
 <% height = width %>
 <% if @settings[:quadicons][:storage] %>
 	<div class="flobj"><img src="/images/icons/<%= size %>/base.png" width="<%= size %>" height="<%= size %>"/></div>
-	<div class="flobj a<%= size %>"><img src="/images/icons/new/storagetype-<%= h(item.store_type.downcase)%>.png"/></div>
+	<div class="flobj a<%= size %>"><img src="/images/icons/new/storagetype-<%= item.store_type.nil? ? "unknown" : h(item.store_type.to_s.downcase)%>.png"/></div>
 	<% hcount = item.v_total_hosts	%><%# Get the Host count %>
 	<% vcount = item.v_total_vms	%><%# Get the VM count %>
 		<div class="flobj b<%= size %>"><p><%= vcount %></p></div>
