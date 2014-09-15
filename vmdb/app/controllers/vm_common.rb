@@ -617,14 +617,14 @@ module VmCommon
       unallocated_space_percent = disk.unallocated_space_percent
       unallocated_space_percent = (unallocated_space_percent*10).round/10.0 if !unallocated_space_percent.nil?
 
-      srow = root.add_element("row", {"id"=>"Disk_#{idx}", "class"=>"css1", "bgColor"=>CD_COLOR_SECTION, "style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;color:black; text-align: center"})
-      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"Disk #{idx}","style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;text-align: left;height:28px;"}).text = calculate_disk_name(disk)
-      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.disk_type}","style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;text-align: left;height:28px;"}).text = disk.disk_type
-      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.mode}","style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;text-align: left;height:28px;"}).text = disk.mode
-      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.partitions_aligned}","style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;text-align: left;height:28px;"}).text = disk.partitions_aligned
-      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{calculate_size(disk.size)}","style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;text-align: right;height:28px;"}).text = calculate_size(disk.size)
-      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{calculate_size(disk.size_on_disk)}","style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;text-align: right;height:28px;"}).text = calculate_size(disk.size_on_disk)
-      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.used_percent_of_provisioned}","style"=>"background-color: #f0f0f0; border-bottom: 1px solid #999999;text-align: right;height:28px;"}).text = disk.used_percent_of_provisioned
+      srow = root.add_element("row", {"id"=>"Disk_#{idx}"})
+      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"Disk #{idx}"}).text = calculate_disk_name(disk)
+      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.disk_type}"}).text = disk.disk_type
+      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.mode}"}).text = disk.mode
+      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.partitions_aligned}",}).text = disk.partitions_aligned
+      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{calculate_size(disk.size)}"}).text = calculate_size(disk.size)
+      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{calculate_size(disk.size_on_disk)}"}).text = calculate_size(disk.size_on_disk)
+      srow.add_element("cell", {"image"=>"blank.gif", "title"=>"#{disk.used_percent_of_provisioned}"}).text = disk.used_percent_of_provisioned
     end
     return xml.to_s
   end

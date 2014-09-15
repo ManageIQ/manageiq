@@ -117,8 +117,10 @@ function miqInitGrid(grid_name){
 	grid.imgURL = "/images/dhtmlxgrid/";
 	grid.setSkin(options['skin']);
 
-	if (options['alt_row']) {
-		grid.enableAlterCss("miq_row0", "miq_row1");
+if (options['alt_row']) {
+    grid.enableAlterCss("miq_row0", "miq_row1");
+  } else if (options['alt_row_no_hover']) {
+      grid.enableAlterCss("miq_row0 no-hover", "miq_row1 no-hover");
 	} else {
 		grid.enableAlterCss("", "");
 	}
