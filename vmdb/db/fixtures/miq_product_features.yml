@@ -1552,7 +1552,7 @@
       - :name: Run Now
         :description: Queue up Schedules to run now
         :feature_type: control
-        :identifier: schedule_run_now
+        :identifier: miq_report_schedule_run_now
     - :name: Modify
       :description: Modify Schedules
       :feature_type: admin
@@ -1561,23 +1561,23 @@
       - :name: Add
         :description: Add a Schedule
         :feature_type: admin
-        :identifier: schedule_add
+        :identifier: miq_report_schedule_add
       - :name: Edit
         :description: Edit a Schedule
         :feature_type: admin
-        :identifier: schedule_edit
+        :identifier: miq_report_schedule_edit
       - :name: Delete
         :description: Delete a Schedule
         :feature_type: admin
-        :identifier: schedule_delete
+        :identifier: miq_report_schedule_delete
       - :name: Enable
         :description: Enable a Schedule
         :feature_type: admin
-        :identifier: schedule_enable
+        :identifier: miq_report_schedule_enable
       - :name: Disable
         :description: Disable a Schedule
         :feature_type: admin
-        :identifier: schedule_disable
+        :identifier: miq_report_schedule_disable
   - :name: Dashboards
     :description: Manage Dashboard Accordion
     :feature_type: node

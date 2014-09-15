@@ -43,7 +43,7 @@
       :title: "Delete this Report from the Database"
       :url_parms: '&refresh=y'
       :confirm: "The selected Reports will be permanently removed from the database. Are you sure you want to delete this Report?"
-    - :button: miq_report_schedules
+    - :button: miq_report_schedule_add
       :image: schedule
       :text: "Add a new Schedule"
       :title: "Add a new Schedule"
