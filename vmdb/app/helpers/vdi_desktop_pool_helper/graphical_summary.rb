@@ -59,15 +59,4 @@ module VdiDesktopPoolHelper::GraphicalSummary
     h
   end
 
-  def graphical_vdi_sessions
-    num = @record.vdi_sessions.count
-    h = {:label => ui_lookup(:tables=>"vdi_session"), :image => "vdi_session", :value => num}
-    if num > 0
-      h[:link]  = link_to("", {:controller => 'vdi_desktop_pool', :action =>'vdi_sessions',
-                                :id => @record}, :title => "Show all #{ui_lookup(:tables=>"vdi_session")}",
-                                :onclick => "return miqCheckForChanges()", :db => "vdi_desktop_pool")
-    end
-    h
-  end
-
 end
