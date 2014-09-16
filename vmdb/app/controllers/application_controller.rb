@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_filter :set_user_time_zone
+  before_filter :set_gettext_locale
   after_filter :set_global_session_data, :except => [:window_sizes]
 
   ensure_security_headers
