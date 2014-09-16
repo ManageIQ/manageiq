@@ -488,6 +488,18 @@ module ApplicationHelper
       available = CustomButton.available_for_user(session[:userid], cbs.name) # get all uri records for this user for specified uri set
       available = available.select { |b| cbs.members.include?(b) }            # making sure available_for_user uri is one of the members
       group[:buttons] = available.collect { |cb| create_raw_custom_button_hash(cb, record) }.uniq
+      if cbs[:set_data][:button_order] # Show custom buttons in the order they were saved
+        ordered_buttons = []
+        cbs[:set_data][:button_order].each do |bidx|
+          group[:buttons].each do |b|
+            if bidx == b[:id] and !ordered_buttons.include?(b)
+              ordered_buttons.push(b)
+              break
+            end
+          end
+        end
+        group[:buttons] = ordered_buttons
+      end
       group
     end
   end
