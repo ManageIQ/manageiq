@@ -1,0 +1,21 @@
+= render :partial => "layouts/flash_msg"
+= form_tag({:action => "discover"},
+           {:id     => "discover_form"}) do
+  = render :partial => "layouts/discover_credentials",
+           :locals  => {:label => "Credentials"}
+  %table{:width => "100%"}
+    %tr
+      %td{:align => "right"}
+        #buttons_on
+          = button_tag("Start",
+                       :name  => "start",
+                       :class => "btn btn-primary",
+                       :alt   => t = "Start the Host Discovery",
+                       :title => t,
+                       :type  => "submit")
+          = button_tag("Cancel",
+                       :name  => "cancel",
+                       :class => "btn btn-default",
+                       :alt   => t = "Cancel",
+                       :title => t,
+                       :type  => "submit")
