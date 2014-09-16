@@ -4,7 +4,7 @@ class SecurityGroup < ActiveRecord::Base
 
   acts_as_miq_taggable
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "EmsCloud"
   belongs_to :cloud_network
   belongs_to :cloud_tenant
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
