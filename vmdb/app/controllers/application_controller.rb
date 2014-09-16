@@ -1962,7 +1962,7 @@ class ApplicationController < ActionController::Base
   end
   private :get_view_process_search_text
 
-  def perpage_key(dbbame)
+  def perpage_key(dbname)
    ["job", "miqtask"].include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
   end
   private :perpage_key
