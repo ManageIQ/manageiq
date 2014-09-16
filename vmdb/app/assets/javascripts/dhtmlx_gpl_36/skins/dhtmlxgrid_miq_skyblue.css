@@ -73,6 +73,10 @@ div.gridbox_style3 table.obj td {
   cursor: pointer;
   color: #4d5258;
   }
+
+div.gridbox_style3 table.obj tr.no-hover:hover {
+  background: transparent;
+}
 <% if @temp && @temp[:ro_grid] %>
   div.gridbox_style3 table.obj tr td:hover {
     background: #d5ecf8 !important; 
@@ -98,10 +102,17 @@ div.gridbox_style3 .dhx_combo_edit {
 }
 div.gridbox_style3 table.obj tr.rowselected td.cellselected, div.gridbox_style3 table.obj td.cellselected {
 }
-div.gridbox_style3 .miq_row0 {
+div.gridbox_style3 table.obj tr.miq_row0 {
   background-color: #fff;
 }
-div.gridbox_style3 .miq_row1 {
+div.gridbox_style3 table.obj tr.miq_row1 {
+  background: #f5f5f5;
+}
+
+div.gridbox_style3 table.obj tr.miq_row0.no-hover:hover {
+  background: #fff !important;
+}
+div.gridbox_style3 table.obj tr.miq_row1.no-hover:hover {
   background: #f5f5f5 !important;
 }
 
