@@ -7,5 +7,6 @@ module MiqAeMethodService
     expose :vms_and_templates,     :association => true
     expose :miq_templates,         :association => true
     expose :floating_ips,          :association => true
+    expose :cloud_resource_quotas, :association => true
   end
 end
