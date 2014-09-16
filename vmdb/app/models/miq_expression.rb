@@ -1473,7 +1473,7 @@ class MiqExpression
 
       new_parent = {
         :macro       => ref.macro,
-        :path        => [parent[:path], assoc.to_s].join("."),
+        :path        => [parent[:path], determine_relat_path(ref)].join("."),
         :assoc       => assoc,
         :assoc_class => assoc_class,
         :root        => parent[:root]
@@ -1812,5 +1812,15 @@ class MiqExpression
     end
 
     model
+  end
+
+  def self.determine_relat_path(ref)
+    last_path = ref.name.to_s
+    class_from_association_name = model_class(last_path)
+    return last_path unless class_from_association_name
+
+    association_class = ref.klass
+    last_path = association_class.to_s.underscore if association_class < class_from_association_name
+    last_path
   end
 end #class MiqExpression
