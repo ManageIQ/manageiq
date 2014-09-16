@@ -39,9 +39,16 @@ module ApplianceConsole
       name.presence.in?(["localhost", "127.0.0.1", nil])
     end
 
-    # currently, only creates the key for a local CA
     def key?
-      options[:key]
+      options[:key] || options[:fetch_key] || (local_database? && !key_configuration.key_exist?)
+    end
+
+    def database?
+      hostname
+    end
+
+    def local_database?
+      hostname && local?(hostname)
     end
 
     def certs?
@@ -77,7 +84,10 @@ module ApplianceConsole
         opt :username, "Database Username",  :type => :string,  :short => 'U', :default => "root"
         opt :password, "Database Password",  :type => :string,  :short => "p"
         opt :dbname,   "Database Name",      :type => :string,  :short => "d", :default => "vmdb_production"
-        opt :key,      "Create master key",  :type => :boolean, :short => "k"
+        opt :key,      "Create encryption key (forcefully)",  :type => :boolean, :short => "k"
+        opt :fetch_key, "SSH host with encryption key", :type => :string
+        opt :sshlogin,  "SSH login",         :type => :string,                 :default => "root"
+        opt :sshpassword, "SSH password",    :type => :string
         opt :verbose,  "Verbose",            :type => :boolean, :short => "v"
         opt :dbdisk,   "Database Disk Path", :type => :string
         opt :tmpdisk,   "Temp storage Disk Path", :type => :string
@@ -91,7 +101,7 @@ module ApplianceConsole
         opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
         opt :api_cert,             "install certs for regional api",    :type => :boolean
       end
-      Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && hostname && local?
+      Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && local_database?
       self
     end
 
@@ -111,8 +121,8 @@ module ApplianceConsole
     end
 
     def set_db
-      raise "No v2_key present" unless KeyConfiguration.new.key_exist?
-      if local?(hostname)
+      raise "No v2_key present" unless key_configuration.key_exist?
+      if local?
         set_internal_db
       else
         set_external_db
@@ -158,11 +168,19 @@ module ApplianceConsole
       config.post_activation
     end
 
-    # force creating the key if user specifies -key
-    # otherwise, only create if it does not exist locally
+    def key_configuration
+      @key_configuration ||= KeyConfiguration.new(
+        :action   => options[:fetch_key] ? :fetch : :create,
+        :force    => options[:fetch_key] ? true : options[:key],
+        :host     => options[:fetch_key],
+        :login    => options[:sshlogin],
+        :password => options[:sshpassword],
+      )
+    end
+
     def create_key
-      say "creating encryption key"
-      KeyConfiguration.new.create_key(options[:key])
+      say "#{key_configuration.action} encryption key"
+      key_configuration.activate
     end
 
     def install_certs

@@ -9,6 +9,9 @@ describe MiqGenericMountSession do
       MiqGenericMountSession.stub(:raw_disconnect)
       @s1 = MiqGenericMountSession.new({:uri => '/tmp/abc'})
       @s2 = MiqGenericMountSession.new({:uri => '/tmp/abc'})
+
+      @s1.logger = Logger.new("/dev/null")
+      @s2.logger = Logger.new("/dev/null")
     end
 
     after do

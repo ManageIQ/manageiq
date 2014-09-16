@@ -16,6 +16,18 @@ describe ApplianceConsole::Prompts do
     Class.new(HighLine) { include ApplianceConsole::Prompts }.new(input, output)
   end
 
+  # net/ssh messes with track_eof
+  # we need it for testing
+  # set it back after we are done
+
+  before do
+    @old_track, HighLine.track_eof = HighLine.track_eof?, true
+  end
+
+  after do
+    HighLine.track_eof = @old_track
+  end
+
   context "#sample_url" do
     it "should show an example for nfs" do
       expect(subject.sample_url('nfs')).to match(%r{nfs://})
@@ -341,6 +353,26 @@ describe ApplianceConsole::Prompts do
     end
   end
 
+  context "#ask_for_string" do
+    it "should work without a default" do
+      say "x"
+      expect(subject.ask_for_string("prompt")).to eq("x")
+      expect_heard("Enter the prompt: ")
+    end
+
+    it "provides defaults" do
+      say ""
+      expect(subject.ask_for_string("prompt", "default")).to eq("default")
+      expect_heard("Enter the prompt: |default| ")
+    end
+
+    it "overrides defaults" do
+      say "this"
+      expect(subject.ask_for_string("prompt", "default")).to eq("this")
+      expect_heard("Enter the prompt: |default| ")
+    end
+  end
+
   context "#ask_for_integer" do
     it "should ensure integer" do
       error = "Please provide an integer"
@@ -357,7 +389,7 @@ describe ApplianceConsole::Prompts do
     end
   end
 
-  context "#just_ask" do
+  context "#just_ask (private method)" do
     it "should work without a default" do
       say "x"
       expect(subject.just_ask("prompt")).to eq("x")

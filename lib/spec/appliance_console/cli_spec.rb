@@ -19,14 +19,8 @@ describe ApplianceConsole::Cli do
     subject.parse([]).run
   end
 
-  context "#database" do
-    it "requires v2_key" do
-      expect_any_instance_of(ApplianceConsole::KeyConfiguration).to receive(:key_exist?).and_return(false)
-      expect { subject.parse(%w(--internal -r 1 --dbdisk x)).run }.to raise_error("No v2_key present")
-    end
-  end
-
   it "should set database host to localhost if running locally" do
+    subject.parse(%w(--internal -r 1 --dbdisk x))
     expect_v2_key
     subject.should_receive(:disk_from_string).with('x').and_return('/dev/x')
     subject.should_receive(:say)
@@ -37,11 +31,12 @@ describe ApplianceConsole::Cli do
             :interactive => false,
             :disk        => '/dev/x')
       .and_return(double(:activate => true, :post_activation => true))
-
-    subject.parse(%w(--internal -r 1 --dbdisk x)).run
+    expect(subject.key_configuration).not_to receive(:activate)
+    subject.run
   end
 
   it "should pass username and password when configuring database locally" do
+    subject.parse(%w(--internal --username user --password pass -r 1 --dbdisk x))
     expect_v2_key
     subject.should_receive(:disk_from_string).and_return('x')
     subject.should_receive(:say)
@@ -54,10 +49,11 @@ describe ApplianceConsole::Cli do
             :disk        => 'x')
       .and_return(double(:activate => true, :post_activation => true))
 
-    subject.parse(%w(--internal --username user --password pass -r 1 --dbdisk x)).run
+    subject.run
   end
 
   it "should handle remote databases (and setup region)" do
+    subject.parse(%w(--hostname host --dbname db --username user --password pass -r 1))
     expect_v2_key
     subject.should_receive(:say)
     ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
@@ -69,10 +65,11 @@ describe ApplianceConsole::Cli do
             :interactive => false)
       .and_return(double(:activate => true, :post_activation => true))
 
-    subject.parse(%w(--hostname host --dbname db --username user --password pass -r 1)).run
+    subject.run
   end
 
   it "should handle remote databases (not setting up region)" do
+    subject.parse(%w(--hostname host --dbname db --username user --password pass))
     expect_v2_key
     subject.should_receive(:say)
     ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
@@ -83,7 +80,7 @@ describe ApplianceConsole::Cli do
             :interactive => false)
       .and_return(double(:activate => true, :post_activation => true))
 
-    subject.parse(%w(--hostname host --dbname db --username user --password pass)).run
+    subject.run
   end
 
   context "#ipa" do
@@ -186,29 +183,42 @@ describe ApplianceConsole::Cli do
     end
   end
 
+  # private methods
+  # mostly handles by context "#key" and cli_specs focused on internal/external database
   context "parse" do
     context "#hostname and local?" do
       it "should not default" do
         expect(subject.hostname).to be_nil
+        expect(subject).not_to be_database
+        expect(subject).not_to be_local_database # the main difference between local and local_database
+        expect(subject).to be_local
       end
 
       it "should have 'localhost' for internal databases" do
         subject.parse(%w(--internal --region 1))
         expect(subject.hostname).to eq("localhost")
+        expect(subject).to be_database
         expect(subject).to be_local
+        expect(subject).to be_local_database
       end
 
       it "should be local (even if explicitly setting hostname" do
         subject.parse(%w(--hostname localhost --region 1))
+        expect(subject).to be_database
         expect(subject).to be_local
+        expect(subject).to be_local_database
       end
 
       it "should respect parameter " do
         subject.parse(%w(--hostname abc  --region 1))
         expect(subject.hostname).to eq("abc")
+        expect(subject).to be_database
         expect(subject).not_to be_local
+        expect(subject).not_to be_local_database
       end
+    end
 
+    context "#local?" do
       ["localhost", "127.0.0.1", "", nil].each do |host|
         it "should know #{host} is local" do
           expect(subject).to be_local(host)
@@ -221,9 +231,60 @@ describe ApplianceConsole::Cli do
     end
 
     context "#key" do
-      it "should setup a key if passing --key" do
-        subject.parse(%w(--key))
-        expect(subject).to be_key
+      # do not access key_configuration variable until after parsing command line
+      let(:key_configuration) { subject.key_configuration }
+      context "no key" do
+        context "local database" do
+          context "remote host specified" do
+            it "fetches a key" do
+              subject.parse(%w(--internal --region 1 --fetch-key remotesystem.com  --sshpassword pass))
+              expect_v2_key(false)
+              subject.should_receive(:say).with(/fetch/)
+              expect(key_configuration.action).to eq(:fetch)
+              expect(key_configuration.force).to eq(true)
+              expect(key_configuration.host).to eq("remotesystem.com")
+              expect(key_configuration.login).to eq("root")
+              expect(key_configuration.password).to eq("pass")
+              expect(subject).to be_key
+              # only need to test get_key this once
+              expect(key_configuration).to receive(:activate).and_return(true)
+              subject.create_key
+            end
+          end
+
+          context "no remote specified" do
+            it "generates key locally" do
+              subject.parse(%w(--internal --region 1))
+              expect_v2_key(false)
+              expect(subject).to be_key
+              expect(key_configuration.action).to eq(:create)
+            end
+          end
+        end
+
+        context "remote database" do
+          it "doesnt auto generate a key" do
+            subject.parse(%w(--hostname xyc.com))
+            expect_v2_key(false)
+            expect(subject).not_to be_key
+          end
+        end
+      end
+      context "key exists" do
+        context "local database" do
+          it "doesnt generate key" do
+            subject.parse(%w(--internal --region 1))
+            expect_v2_key(true)
+            expect(subject).not_to be_key
+          end
+        end
+
+        it "should setup a key if passing --key" do
+          subject.parse(%w(--internal --region 1 --key))
+          expect_v2_key(true)
+          expect(subject).to be_key
+          expect(key_configuration.force).to eq(true)
+        end
       end
     end
 
@@ -280,7 +341,7 @@ describe ApplianceConsole::Cli do
 
   private
 
-  def expect_v2_key
-    expect_any_instance_of(ApplianceConsole::KeyConfiguration).to receive(:key_exist?).and_return(true)
+  def expect_v2_key(exists = true)
+    allow(subject.key_configuration).to receive(:key_exist?).and_return(exists)
   end
 end
