@@ -22,6 +22,15 @@ module MiqAeServiceSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1")
     end
 
+    def assert_readonly_instance(automate_method_script)
+      dom_obj = MiqAeDomain.find_by_name(@domain)
+      dom_obj.update_attributes!(:system => true)
+      @ae_method.update_attributes(:data => automate_method_script)
+      result = invoke_ae.root(@ae_result_key)
+      dom_obj.update_attributes!(:system => false)
+      result.should be_false
+    end
+
     context "$evm.instance_exists?" do
       it "nonexistant instance " do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('/bogus/evenworse/fred')"
@@ -44,6 +53,11 @@ module MiqAeServiceSpec
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
         result.should == false
+      end
+
+      it "readonly domain" do
+        method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_create('#{@domain}/EVM/AUTOMATE/freddy', 'method1' => 'a', 'var1' => 'b')"
+        assert_readonly_instance(method)
       end
 
       it "instance does not exist, create it, check that it exists, then get the instance values" do
@@ -230,6 +244,11 @@ module MiqAeServiceSpec
         result.should == false
       end
 
+      it "readonly domain" do
+        method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_update('#{@domain}/EVM/AUTOMATE/test1', 'method1' => 'a', 'var1' => 'b')"
+        assert_readonly_instance(method)
+      end
+
       it "instance does not exist, create it, then update it" do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_create('#{@domain}/EVM/AUTOMATE/testadd', { 'method1' => 'testattributevalue', 'var1' => 'variablevalue1'})"
         @ae_method.update_attributes(:data => method)
@@ -249,6 +268,11 @@ module MiqAeServiceSpec
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
         result.should == false
+      end
+
+      it "readonly domain " do
+        method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_delete('#{@domain}/EVM/AUTOMATE/test1')"
+        assert_readonly_instance(method)
       end
 
       it "make sure instance does not exist, create new instance, make sure it exists, delete it, then check if it exists" do

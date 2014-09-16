@@ -256,6 +256,8 @@ module MiqAeMethodService
     def instance_create(path, values_hash = {})
       $log.info "MiqAeService#instance_create << path=#{path.inspect}, values_hash=#{values_hash.inspect}"
 
+      return false unless editable_instance?(path)
+
       ns, klass, instance = MiqAeEngine::MiqAePath.split(path)
       $log.info("Instance Create for ns: #{ns} class #{klass} instance: #{instance}")
 
@@ -288,6 +290,8 @@ module MiqAeMethodService
 
     def instance_update(path, values_hash)
       $log.info "MiqAeService#instance_update << path=#{path.inspect}, values_hash=#{values_hash.inspect}"
+      return false unless editable_instance?(path)
+
       aei = __find_instance_from_path(path)
       return false if aei.nil?
 
@@ -332,6 +336,8 @@ module MiqAeMethodService
 
     def instance_delete(path)
       $log.info "MiqAeService#instance_delete << path=#{path.inspect}"
+      return false unless editable_instance?(path)
+
       aei = __find_instance_from_path(path)
       return false if aei.nil?
 
@@ -346,6 +352,15 @@ module MiqAeMethodService
       return nil if aec.nil?
 
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
+    end
+
+    private
+
+    def editable_instance?(path)
+      dom, _, _, _ = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
+      domain = MiqAeDomain.find_by_fqname(dom, false)
+      return false unless domain
+      domain.editable?
     end
   end
 
