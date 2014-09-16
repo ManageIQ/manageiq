@@ -47,19 +47,19 @@ module UiConstants
 
   # PDF page sizes
   PDF_PAGE_SIZES = {
-  "a0"=>"A0 - 841mm x 1189mm",
-  "a1"=>"A1 - 594mm x 841mm",
-  "a2"=>"A2 - 420mm x 594mm",
-  "a3"=>"A3 - 297mm x 420mm",
-  "a4"=>"A4 - 210mm x 297mm (default)",
-  "US-Letter"=>"US Letter - 8.5in x 11.0in",
-  "US-Legal"=>"US Legal - 8.5in x 14.0in",
-  "US-Executive"=>"US Executive - 7.25in x 10.5in",
-  "US-Ledger"=>"US Ledger - 17.0in x 11.0in",
-  "US-Tabloid"=>"US Tabloid - 11.0in x 17.0in",
-  "US-Government"=>"US Government - 8.0in x 11.0in",
-  "US-Statement"=>"US Statement - 5.5in x 8.5in",
-  "US-Folio"=>"US Folio - 8.5in x 13.0in"
+    "a0"            => "A0 - 841mm x 1189mm",
+    "a1"            => "A1 - 594mm x 841mm",
+    "a2"            => "A2 - 420mm x 594mm",
+    "a3"            => "A3 - 297mm x 420mm",
+    "a4"            => "A4 - 210mm x 297mm (default)",
+    "US-Letter"     => "US Letter - 8.5in x 11.0in",
+    "US-Legal"      => "US Legal - 8.5in x 14.0in",
+    "US-Executive"  => "US Executive - 7.25in x 10.5in",
+    "US-Ledger"     => "US Ledger - 17.0in x 11.0in",
+    "US-Tabloid"    => "US Tabloid - 11.0in x 17.0in",
+    "US-Government" => "US Government - 8.0in x 11.0in",
+    "US-Statement"  => "US Statement - 5.5in x 8.5in",
+    "US-Folio"      => "US Folio - 8.5in x 13.0in"
   }
   DEFAULT_PDF_PAGE_SIZE = "US-Letter"
 
@@ -132,33 +132,33 @@ module UiConstants
 
   # Theme settings - each subitem will be set in @settings[:css][:<subitem>] based on the selected theme
   THEME_CSS_SETTINGS = {
-    "red"=>{
-        :font_color=>"#c00",
-        :background_color=>"#c00"
+    "red"           => {
+      :font_color       => "#c00",
+      :background_color => "#c00"
     },
-    "orange"=>{
-      :font_color=>"#ff8a00",
-      :background_color=>"#ff8a00"
+    "orange"        => {
+      :font_color       => "#ff8a00",
+      :background_color => "#ff8a00"
     },
-    "yellow"=>{
-      :font_color=>"#ffe400",
-      :background_color=>"#ffe400"
+    "yellow"        => {
+      :font_color       => "#ffe400",
+      :background_color => "#ffe400"
     },
-    "green"=>{
-      :font_color=>"#6b9130",
-      :background_color=>"#6b9130"
+    "green"         => {
+      :font_color       => "#6b9130",
+      :background_color => "#6b9130"
     },
-    "blue"=>{
-      :font_color=>"#0c7ad7",
-      :background_color=>"#0c7ad7"
+    "blue"          => {
+      :font_color       => "#0c7ad7",
+      :background_color => "#0c7ad7"
     },
-    "manageiq-blue"=>{
-      :font_color=>"#0c7ad7",
-      :background_color=>"#187aa2"
+    "manageiq-blue" => {
+      :font_color       => "#0c7ad7",
+      :background_color => "#187aa2"
     },
-    "black"=>{
-      :font_color=>"#000",
-      :background_color=>"#000"
+    "black"         => {
+      :font_color       => "#000",
+      :background_color => "#000"
     }
   }
 
