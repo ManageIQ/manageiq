@@ -199,6 +199,11 @@
   :url: /miq_policy/explorer
   :rbac_feature_name: control_explorer
   :startup: true
+- :name: automate_explorer
+  :description: Automate / Explorer
+  :url: /miq_ae_class/explorer
+  :rbac_feature_name: miq_ae_class_explorer
+  :startup: true
 - :name: utilization
   :description: Optimize / Utilization
   :url: /miq_capacity/utilization
