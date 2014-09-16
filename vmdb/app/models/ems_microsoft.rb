@@ -4,18 +4,6 @@ $:.push(File.expand_path(File.join(Rails.root, %w{.. lib Scvmm})))
 class EmsMicrosoft < EmsInfra
   include_concern "Powershell"
 
-  def self.default_host_type
-    @default_host_type ||= "HostMicrosoft".freeze
-  end
-
-  def self.default_vm_type
-    @default_vm_type ||= "VmMicrosoft".freeze
-  end
-
-  def self.default_template_type
-    @default_template_type ||= "TemplateMicrosoft".freeze
-  end
-
   def self.ems_type
     @ems_type ||= "scvmm".freeze
   end

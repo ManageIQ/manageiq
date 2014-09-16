@@ -316,7 +316,7 @@ module MiqLibvirt
     def get_os_information(shell)
       os = {}
       os[:name] = @hostname
-      
+
       result = run_command("cat /etc/issue", shell)
       result = result.split("\n")
       os[:product_name] = result[0]
@@ -363,12 +363,13 @@ module MiqLibvirt
     def host_to_inv_h(ems)
       h = {}
 
+      h[:type] = "HostKvm"
       h[:ipaddress] = @server
       h[:power_state] = 'on'
       h[:name] = @hostname
       h[:hostname] = @hostname
       h[:vmm_vendor] = @type.to_s.downcase
-      
+
       hypervisor = @version[:hypervisor].split(' ')
       h[:vmm_product] = hypervisor[0]
       h[:vmm_version] = hypervisor[1]
@@ -415,6 +416,7 @@ module MiqLibvirt
 
     def vm_to_inv_h(domain, ems)
       v = {}
+      v[:type] = "VmKvm"
       v[:connection_state] = 'connected'
       v[:vendor] = domain[:type].to_s.downcase
       v[:name] = domain[:name]
@@ -489,7 +491,7 @@ module MiqLibvirt
           end
           vm_storages << storage unless storage.nil?
         end
-        
+
         block_dev.each do |b|
           @storages.each do |s|
             if b.include?(s[:target][:path])
@@ -531,7 +533,7 @@ module MiqLibvirt
 
       File.join(paths.first, "#{domain[:name]}.vmss")
     end
-    
+
     def debug_time()
       Time.now.strftime("%I:%M:%S")
     end
@@ -641,7 +643,7 @@ module MiqLibvirt
           libvirt_state = "suspended"
         end
       end
-      
+
       return libvirt_state
     end
 

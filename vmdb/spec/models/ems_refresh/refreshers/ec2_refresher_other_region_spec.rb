@@ -72,8 +72,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_flavor
-    @flavor = Flavor.where(:name => "t1.micro").first
-    @flavor.should be_kind_of(FlavorAmazon)
+    @flavor = FlavorAmazon.where(:name => "t1.micro").first
     @flavor.should have_attributes(
       :name                 => "t1.micro",
       :description          => "T1 Micro",
@@ -91,16 +90,14 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_az
-    @az = AvailabilityZone.where(:name => "us-west-1a").first
-    @az.should be_kind_of(AvailabilityZoneAmazon)
+    @az = AvailabilityZoneAmazon.where(:name => "us-west-1a").first
     @az.should have_attributes(
       :name => "us-west-1a",
     )
   end
 
   def assert_specific_floating_ip
-    ip = FloatingIp.where(:address => "54.215.0.230").first
-    ip.should be_kind_of(FloatingIpAmazon)
+    ip = FloatingIpAmazon.where(:address => "54.215.0.230").first
     ip.should have_attributes(
       :address            => "54.215.0.230",
       :ems_ref            => "54.215.0.230",
@@ -109,7 +106,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_key_pair
-    @kp = AuthPrivateKey.where(:name => "EmsRefreshSpec-KeyPair-OtherRegion").first
+    @kp = AuthKeyPairAmazon.where(:name => "EmsRefreshSpec-KeyPair-OtherRegion").first
     @kp.should have_attributes(
       :name        => "EmsRefreshSpec-KeyPair-OtherRegion",
       :fingerprint => "fc:53:30:aa:d2:23:c7:8d:e2:e8:05:95:a0:d2:90:fb:15:30:a2:51"
@@ -117,7 +114,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_security_group
-    @sg = SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup-OtherRegion").first
+    @sg = SecurityGroupAmazon.where(:name => "EmsRefreshSpec-SecurityGroup-OtherRegion").first
     @sg.should have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup-OtherRegion",
       :description => "EmsRefreshSpec-SecurityGroup-OtherRegion",
@@ -136,7 +133,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_template
-    @template = MiqTemplate.where(:name => "EmsRefreshSpec-Image-OtherRegion").first
+    @template = TemplateAmazon.where(:name => "EmsRefreshSpec-Image-OtherRegion").first
     @template.should have_attributes(
       :template              => true,
       :ems_ref               => "ami-183e175d",
@@ -185,7 +182,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = Vm.where(:name => "EmsRefreshSpec-PoweredOn-OtherRegion", :power_state => "on").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-OtherRegion", :power_state => "on").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "i-dc1ee486",
@@ -258,7 +255,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_in_other_region
-    v = Vm.where(:name => "EmsRefreshSpec-PoweredOn-Basic").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-Basic").first
     v.should be_nil
   end
 

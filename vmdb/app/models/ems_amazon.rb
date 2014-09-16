@@ -2,14 +2,6 @@ require 'Amazon/ec2/regions'
 require 'Amazon/amazon_connection'
 
 class EmsAmazon < EmsCloud
-  def self.default_vm_type
-    @default_vm_type ||= "VmAmazon".freeze
-  end
-
-  def self.default_template_type
-    @default_template_type ||= "TemplateAmazon".freeze
-  end
-
   def self.ems_type
     @ems_type ||= "ec2".freeze
   end

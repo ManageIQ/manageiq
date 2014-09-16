@@ -103,7 +103,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
   end
 
   def assert_specific_host
-    @host = Host.find_by_name("hyperv-h01.manageiq.com")
+    @host = HostMicrosoft.find_by_name("hyperv-h01.manageiq.com")
     @host.should have_attributes(
       :ems_ref          => "60e92646-b9f8-432a-a71a-5bc169ceeca2",
       :name             => "hyperv-h01.manageiq.com",
@@ -155,7 +155,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
   end
 
   def assert_specific_vm
-    v = Vm.find_by_name("Salesforce_A")
+    v = VmMicrosoft.find_by_name("Salesforce_A")
 
     v.should have_attributes(
       :template         => false,

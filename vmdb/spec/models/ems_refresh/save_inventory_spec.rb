@@ -258,7 +258,7 @@ describe EmsRefresh::SaveInventory do
 
   private
 
-  RAW_DATA_ATTRS = [:name, :ems_ref_obj, :ems_ref, :vendor, :location, :uid_ems]
+  RAW_DATA_ATTRS = [:name, :ems_ref_obj, :ems_ref, :vendor, :location, :uid_ems, :type]
 
   def raw_data_process(*args)
     args.collect do |v|

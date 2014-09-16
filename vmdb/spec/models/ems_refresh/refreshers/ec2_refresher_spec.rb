@@ -81,8 +81,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_flavor
-    @flavor = Flavor.where(:name => "t1.micro").first
-    @flavor.should be_kind_of(FlavorAmazon)
+    @flavor = FlavorAmazon.where(:name => "t1.micro").first
     @flavor.should have_attributes(
       :name                     => "t1.micro",
       :description              => "T1 Micro",
@@ -101,16 +100,14 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_az
-    @az = AvailabilityZone.where(:name => "us-east-1b").first
-    @az.should be_kind_of(AvailabilityZoneAmazon)
+    @az = AvailabilityZoneAmazon.where(:name => "us-east-1b").first
     @az.should have_attributes(
       :name => "us-east-1b",
     )
   end
 
   def assert_specific_floating_ip
-    @ip = FloatingIp.where(:address => "54.221.202.53").first
-    @ip.should be_kind_of(FloatingIpAmazon)
+    @ip = FloatingIpAmazon.where(:address => "54.221.202.53").first
     @ip.should have_attributes(
       :address            => "54.221.202.53",
       :ems_ref            => "54.221.202.53",
@@ -119,8 +116,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_floating_ip_for_cloud_network
-    ip = FloatingIp.where(:address => "54.208.119.197").first
-    ip.should be_kind_of(FloatingIpAmazon)
+    ip = FloatingIpAmazon.where(:address => "54.208.119.197").first
     ip.should have_attributes(
       :address            => "54.208.119.197",
       :ems_ref            => "54.208.119.197",
@@ -129,7 +125,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_key_pair
-    @kp = AuthPrivateKey.where(:name => "EmsRefreshSpec-KeyPair").first
+    @kp = AuthKeyPairAmazon.where(:name => "EmsRefreshSpec-KeyPair").first
     @kp.should have_attributes(
       :name        => "EmsRefreshSpec-KeyPair",
       :fingerprint => "49:9f:3f:a4:26:48:39:94:26:06:dd:25:73:e5:da:9b:4b:1b:6c:93"
@@ -165,7 +161,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_security_group
-    @sg = SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup").first
+    @sg = SecurityGroupAmazon.where(:name => "EmsRefreshSpec-SecurityGroup").first
     @sg.should have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup",
       :description => "EmsRefreshSpec-SecurityGroup",
@@ -197,7 +193,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_security_group_on_cloud_network
-    @sg_on_cn = SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup-VPC").first
+    @sg_on_cn = SecurityGroupAmazon.where(:name => "EmsRefreshSpec-SecurityGroup-VPC").first
     @sg_on_cn.should have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup-VPC",
       :description => "EmsRefreshSpec-SecurityGroup-VPC",
@@ -208,7 +204,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_template
-    @template = MiqTemplate.where(:name => "EmsRefreshSpec-Image").first
+    @template = TemplateAmazon.where(:name => "EmsRefreshSpec-Image").first
     @template.should have_attributes(
       :template              => true,
       :ems_ref               => "ami-5769193e",
@@ -259,12 +255,12 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_shared_template
-    t = MiqTemplate.where(:ems_ref => "ami-5e094837").first # TODO: Share an EmsRefreshSpec specific template
+    t = TemplateAmazon.where(:ems_ref => "ami-5e094837").first # TODO: Share an EmsRefreshSpec specific template
     t.should_not be_nil
   end
 
   def assert_specific_vm_powered_on
-    v = Vm.where(:name => "EmsRefreshSpec-PoweredOn-Basic", :power_state => "on").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-Basic", :power_state => "on").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "i-7ab3c301",
@@ -297,7 +293,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     v.key_pairs.should              == [@kp]
     v.cloud_network.should          be_nil
     v.cloud_subnet.should           be_nil
-    v.security_groups.should        match_array [@sg, SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup2").first]
+    v.security_groups.should        match_array [@sg, SecurityGroupAmazon.where(:name => "EmsRefreshSpec-SecurityGroup2").first]
 
     v.operating_system.should       be_nil # TODO: This should probably not be nil
     v.custom_attributes.size.should == 0
@@ -339,7 +335,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_powered_off
-    v = Vm.where(:name => "EmsRefreshSpec-PoweredOff", :power_state => "off").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOff", :power_state => "off").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "i-79188d11",
@@ -366,7 +362,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     )
 
     v.ext_management_system.should  == @ems
-    v.availability_zone.should      == AvailabilityZone.find_by_name("us-east-1d")
+    v.availability_zone.should      == AvailabilityZoneAmazon.find_by_name("us-east-1d")
     v.floating_ip.should            be_nil
     v.key_pairs.should              == [@kp]
     v.cloud_network.should          be_nil
@@ -398,7 +394,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_on_cloud_network
-    v = Vm.where(:name => "EmsRefreshSpec-PoweredOn-VPC").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-VPC").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "i-8b5739f2",
@@ -430,7 +426,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_in_other_region
-    v = Vm.where(:name => "EmsRefreshSpec-PoweredOn-OtherRegion").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-OtherRegion").first
     v.should be_nil
   end
 

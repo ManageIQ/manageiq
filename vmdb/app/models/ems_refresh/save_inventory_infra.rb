@@ -173,10 +173,6 @@ module EmsRefresh::SaveInventoryInfra
           found.update_attributes(h)
         end
 
-        # Make sure to set the type as Hosts use Single-Table Inheritance (STI)
-        # TODO: Verify if this is needed anymore since :type is now supported with the NewWithTypeStiMixin
-        found.type ||= found.detect_type || ems.class.default_host_type
-
         # Handle duplicate names coming in because of duplicate hostnames.
         begin
           found.save!

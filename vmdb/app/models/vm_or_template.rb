@@ -245,11 +245,6 @@ class VmOrTemplate < ActiveRecord::Base
     virtual_column m, :type => :string, :uses => :all_relationships
   end
 
-  def detect_type
-    prefix = self.template? ? "Template" : "Vm"
-    "#{prefix}#{self.read_attribute(:vendor).downcase.classify}"
-  end
-
   def v_annotation
     return nil if self.hardware.nil?
     self.hardware.annotation

@@ -213,24 +213,6 @@ describe Host do
     end
   end
 
-  context "#detect_type" do
-    it "with known vendor and product" do
-      expect(Host.new(:vmm_vendor => "vmware", :vmm_product => "esx").detect_type).to eq("HostVmwareEsx")
-    end
-
-    it "with known vendor" do
-      expect(Host.new(:vmm_vendor => "vmware").detect_type).to eq("HostVmware")
-    end
-
-    it "with unknown vendor" do
-      expect(Host.new(:vmm_vendor => "unknown").detect_type).to eq("Host")
-    end
-
-    it "with nil vendor" do
-      expect(Host.new.detect_type).to eq("Host")
-    end
-  end
-
   context "#vmm_vendor" do
     it "with known host type" do
       expect(FactoryGirl.create(:host_vmware_esx).vmm_vendor).to eq("VMware")
