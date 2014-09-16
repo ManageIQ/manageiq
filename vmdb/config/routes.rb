@@ -837,6 +837,7 @@ Vmdb::Application.routes.draw do
         request_copy
         request_edit
         retrieve_email
+        save_col_widths
         show_list
         sort_ds_grid
         sort_host_grid
