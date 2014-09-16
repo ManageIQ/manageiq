@@ -1,12 +1,15 @@
-$: << File.join(File.dirname(__FILE__), "../..")
-$: << File.join(File.dirname(__FILE__), "../../disk")
-$: << File.join(File.dirname(__FILE__), "../../fs/MiqFS")
+$:.push(File.join(File.dirname(__FILE__), "../.."))
+$:.push(File.join(File.dirname(__FILE__), "../../disk"))
+$:.push(File.join(File.dirname(__FILE__), "../../fs/MiqFS"))
 
 require 'bundler_setup'
+require 'openssl' # Required for 'Digest' in camcorder (< Ruby 2.1)
+require 'camcorder'
 require 'log4r'
 require 'ostruct'
 require 'MiqDisk'
 require 'MiqFS'
+require 'modules/MiqLargeFile'
 
 #
 # Formatter to output log messages to the console.
@@ -24,9 +27,20 @@ $log.add 'err_console'
 #
 # Path to RAW disk image.
 #
-VIRTUAL_DISK_FILE = "path to disk image file"
+VIRTUAL_DISK_FILE = "path to raw disk image file"
+
+commit = true
 
 begin
+  recorder = Camcorder::Recorder.new("#{File.dirname(__FILE__)}/foo.yml")
+  Camcorder.default_recorder = recorder
+  Camcorder.intercept_constructor(MiqLargeFile::MiqLargeFileOther) do
+    methods_with_side_effects :seek, :read, :write
+  end
+  Camcorder.intercept_constructor(MiqLargeFile::MiqLargeFileStat)
+
+  recorder.start
+
   diskInfo = OpenStruct.new
   diskInfo.rawDisk = true # remove if image is not in RAW format.
   diskInfo.fileName = VIRTUAL_DISK_FILE
@@ -82,10 +96,17 @@ begin
     puts
     puts "unclassified files:"
     unclassified.each { |p| puts "\t#{p}" }
-  end
+  end 
 rescue => err
   puts err.to_s
   puts err.backtrace.join("\n")
+  commit = false # don't commit recording on error
 ensure
   disk.close if disk
+  if recorder && commit
+    puts
+    puts "camcorder: committing recording..."
+    recorder.commit
+    puts "done."
+  end
 end
