@@ -4059,6 +4059,7 @@ describe ApplicationHelper do
   end
 
   describe "update_url_parms", :type => :request do
+
     context "when the given parameter is a string" do
       before do
         get("/vm/show_list/100", "type=grid&bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
@@ -4088,6 +4089,7 @@ describe ApplicationHelper do
         update_url_parms("main_div", false).should eq("main_div")
       end
     end
+
     context "when the given parameter is a hash" do
       before do
         get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
@@ -4112,6 +4114,21 @@ describe ApplicationHelper do
           "&menu_click=Display-VMs-on_2-6-5&refresh=n&sb_controller=host")
       end
     end
+
+    context "when multiple parameters are specified in the string" do
+      before do
+        get("/vm/show_list", "id=v-10r2691")
+        Object.any_instance.stub(:query_string).and_return(@request.query_string)
+        Object.any_instance.stub(:path_info).and_return(@request.path_info)
+        allow_message_expectations_on_nil
+      end
+
+      it "returns the full url path with the given parameters" do
+        update_url_parms("?type=graphical&explorer=true").should eq("/vm/show_list?explorer=true"\
+          "&id=v-10r2691&type=graphical")
+      end
+    end
+
     context "when there is no query string" do
       before do
         get("/vm/show_list")
@@ -4128,9 +4145,11 @@ describe ApplicationHelper do
         update_url_parms("?type=grid", false).should eq("?type=grid")
       end
     end
+
   end
 
   describe "update_query_string_params", :type => :request do
+
     context "when the url query string hash needs to be updated using the supplied hash" do
       before do
         get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\

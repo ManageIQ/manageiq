@@ -2584,11 +2584,11 @@ module ApplicationHelper
       parse_ampersand = /^&/.match(parameter_to_update)
       parameter_to_update = parse_questionmark.post_match if parse_questionmark.present?
       parameter_to_update = parse_ampersand.post_match if parse_ampersand.present?
-      equalto = /=/.match(parameter_to_update)
 
-      key = equalto.pre_match.to_sym
-      value = equalto.post_match
-      updated_query_string = update_query_string_params(key => value)
+      encoded_url = URI.encode(parameter_to_update)
+      parsed_parameter = Rack::Utils.parse_query URI("?#{encoded_url}").query
+      parsed_parameter_to_update = parsed_parameter.symbolize_keys
+      updated_query_string = update_query_string_params(parsed_parameter_to_update)
     else
       updated_query_string = update_query_string_params(parameter_to_update)
     end
