@@ -8,9 +8,9 @@ class MiqDisk
     attr_accessor :diskType, :dInfo, :blockSize, :pvObj, :fs
     attr_reader   :lbaStart, :lbaEnd, :startByteAddr, :endByteAddr, :partType, :partNum, :size, :hwId, :logName
     
-    def self.getDisk(dInfo)
+    def self.getDisk(dInfo, probes = nil)
         $log.debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}" if $log
-        if ((dm = DiskProbe.getDiskMod(dInfo)))
+        if ((dm = DiskProbe.getDiskMod(dInfo, probes)))
             d = self.new(dm, dInfo.clone, 0)
             if dInfo.baseOnly
                 $log.debug "MiqDisk::getDisk: baseOnly = true, returning parent: #{d.getBase.dInfo.fileName}" if $log

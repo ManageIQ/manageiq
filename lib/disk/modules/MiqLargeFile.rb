@@ -23,7 +23,7 @@ module MiqLargeFile
 		when :unix
 			if Platform::IMPL == :linux
 				return(MiqLargeFileLinux.new(file_name, flags)) if MiqSystem.arch == :x86
-				return(RawBlockIO.new(file_name, flags)) if File.stat(file_name).blockdev?
+				return(RawBlockIO.new(file_name, flags)) if MiqLargeFileStat.new(file_name).blockdev?
 			end
 			return(MiqLargeFileOther.new(file_name, flags))
 		else
@@ -43,6 +43,17 @@ module MiqLargeFile
 			f.close
 			return s
         end
+    end
+
+    # For camcorder interposition.
+    class MiqLargeFileStat
+    	def initialize(file_name)
+    		@file_name = file_name
+    	end
+
+    	def blockdev?
+    		File.stat(@file_name).blockdev?
+    	end
     end
 	
     class MiqLargeFileOther < File
