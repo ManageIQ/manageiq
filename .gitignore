@@ -48,7 +48,6 @@ bin/*
 config/apache
 config/database.yml*
 config/vmdb.yml.db
-config/miq_pass
 
 # db/
 db/*.sqlite3
