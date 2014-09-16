@@ -205,8 +205,6 @@ module XmlHash
 #      doc.root = head
 #      return doc.root
       return head
-      
-      alias :each_attrib :each_pair
     end
 
     def shallow_copy(include_text = false)
