@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - execute:
-      value: delete_from_provider
+      value: delete_from_provider(deletion_type => 'remove_from_disk')

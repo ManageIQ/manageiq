@@ -4,9 +4,29 @@ version: 1.0
 object:
   attributes:
     name: delete_from_provider
-    display_name: DeleteFromProvider
+    display_name: 
     description: 
     scope: instance
     language: ruby
     location: inline
-  inputs: []
+  inputs:
+  - field:
+      aetype: 
+      name: deletion_type
+      display_name: 
+      datatype: 
+      priority: 1
+      owner: 
+      default_value: remove_from_disk
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
