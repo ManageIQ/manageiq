@@ -8,7 +8,7 @@ describe "check_unregistered_from_provider Method Validation" do
     @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host       = FactoryGirl.create(:host)
     @vm         = FactoryGirl.create(:vm_vmware,
-                 :name => "testVM", :state => "off",
+                 :name => "testVM", :raw_power_state => "poweredOff",
                  :registered => false)
   end
 
@@ -29,4 +29,3 @@ describe "check_unregistered_from_provider Method Validation" do
   end
 
 end
-

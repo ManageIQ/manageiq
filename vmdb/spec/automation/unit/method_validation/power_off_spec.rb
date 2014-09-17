@@ -8,7 +8,7 @@ describe "power_off Method Validation" do
     @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host       = FactoryGirl.create(:host)
     @vm         = FactoryGirl.create(:vm_vmware, :host =>@host,
-                 :ems_id => @ems.id, :name => "testVM2", :state => "on")
+                 :ems_id => @ems.id, :name => "testVM2", :raw_power_state => "poweredOn")
   end
 
   let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/PowerOff?Vm::vm=#{@vm.id}") }
@@ -21,7 +21,7 @@ describe "power_off Method Validation" do
   end
 
   it "does not queue any operation for a vm in 'powered_off' state" do
-    @vm.update_attribute(:state, "poweredOff")
+    @vm.update_attribute(:raw_power_state, "poweredOff")
 
     ws
 

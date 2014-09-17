@@ -8,7 +8,7 @@ describe "check_powered_off Method Validation" do
   let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/CheckPoweredOff?Vm::vm=#{@vm.id}") }
 
   it "returns 'ok' for a vm in powered_off state" do
-    @vm.update_attribute(:state, "poweredOff")
+    @vm.update_attribute(:raw_power_state, "poweredOff")
 
     ws.root['vm'].power_state.should be == "off"
     ws.root['ae_result'].should be      == "ok"
@@ -22,7 +22,7 @@ describe "check_powered_off Method Validation" do
   end
 
   it "retries for a vm in powered_on state" do
-    @vm.update_attribute(:state, "poweredOn")
+    @vm.update_attribute(:raw_power_state, "poweredOn")
 
     ws.root['ae_result'].should be      == "retry"
     ws.root['vm'].power_state.should be == "on"
