@@ -22,7 +22,7 @@ describe EmsRefreshCoreWorker do
     context "against a VmVmware" do
       before(:each) do
         Timecop.travel(1.day.ago) do
-          @vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :state => "unknown")
+          @vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :raw_power_state => "unknown")
         end
       end
 
