@@ -1922,7 +1922,7 @@ class ApplicationController < ActionController::Base
   end
   private :get_view_calculate_gtl_type
 
-  def get_view_process_search_text
+  def get_view_process_search_text(view)
     # Check for new search by name text entered
     if params[:search] &&
        # Disabled search for Storage CIs until backend is fixed to handle evm_display_name field
@@ -2058,7 +2058,7 @@ class ApplicationController < ActionController::Base
       :targets_hash        => true,
       :association         => association,
       :filter              => get_view_filter(options),
-      :sub_filter          => get_view_process_search_text,
+      :sub_filter          => get_view_process_search_text(view),
       :page                => options[:all_pages] ? 1 : @current_page,
       :per_page            => options[:all_pages] ? ONE_MILLION : @items_per_page,
       :where_clause        => get_view_where_clause(options),
