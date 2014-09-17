@@ -1390,13 +1390,6 @@ class VmOrTemplate < ActiveRecord::Base
   end
   alias_method :current_state, :state
 
-  # TODO: Having #state return a different value than #state= sets feels really
-  # wrong here.  However, state= is used throughout automate to normalize on
-  # setting the state on various models (Host, VM, EMS).
-  def state=(state)
-    self.raw_power_state = state
-  end
-
   # Override raw_power_state= attribute setter in order to impose side effects
   # of setting previous_state and updating state_changed_on
   def raw_power_state=(new_state)
