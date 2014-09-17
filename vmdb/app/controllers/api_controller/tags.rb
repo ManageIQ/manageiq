@@ -38,6 +38,7 @@ class ApiController
       end
 
       if tag
+        tag[:href] = @req[:s_id] ? @req[:url] : "#{@req[:url]}/#{tag.id}"
         return tag
       end
       false

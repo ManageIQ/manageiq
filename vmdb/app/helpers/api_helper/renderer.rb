@@ -73,8 +73,7 @@ module ApiHelper
         if resource.has_key?('results')
           resource['results'].each do |r|
             if r['href'].nil?
-              r['href'] = normalize_url_from_id(
-                reftype, r.id, "#{r.class}".downcase.pluralize)
+              r['href'] = normalize_url_from_id(reftype, r.id)
             end
           end
         end
