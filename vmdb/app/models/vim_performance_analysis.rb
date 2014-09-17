@@ -41,7 +41,7 @@ module VimPerformanceAnalysis
       #     :memory  =>
       #       :mode       => :perf_trend (:perf_trend | :perf_latest | :current)
       #       :metric     => :max_mem_usage_absolute_average
-      #       :limit_col  => :derived_memory_availavle
+      #       :limit_col  => :derived_memory_available
       #       :limit_pct  => 90
       #     :storage =>
       #       :mode       => :current (:perf_trend | :perf_latest | :current)
@@ -312,7 +312,7 @@ module VimPerformanceAnalysis
 
     COMPUTE_OFFERS_LIMIT_COL_DEFAULT = {
       :cpu     => :derived_cpu_available,
-      :memory  => :derived_memory_availavle,
+      :memory  => :derived_memory_available,
       :storage => :total_space
     }
 
@@ -337,7 +337,7 @@ module VimPerformanceAnalysis
     #     :memory  =>
     #       :mode       => :perf_trend (:perf_trend | :perf_latest | :current)
     #       :metric     => :max_mem_usage_absolute_average
-    #       :limit_col  => :derived_memory_availavle
+    #       :limit_col  => :derived_memory_available
     #       :limit_pct  => 90
     #     :storage =>
     #       :mode       => :current (:perf_trend | :perf_latest | :current)
