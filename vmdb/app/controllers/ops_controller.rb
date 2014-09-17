@@ -419,38 +419,32 @@ class OpsController < ApplicationController
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
-    @nodetype, nodeid = valid_active_node(treenodeid).split("-").first
-    if @replace_trees   #reset active_tab if active_node was reset
+    @nodetype = valid_active_node(treenodeid).split("-").first
+    if @replace_trees
       @sb[:active_tab] = case x_active_tree
-                           when :diagnostics_tree then 'diagnostics_zones'
-                           when :settings_tree then 'settings_details'
+                         when :diagnostics_tree then 'diagnostics_zones'
+                         when :settings_tree    then 'settings_details'
                          end
     end
+
     @explorer = true
     @nodetype = x_node.split("-").first
     case x_active_tree
-    when :analytics_tree  # Setting root
-      analytics_get_info(x_node)
-    when :diagnostics_tree  # Diagnostics tree
-      diagnostics_get_info(x_node)
-    when :rbac_tree # Access Control root
-      rbac_get_info(x_node)
-    when :settings_tree # Setting root
-      settings_get_info(x_node)
-    when :vmdb_tree # VMDB database root
-      db_get_info(x_node)
+    when :analytics_tree   then analytics_get_info(x_node)
+    when :diagnostics_tree then diagnostics_get_info(x_node)
+    when :rbac_tree        then rbac_get_info(x_node)
+    when :settings_tree    then settings_get_info(x_node)
+    when :vmdb_tree        then db_get_info(x_node)
     end
-    if x_active_tree == :diagnostics_tree
-      @right_cell_text ||= "Diagnostics [Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]]"
-    elsif x_active_tree == :settings_tree
-      @right_cell_text ||= "Settings [Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]]"
-    elsif x_active_tree == :rbac_tree
-      @right_cell_text ||= "Access Control [Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]]"
-    elsif x_active_tree == :analytics_tree
-      @right_cell_text ||= "Analytics [Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]]"
-    elsif x_active_tree == :vmdb_tree
-      @right_cell_text ||= "Database []"
-    end
+
+    region_text = "[Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]]"
+    @right_cell_text ||= case x_active_tree
+                         when :diagnostics_tree then "Diagnostics #{region_text}"
+                         when :settings_tree    then "Settings #{region_text}"
+                         when :rbac_tree        then "Access Control #{region_text}"
+                         when :analytics_tree   then "Analytics #{region_text}"
+                         when :vmdb_tree        then "Database []"
+                         end
   end
 
   def replace_right_cell(nodetype, replace_trees = false) # replace_trees can be an array of tree symbols to be replaced
