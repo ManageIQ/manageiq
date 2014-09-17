@@ -1384,9 +1384,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def state
-    return "never" if template?
-    return power_state.downcase unless power_state.nil?
-    return "unknown"
+    (power_state || "unknown").downcase
   end
   alias_method :current_state, :state
 
