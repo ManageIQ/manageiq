@@ -48,15 +48,6 @@ module VdiFarmHelper::GraphicalSummary
     h
   end
 
-  def graphical_vdi_sessions
-    num = @record.vdi_sessions.count
-    h = {:label => ui_lookup(:tables=>"vdi_session"), :image => "vdi_session", :value => num}
-    if num > 0
-      h[:link]  = link_to("", {:controller => 'vdi_farm', :action =>'vdi_sessions', :id => @record}, :title => "Show all #{ui_lookup(:tables=>"vdi_session")}", :onclick => "return miqCheckForChanges()")
-    end
-    h
-  end
-
   def graphical_miq_proxies
     num = @record.miq_proxies.count
     h = {:label => ui_lookup(:tables=>"miq_proxy"), :image => "miq_proxy", :value => num}
