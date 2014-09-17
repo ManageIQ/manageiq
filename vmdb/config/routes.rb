@@ -1151,7 +1151,6 @@ Vmdb::Application.routes.draw do
         upload_form_field_changed
         upload_login_logo
         upload_logo
-        upload_updates
         validate_replcation_worker
         wait_for_task
         x_button

@@ -23,19 +23,6 @@
       </div>
     <% end %>
   <% else %>
-    <p class="legend">Upload a New Product Update</p>
-    <%= form_tag({:action    => "upload_updates"}, 
-                  :multipart => true) do %>
-      <table class="style1">
-        <tr>
-          <td>
-            <%= file_field("upload", "file") %>
-            <%= submit_tag("Upload", :id=>"upload") %>
-          </td>
-        </tr>
-      </table>
-    <% end %>
-    <hr>
     <p class="legend">Available Product Updates
     [Server '<%= @temp[:selected_server].name %>' is currently running Version <%= @temp[:selected_server].version %>]</p>
     Select a product update to view activation options
