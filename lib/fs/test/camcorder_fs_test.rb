@@ -21,7 +21,7 @@ class ConsoleFormatter < Log4r::Formatter
 end
 $log = Log4r::Logger.new 'toplog'
 $log.level = Log4r::DEBUG
-Log4r::StderrOutputter.new('err_console', :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
 #
@@ -96,7 +96,7 @@ begin
     puts
     puts "unclassified files:"
     unclassified.each { |p| puts "\t#{p}" }
-  end 
+  end
 rescue => err
   puts err.to_s
   puts err.backtrace.join("\n")

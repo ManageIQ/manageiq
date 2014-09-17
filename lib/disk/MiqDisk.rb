@@ -10,7 +10,7 @@ class MiqDisk
     
     def self.getDisk(dInfo, probes = nil)
         $log.debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}" if $log
-        if ((dm = DiskProbe.getDiskMod(dInfo, probes)))
+        if (dm = DiskProbe.getDiskMod(dInfo, probes))
             d = self.new(dm, dInfo.clone, 0)
             if dInfo.baseOnly
                 $log.debug "MiqDisk::getDisk: baseOnly = true, returning parent: #{d.getBase.dInfo.fileName}" if $log

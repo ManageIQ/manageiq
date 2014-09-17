@@ -19,7 +19,7 @@ class ConsoleFormatter < Log4r::Formatter
 end
 $log = Log4r::Logger.new 'toplog'
 $log.level = Log4r::DEBUG
-Log4r::StderrOutputter.new('err_console', :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
 #
@@ -50,7 +50,7 @@ begin
   #
   disk = MiqDisk.getDisk(diskInfo, "RawDiskProbe")
 
-  if !disk
+  unless disk
     puts "Failed to open disk"
     exit(1)
   end
@@ -65,7 +65,7 @@ begin
 
   parts = disk.getPartitions
 
-  exit(0) if !parts
+  exit(0) unless parts
 
   i = 1
   parts.each do |p|
