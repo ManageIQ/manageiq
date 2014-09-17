@@ -66,8 +66,13 @@ module ApiHelper
       svalue.match(pref) ? svalue : "#{pref}/#{svalue}"
     end
 
-    def normalize_url_from_id(_type = nil, _resource_id = nil)
+    def normalize_url_from_id(_type = nil, _resource_id = nil, _r_type = nil)
       return nil if _type.nil? || _resource_id.nil?
+
+      unless _r_type.nil? || _r_type == _type
+        return normalize_url(_type, "#{_type}/#{@req[:c_id]}/#{_r_type}/#{_resource_id}")
+      end
+
       normalize_url(_type, "#{_type}/#{_resource_id}")
     end
 
