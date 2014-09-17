@@ -1,0 +1,36 @@
+#tab_div
+  - if @rss_feeds.empty?
+    .alert.alert-warning
+      %span.pficon-layered
+        %span.pficon.pficon-warning-triangle
+        %span.pficon.pficon-warning-exclamation
+      %strong No RSS Feeds Found
+  - else
+    %table.style3
+      %thead
+        %tr
+          %th.special{:colspan => 4}
+            Admin Role Filter:
+            = select_tag('role',
+                         options_for_select(@rss_roles, @rss_role),
+                         :multiple => false,
+                         "data-miq_observe" => {:url => url_for(:action => 'role_selected')}.to_json)
+            = javascript_tag("$j('#role').focus()")
+        %tr
+          %th.icon
+          %th Title
+          %th Description
+          %th Feed URL
+      %tbody
+        - @rss_feeds.each do |feed|
+          %tr{:class => cycle('row0', 'row1')}
+            %td.icon{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              %ul.icons
+                %li
+                  = link_to("", feed.link, :title => "Subscribe to this feed", :class => "fa fa-rss")
+            %td
+              = h(feed.title)
+            %td
+              = h(feed.description)
+            %td
+              = h(feed.url(request.env["HTTP_HOST"]))
