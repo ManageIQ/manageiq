@@ -91,27 +91,6 @@ module OpsController::Settings::Upload
     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
   end
 
-  def upload_updates
-    #if params[:upload] && params[:upload][:file] && params[:upload][:file].kind_of?(Tempfile)
-    if params[:upload] && params[:upload][:file]
-      begin
-        sb = ProductUpdate.upload(params[:upload][:file])
-      rescue StandardError => bang
-        msg = I18n.t("flash.error_during", :task=>"upload") << bang
-        err = true
-      else
-        msg = I18n.t("flash.ops.settings.maintenance_file_uploaded")
-        err = false
-        audit = {:event=>"productupdate_record_add", :message=>"Product Update Record added", :target_class=>"ProductUpdate", :userid => session[:userid]}
-        AuditEvent.success(audit)
-      end
-    else
-      msg = I18n.t("flash.ops.settings.locate_file", :typ=>"Server Product Update")
-      err = true
-    end
-    redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
-  end
-
   private
 
 end
