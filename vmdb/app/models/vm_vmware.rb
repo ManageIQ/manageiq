@@ -26,13 +26,4 @@ class VmVmware < VmInfra
   def supports_snapshots?
     true
   end
-
-  def self.calculate_power_state(raw_power_state)
-    case raw_power_state
-    when "poweredOn"  then "on"
-    when "poweredOff" then "off"
-    when "suspended"  then "suspended"
-    else                   super
-    end
-  end
 end
