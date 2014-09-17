@@ -63,13 +63,15 @@ class EmsEvent
       call("src_vm", "template=", options)
     end
 
-    def change_event_target_state(target, param)
+    def change_event_target_state(target_str, param)
       options = {
         :param => param,
         :save  => true
       }
 
-      call(target, "state=", options)
+      target = get_target(target_str)
+      method = target.respond_to?(:raw_power_state=) ? "raw_power_state=" : "state="
+      call(target_str, method, options)
     end
 
     def src_vm_destroy_all_snapshots
