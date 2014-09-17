@@ -14,7 +14,7 @@
           <%= text_field_tag("name",
                              @edit[:new][:name].to_s,
                              :maxlength         => 40,
-                             "data-miq_observe" => {:interval => '.5', 
+                             "data-miq_observe" => {:interval => '.5',
                                                     :url      => url}.to_json)
           %>
         </div>
@@ -28,7 +28,7 @@
           <%= text_field_tag("description",
                              @edit[:new][:description],
                              :maxlength         => 60,
-                             "data-miq_observe" => {:interval => '.5', 
+                             "data-miq_observe" => {:interval => '.5',
                                                     :url      => url}.to_json)
           %>
         </div>
@@ -36,6 +36,6 @@
     </tr>
   </table>
   <hr>
-  <p class="legend">Assign Buttons</p>
+  <p class="legend">Assign Items</p>
   <%= render :partial => "column_lists" %>
 </div>
