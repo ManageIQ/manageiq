@@ -3,17 +3,8 @@
 #
 
 vm = $evm.root['vm']
-category = "lifecycle"
-tag = "retire_full"
 
-miq_guid = /\w*MIQ\sGUID/i
-if vm.v_annotation =~  miq_guid
-  vm_was_provisioned = true
-else
-  vm_was_provisioned = false
-end
-
-if vm && (vm_was_provisioned || vm.miq_provision || vm.tagged_with?(category, tag))
+if vm && $evm.get_state_var('vm_deleted_from_provider')
   $evm.log('info', "Deleting VM <#{vm.name}> from VMDB")
   vm.remove_from_vmdb
 end
