@@ -985,21 +985,16 @@ class ApplicationController < ActionController::Base
   end
 
   def set_user_time_zone
-    tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-
     # if authenticating or past login screen
-    if (!session[:userid].blank? || !params[:user_name].blank?)
-      user = session[:userid].blank? ? params[:user_name] : session[:userid]
-      @tz = get_timezone_for_userid(user)
-    elsif !tz.blank?
-      #before login screen
-      @tz = tz
-    end
-    @tz = @tz.blank? ? "UTC" : @tz      #if server and user zone has not been set yet
-#   Time.zone = ActiveSupport::TimeZone::MAPPING[@tz]
-    Time.zone = @tz
-    session[:user_tz] = @tz
-#   Time.zone = ActiveSupport::TimeZone::MAPPING["UTC"] if Time.zone.blank?       #if timezone saved didnt exist in Mapping table
+    @tz = if session[:userid].present? || params[:user_name].present?
+            get_timezone_for_userid(session[:userid] || params[:user_name])
+          else
+            MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
+          end
+
+    @tz ||= 'UTC'
+
+    session[:user_tz] = Time.zone = @tz
   end
 
   # Initialize the options for server selection
@@ -1427,41 +1422,44 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def rbac_free_for_custom_button?(task, button_id)
+    task == "custom_button" && CustomButton.find_by_id(from_cid(button_id))
+  end
+
   def check_button_rbac
-    task = params['pressed']
-    if rbac_check_required_for_button?(task)
-      passed = role_allows(:feature => task)     # Intentional single = so we can check auth later
-      unless passed
-        add_flash(I18n.t("flash.user_not_authorized"), :error)
-        render :update do |page|                      # Use RJS to update the display
-          page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
-        end
-      end
-      passed
-    else
-      $log.debug("security warning, feature does not exist for button: '#{task}'")
-      true # FIXME: should not return true like this when the RBAC is fixed
+    task = params[:pressed]
+    # Intentional single = so we can check auth later
+    rbac_free_for_custom_button?(task, params[:button_id]) || role_allows(:feature => task)
+  end
+
+  def handle_button_rbac
+    pass = check_button_rbac
+    unless pass
+      add_flash(I18n.t("flash.user_not_authorized"), :error)
+      render_flash
     end
+    pass
   end
 
   def check_generic_rbac
     ident = "#{controller_name}_#{action_name}"
-
     if MiqProductFeature.feature_exists?(ident)
-      passed = role_allows(:feature => ident, :any => true)
-      unless passed
-        if request.xml_http_request?
-          render :update do |page|
-            page.redirect_to :controller => 'dashboard', :action => 'auth_error'
-          end
-        else
-          redirect_to(:controller => 'dashboard', :action => 'auth_error')
-        end
-      end
-      passed
+      role_allows(:feature => ident, :any => true)
     else
-      validate_route(controller_name, request.env['REQUEST_METHOD'], action_name)
+      valid_route?(request.request_method, controller_name, action_name)
     end
+  end
+
+  def handle_generic_rbac
+    pass = check_generic_rbac
+    unless pass
+      if request.xml_http_request?
+        ie8_safe_redirect(url_for(:controller => 'dashboard', :action => 'auth_error'))
+      else
+        redirect_to(:controller => 'dashboard', :action => 'auth_error')
+      end
+    end
+    pass
   end
 
   # used as a before_filter for controller actions to check that
@@ -1483,19 +1481,8 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    pass = if %w(button x_button).include?(action_name)
-             check_button_rbac  # If a button was pressed, check button RBAC
-           else
-             check_generic_rbac # Check all other URLs against RBAC rules
-           end
-
+    pass = %w(button x_button).include?(action_name) ? handle_button_rbac : handle_generic_rbac
     $audit_log.failure("Userid [#{session[:userid]}], Role ID [#{User.current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
-  end
-
-  def rbac_check_required_for_button?(task)
-    # don't need to check rbac access for custom buttons
-    # make sure custom_button that came in is a valid button
-    task == "custom_button" ? !CustomButton.find_by_id(from_cid(params[:button_id])) : true
   end
 
   def cleanup_action
@@ -2808,7 +2795,7 @@ class ApplicationController < ActionController::Base
                       :record_name=>record_name),
                 :error)
     elsif authrec.nil?
-      add_flash(I18n.t("flash.record_not_authorized for user",
+      add_flash(I18n.t("flash.record_not_authorized_for_user",
                       :record_name=>"#{ui_lookup(:model=>rec.class.base_model.to_s)} '#{resource_name}'"),
                 :error)
     end
@@ -2833,14 +2820,9 @@ class ApplicationController < ActionController::Base
           I18n.t("flash.user_not_authorized") unless role_allows(:feature => feature)
   end
 
-  def validate_route(controller, route_type, action)
-    valid_actions = CONTROLLER_ACTIONS.fetch_path(controller.to_sym, route_type.downcase.to_sym) || []
-    return true if valid_actions.include?(action)
-
-    # TODO: Remove this line once all routes are completed
-    return true if CONTROLLER_ACTIONS.key?(controller.to_sym) && CONTROLLER_ACTIONS.fetch_path(controller.to_sym).nil?
-
-    raise MiqException::RbacPrivilegeException, I18n.t("flash.user_not_authorized")
+  def valid_route?(request_method, controller,  action)
+    valid_actions = CONTROLLER_ACTIONS.fetch_path(controller.to_sym, request_method.downcase.to_sym) || []
+    valid_actions.include?(action)
   end
 
   def previous_breadcrumb_url

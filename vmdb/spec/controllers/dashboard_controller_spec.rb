@@ -13,6 +13,7 @@ describe DashboardController do
       User.stub(:authenticate).and_return(user)
       cfg = {:product => {:vdi => true}}
       controller.stub(:get_vmdb_config).and_return(cfg)
+      controller.stub(:user_is_super_admin?).and_return(true)
       controller.stub(:start_url_for_user).and_return('some_url')
       post :authenticate, :user_name => user.userid, :user_password => 'secret'
       session[:userid].should == user.userid
@@ -29,17 +30,16 @@ describe DashboardController do
     it "returns flash message when user's group is missing" do
       user = FactoryGirl.create(:user, :userid => 'wilma')
       User.stub(:authenticate).and_return(user)
-      controller.send(:validate_user, user)
-      assigns(:flash_msg).should include('User\'s Group is missing')
+      validation = controller.send(:validate_user, user)
+      expect(validation.flash_msg).to include('User\'s Group is missing')
     end
 
     it "returns flash message when user's role is missing" do
       group = FactoryGirl.create(:miq_group, :description => 'test_group')
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
       User.stub(:authenticate).and_return(user)
-      controller.send(:validate_user, user)
-      session[:group].should eq(group.id)
-      assigns(:flash_msg).should include('User\'s Role is missing')
+      validation = controller.send(:validate_user, user)
+      expect(validation.flash_msg).to include('User\'s Role is missing')
     end
 
     it "returns url for the user and sets user's group/role id in session" do
@@ -51,11 +51,12 @@ describe DashboardController do
       cfg = {:product => {:vdi => true}}
       controller.stub(:get_vmdb_config).and_return(cfg)
       controller.stub(:start_url_for_user).and_return('some_url')
-      url = controller.send(:validate_user, user)
+      controller.stub(:user_is_super_admin?).and_return(true)
+      validation = controller.send(:validate_user, user)
       session[:group].should eq(group.id)
       session[:role].should eq(role.id)
-      assigns(:flash_msg).should be_nil
-      url.should eq('some_url')
+      expect(validation.flash_msg).to be_nil
+      expect(validation.url).to eq('some_url')
     end
   end
 

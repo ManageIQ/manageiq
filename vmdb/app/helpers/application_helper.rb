@@ -4,6 +4,10 @@ module ApplicationHelper
   include Sandbox
   include CompressedIds
 
+  def css_background_color
+    (@css || {}).fetch_path(:background_color) || 'black'
+  end
+
   # From http://www.juixe.com/techknow/index.php/2006/07/15/acts-as-taggable-tag-cloud
   #   which refers to http://blog.craz8.com/articles/2005/10/28/acts_as_taggable-is-a-cool-piece-of-code
   def tag_cloud(tags, classes)
@@ -44,23 +48,24 @@ module ApplicationHelper
 
   # Check role based authorization for a UI task
   def role_allows(options={})
+    role_allows_intern(options) rescue false
+  end
+
+  def role_allows_intern(options = {})
     role_id = User.current_user.miq_user_role.try(:id)
     if options[:feature]
-      if options[:any]
-        auth = User.current_user.role_allows_any?(:identifiers=>[options[:feature]])
-      else
-        auth = User.current_user.role_allows?(:identifier=>options[:feature])
-      end
+      auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :
+                             User.current_user.role_allows?(:identifier => options[:feature])
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
     elsif options[:main_tab]
       tab = MAIN_TAB_FEATURES.select{|t| t.first == options[:main_tab]}.first
-      auth = User.current_user.role_allows_any?(:identifiers=>tab.last)
+      auth = User.current_user.role_allows_any?(:identifiers => tab.last)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], main tab [#{options[:main_tab]}]")
     else
       auth = false
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], no main tab or feature passed to role_allows")
     end
-    return auth
+    auth
   end
 
   # Check group based filtered authorization for a UI task

@@ -18,7 +18,7 @@ class PrivilegeCheckerService
   end
 
   def session_active?(session)
-    Time.current - session[:last_trans_time] <= @vmdb_config[:session][:timeout]
+    Time.current - (session[:last_trans_time] || Time.current) <= @vmdb_config[:session][:timeout]
   end
 
   def server_ready?(session)
