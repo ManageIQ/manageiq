@@ -1,7 +1,6 @@
 module ApplicationHelper
   include_concern 'Dialogs'
   include_concern 'PageLayouts'
-  include_concern 'PagingControls'
   include Sandbox
   include CompressedIds
 
@@ -1543,7 +1542,7 @@ module ApplicationHelper
       tb_buttons[button][:prompt] = true
     end
     eval("parms = \"#{item[:url_parms]}\"") if item[:url_parms]
-    tb_buttons[button][:url_parms] = parms if item[:url_parms]
+    tb_buttons[button][:url_parms] = update_url_parms(parms) if item[:url_parms]
     # doing eval for ui_lookup in confirm message
     eval("confirm_title = \"#{item[:confirm]}\"") if item[:confirm]
     tb_buttons[button][:confirm] = confirm_title if item[:confirm]
@@ -2594,5 +2593,39 @@ module ApplicationHelper
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
     !@ownershipitems && !@retireitems && !@politems && !@new_policy &&
     !@in_a_form && !@vdiitems
+  end
+
+  def update_url_parms(url_parm)
+    return url_parm if /=/.match(url_parm).nil?
+
+    keep_parms = %w(bc escape menu_click sb_controller)
+    query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
+    query_string.delete_if { | k, _v | !keep_parms.include? k }
+
+    url_parm_hash = preprocess_url_param(url_parm)
+    query_string.merge!(url_parm_hash)
+    URI.decode("?#{query_string.to_query}")
+  end
+
+  def preprocess_url_param(url_parm)
+    parse_questionmark = /^\?/.match(url_parm)
+    parse_ampersand = /^&/.match(url_parm)
+    url_parm = parse_questionmark.post_match if parse_questionmark.present?
+    url_parm = parse_ampersand.post_match if parse_ampersand.present?
+    encoded_url = URI.encode(url_parm)
+    Rack::Utils.parse_query URI("?#{encoded_url}").query
+  end
+
+  def update_paging_url_parms(parameter_to_update = {})
+    updated_query_string = update_query_string_params(parameter_to_update)
+    "#{request.path_info}?#{updated_query_string.to_query}"
+  end
+
+  def update_query_string_params(update_this_param)
+    exclude_params = %w(flash_msg page sortby sort_choice type)
+    query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
+    updated_query_string = query_string.symbolize_keys
+    updated_query_string.delete_if { | k, _v | exclude_params.include? k.to_s }
+    updated_query_string.merge!(update_this_param)
   end
 end

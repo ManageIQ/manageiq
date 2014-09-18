@@ -27,7 +27,7 @@
 						<%= select_tag("sort_choice",
                                 options_for_select(["Sort by:"] + @view.headers),
                                 "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                "data-miq_observe"=>{:url => paging_controls_url(action_url)}.to_json) %>
+                                "data-miq_observe"=>{:url => update_paging_url_parms}.to_json) %>
 					</td>
 				<% end %>
 			<% else %>
@@ -97,7 +97,7 @@
 							<%= select_tag("perpage_setting#{@pc_occ}",
                                 options_for_select(@pp_choices, pages[:perpage]),
                                 "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                                "data-miq_observe"=>{:url => paging_controls_url(action_url)}.to_json) %>
+                                "data-miq_observe"=>{:url => update_paging_url_parms}.to_json) %>
 						</td>
 						<td nowrap>
 								<!-- first button -->
@@ -105,14 +105,14 @@
 									<% if @ajax_paging_buttons %>
 
 											<%= link_to(image_tag('/images/toolbars/first.png', :border=>"0", :class=>"rollover small"),
-                              paging_controls_url(action_url, :page => 1),
+                              update_paging_url_parms(:page => 1),
 															"data-miq_sparkle_on" => true,
 															"data-miq_sparkle_off" => true,
 															:remote=>true,
 															:title=>"") %>
 
 											<%= link_to(image_tag('/images/toolbars/previous.png', :border=>"0", :class=>"rollover small"),
-                              paging_controls_url(action_url, :page => pages[:current] - 1),
+                              update_paging_url_parms(:page => pages[:current] - 1),
 															"data-miq_sparkle_on" => true,
 															"data-miq_sparkle_off" => true,
 															:remote=>true,
@@ -121,17 +121,17 @@
 									<% elsif action_id %>
 
 											<%= link_to(image_tag('/images/toolbars/first.png', :border=>"0",:class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => 1)) %>
+                                  update_paging_url_parms(:page => 1)) %>
 
 											<%= link_to(image_tag('/images/toolbars/previous.png', :border=>"0", :class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => pages[:current] - 1)) %>
+                                  update_paging_url_parms(:page => pages[:current] - 1)) %>
 
 									<% else %>
 											<%= link_to(image_tag('/images/toolbars/first.png', :border=>"0", :class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => 1)) %>
+                                  update_paging_url_parms(:page => 1)) %>
 
 											<%= link_to(image_tag('/images/toolbars/previous.png', :border=>"0", :class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => pages[:current] - 1)) %>
+                                  update_paging_url_parms(:page => pages[:current] - 1)) %>
 
 									<% end %>
 								<% else %>
@@ -142,30 +142,30 @@
 								<% if pages[:current] < pages[:total] %>
 									<% if @ajax_paging_buttons %>
 											<%= link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
-                              paging_controls_url(action_url, :page => pages[:current] - 1),
+                              update_paging_url_parms(:page => pages[:current] - 1),
 															"data-miq_sparkle_on" => true,
 															"data-miq_sparkle_off" => true,
 															:remote=>true,
 															:title=>"") %>
 
 											<%= link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
-                              paging_controls_url(action_url, :page => pages[:total]),
+                              update_paging_url_parms(:page => pages[:total]),
 															"data-miq_sparkle_on" => true,
 															"data-miq_sparkle_off" => true,
 															:remote=>true,
 															:title=>"") %>
 									<% elsif action_id %>
 											<%= link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => pages[:current] + 1)) %>
+                                  update_paging_url_parms(:page => pages[:current] + 1)) %>
 
 											<%= link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => pages[:total])) %>
+                                  update_paging_url_parms(:page => pages[:total])) %>
 
 									<% else %>
 											<%= link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => pages[:current] + 1)) %>
+                                  update_paging_url_parms(:page => pages[:current] + 1)) %>
 											<%= link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
-                                  paging_controls_url(action_url, :page => pages[:total])) %>
+                                  update_paging_url_parms(:page => pages[:total])) %>
 									<% end %>
 								<% else %>
 											<%= image_tag('/images/toolbars/next.png', :class=>"dimmed small") %>
