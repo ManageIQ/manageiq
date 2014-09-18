@@ -12,9 +12,6 @@ namespace :db do
     when "postgres", "postgresql"
       sql = "SELECT pg_size_pretty(pg_database_size('#{database_name}'));"
       puts ActiveRecord::Base.connection.execute(sql)[0]["pg_size_pretty"]
-    when "oracle", "oci"
-      sql = "select a.data_size+b.temp_size+c.redo_size+d.controlfile_size  from ( select sum(bytes) data_size from dba_data_files) a, ( select nvl(sum(bytes),0) temp_size from dba_temp_files ) b, ( select sum(bytes) redo_size from sys.v_$log ) c, ( select sum(BLOCK_SIZE*FILE_SIZE_BLKS) controlfile_size from v$controlfile) d;"
-      puts ActiveRecord::Base.connection.execute(sql).fetch_hash.values.first
     else
       raise "#{adapter} is not supported"
     end

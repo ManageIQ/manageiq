@@ -1,4 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/../../../../lib/db/MiqOracle")
 $:.push("#{File.dirname(__FILE__)}/../../../../lib/ServiceNowWebService")
 $:.push("#{File.dirname(__FILE__)}/../../../../lib/RcuWebService")
 
@@ -103,14 +102,6 @@ module MiqAeMethodService
       options.each { |k, v| ar_options[k.to_sym] = v if Classification.column_names.include?(k.to_s) || k.to_s == 'name' }
       entry = cat.add_entry(ar_options)
       true
-    end
-
-    def self.oracle_stored_procedure(database, username, password, procedure_name, *params)
-      ar_method do
-        require 'MiqOracle'
-        password = MiqAePassword.decrypt_if_password(password)
-        MiqOracle.exec_stored_procedure(database, username, password, procedure_name, *params)
-      end
     end
 
     def self.netapp_create_datastore(netapp_address, netapp_userid, netapp_password, container, aggregate_or_volume_name, datastore_name, size, protocol = 'NFS', thin_provision = false, auto_grow = false)

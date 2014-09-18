@@ -29,14 +29,6 @@ module MiqAeEngine
       MiqAeMethodService::MiqAeServiceMethods.snmp_trap_v2(inputs)
     end
 
-    def self.miq_oracle_stored_procedure(obj, inputs)
-      if inputs['params'].nil?
-        MiqAeMethodService::MiqAeServiceMethods.oracle_stored_procedure(inputs['database'], inputs['username'], inputs['password'], inputs['procedure_name'] )
-      else
-        MiqAeMethodService::MiqAeServiceMethods.oracle_stored_procedure(inputs['database'], inputs['username'], inputs['password'], inputs['procedure_name'], *(inputs['params']) )
-      end
-    end
-
     def self.miq_service_now_eccq_insert(obj, inputs)
       if inputs['payload'].nil?
         MiqAeMethodService::MiqAeServiceMethods.service_now_eccq_insert(inputs['server'], inputs['username'], inputs['password'], inputs['agent'], inputs['queue'], inputs['topic'], inputs['name'], inputs['source'] )

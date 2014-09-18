@@ -59,7 +59,6 @@ gem "ovirt_metrics",                  "~>1.0.1",      :require => false
 gem "pg",                             "~>0.12.2",     :require => false
 gem "rack",                           "~>1.4.1",      :require => false
 
-gem "ruby-plsql",                     "=0.4.1",       :require => false
 gem "ruby-progressbar",               "~>0.0.10",     :require => false
 gem "rufus-scheduler",                "~>2.0.19",     :require => false
 gem "savon",                          "~>2.2.0",      :require => false  # Automate uses this for simple SOAP Integration
