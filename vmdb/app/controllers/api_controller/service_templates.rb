@@ -48,9 +48,8 @@ class ApiController
       return st, :service_templates
     end
 
-    # Method for when service templates is a collection
-    def order_resource_service_templates(_type, id = nil, data = nil)
-      # first argument is nil since there is no parent object
+    def order_resource_services(_type, id = nil, data = nil)
+      # first argument is nil since there is no parent object 
       service_templates_order_resource(nil, _type, id, data)
     end
 
