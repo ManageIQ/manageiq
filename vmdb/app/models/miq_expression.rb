@@ -10,9 +10,11 @@ class MiqExpression
     CloudResourceQuota
     CloudTenant
     Compliance
+    EmsCloud
     EmsCluster
     EmsClusterPerformance
     EmsEvent
+    EmsInfra
     ExtManagementSystem
     Flavor
     Host
