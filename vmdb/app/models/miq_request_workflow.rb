@@ -1000,8 +1000,8 @@ class MiqRequestWorkflow
   def ci_to_hash_struct(ci)
     return ci.collect {|c| ci_to_hash_struct(c)} if ci.kind_of?(Array)
     method_name = "#{ci.class.base_class.name.underscore}_to_hash_struct".to_sym
-    return self.send(method_name, ci) if self.respond_to?(method_name)
-    ci
+    return send(method_name, ci) if respond_to?(method_name, true)
+    default_ci_to_hash_struct(ci)
   end
 
   def host_to_hash_struct(ci)
@@ -1014,20 +1014,14 @@ class MiqRequestWorkflow
     v
   end
 
-  def ext_management_system_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name])
-  end
-
-  def ems_cluster_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name])
+  def default_ci_to_hash_struct(ci)
+    attributes = []
+    attributes << :name if ci.respond_to?(:name)
+    build_ci_hash_struct(ci, attributes)
   end
 
   def ems_folder_to_hash_struct(ci)
     build_ci_hash_struct(ci, [:name, :is_datacenter?])
-  end
-
-  def resource_pool_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name])
   end
 
   def storage_to_hash_struct(ci)
