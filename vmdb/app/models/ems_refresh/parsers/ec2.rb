@@ -104,12 +104,12 @@ module EmsRefresh::Parsers
     end
 
     def get_public_images
-      get_images(@connection.images.executable_by(:all))
+      get_images(@connection.images.executable_by(:all), true)
     end
 
-    def get_images(image_collection)
+    def get_images(image_collection, is_public = false)
       images = image_collection.filter("image-type", "machine")
-      process_collection(images, :vms) { |image| parse_image(image) }
+      process_collection(images, :vms) { |image| parse_image(image, is_public) }
     end
 
     def get_instances
@@ -260,7 +260,7 @@ module EmsRefresh::Parsers
       ret
     end
 
-    def parse_image(image)
+    def parse_image(image, is_public)
       uid      = image.id
       location = image.location
       guest_os = (image.platform == "windows") ? "windows" : "linux"
@@ -271,16 +271,19 @@ module EmsRefresh::Parsers
       name   ||= uid
 
       new_result = {
-        :type        => "TemplateAmazon",
-        :uid_ems     => uid,
-        :ems_ref     => uid,
-        :name        => name,
-        :location    => location,
-        :vendor      => "amazon",
-        :power_state => "never",
-        :template    => true,
+        :type               => "TemplateAmazon",
+        :uid_ems            => uid,
+        :ems_ref            => uid,
+        :name               => name,
+        :location           => location,
+        :vendor             => "amazon",
+        :power_state        => "never",
+        :template           => true,
+        # the is_public flag here avoids having to make an additional API call
+        # per image, since we already know whether it's a public image
+        :publicly_available => is_public,
 
-        :hardware    => {
+        :hardware           => {
           :guest_os            => guest_os,
           :bitness             => ARCHITECTURE_TO_BITNESS[image.architecture],
           :virtualization_type => image.virtualization_type,
