@@ -32,7 +32,8 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       assert_specific_floating_ip
       assert_specific_key_pair
       assert_specific_security_group
-      assert_specific_template
+      assert_specific_private_template
+      assert_specific_public_template
       assert_specific_vm_powered_on
       assert_specific_template_created_from_vm
       assert_specific_vm_created_from_snapshot_template
@@ -197,13 +198,22 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     end
   end
 
-  def assert_specific_template
-    @template = TemplateOpenstack.where(:name => "EmsRefreshSpec-Image").first
-    @template.should have_attributes(
+  def assert_specific_private_template
+    assert_specific_template("cirros-0.3.0-x86_64", "d3a7f7fd-4642-405a-983c-d84008cf3e8b", true)
+  end
+
+  def assert_specific_public_template
+    @template = assert_specific_template("EmsRefreshSpec-Image", "a11384ef-a7d1-4c99-b063-dd60a357d3ff")
+  end
+
+  def assert_specific_template(name, uid, is_public = false)
+    template = TemplateOpenstack.where(:name => name).first
+    template.should have_attributes(
       :template              => true,
-      :ems_ref               => "a11384ef-a7d1-4c99-b063-dd60a357d3ff",
+      :publicly_available    => is_public,
+      :ems_ref               => uid,
       :ems_ref_obj           => nil,
-      :uid_ems               => "a11384ef-a7d1-4c99-b063-dd60a357d3ff",
+      :uid_ems               => uid,
       :vendor                => "OpenStack",
       :power_state           => "never",
       :location              => "unknown",
@@ -224,13 +234,14 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       :cpu_shares_level      => nil
     )
 
-    @template.ext_management_system.should  == @ems
-    @template.operating_system.should       be_nil # TODO: This should probably not be nil
-    @template.custom_attributes.size.should == 0
-    @template.snapshots.size.should         == 0
-    @template.hardware.should               be_nil
+    template.ext_management_system.should  == @ems
+    template.operating_system.should       be_nil # TODO: This should probably not be nil
+    template.custom_attributes.size.should == 0
+    template.snapshots.size.should         == 0
+    template.hardware.should               be_nil
 
-    @template.parent.should                 be_nil
+    template.parent.should                 be_nil
+    template
   end
 
   def assert_specific_vm_powered_on

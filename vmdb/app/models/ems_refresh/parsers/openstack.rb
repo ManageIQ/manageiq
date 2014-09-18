@@ -483,13 +483,14 @@ module EmsRefresh::Parsers
       parent_server_uid = parse_image_parent_id(image)
 
       new_result = {
-        :type        => "TemplateOpenstack",
-        :uid_ems     => uid,
-        :ems_ref     => uid,
-        :name        => image.name,
-        :vendor      => "openstack",
-        :power_state => "never",
-        :template    => true,
+        :type               => "TemplateOpenstack",
+        :uid_ems            => uid,
+        :ems_ref            => uid,
+        :name               => image.name,
+        :vendor             => "openstack",
+        :power_state        => "never",
+        :template           => true,
+        :publicly_available => image.is_public,
       }
       new_result[:parent_vm_uid] = parent_server_uid unless parent_server_uid.nil?
       new_result[:cloud_tenant]  = @data_index.fetch_path(:cloud_tenants, image.owner) if image.owner
