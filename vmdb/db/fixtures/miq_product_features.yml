@@ -1544,6 +1544,10 @@
     :feature_type: node
     :identifier: miq_report_schedules
     :children:
+    - :name: View
+      :description: View Schedules
+      :feature_type: view
+      :identifier: miq_report_schedule_view
     - :name: Operate
       :description: Perform Operations on Schedules
       :feature_type: control

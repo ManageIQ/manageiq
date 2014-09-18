@@ -152,7 +152,7 @@ class ReportController < ApplicationController
       self.x_active_accord ||= 'reports'
     end
 
-    if role_allows(:feature => "miq_report_schedules")
+    if role_allows(:feature => "miq_report_schedules", :any => true)
       build_schedules_tree
       @trees.push("schedules_tree")
       @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_tree_div")

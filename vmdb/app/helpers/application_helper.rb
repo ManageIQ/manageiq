@@ -602,9 +602,10 @@ module ApplicationHelper
   end
 
   def build_toolbar_hide_button_report(id)
-    if ["miq_report_copy","miq_report_delete","miq_report_edit","miq_report_new",
-        "miq_report_run","miq_report_schedules"].include?(id )
-      return true if !role_allows(:feature=>id)
+    if %w(miq_report_copy miq_report_delete miq_report_edit
+          miq_report_new miq_report_run miq_report_schedule_add).include?(id) ||
+        x_active_tree == :schedules_tree
+      return true unless role_allows(:feature => id)
     end
     case x_active_tree
       when :widgets_tree
@@ -622,7 +623,7 @@ module ApplicationHelper
           when "miq_report_edit","miq_report_delete"
             return @sb[:active_tab] == "report_info" && @record.rpt_type == "Custom" ?
                 false : true
-          when "miq_report_copy","miq_report_new","miq_report_run","miq_report_only","miq_report_schedules"
+          when "miq_report_copy", "miq_report_new", "miq_report_run", "miq_report_only", "miq_report_schedule_add"
             return @sb[:active_tab] == "saved_reports"
           when "view_graph","view_hybrid","view_tabular"
             return @ght_type && @report && @report.graph &&
