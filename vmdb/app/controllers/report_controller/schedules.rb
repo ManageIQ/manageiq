@@ -55,7 +55,7 @@ module ReportController::Schedules
   end
 
   def schedule_new
-    assert_privileges(@sb[:tree_typ] == "reports" ? "miq_report_schedules" : "schedule_add")
+    assert_privileges("miq_report_schedule_add")
     @schedule        = MiqSchedule.new(:userid=>session[:userid])
     @in_a_form       = true
     @schedule.towhat = "MiqReport"
@@ -71,36 +71,32 @@ module ReportController::Schedules
     end
     schedule_edit
   end
-  alias schedule_add schedule_new
-  alias miq_report_schedules schedule_new
+  alias_method :miq_report_schedule_add, :schedule_new
 
   # Delete all selected or single displayed action(s)
-  def schedule_delete
-    assert_privileges("schedule_delete")
+  def miq_report_schedule_delete
+    assert_privileges("miq_report_schedule_delete")
     scheds = find_checked_items
-    if params[:id] != nil && MiqSchedule.find_by_id(from_cid(params[:id])).nil?
-      add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:model=>"MiqSchedule")), :error)
-    else
-      scheds.push(from_cid(params[:id])) if params[:id]
+    if params[:id]
+      if MiqSchedule.exists?(from_cid(params[:id]))
+        scheds.push(from_cid(params[:id]))
+      else
+        add_flash(I18n.t("flash.record.no_longer_exists", :model => ui_lookup(:model => "MiqSchedule")), :error)
+      end
     end
     process_schedules(scheds, "destroy")  unless scheds.empty?
     unless flash_errors?
-      if scheds.length > 1
-        add_flash(I18n.t("flash.selected_records_deleted",
-                        :model=>"#{ui_lookup(:model=>"MiqReport")} #{ui_lookup(:models=>"MiqSchedule")}"),
-                  :info, true)
-      else
-        add_flash(I18n.t("flash.selected_record_deleted",
-                        :model=>"#{ui_lookup(:model=>"MiqReport")} #{ui_lookup(:model=>"MiqSchedule")}"),
-                  :info, true)
-      end
+      msg_str = scheds.length > 1 ? "selected_records_deleted" : "selected_record_deleted"
+      add_flash(I18n.t("flash.#{msg_str}",
+                       :model => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"),
+                :info, true)
     end
     self.x_node = "root"
     replace_right_cell(:replace_trees => [:schedules])
   end
 
-  def schedule_run_now
-    assert_privileges("schedule_run_now")
+  def miq_report_schedule_run_now
+    assert_privileges("miq_report_schedule_run_now")
     scheds = find_checked_items
     if scheds.empty? && params[:id].nil?
       add_flash(I18n.t("flash.report.no_schedules_selected_to_run"), :error)
@@ -108,10 +104,10 @@ module ReportController::Schedules
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
     else
-      if params[:id] != nil && MiqSchedule.find_by_id(from_cid(params[:id])).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:model=>"MiqSchedule")), :error)
+      if MiqSchedule.exists?(from_cid(params[:id]))
+        scheds.push(from_cid(params[:id]))
       else
-        scheds.push(from_cid(params[:id])) if params[:id]
+        add_flash(I18n.t("flash.record.no_longer_exists", :model => ui_lookup(:model => "MiqSchedule")), :error)
       end
     end
     MiqSchedule.find_all_by_id(scheds, :order => "lower(name)").each do |sched|
@@ -119,7 +115,7 @@ module ReportController::Schedules
       audit = {:event=>"queue_scheduled_work", :message=>"Schedule [#{sched.name}] queued to run from the UI by user #{session[:username]}", :target_id=>sched.id, :target_class=>"MiqSchedule", :userid => session[:userid]}
       AuditEvent.success(audit)
     end
-    if ! flash_errors?
+    unless flash_errors?
       add_flash(I18n.t("flash.schedule#{params[:id] ? "" : "s"}_queued_to_run"), :info, true)
     end
     get_node_info
@@ -127,7 +123,7 @@ module ReportController::Schedules
   end
 
   def schedule_toggle(enable)
-    assert_privileges("schedule_#{enable ? 'enable' : 'disable'}")
+    assert_privileges("miq_report_schedule_#{enable ? 'enable' : 'disable'}")
     present_action = enable ? 'enable' : 'disable'
     past_action = present_action + 'd'
 
@@ -148,11 +144,11 @@ module ReportController::Schedules
     replace_right_cell
   end
 
-  def schedule_enable
+  def miq_report_schedule_enable
     schedule_toggle(true)
   end
 
-  def schedule_disable
+  def miq_report_schedule_disable
     schedule_toggle(false)
   end
 
@@ -202,7 +198,7 @@ module ReportController::Schedules
   end
 
   def schedule_edit
-    assert_privileges("schedule_edit")
+    assert_privileges("miq_report_schedule_edit")
     case params[:button]
       when "cancel"
         @schedule = MiqSchedule.find_by_id(session[:edit][:sched_id]) if session[:edit] && session[:edit][:sched_id]
@@ -274,6 +270,7 @@ module ReportController::Schedules
         replace_right_cell
     end
   end
+  alias_method :miq_report_schedule_edit, :schedule_edit
 
   private
 
@@ -342,7 +339,8 @@ module ReportController::Schedules
     @folders = Array.new
 
     # Remember how this edit started
-    @edit[:type] = ["schedule_copy", "schedule_new"].include?(params[:action]) ? "schedule_new" : "schedule_edit"
+    @edit[:type] = %w(miq_report_schedule_copy
+                      miq_report_schedule_new).include?(params[:action]) ? "schedule_new" : "schedule_edit"
 
     # Get configured tz, default to user's tz
     @edit[:tz] = @schedule.run_at && @schedule.run_at[:tz] ? @schedule.run_at[:tz] : session[:user_tz]

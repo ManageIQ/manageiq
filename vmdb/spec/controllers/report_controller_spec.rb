@@ -751,7 +751,7 @@ describe ReportController do
 
   context "ReportController::Schedules" do
     before do
-      seed_specific_product_features("ops_explorer")
+      seed_specific_product_features("miq_report")
     end
 
     context "no schedules selected" do
@@ -762,15 +762,15 @@ describe ReportController do
         controller.should_receive(:replace_right_cell)
       end
 
-      it "#schedule_enable" do
-        controller.schedule_enable
+      it "#miq_report_schedule_enable" do
+        controller.miq_report_schedule_enable
         flash_messages = assigns(:flash_array)
         flash_messages.first[:message].should == "No Report Schedules were selected to be enabled"
         flash_messages.first[:level].should == :error
       end
 
-      it "#schedule_disable" do
-        controller.schedule_disable
+      it "#miq_report_schedule_disable" do
+        controller.miq_report_schedule_disable
         flash_messages = assigns(:flash_array)
         flash_messages.first[:message].should == "No Report Schedules were selected to be disabled"
         flash_messages.first[:level].should == :error
@@ -791,18 +791,18 @@ describe ReportController do
         controller.should_receive(:replace_right_cell)
       end
 
-      it "#schedule_enable" do
+      it "#miq_report_schedule_enable" do
         @sch.update_attribute(:enabled, false)
 
-        controller.schedule_enable
+        controller.miq_report_schedule_enable
         controller.send(:flash_errors?).should_not be_true
         @sch.reload
         @sch.should be_enabled
         @sch.updated_at.should be > 10.minutes.ago.utc
       end
 
-      it "#schedule_disable" do
-        controller.schedule_disable
+      it "#miq_report_schedule_disable" do
+        controller.miq_report_schedule_disable
         controller.send(:flash_errors?).should_not be_true
         @sch.reload
         @sch.should_not be_enabled
