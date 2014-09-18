@@ -1,6 +1,7 @@
 module ApplicationHelper
   include_concern 'Dialogs'
   include_concern 'PageLayouts'
+  include_concern 'PagingControls'
   include Sandbox
   include CompressedIds
 
@@ -1541,7 +1542,7 @@ module ApplicationHelper
     if tb_buttons[button][:name].in?(collect_log_buttons) && @record.try(:log_depot).try(:requires_support_case?)
       tb_buttons[button][:prompt] = true
     end
-    parms = update_url_parms(item[:url_parms], false) if item[:url_parms]
+    eval("parms = \"#{item[:url_parms]}\"") if item[:url_parms]
     tb_buttons[button][:url_parms] = parms if item[:url_parms]
     # doing eval for ui_lookup in confirm message
     eval("confirm_title = \"#{item[:confirm]}\"") if item[:confirm]
@@ -2580,34 +2581,6 @@ module ApplicationHelper
 
   def pdf_page_size_style
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
-  end
-
-  def update_url_parms(parameter_to_update, full_url_path = true)
-    if parameter_to_update.is_a?(String)
-      return parameter_to_update if /=/.match(parameter_to_update).nil?
-
-      parse_questionmark = /^\?/.match(parameter_to_update)
-      parse_ampersand = /^&/.match(parameter_to_update)
-      parameter_to_update = parse_questionmark.post_match if parse_questionmark.present?
-      parameter_to_update = parse_ampersand.post_match if parse_ampersand.present?
-
-      encoded_url = URI.encode(parameter_to_update)
-      parsed_parameter = Rack::Utils.parse_query URI("?#{encoded_url}").query
-      parsed_parameter_to_update = parsed_parameter.symbolize_keys
-      updated_query_string = update_query_string_params(parsed_parameter_to_update)
-    else
-      updated_query_string = update_query_string_params(parameter_to_update)
-    end
-    return "#{request.path_info}?#{updated_query_string.to_query}" if full_url_path
-    "?#{updated_query_string.to_query}"
-  end
-
-  def update_query_string_params(update_this_param)
-    exclude_params = %w(flash_msg page sortby sort_choice type)
-    query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
-    updated_query_string = query_string.symbolize_keys
-    updated_query_string.delete_if { | k, _v | exclude_params.include? k.to_s }
-    updated_query_string.merge!(update_this_param)
   end
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud
