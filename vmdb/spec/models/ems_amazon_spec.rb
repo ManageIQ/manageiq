@@ -26,15 +26,15 @@ describe EmsAmazon do
     end
 
     def assert_region(ems, name)
-      ems.name.should          == name
-      ems.hostname.should      == name.split(" ").first
-      ems.auth_user_pwd.should == [@ec2_user, @ec2_pass]
+      ems.name.should            == name
+      ems.provider_region.should == name.split(" ").first
+      ems.auth_user_pwd.should   == [@ec2_user, @ec2_pass]
     end
 
     def assert_region_on_another_account(ems, name)
-      ems.name.should          == name
-      ems.hostname.should      == name.split(" ").first
-      ems.auth_user_pwd.should == [@ec2_user2, @ec2_pass2]
+      ems.name.should            == name
+      ems.provider_region.should == name.split(" ").first
+      ems.auth_user_pwd.should   == [@ec2_user2, @ec2_pass2]
     end
 
 
@@ -58,7 +58,7 @@ describe EmsAmazon do
     end
 
     it "with some existing records" do
-      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :hostname => "us-west-1")
+      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
 
       found = recorded_discover(example)
       found.count.should == 1
@@ -70,8 +70,8 @@ describe EmsAmazon do
     end
 
     it "with all existing records" do
-      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-east-1", :hostname => "us-east-1")
-      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :hostname => "us-west-1")
+      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-east-1", :provider_region => "us-east-1")
+      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
 
       found = recorded_discover(example)
       found.count.should == 0
@@ -84,7 +84,7 @@ describe EmsAmazon do
 
     context "with records from a different account" do
       it "with the same name" do
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :hostname => "us-west-1")
+        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
         found.count.should == 2
@@ -97,8 +97,8 @@ describe EmsAmazon do
       end
 
       it "with the same name and backup name" do
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :hostname => "us-west-1")
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :hostname => "us-west-1")
+        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
+        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
         found.count.should == 2
@@ -112,9 +112,9 @@ describe EmsAmazon do
       end
 
       it "with the same name, backup name, and secondary backup name" do
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :hostname => "us-west-1")
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :hostname => "us-west-1")
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 1", :hostname => "us-west-1")
+        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
+        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :provider_region => "us-west-1")
+        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 1", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
         found.count.should == 2
@@ -132,30 +132,30 @@ describe EmsAmazon do
   end
 
   it "#description" do
-    ems = FactoryGirl.build(:ems_amazon, :hostname => "us-east-1")
+    ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
     ems.description.should == "US East (Northern Virginia)"
 
-    ems = FactoryGirl.build(:ems_amazon, :hostname => "us-west-1")
+    ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-west-1")
     ems.description.should == "US West (Northern California)"
   end
 
   context "validates_uniqueness_of" do
     it "name" do
-      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :hostname => "us-east-1") }.to_not raise_error
-      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :hostname => "us-east-1") }.to     raise_error(ActiveRecord::RecordInvalid, "Validation failed: Name has already been taken")
+      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :provider_region => "us-east-1") }.to_not raise_error
+      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :provider_region => "us-east-1") }.to     raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "blank region" do
-      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :hostname => "") }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Region is not included in the list")
+      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :provider_region => "") }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "nil region" do
-      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :hostname => nil) }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Region is not included in the list")
+      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :provider_region => nil) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it "duplicate hostname" do
-      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :hostname => "us-east-1") }.to_not raise_error
-      expect { FactoryGirl.create(:ems_amazon, :name => "ems_2", :hostname => "us-east-1") }.to_not raise_error
+    it "duplicate provider_region" do
+      expect { FactoryGirl.create(:ems_amazon, :name => "ems_1", :provider_region => "us-east-1") }.to_not raise_error
+      expect { FactoryGirl.create(:ems_amazon, :name => "ems_2", :provider_region => "us-east-1") }.to_not raise_error
     end
   end
 end

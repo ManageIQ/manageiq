@@ -564,6 +564,7 @@ module EmsCommon
     @edit[:current] = Hash.new
 
     @edit[:new][:name] = @ems.name
+    @edit[:new][:provider_region] = @ems.provider_region
     @edit[:new][:hostname] = @ems.hostname
     @edit[:new][:ipaddress] = @ems.ipaddress
     @edit[:new][:emstype] = @ems.emstype
@@ -620,6 +621,7 @@ module EmsCommon
 
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:ipaddress] = @edit[:new][:hostname] = "" if params[:server_emstype]
+    @edit[:new][:provider_region] = params[:provider_region] if params[:provider_region]
     @edit[:new][:hostname] = params[:hostname] if params[:hostname]
     @edit[:new][:ipaddress] = params[:ipaddress] if params[:ipaddress]
     if params[:server_emstype]
@@ -654,6 +656,7 @@ module EmsCommon
   # Set record variables to new values
   def set_record_vars(ems, mode = nil)
     ems.name = @edit[:new][:name]
+    ems.provider_region = @edit[:new][:provider_region]
     ems.hostname = @edit[:new][:hostname]
     ems.ipaddress = @edit[:new][:ipaddress]
     ems.port = @edit[:new][:port] if ["openstack", "rhevm"].include?(ems.emstype)

@@ -37,7 +37,7 @@ describe EmsCloudController do
     end
 
     context "#create" do
-      it "displays correct attribute name in error message when adding Amazon EMS" do
+      it "displays correct attribute name in error message when adding cloud EMS" do
         set_user_privileges
         controller.instance_variable_set(:@model, EmsCloud)
         controller.instance_variable_set(:@edit, {:new => {:name => "EMS 1", :emstype => "ec2"},
@@ -50,7 +50,7 @@ describe EmsCloudController do
         flash_messages.first[:level].should == :error
       end
 
-      it "displays correct attribute name in error message when adding non-Amazon EMS" do
+      it "displays correct attribute name in error message when adding infra EMS" do
         set_user_privileges
         controller.instance_variable_set(:@model, EmsCloud)
         controller.instance_variable_set(:@edit, {:new => {:name => "EMS 2", :emstype => "rhevm"},

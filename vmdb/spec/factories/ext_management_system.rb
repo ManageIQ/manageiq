@@ -37,7 +37,7 @@ FactoryGirl.define do
   end
 
   factory :ems_amazon, :class => "EmsAmazon", :parent => :ext_management_system do
-    hostname "us-east-1"
+    provider_region "us-east-1"
   end
 
   factory :ems_amazon_with_authentication, :parent => :ems_amazon do

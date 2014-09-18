@@ -14,10 +14,10 @@ class EmsAmazon < EmsCloud
     false
   end
 
-  validates :hostname, :inclusion => { :in => ::Amazon::EC2::Regions.names }
+  validates :provider_region, :inclusion => { :in => ::Amazon::EC2::Regions.names }
 
   def description
-    ::Amazon::EC2::Regions.find_by_name(self.hostname)[:description]
+    ::Amazon::EC2::Regions.find_by_name(provider_region)[:description]
   end
 
   #
@@ -31,7 +31,7 @@ class EmsAmazon < EmsCloud
   end
 
   def browser_url
-    "https://console.aws.amazon.com/ec2/v2/home?region=#{hostname}"
+    "https://console.aws.amazon.com/ec2/v2/home?region=#{provider_region}"
   end
 
   def connect(options = {})
@@ -40,7 +40,7 @@ class EmsAmazon < EmsCloud
     username = options[:user] || self.authentication_userid(options[:auth_type])
     password = options[:pass] || self.authentication_password(options[:auth_type])
 
-    self.class.raw_connect(username, password, options[:service], self.hostname, options[:proxy_uri])
+    self.class.raw_connect(username, password, options[:service], provider_region, options[:proxy_uri])
   end
 
   def verify_credentials(auth_type=nil, options={})
@@ -137,11 +137,11 @@ class EmsAmazon < EmsCloud
     all_ems_names = all_emses.index_by(&:name)
 
     known_emses = all_emses.select { |e| e.authentication_userid == access_key_id }
-    known_ems_hostnames = known_emses.index_by(&:hostname)
+    known_ems_regions = known_emses.index_by(&:provider_region)
 
     ec2 = raw_connect(access_key_id, secret_access_key)
     ec2.regions.each do |region|
-      next if known_ems_hostnames.include?(region.name)
+      next if known_ems_regions.include?(region.name)
       next if region.instances.count == 0 &&                 # instances
               region.images.with_owner(:self).count == 0 &&  # private images
               region.images.executable_by(:self).count == 0  # shared  images
@@ -181,9 +181,9 @@ class EmsAmazon < EmsCloud
     end
 
     new_ems = self.create!(
-      :name     => name,
-      :hostname => region_name,
-      :zone     => Zone.default_zone
+      :name            => name,
+      :provider_region => region_name,
+      :zone            => Zone.default_zone
     )
     new_ems.update_authentication(
       :default => {
