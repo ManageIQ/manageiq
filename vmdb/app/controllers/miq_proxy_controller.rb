@@ -999,7 +999,7 @@ class MiqProxyController < ApplicationController
 
   # edit single selected Object
   def deploy_build
-    assert_privileges("miq_task_deploy")
+    assert_privileges("miq_proxy_deploy")
     sps = find_checked_items
     sp = MiqProxy.find(sps[0])
     if sps.length > 1
