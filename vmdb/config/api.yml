@@ -415,8 +415,8 @@
     - :service_requests
     :subcollection_actions:  # /api/<collection>/<id>/service_templates
       :post:
-      - :name: order
-        :identifier: svc_catalog_provision
+      - :name: create #assign
+        :identifier: st_catalog_edit
       :delete:
       - :name: delete #unassign
         :identifier: st_catalog_edit
