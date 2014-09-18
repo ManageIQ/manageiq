@@ -48,11 +48,6 @@ class ApiController
       return st, :service_templates
     end
 
-    # Method is called only when service_templates is a subcollection
-    def service_templates_create_resource(_object, _type, id = nil, data = nil)
-      service_templates_order_resource(_object, _type, id, data)
-    end
-
     # Method for when service templates is a collection
     def order_resource_service_templates(_type, id = nil, data = nil)
       # first argument is nil since there is no parent object
