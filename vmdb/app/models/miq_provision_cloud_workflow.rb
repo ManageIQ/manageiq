@@ -14,11 +14,12 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
     ems.availability_zones.available.each_with_object({}) {|az, h| h[az.id] = az.name}
   end
 
-  def allowed_cloud_networks(options={})
-    src = resources_for_ui
-    return {} if src[:ems].nil?
+  def allowed_cloud_networks(_options = {})
+    return {} unless (src_obj = provider_or_tenant_object)
 
-    load_ar_obj(src[:ems]).cloud_networks.each_with_object({}) { |cn, hash| hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})" }
+    src_obj.cloud_networks.each_with_object({}) do |cn, hash|
+      hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})"
+    end
   end
 
   def allowed_cloud_subnets(_options = {})
@@ -44,20 +45,20 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
     ems.key_pairs.each_with_object({}) {|kp, h| h[kp.id] = kp.name}
   end
 
-  def allowed_security_groups(options={})
-    source = load_ar_obj(get_source_vm)
-    ems = source.try(:ext_management_system)
+  def allowed_security_groups(_options = {})
+    return {} unless (src_obj = provider_or_tenant_object)
 
-    return {} if ems.nil?
-    ems.security_groups.each_with_object({}) {|sg, h| h[sg.id] = display_name_for_name_description(sg)}
+    src_obj.security_groups.each_with_object({}) do |sg, h|
+      h[sg.id] = display_name_for_name_description(sg)
+    end
   end
 
-  def allowed_floating_ip_addresses(options={})
-    source = load_ar_obj(get_source_vm)
-    ems = source.try(:ext_management_system)
+  def allowed_floating_ip_addresses(_options = {})
+    return {} unless (src_obj = provider_or_tenant_object)
 
-    return {} if ems.nil?
-    ems.floating_ips.available.each_with_object({}) {|ip, h| h[ip.id] = ip.address}
+    src_obj.floating_ips.available.each_with_object({}) do |ip, h|
+      h[ip.id] = ip.address
+    end
   end
 
   def display_name_for_name_description(ci)
@@ -101,6 +102,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
     add_target(:placement_availability_zone, :availability_zone, AvailabilityZone, result)
     add_target(:cloud_network,               :cloud_network,     CloudNetwork,     result)
     add_target(:cloud_subnet,                :cloud_subnet,      CloudSubnet,      result)
+    add_target(:cloud_tenant,                :cloud_tenant,      CloudTenant,      result)
 
     rails_logger('get_source_and_targets', 1)
     return @target_resource=result
@@ -109,6 +111,13 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
   def dialog_name_from_automate(message, extra_attrs)
     extra_attrs['platform_category'] = 'cloud'
     super(message, extra_attrs)
+  end
+
+  def provider_or_tenant_object
+    src = resources_for_ui
+    return nil if src[:ems].nil?
+    obj = src[:cloud_tenant] || src[:ems]
+    load_ar_obj(obj)
   end
 end
 

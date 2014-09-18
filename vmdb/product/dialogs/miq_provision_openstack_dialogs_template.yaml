@@ -156,6 +156,7 @@
         :cloud_tenant:
           :values_from:
             :method: :allowed_cloud_tenants
+          :auto_select_single: false
           :description: Cloud Tenant
           :required: false
           :display: :edit

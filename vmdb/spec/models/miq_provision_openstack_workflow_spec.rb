@@ -101,6 +101,81 @@ describe MiqProvisionOpenstackWorkflow do
           workflow.display_name_for_name_description(flavor).should == "test_flavor: Small"
         end
       end
+
+      context "tenant filtering" do
+        before do
+          @ct1 = FactoryGirl.create(:cloud_tenant, :name => "admin1")
+          @ct2 = FactoryGirl.create(:cloud_tenant, :name => "admin2")
+          provider.cloud_tenants << @ct1
+          provider.cloud_tenants << @ct2
+        end
+
+        context "cloud networks" do
+          before do
+            @cn1 = FactoryGirl.create(:cloud_network, :name => "cn1")
+            @cn2 = FactoryGirl.create(:cloud_network, :name => "cn2")
+            provider.cloud_networks << @cn1
+            provider.cloud_networks << @cn2
+            @ct1.cloud_networks << @cn1
+            @ct2.cloud_networks << @cn2
+          end
+
+          it "#allowed_cloud_networks with tenant selected" do
+            workflow.values.merge!(:cloud_tenant => @ct2.id)
+            cns = workflow.allowed_cloud_networks
+            cns.keys.should match_array [@cn2.id]
+          end
+
+          it "#allowed_cloud_networks with tenant not selected" do
+            cns = workflow.allowed_cloud_networks
+            cns.keys.should match_array [@cn2.id, @cn1.id]
+          end
+        end
+
+        context "security groups" do
+          before do
+            @sg1 = FactoryGirl.create(:security_group_openstack, :name => "sg1")
+            @sg2 = FactoryGirl.create(:security_group_openstack, :name => "sg2")
+            provider.security_groups << @sg1
+            provider.security_groups << @sg2
+            @ct1.security_groups << @sg1
+            @ct2.security_groups << @sg2
+          end
+
+          it "#allowed_security_groups with tenant selected" do
+            workflow.values.merge!(:cloud_tenant => @ct2.id)
+            sgs = workflow.allowed_security_groups
+            sgs.keys.should match_array [@sg2.id]
+          end
+
+          it "#allowed_security_groups with tenant not selected" do
+            sgs = workflow.allowed_security_groups
+            sgs.keys.should match_array [@sg2.id, @sg1.id]
+          end
+        end
+
+        context "floating ip" do
+          before do
+            @ip1 = FactoryGirl.create(:floating_ip, :address => "1.1.1.1")
+            @ip2 = FactoryGirl.create(:floating_ip, :address => "2.2.2.2")
+            provider.floating_ips << @ip1
+            provider.floating_ips << @ip2
+            @ct1.floating_ips << @ip1
+            @ct2.floating_ips << @ip2
+          end
+
+          it "#allowed_floating_ip_addresses with tenant selected" do
+            workflow.values.merge!(:cloud_tenant => @ct2.id)
+            ips = workflow.allowed_floating_ip_addresses
+            ips.keys.should match_array [@ip2.id]
+          end
+
+          it "#allowed_floating_ip_addresses with tenant not selected" do
+            ips = workflow.allowed_floating_ip_addresses
+            ips.keys.should match_array [@ip2.id, @ip1.id]
+          end
+        end
+      end
     end
   end
 end
