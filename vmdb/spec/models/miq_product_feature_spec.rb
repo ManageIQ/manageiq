@@ -5,14 +5,14 @@ describe MiqProductFeature do
     it "empty table" do
       MiqRegion.seed
       MiqProductFeature.seed
-      MiqProductFeature.count.should eq(800)
+      MiqProductFeature.count.should eq(801)
     end
 
     it "run twice" do
       MiqRegion.seed
       MiqProductFeature.seed
       MiqProductFeature.seed
-      MiqProductFeature.count.should eq(800)
+      MiqProductFeature.count.should eq(801)
     end
 
     it "with existing records" do
@@ -24,7 +24,7 @@ describe MiqProductFeature do
       MiqRegion.seed
       MiqProductFeature.seed
 
-      MiqProductFeature.count.should eq(800)
+      MiqProductFeature.count.should eq(801)
       expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
       changed.reload.name.should == "About"
       unchanged.reload.updated_at.should be_same_time_as unchanged_orig_updated_at
