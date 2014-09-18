@@ -806,6 +806,7 @@ Vmdb::Application.routes.draw do
         show_list
         tasks_button
         tasks_change_options
+        toggle_dash
         update
       )
     },
