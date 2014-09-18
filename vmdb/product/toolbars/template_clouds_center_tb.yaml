@@ -21,6 +21,14 @@
       :confirm: "Refresh relationships and power states for all items related to the selected items?"
       :enabled: 'false'
       :onwhen: '1+'
+    - :button: image_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Perform SmartState Analysis on the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
     - :button: image_compare
       :image: compare
       :text: "Compare Selected items"
