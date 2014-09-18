@@ -391,10 +391,6 @@
       :delete:
       - :name: delete
         :identifier: st_catalog_delete
-    :subcollection_actions:
-      :post:
-      - :name: order
-        :identifier: svc_catalog_provision
   :service_requests:
     :description: Service Requests
     :options:
@@ -419,8 +415,8 @@
     - :service_requests
     :subcollection_actions:  # /api/<collection>/<id>/service_templates
       :post:
-      - :name: create #assign
-        :identifier: st_catalog_edit
+      - :name: order
+        :identifier: svc_catalog_provision
       :delete:
       - :name: delete #unassign
         :identifier: st_catalog_edit
@@ -453,6 +449,10 @@
     :klass: Service
     :subcollections:
     - :tags
+    :collection_actions:
+      :post:
+      - :name: order
+        :identifier: svc_catalog_provision
     :resource_actions:
       :post:
       - :name: retire
