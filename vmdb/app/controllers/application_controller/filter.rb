@@ -1791,8 +1791,8 @@ module ApplicationController::Filter
     exp_value_key   = param_key_suffix.starts_with?("1") ? :exp_value : :exp_cvalue
     exp             = @edit[@expkey]
 
-    date = params[param_date_key] || exp[exp_value_key][exp_value_index].split(' ').first
-    time = params[param_time_key] || exp[exp_value_key][exp_value_index].split(' ').last
+    date = params[param_date_key] || (params[param_time_key] && exp[exp_value_key][exp_value_index].split(' ').first)
+    time = params[param_time_key] if params[param_time_key]
 
     if time.to_s.blank? && exp[value_key][:type] == :datetime && exp[exp_key] != EXP_IS
       time = "00:00" # If time is blank, add in midnight if needed
