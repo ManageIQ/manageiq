@@ -1,7 +1,7 @@
 require "spec_helper"
 
-module MiqAeServiceOpenstackResourceQuotaSpec
-  describe MiqAeMethodService::MiqAeServiceOpenstackResourceQuota do
+module MiqAeServiceCloudResourceQuotaOpenstackSpec
+  describe MiqAeMethodService::MiqAeServiceCloudResourceQuotaOpenstack do
     it "#ext_management_system" do
       described_class.instance_methods.should include(:ext_management_system)
     end

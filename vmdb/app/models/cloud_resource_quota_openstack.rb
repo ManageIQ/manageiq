@@ -1,4 +1,4 @@
-class OpenstackResourceQuota < CloudResourceQuota
+class CloudResourceQuotaOpenstack < CloudResourceQuota
   private
 
   # quota_used methods defined for each known quota type
