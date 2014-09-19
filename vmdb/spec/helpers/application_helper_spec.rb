@@ -4058,118 +4058,77 @@ describe ApplicationHelper do
     end
   end
 
-  describe "update_url_parms", :type => :request do
-
-    context "when the given parameter is a string" do
-      before do
-        get("/vm/show_list/100", "type=grid&bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
-          "&sb_controller=host")
-        Object.any_instance.stub(:query_string).and_return(@request.query_string)
-        Object.any_instance.stub(:path_info).and_return(@request.path_info)
-        # Object.any_instance.stub(:fullpath).and_return(@request.fullpath)
-        allow_message_expectations_on_nil
-      end
-
-      it "updates the query string with the given param and returns the full url path" do
-        update_url_parms("?type=list").should eq("/vm/show_list/100?bc=VMs+running+on+2014-08-25"\
-          "&menu_click=Display-VMs-on_2-6-5&sb_controller=host&type=list")
-      end
-
-      it "updates the query string with the given param and returns only the query string" do
-        update_url_parms("?type=list", false).should eq("?bc=VMs+running+on+2014-08-25"\
-          "&menu_click=Display-VMs-on_2-6-5&sb_controller=host&type=list")
-      end
-
-      it "adds the given param in the query string, excludes certain params and returns the full path" do
-        update_url_parms("&refresh=y", false).should eq("?bc=VMs+running+on+2014-08-25"\
-          "&menu_click=Display-VMs-on_2-6-5&refresh=y&sb_controller=host")
-      end
-
-      it "returns the parameter itself if in case of an invalid url param" do
-        update_url_parms("main_div", false).should eq("main_div")
-      end
-    end
+  describe "update_paging_url_parms", :type => :request do
 
     context "when the given parameter is a hash" do
       before do
         get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
-          "&page=2&sb_controller=host")
+           "&page=2&sb_controller=host")
         Object.any_instance.stub(:query_string).and_return(@request.query_string)
         Object.any_instance.stub(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil
       end
 
       it "updates the query string with the given hash value and returns the full url path" do
-        update_url_parms(:page => 1).should eq("/vm/show_list/100?bc=VMs+running+on+2014-08-25"\
+        update_paging_url_parms(:page => 1).should eq("/vm/show_list/100?bc=VMs+running+on+2014-08-25"\
           "&menu_click=Display-VMs-on_2-6-5&page=1&sb_controller=host")
       end
-
-      it "updates the query string with the given hash value and returns the query string" do
-        update_url_parms({:page => 1}, false).should eq("?bc=VMs+running+on+2014-08-25"\
-          "&menu_click=Display-VMs-on_2-6-5&page=1&sb_controller=host")
-      end
-
-      it "adds the given hash value in the query string, excludes certain params and returns the full path" do
-        update_url_parms({:refresh => "n"}, false).should eq("?bc=VMs+running+on+2014-08-25"\
-          "&menu_click=Display-VMs-on_2-6-5&refresh=n&sb_controller=host")
-      end
     end
-
-    context "when multiple parameters are specified in the string" do
-      before do
-        get("/vm/show_list", "id=v-10r2691")
-        Object.any_instance.stub(:query_string).and_return(@request.query_string)
-        Object.any_instance.stub(:path_info).and_return(@request.path_info)
-        allow_message_expectations_on_nil
-      end
-
-      it "returns the full url path with the given parameters" do
-        update_url_parms("?type=graphical&explorer=true").should eq("/vm/show_list?explorer=true"\
-          "&id=v-10r2691&type=graphical")
-      end
-    end
-
-    context "when there is no query string" do
-      before do
-        get("/vm/show_list")
-        Object.any_instance.stub(:query_string).and_return(@request.query_string)
-        Object.any_instance.stub(:path_info).and_return(@request.path_info)
-        allow_message_expectations_on_nil
-      end
-
-      it "returns the full url path with the given parameter placed first (which is the only parameter)" do
-        update_url_parms("?type=grid").should eq("/vm/show_list?type=grid")
-      end
-
-      it "returns the query string only with the given parameter placed first (which is the only parameter)" do
-        update_url_parms("?type=grid", false).should eq("?type=grid")
-      end
-    end
-
   end
 
-  describe "update_query_string_params", :type => :request do
+  describe "update_url_parms", :type => :request do
 
-    context "when the url query string hash needs to be updated using the supplied hash" do
+    context "when the given parameter exists in the request query string" do
       before do
-        get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
-          "&page=2&sb_controller=host")
+        get("/vm/show_list/100", "type=grid")
         Object.any_instance.stub(:query_string).and_return(@request.query_string)
+        Object.any_instance.stub(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil
       end
 
-      it "updates the value in the query string hash with the supplied hash value" do
-        update_query_string_params(:page => 1).should eq(:bc            => "VMs running on 2014-08-25",
-                                                         :menu_click    => "Display-VMs-on_2-6-5",
-                                                         :page          => 1,
-                                                         :sb_controller => "host")
+      it "updates the query string with the given parameter value" do
+        update_url_parms("?type=list").should eq("?type=list")
+      end
+    end
+
+    context "when the given parameters do not exist in the request query string" do
+      before do
+        get("/vm/show_list/100")
+        Object.any_instance.stub(:query_string).and_return(@request.query_string)
+        Object.any_instance.stub(:path_info).and_return(@request.path_info)
+        allow_message_expectations_on_nil
       end
 
-      it "adds the value in the query string hash with the supplied hash value and excludes certain params" do
-        update_query_string_params(:type => "grid").should eq(:bc            => "VMs running on 2014-08-25",
-                                                              :menu_click    => "Display-VMs-on_2-6-5",
-                                                              :sb_controller => "host",
-                                                              :type          => "grid")
+      it "adds the params in the query string" do
+        update_url_parms("?refresh=y&type=list").should eq("?refresh=y&type=list")
+      end
+    end
+
+    context "when the request query string has a few specific params to be retained" do
+      before do
+        get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
+          "&sb_controller=host")
+        Object.any_instance.stub(:query_string).and_return(@request.query_string)
+        Object.any_instance.stub(:path_info).and_return(@request.path_info)
+        allow_message_expectations_on_nil
+      end
+
+      it "retains the specific parameters and adds the new one" do
+        update_url_parms("?type=list").should eq("?bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
+          "&sb_controller=host&type=list")
+      end
+    end
+
+    context "when the request query string has a few specific params to be excluded" do
+      before do
+        get("/vm/show_list/100", "page=1")
+        Object.any_instance.stub(:query_string).and_return(@request.query_string)
+        Object.any_instance.stub(:path_info).and_return(@request.path_info)
+        allow_message_expectations_on_nil
+      end
+
+      it "excludes specific parameters and adds the new one" do
+        update_url_parms("?type=list").should eq("?type=list")
       end
     end
   end
