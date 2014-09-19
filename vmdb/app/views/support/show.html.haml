@@ -45,25 +45,14 @@
                 &nbsp;
                 = link_to("#{title} Guide", docfile_path, :onclick => "return miqClickAndPop(this);")
                 %br
+              - if cond_url
+                %br
+                - url = "http://" + url if !url.starts_with?("http://") && !url.starts_with?("https://")
+                = link_to(desc, url, :onclick => "return miqClickAndPop(this);")
+                %br
               %br
               - rh_cust_portal = link_to("Red Hat Customer Portal",
                                          "https://access.redhat.com/home",
                                          :onclick => "return miqClickAndPop(this);")
               For questions or problem reporting, go to the #{rh_cust_portal}
-              %br
-            - if cond_url
-              %br
-              - url = "http://" + url if !url.starts_with?("http://") && !url.starts_with?("https://")
-              = link_to(image_tag("/images/icons/new/acrobat.png",
-                                  :border => "0",
-                                  :width  => "20",
-                                  :height => "20",
-                                  :align  => "left",
-                                  :alt    => "View the Custom Support Documentation"),
-                        url,
-                        :title   => "View the Custom Support Documentation",
-                        :onclick => "return miqClickAndPop(this);")
-              &nbsp;
-              = link_to(desc, url, :onclick => "return miqClickAndPop(this);")
-              %br
               %br
