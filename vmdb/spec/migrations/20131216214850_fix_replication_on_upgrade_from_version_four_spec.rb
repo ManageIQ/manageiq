@@ -43,6 +43,7 @@ describe FixReplicationOnUpgradeFromVersionFour do
         # HACK: Just verify that the callouts are made...we can't actually run
         # them unless we have replication set up, which is not yet possible in a
         # migration spec.
+        require 'awesome_spawn'
         AwesomeSpawn.should_receive(:run!).with("bin/rake evm:dbsync:prepare_replication_without_sync")
         AwesomeSpawn.should_receive(:run!).with("bin/rake evm:dbsync:uninstall drift_states miq_cim_derived_metrics miq_request_tasks miq_storage_metrics storages_vms_and_templates")
       end
