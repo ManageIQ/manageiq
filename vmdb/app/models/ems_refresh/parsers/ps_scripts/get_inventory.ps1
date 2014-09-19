@@ -10,7 +10,7 @@ function get_vms{
   $id = $_.ID
   
   $vm_hash["Properties"] = $_
-  if ($_.StatusString -ne "Host Not Responding"){
+  if ($_.StatusString -eq "Running"){
    $networks = Read-SCGuestInfo -VM $_ -Key "NetworkAddressIPv4"
    if ($networks -ne $null){
     $vm_hash["Networks"] = $networks.KvpMap["NetworkAddressIPv4"]
