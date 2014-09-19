@@ -471,12 +471,8 @@ module EmsRefresh::Parsers::Rhevm
 #      runtime = summary['runtime']
 #      guest = summary['guest']
 
-      template = vm_inv[:href].include?('/templates/')
-      power_state = template ? 'never' : vm_inv.attributes.fetch_path(:status, :state)
-      case power_state
-      when 'up'   then power_state = 'on'
-      when 'down' then power_state = 'off'
-      end
+      template        = vm_inv[:href].include?('/templates/')
+      raw_power_state = template ? "never" : vm_inv.attributes.fetch_path(:status, :state)
 
 #      affinity_set = config.fetch_path('cpuAffinity', 'affinitySet')
 #      # The affinity_set will be an array of integers if set
@@ -539,41 +535,25 @@ module EmsRefresh::Parsers::Rhevm
 #      uid = hardware[:bios]
 
       new_result = {
-        :type => template ? "TemplateRedhat" : "VmRedhat",
-        :ems_ref => vm_inv[:href],
-        :ems_ref_obj => vm_inv[:href],
-        :uid_ems => vm_inv[:id],
-        :name => URI.decode(vm_inv[:name]),
-        :vendor => "redhat",
-        :power_state => power_state,
-        :location => "#{vm_inv[:id]}.ovf",
-#        :tools_status => tools_status,
-        :boot_time => boot_time,
-#        :standby_action => standby_act,
-        :connection_state => 'connected',
-#        :cpu_affinity => cpu_affinity,
-        :template => template,
-
-#        :memory_reserve => memory["reservation"],
-#        :memory_reserve_expand => memory["expandableReservation"].to_s.downcase == "true",
-#        :memory_limit => memory["limit"],
-#        :memory_shares => memory.fetch_path("shares", "shares"),
-#        :memory_shares_level => memory.fetch_path("shares", "level"),
-#
-#        :cpu_reserve => cpu["reservation"],
-#        :cpu_reserve_expand => cpu["expandableReservation"].to_s.downcase == "true",
-#        :cpu_limit => cpu["limit"],
-#        :cpu_shares => cpu.fetch_path("shares", "shares"),
-#        :cpu_shares_level => cpu.fetch_path("shares", "level"),
-
-        :host => host,
-        :ems_cluster => ems_cluster,
-        :storages => storages,
-        :storage => storage,
-        :operating_system => self.vm_inv_to_os_hash(vm_inv),
-        :hardware => hardware,
+        :type              => template ? "TemplateRedhat" : "VmRedhat",
+        :ems_ref           => vm_inv[:href],
+        :ems_ref_obj       => vm_inv[:href],
+        :uid_ems           => vm_inv[:id],
+        :name              => URI.decode(vm_inv[:name]),
+        :vendor            => "redhat",
+        :raw_power_state   => raw_power_state,
+        :location          => "#{vm_inv[:id]}.ovf",
+        :boot_time         => boot_time,
+        :connection_state  => 'connected',
+        :template          => template,
+        :host              => host,
+        :ems_cluster       => ems_cluster,
+        :storages          => storages,
+        :storage           => storage,
+        :operating_system  => self.vm_inv_to_os_hash(vm_inv),
+        :hardware          => hardware,
         :custom_attributes => self.vm_inv_to_custom_attribute_hashes(vm_inv),
-        :snapshots => self.vm_inv_to_snapshot_hashes(vm_inv),
+        :snapshots         => self.vm_inv_to_snapshot_hashes(vm_inv),
       }
 
       # Attach to the cluster's default resource pool

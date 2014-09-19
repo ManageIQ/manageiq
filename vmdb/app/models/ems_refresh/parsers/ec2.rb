@@ -271,19 +271,19 @@ module EmsRefresh::Parsers
       name   ||= uid
 
       new_result = {
-        :type               => "TemplateAmazon",
-        :uid_ems            => uid,
-        :ems_ref            => uid,
-        :name               => name,
-        :location           => location,
-        :vendor             => "amazon",
-        :power_state        => "never",
-        :template           => true,
+        :type            => "TemplateAmazon",
+        :uid_ems         => uid,
+        :ems_ref         => uid,
+        :name            => name,
+        :location        => location,
+        :vendor          => "amazon",
+        :raw_power_state => "never",
+        :template        => true,
         # the is_public flag here avoids having to make an additional API call
         # per image, since we already know whether it's a public image
         :publicly_available => is_public,
 
-        :hardware           => {
+        :hardware    => {
           :guest_os            => guest_os,
           :bitness             => ARCHITECTURE_TO_BITNESS[image.architecture],
           :virtualization_type => image.virtualization_type,
@@ -301,13 +301,6 @@ module EmsRefresh::Parsers
       uid    = instance.id
       name   = get_name_from_tags(instance)
       name ||= uid
-
-      power_state = case status
-      when :running                 then "on"
-      when :shutting_down, :pending then "suspended"
-      when :terminated              then "terminated"
-      else                               "off"
-      end
 
       flavor_uid = instance.instance_type
       @known_flavors << flavor_uid
@@ -330,12 +323,12 @@ module EmsRefresh::Parsers
       end
 
       new_result = {
-        :type        => "VmAmazon",
-        :uid_ems     => uid,
-        :ems_ref     => uid,
-        :name        => name,
-        :vendor      => "amazon",
-        :power_state => power_state,
+        :type            => "VmAmazon",
+        :uid_ems         => uid,
+        :ems_ref         => uid,
+        :name            => name,
+        :vendor          => "amazon",
+        :raw_power_state => status.to_s,
 
         :hardware    => {
           :bitness             => ARCHITECTURE_TO_BITNESS[instance.architecture],

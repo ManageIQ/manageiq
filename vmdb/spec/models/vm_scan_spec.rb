@@ -18,7 +18,7 @@ describe VmScan do
       @proxy     = FactoryGirl.create(:active_cos_proxy, :name => "test_cos_proxy")
       @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
       @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems, :miq_proxy => @proxy)
-      @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx", :state => 'on', :host => @host, :ext_management_system => @ems, :storage => @storage)
+      @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx", :raw_power_state => 'poweredOn', :host => @host, :ext_management_system => @ems, :storage => @storage)
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
       @job = @vm.scan

@@ -77,28 +77,28 @@ describe ExtManagementSystem do
     it "#total_vms_off" do
       @ems.total_vms_off.should == 0
 
-      @ems.vms.each { |v| v.power_state = "off"; v.save }
+      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "poweredOff") }
       @ems.total_vms_off.should == 5
     end
 
     it "#total_vms_unknown" do
       @ems.total_vms_unknown.should == 0
 
-      @ems.vms.each { |v| v.power_state = "unknown"; v.save }
+      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "unknown") }
       @ems.total_vms_unknown.should == 5
     end
 
     it "#total_vms_never" do
       @ems.total_vms_never.should == 0
 
-      @ems.vms.each { |v| v.power_state = "never"; v.save }
+      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "never") }
       @ems.total_vms_never.should == 5
     end
 
     it "#total_vms_suspended" do
       @ems.total_vms_suspended.should == 0
 
-      @ems.vms.each { |v| v.power_state = "suspended"; v.save }
+      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "suspended") }
       @ems.total_vms_suspended.should == 5
     end
 

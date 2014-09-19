@@ -5,7 +5,7 @@ FactoryGirl.define do
     uid_ems         { MiqUUID.new_guid }
     vendor          "amazon"
     template        false
-    power_state     "on"
+    raw_power_state "running"
     cloud           true
   end
 end

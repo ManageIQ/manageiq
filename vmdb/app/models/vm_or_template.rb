@@ -596,12 +596,6 @@ class VmOrTemplate < ActiveRecord::Base
     name
   end
 
-  def current_state
-    return "never" if self.template?
-    return self.state.downcase unless self.state.nil?
-    return "unknown"
-  end
-
   # Generates the contents of the RSS feed that lists VMs that fail policy
   def self.rss_fails_policy(name, options)
     result = []
@@ -731,7 +725,7 @@ class VmOrTemplate < ActiveRecord::Base
       $log.info "MIQ(#{self.class.name}#disconnect_ems) Disconnecting Vm [#{self.name}] id [#{self.id}]#{log_text}"
 
       self.ext_management_system = nil
-      self.state = "unknown"
+      self.raw_power_state = "unknown"
       self.save
     end
   end
@@ -1167,9 +1161,9 @@ class VmOrTemplate < ActiveRecord::Base
     write_attribute(:template, val)
 
     self.type = self.corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
-    d = self.template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", self.state == 'never' ? 'unknown' : self.state]
+    d = self.template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", self.state == 'never' ? 'unknown' : self.raw_power_state]
     self.location = self.location.sub(d[0], d[1]) unless self.location.nil?
-    self.state = d[2]
+    self.raw_power_state = d[2]
   end
 
   # TODO: Vmware specfic
@@ -1390,15 +1384,26 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def state
-    self.power_state  # Cannot use alias here as power_state is an attribute (method defined later)
+    (power_state || "unknown").downcase
+  end
+  alias_method :current_state, :state
+
+  # Override raw_power_state= attribute setter in order to impose side effects
+  # of setting previous_state and updating state_changed_on
+  def raw_power_state=(new_state)
+    return unless new_state
+
+    unless raw_power_state == new_state
+      self.previous_state   = raw_power_state
+      self.state_changed_on = Time.now.utc
+      super
+      self.power_state      = calculate_power_state
+    end
+    new_state
   end
 
-  def state=(new_state)
-    unless self.power_state == new_state
-      self.state_changed_on = Time.now.utc
-      self.previous_state = self.power_state
-      self.power_state = new_state
-    end
+  def self.calculate_power_state(raw_power_state)
+    (raw_power_state == "never") ? "never" : "unknown"
   end
 
   def archived?
@@ -1961,5 +1966,15 @@ class VmOrTemplate < ActiveRecord::Base
 
   def supports_snapshots?
     false
+  end
+
+  private
+
+  def power_state=(new_power_state)
+    super
+  end
+
+  def calculate_power_state
+    self.class.calculate_power_state(raw_power_state)
   end
 end

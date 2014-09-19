@@ -85,7 +85,7 @@ describe VmVmware::RemoteConsole do
     end
 
     it "with vm off" do
-      @vm.update_attribute(:power_state, "off")
+      @vm.update_attribute(:raw_power_state, "poweredOff")
       lambda {@vm.remote_console_vmrc_acquire_ticket}.should raise_error MiqException::RemoteConsoleNotSupportedError
     end
 
@@ -113,7 +113,7 @@ describe VmVmware::RemoteConsole do
     end
 
     it "with vm off" do
-      @vm.update_attribute(:power_state, "off")
+      @vm.update_attribute(:raw_power_state, "poweredOff")
       lambda {@vm.validate_remote_console_vmrc_support}.should raise_error MiqException::RemoteConsoleNotSupportedError
     end
 

@@ -5,7 +5,7 @@ FactoryGirl.define do
     uid_ems         { MiqUUID.new_guid }
     vendor          "vmware"
     template        true
-    state           "never"
+    raw_power_state "never"
   end
 
   factory :template_vmware_with_ref, :parent => :template_vmware do

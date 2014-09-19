@@ -784,8 +784,8 @@ event_handling:
   DrsVmPoweredOnEvent:
   - call:
     - src_vm
-    - state=
-    - 'on'
+    - raw_power_state=
+    - 'poweredOn'
   - call:
     - src_vm
     - save!
@@ -1300,8 +1300,8 @@ event_handling:
   VmPoweredOffEvent:
   - call:
     - src_vm
-    - state=
-    - 'off'
+    - raw_power_state=
+    - 'poweredOff'
   - call:
     - src_vm
     - save!
@@ -1311,8 +1311,8 @@ event_handling:
   VmPoweredOnEvent:
   - call:
     - src_vm
-    - state=
-    - 'on'
+    - raw_power_state=
+    - 'poweredOn'
   - call:
     - src_vm
     - save!
@@ -1331,8 +1331,8 @@ event_handling:
   VmSuspendedEvent:
   - call:
     - src_vm
-    - state=
-    - suspended
+    - raw_power_state=
+    - "suspended"
   - call:
     - src_vm
     - save!

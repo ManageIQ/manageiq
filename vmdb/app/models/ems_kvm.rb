@@ -52,7 +52,7 @@ class EmsKvm < EmsInfra
       begin
         vm_handle = kvm.getVm(vm.uid_ems)
         vm_handle.send(op)
-        vm.state = vm_handle.powerState
+        vm.raw_power_state = vm_handle.powerState
         vm.save
       rescue => err
         $log.error "MIQ(EmsKvm.vm_power_operation) vm=[#{vm.name}], op=[#{op}], error: #{err}"

@@ -667,14 +667,9 @@ module EmsRefresh::Parsers::Vc
         next
       end
 
-      runtime = summary['runtime']
-
-      template = summary_config["template"].to_s.downcase == "true"
-      power_state = template ? "never" : runtime['powerState']
-      case power_state
-      when "poweredOn"  then power_state = "on"
-      when "poweredOff" then power_state = "off"
-      end
+      runtime         = summary['runtime']
+      template        = summary_config["template"].to_s.downcase == "true"
+      raw_power_state = template ? "never" : runtime['powerState']
 
       begin
         storage_name, location, = Repository.parse_path(pathname)
@@ -735,7 +730,7 @@ module EmsRefresh::Parsers::Vc
         :uid_ems          => uid,
         :name             => URI.decode(summary_config["name"]),
         :vendor           => "vmware",
-        :power_state      => power_state,
+        :raw_power_state  => raw_power_state,
         :location         => location,
         :tools_status     => tools_status,
         :boot_time        => boot_time,

@@ -5,7 +5,7 @@ FactoryGirl.define do
     uid_ems         { MiqUUID.new_guid }
     vendor          "openstack"
     template        true
-    state           "never"
+    raw_power_state "never"
     cloud           true
   end
 end

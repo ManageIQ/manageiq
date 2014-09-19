@@ -2,6 +2,11 @@
 
 module EmsRefresh::Parsers
   class Openstack < Cloud
+    # Openstack uses numbers to represent different power states. Each openstack
+    # power state value corresponds to an array index for the human readable
+    # power state.
+    RAW_POWER_STATES = %w(NO_STATE RUNNING BLOCKED PAUSED SHUTDOWN SHUTOFF CRASHED SUSPENDED FAILED BUILDING)
+
     def self.ems_inv_to_hashes(ems, options = nil)
       self.new(ems, options).ems_inv_to_hashes
     end
@@ -483,13 +488,13 @@ module EmsRefresh::Parsers
       parent_server_uid = parse_image_parent_id(image)
 
       new_result = {
-        :type               => "TemplateOpenstack",
-        :uid_ems            => uid,
-        :ems_ref            => uid,
-        :name               => image.name,
-        :vendor             => "openstack",
-        :power_state        => "never",
-        :template           => true,
+        :type            => "TemplateOpenstack",
+        :uid_ems         => uid,
+        :ems_ref         => uid,
+        :name            => image.name,
+        :vendor          => "openstack",
+        :raw_power_state => "never",
+        :template        => true,
         :publicly_available => image.is_public,
       }
       new_result[:parent_vm_uid] = parent_server_uid unless parent_server_uid.nil?
@@ -506,13 +511,7 @@ module EmsRefresh::Parsers
     def parse_server(server)
       uid = server.id
 
-      power_state =
-        case server.os_ext_sts_power_state.to_i
-        when 1;          "on"         # 1 = RUNNING
-        when 2, 3, 7, 9; "suspended"  # 2 = BLOCKED, 3 = PAUSED, 7 = SUSPENDED, 9 = BUILDING
-        when 4, 5, 6, 8; "off"        # 4 = SHUTDOWN, 5 = SHUTOFF, 6 = CRASHED, 8 = FAILED
-        else             "unknown"    # 0 = NO STATE, et. al.
-        end
+      raw_power_state = RAW_POWER_STATES[server.os_ext_sts_power_state.to_i] || "UNKNOWN"
 
       flavor_uid = server.flavor["id"]
       @known_flavors << flavor_uid
@@ -534,7 +533,7 @@ module EmsRefresh::Parsers
         :ems_ref          => uid,
         :name             => server.name,
         :vendor           => "openstack",
-        :power_state      => power_state,
+        :raw_power_state  => raw_power_state,
         :connection_state => "connected",
 
         :hardware => {

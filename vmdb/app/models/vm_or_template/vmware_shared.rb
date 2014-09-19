@@ -1,5 +1,17 @@
 module VmOrTemplate::VmwareShared
+  extend ActiveSupport::Concern
   include_concern 'RefreshOnScan'
+
+  module ClassMethods
+    def calculate_power_state(raw_power_state)
+      case raw_power_state
+      when "poweredOn"  then "on"
+      when "poweredOff" then "off"
+      when "suspended"  then "suspended"
+      else                   super
+      end
+    end
+  end
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect

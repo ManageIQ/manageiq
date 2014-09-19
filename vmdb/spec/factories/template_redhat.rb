@@ -5,6 +5,6 @@ FactoryGirl.define do
     uid_ems         { MiqUUID.new_guid }
     vendor          "redhat"
     template        true
-    state           "never"
+    raw_power_state "never"
   end
 end

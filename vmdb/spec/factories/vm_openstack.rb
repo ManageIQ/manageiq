@@ -5,7 +5,7 @@ FactoryGirl.define do
     uid_ems         { MiqUUID.new_guid }
     vendor          "openstack"
     template        false
-    power_state     "on"
+    raw_power_state "RUNNING"
     cloud           true
   end
 
@@ -15,7 +15,7 @@ FactoryGirl.define do
 
   factory :vm_target_openstack, :parent => :vm_openstack do
     after(:create) do |x|
-      x.state = (toggle_on_name_seq(x) ? "on" : "off")
+      x.raw_power_state = (toggle_on_name_seq(x) ? "RUNNING" : "STOPPED")
     end
   end
 end

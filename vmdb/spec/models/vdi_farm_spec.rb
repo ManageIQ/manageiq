@@ -149,7 +149,7 @@ describe VdiFarm do
         before(:each) do
           @desktop = @farm1.vdi_desktops.first
           @desktop.vm_vdi = Vm.first
-          @desktop.vm_vdi.power_state = "off"
+          @desktop.vm_vdi.raw_power_state = "poweredOff"
         end
 
         it "return power_state if available" do

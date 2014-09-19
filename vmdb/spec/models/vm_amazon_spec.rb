@@ -2,8 +2,10 @@ require "spec_helper"
 
 describe VmAmazon do
   context "#is_available?" do
-    let (:ems) { FactoryGirl.create(:ems_amazon) }
-    let (:vm)  { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
+    let(:ems)                   { FactoryGirl.create(:ems_amazon) }
+    let(:vm)                    { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
+    let(:power_state_on)        { "running" }
+    let(:power_state_suspended) { "pending" }
 
     context("with :start") do
       let(:state) { :start }

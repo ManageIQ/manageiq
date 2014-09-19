@@ -260,7 +260,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-Basic", :power_state => "on").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOn-Basic", :raw_power_state => "running").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "i-7ab3c301",
@@ -335,7 +335,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_vm_powered_off
-    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOff", :power_state => "off").first
+    v = VmAmazon.where(:name => "EmsRefreshSpec-PoweredOff", :raw_power_state => "stopped").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "i-79188d11",
