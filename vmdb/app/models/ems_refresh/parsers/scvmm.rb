@@ -449,7 +449,8 @@ module EmsRefresh::Parsers
         :is_datacenter => false,
         :uid_ems       => "host_folder",
         :ems_ref       => "host_folder",
-        :ems_children  => {:clusters => @data[:clusters]}
+        :ems_children  => set_host_folder_children
+
       }
       vm_folder = {
         :name          => 'vm',
@@ -474,6 +475,14 @@ module EmsRefresh::Parsers
       }
       @data[:folders]  = [dc_folder, scvmm_folder, host_folder, vm_folder]
       @data[:ems_root] = dc_folder
+    end
+
+    def set_host_folder_children
+      if @data[:clusters].empty?
+        {:hosts => @data[:hosts]}
+      else
+        {:clusters => @data[:clusters]}
+      end
     end
 
     def identify_primary_ip(nics)
