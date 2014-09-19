@@ -1,8 +1,6 @@
 require "spec_helper"
 require Rails.root.join("db/migrate/20140905020643_update_default_registration_channel_names")
 
-class MiqDatabase < ActiveRecord::Base; end
-
 describe UpdateDefaultRegistrationChannelNames do
   let(:miq_database_stub) { migration_stub(:MiqDatabase) }
 

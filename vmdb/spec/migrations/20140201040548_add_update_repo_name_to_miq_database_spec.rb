@@ -2,8 +2,8 @@ require "spec_helper"
 require Rails.root.join("db/migrate/20140201040548_add_update_repo_name_to_miq_database.rb")
 
 describe AddUpdateRepoNameToMiqDatabase do
-  let(:db_stub) { migration_stub(:MiqDatabase) }
-  let(:reserve_stub) { migration_stub(:Reserve) }
+  let(:db_stub)      { migration_stub(:MiqDatabase) }
+  let(:reserve_stub) { MigrationSpecStubs.reserved_stub }
 
   migration_context :up do
     it "Migrates :update_repo_name from Reserves table to new column on MiqDatabase" do

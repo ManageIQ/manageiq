@@ -4,11 +4,16 @@ class FixVmOrTemplateAlerts < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
+  class Tag < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
   def update_and_save_alert(alert, name_split, new_scope)
     name_split[3] = new_scope
     alert.name = name_split.join("/")
     alert.save!
   end
+
   def up
     # look for MiqTemplate alerts from v4 (namespaced /vm/)
     Tag.where("name like '/miq_alert_set/assigned_to/vm/%'").each do |alert|

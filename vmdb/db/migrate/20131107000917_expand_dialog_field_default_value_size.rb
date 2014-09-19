@@ -10,7 +10,7 @@ class ExpandDialogFieldDefaultValueSize < ActiveRecord::Migration
     say_with_time("Migrate data from reserved table") do
       DialogField.includes(:reserved_rec).each do |d|
         d.reserved_hash_migrate(:default_value) if d.reserved_hash_get(:default_value)
-      end      
+      end
     end
   end
 

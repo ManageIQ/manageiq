@@ -4,8 +4,8 @@ require Rails.root.join("db/migrate/20140421150958_create_miq_groups_users_join_
 describe CreateMiqGroupsUsersJoinTable do
   migration_context :up do
     let(:user_stub)       { migration_stub(:User) }
-    let(:reserve_stub)    { migration_stub(:Reserve) }
     let(:join_table_stub) { migration_stub(:MiqGroupsUsers) }
+    let(:reserve_stub)    { MigrationSpecStubs.reserved_stub }
 
     it "migrates eligible_miq_group_ids from reserved column" do
       user = user_stub.create!
