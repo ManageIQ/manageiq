@@ -21,8 +21,8 @@ module ApplianceConsole
       say("\nIPA Server Parameters:\n\n")
       @ipaserver = ask_for_hostname("IPA Server Hostname", @ipaserver)
       @domain    = ask_for_domain("IPA Server Domain", @domain)
-      @realm     = ask_for_realm("IPA Server Realm", realm)
-      @principal = just_ask("IPA Server Principal", @principal)
+      @realm     = ask_for_string("IPA Server Realm", realm)
+      @principal = ask_for_string("IPA Server Principal", @principal)
       @password  = ask_for_password("IPA Server Principal Password", @password)
 
       @ipaserver = fqdn(@ipaserver, @domain)

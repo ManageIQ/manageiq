@@ -2,6 +2,7 @@ require "spec_helper"
 
 require "active_support/all"
 require "appliance_console/external_httpd_authentication"
+require "appliance_console/prompts"
 
 describe ApplianceConsole::ExternalHttpdAuthentication do
   let(:host) { "this.server.com" }
@@ -33,6 +34,27 @@ describe ApplianceConsole::ExternalHttpdAuthentication do
 
     it "should append to a short host name" do
       expect(subject.send(:fqdn, "host", "domain.com")).to eq("host.domain.com")
+    end
+  end
+
+  context "#ask_for_parameters" do
+    context "with just hostname" do
+      subject do
+        Class.new(described_class) do
+          include ApplianceConsole::Prompts
+        end.new(host)
+      end
+      it "supports just host (appliance_console use case)" do
+        expect(subject).to receive(:say).with(/ipa/i)
+        expect(subject).to receive(:just_ask).with(/hostname/i, nil, anything, anything).and_return("ipa")
+        expect(subject).to receive(:just_ask).with(/domain/i, "server.com", anything, anything).and_return("server.com")
+        expect(subject).to receive(:just_ask).with(/realm/i, "SERVER.COM").and_return("realm.server.com")
+        expect(subject).to receive(:just_ask).with(/principal/i, "admin").and_return("admin")
+        expect(subject).to receive(:just_ask).with(/password/i, nil).and_return("password")
+        expect(subject.ask_for_parameters).to be_true
+        expect(subject.send(:realm)).to eq("REALM.SERVER.COM")
+        # expect(subject.ipaserver).to eq("ipa.server.com")
+      end
     end
   end
 end
