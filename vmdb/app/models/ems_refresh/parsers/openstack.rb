@@ -141,7 +141,7 @@ module EmsRefresh::Parsers
           :ems_ref      => ems_ref,
           :name         => key,
           :value        => value,
-          :type         => "OpenstackResourceQuota",
+          :type         => "CloudResourceQuotaOpenstack",
         }
       end
     end
