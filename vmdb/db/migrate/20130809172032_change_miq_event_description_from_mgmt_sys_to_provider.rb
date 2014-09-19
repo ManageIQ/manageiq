@@ -1,4 +1,8 @@
 class ChangeMiqEventDescriptionFromMgmtSysToProvider < ActiveRecord::Migration
+  class MiqEvent < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
   def up
     say_with_time("Changing MiqEvent description with Mgmt Sys to Provider") do
       MiqEvent.where("description like ? and name like ?", "Mgmt Sys%", "ems_auth_%").all.each do |e|

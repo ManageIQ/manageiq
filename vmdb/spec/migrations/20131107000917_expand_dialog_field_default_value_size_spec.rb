@@ -2,9 +2,10 @@ require "spec_helper"
 require Rails.root.join("db/migrate/20131107000917_expand_dialog_field_default_value_size.rb")
 
 describe ExpandDialogFieldDefaultValueSize do
+  let(:dialog_field_stub) { migration_stub(:DialogField) }
+  let(:reserve_stub)      { MigrationSpecStubs.reserved_stub }
+
   migration_context :up do
-    let(:reserve_stub) { migration_stub(:Reserve) }
-    let(:dialog_field_stub) { migration_stub(:DialogField) }
 
     it "should convert default_value to text type" do
       dialog_field_stub.columns_hash['default_value'].type.should == :string
@@ -34,13 +35,9 @@ describe ExpandDialogFieldDefaultValueSize do
       field2.reload.default_value.should == val2
       field3.reload.default_value.should == val3
     end
-
   end
 
   migration_context :down do
-    let(:reserve_stub) { migration_stub(:Reserve) }
-    let(:dialog_field_stub) { migration_stub(:DialogField) }
-
     it "should convert default_value to string type" do
       dialog_field_stub.columns_hash['default_value'].type.should == :text
       migrate

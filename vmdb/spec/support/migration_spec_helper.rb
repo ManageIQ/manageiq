@@ -35,7 +35,9 @@ module MigrationSpecHelper
   end
 
   def migration_stub(klass)
-    described_class.const_get(klass)
+    stub = ar_stubs.detect { |stub| stub.name.split("::").last == klass.to_s }
+    raise NameError, "uninitialized constant #{klass} under #{described_class}" if stub.nil?
+    stub
   end
 
   private
@@ -62,7 +64,8 @@ module MigrationSpecHelper
   end
 
   def ar_stubs
-    described_class.constants
+    described_class
+      .constants
       .collect { |c| described_class.const_get(c) }
       .select  { |c| c.respond_to?(:ancestors) && c.ancestors.include?(ActiveRecord::Base) }
   end

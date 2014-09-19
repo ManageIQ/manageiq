@@ -3,7 +3,7 @@ require Rails.root.join("db/migrate/20140214191729_enhance_firewall_rules_for_ne
 
 describe EnhanceFirewallRulesForNeutronNetworking do
   let(:firewall_rule_stub) { migration_stub(:FirewallRule) }
-  let(:reserve_stub) { migration_stub(:Reserve) }
+  let(:reserve_stub)       { MigrationSpecStubs.reserved_stub }
 
   migration_context :up do
     it "Migrates Reserves data to columns on FirewallRule" do

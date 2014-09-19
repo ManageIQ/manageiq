@@ -5,6 +5,11 @@ class AddExpiresOnToMiqQueue < ActiveRecord::Migration
     include MigrationStubHelper # NOTE: Must be included after other mixins
   end
 
+  class Reserve < ActiveRecord::Base
+    serialize :reserved
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
   def self.up
     add_column :miq_queue, :expires_on, :timestamp
 
