@@ -604,8 +604,8 @@ en:
 
   activerecord:
     attributes:
-      ems_amazon:
-        hostname: "Region"
+      ems_cloud:
+        provider_region: "Region"
       ext_management_system:
         hostname: "Host Name"
         ipaddress: "IP Address"

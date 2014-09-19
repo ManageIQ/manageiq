@@ -4,7 +4,7 @@ module EmsCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress type port guid}
+    items = %w{provider_region hostname ipaddress type port guid}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -26,10 +26,14 @@ module EmsCloudHelper::TextualSummary
   #
   # Items
   #
+  def textual_provider_region
+    return nil if @ems.provider_region.nil?
+    {:label => "Region", :value => @ems.description }
+  end
+
   def textual_hostname
-    label = @ems.kind_of?(EmsAmazon) ? "Region" : "Hostname"
-    value = @ems.kind_of?(EmsAmazon) ? @ems.description : @ems.hostname
-    {:label => label, :value => value }
+    return nil if @ems.hostname.blank?
+    {:label => "Hostname", :value => @ems.hostname }
   end
 
   def textual_ipaddress

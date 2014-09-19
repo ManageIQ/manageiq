@@ -1,14 +1,14 @@
 - if @edit[:new][:emstype] == "ec2"
   %tr
-    %td.key Amazon Region
+    %td.key Region
     %td.wide
-      = select_tag("hostname",
+      = select_tag("provider_region",
                    options_for_select([["<Choose>", nil]] + Array(@edit[:amazon_regions].invert).sort { |a, b| a[0] <=> b[0] },
-                                      @edit[:new][:hostname]),
+                                      @edit[:new][:provider_region]),
                    "data-miq_observe" => {:url => url}.to_json)
 - elsif @edit[:new][:emstype].present?
   %tr
-    %td.key Host name
+    %td.key Host Name
     %td.wide
       = text_field_tag("hostname",
                        @edit[:new][:hostname],

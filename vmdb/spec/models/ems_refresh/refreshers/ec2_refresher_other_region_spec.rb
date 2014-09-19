@@ -3,7 +3,7 @@ require "spec_helper"
 describe EmsRefresh::Refreshers::Ec2Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_amazon, :hostname => "us-west-1", :zone => zone)
+    @ems = FactoryGirl.create(:ems_amazon, :provider_region => "us-west-1", :zone => zone)
     @ems.update_authentication(:default => {:userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"})
   end
 
