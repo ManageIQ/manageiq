@@ -488,35 +488,35 @@ class DashboardController < ApplicationController
   end
 
   def timeline
-    @breadcrumbs = Array.new
-    @layout = "timeline"
-    @report = nil
-    @timeline = true
+    @breadcrumbs = []
+    @layout      = "timeline"
+    @report      = nil
+    @timeline    = true
     if params[:id]
-      build_timeline                            # Create the timeline report
-      drop_breadcrumb( {:name=>@title, :url=>"/dashboard/timeline/#{params[:id]}"})
+      build_timeline
+      drop_breadcrumb(:name => @title, :url => "/dashboard/timeline/#{params[:id]}")
     else
-      drop_breadcrumb( {:name=>"Timelines", :url=>"/dashboard/timeline"})
-      session[:last_rpt_id] = nil               # Clear out last rpt record id
+      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
+      session[:last_rpt_id] = nil # Clear out last rpt record id
     end
     build_timeline_listnav
   end
 
   def show_timeline
-    @breadcrumbs = Array.new
-    @layout = "timeline"
+    @breadcrumbs = []
+    @layout      = "timeline"
     if params[:id]
-      build_timeline                            # Create the timeline report
+      build_timeline
       render :update do |page|
         if @ajax_action
-          page << "miqAsyncAjax('#{url_for(:action=>@ajax_action, :id=>@record)}');"
+          page << "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
         end
       end
     else
       @report = nil
-      drop_breadcrumb( {:name=>"Timelines", :url=>"/dashboard/timeline"})
+      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
       @timeline = true
-      session[:last_rpt_id] = nil               # Clear out last rpt record id
+      session[:last_rpt_id] = nil # Clear out last rpt record id
       build_timeline_listnav
     end
   end
@@ -524,7 +524,7 @@ class DashboardController < ApplicationController
   # Process changes to timeline selection
   def tl_generate
     # set variables for type of timeline is selected
-    if !@temp[:timeline]
+    unless @temp[:timeline]
       tl_gen_timeline_data
       return unless @temp[:timeline]
     end
@@ -539,24 +539,18 @@ class DashboardController < ApplicationController
       center_tb_buttons['timeline_pdf'] = "PDF" if PdfGenerator.available?
       if @report
         page << "miqHighlight('report_#{@report.id}_link', true);"
-        center_tb_buttons.keys.each do |button_id|
+        status = @report.table.data.length == 0 ? :disabled : :enabled
+
+        center_tb_buttons.each do |button_id, typ|
           page << "center_tb.showItem('#{button_id}');"
-        end
-        if @report.table.data.length == 0
-          center_tb_buttons.each do |button_id, typ|
-            page << tl_toggle_button_enablement(button_id, :disabled, typ)
-          end
-        else
-          center_tb_buttons.each do |button_id, typ|
-            page << tl_toggle_button_enablement(button_id, :enabled, typ)
-          end
+          page << tl_toggle_button_enablement(button_id, status, typ)
         end
       else
         center_tb_buttons.keys.each do |button_id|
           page << "center_tb.hideItem('#{button_id}');"
         end
       end
-      page.replace("tl_div", :partial=>"dashboard/tl_detail")
+      page.replace("tl_div", :partial => "dashboard/tl_detail")
       page << "miqSparkle(false);"
       session[:last_rpt_id] = @report ? @report.id : nil  # Remember rpt record id to turn off later
     end
