@@ -7,6 +7,8 @@ class CloudResourceQuota < ActiveRecord::Base
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :cloud_tenant
 
+  virtual_column :used, :type => :integer
+
   # find the currently used value for this quota
   def used
     send("#{name}_quota_used")

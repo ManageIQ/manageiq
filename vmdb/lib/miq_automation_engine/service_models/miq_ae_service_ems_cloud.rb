@@ -7,5 +7,6 @@ module MiqAeMethodService
     expose :floating_ips
     expose :key_pairs
     expose :security_groups
+    expose :cloud_resource_quotas
   end
 end
