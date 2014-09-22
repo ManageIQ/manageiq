@@ -109,16 +109,7 @@ unless ENV['APPLIANCE']
 
   group :metric_fu do
     gem "metric_fu",           :require => false, :git => "git://github.com/ManageIQ/metric_fu.git", :tag => "v3.0.0-3"
-    gem "roodi",               :require => false, :git => "git://github.com/ManageIQ/roodi.git", :tag => "v2.2.0-1"
-
-    # For simplecov-rcov-text, lock onto a specific commit from the master branch
-    #   until the author releases a new version.  This commit fixes the following
-    #   error that occurs after a successful run of the specs:
-    #
-    #     simplecov-rcov-text.rb:17:in `write': "\xC2" from ASCII-8BIT to UTF-8 (Encoding::UndefinedConversionError)
-    #
-    #   See https://github.com/kina/simplecov-rcov-text/pull/3
-    gem "simplecov-rcov-text", :require => false, :git => "git://github.com/kina/simplecov-rcov-text.git", :ref => "3d05aaa5abcc1bf177e143ad86ba14ae69c6d57b"
+    gem "simplecov-rcov-text", ">= 0.0.3", :require => false
   end
 
   # Debuggers:
