@@ -27,6 +27,7 @@ cols:
 - fulfilled_on
 - description
 - approval_state
+- v_approved_by
 - stamped_on
 - created_on
 - updated_on
@@ -48,6 +49,7 @@ col_order:
 - fulfilled_on
 - description
 - approval_state
+- v_approved_by
 - stamped_on
 - created_on
 - updated_on
@@ -65,6 +67,7 @@ headers:
 - Completed
 - Description
 - Approval State
+- Approved/Denied By
 - Approved/Denied On
 - Created On
 - Last Update

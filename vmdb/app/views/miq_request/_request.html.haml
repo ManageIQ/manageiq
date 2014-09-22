@@ -62,7 +62,7 @@
               - if @miq_request.stamped_by
                 = h(@miq_request.stamped_by + (@temp[:user] && " (#{@temp[:user].name})"))
           %tr
-            %td.key Date Approved/Denied
+            %td.key Approved/Denied on
             %td.wide:nowrap
               = h(format_timezone(@miq_request.stamped_on))
           %tr
