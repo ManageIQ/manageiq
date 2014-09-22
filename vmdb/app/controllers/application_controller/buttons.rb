@@ -321,11 +321,11 @@ module ApplicationController::Buttons
     end
   end
 
-  def group_button_cancel
+  def group_button_cancel(typ)
     if typ == "update"
-      add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:current][:name]))
+      add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model => "CustomButtonSet"), :name => @edit[:current][:name]))
     else
-      add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"CustomButtonSet")))
+      add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model => "CustomButtonSet")))
     end
     @edit = session[:edit] = nil  # clean out the saved info
     ab_get_node_info(x_node) if x_active_tree == :ab_tree
@@ -436,7 +436,7 @@ module ApplicationController::Buttons
         CustomButtonSet.find_by_id(@edit[:custom_button_set_id]) : CustomButtonSet.new
     @changed = (@edit[:new] != @edit[:current])
     case params[:button]
-    when 'cancel'      then group_button_cancel
+    when 'cancel'      then group_button_cancel(typ)
     when 'add', 'save' then group_button_add_save(typ)
     when 'reset'       then group_button_reset
     end
