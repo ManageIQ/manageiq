@@ -488,35 +488,35 @@ class DashboardController < ApplicationController
   end
 
   def timeline
-    @breadcrumbs = Array.new
-    @layout = "timeline"
-    @report = nil
-    @timeline = true
+    @breadcrumbs = []
+    @layout      = "timeline"
+    @report      = nil
+    @timeline    = true
     if params[:id]
-      build_timeline                            # Create the timeline report
-      drop_breadcrumb( {:name=>@title, :url=>"/dashboard/timeline/#{params[:id]}"})
+      build_timeline
+      drop_breadcrumb(:name => @title, :url => "/dashboard/timeline/#{params[:id]}")
     else
-      drop_breadcrumb( {:name=>"Timelines", :url=>"/dashboard/timeline"})
-      session[:last_rpt_id] = nil               # Clear out last rpt record id
+      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
+      session[:last_rpt_id] = nil # Clear out last rpt record id
     end
     build_timeline_listnav
   end
 
   def show_timeline
-    @breadcrumbs = Array.new
-    @layout = "timeline"
+    @breadcrumbs = []
+    @layout      = "timeline"
     if params[:id]
-      build_timeline                            # Create the timeline report
+      build_timeline
       render :update do |page|
         if @ajax_action
-          page << "miqAsyncAjax('#{url_for(:action=>@ajax_action, :id=>@record)}');"
+          page << "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
         end
       end
     else
       @report = nil
-      drop_breadcrumb( {:name=>"Timelines", :url=>"/dashboard/timeline"})
+      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
       @timeline = true
-      session[:last_rpt_id] = nil               # Clear out last rpt record id
+      session[:last_rpt_id] = nil # Clear out last rpt record id
       build_timeline_listnav
     end
   end
@@ -524,7 +524,7 @@ class DashboardController < ApplicationController
   # Process changes to timeline selection
   def tl_generate
     # set variables for type of timeline is selected
-    if !@temp[:timeline]
+    unless @temp[:timeline]
       tl_gen_timeline_data
       return unless @temp[:timeline]
     end
@@ -539,24 +539,18 @@ class DashboardController < ApplicationController
       center_tb_buttons['timeline_pdf'] = "PDF" if PdfGenerator.available?
       if @report
         page << "miqHighlight('report_#{@report.id}_link', true);"
-        center_tb_buttons.keys.each do |button_id|
+        status = @report.table.data.length == 0 ? :disabled : :enabled
+
+        center_tb_buttons.each do |button_id, typ|
           page << "center_tb.showItem('#{button_id}');"
-        end
-        if @report.table.data.length == 0
-          center_tb_buttons.each do |button_id, typ|
-            page << tl_toggle_button_enablement(button_id, :disabled, typ)
-          end
-        else
-          center_tb_buttons.each do |button_id, typ|
-            page << tl_toggle_button_enablement(button_id, :enabled, typ)
-          end
+          page << tl_toggle_button_enablement(button_id, status, typ)
         end
       else
         center_tb_buttons.keys.each do |button_id|
           page << "center_tb.hideItem('#{button_id}');"
         end
       end
-      page.replace("tl_div", :partial=>"dashboard/tl_detail")
+      page.replace("tl_div", :partial => "dashboard/tl_detail")
       page << "miqSparkle(false);"
       session[:last_rpt_id] = @report ? @report.id : nil  # Remember rpt record id to turn off later
     end
@@ -904,38 +898,42 @@ class DashboardController < ApplicationController
 
   def tl_gen_timeline_data
     @report = MiqReport.find(from_cid(params[:id]))
-    @title = @report.title
-    @temp[:timeline] = true if !@report         # need to set this incase @report is not there, when switching between Management/Policy events
-    if @report
-      unless params[:task_id]                                     # First time thru, kick off the report generate task
-        options = {:userid => session[:userid]}
-        initiate_wait_for_task(:task_id => @report.async_generate_table(options))
-        return
-      end
-      @temp[:timeline] = true
-      miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
-      tz = @report.tz ? @report.tz : Time.zone
-      @report = miq_task.task_results
-      session[:rpt_task_id] = miq_task.id
-      if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-        add_flash(I18n.t("flash.error_building_timeline") << miq_task.message, :error)
-      else
-        @timeline = true
-        if @report.table.data.length == 0
-          add_flash(I18n.t("flash.no_timeline_records_found"), :warning)
-        else
-          @report.extras[:browser_name] = browser_info("name").downcase
-          if is_browser_ie?
-            blob = BinaryBlob.new(:name => "timeline_results")
-            blob.binary=(@report.to_timeline)
-            session[:tl_xml_blob_id] = blob.id
-          else
-            @temp[:tl_json] = @report.to_timeline
-          end
-          session[:tl_position] = format_timezone(@report.extras[:tl_position],tz,"tl")
-        end
-      end
+    @title  = @report.title
+    @temp[:timeline] = true unless @report # need to set this incase @report is not there, when switching between Management/Policy events
+    return unless @report
+
+    unless params[:task_id] # First time thru, kick off the report generate task
+      options = {:userid => session[:userid]}
+      initiate_wait_for_task(:task_id => @report.async_generate_table(options))
+      return
     end
+
+    @temp[:timeline] = true
+    miq_task = MiqTask.find(params[:task_id]) # Not first time, read the task record
+    @report  = miq_task.task_results
+    session[:rpt_task_id] = miq_task.id
+    if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
+      add_flash(I18n.t("flash.error_building_timeline") << miq_task.message, :error)
+      return
+    end
+
+    @timeline = true
+    if @report.table.data.empty?
+      add_flash(I18n.t("flash.no_timeline_records_found"), :warning)
+      return
+    end
+
+    @report.extras[:browser_name] = browser_info("name").downcase
+    if is_browser_ie?
+      blob = BinaryBlob.new(:name => "timeline_results")
+      blob.binary = @report.to_timeline
+      session[:tl_xml_blob_id] = blob.id
+    else
+      @temp[:tl_json] = @report.to_timeline
+    end
+
+    tz = @report.tz || Time.zone
+    session[:tl_position] = format_timezone(@report.extras[:tl_position], tz, "tl")
   end
 
   def get_layout
