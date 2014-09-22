@@ -43,40 +43,6 @@ describe Zone do
       described_class.all(:include => :aggregate_vm_cpus).should_not be_nil
     end
 
-    context "with two vdi farms in different zones via vdi_desktop_pools" do
-      before(:each) do
-        @farm1 = FactoryGirl.create(:vdi_farm_citrix)
-        @farm1.vdi_desktop_pools << FactoryGirl.create(:vdi_desktop_pool, :name => 'MiqCitrix1', :vendor => 'citrix', :enabled => true, :ext_management_systems => [@zone1.ext_management_systems.first])
-
-        @farm2 = FactoryGirl.create(:vdi_farm_citrix)
-        @farm2.vdi_desktop_pools << FactoryGirl.create(:vdi_desktop_pool, :name => 'MiqCitrix2', :vendor => 'citrix', :enabled => true, :ext_management_systems => [@zone2.ext_management_systems.first])
-      end
-
-      it "zone1#vdi_farms will return farm1" do
-        @zone1.vdi_farms.should == [@farm1]
-      end
-
-      it "zone2#vdi_farms will return farm2" do
-        @zone2.vdi_farms.should == [@farm2]
-      end
-    end
-
-    context "with a farm1 residing in two zones via vdi_desktop_pools" do
-      before(:each) do
-        @farm1 = FactoryGirl.create(:vdi_farm_citrix)
-        @farm1.vdi_desktop_pools << FactoryGirl.create(:vdi_desktop_pool, :name => 'MiqCitrix1', :vendor => 'citrix', :enabled => true, :ext_management_systems => [@zone1.ext_management_systems.first])
-        @farm1.vdi_desktop_pools << FactoryGirl.create(:vdi_desktop_pool, :name => 'MiqCitrix2', :vendor => 'citrix', :enabled => true, :ext_management_systems => [@zone2.ext_management_systems.first])
-      end
-
-      it "zone1#vdi_farms will return farm1" do
-        @zone1.vdi_farms.should == [@farm1]
-      end
-
-      it "zone2#vdi_farms will return farm1" do
-        @zone2.vdi_farms.should == [@farm1]
-      end
-    end
-
     context "with proxies in different zones" do
       before(:each) do
         @proxy1 = FactoryGirl.create(:active_cos_proxy)

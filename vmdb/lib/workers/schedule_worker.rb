@@ -222,12 +222,6 @@ class ScheduleWorker < WorkerBase
       @queue.enq :miq_alert_evaluate_hourly_timer
     end
 
-    # Schedule - Periodic refresh for all VDI Farms
-    every = worker_setting_or_default(:vdi_refresh_interval, 20.minutes)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => 1.minute) do |job_id, at, params|
-      @queue.enq :vdi_farm_refresh_all_vdi_farms_timer
-    end
-
     # Schedule every 24 hours
     at = worker_setting_or_default(:storage_file_collection_time_utc)
     if Time.now.strftime("%Y-%m-%d #{at}").to_time < Time.now.utc

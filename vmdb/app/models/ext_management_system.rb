@@ -51,8 +51,6 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_and_belongs_to_many :vdi_desktop_pools, :foreign_key => "ems_id"
-
   validates :name,                 :presence => true, :uniqueness => true
   validates :hostname, :ipaddress, :presence => true, :uniqueness => {:case_sensitive => false}, :if => :hostname_ipaddress_required?
 

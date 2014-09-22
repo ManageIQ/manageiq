@@ -64,14 +64,12 @@ module Rbac
     return false if klass == Metric
     return false if klass == MetricRollup
     return false if klass == VimPerformanceDaily
-    return true  if klass == VdiDesktop
     klass.hierarchy.include?(MetricRollup) || klass.hierarchy.include?(Metric)
   end
 
   def self.rbac_class(klass)
     return klass if apply_rbac_to_class?(klass)
     if apply_rbac_to_associated_class?(klass)
-      return VmOrTemplate if klass == VdiDesktop
       return klass.name[0..-12].constantize.base_class # e.g. VmPerformance => VmOrTemplate
     end
     return nil
@@ -79,7 +77,6 @@ module Rbac
 
   def self.rbac_instance(obj)
     return obj                if apply_rbac_to_class?(obj.class)
-    return obj.vm_or_template if obj.kind_of?(VdiDesktop)
     return obj.resource       if obj.kind_of?(MetricRollup) || obj.kind_of?(Metric)
     return nil
   end

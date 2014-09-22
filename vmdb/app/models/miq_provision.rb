@@ -20,7 +20,6 @@ class MiqProvision < MiqRequestTask
   include_concern 'Service'
   include_concern 'StateMachine'
   include_concern 'Tagging'
-  include_concern 'Vdi'
 
   alias_attribute :provision_type,        :request_type
   alias_attribute :miq_provision_request, :miq_request

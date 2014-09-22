@@ -1782,7 +1782,6 @@ Vmdb::Application.routes.draw do
         users
         vmrc_console
         vm_pre_prov
-        vm_vdi
         wait_for_task
         win32_services
         x_button

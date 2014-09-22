@@ -1,7 +1,7 @@
 module MiqProvisionDialogs
   def self.dialogs
     {
-      :dialog_order => [:requester,:purpose,:service,:environment,:vdi,:hardware,:network,:customize,:schedule],
+      :dialog_order => [:requester,:purpose,:service,:environment,:hardware,:network,:customize,:schedule],
       :buttons => [:submit, :cancel],     # :continue
       :dialogs      => {
     :requester => {
@@ -78,19 +78,6 @@ module MiqProvisionDialogs
       :new_datastore_max_size           => {:data_type => :integer, :display => :hide, :required => false, :description => "Max Size (GB)"},
       :ds_filter                        => {:data_type => :integer, :display => :edit, :required => false, :description => "Filter",:values_from => {:method => :allowed_filters, :options => {:category => :Storage}}, :auto_select_single => false },
       :placement_ds_name                => {:data_type => :integer, :display => :edit, :required => true, :required_method=>:validate_placement, :description => "Name",:values_from => {:method => :allowed_storages}, :auto_select_single => false,  :required_description => "Datastore Name" },
-          }
-        },
-    :vdi => {
-          :description => "Desktop",
-          :display     => :show,
-          :fields      => {
-      :vdi_enabled                     => {:data_type => :boolean, :display => :edit, :required => false, :description => "Enabled",:default => false,:values => {false => 0,true => 1}},
-      :vdi_farm                        => {:data_type => :string, :display => :hide, :required => false, :description => "Farm",:values_from => {:method => :allowed_vdi_farms}},
-      :vdi_desktop_pool_create         => {:data_type => :boolean, :display => :hide, :required => false, :description => "Create Desktop Pool",:default => false,:values  => {false => 0,true    => 1}},
-      :vdi_desktop_pool                => {:data_type => :string, :display => :hide, :required => false, :description => "Desktop Pools",:values_from => {:method => :allowed_vdi_desktop_pools}},
-      :vdi_new_desktop_pool_name       => {:data_type => :string, :display => :hide, :required => false, :description => "Name"},
-      :vdi_new_desktop_pool_assignment => {:data_type => :string, :display => :hide, :required => false, :description => "Desktop Pools Assignment",:values_from => {:method => :allowed_vdi_desktop_pool_assignments}},
-      :vdi_desktop_pool_user_list      => {:data_type => :string, :display => :edit, :required => true,  :required_method=>:validate_vdi_user_list, :description => "User List"},
           }
         },
     :hardware => {

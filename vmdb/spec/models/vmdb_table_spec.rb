@@ -81,7 +81,7 @@ describe VmdbTable do
       VmdbTable.atStartup
       MiqDatabase.seed
       @db = MiqDatabase.first
-      @test_tables = %w(vdi_desktop_pools_vdi_users ui_tasks miq_regions miq_databases)
+      @test_tables = %w(miq_servers_product_updates ui_tasks miq_regions miq_databases)
       @unpopulated_tables = %w{hosts vms}
       @populated_tables = %w(miq_regions miq_databases)
     end
@@ -140,7 +140,7 @@ describe VmdbTable do
       end
 
       it "will handle tables without models" do
-        VmdbTable.new(:name => "vdi_desktop_pools_vdi_users").record_count.should >= 0
+        VmdbTable.new(:name => "miq_servers_product_updates").record_count.should >= 0
       end
     end
 
@@ -150,7 +150,7 @@ describe VmdbTable do
       end
 
       it "will handle tables without models" do
-        VmdbTable.new(:name => "vdi_desktop_pools_vdi_users").model_name.should == "VdiDesktopPoolsVdiUser"
+        VmdbTable.new(:name => "miq_servers_product_updates").model_name.should == "MiqServersProductUpdates"
       end
     end
 
@@ -160,13 +160,13 @@ describe VmdbTable do
       end
 
       it "will handle tables without models" do
-        VmdbTable.new(:name => "vdi_desktop_pools_vdi_users").model.should be_nil
+        VmdbTable.new(:name => "miq_servers_product_updates").model.should be_nil
       end
     end
 
     context "#export" do
       it "will handle tables without models" do
-        lambda { VmdbTable.new(:name => "vdi_desktop_pools_vdi_users").export }.should_not raise_error
+        lambda { VmdbTable.new(:name => "miq_servers_product_updates").export }.should_not raise_error
       end
 
       it "will return nil if no data in tables" do

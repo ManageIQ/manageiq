@@ -49,12 +49,6 @@ class MiqProvisionInfraWorkflow < MiqProvisionWorkflow
     else
       add_target(:placement_dc_name, :datacenter, EmsFolder, result)
     end
-    result[:vdi_farm_id] = get_value(@values[:vdi_farm])
-    unless result[:vdi_farm_id].nil?
-      @vdi_farm_vendor = VdiFarm.find_by_id(result[:vdi_farm_id]).try(:vendor)
-    else
-      @vdi_farm_vendor = nil
-    end
 
     rails_logger('get_source_and_targets', 1)
     return @target_resource=result

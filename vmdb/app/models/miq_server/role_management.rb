@@ -176,7 +176,6 @@ module MiqServer::RoleManagement
 
   def licensed_roles
     roles = ServerRole.all.to_a
-    roles.delete_if {|r| r.name.starts_with?('vdi_')} unless VdiFarm.is_available?
     unless VMDB::Config.new("vmdb").config[:product][:storage]
       roles.delete_if {|r| r.name.starts_with?('storage_')}
       roles.delete_if {|r| r.name == 'vmdb_storage_bridge'}

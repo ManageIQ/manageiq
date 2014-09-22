@@ -12,7 +12,6 @@ class VmOrTemplate < ActiveRecord::Base
   include_concern 'RightSizing'
   include_concern 'Scanning'
   include_concern 'Snapshotting'
-  include_concern 'Vdi'
 
   attr_accessor :surrogate_host
   @surrogate_host = nil

@@ -1863,24 +1863,13 @@ class Host < ActiveRecord::Base
 
   def add_ems_events(event_hash)
     event_hash[:events].each do |event|
-      if event[:format] == "xml"
-        xml = MiqXml.load(event[:data])
-        if xml.root.attributes[:xmlns].to_s.include?('powershell')
-          require 'miq-powershell'
-          event[:ps_event] = MiqPowerShell.ps_xml_to_hash(xml).first
-          #$log.warn "MIQ(host.add_ems_events) \n#{YAML.dump(event)}"
-          VdiFarm.add_event(event, self) if event[:ps_event][:type].to_s.starts_with?('Vdi')
-        end
-      else
-        event[:ems_id] = self.ems_id
-        event[:host_name] = self.name
-        event[:host_id] = self.id
-        #$log.warn "MIQ(host.add_ems_events) \n#{YAML.dump(event)}"
-        begin
-          EmsEvent.add(self.ems_id, event)
-        rescue
-          $log.log_backtrace($!)
-        end
+      event[:ems_id] = self.ems_id
+      event[:host_name] = self.name
+      event[:host_id] = self.id
+      begin
+        EmsEvent.add(self.ems_id, event)
+      rescue
+        $log.log_backtrace($!)
       end
     end
   end

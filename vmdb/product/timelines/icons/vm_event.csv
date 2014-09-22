@@ -118,9 +118,3 @@ vmsuspendedevent,vm_suspended
 vmsuspendingevent,vm_suspending
 vmtotemplate,vm_to_template
 vmuuidassignedevent,vm_uuid_assigned
-vdilogoutsessionevent,vdi_logout
-vdiloginsessionevent,vdi_login
-vdiconsoleloggedinsession,vdi_login
-vdilogoffsessionevent,vdi_logout
-vdiconnectingsessionevent,vdi_connected
-vdidisconnectedsessionevent,vdi_disconnected

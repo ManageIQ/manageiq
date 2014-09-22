@@ -28,7 +28,6 @@ module MiqAeServiceModelSpec
     end
 
     it "ae_vm should have a special inspect method" do
-      # #<MiqAeServiceVm:0x82c9ac48 @object=#<Vm id: 102, vendor: "vmware", format: nil, version: nil, name: "vm_3", description: nil, location: "[storage] vm_3/vm_3.vmx", config_xml: nil, autostart: nil, host_id: nil, last_sync_on: nil, created_on: "2011-02-24 21:08:14", updated_on: "2011-02-24 21:08:14", storage_id: nil, guid: "318e7116-405a-11e0-bbd9-001f5bee6a67", service_id: nil, ems_id: nil, last_scan_on: nil, last_scan_attempt_on: nil, uid_ems: "318e597e-405a-11e0-bbd9-001f5bee6a67", retires_on: nil, retired: nil, boot_time: nil, tools_status: nil, standby_action: nil, power_state: nil, state_changed_on: nil, previous_state: nil, connection_state: nil, last_perf_capture_on: nil, blackbox_exists: nil, blackbox_validated: nil, registered: nil, busy: nil, smart: nil, retirement: nil, memory_reserve: nil, memory_reserve_expand: nil, memory_limit: nil, memory_shares: nil, memory_shares_level: nil, cpu_reserve: nil, cpu_reserve_expand: nil, cpu_limit: nil, cpu_shares: nil, cpu_shares_level: nil, cpu_affinity: nil, ems_created_on: nil, template: false, evm_owner_id: nil, ems_ref_obj: nil, miq_group_id: nil, operating_ranges: nil, vdi: false>, @associations=["datacenter", "ems_blue_folder", "ems_cluster", "ems_folder", "ext_management_system", "hardware", "host", "miq_provision", "operating_system", "owner", "resource_pool", "storage"]>
       inspect = @ae_vm.inspect
       inspect[0,2].should == '#<'
       inspect[-1,1].should == '>'

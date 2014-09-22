@@ -6,7 +6,6 @@ module MiqAeMethodService
     expose :miq_provision_request, :association => true
     expose :vm,                    :association => true
     expose :vm_template,           :association => true
-    expose :vdi_farm,              :association => true
     expose :target_type
     expose :source_type
 

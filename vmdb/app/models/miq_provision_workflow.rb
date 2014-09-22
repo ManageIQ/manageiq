@@ -87,17 +87,8 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       if service_template_req == true
         show_dialog(:requester, :hide, "disabled")
         show_dialog(:purpose,   :hide, "disabled")
-        show_dialog(:vdi,       :hide, "disabled")
       end
-      show_dialog(:vdi, :hide, "disabled") unless VdiFarm.is_available?
-
     end
-  end
-
-  def init_from_dialog(values, userid)
-    result = super
-    parse_vdi_user_list
-    result
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name', extra_attrs = {})
@@ -288,33 +279,6 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     return "#{required_description(dlg, fld)} is required"
   end
 
-  def validate_vdi_user_list(field, values, dlg, fld, value)
-    return nil unless @vdi_farm_vendor == 'citrix'
-    value = value.to_s.strip
-    return nil if value.blank?
-    return nil unless get_value(@values[:vdi_enabled]).to_s == "true"
-
-    # Validate that listed users can be identified through AD.
-    if MiqLdap.using_ldap?
-      ldap = MiqLdap.new
-      ldap.bind_with_default
-
-      missing_users = []
-      user_names = value.split(',').collect{|user| user.split(' ')}.flatten.uniq
-
-      user_names.each do |user|
-        fq_user = ldap.fqusername(user)
-        uobj = ldap.get_user_object(fq_user, 'userprincipalname')
-        missing_users << user if uobj.nil?
-      end
-
-      return "#{required_description(dlg, fld)} contains users not found in AD: #{missing_users.join(", ")}" unless missing_users.length.zero?
-
-      requested_vm_count = get_value(@values[:number_of_vms]).to_i
-      return "#{required_description(dlg, fld)} contains more unique users [#{user_names.length}] than requested VMs [#{requested_vm_count}]" if user_names.length > requested_vm_count
-    end
-  end
-
   def default_require_sysprep_enabled(field, values, dlg, fld, value)
     return "#{required_description(dlg, fld)} is required" if value.blank? || value == "disabled"
   end
@@ -416,30 +380,6 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
           f[:edit] -= [:new_datastore_autogrow]
         end
       end
-    end
-
-    # VDI tab
-    show_flag = get_value(@values[:vdi_enabled]).to_s == "true" ? :edit : :hide
-    if show_flag == :hide
-      f[:hide] += [:vdi_farm, :vdi_desktop_pool_create, :vdi_desktop_pool, :vdi_new_desktop_pool_name,
-                   :vdi_new_desktop_pool_assignment, :vdi_desktop_pool_user_list]
-    else
-      f[:edit] += [:vdi_farm]
-      show_flag = :edit
-      if @vdi_farm_vendor == "vmware"
-        # For VMware View force the create new pool flag on and disable the checkbox
-        # but still have it visible on the screen.
-        show_flag = :show
-        @values[:vdi_desktop_pool_create] = [true, 1]
-        f[:hide] += [:vdi_desktop_pool_user_list]
-      else
-        f[:edit] += [:vdi_desktop_pool_user_list]
-      end
-      f[show_flag] += [:vdi_desktop_pool_create]
-
-      show_flags = get_value(@values[:vdi_desktop_pool_create]).to_s == "true" ? [:hide, :edit] : [:edit, :hide]
-      f[show_flags[0]] += [:vdi_desktop_pool]
-      f[show_flags[1]] += [:vdi_new_desktop_pool_name, :vdi_new_desktop_pool_assignment]
     end
 
     # Hide VM filter if we are using a pre-selected VM
@@ -847,54 +787,6 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     naf = NetAppFiler.find_by_name(controller)
     naf_type = get_value(@values[:new_datastore_fs_type]) == "NFS" ? :aggregates : :volumes
     naf.send(naf_type).each {|a| result[a] = a}
-    return result
-  end
-
-  def allowed_vdi_farms(options={})
-    result = {}
-    return result if (src = get_source_and_targets).blank?
-    return result if src[:ems].nil?
-    VdiFarm.find(:all).each {|f| result[f.id.to_s] = f.name}
-    return result
-  end
-
-  def allowed_vdi_desktop_pools(options={})
-    result = {}
-    return result if (src = get_source_and_targets).blank?
-    return result if src[:ems].nil?
-    ems_id = src[:ems].id
-    vdi_farm_id = get_value(@values[:vdi_farm])
-    unless vdi_farm_id.blank?
-      # Limit Desktop pools by ones associated to the same ems as the source template
-      VdiFarm.find_by_id(vdi_farm_id).vdi_desktop_pools.each do |dp|
-        if dp.ext_management_system && dp.ext_management_system.id == ems_id || dp.has_broker? == false
-          result[dp.id.to_s] = dp.name
-        end
-      end
-    end
-    return result
-  end
-
-  def allowed_vdi_desktop_pool_assignments(options={})
-    result = if @vdi_farm_vendor == 'citrix'
-      {
-        "Pooled"           => "Pooled",
-        "PreAssigned"      => "Pre-assigned",
-        "AssignOnFirstUse" => "Assign on first use",
-      }
-    elsif @vdi_farm_vendor == 'vmware'
-      {
-        "Pooled"           => "Floating",
-        #"PreAssigned"      => "Dedicated",
-        "AssignOnFirstUse" => "Dedicated (Automatic Assignment)",
-      }
-    elsif @vdi_farm_vendor == 'brokerless'
-      {
-        "PreAssigned"      => "Pre-assigned",
-      }
-    else
-      {}
-    end
     return result
   end
 
@@ -1311,16 +1203,6 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       result = svm.template? ? 'template' : 'vm'
     end
     return result
-  end
-
-  def parse_vdi_user_list()
-    vdi_users_list = @values[:vdi_users_list]
-    if vdi_users_list.kind_of?(Array) && !vdi_users_list.blank? && @values[:vdi_desktop_pool_user_list].blank?
-      users = vdi_users_list.collect {|vdi_user_id| VdiUser.find_by_id(vdi_user_id).try(:name)}.compact.uniq
-      @values[:vdi_desktop_pool_user_list] = users.join("\n")
-      @values[:number_of_vms] = users.length
-      @values[:vdi_enabled] = [true, 1]
-    end
   end
 
   def self.from_ws(*args)
