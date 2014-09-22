@@ -1494,6 +1494,22 @@
       :description: View Reports
       :feature_type: view
       :identifier: miq_report_view
+      :children:
+      - :name: Download CSV Format
+        :description: Download Report in CSV Format
+        :feature_type: admin
+        :hidden: true
+        :identifier: render_report_csv
+      - :name: Download PDF Format
+        :description: Download Report in PDF Format
+        :feature_type: admin
+        :hidden: true
+        :identifier: render_report_pdf
+      - :name: Download Text Format
+        :description: Download Report in Text Format
+        :feature_type: admin
+        :hidden: true
+        :identifier: render_report_txt
     - :name: Operate
       :description: Perform Operations on Reports
       :feature_type: control
@@ -1524,21 +1540,6 @@
         :description: Edit a Report
         :feature_type: admin
         :identifier: miq_report_edit
-      - :name: Download CSV Fromat
-        :description: Download Report in CSV Format
-        :feature_type: admin
-        :hidden: true
-        :identifier: render_report_csv
-      - :name: Download PDF Fromat
-        :description: Download Report in PDF Format
-        :feature_type: admin
-        :hidden: true
-        :identifier: render_report_pdf
-      - :name: Download Text Fromat
-        :description: Download Report in Text Format
-        :feature_type: admin
-        :hidden: true
-        :identifier: render_report_txt
   - :name: Schedules
     :description: Schedules Accordion
     :feature_type: node
