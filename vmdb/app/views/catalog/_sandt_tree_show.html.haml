@@ -10,7 +10,7 @@
       %li#li_resources
         %a{:href => "#resources"} Selected Resources
     - else
-      - if !@record.prov_type.eql?("generic")
+      - unless @record.prov_type.eql?("generic")
         %li#li_request
           %a{:href => "#request"} Request Info
   #basic{:name => "basic", :width => "80px"}
@@ -67,7 +67,7 @@
                   :id        => @record.id},
                   :multipart => true) do
         = file_field("upload", "image")
-        = submit_tag("Upload", :id    => "upload", :class => "upload")
+        = submit_tag("Upload", :id => "upload", :class => "upload")
         * Requirements: File-type - PNG; Dimensions - 350x70.
     - else
       = form_tag({:action  => "st_upload_image",
@@ -90,7 +90,7 @@
     #resources{:name => "resources", :width => "80px"}
       %p.legend Resources
       - resources = @record.service_resources
-      - if !resources.empty?
+      - unless resources.empty?
         %table.style3
           %thead
             %tr
@@ -136,7 +136,7 @@
       - else
         No Resources found.
   - else
-    - if !@record.prov_type || (@record.prov_type && @record.prov_type != "generic")
+    - unless @record.prov_type || (@record.prov_type && @record.prov_type != "generic")
       #request{:name => "request", :width => "80px"}
         - if @options[:wf]
           %p.legend
@@ -147,7 +147,4 @@
         - else
           %span{:style => "color:red"}= @no_wf_msg
 :javascript
-  //method takes hash that can have 4 keys: tabs div id, active_tab label,
-  //url to go to when tab is changed, and whether to check for abandon changes or not
-  //miq_jquery_tabs_init({tabs_div: "st_form_tabs", active_tab: "=@sb[:st_form_active_tab]", disabled_tabs: [1,2] })
   miq_jquery_tabs_init({tabs_div: "st_tabs", active_tab: "basic"})
