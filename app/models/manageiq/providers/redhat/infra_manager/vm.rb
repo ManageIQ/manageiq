@@ -47,4 +47,28 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   def validate_smartstate_analysis
     validate_supported
   end
+
+  # Show Reconfigure VM task
+  def reconfigurable?
+    true
+  end
+
+  def max_total_vcpus
+    # the default value of MaxNumOfVmCpusTotal for RHEV 3.1 - 3.4
+    160
+  end
+
+  def max_cores_per_socket
+    # the default value of MaxNumOfCpuPerSocket for RHEV 3.1 - 3.4
+    16
+  end
+
+  def max_vcpus
+    # the default value of MaxNumofVmSockets for RHEV 3.1 - 3.4
+    16
+  end
+
+  def max_memory_cpu
+    2.terabyte / 1.megabyte
+  end
 end
