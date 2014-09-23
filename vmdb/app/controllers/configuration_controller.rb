@@ -476,7 +476,7 @@ class ConfigurationController < ApplicationController
     @edit[:new][:profile_type] = params[:profile_type] if params[:profile_type]
     @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.key?(:profile_tz)
     @redraw = true if params.key?(:profile_tz)
-    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params._key?(:rollup_daily)
+    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params.key?(:rollup_daily)
     @edit[:new][:profile_key] = @edit[:new][:profile_type] == "user" ? session[:userid] : nil
     params.each do |var, val|
       vars=var.split("_")
