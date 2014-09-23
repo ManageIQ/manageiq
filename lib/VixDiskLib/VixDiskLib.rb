@@ -108,6 +108,14 @@ class VixDiskLib
     reader, writer = IO.pipe
     writerfd = writer.fileno
     my_env["WRITER_FD"] = writerfd.to_s
+
+    # Ruby 2.0+ automatically closes all descriptors except 0, 1, 2 (input/output/error)
+    # in child processes.  We need the child process (the server) to write it's DRb URI to
+    # the writer descriptor so the client can read it.  Set close_on_exec to false
+    # in the writer descriptor so it doesn't get closed on us.
+    # See: https://bugs.ruby-lang.org/issues/5041
+    writer.close_on_exec = false
+
     pid = Kernel.spawn(my_env, "ruby #{SERVER_PATH}VixDiskLibServer.rb",
                        [:out, :err]     => [LOG_FILE, "a"],
                        :unsetenv_others => true,
