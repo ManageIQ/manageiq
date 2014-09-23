@@ -50,25 +50,25 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     Flavor.count.should              == 6
     AvailabilityZone.count.should    == 2
     FloatingIp.count.should          == 4
-    AuthPrivateKey.count.should      == 1
-    SecurityGroup.count.should       == 4
-    FirewallRule.count.should        == 30
-    CloudNetwork.count.should        == 4
-    CloudSubnet.count.should         == 4
+    AuthPrivateKey.count.should      == 2
+    SecurityGroup.count.should       == 5
+    FirewallRule.count.should        == 34
+    CloudNetwork.count.should        == 6
+    CloudSubnet.count.should         == 5
     VmOrTemplate.count.should        == 14
-    Vm.count.should                  == 8
-    MiqTemplate.count.should         == 6
+    Vm.count.should                  == 6
+    MiqTemplate.count.should         == 8
 
     CustomAttribute.count.should     == 0
-    Disk.count.should                == 17
+    Disk.count.should                == 14
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 8
-    Network.count.should             == 8
+    Hardware.count.should            == 6
+    Network.count.should             == 7
     OperatingSystem.count.should     == 0
     Snapshot.count.should            == 0
     SystemService.count.should       == 0
 
-    Relationship.count.should        == 12
+    Relationship.count.should        == 9
     MiqQueue.count.should            == 16
   end
 
@@ -81,11 +81,11 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.flavors.size.should            == 6
     @ems.availability_zones.size.should == 2
     @ems.floating_ips.size.should       == 4
-    @ems.key_pairs.size.should          == 1
-    @ems.security_groups.size.should    == 4
+    @ems.key_pairs.size.should          == 2
+    @ems.security_groups.size.should    == 5
     @ems.vms_and_templates.size.should  == 14
-    @ems.vms.size.should                == 8
-    @ems.miq_templates.size.should      == 6
+    @ems.vms.size.should                == 6
+    @ems.miq_templates.size.should      == 8
   end
 
   # def assert_specific_host
