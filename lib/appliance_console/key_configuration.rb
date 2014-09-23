@@ -87,7 +87,7 @@ module ApplianceConsole
         'Fetch key from remote machine' => :fetch,
       }
 
-      action_id = options.values.index(default_action).to_i + 1
+      action_id = (options.values.index(default_action).to_i + 1).to_s
 
       ask_with_menu("Encryption Key", options, action_id, false)
     end
