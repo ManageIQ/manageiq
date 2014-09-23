@@ -176,6 +176,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        toggle_dash
         update
         panel_control
       )
