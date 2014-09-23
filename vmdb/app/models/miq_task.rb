@@ -227,7 +227,9 @@ class MiqTask < ActiveRecord::Base
       Timeout.timeout(options[:timeout]) do
         while task.state != STATE_FINISHED
           sleep(options[:sleep_time])
-          task.reload
+          # Code running with Rails QueryCache enabled,
+          # need to disable caching for the reload to see updates.
+          task.class.uncached { task.reload }
         end
       end
     rescue Timeout::Error
