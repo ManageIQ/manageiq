@@ -19,8 +19,6 @@
     - lib/kvm
     - lib/libvirt
     - lib/HyperV
-    - lib/VdiCitrix
-    - lib/VdiVmware
     # miqhost
     - host/bundler_setup.rb
     - host/Gemfile
