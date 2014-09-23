@@ -33,7 +33,7 @@ namespace :spec do
     desc "Run the backend code examples"
     RSpec::Core::RakeTask.new(:backend) do |t|
       initialize_task(t)
-      t.pattern = Rails.env == "metric_fu" ? EvmTestHelper::BACKEND_SPECS + ['spec/coverage_helper.rb'] : EvmTestHelper::BACKEND_SPECS
+      t.pattern = Rails.env == "metric_fu" ? EvmTestHelper::METRICS_SPECS : EvmTestHelper::BACKEND_SPECS
     end
 
     desc "Run the replication code examples"
