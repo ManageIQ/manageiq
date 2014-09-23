@@ -2599,23 +2599,10 @@ class ApplicationController < ActionController::Base
         session[:tab_bc][:sto] = @breadcrumbs.dup if ["show", "show_list", "index"].include?(action_name)
       when "ems_cloud", "availability_zone", "flavor"
         session[:tab_bc][:clo] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "ems_infra"
-        session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "datacenter"
-        session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "ems_cluster"
+      when "ems_infra", "datacenter", "ems_cluster", "resource_pool", "storage", "repository", "pxe_server"
         session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
       when "host"
         session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list", "log_viewer"].include?(action_name)
-      when "resource_pool"
-        session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "storage"
-        session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "repository"
-        session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "pxe_server"
-        session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-
       when "vdi_controller","vdi_desktop","vdi_desktop_pool","vdi_endpoint_device","vdi_farm","vdi_user","vm_vdi"
         session[:tab_bc][:vdi] = @breadcrumbs.dup if ["show", "show_list", "index"].include?(action_name)
       when "miq_request"
