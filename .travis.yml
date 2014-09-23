@@ -5,11 +5,11 @@ env:
   - BUNDLE_WITHOUT=development:metric_fu:qpid
   - RUBY_GC_MALLOC_LIMIT=90000000
   matrix:
-  - TEST_SUITE=lib
-  - TEST_SUITE=vmdb
-  - TEST_SUITE=migrations
-  - TEST_SUITE=replication
-  - TEST_SUITE=automation
+  - TEST_SUITE=lib         TEST_ROOT=lib
+  - TEST_SUITE=vmdb        TEST_ROOT=vmdb
+  - TEST_SUITE=migrations  TEST_ROOT=vmdb
+  - TEST_SUITE=replication TEST_ROOT=vmdb
+  - TEST_SUITE=automation  TEST_ROOT=vmdb
 addons:
   postgresql: '9.3'
 before_install:
@@ -21,4 +21,6 @@ before_install:
 - travis_retry gem install rake -v10.1.1
 - psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
 - rake build:shared_objects:clean build:shared_objects
-script: rake test:$TEST_SUITE
+- cd $TEST_ROOT
+before_script: bundle exec rake test:setup_$TEST_SUITE
+script: bundle exec rake test:$TEST_SUITE
