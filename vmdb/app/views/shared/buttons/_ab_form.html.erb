@@ -31,13 +31,13 @@
         <%= text_field_tag("name",
                            @edit[:new][:name],
                            :maxlength         => 30,
-                           "data-miq_observe" => {:url => url}.to_json)
+                           "data-miq_observe" => {:interval=>'.5', :url => url}.to_json)
         %>
         &nbsp;
         <%= check_box_tag("display", 
                           value="1",
                           checked=@edit[:new][:display],
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+                          "data-miq_observe_checkbox" => {:interval=>'.5', :url => url}.to_json)
         %>
         &nbsp;Display on Button
       </td>
@@ -51,7 +51,7 @@
         <%= text_field_tag("description",
                            @edit[:new][:description],
                            :maxlength         => 50,
-                           "data-miq_observe" => {:url => url}.to_json)
+                           "data-miq_observe" => {:interval=>'.5', :url => url}.to_json)
         %>
       </td>
     </tr>
@@ -79,7 +79,7 @@
                        options_for_select(([["<None>",nil]]) + Array(@edit[:new][:available_dialogs].invert).sort{|a,b|a.first.downcase<=>b.first.downcase},
                                           @edit[:new][:dialog_id]),
                        "data-miq_sparkle_on" => true,
-                       "data-miq_observe"    => {:url => url}.to_json)
+                       "data-miq_observe"    => {:interval=>'.5', :url => url}.to_json)
         %>
       </td>
     </tr>
