@@ -13,8 +13,10 @@ module OpenstackHandle
     # retrieve a list of tenants the user can access.
     #
     def visible_tenants
-      response = Fog::Connection.new(
-        "http://#{@os_handle.address}:#{@os_handle.port}/v2.0/tenants", false, {}).request(
+      conection = Fog::Connection.new(
+        "http://#{@os_handle.address}:#{@os_handle.port}/v2.0/tenants", false, {}
+      )
+      response = conection.request(
         :expects => [200, 204],
         :headers => {'Content-Type' => 'application/json',
                      'Accept'       => 'application/json',
