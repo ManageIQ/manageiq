@@ -218,6 +218,10 @@ class MiqExpression
     guid
   }
 
+  EXCLUDE_FROM_RELATS = {
+    "EmsCloud" => ["hosts", "ems_clusters", "resource_pools"]
+  }
+
   TAG_CLASSES = [
     "EmsCloud", "ext_management_system",
     "EmsCluster", "ems_cluster",
@@ -1470,6 +1474,10 @@ class MiqExpression
       next if     assoc.to_s.pluralize == "processes"  && parent[:root] == "Host" # Process data not available yet for Host
 
       next if ref.macro == :belongs_to && model.name != parent[:root]
+
+      # REMOVE ME: workaround to temporarily exlude certain mdoels from the relationships
+      excluded_models = EXCLUDE_FROM_RELATS[model.name]
+      next if excluded_models && excluded_models.include?(assoc.to_s)
 
       assoc_class = ref.klass.name
 
