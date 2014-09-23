@@ -41,7 +41,7 @@ module ApplianceConsole
       loop do
         return false unless ask_questions
         return true if activate
-        return false unless agree("Try again?")
+        return false unless agree("Try again? (Y/N) ")
       end
     end
 
@@ -53,7 +53,6 @@ module ApplianceConsole
       else
         create_key
       end
-      true
     end
 
     def key_exist?
