@@ -16,7 +16,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_vm_cloud_relationships
-    items = %w(ems availability_zone flavor drift scan_history security_groups cloud_network cloud_subnet)
+    items = %w(ems availability_zone cloud_tenant flavor drift scan_history security_groups cloud_network cloud_subnet)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -567,5 +567,16 @@ module VmCloudHelper::TextualSummary
     return nil if @record.kind_of?(VmOpenstack) || @record.kind_of?(TemplateOpenstack)
     rd_type = @record.hardware.try(:root_device_type)
     {:label => "Root Device Type", :value => rd_type.to_s}
+  end
+
+  def textual_cloud_tenant
+    cloud_tenant = @record.cloud_tenant
+    label = ui_lookup(:table => "cloud_tenants")
+    h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? "None" : cloud_tenant.name)}
+    if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
+      h[:title] = "Show this VM's #{label}"
+      h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
+    end
+    h
   end
 end

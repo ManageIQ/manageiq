@@ -16,7 +16,7 @@ module VmCloudHelper::GraphicalSummary
   end
 
   def graphical_group_vm_cloud_relationships
-    items = %w{ems availability_zone flavor drift scan_history}
+    items = %w(ems availability_zone cloud_tenant flavor drift scan_history)
     items.collect { |m| self.send("graphical_#{m}") }.flatten.compact
   end
 
@@ -312,6 +312,18 @@ module VmCloudHelper::GraphicalSummary
     h = {:label => "Event Logs", :image => "event_logs", :value => (num == 0 ? "Not Available" : "Available")}
     if num > 0
       h[:link] = link_to("", {:action => 'event_logs', :id => @record}, :remote => @explorer, :title => "Show event logs on this VM")
+    end
+    h
+  end
+
+  def graphical_cloud_tenant
+    cloud_tenant = @record.cloud_tenant
+    label = ui_lookup(:table => "cloud_tenants")
+    h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? "None" : cloud_tenant.name)}
+    if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
+      h[:link]  = link_to("", {:controller => 'cloud_tenant',
+                               :action     => 'show',
+                               :id         => cloud_tenant}, :title => "Show #{label} '#{cloud_tenant.name}'")
     end
     h
   end
