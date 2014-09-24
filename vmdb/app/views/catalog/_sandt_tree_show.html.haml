@@ -75,7 +75,7 @@
                  :id        => "uploadForm",
                  :multipart => true) do
         = file_field("upload", "image")
-        * Requirements - Type: jpg/png  Size: 100x100
+        * Requirements: File-type - JPG/PNG; Dimensions - 100x100.
       %script{:type => "text/javascript"} miqInitJqueryForm();
 
   - if @record.display
