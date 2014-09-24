@@ -1,2 +1,4 @@
---colour
+--backtrace
+--color
+--order random
 --format documentation

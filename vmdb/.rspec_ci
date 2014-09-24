@@ -1,4 +1,4 @@
---format progress
---order random
 --backtrace
+--color
+--order random
 --profile
