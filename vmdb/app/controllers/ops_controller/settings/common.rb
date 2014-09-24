@@ -94,6 +94,7 @@ module OpsController::Settings::Common
           page << "$('amazon_role_div').#{verb}();"
 
           verb = @edit[:new][:authentication][:mode] == 'httpd' ? 'show' : 'hide'
+          page << "$('httpd_div').#{verb}();"
           page << "$('httpd_role_div').#{verb}();"
         end
         if @authusertype_changed
@@ -747,6 +748,7 @@ module OpsController::Settings::Common
         end
         @authmode_changed = true
       end
+      @edit[:new][:authentication][:sso_enabled] = (params[:sso_enabled].to_s == "1") if params[:sso_enabled]
     when "settings_workers"                                       # Workers Settings tab
       wb  = @edit[:new].config[:workers][:worker_base]
       qwb = wb[:queue_worker_base]
@@ -929,6 +931,7 @@ module OpsController::Settings::Common
       @edit[:current].config[:authentication][:ldaphost] = @edit[:current].config[:authentication][:ldaphost].to_miq_a
       @edit[:current].config[:authentication][:user_proxies] ||= [{}]
       @edit[:current].config[:authentication][:follow_referrals] ||= false
+      @edit[:current].config[:authentication][:sso_enabled] ||= false
       @sb[:newrole] = @edit[:current].config[:authentication][:ldap_role]
       @sb[:new_amazon_role] = @edit[:current].config[:authentication][:amazon_role]
       @sb[:new_httpd_role] = @edit[:current].config[:authentication][:httpd_role]

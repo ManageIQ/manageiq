@@ -224,6 +224,7 @@ Vmdb::Application.routes.draw do
         widget_to_pdf
       ),
       :post => %w(
+        kerberos_authenticate
         authenticate
         change_group
         csp_report

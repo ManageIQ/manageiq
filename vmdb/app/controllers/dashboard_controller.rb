@@ -1,8 +1,8 @@
 class DashboardController < ApplicationController
   @@items_per_page = 8
 
-  before_filter :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :logout, :login, :login_retry, :wait_for_task]
-  before_filter :get_session_data, :except => [:csp_report, :window_sizes, :authenticate]
+  before_filter :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate, :logout, :login, :login_retry, :wait_for_task]
+  before_filter :get_session_data, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate]
   after_filter :cleanup_action,    :except => [:csp_report]
   after_filter :set_session_data,  :except => [:csp_report, :window_sizes]
 
@@ -432,6 +432,15 @@ class DashboardController < ApplicationController
     end
   end
 
+  # Handle single-signon from login screen
+  def kerberos_authenticate
+    if @user_name.blank? && request.env.key?("HTTP_X_REMOTE_USER").present?
+      @user_name = params[:user_name] = request.env["HTTP_X_REMOTE_USER"].split("@").first
+    end
+
+    authenticate
+  end
+
   # Handle user credentials from login screen
   def authenticate
     @layout = "dashboard"
@@ -465,6 +474,18 @@ class DashboardController < ApplicationController
       :new_password    => params[:user_new_password],
       :verify_password => params[:user_verify_password]
     }
+
+    if params[:user_name].blank? && params[:user_password].blank? &&
+      request.env["HTTP_X_REMOTE_USER"].blank? &&
+      get_vmdb_config[:authentication][:httpd_role] == true &&
+      get_vmdb_config[:authentication][:sso_enabled] == true &&
+      params[:action] == "authenticate"
+
+      render :update do |page|
+        page.redirect_to(root_path)
+      end
+      return
+    end
 
     validation = validate_user(user, params[:task_id])
     case validation.result
@@ -599,6 +620,7 @@ class DashboardController < ApplicationController
     user.logoff if user
 
     session.clear
+    session[:auto_login] = false
     redirect_to :action => 'login'
   end
 
@@ -663,7 +685,7 @@ class DashboardController < ApplicationController
 
     # Call the authentication, use wait_for_task if a task is spawned
     begin
-      user_or_taskid = User.authenticate(user[:name], user[:password])
+      user_or_taskid = User.authenticate(user[:name], user[:password], request)
     rescue MiqException::MiqEVMLoginError
       user[:name] = nil
       return ValidateResult.new(:fail, I18n.t("flash.authentication.error"))

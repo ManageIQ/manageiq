@@ -1,4 +1,5 @@
 require_relative "external_httpd_configuration"
+require_relative "principal"
 
 module ApplianceConsole
   class ExternalHttpdAuthentication
@@ -61,6 +62,7 @@ module ApplianceConsole
         configure_ipa
         configure_pam
         configure_sssd
+        configure_ipa_http_service
         configure_httpd_external_auth
         configure_httpd
         configure_selinux
@@ -123,6 +125,16 @@ module ApplianceConsole
       config_file_write(config, SSSD_CONFIG, @timestamp)
     end
 
+    def configure_ipa_http_service
+      say("Configuring IPA HTTP Service and Keytab ...")
+      AwesomeSpawn.run!("/bin/echo \"#{@password}\" | /usr/bin/kinit #{@principal}")
+      service = Principal.new(:hostname => @host, :realm => realm, :service => "HTTP", :ca_name => "ipa")
+      service.register
+      AwesomeSpawn.run!(IPA_GETKEYTAB, :params => {"-s" => @ipaserver, "-k" => HTTP_KEYTAB, "-p" => service.name})
+      FileUtils.chown(APACHE_USER, nil, HTTP_KEYTAB)
+      FileUtils.chmod(0600, HTTP_KEYTAB)
+    end
+
     def configure_httpd_external_auth
       say("Configuring httpd External Authentication ...")
       config_file_write(httpd_mod_intercept_config, HTTPD_EXTERNAL_AUTH, @timestamp)
@@ -137,9 +149,14 @@ module ApplianceConsole
 
     def configure_selinux
       say("Configuring SELinux ...")
-      AwesomeSpawn.run!("#{SETSEBOOL_COMMAND} -P allow_httpd_mod_auth_pam on")
-      result = AwesomeSpawn.run("#{GETSEBOOL_COMMAND} httpd_dbus_sssd")
-      AwesomeSpawn.run!("#{SETSEBOOL_COMMAND} -P httpd_dbus_sssd on") if result.exit_status == 0
+      get_enforce = AwesomeSpawn.run!(GETENFORCE_COMMAND)
+      if get_enforce.output.downcase.include?("disabled")
+        say("SELinux is Disabled")
+      else
+        AwesomeSpawn.run!("#{SETSEBOOL_COMMAND} -P allow_httpd_mod_auth_pam on")
+        result = AwesomeSpawn.run("#{GETSEBOOL_COMMAND} httpd_dbus_sssd")
+        AwesomeSpawn.run!("#{SETSEBOOL_COMMAND} -P httpd_dbus_sssd on") if result.exit_status == 0
+      end
     end
   end
 end

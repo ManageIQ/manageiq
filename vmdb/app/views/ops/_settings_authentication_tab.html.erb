@@ -233,6 +233,21 @@
     </table>
   </div>
 
+  <%= hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_div") do %>
+    <p class="legend">External Authentication (httpd) Settings</p>
+    <table class="style1">
+      <tr>
+        <td class="key">Enable Single Sign-On</td>
+        <td>
+          <%= check_box_tag("sso_enabled", "1",
+                              @edit[:new][:authentication][:sso_enabled],
+                              "data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
+        </td>
+      </tr>
+    </table>
+    <hr>
+  <% end %>
+
   <%= hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_role_div") do %>
     <p class="legend">Role Settings</p>
     <table class="style1">
