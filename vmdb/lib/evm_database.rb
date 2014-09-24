@@ -70,7 +70,6 @@ class EvmDatabase
   # Determines the average time to the database in milliseconds
   def self.ping(connection)
     query = "SELECT 1"
-    query << " FROM DUAL" if connection.class.name == "OracleAdapter" || connection.class.name == "OracleEnhancedAdapter"
     Benchmark.realtime { 10.times { connection.select_value(query) } } / 10 * 1000
   end
 
