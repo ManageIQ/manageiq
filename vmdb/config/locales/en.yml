@@ -227,8 +227,6 @@ en:
         ldap_group_lookup: "%{field} must be entered to perform LDAP Group Look Up"
         ldap_settings_validated: "LDAP Settings validation was successful"
         amazon_settings_validated: "Amazon Settings validation was successful"
-        maintenance_file_uploaded: "Maintenance file uploaded successfully, post processing has been initiated."
-        product_update_activation_initiated: 'Activation of Product Update "%{version}" initiated, the CFME Server will be restarted'
         worker_credentials_validated: "%{wtype} Credentials validated successfully"
         settings_saved: '%{typ} settings saved for CFME Server "%{name} [%{server_id}]" in Zone "%{zone}"'
         smartproxy_settings_saved: "SmartProxy default settings saved"
