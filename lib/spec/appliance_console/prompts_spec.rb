@@ -351,6 +351,34 @@ describe ApplianceConsole::Prompts do
       expect(subject.ask_with_menu("q?", "a" => "a1", "b" => "b1")).to eq("a1")
       expect_heard ["q?", "", "", "1) a", "", "2) b", "", "", "Choose the q?: "]
     end
+
+    it "default to the index of a menu array option" do
+      say ""
+      expect_cls
+      expect(subject.ask_with_menu("q?", %w(a b), 1)).to eq("a")
+      expect_heard ["q?", "", "", "1) a", "", "2) b", "", "", "Choose the q?: |1| "]
+    end
+
+    it "defaults to the number of a menu option" do
+      say ""
+      expect_cls
+      expect(subject.ask_with_menu("q?", {"a" => "a1", "b" => "b1"}, 1)).to eq("a1")
+      expect_heard ["q?", "", "", "1) a", "", "2) b", "", "", "Choose the q?: |1| "]
+    end
+
+    it "defaults to the index of a menu hash key option" do
+      say ""
+      expect_cls
+      expect(subject.ask_with_menu("q?", {"a" => "a1", "b" => "b1"}, "a")).to eq("a1")
+      expect_heard ["q?", "", "", "1) a", "", "2) b", "", "", "Choose the q?: |1| "]
+    end
+
+    it "defaults to the index of a menu hash value option" do
+      say ""
+      expect_cls
+      expect(subject.ask_with_menu("q?", {"a" => "a1", "b" => "b1"}, "b1")).to eq("b1")
+      expect_heard ["q?", "", "", "1) a", "", "2) b", "", "", "Choose the q?: |2| "]
+    end
   end
 
   context "#ask_for_string" do
