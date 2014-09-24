@@ -14,11 +14,6 @@ addons:
   postgresql: '9.3'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
-- gem uninstall -x -i $GEM_HOME@global bundler
-- gem uninstall -ax rake
-- gem uninstall -x -i $GEM_HOME@global rake
-- travis_retry gem install bundler -v1.3.5
-- travis_retry gem install rake -v10.1.1
 - psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
 - rake build:shared_objects:clean build:shared_objects
 script: rake test:$TEST_SUITE
