@@ -327,6 +327,8 @@ NETMASK=${2}" >> ${cfg}.tmp
   # Truncate the temporary io file
   :> $TMP_IO
 
+  /sbin/restorecon -R /etc/sysconfig
+
   # 2) reload config and bring up the interface to see if it worked
   service network reload > /dev/null 2>> $ERR_FILE
   ifup eth0 >> $TMP_IO 2 >> $ERR_FILE
@@ -464,6 +466,8 @@ set_redhat_dhcp() {
 
   # Truncate the temporary io file
   :> $TMP_IO
+
+  /sbin/restorecon -R /etc/sysconfig
 
   # 4) Start the interface to see if it worked
   ifup eth0 >> $TMP_IO 2>> $ERR_FILE
