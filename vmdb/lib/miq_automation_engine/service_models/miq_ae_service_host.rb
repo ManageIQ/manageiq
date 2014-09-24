@@ -17,8 +17,8 @@ module MiqAeMethodService
     expose :event_log_threshold?
     expose :to_s
     expose :domain
-    expose :files
-    expose :directories
+    expose :files,                 :association => true
+    expose :directories,           :association => true
 
     METHODS_WITH_NO_ARGS = %w{scan}
     METHODS_WITH_NO_ARGS.each do |m|
