@@ -75,9 +75,11 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
   $scope.filterTypeChanged = function() {
     if ($scope.filterType != 'all') {
+      miqService.sparkleOn();
       $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.filterType}).success(function(data) {
         buildFilterList(data);
         $scope.filterValuesEmpty = false;
+        miqService.sparkleOff();
       });
     } else {
       $scope.filterValuesEmpty = true;
@@ -98,6 +100,24 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else {
       $scope.scheduleTimerValue = '1';
     }
+  };
+
+  $scope.cancelClicked = function() {
+    miqService.sparkleOn();
+    var url = '/ops/schedule_edit/' + scheduleFormId + '?button=cancel';
+    miqService.miqAjaxButton(url);
+  };
+
+  $scope.resetClicked = function() {
+    miqService.sparkleOn();
+    var url = '/ops/schedule_edit/' + scheduleFormId + '?button=reset';
+    miqService.miqAjaxButton(url);
+  };
+
+  $scope.saveClicked = function() {
+    miqService.sparkleOn();
+    var url = '/ops/schedule_edit/' + scheduleFormId + '?button=save';
+    miqService.miqAjaxButton(url);
   };
 
   miqService.sparkleOn();

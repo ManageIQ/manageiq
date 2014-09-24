@@ -28,8 +28,13 @@
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
 
+  = button_tag("Save", :class => "btn btn-primary", "ng-click" => "saveClicked()")
+  = button_tag("Reset", :class => "btn btn-default", "ng-click" => "resetClicked()")
+  = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
+
 :javascript
-  jQuery('#name').focus();
+  $j('#name').focus();
+  $j('#form_buttons_div').hide();
 
   cfmeAngularApplication.value('storageTable', '#{ui_lookup(:table => "storages")}');
   cfmeAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');

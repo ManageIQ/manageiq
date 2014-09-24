@@ -18,13 +18,6 @@ describe OpsController do
     before do
       params[:filter_type] = filter_type
       params[:id] = "123"
-      session[:edit] = {:new => {:filter_type => filter_type}, :key => "schedule_edit__123"}
-    end
-
-    shared_examples_for "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed" do
-      it "assigns the filter type" do
-        assigns(:edit)[:new][:filter_type].should == filter_type
-      end
     end
 
     context "when the filter_type is 'vm'" do
@@ -35,8 +28,6 @@ describe OpsController do
         Vm.stub(:find).with(:all, {}).and_return([vm])
         post :schedule_form_filter_type_field_changed, params, session
       end
-
-      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
 
       it "responds with a filtered vm list" do
         json = JSON.parse(response.body)
@@ -52,8 +43,6 @@ describe OpsController do
         ExtManagementSystem.stub(:find).with(:all, {}).and_return([ext_management_system])
         post :schedule_form_filter_type_field_changed, params, session
       end
-
-      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
 
       it "responds with a filtered ext management system list" do
         json = JSON.parse(response.body)
@@ -71,8 +60,6 @@ describe OpsController do
         post :schedule_form_filter_type_field_changed, params, session
       end
 
-      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
-
       it "responds with a filtered cluster list" do
         json = JSON.parse(response.body)
         json["filtered_item_list"].should == [["clustertest__datacenter", "desc"]]
@@ -87,8 +74,6 @@ describe OpsController do
         Host.stub(:find).with(:all, {}).and_return([host])
         post :schedule_form_filter_type_field_changed, params, session
       end
-
-      it_behaves_like "OpsController::Settings::Schedules#schedule_form_filter_type_field_changed"
 
       it "responds with a filtered host list" do
         json = JSON.parse(response.body)
