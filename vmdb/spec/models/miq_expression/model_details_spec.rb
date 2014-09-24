@@ -32,9 +32,14 @@ describe MiqExpression do
         result.select { |r| r.first == "Instance.VM and Instance.My Company Tags : Auto Approve - Max CPU" }.should be_empty
       end
 
-      it "Vm" do
-        result = described_class.model_details("Vm", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "VM and Instance.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+      it "VmOrTemplate" do
+        result = described_class.model_details("VmOrTemplate",
+                                               :typ             => "tag",
+                                               :include_model   => true,
+                                               :include_my_tags => true,
+                                               :userid          => "admin"
+        )
+        result.select { |r| r.first == "VM or Template.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
       end
 
       it "TemplateInfra" do
@@ -64,8 +69,11 @@ describe MiqExpression do
     end
 
     context "with :typ=>all" do
-      it "Vm" do
-        result = described_class.model_details("Vm", :typ => "all", :include_model => false, :include_tags => true)
+      it "VmOrTemplate" do
+        result = described_class.model_details("VmOrTemplate",
+                                               :typ           => "all",
+                                               :include_model => false,
+                                               :include_tags  => true)
         result.select { |r| r.first == "My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
       end
 

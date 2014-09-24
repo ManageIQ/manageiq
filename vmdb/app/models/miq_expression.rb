@@ -218,28 +218,27 @@ class MiqExpression
     guid
   }
 
+  TAG_CLASSES = %w(
+    EmsCloud ext_management_system
+    EmsCluster ems_cluster
+    EmsInfra ext_management_system
+    Host host
+    MiqGroup miq_group
+    MiqTemplate miq_template
+    Repository repository
+    ResourcePool resource_pool
+    Service service
+    Storage storage
+    TemplateCloud miq_template
+    TemplateInfra miq_template
+    User user
+    VmOrTemplate vm
+    VmCloud vm
+    VmInfra vm
+  )
   EXCLUDE_FROM_RELATS = {
     "EmsCloud" => ["hosts", "ems_clusters", "resource_pools"]
   }
-
-  TAG_CLASSES = [
-    "EmsCloud", "ext_management_system",
-    "EmsCluster", "ems_cluster",
-    "EmsInfra", "ext_management_system",
-    "Host", "host",
-    "MiqGroup", "miq_group",
-    "MiqTemplate", "miq_template",
-    "Repository", "repository",
-    "ResourcePool", "resource_pool",
-    "Service", "service",
-    "Storage", "storage",
-    "TemplateCloud", "miq_template",
-    "TemplateInfra", "miq_template",
-    "User", "user",
-    "Vm", "vm",
-    "VmCloud", "vm",
-    "VmInfra", "vm"
-  ]
 
   FORMAT_SUB_TYPES = {
     :boolean => {
