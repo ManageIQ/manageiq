@@ -23,6 +23,20 @@ module OpenstackHandle
       "Metering" => :ceilometer
     }
 
+    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
+      auth_url = auth_url(address, port)
+      begin
+        # attempt to connect without SSL
+        raw_connect(username, password, auth_url, service, opts)
+      rescue Excon::Errors::SocketError => err
+        raise unless err.message.include?("end of file reached (EOFError)")
+        # if the error looks like an SSL-related failure, try again with SSL
+        auth_url = auth_url(address, port, true)
+        opts[:connection_options] = (opts[:connection_options] || {}).merge(:ssl_verify_peer => false)
+        raw_connect(username, password, auth_url, service, opts)
+      end
+    end
+
     def self.raw_connect(username, password, auth_url, service = "Compute", extra_opts = nil)
       opts = {
         :provider           => 'OpenStack',
@@ -44,8 +58,9 @@ module OpenstackHandle
       raise
     end
 
-    def self.auth_url(address, port = 5000)
-      "http://#{address}:#{port}/v2.0/tokens"
+    def self.auth_url(address, port = 5000, ssl = false)
+      scheme = ssl ? "https" : "http"
+      "#{scheme}://#{address}:#{port}/v2.0/tokens"
     end
 
     def self.connection_options=(hash)
@@ -67,10 +82,6 @@ module OpenstackHandle
       @connection_options = self.class.connection_options
     end
 
-    def auth_url
-      self.class.auth_url(address, port)
-    end
-
     def browser_url
       "http://#{address}/dashboard"
     end
@@ -87,10 +98,9 @@ module OpenstackHandle
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
-        auth_url = self.class.auth_url(address, port)
         opts[:connection_options] = connection_options if connection_options
 
-        raw_service = self.class.raw_connect(username, password, auth_url, service, opts)
+        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts)
         service_wrapper_name = "#{service}Delegate"
         # Allow openstack to define new services without explicitly requiring a
         # service wrapper.
