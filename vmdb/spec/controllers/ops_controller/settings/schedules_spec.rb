@@ -1,14 +1,10 @@
 require "spec_helper"
-require "debugger"
 
 describe OpsController do
   let(:params) { {} }
   let(:session) { {} }
 
-  before do
-    #TODO: Change to shared context 'valid session' when merged
-    set_user_privileges
-  end
+  include_context "valid session"
 
   describe "#schedule_form_fields" do
     pending
@@ -21,7 +17,7 @@ describe OpsController do
     end
 
     context "when the filter_type is 'vm'" do
-      let(:vm) { Vm.new; instance_double("Vm", :name => "vmtest") }
+      let(:vm) { active_record_instance_double("Vm", :name => "vmtest") }
       let(:filter_type) { "vm" }
 
       before do
@@ -36,7 +32,7 @@ describe OpsController do
     end
 
     context "when the filter_type is 'ems'" do
-      let(:ext_management_system) { ExtManagementSystem.new; instance_double("ExtManagementSystem", :name => "emstest") }
+      let(:ext_management_system) { active_record_instance_double("ExtManagementSystem", :name => "emstest") }
       let(:filter_type) { "ems" }
 
       before do
@@ -51,7 +47,14 @@ describe OpsController do
     end
 
     context "when the filter_type is 'cluster'" do
-      let(:cluster) { EmsCluster.new; instance_double("EmsCluster", :name => "clustertest", :v_parent_datacenter => "datacenter", :v_qualified_desc => "desc") }
+      let(:cluster) do
+        active_record_instance_double(
+          "EmsCluster",
+          :name                => "clustertest",
+          :v_parent_datacenter => "datacenter",
+          :v_qualified_desc    => "desc"
+        )
+      end
       let(:filter_type) { "cluster" }
 
       before do
@@ -62,12 +65,12 @@ describe OpsController do
 
       it "responds with a filtered cluster list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == [["clustertest__datacenter", "desc"]]
+        json["filtered_item_list"].should == [%w(clustertest__datacenter desc)]
       end
     end
 
     context "when the filter_type is 'host'" do
-      let(:host) { Host.new; instance_double("Host", :name => "hosttest") }
+      let(:host) { active_record_instance_double("Host", :name => "hosttest") }
       let(:filter_type) { "host" }
 
       before do
