@@ -1,8 +1,6 @@
 require "spec_helper"
 require "appliance_console/env"
 
-RAILS_ROOT ||= File.expand_path("../../../vmdb", Pathname.new(__FILE__).realpath)
-
 describe ApplianceConsole::Env do
   before do
     described_class.stub(:`).and_raise("Spawning is not permitted in specs.  Please add stubs to your spec")
