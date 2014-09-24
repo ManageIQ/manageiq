@@ -9,5 +9,3 @@ require 'rdoc/task'
 
 LIB_ROOT = File.expand_path(File.dirname(__FILE__))
 Dir["#{LIB_ROOT}/lib/tasks/**/*.rake"].sort.each { |ext| load ext }
-
-task :default => [:test]

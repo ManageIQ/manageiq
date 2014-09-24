@@ -9,25 +9,25 @@ namespace :test do
   desc "Runs EVM vmdb specs"
   task :vmdb do
     ENV['RAILS_ENV'] = 'test'
-    ['test:load_vmdb_tasks', 'evm:test:setup', 'spec:evm:backend'].each { |t| Rake::Task[t].invoke }
+    ['test:load_vmdb_tasks', 'evm:test:setup', 'test:vmdb'].each { |t| Rake::Task[t].invoke }
   end
 
   desc "Run EVM migration specs"
   task :migrations do
     ENV['RAILS_ENV'] = 'test'
-    ['test:load_vmdb_tasks', 'evm:test:setup_migrations', 'spec:evm:migrations:up', 'evm:test:complete_migrations:up', 'spec:evm:migrations:down', 'evm:test:complete_migrations:down'].each { |t| Rake::Task[t].invoke }
+    ['test:load_vmdb_tasks', 'evm:test:setup', 'test:migrations'].each { |t| Rake::Task[t].invoke }
   end
 
   desc "Run EVM replication specs"
   task :replication do
     ENV['RAILS_ENV'] = 'test'
-    ['test:load_vmdb_tasks', 'evm:test:setup_replication', 'spec:evm:replication'].each { |t| Rake::Task[t].invoke }
+    ['test:load_vmdb_tasks', 'evm:test:initialize', 'evm:test:setup_replication', 'test:replication'].each { |t| Rake::Task[t].invoke }
   end
 
   desc "Run EVM automation specs"
   task :automation do
     ENV['RAILS_ENV'] = 'test'
-    ['test:load_vmdb_tasks', 'evm:test:setup', 'spec:evm:automation'].each { |t| Rake::Task[t].invoke }
+    ['test:load_vmdb_tasks', 'evm:test:setup', 'test:automation'].each { |t| Rake::Task[t].invoke }
   end
 
   desc "Run metric_fu metrics"
@@ -43,8 +43,8 @@ namespace :test do
   end
 
   desc "Runs EVM lib tests in a single block"
-  task :lib do
-    ['test:load_lib_tasks', :spec, :test].each { |t| Rake::Task[t].invoke }
+  task :run_lib do
+    ['test:load_lib_tasks', 'test:lib'].each { |t| Rake::Task[t].invoke }
   end
 
   task :load_vmdb_tasks do

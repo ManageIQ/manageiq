@@ -1,10 +1,12 @@
 namespace :evm do
   namespace :test do
-    task :setup_replication => 'evm:test:initialize' do
+    task :setup_replication do
       EvmTestSetupReplication.new.execute
     end
   end
 end
+
+require_relative "./evm_test_helper"
 
 class EvmTestSetupReplication
   def initialize
@@ -23,7 +25,7 @@ class EvmTestSetupReplication
 
   def prepare_slave_database
     puts "** Preparing slave database"
-    run_rake_via_shell("evm:db:reset")
+    db_reset
   end
 
   def prepare_master_database
@@ -36,10 +38,18 @@ class EvmTestSetupReplication
       config["test"]["database"] += "_master"
       File.open(@db_yaml_file, "w") { |f| f.puts(config.to_yaml) }
 
-      run_rake_via_shell("evm:db:reset")
+      db_reset
     ensure
       restore_system_files
     end
+  end
+
+  def db_reset
+    env = {
+      "RAILS_ENV" => ENV["RAILS_ENV"] || "test",
+      "VERBOSE"   => ENV["VERBOSE"]   || "false",
+    }
+    EvmTestHelper.run_rake_via_shell("evm:db:reset", env)
   end
 
   def backup_system_files
@@ -54,10 +64,5 @@ class EvmTestSetupReplication
     else
       FileUtils.rm(@region_file)
     end
-  end
-
-  def run_rake_via_shell(rake_command)
-    pid, status = Process.wait2(Kernel.spawn("rake #{rake_command}", :chdir => Rails.root))
-    exit(status.exitstatus) if status.exitstatus != 0
   end
 end

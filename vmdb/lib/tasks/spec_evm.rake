@@ -1,27 +1,3 @@
-begin
-  require 'rspec/core/rake_task'
-rescue LoadError
-  module RSpec
-    module Core
-      class RakeTask
-        def initialize(name)
-          task name do
-            # ... otherwise, do this:
-            raise <<-MSG
-
-#{"*" * 80}
-*  You are trying to run an rspec rake task defined in
-*  #{__FILE__},
-*  but rspec can not be found in vendor/gems, vendor/plugins or system gems.
-#{"*" * 80}
-            MSG
-          end
-        end
-      end
-    end
-  end
-end
-
 namespace :spec do
   namespace :evm do
     def initialize_task(t, rspec_opts = [])
@@ -33,7 +9,7 @@ namespace :spec do
     desc "Run the backend code examples"
     RSpec::Core::RakeTask.new(:backend) do |t|
       initialize_task(t)
-      t.pattern = Rails.env == "metric_fu" ? EvmTestHelper::BACKEND_SPECS + ['spec/coverage_helper.rb'] : EvmTestHelper::BACKEND_SPECS
+      t.pattern = Rails.env == "metric_fu" ? EvmTestHelper::METRICS_SPECS : EvmTestHelper::BACKEND_SPECS
     end
 
     desc "Run the replication code examples"

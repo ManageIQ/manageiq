@@ -1,9 +1,4 @@
-module EvmTestHelper
-  BACKEND_SPECS     = FileList["spec/**/*_spec.rb"].exclude(/^spec\/(replication|gems|migrations|automation|requests)/)
-  REPLICATION_SPECS = FileList['spec/replication/**/*_spec.rb']
-  MIGRATION_SPECS   = FileList['spec/migrations/**/*_spec.rb'].sort
-  AUTOMATION_SPECS  = FileList['spec/automation/**/*_spec.rb']
-end
+require_relative "./evm_test_helper"
 
 namespace :evm do
   namespace :test do
