@@ -570,7 +570,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_cloud_tenant
-    cloud_tenant = @record.cloud_tenant
+    cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
     label = ui_lookup(:table => "cloud_tenants")
     h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? "None" : cloud_tenant.name)}
     if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
