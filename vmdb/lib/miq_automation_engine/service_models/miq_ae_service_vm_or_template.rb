@@ -24,8 +24,8 @@ module MiqAeMethodService
     expose :reconfigured_hardware_value?
     expose :changed_vm_value?
     expose :retire_now
-    expose :files
-    expose :directories
+    expose :files,                 :association => true
+    expose :directories,           :association => true
     expose :refresh, :method => :refresh_ems
 
     METHODS_WITH_NO_ARGS = %w{start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest}
