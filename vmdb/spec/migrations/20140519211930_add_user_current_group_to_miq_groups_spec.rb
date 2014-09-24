@@ -40,5 +40,22 @@ describe AddUserCurrentGroupToMiqGroups do
 
       expect(user.miq_groups).to match_array [group]
     end
+
+    it "user missing their current_group" do
+      group1 = miq_group_stub.create!
+      group2 = miq_group_stub.create!
+      user   = user_stub.create!(:current_group => group2)
+      join_table_stub.create!(:user_id => user.id, :miq_group_id => group1.id)
+      join_table_stub.create!(:user_id => user.id, :miq_group_id => group2.id)
+      group2.destroy
+
+      migrate
+
+      user.reload
+      expect(user.miq_groups).to match_array [group1]
+      expect(user.current_group).to be_nil
+      expect(user.current_group_id).to be_nil
+    end
+
   end
 end
