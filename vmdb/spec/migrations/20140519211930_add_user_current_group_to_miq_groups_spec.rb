@@ -34,7 +34,7 @@ describe AddUserCurrentGroupToMiqGroups do
       expect(user.miq_groups).to match_array [group]
     end
 
-    it "user missing their current_group" do
+    it "user's current_group is orphaned" do
       # model code was broken and could leave the current group orphaned
       group = miq_group_stub.create!
       user  = user_stub.create!(:current_group_id => (group.id + 1), :miq_groups => [group])
@@ -45,6 +45,18 @@ describe AddUserCurrentGroupToMiqGroups do
       expect(user.miq_groups).to eq [group]
       expect(user.current_group).to be_nil
       expect(user.current_group_id).to be_nil
+    end
+
+    it "current group is valid but not in miq_groups" do
+      group1 = miq_group_stub.create!
+      group2 = miq_group_stub.create!
+      user   = user_stub.create!(:current_group => group2, :miq_groups => [group1])
+
+      migrate
+
+      user.reload
+      expect(user.miq_groups).to match_array [group1, group2]
+      expect(user.current_group).to eql group2
     end
 
   end
