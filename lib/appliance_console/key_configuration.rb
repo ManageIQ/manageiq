@@ -82,14 +82,8 @@ module ApplianceConsole
     private
 
     def ask_for_action(default_action)
-      options = {
-        'Create key'                    => :create,
-        'Fetch key from remote machine' => :fetch,
-      }
-
-      action_id = (options.values.index(default_action).to_i + 1).to_s
-
-      ask_with_menu("Encryption Key", options, action_id, false)
+      options = {'Create key' => :create, 'Fetch key from remote machine' => :fetch}
+      ask_with_menu("Encryption Key", options, default_action, false)
     end
 
     # return true if key is gone, otherwise false (and we should probably abort)
