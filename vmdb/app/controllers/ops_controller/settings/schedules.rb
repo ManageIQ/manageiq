@@ -121,7 +121,7 @@ module OpsController::Settings::Schedules
       obj[0] = params[:id] if obj.blank? && params[:id]
       @schedule = params[:typ] == "new" ? MiqSchedule.new(:userid=>session[:userid])  : MiqSchedule.find(obj[0])          # Get existing or new record
 
-      #This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
+      # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:sched_id => @schedule.id}
 
       settings = @schedule.depot_hash
@@ -154,8 +154,8 @@ module OpsController::Settings::Schedules
     elsif @schedule.sched_action && @schedule.sched_action[:method] && @schedule.sched_action[:method] == "db_backup"
       action_type = @schedule.sched_action[:method]
 
-      #have to create array to add <choose> on the top in the form
-      @protocols_arr = Array.new
+      # have to create array to add <choose> on the top in the form
+      @protocols_arr = []
       DatabaseBackup.supported_depots.each do |p|
         @protocols_arr.push(p[1])
       end
@@ -170,7 +170,7 @@ module OpsController::Settings::Schedules
       @log_password = settings[:password]
       @log_verify = settings[:password]
     else
-      if @schedule.towhat == nil
+      if @schedule.towhat.nil?
         action_type = "vm"
       else
         action_type ||= @schedule.towhat == "EmsCluster" ? "emscluster" : @schedule.towhat.underscore
@@ -181,7 +181,7 @@ module OpsController::Settings::Schedules
       if @schedule.miq_search                         # See if a search filter is attached
         filter_type = @schedule.miq_search.search_type == "user" ? "my" : "global"
         filter_value = @schedule.miq_search.id
-      elsif @schedule.filter == nil                   # Set to All if not set
+      elsif @schedule.filter.nil?                   # Set to All if not set
         filter_type = "all"
         filter_value = nil
       else
@@ -370,7 +370,7 @@ module OpsController::Settings::Schedules
   def schedule_validate?(sched)
     valid = true
     if params[:action_typ] != "db_backup"
-      if ["global","my"].include?(params[:filter_typ])
+      if %w(global my).include?(params[:filter_typ])
         if params[:filter_value].blank?  # Check for search filter chosen
           add_flash(_("%s must be selected") % "filter", :error)
           valid = false
@@ -398,24 +398,24 @@ module OpsController::Settings::Schedules
     build_listnav_search_list("Host")
     build_listnav_search_list("EmsCluster")
     build_listnav_search_list("Storage")
-    @vm_global_filters = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @vm_my_filters = @my_searches.collect{|s| [s.description, s.id]}
-    @miq_template_global_filters = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @miq_template_my_filters = @my_searches.collect{|s| [s.description, s.id]}
-    @host_global_filters = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @host_my_filters = @my_searches.collect{|s| [s.description, s.id]}
-    @cluster_global_filters = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @cluster_my_filters = @my_searches.collect{|s| [s.description, s.id]}
-    @storage_global_filters = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @storage_my_filters = @my_searches.collect{|s| [s.description, s.id]}
+    @vm_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
+    @vm_my_filters = @my_searches.collect { |s| [s.description, s.id] }
+    @miq_template_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
+    @miq_template_my_filters = @my_searches.collect { |s| [s.description, s.id] }
+    @host_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
+    @host_my_filters = @my_searches.collect { |s| [s.description, s.id] }
+    @cluster_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
+    @cluster_my_filters = @my_searches.collect { |s| [s.description, s.id] }
+    @storage_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
+    @storage_my_filters = @my_searches.collect { |s| [s.description, s.id] }
 
     build_schedule_options_for_select
 
     one_month_ago = (Time.now - 1.month).in_time_zone(session[:user_tz])
     @one_month_ago = {
-      :year => one_month_ago.year,
+      :year  => one_month_ago.year,
       :month => one_month_ago.month - 1, # Javascript counts months 0-11
-      :date => one_month_ago.day
+      :date  => one_month_ago.day
     }
   end
 
@@ -432,7 +432,7 @@ module OpsController::Settings::Schedules
       schedule.towhat = params[:action_typ] == "emscluster" ? "EmsCluster" : params[:action_typ].camelcase
     end
 
-    if ["vm", "miq_template"].include?(params[:action_typ])
+    if %w(vm miq_template).include?(params[:action_typ])
       schedule.sched_action = {:method=>"vm_scan"}      # Default to vm_scan method for now
     elsif params[:action_typ].ends_with?("check_compliance")
       schedule.sched_action = {:method=>"check_compliance"}
@@ -443,88 +443,88 @@ module OpsController::Settings::Schedules
     end
 
     if params[:action_typ] != "db_backup"
-      unless ["global","my"].include?(params[:filter_typ]) # Unless a search filter is chosen
+      unless %w(global my).include?(params[:filter_typ]) # Unless a search filter is chosen
         # Build the filter expression
         exp = Hash.new
         if params[:action_typ] == "storage"
           case params[:filter_typ]
             when "ems"
-              exp["CONTAINS"] = {"field"=>"Storage.ext_management_systems-name", "value"=>params[:filter_value]}
+              exp["CONTAINS"] = {"field" => "Storage.ext_management_systems-name", "value" => params[:filter_value]}
             when "host"
-              exp["CONTAINS"] = {"field"=>"Storage.hosts-name", "value"=>params[:filter_value]}
+              exp["CONTAINS"] = {"field" => "Storage.hosts-name", "value" => params[:filter_value]}
             when "storage"
-              exp["="] = {"field"=>"Storage-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "Storage-name", "value" => params[:filter_value]}
             else
-              exp["IS NOT NULL"] = {"field"=>"Storage-name"}
+              exp["IS NOT NULL"] = {"field" => "Storage-name"}
           end
         elsif params[:action_typ] == "host"
           case params[:filter_typ]
             when "ems"
-              exp["="] = {"field"=>"Host.ext_management_system-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "Host.ext_management_system-name", "value" => params[:filter_value]}
             when "cluster"
               unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"="=>{"field"=>"Host-v_owning_cluster", "value"=>params[:filter_value].split("__").first}},
-                  {"="=>{"field"=>"Host-v_owning_datacenter", "value"=>params[:filter_value].split("__").last}}
+                  {"=" => {"field" => "Host-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
+                  {"=" => {"field" => "Host-v_owning_datacenter", "value" => params[:filter_value].split("__").last}}
                 ]
               end
             when "host"
-              exp["="] = {"field"=>"Host-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "Host-name", "value" => params[:filter_value]}
             else
-              exp["IS NOT NULL"] = {"field"=>"Host-name"}
+              exp["IS NOT NULL"] = {"field" => "Host-name"}
           end
         elsif params[:action_typ] == "emscluster"
           case params[:filter_typ]
             when "ems"
-              exp["="] = {"field"=>"EmsCluster.ext_management_system-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "EmsCluster.ext_management_system-name", "value" => params[:filter_value]}
             when "cluster"
               unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"="=>{"field"=>"EmsCluster-name", "value"=>params[:filter_value].split("__").first}},
-                  {"="=>{"field"=>"EmsCluster-v_parent_datacenter", "value"=>params[:filter_value].split("__").last}}
+                  {"=" => {"field" => "EmsCluster-name", "value" => params[:filter_value].split("__").first}},
+                  {"=" => {"field" => "EmsCluster-v_parent_datacenter", "value" => params[:filter_value].split("__").last}}
                 ]
               end
             else
-              exp["IS NOT NULL"] = {"field"=>"EmsCluster-name"}
+              exp["IS NOT NULL"] = {"field" => "EmsCluster-name"}
           end
         elsif params[:action_typ].ends_with?("check_compliance")
           case params[:filter_typ]
           when "ems"
-            exp["="] = {"field"=>"#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name", "value"=>params[:filter_value]}
+            exp["="] = {"field" => "#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name", "value" => params[:filter_value]}
           when "cluster"
             unless params[:filter_value].blank?
               exp["AND"] = [
-                {"="=>{"field"=>"#{params[:action_typ].split("_").first.capitalize}-v_owning_cluster", "value"=>params[:filter_value].split("__").first}},
-                {"="=>{"field"=>"#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter", "value"=>params[:filter_value].split("__").last}}
+                {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
+                {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter", "value" => params[:filter_value].split("__").last}}
               ]
             end
           when "host"
-            exp["="] = {"field"=>"Host-name", "value"=>params[:filter_value]}
+            exp["="] = {"field" => "Host-name", "value" => params[:filter_value]}
           when "vm"
-              exp["="] = {"field"=>"Vm-name", "value"=>params[:filter_value]}
+            exp["="] = {"field" => "Vm-name", "value" => params[:filter_value]}
           else
-            exp["IS NOT NULL"] = {"field"=>"#{params[:action_typ].split("_").first.capitalize}-name"}
+            exp["IS NOT NULL"] = {"field" => "#{params[:action_typ].split("_").first.capitalize}-name"}
           end
         else
           model = params[:action_typ].starts_with?("vm") ? "Vm" : "MiqTemplate"
           case params[:filter_typ]
             when "ems"
-              exp["="] = {"field"=>"#{model}.ext_management_system-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}
             when "cluster"
               unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"="=>{"field"=>"#{model}-v_owning_cluster", "value"=>params[:filter_value].split("__").first}},
-                  {"="=>{"field"=>"#{model}-v_owning_datacenter", "value"=>params[:filter_value].split("__").last}}
+                  {"=" => {"field" => "#{model}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
+                  {"=" => {"field" => "#{model}-v_owning_datacenter", "value" => params[:filter_value].split("__").last}}
                 ]
               end
             when "host"
-              exp["="] = {"field"=>"#{model}.host-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "#{model}.host-name", "value" => params[:filter_value]}
             when "vm"
-              exp["="] = {"field"=>"#{model}-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "#{model}-name", "value" => params[:filter_value]}
             when "miq_template"
-              exp["="] = {"field"=>"#{model}-name", "value"=>params[:filter_value]}
+              exp["="] = {"field" => "#{model}-name", "value" => params[:filter_value]}
             else
-              exp["IS NOT NULL"] = {"field"=>"#{model}-name"}
+              exp["IS NOT NULL"] = {"field" => "#{model}-name"}
           end
         end
 
@@ -552,58 +552,58 @@ module OpsController::Settings::Schedules
 
   def build_schedule_options_for_select
     @action_type_options_for_select = [
-      ["VM Analysis","vm"],
-      ["Template Analysis","miq_template"],
-      ["Host Analysis","host"],
-      ["#{ui_lookup(:model=>'EmsCluster')} Analysis","emscluster"],
-      ["#{ui_lookup(:model=>'Storage')} Analysis","storage"]
+      ["VM Analysis", "vm"],
+      ["Template Analysis", "miq_template"],
+      ["Host Analysis", "host"],
+      ["#{ui_lookup(:model => 'EmsCluster')} Analysis", "emscluster"],
+      ["#{ui_lookup(:model => 'Storage')} Analysis", "storage"]
     ]
-    @action_type_options_for_select.push(["VM Compliance Check","vm_check_compliance"]) if role_allows(:feature=>"vm_check_compliance")
-    @action_type_options_for_select.push(["Host Compliance Check","host_check_compliance"]) if role_allows(:feature=>"host_check_compliance")
-    @action_type_options_for_select.push(["Database Backup","db_backup"]) if DatabaseBackup.backup_supported?
+    @action_type_options_for_select.push(["VM Compliance Check", "vm_check_compliance"]) if role_allows(:feature => "vm_check_compliance")
+    @action_type_options_for_select.push(["Host Compliance Check", "host_check_compliance"]) if role_allows(:feature => "host_check_compliance")
+    @action_type_options_for_select.push(["Database Backup", "db_backup"]) if DatabaseBackup.backup_supported?
 
     @vm_options_for_select = [
-      ["All VMs","all"],
-      ["All VMs for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
-      ["All VMs for #{ui_lookup(:table=>"ems_clusters")}","cluster"],
-      ["All VMs for Host","host"],
-      ["A single VM","vm"]
+      ["All VMs", "all"],
+      ["All VMs for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["All VMs for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
+      ["All VMs for Host", "host"],
+      ["A single VM", "vm"]
     ] +
       (@vm_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
       (@vm_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @template_options_for_select = [
-      ["All Templates","all"],
-      ["All Templates for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
-      ["All Templates for #{ui_lookup(:table=>"ems_clusters")}","cluster"],
-      ["All Templates for Host","host"],
-      ["A single Template","miq_template"]
+      ["All Templates", "all"],
+      ["All Templates for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["All Templates for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
+      ["All Templates for Host", "host"],
+      ["A single Template", "miq_template"]
     ] +
       (@miq_template_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
       (@miq_template_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @host_options_for_select = [
-      ["All Hosts","all"],
-      ["All Hosts for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
-      ["All Hosts for #{ui_lookup(:table=>"ems_clusters")}","cluster"],
-      ["A single Host","host"]
+      ["All Hosts", "all"],
+      ["All Hosts for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["All Hosts for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
+      ["A single Host", "host"]
     ] +
       (@host_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
       (@host_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @cluster_options_for_select = [
-      ["All Clusters","all"],
-      ["All Clusters for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
-      ["A single Cluster","cluster"]
+      ["All Clusters", "all"],
+      ["All Clusters for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["A single Cluster", "cluster"]
     ] +
       (@cluster_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
       (@cluster_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @storage_options_for_select = [
-      ["All Datastores","all"],
-      ["All Datastores for Host","host"],
-      ["All Datastores for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
-      ["A single Datastore","storage"]
+      ["All Datastores", "all"],
+      ["All Datastores for Host", "host"],
+      ["All Datastores for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["A single Datastore", "storage"]
     ] +
       (@storage_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
       (@storage_my_filters.empty? ? [] : [["My Filters", "my"]])
