@@ -4,7 +4,7 @@ class Flavor < ActiveRecord::Base
 
   acts_as_miq_taggable
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "EmsCloud"
   has_many   :vms
 
   virtual_column :total_vms, :type => :integer, :uses => :vms
@@ -14,5 +14,4 @@ class Flavor < ActiveRecord::Base
   def total_vms
     vms.size
   end
-
 end

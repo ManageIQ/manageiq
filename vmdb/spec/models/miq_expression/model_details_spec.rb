@@ -75,4 +75,41 @@ describe MiqExpression do
       end
     end
   end
+
+  context ".build_relats" do
+    it "AvailabilityZone" do
+      result = described_class.build_relats("AvailabilityZone")
+      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :path).split(".").last).to eq("ems_cloud")
+    end
+
+    it "VmInfra" do
+      result = described_class.build_relats("VmInfra")
+      expect(result.fetch_path(:reflections, :evm_owner, :parent, :path).split(".").last).to eq("evm_owner")
+      expect(result.fetch_path(:reflections, :linux_initprocesses, :parent, :path).split(".").last).to eq("linux_initprocesses")
+    end
+
+    it "Vm" do
+      result = described_class.build_relats("Vm")
+      expect(result.fetch_path(:reflections, :users, :parent, :path).split(".").last).to eq("users")
+    end
+  end
+
+  context ".determine_relat_path" do
+    subject { described_class.determine_relat_path(@ref) }
+
+    it "when association name is same as class name" do
+      @ref = Vm.reflections[:miq_group]
+      expect(subject).to eq(@ref.name.to_s)
+    end
+
+    it "when association name is different from class name" do
+      @ref = Vm.reflections[:evm_owner]
+      expect(subject).to eq(@ref.name.to_s)
+    end
+
+    it "when class name is a subclass of association name" do
+      @ref = AvailabilityZone.reflections[:ext_management_system]
+      expect(subject).to eq(@ref.klass.to_s.underscore)
+    end
+  end
 end

@@ -27,4 +27,6 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.plural(/Queue$/, "Queue")         # for Class name(s)
   inflect.singular(/queue$/, "queue")       # for table name(s)
   inflect.plural(/queue$/, "queue")         # for table name(s)
+  inflect.singular(/quota$/, "quota")
+  inflect.singular(/Quota$/, "Quota")
 end

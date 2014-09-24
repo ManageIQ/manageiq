@@ -3,7 +3,7 @@ class CloudTenant < ActiveRecord::Base
 
   attr_accessible :description, :ems_ref, :enabled, :name
 
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "EmsCloud"
   has_many   :security_groups
   has_many   :cloud_networks
   has_many   :vms

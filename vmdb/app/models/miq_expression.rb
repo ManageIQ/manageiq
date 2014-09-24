@@ -4,13 +4,19 @@ class MiqExpression
   @@proto = VMDB::Config.new("vmdb").config[:product][:proto]
   @@base_tables = %w{
     AuditEvent
+    AvailabilityZone
     BottleneckEvent
     Chargeback
+    CloudResourceQuota
+    CloudTenant
     Compliance
+    EmsCloud
     EmsCluster
     EmsClusterPerformance
     EmsEvent
+    EmsInfra
     ExtManagementSystem
+    Flavor
     Host
     HostPerformance
     MiqGroup
@@ -27,6 +33,7 @@ class MiqExpression
     PolicyEvent
     Repository
     ResourcePool
+    SecurityGroup
     Service
     ServiceTemplate
     Storage
@@ -59,6 +66,9 @@ class MiqExpression
   @@include_tables = %w{
     advanced_settings
     audit_events
+    availability_zones
+    cloud_resource_quotas
+    cloud_tenants
     compliances
     compliance_details
     disks
@@ -71,6 +81,7 @@ class MiqExpression
     filesystem_drivers
     filesystems
     firewall_rules
+    flavors
     groups
     guest_applications
     hardwares
@@ -110,6 +121,7 @@ class MiqExpression
     registry_items
     repositories
     resource_pools
+    security_groups
     service_templates
     services
     snapshots
@@ -204,6 +216,10 @@ class MiqExpression
     capacity_profile_2_vcpu_per_vm_with_min_max
     chain_id
     guid
+  }
+
+  EXCLUDE_FROM_RELATS = {
+    "EmsCloud" => ["hosts", "ems_clusters", "resource_pools"]
   }
 
   TAG_CLASSES = [
@@ -1459,11 +1475,15 @@ class MiqExpression
 
       next if ref.macro == :belongs_to && model.name != parent[:root]
 
+      # REMOVE ME: workaround to temporarily exlude certain mdoels from the relationships
+      excluded_models = EXCLUDE_FROM_RELATS[model.name]
+      next if excluded_models && excluded_models.include?(assoc.to_s)
+
       assoc_class = ref.klass.name
 
       new_parent = {
         :macro       => ref.macro,
-        :path        => [parent[:path], assoc.to_s].join("."),
+        :path        => [parent[:path], determine_relat_path(ref)].join("."),
         :assoc       => assoc,
         :assoc_class => assoc_class,
         :root        => parent[:root]
@@ -1802,5 +1822,15 @@ class MiqExpression
     end
 
     model
+  end
+
+  def self.determine_relat_path(ref)
+    last_path = ref.name.to_s
+    class_from_association_name = model_class(last_path)
+    return last_path unless class_from_association_name
+
+    association_class = ref.klass
+    last_path = association_class.to_s.underscore if association_class < class_from_association_name
+    last_path
   end
 end #class MiqExpression
