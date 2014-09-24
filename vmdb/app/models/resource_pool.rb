@@ -157,6 +157,7 @@ class ResourcePool < ActiveRecord::Base
   # Overridden from AggregationMixin to provide hosts related to this RP
   def all_hosts
     p = self.parent_cluster_or_host
+    return [] unless p
     p.is_a?(Host) ? [p] : p.all_hosts
   end
 
