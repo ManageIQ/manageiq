@@ -7,6 +7,7 @@ describe('miqService', function() {
     testService = miqService;
     spyOn(window, 'miqButtons');
     spyOn(window, 'miqBuildCalendar');
+    spyOn(window, 'miqAjaxButton');
     spyOn(window, 'miqSparkle');
   }));
 
@@ -33,6 +34,13 @@ describe('miqService', function() {
     it('calls the global build calendar function', function() {
       testService.buildCalendar();
       expect(window.miqBuildCalendar).toHaveBeenCalled();
+    });
+  });
+
+  describe('#miqAjaxButton', function() {
+    it('calls the global miqAjaxButton with the correct arguments', function() {
+      testService.miqAjaxButton('test_url');
+      expect(window.miqAjaxButton).toHaveBeenCalledWith('test_url', undefined);
     });
   });
 

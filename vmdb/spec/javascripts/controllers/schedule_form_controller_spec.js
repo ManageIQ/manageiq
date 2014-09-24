@@ -8,6 +8,7 @@ describe('scheduleFormController', function() {
     spyOn(miqService, 'showButtons');
     spyOn(miqService, 'hideButtons');
     spyOn(miqService, 'buildCalendar');
+    spyOn(miqService, 'miqAjaxButton');
     spyOn(miqService, 'sparkleOn');
     spyOn(miqService, 'sparkleOff');
     $scope = $rootScope.$new();
@@ -220,10 +221,49 @@ describe('scheduleFormController', function() {
     });
   });
 
-  describe('#buildLegend', function() {
+  describe('#cancelClicked', function() {
     beforeEach(function() {
+      $scope.cancelClicked();
     });
 
+    it('turns the spinner on via the miqService', function() {
+      expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('delegates to miqService.miqAjaxButton', function() {
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=cancel');
+    });
+  });
+
+  describe('#resetClicked', function() {
+    beforeEach(function() {
+      $scope.resetClicked();
+    });
+
+    it('turns the spinner on via the miqService', function() {
+      expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('delegates to miqService.miqAjaxButton', function() {
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=reset');
+    });
+  });
+
+  describe('#saveClicked', function() {
+    beforeEach(function() {
+      $scope.saveClicked();
+    });
+
+    it('turns the spinner on via the miqService', function() {
+      expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('delegates to miqService.miqAjaxButton', function() {
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save');
+    });
+  });
+
+  describe('#buildLegend', function() {
     describe('when the action type is a vm type', function() {
       beforeEach(function() {
         $scope.actionType = 'vm_potato';
@@ -350,6 +390,14 @@ describe('scheduleFormController', function() {
           it('sets the filterValuesEmpty to false', function() {
             expect($scope.filterValuesEmpty).toBe(false);
           });
+
+          it('turns the sparkle on', function() {
+            expect(miqService.sparkleOn).toHaveBeenCalled();
+          });
+
+          it('turns the sparkle off', function() {
+            expect(miqService.sparkleOff).toHaveBeenCalled();
+          });
         });
 
         describe('when the item list is a multi dimension array', function() {
@@ -365,6 +413,14 @@ describe('scheduleFormController', function() {
 
           it('sets the filterValuesEmpty to false', function() {
             expect($scope.filterValuesEmpty).toBe(false);
+          });
+
+          it('turns the sparkle on', function() {
+            expect(miqService.sparkleOn).toHaveBeenCalled();
+          });
+
+          it('turns the sparkle off', function() {
+            expect(miqService.sparkleOff).toHaveBeenCalled();
           });
         });
       });

@@ -254,8 +254,6 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_form_filter_type_field_changed
-    return unless load_edit("schedule_edit__#{params[:id]}", "replace_cell__explorer")
-
     case params[:filter_type]
     when "vm"
       filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
