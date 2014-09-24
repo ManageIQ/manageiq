@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "check_unregistered_from_provider Method Validation" do
+describe "check_removed_from_provider Method Validation" do
   before(:each) do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
