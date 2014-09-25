@@ -8,10 +8,6 @@ class ServiceController < ApplicationController
   SERVICE_X_BUTTON_ALLOWED_ACTIONS = {
     'service_delete'      => :service_delete,
     'service_edit'        => :service_edit,
-    'service_ownership'   => :service_ownership,
-    'service_tag'         => :service_tag,
-    'service_retire'      => :service_retire,
-    'service_retire_now'  => :service_retire_now,
     'service_reconfigure' => :service_reconfigure
   }
 
@@ -26,11 +22,7 @@ class ServiceController < ApplicationController
 
     send_action = SERVICE_X_BUTTON_ALLOWED_ACTIONS[action]
 
-    if [:service_ownership, :service_tag].include?(send_action)
-      self.send(send_action, 'Service')
-    else
-      self.send(send_action)
-    end
+    self.send(send_action)
     send_action
   end
   hide_action :whitelisted_action
