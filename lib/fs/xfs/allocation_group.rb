@@ -1,4 +1,3 @@
-
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 require 'miq-uuid'
@@ -95,7 +94,7 @@ module XFS
   # ////////////////////////////////////////////////////////////////////////////
   # // Class.
 
-  class AllocGroup
+  class AllocationGroup
     XFS_AGF_MAGIC                          = 0x58414746
     XFS_AGI_MAGIC                          = 0x58414749
     XFS_AGFL_MAGIC                         = 0x5841464c
@@ -107,7 +106,7 @@ module XFS
     attr_reader :stream, :agf, :agi, :agfl, :allocation_group_block
 
     def initialize(stream, _agno, sb)
-      raise "XFS::AllocGroup.initialize: Nil stream" if stream.nil?
+      raise "XFS::AllocationGroup.initialize: Nil stream" if stream.nil?
       #
       # The stream should be pointing at the Allocation Group to be built on the disk.
       #
@@ -124,11 +123,11 @@ module XFS
 
       # Grab some quick facts & make sure there's nothing wrong. Tight qualification.
       if @agf['magic_num'] != XFS_AGF_MAGIC
-        raise "XFS::AllocGroup.initialize: Invalid AGF magic number=[#{@agf['magic_num']}]"
+        raise "XFS::AllocationGroup.initialize: Invalid AGF magic number=[#{@agf['magic_num']}]"
       elsif @agi['magic_num'] != XFS_AGI_MAGIC
-        raise "XFS::AllocGroup.initialize: Invalid AGI magic number=[#{@agi['magic_num']}]"
+        raise "XFS::AllocationGroup.initialize: Invalid AGI magic number=[#{@agi['magic_num']}]"
       elsif @agfl['magic_num'] != XFS_AGFL_MAGIC
-        raise "XFS::AllocGroup.initialize: Invalid AGFL magic number=[#{@agfl['magic_num']}]"
+        raise "XFS::AllocationGroup.initialize: Invalid AGFL magic number=[#{@agfl['magic_num']}]"
       end
     end
 
@@ -161,5 +160,5 @@ module XFS
       out << "Levels in Free Ino Btree : #{@agi['free_level']}\n"
       out
     end
-  end # class Superblock
+  end # class AllocationGroup
 end # module XFS

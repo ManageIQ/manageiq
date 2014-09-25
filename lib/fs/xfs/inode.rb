@@ -170,6 +170,26 @@ module XFS
     FM_SYM_LNK    = 0xa000  # symbolic link
     FM_SOCKET     = 0xc000  # socket device
 
+    # Values our callers may know
+    FT_UNKNOWN    = 0
+    FT_FILE       = 1
+    FT_DIRECTORY  = 2
+    FT_CHAR       = 3
+    FT_BLOCK      = 4
+    FT_FIFO       = 5
+    FT_SOCKET     = 6
+    FT_SYM_LNK    = 7
+
+    FILE_MODE_TO_FILE_TYPE_LOOKUP_TABLE = {
+      FM_FIFO      => FT_FIFO,
+      FM_CHAR      => FT_CHAR,
+      FM_DIRECTORY => FT_DIRECTORY,
+      FM_BLOCK_DEV => FT_BLOCK,
+      FM_FILE      => FT_FILE,
+      FM_SYM_LNK   => FT_SYM_LNK,
+      FM_SOCKET    => FT_SOCKET
+    }
+
     # For accessor convenience.
     MSK_FILE_MODE = 0xf000
     MSK_IS_DEV    = (FM_FIFO | FM_CHAR | FM_BLOCK_DEV | FM_SOCKET)
@@ -217,7 +237,8 @@ module XFS
     end
 
     def dfork_dptr
-      @disk_buf[dinode_size(@version)..@sb.inode_size]
+      start = @offset + dinode_size(@version)
+      @disk_buffer[start..start + @sb.inode_size]
     end
 
     def dfork_aptr
@@ -225,22 +246,22 @@ module XFS
     end
 
     def litino
-      @sb.inodeSize - dinode_size(@version)
+      @sb.inode_size - dinode_size(@version)
     end
 
-    attr_reader :mode, :flags, :length, :disk_buf, :version, :inode_number, :sb, :data_method
+    attr_reader :mode, :flags, :length, :disk_buffer, :version, :inode_number, :sb, :data_method, :in
     attr_accessor :data_fork, :attribute_fork
 
     def valid_inode?
-      raise "XFS::Inode: Invalid Magic Number for inode #{inode_number}"  unless @in['magic'] == XFS_DINODE_MAGIC
-      raise "XFS::Inode: Invalid Inode Version for inode #{inode_number}" unless dinode_good_version(@in['version'])
+      $log.error "XFS::Inode: Bad Magic # inode #{@inode_number}" unless @in['magic'] == XFS_DINODE_MAGIC
+      raise "XFS::Inode: Invalid Magic Number for inode #{@inode_number}"  unless @in['magic'] == XFS_DINODE_MAGIC
+      raise "XFS::Inode: Invalid Inode Version for inode #{@inode_number}" unless dinode_good_version(@in['version'])
       true
     end
 
     def inode_format
       if @format    == XFS_DINODE_FMT_LOCAL
         data_method    = :local
-        @symlink          = read_shortform(@length) if symlink?
       elsif @format == XFS_DINODE_FMT_EXTENTS
         data_method    = :extents
       else
@@ -249,17 +270,19 @@ module XFS
       data_method
     end
 
-    def initialize(buf, offset, superblock, inode_number)
-      raise "XFS::Inode: Nil buffer for inode #{inode_number}" if buf.nil?
+    def initialize(buffer, offset, superblock, inode_number)
+      raise "XFS::Inode: Nil buffer for inode #{inode_number}" if buffer.nil?
       @sb               = superblock
       @inode_number     = inode_number
+      @offset           = offset
       if @sb.inode_size < SIZEOF_EXTENDED_INODE
-        @in             = INODE.decode(buf[offset..(offset + SIZEOF_INODE)])
+        @in             = INODE.decode(buffer[offset..(offset + SIZEOF_INODE)])
       else
-        @in             = EXTENDED_INODE.decode(buf[offset..(offset + SIZEOF_EXTENDED_INODE)])
+        @in             = EXTENDED_INODE.decode(buffer[offset..(offset + SIZEOF_EXTENDED_INODE)])
       end
       valid_inode? || return
-
+      rewind
+      @disk_buffer      = buffer
       @mode             = @in['file_mode']
       @flags            = @in['flags']
       @version          = @in['version']
@@ -267,11 +290,6 @@ module XFS
       @format           = @in['format']
       @block_offset     = 1
       @data_method      = inode_format
-      if @data_method   == :local
-        @symlink          = read_shortform(@length) if symlink?
-      end
-      @disk_buf         = buf
-      rewind
     end
 
     # ////////////////////////////////////////////////////////////////////////////
@@ -284,19 +302,19 @@ module XFS
       @pos = case method
              when IO::SEEK_SET then offset
              when IO::SEEK_CUR then @pos + offset
-             when IO::SEEK_END then length - offset
+             when IO::SEEK_END then @length - offset
       end
       @pos = 0           if @pos < 0
-      @pos = length if @pos > length
+      @pos = @length if @pos > @length
       @pos
     end
 
-    def read(nbytes = length)
+    def read(nbytes = @length)
       raise "XFS::Inode.read: Can't read 4G or more at a time (use a smaller read size)" if nbytes >= MAX_READ
-      return nil if @pos >= length
+      return nil if @pos >= @length
 
-      nbytes = length - @pos if @pos + nbytes > length
-      return read_shortform(nbytes) if @data_method == :local
+      nbytes = @length - @pos if @pos + nbytes > @length
+      return read_short_form(nbytes) if @data_method == :local
 
       # get data.
       start_block, start_byte, nblocks = pos_to_block(@pos, nbytes)
@@ -364,7 +382,7 @@ module XFS
     # // Utility functions.
 
     def file_mode_to_file_type
-      @@FM2FT[@mode & MSK_FILE_MODE]
+      FILE_MODE_TO_FILE_TYPE_LOOKUP_TABLE[@mode & MSK_FILE_MODE]
     end
 
     def mode_set?(bit)
@@ -404,12 +422,12 @@ module XFS
 
     private
 
-    def read_shortform(len)
-      unless self.isDir? || self.isSymLink?
+    def read_short_form(len)
+      unless self.directory? || self.symlink?
         raise "XFS::Inode.read: Invalid ShortForm Directory for inode #{@inode_number}"
       end
-      if @pos + len > @sb.inodeSize
-        raise "XFS::Inode.read_shortform: Invalid length #{len} for Shortform Inode #{@inode_number}"
+      if @pos + len > @sb.inode_size
+        raise "XFS::Inode.read_short_form: Invalid length #{len} for Shortform Inode #{@inode_number}"
       end
       fork = dfork_dptr
       data = fork[@pos..(@pos + len - 1)]
@@ -419,14 +437,14 @@ module XFS
 
     # NB: pos is 0-based, while len is 1-based
     def pos_to_block(pos, len)
-      start_block, start_byte = pos.divmod(@sb.blockSize)
-      end_block, _end_byte = (pos + len - 1).divmod(@sb.blockSize)
+      start_block, start_byte = pos.divmod(@sb.block_size)
+      end_block, _end_byte = (pos + len - 1).divmod(@sb.block_size)
       nblocks = end_block - start_block + 1
       return start_block, start_byte, nblocks
     end
 
     def read_blocks(startBlock, nblocks = 1)
-      out = MiqMemory.create_zero_buffer(nblocks * @sb.blockSize)
+      out = MiqMemory.create_zero_buffer(nblocks * @sb.block_size)
       dbp_len = data_block_pointers.length
       raise "XFS::Inode.read_blocks: startBlock=<#{startBlock}> is greater than #{dbp_len}" if startBlock > dbp_len - 1
       1.upto(nblocks) do |i|
@@ -437,7 +455,7 @@ module XFS
         end
         block = data_block_pointers[block_index]
         data  = @sb.get_block(block)
-        out[(i - 1) * @sb.blockSize, @sb.blockSize] = data
+        out[(i - 1) * @sb.block_size, @sb.block_size] = data
       end
       out
     end
@@ -456,20 +474,40 @@ module XFS
 
     def expected_blocks
       @expected_blocks ||= begin
-        quotient, remainder = length.divmod(@sb.blockSize)
+        quotient, remainder = @length.divmod(@sb.block_size)
         quotient + ( (remainder > 0) ? 1 : 0)
       end
     end
 
+    def block_pointers_via_bmap_btree_block_node(btree_block, data, block_pointers_length)
+      block_pointers = []
+      return block_pointers unless (block_pointers_length + block_pointers.length) < expected_blocks
+      maximum_records = (@sb.block_size - btree_block.header_size) / SIZEOF_BMAP_BTREE_ROOT_NODE_ENTRIES
+      return if maximum_records == 0
+      offset_size  = SIZEOF_BMAP_BTREE_ROOT_NODE_OFFSET
+      block_size   = SIZEOF_BMAP_BTREE_ROOT_NODE_BLOCK
+      1.upto(btree_block.number_records) do |i|
+        start      = maximum_records * offset_size + (i - 1) * block_size
+        block      = (data[start..start + block_size]).unpack('Q>').shift
+        agbno      = @sb.fsb_to_agbno(block)
+        agno       = @sb.fsb_to_agno(block)
+        real_block = sb.agbno_to_real_block(agno, agbno)
+        block_pointers.concat block_pointers_via_bmap_btree_block(real_block,
+                                                                  block_pointers.length + block_pointers_length)
+      end
+      block_pointers
+    end
+
     def block_pointers_via_bmap_btree_block_leaf(data, block_pointers_length, number_records)
       block_pointers = []
-      if (block_pointers_length + block_pointers.length) < expected_blocks
-        1.upto(number_records) do |i|
-          bmap_btree_record = BmapBTreeRecord.new(data[(SIZEOF_BMAP_BTREE_REC * (i - 1))..(SIZEOF_BMAP_BTREE_REC * i)])
-          $log.info "Bmap Btree Record for Inode: #{inode_number}\n#{bmap_btree_record.dump}\n\n" if $log
-          if (block_pointers_length + block_pointers.length) < expected_blocks
-            block_pointers.concat bmap_btree_record_to_block_pointers(bmap_btree_record, block_pointers.length)
-          end
+      return block_pointers unless (block_pointers_length + block_pointers.length) < expected_blocks
+      1.upto(number_records) do |i|
+        bmap_btree_record = BmapBTreeRecord.new(data[(SIZEOF_BMAP_BTREE_REC * (i - 1))..(SIZEOF_BMAP_BTREE_REC * i)],
+                                                @sb)
+        break if @sb.fsb_to_b(bmap_btree_record.start_offset) >= DirectoryEntry::XFS_DIR2_LEAF_OFFSET
+        if (block_pointers_length + block_pointers.length) < expected_blocks
+          block_pointers.concat bmap_btree_record_to_block_pointers(bmap_btree_record,
+                                                                    block_pointers.length + block_pointers_length)
         end
       end
       block_pointers
@@ -482,12 +520,11 @@ module XFS
         btree_block    = BmapBTreeBlock.new(data, @sb)
         if btree_block.level == 0
           block_pointers.concat block_pointers_via_bmap_btree_block_leaf(data[btree_block.header_size..-1],
-                                                                         block_pointers.length,
+                                                                         block_pointers.length + block_pointers_length,
                                                                          btree_block.number_records)
         else
-          block_pointers.concat block_pointers_via_bmap_btree_block_node(btree_block[btree_block.header_size..-1],
-                                                                         block_pointers.length,
-                                                                         btree_block.number_records)
+          block_pointers.concat block_pointers_via_bmap_btree_block_node(btree_block, data[btree_block.header_size..-1],
+                                                                         block_pointers.length + block_pointers_length)
         end
       end
       block_pointers
@@ -505,9 +542,9 @@ module XFS
 
     def extent_to_block_pointers(extent, bplen)
       block_pointers = []
-      # Fill in the missing blocks with 0-blocks
+# Fill in the missing blocks with 0-blocks
       block_pointers << 0 while (bplen + block_pointers.length) < extent.start_offset
-      @block_offset.upto(extent.block_count) { |i| block_pointers << extent.start_block + i - 1 }
+      1.upto(extent.block_count) { |i| block_pointers << extent.start_block + i - 1 }
       @block_offset += extent.block_count
       block_pointers
     end
@@ -515,10 +552,15 @@ module XFS
     def block_pointers_via_extents
       block_pointers = []
       fork = dfork_dptr
-      return block_pointers if @in['num_extents'] == 0
-      1.upto(@in['num_extents']) do |i|
-        bmap_btree_record = BmapBTreeRecord.new(fork[(SIZEOF_BMAP_BTREE_REC * (i - 1))..(SIZEOF_BMAP_BTREE_REC * i)])
-        $log.info "Bmap Btree Record for Inode: #{inode_number}\n#{bmap_btree_record.dump}\n\n" if $log
+      extent_count = @in['num_extents']
+      return block_pointers if extent_count == 0
+      1.upto(extent_count) do |i|
+        bmap_btree_record = BmapBTreeRecord.new(fork[(SIZEOF_BMAP_BTREE_REC * (i - 1))..(SIZEOF_BMAP_BTREE_REC * i)],
+                                                @sb)
+        #
+        # The following test is to weed out Leaf Metadata Blocks that have no directory content
+        #
+        break if @sb.fsb_to_b(bmap_btree_record.start_offset) >= DirectoryEntry::XFS_DIR2_LEAF_OFFSET
         block_pointers.concat extent_to_block_pointers(bmap_btree_record, block_pointers.length)
       end
       block_pointers

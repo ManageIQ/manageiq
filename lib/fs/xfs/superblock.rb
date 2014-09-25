@@ -1,4 +1,3 @@
-
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 require 'miq-uuid'
@@ -92,10 +91,10 @@ module XFS
   # // Class.
 
   class Superblock
-    DEF_BLOCK_CACHE_SIZE                   = 50
-    DEF_INODE_CACHE_SIZE                   = 50
+    DEF_BLOCK_CACHE_SIZE                   = 500
+    DEF_CLUSTER_CACHE_SIZE                 = 500
+    DEF_INODE_CACHE_SIZE                   = 500
     DEF_AG_CACHE_SIZE                      = 10
-    DEF_BT_CACHE_SIZE                      = 50
     XFS_SUPERBLOCK_MAGIC                   = 0x58465342
     XFS_SUPERBLOCK_VERSION_1               = 1           # 5.3, 6.0.1, 6.1 */
     XFS_SUPERBLOCK_VERSION_2               = 2           # 6.2 - attributes */
@@ -165,7 +164,7 @@ module XFS
     # /////////////////////////////////////////////////////////////////////////
     # // initialize
     attr_reader :groups_count, :filesystem_id, :stream, :block_count, :inode_count, :volume_name
-    attr_reader :sector_size, :blockSize, :root_inode, :inode_size, :sb
+    attr_reader :sector_size, :block_size, :root_inode, :inode_size, :sb
     attr_reader :ialloc_inos, :ialloc_blks, :agno, :agino, :agbno, :allocation_group_count
 
     def validate_sb(agno)
@@ -194,20 +193,21 @@ module XFS
       @sb = SUPERBLOCK.decode(@stream.read(SUPERBLOCK_SIZE))
       validate_sb(agno)
 
-      @blockSize              = @sb['block_size']
+      @block_size             = @sb['block_size']
 
       @block_cache            = LruHash.new(DEF_BLOCK_CACHE_SIZE)
+      @cluster_cache          = LruHash.new(DEF_CLUSTER_CACHE_SIZE)
       @inode_cache            = LruHash.new(DEF_INODE_CACHE_SIZE)
       @allocation_group_cache = LruHash.new(DEF_AG_CACHE_SIZE)
-      @btree_cache            = LruHash.new(DEF_BT_CACHE_SIZE)
 
       # expose for testing.
       @block_count            = @sb['data_blocks']
       @inode_count            = @sb['inode_count']
+      @inode_size             = @sb['inode_size']
       @root_inode             = @sb['root_inode_num']
 
       # Inode file size members can't be trusted, so use sector count instead.
-# MiqDisk exposes blockSize, which for our purposes is sector_size.
+      # MiqDisk exposes block_size, which for our purposes is sector_size.
       @sector_size            = @stream.blockSize
 
       # Preprocess some members.
@@ -221,7 +221,6 @@ module XFS
       @ialloc_inos                      = (@sb['inodes_per_blk']..XFS_INODES_PER_CHUNK).max
       @ialloc_blks                      = @ialloc_inos >> @sb['inodes_per_blk_log']
       dumpout                           = dump
-      $log.info "Superblock:\n#{dumpout}" if $log
     end
 
     # ////////////////////////////////////////////////////////////////////////////
@@ -251,10 +250,6 @@ module XFS
       sb_version_num == XFS_SUPERBLOCK_VERSION_5
     end
 
-    def new_dir_ent?
-      got_bit?(@sb['incompat_flags'], ICF_FILE_TYPE)
-    end
-
     def fragment_size
       1024 << @sb['fragment_size']
     end
@@ -263,8 +258,8 @@ module XFS
       @sb['inode_size']
     end
 
-    def freeBytes
-      @sb['free_data_blocks'] * @blockSize
+    def free_bytes
+      @sb['free_data_blocks'] * @block_size
     end
 
     def ino_mask(k)
@@ -321,6 +316,10 @@ module XFS
 
     def agb_to_fsb(agno, agbno)
       agno << @sb['ag_blocks_log'] | agbno
+    end
+
+    def agbno_to_real_block(agno, agbno)
+      agno * @allocation_group_blocks + agbno
     end
 
     def agb_to_daddr(agno, agbno)
@@ -431,22 +430,15 @@ module XFS
 
     def icluster_size_fsb
       cluster_size = inode_cluster_size
-      return 1 if @blockSize > cluster_size
+      return 1 if @block_size > cluster_size
       cluster_size >> @sb['block_size_log']
     end
 
-    def get_btree(cursor)
-      blkno = cursor.getblockno
-      unless @btree_cache.key?(blkno)
-        @btree_cache[blkno] = BTreeRecord.new(blkno)
-      end
-    end
-
     def get_ag(agno)
-      unless @allocation_groupg_cache.key?(agno)
+      unless @allocation_group_cache.key?(agno)
         blk_num  = ag_daddr(agno, agf_daddr)
         @stream.seek(fsb_to_b(blk_num))
-        @allocation_group_cache[agno] = AllocGroup.new(@stream, agno, @sb)
+        @allocation_group_cache[agno] = AllocationGroup.new(@stream, agno, @sb)
       end
       @allocation_group_cache[agno]
     end
@@ -470,24 +462,33 @@ module XFS
     def get_inode(inode)
       unless @inode_cache.key?(inode)
         inode_map = InodeMap.new(inode, self)
-        buf = get_block(inode_map.inode_blkno)
-        # read_offset = agb_to_daddr(@agno, @cluster_agbno) * BBSIZE + offset << @sb['inode_size_log']
-        # @stream.seek(read_offset)
-        # @inode_cache[inode] = Inode.new(@stream.read(inodeSize), @sb, inode)
+        if icluster_size_fsb == 1
+          buf = get_block(inode_map.inode_blkno)
+        else
+          buf = get_cluster(inode_map.inode_blkno)
+        end
         @inode_cache[inode] = Inode.new(buf, inode_map.inode_boffset, self, inode)
-        $log.info "Inode num: #{inode}\n#{@inode_cache[inode].dump}\n\n" if $log
       end
 
       @inode_cache[inode]
     end
 
+    def get_cluster(block)
+      raise "XFS::Superblock.get_cluster: block is nil" if block.nil?
+      @cluster_cache[block] = MiqMemory.create_zero_buffer(@block_size * icluster_size_fsb) if block == 0
+      unless @cluster_cache.key?(block)
+        @stream.seek(fsb_to_b(block))
+        @cluster_cache[block] = @stream.read(@block_size * icluster_size_fsb)
+      end
+      @cluster_cache[block]
+    end
+
     def get_block(block)
       raise "XFS::Superblock.get_block: block is nil" if block.nil?
+      @block_cache[block] = MiqMemory.create_zero_buffer(@block_size) if block == 0
       unless @block_cache.key?(block)
-        @block_cache[block] = MiqMemory.create_zero_buffer(@blockSize)
         @stream.seek(fsb_to_b(block))
-        @block_cache[block] = @stream.read(@blockSize)
-        $log.info "Block num: #{block}\n" if $log
+        @block_cache[block] = @stream.read(@block_size)
       end
       @block_cache[block]
     end
@@ -503,7 +504,7 @@ module XFS
     def dump
       out = "\#<#{self.class}:0x#{format('%08x', object_id)}>\n"
       out << "Magic number            : #{format('%0x', @sb['magic_num'])}\n"
-      out << "Block size              : #{@sb['block_size']} (#{@blockSize} bytes)\n"
+      out << "Block size              : #{@sb['block_size']} (#{@block_size} bytes)\n"
       out << "Number of blocks        : #{@sb['data_blocks']}\n"
       out << "Real-time blocks        : #{@sb['realtime_blocks']}\n"
       out << "Real-time extents       : #{@sb['realtime_extents']}\n"

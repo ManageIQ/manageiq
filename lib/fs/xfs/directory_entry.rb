@@ -11,27 +11,51 @@ module XFS
   # For dir3 structures, there is a 1 byte file type field between the name
   # and the tag.  It is packed hard against the end of the name so any padding
   # for rounding is between the file type and the tag.
-  DIR2_DATA_ENTRY = BinaryStruct.new([
+  DIRECTORY2_DATA_ENTRY = BinaryStruct.new([
     'Q>',  'inumber',   # inode number
     'C',   'name_len',  # name length
   ])
-  SIZEOF_DIR2_DATA_ENTRY = DIR2_DATA_ENTRY.size
+  SIZEOF_DIRECTORY2_DATA_ENTRY = DIRECTORY2_DATA_ENTRY.size
 
-  DIR2_DATA_TAG = BinaryStruct.new([
+  DIRECTORY2_DATA_TAG = BinaryStruct.new([
     'S>',  'tag',       # tag
   ])
-  SIZEOF_DIR2_DATA_TAG = DIR2_DATA_TAG.size
+  SIZEOF_DIRECTORY2_DATA_TAG = DIRECTORY2_DATA_TAG.size
 
-  DIR2_UNUSED_ENTRY = BinaryStruct.new([
+  DIRECTORY2_UNUSED_ENTRY = BinaryStruct.new([
     'S>',  'freetag',   # 0xFFFF if unused
     'S>',  'length',    # length of this free entry
   ])
-  SIZEOF_DIR2_UNUSED_ENTRY = DIR2_UNUSED_ENTRY.size
+  SIZEOF_DIRECTORY2_UNUSED_ENTRY = DIRECTORY2_UNUSED_ENTRY.size
 
   class DirectoryEntry
     XFS_DIR2_DATA_FREE_TAG  = 0xffff
     XFS_DIR2_DATA_ALIGN_LOG = 3
     XFS_DIR2_DATA_ALIGN     = 1 << XFS_DIR2_DATA_ALIGN_LOG
+    XFS_DIR2_SPACE_SIZE     = 1 << (32 + XFS_DIR2_DATA_ALIGN_LOG)
+    XFS_DIR2_LEAF_SPACE     = 1
+    XFS_DIR2_LEAF_OFFSET    = XFS_DIR2_LEAF_SPACE * XFS_DIR2_SPACE_SIZE
+    XFS_DIR2_FREE_SPACE     = 2
+    XFS_DIR2_FREE_OFFSET    = XFS_DIR2_FREE_SPACE * XFS_DIR2_SPACE_SIZE
+
+    def symlink?
+      @file_type == Inode::FT_SYM_LNK
+    end
+
+    def directory?
+      @file_type == Inode::FT_DIRECTORY
+    end
+
+    def file?
+      @file_type == Inode::FT_FILE
+    end
+
+    def device?
+      @file_type == Inode::FT_CHAR  ||
+      @file_type == Inode::FT_BLOCK ||
+      @file_type == Inode::FT_FIFO  ||
+      @file_type == Inode::FT_SOCKET
+    end
 
     def round_up(num, base)
       return num if num % base == 0
@@ -39,15 +63,15 @@ module XFS
     end
 
     def dir2_unused_entsize(n)
-      round_up(SIZEOF_DIR2_UNUSED_ENTRY + n + SIZEOF_DIR2_DATA_TAG, XFS_DIR2_DATA_ALIGN)
+      round_up(SIZEOF_DIRECTORY2_UNUSED_ENTRY + n + SIZEOF_DIRECTORY2_DATA_TAG, XFS_DIR2_DATA_ALIGN)
     end
 
     def dir2_data_entsize(n)
-      round_up(SIZEOF_DIR2_DATA_ENTRY + n + SIZEOF_DIR2_DATA_TAG, XFS_DIR2_DATA_ALIGN)
+      round_up(SIZEOF_DIRECTORY2_DATA_ENTRY + n + SIZEOF_DIRECTORY2_DATA_TAG, XFS_DIR2_DATA_ALIGN)
     end
 
     def dir3_data_entsize(n)
-      round_up(SIZEOF_DIR2_DATA_ENTRY + n + SIZEOF_DIR2_DATA_TAG + 1, XFS_DIR2_DATA_ALIGN)
+      round_up(SIZEOF_DIRECTORY2_DATA_ENTRY + n + SIZEOF_DIRECTORY2_DATA_TAG + 1, XFS_DIR2_DATA_ALIGN)
     end
 
     attr_reader :inode, :length, :name, :tag, :name_length
@@ -55,9 +79,9 @@ module XFS
 
     def initialize(data)
       raise "XFS::DirectoryEntry.initialize: Nil directory entry data" if data.nil?
-      size           = SIZEOF_DIR2_UNUSED_ENTRY
+      size           = SIZEOF_DIRECTORY2_UNUSED_ENTRY
       start          = 0
-      unused_entry  = DIR2_UNUSED_ENTRY.decode(data[start..size])
+      unused_entry  = DIRECTORY2_UNUSED_ENTRY.decode(data[start..size])
       @length        = 0
       if unused_entry['freetag'] == XFS_DIR2_DATA_FREE_TAG
         @length      = unused_entry['length']
@@ -66,19 +90,18 @@ module XFS
         return
       end
       free_size = start
-      size         = SIZEOF_DIR2_DATA_ENTRY
-      @de          = DIR2_DATA_ENTRY.decode(data[start..(start + size)])
+      size         = SIZEOF_DIRECTORY2_DATA_ENTRY
+      @de          = DIRECTORY2_DATA_ENTRY.decode(data[start..(start + size)])
       @inode       = @de['inumber']
       @name_length = @de['name_len']
       start        += size
       # If there's a name get it.
       unless @name_length == 0
         @name     = data[start, @name_length]
-        @tag      = DIR2_DATA_TAG.decode(data[start])
+        @tag      = DIRECTORY2_DATA_TAG.decode(data[start])
         @length   = free_size + dir2_data_entsize(@name_length)
       end
       raise "XFS::Directory: DirectoryEntry length cannot be 0" if @length == 0
-      $log.info "Dir Entry: #{dump}" if $log
     end
 
     def dump

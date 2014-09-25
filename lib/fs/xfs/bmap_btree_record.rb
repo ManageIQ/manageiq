@@ -44,14 +44,20 @@ module XFS
       ((word0 & xfs_mask64lo(9) << 43)) | (word1  >> 21)
     end
 
-    def initialize(data)
+    def initialize(data, sb)
       raise "XFS::BmapBTreeRec: Nil buffer" if data.nil?
       @record          = BMAP_BTREE_REC.decode(data)
       @start_offset    = bmbt_get_start_offset(@record['l0'])
-      @start_block     = bmbt_get_start_block(@record['l1'])
-      @big_start_block = bmbt_get_big_start_block(@record['l0'], @record['l1'])
+      start_block     = bmbt_get_start_block(@record['l1'])
+      big_start_block = bmbt_get_big_start_block(@record['l0'], @record['l1'])
       @block_count     = bmbt_get_block_count(@record['l1'])
       @flag            = bmbt_get_state(@record['l0'])
+      agno             = sb.fsb_to_agno(start_block)
+      agbno            = sb.fsb_to_agbno(start_block)
+      @start_block     = sb.agbno_to_real_block(agno, agbno)
+      agno             = sb.fsb_to_agno(big_start_block)
+      agbno            = sb.fsb_to_agbno(big_start_block)
+      @big_start_block = sb.agbno_to_real_block(agno, agbno)
     end
 
     def set_record(cursor, level, key_number, block)

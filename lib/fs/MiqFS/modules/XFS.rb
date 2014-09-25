@@ -9,7 +9,7 @@ require 'directory'
 # XFS file system interface to MiqFS.
 module XFS
   # Default directory cache size.
-  DEF_CACHE_SIZE = 50
+  DEF_CACHE_SIZE = 500
 
   # Members (these become members of an MiqFS instance).
   attr_accessor :superblock, :rootDir, :entry_cache, :dir_cache, :cache_hits
@@ -30,18 +30,17 @@ module XFS
       # XFS module methods use miqfs instance accessors to touch @boot_sector.
       @mode = mode.downcase
       @de = ifs_getFile(@path, @miqfs)
-      raise "File is directory: '#{@path}'" if  @de && @de.isDir?
+      raise "File is directory: '#{@path}'" if  @de && @de.directory?
 
       if mode.include?("r")
         raise "File not found: '#{@path}'" if @de.nil?
-        @inode = @miqfs.superblock.getInode(@de.inode)
+        @inode = @miqfs.superblock.get_inode(@de.inode)
       end
     end
   end
 
   # File system interface.
   def fs_init
-    # puts "XFS::fs_init(#{@dobj.dInfo.fileName})"
     self.fsType = "XFS"
 
     # Initialize bs & read root dir.
@@ -57,7 +56,7 @@ module XFS
 
   # Returns free space on file system in bytes.
   def fs_freeBytes
-    @superblock.freeBytes
+    @superblock.free_bytes
   end
 
   #
@@ -70,7 +69,7 @@ module XFS
     # Get path directory.
     dir = ifs_getDir(p)
     return nil if dir.nil?
-    dir.globNames
+    dir.glob_names
   end
 
   # Make a directory. Parent must exist.
@@ -100,21 +99,21 @@ module XFS
   def fs_fileFile?(p)
     de = ifs_getFile(p)
     return false if de.nil?
-    de.fileType == DirectoryEntry::FT_FILE
+    de.file_type == Inode::FT_FILE
   end
 
   # Returns true if name is a directory.
   def fs_fileDirectory?(p)
     de = ifs_getFile(p)
     return false if de.nil?
-    de.fileType == DirectoryEntry::FT_DIRECTORY
+    de.file_type == Inode::FT_DIRECTORY
   end
 
   # Returns size in bytes.
   def fs_fileSize(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    @superblock.getInode(de.inode).length
+    @superblock.get_inode(de.inode).length
   end
 
   # Delete file.
@@ -126,28 +125,28 @@ module XFS
   def fs_fileAtime(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    @superblock.getInode(de.inode).aTime
+    @superblock.get_inode(de.inode).aTime
   end
 
   # Returns Ruby Time object.
   def fs_fileCtime(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    @superblock.getInode(de.inode).cTime
+    @superblock.get_inode(de.inode).cTime
   end
 
   # Returns Ruby Time object.
   def fs_fileMtime(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    @superblock.getInode(de.inode).mTime
+    @superblock.get_inode(de.inode).mTime
   end
 
   # Return true if p is a path to a symbolic link.
   def fs_isSymLink?(p)
     de = ifs_getFile(p)
     return false if de.nil?
-    de.isSymLink?
+    de.symlink?
   end
   # In these, fobj is a FileObject.
 
@@ -227,7 +226,7 @@ module XFS
     # NOTE: if p is a directory that's ok, find it.
     begin
       directory_object = ifs_getDir(dir, miqfs)
-      directory_entry = directory_object.nil? ? nil : directory_object.findEntry(fname)
+      directory_entry = directory_object.nil? ? nil : directory_object.find_entry(fname)
     rescue RuntimeError
       directory_entry = nil
     end
@@ -286,7 +285,7 @@ module XFS
     pdir = ifs_getDirR(names, miqfs)
     return nil if pdir.nil?
 
-    de = pdir.funallocated_blocksindEntry(name, DirectoryEntry::FT_DIRECTORY)
+    de = pdir.find_entry(name, Inode::FT_DIRECTORY)
     return nil if de.nil?
     miqfs.entry_cache[fname] = de
 

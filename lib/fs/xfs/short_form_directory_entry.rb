@@ -8,12 +8,12 @@ module XFS
   #
   # Short Form Directory Entry in a Short Form Inode.
   #
-  SHORT_FORM_DIR_ENTRY = BinaryStruct.new([
-    'C',   'name_len',  # name length
+  SHORT_FORM_DIRECTORY_ENTRY = BinaryStruct.new([
+    'C',   'name_length',  # name length
     'C',   'offset_byte0',
     'C',   'offset_byte1',
   ])
-  SIZEOF_SHORT_FORM_DIR_ENTRY = SHORT_FORM_DIR_ENTRY.size
+  SIZEOF_SHORT_FORM_DIRECTORY_ENTRY = SHORT_FORM_DIRECTORY_ENTRY.size
 
   SHORT_FORM_SHORT_INO = BinaryStruct.new([
     'I>',  'inode_num', # 4 byte inode number
@@ -25,9 +25,28 @@ module XFS
   ])
   SIZEOF_SHORT_FORM_LONG_INO = SHORT_FORM_LONG_INO.size
 
-  class ShortFormDirEntry
+  class ShortFormDirectoryEntry
     attr_reader :length, :name, :name_length, :short_inode
     attr_accessor :file_type, :inode
+
+    def symlink?
+      @file_type == Inode::FT_SYM_LNK
+    end
+
+    def directory?
+      @file_type == Inode::FT_DIRECTORY
+    end
+
+    def file?
+      @file_type == Inode::FT_FILE
+    end
+
+    def device?
+      @file_type == Inode::FT_CHAR  ||
+      @file_type == Inode::FT_BLOCK ||
+      @file_type == Inode::FT_FIFO  ||
+      @file_type == Inode::FT_SOCKET
+    end
 
     def dot_entry(dots, inode_number)
       @length      = 0
@@ -38,32 +57,31 @@ module XFS
       # Inode Numbers will be filled in by the caller
     end
 
-    def initialize(data, short_inode, dots = 0, inode_number = nil)
+    def initialize(data, short_inode, dots = nil, inode_number = nil)
       #
       # If dots is 1 or 2 we need to construct the
       # "." and ".." directory entries.
       #
       return dot_entry(dots, inode_number) if dots
-      raise "XFS::DirectoryEntry.initialize: Nil directory entry data" if data.nil?
-      siz           = SIZEOF_SHORT_FORM_DIR_ENTRY
-      start         = 0
-      @de           = SHORT_FORM_DIR_ENTRY.decode(data[start..siz])
-      @name_length     = @de['name_length']
+      raise "XFS::ShortFormDirectoryEntry.initialize: Nil directory entry data" if data.nil?
+      siz              = SIZEOF_SHORT_FORM_DIRECTORY_ENTRY
+      start            = 0
+      @directory_entry = SHORT_FORM_DIRECTORY_ENTRY.decode(data[start..start + siz])
+      @name_length  = @directory_entry['name_length']
       # If there's a name get it.
       unless @name_length == 0
-        @name     = data[SIZEOF_SHORT_FORM_DIR_ENTRY, @name_length]
-        start   = SIZEOF_SHORT_FORM_DIR_ENTRY + @name_length
+        @name   = data[SIZEOF_SHORT_FORM_DIRECTORY_ENTRY, @name_length]
+        start   = SIZEOF_SHORT_FORM_DIRECTORY_ENTRY + @name_length
         if short_inode
           ino_size = SIZEOF_SHORT_FORM_SHORT_INO
-          @inode  = SHORT_FORM_SHORT_INO.decode(data[start..(start + ino_size)])
+          inode    = SHORT_FORM_SHORT_INO.decode(data[start..(start + ino_size)])
         else
           ino_size = SIZEOF_SHORT_FORM_LONG_INO
-          @inode  = SHORT_FORM_LONG_INO.decode(data[start..(start + ino_size)])
+          inode    = SHORT_FORM_LONG_INO.decode(data[start..(start + ino_size)])
         end
         @length    = start + ino_size
       end
-      @inode    = @de['inumber']
-      puts "Dir Entry is #{dump}"
+      @inode       = inode['inode_num']
     end
 
     def dump

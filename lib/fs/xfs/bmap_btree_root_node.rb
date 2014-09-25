@@ -61,8 +61,11 @@ module XFS
       size            = SIZEOF_BMAP_BTREE_ROOT_NODE_HEADER
       1.upto(@entry_count) do |i|
         start             = size + maximum_records * offset_size + (i - 1) * block_size
-        block             = (data[start..start + block_size]).unpack('Q>')
-        @blocks.concat(block)
+        block             = (data[start..start + block_size]).unpack('Q>').shift
+        agbno             = inode.sb.fsb_to_agbno(block)
+        agno              = inode.sb.fsb_to_agno(block)
+        real_block        = inode.sb.agbno_to_real_block(agno, agbno)
+        @blocks.concat([real_block])
       end
     end
   end

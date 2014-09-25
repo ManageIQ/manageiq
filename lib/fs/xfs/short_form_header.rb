@@ -8,35 +8,35 @@ module XFS
   # entry all these structures are variable length, and the accessors in
   # this file should be used to iterate over them.
   #
-  DIR_SHORTERFORM_HEADER = BinaryStruct.new([
+  DIRECTORY_SHORTERFORM_HEADER = BinaryStruct.new([
     'C',  'entry_count',         # count of entries
     'S',  'i8byte_count',        # count of 8-byte inode #s
-    'a4', 'parent_ino_4byte',    # parent dir inode # stored as 4 8-bit values
+    'I>', 'parent_ino_4byte',    # parent dir inode # stored as 4 8-bit values
   ])
-  SIZEOF_DIR_SHORTERFORM_HEADER = DIR_SHORTERFORM_HEADER.size
+  SIZEOF_DIRECTORY_SHORTERFORM_HEADER = DIRECTORY_SHORTERFORM_HEADER.size
 
-  DIR_SHORTFORM_HEADER = BinaryStruct.new([
+  DIRECTORY_SHORTFORM_HEADER = BinaryStruct.new([
     'C',  'entry_count',         # count of entries
     'S',  'i8byte_count',        # count of 8-byte inode #s
-    'a8', 'parent_ino_8byte',    # parent dir inode # stored as 8 8-bit values
+    'Q>', 'parent_ino_8byte',    # parent dir inode # stored as 8 8-bit values
   ])
-  SIZEOF_DIR_SHORTFORM_HEADER = DIR_SHORTFORM_HEADER.size
+  SIZEOF_DIRECTORY_SHORTFORM_HEADER = DIRECTORY_SHORTFORM_HEADER.size
 
   class ShortFormHeader
     attr_reader :short_form_header, :entry_count, :parent_inode, :size, :small_inode
 
     def initialize(data)
-      @short_form_header = DIR_SHORTERFORM_HEADER.decode(data)
+      @short_form_header = DIRECTORY_SHORTERFORM_HEADER.decode(data)
       @entry_count       = @short_form_header['entry_count']
       i8byte_count       = @short_form_header['i8byte_count']
       @parent_inode      = @short_form_header['parent_ino_4byte']
-      @size              = SIZEOF_DIR_SHORTERFORM_HEADER
+      @size              = SIZEOF_DIRECTORY_SHORTERFORM_HEADER
       @small_inode       = true
       if @entry_count == 0
         @entry_count       = i8byte_count
-        @short_form_header = DIR_SHORTFORM_HEADER.decode(data)
+        @short_form_header = DIRECTORY_SHORTFORM_HEADER.decode(data)
         @parent_inode      = @short_form_header['parent_ino_8byte']
-        @size              = SIZEOF_DIR_SHORTFORM_HEADER
+        @size              = SIZEOF_DIRECTORY_SHORTFORM_HEADER
         @small_inode       = nil
       end
     end

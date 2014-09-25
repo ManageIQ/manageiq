@@ -9,11 +9,11 @@ module XFS
   class InodeMap
     attr_reader :inode_blkno, :inode_length, :inode_boffset
 
-    def valid_inode_size?(inode, sb)
+    def valid_inode_size?(sb)
       if (@inode_blkno + @inode_length) > sb.fsb_to_bb(sb.block_count)
+        $log.error "XFS::InodeMap - Inode #{@inode_blkno} too large for filesystem" if $log
         raise "XFS::InodeMap - Inode #{@inode_blkno} too large for filesystem"
       end
-      $log.info "Map for Inode: #{inode}\n#{dump}\n\n" if $log
       true
     end
 
@@ -21,6 +21,7 @@ module XFS
       if (@agno >= sb.sb['ag_count']) ||
          (@agbno >= sb.sb['ag_blocks']) ||
          sb.agino_to_ino(@agno, @agino) != inode
+        $log.error "XFS::InodeMap - Bad Inode number #{inode} for agno #{@agno} agcount #{sb.sb['ag_count']}, agbno #{@agbno}, agblocks #{sb.sb['ag_blocks']}, agino #{@agino}, agino_to_ino #{sb.agino_to_ino(@agno, @agino)}" if $log
         raise "XFS::InodeMap - Bad Inode number #{inode}"
       end
       true
@@ -33,18 +34,18 @@ module XFS
       @inode_number   = inode
       @agno           = sb.ino_to_agno(inode)
       @agino          = sb.ino_to_agino(inode)
-      @agbno          = sb.agino_to_agbno(inode)
+      @agbno          = sb.agino_to_agbno(@agino)
 
       valid_inode_number?(inode, sb) || return
       #
       # If the inode cluster size is the same as the blocksize or
       # smaller we get to the block by simple arithmetic
       #
-      blks_per_cluster = sb.icluster_size_fsb
-      @inode_length = sb.fsb_to_bb(blks_per_cluster)
-      if blks_per_cluster == 1
+      blocks_per_cluster = sb.icluster_size_fsb
+      @inode_length = sb.fsb_to_bb(blocks_per_cluster)
+      if blocks_per_cluster == 1
         offset = sb.ino_to_offset(inode)
-        @inode_blkno  = sb.agb_to_daddr(@agno, @agbno)
+        @inode_blkno  = sb.agbno_to_real_block(@agno, @agbno)
         @inode_boffset = offset << sb['inode_size_log']
         return
       elsif sb.inode_align_mask
@@ -53,7 +54,7 @@ module XFS
         # find the location.  Otherwise we have to do a btree
         # lookup to find the location.
         #
-        offset_agbno = @agbno + sb.inode_align_mask
+        offset_agbno = @agbno & (sb.inode_align_mask - 1)
         chunk_agbno  = @agbno - offset_agbno
       else
         start_ino    = imap_lookup(@agno, @agino)
@@ -61,11 +62,11 @@ module XFS
         offset_agbno = @agbno - chunk_agbno
       end
 
-      @cluster_agbno = chunk_agbno + (offset_agbno / blks_per_cluster) * blks_per_cluster
+      @cluster_agbno = chunk_agbno + (offset_agbno / blocks_per_cluster) * blocks_per_cluster
       offset = (@agbno - @cluster_agbno) * sb.sb['inodes_per_blk'] + sb.ino_to_offset(inode)
-      @inode_blkno  = sb.agb_to_fsb(@agno, @cluster_agbno)
+      @inode_blkno  = sb.agbno_to_real_block(@agno, @cluster_agbno)
       @inode_boffset = offset << sb.sb['inode_size_log']
-      valid_inode_size?(inode, sb) || return
+      valid_inode_size?(sb) || return
     end # initialize
 
     def imap_lookup(agno, agino)
@@ -87,7 +88,7 @@ module XFS
 
     def dump
       out = "\#<#{self.class}:0x#{format('%08x', object_id)}>\n"
-      out += "Inode Number : #{@inum}\n"
+      out += "Inode Number : #{@inode_number}\n"
       out += "Alloc Grp Num: #{@agno}\n"
       out += "AG Ino       : #{@agino}\n"
       out += "AG Block Num : #{@agbno}\n"
