@@ -1,6 +1,6 @@
 - url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
 
-#form_div
+#form_div(ng-controller="scheduleFormController")
   = render :partial => "layouts/flash_msg"
   %fieldset
     %p.legend
@@ -13,9 +13,6 @@
               @edit[:new][:name],
               :maxlength=>MAX_NAME_LEN,
               "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
-
-            = javascript_tag(javascript_focus('name'))
-
         %tr
           %td.key Description
           %td
@@ -37,12 +34,14 @@
           %td
             = select_tag('action_typ',
               options_for_select(@edit[:action_types], @edit[:new][:action]),
-              "data-miq_sparkle_on" => true,
-              "data-miq_observe" => {:url=>url}.to_json)
+              "ng-model" => "action_type",
+              "ng-change" => "actionTypeChanged()")
 
-  - if @edit[:new][:action] == "db_backup"
-    = render :partial => "layouts/edit_log_depot_settings", :locals => {:action => "log_depot_field_changed", :validate_url => "log_depot_validate"}
-  - else
-    = render :partial => "schedule_form_filter"
-
+  = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
+
+:javascript
+  jQuery('#name').focus();
+
+  cfmeAngularApplication.value('storageTable', '#{ui_lookup(:table => "storages")}');
+  angular.bootstrap(jQuery('#form_div'), ['cfmeAngularApplication']);
