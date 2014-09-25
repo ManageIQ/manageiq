@@ -129,6 +129,31 @@ module OpsController::Settings::Schedules
     end
   end
 
+  def schedule_form_field_change
+    case params[:filter_type]
+    when "vm"
+      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "host"
+      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "ems"
+      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "cluster"
+      filtered_item_list = find_filtered(EmsCluster, :all).collect { |cluster|
+        [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
+      }.sort_by { |cluster| cluster.first.downcase }
+    when "global"
+      build_listnav_search_list("Vm")
+      filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
+    when "my"
+      build_listnav_search_list("Vm")
+      filtered_item_list = @my_searches.collect { |search| [search.id, search.description] }
+    else
+      DatabaseBackup.supported_depots.each { |depot| @edit[:protocols_arr].push(depot[1]) }
+    end
+
+    render :json => {:filtered_item_list => filtered_item_list}
+  end
+
   # AJAX driven routine to check for changes in ANY field on the form
   def schedule_form_field_changed
     return unless load_edit("schedule_edit__#{params[:id]}","replace_cell__explorer")
@@ -469,6 +494,8 @@ module OpsController::Settings::Schedules
     build_listnav_search_list("Storage")
     @edit[:filters][:storage_global] = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
     @edit[:filters][:storage_my] = @my_searches.collect{|s| [s.description, s.id]}
+
+    build_schedule_options_for_select
   end
 
   # Set record variables to new values
@@ -611,4 +638,55 @@ module OpsController::Settings::Schedules
     process_elements(schedules, MiqSchedule, task)
   end
 
+  def build_schedule_options_for_select
+    @vm_options_for_select = [
+      ["All VMs","all"],
+      ["All VMs for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
+      ["All VMs for #{ui_lookup(:table=>"ems_clusters")}","cluster"],
+      ["All VMs for Host","host"],
+      ["A single VM","vm"]
+    ] +
+      (@edit[:filters][:vm_global].empty? ? [] : [["Global Filters", "global"]]) +
+      (@edit[:filters][:vm_my].empty? ? [] : [["My Filters", "my"]])
+
+    @template_options_for_select = [
+      ["All Templates","all"],
+      ["All Templates for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
+      ["All Templates for #{ui_lookup(:table=>"ems_clusters")}","cluster"],
+      ["All Templates for Host","host"],
+      ["A single Template","miq_template"]
+    ] +
+      (@edit[:filters][:miq_template_global].empty? ? [] : [["Global Filters", "global"]]) +
+      (@edit[:filters][:miq_template_my].empty? ? [] : [["My Filters", "my"]])
+
+    @host_options_for_select = [
+      ["All Hosts","all"],
+      ["All Hosts for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
+      ["All Hosts for #{ui_lookup(:table=>"ems_clusters")}","cluster"],
+      ["A single Host","host"]
+    ] +
+      (@edit[:filters][:host_global].empty? ? [] : [["Global Filters", "global"]]) +
+      (@edit[:filters][:host_my].empty? ? [] : [["My Filters", "my"]])
+
+    @cluster_options_for_select = [
+      ["All Clusters","all"],
+      ["All Clusters for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
+      ["A single Cluster","cluster"]
+    ] +
+      (@edit[:filters][:cluster_global].empty? ? [] : [["Global Filters", "global"]]) +
+      (@edit[:filters][:cluster_my].empty? ? [] : [["My Filters", "my"]])
+
+    @storage_options_for_select = [
+      ["All Datastores","all"],
+      ["All Datastores for Host","host"],
+      ["All Datastores for #{ui_lookup(:table=>"ext_management_systems")}","ems"],
+      ["A single Datastore","storage"]
+    ] +
+      (@edit[:filters][:storage_global].empty? ? [] : [["Global Filters", "global"]]) +
+      (@edit[:filters][:storage_my].empty? ? [] : [["My Filters", "my"]])
+
+    @edit[:protocols_arr] = []
+    DatabaseBackup.supported_depots.each { |depot| @edit[:protocols_arr].push(depot[1]) }
+    @database_backup_options_for_select = @edit[:protocols_arr].sort
+  end
 end

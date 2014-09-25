@@ -3,54 +3,51 @@
 - url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
 
 #form_filter_div
-  - if @edit[:new][:action].starts_with?("vm")
-    %fieldset
-      %p.legend VM Selection
-      %table.style1
-        %tr
-          %td.key Filter
-          %td
-            = select_tag('filter_typ', options_for_select([["All VMs","all"], ["All VMs for #{ui_lookup(:table=>"ext_management_systems")}","ems"], ["All VMs for #{ui_lookup(:table=>"ems_clusters")}","cluster"], ["All VMs for Host","host"], ["A single VM","vm"]] + (@edit[:filters][:vm_global].empty? ? [] : [["Global Filters", "global"]]) + (@edit[:filters][:vm_my].empty? ? [] : [["My Filters", "my"]]), @edit[:new][:filter]), "data-miq_sparkle_on"=>true, "data-miq_observe"=>{:url=>url}.to_json)
-            = render :partial => "schedule_form_filter_values", :locals => {:edit => @edit, :url => url}
+  %fieldset
+    %p.legend {{buildLegend()}}
+    %table.style1
+      %tr(ng-switch on="determineActionType()")
+        %td.key Filter
+        %td
+          = select_tag('filter_typ', options_for_select(@vm_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "vm", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@template_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "miq_template", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@host_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "host", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@cluster_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "emscluster", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@storage_options_for_select, @edit[:new][:filter]), "ng-switch-when" => "storage", "ng-model" => "$parent.filter_type", "ng-change" => "filterTypeChanged()")
+          = select_tag('log_protocol', options_for_select(@database_backup_options_for_select, @edit[:protocol]), "ng-switch-when" => "db_backup", "ng-model" => "$parent.log_protocol")
 
-  - elsif @edit[:new][:action].starts_with?("miq_template")
-    %fieldset
-      %p.legend Template Selection
-      %table.style1
-        %tr
-          %td.key Filter
-          %td
-            = select_tag('filter_typ', options_for_select([["All Templates","all"], ["All Templates for #{ui_lookup(:table=>"ext_management_systems")}","ems"], ["All Templates for #{ui_lookup(:table=>"ems_clusters")}","cluster"], ["All Templates for Host","host"], ["A single Template","miq_template"]] + (@edit[:filters][:miq_template_global].empty? ? [] : [["Global Filters", "global"]]) + (@edit[:filters][:miq_template_my].empty? ? [] : [["My Filters", "my"]]), @edit[:new][:filter]), "data-miq_sparkle_on"=>true, "data-miq_observe"=>{:url=>url}.to_json)
-            = render :partial => "schedule_form_filter_values", :locals => {:edit => @edit, :url => url}
+          %select#filter_value(ng-hide="filterValuesEmpty")
+            %option &lt;Choose&gt;
+            %option(ng-repeat="filteredItem in filterList" value="{{filteredItem[0]}}")
+              {{filteredItem[1]}}
 
-  - elsif @edit[:new][:action].starts_with?("host")
-    %fieldset
-      %p.legend Host Selection
-      %table.style1
-        %tr
-          %td.key Filter
-          %td
-            = select_tag('filter_typ', options_for_select([["All Hosts","all"], ["All Hosts for #{ui_lookup(:table=>"ext_management_systems")}","ems"], ["All Hosts for #{ui_lookup(:table=>"ems_clusters")}","cluster"], ["A single Host","host"]] + (@edit[:filters][:host_global].empty? ? [] : [["Global Filters", "global"]]) + (@edit[:filters][:host_my].empty? ? [] : [["My Filters", "my"]]), @edit[:new][:filter]), "data-miq_sparkle_on"=>true, "data-miq_observe"=>{:url=>url}.to_json)
-            = render :partial => "schedule_form_filter_values", :locals => {:edit => @edit, :url => url}
+      %tr(ng-show="determineActionType() == 'db_backup'")
+        %td.key URI
+        %td.wide
+          = "#{@edit[:new][:uri_prefix]}://"
+          = text_field_tag("uri", @edit[:new][:uri], :maxlength => 100)
+        = javascript_tag("$('uri').focus()")
 
-  - elsif @edit[:new][:action] == "emscluster"
-    %fieldset
-      %p.legend Cluster Selection
-      %table.style1
-        %tr
-          %td.key Filter
-          %td
-            = select_tag('filter_typ', options_for_select([["All Clusters","all"], ["All Clusters for #{ui_lookup(:table=>"ext_management_systems")}","ems"], ["A single Cluster","cluster"]] + (@edit[:filters][:cluster_global].empty? ? [] : [["Global Filters", "global"]]) + (@edit[:filters][:cluster_my].empty? ? [] : [["My Filters", "my"]]), @edit[:new][:filter]), "data-miq_sparkle_on"=>true, "data-miq_observe"=>{:url=>url}.to_json)
-            = render :partial => "schedule_form_filter_values", :locals => {:edit => @edit, :url => url}
+      %tr(ng-show="sambaBackup()")
+        %td.key
+          User ID
+        %td
+          = text_field_tag("log_userid", @edit[:new]["log_userid".to_sym], :maxlength => 50)
 
-  - elsif @edit[:new][:action] == "storage"
-    %fieldset
-      %p.legend
-        = ui_lookup(:table=>"storages")
-        Selection
-      %table.style1
-        %tr
-          %td.key Filter
-          %td
-            = select_tag('filter_typ', options_for_select([["All Datastores","all"], ["All Datastores for Host","host"], ["All Datastores for #{ui_lookup(:table=>"ext_management_systems")}","ems"], ["A single Datastore","storage"]] + (@edit[:filters][:storage_global].empty? ? [] : [["Global Filters", "global"]]) + (@edit[:filters][:storage_my].empty? ? [] : [["My Filters", "my"]]), @edit[:new][:filter]), "data-miq_sparkle_on"=>true, "data-miq_observe"=>{:url=>url}.to_json)
-            = render :partial => "schedule_form_filter_values", :locals => {:edit => @edit, :url => url}
+      %tr(ng-show="sambaBackup()")
+        %td.key
+          Password
+        %td
+          = password_field_tag("log_password", @edit[:new]["log_password".to_sym], :maxlength => 50)
+
+      %tr(ng-show="sambaBackup()")
+        %td.key
+          Verify Password
+        %td
+          = password_field_tag("log_verify", @edit[:new]["log_verify".to_sym], :maxlength => 50)
+
+      %tr(ng-show="sambaBackup()")
+        %td
+        %td(align="right")
+          - validate_url ||= ["new", "create"].include?(controller.action_name) ? "create" : "update"
+          = render(:partial => "/layouts/form_buttons_verify", :locals => {:validate_url => validate_url, :valtype => "log"})
