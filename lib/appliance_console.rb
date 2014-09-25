@@ -4,7 +4,7 @@
 
 # TODO: Move the Service Support (start/stop/restart/status) to it's own file (appliance_console_service.rb)
 # and update callers to appliance_console.rb to use the appliance_console_service.rb.
-console_title = 'Evm Appliance Console [appliance_console.rb]'
+console_title = 'Appliance Console [appliance_console.rb]'
 ARGV << "start" if ARGV.empty?
 
 # developers can turn this off
@@ -170,7 +170,7 @@ loop do
 
     clear_screen
 
-    say("ManageIQ Virtual Appliance\n\nTo administer this appliance, browse to https://#{ip}\n")
+    say("#{I18n.t("product.name")} Virtual Appliance\n\nTo administer this appliance, browse to https://#{ip}\n")
     if $MIQDEBUG
       $MIQDEBUG_FILES.each { |f| puts "Modified #{(Time.now - File.mtime(f)).to_i / 60} minutes ago - #{f}" }
     end
@@ -205,7 +205,7 @@ loop do
         clear_screen
 
         say(<<-EOL)
-Welcome to the ManageIQ Virtual Appliance.
+Welcome to the #{I18n.t("product.name")} Virtual Appliance.
 
 To modify the configuration, use a web browser to access the management page.
 
