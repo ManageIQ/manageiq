@@ -137,11 +137,25 @@ module ApplianceConsole
       disk
     end
 
+    # use the integer index for menu prompts
+    # ensure default is a string
+    def default_to_index(default, options)
+      return unless default
+      default_index = if options.is_a?(Hash)
+                        options.values.index(default) || options.keys.index(default)
+                      else
+                        options.index(default)
+                      end
+      default_index ? (default_index.to_i + 1).to_s : default.to_s
+    end
+
     def ask_with_menu(prompt, options, default = nil, clear_screen_after = true)
       say("#{prompt}\n\n")
+
+      default = default_to_index(default, options)
       selection = nil
       choose do |menu|
-        menu.default      = default if default
+        menu.default      = default
         menu.index        = :number
         menu.index_suffix = ") "
         menu.prompt       = "\nChoose the #{prompt.downcase}:#{" |#{default}|" if default} "

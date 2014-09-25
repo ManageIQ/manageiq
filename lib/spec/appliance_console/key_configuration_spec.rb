@@ -9,7 +9,7 @@ describe ApplianceConsole::KeyConfiguration do
     context "creating" do
       it "asks for nothing else" do
         v2_exists(false)
-        expect(subject).to receive(:ask_with_menu).with(/key/i, anything, "1", false).and_return(:create)
+        expect(subject).to receive(:ask_with_menu).with(/key/i, anything, :create, false).and_return(:create)
         expect(subject).not_to receive(:just_ask)
         expect(subject.ask_questions).to be_true
       end
@@ -17,7 +17,7 @@ describe ApplianceConsole::KeyConfiguration do
       it "defaults to action" do
         v2_exists(false)
         subject.action = :fetch
-        expect(subject).to receive(:ask_with_menu).with(/key/i, anything, "2", false).and_return(:create)
+        expect(subject).to receive(:ask_with_menu).with(/key/i, anything, :fetch, false).and_return(:create)
         expect(subject).not_to receive(:just_ask)
         expect(subject.ask_questions).to be_true
       end
@@ -26,7 +26,7 @@ describe ApplianceConsole::KeyConfiguration do
     context "fetch" do
       it "asks for other parameters" do
         v2_exists(false)
-        expect(subject).to receive(:ask_with_menu).with(/key/i, anything, "1", false).and_return(:fetch)
+        expect(subject).to receive(:ask_with_menu).with(/key/i, anything, :create, false).and_return(:fetch)
         expect(subject).to receive(:say).with("")
         expect(subject).to receive(:just_ask).with(/host/i, nil, anything, anything).and_return("newhost")
         expect(subject).to receive(:just_ask).with(/login/i, "root").and_return("root")
