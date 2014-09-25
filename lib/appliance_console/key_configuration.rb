@@ -1,6 +1,7 @@
 require 'pathname'
 require 'fileutils'
 require 'net/scp'
+require 'active_support/all'
 
 RAILS_ROOT ||= Pathname.new(File.dirname(__FILE__)).join("../../vmdb")
 require 'util/miq-password'

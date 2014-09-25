@@ -2,8 +2,6 @@ require "spec_helper"
 require 'appliance_console/env'
 require "appliance_console/cli"
 
-RAILS_ROOT ||= File.expand_path("../../../vmdb", Pathname.new(__FILE__).realpath)
-
 describe ApplianceConsole::Cli do
   subject { described_class.new }
 

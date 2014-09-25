@@ -1,8 +1,6 @@
 require "spec_helper"
 require "appliance_console/principal"
 
-RAILS_ROOT ||= File.expand_path("../../../vmdb", Pathname.new(__FILE__).realpath)
-
 describe ApplianceConsole::Principal do
   before { Open3.should_not_receive(:capture3) }
   let(:hostname) { "machine.network.com" }

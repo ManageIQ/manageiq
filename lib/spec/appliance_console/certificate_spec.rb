@@ -2,8 +2,6 @@ require "spec_helper"
 require "fileutils"
 require "appliance_console/certificate"
 
-RAILS_ROOT ||= File.expand_path("../../../vmdb", Pathname.new(__FILE__).realpath)
-
 describe ApplianceConsole::Certificate do
   before { Open3.should_not_receive(:capture) }
   let(:host)  { "client.network.com" }

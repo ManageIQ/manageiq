@@ -1,4 +1,4 @@
-# NOTE: relies upon RAILS_ROOT being set
+RAILS_ROOT ||= Pathname.new(File.dirname(__FILE__)).join("../../vmdb")
 
 module ApplianceConsole
   class Env
