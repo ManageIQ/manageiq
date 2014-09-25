@@ -28,14 +28,14 @@ describe Vmdb::Logging::MirroredLogger do
           @log.send(level, "Testing!")
 
           @log_stream.rewind
-          lines = @log_stream.lines.to_a
+          lines = @log_stream.each_line.to_a
           lines.length.should == 1
           line = lines.first.chomp
           line[7, 1].should == level.to_s[0, 1].upcase
           line[-13..-1].should == "-- : Testing!"
 
           @mirror_stream.rewind
-          lines = @mirror_stream.lines.to_a
+          lines = @mirror_stream.each_line.to_a
           if mirrored
             lines.length.should == 1
             line = lines.first.chomp
