@@ -613,13 +613,16 @@ class User < ActiveRecord::Base
   end
 
   def self.find_or_create_by_ldap_attr(attr, value)
+    user = find_by_userid(value)
+    return user if user
+
     ldap = MiqLdap.new
 
     user = case attr
     when "mail"
       self.find_by_email(value)
     when "userprincipalname"
-      value = ldap.fqusername(value) unless value == "admin"
+      value = ldap.fqusername(value)
       self.find_by_userid(value)
     else
       raise "Attribute '#{attr}' is not supported"
