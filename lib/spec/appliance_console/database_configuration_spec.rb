@@ -231,10 +231,15 @@ describe ApplianceConsole::DatabaseConfiguration do
 
   context "#log_and_feedback" do
     before do
-      @config.logger = nil
+      @old_logger = @config.logger
+    end
+
+    after do
+      @config.logger = @old_logger
     end
 
     it "raises ArgumentError with no block_given" do
+      @config.logger = nil
       lambda {@config.log_and_feedback(:some_method)}.should raise_error(ArgumentError)
     end
 
