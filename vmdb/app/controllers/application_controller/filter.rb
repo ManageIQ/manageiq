@@ -51,7 +51,9 @@ module ApplicationController::Filter
       end
     else
       if ["commit", "not", "remove"].include?(params[:pressed])
-        @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression], :token)
+        copy = copy_hash(@edit[@expkey][:expression])
+        copy.deep_delete :token
+        @edit[:new][@expkey] = copy
         exp_array(:push, @edit[:new][@expkey])
       end
       unless ["and", "or"].include?(params[:pressed]) # Unless adding an AND or OR token

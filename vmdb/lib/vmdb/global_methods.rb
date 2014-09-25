@@ -22,17 +22,13 @@ module Vmdb
     end
 
     # Copy a hash, duplicating any embedded hashes/arrays contained within
-    def copy_hash(hashin, skip_key = nil)
-      h = hashin.deep_clone
-      h.deep_delete(skip_key) unless skip_key.nil?
-      h
+    def copy_hash(hashin)
+      hashin.deep_clone
     end
 
     # Copy an array, duplicating any embedded hashes/arrays contained within
-    def copy_array(arrayin, skip_key = nil)
-      a = arrayin.deep_clone
-      a.deep_delete(skip_key) unless skip_key.nil?
-      a
+    def copy_array(arrayin)
+      arrayin.deep_clone
     end
 
     def column_type(model, column)
