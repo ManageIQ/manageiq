@@ -33,7 +33,6 @@ class ServiceController < ApplicationController
     @sb[:action] = action
 
     performed_action = whitelisted_action(params[:pressed])
-    return if [:service_delete, :service_edit, :service_reconfigure].include?(performed_action)
 
     if @refresh_partial
       replace_right_cell(action)
