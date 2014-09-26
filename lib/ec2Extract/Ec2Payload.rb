@@ -10,7 +10,7 @@ module Ec2Payload
 	PAIRAPD = 2
 	PAIRBPD = 3
 	
-	GLOBAL_KEY = "\222dL\256\177\311X)\177\332\214*3\367\252\002\023\034\305\243\274\252\312X\276\b\273\261\331(\216\310"
+	GLOBAL_KEY = "\222dL\256\177\311X)\177\332\214*3\367\252\002\023\034\305\243\274\252\312X\276\b\273\261\331(\216\310".force_encoding("ASCII-8BIT")
 	
 	def self.userData
 		ud = `curl http://169.254.169.254/latest/user-data 2> /dev/null`
