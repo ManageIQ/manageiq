@@ -23,6 +23,13 @@ cols:
 - description
 - created_at
 - retired
+- v_total_vms
+- aggregate_all_vm_cpus
+- aggregate_all_vm_memory
+- aggregate_all_vm_disk_count
+- aggregate_all_vm_disk_space_allocated
+- aggregate_all_vm_disk_space_used
+- aggregate_all_vm_memory_on_disk
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -38,6 +45,14 @@ col_order:
 - description
 - created_at
 - retired
+- v_total_vms
+- aggregate_all_vm_cpus
+- aggregate_all_vm_memory
+- aggregate_all_vm_disk_count
+- aggregate_all_vm_disk_space_allocated
+- aggregate_all_vm_disk_space_used
+- aggregate_all_vm_memory_on_disk
+
 
 # Column titles, in order
 headers:
@@ -45,6 +60,13 @@ headers:
 - Description
 - Created On
 - Retired
+- Total VMs
+- Total CPUs
+- Total Memory
+- Total VM Disk Count
+- Total VM Disk Space Allocated
+- Total VM Disk Space Used
+- Total VM Memory on Disk
 
 col_formats:
 -

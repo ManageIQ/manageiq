@@ -11,6 +11,7 @@ class Service < ActiveRecord::Base
   virtual_has_many   :all_service_children
   virtual_has_many   :vms
   virtual_has_many   :all_vms
+  virtual_column     :v_total_vms,            :type => :integer,  :uses => :vms
 
   include ServiceMixin
   include OwnershipMixin
@@ -250,5 +251,9 @@ class Service < ActiveRecord::Base
 
   def raise_event(event_type, message)
     EmsEvent.add(nil, {:service_id => self.id, :event_type => event_type, :timestamp => Time.now, :message => message})
+  end
+
+  def v_total_vms
+    vms.size
   end
 end
