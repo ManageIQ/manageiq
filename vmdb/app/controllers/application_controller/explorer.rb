@@ -1110,17 +1110,17 @@ module ApplicationController::Explorer
     when :images # Images by Provider tree has orphaned and archived nodes
       case object[:id]
         when "orph" # Orphaned
-          objects = rbac_filtered_objects(TemplateCloud.all_orphaned).sort_by{|a,b| a.name.downcase }
+          objects = rbac_filtered_objects(TemplateCloud.all_orphaned).sort_by{|a| a.name.downcase }
         when "arch" # Archived
-          objects = rbac_filtered_objects(TemplateCloud.all_archived).sort_by{|a,b| a.name.downcase }
+          objects = rbac_filtered_objects(TemplateCloud.all_archived).sort_by{|a| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :instances # Instances by Provider tree has orphaned and archived nodes
       case object[:id]
         when "orph" # Orphaned
-          objects = rbac_filtered_objects(VmCloud.all_orphaned).sort_by{|a,b| a.name.downcase }
+          objects = rbac_filtered_objects(VmCloud.all_orphaned).sort_by{|a| a.name.downcase }
         when "arch" # Archived
-          objects = rbac_filtered_objects(VmCloud.all_archived).sort_by{|a,b| a.name.downcase }
+          objects = rbac_filtered_objects(VmCloud.all_archived).sort_by{|a| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :filter  # Filter trees have global and my filter nodes
