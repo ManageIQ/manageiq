@@ -11,18 +11,18 @@
     :title: Configuration
     :text: Configuration
     :items:
-    - :button: schedule_add
+    - :button: miq_report_schedule_add
       :image: new
       :text: "Add a new Schedule"
       :title: "Add a new Schedule"
-    - :button: schedule_edit
+    - :button: miq_report_schedule_edit
       :image: edit
       :text: Edit the selected Schedule
       :title: Edit the selected Schedule
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
-    - :button: schedule_delete
+    - :button: miq_report_schedule_delete
       :image: delete
       :text: Delete the selected Schedules from the VMDB
       :title: Delete the selected Schedules from the VMDB
@@ -30,14 +30,14 @@
       :confirm: "Warning: The selected Schedules and ALL of their components will be permanently removed from the VMDB.  Are you sure you want to delete the selected Schedules?"
       :enabled: 'false'
       :onwhen: '1+'
-    - :button: schedule_enable
+    - :button: miq_report_schedule_enable
       :image: enable
       :text: Enable the selected Schedules
       :title: Enable the selected Schedules
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
-    - :button: schedule_disable
+    - :button: miq_report_schedule_disable
       :image: disable
       :text: Disable the selected Schedules
       :title: Disable the selected Schedules
@@ -45,7 +45,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :separator:
-    - :button: schedule_run_now
+    - :button: miq_report_schedule_run_now
       :image: collect
       :text: Queue up selected Schedules to run now
       :title: Queue up selected Schedules to run now
