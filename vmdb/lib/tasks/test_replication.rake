@@ -1,12 +1,18 @@
-namespace :evm do
-  namespace :test do
-    task :setup_replication do
-      EvmTestSetupReplication.new.execute
-    end
+require_relative "./evm_test_helper"
+
+if defined?(RSpec)
+namespace :test do
+  task :setup_replication => :initialize do
+    EvmTestSetupReplication.new.execute
+  end
+
+  desc "Run all replication specs"
+  RSpec::Core::RakeTask.new(:replication => :initialize) do |t|
+    EvmTestHelper.init_rspec_task(t)
+    t.pattern = EvmTestHelper::REPLICATION_SPECS
   end
 end
-
-require_relative "./evm_test_helper"
+end # ifdef
 
 class EvmTestSetupReplication
   def initialize

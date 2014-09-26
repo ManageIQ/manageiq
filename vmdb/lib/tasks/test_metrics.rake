@@ -1,43 +1,51 @@
+# NOTE: Disabled out of box metric_fu task, :metrics_all
+#   metrics:all task is copied and split into metrics:configuration and
+#   metrics:run tasks below to expose the configuration for manipulation
+#   original here: https://github.com/ManageIQ/metric_fu/blob/master/tasks/metric_fu.rake
 require_relative "./evm_test_helper"
 
-namespace :evm do
-  namespace :test do
-    task :initialize do
-      ENV['RAILS_ENV'] ||= 'test'
-      Rails.env = ENV['RAILS_ENV']
+if defined?(RSpec)
+namespace :test do
+  task :setup_metrics => %w(test:metrics:initialize test:setup_db)
 
-      cc_start_top if ENV['CC_BUILD_ARTIFACTS']
-
-      # Turn off migrate verbosity unless overridden
-      ENV['VERBOSE'] ||= 'false'
-
-      ENV['RESETDB'] ||= 'true'
+  desc "Run metrics using metric_fu"
+  task :metrics => %w(test:metrics:initialize test:metrics:configuration) do
+    begin
+      puts "** #{Time.now} Running 'test:vmdb'"
+      Rake::Task['test:vmdb'].invoke if MetricFu.configuration.metrics.include?(:rcov)
+    ensure
+      puts "** #{Time.now} Running 'test:vmdb'...Complete"
+      Rake::Task['test:metrics:run'].invoke
     end
+  end
 
-    task :setup => 'evm:test:initialize' do
-      unless ENV['RESETDB'].to_s.downcase == 'false'
-        ['evm:db:reset', 'environment'].each do |task|
-          Rake::Task[task].invoke
-        end
+  namespace :metrics do
+    task :initialize => %w(test:initialize environment test:metrics:check_env)
+
+    task :check_env do
+      if Rails.env != 'metric_fu'
+        raise "Invalid environment '#{Rails.env}'.  Run with RAILS_ENV=metric_fu instead."
       end
     end
 
-    desc "Run EVM metrics through metric_fu"
-    task :metrics => :environment do
-      raise "Invalid environment '#{Rails.env}'.  Run with RAILS_ENV=metric_fu instead." unless Rails.env == 'metric_fu'
-      Rake::Task['evm:test:setup'].invoke
+    task :configuration do
+      STDOUT.sync = true
 
-      # Rake::Task['metrics:all'].invoke
-      # NOTE: Disabled out of box metric_fu task
-      #   metrics:all task copied and split into metrics_* tasks below
-      #   to expose metric_fu configuration
-      #   original here: /usr/local/rvm/gems/ree-1.8.7-2010.02/gems/metric_fu-2.0.1/tasks/metric_fu.rake
-      Rake::Task['evm:test:metrics_configuration'].invoke
+      MetricFu::Configuration.run do |config|
+        config.flog[:show_call_list] = false
+
+        config.rcov[:external] = Rails.root.join('tmp/metric_fu/coverage/rcov/rcov.txt').to_s
+
+        config.saikuro[:filter_cyclo] = "10"
+        config.saikuro[:warn_cyclo]   = "10"
+        config.saikuro[:error_cyclo]  = "15"
+        config.syntax_highlighting    = false
+      end
 
       # Uncomment and edit the following to only run specific tests
       # MetricFu.configuration.metrics = [:churn, :flog, :flay, :reek, :roodi, :rcov, :hotspots, :saikuro, :stats, :rails_best_practices]
 
-      #TODO: rails_best_practices blows up an invalid byte sequence in UTF-8 error and doesn't report the file with the issue
+      # TODO: rails_best_practices blows up an invalid byte sequence in UTF-8 error and doesn't report the file with the issue
       # need to instrument it to report the failing files and prevent this error from blowing all the metrics
       #
       # ./gems/rails_best_practices-1.10.1/lib/rails_best_practices/lexicals/remove_tab_check.rb:19:in `check': invalid byte sequence in UTF-8 (ArgumentError)
@@ -66,36 +74,13 @@ namespace :evm do
       MetricFu.configuration.metrics.delete(:reek)  # takes 30+ minutes and isn't that useful
       MetricFu.configuration.metrics.delete(:roodi) # takes 1-2 minutes and duplicates features from other metrics
 
-      begin
-        puts "** #{Time.now} Running 'spec:evm:backend'"
-        Rake::Task['spec:evm:backend'].invoke if MetricFu.configuration.metrics.include?(:rcov)
-      ensure
-        puts "** #{Time.now} Running 'spec:evm:backend'...Complete"
-        Rake::Task['evm:test:metrics_run'].invoke
-      end
-    end
-
-    task :metrics_configuration do
-      STDOUT.sync = true
-
-      MetricFu::Configuration.run do |config|
-        config.flog[:show_call_list] = false
-
-        config.rcov[:external] = Rails.root.join('tmp/metric_fu/coverage/rcov/rcov.txt').to_s
-
-        config.saikuro[:filter_cyclo] = "10"
-        config.saikuro[:warn_cyclo]   = "10"
-        config.saikuro[:error_cyclo]  = "15"
-        config.syntax_highlighting    = false
-      end
-
       # Remove graph data for everything but the 14 most recent builds since
       # metric_fu graphs don't display more data points properly.
       files = Dir[File.join(MetricFu.data_directory, '*.yml')].sort[0..-15]
       FileUtils.rm_f(files, :verbose => true)
     end
 
-    task :metrics_run do
+    task :run do
       puts "** #{Time.now} Running MetricFu..."
 
       # copy of the metrics:all task from metric_fu with logging
@@ -140,21 +125,4 @@ namespace :evm do
     end
   end
 end
-
-
-def cc_start_top
-  return if $cc_top_parent_process_id
-  if ENV['CC_BUILD_ARTIFACTS'] && File.exist?(ENV['CC_BUILD_ARTIFACTS'])
-    dest = File.join(ENV['CC_BUILD_ARTIFACTS'], 'top_output.log')
-    max_run_time = 2.hours
-    top_interval = 30.seconds
-    top_iterations = max_run_time / top_interval
-    # top
-    # -b batch mode
-    # -d delay time between top runs(in seconds)
-    # -n number of iterations
-    $cc_top_parent_process_id = Process.pid
-    system("top -b -d #{top_interval} -n #{top_iterations} > #{dest} &")
-    at_exit { system('killall top') if $cc_top_parent_process_id == Process.pid }
-  end
-end
+end # ifdef
