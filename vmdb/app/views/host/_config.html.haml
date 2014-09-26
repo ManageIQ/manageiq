@@ -1,0 +1,70 @@
+.maincontent
+  = render :partial => "layouts/flash_msg"
+  - case @display
+  - when "devices" 
+    %table.style3
+      %thead
+        %tr
+          %th{:colspan => 2, :align => 'left'} Devices
+      - unless @devices.empty?
+        - @devices.each do |item|
+          %tr.no-hover{:class => cycle('row0', 'row1'), :name => 'rel'}
+            %td.label 
+              = h(item[:device])
+            %td 
+              %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}
+              = h(item[:description])
+  - when "os_info"
+    - if @osinfo
+      %table.style3
+        %thead
+          %tr
+            %th{:colspan => 2, :align => 'left'} OS Information
+        - @osinfo.each do |item|
+          %tr.no-hover{:class => cycle('row0', 'row1'), :name => 'rel'}
+            %td.label 
+              = h(item[:osinfo])
+            %td 
+              = h(item[:description])
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label Hostname
+          %td 
+            = h(@host.hostname)
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label IP Address
+          %td 
+            = h(@host.ipaddress)
+  - when "hv_info"
+    - if @vmminfo
+      %table.style3
+        %thead
+          %tr
+            %th{:colspan => 2, :align => 'left'} OS Information
+        - @vmminfo.each do |item|
+          %tr.no-hover{:class => cycle('row0', 'row1')}
+            %td.label 
+              = h(item[:vmminfo])
+            %td 
+              = h(item[:description])
+  - when "network"
+    %table{:style => "height: 100px;"}
+      %tr
+        %td{:width => "55%", :valign => 'top'}
+          / Create divs for each VM to display as the mouse hovers over each VM node
+          - @tree_vms.each do |v|
+            #outer
+              #inner
+                %div{:id => "v-#{v.id.to_s}", :style => "display: none; z-index: 10; width: 72px; height: 72px; padding: 0 0 0 0;"}
+                  %div{:style => "margin-left: -78px;"}
+                    = render(:partial => "layouts/quadicon", :locals => {:mode => :icon, :item => v, :typ => :listnav, :size => 72})
+                    %div
+                      %center{:style => "colod: #000;"}
+                        = h(v.product_name)
+                        %br
+                        = h(v.service_pack)
+          = render :partial => "network_tree"
+  - when "storage_adapters"
+    %table{:style => "height: 100px;"}
+      %tr
+        %td{:width => "55%", :valign => "top"}
+          = render :partial => "network_tree"         
