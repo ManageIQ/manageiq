@@ -8,7 +8,8 @@ module MiqSqlite3DB
     raise "Empty Buffer" if buf == nil || buf.size == 0
     bytes = Array.new
     while true
-      byte = buf[bytes.size]
+
+      byte = buf[bytes.size].ord
       bytes << byte
       break if !hiBit?(byte) || bytes.size == 9
     end
