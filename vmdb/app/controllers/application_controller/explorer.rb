@@ -460,14 +460,14 @@ module ApplicationController::Explorer
       objects = MiqAeNamespace.all(:conditions => ["parent_id is null AND name<>?" ,"$"]).sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}
       return count_only ? objects.length : objects
     when :action
-      objects = MiqAction.all.sort{|a,b| a.description.downcase <=> b.description.downcase}
+      objects = MiqAction.all.sort_by{|a| a.description.downcase }
       return count_only ? objects.length : objects
     when :alert
-      objects = MiqAlert.all.sort{|a,b| a.description.downcase <=> b.description.downcase}
+      objects = MiqAlert.all.sort_by{|a| a.description.downcase }
       return count_only ? objects.length : objects
     when :alert_profile
       objects = Array.new
-      MiqAlert.base_tables.sort{|a,b| ui_lookup(:model=>a)<=>ui_lookup(:model=>b)}.each do |db|
+      MiqAlert.base_tables.sort_by{|a| ui_lookup(:model=>a) }.each do |db|
         objects.push({:id=>db, :text=>"#{ui_lookup(:model=>db)} Alert Profiles", :image=>db.underscore.downcase, :tip=>"#{ui_lookup(:model=>db)} Alert Profiles"})
         # Set alert profile folder nodes to open so we pre-load all children
         n = "xx-#{db}"
@@ -490,15 +490,15 @@ module ApplicationController::Explorer
       objects = params[:id] ? [Dialog.find_by_id(params[:id])] : [Dialog.new(:label=>"Dialog")]
       return count_only ? objects.length : objects
     when :dialogs
-      objects = rbac_filtered_objects(Dialog.all).sort{|a,b| a.label.downcase <=> b.label.downcase}
+      objects = rbac_filtered_objects(Dialog.all).sort_by{|a| a.label.downcase }
       return count_only ? objects.length : objects
     when :event
-      objects = MiqPolicy.all_policy_events.sort{|a,b| a.description.downcase <=> b.description.downcase}
+      objects = MiqPolicy.all_policy_events.sort_by {|a| a.description.downcase }
       return count_only ? objects.length : objects
     when :old_dialogs
       MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id=>"MiqDialog_#{typ[1]}", :text=>typ[0], :image=>"folder", :tip=>typ[0]}}
     when :policy_profile
-      objects = MiqPolicySet.all.sort{|a,b| a.description.downcase <=> b.description.downcase}
+      objects = MiqPolicySet.all.sort_by{|a| a.description.downcase }
       return count_only ? objects.length : objects
     when :policy
       objects = Array.new
@@ -523,14 +523,14 @@ module ApplicationController::Explorer
       else
         roles = [MiqGroup.find_by_id(user.current_group_id)]
       end
-      return options[:count_only] ? roles.count : roles.sort{|a,b| a.name.downcase <=> b.name.downcase}
+      return options[:count_only] ? roles.count : roles.sort_by{|a| a.name.downcase }
     when :schedules
       if session[:userrole] == "super_administrator"  # Super admins see all report schedules
         objects = MiqSchedule.all(:conditions=>["towhat=?", "MiqReport"])
       else
         objects = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
       end
-      return options[:count_only] ? objects.count : objects.sort{|a,b| a.name.downcase <=> b.name.downcase}
+      return options[:count_only] ? objects.count : objects.sort_by{|a| a.name.downcase }
     when :vandt # :vandt is partially built in a "new" full tree way
       objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
 
@@ -591,10 +591,10 @@ module ApplicationController::Explorer
       end
       return objects
     when :stcat
-      objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort{|a,b| a.name.downcase <=> b.name.downcase}
+      objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by{|a| a.name.downcase }
       return count_only ? objects.length : objects
     when :svccat
-      objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort{|a,b| a.name.downcase <=> b.name.downcase}
+      objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by{|a| a.name.downcase }
       filtered_objects = Array.new
       #only show catalogs nodes that have any servicetemplate records under them
       objects.each do |object|
@@ -611,7 +611,7 @@ module ApplicationController::Explorer
       return objects
     when :bottlenecks, :utilization
       ent = MiqEnterprise.my_enterprise
-      objects = ent.miq_regions.sort{|a,b| a.description.to_s.downcase <=> b.description.to_s.downcase}
+      objects = ent.miq_regions.sort_by{|a| a.description.to_s.downcase }
       return count_only ? objects.length : objects
     when :widgets
       objects = Array.new
@@ -645,7 +645,7 @@ module ApplicationController::Explorer
         objects = rbac_filtered_objects(object.vms_and_templates.order("name"))
       else
         objects = object.ems_folder_root ?
-          rbac_filtered_objects(object.ems_folder_root.children, :match_via_descendants => "VmOrTemplate").sort{|a,b| a.name.downcase <=> b.name.downcase} :
+          rbac_filtered_objects(object.ems_folder_root.children, :match_via_descendants => "VmOrTemplate").sort_by{|a| a.name.downcase } :
           []
       end
       return count_only ? objects.length : objects
@@ -679,11 +679,11 @@ module ApplicationController::Explorer
     case options[:type]
     when :vandt
       # Count clusters directly in this folder
-      objects = rbac_filtered_objects(object.clusters, :match_via_descendants => "VmOrTemplate").sort{|a,b| a.name.downcase <=> b.name.downcase}
+      objects = rbac_filtered_objects(object.clusters, :match_via_descendants => "VmOrTemplate").sort_by{|a| a.name.downcase }
       object.folders.each do |f|
         if f.name == "vm"                 # Count vm folder children
-          objects += rbac_filtered_objects(f.folders, :match_via_descendants => "VmOrTemplate").sort{|a,b| a.name.downcase <=> b.name.downcase}
-          objects += rbac_filtered_objects(f.vms_and_templates).sort{|a,b| a.name.downcase <=> b.name.downcase}
+          objects += rbac_filtered_objects(f.folders, :match_via_descendants => "VmOrTemplate").sort_by{|a| a.name.downcase }
+          objects += rbac_filtered_objects(f.vms_and_templates).sort_by{|a| a.name.downcase }
         elsif f.name == "host"            # Don't count host folder children
         else                              # add in other folders
           objects += rbac_filtered_objects([f], :match_via_descendants => "VmOrTemplate")
@@ -691,13 +691,13 @@ module ApplicationController::Explorer
       end
       return count_only ? objects.length : objects
     when :handc
-      objects = rbac_filtered_objects(object.clusters).sort{|a,b| a.name.downcase <=> b.name.downcase}
+      objects = rbac_filtered_objects(object.clusters).sort_by{|a| a.name.downcase }
       object.folders.each do |f|
         if f.name == "vm"                 # Don't add vm folder children
         elsif f.name == "host"            # Add host folder children
-          objects += rbac_filtered_objects(f.folders).sort{|a,b| a.name.downcase <=> b.name.downcase}
-          objects += rbac_filtered_objects(f.clusters).sort{|a,b| a.name.downcase <=> b.name.downcase}
-          objects += rbac_filtered_objects(f.hosts).sort{|a,b| a.name.downcase <=> b.name.downcase}
+          objects += rbac_filtered_objects(f.folders).sort_by{|a| a.name.downcase }
+          objects += rbac_filtered_objects(f.clusters).sort_by{|a| a.name.downcase }
+          objects += rbac_filtered_objects(f.hosts).sort_by{|a| a.name.downcase }
         else                              # add in other folders
           objects += rbac_filtered_objects([f])
         end
@@ -712,11 +712,11 @@ module ApplicationController::Explorer
     count_only = options[:count_only]
     case options[:type]
     when :vandt, :handc
-      objects =  rbac_filtered_objects(object.folders_only, :match_via_descendants => "VmOrTemplate").sort{|a,b| a.name.downcase <=> b.name.downcase}
-      objects += rbac_filtered_objects(object.datacenters_only, :match_via_descendants => "VmOrTemplate").sort{|a,b| a.name.downcase <=> b.name.downcase}
-      objects += rbac_filtered_objects(object.clusters, :match_via_descendants => "VmOrTemplate").sort{|a,b| a.name.downcase <=> b.name.downcase}
-      objects += rbac_filtered_objects(object.hosts, :match_via_descendants => "VmOrTemplate").sort{|a,b| a.name.downcase <=> b.name.downcase}
-      objects += rbac_filtered_objects(object.vms_and_templates).sort{|a,b| a.name.downcase <=> b.name.downcase}
+      objects =  rbac_filtered_objects(object.folders_only, :match_via_descendants => "VmOrTemplate").sort_by{|a| a.name.downcase }
+      objects += rbac_filtered_objects(object.datacenters_only, :match_via_descendants => "VmOrTemplate").sort_by{|a| a.name.downcase }
+      objects += rbac_filtered_objects(object.clusters, :match_via_descendants => "VmOrTemplate").sort_by{|a| a.name.downcase }
+      objects += rbac_filtered_objects(object.hosts, :match_via_descendants => "VmOrTemplate").sort_by{|a| a.name.downcase }
+      objects += rbac_filtered_objects(object.vms_and_templates).sort_by{|a| a.name.downcase }
       return count_only ? objects.length : objects
     else
       return count_only ? 0 : []
@@ -724,10 +724,10 @@ module ApplicationController::Explorer
   end
 
   def x_get_tree_cluster_kids(object, options)
-    objects =  rbac_filtered_objects(object.hosts).sort{|a,b| a.name.downcase <=> b.name.downcase}
+    objects =  rbac_filtered_objects(object.hosts).sort_by{|a| a.name.downcase }
     if ![:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
-      objects += rbac_filtered_objects(object.resource_pools).sort{|a,b| a.name.downcase <=> b.name.downcase}
-      objects += rbac_filtered_objects(object.vms).sort{|a,b| a.name.downcase <=> b.name.downcase}
+      objects += rbac_filtered_objects(object.resource_pools).sort_by{|a| a.name.downcase }
+      objects += rbac_filtered_objects(object.vms).sort_by{|a| a.name.downcase }
     end
     return options[:count_only] ? objects.length : objects
   end
@@ -736,17 +736,17 @@ module ApplicationController::Explorer
     if [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
       objects = Array.new
     else
-      objects = rbac_filtered_objects(object.resource_pools).sort{|a,b| a.name.downcase <=> b.name.downcase}.delete_if{|o| o.is_default}
+      objects = rbac_filtered_objects(object.resource_pools).sort_by{|a| a.name.downcase }.delete_if{|o| o.is_default}
       if object.default_resource_pool           # Go thru default RP VMs
-        objects += rbac_filtered_objects(object.default_resource_pool.vms).sort{|a,b| a.name.downcase <=> b.name.downcase}
+        objects += rbac_filtered_objects(object.default_resource_pool.vms).sort_by{|a| a.name.downcase }
       end
     end
     return options[:count_only] ? objects.length : objects
   end
 
   def x_get_tree_rp_kids(object, options)
-    objects =  rbac_filtered_objects(object.resource_pools).sort{|a,b| a.name.downcase <=> b.name.downcase}
-    objects += rbac_filtered_objects(object.vmss).sort{|a,b| a.name.downcase <=> b.name.downcase}
+    objects =  rbac_filtered_objects(object.resource_pools).sort_by{|a| a.name.downcase }
+    objects += rbac_filtered_objects(object.vmss).sort_by{|a| a.name.downcase }
     return options[:count_only] ? objects.length : objects
   end
 
@@ -754,7 +754,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return (object.ldap_domains.count)
     else
-      return (object.ldap_domains.sort{|a,b| a.name.to_s <=> b.name.to_s})
+      return (object.ldap_domains.sort_by{|a| a.name.to_s })
     end
   end
 
@@ -762,7 +762,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return (object.miq_servers.count)
     else
-      return (object.miq_servers.sort{|a,b| a.name.to_s <=> b.name.to_s})
+      return (object.miq_servers.sort_by{|a| a.name.to_s })
     end
   end
 
@@ -801,7 +801,7 @@ module ApplicationController::Explorer
     else
       objects = copy_array(widgetsets)
     end
-    return options[:count_only] ? widgetsets.count : widgetsets.sort{|a,b| a.name.to_s <=> b.name.to_s}
+    return options[:count_only] ? widgetsets.count : widgetsets.sort_by{|a| a.name.to_s }
   end
 
   def x_get_tree_r_kids(object, options)
@@ -814,7 +814,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return objects.count
     else
-      return (objects.sort{|a,b| a.name.downcase <=> b.name.downcase})
+      return (objects.sort_by{|a| a.name.downcase })
     end
   end
 
@@ -850,7 +850,7 @@ module ApplicationController::Explorer
         CustomButton.buttons_for(object.name.split('|').last.split('-').last).each do |uri|
           objects.push(uri) if uri.parent.nil?
         end
-        return objects.sort{|a,b| a.name <=> b.name}
+        return objects.sort_by{|a| a.name }
       else
         #need to show button nodes in button order that they were saved in
         button_order = object[:set_data] && object[:set_data][:button_order] ? object[:set_data][:button_order] : nil
@@ -873,7 +873,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return object.miq_alerts.count
     else
-      return object.miq_alerts.sort{|a,b| a.description.downcase <=> b.description.downcase}
+      return object.miq_alerts.sort_by{|a| a.description.downcase }
     end
   end
 
@@ -881,7 +881,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return object.miq_policies.count
     else
-      return object.miq_policies.sort{|a,b| a.towhat + a.mode + a.description.downcase <=> b.towhat + b.mode + b.description.downcase}
+      return object.miq_policies.sort_by{|a| a.towhat + a.mode + a.description.downcase }
     end
   end
 
@@ -889,8 +889,8 @@ module ApplicationController::Explorer
     if options[:count_only]
       return object.conditions.count + object.miq_events.count
     else
-      return object.conditions.sort{|a,b| a.description.downcase <=> b.description.downcase} +
-              object.miq_events.sort{|a,b| a.description.downcase <=> b.description.downcase}
+      return object.conditions.sort_by{|a| a.description.downcase } +
+              object.miq_events.sort_by{|a| a.description.downcase }
     end
   end
 
@@ -991,7 +991,7 @@ module ApplicationController::Explorer
     else
       typ = object.resource_type
       rec = ServiceTemplate.find_by_id(object.resource_id) if typ == "ServiceTemplate"
-      return (rec.service_resources.sort{|a,b| a.resource_name.downcase <=> b.resource_name.downcase})
+      return (rec.service_resources.sort_by{|a| a.resource_name.downcase })
     end
   end
 
@@ -1017,14 +1017,14 @@ module ApplicationController::Explorer
     when :db
       if object[:id].split('-').first == "g"
         objects = MiqGroup.all
-        return options[:count_only] ? objects.count : objects.sort{|a,b| a.name <=> b.name}
+        return options[:count_only] ? objects.count : objects.sort_by{|a| a.name }
       else
         options[:count_only] ? 0 : []
       end
     when :condition
       nodes = object[:id].split('-')
       if ["host","vm"].include?(nodes.first) && nodes.length == 1
-        objects = Condition.find_all_by_towhat(nodes.first.titleize).sort{|a,b| a.description.downcase <=> b.description.downcase}
+        objects = Condition.find_all_by_towhat(nodes.first.titleize).sort_by{|a| a.description.downcase }
       end
       if options[:count_only]
         return objects.count
@@ -1052,7 +1052,7 @@ module ApplicationController::Explorer
         return objects
       end
     when :old_dialogs # VMs & Templates tree has orphaned and archived nodes
-      objects = MiqDialog.find_all_by_dialog_type(object[:id].split('_').last).sort{|a,b| a.description.downcase <=> b.description.downcase}
+      objects = MiqDialog.find_all_by_dialog_type(object[:id].split('_').last).sort_by{|a| a.description.downcase }
       return count_only ? objects.length : objects
     when :reports
       objects = Array.new
@@ -1096,7 +1096,7 @@ module ApplicationController::Explorer
       view.table.data.each do |s|
         objects.push(MiqReportResult.find_by_id(s["id"]))
       end
-      return options[:count_only] ? objects.count : objects.sort{|a,b| a.name <=> b.name}
+      return options[:count_only] ? objects.count : objects.sort_by{|a| a.name }
     when :vandt # VMs & Templates tree has orphaned and archived nodes
       case object[:id]
       when "orph" # Orphaned
@@ -1110,25 +1110,25 @@ module ApplicationController::Explorer
     when :images # Images by Provider tree has orphaned and archived nodes
       case object[:id]
         when "orph" # Orphaned
-          objects = rbac_filtered_objects(TemplateCloud.all_orphaned).sort{|a,b| a.name.downcase <=> b.name.downcase}
+          objects = rbac_filtered_objects(TemplateCloud.all_orphaned).sort_by{|a,b| a.name.downcase }
         when "arch" # Archived
-          objects = rbac_filtered_objects(TemplateCloud.all_archived).sort{|a,b| a.name.downcase <=> b.name.downcase}
+          objects = rbac_filtered_objects(TemplateCloud.all_archived).sort_by{|a,b| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :instances # Instances by Provider tree has orphaned and archived nodes
       case object[:id]
         when "orph" # Orphaned
-          objects = rbac_filtered_objects(VmCloud.all_orphaned).sort{|a,b| a.name.downcase <=> b.name.downcase}
+          objects = rbac_filtered_objects(VmCloud.all_orphaned).sort_by{|a,b| a.name.downcase }
         when "arch" # Archived
-          objects = rbac_filtered_objects(VmCloud.all_archived).sort{|a,b| a.name.downcase <=> b.name.downcase}
+          objects = rbac_filtered_objects(VmCloud.all_archived).sort_by{|a,b| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :filter  # Filter trees have global and my filter nodes
       case object[:id]
       when "global" # Global filters
-        objects = MiqSearch.all(:conditions=>["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global", "default", "_hidden_", options[:leaf]]).sort{|a,b| a.description.downcase <=> b.description.downcase}
+        objects = MiqSearch.all(:conditions=>["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global", "default", "_hidden_", options[:leaf]]).sort_by{|a| a.description.downcase }
       when "my"     # My filters
-        objects = MiqSearch.all(:conditions=>["search_type=? and search_key=? and db=?", "user", session[:userid], options[:leaf]]).sort{|a,b| a.description.downcase <=> b.description.downcase}
+        objects = MiqSearch.all(:conditions=>["search_type=? and search_key=? and db=?", "user", session[:userid], options[:leaf]]).sort_by{|a| a.description.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :bottlenecks, :utilization
@@ -1148,17 +1148,17 @@ module ApplicationController::Explorer
         if options[:count_only]
           return ems_clusters.count + non_clustered_hosts.count
         else
-          return ems_clusters.sort{|a,b| a.name.downcase <=> b.name.downcase} + non_clustered_hosts.sort{|a,b| a.name.downcase <=> b.name.downcase}
+          return ems_clusters.sort_by{|a| a.name.downcase } + non_clustered_hosts.sort_by{|a| a.name.downcase }
         end
       end
       if options[:count_only]
         return emses.count + storages.count
       else
-        return emses.sort{|a,b| a.name.downcase <=> b.name.downcase} + storages.sort{|a,b| a.name.downcase <=> b.name.downcase}
+        return emses.sort_by{|a| a.name.downcase } + storages.sort_by{|a| a.name.downcase }
       end
     when :widgets
       objects = MiqWidget.find_all_by_content_type(WIDGET_CONTENT_TYPE[object[:id].split('-').last])
-      return options[:count_only] ? objects.count : objects.sort{|a,b| a.title <=> b.title}
+      return options[:count_only] ? objects.count : objects.sort_by{|a| a.title }
     else
       return options[:count_only] ? 0 : []
     end
