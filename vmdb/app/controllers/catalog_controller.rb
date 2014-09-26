@@ -1398,7 +1398,13 @@ class CatalogController < ApplicationController
         presenter[:expand_collapse_cells][:c] = 'expand'  # incase it was collapsed for summary screen, and incase there were no records on show_list
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
-        presenter[:build_calendar] = true
+        @record.dialog_fields.each do |field|
+          if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field.type)
+            presenter[:build_calendar]  = {
+              :date_from => field.show_past_dates ? nil : Time.now.in_time_zone(session[:user_tz]).to_i * 1000
+            }
+          end
+        end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url =>"dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
