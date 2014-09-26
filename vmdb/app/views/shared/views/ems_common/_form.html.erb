@@ -60,7 +60,7 @@
             %>
           <% else %>
             <%= select_tag("server_zone",
-                           options_for_select(@edit[:server_zones].sort,
+                           options_for_select(@edit[:server_zones],
                                              @edit[:new][:zone]),
                            "data-miq_observe" => {:url => url}.to_json) 
             %>
