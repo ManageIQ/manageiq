@@ -12,6 +12,8 @@ class MiqUserRole < ActiveRecord::Base
 
   default_value_for :read_only, false
 
+  before_destroy { |r| raise "Read only roles cannot be deleted." if r.read_only }
+
   include ReportableMixin
 
   FIXTURE_DIR  = File.join(Rails.root, "db/fixtures")
