@@ -2200,7 +2200,7 @@ module ApplicationHelper
       end
     elsif x_active_tree == :schedules_tree
       return x_node == "root" ?
-          "miq_schedules_center_tb" : "miq_schedule_center_tb"
+          "miq_report_schedules_center_tb" : "miq_report_schedule_center_tb"
     elsif x_active_tree == :widgets_tree
       node = x_node
       return node == "root" || node.split('-').length == 2 ?

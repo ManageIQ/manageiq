@@ -11,18 +11,18 @@
     :title: Configuration
     :text: Configuration
     :items:
-    - :button: schedule_edit
+    - :button: miq_report_schedule_edit
       :image: edit
       :text: "Edit this Schedule"
       :title: "Edit this Schedule"
-    - :button: schedule_delete
+    - :button: miq_report_schedule_delete
       :image: delete
       :text: "Delete this Schedule from the Database"
       :title: "Delete this Schedule from the Database"
       :url_parms: '&refresh=y'
       :confirm: "Warning: This Schedule and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Schedule?"
     - :separator:
-    - :button: schedule_run_now
+    - :button: miq_report_schedule_run_now
       :image: collect
       :text: Queue up this Schedule to run now
       :title: Queue up this Schedule to run now
