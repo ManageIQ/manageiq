@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'test/unit'
 require_relative '../MiqSqlite3'
 

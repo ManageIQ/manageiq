@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'ostruct'
 require 'enumerator'
 
