@@ -1,3 +1,5 @@
+# these are only useful in development
+if defined?(RSpec)
 namespace :spec do
   namespace :evm do
     def initialize_task(t, rspec_opts = [])
@@ -47,3 +49,4 @@ namespace :spec do
     end
   end
 end
+end # ifdef
