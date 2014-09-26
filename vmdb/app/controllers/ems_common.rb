@@ -450,7 +450,7 @@ module EmsCommon
 
   def set_verify_status
     if @edit[:new][:emstype] == "ec2"
-      if @edit[:new][:default_userid].blank? || @edit[:new][:hostname].blank?
+      if @edit[:new][:default_userid].blank? || @edit[:new][:provider_region].blank?
         @edit[:default_verify_status] = false
       else
         @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
