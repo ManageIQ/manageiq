@@ -45,7 +45,7 @@ describe OpsController do
       context "#build_smartproxy_affinity_tree" do
         it "should build a SmartProxy Affinity tree" do
           tree = controller.send(:build_smartproxy_affinity_tree, @zone)
-          tree.should be == [
+          expect(tree).to match_array([
             {
               :key      => @svr1.id.to_s,
               :icon     => "evm_server.png",
@@ -138,7 +138,7 @@ describe OpsController do
                 }
               ]
             }
-          ]
+          ])
         end
       end
 
