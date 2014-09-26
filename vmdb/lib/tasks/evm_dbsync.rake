@@ -66,6 +66,40 @@ namespace :evm do
       puts "Replicating Region (#{MiqRegion.my_region_number}) to remote database...Complete (#{Time.now - t}s)"
     end
 
+    desc "Run Rubyrep Replication until the backlog is empty"
+    task :replicate_backlog => :environment do
+      puts "Replicating Region (#{MiqRegion.my_region_number}) to remote database..."
+
+      unless (total = RrPendingChange.count) == 0
+        require 'progressbar'
+        require 'rubyrep'
+        pbar = ProgressBar.new("Backlog", total)
+
+        begin
+          pid     = Process.spawn("bin/rake evm:dbsync:replicate", :chdir => Rails.root)
+          waiting = Thread.new { Process.wait2(pid) }
+
+          # Wait for the Backlog to empty before continuing
+          until (count = RrPendingChange.count) == 0
+            pbar.set(total - count)
+            break unless waiting.status
+            sleep 1
+          end
+
+          puts "Stopping Replication worker..."
+        ensure
+          begin
+            Process.kill("INT", pid)
+            sleep(0.1) while waiting.status
+          rescue Errno::ESRCH
+          end
+          pbar.finish
+        end
+      end
+
+      puts "Current Replication Backlog: #{RrPendingChange.count}"
+    end
+
     desc "Reset Rubyrep installation"
     task :reset do
       $final_rake_task ||= :prepare_replication
