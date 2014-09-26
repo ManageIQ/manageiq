@@ -2,8 +2,10 @@ require_relative "./evm_test_helper"
 
 if defined?(RSpec)
 namespace :test do
-  task :setup_replication => :initialize do
-    EvmTestSetupReplication.new.execute
+  namespace :replication do
+    task :setup => :initialize do
+      EvmTestSetupReplication.new.execute
+    end
   end
 
   desc "Run all replication specs"

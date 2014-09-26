@@ -2,8 +2,6 @@ require_relative "./evm_test_helper"
 
 if defined?(RSpec)
 namespace :test do
-  task :setup_migrations => :setup_db
-
   desc "Run all migration specs"
   task :migrations => %w(
     test:initialize
@@ -14,6 +12,8 @@ namespace :test do
   )
 
   namespace :migrations do
+    task :setup => :setup_db
+
     desc "Run the up migration specs only"
     RSpec::Core::RakeTask.new(:up => :initialize) do |t|
       EvmTestHelper.init_rspec_task(t, ["--tag", "migrations:up"])

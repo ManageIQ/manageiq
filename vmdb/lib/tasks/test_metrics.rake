@@ -6,10 +6,8 @@ require_relative "./evm_test_helper"
 
 if defined?(RSpec)
 namespace :test do
-  task :setup_metrics => %w(test:metrics:initialize test:setup_db)
-
   desc "Run metrics using metric_fu"
-  task :metrics => %w(test:metrics:initialize test:metrics:configuration) do
+  task :metrics => %w(test:initialize test:metrics:check_env test:metrics:configuration) do
     begin
       puts "** #{Time.now} Running 'test:vmdb'"
       Rake::Task['test:vmdb'].invoke if MetricFu.configuration.metrics.include?(:rcov)
@@ -20,9 +18,9 @@ namespace :test do
   end
 
   namespace :metrics do
-    task :initialize => %w(test:initialize environment test:metrics:check_env)
+    task :setup => %w(test:initialize test:metrics:check_env test:setup_db)
 
-    task :check_env do
+    task :check_env => :environment do
       if Rails.env != 'metric_fu'
         raise "Invalid environment '#{Rails.env}'.  Run with RAILS_ENV=metric_fu instead."
       end
