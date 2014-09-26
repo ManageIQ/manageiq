@@ -111,19 +111,6 @@ module ApplicationController::DialogRunner
                   elsif field.type.include?("TagControl") && field.single_value? && field.required
                     category_tags = DialogFieldTagControl.category_tags(field.category).map {|cat| [cat[:description], cat[:id]]}
                     page.replace("#{field.name}", :text => "#{select_tag(field.name, options_for_select(category_tags, p[1]), 'data-miq_sparkle_on' => true, 'data-miq_sparkle_off'=> true, 'data-miq_observe'=>{:url=>url}.to_json)}")
-
-                  else
-                    if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field.type)
-
-                      if field.show_past_dates
-                        page << "miq_cal_dateFrom = undefined ;"
-                      else
-                        date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
-                        page << "miq_cal_dateFrom = new Date('#{date_tz}');"
-                      end
-
-                      page << "miqBuildCalendar();"
-                    end
                   end
                 end
               end
