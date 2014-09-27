@@ -1,6 +1,3 @@
-require 'rake'
-require 'rake/testtask'
-
 namespace :build do
   desc "Upload the build files to an imagefactory instance"
   task :upload do
