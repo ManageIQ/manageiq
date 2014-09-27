@@ -1,6 +1,10 @@
-namespace :brakeman do
+namespace :test do
+  namespace :brakeman do
+    task :setup # NOOP - Stub for consistent CI testing
+  end
+
   desc "Run Brakeman"
-  task :run do |t, args|
+  task :brakeman do
     require "brakeman"
 
     if ENV["CC_BUILD_ARTIFACTS"] && File.exist?(ENV["CC_BUILD_ARTIFACTS"])
@@ -12,9 +16,9 @@ namespace :brakeman do
     html_report = output_directory.join("brakeman.html").to_s
     output_files = [html_report]
 
-    #Run Brakeman scan. Returns Tracker object.
+    # Run Brakeman scan. Returns Tracker object.
     #
-    #Options:
+    #  Options:
     #  * :app_path - path to root of Rails app (required)
     #  * :assume_all_routes - assume all methods are routes (default: true)
     #  * :check_arguments - check arguments of methods (default: true)
@@ -55,7 +59,7 @@ namespace :brakeman do
 
     tracker = Brakeman.run(options)
 
-    # Exit 1 on any warnings so cruisecontrol.rb can report the project as red.
+    # Exit 1 on any warnings so CI can report the project as red.
     exit tracker.checks.all_warnings.empty? ? 0 : 1
   end
 end
