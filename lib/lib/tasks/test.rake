@@ -10,7 +10,9 @@ namespace :test do
     t.test_files = ['test/ts_mdfs.rb']
   end
 
-  task :setup_lib # NOOP - Stub for consistent CI testing
+  namespace :lib do
+    task :setup # NOOP - Stub for consistent CI testing
+  end
 
   desc "Run all lib specs and tests except MiqDisk tests"
   task :lib => [:spec, :test]
