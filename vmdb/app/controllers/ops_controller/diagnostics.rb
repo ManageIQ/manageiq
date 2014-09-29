@@ -293,9 +293,6 @@ module OpsController::Diagnostics
     @edit[:selected_backup_schedule] = params[:backup_schedule] if params[:backup_schedule]
     schedule = MiqSchedule.find_by_id(@edit[:selected_backup_schedule]) if @edit[:selected_backup_schedule] && @edit[:selected_backup_schedule] != ""
     settings = schedule ? schedule.depot_hash : nil
-    @prev_uri_prefix = @edit[:new][:uri_prefix]
-    @edit[:protocol] = params[:log_protocol] if params[:log_protocol]
-    @edit[:new][:uri_prefix] = @edit[:protocols_hash].invert[params[:log_protocol]] if params[:log_protocol]
     if settings && !settings.blank? && @prev_backup_schedule != @edit[:selected_backup_schedule]
       log_depot_get_form_vars_from_settings(settings)
       @edit[:protocol] = @edit[:new][:uri_prefix]
@@ -578,7 +575,7 @@ module OpsController::Diagnostics
   end
 
   def log_depot_get_form_vars
-    unless @schedule
+    unless @schedule || (@sb["active_tree"] == :diagnostics_tree && @sb["active_tab"] == "diagnostics_database")
       @record = @sb[:selected_typ].classify.constantize.find_by_id(@sb[:selected_server_id])
     end
     @prev_uri_prefix = @edit[:new][:uri_prefix]
