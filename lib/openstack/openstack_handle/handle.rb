@@ -167,6 +167,23 @@ module OpenstackHandle
     def detect_service(service, tenant_name = nil)
       svc = connect(:service => service, :tenant_name => tenant_name)
       @service_names[service] = SERVICE_NAME_MAP[service]
+
+      #
+      # For non-admin users, if the Swift ACLs aren't set to permit
+      # read access for the user, we'll be able to connect to the
+      # service but it will fail on first access.
+      #
+      # We check for that situation here, and treat it as though the
+      # service isn't available when encountered.
+      #
+      if service == "Storage"
+        begin
+          svc.directories.length
+        rescue Excon::Errors::Forbidden
+          @service_names[service] = :none
+          return nil
+        end
+      end
       svc
     rescue MiqException::ServiceNotAvailable
       unless (fbs = SERVICE_FALL_BACK[service])
@@ -185,7 +202,7 @@ module OpenstackHandle
     end
 
     def tenants
-      @tenants ||= identity_service.tenants
+      @tenants ||= identity_service.visible_tenants
     end
 
     def tenant_names
@@ -222,21 +239,29 @@ module OpenstackHandle
       end
     end
 
-    def accessor_for_accessible_tenants(service, accessor, uniq_id)
+    def accessor_for_accessible_tenants(service, accessor, uniq_id, array_accessor = true)
       ra = []
       service_for_each_accessible_tenant(service) do |svc|
         not_found_error = Fog.const_get(service)::OpenStack::NotFound
-        data_array = begin
-          svc.send(accessor).to_a
+
+        rv = begin
+          svc.send(accessor)
         rescue not_found_error => e
           $fog_log.warn("MIQ(#{self.class.name}.#{__method__}) HTTP 404 Error during OpenStack request. " \
                         "Skipping inventory item #{service} #{accessor}\n#{e}")
-          []
+          nil
         end
-        ra.concat(data_array)
+
+        if rv
+          if array_accessor
+            ra.concat(rv.to_a)
+          else
+            ra << rv
+          end
+        end
       end
       return ra unless uniq_id
-      ra.uniq { |i| i.send(uniq_id) }
+      ra.uniq { |i| i.kind_of?(Hash) ? i[uniq_id] : i.send(uniq_id) }
     end
   end
 end

@@ -49,25 +49,25 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     AvailabilityZone.count.should    == 2 # nova AZ and null_az
     FloatingIp.count.should          == 10
     AuthPrivateKey.count.should      == 1
-    SecurityGroup.count.should       == 7
-    FirewallRule.count.should        == 12
+    SecurityGroup.count.should       == 9
+    FirewallRule.count.should        == 14
     CloudNetwork.count.should        == 0
     CloudSubnet.count.should         == 0
-    VmOrTemplate.count.should        == 18
-    Vm.count.should                  == 10
+    VmOrTemplate.count.should        == 17
+    Vm.count.should                  == 9
     MiqTemplate.count.should         == 8
 
     CustomAttribute.count.should     == 0
-    Disk.count.should                == 18
+    Disk.count.should                == 17
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 10
-    Network.count.should             == 11
+    Hardware.count.should            == 9
+    Network.count.should             == 10
     OperatingSystem.count.should     == 0
     Snapshot.count.should            == 0
     SystemService.count.should       == 0
 
-    Relationship.count.should        == 15
-    MiqQueue.count.should            == 20
+    Relationship.count.should        == 13
+    MiqQueue.count.should            == 19
   end
 
   def assert_ems
@@ -80,9 +80,9 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.availability_zones.size.should == 2 #null AZ and nova az
     @ems.floating_ips.size.should       == 10
     @ems.key_pairs.size.should          == 1
-    @ems.security_groups.size.should    == 7
-    @ems.vms_and_templates.size.should  == 18
-    @ems.vms.size.should                == 10
+    @ems.security_groups.size.should    == 9
+    @ems.vms_and_templates.size.should  == 17
+    @ems.vms.size.should                == 9
     @ems.miq_templates.size.should      == 8
   end
 

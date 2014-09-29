@@ -21,10 +21,12 @@ ACCESSORS = [
   ['Compute', 'flavors',                                nil],
   ['Compute', 'tenants',                                nil],
   ['Compute', 'key_pairs',                              nil],
+  ['Compute', 'quotas_for_accessible_tenants',          nil],
   ['Network', 'security_groups',                        nil],
   ['Network', 'security_groups_for_accessible_tenants', nil],
   ['Network', 'networks',                               :neutron],
   ['Network', 'floating_ips',                           :neutron],
+  ['Network', 'quotas_for_accessible_tenants',          :neutron],
   ['Compute', 'addresses',                              nil],
   ['Compute', 'addresses_for_accessible_tenants',       nil],
   ['Image',   'images',                                 nil],
@@ -33,6 +35,7 @@ ACCESSORS = [
   ['Volume',  'volumes_for_accessible_tenants',         nil],
   ['Volume',  'list_snapshots',                         nil],
   ['Volume',  'snapshots_for_accessible_tenants',       nil],
+  ['Volume',  'quotas_for_accessible_tenants',          nil],
   ['Storage', 'directories',                            nil],
   ['Storage', 'directories_for_accessible_tenants',     nil]
 ]

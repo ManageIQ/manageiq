@@ -20,6 +20,7 @@ module EmsRefresh::Parsers
       @known_flavors = Set.new
 
       @os_handle            = ems.openstack_handle
+      @compute_service      = @connection # for consistency
       @network_service      = @os_handle.detect_network_service
       @network_service_name = @os_handle.network_service_name
       @image_service        = @os_handle.detect_image_service
@@ -61,18 +62,6 @@ module EmsRefresh::Parsers
 
     private
 
-    def detect_volume_service
-      [@ems.connect_volume, :cinder]
-    rescue MiqException::ServiceNotAvailable
-      [@connection, :nova]
-    end
-
-    def detect_storage_service
-      [@ems.connect_storage, :swift]
-    rescue MiqException::ServiceNotAvailable
-      [nil, :none]
-    end
-
     def servers
       @servers ||= @connection.servers_for_accessible_tenants
     end
@@ -113,42 +102,11 @@ module EmsRefresh::Parsers
     end
 
     def get_quotas
-      # each call to "get_quota" returns a hash of the form:
-      #   {"id" => "ems_ref", "quota_key_1" => "value", "quota_key_2" => "value"}
-      # we want hashes that look more like:
-      #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_1", :value => "value"},
-      #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_2", :value => "value"}
-      quotas = @tenants.each_with_object([]) do |tenant, arr|
-        arr.concat(get_quotas_by_tenant_and_service(tenant, "compute", @connection))
-        arr.concat(get_quotas_by_tenant_and_service(tenant, "volume", @volume_service)) if @volume_service_name == :cinder
-        arr.concat(get_quotas_by_tenant_and_service(tenant, "network", @network_service, "quota")) if @network_service_name == :neutron
-      end
-      process_collection(quotas, :cloud_resource_quotas) { |quota| parse_quota(quota) }
-    end
+      quotas = @compute_service.quotas_for_accessible_tenants
+      quotas.concat(@volume_service.quotas_for_accessible_tenants)  if @volume_service_name == :cinder
+      quotas.concat(@network_service.quotas_for_accessible_tenants) if @network_service_name == :neutron
 
-    def get_quotas_by_tenant_and_service(tenant, service_name, service_connection, element_name = "quota_set")
-      service_quotas = service_connection.get_quota(tenant.id).body[element_name]
-      ems_ref = service_quotas["id"]
-      # the array of hashes returned from this block is the same as what would
-      # be produced by parse_quota ... so, parse_quota just returns the same
-      # hash with a compound key
-      service_quotas.except("id").collect do |key, value|
-        begin
-          value = value.to_i
-        rescue
-          #TODO: determine a decent "error" value here
-          # -1 is a valid value from the service and means "unlimited"
-          value = 0
-        end
-        {
-          :cloud_tenant => @data_index.fetch_path(:cloud_tenants, tenant.id),
-          :service_name => service_name,
-          :ems_ref      => ems_ref,
-          :name         => key,
-          :value        => value,
-          :type         => "CloudResourceQuotaOpenstack",
-        }
-      end
+      process_collection(flatten_quotas(quotas), :cloud_resource_quotas) { |quota| parse_quota(quota) }
     end
 
     def get_key_pairs
@@ -322,8 +280,41 @@ module EmsRefresh::Parsers
       return uid, new_result
     end
 
+    def flatten_quotas(quotas)
+      quotas.collect { |q| flatten_quota(q) }.flatten
+    end
+
+    # Each call to "get_quota" returns a hash of the form:
+    #   {"id" => "ems_ref", "quota_key_1" => "value", "quota_key_2" => "value"}
+    # we want hashes that look more like:
+    #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_1", :value => "value"},
+    #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_2", :value => "value"}
+    # So, one input quota record will be parsed into an array of output quota records.
+    def flatten_quota(quota)
+      # The array of hashes returned from this block is the same as what would
+      # be produced by parse_quota ... so, parse_quota just returns the same
+      # hash with a compound key.
+      quota.except("id", "tenant_id", "service_name").collect do |key, value|
+        begin
+          value = value.to_i
+        rescue
+          # TODO: determine a decent "error" value here
+          #  -1 is a valid value from the service and means "unlimited"
+          value = 0
+        end
+        {
+          :cloud_tenant => @data_index.fetch_path(:cloud_tenants, quota["tenant_id"]),
+          :service_name => quota["service_name"],
+          :ems_ref      => quota["id"],
+          :name         => key,
+          :value        => value,
+          :type         => "CloudResourceQuotaOpenstack",
+        }
+      end
+    end
+
     def parse_quota(quota)
-      uid = [quota["emf_ref"], quota["name"]]
+      uid = [quota["ems_ref"], quota["name"]]
       return uid, quota
     end
 
@@ -401,10 +392,8 @@ module EmsRefresh::Parsers
     end
 
     def parse_volume(volume)
-      if (attachment = volume.attachments.first)
-        server_id = attachment["server_id"]
-        vm = @data_index.fetch_path(:vms, server_id)
-      end
+      log_header = "MIQ(#{self.class.name}.#{__method__})"
+
       uid = volume.id
       new_result = {
         :ems_ref           => uid,
@@ -422,8 +411,13 @@ module EmsRefresh::Parsers
 
       volume.attachments.each do |a|
         dev = File.basename(a['device'])
-        vm = @data_index.fetch_path(:vms, a['server_id'])
-        disks = vm[:hardware][:disks]
+        disks = @data_index.fetch_path(:vms, a['server_id'], :hardware, :disks)
+
+        unless disks
+          $fog_log.warn "#{log_header}: Volume: #{uid}, attached to instance not visible in the scope of this EMS"
+          $fog_log.warn "#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}"
+          next
+        end
 
         if (disk = disks.detect { |d| d[:location] == dev })
           disk[:size] = new_result[:size]
