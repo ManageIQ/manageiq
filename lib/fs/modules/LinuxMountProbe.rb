@@ -4,7 +4,7 @@ require 'MiqFS'
 
 module LinuxMountProbe
     
-	LINUX_FS_TYPES   = [ "Ext3", "ext3", "Ext4", "ext4", "ReiserFS" ]
+  LINUX_FS_TYPES   = %w( Ext3 ext3 Ext4 ext4 ReiserFS XFS )
 	LINUX_ROOT_DIRS  = [ "bin", "dev", "etc", "lib", "proc", "sbin", "usr" ]
 	LINUX_ROOT_FILES = [ "/etc/fstab" ]
     
