@@ -142,7 +142,7 @@ module VmShowMixin
     session[:vm_filters]      = @filters
     session[:vm_catinfo]      = @catinfo
     session[:vm_cats]         = @cats
-    session[:vm_display]      = @display unless display.nil?
+    session[:vm_display]      = @display unless @display.nil?
     session[:polArr]          = @polArr unless @polArr.nil?
     session[:policy_options]  = @policy_options unless @policy_options.nil?
   end
