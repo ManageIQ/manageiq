@@ -101,7 +101,7 @@ module EmsRefresh::Parsers
       quotas.concat(@volume_service.quotas_for_accessible_tenants)  if @volume_service_name == :cinder
       quotas.concat(@network_service.quotas_for_accessible_tenants) if @network_service_name == :neutron
 
-      process_collection(parse_quotas_lvl1(quotas), :cloud_resource_quotas) { |quota| parse_quota(quota) }
+      process_collection(flatten_quotas(quotas), :cloud_resource_quotas) { |quota| parse_quota(quota) }
     end
 
     def get_key_pairs
@@ -275,8 +275,8 @@ module EmsRefresh::Parsers
       return uid, new_result
     end
 
-    def parse_quotas_lvl1(quotas)
-      quotas.collect { |q| parse_quota_lvl1(q) }.flatten
+    def flatten_quotas(quotas)
+      quotas.collect { |q| flatten_quota(q) }.flatten
     end
 
     # Each call to "get_quota" returns a hash of the form:
@@ -285,7 +285,7 @@ module EmsRefresh::Parsers
     #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_1", :value => "value"},
     #   {:cloud_tenant => 123, :service_name => "compute", :name => "quota_key_2", :value => "value"}
     # So, one input quota record will be parsed into an array of output quota records.
-    def parse_quota_lvl1(quota)
+    def flatten_quota(quota)
       # The array of hashes returned from this block is the same as what would
       # be produced by parse_quota ... so, parse_quota just returns the same
       # hash with a compound key.
