@@ -321,6 +321,7 @@ class MiqExpression
   FORMAT_SUB_TYPES[:mhz_avg] = FORMAT_SUB_TYPES[:mhz]
   FORMAT_SUB_TYPES[:text] = FORMAT_SUB_TYPES[:string]
   FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].inject({}) {|h, (v,k)| h[k] = v; h}
+  BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
 
   def initialize(exp, ctype = nil)
     @exp = exp
