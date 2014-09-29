@@ -62,12 +62,12 @@ class EvmTestSetupReplication
 
   def backup_system_files
     FileUtils.cp(@db_yaml_file, @db_yaml_file_orig)
-    FileUtils.cp(@region_file,  @region_file_orig) if File.exists?(@region_file)
+    FileUtils.cp(@region_file,  @region_file_orig) if File.exist?(@region_file)
   end
 
   def restore_system_files
     FileUtils.mv(@db_yaml_file_orig, @db_yaml_file)
-    if File.exists?(@region_file_orig)
+    if File.exist?(@region_file_orig)
       FileUtils.mv(@region_file_orig, @region_file)
     else
       FileUtils.rm(@region_file)

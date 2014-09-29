@@ -88,14 +88,18 @@ namespace :test do
       end
 
       puts "** #{Time.now} Running MetricFu.report.save_output to #{MetricFu.base_directory}"
-      MetricFu.report.save_output(MetricFu.report.to_yaml,
+      MetricFu.report.save_output(
+        MetricFu.report.to_yaml,
         MetricFu.base_directory,
-        "report.yml")
+        "report.yml"
+      )
 
       puts "** #{Time.now} Running MetricFu.report.save_output to #{MetricFu.data_directory}"
-      MetricFu.report.save_output(MetricFu.report.to_yaml,
+      MetricFu.report.save_output(
+        MetricFu.report.to_yaml,
         MetricFu.data_directory,
-        "#{Time.now.strftime("%Y%m%d")}.yml")
+        "#{Time.now.strftime("%Y%m%d")}.yml"
+      )
 
       puts "** #{Time.now} Running MetricFu.report.save_templatized_report"
       MetricFu.report.save_templatized_report
