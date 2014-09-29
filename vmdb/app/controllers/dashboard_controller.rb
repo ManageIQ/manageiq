@@ -1,7 +1,8 @@
 class DashboardController < ApplicationController
   @@items_per_page = 8
 
-  before_filter :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate, :logout, :login, :login_retry, :wait_for_task]
+  before_filter :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate,
+                                               :logout, :login, :login_retry, :wait_for_task]
   before_filter :get_session_data, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate]
   after_filter :cleanup_action,    :except => [:csp_report]
   after_filter :set_session_data,  :except => [:csp_report, :window_sizes]
@@ -477,8 +478,8 @@ class DashboardController < ApplicationController
 
     if params[:user_name].blank? && params[:user_password].blank? &&
       request.env["HTTP_X_REMOTE_USER"].blank? &&
-      get_vmdb_config[:authentication][:httpd_role] == true &&
-      get_vmdb_config[:authentication][:sso_enabled] == true &&
+      get_vmdb_config[:authentication][:httpd_role] &&
+      get_vmdb_config[:authentication][:sso_enabled] &&
       params[:action] == "authenticate"
 
       render :update do |page|

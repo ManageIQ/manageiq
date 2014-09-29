@@ -5,7 +5,7 @@ describe "dashboard/login.html.haml" do
   context "login_div contains browser and TZ hidden fields" do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      view.stub(:get_vmdb_config).and_return({:server => {}, :session => {}})
+      view.stub(:get_vmdb_config).and_return(:server => {}, :session => {}, :authentication => {})
     end
 
     it "when authentication is 'database'" do
@@ -35,7 +35,8 @@ describe "dashboard/login.html.haml" do
     end
 
     it "show" do
-      view.stub(:get_vmdb_config).and_return({:server => {}, :session => {:show_login_info => true}})
+      view.stub(:get_vmdb_config).and_return(:server => {},
+        :session => {:show_login_info => true}, :authentication => {})
       render
       @labels.each do |label|
         response.should have_selector('aside p', text: label)
@@ -43,7 +44,8 @@ describe "dashboard/login.html.haml" do
     end
 
     it "hide" do
-      view.stub(:get_vmdb_config).and_return({:server => {}, :session => {:show_login_info => false}})
+      view.stub(:get_vmdb_config).and_return(:server => {},
+        :session => {:show_login_info => false}, :authentication => {})
       render
       @labels.each do |label|
         response.should_not have_selector('aside p', text: label)
