@@ -403,8 +403,10 @@ module ApplicationController::Filter
     end
 
     # Check for suffixes changed
-    @edit[:suffix] = params[:chosen_suffix].to_sym if params[:chosen_suffix]
-    @edit[:suffix2] = params[:chosen_suffix2].to_sym if params[:chosen_suffix2]
+    %w(suffix suffix2).each do |key|
+      params_key = "chosen_#{key}"
+      @edit[key.to_sym] = MiqExpression::BYTE_FORMAT_WHITELIST[params[params_key]] if params[params_key]
+    end
 
     # See if only a text value changed
     if params[:chosen_value] || params[:chosen_regkey] || params[:chosen_regval] ||
