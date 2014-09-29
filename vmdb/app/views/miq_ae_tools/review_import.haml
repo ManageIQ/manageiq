@@ -1,0 +1,9 @@
+:javascript
+  var postMessageData = {
+    import_file_upload_id: '#{@import_file_upload_id}',
+    message: '#{@message}'
+  };
+
+  $j(function() {
+    parent.postMessage(postMessageData, '*');
+  });

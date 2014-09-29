@@ -1,0 +1,68 @@
+%iframe.import-hidden-iframe(name="upload_target")
+
+.import-flash-message
+  .alert
+    %span.icon-placeholder
+      %span.pficon
+      %span.pficon
+    %strong.message
+
+.import-or-export
+  %fieldset
+    %p.legend Import Datastore classes
+    = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
+      = file_field("upload", "file")
+      = submit_tag("Upload", :id => "upload-datastore-import", :class => "upload")
+
+  %fieldset
+    %p.legend Export
+    = form_tag({:action => "export_datastore"}, :method => :get) do
+      = image_submit_tag("/images/toolbars/export.png")
+
+  %fieldset
+    %p.legend Reset all Datastore custom classes and instances to default
+    = form_tag({:action => "reset_datastore"},
+                :method => :get,
+                :confirm => "All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?",
+                "data-miq_sparkle_on" => true) do
+      = image_submit_tag("/images/toolbars/reset.png")
+
+.import-data
+  %form#import-form
+    %fieldset
+      %p.legend Import Datastore classes
+
+      %p.import-label Select existing domain to import into:
+      %select.existing-domains(name="selected_domain_to_import_to")
+        = options_for_select(@importable_domain_options)
+
+      %p.import-label Select domain you wish to import from:
+      %select.importing-domains(name="selected_domain_to_import_from")
+
+      %p.import-label Select namespaces you wish to import:
+      %input#toggle-all(type="checkbox")
+      %label(for="toggle-all") Toggle All/None
+
+      .domain-tree(name="selected_namespaces[]")
+
+      %table(width="100%")
+        %tr
+          %td(align="right")
+            #buttons
+              %ul#form_buttons
+                %li
+                  = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
+                  = button_tag("Commit", :class => "import-commit btn btn-primary")
+
+                %li
+                  = button_tag("Back", :class => "import-back btn btn-default")
+
+:javascript
+  $j(function() {
+    $j('#upload-datastore-import').click(function() {
+      miqSparkleOn();
+    });
+
+    Automate.listenForAutomatePostMessages();
+    Automate.setUpAutomateImportClickHandlers();
+  });
