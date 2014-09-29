@@ -210,6 +210,7 @@ module MiqApache
 
     def self.create_redirects_config(opts = {})
       opts[:redirects].to_miq_a.each_with_object("") do |redirect, content|
+        content << "ProxyPass /proxy_pages !\n" if redirect == "/"
         content << "ProxyPass #{redirect} balancer://#{opts[:cluster]}#{redirect}\n"
         content << "ProxyPassReverse #{redirect} balancer://#{opts[:cluster]}#{redirect}\n"
       end

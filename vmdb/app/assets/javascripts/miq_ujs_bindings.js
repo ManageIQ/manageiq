@@ -16,6 +16,12 @@ $j(document).ready(function(){
 	$j('a[data-miq_sparkle_on]').live('ajax:beforeSend', function() {
 			miqSparkleOn();	// Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
 	})
+	$j('a[data-miq_login_error]').live('ajax:error', function(xhr, status, error) {
+	  js_mimetypes = ["text/javascript", "application/javascript"]
+	  if(status.status == 401 && js_mimetypes.indexOf(status.getResponseHeader("Content-Type")) > -1 && status.responseText.length > 0) {
+	    $j.globalEval(status.responseText)
+	  }
+	})
 	$j('a[data-miq_sparkle_off]').live('ajax:complete', function() {
 			miqSparkle(false);
 	})

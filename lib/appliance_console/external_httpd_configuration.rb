@@ -4,7 +4,9 @@ module ApplianceConsole
       #
       # External Authentication Definitions
       #
+      IPA_COMMAND         = "/usr/bin/ipa"
       IPA_INSTALL_COMMAND = "/usr/sbin/ipa-client-install"
+      IPA_GETKEYTAB       = "/usr/sbin/ipa-getkeytab"
 
       PAM_MODULE          = "httpd-auth"
       PAM_CONFIG          = "/etc/pam.d/#{PAM_MODULE}"
@@ -13,6 +15,7 @@ auth    required pam_sss.so
 account required pam_sss.so
 EOS
       SSSD_CONFIG         = "/etc/sssd/sssd.conf"
+      HTTP_KEYTAB         = "/etc/http.keytab"
 
       EXTERNAL_AUTH_FILE  = "conf.d/cfme-external-auth"
       HTTPD_EXTERNAL_AUTH = "/etc/httpd/#{EXTERNAL_AUTH_FILE}"
@@ -20,9 +23,12 @@ EOS
 
       GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
       SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
+      GETENFORCE_COMMAND  = "/usr/sbin/getenforce"
 
       INTERCEPT_FORM      = "/dashboard/authenticate"
+      KERBEROS_AUTH       = "/dashboard/kerberos_authenticate"
       INTERNAL_LOGIN      = "admin"
+      APACHE_USER         = "apache"
 
       TIMESTAMP_FORMAT    = "%Y%m%d_%H%M%S"
 
@@ -76,6 +82,7 @@ EOS
 LoadModule authnz_pam_module modules/mod_authnz_pam.so
 LoadModule intercept_form_submit_module modules/mod_intercept_form_submit.so
 LoadModule lookup_identity_module modules/mod_lookup_identity.so
+LoadModule auth_kerb_module modules/mod_auth_kerb.so
 #{httpd_mod_intercept_config_ui}
 #{httpd_mod_intercept_config_api}
 EOS
@@ -83,6 +90,18 @@ EOS
 
       def httpd_mod_intercept_config_ui
         <<EOS
+
+<Location #{KERBEROS_AUTH}>
+  AuthType  Kerberos
+  AuthName  "Kerberos Login"
+  KrbMethodNegotiate On
+  KrbMethodK5Passwd Off
+  KrbAuthRealms #{realm}
+  Krb5KeyTab #{HTTP_KEYTAB}
+  Require pam-account #{PAM_MODULE}
+
+  ErrorDocument 401 /proxy_pages/invalid_sso_credentials.js
+</Location>
 
 <Location #{INTERCEPT_FORM}>
   InterceptFormPAMService #{PAM_MODULE}
@@ -92,9 +111,9 @@ EOS
   InterceptFormClearRemoteUserForSkipped on
 </Location>
 
-<Location #{INTERCEPT_FORM}>
+<LocationMatch ^#{INTERCEPT_FORM}$|^#{KERBEROS_AUTH}$>
 #{httpd_mod_intercept_config_attrs}
-</Location>
+</LocationMatch>
 EOS
       end
 
@@ -184,7 +203,7 @@ EOS
       def configure_sssd_ifp(config)
         user_attributes = LDAP_ATTRS.keys.collect { |k| "+#{k}" }.join(", ")
         ifp_config      = "
-  allowed_uids = apache, root
+  allowed_uids = #{APACHE_USER}, root
   user_attributes = #{user_attributes}
 "
         if config.include?("[ifp]")

@@ -38,13 +38,14 @@ describe MiqApache::Conf do
       output = MiqApache::Conf.create_redirects_config(@default_options).lines.to_a
       expect(output).to include("ProxyPass /miqservices/ balancer://evmcluster_ui/miqservices/\n")
       expect(output).to include("ProxyPassReverse /miqservices/ balancer://evmcluster_ui/miqservices/\n")
+      expect(output).to include("ProxyPass /proxy_pages !\n")
       expect(output).to include("ProxyPass / balancer://evmcluster_ui/\n")
       expect(output).to include("ProxyPassReverse / balancer://evmcluster_ui/\n")
     end
 
     it "should write two lines per redirect" do
       output = MiqApache::Conf.create_redirects_config(@default_options).lines.to_a
-      expect(output.length).to be(Array(@default_options[:redirects]).length*2)
+      expect(output.length).to be(Array(@default_options[:redirects]).length * 2 + 1)
     end
   end
 

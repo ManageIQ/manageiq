@@ -29,6 +29,7 @@
       %ul.login_buttons
         %li
           = link_to({:action=>"authenticate", :button=>"login", :method=>:post}, "data-miq_sparkle_on" => true,"data-submit"=>'login_div',:remote=>true,:id=>"login",:class=>"button", :title=>"Login") { "Log In" }
+          = link_to({:action=>"kerberos_authenticate", :button => "sso_login", :method => :post}, "data-miq_sparkle_on" => true, "data-miq_login_error" => true, "data-submit" => 'login_div', :remote => true, :id => "sso_login", :class => "button", :hidden => true, :title => "SSO Login" ) { "SSO Log In"}
 
         - if User.mode == "database"
           %li#back_button{:style=>"display:none"}
@@ -60,6 +61,13 @@
   miqGetBrowserSize();
   miqClearTreeState();
 
-- if @user_name  # If user name is pre-populated by the server, press the Login button automatically
+- auto_login  = session[:auto_login]  # Set to false via dashboard/logout
+- sso_enabled = get_vmdb_config[:authentication][:sso_enabled]
+- session[:auto_login] = true
+- if sso_enabled
+  - if auto_login != false
+    :javascript
+      var miq_after_onload = "$('sso_login').click()";
+- elsif @user_name  # If user name is pre-populated by the server, press the Login button automatically
   :javascript
     var miq_after_onload = "$('login').click()";
