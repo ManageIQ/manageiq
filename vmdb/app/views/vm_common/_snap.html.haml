@@ -1,0 +1,35 @@
+= form_tag({:action => 'snap_vm', :id => @record}, {:id => "vm_snap_form"}) do
+  = render :partial => "layouts/flash_msg"
+  #form_div
+    %p.legend Snapshot Information
+    %table.style1
+      %tbody
+        %tr
+          %td.key Name
+          %td
+            = text_field_tag("name", @name, :maxlength => MAX_NAME_LEN, "data-miq_focus" => true)
+        %tr
+          %td.key Description
+          %td
+            = text_area_tag("description", @description, :size => "50x4")
+        %tr
+          %td.key Snapshot VM memory
+          %td
+            = check_box_tag("snap_memory", :value => "1", :checked => false)
+  - unless @edit
+    %hr
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "right"}
+          = button_tag("Create",
+            :name  => "create",
+            :class => "button",
+            :alt   => "Create snapshot",
+            :title => "Create snapshot",
+            :type  => "submit")
+          = button_tag("Cancel",
+            :name  => "cancel",
+            :class => "button",
+            :alt   => "Cancel",
+            :title => "Cancel",
+            :type  => "submit")

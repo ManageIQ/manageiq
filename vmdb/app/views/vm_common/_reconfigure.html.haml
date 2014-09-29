@@ -1,0 +1,92 @@
+- url = {:url => url_for(:action=>'reconfigure_field_changed', :id=>"new")}.to_json
+#form_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend Options
+  %table.style1
+    %tr
+      %td.key Memory
+      %td
+        %table{:style => "line-height:1px;white-space: nowrap"}
+          %tr
+            %td
+              = check_box_tag("cb_memory",
+                :value => "1",
+                :checked => @edit[:new][:cb_memory],
+                "data-miq_sparkle_on" => true,
+                "data-miq_sparkle_off" => true,
+                "data-miq_observe_checkbox" => url)
+            %td
+              - display = @edit[:new][:cb_memory] ? "" : "display:none"
+              #memory_div{:style => display}
+                = text_field_tag("memory",
+                  @edit[:new][:memory],
+                  :maxlength => MAX_NAME_LEN,
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+
+                = select_tag("mem_typ",
+                  options_for_select(["MB","GB"],
+                  @edit[:new][:mem_typ]),
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe" => url)
+                (#{@edit[:memory_note]})
+
+    %tr
+      %td.key Processors
+      %td
+        %table{:style => "line-height:1px;white-space: nowrap"}
+          %tr
+            %td
+              = check_box_tag("cb_cpu",
+                :value => "1",
+                :checked => @edit[:new][:cb_cpu],
+                "data-miq_sparkle_on" => true,
+                "data-miq_sparkle_off" => true,
+                "data-miq_observe_checkbox" => url)
+            %td
+              - display = @edit[:new][:cb_cpu] ? "" : "display:none"
+              #cpu_div{:style => display}
+                - if @edit[:cpu_options].length > 1
+                  = select_tag("cpu_count",
+                     options_for_select((@edit[:new][:cpu_count].nil? ? [["<Choose>",nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-miq_observe"     => url)
+                - else
+                  = @edit[:cpu_options][0]
+
+  - if !@edit[:explorer]
+    #buttons_div
+      %table{:width => "100%"}
+        %tr
+          %td{:align => "right"}
+            %div
+              = button_tag('Submit',
+                :class   => "btn btn-primary",
+                :alt     => "Submit this reconfigure request",
+                :title   => "Submit this reconfigure request",
+                :onclick => "miqAjaxButton('#{url_for(:action => 'reconfigure_update',
+                  :id     => "new",
+                  :button => "submit")}');")
+
+              = button_tag('Cancel',
+                :class   => "btn btn-default",
+                :alt     => "Cancel Changes",
+                :title   => "Cancel Changes",
+                :onclick => "miqAjaxButton('#{url_for(:action => "reconfigure_update",
+                  :id     => "new",
+                  :button => "cancel")}');")
+
+  %hr
+  %p.legend Affected VMs
+  %table.admintable{:height => "75"}
+    %tbody
+      %tr
+        %td
+          - if @reconfigureitems
+            - @embedded = true
+            - @gtl_type = "list"
+            = render :partial => "layouts/gtl"
+
+:javascript
+  miqObserveCheckboxes();

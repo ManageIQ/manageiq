@@ -1,0 +1,15 @@
+#instances_filter_tree_div{:style => "width:100%;height:100%;"}
+  #instances_filter_treebox{:style => "width:100%;height:100%;color:#000; overflow: hidden"}
+  = render(:partial => "layouts/dynatree",
+    :locals => {:tree_id => "instances_filter_treebox",
+      :tree_name => "instances_filter_tree",
+      :id_prefix => "inf_",
+      :json_tree => @temp[:instances_filter_tree],
+      :onclick => "cfmeOnClick_SelectTreeNode",
+      :select_node=>"#{x_node(:instances_filter_tree)}",
+      :base_id => "root",
+      :no_base_exp => true,
+      :exp_tree => false,
+      :highlighting => true,
+      :tree_state => true,
+      :autoload => false})
