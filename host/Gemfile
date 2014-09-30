@@ -8,7 +8,7 @@ end
 gem "actionwebservice", "=3.1.0", :git => "git://github.com/ManageIQ/actionwebservice.git", :tag => "v3.1.0-1"
 
 # Locally modified and required
-gem "activesupport", "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-6"
+gem "activesupport", "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-7"
 
 # Not locally modified and not required
 gem "binary_struct",        "~>1.0.1", :require => false
