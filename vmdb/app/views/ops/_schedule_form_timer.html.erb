@@ -26,7 +26,7 @@
         </span>
         <%= hidden_span_if(@edit[:new][:timer_typ].downcase != "weekly", :id=>"weekly_span" ) %>
           every
-          <%= select_tag('timer_weekss',
+          <%= select_tag('timer_weeks',
                               options_for_select(TIMER_WEEKS,
                                 @edit[:new][:timer_weeks]),
                               "data-miq_observe"=>{:url=>url}.to_json) %>
