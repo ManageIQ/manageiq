@@ -50,6 +50,14 @@ module ApplianceConsole
       agree("Are you sure#{clarifier}? (Y/N): ")
     end
 
+    def ask_yn?(prompt, default = nil)
+      ask("#{prompt}? (Y/N): ") do |q|
+        q.default = default if default
+        q.validate = ->(p) { (p.blank? && default) || %w(y n).include?(p.downcase[0]) }
+        q.responses[:not_valid] = "Please provide yes or no."
+      end.downcase[0] == 'y'
+    end
+
     def ask_for_domain(prompt, default = nil, validate = DOMAIN_REGEXP, error_text = "a valid Domain.", &block)
       just_ask(prompt, default, validate, error_text, &block)
     end
