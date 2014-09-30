@@ -162,13 +162,13 @@ describe OpsController do
         it "should select a datastore when checked" do
           controller.params = {:id => "#{@svr1.id}__storage_#{@storage2.id}", :check => '1'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.should_not include(@storage2.id)
+          @edit[:new][:servers][@svr1.id][:storages].to_a.should include(@storage2.id)
         end
 
         it "should deselect a datastore when unchecked" do
-          controller.params = {:id => "#{@svr1.id}__host_#{@storage1.id}", :check => '0'}
+          controller.params = {:id => "#{@svr1.id}__storage_#{@storage1.id}", :check => '0'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.should_not include(@storage1.id)
+          @edit[:new][:servers][@svr1.id][:storages].to_a.should_not include(@storage1.id)
         end
 
         it "should select all child hosts when checked" do
