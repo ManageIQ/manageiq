@@ -478,7 +478,7 @@ class DashboardController < ApplicationController
 
     if params[:user_name].blank? && params[:user_password].blank? &&
       request.env["HTTP_X_REMOTE_USER"].blank? &&
-      get_vmdb_config[:authentication][:httpd_role] &&
+      get_vmdb_config[:authentication][:mode] == "httpd" &&
       get_vmdb_config[:authentication][:sso_enabled] &&
       params[:action] == "authenticate"
 
