@@ -1,5 +1,7 @@
 ---
 en:
+  product:
+    name: ManageIQ
   advanced_settings:
     menu_order:
     - dhcp
