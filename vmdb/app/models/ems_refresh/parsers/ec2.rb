@@ -152,11 +152,11 @@ module EmsRefresh::Parsers
         :supports_64_bit          => flavor[:architecture].include?(:x86_64),
         :supports_hvm             => flavor[:virtualization_type].include?(:hvm),
         :supports_paravirtual     => flavor[:virtualization_type].include?(:paravirtual),
-        :block_storage_based_only => flavor[:instance_store_volumes] == :ebs_only,
+        :block_storage_based_only => flavor[:ebs_only],
 
         # Extra keys
-        :disk_size            => flavor[:instance_store_size].to_i,
-        :disk_count           => flavor[:instance_store_volumes].to_i
+        :disk_size                => flavor[:instance_store_size],
+        :disk_count               => flavor[:instance_store_volumes]
       }
 
       return uid, new_result
