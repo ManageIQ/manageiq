@@ -1363,8 +1363,7 @@ class MiqAeClassController < ApplicationController
         end  # end of transaction
       rescue StandardError => bang
         add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
-        session[:changed] = @changed
-        @changed = truemail.corp.redhat.com
+        session[:changed] = @changed = true
         render :update do |page|
           page.replace("flash_msg_div_class_fields",
                        :partial => "layouts/flash_msg",
