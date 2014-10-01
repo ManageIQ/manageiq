@@ -1,12 +1,20 @@
-namespace :evm do
-  namespace :test do
-    task :setup_replication do
+require_relative "./evm_test_helper"
+
+if defined?(RSpec)
+namespace :test do
+  namespace :replication do
+    task :setup => :initialize do
       EvmTestSetupReplication.new.execute
     end
   end
-end
 
-require_relative "./evm_test_helper"
+  desc "Run all replication specs"
+  RSpec::Core::RakeTask.new(:replication => :initialize) do |t|
+    EvmTestHelper.init_rspec_task(t)
+    t.pattern = EvmTestHelper::REPLICATION_SPECS
+  end
+end
+end # ifdef
 
 class EvmTestSetupReplication
   def initialize
@@ -54,12 +62,12 @@ class EvmTestSetupReplication
 
   def backup_system_files
     FileUtils.cp(@db_yaml_file, @db_yaml_file_orig)
-    FileUtils.cp(@region_file,  @region_file_orig) if File.exists?(@region_file)
+    FileUtils.cp(@region_file,  @region_file_orig) if File.exist?(@region_file)
   end
 
   def restore_system_files
     FileUtils.mv(@db_yaml_file_orig, @db_yaml_file)
-    if File.exists?(@region_file_orig)
+    if File.exist?(@region_file_orig)
       FileUtils.mv(@region_file_orig, @region_file)
     else
       FileUtils.rm(@region_file)

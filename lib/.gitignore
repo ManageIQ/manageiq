@@ -4,6 +4,10 @@ Gemfile.lock
 lib.stproj
 SyntaxCheck
 
+# Log files generated from running test:miq_disk
+mdfs*.log
+
+# Compilation artifacts
 /NetappManageabilityAPI/NmaCore
 !/NetappManageabilityAPI/NmaCore/NmaCore_raw/extconf.rb
 !/NetappManageabilityAPI/NmaCore/NmaCore_raw/*.c
@@ -31,3 +35,4 @@ SyntaxCheck
 !/VixDiskLib/VixDiskLib_raw/**/*.def
 /VixDiskLib/lib
 /VixDiskLib/vddklib
+
