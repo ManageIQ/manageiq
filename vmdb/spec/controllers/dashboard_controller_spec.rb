@@ -13,7 +13,7 @@ describe DashboardController do
       User.stub(:authenticate).and_return(user)
       cfg = {:product => {:vdi => true}}
       controller.stub(:get_vmdb_config).and_return(cfg)
-      controller.stub(:user_is_super_admin?).and_return(true)
+      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
       controller.stub(:start_url_for_user).and_return('some_url')
       post :authenticate, :user_name => user.userid, :user_password => 'secret'
       session[:userid].should == user.userid
@@ -51,7 +51,7 @@ describe DashboardController do
       cfg = {:product => {:vdi => true}}
       controller.stub(:get_vmdb_config).and_return(cfg)
       controller.stub(:start_url_for_user).and_return('some_url')
-      controller.stub(:user_is_super_admin?).and_return(true)
+      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
       validation = controller.send(:validate_user, user)
       session[:group].should eq(group.id)
       session[:role].should eq(role.id)
