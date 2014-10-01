@@ -7,7 +7,7 @@ namespace :test do
     Rails.env = ENV['RAILS_ENV'] if defined?(Rails)
     ENV['VERBOSE']   ||= "false"
 
-    EvmTestHelper.start_cc_top if ENV['CC_BUILD_ARTIFACTS']
+    EvmTestHelper.cc_start_top if ENV['CC_BUILD_ARTIFACTS']
   end
 
   task :setup_db => :initialize do
