@@ -64,13 +64,13 @@ module XFS
       #
       # Fill In Dot and DotDot Entries Which don't exist in ShortForm Dir.
       #
-      directory_entry = ShortFormDirectoryEntry.new(nil, small_inode, DOT, @inode_object.inode_number)
+      directory_entry = ShortFormDirectoryEntry.new(nil, small_inode, @sb, DOT, @inode_object.inode_number)
       entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
-      directory_entry = ShortFormDirectoryEntry.new(nil, small_inode, DOTDOT, header.parent_inode)
+      directory_entry = ShortFormDirectoryEntry.new(nil, small_inode, @sb, DOTDOT, header.parent_inode)
       entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
       loop do
         break if data_pointer > @data.length - 4 || @data[data_pointer, data_pointer + 4].nil?
-        directory_entry = ShortFormDirectoryEntry.new(@data[data_pointer - 1..@inode_object.length], small_inode)
+        directory_entry = ShortFormDirectoryEntry.new(@data[data_pointer..@inode_object.length], small_inode, @sb)
         entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
         data_pointer    += directory_entry.length
       end
@@ -79,15 +79,15 @@ module XFS
 
     def glob_single_extent_entries_by_linked_list
       entries_by_name           = {}
-      header                    = DirectoryDataHeader.new(@data)
+      header                    = DirectoryDataHeader.new(@data, @sb)
       data_pointer              = header.header_end
       tail                      = DirectoryBlockTail.new(@data[@sb.block_size - SIZEOF_DIRECTORY_BLOCK_TAIL..-1])
-      leaf_count                = tail.count
-      total_leaves_size         = leaf_count * SIZEOF_DIRECTORY_LEAF_ENTRY
-      last_directory_space      = @sb.block_size - 16 - SIZEOF_DIRECTORY_BLOCK_TAIL - total_leaves_size
+      total_leaves_size         = tail.count * SIZEOF_DIRECTORY_LEAF_ENTRY
+      last_directory_space      = @sb.block_size - DirectoryEntry::SIZEOF_SMALLEST_DIRECTORY_ENTRY -
+                                  SIZEOF_DIRECTORY_BLOCK_TAIL - total_leaves_size
       loop do
         break if data_pointer > @data.length - 4 || @data[data_pointer, 4].nil? || data_pointer > last_directory_space
-        directory_entry = DirectoryEntry.new(@data[data_pointer..-1])
+        directory_entry = DirectoryEntry.new(@data[data_pointer..-1], header.version_3)
         entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
         data_pointer    += directory_entry.length
       end
@@ -98,19 +98,17 @@ module XFS
       entries_by_name           = {}
       data_pointer              = 0
       block_number              = 1
-      # 16 is the smallest dirent size but hard-coding is horrible
-      last_directory_space      = @sb.block_size - 16
+      last_directory_space      = @sb.block_size - DirectoryEntry::SIZEOF_SMALLEST_DIRECTORY_ENTRY
       if @inode_object.data_method == :extents
-        extent_count              = @inode_object.in['num_extents']
-        return glob_single_extent_entries_by_linked_list if extent_count == 1
+        return glob_single_extent_entries_by_linked_list if @inode_object.in['num_extents'] == 1
       end
       loop do
-        header                  = DirectoryDataHeader.new(@data[data_pointer..@sb.block_size * block_number])
-        block_pointer           = header.header_end
-        data_pointer            += header.header_end
+        header                = DirectoryDataHeader.new(@data[data_pointer..@sb.block_size * block_number], @sb)
+        block_pointer         = header.header_end
+        data_pointer          += header.header_end
         loop do
           break if block_pointer > last_directory_space
-          directory_entry = DirectoryEntry.new(@data[data_pointer..@sb.block_size * block_number])
+          directory_entry = DirectoryEntry.new(@data[data_pointer..@sb.block_size * block_number], header.version_3)
           entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
           block_pointer   += directory_entry.length
           data_pointer    += directory_entry.length

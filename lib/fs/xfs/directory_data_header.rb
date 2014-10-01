@@ -1,43 +1,46 @@
 require 'directory'
+require 'directory2_data_header'
+require 'directory3_data_header'
+require 'superblock'
 
 module XFS
-  #
-  # xfs_dir2_data_hdr consists of the magic number
-  # followed by 3 copies of the xfs_dir2_data_free structure
-  #
-  DIRECTORY_DATA_HEADER = BinaryStruct.new([
-    'I>', 'magic',               # magic number
-  ])
-  SIZEOF_DIRECTORY_DATA_HEADER = DIRECTORY_DATA_HEADER.size
-
   DIRECTORY_DATA_FREE = BinaryStruct.new([
     'S>',  'offset',              # start of freespace
     'S>',  'length',              # length of freespace
   ])
-  SIZEOF_DIRECTORY_DATA_FREE        = DIRECTORY_DATA_FREE.size
-  XFS_DIR2_DATA_FD_COUNT      = 3
-  SIZEOF_FULL_DIRECTORY_DATA_HEADER = SIZEOF_DIRECTORY_DATA_HEADER + SIZEOF_DIRECTORY_DATA_FREE * XFS_DIR2_DATA_FD_COUNT
-
-  XFS_DIR2_BLOCK_MAGIC = 0x58443242 # XD2B: single block dirs
-  XFS_DIR2_DATA_MAGIC  = 0x58443244 # XD2D: multiblock dirs
+  SIZEOF_DIRECTORY_DATA_FREE    = DIRECTORY_DATA_FREE.size
 
   class DirectoryDataHeader
-    attr_reader :data_header, :header_end
+    XFS_DIR2_DATA_FD_COUNT      = 3
 
-    def initialize(data)
-      @data_header = DIRECTORY_DATA_HEADER.decode(data)
-      if @data_header['magic'] != XFS_DIR2_BLOCK_MAGIC && @data_header['magic'] != XFS_DIR2_DATA_MAGIC
-        raise "XFS::DirectoryDataHeader: Invalid Magic Number #{@data_header['magic']}"
+    attr_reader :data_header, :header_end, :version_3
+
+    def decode_directory_header(data, header)
+      template     = header.template
+      @data_header = template.decode(data)
+      header.magic_numbers.each { |magic_number| return template.size if @data_header['magic'] == magic_number }
+      raise "XFS::DirectoryDataHeader: Invalid Magic Number #{@data_header['magic']}"
+    end
+
+    def initialize(data, sb)
+      @sb = sb
+      if @sb.version_has_crc?
+        version_header = Directory3DataHeader.new
+      else
+        version_header = Directory2DataHeader.new
       end
-      free_offset   = SIZEOF_DIRECTORY_DATA_HEADER
+      @version_3 = version_header.version_3
+      header_size = decode_directory_header(data, version_header)
+      free_offset = header_size
       @data_free    = []
       @free_end     = 0
       (1..XFS_DIR2_DATA_FD_COUNT).each do | i |
-        @free_end     = SIZEOF_DIRECTORY_DATA_HEADER + SIZEOF_DIRECTORY_DATA_FREE * i
+        @free_end     = header_size + SIZEOF_DIRECTORY_DATA_FREE * i
         @data_free[i] = DIRECTORY_DATA_FREE.decode(data[free_offset..@free_end])
         free_offset   = @free_end
       end
       @header_end = @free_end
+      @header_end += version_header.pad
     end
   end # class DirectoryDataHeader
 end   # module XFS

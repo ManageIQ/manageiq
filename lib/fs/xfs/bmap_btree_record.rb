@@ -5,17 +5,15 @@ module XFS
   ])
 
   SIZEOF_BMAP_BTREE_REC   = 16
-  BMBT_EXNTFLAG_BITLEN    = 1
-  BMBT_STARTOFF_BITLEN    = 54
-  BMBT_STARTBLOCK_BITLEN  = 52
-  BMBT_BLOCKCOUNT_BITLEN  = 21
-
-  XFS_EXT_NORM            = 0
-  XFS_EXT_UNWRITTEN       = 1
-  XFS_EXT_DMAPI_OFFLINE   = 2
-  XFS_EXT_INVALID         = 3
 
   class BmapBTreeRecord
+    BMBT_EXNTFLAG_BITLEN    = 1
+    BMBT_STARTOFF_BITLEN    = 54
+    BMBT_STARTBLOCK_BITLEN  = 52
+    BMBT_BLOCKCOUNT_BITLEN  = 21
+
+    XFS_EXT_NORM            = 0
+    XFS_EXT_UNWRITTEN       = 1
     attr_accessor   :key_ptr, :start_offset, :start_block, :big_start_block, :block_count, :flag
 
     def xfs_mask64lo(shift)

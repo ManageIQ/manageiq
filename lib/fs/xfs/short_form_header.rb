@@ -10,14 +10,14 @@ module XFS
   #
   DIRECTORY_SHORTERFORM_HEADER = BinaryStruct.new([
     'C',  'entry_count',         # count of entries
-    'S',  'i8byte_count',        # count of 8-byte inode #s
+    'C',  'i8byte_count',        # count of 8-byte inode #s
     'I>', 'parent_ino_4byte',    # parent dir inode # stored as 4 8-bit values
   ])
   SIZEOF_DIRECTORY_SHORTERFORM_HEADER = DIRECTORY_SHORTERFORM_HEADER.size
 
   DIRECTORY_SHORTFORM_HEADER = BinaryStruct.new([
     'C',  'entry_count',         # count of entries
-    'S',  'i8byte_count',        # count of 8-byte inode #s
+    'C',  'i8byte_count',        # count of 8-byte inode #s
     'Q>', 'parent_ino_8byte',    # parent dir inode # stored as 8 8-bit values
   ])
   SIZEOF_DIRECTORY_SHORTFORM_HEADER = DIRECTORY_SHORTFORM_HEADER.size

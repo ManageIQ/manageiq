@@ -57,7 +57,7 @@ module XFS
       # Inode Numbers will be filled in by the caller
     end
 
-    def initialize(data, short_inode, dots = nil, inode_number = nil)
+    def initialize(data, short_inode, sb, dots = nil, inode_number = nil)
       #
       # If dots is 1 or 2 we need to construct the
       # "." and ".." directory entries.
@@ -65,13 +65,12 @@ module XFS
       return dot_entry(dots, inode_number) if dots
       raise "XFS::ShortFormDirectoryEntry.initialize: Nil directory entry data" if data.nil?
       siz              = SIZEOF_SHORT_FORM_DIRECTORY_ENTRY
-      start            = 0
-      @directory_entry = SHORT_FORM_DIRECTORY_ENTRY.decode(data[start..start + siz])
-      @name_length  = @directory_entry['name_length']
-      # If there's a name get it.
+      @directory_entry = SHORT_FORM_DIRECTORY_ENTRY.decode(data[0..siz])
+      @name_length     = @directory_entry['name_length']
       unless @name_length == 0
-        @name   = data[SIZEOF_SHORT_FORM_DIRECTORY_ENTRY, @name_length]
-        start   = SIZEOF_SHORT_FORM_DIRECTORY_ENTRY + @name_length
+        @name_length     += 1 if sb.version_has_crc?
+        @name   = data[siz, @name_length]
+        start   = siz + @name_length
         if short_inode
           ino_size = SIZEOF_SHORT_FORM_SHORT_INO
           inode    = SHORT_FORM_SHORT_INO.decode(data[start..(start + ino_size)])
@@ -80,8 +79,8 @@ module XFS
           inode    = SHORT_FORM_LONG_INO.decode(data[start..(start + ino_size)])
         end
         @length    = start + ino_size
+        @inode     = inode['inode_num']
       end
-      @inode       = inode['inode_num']
     end
 
     def dump

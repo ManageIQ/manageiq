@@ -72,25 +72,23 @@ module XFS
   ])
 
   SUPERBLOCK_SIZE = 512
-  #
-  # Block I/O parameterization.	A basic block (BB) is the lowest size of
-  # filesystem allocation, and must equal 512.  Length units given to bio
-  # routines are in BB's.
-  #
-  BBSHIFT                    = 9
-  BBSIZE                     = 1 << BBSHIFT
-  BBMASK                     = BBSIZE - 1
-  XFS_INODE_BIG_CLUSTER_SIZE = 8192
-  XFS_NBBY                   = 8                   # number of bits in a byte
-  XFS_NBBYLOG                = 3                   # log base 2 of number of bits in a byte
-  XFS_INODES_PER_CHUNK       = XFS_NBBY * 8
-  XFS_DINODE_MIN_LOG         = 8
-  XFS_DINODE_MIN_SIZE        = 1 << XFS_DINODE_MIN_LOG
 
   # ////////////////////////////////////////////////////////////////////////////
   # // Class.
 
   class Superblock
+    #
+    # Block I/O parameterization.	A basic block (BB) is the lowest size of
+    # filesystem allocation, and must equal 512.  Length units given to bio
+    # routines are in BB's.
+    #
+    BBSHIFT                                = 9
+    BBSIZE                                 = 1 << BBSHIFT
+    XFS_INODE_BIG_CLUSTER_SIZE             = 8192
+    XFS_NBBY                               = 8                   # number of bits in a byte
+    XFS_INODES_PER_CHUNK                   = XFS_NBBY * 8
+    XFS_DINODE_MIN_LOG                     = 8
+    XFS_DINODE_MIN_SIZE                    = 1 << XFS_DINODE_MIN_LOG
     DEF_BLOCK_CACHE_SIZE                   = 500
     DEF_CLUSTER_CACHE_SIZE                 = 500
     DEF_INODE_CACHE_SIZE                   = 500
@@ -116,7 +114,7 @@ module XFS
     XFS_SUPERBLOCK_VERSION_EXTFLGBIT       = 0x1000
     XFS_SUPERBLOCK_VERSION_DIRV2BIT        = 0x2000
     XFS_SUPERBLOCK_VERSION_BORGBIT         = 0x4000      # ASCII only case-insens. */
-    XFS_SUPERBLOCK_VERSION_MOREBITSBIT     =  0x8000
+    XFS_SUPERBLOCK_VERSION_MOREBITSBIT     = 0x8000
 
     XFS_SUPERBLOCK_VERSION_OKSASHFBITS     = XFS_SUPERBLOCK_VERSION_EXTFLGBIT  |
                                              XFS_SUPERBLOCK_VERSION_DIRV2BIT   |
@@ -161,6 +159,8 @@ module XFS
     XFS_SUPERBLOCK_VERSION2_OKREALBITS     = XFS_SUPERBLOCK_VERSION2_OKREALFBITS    |
                                              XFS_SUPERBLOCK_VERSION2_OKSASHFBITS
 
+    XFS_SB_FEAT_INCOMPAT_FTYPE             = 1
+
     # /////////////////////////////////////////////////////////////////////////
     # // initialize
     attr_reader :groups_count, :filesystem_id, :stream, :block_count, :inode_count, :volume_name
@@ -172,7 +172,7 @@ module XFS
       if @sb['magic_num'] != XFS_SUPERBLOCK_MAGIC
         raise "XFS::Superblock.initialize: Invalid magic number=[#{@sb['magic_num']}] in AG #{agno}"
       end
-      unless sb_good_version
+      unless good_version?
         $log.warn "XFS::Superblock.initialize: Bad Superblock version # #{@sb['version_number']} in AG #{agno}"
         $log.warn "Attempting to access filesystem"
       end
@@ -220,7 +220,6 @@ module XFS
       @volume_name                      = @sb['fs_name']
       @ialloc_inos                      = (@sb['inodes_per_blk']..XFS_INODES_PER_CHUNK).max
       @ialloc_blks                      = @ialloc_inos >> @sb['inodes_per_blk_log']
-      dumpout                           = dump
     end
 
     # ////////////////////////////////////////////////////////////////////////////
@@ -242,11 +241,20 @@ module XFS
       @sb['version_number'] & XFS_SUPERBLOCK_VERSION_NUMBITS
     end
 
-    def sb_version_hascrc
-      sb_version_num == XFS_SUPERBLOCK_VERSION_5
+    def incompatible_feature?(feature)
+      (@sb['features_incompat'] & feature) != 0
     end
 
-    def sb_version_haspquotino
+    def version_has_more_bits?
+      version_has_crc? || (@sb['version_number'] & XFS_SUPERBLOCK_VERSION_MOREBITSBIT != 0)
+    end
+
+    def version_has_ftype?
+      (version_has_crc? && incompatible_feature?(XFS_SB_FEAT_INCOMPAT_FTYPE)) ||
+      (version_has_more_bits? && ((@sb['features_2'] & XFS_SUPERBLOCK_VERSION2_FTYPE) != 0))
+    end
+
+    def version_has_crc?
       sb_version_num == XFS_SUPERBLOCK_VERSION_5
     end
 
@@ -374,14 +382,14 @@ module XFS
       (block << @sb['inodes_per_blk_log']) | offset
     end
 
-    def sb_version_hasalign
+    def version_has_align?
       (sb_version_num == XFS_SUPERBLOCK_VERSION_5) ||
       ((sb_version_num >= XFS_SUPERBLOCK_VERSION_4) &&
-      (@sb['version_number'] & XFS_SUPERBLOCK_VERSION_ALIGNBIT))
+      ((@sb['version_number'] & XFS_SUPERBLOCK_VERSION_ALIGNBIT) != 0))
     end
 
     def inode_align_mask
-      if sb_version_hasalign &&
+      if version_has_align? &&
          @sb['inode_alignment'] >> b_to_fsbt(XFS_INODE_BIG_CLUSTER_SIZE)
         return @sb['inode_alignment']
       else
@@ -389,7 +397,7 @@ module XFS
       end
     end
 
-    def sb_good_version_4(sb)
+    def good_version_4?(sb)
       if (sb['version_number'] & ~XFS_SUPERBLOCK_VERSION_OKREALBITS) ||
          ((sb['version_number'] & XFS_SUPERBLOCK_VERSION_MOREBITSBIT) &&
          (sb['features_2'] & ~XFS_SUPERBLOCK_VERSION2_OKREALBITS))
@@ -399,7 +407,7 @@ module XFS
       1
     end
 
-    def sb_good_version
+    def good_version?
       #
       # We always support version 1-3
       #
@@ -411,14 +419,14 @@ module XFS
       # We support version 4 if all feature bits are supported
       #
       if sb_version_num == XFS_SUPERBLOCK_VERSION_4
-        return sb_good_version_4(@sb)
+        return good_version_4?(@sb)
       end
       return 1 if sb_version_num == XFS_SUPERBLOCK_VERSION_5
     end
 
     def inode_cluster_size
       cluster_size = XFS_INODE_BIG_CLUSTER_SIZE
-      if sb_version_hascrc
+      if version_has_crc?
         new_size = cluster_size
         new_size *= inode_size / XFS_DINODE_MIN_SIZE
         if @sb['inode_alignment'] >= b_to_fsbt(new_size)
