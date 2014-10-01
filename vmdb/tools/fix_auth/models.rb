@@ -1,5 +1,6 @@
 require 'active_support/all'
 require 'active_record'
+require 'securerandom'
 require 'util/extensions/miq-deep'
 require 'vmdb/configuration_encoder'
 
@@ -15,6 +16,10 @@ module FixAuth
     include FixAuth::AuthModel
     self.table_name = "miq_databases"
     self.password_columns = %w(registration_http_proxy_server session_secret_token csrf_secret_token)
+
+    def self.hardcode(old_value, _new_value)
+      super(old_value, SecureRandom.hex(64))
+    end
   end
 
   class FixMiqAeValue < ActiveRecord::Base
@@ -26,7 +31,7 @@ module FixAuth
 
     # only bring back columns that store passwords
     # we want to use joins, but using joins makes this readonly, so we're using includes instead
-    def self.contenders
+    def self.contenders(_ = nil)
       super.includes(:field).where(:miq_ae_fields => {:datatype => 'password'})
     end
   end
@@ -37,7 +42,7 @@ module FixAuth
     self.password_columns = %w(default_value)
 
     # only fix columns with password values
-    def self.contenders
+    def self.contenders(_ = nil)
       super.where(:datatype => 'password')
     end
   end
@@ -53,8 +58,8 @@ module FixAuth
     end
 
     # only bring back rows that store passwords
-    def self.selection_criteria
-      "typ = 'vmdb'"
+    def self.contenders(_ = nil)
+      where("typ = 'vmdb'")
     end
   end
 
@@ -72,9 +77,8 @@ module FixAuth
       puts "  #{r.id}:"
     end
 
-    # bring back everything
-    def self.selection_criteria
-      "options like '%password%'"
+    def self.contenders(_ = nil)
+      where("options like '%password%'")
     end
   end
 
@@ -92,9 +96,8 @@ module FixAuth
       puts "  #{r.id}:"
     end
 
-    # bring back everything
-    def self.selection_criteria
-      "options like '%password%'"
+    def self.contenders(_ = nil)
+      where("options like '%password%'")
     end
   end
 end
