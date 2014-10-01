@@ -14,7 +14,11 @@ class VimPerformanceTag < MetricRollup
     tp = options.fetch_path(:ext_options, :time_profile)
     results = recs.inject({:res => [], :tags => [], :tcols => []}) do |h,rec|
       if rec.class.name == "VimPerformanceTag"
-        tvrecs = rec.vim_performance_tag_values.find_all_by_category_and_association_type(options[:category], options[:cat_model].to_s)
+        tvrecs = rec.vim_performance_tag_values.build_for_association(rec,
+                                                                      options[:cat_model].pluralize.underscore,
+                                                                      :save     => false,
+                                                                      :category => options[:category])
+        tvrecs = tvrecs.select { |r| r.category == options[:category] }
         rec.inside_time_profile = tp ? tp.ts_in_profile?(rec.timestamp) : true
       else
         #TODO - Should use table name instead of options[:cat_model].pluralize.underscore

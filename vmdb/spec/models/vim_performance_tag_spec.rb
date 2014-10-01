@@ -133,7 +133,10 @@ describe VimPerformanceTag do
 
       it "#find_and_group_by_tags" do
         where_clause = [ "resource_type = ? and resource_id = ?", @host.class.base_class.name, @host.id ]
-        results, group_by_tag_cols, group_by_tags = VimPerformanceTag.find_and_group_by_tags(:cat_model => "VmOrTemplate", :category => "environment", :where_clause => where_clause)
+        results, group_by_tag_cols, group_by_tags =
+          VimPerformanceTag.find_and_group_by_tags(:cat_model    => "Vm",
+                                                   :category     => "environment",
+                                                   :where_clause => where_clause)
 
         classification_entries_with_none = @classification_entries + ["_none_"]
 
