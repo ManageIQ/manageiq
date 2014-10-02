@@ -56,6 +56,9 @@ module EmsRefresh::Refreshers
           $log.log_backtrace(err)
           $log.error("#{log_header} Unable to perform refresh for the following targets:" )
           targets.each { |t| $log.error "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
+          @ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
+        else
+          @ems.update_attributes(:last_refresh_error => nil, :last_refresh_date => Time.now.utc)
         end
       end
 

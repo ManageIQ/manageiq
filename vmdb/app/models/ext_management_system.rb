@@ -83,6 +83,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
+  virtual_column :last_refresh_status,     :type => :string
   virtual_column :total_vms_and_templates, :type => :integer
   virtual_column :total_vms,               :type => :integer
   virtual_column :total_miq_templates,     :type => :integer
@@ -182,6 +183,10 @@ class ExtManagementSystem < ActiveRecord::Base
 
     ems_ids = ems_ids.collect { |id| [ExtManagementSystem, id] }
     EmsRefresh.queue_refresh(ems_ids)
+  end
+
+  def last_refresh_status
+    last_refresh_error ? "error" : "success"
   end
 
   def refresh_ems
