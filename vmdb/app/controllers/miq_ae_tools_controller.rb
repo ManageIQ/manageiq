@@ -207,7 +207,7 @@ class MiqAeToolsController < ApplicationController
       add_flash(I18n.t("flash.automate.reset_to_default"))
     end
     render :update do |page|          # Use RJS to update the display
-      page.replace("import_export_div", :partial=>"import_export")
+      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       page << "miqSparkle(false);"
     end
   end
