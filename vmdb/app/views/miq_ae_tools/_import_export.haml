@@ -1,5 +1,6 @@
 %iframe.import-hidden-iframe(name="upload_target")
 
+= render(:partial=>"layouts/flash_msg")
 .import-flash-message
   .alert
     %span.icon-placeholder
@@ -17,16 +18,19 @@
   %fieldset
     %p.legend Export
     = form_tag({:action => "export_datastore"}, :method => :get) do
-      = image_submit_tag("/images/toolbars/export.png")
+      = image_submit_tag("/images/toolbars/export.png",
+                         :alt   => "Export all classes and instances",
+                         :title => "Export all classes and instances")
 
   %fieldset
     %p.legend Reset all Datastore custom classes and instances to default
-    = form_tag({:action => "reset_datastore"},
-                :method => :get,
-                :confirm => "All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?",
-                "data-miq_sparkle_on" => true) do
-      = image_submit_tag("/images/toolbars/reset.png")
-
+    = link_to(image_tag("/images/toolbars/reset.png",
+                        :alt => "Reset all custom classes and instances to default"),
+                        {:action               => 'reset_datastore'},
+                         "data-miq_sparkle_on" => true,
+                         :confirm              => "All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?",
+                         :remote               => true,
+                         :title                => "Reset all custom classes and instances to default")
 .import-data
   %form#import-form
     %fieldset
