@@ -199,10 +199,10 @@ module MiqPolicyController::Policies
     when "events" # Editing event assignments
       @edit[:new][:events] = @policy.miq_events.collect{|e| e.id.to_s}.uniq.sort
 
-      @edit[:allevents] = Hash.new
-      MiqPolicy.all_policy_events.each do |e|                             # Build hash of arrays of all events by event type
-        next if e.name.ends_with?("compliance_check")
-        @edit[:allevents][e.etype.description] ||= Array.new
+      @edit[:allevents] = {}
+      MiqPolicy.all_policy_events.each do |e|
+        next if excluded_event?(e)
+        @edit[:allevents][e.etype.description] ||= []
         @edit[:allevents][e.etype.description].push([e.description, e.id.to_s])
       end
     else  # Editing basic information and policy scope
@@ -215,6 +215,11 @@ module MiqPolicyController::Policies
     @in_a_form = true
     @edit[:current][:add] = true if @edit[:policy_id].nil?                              # Force changed to be true if adding a record
     session[:changed] = (@edit[:new] != @edit[:current])
+  end
+
+  def excluded_event?(event)
+    event.name.end_with?("compliance_check") ||
+    event.name.end_with?("perf_complete")
   end
 
   def policy_get_all_folders(parent = nil)
