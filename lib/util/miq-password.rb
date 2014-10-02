@@ -5,6 +5,7 @@ require 'ezcrypto'
 require 'CryptString'
 require 'base64'
 require 'yaml'
+require 'fileutils'
 
 class MiqPassword
   CURRENT_VERSION = "2"
@@ -148,6 +149,11 @@ class MiqPassword
             EzCrypto::Key.generate(:algorithm => "aes-256-cbc")
           end
     key.store(filename)
+  end
+
+  def self.backup_symetric(filename)
+    ext=Time.now.strftime("%Y%m%d-%H%M%S")
+    FileUtils.mv(filename, "#{filename}.#{ext}") if File.exist?(filename)
   end
 
   protected

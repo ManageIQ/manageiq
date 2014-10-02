@@ -77,22 +77,14 @@ describe ApplianceConsole::KeyConfiguration do
       end
 
       context "with existing key" do
-        it "removes existing key" do
+        it "moves existing key" do
           subject.force = true
           v2_exists(true) # before downloaded
           v2_exists(true) # after downloaded
-          expect(FileUtils).to receive(:rm).with(/v2_key/).and_return(["v2_key"])
+          expect(FileUtils).to receive(:mv).with(/v2_key/, /v2_key\.20/).and_return(["v2_key"])
           scp = double('scp')
           expect(scp).to receive(:download!).with(subject.key_path, /v2_key/).and_return(:result)
           expect(Net::SCP).to receive(:start).with(host, "root", :password => password).and_yield(scp).and_return(true)
-          expect(subject.activate).to be_true
-        end
-
-        it "skips if key exists (no force)" do
-          subject.force = false
-          v2_exists(true)
-          expect(FileUtils).not_to receive(:rm)
-          expect(Net::SCP).not_to receive(:start)
           expect(subject.activate).to be_true
         end
       end
