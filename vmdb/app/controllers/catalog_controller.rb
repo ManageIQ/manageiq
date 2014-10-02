@@ -188,20 +188,23 @@ class CatalogController < ApplicationController
     @built_trees = []
     @accords     = []
 
-    self.x_active_tree   ||= 'svccat_tree'     # Use Services & Template for first time
-    self.x_active_accord ||= 'svccat'
-
-    if role_allows(:feature => "svc_catalog_accord")
-      @built_trees << build_svccat_tree
-      @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
-    end
     if role_allows(:feature => "catalog_items_view")
+      self.x_active_tree   = 'sandt_tree'
+      self.x_active_accord = 'sandt'
       @built_trees << build_st_tree
       @accords.push(:name => "sandt", :title => "Catalog Items", :container => "sandt_tree_div")
     end
     if role_allows(:feature => "st_catalog_accord")
+      self.x_active_tree   = 'stcat_tree'
+      self.x_active_accord = 'stcat'
       @built_trees << build_stcat_tree
       @accords.push(:name => "stcat", :title => "Catalogs", :container => "stcat_tree_div")
+    end
+    if role_allows(:feature => "svc_catalog_accord")
+      self.x_active_tree   = 'svccat_tree'
+      self.x_active_accord = 'svccat'
+      @built_trees << build_svccat_tree
+      @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
     end
 
     if params[:id]  # If a tree node id came in, show in one of the trees
