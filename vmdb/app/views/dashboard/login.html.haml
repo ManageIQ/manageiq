@@ -62,9 +62,10 @@
   miqClearTreeState();
 
 - auto_login  = session[:auto_login]  # Set to false via dashboard/logout
+- auth_mode   = get_vmdb_config[:authentication][:mode]
 - sso_enabled = get_vmdb_config[:authentication][:sso_enabled]
 - session[:auto_login] = true
-- if sso_enabled
+- if auth_mode == "httpd" && sso_enabled
   - if auto_login != false
     :javascript
       var miq_after_onload = "$('sso_login').click()";
