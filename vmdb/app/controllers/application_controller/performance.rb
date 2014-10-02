@@ -550,6 +550,7 @@ module ApplicationController::Performance
         @perf_record.respond_to?(c[:applies_to_method]) &&
         !@perf_record.send(c[:applies_to_method].to_sym)
     end
+    @perf_options[:index] = nil unless @perf_options[:index].nil? || charts[@perf_options[:index].to_i]
     return charts
   end
 
@@ -832,8 +833,8 @@ module ApplicationController::Performance
       to_dt = create_time_in_utc("#{@perf_options[:daily_date]} 23", @perf_options[:tz])    # Get tz 11pm in UTC
       rpt = perf_get_chart_rpt("vim_perf_tag_daily")
       rpt.time_profile_id = @perf_options[:time_profile]
+      chart_layout = perf_get_chart_layout("daily_tag_charts", @perf_options[:model]) if @perf_options[:index]
       if @perf_options[:index]                    # If only looking at 1 chart, trim report columns for less daily rollups
-        chart_layout = perf_get_chart_layout("daily_tag_charts", @perf_options[:model])
         chart = chart_layout[@perf_options[:index].to_i]
         perf_trim_report_cols(rpt, chart)
       end
