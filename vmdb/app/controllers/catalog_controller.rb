@@ -107,7 +107,7 @@ class CatalogController < ApplicationController
         @edit[:st_prov_types] = {
             "amazon"    => "Amazon",
             "openstack" => "OpenStack",
-            "redhat"    => "Redhat",
+            "redhat"    => "RHEV",
             "generic"   => "Generic",
             "vmware"    => "VMware"
         }
