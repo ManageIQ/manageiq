@@ -143,12 +143,10 @@ module ReportController::Reports::Editor
   end
 
   def filter_change
-    return unless load_edit("report_edit__#{params[:id]}","replace_cell__explorer")
-    if params[:button]
-      @expkey = params[:button].to_sym
-    end
-    render :update do |page|                    # Use JS to update the display
-      page.replace("filter_div", :partial=>"form_filter")
+    return unless load_edit("report_edit__#{params[:id]}", "replace_cell__explorer")
+    @expkey = $&.to_sym if params[:button].to_s =~ /^(record|display)_filter$/
+    render :update do |page|
+      page.replace("filter_div", :partial => "form_filter")
       page << "miqSparkle(false);"
     end
   end
