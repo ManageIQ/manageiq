@@ -17,6 +17,11 @@ class VmInfra < Vm
     true
   end
 
+  def self.calculate_power_state(raw_power_state)
+    return raw_power_state if raw_power_state == "wait_for_launch"
+    super
+  end
+
 end
 
 # Preload any subclasses of this class, so that they will be part of the
