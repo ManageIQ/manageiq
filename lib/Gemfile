@@ -65,6 +65,7 @@ gem "rubywbem",    "=0.1.0",    :require => false, :git => "git://github.com/Man
 unless ENV['APPLIANCE']
   group :test do
     gem "camcorder",              :require => false
+    gem "jasmine",    "~>2.0",    :require => false
     gem "rspec",      "~>2.14.0", :require => false
     gem "rspec-fire", "~>1.3.0",  :require => false
     gem "timecop",    "~>0.5.3",  :require => false

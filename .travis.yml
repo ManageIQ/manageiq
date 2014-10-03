@@ -10,6 +10,7 @@ env:
   - TEST_SUITE=migrations  TEST_ROOT=vmdb
   - TEST_SUITE=replication TEST_ROOT=vmdb
   - TEST_SUITE=automation  TEST_ROOT=vmdb
+  - TEST_SUITE=javascript  TEST_ROOT=vmdb
 addons:
   postgresql: '9.3'
 before_install:
