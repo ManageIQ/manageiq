@@ -10,11 +10,10 @@ module VmOrTemplate::Operations::Snapshot
 
   def validate_remove_snapshot(task = 'Remove')
     return {:available => false, :message => "#{task} Snapshot operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
+    return {:available => false, :message => "There are no snapshots available for this VM"} if self.snapshots.size <= 0
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    msg = {:available => true, :message => nil}
-    msg[:message] = 'There are no snapshots available for this VM' if self.snapshots.size <= 0
-    return msg
+    return {:available => true, :message => nil}
   end
 
   def validate_remove_all_snapshots
