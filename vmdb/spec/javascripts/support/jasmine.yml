@@ -15,6 +15,7 @@ src_files:
   - javascripts/dollar_j.js
   - javascripts/prototype.js
   - javascripts/cfme_application.js
+  - javascripts/import.js
 
 # stylesheets
 #
