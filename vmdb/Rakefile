@@ -8,3 +8,9 @@ include Rake::DSL
 Vmdb::Application.load_tasks
 
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "lib", "util", "miq-password"))
+
+begin
+  require 'jasmine'
+  load 'jasmine/tasks/jasmine.rake'
+rescue LoadError
+end
