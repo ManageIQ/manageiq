@@ -26,6 +26,24 @@
     :columns:
     - derived_vm_count_on
     - derived_host_count_on
+  :applies_to_method: cpu_mhz_available?
+
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  - min_cpu_usage_rate_average
+  - max_cpu_usage_rate_average
+  - trend_max_cpu_usage_rate_average
+  - resource.cpu_usage_rate_average_high_over_time_period
+  - resource.cpu_usage_rate_average_low_over_time_period
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Timeline-Current-Daily:Daily events on this Cluster
+  - Timeline-Current-Hourly:Hourly events on this Cluster
+  :max_value: 100.4
+  :decimals: 1
+  :applies_to_method: cpu_percent_available?
 
 - :title: Virtual Machine CPU States
   :type: StackedArea
@@ -49,6 +67,7 @@
     :columns:
     - derived_vm_count_on
     - derived_host_count_on
+  :applies_to_method: cpu_ready_available?
 
 - :title: Memory (MB)
   :type: Line
@@ -76,6 +95,7 @@
     :columns:
     - derived_vm_count_on
     - derived_host_count_on
+  :applies_to_method: memory_mb_available?
 
 - :title: Disk I/O (KBps)
   :type: Line
