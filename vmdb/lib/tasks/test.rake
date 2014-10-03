@@ -11,6 +11,7 @@ namespace :test do
   end
 
   task :setup_db => :initialize do
+    puts "** Preparing database"
     Rake::Task['evm:db:reset'].invoke
   end
 end
