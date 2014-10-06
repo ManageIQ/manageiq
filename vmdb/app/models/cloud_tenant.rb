@@ -1,5 +1,6 @@
 class CloudTenant < ActiveRecord::Base
   include ReportableMixin
+  include NewWithTypeStiMixin
 
   attr_accessible :description, :ems_ref, :enabled, :name
 

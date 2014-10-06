@@ -1,6 +1,12 @@
 class TemplateOpenstack < TemplateCloud
   belongs_to :cloud_tenant
 
+  has_and_belongs_to_many :cloud_tenants,
+                          :foreign_key             => "vm_id",
+                          :join_table              => "cloud_tenants_vms",
+                          :association_foreign_key => "cloud_tenant_id",
+                          :class_name              => "CloudTenantOpenstack"
+
   def provider_object(connection = nil)
     connection ||= self.ext_management_system.connect
     connection.images.get(self.ems_ref)
