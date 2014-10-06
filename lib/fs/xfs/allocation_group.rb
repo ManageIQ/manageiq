@@ -87,19 +87,17 @@ module XFS
   ])
   AG_FL_STRUCT_SIZE = AG_FREELIST.size
 
-  AG_FREESPACE_SIZE = 512
-  AG_INODEINFO_SIZE = 512
-  AG_FREELIST_SIZE  = 512
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Class.
 
   class AllocationGroup
+    AG_FREESPACE_SIZE = 512
+    AG_INODEINFO_SIZE = 512
+    AG_FREELIST_SIZE  = 512
+
     XFS_AGF_MAGIC                          = 0x58414746
     XFS_AGI_MAGIC                          = 0x58414749
     XFS_AGFL_MAGIC                         = 0x5841464c
-    XFS_AGF_VERSION                        = 1
-    XFS_AGI_VERSION                        = 1
 
     # /////////////////////////////////////////////////////////////////////////
     # // initialize

@@ -91,54 +91,12 @@ module XFS
   SIZEOF_INODE = INODE.size
   SIZEOF_EXTENDED_INODE = EXTENDED_INODE.size
 
-  SYM_LNK_SIZE          = 60
-  MAX_READ              = 4_294_967_296
-  DEFAULT_BLOCK_SIZE    = 1024
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Class.
 
   class Inode
+    MAX_READ              = 4_294_967_296
     XFS_DINODE_MAGIC             = 0x494e
-    # Values for Inode flags field
-    XFS_DIFLAG_REALTIME_BIT      = 0	# file's blocks come from rt area
-    XFS_DIFLAG_PREALLOC_BIT      = 1	# file space has been preallocated
-    XFS_DIFLAG_NEWRTBM_BIT       = 2	# for rtbitmap inode, new format
-    XFS_DIFLAG_IMMUTABLE_BIT     = 3	# inode is immutable
-    XFS_DIFLAG_APPEND_BIT        = 4	# inode is append-only
-    XFS_DIFLAG_SYNC_BIT          = 5	# inode is written synchronously
-    XFS_DIFLAG_NOATIME_BIT       = 6	# do not update atime
-    XFS_DIFLAG_NODUMP_BIT        = 7	# do not dump
-    XFS_DIFLAG_RTINHERIT_BIT     = 8	# create with realtime bit set
-    XFS_DIFLAG_PROJINHERIT_BIT   = 9	# create with parents projid
-    XFS_DIFLAG_NOSYMLINKS_BIT    = 10	# disallow symlink creation
-    XFS_DIFLAG_EXTSIZE_BIT       = 11	# inode extent size allocator hint
-    XFS_DIFLAG_EXTSZINHERIT_BIT  = 12	# inherit inode extent size
-    XFS_DIFLAG_NODEFRAG_BIT      = 13	# do not reorganize/defragment
-    XFS_DIFLAG_FILESTREAM_BIT    = 14  # use filestream allocator
-    XFS_DIFLAG_REALTIME          = 1 << XFS_DIFLAG_REALTIME_BIT
-    XFS_DIFLAG_PREALLOC          = 1 << XFS_DIFLAG_PREALLOC_BIT
-    XFS_DIFLAG_NEWRTBM           = 1 << XFS_DIFLAG_NEWRTBM_BIT
-    XFS_DIFLAG_IMMUTABLE         = 1 << XFS_DIFLAG_IMMUTABLE_BIT
-    XFS_DIFLAG_APPEND            = 1 << XFS_DIFLAG_APPEND_BIT
-    XFS_DIFLAG_SYNC              = 1 << XFS_DIFLAG_SYNC_BIT
-    XFS_DIFLAG_NOATIME           = 1 << XFS_DIFLAG_NOATIME_BIT
-    XFS_DIFLAG_NODUMP            = 1 << XFS_DIFLAG_NODUMP_BIT
-    XFS_DIFLAG_RTINHERIT         = 1 << XFS_DIFLAG_RTINHERIT_BIT
-    XFS_DIFLAG_PROJINHERIT       = 1 << XFS_DIFLAG_PROJINHERIT_BIT
-    XFS_DIFLAG_NOSYMLINKS        = 1 << XFS_DIFLAG_NOSYMLINKS_BIT
-    XFS_DIFLAG_EXTSIZE           = 1 << XFS_DIFLAG_EXTSIZE_BIT
-    XFS_DIFLAG_EXTSZINHERIT      = 1 << XFS_DIFLAG_EXTSZINHERIT_BIT
-    XFS_DIFLAG_NODEFRAG          = 1 << XFS_DIFLAG_NODEFRAG_BIT
-    XFS_DIFLAG_FILESTREAM        = 1 << XFS_DIFLAG_FILESTREAM_BIT
-
-    XFS_DIFLAG_ANY = (XFS_DIFLAG_REALTIME | XFS_DIFLAG_PREALLOC | XFS_DIFLAG_NEWRTBM |
-                      XFS_DIFLAG_IMMUTABLE | XFS_DIFLAG_APPEND | XFS_DIFLAG_SYNC |
-                      XFS_DIFLAG_NOATIME | XFS_DIFLAG_NODUMP | XFS_DIFLAG_RTINHERIT |
-                      XFS_DIFLAG_PROJINHERIT | XFS_DIFLAG_NOSYMLINKS | XFS_DIFLAG_EXTSIZE |
-                      XFS_DIFLAG_EXTSZINHERIT | XFS_DIFLAG_NODEFRAG | XFS_DIFLAG_FILESTREAM)
-
-    XFS_DI_MAX_FLUSH = 0xffff
 
     # Bits 0 to 8 of file mode.
     PF_O_EXECUTE  = 0x0001  # owner execute
@@ -155,11 +113,6 @@ module XFS
     MSK_PERM_OWNER = (PF_O_EXECUTE | PF_O_WRITE | PF_O_READ)
     MSK_PERM_GROUP = (PF_G_EXECUTE | PF_G_WRITE | PF_G_READ)
     MSK_PERM_USER  = (PF_U_EXECUTE | PF_U_WRITE | PF_U_READ)
-
-    # Bits 9 to 11 of file mode.
-    DF_STICKY     = 0x0200
-    DF_SET_GID    = 0x0400
-    DF_SET_UID    = 0x0800
 
     # Bits 12 to 15 of file mode.
     FM_FIFO       = 0x1000  # fifo device (pipe)
