@@ -22,6 +22,8 @@ class ServiceTemplate < ActiveRecord::Base
 
   default_value_for :service_type,  'unknown'
 
+  validate :dialog_when_catalog
+
   def custom_buttons
     CustomButton.buttons_for(self).select { |b| b.parent.nil? }
   end
@@ -163,4 +165,12 @@ class ServiceTemplate < ActiveRecord::Base
     service.save
   end
 
+  private
+
+  # validate presence of a dialog when attached to a catalog
+  def dialog_when_catalog
+    if display && resource_actions.collect { |a| a.dialog.nil? }.reduce(:&)
+      errors.add(:dialog, "has to be set if Display in Catalog is chosen")
+    end
+  end
 end
