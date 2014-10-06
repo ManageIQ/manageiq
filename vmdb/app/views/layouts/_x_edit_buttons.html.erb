@@ -230,14 +230,14 @@
            
           <% if params[:action] == "policies" %>
             <%# Button to go back to policy simulation screen from 1 VMs policies %>
-            <%= button_tag('Back...',  
+            <%= button_tag('Back',  
                            :class   => "btn btn-default",
                            :alt     => "Back", 
                            :title   => "Back",
                            :onclick => "miqAjaxButton('#{url_for(:action   => "policy_sim",
                                                                  :continue => true)}');")
             %>
-          <% elsif %w(drift policy_sim right_size).include?(@sb[:action]) %>
+          <% elsif %w(drift policy_sim).include?(@sb[:action]) %>
             <%# Button to cancel policy simulation/drift and return to latest tree node %>
             <%= button_tag('Cancel',  
                            :class   => "btn btn-default",
@@ -245,6 +245,14 @@
                            :title   => "Cancel",
                            :onclick => "miqAjaxButton('#{url_for(:action => "x_history",
                                                                  :item   => 0)}');")
+            %>
+          <% elsif %w(right_size).include?(@sb[:action]) %>
+            <%= button_tag('Back',
+                            :class   => 'btn btn-default',
+                            :alt     => 'Back', 
+                            :title   => 'Back',
+                            :onclick => "miqAjaxButton('#{url_for(:action   => "x_history",
+                                                                  :continue => true)}');")
             %>
           <% elsif export_button %>
             <%= button_tag("Export",
