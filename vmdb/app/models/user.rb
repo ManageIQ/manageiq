@@ -384,11 +384,21 @@ class User < ActiveRecord::Base
         # If role_mode == database we will only use ldap for authentication. Also, the user must exist in our database
         # otherwise we will fail authentication
         user = self.find_by_userid(fq_user)
+
+        default_group = MiqGroup.where(:description => auth[:default_group_for_users]).first if auth[:default_group_for_users]
+        if user.nil? && default_group
+          # when default group for ldap users is enabled, create the user
+          user = new
+          lobj = ldap.get_user_object(fq_user)
+          user.update_attrs_from_ldap(ldap, lobj)
+          user.save_successful_logon([default_group], audit)
+          $log.info("MIQ(User.authenticate_ldap): Created User: [#{user.userid}]")
+        end
+
         unless user
           AuditEvent.failure(audit.merge(:message => "User #{fq_user} authenticated but not defined in EVM"))
           raise MiqException::MiqEVMLoginError, "User authenticated but not defined in EVM, please contact your EVM administrator"
         end
-        return nil unless user
       end
 
       AuditEvent.success(audit.merge(:message => "Authentication successful for user #{fq_user}"))
@@ -397,8 +407,6 @@ class User < ActiveRecord::Base
       AuditEvent.failure(audit.merge(:message => "Authentication failed for userid #{fq_user}"))
       return nil
     end
-
-    return user
   end
 
   def self.authorize_ldap_queue(fq_user)
