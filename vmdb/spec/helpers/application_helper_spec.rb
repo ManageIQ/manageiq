@@ -2817,7 +2817,14 @@ describe ApplicationHelper do
             before { @record.stub(:is_available?).with(:remove_snapshot).and_return(false) }
             it_behaves_like 'record with error message', 'remove_snapshot'
           end
-          it_behaves_like 'default case'
+          context "when without snapshots" do
+            before { @record.stub_chain(:snapshots, :size).and_return(0) }
+            it_behaves_like 'record with error message', 'remove_snapshot'
+          end
+          context "when with snapshots" do
+            before { @record.stub_chain(:snapshots, :size).and_return(2) }
+            it_behaves_like 'default case'
+          end
         end
 
         context "and id = vm_snapshot_delete_all" do
@@ -2826,7 +2833,14 @@ describe ApplicationHelper do
             before { @record.stub(:is_available?).with(:remove_all_snapshots).and_return(false) }
             it_behaves_like 'record with error message', 'remove_all_snapshots'
           end
-          it_behaves_like 'default case'
+          context "when without snapshots" do
+            before { @record.stub_chain(:snapshots, :size).and_return(0) }
+            it_behaves_like 'record with error message', 'remove_all_snapshots'
+          end
+          context "when with snapshots" do
+            before { @record.stub_chain(:snapshots, :size).and_return(2) }
+            it_behaves_like 'default case'
+          end
         end
 
         context "id = vm_snapshot_revert" do
@@ -2835,7 +2849,14 @@ describe ApplicationHelper do
             before { @record.stub(:is_available?).with(:revert_to_snapshot).and_return(false) }
             it_behaves_like 'record with error message', 'revert_to_snapshot'
           end
-          it_behaves_like 'default case'
+          context "when without snapshots" do
+            before { @record.stub_chain(:snapshots, :size).and_return(0) }
+            it_behaves_like 'record with error message', 'revert_to_snapshot'
+          end
+          context "when with snapshots" do
+            before { @record.stub_chain(:snapshots, :size).and_return(2) }
+            it_behaves_like 'default case'
+          end
         end
       end
     end # end of Vm class
