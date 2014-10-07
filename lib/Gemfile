@@ -26,6 +26,7 @@ gem "linux_admin",          "~>0.9",     :require => false
 gem "log4r",                "=1.1.8",    :require => false
 gem "more_core_extensions", "~>1.2.0",   :require => false
 gem "nokogiri",             "~>1.5.0",   :require => false
+gem "ovirt",                "~>0.2.1",   :require => false
 gem "parallel",             "~>0.5.21",  :require => false
 gem "Platform",             "=0.4.0",    :require => false
 gem "rubyzip",              "=0.9.5",    :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
@@ -55,7 +56,6 @@ end
 
 # Locally modified but not required
 gem "handsoap",    "~>0.2.5",   :require => false, :git => "git://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-2"
-gem "rest-client", "~>1.6.7",   :require => false, :git => "git://github.com/ManageIQ/rest-client.git", :tag => "v1.6.7-5"
 gem "rubywbem",    "=0.1.0",    :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :tag => "v0.1.0-2"
 
 ### Start of gems excluded from the appliances.

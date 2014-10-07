@@ -5,12 +5,12 @@ module VmRedhat::Operations::Power
 
   def raw_start
     with_provider_object { |rhevm_vm| rhevm_vm.start }
-  rescue RhevmApiVmAlreadyRunning
+  rescue Ovirt::VmAlreadyRunning
   end
 
   def raw_stop
     with_provider_object { |rhevm_vm| rhevm_vm.stop }
-  rescue RhevmApiVmIsNotRunning
+  rescue Ovirt::VmIsNotRunning
   end
 
   def raw_suspend

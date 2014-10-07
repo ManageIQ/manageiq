@@ -2,8 +2,8 @@ require 'workers/event_catcher'
 
 class EventCatcherRedhat < EventCatcher
   def event_monitor_handle
-    require 'RedHatEnterpriseVirtualizationManagerAPI/rhevm_event_monitor'
-    @event_monitor_handle ||= RhevmEventMonitor.new(
+    require 'ovirt'
+    @event_monitor_handle ||= Ovirt::EventMonitor.new(
                                 :server   => @ems.ipaddress,
                                 :port     => @ems.port,
                                 :username => @ems.authentication_userid,

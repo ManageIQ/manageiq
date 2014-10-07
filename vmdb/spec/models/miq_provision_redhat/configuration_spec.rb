@@ -1,5 +1,5 @@
 require "spec_helper"
-require 'RedHatEnterpriseVirtualizationManagerAPI/rhevm_api'
+require "ovirt"
 
 describe MiqProvisionRedhat::Configuration do
 

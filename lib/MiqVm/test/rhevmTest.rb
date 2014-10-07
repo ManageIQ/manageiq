@@ -28,7 +28,7 @@ $log = toplog if $log.nil?
 
 begin
 
-  $rhevm = RhevmInventory.new(
+  $rhevm = Ovirt::Inventory.new(
             :server   => RHEVM_SERVER,
             :port     => RHEVM_PORT,
             :domain   => RHEVM_DOMAIN,
@@ -37,7 +37,7 @@ begin
 
   puts "Attempting to scan VM: #{VM_NAME}"
 
-  unless (rvm = RhevmVm.find_by_name($rhevm.service, VM_NAME))
+  unless (rvm = Ovirt::Vm.find_by_name($rhevm.service, VM_NAME))
     raise "Could not find VM: #{VM_NAME}"
   end
 

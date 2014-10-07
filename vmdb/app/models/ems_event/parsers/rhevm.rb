@@ -36,7 +36,7 @@ module EmsEvent::Parsers::Rhevm
     username  = nil
     if ems && user_href
       ems.with_provider_connection do |rhevm|
-        username = RhevmUser.find_by_href(rhevm, user_href).try(:[], :user_name)
+        username = Ovirt::User.find_by_href(rhevm, user_href).try(:[], :user_name)
       end
     end
 

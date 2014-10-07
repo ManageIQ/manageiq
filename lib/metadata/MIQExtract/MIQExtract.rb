@@ -447,7 +447,7 @@ class MIQExtract
         }
         ems_opt[:port] = miqVimHost[:port] unless miqVimHost[:port].blank?
 
-        rhevm = RhevmInventory.new(ems_opt)
+        rhevm = Ovirt::Inventory.new(ems_opt)
         rhevm.api
         ost.miqRhevm = rhevm
         $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vmCfgFile}] in [#{Time.now-st}] seconds"
