@@ -33,7 +33,7 @@ class ZiyaCharting < Charting
   CHARTS  = %w{Area AreaThreed Bar CandleStick Column ColumnThreed Line ParallelThreedColumn
   Pie PieThreed StackedArea StackedBar StackedColumn StackedThreedArea StackedThreedColumn}
 
-  def js_load_statement(delayed)
+  def js_load_statement(_delayed = false)
     # FIXME: only for IE
     'miqLoadCharts();'
   end

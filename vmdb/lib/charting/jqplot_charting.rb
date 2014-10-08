@@ -1,5 +1,5 @@
 class JqplotCharting < Charting
-  def js_load_statement(delayed)
+  def js_load_statement(delayed = false)
     delayed ? 'setTimeout(function(){ load_jqplot_charts(); }, 100);' : 'load_jqplot_charts();'
   end
 
