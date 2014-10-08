@@ -4,7 +4,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.252.231", :ipaddress => "192.168.252.231", :port => 8443)
-    @ems.update_authentication(:default => {:userid => "evm@manageiq.com", :password => "smartvm"})
+    @ems.update_authentication(:default => {:userid => "evm@manageiq.com", :password => "password"})
   end
 
   it "will perform a full refresh on v3.0" do

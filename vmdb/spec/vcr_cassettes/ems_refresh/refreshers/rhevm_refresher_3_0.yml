@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api
     body:
       encoding: US-ASCII
       string: ''
@@ -50,7 +50,7 @@ http_interactions:
       Content-Length:
       - '2313'
       Date:
-      - Thu, 22 May 2014 22:02:52 GMT
+      - Tue, 07 Oct 2014 17:58:20 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<api>\n
@@ -78,14 +78,14 @@ http_interactions:
         revision=\"0\" build=\"0\" minor=\"0\" major=\"3\"/>\n    </product_info>\n
         \   <summary>\n        <vms>\n            <total>21</total>\n            <active>0</active>\n
         \       </vms>\n        <hosts>\n            <total>1</total>\n            <active>0</active>\n
-        \       </hosts>\n        <users>\n            <total>14</total>\n            <active>3</active>\n
+        \       </hosts>\n        <users>\n            <total>14</total>\n            <active>2</active>\n
         \       </users>\n        <storage_domains>\n            <total>6</total>\n
         \           <active>0</active>\n        </storage_domains>\n    </summary>\n</api>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:36 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:28 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/clusters
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/clusters
     body:
       encoding: US-ASCII
       string: ''
@@ -118,7 +118,7 @@ http_interactions:
       Content-Length:
       - '4602'
       Date:
-      - Thu, 22 May 2014 22:02:52 GMT
+      - Tue, 07 Oct 2014 17:58:20 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<clusters>\n
@@ -174,10 +174,10 @@ http_interactions:
         major=\"3\"/>\n        <error_handling>\n            <on_error>migrate</on_error>\n
         \       </error_handling>\n    </cluster>\n</clusters>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:37 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:28 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vmpools
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vmpools
     body:
       encoding: US-ASCII
       string: ''
@@ -210,7 +210,7 @@ http_interactions:
       Content-Length:
       - '67'
       Date:
-      - Thu, 22 May 2014 22:02:52 GMT
+      - Tue, 07 Oct 2014 17:58:20 GMT
     body:
       encoding: US-ASCII
       string: ! '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -219,10 +219,10 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:37 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:29 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/networks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/networks
     body:
       encoding: US-ASCII
       string: ''
@@ -255,7 +255,7 @@ http_interactions:
       Content-Length:
       - '3040'
       Date:
-      - Thu, 22 May 2014 22:02:53 GMT
+      - Tue, 07 Oct 2014 17:58:20 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<networks>\n
@@ -294,10 +294,10 @@ http_interactions:
         \       <status>\n            <state>operational</state>\n        </status>\n
         \   </network>\n</networks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:37 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:29 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/storagedomains?search=sortby%20name%20asc%20page%201
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/storagedomains?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -330,7 +330,7 @@ http_interactions:
       Content-Length:
       - '6072'
       Date:
-      - Thu, 22 May 2014 22:02:53 GMT
+      - Tue, 07 Oct 2014 17:58:20 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<storage_domains>\n
@@ -398,10 +398,10 @@ http_interactions:
         \       <committed>184683593728</committed>\n        <storage_format>v2</storage_format>\n
         \   </storage_domain>\n</storage_domains>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:37 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:29 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/storagedomains?search=sortby%20name%20asc%20page%202
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/storagedomains?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -434,7 +434,7 @@ http_interactions:
       Content-Length:
       - '75'
       Date:
-      - Thu, 22 May 2014 22:02:53 GMT
+      - Tue, 07 Oct 2014 17:58:21 GMT
     body:
       encoding: US-ASCII
       string: ! '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -443,10 +443,10 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:37 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:29 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/datacenters
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/datacenters
     body:
       encoding: US-ASCII
       string: ''
@@ -479,7 +479,7 @@ http_interactions:
       Content-Length:
       - '2294'
       Date:
-      - Thu, 22 May 2014 22:02:53 GMT
+      - Tue, 07 Oct 2014 17:58:21 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<data_centers>\n
@@ -511,10 +511,10 @@ http_interactions:
         \       <status>\n            <state>not_operational</state>\n        </status>\n
         \   </data_center>\n</data_centers>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:38 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:29 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/hosts?search=sortby%20name%20asc%20page%201
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/hosts?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -547,7 +547,7 @@ http_interactions:
       Content-Length:
       - '2582'
       Date:
-      - Thu, 22 May 2014 22:02:53 GMT
+      - Tue, 07 Oct 2014 17:58:21 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<hosts>\n
@@ -579,10 +579,10 @@ http_interactions:
         \       </cpu>\n        <summary>\n            <active>0</active>\n            <migrating>0</migrating>\n
         \           <total>0</total>\n        </summary>\n    </host>\n</hosts>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:38 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:30 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/hosts?search=sortby%20name%20asc%20page%202
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/hosts?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -615,7 +615,7 @@ http_interactions:
       Content-Length:
       - '65'
       Date:
-      - Thu, 22 May 2014 22:02:53 GMT
+      - Tue, 07 Oct 2014 17:58:21 GMT
     body:
       encoding: US-ASCII
       string: ! '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -624,10 +624,10 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:38 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:30 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms?search=sortby%20name%20asc%20page%201
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -660,7 +660,7 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 22 May 2014 22:02:55 GMT
+      - Tue, 07 Oct 2014 17:58:22 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<vms>\n
@@ -1371,10 +1371,10 @@ http_interactions:
         \       </memory_policy>\n        <usb>\n            <enabled>false</enabled>\n
         \       </usb>\n    </vm>\n</vms>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:38 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:30 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms?search=sortby%20name%20asc%20page%202
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -1407,7 +1407,7 @@ http_interactions:
       Content-Length:
       - '63'
       Date:
-      - Thu, 22 May 2014 22:02:55 GMT
+      - Tue, 07 Oct 2014 17:58:22 GMT
     body:
       encoding: US-ASCII
       string: ! '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1416,10 +1416,10 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:38 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:31 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates
     body:
       encoding: US-ASCII
       string: ''
@@ -1452,7 +1452,7 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 22 May 2014 22:02:55 GMT
+      - Tue, 07 Oct 2014 17:58:23 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<templates>\n
@@ -1722,10 +1722,10 @@ http_interactions:
         \       <stateless>false</stateless>\n        <usb>\n            <enabled>false</enabled>\n
         \       </usb>\n    </template>\n</templates>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:39 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:31 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/datacenters/cb50d90a-f585-4d17-a524-a577a97da928/storagedomains
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/datacenters/cb50d90a-f585-4d17-a524-a577a97da928/storagedomains
     body:
       encoding: US-ASCII
       string: ''
@@ -1758,7 +1758,7 @@ http_interactions:
       Content-Length:
       - '1952'
       Date:
-      - Thu, 22 May 2014 22:02:55 GMT
+      - Tue, 07 Oct 2014 17:58:23 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<storage_domains>\n
@@ -1782,10 +1782,10 @@ http_interactions:
         \       <committed>201863462912</committed>\n        <storage_format>v2</storage_format>\n
         \   </storage_domain>\n</storage_domains>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:39 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:32 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/datacenters/199560d0-9b83-4212-b2a1-077e1b4371af/storagedomains
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/datacenters/199560d0-9b83-4212-b2a1-077e1b4371af/storagedomains
     body:
       encoding: US-ASCII
       string: ''
@@ -1818,7 +1818,7 @@ http_interactions:
       Content-Length:
       - '1952'
       Date:
-      - Thu, 22 May 2014 22:02:55 GMT
+      - Tue, 07 Oct 2014 17:58:23 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<storage_domains>\n
@@ -1842,10 +1842,10 @@ http_interactions:
         \       <committed>184683593728</committed>\n        <storage_format>v2</storage_format>\n
         \   </storage_domain>\n</storage_domains>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:39 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:32 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085/storagedomains
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085/storagedomains
     body:
       encoding: US-ASCII
       string: ''
@@ -1878,7 +1878,7 @@ http_interactions:
       Content-Length:
       - '2380'
       Date:
-      - Thu, 22 May 2014 22:02:55 GMT
+      - Tue, 07 Oct 2014 17:58:23 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<storage_domains>\n
@@ -1907,10 +1907,10 @@ http_interactions:
         \       <committed>0</committed>\n        <storage_format>v1</storage_format>\n
         \   </storage_domain>\n</storage_domains>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:39 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:32 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/hosts/ca389dbc-2054-11e1-9241-005056af0085/statistics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/hosts/ca389dbc-2054-11e1-9241-005056af0085/statistics
     body:
       encoding: US-ASCII
       string: ''
@@ -1943,7 +1943,7 @@ http_interactions:
       Content-Length:
       - '7878'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:25 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<statistics>\n
@@ -2032,10 +2032,10 @@ http_interactions:
         \       <type>GAUGE</type>\n        <unit>PERCENT</unit>\n        <host id=\"ca389dbc-2054-11e1-9241-005056af0085\"
         href=\"/api/hosts/ca389dbc-2054-11e1-9241-005056af0085\"/>\n    </statistic>\n</statistics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:39 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:33 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/hosts/ca389dbc-2054-11e1-9241-005056af0085/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/hosts/ca389dbc-2054-11e1-9241-005056af0085/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -2068,7 +2068,7 @@ http_interactions:
       Content-Length:
       - '2285'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:25 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<host_nics>\n
@@ -2094,10 +2094,10 @@ http_interactions:
         netmask=\"255.255.254.0\" address=\"192.168.252.119\"/>\n        <speed>1000000000</speed>\n
         \       <status>\n            <state>up</state>\n        </status>\n    </host_nic>\n</host_nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:39 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:34 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -2130,7 +2130,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:26 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -2176,10 +2176,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:34 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -2212,7 +2212,7 @@ http_interactions:
       Content-Length:
       - '839'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:26 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -2224,10 +2224,10 @@ http_interactions:
         href=\"/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0/disks/2c364312-e3d0-4399-92ed-2975181d88b2\"/>\n
         \       <date>2012-06-27T14:43:38.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:34 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -2260,7 +2260,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:26 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -2271,10 +2271,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:0d\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:35 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -2307,7 +2307,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:27 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -2353,10 +2353,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:35 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -2389,7 +2389,7 @@ http_interactions:
       Content-Length:
       - '840'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:27 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -2401,10 +2401,10 @@ http_interactions:
         href=\"/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3/disks/8ea1916d-d09c-4bfe-a81a-54179b355b0c\"/>\n
         \       <date>2012-04-30T12:32:57.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:35 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -2437,7 +2437,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:02:56 GMT
+      - Tue, 07 Oct 2014 17:58:27 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -2448,10 +2448,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:0a\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:36 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/26a050fb-62c3-4645-9088-be6efec860e1/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/26a050fb-62c3-4645-9088-be6efec860e1/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -2484,7 +2484,7 @@ http_interactions:
       Content-Length:
       - '1915'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:28 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -2506,10 +2506,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:36 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/26a050fb-62c3-4645-9088-be6efec860e1/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/26a050fb-62c3-4645-9088-be6efec860e1/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -2542,7 +2542,7 @@ http_interactions:
       Content-Length:
       - '3237'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:28 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -2576,10 +2576,10 @@ http_interactions:
         href=\"/api/vms/26a050fb-62c3-4645-9088-be6efec860e1/disks/190fa724-91e7-49ba-8dcc-5dda4d0186d8\"/>\n
         \       <date>2012-09-26T10:31:37.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:40 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:37 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/26a050fb-62c3-4645-9088-be6efec860e1/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/26a050fb-62c3-4645-9088-be6efec860e1/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -2612,7 +2612,7 @@ http_interactions:
       Content-Length:
       - '1967'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:28 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -2633,10 +2633,10 @@ http_interactions:
         \       <interface>rtl8139</interface>\n        <mac address=\"00:1a:4a:a8:fc:0f\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:41 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:37 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -2669,7 +2669,7 @@ http_interactions:
       Content-Length:
       - '1916'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:28 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -2691,10 +2691,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:41 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:37 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -2727,7 +2727,7 @@ http_interactions:
       Content-Length:
       - '1617'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:28 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -2748,10 +2748,10 @@ http_interactions:
         href=\"/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876/disks/061baae8-69bc-410c-a950-7d78be535c8c\"/>\n
         \       <date>2012-09-26T10:52:25.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:41 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:37 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -2784,7 +2784,7 @@ http_interactions:
       Content-Length:
       - '1967'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:29 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -2805,10 +2805,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:12\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:41 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:38 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -2841,7 +2841,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:29 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -2887,10 +2887,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:41 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:38 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -2923,7 +2923,7 @@ http_interactions:
       Content-Length:
       - '3861'
       Date:
-      - Thu, 22 May 2014 22:02:57 GMT
+      - Tue, 07 Oct 2014 17:58:29 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -2963,10 +2963,10 @@ http_interactions:
         href=\"/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de/disks/a4f7b574-2754-458d-a784-65586212440b\"/>\n
         \       <date>2012-08-02T14:35:17.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:41 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:38 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -2999,7 +2999,7 @@ http_interactions:
       Content-Length:
       - '702'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:29 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -3010,10 +3010,10 @@ http_interactions:
         \       <interface>e1000</interface>\n        <mac address=\"00:1a:4a:a8:fc:4e\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:41 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:38 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -3046,7 +3046,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:29 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -3092,10 +3092,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:38 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -3128,7 +3128,7 @@ http_interactions:
       Content-Length:
       - '837'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:30 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -3140,10 +3140,10 @@ http_interactions:
         href=\"/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a/disks/ff633058-57b3-479e-a00e-c0f43091c151\"/>\n
         \       <date>2012-09-07T16:50:11.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:39 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -3176,7 +3176,7 @@ http_interactions:
       Content-Length:
       - '702'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:30 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -3187,10 +3187,10 @@ http_interactions:
         \       <interface>e1000</interface>\n        <mac address=\"00:1a:4a:a8:fc:33\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:39 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/4655202c-c752-461d-89bd-db42ff76b69f/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/4655202c-c752-461d-89bd-db42ff76b69f/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -3223,7 +3223,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:30 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -3269,10 +3269,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:39 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/4655202c-c752-461d-89bd-db42ff76b69f/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/4655202c-c752-461d-89bd-db42ff76b69f/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -3305,7 +3305,7 @@ http_interactions:
       Content-Length:
       - '841'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:30 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -3317,10 +3317,10 @@ http_interactions:
         href=\"/api/vms/4655202c-c752-461d-89bd-db42ff76b69f/disks/4611586d-e56e-47e9-8316-17ff7f462816\"/>\n
         \       <date>2012-02-08T18:28:54.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:39 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/4655202c-c752-461d-89bd-db42ff76b69f/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/4655202c-c752-461d-89bd-db42ff76b69f/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -3353,7 +3353,7 @@ http_interactions:
       Content-Length:
       - '64'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:30 GMT
     body:
       encoding: US-ASCII
       string: ! '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -3362,10 +3362,10 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:39 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -3398,7 +3398,7 @@ http_interactions:
       Content-Length:
       - '4705'
       Date:
-      - Thu, 22 May 2014 22:02:58 GMT
+      - Tue, 07 Oct 2014 17:58:32 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -3444,10 +3444,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:40 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -3480,7 +3480,7 @@ http_interactions:
       Content-Length:
       - '3861'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:32 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -3520,10 +3520,10 @@ http_interactions:
         href=\"/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f/disks/eaa3042a-ed09-49c4-87ac-c162c36ff17b\"/>\n
         \       <date>2011-12-08T12:01:36.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:42 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:40 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -3556,7 +3556,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:32 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -3567,10 +3567,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:01\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:40 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/70c4e710-846c-453e-bfc8-f02113f34045/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/70c4e710-846c-453e-bfc8-f02113f34045/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -3603,7 +3603,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:32 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -3649,10 +3649,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:40 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/70c4e710-846c-453e-bfc8-f02113f34045/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/70c4e710-846c-453e-bfc8-f02113f34045/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -3685,7 +3685,7 @@ http_interactions:
       Content-Length:
       - '834'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:32 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -3697,10 +3697,10 @@ http_interactions:
         href=\"/api/vms/70c4e710-846c-453e-bfc8-f02113f34045/disks/0a5c89b3-e8ad-490a-bae7-922ffef313f9\"/>\n
         \       <date>2011-12-27T11:18:00.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:40 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/70c4e710-846c-453e-bfc8-f02113f34045/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/70c4e710-846c-453e-bfc8-f02113f34045/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -3733,7 +3733,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:33 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -3744,10 +3744,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:04\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:41 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/bb8e1c05-0722-405e-967d-00b142cae630/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/bb8e1c05-0722-405e-967d-00b142cae630/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -3780,7 +3780,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:33 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -3826,10 +3826,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:41 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/bb8e1c05-0722-405e-967d-00b142cae630/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/bb8e1c05-0722-405e-967d-00b142cae630/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -3862,7 +3862,7 @@ http_interactions:
       Content-Length:
       - '835'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:33 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -3874,10 +3874,10 @@ http_interactions:
         href=\"/api/vms/bb8e1c05-0722-405e-967d-00b142cae630/disks/852765a3-7c12-4366-b10d-6e97954958b6\"/>\n
         \       <date>2012-10-08T18:37:30.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:41 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/bb8e1c05-0722-405e-967d-00b142cae630/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/bb8e1c05-0722-405e-967d-00b142cae630/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -3910,7 +3910,7 @@ http_interactions:
       Content-Length:
       - '702'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:33 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -3921,10 +3921,10 @@ http_interactions:
         \       <interface>e1000</interface>\n        <mac address=\"00:1a:4a:a8:fc:2b\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:41 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -3957,7 +3957,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:33 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -4003,10 +4003,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:42 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -4039,7 +4039,7 @@ http_interactions:
       Content-Length:
       - '3846'
       Date:
-      - Thu, 22 May 2014 22:02:59 GMT
+      - Tue, 07 Oct 2014 17:58:34 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -4079,10 +4079,10 @@ http_interactions:
         href=\"/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b/disks/efc1be6d-3847-4c2b-a997-72ffe970abd9\"/>\n
         \       <date>2012-02-07T13:42:36.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:43 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:42 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -4115,7 +4115,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:34 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -4126,10 +4126,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:09\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:42 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -4162,7 +4162,7 @@ http_interactions:
       Content-Length:
       - '1919'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:34 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -4184,10 +4184,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:42 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -4220,7 +4220,7 @@ http_interactions:
       Content-Length:
       - '1671'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:34 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -4239,10 +4239,10 @@ http_interactions:
         href=\"/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226/disks/3685c850-948b-47be-ac9a-cf93f1f0c6f8\"/>\n
         \       <date>2012-01-20T12:33:09.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:42 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -4275,7 +4275,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:34 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -4286,10 +4286,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:02\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:43 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/980bb541-261d-4d11-8782-86848f35cf33/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/980bb541-261d-4d11-8782-86848f35cf33/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -4322,7 +4322,7 @@ http_interactions:
       Content-Length:
       - '997'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:34 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -4336,10 +4336,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:43 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/980bb541-261d-4d11-8782-86848f35cf33/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/980bb541-261d-4d11-8782-86848f35cf33/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -4372,7 +4372,7 @@ http_interactions:
       Content-Length:
       - '834'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:35 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -4384,10 +4384,10 @@ http_interactions:
         href=\"/api/vms/980bb541-261d-4d11-8782-86848f35cf33/disks/33ce0787-a83d-4dcc-a224-6b4766ce643a\"/>\n
         \       <date>2012-08-29T23:09:57.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:43 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/980bb541-261d-4d11-8782-86848f35cf33/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/980bb541-261d-4d11-8782-86848f35cf33/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -4420,7 +4420,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:35 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -4431,10 +4431,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:25\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:43 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -4467,7 +4467,7 @@ http_interactions:
       Content-Length:
       - '1919'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:35 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -4489,10 +4489,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:43 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -4525,7 +4525,7 @@ http_interactions:
       Content-Length:
       - '1583'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:35 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -4544,10 +4544,10 @@ http_interactions:
         href=\"/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141/disks/cb92669c-6081-4303-9c4f-ae7d43a79dd8\"/>\n
         \       <date>2012-08-21T12:51:11.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:44 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -4580,7 +4580,7 @@ http_interactions:
       Content-Length:
       - '1335'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:35 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -4596,10 +4596,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:17\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:44 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:44 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -4632,7 +4632,7 @@ http_interactions:
       Content-Length:
       - '996'
       Date:
-      - Thu, 22 May 2014 22:03:00 GMT
+      - Tue, 07 Oct 2014 17:58:35 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -4646,10 +4646,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:45 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:44 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -4682,7 +4682,7 @@ http_interactions:
       Content-Length:
       - '835'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:36 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -4694,10 +4694,10 @@ http_interactions:
         href=\"/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67/disks/78cd3f01-35c9-4500-be65-f60532a360a3\"/>\n
         \       <date>2011-12-27T17:16:36.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:45 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:44 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -4730,7 +4730,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:36 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -4741,10 +4741,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:05\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:45 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:44 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -4777,7 +4777,7 @@ http_interactions:
       Content-Length:
       - '997'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:36 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -4791,10 +4791,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:45 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:45 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -4827,7 +4827,7 @@ http_interactions:
       Content-Length:
       - '843'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:36 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -4839,10 +4839,10 @@ http_interactions:
         href=\"/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0/disks/cebcd82e-e4f2-4c0b-ad8b-0051d7a1f4a1\"/>\n
         \       <date>2012-11-26T09:20:13.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:45 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:45 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -4875,7 +4875,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:37 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -4886,10 +4886,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:16\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:45 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:45 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -4922,7 +4922,7 @@ http_interactions:
       Content-Length:
       - '997'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:37 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -4936,10 +4936,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:46 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -4972,7 +4972,7 @@ http_interactions:
       Content-Length:
       - '829'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:37 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -4984,10 +4984,10 @@ http_interactions:
         href=\"/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39/disks/9ab199b4-d43d-4091-ba39-1d70b13c4a4a\"/>\n
         \       <date>2011-12-20T13:19:19.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:46 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -5020,7 +5020,7 @@ http_interactions:
       Content-Length:
       - '64'
       Date:
-      - Thu, 22 May 2014 22:03:01 GMT
+      - Tue, 07 Oct 2014 17:58:37 GMT
     body:
       encoding: US-ASCII
       string: ! '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -5029,10 +5029,10 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:46 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5065,7 +5065,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:38 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -5111,10 +5111,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:46 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -5147,7 +5147,7 @@ http_interactions:
       Content-Length:
       - '832'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:38 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -5159,10 +5159,10 @@ http_interactions:
         href=\"/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0/disks/43adfc13-f1a4-4f7a-9388-6e5049be6323\"/>\n
         \       <date>2013-03-28T08:36:57.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:47 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -5195,7 +5195,7 @@ http_interactions:
       Content-Length:
       - '702'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:38 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -5206,10 +5206,10 @@ http_interactions:
         \       <interface>e1000</interface>\n        <mac address=\"00:1a:4a:a8:fc:07\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:47 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5242,7 +5242,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:39 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -5288,10 +5288,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:47 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -5324,7 +5324,7 @@ http_interactions:
       Content-Length:
       - '1671'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:39 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -5343,10 +5343,10 @@ http_interactions:
         href=\"/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e/disks/d07c8761-9934-4db8-9197-7f95f845688a\"/>\n
         \       <date>2013-03-11T08:54:56.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:48 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -5379,7 +5379,7 @@ http_interactions:
       Content-Length:
       - '702'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:39 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -5390,10 +5390,10 @@ http_interactions:
         \       <interface>e1000</interface>\n        <mac address=\"00:1a:4a:a8:fc:03\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:46 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:48 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5426,7 +5426,7 @@ http_interactions:
       Content-Length:
       - '997'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:39 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -5440,10 +5440,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:48 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -5476,7 +5476,7 @@ http_interactions:
       Content-Length:
       - '1665'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:39 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -5495,10 +5495,10 @@ http_interactions:
         href=\"/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49/disks/5052e0f4-130f-4048-99a2-63c5fd1646ef\"/>\n
         \       <date>2011-09-27T15:30:05.000-04:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:48 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -5531,7 +5531,7 @@ http_interactions:
       Content-Length:
       - '702'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:39 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -5542,10 +5542,10 @@ http_interactions:
         \       <interface>e1000</interface>\n        <mac address=\"00:1a:4a:a8:fc:00\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:48 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5578,7 +5578,7 @@ http_interactions:
       Content-Length:
       - '4682'
       Date:
-      - Thu, 22 May 2014 22:03:02 GMT
+      - Tue, 07 Oct 2014 17:58:40 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -5624,10 +5624,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:49 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f/snapshots
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -5660,7 +5660,7 @@ http_interactions:
       Content-Length:
       - '832'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:40 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<snapshots>\n
@@ -5672,10 +5672,10 @@ http_interactions:
         href=\"/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f/disks/ddde3a31-fe96-41a4-91e7-8d76c9ff3270\"/>\n
         \       <date>2012-01-04T14:06:52.000-05:00</date>\n    </snapshot>\n</snapshots>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:49 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f/nics
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -5708,7 +5708,7 @@ http_interactions:
       Content-Length:
       - '703'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:40 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<nics>\n
@@ -5719,10 +5719,10 @@ http_interactions:
         \       <interface>virtio</interface>\n        <mac address=\"00:1a:4a:a8:fc:06\"/>\n
         \   </nic>\n</nics>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:49 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/00000000-0000-0000-0000-000000000000/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/00000000-0000-0000-0000-000000000000/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5755,7 +5755,7 @@ http_interactions:
       Content-Length:
       - '65'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:40 GMT
     body:
       encoding: US-ASCII
       string: ! '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -5764,10 +5764,10 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:49 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/e3af998a-7104-4a10-a7c0-bc90c4250bf5/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/e3af998a-7104-4a10-a7c0-bc90c4250bf5/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5800,7 +5800,7 @@ http_interactions:
       Content-Length:
       - '857'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:40 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -5814,10 +5814,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:50 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5850,7 +5850,7 @@ http_interactions:
       Content-Length:
       - '1635'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:42 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -5872,10 +5872,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:47 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:50 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/d473fb6b-96a5-4667-a2d4-60b195603bbf/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/d473fb6b-96a5-4667-a2d4-60b195603bbf/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5908,7 +5908,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:42 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -5954,10 +5954,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:50 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/ce9b44cb-8253-4153-ad4b-c53039dd9356/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/ce9b44cb-8253-4153-ad4b-c53039dd9356/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -5990,7 +5990,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:42 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6036,10 +6036,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:50 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/7120b19a-1b39-4bd4-afa8-6393fc4cd3dc/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/7120b19a-1b39-4bd4-afa8-6393fc4cd3dc/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6072,7 +6072,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:42 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6118,10 +6118,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:51 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/1845ad70-c097-42f8-acb6-c3ac8c410572/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/1845ad70-c097-42f8-acb6-c3ac8c410572/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6154,7 +6154,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:03 GMT
+      - Tue, 07 Oct 2014 17:58:42 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6200,10 +6200,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:51 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/a9ac3d74-eb66-437b-85c8-e83099edf9ff/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/a9ac3d74-eb66-437b-85c8-e83099edf9ff/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6236,7 +6236,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:43 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6282,10 +6282,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:51 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/6bd4eec5-0135-4cd0-ae16-71905ba76676/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/6bd4eec5-0135-4cd0-ae16-71905ba76676/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6318,7 +6318,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:43 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6364,10 +6364,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:51 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/c9ee91ff-41af-48f5-8734-953f865c83b9/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/c9ee91ff-41af-48f5-8734-953f865c83b9/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6400,7 +6400,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:43 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6446,10 +6446,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:52 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6482,7 +6482,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:43 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6528,10 +6528,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:48 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:52 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/83f76598-4797-40ff-b0ec-433eb74db8be/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/83f76598-4797-40ff-b0ec-433eb74db8be/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6564,7 +6564,7 @@ http_interactions:
       Content-Length:
       - '857'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:44 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6578,10 +6578,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:49 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:52 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/57eb8fef-58ea-4f40-a308-f88b05d18f5d/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/57eb8fef-58ea-4f40-a308-f88b05d18f5d/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6614,7 +6614,7 @@ http_interactions:
       Content-Length:
       - '857'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:44 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6628,10 +6628,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:49 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:52 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/bb3289d7-6dce-4cfc-9973-c01f3abfe13f/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/bb3289d7-6dce-4cfc-9973-c01f3abfe13f/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6664,7 +6664,7 @@ http_interactions:
       Content-Length:
       - '857'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:44 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6678,10 +6678,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:49 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:52 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api/templates/276fcf44-afeb-4591-b3a6-82544124f898/disks
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/templates/276fcf44-afeb-4591-b3a6-82544124f898/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -6714,7 +6714,7 @@ http_interactions:
       Content-Length:
       - '3982'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:44 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
@@ -6760,10 +6760,10 @@ http_interactions:
         \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
         \   </disk>\n</disks>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:49 GMT
+  recorded_at: Tue, 07 Oct 2014 17:58:53 GMT
 - request:
     method: get
-    uri: https://evm%40manageiq.com:smartvm@192.168.252.231:8443/api
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api
     body:
       encoding: US-ASCII
       string: ''
@@ -6811,7 +6811,7 @@ http_interactions:
       Content-Length:
       - '2313'
       Date:
-      - Thu, 22 May 2014 22:03:04 GMT
+      - Tue, 07 Oct 2014 17:58:44 GMT
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<api>\n
@@ -6839,9 +6839,9 @@ http_interactions:
         revision=\"0\" build=\"0\" minor=\"0\" major=\"3\"/>\n    </product_info>\n
         \   <summary>\n        <vms>\n            <total>21</total>\n            <active>0</active>\n
         \       </vms>\n        <hosts>\n            <total>1</total>\n            <active>0</active>\n
-        \       </hosts>\n        <users>\n            <total>14</total>\n            <active>3</active>\n
+        \       </hosts>\n        <users>\n            <total>14</total>\n            <active>2</active>\n
         \       </users>\n        <storage_domains>\n            <total>6</total>\n
         \           <active>0</active>\n        </storage_domains>\n    </summary>\n</api>\n"
     http_version: 
-  recorded_at: Thu, 22 May 2014 22:07:49 GMT
-recorded_with: VCR 2.4.0
+  recorded_at: Tue, 07 Oct 2014 17:58:53 GMT
+recorded_with: VCR 2.9.3
