@@ -103,7 +103,10 @@ class Jqplot
     end
 
     def apply_theme(chart, report_theme)
-      Rails.logger.error(['Jqplot apply_theme', chart, report_theme].inspect)
+      theme = JqplotThemes.get_theme(report_theme)
+      return chart if theme.nil?
+
+      chart[:options][:seriesColors] = theme[:seriesColors] if theme[:seriesColors]
       chart
     end
   end

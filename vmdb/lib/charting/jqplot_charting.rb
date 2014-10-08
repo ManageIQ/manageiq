@@ -48,10 +48,8 @@ class JqplotCharting < Charting
   ]
 
   def chart_themes_for_select
-    CHART_THEMES.collect { |name| [name, name] }
+    JqplotThemes::THEMES.collect { |name, _| [name, name] }
   end
-
-  CHART_THEMES = ['none']
 
   private
 
