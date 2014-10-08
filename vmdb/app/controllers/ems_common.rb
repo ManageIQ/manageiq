@@ -359,6 +359,7 @@ module EmsCommon
       scanstorage if params[:pressed] == "storage_scan"
       refreshstorage if params[:pressed] == "storage_refresh"
       tag(Storage) if params[:pressed] == "storage_tag"
+      deletestorages if params[:pressed] == "storage_delete"
 
       terminatevms if params[:pressed] == "instance_terminate"
 
