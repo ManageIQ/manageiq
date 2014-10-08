@@ -1,0 +1,16 @@
+= render :partial => 'form'
+%table{:width => '100%'}
+  %tr
+    %td{:align => 'right'}
+      #buttons_on
+        = button_tag('Add',
+          :class => "btn btn-primary",
+          :alt => "Add this Repository",
+          :title => "Add this Repository",
+          :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "add")}');")
+
+        = button_tag('Cancel',
+          :class => "btn btn-default",
+          :alt => "Cancel",
+          :title => "Cancel",
+          :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "cancel")}');")
