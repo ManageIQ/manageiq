@@ -19,7 +19,6 @@ module Metric::Common
     serialize :assoc_ids
     serialize :min_max   # TODO: Move this to MetricRollup
 
-    attr_accessor :v_derived_storage_used, :min_v_derived_storage_used, :max_v_derived_storage_used
     virtual_column :v_derived_storage_used, :type => :float
 
     [
