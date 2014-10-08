@@ -1931,9 +1931,6 @@ Vmdb::Application.routes.draw do
                :controller => controller_name
         end
       end
-    else # TODO: remove this else when all controller actions are defined
-      # Use legacy routes for other controllers
-      match "#{controller_name}(/:action(/:id))(.:format)", :controller => controller_name
     end
   end
 end
