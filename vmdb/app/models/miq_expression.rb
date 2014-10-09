@@ -517,10 +517,17 @@ class MiqExpression
       col_type = self.get_col_type(col_name)
 
       start_val, end_val = exp[operator]["value"]
-      start_val = self.quote(self.normalize_date_time(start_val, tz, "beginning").utc, :datetime)
-      end_val   = self.quote(self.normalize_date_time(end_val, tz, "end").utc, :datetime)
+      if col_type == :date
+        start_val = self.quote(self.normalize_date_time(start_val, "UTC", "beginning").to_date, :date)
+        end_val   = self.quote(self.normalize_date_time(end_val, "UTC", "end").to_date, :date)
 
-      clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
+        clause = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
+      else
+        start_val = self.quote(self.normalize_date_time(start_val, tz, "beginning").utc, :datetime)
+        end_val   = self.quote(self.normalize_date_time(end_val, tz, "end").utc, :datetime)
+
+        clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
+      end
     when "date_time_with_logical_operator"
       exp = exp[operator]
       operator = exp.keys.first
@@ -534,9 +541,16 @@ class MiqExpression
       when ">", "<="  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
       when "<", ">="  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
       end
-      val = self.normalize_date_time(exp[operator]["value"], tz, mode)
 
-      clause = "val=#{col_ruby}; !val.nil? && val.to_time #{normalized_operator} #{self.quote(val.utc, :datetime)}"
+      if col_type == :date
+        val = self.normalize_date_time(exp[operator]["value"], "UTC", mode)
+
+        clause = "val=#{col_ruby}; !val.nil? && val.to_date #{normalized_operator} #{self.quote(val.to_date, :date)}"
+      else
+        val = self.normalize_date_time(exp[operator]["value"], tz, mode)
+
+        clause = "val=#{col_ruby}; !val.nil? && val.to_time #{normalized_operator} #{self.quote(val.utc, :datetime)}"
+      end
     else
       raise "operator '#{operator}' is not supported"
     end
@@ -711,10 +725,17 @@ class MiqExpression
       col_type = self.class.get_col_type(col_name)
 
       start_val, end_val = exp[operator]["value"]
-      start_val = self.class.quote(self.class.normalize_date_time(start_val, tz, "beginning").utc, :datetime, :sql)
-      end_val   = self.class.quote(self.class.normalize_date_time(end_val, tz, "end").utc, :datetime, :sql)
+      if col_type == :date
+        start_val = self.class.quote(self.class.normalize_date_time(start_val, "UTC", "beginning").to_date, :date, :sql)
+        end_val   = self.class.quote(self.class.normalize_date_time(end_val, "UTC", "end").to_date, :date, :sql)
 
-      clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
+        clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
+      else
+        start_val = self.class.quote(self.class.normalize_date_time(start_val, tz, "beginning").utc, :datetime, :sql)
+        end_val   = self.class.quote(self.class.normalize_date_time(end_val, tz, "end").utc, :datetime, :sql)
+
+        clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
+      end
     when "date_time_with_logical_operator"
       exp = exp[operator]
       operator = exp.keys.first
@@ -728,9 +749,16 @@ class MiqExpression
       when ">", "<="  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
       when "<", ">="  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
       end
-      val = self.class.normalize_date_time(exp[operator]["value"], tz, mode)
 
-      clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.utc, :datetime, :sql)}"
+      if col_type == :date
+        val = self.class.normalize_date_time(exp[operator]["value"], "UTC", mode)
+
+        clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.to_date, :date, :sql)}"
+      else
+        val = self.class.normalize_date_time(exp[operator]["value"], tz, mode)
+
+        clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.utc, :datetime, :sql)}"
+      end
     else
       raise "operator '#{operator}' is not supported"
     end
