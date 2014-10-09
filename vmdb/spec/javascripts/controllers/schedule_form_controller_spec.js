@@ -1,10 +1,11 @@
 describe('scheduleFormController', function() {
-  var $scope, $controller, $httpBackend, miqService, oneMonthAgo;
+  var $scope, $controller, $httpBackend, miqService, timerOptionService, oneMonthAgo;
 
   beforeEach(module('cfmeAngularApplication'));
 
-  beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_) {
+  beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_, _timerOptionService_) {
     miqService = _miqService_;
+    timerOptionService = _timerOptionService_;
     spyOn(miqService, 'showButtons');
     spyOn(miqService, 'hideButtons');
     spyOn(miqService, 'buildCalendar');
@@ -19,7 +20,14 @@ describe('scheduleFormController', function() {
       date: 3
     };
     $httpBackend.whenGET('/ops/schedule_form_fields/new').respond();
-    $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: 'new', oneMonthAgo: oneMonthAgo, miqService: miqService});
+    $controller = _$controller_('scheduleFormController', {
+      $scope: $scope,
+      storageTable: 'Potatostore',
+      scheduleFormId: 'new',
+      oneMonthAgo: oneMonthAgo,
+      miqService: miqService,
+      timerOptionService: timerOptionService
+    });
   }));
 
   afterEach(function() {
@@ -512,6 +520,10 @@ describe('scheduleFormController', function() {
   });
 
   describe('#scheduleTimerTypeChanged', function() {
+    beforeEach(function() {
+      spyOn(timerOptionService, 'getOptions').and.returnValue(['some', 'options']);
+    });
+
     describe('when the timer type is changed to once', function() {
       beforeEach(function() {
         $scope.scheduleTimerType = 'Once';
@@ -521,6 +533,10 @@ describe('scheduleFormController', function() {
 
       it('sets the scheduleTimerValue to null', function() {
         expect($scope.scheduleTimerValue).toBeNull();
+      });
+
+      it('sets timerItems to the return value of the timerOptionService', function() {
+        expect($scope.timerItems).toEqual(['some', 'options']);
       });
     });
 
@@ -533,6 +549,32 @@ describe('scheduleFormController', function() {
 
       it('sets the scheduleTimerValue to 1', function() {
         expect($scope.scheduleTimerValue).toEqual('1');
+      });
+
+      it('sets timerItems to the return value of the timerOptionService', function() {
+        expect($scope.timerItems).toEqual(['some', 'options']);
+      });
+    });
+  });
+
+  describe('#timerNotOnce', function() {
+    describe('when the timer type is once', function() {
+      beforeEach(function() {
+        $scope.scheduleTimerType = 'Once';
+      });
+
+      it('returns false', function() {
+        expect($scope.timerNotOnce()).toBe(false);
+      });
+    });
+
+    describe('when the timer type is not once', function() {
+      beforeEach(function() {
+        $scope.scheduleTimerType = 'Hourly';
+      });
+
+      it('returns true', function() {
+        expect($scope.timerNotOnce()).toBe(true);
       });
     });
   });
