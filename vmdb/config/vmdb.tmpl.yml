@@ -441,6 +441,7 @@ workers:
         - miq_servers_product_updates
         - miq_sets
         - miq_schedules
+        - miq_shortcuts
         - miq_tasks
         - miq_user_roles
         - miq_widgets
