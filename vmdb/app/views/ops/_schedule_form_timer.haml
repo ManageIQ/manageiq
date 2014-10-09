@@ -6,13 +6,10 @@
     %table.style1
       %tr
         %td.key Run
-        %td(ng-switch on="scheduleTimerType")
+        %td
           = select_tag("timer_typ", options_for_select(["Once","Hourly","Daily","Weekly","Monthly"]), "ng-model" => "scheduleTimerType", "ng-change" => "scheduleTimerTypeChanged()")
-          %span(ng-show="scheduleTimerType !== 'Once'") every
-          = select_tag("timer_value", options_for_select(TIMER_HOURS), "ng-switch-when" => "Hourly", "ng-model" => "scheduleTimerValue")
-          = select_tag("timer_value", options_for_select(TIMER_DAYS), "ng-switch-when" => "Daily", "ng-model" => "scheduleTimerValue")
-          = select_tag("timer_value", options_for_select(TIMER_WEEKS), "ng-switch-when" => "Weekly", "ng-model" => "scheduleTimerValue")
-          = select_tag("timer_value", options_for_select(TIMER_MONTHS), "ng-switch-when" => "Monthly", "ng-model" => "scheduleTimerValue")
+          %span(ng-show="timerNotOnce()") every
+          %select#timer_value(ng-model="scheduleTimerValue" ng-options="timerItem.value as timerItem.text for timerItem in timerItems" ng-show="timerNotOnce()")
 
       %tr
         %td.key Time Zone

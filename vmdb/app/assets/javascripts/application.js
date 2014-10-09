@@ -9,6 +9,8 @@
 //= require miq_dynatree_replacement
 //= require controllers/schedule_form_controller
 //= require services/miq_service
+//= require services/timer_option_service
+//= require controllers/schedule_form_controller
 //= require dialog_import_export
 //= require widget_import_export
 //= require automate_import_export

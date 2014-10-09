@@ -1,4 +1,4 @@
-cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'storageTable', 'scheduleFormId', 'oneMonthAgo', 'miqService', function($http, $scope, storageTable, scheduleFormId, oneMonthAgo, miqService) {
+cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'storageTable', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, storageTable, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var buildFilterList = function(data) {
     $scope.filterList = [];
     angular.forEach(data.filtered_item_list, function(filteredItem) {
@@ -95,11 +95,17 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
   };
 
   $scope.scheduleTimerTypeChanged = function() {
-    if ($scope.scheduleTimerType === 'Once') {
-      $scope.scheduleTimerValue = null;
-    } else {
+    if ($scope.timerNotOnce()) {
       $scope.scheduleTimerValue = '1';
+    } else {
+      $scope.scheduleTimerValue = null;
     }
+
+    $scope.timerItems = timerOptionService.getOptions($scope.scheduleTimerType);
+  };
+
+  $scope.timerNotOnce = function() {
+    return $scope.scheduleTimerType !== 'Once';
   };
 
   $scope.cancelClicked = function() {
