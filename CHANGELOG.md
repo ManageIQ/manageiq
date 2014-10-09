@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 13 end 2014-09-29
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+13+Ending+Sept+29%2C+2014%22+is%3Aclosed+label%3Aenhancement)
+
+- UI
+  - OpenStack: Tenant relationships added to summary screens.
+  - Cloud images and instances: Added root device type to summary screens.
+  - Cloud flavors: Added block storage restriction to summary screens.
+  - Cleaned up Service Requests list and detail views.
+  - Added cloud models to reporting.
+- Automate
+  - Added new service model for CloudResourceQuota and exposed relationships
+    through EmsCloud and CloudTenant models.
+  - Enhanced import to allow granularity down to the namespace.
+- Provisioning
+  - OpenStack: Added tenant filtering on security groups, floating IPs, and
+    networks.
+  - Amazon: added filtering of flavors based on root device type and block
+    storage restrictions.
+- Providers
+  - All: Added collection of raw power state and exposed to reporting.
+  - Cloud: Added a backend attribute to identify public images.
+  - OpenStack: Added support for non-admin users to EMS Refresh.
+- Fleecing
+  - Added XFS filesystem support.
+- Security
+  - Added Kerberos ticket based SSO to web UI login.
+- Appliance
+  - Added a rake task to allow a user to replicate all pending backlog before
+    upgrading.
+  - Appliance Console: Added ability to copy keys across appliances.
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+13+Ending+Sept+29%2C+2014%22+is%3Aclosed+label%3Abug)
+
+- 80 issues fixed.  Notable fixes include
+  - UI: Fixed RBAC / Feature bugs
+  - OpenStack provider will gracefully handle 404 errors.
+  - server_monitor_poll default setting changed to 5 seconds.  This should
+    result in shorter queue wait times across the board.
+  - Fixed issue where deleting an EMS and adding it back would cause failure to
+    refresh.
+  - Fixed issue where a stopped or paused OpenStack instance could not be
+    restarted.
+  - More Ruby 2.0 backward compatible fixes.
+
 ## Unreleased - as of Sprint 12 end 2014-09-09
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+12+Ending+Sept+9%2C+2014%22+is%3Aclosed+label%3Aenhancement)
@@ -41,4 +86,3 @@ All notable changes to this project will be documented in this file.
     - haml
     - net-ldap
     - net-ping
-
