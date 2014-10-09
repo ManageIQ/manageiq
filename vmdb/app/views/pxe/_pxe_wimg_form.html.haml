@@ -1,0 +1,13 @@
+- url = url_for(:action => 'pxe_wimg_form_field_changed', :id => "#{@wimg.id || "new"}")
+#form_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend Basic Information
+  %table.style1
+    %tbody
+      %tr
+        %td.key Type
+        %td.wide
+          - img_types = [["<Unkown>",nil]] + @edit[:pxe_image_types]
+          = select_tag("image_typ",
+            options_for_select(img_types, @edit[:new][:img_type]),
+            "data-miq_observe" => {:url => url}.to_json)

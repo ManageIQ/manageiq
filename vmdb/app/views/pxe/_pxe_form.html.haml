@@ -1,0 +1,61 @@
+- url = url_for(:action => 'pxe_server_form_field_changed', :id => "#{@ps.id || "new"}")
+#form_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend Basic Information
+  %table.style1
+    %tbody
+      %tr
+        %td.key Name
+        %td
+          = text_field_tag("name", @edit[:new][:name], :maxlength => MAX_NAME_LEN,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          = javascript_tag("$j('#name').focus()")
+      %tr
+        %td.key Depot Type
+        %td.wide
+          = select_tag("log_protocol",
+            options_for_select([["<Choose>",nil]] + @edit[:protocols_arr].sort, @edit[:new][:protocol]),
+            "data-miq_observe" => {:url => url}.to_json)
+      - if !@edit[:new][:uri_prefix].nil?
+        %tr
+          %td.key URI
+          %td.wide
+            = "#{@edit[:new][:uri_prefix]}://"
+            = text_field_tag("uri", @edit[:new][:uri], :maxlength => 100,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        - if @edit[:new][:uri_prefix] != "nfs"
+          = render(:partial => "/layouts/auth_credentials", :locals => {:pfx => "log",
+            :change_url => "pxe_server_form_field_changed",
+            :validate_url => "log_depot_validate",
+            :record => @ps})
+      %tr
+        %td.key Access URL
+        %td.wide
+          = text_field_tag("access_url", @edit[:new][:access_url], :maxlength => MAX_NAME_LEN,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td.key PXE Directory
+        %td.wide
+          = text_field_tag("pxe_directory", @edit[:new][:pxe_directory], :maxlength => MAX_NAME_LEN,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td.key Windows Images Directory
+        %td.wide
+          = text_field_tag("windows_images_directory", @edit[:new][:windows_images_directory],
+            :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td.key Customization Directory
+        %td.wide
+          = text_field_tag("customization_directory", @edit[:new][:customization_directory],
+            :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+
+  %hr
+  %p.legend PXE Image Menus
+  %table.style1
+    %tbody
+      - @edit[:new][:pxe_menus].each_with_index do |menu,index|
+        %tr
+          %td.key Filename
+          %td.wide
+            = text_field_tag("pxemenu_#{index}", h(menu), :maxlength => MAX_NAME_LEN,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

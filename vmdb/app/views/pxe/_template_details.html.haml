@@ -1,0 +1,23 @@
+#template_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - # if Customization template is selected
+  - if @ct
+    #template_info_div
+      - if @edit
+        = render :partial => "template_form"
+      - else
+        = render :partial => "layouts/flash_msg"
+        = render(:partial => "shared/summary/textual",
+          :locals  => {:title => "Basic Information", :items => textual_template_basicinfo})
+        %hr
+        %p.legend Script
+        = text_area("script1", "data",
+          :value => @ct.script,
+          :size => "90x20",
+          :disabled => true,
+          :style => "display:none;")
+        - # Create a MyCodeMirror editor for the text area
+        = render(:partial =>"/layouts/my_code_mirror",
+          :locals => {:text_area_id => "script1_data",
+            :mode => @ct.type == "CustomizationTemplateKickstart" ? "shell" : "xml",
+            :line_numbers => true,
+            :read_only => true})

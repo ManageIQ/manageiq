@@ -1,0 +1,22 @@
+#template_folders_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - if @folders
+    = render(:partial=>"layouts/flash_msg")
+    %table.style3
+      %thead
+        %th.icon
+        %th
+      %tbody
+        %tr{:class => cycle('row0', 'row1'),
+          :onclick => "cfmeDynatree_activateNode('customization_templates_tree', 'xx-xx-system');",
+          :onmouseover => "this.style.cursor='pointer'", :title => "View Examples (read only)' Folder"}
+          %td{:nowrap => 'nowrap'}
+            %img{:src => '/images/icons/new/folder.png', :valign => 'middle', :border => '0', :height => "20", :width => "20"}
+          %td Examples (read only)
+        - @folders.each do |f|
+          %tr{:class => cycle('row0', 'row1'),
+            :onclick => "cfmeDynatree_activateNode('customization_templates_tree', 'xx-xx-#{to_cid(f.id)}');",
+            :onmouseover => "this.style.cursor='pointer'", :title => "View '#{f.name}' Folder"}
+            %td{:nowrap => 'nowrap'}
+              %img{:src => '/images/icons/new/folder.png', :valign => 'middle', :border => '0', :height => "20", :width => "20"}
+            %td
+              = h(f.name)
