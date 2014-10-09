@@ -7,10 +7,10 @@ gem "rake",    "~>10.1"
 #       this file, the directories resolve correctly.
 
 # Locally modified and required
-gem "activesupport", "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-6"
+gem "activesupport", "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-7"
 
 # ActiveRecord is used by appliance_console
-gem "activerecord",  "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-6"
+gem "activerecord",  "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-7"
 
 # Not locally modified and not required
 gem "awesome_spawn",        "~> 1.2",    :require => false
