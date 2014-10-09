@@ -1,0 +1,133 @@
+.maincontent
+  = render :partial => "layouts/flash_msg"
+  - case @display
+  - when "os_info"
+    - if @osinfo
+      %dl.col2
+        %dd
+          %table.style3
+            %thead
+              %tr
+                %th{:colspan => "2", :align => "left"} Basic Information
+            - @osinfo.each do |item|
+              %tr.no-hover{:class => cycle('row1', 'row1')}
+                %td.label
+                  = h(item[:osinfo])
+                %td
+                  %img{:src => "/images/icons/new/os-#{h(@record.os_image_name.downcase)}.png"}
+                  = h(item[:description])
+          %br
+    - regexosname = Regexp.new(/linux/)
+    - linuxos = regexosname.match(@record.os_image_name.downcase)
+    - unless linuxos
+      %dl.col2
+        %dd
+          %table.style3
+            %thead
+              %tr
+                %th{:colspan => "2", :align => "left"} Account Policies
+            - if @account_policy.nil? || @account_policy.empty?
+              %tr
+                %td{:width => "495"}
+                  %strong Not Available
+            - else
+              - @account_policy.each_slice(2) do |items|
+                %tr.no-hover{:class => cycle('row0', 'row1')}
+                  - items.each do |item|
+                    %td{:width => "495"}
+                      %strong
+                        = h(item[:field])
+                        = h(item[:description])
+  - when "hv_info"
+    - if @vmminfo
+      %dl.col2
+        %dd
+          %table.style3
+            %thead
+              %tr
+                %th{:colspan => "2", :align => "left"} Basic Information
+            - @vmminfo.each do |item|
+              %tr.no-hover{:class => cycle('row0', 'row1')}
+                %td.label
+                  = h(item[:vmminfo])
+                %td
+                  = h(item[:description])
+          %table.style3
+            %thead
+              %tr
+                %th{:colspan => "2", :align => "left"} Devices
+            - unless @devices.empty?
+              - @devices.each do |item|
+                %tr.no-hover{:class => cycle('row0', 'row1')}
+                  %td.label
+                    = h(item[:device])
+                  %td
+                    %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}
+                    = h(item[:description])
+                - unless item[:mode].nil?
+                  %tr.no-hover{:class => cycle('row0', 'row1')}
+                    %td.label Network Type
+                    %td
+                      = h(item[:mode])
+  - when "snapshot_info"
+    = render :partial => "vm_common/snapshots_desc"
+    = render :partial => "vm_common/snapshots_tree"
+  - when "vmtree_info"
+    - # Create divs for each VM to display as the mouse hovers over each VM node
+    - @tree_vms.each do |v|
+      - prefix = session[:base_vm] == "_h-#{v.id.to_s}|" ? 'v' : 'h'
+      #outer
+        #inner
+          %div{:id => "#{prefix}-#{v.id.to_s}", :style => "display:none; z-index:10; width: 72px; height: 72px; padding: 0 0px 0px 0px"}
+            %div{:style => "margin-left: -70px;"}
+              = render(:partial=>"layouts/quadicon", :locals=>{:mode=>:icon,
+                :item=>v,
+                :typ=>:listnav,
+                :size=>72})
+              %div
+                %center{:style => 'color:#000;'}
+                  = h(v.product_name)
+    = render :partial => "vm_common/vmtree"
+  - when "networks"
+    - if @vmminfo
+      .modbox{:style => "margin: 0px 0px 20px 30px"}
+        %h2.modtitle Network Adapters
+        %table.style3
+          - if @record.hardware.networks.blank?
+            %tr.no-hover{:class => cycle('row0', 'row1')}
+              %td
+                %strong
+                  = "#{@record.name} has no network adapters"
+          - else
+            %thead
+              %tr
+                - ["IPAddress", "Description", "DHCP Server", "DHCP Enabled", "Default Gateway", "Subnet Mask", "DNS Server"].each do |title|
+                  %th
+                    = h(title)
+            %tbody
+              %tr
+                - @record.hardware.networks.each do |v|
+                  %tr.no-hover{:class => cycle('row0', 'row1')}
+                    - [:ipaddress, :description, :dhcp_server, :dhcp_enabled, :default_gateway, :subnet_mask, :dns_server].each do |item|
+                      %td
+                        = v[item]
+  - when "resources_info"
+    %table.style3
+      %thead
+        %tr
+          %th{:colspan => "2"} Account Policies
+      - {:cpu_limit => "CPU Limit",
+          :cpu_reserve => "CPU Reserve",
+          :cpu_reserve_expand => "CPU Reserve Expand",
+          :cpu_shares => "CPU Shares",
+          :cpu_shares_level => "CPU Shares Level",
+          :memory_limit => "Memory Limit",
+          :memory_reserve => "Memory Reserve",
+          :memory_reserve_expand => "Memory Reserve Expand",
+          :memory_shares => "Memory Shares",
+          :memory_shares_level => "Memory Shares Level"}.each do |sym, label|
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label
+            = label
+          %td
+            = @record.send(sym)

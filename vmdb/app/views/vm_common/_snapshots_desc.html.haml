@@ -1,0 +1,37 @@
+- if session[:snap_selected].nil? && @record.snapshots.count > 0
+  - selected_id = @record.snapshots.first
+  - display_name = selected_id[:name]
+- else
+  - if session[:snap_selected].nil?
+    - display_name = "Basic Information"
+  - else
+    - selected_id = @temp[:snap_selected]
+    - display_name = selected_id[:name]
+
+#desc_content.desc_content
+  %fieldset
+    %p.legend
+      = display_name
+    %table.style1
+      - if !session[:snap_selected].nil? || @record.snapshots.count > 0
+        %tr
+          %td.key{:rowspan => "9", :valign => "top", :style => "width: 64px"}
+            %img{:src => "/images/icons/new/snapshot.png", :width => "64", :height => "64"}
+          %td.key Description
+          %td
+            = selected_id[:description]
+        %tr
+          %td.key Size
+          - unless selected_id[:total_size].blank?
+            %td
+              = number_to_human_size(selected_id[:total_size], :precision => 2) 
+              (#{number_with_delimiter(selected_id[:total_size], :delimiter => ",",:separator => ".")} bytes) 
+        %tr
+          %td.key Created On
+          %td
+            - if !selected_id[:create_time].blank?
+              = format_timezone(selected_id[:create_time].to_time,Time.zone,"view")
+      - else
+        %tr{:class => cycle('row0', 'row1')}
+          %td
+            %strong #{@record.name} has no snapshots.

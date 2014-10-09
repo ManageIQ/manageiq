@@ -1,0 +1,7 @@
+#main_div
+  - if @ownershipedit
+    = render :partial => "shared/views/ownership"
+  - elsif @rightsize
+    = render :partial => "vm_common/right_size"
+  - elsif @reconfigure
+    = render :partial => "vm_common/reconfigure"

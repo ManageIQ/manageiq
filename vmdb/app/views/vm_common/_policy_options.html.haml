@@ -1,0 +1,38 @@
+- url = {:url => url_for(:action => 'policy_options', :id=>@record.id)}.to_json
+- url2 = {:url => url_for(:action => 'policy_show_options', :id=>@record.id)}.to_json
+#policy_options_div
+	%fieldset%
+		%p.legend Options
+		%table.style1
+      %tr
+        %td.key Show out of scope items:
+        %td
+          = check_box_tag("out_of_scope",
+            :value => "1",
+            :checked => @policy_options[:out_of_scope],
+            "data-miq_sparkle_on" => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe_checkbox" => url)
+      %tr
+				%td.key Show policies:
+        %td
+          = check_box_tag("passed",
+            :value => "1",
+            :checked => @policy_options[:passed],
+            "data-miq_sparkle_on" => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe_checkbox" => url2)
+            &nsbp; Successful
+            &nsbp;
+            = check_box_tag("failed",
+              :value => "1",
+              :checked => @policy_options[:failed],
+              "data-miq_sparkle_on" => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe_checkbox" => url2)
+            &nsbp;
+
+- # Need this to bind checkbox observers when under DHTMLX tabs
+- # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+:javascript
+  miqObserveCheckboxes();

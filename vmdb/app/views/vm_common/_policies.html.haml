@@ -1,0 +1,27 @@
+#main_div
+  = render :partial => "layouts/flash_msg"
+  - image_pfx = "/images/toolbars/"
+  = render(:partial => 'vm_common/policy_options')
+  %fieldset
+    %p.legend Policy Simulation Details
+    - squash_state = session[:squash_open] && session[:squash_open] == true ? "false" : "true"
+    - squash_title = session[:squash_open] && session[:squash_open] == true ? "Collapse All" : "Expand All"
+    = link_to(image_tag("/images/toolbars/squashed-all-#{squash_state}.png",
+      :id => 'squash_img', :class => "rollover small", :alt => "#{squash_title}", :title => "#{squash_title}"),
+      {:action =>'squash_toggle', :id => @record.id},
+      :remote => :true, :id => 'squash')
+    %div{:id => "#{session[:tree_name]}box"}
+
+  = render(:partial => "layouts/dynatree",
+      :locals => {
+        :tree_id                     => "#{session[:tree_name]}box",
+        :tree_name                   => session[:tree_name],
+        :json_tree                   => session[:policy_tree],
+        :icon_size                   => @settings[:views][:treesize].to_i,
+        :base_id                     => "h_#{@record.name}",
+        :cfme_no_click               => true,
+        :tree_state                  => true,
+        :cookie_id_prefix            => "edit_treeOpenStatex",
+        :open_close_all_on_dbl_click => true})
+
+  * Items in <font color="red"><i>red italics</i></font> do not change the outcome of the scope or expression.

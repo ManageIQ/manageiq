@@ -1,0 +1,38 @@
+- content_for :trees do 
+  = render(:partial=>"layouts/x_adv_searchbox", :locals=>{:nameonly=>(x_active_tree == :vandt_tree)})
+  = render(:partial=>'layouts/quick_search')
+
+  - @trees.each do |tree|
+    %div{:style => "display:none;"}
+      = render(:partial => "vm_common/#{tree}")
+
+  - # Custom left cell div for compare options to use
+  = render :partial => "layouts/custom_left_cell"
+
+
+- content_for :accords do 
+  - # Create the explorer dhtmlx layout/accordion JS objects
+  = render(:partial => "layouts/dhtmlxlayout_explorer",
+    :locals=>{:accords=>@accords,
+      :active_accord=>@sb[:active_accord],
+      :accord_select_function=>"miqAccordVmInfraSelect"}) 
+
+- # These are the initial divs that will go inside center_cell_div
+- if @record 
+  - # Showing a specific VM or Template record 
+  #main_div.main_div
+    - if @showtype == "performance"
+      = render(:partial => "layouts/performance")
+      :javascript
+        var miq_after_onload = "miqAsyncAjax('#{url_for(:action=>@ajax_action, :id=>@record)}');"
+    - elsif @showtype == "timeline"
+      = render(:partial => "layouts/tl_show")
+      :javascript
+        var miq_after_onload = "miqAsyncAjax('#{url_for(:action=>@ajax_action, :id=>@record)}');"
+    - else
+      = render(:partial => 'vm_common/main', :locals=>{:controller=>"vm"})
+
+- else
+  - # Showing a list of VMs
+  #main_div.main_div
+    = render(:partial => 'layouts/x_gtl')
