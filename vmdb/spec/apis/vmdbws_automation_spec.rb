@@ -3,9 +3,6 @@ require "spec_helper"
 describe VmdbwsController, :apis => true do
 
   before(:each) do
-    MiqRegion.seed
-    MiqDialog.seed
-
     @guid = MiqUUID.new_guid
     MiqServer.stub(:my_guid).and_return(@guid)
 
