@@ -1,0 +1,9 @@
+#rates_tabs_div{:style => "width: 100%; height: 100%;"}
+  - # Toplevel Tabbar
+  - if x_active_tree == :cb_rates_tree
+    - if x_node == "root"
+      = render :partial => "rates_list"
+    - elsif ["Compute","Storage"].include?(x_node.split('-').last)
+      = render :partial => "cb_rates"
+    - else
+      = render :partial => "cb_rate_show"

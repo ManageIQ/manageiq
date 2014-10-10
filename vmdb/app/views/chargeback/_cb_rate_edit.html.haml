@@ -1,0 +1,43 @@
+- url = url_for(:action=>'cb_rate_form_field_changed', :id=>"#{@sb[:rate].id || "new"}")
+#form_div
+  %fieldset
+    %p.legend Basic Info
+    %table.style1
+      %tr
+        %td.key Description
+        %td
+          = text_field_tag("description", @edit[:new][:description],
+            :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          = javascript_tag("$j('#description').focus()")
+  %fieldset
+    %p.legend Rate Details
+    %table.style3
+      %thead
+        %tr
+          %th Group
+          %th Description
+          %th Rate
+          %th Per Time
+          %th Per Unit
+      %tbody
+        - @sb[:rate_details].each_with_index do |r,i|
+          - @cur_group = r[:group] if @cur_group.nil?
+          - if @cur_group != r[:group]
+            - @cur_group = r[:group]
+            %tr
+              %td{:style => "background-color: #f0f0f0;", :colspan => "6"} &nbsp;
+          %tr
+            %td.title1
+              = Dictionary::gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize)
+            %td.title1
+              =r[:description]
+            %td.title1{:align => 'right'}
+              = text_field_tag("rate_#{i}", @edit[:new][:details][i][:rate],
+                :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            %td.title1
+              = select_tag("per_time_#{i}",
+                options_for_select(@edit[:new][:per_time_types].invert, @edit[:new][:details][i][:per_time]),
+                "data-miq_observe" => {:url => url}.to_json)
+            - per_unit = r.per_unit_display
+            %td.title1
+              = per_unit
