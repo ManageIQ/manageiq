@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require "spec_helper"
 
 describe MiqLdap do
@@ -120,7 +122,7 @@ describe MiqLdap do
   end
 
   it "#sid_to_s" do
-    data = "\001\005\000\000\000\000\000\005\025\000\000\000+\206\301\364y\307\r\302=\336p\216\237\004\000\000".force_encoding("ASCII-8BIT")
+    data = "\001\005\000\000\000\000\000\005\025\000\000\000+\206\301\364y\307\r\302=\336p\216\237\004\000\000"
     MiqLdap.sid_to_s(data).should == "S-1-5-21-4106323499-3255682937-2389761597-1183"
   end
 end

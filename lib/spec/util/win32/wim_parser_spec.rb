@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require "spec_helper"
 
 $:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util win32})))
@@ -15,12 +17,12 @@ describe WimParser do
   context "#header" do
     it "with a WIM file" do
       @wim_parser.header.should == {
-        "image_tag"                   => "MSWIM\0\0\0".force_encoding("ASCII-8BIT"),
+        "image_tag"                   => "MSWIM\0\0\0",
         "size"                        => 208,
         "version"                     => 68864,
         "flags"                       => 0x00020082,
         "compression_size"            => 32768,
-        "wim_guid"                    => "N\x91-\xF7a'\x8D@\x9A0\xC5\xF1~\xD7X\x16".force_encoding("ASCII-8BIT"), # real GUID is pending adding support for winnt.h GUID structure parsing
+        "wim_guid"                    => "N\x91-\xF7a'\x8D@\x9A0\xC5\xF1~\xD7X\x16", # real GUID is pending adding support for winnt.h GUID structure parsing
         "part_number"                 => 1,
         "total_parts"                 => 1,
         "image_count"                 => 2,
@@ -41,7 +43,7 @@ describe WimParser do
         "integrity_flags"             => 0x00000000,
         "integrity_offset"            => 0,
         "integrity_original_size"     => 0,
-        "unused"                      => ("\0" * 60).force_encoding("ASCII-8BIT"),
+        "unused"                      => ("\0" * 60),
       }
     end
 
