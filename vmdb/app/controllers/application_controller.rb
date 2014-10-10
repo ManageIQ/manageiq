@@ -1219,7 +1219,7 @@ class ApplicationController < ActionController::Base
       # do not add listicon for AE class show_list
       unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)
         cell = new_row.add_element('cell', 'title' => 'View this item')
-        cell.add_cdata("<img src='#{listicon_image(view, row)}' width='20' height='20' border='0' align='middle' alt='Image missing'>")
+        cell.add_cdata("<img src='#{listicon_image(view)}' width='20' height='20' border='0' align='middle' alt='Image missing'>")
       end
 
       view.col_order.each_with_index do |col, col_idx|
@@ -1263,89 +1263,69 @@ class ApplicationController < ActionController::Base
   def create_cols_key(view)
     key = view.scoped_association.nil? ? view.db : (view.db + "-" + view.scoped_association)
     # For certain models, save columns for each tree that uses the view
-    if ["ServiceTemplate"].include?(view.db)
-      key += ("-" + x_active_tree.to_s) if x_active_tree
-    end
-    return key.to_sym
+    key += ("-" + x_active_tree.to_s) if ("ServiceTemplate" == view.db) && x_active_tree
+    key.to_sym
   end
 
   def calculate_pct_img(val)
-    img = val == 100 ? 20 : ((val + 2) / 5.25).round    #val is the percentage value of free space
-    return img
+    val == 100 ? 20 : ((val + 2) / 5.25).round # val is the percentage value of free space
   end
 
   # Return the image name for the list view icon of a db,id pair
-  def listicon_image(view, row)
-    klass = view.db.constantize
-    item  = @targets_hash[@id] if @targets_hash   # Get the record from the view
-    item  = klass.find(@id) unless @targets_hash  # Read the record from the db
+  def listicon_image(view)
+    item = if @targets_hash
+             @targets_hash[@id] # Get the record from the view
+           else
+             klass = view.db.constantize
+             klass.find(@id)    # Read the record from the db
+           end
+
+    p  = "/images/icons/"
+    pn = "#{p}new/"
+
     case item.class.base_class.to_s
-    when "ExtManagementSystem"
-      return "/images/icons/new/vendor-#{item.emstype.downcase}.png"
-    when "Filesystem"
-      return "/images/icons/ico/win/#{item.image_name.downcase}.ico"
-    when "Host"
-      return "/images/icons/new/vendor-#{item.vmm_vendor.downcase}.png"
-    when "MiqEvent"
-      return "/images/icons/new/event-#{item.name.downcase}.png"
+    when "ExtManagementSystem"   then "#{pn}/vendor-#{item.emstype.downcase}.png"
+    when "Filesystem"            then "#{p}ico/win/#{item.image_name.downcase}.ico"
+    when "Host"                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
+    when "MiqEvent"              then "#{pn}event-#{item.name.downcase}.png"
     when "MiqRequest"
-      case item.request_status.to_s.downcase
-      when "ok"
-        return "/images/icons/new/checkmark.png"
-      when "error"
-        return "/images/icons/new/x.png"
-      else
-        return "/images/icons/new/#{@listicon.downcase}.png"
-      end
-    when "RegistryItem"
-      return "/images/icons/new/#{item.image_name.downcase}.png"
-    when "ResourcePool"
-      img = item.vapp ? "vapp" : "resource_pool"
-      return "/images/icons/new/#{img}.png"
-    when "Vm", "VmOrTemplate"
-      return "/images/icons/new/vendor-#{item.vendor.downcase}.png"
-    when "ServiceResource"
-      return "/images/icons/new/#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
-    when "Storage"
-      return "/images/icons/new/piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
-    when "OsProcess", "EventLog"
-      return "/images/icons/new/#{@listicon.downcase}.png"
-    when "VdiController", "VdiDesktopPool"
-      vendor = item.vendor ? item.vendor.downcase : "unknown"
-      return "/images/icons/new/vendor-#{vendor}.png"
+      pn + case item.request_status.to_s.downcase
+           when "ok"    then "checkmark.png"
+           when "error" then "x.png"
+           else              "#{@listicon.downcase}.png"
+           end
+    when "RegistryItem"          then "#{pn}#{item.image_name.downcase}.png"
+    when "ResourcePool"          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
+    when "Vm", "VmOrTemplate"    then "#{pn}vendor-#{item.vendor.downcase}.png"
+    when "ServiceResource"       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
+    when "Storage"               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
+    when "OsProcess", "EventLog" then "#{pn}#{@listicon.downcase}.png"
+    when "VdiController",
+         "VdiDesktopPool"        then "#{pn}vendor-#{(item.vendor || "unknown").downcase}.png"
     when "Service", "ServiceTemplate"
-      if item.respond_to?(:picture) && item.picture
+      if item.try(:picture)
         add_pictures_to_sync(item.picture.id)
-        return "../../../pictures/#{item.picture.basename}"
+        "../../../pictures/#{item.picture.basename}"
+      else
+        # FIXME: what here?
       end
-    end
-    if @listicon != nil
-      return "/images/icons/new/#{@listicon.downcase}.png"
     else
-      return "/images/icons/new/#{view.db.underscore}.png"
+      "#{pn}#{(@listicon || view.db).underscore}.png"
     end
   end
 
-  # get the host that this vm belongs to
   def get_host_for_vm(vm)
-    if vm.host
-      @hosts = Array.new
-      @hosts.push vm.host
-    end
+    @hosts = [vm.host] if vm.host
   end
 
-  # Send the current report in text format
   def download_txt(view)
     disable_client_cache
-    send_data(view.to_text,
-      :filename => "#{@filename}.txt" )
+    send_data(view.to_text, :filename => "#{@filename}.txt")
   end
 
-  # Send the current report in csv format
   def download_csv(view)
     disable_client_cache
-    send_data(view.to_csv,
-      :filename => "#{@filename}.csv" )
+    send_data(view.to_csv, :filename => "#{@filename}.csv")
   end
 
   # Send the current report in pdf format
