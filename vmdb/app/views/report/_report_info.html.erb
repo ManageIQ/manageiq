@@ -1,63 +1,9 @@
 <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10, :div_num=>"_report_list"}) %>
 <% if @sb[:active_tab] == "report_info" %>
   <% if @sb[:miq_report_id] && @miq_report %>
-    <p class="legend"><%= @miq_report.name %></p>
-    <table class="style1">
-      <tbody>
-        <tr>
-          <td class="key">Title</td>
-          <td class="notwide"><%= @miq_report.title %></td>
-        </tr>
-        <% if @miq_report.conditions %>
-          <tr>
-            <td class="key">Primary (Record) Filter</td>
-            <td class="notwide"><%= @miq_report.conditions.to_human %></td>
-          </tr>
-        <% end %>
-        <% if @miq_report.display_filter %>
-          <tr>
-            <td class="key">Secondary (Display) Filter</td>
-            <td class="notwide"><%= @miq_report.display_filter.to_human %></td>
-          </tr>
-        <% end %>
-        <% if @miq_report.sortby %>
-          <% sortby = Array.new %>
-          <% @miq_report.sortby.each do |s| %>
-            <% sortby.push(Dictionary::gettext(s, :type=>:column, :notfound=>:titleize)) %>
-          <% end %>
-          <tr>
-            <td class="key">Sort By</td>
-            <td class="notwide">
-              <%= sortby.join(", ") %>
-            </td>
-          </tr>
-        <% end %>
-        <% if @miq_report.graph %>
-          <tr>
-            <td class="key">Chart</td>
-            <td class="notwide"><%= @miq_report.graph[:type] %></td>
-          </tr>
-        <% end %>
-        <tr>
-          <td class="key">Based On</td>
-          <td class="notwide"><%= Dictionary::gettext(@miq_report.db, :type=>:model, :notfound=>:titleize) %></td>
-        </tr>
-        <tr>
-          <td class="key">User</td>
-          <td class="notwide"><%= @miq_report.user ? @miq_report.user.userid : "" %></td>
-        </tr>
-        <tr>
-          <td class="key"><%= Dictionary::gettext("MiqGroup", :type=>:model, :notfound=>:titleize) %></td>
-          <td class="notwide"><%= @miq_report.miq_group ? @miq_report.miq_group.description : "" %></td>
-        </tr>
-        <tr>
-          <td class="key">Updated On</td>
-          <td class="notwide">
-            <%= format_timezone(@miq_report.updated_on,Time.zone,"gtl") %>
-          </td>
-        </tr>
-        </tbody>
-    </table>
+    <%= render :partial => "shared/summary/textual",
+               :locals  => {:title => @miq_report.name,
+                            :items => textual_miq_report_info} %>
     <hr>
   <% end %>
   <p class="legend">Schedules</p>

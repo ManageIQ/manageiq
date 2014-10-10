@@ -1,4 +1,6 @@
 module ReportHelper
+  include_concern 'TextualSummary'
+
   STYLE_CLASSES = {
     :miq_rpt_red_text     => "Red Text",
     :miq_rpt_red_bg       => "Red Background",
