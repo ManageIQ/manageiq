@@ -1,0 +1,7 @@
+#dashboard_dropdown
+  = render(:partial => "layouts/dhtmlx_tags", :locals => {:control => "toolbar"})
+  #widget_select_div{:style => "padding-left: 14px; padding-top: 4px;"}
+
+  - # Set the JS var to hold the dhtmlxtoolbar widget dropdown XML
+  :javascript
+    var miqMenuXML = "#{@widgets_menu_xml}";

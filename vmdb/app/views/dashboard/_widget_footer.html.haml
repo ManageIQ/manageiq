@@ -1,0 +1,15 @@
+- # Parameters:
+- #   widget -- MiqWidget object
+.modboxfooter
+  Updated
+  - last_run_on = widget.last_run_on_for_user(session[:userid])
+  - if last_run_on
+    = format_timezone(last_run_on, session[:user_tz], "widget_footer")
+  - else
+    Never
+  &nbsp;&nbsp;|&nbsp;&nbsp; Next
+  - next_run_on = widget.next_run_on
+  - if next_run_on
+    = format_timezone(next_run_on, session[:user_tz], "widget_footer")
+  - else
+    Unknown
