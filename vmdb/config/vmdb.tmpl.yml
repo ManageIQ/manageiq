@@ -422,6 +422,7 @@ workers:
         - miq_alert_statuses
         - miq_alerts
         - miq_databases
+        - miq_dialogs
         - miq_enterprises
         - miq_events
         - miq_globals
