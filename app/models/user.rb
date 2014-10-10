@@ -78,7 +78,6 @@ class User < ActiveRecord::Base
 
   before_validation :nil_email_field_if_blank
   before_validation :dummy_password_for_external_auth
-  before_save :on_changed_admin_password
   before_destroy :destroy_subscribed_widget_sets
 
   def miq_group
@@ -267,20 +266,6 @@ class User < ActiveRecord::Base
     self.userid == "admin"
   end
 
-  def sync_admin_password(fd = nil)
-    raise "User is not admin" unless admin?
-
-    fd_provided = !!fd
-    fd ||= File.open(File.join(Rails.root, "config/miq_pass"), 'w')
-    fd.puts self.read_attribute(:password_digest)
-  ensure
-    fd.close unless fd_provided
-  end
-
-  def self.sync_admin_password(fd = nil)
-    User.admin.first.sync_admin_password(fd)
-  end
-
   def subscribed_widget_sets
     MiqWidgetSet.subscribed_for_user(self)
   end
@@ -316,20 +301,6 @@ class User < ActiveRecord::Base
       (vms + miq_groups.includes(:vms).collect(&:vms).flatten).uniq
     else
       Vm.all
-    end
-  end
-
-  protected
-
-  def on_changed_admin_password
-    if admin? && self.password_digest_changed?
-      sync_admin_password
-
-      # notify other servers in region, to call MiqUser#sync_admin_password
-      MiqRegion.my_region.miq_servers.each do |s|
-        next if s.guid == MiqServer.my_guid
-        s.sync_admin_password_queue
-      end
     end
   end
 
