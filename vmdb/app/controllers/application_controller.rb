@@ -107,32 +107,6 @@ class ApplicationController < ActionController::Base
   end
   hide_action :render_exception
 
-  # See if a report URL is defined and reroute report requests to it
-  def check_redirect
-    if controller_name == "report"
-      if get_vmdb_config[:server][:report_url] != nil
-        params[:only_path] = true
-#       params[:sess] = request.session.session_id
-        report_url = get_vmdb_config[:server][:report_url] + url_for(params)
-        #headers["Status"] = "301 Moved Permanently"
-        redirect_to report_url
-        return true
-      end
-#     sdata = Session.find_by_session_id(@session_id).data
-#     sdata = Session.find_by_session_id(params[:sess]).data
-#     @_session = Marshal.load(Base64.decode64(sdata.split("\n").join))
-    else
-      if get_vmdb_config[:server][:evm_url] != nil
-        params[:only_path] = true
-        evm_url = get_vmdb_config[:server][:evm_url] + url_for(params)
-        #headers["Status"] = "301 Moved Permanently"
-        redirect_to evm_url
-        return true
-      end
-    end
-    return false
-  end
-
   # Put out error msg if user's role is not authorized for an action
   def auth_error
     add_flash(I18n.t("flash.user_not_authorized"), :error)
