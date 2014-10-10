@@ -32,21 +32,31 @@ describe MiqUserRole do
   context "testing allows methods" do
     before(:each) do
       MiqRegion.seed
-      MiqProductFeature.seed
+
+      EvmSpecHelper.seed_specific_product_features(%w(
+        dashboard_add
+        dashboard_view
+        host_compare
+        host_edit
+        host_scan
+        host_show_list
+        policy
+        vm
+      ))
 
       @idents1 = ["dashboard_admin"]
       @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents1))
-      @group1  = FactoryGirl.create(:miq_group, :description => "Group1", :miq_user_role => @role1, :ui_task_set_id => 1)
+      @group1  = FactoryGirl.create(:miq_group, :description => "Group1", :miq_user_role => @role1)
       @user1   = FactoryGirl.create(:user, :userid => "user1", :miq_groups => [@group1])
 
       @idents2 = ["everything"]
       @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents2))
-      @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2, :ui_task_set_id => 1)
+      @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
       @user2   = FactoryGirl.create(:user, :userid => "user2", :miq_groups => [@group2])
 
       @idents3 = ["host_show_list", "host_scan", "host_edit"]
       @role3   = FactoryGirl.create(:miq_user_role, :name => "Role3", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents3))
-      @group3  = FactoryGirl.create(:miq_group, :description => "Group3", :miq_user_role => @role3, :ui_task_set_id => 1)
+      @group3  = FactoryGirl.create(:miq_group, :description => "Group3", :miq_user_role => @role3)
       @user3   = FactoryGirl.create(:user, :userid => "user3", :miq_groups => [@group3])
     end
 
