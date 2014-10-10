@@ -12,11 +12,11 @@ class UserValidationService
   # Validate user login credentials
   #   return <url for redirect> as part of the result
   #
-  def validate_user(user, task_id = nil)
+  def validate_user(user, task_id = nil, request = nil)
     if task_id.present?
       validation = validate_user_collect_task(user, task_id)
     else # First time thru, kick off authenticate task
-      validation = validate_user_kick_off_task(user)
+      validation = validate_user_kick_off_task(user, request)
       return validation unless validation.result == :pass
     end
 
@@ -90,12 +90,12 @@ class UserValidationService
     end
   end
 
-  def validate_user_kick_off_task(user)
+  def validate_user_kick_off_task(user, request)
     validate_user_pre_auth_checks(user).tap { |result| return result if result }
 
     # Call the authentication, use wait_for_task if a task is spawned
     begin
-      user_or_taskid = User.authenticate(user[:name], user[:password])
+      user_or_taskid = User.authenticate(user[:name], user[:password], request)
     rescue MiqException::MiqEVMLoginError
       user[:name] = nil
       return ValidateResult.new(:fail, I18n.t("flash.authentication.error"))

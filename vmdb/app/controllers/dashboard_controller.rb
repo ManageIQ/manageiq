@@ -488,7 +488,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    validation = validate_user(user, params[:task_id])
+    validation = validate_user(user, params[:task_id], request)
     case validation.result
     when :wait_for_task
       # noop, page content already set by initiate_wait_for_task
@@ -655,8 +655,8 @@ class DashboardController < ApplicationController
   end
   helper_method(:tl_toggle_button_enablement)
 
-  def validate_user(user, task_id = nil)
-    UserValidationService.new(self).validate_user(user, task_id)
+  def validate_user(user, task_id = nil, request = nil)
+    UserValidationService.new(self).validate_user(user, task_id, request)
   end
 
   def start_url_for_user(start_url)
