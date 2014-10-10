@@ -49,7 +49,7 @@ describe ApplicationController do
 
   context "#assert_privileges" do
     before do
-      EvmSpecHelper.seed_specific_product_features("host")
+      EvmSpecHelper.seed_specific_product_features("host_new", "host_edit")
       feature = MiqProductFeature.find_all_by_identifier("host_new")
       test_user_role  = FactoryGirl.create(:miq_user_role,
                                            :name                 => "test_user_role",
@@ -66,7 +66,7 @@ describe ApplicationController do
       end.should_not raise_error
     end
 
-    it "should raise an error for feature that user does not have acces to" do
+    it "should raise an error for feature that user does not have access to" do
       msg = "The user is not authorized for this task or item."
       lambda do
         controller.send(:assert_privileges, "host_edit")
