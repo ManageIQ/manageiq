@@ -16,7 +16,7 @@ module ControllerSpecHelper
   end
 
   def seed_specific_product_features(feature)
-    MiqProductFeature.seed_specific_features(feature)
+    EvmSpecHelper.seed_specific_product_features(feature)
     create_user_with_product_features(MiqProductFeature.find_all_by_identifier([feature]))
   end
 

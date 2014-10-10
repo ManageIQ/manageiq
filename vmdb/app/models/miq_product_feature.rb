@@ -88,13 +88,6 @@ class MiqProductFeature < ActiveRecord::Base
     end
   end
 
-  def self.seed_specific_features(*features)
-    features = features.first if features.first.kind_of?(Array)
-    hash = YAML.load_file(FIXTURE_YAML)
-    hash[:children].select! { |h| h[:identifier].in?(features) }
-    self.seed_from_hash(hash)
-  end
-
   def self.seed_from_hash(hash, seen = [], parent=nil)
     log_header = "MIQ(#{self.name}.seed_from_hash)"
     children = hash.delete(:children) || []

@@ -49,7 +49,7 @@ describe ApplicationController do
 
   context "#assert_privileges" do
     before do
-      MiqProductFeature.seed_specific_features("host")
+      EvmSpecHelper.seed_specific_product_features("host")
       feature = MiqProductFeature.find_all_by_identifier("host_new")
       test_user_role  = FactoryGirl.create(:miq_user_role,
                                            :name                 => "test_user_role",
