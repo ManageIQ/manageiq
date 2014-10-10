@@ -6,15 +6,22 @@ module FixAuth
 
     module ClassMethods
       attr_accessor :password_fields
+      attr_accessor :password_prefix
+      # true if we want to output the keys as symbols (default: false - output as string keys)
+      attr_accessor :symbol_keys
 
       def display_column(r, column)
         puts "    #{column}:"
         traverse_column([], YAML.load(r.send(column)))
       end
 
+      def password_field?(key)
+        key.to_s.in?(password_fields) || (password_prefix && key.to_s.include?(password_prefix))
+      end
+
       def traverse_column(names, hash)
         hash.each_pair do |n, v|
-          if n.to_s.in?(password_fields)
+          if password_field?(n)
             puts "      #{names.join(".")}.#{n}: #{v}"
           elsif v.is_a?(Hash)
             traverse_column(names + [n], v)
@@ -23,20 +30,27 @@ module FixAuth
       end
 
       def hardcode(old_value, new_value)
-        hash = Vmdb::ConfigurationEncoder.load(old_value) do |k, v, h|
-          h[k] = new_value if k.to_s.in?(password_fields) && v.present?
+        hash = Vmdb::ConfigurationEncoder.load(old_value, !symbol_keys) do |k, v, h|
+          h[k] = new_value if password_field?(k) && v.present?
         end
-        Vmdb::ConfigurationEncoder.dump(hash)
+        Vmdb::ConfigurationEncoder.dump(hash, nil, !symbol_keys) do |k, v, h|
+          h[k] = MiqPassword.try_encrypt(new_value) if password_field?(k) && v.present?
+        end
       end
 
       def recrypt(old_value, options = {})
-        hash = Vmdb::ConfigurationEncoder.load(old_value)
-        Vmdb::ConfigurationEncoder.dump(hash)
-      rescue
-        if options[:invalid]
-          hardcode(old_value, options[:invalid])
-        else
-          raise
+        hash = Vmdb::ConfigurationEncoder.load(old_value, !symbol_keys) do |k, v, h|
+          if password_field?(k) && v.present?
+            begin
+              h[k] = MiqPassword.try_decrypt(v)
+            rescue
+              raise unless options[:invalid]
+              h[k] = options[:invalid]
+            end
+          end
+        end
+        Vmdb::ConfigurationEncoder.dump(hash, nil, !symbol_keys) do |k, v, h|
+          h[k] = MiqPassword.try_encrypt(v) if password_field?(k) && v.present?
         end
       end
     end
