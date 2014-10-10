@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 module NtUtil
 
   def NtUtil.NtToRubyTime(ntTime)

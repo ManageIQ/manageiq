@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require "spec_helper"
 
 $:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. util})))

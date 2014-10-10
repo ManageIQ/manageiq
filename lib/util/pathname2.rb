@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 # == Synopsis
 #
 # Pathname2 represents a path name on a filesystem.  A Pathname2 can be

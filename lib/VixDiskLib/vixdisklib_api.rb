@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'vixdisklib_ffi'
 
 class VixDiskLibError < RuntimeError

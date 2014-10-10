@@ -1,3 +1,4 @@
+# encoding: US-ASCII
 #!/usr/bin/env ruby
 
 require 'optparse'

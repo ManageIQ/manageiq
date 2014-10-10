@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 class MiqMemory
   PACK_MIN = 152       #size after which performance of pack is better than the * operator 
   PACK_MAX = 545259518 #size after which pack completely fails

@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 module VMWareDiskProbe
     SPARSE_MAGIC = "KDMV"
     SPARSE_MOD   = "VMWareSparseDisk"

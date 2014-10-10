@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'rubygems'
 require 'mk4rb'
 

@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'stringio'
 
 $:.push("#{File.dirname(__FILE__)}/../../../util")

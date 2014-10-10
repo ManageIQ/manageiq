@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../../util")
