@@ -114,27 +114,6 @@ class ApplicationController < ActionController::Base
 #   render(:text=>"User is not authorized for this task . . . press your browser's Back button to continue")
   end
 
-  # Turn on temp debugws mode
-  def toggle_debugws
-# Switch toggle commented out . . . this code now just triggers the hazing bug!
-#   if session[:debugws] == nil || session[:debugws] == false
-#     session[:debugws] = true
-#     @flash_msg = "Rescue VM errors: off"
-#   else
-#     session[:debugws] = false
-#     @flash_msg = "Rescue VM errors: on"
-#   end
-    render :update do |page|
-      text = ""
-      20.times{
-        10.times{text += rand(99999999).to_s + " "}
-        text += "<br/>"
-        }
-      page.replace("twrap","<br/>Unrecoverable system error: 0x6F47EA323  memory corruption at #{rand(99999999).to_s}<br/> #{text}possible buffer overrun security exposure")
-#     page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-    end
-  end
-
   def change_tab
     redirect_to(:action=>params[:tab], :id=>params[:id])
   end
