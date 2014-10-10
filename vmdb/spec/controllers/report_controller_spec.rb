@@ -751,7 +751,7 @@ describe ReportController do
 
   context "ReportController::Schedules" do
     before do
-      seed_specific_product_features("miq_report")
+      seed_specific_product_features("miq_report_schedule_enable", "miq_report_schedule_disable")
     end
 
     context "no schedules selected" do

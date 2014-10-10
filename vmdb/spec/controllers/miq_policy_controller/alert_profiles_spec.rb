@@ -4,7 +4,7 @@ include UiConstants
 describe MiqPolicyController do
   context "::AlertProfiles" do
     before do
-      seed_specific_product_features("control_explorer")
+      seed_specific_product_features("alert_profile_assign")
     end
 
     context "#alert_profile_assign" do

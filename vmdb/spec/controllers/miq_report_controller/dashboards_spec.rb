@@ -4,7 +4,7 @@ describe ReportController do
   context "::Dashboards" do
     context "#db_edit" do
       before :each do
-        seed_specific_product_features("miq_report")
+        seed_specific_product_features("db_edit")
         @db = FactoryGirl.create(:miq_widget_set,
                                  :owner    => User.current_user.current_group,
                                  :set_data => {:col1 => [], :col2 => [], :col3 => []})

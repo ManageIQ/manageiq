@@ -1,10 +1,6 @@
 require "spec_helper"
 
 describe StorageController do
-  before do
-    seed_specific_product_features("host")
-  end
-
   context "#button" do
     it "when VM Right Size Recommendations is pressed" do
       controller.instance_variable_set(:@_params, {:pressed => "vm_right_size"})
@@ -74,6 +70,8 @@ describe StorageController do
       "host_reset"    => "Reset"
     }.each do |button, description|
       it "when Host #{description} button is pressed" do
+        seed_specific_product_features(button)
+
         host = FactoryGirl.create(:host)
         controller.instance_variable_set(:@_params, {:pressed => button, :miq_grid_checks => "#{host.id}"})
         controller.instance_variable_set(:@lastaction, "show_list")

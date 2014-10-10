@@ -3,11 +3,11 @@ include UiConstants
 
 describe MiqAeCustomizationController do
   context "::Dialogs" do
-    before do
-      seed_specific_product_features("miq_ae_customization_explorer")
-    end
+    context "#dialog_delete" do
+      before do
+        seed_specific_product_features("dialog_delete")
+      end
 
-    context "#dialog_button_operation" do
       it "flash message displays Dialog Label being deleted" do
         dialog = FactoryGirl.create(:dialog, :label            => "Test Label",
                                              :description      => "Test Description",
