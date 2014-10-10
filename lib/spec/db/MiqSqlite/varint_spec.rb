@@ -27,7 +27,7 @@ describe MiqSqlite3DB do
     expect(get_varint("\x81\x00")).to eql(0x00000080)
     expect(get_varint("\x82\x00")).to eql(0x00000100)
     expect(get_varint("\x80\x7f")).to eql(0x0000007f)
-    expect(get_varint("\x81\x91\xd1\xac\x78")).to eql(0x12345678)  # For some reason, the example in the comments is wrong!)
+    expect(get_varint("\x81\x91\xd1\xac\x78")).to eql(0x12345678)  # For some reason, the example in the comments is wrong!
     expect(get_varint("\x81\x81\x81\x81\x01")).to eql(0x10204081)
   end
 

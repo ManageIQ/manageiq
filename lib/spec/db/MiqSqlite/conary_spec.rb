@@ -1,19 +1,19 @@
 require "spec_helper"
 
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. db})))
+$LOAD_PATH.push(File.expand_path(File.join(File.dirname(__FILE__), %w(.. .. .. db))))
 require 'MiqSqlite/MiqSqlite3'
 
 describe MiqSqlite3DB::MiqSqlite3 do
 
-  let(:fname) { "#{File.dirname(__FILE__)}/conary.db"}
-  let(:db)    { MiqSqlite3DB::MiqSqlite3.new(fname)}
+  let(:fname) { "#{File.dirname(__FILE__)}/conary.db" }
+  let(:db)    { MiqSqlite3DB::MiqSqlite3.new(fname) }
 
   after do
     db.close
   end
 
   it "#table_names" do
-    expected = %w{
+    expected = %w(
       DBFileTags
       DBFlavorMap
       DBTroveFiles
@@ -30,36 +30,36 @@ describe MiqSqlite3DB::MiqSqlite3 do
       TroveTroves
       Versions
       sqlite_sequence
-    }
+    )
 
-    expect(db.table_names.sort).to eql(expected)
+    expect(db.table_names).to match_array(expected)
   end
 
   it "#npages" do
-    expect(db.npages).to eql(16699)
+    expect(db.npages).to eq(16_699)
   end
 
   it "btree" do
-    tVersions  = db.getTable("Versions")
-    tInstances = db.getTable("Instances")
+    t_versions  = db.getTable("Versions")
+    t_instances = db.getTable("Instances")
 
     versions = Hash.new
-    tVersions.each_row { |row|
+    t_versions.each_row do |row|
       id           = row['versionId']
       versions[id] = row['version']
-    }
+    end
 
     troves = Hash.new
-    tInstances.each_row { |row|
+    t_instances.each_row do |row|
       troveName = row['troveName']
       versionId = row['versionId']
-      if versions.has_key?(versionId) && !troveName.include?(":") && row['isPresent']
+      if versions.key?(versionId) && !troveName.include?(":") && row['isPresent']
         troves[troveName] = {
           :versionID => versionId,
           :version   => versions[versionId]
         }
       end
-    }
+    end
 
     expected = {
       "info-disk"                   => {:versionID => 1, :version => "/conary.rpath.com@rpl:devel//1/1-1-0.1"},
@@ -275,6 +275,6 @@ describe MiqSqlite3DB::MiqSqlite3 do
       "graphviz"                    => {:versionID => 48, :version => "/contrib.rpath.org@rpl:devel//1/2.12-2.3-1"},
       "group-amp"                   => {:versionID => 592, :version => "/vehera-base.rpath.org@rpl:devel/1.6.10-3-1"}
     }
-    expect(troves).to eql(expected)
+    expect(troves).to eq(expected)
   end
 end
