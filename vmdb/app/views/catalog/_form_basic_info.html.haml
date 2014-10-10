@@ -1,0 +1,115 @@
+- url = url_for(:id => "#{@edit[:rec_id] || "new"}",
+  :action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed")
+
+#basic_info_div
+  = hidden_div_if(@edit && @edit[:ae_tree_select] != true, :id => "ae_tree_select_div" ) do
+    = render(:partial=>'layouts/ae_tree_select')
+
+  %p.legend Basic Info
+  %table.style1
+    %tr
+      %td.key Name / Description
+      %td
+        = text_field_tag("name",
+          @edit[:new][:name].to_s,
+          :maxlength => 40,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        &nbsp;/&nbsp;
+        = text_field_tag("description",
+          @edit[:new][:description],
+          :maxlength => 60,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        &nbsp;
+        = check_box_tag("display", value = "1", checked = @edit[:new][:display],
+          "data-miq_observe_checkbox" => {:url => url}.to_json)
+        &nbsp;Display in Catalog
+    = javascript_tag(javascript_focus('name'))
+    - if @edit[:new][:display]
+      %tr
+        %td.key Catalog
+        %td.wide
+          = select_tag('catalog_id',
+            options_for_select(([["<Unassigned>",nil]]) + @edit[:new][:available_catalogs], @edit[:new][:catalog_id]),
+            "data-miq_sparkle_on" => true,
+            "data-miq_observe" => {:url => url}.to_json)
+      %tr
+        %td.key Dialog
+        %td.wide
+          - options = [["<No Dialog>",nil]] + @edit[:new][:available_dialogs].invert.to_a.sort_by{ |a| a.first.downcase }
+          = select_tag('dialog_id',
+            options_for_select(options, @edit[:new][:dialog_id]),
+            "data-miq_sparkle_on" => true, "data-miq_observe" => {:url => url}.to_json)
+      %tr
+        %td.key{:title => "Provisioning Entry Point (NameSpace/Class/Instance)"}
+          Provisioning Entry Point
+          %br
+          (NS/Cls/Inst)
+        %td.wider{:title => @edit[:new][:fqname]}
+          %table
+            %tr
+              %td
+                = text_field_tag("fqname", @edit[:new][:fqname],
+                  :onFocus => 'miqShowAE_Tree("provision");miqButtons(false);')
+              %td
+                - display = @edit[:new][:fqname] != "" ? "" : "display:none"
+                #fqname_div{:style => @edit[:new][:fqname] != "" ? "" : "display:none"}
+                  = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Provisioning Entry Point"),
+                    {:action => 'ae_tree_select_discard', :typ => "provision"},
+                    "data-miq_sparkle_on" => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-confirm" => "Are you sure you want to remove this Provisioning Entry Point?",
+                    :remote => true,
+                    :title => "Remove this Provisioning Entry Point")
+      %tr
+        %td.key{:title => "Reconfigure Entry Point (NameSpace/Class/Instance)"}
+          Reconfigure Entry Point
+          %br
+          (NS/Cls/Inst)
+        %td.wider{:title => @edit[:new][:reconfigure_fqname]}
+          %table
+            %tr
+              %td
+                = text_field_tag("reconfigure_fqname",
+                  @edit[:new][:reconfigure_fqname],
+                  :onFocus => 'miqShowAE_Tree("reconfigure")',
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+              %td
+              #reconfigure_fqname_div{:style => @edit[:new][:reconfigure_fqname] != "" ? "" : "display:none"}
+                = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Reconfigure Entry Point"),
+                  {:action => 'ae_tree_select_discard', :typ => "reconfigure"},
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-confirm" => "Are you sure you want to remove this Reconfigure Entry Point?",
+                  :remote => true,
+                  :title => "Remove this Reconfigure Entry Point")
+      %tr
+        %td.key{:title => "Retirement Entry Point (NameSpace/Class/Instance)"}
+          Retirement Entry Point
+          %br
+          (NS/Cls/Inst)
+        %td.wider{:title => @edit[:new][:retire_fqname]}
+          %table
+            %tr
+              %td
+                = text_field_tag("retire_fqname", @edit[:new][:retire_fqname],
+                  :onFocus => 'miqShowAE_Tree("retire");miqButtons(false);')
+              %td
+                #retire_fqname_div{:style => @edit[:new][:retire_fqname] != "" ? "" : "display:none"}
+                  = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Retirement Entry Point"),
+                    {:action => 'ae_tree_select_discard', :typ => "retirement"},
+                    "data-miq_sparkle_on" => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-confirm" => "Are you sure you want to remove this Retirement Entry Point?",
+                    :remote => true,
+                    :title => "Remove this Retirement Entry Point")
+    /
+      %tr
+        %td.key Cost
+        %td
+          = text_field_tag("provision_cost", @edit[:new][:provision_cost], :maxlength => MAX_NAME_LEN,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+
+  - # Need this to bind checkbox observers when under DHTMLX tabs
+  - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+  :javascript
+    miqObserveCheckboxes();
