@@ -1,0 +1,11 @@
+- # Parameters:
+- #   widget -- MiqWidget object
+#zoomed_chart_div
+  %h2.modtitle
+    %a.delbox{:title => "Close", :href => "#",
+      :onclick => "miqSparkle(false);$j('#lightbox-panel').fadeOut(300);"}
+    %div
+      %span.modtitle_text
+        = h(widget.title)
+  = chart_remote('dashboard', :id => 'my_chart', :width => 700, :height => 500, :bgcolor => "#f2f2f2")
+  = render :partial => 'widget_footer', :locals => {:widget => widget}

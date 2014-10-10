@@ -1,0 +1,20 @@
+#tl_div
+  .dhtmlxInfoBarLabel-2
+    = @title
+  %br
+  = yield
+  = render :partial => "layouts/flash_msg"
+  - if @report && @report.table && @report.table.data.blank?
+  - elsif @report
+    #miq_timeline{:style => "height: 500px; border: 1px solid #aaa;"}
+    = render(:partial => "layouts/timeline",
+      :locals  => {:bands => @report.timeline[:bands],
+        :tl_json => @temp[:tl_json].to_s.html_safe,
+        :data_action => "getTLdata",
+        :position_time => session[:tl_position]})
+    - if @report.filter_summary
+      = @report.filter_summary
+  - else
+    .alert.alert-info
+      %span.pficon.pficon-info
+      %strong Choose a Timeline from the menus on the left.

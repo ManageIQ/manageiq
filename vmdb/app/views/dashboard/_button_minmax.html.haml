@@ -1,0 +1,16 @@
+- # Parameters:
+- #   widget -- MiqWidget object
+- if @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id)
+  = link_to("",
+    {:controller => "dashboard", :action => "widget_toggle_minmax", :widget => "#{widget.id}"},
+    :id => "w_#{widget.id}_minmax",
+    :title => "Restore",
+    :remote => true,
+    :class => "maxbox")
+- else
+  = link_to("",
+    {:controller => "dashboard", :action => "widget_toggle_minmax", :widget => "#{widget.id}"},
+    :id => "w_#{widget.id}_minmax",
+    :title => "Minimize",
+    :remote => true,
+    :class => "minbox")
