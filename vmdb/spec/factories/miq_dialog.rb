@@ -8,5 +8,23 @@ FactoryGirl.define do
   factory :miq_dialog_provision, :parent => :miq_dialog do
     name        "miq_provision_dialogs"
     dialog_type "MiqProvisionWorkflow"
+
+    content do
+      {
+        :dialogs => {
+          :customize => {
+            :description => "Customize",
+            :fields      => {
+              :root_password => {
+                :description => "Root Password",
+                :required    => false,
+                :display     => :edit,
+                :data_type   => :string
+              }
+            }
+          }
+        }
+      }
+    end
   end
 end
