@@ -95,7 +95,14 @@ describe VmdbwsController, :apis => true do
 
     context "with a valid MiqProvisionRequest" do
       before(:each) do
-        Classification.seed
+        FactoryGirl.create(:classification_tag,
+          :name   => "internal",
+          :parent => FactoryGirl.create(:classification, :name => "network_location")
+        )
+        FactoryGirl.create(:classification_tag,
+          :name   => "001",
+          :parent => FactoryGirl.create(:classification, :name => "cc")
+        )
 
         params = @params[0,5]
         params << VmdbwsSupport::ProvisionOptions.new(:values => @params[5], :ems_custom_attributes => @params[6], :miq_custom_attributes => @params[7])
