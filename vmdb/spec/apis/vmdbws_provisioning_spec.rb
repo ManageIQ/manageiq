@@ -3,9 +3,6 @@ require "spec_helper"
 describe VmdbwsController, :apis => true do
 
   before(:each) do
-    MiqRegion.seed
-    MiqDialog.seed
-
     @guid = MiqUUID.new_guid
     MiqServer.stub(:my_guid).and_return(@guid)
 
@@ -34,6 +31,8 @@ describe VmdbwsController, :apis => true do
 
   context "With a Valid Template," do
     before(:each) do
+      FactoryGirl.create(:miq_dialog_provision)
+
       @ems         = FactoryGirl.create(:ems_vmware_with_authentication,  :name => "Test EMS",  :zone => @zone)
 
       # Don't attempt to connect to the ems as a side-effect of doing provision type WS calls
@@ -107,9 +106,9 @@ describe VmdbwsController, :apis => true do
         (req_task_attribs.keys - MiqRequestTask.column_names + ['created_on', 'updated_on', 'type']).each {|key| req_task_attribs.delete(key)}
 
         req_task_attribs['options'][:pass] = 1
-        vm001 = FactoryGirl.create(:vm_vmware,   :name => "vm001",  :location => "vm001/vm001.vmx", :ext_management_system => @ems, :host => @host)
+        @vm = FactoryGirl.create(:vm_vmware,   :name => "vm001",  :location => "vm001/vm001.vmx", :ext_management_system => @ems, :host => @host)
         @miq_request.miq_request_tasks << FactoryGirl.create(:miq_provision, req_task_attribs)
-        @miq_request.miq_request_tasks.first.destination = vm001
+        @miq_request.miq_request_tasks.first.destination = @vm
 
         # Since the request has been updated get an updated copy through the WS
         @proxy_request = invoke(:GetVmProvisionRequest, @proxy_request.id)
@@ -140,17 +139,17 @@ describe VmdbwsController, :apis => true do
       it 'should provide the options hash column as an array' do
         @proxy_request.request_options.should be_kind_of(Array)
         @proxy_request.request_options.first.should be_kind_of(VmdbwsSupport::KeyValueStruct)
-        options = {}
-        @proxy_request.request_options.each {|opt| options[opt.key] = opt.value}
-
-        %w{number_of_vms vm_memory owner_email placement_auto miq_request_dialog_name}.each do |key|
-          options.should have_key(key)
-          options[key].should_not be_blank
+        options = @proxy_request.request_options.each_with_object({}) do |opt, h|
+          h[opt.key] = opt.value
         end
 
-        %w{vm_tags ws_values networks}.each do |key|
-          options.should_not have_key(key)
-        end
+        options.should == {
+          "request_type"            => "template",
+          "miq_request_dialog_name" => "miq_provision_dialogs",
+          "src_vm_id"               => @vm_template.id.to_s,
+          "src_ems_id"              => @ems.id.to_s,
+          "placement_auto"          => "true"
+        }
       end
 
       it 'should provide the selected tags as an array' do
