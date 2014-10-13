@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 ############################################################################################
 #
 #  SQLite implements an external (disk-based) database using BTrees.

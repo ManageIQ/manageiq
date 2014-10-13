@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'ostruct'
 require 'enumerator'
 
@@ -41,7 +43,7 @@ module MiqSqlite3DB
       return @fields if @fields
       
       return nil if @data.nil?
-      len     = @data[0]
+      len     = @data[0].ord
       @fields = Array.new
       offset   = len
       byte     = 1
