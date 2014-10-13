@@ -1085,12 +1085,12 @@ module VmCommon
     @lastaction = "right_size"
     @rightsize = true
     @in_a_form = true
-    if params[:button] == "cancel"
+    if params[:button] == "back"
       render :update do |page|
         page.redirect_to(previous_breadcrumb_url)
       end
     end
-    if !@explorer && params[:button] != "cancel"
+    if !@explorer && params[:button] != "back"
       drop_breadcrumb(:name => "Right Size VM '" + @record.name + "'", :url => "/vm/right_size")
       render :action=>"show"
     end

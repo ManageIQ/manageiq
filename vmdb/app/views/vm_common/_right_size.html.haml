@@ -83,7 +83,7 @@
                       = number_to_human_size(@record.derived_memory_used_avg_over_time_period * 1024 * 1024,:precision => 2)
                     - else
                       Not Available
-          %tr.ho-hover{:class => cycle('row0','row1',:name => 'vmsafe')}
+          %tr.no-hover{:class => cycle('row0','row1',:name => 'vmsafe')}
             %td.label{:valign => "middle"} Memory Usage
             %td
               %table{:style => "line-height: 5px; white-space: nowrap;"}
@@ -211,11 +211,11 @@
       .note
         = "* Recommendations are subject to minimum of CPU: #{Vm.cpu_recommendation_minimum} and Memory: #{MiqReport.new.format_mbytes_to_human_size(Vm.mem_recommendation_minimum)}."
   - unless @explorer
-    #buttons_on
-      = button_tag('Cancel',
+    #buttons_on{:style => "float: right"}
+      = button_tag('Back',
         :class   => 'btn btn-default',
-        :alt     => 'Cancel',
-        :title   => 'Cancel',
+        :alt     => 'Back',
+        :title   => 'Back',
         :onclick => "miqAjaxButton('#{url_for(:action => "right_size",
-        :id     => @record_id,
-        :button => "cancel")}');")
+                                              :id     => @record_id,
+                                              :button => "back")}');")
