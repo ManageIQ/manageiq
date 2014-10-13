@@ -12,23 +12,6 @@ require 'miq-unicode'
 #       writes found icons to the root dir as icon0.ico, icon1.ico, etc.  Any icon editor will be able 
 #       to open them and display each resolution contained in the icon (if more than one).
 
-# Bit test extension to Fixnum & Bignum.
-class Fixnum
-	# Returns state of bit number bitNum in self.
-	def bit?(bitNum)
-		msk = 1 << bitNum
-		return self & msk == msk
-	end
-end
-
-class Bignum
-	# Returns state of bit number bitNum in self.
-	def bit?(bitNum)
-		msk = 1 << bitNum
-		return self & msk == msk
-	end
-end
-
 class PEheader
 
 IMAGE_NT_SIGNATURE = "PE\0\0"
@@ -362,7 +345,7 @@ IMAGE_DOS_SIGNATURE = "MZ"
     offset = resEntry[:offset_into_data] + size
     entry = rsc_type.decode(@dataDirs[IMAGE_DIRECTORY_ENTRY_RESOURCE][:data][offset..-1])
     entry[:offset_into_data] = offset
-    entry[:isDir] = entry[:offsetToData].bit?(31)
+    entry[:isDir] = bit?(entry[:offsetToData], 31)
     return entry
   end
 
@@ -418,7 +401,7 @@ IMAGE_DOS_SIGNATURE = "MZ"
   end
 	
 	def getResourceDirectoryEntryName(resDirEntry)
-    return resDirEntry[:name] unless resDirEntry[:name].bit?(31)
+    return resDirEntry[:name] unless bit?(resDirEntry[:name], 31)
 
 		# The low 30 bits of the 'Name' member is an offset to an IMAGE_RESOURCE_DIRECTORY_STRING_U struct.
 		str = ""
@@ -858,6 +841,13 @@ IMAGE_SIZEOF_NT_OPTIONAL64_HEADER = 240
 
 IMAGE_NT_OPTIONAL_HDR32_MAGIC     = 0x10b
 IMAGE_NT_OPTIONAL_HDR64_MAGIC     = 0x20b
+
+  private
+
+  def bit?(num, bitNum)
+    msk = 1 << bitNum
+    num & msk == msk
+  end
 end
 
 ###########################################################
