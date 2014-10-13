@@ -3,7 +3,7 @@ require "spec_helper"
 describe OpsController do
   context "OpsSettings::Schedules" do
     before do
-      seed_specific_product_features("ops_explorer")
+      seed_specific_product_features("schedule_enable", "schedule_disable")
     end
 
     context "no schedules selected" do

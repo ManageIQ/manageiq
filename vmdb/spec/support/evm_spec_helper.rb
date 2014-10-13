@@ -73,6 +73,21 @@ module EvmSpecHelper
     create_guid_miq_server_zone
   end
 
+  def self.seed_specific_product_features(*features)
+    features.flatten!
+    hashes   = YAML.load_file(MiqProductFeature::FIXTURE_YAML)
+    filtered = filter_specific_features([hashes], features).first
+    MiqProductFeature.seed_from_hash(filtered)
+  end
+
+  def self.filter_specific_features(hashes, features)
+    hashes.select do |h|
+      h[:children] = filter_specific_features(h[:children], features) if h[:children].present?
+      h[:identifier].in?(features) || h[:children].present?
+    end
+  end
+  private_class_method :filter_specific_features
+
   def self.seed_admin_user_and_friends
     guid, server, zone = seed_for_miq_queue
 
