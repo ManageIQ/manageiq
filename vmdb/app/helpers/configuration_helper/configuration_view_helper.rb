@@ -7,7 +7,7 @@ module ConfigurationHelper
        when :compare_mode, :drift_mode
          view == "details" ? compare_or_drift_mode_details(resource) : compare_or_drift_mode_exists(resource)
        when :dashboards
-         view == "textural" ? dashboards_textural : dashboards_graphical
+         view == "textual" ? dashboards_textual : dashboards_graphical
        when :treesize
          view == "20" ?  treesize_small : treesize_large
        else
@@ -63,14 +63,14 @@ module ConfigurationHelper
       inactive_icon("exists.png", "Exists Mode", resource, "exists")
     end
 
-    def dashboards_textural
-      inactive_icon("view_graphical.png", "Graphical View", resource, "dashboards") +
+    def dashboards_textual
+      inactive_icon("view_graphical.png", "Graphical View", :dashboards, "dashboards") +
       active_icon("view_textual.png", "Text View")
     end
 
     def dashboards_graphical
       active_icon("view_graphical.png", "Graphical View") +
-      inactive_icon("view_textual.png", "Text View", :dashboards, "textural")
+      inactive_icon("view_textual.png", "Text View", :dashboards, "textual")
     end
 
     def treesize_small
