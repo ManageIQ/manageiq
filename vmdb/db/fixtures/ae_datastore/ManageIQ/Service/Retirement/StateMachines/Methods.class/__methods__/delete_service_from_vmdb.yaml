@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: markserviceasretired
+    name: delete_service_from_vmdb
     display_name: 
     description: 
     scope: instance

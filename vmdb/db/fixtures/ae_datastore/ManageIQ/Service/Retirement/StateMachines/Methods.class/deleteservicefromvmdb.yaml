@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - execute:
-      value: deleteservicefromvmdb
+      value: delete_service_from_vmdb

@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - execute:
-      value: checkservicevmretirement
+      value: check_service_vm_retirement

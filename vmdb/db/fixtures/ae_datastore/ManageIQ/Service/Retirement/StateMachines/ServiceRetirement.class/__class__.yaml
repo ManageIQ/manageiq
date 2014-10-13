@@ -52,7 +52,7 @@ object:
       on_entry: update_service_retirement_status(status => 'Processing Pre1')
       on_exit: update_service_retirement_status(status => 'Processed Pre1')
       on_error: update_service_retirement_status(status => 'Error Processing Pre1')
-      max_retries: '3'
+      max_retries: '100'
       max_time: 
   - field:
       aetype: state
@@ -72,7 +72,7 @@ object:
       on_entry: update_service_retirement_status(status => 'Processing Pre2')
       on_exit: update_service_retirement_status(status => 'Processed Pre2')
       on_error: update_service_retirement_status(status => 'Error Processing Pre2')
-      max_retries: '3'
+      max_retries: '100'
       max_time: 
   - field:
       aetype: state
@@ -89,11 +89,11 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'Retiring Service VMs')
-      on_exit: update_service_retirement_status(status => 'Retired Service VMs')
+      on_entry: update_service_retirement_status(status => 'Retiring Service')
+      on_exit: update_service_retirement_status(status => 'Retired Service')
       on_error: update_service_retirement_status(status => 'Error Retiring Service
-        VMs')
-      max_retries: '3'
+        ')
+      max_retries: '100'
       max_time: 
   - field:
       aetype: state
@@ -157,7 +157,7 @@ object:
         from VMDB')
       on_error: update_service_retirement_status(status => 'Error Deleting Retired
         Service from VMDB')
-      max_retries: '3'
+      max_retries: '100'
       max_time: 
   - field:
       aetype: state
