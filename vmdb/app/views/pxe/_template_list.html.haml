@@ -1,0 +1,10 @@
+- if x_active_tree == :customization_templates_tree
+  - if (x_node == "root" && !@in_a_form) || @view
+    #template_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+      - if x_node == "root"
+        = render :partial => "template_folders"
+      - if @view
+        = render :partial => 'layouts/x_gtl', :locals => {:action_url => "template_list"}
+  - else
+    = render :partial=>"template_details"
+  #null_div

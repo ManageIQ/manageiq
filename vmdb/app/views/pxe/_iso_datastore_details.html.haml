@@ -1,0 +1,34 @@
+#iso_datastore_details_div{:style => "width: 100%; height: 100%; overflow: auto; position: relative;"}
+  - # Added position:relative so dhtmlxtree scrolls properly in IE7
+  - if @isd
+    - # if PXE Server is selected %>
+    #iso_datastore_info_div
+      - if @edit
+        = render :partial => "iso_datastore_form"
+      - else
+        = render :partial => "layouts/flash_msg"
+        = render(:partial => "shared/summary/textual",
+          :locals  => {:title => "Basic Information", :items => textual_iso_datastore_basicinfo})
+        - unless @isd.iso_images.empty?
+          %p.legend ISO Images
+          %table.style3
+            %thead
+              %tr
+                %th Name
+            %tbody
+              - @isd.iso_images.sort_by{ |a| a.name.downcase }.each do |i|
+                %tr{:class => cycle('row0', 'row1'), :title => "View this ISO Image",
+                  :onclick => "cfmeDynatree_activateNode('iso_datastores_tree', 'isi-#{to_cid(i.id)}');",
+                  :onmouseover => "this.style.cursor='pointer'"}
+                  %td
+                    = h(i.name)
+
+  - if @img
+    - # PXE Image is selected
+    #iso_img_info_div
+      - if @edit
+        = render :partial => "iso_img_form"
+      - else
+        = render :partial => "layouts/flash_msg"
+        = render :partial => "shared/summary/textual",
+          :locals  => {:title => "Basic Information", :items => textual_iso_img_info}

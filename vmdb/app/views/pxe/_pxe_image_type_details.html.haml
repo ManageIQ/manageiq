@@ -1,0 +1,10 @@
+- # Added position:relative so dhtmlxtree scrolls properly in IE7 %>
+#pxe_image_type_details_div{:style => "width: 100%; height: 100%; overflow: auto; position: relative;"}
+  - # if PXE Server is selected %>
+  - if @pxe_image_type
+    - if @edit
+      = render :partial => "pxe_image_type_form"
+
+    - else
+      = render :partial => "shared/summary/textual",
+        :locals  => {:title => "Basic Information", :items => textual_sysimg_type_basicinfo}
