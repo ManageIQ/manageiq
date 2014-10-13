@@ -1321,6 +1321,10 @@ Vmdb::Application.routes.draw do
 
     :resource_pool => {
       :get => %w(
+        compare_miq
+        compare_to_csv
+        compare_to_pdf
+        compare_to_txt
         download_data
         index
         protect
@@ -1335,12 +1339,22 @@ Vmdb::Application.routes.draw do
         adv_search_name_typed
         adv_search_toggle
         button
+        compare_choose_base
+        compare_compress
+        compare_miq
+        compare_miq_all
+        compare_miq_differences
+        compare_miq_same
+        compare_mode
+        compare_remove
+        compare_set_state
         exp_button
         exp_changed
         exp_token_pressed
         panel_control
         protect
         save_col_widths
+        sections_field_changed
         show
         show_list
         tagging_edit
