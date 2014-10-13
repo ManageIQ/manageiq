@@ -4,9 +4,7 @@
   :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  os_ver
     \                 = \"CentOS 6.3 Server\"\n  repo_source_url         = \"http://<pxe_server>/ipxe/sources/centos/6.3/\"\n
     \ rhev_agent_url          = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
-    \ root_fallback_password  = \"Pa$sw0rd\" # Fallback root password if the dialog
-    was blank\n  \n  # Account for some missing values\n  evm[:root_password]  = root_fallback_password
-    if evm[:root_password].blank?\n  evm[:hostname]       = evm[:vm_target_hostname]
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
     if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
     || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
     the network string based on values from the dialog\n  if evm[:addr_mode].first
@@ -67,9 +65,7 @@
   :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  rhn_activation_key
     \     = \"\"\n  os_ver                  = \"RHEL 6.3 Server\"\n  rhev_agent_url
     \         = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
-    \ root_fallback_password  = \"Pa$sw0rd\" # Fallback root password if the dialog
-    was blank\n  \n  # Account for some missing values\n  evm[:root_password]  = root_fallback_password
-    if evm[:root_password].blank?\n  evm[:hostname]       = evm[:vm_target_hostname]
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
     if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
     || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
     the network string based on values from the dialog\n  if evm[:addr_mode].first
@@ -109,9 +105,7 @@
     \                 = \"RHEL 6.3 Server\"\n  rhn_activation_key      = \"\"\n  repo_source_url
     \        = \"http://<pxe_server>/ipxe/sources/rhel/6.3-server\"\n  rhev_agent_url
     \         = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
-    \ root_fallback_password  = \"Pa$sw0rd\" # Fallback root password if the dialog
-    was blank\n  \n  # Account for some missing values\n  evm[:root_password]  = root_fallback_password
-    if evm[:root_password].blank?\n  evm[:hostname]       = evm[:vm_target_hostname]
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
     if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
     || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
     the network string based on values from the dialog\n  if evm[:addr_mode].first
@@ -163,9 +157,7 @@
     \                 = \"RHEL 6.3 Server\"\n  rhn_activation_key      = \"\"\n  repo_source_url
     \        = \"http://<pxe_server>/ipxe/sources/rhel/6.3-server\"\n  rhev_agent_url
     \         = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
-    \ root_fallback_password  = \"Pa$sw0rd\" # Fallback root password if the dialog
-    was blank\n  \n  # Account for some missing values\n  evm[:root_password]  = root_fallback_password
-    if evm[:root_password].blank?\n  evm[:hostname]       = evm[:vm_target_hostname]
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
     if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
     || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
     the network string based on values from the dialog\n  if evm[:addr_mode].first
@@ -216,9 +208,7 @@
   :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  ms_product_key
     \         = \"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX\"\n  locale                  = \"en-US\"\n
     \ registered_organization = \"My Company\"\n  registered_owner        = \"My Company\"\n
-    \ admin_fallback_password = \"Pa$sw0rd\"\n  # Change values if blank\n  evm[:root_password]
-    \    = admin_fallback_password if evm[:root_password].blank?  # Use admin fallback
-    password if the dialog was blank\n  evm[:hostname]          = evm[:vm_target_hostname]
+    \n  # Change values if blank\n  evm[:hostname]          = evm[:vm_target_hostname]
     if evm[:hostname].blank?      # Use vm_target_hostname if hostname in the dialog
     was blank\n  evm[:addr_mode]         = ['dhcp'] if evm[:ip_addr].blank? || evm[:subnet_mask].blank?
     || evm[:gateway].blank?\n%>\n\n<%= evm.inspect if debug == true %>\n\n<?xml version=\"1.0\"
