@@ -7,13 +7,6 @@
 			disabled_name = false
 		end
 	%>
-	<%
-		if !@zone.name.nil?  && !@edit[:current][:name].nil? && @zone.name.downcase == "default"
-			disabled_desc = true
-		else
-			disabled_desc = false
-		end
-	%>
 	<dl class="col2">
 		<dd>
 				<fieldset>
@@ -38,7 +31,6 @@
                   <%= text_field_tag("description",
                                       @edit[:new][:description],
                                       :maxlength=>50,
-                                      :disabled =>disabled_desc,
                                       "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
 									<% if @zone.id && @zone.name.downcase != "default" %>
 										<%= javascript_tag("$j('#description').focus()") %>

@@ -576,9 +576,9 @@ module EmsCommon
       @edit[:new][:zone] = @ems.my_zone
     end
     @edit[:server_zones] = Array.new
-    zones = Zone.all
+    zones = Zone.order('lower(description)')
     zones.each do |zone|
-      @edit[:server_zones].push(zone.name)
+      @edit[:server_zones].push([zone.description, zone.name])
     end
 
     @edit[:new][:default_userid] = @ems.authentication_userid
