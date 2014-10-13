@@ -107,58 +107,11 @@ class ApplicationController < ActionController::Base
   end
   hide_action :render_exception
 
-  # See if a report URL is defined and reroute report requests to it
-  def check_redirect
-    if controller_name == "report"
-      if get_vmdb_config[:server][:report_url] != nil
-        params[:only_path] = true
-#       params[:sess] = request.session.session_id
-        report_url = get_vmdb_config[:server][:report_url] + url_for(params)
-        #headers["Status"] = "301 Moved Permanently"
-        redirect_to report_url
-        return true
-      end
-#     sdata = Session.find_by_session_id(@session_id).data
-#     sdata = Session.find_by_session_id(params[:sess]).data
-#     @_session = Marshal.load(Base64.decode64(sdata.split("\n").join))
-    else
-      if get_vmdb_config[:server][:evm_url] != nil
-        params[:only_path] = true
-        evm_url = get_vmdb_config[:server][:evm_url] + url_for(params)
-        #headers["Status"] = "301 Moved Permanently"
-        redirect_to evm_url
-        return true
-      end
-    end
-    return false
-  end
-
   # Put out error msg if user's role is not authorized for an action
   def auth_error
     add_flash(I18n.t("flash.user_not_authorized"), :error)
     add_flash(I18n.t("flash.press_back_button"))
 #   render(:text=>"User is not authorized for this task . . . press your browser's Back button to continue")
-  end
-
-  # Turn on temp debugws mode
-  def toggle_debugws
-# Switch toggle commented out . . . this code now just triggers the hazing bug!
-#   if session[:debugws] == nil || session[:debugws] == false
-#     session[:debugws] = true
-#     @flash_msg = "Rescue VM errors: off"
-#   else
-#     session[:debugws] = false
-#     @flash_msg = "Rescue VM errors: on"
-#   end
-    render :update do |page|
-      text = ""
-      20.times{
-        10.times{text += rand(99999999).to_s + " "}
-        text += "<br/>"
-        }
-      page.replace("twrap","<br/>Unrecoverable system error: 0x6F47EA323  memory corruption at #{rand(99999999).to_s}<br/> #{text}possible buffer overrun security exposure")
-#     page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-    end
   end
 
   def change_tab
