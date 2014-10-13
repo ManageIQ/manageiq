@@ -1,0 +1,5 @@
+#main_div
+  - if @showtype == "download_pdf"
+    = render(:partial => "layouts/show_pdf")
+  - else
+    = render :partial => @showtype
