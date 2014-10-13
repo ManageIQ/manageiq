@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: power_off
+    name: pre_delete_from_provider
     display_name: 
     description: 
     scope: instance

@@ -13,6 +13,29 @@ object:
   schema:
   - field:
       aetype: state
+      name: StartRetirement
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: /Service/Retirement/StateMachines/Methods/StartRetirement
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_service_retirement_status(status => 'Starting Retirement',status_state
+        => 'on_entry')
+      on_exit: update_service_retirement_status(status => 'Started Retirement',status_state
+        => 'on_exit')
+      on_error: update_service_retirement_status(status => 'Error Starting Retirement',status_state
+        => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
       name: pre1
       display_name: 
       datatype: string
@@ -53,12 +76,12 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: retireservicevms
+      name: RetireService
       display_name: 
       datatype: string
       priority: 3
       owner: 
-      default_value: 
+      default_value: /Service/Retirement/StateMachines/Methods/RetireService
       substitute: true
       message: create
       visibility: 
@@ -74,12 +97,12 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: checkservicevmretirement
+      name: CheckServiceRetired
       display_name: 
       datatype: string
       priority: 4
       owner: 
-      default_value: 
+      default_value: /Service/Retirement/StateMachines/Methods/CheckServiceRetired
       substitute: true
       message: create
       visibility: 
@@ -87,20 +110,20 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'Checking Service VM retirement')
-      on_exit: update_service_retirement_status(status => 'Checked Service VM retirement')
+      on_entry: update_service_retirement_status(status => 'Checking Service retirement')
+      on_exit: update_service_retirement_status(status => 'Checked Service retirement')
       on_error: update_service_retirement_status(status => 'Error Checking Service
-        VM retirement')
-      max_retries: '3'
+        retirement')
+      max_retries: '100'
       max_time: 
   - field:
       aetype: state
-      name: markserviceasretired
+      name: FinishRetirement
       display_name: 
       datatype: string
-      priority: 5
+      priority: 4
       owner: 
-      default_value: 
+      default_value: /Service/Retirement/StateMachines/Methods/FinishRetirement
       substitute: true
       message: create
       visibility: 
@@ -108,20 +131,19 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_service_retirement_status(status => 'Marking Service as retired')
-      on_exit: update_service_retirement_status(status => 'Marked Service as retired')
-      on_error: update_service_retirement_status(status => 'Error Marking Service
-        as retired')
-      max_retries: '3'
+      on_entry: update_service_retirement_status(status => 'Finishing Retirement')
+      on_exit: update_service_retirement_status(status => 'Finished Retirement')
+      on_error: update_service_retirement_status(status => 'Error Finishing Retirement')
+      max_retries: '100'
       max_time: 
   - field:
       aetype: state
-      name: deleteservicefromVMDB
+      name: DeleteServiceFromVMDB
       display_name: 
       datatype: string
       priority: 6
       owner: 
-      default_value: 
+      default_value: /Service/Retirement/StateMachines/Methods/DeleteFromVMDB
       substitute: true
       message: create
       visibility: 

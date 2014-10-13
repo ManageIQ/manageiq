@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     name: unregister_from_provider
-    display_name: UnregisterFromProvider
+    display_name: 
     description: 
     scope: instance
     language: ruby

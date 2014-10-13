@@ -7,6 +7,4 @@ object:
     name: RetireService
     inherits: 
     description: 
-  fields:
-  - execute:
-      value: retireservicevms
+  fields: []

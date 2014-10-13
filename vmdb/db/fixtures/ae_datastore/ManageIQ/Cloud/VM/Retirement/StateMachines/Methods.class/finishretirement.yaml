@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: RetireService
+    name: FinishRetirement
     inherits: 
     description: 
   fields:
   - execute:
-      value: retireservicevms
+      value: finish_retirement
