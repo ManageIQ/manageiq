@@ -25,7 +25,7 @@ describe FixAuth::AuthModel do
 
   context "#authentications" do
     subject { FixAuth::FixAuthentication }
-    let(:contenders) { subject.contenders.map(&:name) }
+    let(:contenders) { subject.contenders.collect(&:name) }
 
     # NOTE: these are not created unless you reference them
     # if you want to always create them use let!(:var) {} instead
@@ -63,13 +63,13 @@ describe FixAuth::AuthModel do
     end
 
     it "should find records with encrypted passwords" do
-      [v1, v2, leg, nls].map(&:save!)
+      [v1, v2, leg, nls].each(&:save!)
       expect(contenders).to include(v1.name, leg.name)
       expect(contenders).not_to include(v2.name, nls.name)
     end
 
     it "should find viable records among mixed mode records" do
-      [v1_v2, v2_v1].map(&:save!)
+      [v1_v2, v2_v1].each(&:save!)
       expect(contenders).to include(v1_v2.name)
       expect(contenders).to include(v2_v1.name)
     end
@@ -140,7 +140,7 @@ describe FixAuth::AuthModel do
 
   context "#configurations" do
     subject { FixAuth::FixConfiguration }
-    let(:contenders) { subject.contenders.map(&:typ) }
+    let(:contenders) { subject.contenders.collect(&:typ) }
 
     let(:other_context) do
       subject.create(:typ => 'event_handling', :settings => YAML.dump(:production => {:password => enc_v1}))
