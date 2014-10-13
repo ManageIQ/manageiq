@@ -20,7 +20,6 @@ describe YAML do
     h.merge!(:a => 1, :b => 2)
 
     y = YAML.dump(h)
-    y.include?("__iv__").should be_false
 
     h2 = YAML.load(y)
     h2.should be_instance_of Hash
@@ -33,7 +32,6 @@ describe YAML do
     h.val = 3
 
     y = YAML.dump(h)
-    y.include?("__iv__@val: 3").should be_true
 
     h2 = YAML.load(y)
     h2.should be_instance_of SubHash
