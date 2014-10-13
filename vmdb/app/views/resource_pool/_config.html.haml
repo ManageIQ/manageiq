@@ -1,0 +1,22 @@
+#maincontent
+  = render :partial => "layouts/flash_msg"
+
+  - if @display == "config_info"
+    %fieldset%
+      %p.legend Info
+      %table.style3
+        - if @rp_config.nil? || @rp_config.empty?
+          %tr
+            %td{:width => "495"}
+              %strong Not Available
+        - else
+          - @rp_config.each_slice(2) do |items|
+            %tr{:class => cycle('row0', 'row1')}
+              items.each do |item|
+                %td{:width => "495"}
+                  %strong
+                    = h(item[:field])
+                  = h(item[:description])
+
+  - elsif @display == "descendant_vms"
+    = render :partial => "layouts/dc_tree_page"
