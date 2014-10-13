@@ -31,6 +31,7 @@ module MiqAeMethodService
     expose :start_retirement
     expose :finish_retirement
     expose :is_or_being_retired?
+    expose :retired?
     expose :files
     expose :directories
     expose :refresh, :method => :refresh_ems

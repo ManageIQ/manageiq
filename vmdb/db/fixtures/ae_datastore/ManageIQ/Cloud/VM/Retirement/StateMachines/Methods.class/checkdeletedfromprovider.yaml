@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: UnregisterFromProvider
+    name: CheckDeletedFromProvider
     inherits: 
     description: 
   fields:
   - execute:
-      value: remove_from_provider(removal_type => 'unregister')
+      value: check_deleted_from_provider

@@ -16,14 +16,13 @@ module Service::RetirementManagement
   def retire_service_resources
     self.service_resources.each do |sr|
       if sr.resource.respond_to?(:retire_now)
-        $log.info("Retiring service  resource for service: #{self.name} resource ID: #{sr.id}")
+        $log.info("Retiring service resource for service: #{self.name} resource ID: #{sr.id}")
         sr.resource.retire_now
       end
     end
   end
 
   def automate_retirement_entrypoint
-    #state_machine_entry_point = nil
     ra = self.service_template.resource_actions.detect {|ra| ra.action == 'Retirement'} unless self.service_template.nil?
     state_machine_entry_point = ra.try(:fqname)
     $log.info("get_retirement_entrypoint returning state machine entry point: #{state_machine_entry_point}")

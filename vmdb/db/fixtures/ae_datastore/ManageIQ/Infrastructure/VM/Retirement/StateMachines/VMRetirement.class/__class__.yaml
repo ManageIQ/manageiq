@@ -13,12 +13,52 @@ object:
   schema:
   - field:
       aetype: state
-      name: CheckPoweredOff
+      name: StartRetirement
       display_name: 
       datatype: string
       priority: 1
       owner: 
-      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckPoweredOff"
+      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/StartRetirement
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Starting Retirement')
+      on_exit: update_retirement_status(status => 'Started Retirement')
+      on_error: update_retirement_status(status => 'Error Starting Retirement')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PowerOff
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/PowerOff
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Powering Off VM')
+      on_exit: update_retirement_status(status => 'Powered Off VM')
+      on_error: update_retirement_status(status => 'Error Powering Off VM')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: CheckPoweredOff
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckPoweredOff
       substitute: true
       message: create
       visibility: 
@@ -36,7 +76,7 @@ object:
       name: DeactivateCMDB
       display_name: 
       datatype: string
-      priority: 2
+      priority: 4
       owner: 
       default_value: 
       substitute: true
@@ -56,7 +96,7 @@ object:
       name: UnregisterDHCP
       display_name: 
       datatype: string
-      priority: 3
+      priority: 5
       owner: 
       default_value: 
       substitute: true
@@ -76,7 +116,7 @@ object:
       name: UnregisterAD
       display_name: 
       datatype: string
-      priority: 4
+      priority: 6
       owner: 
       default_value: 
       substitute: true
@@ -96,7 +136,7 @@ object:
       name: UnregisterDNS
       display_name: 
       datatype: string
-      priority: 5
+      priority: 7
       owner: 
       default_value: 
       substitute: true
@@ -116,7 +156,7 @@ object:
       name: ReleaseMACAddress
       display_name: 
       datatype: string
-      priority: 6
+      priority: 8
       owner: 
       default_value: 
       substitute: true
@@ -136,7 +176,7 @@ object:
       name: ReleaseIPAddress
       display_name: 
       datatype: string
-      priority: 7
+      priority: 9
       owner: 
       default_value: 
       substitute: true
@@ -156,7 +196,7 @@ object:
       name: PreDeleteEmailOwner
       display_name: 
       datatype: string
-      priority: 8
+      priority: 10
       owner: 
       default_value: "#/Infrastructure/VM/Retirement/Email/vm_retirement_emails?event=vm_entered_retirement"
       substitute: true
@@ -250,6 +290,26 @@ object:
       on_entry: update_retirement_status(status => 'Checking Removal from Provider')
       on_exit: update_retirement_status(status => 'Checked Removal from Provider')
       on_error: update_retirement_status(status => 'Error Checking Removal from Provider')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: FinishRetirement
+      display_name: 
+      datatype: string
+      priority: 15
+      owner: 
+      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/FinishRetirement
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Finishing Retirement')
+      on_exit: update_retirement_status(status => 'Finished Retirement')
+      on_error: update_retirement_status(status => 'Error Finishing Retirement')
       max_retries: '100'
       max_time: 
   - field:

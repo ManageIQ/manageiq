@@ -93,20 +93,6 @@ module RetirementMixin
     self.retire_now if self.retirement_due?
   end
 
-  def retiredx=(retired_state)
-    case retired_state
-    when false
-      self.retires_on = nil
-      write_attribute(:retired, false)
-    when true
-      unless self.retired?
-        self.retires_on = Date.today
-        write_attribute(:retired, true)
-      end
-    else
-    end
-  end
-
   def retire_now
     log_prefix = "MIQ(#{retirement_object_title}#retire_now)"
     unless self.retired
@@ -126,10 +112,7 @@ module RetirementMixin
   def finish_retirement
     unless self.retired?
       $log.info("Finishing Retirement for [#{self.name}]")
-      self.retires_on = Date.today
-      self.retired    = true
-      self.retirement_state = 'retired'
-      self.save
+      self.update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
       message = "#{self.class.base_model.name}: [#{self.name}], Retires On Date: [#{self.retires_on}], has been retired"
       $log.info("Calling audit event for: #{message} ")
       raise_audit_event(retired_event_name, message)
@@ -140,8 +123,7 @@ module RetirementMixin
   def start_retirement
     unless self.retired?
       $log.info("Starting Retirement for [#{self.name}]")
-      self.retirement_state = 'retiring'
-      self.save
+      self.update_attributes(:retirement_state => "retiring")
     end
   end
 
@@ -178,7 +160,9 @@ module RetirementMixin
     event_hash = {}
     event_hash[retirement_base_model_name.underscore.to_sym] = self
     event_hash[:host] = self.host if self.respond_to?(:host)
-    MiqEvent.raise_evm_event(self, event_name, event_hash)
+    $log.info("Raising EVM Retirement Event (not checking policy) for [#{self.name}]")
+    event_hash[:type] ||= self.class.name
+    MiqAeEvent.raise_evm_event(event_name, self, event_hash)
   end
 
   def raise_audit_event(event_name, message)
@@ -193,10 +177,6 @@ module RetirementMixin
 
   def is_or_being_retired?
     self.retired || !self.retirement_state.blank?
-  end
-
-  def unretire
-    self.update_attributes(:retired => false, :retirement_state => nil)
   end
 
 end
