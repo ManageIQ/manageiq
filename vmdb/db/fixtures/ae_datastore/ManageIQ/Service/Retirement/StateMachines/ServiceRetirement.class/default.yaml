@@ -7,12 +7,4 @@ object:
     name: Default
     inherits: 
     description: 
-  fields:
-  - retireservicevms:
-      value: ! '#/Service/Retirement/StateMachines/Methods/retireservicevms'
-  - checkservicevmretirement:
-      value: /Service/Retirement/StateMachines/Methods/checkservicevmretirement
-  - markserviceasretired:
-      value: ! '#/Service/Retirement/StateMachines/Methods/markserviceasretired'
-  - deleteservicefromVMDB:
-      value: ! '#/Service/Retirement/StateMachines/Methods/DeleteFromVMDB'
+  fields: []

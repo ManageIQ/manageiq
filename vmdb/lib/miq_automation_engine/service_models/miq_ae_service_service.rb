@@ -7,7 +7,6 @@ module MiqAeMethodService
     expose :finish_retirement
     expose :is_or_being_retired?
     expose :start
-    expose :retired?
     expose :stop
     expose :suspend
     expose :shutdown_guest

@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: power_off
+    name: check_service_retired
     display_name: 
     description: 
     scope: instance

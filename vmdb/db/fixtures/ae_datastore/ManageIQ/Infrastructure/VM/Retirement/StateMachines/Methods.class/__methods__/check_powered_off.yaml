@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     name: check_powered_off
-    display_name: CheckPoweredOff
+    display_name: 
     description: 
     scope: instance
     language: ruby

@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: MarkServiceAsRetired
+    name: CheckDeletedFromProvider
     inherits: 
     description: 
   fields:
   - execute:
-      value: mark_service_as_retired
+      value: check_deleted_from_provider

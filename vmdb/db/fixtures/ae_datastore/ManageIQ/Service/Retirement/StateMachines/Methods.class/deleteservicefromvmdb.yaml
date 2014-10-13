@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: deleteservicefromvmdb
+    name: DeleteServiceFromVMDB
     inherits: 
     description: 
   fields:
   - execute:
-      value: deleteservicefromvmdb
+      value: delete_service_from_vmdb
