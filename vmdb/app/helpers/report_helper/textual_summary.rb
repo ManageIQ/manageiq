@@ -52,5 +52,72 @@ module ReportHelper
       {:label => "Updated On",
        :value => format_timezone(@miq_report.updated_on, Time.zone, "gtl")}
     end
+
+    def textual_report_schedule_info
+      items = %w(description active email_after_run)
+      items.push('from_email', 'to_email') if @schedule.sched_action[:options] &&
+                                              @schedule.sched_action[:options][:send_email] &&
+                                              @schedule.sched_action[:options][:email]
+      items.push('report_filter', 'run_at', 'last_run_time', 'next_run_time', 'zone')
+      items.collect { |m| send("textual_sched_report_#{m}") }.flatten.compact
+    end
+
+    def textual_sched_report_description
+      {:label => "Description", :value => @schedule.description}
+    end
+
+    def textual_sched_report_active
+      {:label => "Active", :value => @schedule.enabled.to_s.capitalize}
+    end
+
+    def textual_sched_report_email_after_run
+      row = {:label => "E-Mail after Running"}
+      row[:value] = if @schedule.sched_action[:options] && @schedule.sched_action[:options][:send_email]
+                      "True"
+                    else
+                      "False"
+                    end
+      row
+    end
+
+    def textual_sched_report_from_email
+      row = {:label => "From E-mail"}
+      row[:value] = if @schedule.sched_action[:options][:email][:from].blank?
+                      "(Default: " + get_vmdb_config[:smtp][:from] + ")"
+                    else
+                      row[:value] = @schedule.sched_action[:options][:email][:from]
+                    end
+      row
+    end
+
+    def textual_sched_report_to_email
+      row = {:label => "To E-mail"}
+      row[:value] = @temp[:email_to].join(';') unless @temp[:email_to].blank?
+      row
+    end
+
+    def textual_sched_report_report_filter
+      {:label => "Report Filter", :value => @rep_filter}
+    end
+
+    def textual_sched_report_run_at
+      {:label => "Run At", :value => @schedule.run_at_to_human(@timezone).to_s}
+    end
+
+    def textual_sched_report_last_run_time
+      row = {:label => "Last Run Time"}
+      row[:value] = format_timezone(@schedule.last_run_on, @timezone, "view") unless @schedule.last_run_on.blank?
+      row
+    end
+
+    def textual_sched_report_next_run_time
+      row = {:label => "Next Run Time"}
+      row[:value] = format_timezone(@schedule.next_run_on, @timezone, "view") unless @schedule.next_run_on.blank?
+      row
+    end
+
+    def textual_sched_report_zone
+      {:label => "Zone", :value => @schedule.v_zone_name}
+    end
   end
 end
