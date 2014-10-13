@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 # Windows dynamic disks
 #
 

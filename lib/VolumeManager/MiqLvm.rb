@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 $:.push("#{File.dirname(__FILE__)}/../disk")
 
 require 'enumerator'

@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require 'Ext4GroupDescriptorTable'
 require 'Ext4Inode'
 

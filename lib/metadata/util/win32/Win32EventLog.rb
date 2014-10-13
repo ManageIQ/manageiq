@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 # TODO:
 #      Provide collection of custom log names?
 

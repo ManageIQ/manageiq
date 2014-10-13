@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require "binary_struct"
 
 # Parser for the Windows Image Format (WIM).
@@ -45,7 +47,7 @@ class WimParser
   ])
   SIZEOF_HEADER_V1_STRUCT = HEADER_V1_STRUCT.size
 
-  IMAGE_TAG = "MSWIM\0\0\0".force_encoding("ASCII-8BIT")
+  IMAGE_TAG = "MSWIM\0\0\0"
 
   # Flags values for the header struct
   FLAG_HEADER_RESERVED          = 0x00000001
