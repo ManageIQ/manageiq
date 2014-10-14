@@ -228,16 +228,17 @@
         <%# show button to go back %>
         <div id="buttons">
            
-          <% if params[:action] == "policies" %>
+          <% if params[:action] == "policies" || %w(right_size).include?(@sb[:action])%>
+            <% action = (params[:action] == "policies" ? "policy_sim" : "x_history") %>
             <%# Button to go back to policy simulation screen from 1 VMs policies %>
-            <%= button_tag('Back...',  
+            <%= button_tag('Back',  
                            :class   => "btn btn-default",
                            :alt     => "Back", 
                            :title   => "Back",
-                           :onclick => "miqAjaxButton('#{url_for(:action   => "policy_sim",
+                           :onclick => "miqAjaxButton('#{url_for(:action   => action,
                                                                  :continue => true)}');")
             %>
-          <% elsif %w(drift policy_sim right_size).include?(@sb[:action]) %>
+          <% elsif %w(drift policy_sim).include?(@sb[:action]) %>
             <%# Button to cancel policy simulation/drift and return to latest tree node %>
             <%= button_tag('Cancel',  
                            :class   => "btn btn-default",
@@ -246,20 +247,13 @@
                            :onclick => "miqAjaxButton('#{url_for(:action => "x_history",
                                                                  :item   => 0)}');")
             %>
-          <% elsif export_button %>
+          <% else  # export_button %>
             <%= button_tag("Export",
                            :class  => "btn btn-primary",
                            :type   => "application/txt",
                            :id     => "export_button",
                            :alt    => "Download Report to YAML")
 
-            %>
-          <% else %>
-            <%#= button_tag('Back...',  :class=>"btn btn-default",
-                          :alt=>"Back", :title=>"Back",
-                          :onclick=>"miqAjaxButton('#{url_for(:action=>"x_show",
-                                                              :id=>record_id,
-                                                              :button=>"back")}');")
             %>
           <% end %>
             
