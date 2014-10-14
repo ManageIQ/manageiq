@@ -1,17 +1,13 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}")
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../VMwareWebService")
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
 
 require 'drb/drb'
 require 'sync'
-require 'vixdisklib_api'
+require 'ffi-vix_disk_lib/api_wrapper'
 require 'VimTypes'
 require 'log4r'
 require 'time'
 require 'vmdb-logger'
-
-class VixDiskLibError < RuntimeError
-end
 
 MIQ_ROOT    = "#{File.dirname(__FILE__)}/../../"
 LOG_DIR     = MIQ_ROOT + "vmdb/log/"
@@ -19,22 +15,15 @@ LOG_FILE    = LOG_DIR + "vim.log"
 
 $vim_log = VMDBLogger.new LOG_FILE
 
-class << VixDiskLibApi
-  alias_method :__disconnect__, :disconnect
-  undef :disconnect
-
-  alias_method :__exit__, :exit
-  undef :exit
-
-  alias_method :getInfo, :get_info
-end
-
-class VixDiskLibServer < VixDiskLibApi
+VixDiskLibApi = FFI::VixDiskLib::ApiWrapper
+class VdlWrapper
+  extend FFI::VixDiskLib::ApiWrapper
   include DRb::DRbUndumped
 
   @initialized       = false
   @server_disk_count = 0
   @vddk              = nil
+
   def self.server(server)
     return unless @vddk.nil?
     @vddk = server
@@ -43,11 +32,11 @@ class VixDiskLibServer < VixDiskLibApi
   @info_log  = ->(s) { $vim_log.info "VMware(VixDiskLib): #{s}" }
   @warn_log  = ->(s) { $vim_log.warn "VMware(VixDiskLib): #{s}" }
   @error_log = ->(s) { $vim_log.error "VMware(VixDiskLib): #{s}" }
+
   def self.init
     return if @initialized
-    super(@info_log, @warn_log, @error_log, nil)
+    FFI::VixDiskLib::ApiWrapper.init(@info_log, @warn_log, @error_log, nil)
     @initialized = true
-    @vddk.started = true
     @connection = nil
   end
 
@@ -71,7 +60,7 @@ class VixDiskLibServer < VixDiskLibApi
   end
 
   def self.connect(connect_parms)
-    $vim_log.info "VixDiskLibServer.connect: #{connect_parms[:server_name]}" if $vim_log
+    $vim_log.info "VdlWrapper.connect: #{connect_parms[:server_name]}" if $vim_log
     raise VixDiskLibError, "VixDiskLib is not initialized" unless @initialized
     raise VixDiskLibError, "Already connected to #{@connection.serverName}" if @connection
     @connection = VdlConnection.new(connect_parms, @vddk)
@@ -79,9 +68,9 @@ class VixDiskLibServer < VixDiskLibApi
   end
 
   def self.__disconnect__(conn_obj)
-    $vim_log.info "VixDiskLibServer.__disconnect__: #{conn_obj.serverName}" if $vim_log
+    $vim_log.info "VdlWrapper.__disconnect__: #{conn_obj.serverName}" if $vim_log
     raise VixDiskLibError, "VixDiskLib is not initialized" unless @initialized
-    super(conn_obj.vdl_connection)
+    FFI::VixDiskLib::API.disconnect(conn_obj.vdl_connection)
     @connection = nil
   end
 
@@ -124,7 +113,7 @@ class VdlConnection
         vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
       else
         __close_disks__
-        VixDiskLibServer.__disconnect__(self)
+        VdlWrapper.__disconnect__(self)
         @vdl_connection = nil
         @vddk.running = true
         @vddk.shutdown = true
@@ -149,13 +138,13 @@ class VdlConnection
       @vddk.running = true
       disk = VdlDisk.new(self, path, flags)
       @disks << disk
-      nd = VixDiskLibServer.inc_server_disk_count
+      nd = VdlWrapper.inc_server_disk_count
       $vim_log.info "VdlConnection.getDisk: #{@serverName} open disks = #{nd}" if $vim_log
       if nd >= MAX_DISK_WARN && $vim_log
         $vim_log.warn "VdlConnection::getDisk: connection to server: #{@serverName}"
         $vim_log.warn "VdlConnection::getDisk: number of open disks = #{nd}"
         $vim_log.warn "VdlConnection::getDisk: subsequent open calls may fail"
-        VixDiskLibServer.dumpDisks(@serverName)
+        VdlWrapper.dumpDisks(@serverName)
       end
       return disk
     end
@@ -170,7 +159,7 @@ class VdlConnection
       vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
     else
       @disks.delete(diskObj)
-      nd = VixDiskLibServer.dec_server_disk_count
+      nd = VdlWrapper.dec_server_disk_count
       $vim_log.warn "VdlConnection.__close_disk__: #{@serverName} open disks = #{nd}" if $vim_log
     end
     ensure
@@ -204,7 +193,7 @@ class VdlDisk
     @path = path
     @flags = flags
     @sectorSize = FFI::VixDiskLib::API::VIXDISKLIB_SECTOR_SIZE
-    @info = VixDiskLibApi.getInfo(@handle)
+    @info = VixDiskLibApi.get_info(@handle)
     @handle_lock = Sync.new
     @cache = @cache_range = nil
 
