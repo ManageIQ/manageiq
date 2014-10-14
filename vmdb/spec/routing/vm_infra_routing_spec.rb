@@ -138,10 +138,4 @@ describe 'routes for VmInfra' do
       expect(post("/#{controller_name}/vmrc_console")).to route_to("#{controller_name}#vmrc_console")
     end
   end
-
-  describe '#vm_vdi' do
-    it 'routes with POST' do
-      expect(post("/#{controller_name}/vm_vdi")).to route_to("#{controller_name}#vm_vdi")
-    end
-  end
 end

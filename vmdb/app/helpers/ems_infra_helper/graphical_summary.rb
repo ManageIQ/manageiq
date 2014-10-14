@@ -5,7 +5,7 @@ module EmsInfraHelper::GraphicalSummary
   #
 
   def graphical_group_relationships
-    items = %w{infrastructure_folders folders clusters hosts datastores vms templates vdi_desktop_pools}
+    items = %w{infrastructure_folders folders clusters hosts datastores vms templates}
     items.collect { |m| self.send("graphical_#{m}") }.flatten.compact
   end
 
@@ -79,17 +79,6 @@ module EmsInfraHelper::GraphicalSummary
     h = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
       h[:link] = link_to("", {:action => 'show', :id => @ems, :display => 'miq_templates'}, :title => "Show all #{label}", :onclick=>"return miqCheckForChanges()")
-    end
-    h
-  end
-
-  def graphical_vdi_desktop_pools
-    return nil unless get_vmdb_config[:product][:vdi]
-    label = ui_lookup(:tables=>"vdi_desktop_pool")
-    num = @ems.number_of(:vdi_desktop_pools)
-    h = {:label => label, :image => "vdi_desktop_pool", :value => num}
-    if num > 0 && role_allows(:feature => "vdi_desktop_pool_show_list")
-      h[:link] = link_to("", {:action => 'show', :id => @ems, :display => 'vdi_desktop_pool'}, :title => "Show all #{label}", :onclick=>"return miqCheckForChanges()")
     end
     h
   end

@@ -1,7 +1,7 @@
 <% size ||= 72			%><%# Default to 100 pixel size %>
 <% item ||= nil			%><%# item is the record to be used to build the quadicon %>
 <% typ  ||= nil			%><%# Qualifier (ie :listnav) %>
-<% db = "VmVdi" if item.class.base_model.to_s == "Vm" && item.vdi? && !@explorer %>
+<% db   ||= nil     %>
 <% if !db && item %>
   <% db = item.kind_of?(ExtManagementSystem) ? model_for_ems(item).name : item.class.base_model.name %>
 <% end %>
@@ -23,10 +23,10 @@
 		<div id="quadicon">
 	<% end %>
 
-	<% if ["EmsCluster","ResourcePool","Repository","Service","ServiceTemplate","Storage","VdiController","VdiDesktop","VdiDesktopPool","VdiEndpointDevice","VdiFarm","VdiUser"].include?(item.class.name) %>
+	<% if ["EmsCluster","ResourcePool","Repository","Service","ServiceTemplate","Storage"].include?(item.class.name) %>
 		<% partial_name = item.class.name.underscore %>
 	<% elsif item.kind_of?(VmOrTemplate) %>
-		<% partial_name = item.class.base_model.to_s == "Vm" && item.vdi? && !@explorer ? "vm_vdi" : item.class.base_model.to_s.underscore %>
+		<% partial_name = item.class.base_model.to_s.underscore %>
 	<% elsif ["ExtManagementSystem", "Host"].include?(item.class.base_class.name) %>
 		<% partial_name = item.class.base_class.name.underscore %>
 	<% else %>

@@ -1019,7 +1019,6 @@ class ApplicationController < ActionController::Base
         next if r.template_type != "report" && ! r.template_type.blank?
         r_group = r.rpt_group == "Custom" ? "#{@sb[:grp_title]} - Custom" : r.rpt_group # Get the report group
         title = r_group.split('-')
-        next if title[0].strip == "VDI" && !get_vmdb_config[:product][:vdi]
         i = 0
         while i < title.length
           title[i] = title[i].strip
@@ -1092,9 +1091,6 @@ class ApplicationController < ActionController::Base
           end
         end
       else
-        rec.settings[:report_menus].dup.each do |menu|
-          rec.settings[:report_menus].delete(menu) if menu[0].strip == "VDI" && !get_vmdb_config[:product][:vdi]
-        end
         temp2 = rec.settings[:report_menus]
       end
       rptmenu = temp.concat(temp2)
@@ -1253,8 +1249,6 @@ class ApplicationController < ActionController::Base
     when "ServiceResource"       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
     when "Storage"               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
     when "OsProcess", "EventLog" then "#{pn}#{@listicon.downcase}.png"
-    when "VdiController",
-         "VdiDesktopPool"        then "#{pn}vendor-#{(item.vendor || "unknown").downcase}.png"
     when "Service", "ServiceTemplate"
       if item.try(:picture)
         add_pictures_to_sync(item.picture.id)
@@ -2233,10 +2227,6 @@ class ApplicationController < ActionController::Base
       @org_controller = "vm"                                      #request originated from controller
       @refresh_partial = "pre_prov"
     end
-    if request.parameters[:controller] == "vdi_user"
-      vdi_users = params[:id] ? [params[:id]] : find_checked_items
-      @vdi_users = vdi_users.join('_')
-    end
     if typ
       vms = find_checked_items
       case typ
@@ -2538,8 +2528,6 @@ class ApplicationController < ActionController::Base
         session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
       when "host"
         session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list", "log_viewer"].include?(action_name)
-      when "vdi_controller","vdi_desktop","vdi_desktop_pool","vdi_endpoint_device","vdi_farm","vdi_user","vm_vdi"
-        session[:tab_bc][:vdi] = @breadcrumbs.dup if ["show", "show_list", "index"].include?(action_name)
       when "miq_request"
         if @layout == "miq_request_vm"
           session[:tab_bc][:vms] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
@@ -2580,8 +2568,7 @@ class ApplicationController < ActionController::Base
     session[:edit] = @edit ? @edit : nil                    # Set or clear session edit hash
 
     session[:view] = @view ? @view : nil                    # Set or clear view in session hash
-    unless params[:controller] == "miq_proxy" ||            # Proxy needs data for delete all
-        params[:controller].starts_with?("vdi_")            # needs the data to create links from vdi_session summary to other VDI CI screens
+    unless params[:controller] == "miq_proxy"               # Proxy needs data for delete all
       session[:view].table = nil if session[:view]          # Don't need to carry table data around
     end
 

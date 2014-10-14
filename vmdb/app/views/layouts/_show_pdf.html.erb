@@ -1,6 +1,6 @@
 <%= render(:partial => "layouts/pdf_styles") %>
 
-<% controller = ["miq_template", "vm_infra", "vm_or_template", "vm_vdi", "vm"].include?(params[:controller]) ? "vm_common" : params[:controller] %>
+<% controller = ["miq_template", "vm_infra", "vm_or_template", "vm"].include?(params[:controller]) ? "vm_common" : params[:controller] %>
 <div id="xyz_main">
   <%= render(:partial => "layouts/quadicon", :locals => {
         :mode => :icon,

@@ -198,8 +198,6 @@ module ApplicationController::CiProcessing
       rec_cls = "vm"
     elsif request.parameters[:controller] == "service"
       rec_cls =  "service"
-    else
-      rec_cls = "vm_vdi"
     end
     if vms.blank?
       session[:retire_items] = [params[:id]]
@@ -305,7 +303,7 @@ module ApplicationController::CiProcessing
   def vm_right_size
     assert_privileges(params[:pressed])
     # check to see if coming from show_list or drilled into vms from another CI
-    rec_cls = request.parameters[:controller] == "vm" || ["all_vms","vms"].include?(params[:display]) ? "vm" : "vm_vdi"
+    rec_cls = "vm"
     recs = params[:display] ? find_checked_items : [params[:id].to_i]
     if recs.length < 1
       add_flash(I18n.t("flash.button.one_or_more_selected_for_task", :model => ui_lookup(:table => request.parameters[:controller]), :task=>"Right-Size Recommendations"), :error)
@@ -333,54 +331,6 @@ module ApplicationController::CiProcessing
   end
   alias instance_right_size vm_right_size
 
-  def vdi_sessions
-    @explorer = true if request.xml_http_request? # Ajax request means in explorer
-    @db = params[:db] ? params[:db] : request.parameters[:controller]
-    session[:db] = @db if !@db.nil?
-    @db = session[:db] if !session[:db].nil?
-
-    if ['vdi_farm', 'vdi_controller', 'vdi_desktop_pool', 'vdi_desktop', 'vdi_endpoint_device', 'vdi_user'].include?(@db)
-      klass   = @db.classify.constantize
-      @record = identify_record(params[:id], klass)
-    end
-    return if record_no_longer_exists?(@record)
-
-    @view = session[:view]                  # Restore the view from the session to get column names for the display
-    @lastaction = "vdi_sessions"
-    @no_checkboxes = true
-    @showlinks = true
-    @force_no_grid_xml = true
-    @vdiitems = true
-
-    if params[:show] != nil
-      @item = VdiSession.find(from_cid(params[:show]))
-      drop_breadcrumb( {:name=>@record.name.to_s + " (#{ui_lookup(:tables=>"vdi_session")})", :url=>"/#{@db}/vdi_sessions/#{@record.id}?db=#{@db}&page=#{@current_page}"} )
-      drop_breadcrumb( {:name=>format_timezone(@item.start_time), :url=>"/#{@db}/show/#{@record.id}?db=#{@db}&show=#{@item.id}"} )
-      @showtype = "vdi_session_item"
-      render :action => 'show'
-    else
-      drop_breadcrumb( {:name=>@record.name.to_s + " (#{ui_lookup(:tables=>"vdi_session")})", :url=>"/#{@db}/vdi_sessions/#{@record.id}?db=#{@db}"} )
-      @listicon = "vdi_session"
-      # generate the grid/tile/list url to come back here when gtl buttons are pressed
-      @gtl_url = "/#{@db}/vdi_sessions/" + @record.id.to_s + "?"
-
-      @showtype = "vdi_sessions"
-
-      @view, @pages = get_view(klass,
-                              :association=>"vdi_sessions",
-                              :parent=>@record) # Get the records into a view & paginator
-
-
-      # Came in from outside, use RJS to redraw gtl partial
-      if params[:ppsetting] || params[:entry] || params[:sort_choice]
-        render :update do |page|                    # Use RJS to update the display
-          page.replace_html("main_div", :partial=>"layouts/gtl", :locals=>{:action_url=>@lastaction})
-        end
-      else
-        render :action => 'show'
-      end
-    end
-  end
 
   # Assign/unassign ownership to a set of objects
   def reconfigure
@@ -505,13 +455,9 @@ module ApplicationController::CiProcessing
         @redirect_controller = "miq_template"
       when "image_edit","instance_edit","vm_edit"
         @redirect_controller = "vm"
-      when "vm_vdi_edit"
-        @redirect_controller = "vm_vdi"
       when "host_edit"
         @redirect_controller = "host"
         session[:host_items] = obj if obj.length > 1
-      when "vdi_desktop_pool_edit", "vdi_desktop_pool_new"
-        @redirect_controller = "vdi_desktop_pool"
     end
     @redirect_id = obj[0] if obj.length == 1      # not redirecting to an id if multi host are selected for credential edit
 
@@ -519,7 +465,6 @@ module ApplicationController::CiProcessing
 #       page.redirect_to :controller=>params[:rec], :action=>link   # redirect to build the compare screen
       @refresh_partial = "edit"
       @refresh_partial = "edit_set" if params[:db] == "policyprofile"
-      @refresh_partial = "new" if params[:pressed] == "vdi_desktop_pool_new"
     else
       if db == "ScanItemSet"
         scan = ScanItemSet.find(obj[0])
@@ -661,8 +606,6 @@ module ApplicationController::CiProcessing
       @miq_template = @record = identify_record(params[:id], MiqTemplate)
     elsif ["vm_infra","vm_cloud","vm","vm_or_template"].include?(db)
       @vm = @record = identify_record(params[:id], VmOrTemplate)
-    elsif db == "vm_vdi"
-      @vm_vdi = @record = identify_record(params[:id], VmVdi)
     end
   end
 
@@ -1037,7 +980,7 @@ module ApplicationController::CiProcessing
     @edit[:current] = Hash.new
     @edit[:new] = Hash.new
     # check to see if coming from show_list or drilled into vms from another CI
-    rec_cls = request.parameters[:controller] == "vm" || ["all_vms","vms"].include?(params[:display]) ? "vm" : "vm_vdi"
+    rec_cls = "vm"
     recs = Array.new
     # if coming in to edit from miq_request list view
     if !session[:checked_items].nil? && (@lastaction == "set_checked_items" || params[:pressed] == "miq_request_edit")
@@ -1149,7 +1092,7 @@ module ApplicationController::CiProcessing
 
     # Either a list or coming from a different controller (eg from host screen, go to its vms)
     if @lastaction == "show_list" ||
-       !["vm_cloud","vm_infra","vm_vdi","vm","miq_template","vm_or_template","service"].include?(request.parameters["controller"]) # showing a list
+       !["vm_cloud","vm_infra","vm","miq_template","vm_or_template","service"].include?(request.parameters["controller"]) # showing a list
 
       vms = find_checked_items
       if method == 'retire_now' && VmOrTemplate.includes_template?(vms)
@@ -1206,8 +1149,6 @@ module ApplicationController::CiProcessing
 
   def get_rec_cls
     case request.parameters["controller"]
-    when "vm_vdi"
-      return VmVdi
     when "miq_template"
       return MiqTemplate
     when "service"

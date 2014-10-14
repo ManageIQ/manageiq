@@ -122,40 +122,6 @@
             %li(class="#{secondary_nav_class('miq_request_host')}")
               %a{:href=>"/miq_request?typ=host"}Requests
 
-    -if get_vmdb_config[:product][:vdi]
-      -if role_allows(:main_tab => MAIN_TABS[:vdi]) 
-        %li(class="#{primary_nav_class(:vdi)}")
-          %a{:href=>'/dashboard/maintab/?tab=vdi'}= h(MAIN_TABS[:vdi])
-          %ul(class="#{primary_nav_class(:vdi)}")
-
-            -if role_allows(:feature => 'vdi_farm_show_list')
-              %li(class="#{secondary_nav_class('vdi_farm')}")
-                %a{:href=>'/vdi_farm'}= ui_lookup(:tables => 'vdi_farm')
-
-            -if role_allows(:feature => 'vdi_controller_show_list')
-              %li(class="#{secondary_nav_class('vdi_controller')}")
-                %a{:href=>'/vdi_controller'}= ui_lookup(:tables => 'vdi_controller')
-
-            -if role_allows(:feature => 'vdi_desktop_pool_show_list')
-              %li(class="#{secondary_nav_class('vdi_desktop_pool')}")
-                %a{:href=>'/vdi_desktop_pool'}= ui_lookup(:tables => 'vdi_desktop_pool')
-
-            -if role_allows(:feature => 'vdi_desktop_show_list')
-              %li(class="#{secondary_nav_class('vdi_desktop')}")
-                %a{:href=>'/vdi_desktop'}= ui_lookup(:tables => 'vdi_desktop')
-
-            -if role_allows(:feature => 'vdi_endpoint_device_show_list')
-              %li(class="#{secondary_nav_class('vdi_endpoint_device')}")
-                %a{:href=>'/vdi_endpoint_device'}= ui_lookup(:tables => 'vdi_endpoint_device')
-
-            -if role_allows(:feature => 'vdi_user_show_list')
-              %li(class="#{secondary_nav_class('vdi_user')}")
-                %a{:href=>'/vdi_user'}= ui_lookup(:tables => 'vdi_user')
-
-            -if role_allows(:feature => 'vm_vdi_show_list')
-              %li(class="#{secondary_nav_class('vm_vdi')}")
-                %a{:href=>'/vm_vdi'}VMs
-
     -if get_vmdb_config[:product][:storage]
       -if role_allows(:main_tab => MAIN_TABS[:sto]) 
         %li(class="#{primary_nav_class(:sto)}")

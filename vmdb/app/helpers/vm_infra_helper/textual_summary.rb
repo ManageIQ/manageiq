@@ -16,7 +16,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history vdi_desktop}
+    items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -87,24 +87,6 @@ module VmCloudHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
-  def textual_group_vdi_endpoint_device
-    return nil unless get_vmdb_config[:product][:vdi]
-    items = %w{vdi_endpoint_name vdi_endpoint_type vdi_endpoint_ip_address vdi_endpoint_mac_address}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
-  def textual_group_vdi_connection
-    return nil unless get_vmdb_config[:product][:vdi]
-    items = %w{vdi_connection_name vdi_connection_logon_server vdi_connection_session_name vdi_connection_remote_ip_address vdi_connection_dns_name vdi_connection_url vdi_connection_session_type}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
-  def textual_group_vdi_user
-    return nil unless get_vmdb_config[:product][:vdi]
-    items = %w{vdi_user_name vdi_user_ldap vdi_user_domain vdi_user_dns_domain vdi_user_logon_time vdi_user_appdata vdi_user_home_drive vdi_user_home_share vdi_user_home_path}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
   #
   # Items
   #
@@ -124,21 +106,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_name
-    h = {:label => "Name", :value => @record.name}
-    if @record.vdi?
-      if params[:controller] != "vm_vdi"
-        if role_allows(:feature => "vm_vdi_view")
-          h[:title] = "Show this VDI VM in the VDI tab"
-          h[:link]  = url_for(:controller => 'vm_vdi', :action => 'show', :id => @record.id)
-        end
-      else
-        if role_allows(:feature => "vandt_accord") || role_allows(:feature => "vm_filter_accord")
-          h[:title] = "Show this VDI VM in the Virtual Machines tab"
-          h[:link]  = url_for(:controller => 'vm_or_template', :action => 'show', :id => @record.id)
-        end
-      end
-    end
-    h
+    {:label => "Name", :value => @record.name}
   end
 
   def textual_server
@@ -389,18 +357,6 @@ module VmCloudHelper::TextualSummary
       h[:title] = "Show virtual machine analysis history"
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'scan_histories', :id => @record)
-    end
-    h
-  end
-
-  def textual_vdi_desktop
-    return nil unless get_vmdb_config[:product][:vdi]
-    vdi_desktop = @record.vdi_desktop
-    label = ui_lookup(:table=>"vdi_desktop")
-    h = {:label => label, :image => "vdi_desktop", :value => (vdi_desktop.nil? ? "None" : vdi_desktop.name)}
-    if vdi_desktop && role_allows(:feature => "vdi_desktop_show")
-      h[:title] = "Show #{label} '#{vdi_desktop.name}'"
-      h[:link]  = url_for(:controller => "vdi_desktop", :action => 'show', :id => vdi_desktop)
     end
     h
   end
@@ -824,88 +780,5 @@ module VmCloudHelper::TextualSummary
       h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
     end
     h
-  end
-
-  def textual_vdi_endpoint_name
-    {:label => "Name", :value => @record.vdi_endpoint_name}
-  end
-
-  def textual_vdi_endpoint_type
-    {:label => "Type", :value => @record.vdi_endpoint_type}
-  end
-
-  def textual_vdi_endpoint_ip_address
-    {:label => "IP Address", :value => @record.vdi_endpoint_ip_address}
-  end
-
-  def textual_vdi_endpoint_mac_address
-    {:label => "MAC Address", :value => @record.vdi_endpoint_mac_address}
-  end
-
-  def vdi_connection_name
-    {:label => "Name", :value => @record.vdi_connection_name}
-  end
-
-  def vdi_connection_logon_server
-    {:label => "Logon Server", :value => @record.vdi_connection_logon_server}
-  end
-
-  def vdi_connection_session_name
-    {:label => "Session Name", :value => @record.vdi_connection_session_name}
-  end
-
-  def vdi_connection_remote_ip_address
-    {:label => "Remote IP Address", :value => @record.vdi_connection_remote_ip_address}
-  end
-
-  def vdi_connection_dns_name
-    {:label => "DNS Name", :value => @record.vdi_connection_dns_name}
-  end
-
-  def vdi_connection_url
-    {:label => "URL", :value => @record.vdi_connection_url}
-  end
-
-  def vdi_connection_session_type
-    {:label => "Session Type", :value => @record.vdi_connection_session_type}
-  end
-
-  def vdi_user_name
-    {:label => "Username", :value => @record.vdi_user_name}
-  end
-
-  def vdi_user_ldap
-    return nil unless MiqLdap.using_ldap?
-    ldap = @record.vdi_user_ldap
-    return nil if ldap.nil?
-    ldap.collect { |l| {:label => l[0], :value => l[1]} }
-  end
-
-  def vdi_user_domain
-    {:label => "Domain", :value => @record.vdi_user_domain}
-  end
-
-  def vdi_user_dns_domain
-    {:label => "DNS Domain", :value => @record.vdi_user_dns_domain}
-  end
-
-  def vdi_user_logon_time
-    {:label => "Logon Time", :value => @record.vdi_user_logon_time}
-  end
-
-  def vdi_user_appdata
-    {:label => "APPDATA", :value => @record.vdi_user_appdata}
-  end
-
-  def vdi_user_home_drive
-    {:label => "HOMEDRIVE", :value => @record.vdi_user_home_drive}
-  end
-
-  def vdi_user_home_share
-    {:label => "HOMESHARE", :value => @record.vdi_user_home_share}
-  end
-
-  def vdi_user_home_path
-    {:label => "HOMEPATH", :value => @record.vdi_user_home_path}
   end
 end

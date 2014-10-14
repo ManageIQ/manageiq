@@ -723,7 +723,6 @@ class ConfigurationController < ApplicationController
                     :storage => ["Infrastructure", "Datastores"],
                     :templatecloud => ["Cloud", "Instances", "Images"],
                     :templateinfra => ["Infrastructure", "Virtual Machines", "Templates"],
-                    :vdiuser => ["VDI", "Users"],
                     :vm => ["Services", "Workloads", "VMs & Instances"],
                     :vmcloud => ["Cloud", "Instances", "Instances"],
                     :vminfra => ["Infrastructure", "Virtual Machines", "VMs"]
@@ -776,7 +775,6 @@ class ConfigurationController < ApplicationController
       current = MiqSearch.all(:conditions=>["search_type=?", "default"]).sort_by do |a|
         [NAV_TAB_PATH[a.db.downcase.to_sym], a.description.downcase]
       end
-      current.delete_if { |ms| ms.db == "VdiUser" } unless get_vmdb_config[:product][:vdi]
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,
@@ -823,12 +821,9 @@ class ConfigurationController < ApplicationController
       if get_vmdb_config[:product][:proto] # Hide behind proto setting - Sprint 34
         @edit[:new][:quadicons][:service] = params[:quadicons_service] == "1" if params[:quadicons_service]
       end
-      @edit[:new][:quadicons][:vmvdi] = params[:quadicons_vmvdi] == "1" if params[:quadicons_vmvdi]
       @edit[:new][:quadicons][:vmitem] = params[:quadicons_vmitem] == "1" if params[:quadicons_vmitem]
       @edit[:new][:quadicons][:storageitem] = params[:quadicons_storageitem] == "1" if params[:quadicons_storageitem]
       @edit[:new][:quadicons][:storage] = params[:quadicons_storage] == "1" if params[:quadicons_storage]
-      @edit[:new][:quadicons][:vdicontroller] = params[:quadicons_vdicontroller] == "1" if params[:quadicons_vdicontroller]
-      @edit[:new][:quadicons][:vdidesktoppool] = params[:quadicons_vdidesktoppool] == "1" if params[:quadicons_vdidesktoppool]
       @edit[:new][:perpage][:grid] = params[:perpage_grid].to_i if params[:perpage_grid]
       @edit[:new][:perpage][:tile] = params[:perpage_tile].to_i if params[:perpage_tile]
       @edit[:new][:perpage][:list] = params[:perpage_list].to_i if params[:perpage_list]

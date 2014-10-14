@@ -1,5 +1,5 @@
 class VmInfraController < ApplicationController
-  include VmCommon        # common methods for vm/vdi vm controllers
+  include VmCommon        # common methods for vm controllers
   include VmShowMixin
 
   # Exception due to open.window() in newer IE versions not sending request.referer

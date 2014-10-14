@@ -17,8 +17,8 @@ module VmHelper
 
   def set_controller_action
     parent = @record.with_relationship_type("genealogy") { |r| r.parent }
-    url = parent.vdi ? "vm_vdi" : request.parameters[:controller]
-    action = parent.vdi ? "show" : "x_show"
+    url = request.parameters[:controller]
+    action = "x_show"
     return url, action
   end
 

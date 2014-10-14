@@ -346,33 +346,6 @@ function miqUpdateAllCheckboxes(button_div,override) {
   miqSparkle(false);
 }
 
-// Update button if any of the checkboxes that is checked
-function miqImportUserCheckboxes(obj,cb_id) {
-  new Ajax.Request(encodeURI ("/vdi_user/users_selected/?cb_id=" + cb_id + "&cb_value=" + obj.checked),
-    {asynchronous:true, evalScripts:true}
-  );
-  return true;
-}
-
-// update all checkboxes on a form when the masterToggle checkbox is changed
-// send transaction up so all checked checkboxes can be handled
-function miqImportUserAllCheckboxes(button_div,override) {
-  if ($('masterToggle')) {
-    var state = $('masterToggle').checked;
-    if ( override != null ) state = override;
-    if ($$('input[id=listcheckbox]').length>0) {              // No dhtmlx grid on the screen
-      cbs = $$('input[id=listcheckbox]');
-      cbs.each(function(cb) {
-        cb.checked=state;
-      })
-      new Ajax.Request(encodeURI ("/vdi_user/users_selected/?cb_all=true" + "&cb_value=" + state),
-        {asynchronous:true, evalScripts:true}
-      );
-      return true;
-    }
-  }
-}
-
 // Update buttons based on number of checkboxes that are checked
 // parms: obj=<checkbox element>, button_div=<id of div with buttons to update>
 function miqUpdateButtons(obj, button_div) {

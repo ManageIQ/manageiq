@@ -55,12 +55,6 @@
       :image: reconfigure
       :text: "Reconfigure this VM"
       :title: "Reconfigure the Memory/CPU of this VM"
-#      :url: '/reconfigure'	# Uncomment if we use a url
-    - :button: vm_mark_vdi
-      :image: mark_vdi
-      :text: "Mark this VM as VDI Desktop"
-      :title: "Mark this VM as VDI Desktop"
-      :confirm: "Are you sure you want to mark this VM as VDI Desktop? VDI Desktop will be created for this VM."
 - :name: vm_policy
   :items:
   - :buttonSelect: vm_policy_choice

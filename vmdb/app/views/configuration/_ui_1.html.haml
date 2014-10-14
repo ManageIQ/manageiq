@@ -19,10 +19,7 @@
                [role_allows(:feature => "storage_show_list"),   "#{ui_lookup(:table => "storages")} Item", "storageitem"],
                [true,                                           "VM",                                      "vm"],
                [true,                                           "VM Item",                                 "vmitem"],
-               [true,                                           "Template",                                "miq_template"],
-               [get_vmdb_config[:product][:vdi],                "VM VDI",                                  "vmvdi"],
-               [get_vmdb_config[:product][:vdi],                "VDI Controller",                          "vdicontroller"],
-               [get_vmdb_config[:product][:vdi],                "VDI Desktop Pools",                       "vdidesktoppool"]].each do |icons_checkbox|
+               [true,                                           "Template",                                "miq_template"]].each do |icons_checkbox|
               - if icons_checkbox[0]
                 %tr
                   %td.key Show #{icons_checkbox[1]} Quadrants

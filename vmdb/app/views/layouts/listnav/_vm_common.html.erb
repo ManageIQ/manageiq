@@ -193,17 +193,6 @@
 			Analysis History (<%= @record.number_of(:scan_histories) %>)<br/>
 		<% end %>
 
-		<% if role_allows(:feature=>"vdi_desktop_show") %>
-		<% if @record.vdi_desktop != nil %>
-      <%= link_to_with_icon("#{ui_lookup(:table=>"vdi_desktop")}: #{@record.vdi_desktop.name}",
-                            {:controller=>"vdi_desktop", :action=>'show', :id=>@record.vdi_desktop.id.to_s},
-                            {:title=>"Show #{ui_lookup(:table=>"vdi_desktop")}",},
-                            '/images/icons/16/link_external.gif') %>
-		<% else %>
-			<img src="/images/icons/16/link_none.gif"/>
-			<%= ui_lookup(:table=>"vdi_desktop")%>: None<br/>
-		<% end %>
-			<% end %>
 		</div>
 	</div>
 

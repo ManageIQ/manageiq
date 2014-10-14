@@ -148,8 +148,6 @@
     %>
   <% elsif db == "MiqProvision" %>
     <img src="/images/icons/new/miq_request.png" valign="middle" border="0" height="20" width="20" />
-  <% elsif db == "VdiSession" %>
-    <img src="/images/icons/new/vdi_session.png" valign="middle" border="0" height="20" width="20"  />
   <% elsif ["CimBaseStorageExtent","LdapRegion","OntapStorageSystem","OntapLogicalDisk","OntapStorageVolume","OntapFileShare","SniaLocalFileSystem"].include?(db) %>
     <img src="/images/icons/new/<%=h(db.underscore)%>.png" valign="middle" border="0" height="20" width="20"  />
   <% elsif db == "ServiceTemplate" %>

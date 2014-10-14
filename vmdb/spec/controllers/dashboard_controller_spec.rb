@@ -11,8 +11,7 @@ describe DashboardController do
       group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
       User.stub(:authenticate).and_return(user)
-      cfg = {:product => {:vdi => true}}
-      controller.stub(:get_vmdb_config).and_return(cfg)
+      controller.stub(:get_vmdb_config).and_return({:product => {}})
       UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
       controller.stub(:start_url_for_user).and_return('some_url')
       post :authenticate, :user_name => user.userid, :user_password => 'secret'
@@ -47,9 +46,7 @@ describe DashboardController do
       group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
       User.stub(:authenticate).and_return(user)
-
-      cfg = {:product => {:vdi => true}}
-      controller.stub(:get_vmdb_config).and_return(cfg)
+      controller.stub(:get_vmdb_config).and_return({:product => {}})
       controller.stub(:start_url_for_user).and_return('some_url')
       UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
       validation = controller.send(:validate_user, user)

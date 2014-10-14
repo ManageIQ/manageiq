@@ -91,21 +91,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_name
-    h = {:label => "Name", :value => @record.name}
-    if @record.vdi?
-      if params[:controller] != "vm_vdi"
-        if role_allows(:feature => "vm_vdi_view")
-          h[:title] = "Show this VDI VM in the VDI tab"
-          h[:link]  = url_for(:controller => 'vm_vdi', :action => 'show', :id => @record.id)
-        end
-      else
-        if role_allows(:feature => "vandt_accord") || role_allows(:feature => "vm_filter_accord")
-          h[:title] = "Show this VDI VM in the Virtual Machines tab"
-          h[:link]  = url_for(:controller => 'vm_or_template', :action => 'show', :id => @record.id)
-        end
-      end
-    end
-    h
+    {:label => "Name", :value => @record.name}
   end
 
   def textual_server

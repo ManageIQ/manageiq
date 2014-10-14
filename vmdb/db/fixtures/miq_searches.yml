@@ -554,50 +554,6 @@
     search_type: default
     db: MiqTemplate
 - attributes:
-    name: default_Find by First Name
-    description: Find by First Name
-    filter: !ruby/object:MiqExpression
-      exp:
-        INCLUDES:
-          field: VdiUser.ldap-first_name
-          value: :user_input
-    search_type: default
-    db: VdiUser
-- attributes:
-    name: default_Find by Last Name
-    description: Find by Last Name
-    filter: !ruby/object:MiqExpression
-      exp:
-        INCLUDES:
-          field: VdiUser.ldap-last_name
-          value: :user_input
-    search_type: default
-    db: VdiUser
-- attributes:
-    name: default_Find by First and Last Name
-    description: Find by First and Last Name
-    filter: !ruby/object:MiqExpression
-      exp:
-        and:
-        - INCLUDES:
-            field: VdiUser.ldap-first_name
-            value: :user_input
-        - INCLUDES:
-            field: VdiUser.ldap-last_name
-            value: :user_input
-    search_type: default
-    db: VdiUser
-- attributes:
-    name: default_Find by E-mail
-    description: Find by E-mail
-    filter: !ruby/object:MiqExpression
-      exp:
-        INCLUDES:
-          field: VdiUser.ldap-mail
-          value: :user_input
-    search_type: default
-    db: VdiUser
-- attributes:
     name: default_Over Sized
     description: Over Sized
     filter: !ruby/object:MiqExpression

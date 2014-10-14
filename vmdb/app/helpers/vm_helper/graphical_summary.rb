@@ -16,7 +16,7 @@ module VmHelper::GraphicalSummary
   end
 
   def graphical_group_relationships
-    items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history vdi_desktop}
+    items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history}
     items.collect { |m| self.send("graphical_#{m}") }.flatten.compact
   end
 
@@ -273,17 +273,6 @@ module VmHelper::GraphicalSummary
     else
       h[:value] = num
       h[:link]  = link_to("", {:action => 'scan_histories', :id => @record}, :remote => @explorer, :title => "Show virtual machine analysis history")
-    end
-    h
-  end
-
-  def graphical_vdi_desktop
-    return nil unless get_vmdb_config[:product][:vdi]
-    vdi_desktop = @record.vdi_desktop
-    label = ui_lookup(:table=>"vdi_desktop")
-    h = {:label => label, :image => "vdi_desktop", :value => (vdi_desktop.nil? ? "None" : vdi_desktop.name.truncate(13))}
-    if vdi_desktop && role_allows(:feature => "vdi_desktop_show")
-      h[:link] = link_to("", {:controller => "vdi_desktop", :action => 'show', :id => vdi_desktop}, :title => "Show #{label} '#{vdi_desktop.name}'", :onclick => "return miqCheckForChanges()")
     end
     h
   end

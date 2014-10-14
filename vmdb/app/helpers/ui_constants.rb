@@ -168,7 +168,6 @@ module UiConstants
     :svc => "Services",
     :inf => "Infrastructure",
     :clo => "Clouds",
-    :vdi => "VDI",
     :sto => "Storage",
     :con => "Control",
     :aut => "Automate",
@@ -209,15 +208,6 @@ module UiConstants
                                 repository
                                 vm_infra_explorer_accords
                                 pxe
-                              }],
-    [MAIN_TABS[:vdi],         %w{
-                                vdi_farm
-                                vdi_controller
-                                vdi_desktop_pool
-                                vdi_desktop
-                                vdi_endpoint_device
-                                vdi_user
-                                vm_vdi
                               }],
     [MAIN_TABS[:sto],         %w{
                                 ontap_storage_system
@@ -267,12 +257,9 @@ module UiConstants
       :miq_template   =>  true,
       :storage        =>  true,
       :vm             =>  true,
-      :vmvdi          =>  true,
       :vmitem         =>  true,
       :hostitem       =>  true,
-      :storageitem    =>  true,
-      :vdicontroller  =>  true,
-      :vdidesktoppool =>  true
+      :storageitem    =>  true
     },
     :views => { # List view setting, by resource type
       :catalog          =>  "list",
@@ -328,18 +315,10 @@ module UiConstants
       :templatecloud    =>  "list",
       :templateinfra    =>  "list",
       :treesize         =>  "20",
-      :vdicontroller    =>  "list",
-      :vdidesktop       =>  "list",
-      :vdidesktoppool   =>  "list",
-      :vdiendpointdevice => "list",
-      :vdifarm          =>  "list",
-      :vdisession       =>  "list",
-      :vdiuser          =>  "list",
       :vm               =>  "grid",
       :vmcloud          =>  "grid",
       :vminfra          =>  "grid",
       :vmortemplate     =>  "grid",
-      :vmvdi            =>  "grid",
       :vmcompare        =>  "compressed",
       :vmitem           =>  "list"
     },

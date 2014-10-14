@@ -116,16 +116,6 @@
               Templates (<%= @record.number_of(:miq_templates) %>)<br/>
           <% end %>
         <% end %>
-
-        <% if role_allows(:feature=>"vdi_desktop_pool_show_list") %>
-          <%= link_if_nonzero(
-            :count     => @record.vdi_desktop_pools.count,
-            :record_id => @record.id,
-            :tables    => 'vdi_desktop_pool',
-            :controller=> 'ems_infra',
-            :action    => 'show',
-          )%>
-        <% end %>
       </div>
     </div>
 <% end %>

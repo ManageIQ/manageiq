@@ -1,5 +1,5 @@
 class VmCloudController < ApplicationController
-  include VmCommon        # common methods for vm/vdi vm controllers
+  include VmCommon        # common methods for vm controllers
   include VmShowMixin
 
   before_filter :check_privileges
