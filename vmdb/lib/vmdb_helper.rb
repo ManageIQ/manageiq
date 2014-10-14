@@ -20,7 +20,6 @@ require 'active_record_query_parts'
 
 # Include monkey-patches
 $:.push("#{File.dirname(__FILE__)}/patches")
-require 'active_support_string_patch'
 require 'ruport_patch'
 
 APPLIANCE_DATA_VOL = File.directory?("/var/www/miq/vmdb") ? "/var/lib/data" : Rails.root.join("tmp")
