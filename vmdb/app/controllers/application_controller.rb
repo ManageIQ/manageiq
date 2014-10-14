@@ -1387,7 +1387,9 @@ class ApplicationController < ActionController::Base
     pass = check_generic_rbac
     unless pass
       if request.xml_http_request?
-        ie8_safe_redirect(url_for(:controller => 'dashboard', :action => 'auth_error'))
+        render :update do |page|
+          page.redirect_to(:controller => 'dashboard', :action => 'auth_error')
+        end
       else
         redirect_to(:controller => 'dashboard', :action => 'auth_error')
       end
