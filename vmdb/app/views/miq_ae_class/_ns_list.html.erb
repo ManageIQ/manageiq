@@ -1,5 +1,5 @@
 <% if @in_a_form %>
-  <% url = url_for(:action => 'form_ns_field_changed', 
+  <% url = url_for(:action => 'form_ns_field_changed',
                    :id     => "#{@ae_ns.id || "new"}")
   %>
 <% end %>
@@ -34,7 +34,7 @@
         <% unless @ae_ns.domain? %>
           <tr>
             <td class="key">
-              <%= Dictionary::gettext('fqname', 
+              <%= Dictionary::gettext('fqname',
                                       :type     => :column,
                                       :notfound => :titleize)
               %>
@@ -50,10 +50,10 @@
             <%= text_field_tag("ns_name",
                                 @edit[:new][:ns_name],
                                 :maxlength         => MAX_NAME_LEN,
-                                "data-miq_observe" => {:interval => '.5', 
+                                "data-miq_observe" => {:interval => '.5',
                                                        :url      => url}.to_json)
             %>
-            <%= javascript_tag("$j('#ns_name').focus()") %>
+            <%= javascript_tag(javascript_focus('#ns_name')) %>
           </td>
         </tr>
         <tr>

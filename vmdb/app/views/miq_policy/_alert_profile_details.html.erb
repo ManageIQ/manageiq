@@ -1,6 +1,6 @@
 <% if @edit %>
-  <% url = url_for(:action => 'alert_profile_field_changed', 
-                   :id     => "#{@alert_profile.id || "new"}") 
+  <% url = url_for(:action => 'alert_profile_field_changed',
+                   :id     => "#{@alert_profile.id || "new"}")
   %>
 <% end %>
 <div id="alert_profile_details_div" style="width:100%;height:100%;overflow:auto;">
@@ -21,11 +21,11 @@
                   <%= text_field_tag("description",
                                       @edit[:new][:description],
                                       :maxlength => MAX_DESC_LEN,
-                                      "data-miq_observe" => {:interval => '.5', 
-                                                             :url      => url}.to_json) 
+                                      "data-miq_observe" => {:interval => '.5',
+                                                             :url      => url}.to_json)
                   %>
                 </td>
-                <%= javascript_tag("$j('#description').focus()") %>
+                <%= javascript_tag(javascript_focus('description')) %>
               <% end %>
             </tr>
         </table>
@@ -74,20 +74,20 @@
               <span id="choices_chosen_div">
                 <%= select_tag 'choices_chosen[]',
                                 options_for_select(@edit[:choices].sort),
-                                {:multiple => true, 
-                                 :class    => "widthed", 
-                                 :size     => 8, 
-                                 :id       => "choices_chosen"} 
+                                {:multiple => true,
+                                 :class    => "widthed",
+                                 :size     => 8,
+                                 :id       => "choices_chosen"}
                 %>
                </span><p>
             </td>
             <td width="20" valign="middle">
               <%= link_to(image_tag("/images/toolbars/right.png",
-                                    :border => "0", 
-                                    :class  => "rollover small", 
+                                    :border => "0",
+                                    :class  => "rollover small",
                                     :alt    => "Move selected Alerts into this Profile"),
-                         {:action => 'alert_profile_edit', 
-                          :button => 'move_right', 
+                         {:action => 'alert_profile_edit',
+                          :button => 'move_right',
                           :id     => @alert_profile},
                          "data-miq_sparkle_on"  => true,
                          "data-miq_sparkle_off" => true,
@@ -96,11 +96,11 @@
                          :title  => "Move selected Alerts into this Profile")
               %>
               <%= link_to(image_tag("/images/toolbars/allleft.png",
-                                     :border => "0", 
-                                     :class  => "rollover small", 
+                                     :border => "0",
+                                     :class  => "rollover small",
                                      :alt    => "Remove all Alerts from this Profile"),
-                          {:action => 'alert_profile_edit', 
-                           :button => 'move_allleft', 
+                          {:action => 'alert_profile_edit',
+                           :button => 'move_allleft',
                            :id     => @alert_profile},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -108,11 +108,11 @@
                           :title  => "Remove all Alerts from this Profile")
               %>
               <%= link_to(image_tag("/images/toolbars/left.png",
-                                     :border => "0", 
-                                     :class  => "rollover small", 
+                                     :border => "0",
+                                     :class  => "rollover small",
                                      :alt    => "Remove selected Alerts from this Profile"),
-                          {:action => 'alert_profile_edit', 
-                           :button => 'move_left', 
+                          {:action => 'alert_profile_edit',
+                           :button => 'move_left',
                            :id     => @alert_profile},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -125,10 +125,10 @@
               <span id="members_chosen_div">
                 <%= select_tag 'members_chosen[]',
                                 options_for_select(@edit[:new][:alerts].sort),
-                                {:multiple => true, 
-                                 :class    => "widthed", 
-                                 :size     => 8, 
-                                 :id       => "members_chosen"} 
+                                {:multiple => true,
+                                 :class    => "widthed",
+                                 :size     => 8,
+                                 :id       => "members_chosen"}
                 %>
               </span>
             </td>
@@ -157,8 +157,8 @@
                             :maxlength => "512",
                             :counter   => "notes_count",
                             "data-miq_check_max_length" => true,
-                            "data-miq_observe"          => {:interval => '.5', 
-                                                            :url      => url}.to_json) 
+                            "data-miq_observe"          => {:interval => '.5',
+                                                            :url      => url}.to_json)
           %>
         <hr>
       <% end %>
@@ -182,7 +182,7 @@
                     <% aa[:objects].each do |o| %>
                       <% if o.kind_of?(EmsFolder) %>
                         <% objs.push("#{o.ext_management_system.name}/#{o.folder_path({:exclude_root_folder         => true,
-                                                                                       :exclude_non_display_folders => true})}") 
+                                                                                       :exclude_non_display_folders => true})}")
                         %>
                       <% elsif o.kind_of?(ResourcePool) %>
                         <% objs.push(o.absolute_path(:exclude_hidden => true))%>

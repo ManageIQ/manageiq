@@ -21,7 +21,7 @@
                            "data-miq_observe" => {:interval => '.5',
                                                   :url      => url}.to_json)
         %>
-        <%= javascript_tag("$j('##{prefix}inst_name').focus()") %>
+        <%= javascript_tag(javascript_focus("#{prefix}inst_name")) %>
        </td>
     </tr>
     <tr>
@@ -30,7 +30,7 @@
         <%= text_field_tag("#{prefix}inst_display_name",
                            @edit[:new][:ae_inst]["display_name"],
                            :maxlength         => MAX_NAME_LEN,
-                           "data-miq_observe" => {:interval => '.5', 
+                           "data-miq_observe" => {:interval => '.5',
                                                   :url      => url}.to_json)
         %>
       </td>
@@ -82,7 +82,7 @@
                                      :onBlur =>"miqSetInputValues(this, 'blur')",
                                      #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                      "data-miq_default_value" => default_value,
-                                     "data-miq_observe"       => {:interval => '.5', 
+                                     "data-miq_observe"       => {:interval => '.5',
                                                                   :url      => url}.to_json)
               %>
             <% else %>
@@ -145,7 +145,7 @@
                                :onBlur => "miqSetInputValues(this, 'blur')",
                                #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
                                "data-miq_default_value" => default_value,
-                               "data-miq_observe"       => {:interval => '.5', 
+                               "data-miq_observe"       => {:interval => '.5',
                                                             :url      => url}.to_json)
             %>
           </td>

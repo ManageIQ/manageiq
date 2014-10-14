@@ -38,4 +38,12 @@ module JsHelper
   def j_str(value)
     j(value.to_s)
   end
+
+  def javascript_focus(element)
+    "$j('##{element}').focus();"
+  end
+
+  def javascript_focus_if_exists(element)
+    "if ($j('##{element}').length) #{javascript_focus(element)}"
+  end
 end

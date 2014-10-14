@@ -6,7 +6,7 @@
     <table class="style1">
         <tr>
           <td class="key">
-            <%= Dictionary::gettext('fqname', 
+            <%= Dictionary::gettext('fqname',
                                     :type     => :column,
                                     :notfound => :titleize)
             %>
@@ -21,11 +21,10 @@
             <%= text_field_tag("#{prefix}method_name",
                                 @edit[:new][:name],
                                 :maxlength         => MAX_NAME_LEN,
-                                "data-miq_observe" => {:interval => '.5', 
+                                "data-miq_observe" => {:interval => '.5',
                                                        :url      => url}.to_json)
             %>
           </td>
-            <%#= javascript_tag("$j('#method_name').focus()") %>
         </tr>
         <tr>
           <td class="key">Display Name</td>
@@ -42,7 +41,7 @@
           <td class="key">Location</td>
           <td class="wide">
             <%= select_tag("#{prefix}method_location",
-                           options_for_select(@edit[:new][:available_locations].sort, 
+                           options_for_select(@edit[:new][:available_locations].sort,
                            @edit[:new][:location]),
                            "data-miq_observe" => {:url => url}.to_json)
             %>
@@ -56,7 +55,7 @@
             </td>
           </tr>
         <% end %>
-        </table> 
+        </table>
         <hr>
         <p class="legend">Data</p>
         <%= render :partial => "method_data",
@@ -75,11 +74,11 @@
       <thead>
         <tr>
           <th class="special">
-            <%= link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png", 
+            <%= link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png",
                                   :class => "rollover small",
                                   :id    => "exp_collapse_img",
-                                  :style => "z-index:50", 
-                                  :alt   => title, 
+                                  :style => "z-index:50",
+                                  :alt   => title,
                                   :title=>title),
                         {:action => 'expand_toggle',
                          :id     => "exp_collapse"},

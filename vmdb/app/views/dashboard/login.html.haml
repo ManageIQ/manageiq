@@ -1,7 +1,7 @@
 #login-screen{:class =>"#{get_vmdb_config[:server][:custom_login_logo] ? 'whitelabel' : ''}"}
   %img#logo{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("layout/login-screen-logo.png")}"}
   .form
-    = render(:partial=>"layouts/spinner", :locals=>{:login=>true}) 
+    = render(:partial=>"layouts/spinner", :locals=>{:login=>true})
     #flash_div{:style =>"#{flash[:notice] ? "" : "display:none"}"}
       #{flash[:notice]}
     %fieldset
@@ -11,8 +11,7 @@
         %p
           %label Username
           = text_field_tag('user_name', @user_name,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();")
-          :javascript
-            $j('#user_name').focus();
+          = javascript_tag(javascript_focus('user_name'))
         %p
           %label Password
           = password_field_tag('user_password', @user_password,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();",:autocomplete => "off")

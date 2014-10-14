@@ -14,8 +14,7 @@
               :maxlength=>MAX_NAME_LEN,
               "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
 
-            :javascript
-              $('name').focus();
+            = javascript_tag(javascript_focus('name'))
 
         %tr
           %td.key Description

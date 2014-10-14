@@ -316,7 +316,7 @@ module OpsController::Settings::Ldap
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ldap_server_entries_div", :partial=>"ldap_server_entries", :locals=>{:entry=>"new", :edit=>true,:domain_id=>params[:domain_id]})
-        page << "$j('#entry_name').focus();"
+        page << javascript_focus('entry_name')
         page << "$('entry_name').select();"
       end
       session[:entry] = "new"
@@ -325,7 +325,7 @@ module OpsController::Settings::Ldap
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ldap_server_entries_div", :partial=>"ldap_server_entries", :locals=>{:entry=>entry, :edit=>true,:domain_id=>params[:domain_id]})
-        page << "$j('#entry_#{j_str(params[:field])}').focus();"
+        page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('entry_#{j_str(params[:field])}').select();"
       end
       session[:entry] = entry

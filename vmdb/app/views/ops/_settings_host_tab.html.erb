@@ -1,6 +1,6 @@
 <% url = url_for(:action=>'cu_collection_field_changed') %>
 <% if @sb[:active_tab] == "settings_host" %>
-	
+
 		<%= render :partial => "layouts/flash_msg" %>
 
 			<fieldset>
@@ -12,7 +12,7 @@
 							<% check = @edit[:new][:host][:autoscan].to_s == "1" %>
 								<%= check_box_tag("host_autoscan", value="1", checked=check,
 																			"data-miq_observe_checkbox"=>{:url=>url}.to_json)%>
-								<%= javascript_tag("$j('#host_autoscan').focus()") %>
+								<%= javascript_tag(javascript_focus('host_autoscan')) %>
 						</td>
 					</tr>
 					<tr>

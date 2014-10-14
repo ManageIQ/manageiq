@@ -1707,10 +1707,10 @@ class MiqAeClassController < ApplicationController
       page.replace_html(@refresh_div, :partial=>@refresh_partial) if @refresh_div
       if row_selected_in_grid?
         page << "$('class_methods_div').show();"
-        page << "$j('#cls_field_name').focus();"
+        page << javascript_focus('cls_field_name')
       else
         page << "$('method_inputs_div').show();"
-        page << "$j('#field_name').focus();"
+        page << javascript_focus('field_name')
       end
       page << javascript_for_miq_button_visibility(@changed)
       page << "$('inputs_div').show();"

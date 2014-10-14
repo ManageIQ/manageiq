@@ -15,20 +15,20 @@
                     <% if @edit[:qs_tokens][token].has_key?(:field) %>
                       <% if @edit[:qs_tokens][token][:value_type] == :boolean %>
                         <% values = [["<Choose>",""],["true","true"],["false","false"]] %>
-                        <%= select_tag("value_#{token}", 
+                        <%= select_tag("value_#{token}",
                                        options_for_select(values, nil),
-                                       :multiple              => false, 
+                                       :multiple              => false,
                                        :class                 => "widthed",
-                                       "data-miq_sparkle_on"  => true, 
+                                       "data-miq_sparkle_on"  => true,
                                        "data-miq_sparkle_off" => true,
-                                       "data-miq_observe"     => {:url => url}.to_json) 
+                                       "data-miq_observe"     => {:url => url}.to_json)
                         %>
                       <% else %>  <%# String input value %>
-                        <%= text_field_tag("value_#{token}", nil, 
+                        <%= text_field_tag("value_#{token}", nil,
                                            :maxlength         => 500,
                                            :onkeyup           => "miqQsEnterEscape(event);", # Check for enter/escape keys
-                                           "data-miq_observe" => {:interval => '.5', 
-                                                                  :url      => url}.to_json) 
+                                           "data-miq_observe" => {:interval => '.5',
+                                                                  :url      => url}.to_json)
                         %>
                         <% if @edit[:qs_tokens][token][:value_type] == :percent %>
                           %
@@ -36,13 +36,13 @@
                             MB
                         <% elsif FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units] %>
                           <%= select_tag("suffix_#{token}",
-                                         options_for_select(FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units], 
+                                         options_for_select(FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units],
                                                             nil),
-                                         :multiple              => false, 
+                                         :multiple              => false,
                                          :class                 => "widthed",
-                                         "data-miq_sparkle_on"  => true, 
+                                         "data-miq_sparkle_on"  => true,
                                          "data-miq_sparkle_off" => true,
-                                         "data-miq_observe"     => {:url => url}.to_json) 
+                                         "data-miq_observe"     => {:url => url}.to_json)
                           %>
                         <% end %>
                       <% end %>
@@ -51,19 +51,19 @@
                       <%= select_tag("value_#{token}",
                                      options_for_select(["<Choose>"] + MiqExpression.get_entry_details(@edit[:qs_tokens][token][:tag]).sort{|a,b| a.first.downcase<=>b.first.downcase},
                                                         nil),
-                                     :multiple              => false, 
+                                     :multiple              => false,
                                      :class                 => "widthed",
-                                     "data-miq_sparkle_on"  => true, 
+                                     "data-miq_sparkle_on"  => true,
                                      "data-miq_sparkle_off" => true,
-                                     "data-miq_observe"     => {:url => url}.to_json) 
+                                     "data-miq_observe"     => {:url => url}.to_json)
                       %>
 
                     <% elsif @edit[:qs_tokens][token].has_key?(:count) %>
-                      <%= text_field_tag("value_#{token}", nil, 
+                      <%= text_field_tag("value_#{token}", nil,
                                          :maxlength         => 500,
                                          :onkeyup           => "miqQsEnterEscape(event);", # Check for enter/escape keys
-                                         "data-miq_observe" => {:interval => '.5', 
-                                                                :url      => url}.to_json) 
+                                         "data-miq_observe" => {:interval => '.5',
+                                                                :url      => url}.to_json)
                       %>
                     <% end %>
                   <% else %>
@@ -84,33 +84,33 @@
               <%= button_tag("Apply",	:class => "btn btn-primary btn-disabled") %>
             </span>
             <span id="buttons_on" style="display:none;">
-              <%= link_to(button_tag('Apply', 
-                                    :class => "btn btn-primary", 
+              <%= link_to(button_tag('Apply',
+                                    :class => "btn btn-primary",
                                     :alt   => 'Apply the current filter (Enter)'),
-                          {:action => "quick_search", 
+                          {:action => "quick_search",
                            :button => "apply"},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
                           :remote                => true,
                           :method                => :post,
                           :id                    => "apply_button",
-                          :title                 => "Apply the current filter (Enter)") 
+                          :title                 => "Apply the current filter (Enter)")
               %>
             </span>
-            <%= link_to(button_tag('Cancel', 
-                                  :class => "btn btn-default", 
+            <%= link_to(button_tag('Cancel',
+                                  :class => "btn btn-default",
                                   :alt   => 'Cancel (Esc)'),
-                        {:action => "quick_search", 
+                        {:action => "quick_search",
                          :button => "cancel"},
                         :remote => true,
                         :method => :post,
                         :id     => "cancel_button",
-                        :title  => "Cancel (Esc)") 
+                        :title  => "Cancel (Esc)")
             %>
           </div>
         </td>
       </tr>
     </table>
-    <%= javascript_tag("if ($j('#value_1').length) $j('#value_1').focus()") %>
+    <%= javascript_tag(javascript_focus_if_exists('value_1')) %>
   <% end %>
 </div>

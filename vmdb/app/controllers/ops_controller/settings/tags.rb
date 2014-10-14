@@ -165,7 +165,7 @@ module OpsController::Settings::Tags
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("classification_entries_div", :partial=>"classification_entries", :locals=>{:entry=>"new", :edit=>true})
-        page << "$j('#entry_name').focus();"
+        page << javascript_focus('entry_name')
         page << "$('entry_name').select();"
       end
       session[:entry] = "new"
@@ -174,7 +174,7 @@ module OpsController::Settings::Tags
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("classification_entries_div", :partial=>"classification_entries", :locals=>{:entry=>entry, :edit=>true})
-        page << "$j('#entry_#{j_str(params[:field])}').focus();"
+        page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('entry_#{j_str(params[:field])}').select();"
       end
       session[:entry] = entry
@@ -201,7 +201,7 @@ module OpsController::Settings::Tags
       entry.errors.each { |field,msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "$j('#entry_name').focus();"
+        page << javascript_focus('entry_name')
       end
       return
     end
@@ -232,7 +232,7 @@ module OpsController::Settings::Tags
       entry.errors.each { |field,msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page << "$j('#entry_name').focus();"
+        page << javascript_focus('entry_name')
       end
     end
   end

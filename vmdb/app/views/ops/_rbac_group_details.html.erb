@@ -22,7 +22,7 @@
                     <%= text_field_tag("description",
                                        @edit[:new][:description],
                                        :maxlength         => 50,
-                                       "data-miq_observe" => {:interval => '.5', 
+                                       "data-miq_observe" => {:interval => '.5',
                                                               :url      => url}.to_json)
                     %>
                     &nbsp;
@@ -31,7 +31,7 @@
                                       "data-miq_observe_checkbox" => {:url => url}.to_json)
                     %>
                     (Look Up LDAP Groups)
-                    <%= javascript_tag("$j('#description').focus()") %>
+                    <%= javascript_tag(javascript_focus('description')) %>
                   <% end %>
                 </td>
               </tr>
@@ -106,7 +106,7 @@
                     <%= text_field_tag("user",
                                        @edit[:new][:user],
                                        :maxlength         => 255,
-                                       "data-miq_observe" => {:interval => '.5', 
+                                       "data-miq_observe" => {:interval => '.5',
                                                               :url      => url}.to_json)
                     %>
                   </td>
@@ -119,7 +119,7 @@
                     <%= text_field_tag("user_id",
                                        @edit[:new][:user_id],
                                        :maxlength         => 255,
-                                       "data-miq_observe" => {:interval => '.5', 
+                                       "data-miq_observe" => {:interval => '.5',
                                                               :url      => url}.to_json)
                     %>
                   </td>
@@ -131,13 +131,13 @@
                     <%= password_field_tag("password",
                                       @edit[:new][:password],
                                       :maxlength         => 50,
-                                      "data-miq_observe" => {:interval => '.5', 
-                                                             :url      => url}.to_json) 
+                                      "data-miq_observe" => {:interval => '.5',
+                                                             :url      => url}.to_json)
                     %>
                   </td>
                   <td  valign="bottom" align="right">
                     <%= link_to(button_tag("Retrieve",
-                                           :class => "btn btn-primary", 
+                                           :class => "btn btn-primary",
                                            :alt   => "LDAP Group Lookup"),
                                 {:action => "rbac_group_user_lookup",
                                  :button => "submit",
@@ -194,7 +194,7 @@
                                       :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
                                       :disable_checks => @edit.nil?,
                                       :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                                      :checkboxes     => true}) 
+                                      :checkboxes     => true})
               %>
             </div>
             <div id="vms_templates" name="vms_templates" width="80px">
@@ -211,7 +211,7 @@
                                       :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
                                       :disable_checks => @edit.nil?,
                                       :check_url      => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                                      :checkboxes     => true}) 
+                                      :checkboxes     => true})
               %>
             </div>
           </div>

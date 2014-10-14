@@ -9,7 +9,7 @@
         %td.wide
           = text_field_tag("name", @edit[:new][:name], :maxlength => MAX_NAME_LEN,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          = javascript_tag("$j('#name').focus()")
+          = javascript_tag(javascript_focus('name'))
       %tr
         %td.key Type
         %td.wide

@@ -15,6 +15,7 @@
                          :maxlength         => 40,
                          "data-miq_observe" => {:interval => ".5",
                                                 :url      => url}.to_json)
+        = javascript_tag(javascript_focus('name'))
     %tr
       %td.key Description
       %td.wider

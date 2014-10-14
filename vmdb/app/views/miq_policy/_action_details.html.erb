@@ -1,6 +1,6 @@
 <% if @edit %>
-  <% url = url_for(:action => 'action_field_changed', 
-                   :id     => "#{@action.id || "new"}") 
+  <% url = url_for(:action => 'action_field_changed',
+                   :id     => "#{@action.id || "new"}")
   %>
 <% end %>
 <div id="action_details_div">
@@ -19,10 +19,10 @@
                   <%= text_field_tag("description",
                                      @edit[:new][:description],
                                      :maxlength => MAX_DESC_LEN,
-                                     "data-miq_observe" => {:interval => '.5', 
-                                                            :url      => url}.to_json) 
+                                     "data-miq_observe" => {:interval => '.5',
+                                                            :url      => url}.to_json)
                   %>
-                  <%= javascript_tag("$j('#description').focus()") %>
+                  <%= javascript_tag(javascript_focus('description')) %>
                 </td>
               <% end %>
                 </td>
@@ -37,9 +37,9 @@
                 <%= select_tag('miq_action_type',
                                 options_for_select([["<Choose>",nil]] + MiqAction::TYPES.invert.sort,
                                                    @edit[:new][:action_type]),
-                                "data-miq_sparkle_on"  => true, 
+                                "data-miq_sparkle_on"  => true,
                                 "data-miq_sparkle_off" => true,
-                                "data-miq_observe"     => {:url => url}.to_json) 
+                                "data-miq_observe"     => {:url => url}.to_json)
                 %>
               </td>
             <% end %>
