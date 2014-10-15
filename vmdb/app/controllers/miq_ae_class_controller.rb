@@ -18,7 +18,7 @@ class MiqAeClassController < ApplicationController
     #resetting flash array so messages don't get displayed when tab is changed
     @flash_array = Array.new
     @explorer = true
-    @record = @ae_class = MiqAeClass.find_by_id(from_cid(@temp[:ae_class_id]))
+    @record = @ae_class = MiqAeClass.find_by_id(from_cid(x_node.split('-').last))
     @sb[:active_tab] = params[:tab_id]
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
     case params[:tab_id]
