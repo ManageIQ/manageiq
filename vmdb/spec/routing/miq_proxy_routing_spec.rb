@@ -139,12 +139,6 @@ describe "routes for MiqProxyController" do
     end
   end
 
-  describe "#toggle_dash" do
-    it "routes with POST" do
-      expect(post("miq_proxy/toggle_dash/123")).to route_to("miq_proxy#toggle_dash", :id => "123")
-    end
-  end
-
   describe "#update" do
     it 'routes with POST' do
       expect(post("/miq_proxy/update")).to route_to("miq_proxy#update")

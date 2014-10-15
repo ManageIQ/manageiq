@@ -304,38 +304,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Toggle the dashboard between graphical and textual mode
-  def toggle_dash
-    @settings[:views][:dashboards] = params[:type]
-    @layout = params[:layout]
-    @layout ||= session[:layout]
-    @display = "main"
-    render :update do |page|                    # Use RJS to update the display
-        button_id = params[:explorer] ? "vm_download_pdf" : "download_view"
-      if params[:type] == "graphical"
-        page << "$('textual_div').hide();"
-        page << "$('graphical_div').show();"
-        page << "view_tb.enableItem('view_textual');"
-        page << "view_tb.setItemState('view_textual', false);"
-        page << "view_tb.disableItem('view_graphical');"
-        page << "view_tb.setItemState('view_graphical', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "view_tb.setItemState('view_graphical', true);"
-        page << "view_tb.hideItem('#{button_id}');"
-        page << "view_tb.hideItem('sep_1');"
-      else
-        page << "$('graphical_div').hide();"
-        page << "$('textual_div').show();"
-        page << "view_tb.enableItem('view_graphical');"
-        page << "view_tb.setItemState('view_graphical', false);"
-        page << "view_tb.disableItem('view_textual');"
-        page << "view_tb.setItemState('view_textual', false);"    # For some reason, need to unselect before selecting a disabled item
-        page << "view_tb.setItemState('view_textual', true);"
-        page << "view_tb.showItem('#{button_id}');"
-        page << "view_tb.showItem('sep_1');"
-      end
-    end
-  end
-
   # Save column widths
   def save_col_widths
     @view = session[:view]
@@ -681,7 +649,7 @@ class ApplicationController < ActionController::Base
     klass        = ui_lookup(:model => "#{@record.class}")
 
     @options = {
-      :page_layout => @settings[:views][:dashboards] == "textual" ? "portrait" : "landscape",
+      :page_layout => "portrait",
       :page_size   => "us-letter",
       :run_date    => run_time.strftime("%m/%d/%y %l:%m %p %z"),
       :title       => "#{klass} \"#{@record.name}\"".html_safe,
