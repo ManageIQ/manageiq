@@ -77,6 +77,10 @@ div.gridbox_style3 table.obj td {
 div.gridbox_style3 table.obj tr.no-hover:hover {
   background: transparent;
 }
+
+div.gridbox_style3 table.obj tr.no-hover:hover td{
+  cursor: default !important;
+}
 <% if @temp && @temp[:ro_grid] %>
   div.gridbox_style3 table.obj tr td:hover {
     background: #d5ecf8 !important; 
