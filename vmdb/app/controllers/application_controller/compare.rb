@@ -1107,7 +1107,11 @@ module ApplicationController::Compare
 
   # Build the total row of the compare grid xml
   def drift_add_total(view)
-    row = {:col0 => "<span class='cell-effort-driven cell-plain'>All Sections</span>"}
+    row = {
+      :col0  => "<span class='cell-effort-driven cell-plain'>All Sections</span>",
+      :id    => "id_#{@temp[:rows].length}",
+      :total => true
+    }
     view.ids.each_with_index do |id, idx|
       if idx == 0
         row.merge!(drift_add_same_image(idx, "Same as previous"))
@@ -1119,7 +1123,6 @@ module ApplicationController::Compare
         end
       end
     end
-    row.merge!(:id => "id_#{@temp[:rows].length}", :total => true)
     @temp[:rows] << row
   end
 
@@ -1131,14 +1134,16 @@ module ApplicationController::Compare
     else                # Show fields count
       cell_text += " (#{records.length})"
     end
-    row = {:col0 => cell_text}
+    row = {
+      :col0       => cell_text,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 0,
+      :parent     => nil,
+      :section    => true,
+      :exp_id     => "#{section[:name]}",
+      :_collapsed => collapsed_state("#{section[:name]}")
+    }
     row.merge!(drift_section_data_cols(view, section))
-    row.merge!(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 0,
-                    :parent     => nil,
-                    :section    => true,
-                    :exp_id     => "#{section[:name]}",
-                    :_collapsed => collapsed_state("#{section[:name]}"))
     @temp[:section_parent_id] = @temp[:rows].length
     @temp[:rows] << row
   end
@@ -1165,14 +1170,16 @@ module ApplicationController::Compare
   # Build a record row for the compare grid xml
   def drift_add_record(view, section, record, ridx)
     @temp[:same] = true
-    row = {:col0 => record}
+    row = {
+      :col0       => record,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 1,
+      :parent     => @temp[:section_parent_id],
+      :record     => true,
+      :exp_id     => "#{section[:name]}_#{ridx}",
+      :_collapsed => collapsed_state("#{section[:name]}_#{ridx}")
+    }
     row.merge!(drift_record_data_cols(view, section, record))
-    row.merge!(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 1,
-                    :parent     => @temp[:section_parent_id],
-                    :record     => true,
-                    :exp_id     => "#{section[:name]}_#{ridx}",
-                    :_collapsed => collapsed_state("#{section[:name]}_#{ridx}"))
 
     @temp[:record_parent_id] = @temp[:rows].length
     @temp[:rows] << row
@@ -1612,7 +1619,12 @@ module ApplicationController::Compare
   end
 
   def comp_add_footer(view)
-    row = {:col0 => ""}
+    row = {
+      :col0       => "",
+      :id         => "id_#{@temp[:rows].length}",
+      :remove_col => true
+    }
+
     if view.ids.length > 2
       view.ids.each_with_index do |id, idx|
         if idx != 0
@@ -1627,7 +1639,6 @@ module ApplicationController::Compare
         end
       end
     end
-    row.merge!(:id => "id_#{@temp[:rows].length}", :remove_col => true)
     @temp[:rows] << row
   end
 
@@ -1666,7 +1677,11 @@ module ApplicationController::Compare
 
   # Build the total row of the compare grid xml
   def comp_add_total(view)
-    row = {:col0 => "<span class='cell-effort-driven cell-plain'>Total Matches</span>"}
+    row = {
+      :col0  => "<span class='cell-effort-driven cell-plain'>Total Matches</span>",
+      :id    => "id_#{@temp[:rows].length}",
+      :total => true
+    }
     view.ids.each_with_index do |id, idx|
       if idx == 0
         row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : "% Matched:", "% Matched"))
@@ -1677,7 +1692,6 @@ module ApplicationController::Compare
         row.merge!(compare_add_piechart_image(idx, "#{pct_match}% matched", image))
       end
     end
-    row.merge!(:id => "id_#{@temp[:rows].length}", :total => true)
     @temp[:rows] << row
   end
 
@@ -1689,14 +1703,17 @@ module ApplicationController::Compare
     else                # Show fields count
       cell_text += " (#{records.length})"
     end
-    row = {:col0 => cell_text}
+    row = {
+      :col0       => cell_text,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 0,
+      :parent     => nil,
+      :section    => true,
+      :exp_id     => "#{section[:name]}",
+      :_collapsed => collapsed_state("#{section[:name]}")
+    }
     row.merge!(compare_section_data_cols(view, section, records))
-    row.merge!(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 0,
-                    :parent     => nil,
-                    :section    => true,
-                    :exp_id     => "#{section[:name]}",
-                    :_collapsed => collapsed_state("#{section[:name]}"))
+
     @temp[:section_parent_id] = @temp[:rows].length
     @temp[:rows] << row
   end
@@ -1724,14 +1741,16 @@ module ApplicationController::Compare
   # Build a record row for the compare grid xml
   def comp_add_record(view, section, record, ridx)
     @temp[:same] = true
-    row = {:col0 => record}
+    row = {
+      :col0       => record,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 1,
+      :parent     => @temp[:section_parent_id],
+      :record     => true,
+      :exp_id     => "#{section[:name]}_#{ridx}",
+      :_collapsed => collapsed_state("#{section[:name]}_#{ridx}")
+    }
     row.merge!(comp_record_data_cols(view, section, record))
-    row.merge!(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 1,
-                    :parent     => @temp[:section_parent_id],
-                    :record     => true,
-                    :exp_id     => "#{section[:name]}_#{ridx}",
-                    :_collapsed => collapsed_state("#{section[:name]}_#{ridx}"))
 
     @temp[:record_parent_id] = @temp[:rows].length
     @temp[:rows] << row
@@ -1885,17 +1904,19 @@ module ApplicationController::Compare
 
   # Build a field row under a record row
   def comp_add_record_field(view, section, record, field)
-    row = {:col0 => field[:header]}
+    row = {
+      :col0         => field[:header],
+      :id           => "id_#{@temp[:rows].length}",
+      :indent       => 2,
+      :parent       => @temp[:record_parent_id],
+      :record_field => true
+    }
 
     if @compressed  # Compressed
       row.merge!(comp_add_record_field_compressed(view, section, record, field))
     else  # Expanded
       row.merge!(comp_add_record_field_expanded(view, section, record, field))
     end
-    row.merge!(:id           => "id_#{@temp[:rows].length}",
-                    :indent       => 2,
-                    :parent       => @temp[:record_parent_id],
-                    :record_field => true)
     @temp[:rows] << row
   end
 
@@ -2028,7 +2049,13 @@ module ApplicationController::Compare
   def comp_add_section_field(view, section, field)
     @temp[:same] = true
 
-    row = {:col0 => field[:header]}
+    row = {
+      :col0          => field[:header],
+      :id            => "id_#{@temp[:rows].length}",
+      :indent        => 1,
+      :parent        => @temp[:section_parent_id],
+      :section_field => true
+    }
 
     if @compressed  # Compressed
       row.merge!(comp_add_section_field_compressed(view, section, field))
@@ -2036,10 +2063,6 @@ module ApplicationController::Compare
       row.merge!(comp_add_section_field_expanded(view, section, field))
     end
 
-    row.merge!(:id            => "id_#{@temp[:rows].length}",
-                    :indent        => 1,
-                    :parent        => @temp[:section_parent_id],
-                    :section_field => true)
     @temp[:rows] << row
   end
 
