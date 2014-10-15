@@ -213,19 +213,19 @@ describe('scheduleFormController', function() {
         it('sets the scheduleTimeZone', function() {
           expect($scope.scheduleTimeZone).toEqual('UTC');
         });
-      });
-    });
 
-    it('turns sparkle on', function() {
-      expect(miqService.sparkleOn).toHaveBeenCalled();
+        it('turns sparkle on', function() {
+          expect(miqService.sparkleOn).toHaveBeenCalled();
+        });
+
+        it('turns sparkle off', function() {
+          expect(miqService.sparkleOff).toHaveBeenCalled();
+        });
+      });
     });
 
     it('builds a calendar', function() {
       expect(miqService.buildCalendar).toHaveBeenCalledWith(2014, 2, 3);
-    });
-
-    it('turns sparkle off', function() {
-      expect(miqService.sparkleOff).toHaveBeenCalled();
     });
   });
 

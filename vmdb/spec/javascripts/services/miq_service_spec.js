@@ -8,7 +8,8 @@ describe('miqService', function() {
     spyOn(window, 'miqButtons');
     spyOn(window, 'miqBuildCalendar');
     spyOn(window, 'miqAjaxButton');
-    spyOn(window, 'miqSparkle');
+    spyOn(window, 'miqSparkleOn');
+    spyOn(window, 'miqSparkleOff');
   }));
 
   describe('#showButtons', function() {
@@ -45,16 +46,16 @@ describe('miqService', function() {
   });
 
   describe('#sparkleOn', function() {
-    it('calls the global miq sparkle with true', function() {
+    it('calls the global miq sparkle on', function() {
       testService.sparkleOn();
-      expect(window.miqSparkle).toHaveBeenCalledWith(true);
+      expect(window.miqSparkleOn).toHaveBeenCalled();
     });
   });
 
   describe('#sparkleOff', function() {
-    it('calls the global miq sparkle with false', function() {
+    it('calls the global miq sparkle off', function() {
       testService.sparkleOff();
-      expect(window.miqSparkle).toHaveBeenCalledWith(false);
+      expect(window.miqSparkleOff).toHaveBeenCalled();
     });
   });
 });
