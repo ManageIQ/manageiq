@@ -1275,11 +1275,10 @@ module ApplicationController::Compare
 
   # Build a field row under a record row
   def drift_add_record_field(view, section, record, field)
-    row = {}
     if @compressed  # Compressed
-      row.merge!(drift_record_field_compressed(view, section, record, field))
+      row = drift_record_field_compressed(view, section, record, field)
     else  # Expanded
-      row.merge!(drift_record_field_expanded(view, section, record, field))
+      row = drift_record_field_expanded(view, section, record, field)
     end
     row.merge!(:id           => "id_#{@temp[:rows].length}",
                     :indent       => 2,
