@@ -57,4 +57,44 @@ module FixAuth
       "typ = 'vmdb'"
     end
   end
+
+  class FixMiqRequest < ActiveRecord::Base
+    include FixAuth::AuthConfigModel
+    # don't want to leverage STI
+    self.inheritance_column = :_type_disabled
+    self.password_columns = %w(options)
+    self.password_fields = %w(root_password sysprep_password sysprep_domain_password)
+    self.password_prefix = "password::"
+    self.symbol_keys = true
+    self.table_name = "miq_requests"
+
+    def self.display_record(r)
+      puts "  #{r.id}:"
+    end
+
+    # bring back everything
+    def self.selection_criteria
+      "options like '%password%'"
+    end
+  end
+
+  class FixMiqRequestTask < ActiveRecord::Base
+    include FixAuth::AuthConfigModel
+    # don't want to leverage STI
+    self.inheritance_column = :_type_disabled
+    self.password_columns = %w(options)
+    self.password_fields = %w(root_password sysprep_password sysprep_domain_password)
+    self.password_prefix = "password::"
+    self.symbol_keys = true
+    self.table_name = "miq_request_tasks"
+
+    def self.display_record(r)
+      puts "  #{r.id}:"
+    end
+
+    # bring back everything
+    def self.selection_criteria
+      "options like '%password%'"
+    end
+  end
 end
