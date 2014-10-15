@@ -79,62 +79,74 @@ module OpsController::Settings::CapAndU
       page << "$('storages_div').#{params[:all_storages] == "1" ? "hide" : "show"}()" if params[:all_storages]
       if params[:id] || params[:check_all] #|| (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
         if (params[:id] && params[:id].split('_')[0] == "Datastore") || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
-          @changed_id_list = Array.new
-          @unchanged_id_list = Array.new
+          # change nodes to blue if they were changed during current edit session
+          @changed_id_list   = []
+          # change ids back to black if change during current session is reverted back
+          @unchanged_id_list = []
           @edit[:new][:storages].each_with_index do |s,i|
+            datastore_id = "Datastore_#{s[:id]}"
             if @edit[:new][:storages][i][:capture] != @edit[:current][:storages][i][:capture]
-              @changed_id_list.push("Datastore_#{s[:id]}")
-            else
-              @unchanged_id_list.push("Datastore_#{s[:id]}")
+              @changed_id_list.push(datastore_id)
+            elsif datastore_id == params[:id] || params[:check_all]
+              @unchanged_id_list.push(datastore_id)
             end
           end
           @changed_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}', '#{j_str(item)}', 'cfme-blue-bold-node')"
+            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+                                                  '#{j_str(item)}',
+                                                  'cfme-blue-bold-node');"
           end
           @unchanged_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}', '#{j_str(item)}', 'dynatree-title')"
+            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+                                                  '#{j_str(item)}',
+                                                  'dynatree-title');"
           end
         else
-          @changed_id_list = Array.new
-          @unchanged_id_list = Array.new
+          @changed_id_list   = []
+          @unchanged_id_list = []
           @edit[:new][:clusters].each_with_index do |c,i|
             cname = c[:name]
+            cluster_id = "Cluster_#{c[:id]}"
             if @edit[:new][:clusters][i][:capture] != @edit[:current][:clusters][i][:capture]
-              @changed_id_list.push("Cluster_#{c[:id]}")
+              @changed_id_list.push(cluster_id)
             else
-              @unchanged_id_list.push("Cluster_#{c[:id]}")
+              @unchanged_id_list.push(cluster_id)
             end
             @edit[:new][cname.to_sym].each_with_index do |host,j|
+              host_id = "#{cluster_id}:Host_#{host[:id]}"
               if @edit[:new][cname.to_sym][j][:capture] != @edit[:current][cname.to_sym][j][:capture]
-                @changed_id_list.push("Cluster_#{c[:id]}:Host_#{host[:id]}")
-              else
-                @unchanged_id_list.push("Cluster_#{c[:id]}:Host_#{host[:id]}")
+                @changed_id_list.push(host_id)
+              elsif cluster_id == params[:id] || host_id == params[:id] || params[:check_all]
+                @unchanged_id_list.push(host_id)
               end
             end
           end
           if !@edit[:current][:non_cl_hosts].blank?   # if there are any hosts without clusters
             if @edit[:new][:non_cluster_host_enabled] == @edit[:current][:non_cluster_host_enabled]
-              @unchanged_id_list.push("NonCluster_0")
+              @unchanged_id_list.push('NonCluster_0')
             else
-              @changed_id_list.push("NonCluster_0")
+              @changed_id_list.push('NonCluster_0')
             end
             @edit[:new][:non_cluster_host_enabled].each do |h|
+              non_clustered_host_id = "NonCluster_0:Host_#{h[0]}"
               if @edit[:current][:non_cluster_host_enabled][h[0]] != @edit[:new][:non_cluster_host_enabled][h[0]]
-                @changed_id_list.push("NonCluster_0:Host_#{h[0]}")
-              else
-                @unchanged_id_list.push("NonCluster_0:Host_#{h[0]}")
+                @changed_id_list.push(non_clustered_host_id)
+              elsif non_clustered_host_id == params[:id] || params[:check_all]
+                @unchanged_id_list.push(non_clustered_host_id)
               end
             end
           end
           @changed_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}', '#{j_str(item)}', 'cfme-blue-bold-node')"
+            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+                                                  '#{j_str(item)}',
+                                                  'cfme-blue-bold-node');"
           end
           @unchanged_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}', '#{j_str(item)}', 'dynatree-title')"
+            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+                                                  '#{j_str(item)}',
+                                                  'dynatree-title');"
           end
         end
-        #need to redraw the tree to change node colors
-        page << "cfme_dynatree_redraw('#{j_str(params[:tree_name])}')"
       end
       page << javascript_for_miq_button_visibility(@changed)
     end

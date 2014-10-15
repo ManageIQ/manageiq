@@ -136,7 +136,6 @@ class ConfigurationController < ApplicationController
         end
         page << "cfme_dynatree_node_add_class('#{session[:tree_name]}', '#{id}', '#{style_class}')"
       end
-      page << "cfme_dynatree_redraw('#{session[:tree_name]}')"
       page << javascript_for_miq_button_visibility(@changed) if @changed
     end
   end

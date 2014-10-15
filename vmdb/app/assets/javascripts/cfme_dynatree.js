@@ -132,7 +132,9 @@ function cfme_expand_parent_nodes(treename, selected_node){
 }
 
 function cfme_dynatree_node_add_class(treename, key, klass){
-  $j("#" + treename + "box").dynatree('getTree').getNodeByKey(key).data.addClass = klass
+  node = $j("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+  node.data.addClass = klass;
+  node.render();
 }
 
 function cfme_dynatree_redraw(treename){

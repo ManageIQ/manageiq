@@ -21,7 +21,6 @@ module ApplicationController::PolicySupport
         else
           page << "cfme_dynatree_node_add_class('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}', 'cfme-blue-bold-node')"
         end
-        page << "cfme_dynatree_redraw('#{session[:tree_name]}')"
         if changed != session[:changed]
           session[:changed] = changed
           page << javascript_for_miq_button_visibility(changed)
