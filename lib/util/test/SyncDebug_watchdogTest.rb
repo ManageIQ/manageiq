@@ -1,10 +1,6 @@
 require 'sync'
 require_relative '../SyncDebug'
 
-#class Sync
-#  include SyncDebug_m
-#end
-
 $stdout.sync = true
 
 $my_puts_mutex = Mutex.new
