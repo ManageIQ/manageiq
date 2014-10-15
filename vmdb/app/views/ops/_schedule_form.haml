@@ -1,6 +1,6 @@
 - url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
 
-#form_div(ng-controller="scheduleFormController")
+%form#form_div(name="scheduleForm" ng-controller="scheduleFormController")
   = render :partial => "layouts/flash_msg"
   %fieldset
     %p.legend
@@ -28,8 +28,8 @@
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
 
-  = button_tag("Save", :class => "btn btn-primary", "ng-click" => "saveClicked()")
-  = button_tag("Reset", :class => "btn btn-default", "ng-click" => "resetClicked()")
+  = button_tag("Save", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !scheduleForm.$dirty}", "ng-click" => "saveClicked()", "ng-disabled" => "!scheduleForm.$dirty")
+  = button_tag("Reset", :class => "btn btn-default", "ng-class" => "{'btn-disabled': !scheduleForm.$dirty}", "ng-click" => "resetClicked()", "ng-disabled" => "!scheduleForm.$dirty")
   = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
 
 :javascript
