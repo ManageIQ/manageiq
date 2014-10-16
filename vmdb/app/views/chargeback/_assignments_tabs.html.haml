@@ -1,0 +1,4 @@
+#assignments_tabs_div{:style => "width: 100%; height: 100%;"}
+  - #  Toplevel Tabbar
+  - if x_active_tree == :cb_assignments_tree
+    = render :partial => x_node == "root" ? "assignments_list" : "cb_assignments"

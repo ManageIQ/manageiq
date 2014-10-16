@@ -1,0 +1,40 @@
+= render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
+- if @edit && @edit[:current]
+  = render :partial => "cb_rate_edit"
+- else
+  %fieldset
+    %p.legend Basic Info
+    %table.style1
+      %tr
+        %td.key Description
+        %td
+          = h(@record.description)
+  %fieldset
+    %p.legend Rate Details
+    %table.style3
+      %thead
+        %tr
+          %th Group
+          %th Description
+          %th Rate
+          %th Per Time
+          %th Per Unit
+      %tbody
+        - @sb[:selected_rate_details].each do |r|
+          - @cur_group = r[:group] if @cur_group.nil?
+          - if @cur_group !=  r[:group]
+            - @cur_group = r[:group]
+            %tr
+              %td{:style => "background-color: #f0f0f0;", :colspan => "6"} &nbsp;
+          %tr
+            %td
+              = h(Dictionary::gettext(r[:group],:type=>:rate_detail_group,:notfound=>:titleize))
+            %td
+              = r[:description]
+            %td{:align => "right"}
+              = r[:rate]
+            %td
+              = r[:per_time]
+            - per_unit = r.per_unit_display
+            %td
+              = per_unit
