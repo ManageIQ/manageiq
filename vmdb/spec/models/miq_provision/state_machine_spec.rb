@@ -2,6 +2,21 @@ require "spec_helper"
 
 describe MiqProvision do
   context "::StateMachine" do
+    context "#prepare_provision" do
+      let(:ems)      { FactoryGirl.create(:ems_openstack_with_authentication) }
+      let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ext_management_system => ems) }
+      let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems) }
+      let(:options)  { {:src_vm_id => template.id, :vm_target_name => "test_vm_1"} }
+      let(:task)     { FactoryGirl.create(:miq_provision_openstack, :source => template, :state => 'pending', :status => 'Ok', :options => options ) }
+      it "merges :clone_options from automate" do
+        task.stub(:update_and_notify_parent)
+        task.should_receive(:instance_type).and_return(flavor)
+        task.should_receive(:signal).with(:start_clone_task)
+
+        task.prepare_provision
+      end
+    end
+
     context "#post_create_destination" do
       before(:each) do
         @ems      = FactoryGirl.create(:ems_vmware_with_authentication)
