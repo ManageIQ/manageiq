@@ -268,7 +268,6 @@ module UiConstants
       :condition        =>  "list",
       :cimbasestorageextent =>  "list",
       :cimstorageextent =>  "list",
-      :dashboards       =>  "textual",
       :drift            =>  "expanded",
       :drift_mode       =>  "details",
       :emscloud         =>  "grid",

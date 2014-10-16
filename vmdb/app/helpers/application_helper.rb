@@ -356,8 +356,7 @@ module ApplicationHelper
           props["enabled"] = "false" if dis_title = build_toolbar_disable_button(bgi[:button]) || button_hide
           props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
           #set pdf button to be hidden if graphical summary screen is set by default
-          bgi[:hidden] = ["download_view","vm_download_pdf"].include?(bgi[:button]) &&
-                         @settings[:views][:dashboards] == "graphical" ? true : button_hide
+          bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
           eval("title = \"#{bgi[:title]}\"") if !bgi[:title].blank? # Evaluate substitutions in text
           props["title"] = dis_title.is_a?(String) ? dis_title : title
 
@@ -667,10 +666,9 @@ module ApplicationHelper
                                                 @temp[:gtl_buttons] && ["view_grid","view_tile","view_list"].include?(id)
 
     #don't hide view buttons in toolbar
-    return false if ["view_grid","view_tile","view_list","refresh_log","fetch_log",
-                      "common_drift","download_text", "download_csv", "download_pdf",
-                      "view_graphical","view_textual","download_view","vm_download_pdf",
-                      "tree_large","tree_small"].include?(id) && !["miq_policy_rsop","ops"].include?(@layout)
+    return false if %( view_grid view_tile view_list refresh_log fetch_log common_drift
+      download_text download_csv download_pdf download_view vm_download_pdf
+      tree_large tree_small).include?(id) && !%w(miq_policy_rsop ops).include?(@layout)
 
     # dont hide back to summary button button when not in explorer
     return false if id == "show_summary" && !@explorer
@@ -1033,7 +1031,7 @@ module ApplicationHelper
 
   # Determine if a button should be disabled
   def build_toolbar_disable_button(id)
-    return true if id.starts_with?("view_") && id.ends_with?(@settings[:views][:dashboards])  # Summary view buttons
+    return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
     return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
     return true if id == "history_1" && x_tree_history.length < 2 # Need 1 child button to show parent
 
@@ -1429,7 +1427,7 @@ module ApplicationHelper
 
   # Determine if a button should be selected for buttonTwoState
   def build_toolbar_select_button(id)
-    return true if id.starts_with?("view_") && id.ends_with?(@settings[:views][:dashboards])  # Summary view buttons
+    return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
     return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
     return true if @ght_type && id.starts_with?("view_") && id.ends_with?(@ght_type)  # GHT view buttons on report show
     return true if id.starts_with?("tree_") && id.ends_with?(@settings[:views][:treesize].to_i == 32 ? "large" : "small")

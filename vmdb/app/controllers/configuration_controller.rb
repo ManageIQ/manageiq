@@ -268,6 +268,7 @@ class ConfigurationController < ApplicationController
         @settings[:display].delete(:vmcompare)                    # :vmcompare moved to :views hash
         @settings[:display].delete(:vm_summary_cool)              # :vm_summary_cool moved to :views hash
         @settings[:views].delete(:vm_summary_cool)                # :views/:vm_summary_cool changed to :dashboards
+        @settings[:views].delete(:dashboards)                    # :dashboards is obsolete now
 
         db_user = User.find_by_userid(session[:userid])
         unless db_user.nil?                                       # Only if userid is in the DB

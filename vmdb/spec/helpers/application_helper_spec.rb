@@ -751,12 +751,15 @@ describe ApplicationHelper do
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
       @record = double("record")
       User.stub(:current_user).and_return(@user)
-      @settings = { :views => {:dashboards => 'textual',
-                               :compare => 'compressed',
-                               :drift => 'compressed',
-                               :compare_mode => 'exists',
-                               :drift_mode => 'exists',
-                               :treesize => '32' }}
+      @settings = {
+        :views => {
+          :compare      => 'compressed',
+          :drift        => 'compressed',
+          :compare_mode => 'exists',
+          :drift_mode   => 'exists',
+          :treesize     => '32'
+        }
+      }
     end
 
     def setup_x_tree_history
@@ -764,9 +767,18 @@ describe ApplicationHelper do
               :active_tree => :testing }
     end
 
-    ["view_grid","view_tile","view_list", "download_text", "download_csv",
-      "download_pdf", "view_graphical", "view_textual", "download_view",
-      "vm_download_pdf", "refresh_log","fetch_log"].each do |item|
+    %w(
+      view_grid
+      view_tile
+      view_list
+      download_text
+      download_csv
+      download_pdf
+      download_view
+      vm_download_pdf
+      refresh_log
+      fetch_log
+    ).each do |item|
       it "when with #{item}" do
         @id = item
         subject.should be_false
@@ -2174,25 +2186,21 @@ describe ApplicationHelper do
     subject { build_toolbar_disable_button(@id) }
     before do
       @gtl_type = 'list'
-      @settings = { :views => {:dashboards => 'textual',
-                          :compare => 'compressed',
-                          :drift => 'compressed',
-                          :compare_mode => 'exists',
-                          :drift_mode => 'exists',
-                          :treesize => '32' }}
+      @settings = {
+        :views => {
+          :compare      => 'compressed',
+          :drift        => 'compressed',
+          :compare_mode => 'exists',
+          :drift_mode   => 'exists',
+          :treesize     => '32'
+        }
+      }
     end
 
     def setup_firefox_with_linux
       # setup for mocking is_browser? and is_browser_os?
       ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, :name).and_return('firefox')
       ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, :os).and_return('linux')
-    end
-
-    ['textual', 'graphical'].each do |d|
-      it "when with view_#{d}" do
-        @settings[:views][:dashboards] = d
-        build_toolbar_disable_button("view_#{d}").should be_true
-      end
     end
 
     ['list', 'tile', 'grid'].each do |g|
@@ -2880,21 +2888,17 @@ describe ApplicationHelper do
   describe "#build_toolbar_select_button" do
     before :each do
       @gtl_type = 'list'
-      @settings = { :views => {:dashboards => 'textual',
-                          :compare => 'compressed',
-                          :drift => 'compressed',
-                          :compare_mode => 'exists',
-                          :drift_mode => 'exists',
-                          :treesize => '32' }}
+      @settings = {
+        :views => {
+          :compare      => 'compressed',
+          :drift        => 'compressed',
+          :compare_mode => 'exists',
+          :drift_mode   => 'exists',
+          :treesize     => '32'
+        }
+      }
     end
     subject { build_toolbar_select_button(id) }
-
-    ['textual', 'graphical'].each do |d|
-      it "when with view_#{d}" do
-        @settings[:views][:dashboards] = d
-        build_toolbar_select_button("view_#{d}").should be_true
-      end
-    end
 
     ['list', 'tile', 'grid'].each do |g|
       it "when with view_#{g}" do
@@ -2943,10 +2947,6 @@ describe ApplicationHelper do
       it { should be_true }
     end
 
-    context  "otherwise" do
-      let(:id) { "view_graphical" }
-      it { should be_false }
-    end
   end
 
   describe "#build_toolbar_save_button" do
@@ -2969,11 +2969,6 @@ describe ApplicationHelper do
         build_toolbar_save_button(@tb_buttons, @item, @parent)
         @tb_buttons
       }
-
-      it "as item[:buttonTwoState] when it exists" do
-        @item[:buttonTwoState] = 'view_textual'
-        subject.should have_key("view_textual")
-      end
 
       it "as item[:buttonSelect] when item[:buttonTwoState] does not exist" do
         @item[:buttonSelect] = 'tree_large'

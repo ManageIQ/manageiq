@@ -61,7 +61,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         tl_chooser
-        toggle_dash
         wait_for_task
       )
     },
@@ -176,7 +175,6 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
-        toggle_dash
         update
         panel_control
       )
@@ -293,7 +291,6 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        toggle_dash
         update
         wait_for_task
       )
@@ -359,7 +356,6 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        toggle_dash
         wait_for_task
       )
     },
@@ -413,7 +409,6 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        toggle_dash
         tree_autoload_dynatree
         tree_autoload_quads
         update
@@ -464,7 +459,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
       )
     },
 
@@ -557,7 +551,6 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        toggle_dash
         toggle_policy_profile
         update
         users
@@ -813,7 +806,6 @@ Vmdb::Application.routes.draw do
         show_list
         tasks_button
         tasks_change_options
-        toggle_dash
         update
       )
     },
@@ -928,7 +920,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
       )
     },
     :ontap_logical_disk     => {
@@ -975,7 +966,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
         wait_for_task
       )
     },
@@ -1025,7 +1015,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
       )
     },
     :ontap_storage_volume   => {
@@ -1070,7 +1059,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
       )
     },
     :ops => {
@@ -1314,7 +1302,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
         update
       )
     },
@@ -1359,7 +1346,6 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
-        toggle_dash
         quick_search
       )
     },
@@ -1400,7 +1386,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
       )
     },
 
@@ -1495,7 +1480,6 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-        toggle_dash
         wait_for_task
       )
     },
@@ -1526,7 +1510,6 @@ Vmdb::Application.routes.draw do
         save_col_widths
         show
         show_list
-        toggle_dash
         update
       )
     },
@@ -1659,7 +1642,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         tl_chooser
-        toggle_dash
         tree_autoload_dynatree
         tree_select
         users
@@ -1776,7 +1758,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         tl_chooser
-        toggle_dash
         tree_autoload_dynatree
         tree_select
         users
@@ -1892,7 +1873,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         tl_chooser
-        toggle_dash
         tree_select
         users
         util_chart_chooser

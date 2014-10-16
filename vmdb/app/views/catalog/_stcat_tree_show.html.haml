@@ -1,32 +1,30 @@
 .maincontent
   = render :partial => "layouts/flash_msg"
-  = hidden_div_if(@settings[:views][:dashboards] != "graphical", :id => "graphical_div") do end
-  = hidden_div_if(@settings[:views][:dashboards] != "textual",   :id => "textual_div") do
-    %table
-      %tr
-        %td{:valign => "center"}
-          %table.style1
-            %tr
-              %td.key Name
-              %td.notwide= @record.name
-            %tr
-              %td.key Description
-              %td.notwide= @record.description
-    - unless @record_service_templates.empty?
-      %hr
-      %table.style3
-        %thead
-          %th Catalog Items
-        %tbody
-          - @record_service_templates.sort_by { |a| a.name.downcase }.each do |obj|
-            %tr{:class       => cycle("row0", "row1"),
-                :onclick     => remote_function(:loading  => "miqSparkle(true);",
-                                                :complete => "miqSparkle(false);",
-                                                :url      => "/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}"),
-                :onmouseover => "this.style.cursor='pointer'",
-                :title       => "Click to this Catalog Item"}
-              %td=obj.name
-    - else
-      .alert.alert-info
-        %span.pficon.pficon-info
-        %strong No Catalog Items found
+  %table
+    %tr
+      %td{:valign => "center"}
+        %table.style1
+          %tr
+            %td.key Name
+            %td.notwide= @record.name
+          %tr
+            %td.key Description
+            %td.notwide= @record.description
+  - unless @record_service_templates.empty?
+    %hr
+    %table.style3
+      %thead
+        %th Catalog Items
+      %tbody
+        - @record_service_templates.sort_by { |a| a.name.downcase }.each do |obj|
+          %tr{:class       => cycle("row0", "row1"),
+              :onclick     => remote_function(:loading  => "miqSparkle(true);",
+                                              :complete => "miqSparkle(false);",
+                                              :url      => "/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}"),
+              :onmouseover => "this.style.cursor='pointer'",
+              :title       => "Click to this Catalog Item"}
+            %td=obj.name
+  - else
+    .alert.alert-info
+      %span.pficon.pficon-info
+      %strong No Catalog Items found
