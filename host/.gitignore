@@ -1,7 +1,0 @@
-Gemfile.lock
-host.stproj
-SyntaxCheck
-build_win/build_dir
-build_linux/build_dir
-build_linux64/build_dir
-/bin/
