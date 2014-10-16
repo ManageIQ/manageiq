@@ -358,10 +358,8 @@ module ApplicationController::Timelines
       @tl_options[:groups] = Array.new
       @tl_groups_hash = Hash.new
       TL_ETYPE_GROUPS.each do |gname,list|
-        if gname != :vdi || (gname == :vdi && get_vmdb_config[:product][:vdi])
-          @tl_options[:groups].push(list[:name].to_s)
-          @tl_groups_hash[list[:name].to_s] = gname
-        end
+        @tl_options[:groups].push(list[:name].to_s)
+        @tl_groups_hash[list[:name].to_s] = gname
       end
       @tl_options[:fl_typ] = "critical" if @tl_options[:fl_typ].nil?
       if @tl_options[:filter1].nil?

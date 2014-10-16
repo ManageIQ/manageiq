@@ -18,8 +18,6 @@
     - lib/VolumeManager
     - lib/kvm
     - lib/libvirt
-    - lib/VdiCitrix
-    - lib/VdiVmware
     # miqhost
     - host/bundler_setup.rb
     - host/Gemfile

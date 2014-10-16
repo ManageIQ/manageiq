@@ -186,9 +186,6 @@ function miqToolbarOnClick(id){
 	// Checking for perf_reload button to not turn off spinning Q (will be done after charts are drawn).
 	// Need to design this feature into the toolbar button support at a later time.
   if ((button.name == "perf_reload") ||
-      (button.name == "vm_vmdb_choice__vm_mark_vdi") ||
-      (button.name == "vdi_desktop_vmdb_choice__vdi_desktop_unmark_vdi") ||
-      (button.name == "vdi_user_vmdb_choice__vdi_user_delete") ||
 		  (button.name == "vm_perf_reload") ||
       (button.name.endsWith("_console"))) {
 		if (typeof params == "undefined") {

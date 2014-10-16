@@ -70,49 +70,6 @@ describe Vm do
     end
   end
 
-  context "with a small env" do
-    before(:each) do
-      @zone1 = FactoryGirl.create(:small_environment)
-      MiqServer.stub(:my_server).and_return(@zone1.miq_servers.first)
-    end
-
-    it "will not have an active VDI session" do
-      vm = @zone1.vms.first
-      vm.has_active_vdi_session.should be_false
-    end
-
-    context "with a VDI Desktop relationship" do
-      before(:each) do
-        @vm = @zone1.vms.first
-        FactoryGirl.create(:vdi_desktop, :vm_or_template_id => @vm.id)
-      end
-
-      it "should not have an active session" do
-        @vm.has_active_vdi_session.should be_false
-      end
-
-      context "with a VDI session" do
-        before(:each) do
-          @vdi_session = FactoryGirl.create(:vdi_session, :vdi_desktop_id => @vm.vdi_desktop.id, :state => 'Disconnected')
-        end
-
-        it "should detect an active session" do
-          @vm.vdi_desktop.vdi_sessions.first.state = 'Disconnected'
-          @vm.has_active_vdi_session.should be_false
-
-          @vm.vdi_desktop.vdi_sessions.first.state = 'Connected'
-          @vm.has_active_vdi_session.should be_true
-
-          @vm.vdi_desktop.vdi_sessions.first.state = 'Connecting'
-          @vm.has_active_vdi_session.should be_false
-
-          @vm.vdi_desktop.vdi_sessions.first.state = 'ConsoleLoggedIn'
-          @vm.has_active_vdi_session.should be_true
-        end
-      end
-    end
-  end
-
   context "#invoke_tasks_local" do
     before(:each) do
       @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone

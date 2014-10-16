@@ -491,7 +491,6 @@ workers:
       :session_timeout_interval: 30.seconds
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 06:00
-      :vdi_refresh_interval: 20.minutes
       :vm_retired_interval: 10.minutes
       :vm_scan_interval: 10.minutes
     :smis_refresh_worker:

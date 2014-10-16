@@ -89,7 +89,7 @@ module ApplicationHelper
   def url_for_record(record, action="show") # Default action is show
     @id = to_cid(record.id)
     if record.kind_of?(VmOrTemplate)
-      return url_for_db(record.vdi? ? record.class.to_s : controller_for_vm(model_for_vm(record)), action)
+      return url_for_db(controller_for_vm(model_for_vm(record)), action)
     elsif record.kind_of?(ExtManagementSystem)
       return url_for_db(model_for_ems(record).to_s, action)
     else
@@ -675,35 +675,9 @@ module ApplicationHelper
     # dont hide back to summary button button when not in explorer
     return false if id == "show_summary" && !@explorer
 
-    #hide vdi buttons if flag is marked true
-    if id.starts_with?("vdi_desktop") || id.starts_with?("vdi_user") || id == "vm_mark_vdi"
-      return true unless VdiFarm::MGMT_ENABLED
-    end
-
-    #need to hide certain buttons when on vdi user/desktop pool direct list view screen.
-    if id.starts_with?("vdi_") && @lastaction == "show_list" && !@display
-      return true if ["vdi_user_desktop_pool_unassign","vdi_desktop_pool_user_unassign"].include?(id)
-    end
-
-    #need to hide import/delete buttons when viewing list of  VdiUsers for desktop pool.
-    if id.starts_with?("vdi_") && @lastaction == "show" && @display == "vdi_user"
-      return true if ["vdi_user_delete","vdi_user_import"].include?(id)
-    end
-
-    #need to hide unmark VDI button if has_broker? is true
-    if id.starts_with?("vdi_") && @lastaction == "show" && @display == "vdi_desktop"
-      return true if @record.has_broker?
-    end
-
     #need to hide add buttons when on sub-list view screen of a CI.
     return true if (id.ends_with?("_new") || id.ends_with?("_discover")) &&
                             @lastaction == "show" && @display != "main"
-
-    #don't need delete buttons when viewing list of desktop pools for VDI User
-    return true if ["vdi_desktop_pool_delete"].include?(id) && request.parameters[:controller] == "vdi_user"
-
-    #don't need these buttons when viewing list of desktop pools for VDI farm
-    return true if ["vdi_desktop_pool_user_assign","vdi_desktop_pool_user_unassign"].include?(id) && request.parameters[:controller] == "vdi_farm"
 
     if id == "summary_reload"                             # Show reload button if
       return @explorer &&                                 # we are in explorer and
@@ -797,14 +771,14 @@ module ApplicationHelper
       return true if @edit && @edit[:current]
     when "miq_task_canceljob"
       return true if !["all_tasks", "all_ui_tasks"].include?(@layout)
-    when "vm_console", "vm_vdi_console"
+    when "vm_console"
       return true if !@record.console_supported? ||
           (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "MKS")
-    when "vm_vnc_console", "vm_vdi_vnc_console"
+    when "vm_vnc_console"
       return true if !@record.console_supported? ||
           !get_vmdb_config[:server][:remote_console_type] ||
           (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "VNC")
-    when "vm_vmrc_console", "vm_vdi_vmrc_console"
+    when "vm_vmrc_console"
       return true if !@record.console_supported? ||
           !get_vmdb_config[:server][:remote_console_type] ||
           (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "VMRC")
@@ -968,33 +942,31 @@ module ApplicationHelper
         return true unless @record.cloneable?
       when "vm_publish"
         return true if %w(VmMicrosoft VmRedhat).include?(@record.type)
-      when "vm_collect_running_processes", "vm_vdi_collect_running_processes"
+      when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
-      when "vm_evm_relationship", "vm_right_size"
-        return true if @record.vdi?
-      when "vm_guest_startup", "vm_start", "vm_vdi_guest_startup", "vm_vdi_power_on", "instance_start", "instance_resume"
+      when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
         return true if !@record.is_available?(:start)
-      when "vm_guest_standby", "vm_vdi_guest_standby"
+      when "vm_guest_standby"
         return true if !@record.is_available?(:standby_guest)
-      when "vm_guest_shutdown", "vm_vdi_guest_shutdown", "instance_guest_shutdown"
+      when "vm_guest_shutdown", "instance_guest_shutdown"
         return true if !@record.is_available?(:shutdown_guest)
-      when "vm_guest_restart", "vm_vdi_guest_restart", "instance_guest_restart"
+      when "vm_guest_restart", "instance_guest_restart"
         return true if !@record.is_available?(:reboot_guest)
       when "vm_migrate", "vm_reconfigure"
-        return true if @record.vendor.downcase == "redhat" || @record.vdi?
-      when "vm_stop", "vm_vdi_power_off", "instance_stop"
+        return true if @record.vendor.downcase == "redhat"
+      when "vm_stop", "instance_stop"
         return true if !@record.is_available?(:stop)
-      when "vm_reset", "vm_vdi_power_reset", "instance_reset"
+      when "vm_reset", "instance_reset"
         return true if !@record.is_available?(:reset)
-      when "vm_suspend", "vm_vdi_power_suspend", "instance_suspend"
+      when "vm_suspend", "instance_suspend"
         return true if !@record.is_available?(:suspend)
       when "instance_pause"
         return true if !@record.is_available?(:pause)
-      when "vm_policy_sim", "vm_protect", "vm_vdi_policy_sim", "vm_vdi_protect"
+      when "vm_policy_sim", "vm_protect"
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
-      when "vm_refresh", "vm_vdi_refresh"
+      when "vm_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "vm_scan", "vm_vdi_scan"
+      when "vm_scan"
         return true if !@record.has_proxy?
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
@@ -1011,16 +983,6 @@ module ApplicationHelper
         return true if !@record.has_proxy?
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
-      end
-    when "VdiDesktop"
-      case id
-      when "vdi_desktop_unmark_vdi"
-        return true if @record.vdi_desktop_pool && @record.vdi_desktop_pool.has_broker?
-      end
-    when "VdiDesktopPool"
-      case id
-      when "vdi_desktop_pool_manage_desktops"
-        return true if @record.has_broker?
       end
     when "NilClass"
       case id
@@ -1310,20 +1272,20 @@ module ApplicationHelper
       end
     when "Vm"
       case id
-      when "instance_perf", "vm_perf", "vm_vdi_perf"
+      when "instance_perf", "vm_perf"
         return "No Capacity & Utilization data has been collected for this VM" unless @record.has_perf_data?
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
         return "No Compliance Policies assigned to this #{model == "VmInfra" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
-      when "vm_collect_running_processes", "vm_vdi_collect_running_processes"
+      when "vm_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
-      when "vm_console", "vm_vdi_console", "vm_vmrc_console", "vm_vdi_vmrc_console"
+      when "vm_console", "vm_vmrc_console"
         if !is_browser?(%w(explorer firefox mozilla chrome)) ||
           !is_browser_os?(%w(windows linux))
           return "The web-based console is only available on IE, Firefox or Chrome (Windows/Linux)"
         end
 
-        if id.in?(["vm_vmrc_console", "vm_vdi_vmrc_console"])
+        if id.in?(["vm_vmrc_console"])
           begin
             @record.validate_remote_console_vmrc_support
           rescue MiqException::RemoteConsoleNotSupportedError => err
@@ -1332,33 +1294,30 @@ module ApplicationHelper
         end
 
         return "The web-based console is not available because the VM is not powered on" if @record.current_state != "on"
-      when "vm_vnc_console", "vm_vdi_vnc_console"
+      when "vm_vnc_console"
         return "The web-based VNC console is not available because the VM is not powered on" if @record.current_state != "on"
-      when "vm_guest_startup", "vm_start", "vm_vdi_guest_startup", "vm_vdi_start"
+      when "vm_guest_startup", "vm_start"
         return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)
-      when "vm_guest_standby", "vm_vdi_guest_standby"
+      when "vm_guest_standby"
         return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
-      when "vm_guest_shutdown", "vm_vdi_guest_shutdown"
+      when "vm_guest_shutdown"
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
-      when "vm_guest_restart", "vm_vdi_guest_restart"
+      when "vm_guest_restart"
         return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
-      when "vm_mark_vdi"
-        return "This VM is already a VDI Desktop" if @record.vdi?
-      when "vm_stop", "vm_vdi_stop"
+      when "vm_stop"
         return @record.is_available_now_error_message(:stop) if @record.is_available_now_error_message(:stop)
-      when "vm_reset", "vm_vdi_reset"
+      when "vm_reset"
         return @record.is_available_now_error_message(:reset) if @record.is_available_now_error_message(:reset)
-      when "vm_suspend", "vm_vdi_suspend"
+      when "vm_suspend"
         return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
       when "instance_retire", "instance_retire_now",
-              "vm_retire", "vm_retire_now",
-              "vm_vdi_retire","vm_vdi_retire_now"
+              "vm_retire", "vm_retire_now"
         return "#{@record.kind_of?(VmCloud) ? "Instance" : "VM"} is already retired" if @record.retired == true
-      when "vm_scan", "vm_vdi_scan"
+      when "vm_scan"
         return @record.active_proxy_error_message if !@record.has_active_proxy?
-      when "vm_timeline", "vm_vdi_timeline"
+      when "vm_timeline"
         return "No Timeline data has been collected for this VM" unless @record.has_events? || @record.has_events?(:policy_events)
-      when "vm_snapshot_add", "vm_vdi_snapshot_add"
+      when "vm_snapshot_add"
         if @record.number_of(:snapshots) <= 0
           return @record.is_available_now_error_message(:create_snapshot) unless @record.is_available?(:create_snapshot)
         else
@@ -1368,11 +1327,11 @@ module ApplicationHelper
             return "Select the Active snapshot to create a new snapshot for this VM" unless @active
           end
         end
-      when "vm_snapshot_delete", "vm_vdi_snapshot_delete"
+      when "vm_snapshot_delete"
         return @record.is_available_now_error_message(:remove_snapshot) unless @record.is_available?(:remove_snapshot)
-      when "vm_snapshot_delete_all", "vm_vdi_snapshot_delete_all"
+      when "vm_snapshot_delete_all"
         return @record.is_available_now_error_message(:remove_all_snapshots) unless @record.is_available?(:remove_all_snapshots)
-      when "vm_snapshot_revert", "vm_vdi_snapshot_revert"
+      when "vm_snapshot_revert"
         return @record.is_available_now_error_message(:revert_to_snapshot) unless @record.is_available?(:revert_to_snapshot)
       end
     when "MiqTemplate"
@@ -1386,16 +1345,6 @@ module ApplicationHelper
       when "miq_template_timeline"
         return "No Timeline data has been collected for this Template" unless @record.has_events? || @record.has_events?(:policy_events)
       end
-    when "VdiDesktop"
-      case id
-      when "vdi_desktop_user_assign"
-        return @record.supports_user_assignment_error_message
-      end
-    when "VdiUser"
-      case id
-      when "vdi_user_import"
-        return "No LDAP Servers available for import" if LdapServer.find(:all).size <= 0
-      end
     when "Zone"
       case id
       when "collect_logs", "collect_current_logs"
@@ -1407,7 +1356,6 @@ module ApplicationHelper
           return "'Default' zone cannot be deleted"
         elsif @selected_zone.ext_management_systems.count > 0 ||
             @selected_zone.storage_managers.count > 0 ||
-            @selected_zone.vdi_farms.count > 0 ||
             @selected_zone.miq_schedules.count > 0 ||
             @selected_zone.miq_servers.count > 0
           return "Cannot delete a Zone that has Relationships"
@@ -1617,8 +1565,6 @@ module ApplicationHelper
       title += ": Optimize"
     elsif layout.starts_with?("miq_request")
       title += ": Requests"
-    elsif layout.starts_with?("vdi_")
-      title += ": VDI - #{ui_lookup(:tables=>layout)}"
     elsif layout.starts_with?("cim_") ||
           layout.starts_with?("snia_")
       title += ": Storage - #{ui_lookup(:tables=>layout)}"
@@ -2272,12 +2218,6 @@ module ApplicationHelper
         return "resource_pools_center_tb"
       elsif @display == "storages"
         return "storages_center_tb"
-      elsif @display == "vdi_desktop_pool" && ["vdi_farm","vdi_user"].include?(request.parameters[:controller])
-        return "vdi_desktop_pools_center_tb"
-      elsif @display == "vdi_user" && request.parameters[:controller] == "vdi_desktop_pool"
-        return "vdi_users_center_tb"
-      elsif @display == "vdi_desktop" && ["vdi_farm","vdi_desktop_pool"].include?(request.parameters[:controller])
-        return "vdi_desktops_center_tb"
       elsif (@layout == "vm" || @layout == "host") && @display == "performance"
         return "#{@explorer ? "x_" : ""}vm_performance_tb"
       end
@@ -2292,8 +2232,8 @@ module ApplicationHelper
       if !@in_a_form
         if ["availability_zone","flavor","ems_cloud","ems_cluster","host","ems_infra","miq_proxy",
             "ontap_file_share","ontap_logical_disk","ontap_storage_system","repository",
-            "resource_pool","storage","storage_manager","timeline","usage","vdi_desktop",
-            "vdi_desktop_pool","vdi_farm","vdi_user","security_group"].include?(@layout)
+            "resource_pool","storage","storage_manager","timeline","usage",
+            "security_group"].include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"
           else
@@ -2311,12 +2251,6 @@ module ApplicationHelper
           else
             return "miq_request_center_tb"
           end
-        elsif @layout == "vm_vdi"
-          if ["show_list"].include?(@lastaction)
-            return "vmvdis_center_tb"
-          else
-            return "vmvdi_center_tb"
-          end
         elsif ["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(@layout)
           return "tasks_center_tb"
         end
@@ -2332,7 +2266,7 @@ module ApplicationHelper
     if (%w(advanced_settings drift_history event_logs guest_applications groups
            host_services kernel_drivers filesystem_drivers filesystems linux_initprocesses
            patches processes registry_items scan_histories scan_history vmtree
-           rsop users vdi_sessions vdi_session_item win32_services).include?(@lastaction) ||
+           rsop users win32_services).include?(@lastaction) ||
         (@lastaction == "show" && @display != "main")) && @record &&
         ((@layout == "cim_base_storage_extent" && !@record.evm_display_name.nil?) ||
             (@layout != "cim_base_storage_extent" && @record.respond_to?('name') && !@record.name.nil?))
@@ -2385,7 +2319,7 @@ module ApplicationHelper
   end
 
   def pressed2model_action(pressed)
-    pressed =~ /^(ems_cluster|vm_vdi|miq_template)_(.*)$/ ? [$1, $2] : pressed.split('_', 2)
+    pressed =~ /^(ems_cluster|miq_template)_(.*)$/ ? [$1, $2] : pressed.split('_', 2)
   end
 
   def model_for_ems(record)
@@ -2530,7 +2464,6 @@ module ApplicationHelper
     :svc => %w{services catalogs vm_or_template miq_request_vm},
     :clo => %w{ems_cloud availability_zone cloud_tenant flavor security_group vm_cloud},
     :inf => %w{ems_infra ems_cluster host vm_infra resource_pool storage repository pxe miq_request_host},
-    :vdi => %w{vdi_farm vdi_controller vdi_desktop_pool vdi_desktop vdi_endpoint_device vdi_user vm_vdi},
     :sto => %w{ontap_storage_system ontap_logical_disk ontap_storage_volume ontap_file_share storage_manager},
     :con => %w{miq_policy miq_policy_rsop miq_policy_export miq_policy_logs},
     :aut => %w{miq_ae_class miq_ae_tools miq_ae_customization miq_ae_export miq_ae_logs miq_request_ae},
@@ -2584,13 +2517,12 @@ module ApplicationHelper
                         ems_cluster ems_infra event flavor host miq_proxy miq_schedule miq_template offline
                         ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume policy
                         policy_group policy_profile repository resource_pool retired scan_profile service
-                        snia_local_file_system storage storage_manager templates vdi_controller vdi_desktop
-                        vdi_desktop_pool vdi_endpoint_device vdi_farm vdi_user vm vm_vdi)
+                        snia_local_file_system storage storage_manager templates)
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
     !@ownershipitems && !@retireitems && !@politems && !@new_policy &&
-    !@in_a_form && !@vdiitems
+    !@in_a_form
   end
 
   def update_url_parms(url_parm)

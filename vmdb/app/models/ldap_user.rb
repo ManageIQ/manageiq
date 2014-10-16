@@ -7,8 +7,6 @@ class LdapUser < ActiveRecord::Base
   has_many   :inverse_managements, :class_name => "LdapManagement", :foreign_key => "manager_id", :dependent => :destroy
   has_many   :direct_reports,  :through => :inverse_managements, :source => :ldap_user
 
-  belongs_to :vdi_user
-
   acts_as_miq_taggable
 
   include ReportableMixin

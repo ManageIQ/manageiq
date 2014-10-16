@@ -36,11 +36,6 @@
       :text: "Edit Management Engine Relationship"
       :title: "Edit Management Engine Relationship"
     - :separator:
-    - :button: instance_mark_vdi
-      :image: mark_vdi
-      :text: "Mark this Instance as VDI Desktop"
-      :title: "Mark this Instance as VDI Desktop"
-      :confirm: "Are you sure you want to mark this Instance as VDI Desktop? VDI Desktop will be created for this Instance."
 - :name: instance_policy
   :items:
   - :buttonSelect: instance_policy_choice

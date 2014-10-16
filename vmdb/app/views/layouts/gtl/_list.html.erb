@@ -177,8 +177,6 @@
                             onclick="DoNav('<%= "/vm/show/#{to_cid(rec.destination_id)}" %>');"
                             title="Click to view this VM"
                         <% end %>
-                  <% elsif view.db == "VdiSession" %>
-                    onclick="DoNav('<%= "/#{params[:db]}/vdi_sessions/#{params[:id]}?db=#{params[:db]}&show=" << @id.to_s %>');"
                   <% elsif view.db == "Job" %>
                     onclick="DoNav('<%= "/vm/show/#{to_cid(row["target_id"])}" %>');"
                   <% elsif @vm %>
@@ -260,24 +258,6 @@
                   <%# if ["MiqTask","MiqEvent","VmdbDatabaseSetting"].include?(view.db) %>
                   <%# elsif view.db == "MiqSchedule" %>
                       <%# rec = @targets_hash[row['id']] if @targets_hash %>
-                  <% elsif view.db == "VdiSession" %>
-                    <% if !row[col].blank? %>
-                      <% if col == "vdi_controller_name" %>
-                        onclick="DoNav('<%= "/vdi_controller/show/#{row["vdi_controller_id"]}" %>');" title="Show <%= ui_lookup(:tables => "vdi_controller") %>"
-                      <% elsif col == "vdi_farm_name" %>
-                        onclick="DoNav('<%= "/vdi_farm/show/#{row["vdi_farm"].id}" %>');" title="Show <%= ui_lookup(:tables => "vdi_farm") %>"
-                      <% elsif col == "vdi_desktop_pool_name" %>
-                        onclick="DoNav('<%= "/vdi_desktop_pool/show/#{row["vdi_desktop_pool"].id}" %>');" title="Show <%= ui_lookup(:tables => "vdi_desktop_pool") %>"
-                      <% elsif col == "vdi_desktop_name" %>
-                        onclick="DoNav('<%= "/vdi_desktop/show/#{row["vdi_desktop_id"]}" %>');" title="Show <%= ui_lookup(:tables => "vdi_desktop") %>"
-                      <% elsif col == "vdi_user_name" %>
-                        onclick="DoNav('<%= "/vdi_user/show/#{row["vdi_user_id"]}" %>');" title="Show <%= ui_lookup(:tables => "vdi_user") %>"
-                      <% elsif col == "vdi_endpoint_device_name" %>
-                        onclick="DoNav('<%= "/vdi_endpoint_device/show/#{row["vdi_endpoint_device_id"]}" %>');" title="Show <%= ui_lookup(:tables => "vdi_endpoint_device") %>"
-                      <% else %>
-                        onclick="DoNav('<%= "/#{params[:db]}/vdi_sessions/#{params[:id]}?db=#{params[:db]}&show=" << @id.to_s %>');" title="Click to view Details"
-                      <% end %>
-                    <% end %>
                   <% elsif view.db == "MiqProvision" %>
                       <% rec = @targets_hash[row['id']] if @targets_hash %>
                       <% unless rec.destination_id.blank? %>

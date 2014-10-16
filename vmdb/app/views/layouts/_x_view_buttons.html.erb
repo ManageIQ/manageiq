@@ -22,9 +22,8 @@
 			<%  if ["ems_cloud","ems_infra","host","vm","offline","retired","templates","repository","storage","service","miq_proxy",
 				"policy","policy_profile","policy_group","event","condition","action","scan_profile",
 				"ems_cluster","resource_pool","miq_schedule","storage_manager",
-				"ontap_storage_system","ontap_storage_volume","ontap_file_share","snia_local_file_system","ontap_logical_disk","cim_base_storage_extent",
-				"vdi_controller","vdi_desktop","vdi_desktop_pool","vdi_endpoint_device","vdi_farm","vdi_user","vm_vdi"].include?(@layout) &&
-				@gtl_type	&& !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form && !@vdiitems %>
+				"ontap_storage_system","ontap_storage_volume","ontap_file_share","snia_local_file_system","ontap_logical_disk","cim_base_storage_extent"].include?(@layout) &&
+				@gtl_type	&& !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form %>
 				<%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"gtl_view_tb"} %>
       <% elsif (@layout == "vm" || @layout == "host" || @layout == "ems_cluster") && (@lastaction == "compare_miq" || @lastaction == "compare_compress") %>
         <%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"compare_view_tb"} %>

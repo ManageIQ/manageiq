@@ -164,36 +164,6 @@
   :url: /storage_manager/show_list
   :rbac_feature_name: storage_manager_show_list
   :startup: true
-- :name: vdi_farms
-  :description: VDI / Farms
-  :url: /vdi_farm/show_list
-  :rbac_feature_name: vdi_farm_show_list
-  :startup: true
-- :name: vdi_brokers
-  :description: VDI / Brokers
-  :url: /vdi_controller/show_list
-  :rbac_feature_name: vdi_controller_show_list
-  :startup: true
-- :name: vdi_desktop_pools
-  :description: VDI / Desktop Pools
-  :url: /vdi_desktop_pool/show_list
-  :rbac_feature_name: vdi_desktop_pool_show_list
-  :startup: true
-- :name: vdi_desktops
-  :description: VDI / Desktops
-  :url: /vdi_desktop/show_list
-  :rbac_feature_name: vdi_desktop_show_list
-  :startup: true
-- :name: vdi_endpoint_devices
-  :description: VDI / Endpoint Devices
-  :url: /vdi_endpoint_device/show_list
-  :rbac_feature_name: vdi_endpoint_device_show_list
-  :startup: true
-- :name: vdi_users
-  :description: VDI / Users
-  :url: /vdi_user/show_list
-  :rbac_feature_name: vdi_user_show_list
-  :startup: true
 - :name: control_explorer
   :description: Control / Explorer
   :url: /miq_policy/explorer

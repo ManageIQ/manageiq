@@ -72,9 +72,6 @@
         <%= render(:partial=>"#{prefix}prov_dialog_fieldset", :locals=>{:workflow=>wf, :dialog=>dialog, :label=>"Placement - Options", :prefix=>prefix, :keys=>keys, :extra_table_attributes=>"width=100%"}) %>
       <% end %>
 		<% end %>
-	<% when :vdi %>
-		<% keys = [:vdi_enabled, :vdi_farm, :vdi_desktop_pool_create, :vdi_desktop_pool, :vdi_new_desktop_pool_name, :vdi_new_desktop_pool_assignment, :vdi_desktop_pool_user_list] %>
-		<%= render(:partial=>"#{prefix}prov_dialog_fieldset", :locals=>{:workflow=>wf, :dialog=>dialog, :label=>"VDI", :prefix=>prefix, :keys=>keys, :extra_table_attributes=>"width=100%"}) %>
 	<% when :hardware %>
     <% keys = [:instance_type, :number_of_cpus, :number_of_sockets, :cores_per_socket, :vm_memory, :network_adapters, :disk_format, :guest_access_key_pair, :monitoring] %>
     <% label = wf.kind_of?(MiqProvisionCloudWorkflow) ? "Properties" : "Hardware" %>

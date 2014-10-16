@@ -81,10 +81,6 @@ class ScheduleWorker < WorkerBase
       queue_work_on_each_zone(:class_name  => "MiqAlert", :method_name => "evaluate_hourly_timer")
     end
 
-    def vdi_farm_refresh_all_vdi_farms_timer
-      queue_work_on_each_zone(:class_name  => "VdiFarm", :method_name => "refresh_all_vdi_farms_timer")
-    end
-
     def storage_scan_timer
       queue_work(:class_name  => "Storage", :method_name => "scan_timer")
     end

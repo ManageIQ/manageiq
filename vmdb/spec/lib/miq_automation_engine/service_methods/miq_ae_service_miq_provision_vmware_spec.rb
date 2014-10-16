@@ -84,32 +84,6 @@ module MiqAeServiceMiqProvisionVmwareSpec
       [:id, :name, :location].each { |meth| ae_object.send(meth).should == @vm_template.send(meth) }
     end
 
-    it "#vdi_farm" do
-      method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].vdi_farm"
-      @ae_method.update_attributes(:data => method)
-
-      invoke_ae.root(@ae_result_key).should be_nil
-
-      vdi_farm = FactoryGirl.create(:vdi_farm_vmware)
-      opts = @options.dup
-      opts[:vdi_enabled] = true
-      opts[:vdi_farm]    = [vdi_farm.id, vdi_farm.name]
-      @miq_provision.update_attributes(:options => opts)
-
-      ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceVdiFarm)
-      [:id, :name, :vendor].each { |meth| ae_object.send(meth).should == vdi_farm.send(meth) }
-
-      opts[:vdi_enabled] = false
-      @miq_provision.update_attributes(:options => opts)
-      invoke_ae.root(@ae_result_key).should be_nil
-
-      opts[:vdi_enabled] = true
-      opts[:vdi_farm]    = nil
-      @miq_provision.update_attributes(:options => opts)
-      invoke_ae.root(@ae_result_key).should be_nil
-    end
-
     it "#execute" do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].execute"
       @ae_method.update_attributes(:data => method)

@@ -3,7 +3,7 @@
 <div id="listnav_div">
   <% if @lastaction == "show_list" && !session[:menu_click] &&
               ["vm","miq_template", "offline", "retired", "templates", "host", "service", "repository", "storage",
-              "ems_cloud","ems_cluster","resource_pool","ems_infra","vdi_user"].include?(@layout) && !@in_a_form %>
+              "ems_cloud","ems_cluster","resource_pool","ems_infra"].include?(@layout) && !@in_a_form %>
     <%= render :partial=>"layouts/listnav/show_list", :locals=>{:trunc_at=>trunc_at, :trunc_to=>trunc_to} %>
   <% elsif @compare %>
     <%= render(:partial => "layouts/listnav/compare_sections",
@@ -55,7 +55,7 @@
     <%= render :partial=>"layouts/listnav/timeline", :locals=>{:trunc_at=>trunc_at, :trunc_to=>trunc_to} %>
   <% elsif ["vm","vm_cloud","offline","retired","templates","vm_or_template"].include?(@layout) %>
     <%= render :partial=>"layouts/listnav/vm", :locals=>{:trunc_at=>trunc_at, :trunc_to=>trunc_to} %>
-  <% elsif ["availability_zone","cloud_tenant","ems_cloud","ems_infra","flavor","security_group","miq_template","vdi_controller","vdi_desktop","vdi_desktop_pool","vdi_endpoint_device","vdi_farm","vdi_user","vm_vdi"].include?(@layout) %>
+  <% elsif ["availability_zone","cloud_tenant","ems_cloud","ems_infra","flavor","security_group","miq_template"].include?(@layout) %>
     <%= render :partial=>"layouts/listnav/#{@layout}", :locals=>{:trunc_at=>trunc_at, :trunc_to=>trunc_to} %>
   <% else %>
       <!-- hack for IE7 and FF2 -->

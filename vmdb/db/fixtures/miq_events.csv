@@ -120,11 +120,6 @@ vm_compliance_check,VM Compliance Check,Default,compliance
 vm_compliance_passed,VM Compliance Passed,Default,compliance
 vm_compliance_failed,VM Compliance Failed,Default,compliance
 vm_remote_console_connected,VM Remote Console Connected,Default,vm_operational
-vm_vdi_login_session,VDI Login Session,Default,vm_operational
-vm_vdi_console_logged_in_session,VDI Console Login Session,Default,vm_operational
-vm_vdi_logoff_session,VDI Logoff Session,Default,vm_operational
-vm_vdi_connecting_session,VDI Connecting to Session,Default,vm_operational
-vm_vdi_disconnected_session,VDI Disconnected from Session,Default,vm_operational
 
 #
 # Storage Operations

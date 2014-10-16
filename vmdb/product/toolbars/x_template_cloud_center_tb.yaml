@@ -45,12 +45,6 @@
       :image: reconfigure
       :text: "Reconfigure this Image"
       :title: "Reconfigure the Memory/CPU of this Image"
-#      :url: '/reconfigure'	# Uncomment if we use a url
-    - :button: image_mark_vdi
-      :image: mark_vdi
-      :text: "Mark this Image as VDI Desktop"
-      :title: "Mark this Image as VDI Desktop"
-      :confirm: "Are you sure you want to mark this Image as VDI Desktop? VDI Desktop will be created for this Image."
 - :name: image_policy
   :items:
   - :buttonSelect: image_policy_choice

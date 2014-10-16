@@ -89,7 +89,7 @@ module VmShowMixin
     if @record.class.base_model.to_s == "MiqTemplate"
       rec_cls = @record.class.base_model.to_s.underscore
     else
-      rec_cls = @record.vdi? && !@explorer ? "vm_vdi" : "vm"
+      rec_cls = "vm"
     end
     case @display
     when "download_pdf", "main", "summary_only"

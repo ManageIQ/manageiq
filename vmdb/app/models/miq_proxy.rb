@@ -13,7 +13,6 @@ class MiqProxy < ActiveRecord::Base
   has_many    :proxy_tasks
   has_many :log_files, :dependent => :destroy, :as => :resource
   has_and_belongs_to_many :product_updates
-  belongs_to  :vdi_farm
 
   serialize   :settings
   serialize   :capabilities

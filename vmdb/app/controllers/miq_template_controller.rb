@@ -1,6 +1,6 @@
 require "rexml/document"
 class MiqTemplateController < ApplicationController
-  include VmCommon        # common methods for vm/vdi vm controllers
+  include VmCommon        # common methods for vm controllers
 
   before_filter :check_privileges
   before_filter :get_session_data

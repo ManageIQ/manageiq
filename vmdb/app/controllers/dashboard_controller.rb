@@ -30,7 +30,7 @@ class DashboardController < ApplicationController
 
   VALID_TABS = lambda { |x| Hash[x.map(&:to_s).zip(x)] }[[
     :vi, :svc, :clo, :inf, :con, :aut, :opt, :set,  # normal tabs
-    :vs, :vdi, :sto                                 # hidden tabs
+    :vs, :sto                                       # hidden tabs
   ]] # format is {"vi" => :vi, "svc" => :svc . . }
 
   EXPLORER_FEATURE_LINKS = {
@@ -129,7 +129,7 @@ class DashboardController < ApplicationController
         case tab
         when :vs
           redirect_to :controller => "service"
-        when :vdi, :sto
+        when :sto
           feature = tab_features.detect { |f| role_allows(:feature => "#{f}_show_list") }
           redirect_to(:controller => feature) if feature
         end

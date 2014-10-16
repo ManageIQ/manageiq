@@ -66,69 +66,6 @@
 						</table>
 					</fieldset>
 				<% end %>
-        <% if get_vmdb_config[:product][:vdi] && role_allows(:main_tab => MAIN_TABS[:vdi]) %>
-          <fieldset>
-            <p class="legend">VDI</p>
-            <table class="style1">
-              <% if role_allows(:feature => 'vdi_controller_show_list') %>
-                <tr>
-                  <td class="key"><%= ui_lookup(:tables=>"vdi_controller") %></td>
-                  <td>
-                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdicontroller, :view=>@edit[:new][:views][:vdicontroller]} %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if role_allows(:feature => 'vdi_desktop_show_list') %>
-                <tr>
-                  <td class="key"><%= ui_lookup(:tables=>"vdi_desktop") %></td>
-                  <td>
-                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdidesktop, :view=>@edit[:new][:views][:vdidesktop]} %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if role_allows(:feature => 'vdi_desktop_pool_show_list') %>
-                <tr>
-                  <td class="key"><%= ui_lookup(:tables=>"vdi_desktop_pool") %></td>
-                  <td>
-                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdidesktoppool, :view=>@edit[:new][:views][:vdidesktoppool]} %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if role_allows(:feature => 'vdi_endpoint_device_show_list') %>
-                <tr>
-                  <td class="key"><%= ui_lookup(:tables=>"vdi_endpoint_device") %></td>
-                  <td>
-                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdiendpointdevice, :view=>@edit[:new][:views][:vdiendpointdevice]} %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if role_allows(:feature => 'vdi_farm_show_list') %>
-                <tr>
-                  <td class="key"><%= ui_lookup(:tables=>"vdi_farm") %></td>
-                  <td>
-                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdifarm, :view=>@edit[:new][:views][:vdifarm]} %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if role_allows(:feature => 'vdi_user_show_list') %>
-                <tr>
-                  <td class="key"><%= ui_lookup(:tables=>"vdi_user") %></td>
-                  <td>
-                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vdiuser, :view=>@edit[:new][:views][:vdiuser]} %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if role_allows(:feature => 'vm_vdi_show_list') %>
-                <tr>
-                  <td class="key"><%= ui_lookup(:tables=>"vm_vdi") %></td>
-                  <td>
-                    <%= render :partial=>"ui_1_gtl", :locals=>{:resource=>:vmvdi, :view=>@edit[:new][:views][:vmvdi]} %>
-                  </td>
-                </tr>
-              <% end %>
-            </table>
-          </fieldset>
-        <% end %>
         <fieldset>
           <p class="legend">Services</p>
           <table class="style1" >

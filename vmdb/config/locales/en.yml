@@ -108,8 +108,6 @@ en:
       set_to_default: "%{model} set to default"
       user_assignment_cancelled: "Assignment was cancelled by the user"
       user_assignment_initiated: "Assignment changes initiated"
-      user_import_cancelled: "VDI User import from LDAP was cancelled by the user"
-      user_import_successful: "VDI Users successfully imported from LDAP"
       user_unassignment_initiated: "User Un-Assignment initiated"
       userid_pwd_required: "User ID must be entered if Password is entered"
       task_cancelled: "%{task} was cancelled by the user"
@@ -1382,13 +1380,6 @@ en:
       TemplateInfra:            Template
       TimeProfile:              Time Profile
       User:                     EVM User
-      VdiController:            VDI - Controller
-      VdiDesktop:               VDI - Desktop
-      VdiDesktopPool:           VDI - Desktop Pool
-      VdiEndpointDevice:        VDI - Endpoint Device
-      VdiFarm:                  VDI - Farm
-      VdiSession:               VDI - Session
-      VdiUser:                  VDI - User
       VimPerformanceTrend:      Performance Trend
       Vm:                       VM and Instance
       VmCloud:                  Instance
@@ -1396,7 +1387,6 @@ en:
       VmInfra:                  Virtual Machine
       VmOrTemplate:             VM or Template
       VmPerformance:            Performance - VM
-      VmVdi:                    VDI - VM
       Zone:                     Zone
 
     option:
@@ -1506,18 +1496,10 @@ en:
       switches:                    vSwitches
       template_cloud:              Image
       template_infra:              Template
-      vdi_controller:              Broker
-      vdi_desktop:                 Desktop
-      vdi_desktop_pool:            Desktop Pool
-      vdi_endpoint_device:         Endpoint Device
-      vdi_farm:                    Farm
-      vdi_session:                 VDI Session
-      vdi_user:                    VDI User
       vm:                          VM and Instance
       vm_cloud:                    Instance
       vm_infra:                    Virtual Machine
       vm_or_template:              Virtual Machine
-      vm_vdi:                      VDI VM
       vms:                         VMs
       zone:                        Zone
       zones:                       Zones

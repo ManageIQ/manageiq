@@ -15,12 +15,6 @@
         <td class="key">Storage Managers</td>
         <td class="wide"><%= @selected_zone.storage_managers.count %></td>
       </tr>
-      <% if get_vmdb_config[:product][:vdi] %>
-        <tr>
-          <td class="key">VDI Farms</td>
-          <td class="wide"><%= @selected_zone.vdi_farms.count %></td>
-        </tr>
-      <% end %>
       <tr>
         <td class="key">Schedules</td>
         <td class="wide"><%= @selected_zone.miq_schedules.count %></td>

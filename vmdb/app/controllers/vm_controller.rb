@@ -3,7 +3,7 @@ class VmController < ApplicationController
   before_filter :get_session_data
   after_filter :cleanup_action
   after_filter :set_session_data
-  include VmCommon        # common methods for vm/vdi vm controllers
+  include VmCommon        # common methods for vm controllers
 
   def index
     session[:vm_type] = nil             # Reset VM type if coming in from All tab

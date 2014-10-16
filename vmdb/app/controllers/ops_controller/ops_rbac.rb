@@ -743,10 +743,9 @@ module OpsController::OpsRbac
       end
 
       t_node[:children] = t_kids unless t_kids.empty?
-      #only show vdi/storage node if product setting is set to show the nodes
+      #only show storage node if product setting is set to show the nodes
       case mt[0].downcase
         when "storage"; top_nodes.push(t_node) if get_vmdb_config[:product][:storage]
-        when "vdi";     top_nodes.push(t_node) if get_vmdb_config[:product][:vdi]
         else            top_nodes.push(t_node)
       end
     end

@@ -721,60 +721,6 @@
           :default: 1.week
           :data_type: :integer
       :display: :show
-    :vdi:
-      :description: Desktop
-      :fields:
-        :vdi_new_desktop_pool_name:
-          :description: Name
-          :required: false
-          :display: :hide
-          :data_type: :string
-        :vdi_farm:
-          :values_from:
-            :method: :allowed_vdi_farms
-          :description: Farm
-          :required: false
-          :display: :hide
-          :data_type: :string
-        :vdi_new_desktop_pool_assignment:
-          :values_from:
-            :method: :allowed_vdi_desktop_pool_assignments
-          :description: Desktop Pools Assignment
-          :required: false
-          :display: :hide
-          :data_type: :string
-        :vdi_desktop_pool_create:
-          :values:
-            false: 0
-            true: 1
-          :description: Create Desktop Pool
-          :required: false
-          :display: :hide
-          :default: false
-          :data_type: :boolean
-        :vdi_desktop_pool:
-          :values_from:
-            :method: :allowed_vdi_desktop_pools
-          :description: Desktop Pools
-          :required: false
-          :display: :hide
-          :data_type: :string
-        :vdi_enabled:
-          :values:
-            false: 0
-            true: 1
-          :description: Enabled
-          :required: false
-          :display: :edit
-          :default: false
-          :data_type: :boolean
-        :vdi_desktop_pool_user_list:
-          :description: User List
-          :required: true
-          :required_method: :validate_vdi_user_list
-          :display: :hide
-          :data_type: :string
-      :display: :hide
     :network:
       :description: Network
       :fields:
@@ -880,7 +826,6 @@
   - :purpose
   - :service
   - :environment
-  - :vdi
   - :hardware
   - :network
   - :customize

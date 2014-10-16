@@ -67,7 +67,6 @@ module MiqProvision::StateMachine
     set_miq_custom_attributes(self.destination, get_option(:ws_miq_custom_attributes))
     set_ems_custom_attributes(self.destination, get_option(:ws_ems_custom_attributes))
     connect_to_service(self.destination, *self.get_service_and_service_resource)
-    connect_to_vdi(self.destination)
 
     self.destination.save
 

@@ -149,12 +149,7 @@ describe ApplicationHelper do
   describe "#url_for_record" do
     subject { url_for_record(@record, @action = "show") }
 
-    it "when record is Vdi" do
-      @record = Vm.new(:vdi => true)
-      subject.should == url_for_db(@record.class.to_s, @action)
-    end
-
-    it "when record is VmOrTemplate but not vdi" do
+    it "when record is VmOrTemplate" do
       @record = Vm.new
       subject.should == url_for_db(controller_for_vm(model_for_vm(@record)), @action)
     end
@@ -957,24 +952,7 @@ describe ApplicationHelper do
         "vm_snapshot_add",
         "vm_snapshot_delete",
         "vm_snapshot_delete_all",
-        "vm_snapshot_revert",
-        "vm_vdi_check_compliance",
-        "vm_vdi_policy_sim",
-        "vm_vdi_protect",
-        "vm_vdi_retire",
-        "vm_vdi_retire_now",
-        "vm_vdi_snapshot_add",
-        "vm_vdi_snapshot_delete",
-        "vm_vdi_snapshot_delete_all",
-        "vm_vdi_snapshot_revert",
-        "vm_vdi_guest_startup",
-        "vm_vdi_guest_shutdown",
-        "vm_vdi_guest_standby",
-        "vm_vdi_guest_restart",
-        "vm_vdi_power_on",
-        "vm_vdi_power_off",
-        "vm_vdi_power_suspend",
-        "vm_vdi_power_reset"].each do |id|
+        "vm_snapshot_revert"].each do |id|
       it "when with #{id}" do
         @id = id
         @user.stub(:role_allows?).and_return(true)
@@ -1206,93 +1184,87 @@ describe ApplicationHelper do
       end
     end
 
-    ["vm_console", "vm_vdi_console"].each do |id|
-      context "when with #{id}" do
-        before do
-          @id = id
-          @user.stub(:role_allows?).and_return(true)
-          @record.stub(:console_supported? => false)
-        end
+    context "when with vm_console" do
+      before do
+        @id = "vm_console"
+        @user.stub(:role_allows?).and_return(true)
+        @record.stub(:console_supported? => false)
+      end
 
-        it "and record is not console supported" do
-          subject.should be_true
-        end
+      it "and record is not console supported" do
+        subject.should be_true
+      end
 
-        it "and server's remote_console_type not set" do
-          @vmdb_config = { :server => nil }
-          subject.should be_true
-        end
+      it "and server's remote_console_type not set" do
+        @vmdb_config = { :server => nil }
+        subject.should be_true
+      end
 
-        it "and server's remote_console_type is not MKS" do
-          @vmdb_config = { :server => { :remote_console_type => "not_MKS" } }
-          subject.should be_true
-        end
+      it "and server's remote_console_type is not MKS" do
+        @vmdb_config = { :server => { :remote_console_type => "not_MKS" } }
+        subject.should be_true
+      end
 
-        it "and record is console supported and server's remote_console_type is MKS" do
-          @record.stub(:console_supported? => true)
-          @vmdb_config = { :server => { :remote_console_type => "MKS" } }
-          subject.should be_false
-        end
+      it "and record is console supported and server's remote_console_type is MKS" do
+        @record.stub(:console_supported? => true)
+        @vmdb_config = { :server => { :remote_console_type => "MKS" } }
+        subject.should be_false
       end
     end
 
-    ["vm_vnc_console", "vm_vdi_vnc_console"].each do |id|
-      context "when with #{id}" do
-        before do
-          @id = id
-          @user.stub(:role_allows?).and_return(true)
-          @record.stub(:console_supported? => false)
-        end
+    context "when with vm_vnc_console" do
+      before do
+        @id = "vm_vnc_console"
+        @user.stub(:role_allows?).and_return(true)
+        @record.stub(:console_supported? => false)
+      end
 
-        it "and record is not console supported" do
-          subject.should == true
-        end
+      it "and record is not console supported" do
+        subject.should == true
+      end
 
-        it "and server's remote_console_type not set" do
-          @vmdb_config = { :server => nil }
-          subject.should == true
-        end
+      it "and server's remote_console_type not set" do
+        @vmdb_config = { :server => nil }
+        subject.should == true
+      end
 
-        it "and server's remote_console_type is not VNC" do
-          @vmdb_config = { :server => { :remote_console_type => "not_VNC" } }
-          subject.should == true
-        end
+      it "and server's remote_console_type is not VNC" do
+        @vmdb_config = { :server => { :remote_console_type => "not_VNC" } }
+        subject.should == true
+      end
 
-        it "and record is console supported and server's remote_console_type is VNC" do
-          @record.stub(:console_supported? => true)
-          @vmdb_config = { :server => { :remote_console_type => "VNC" } }
-          subject.should == false
-        end
+      it "and record is console supported and server's remote_console_type is VNC" do
+        @record.stub(:console_supported? => true)
+        @vmdb_config = { :server => { :remote_console_type => "VNC" } }
+        subject.should == false
       end
     end
 
-    ["vm_vmrc_console", "vm_vdi_vmrc_console"].each do |id|
-      context "when with #{id}" do
-        before do
-          @id = id
-          @user.stub(:role_allows?).and_return(true)
-          @record.stub(:console_supported? => false)
-        end
+    context "when with vm_vmrc_console" do
+      before do
+        @id = "vm_vmrc_console"
+        @user.stub(:role_allows?).and_return(true)
+        @record.stub(:console_supported? => false)
+      end
 
-        it "and record is not console supported" do
-          subject.should == true
-        end
+      it "and record is not console supported" do
+        subject.should == true
+      end
 
-        it "and server's remote_console_type not set" do
-          @vmdb_config = { :server => nil }
-          subject.should == true
-        end
+      it "and server's remote_console_type not set" do
+        @vmdb_config = { :server => nil }
+        subject.should == true
+      end
 
-        it "and server's remote_console_type is not VMRC" do
-          @vmdb_config = { :server => { :remote_console_type => "not_VMRC" } }
-          subject.should == true
-        end
+      it "and server's remote_console_type is not VMRC" do
+        @vmdb_config = { :server => { :remote_console_type => "not_VMRC" } }
+        subject.should == true
+      end
 
-        it "and record is console supported and server's remote_console_type is VMRC" do
-          @record.stub(:console_supported? => true)
-          @vmdb_config = { :server => { :remote_console_type => "VMRC" } }
-          subject.should == false
-        end
+      it "and record is console supported and server's remote_console_type is VMRC" do
+        @record.stub(:console_supported? => true)
+        @vmdb_config = { :server => { :remote_console_type => "VMRC" } }
+        subject.should == false
       end
     end
 
@@ -1751,33 +1723,31 @@ describe ApplicationHelper do
         end
       end
 
-      ["vm_collect_running_processes", "vm_vdi_collect_running_processes"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:retired => false, :current_state => "new")
-            @record.stub(:is_available?).with(:collect_running_processes).and_return(true)
-          end
+      context "and id = vm_collect_running_processes" do
+        before do
+          @id = "vm_collect_running_processes"
+          @record.stub(:retired => false, :current_state => "new")
+          @record.stub(:is_available?).with(:collect_running_processes).and_return(true)
+        end
 
-          it "and @record.retired & !@record.is_available?(:collect_running_processes)" do
-            @record.stub(:retired => true)
-            @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
-            subject.should == true
-          end
+        it "and @record.retired & !@record.is_available?(:collect_running_processes)" do
+          @record.stub(:retired => true)
+          @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.current_state = never & !@record.is_available?(:collect_running_processes)" do
-            @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
-            @record.stub(:current_state => "never")
-            subject.should == true
-          end
+        it "and @record.current_state = never & !@record.is_available?(:collect_running_processes)" do
+          @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
+          @record.stub(:current_state => "never")
+          subject.should == true
+        end
 
-          it "and @record.is_available?(:collect_running_processes)" do
-            subject.should == false
-          end
+        it "and @record.is_available?(:collect_running_processes)" do
+          subject.should == false
+        end
 
-          it "and !@record.retired & @record.current_state != never" do
-            subject.should == false
-          end
+        it "and !@record.retired & @record.current_state != never" do
+          subject.should == false
         end
       end
 
@@ -1793,7 +1763,7 @@ describe ApplicationHelper do
         end
       end
 
-      ["vm_guest_startup", "vm_start", "vm_vdi_guest_startup", "vm_vdi_power_on"].each do |id|
+      ["vm_guest_startup", "vm_start"].each do |id|
         context "and id = #{id}" do
           before do
             @id = id
@@ -1811,115 +1781,103 @@ describe ApplicationHelper do
         end
       end
 
-      ["vm_guest_standby", "vm_vdi_guest_standby"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:is_available?).with(:standby_guest).and_return(true)
-          end
+      context "and id = vm_guest_standby" do
+        before do
+          @id = "vm_guest_standby"
+          @record.stub(:is_available?).with(:standby_guest).and_return(true)
+        end
 
-          it "and !@record.is_available?(:standby_guest)" do
-            @record.stub(:is_available?).with(:standby_guest).and_return(false)
-            subject.should == true
-          end
+        it "and !@record.is_available?(:standby_guest)" do
+          @record.stub(:is_available?).with(:standby_guest).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.is_available?(:standby_guest)" do
-            subject.should == false
-          end
+        it "and @record.is_available?(:standby_guest)" do
+          subject.should == false
         end
       end
 
-      ["vm_guest_shutdown", "vm_vdi_guest_shutdown"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:is_available?).with(:shutdown_guest).and_return(true)
-          end
+      context "and id = vm_guest_shutdown" do
+        before do
+          @id = "vm_guest_shutdown"
+          @record.stub(:is_available?).with(:shutdown_guest).and_return(true)
+        end
 
-          it "and !@record.is_available?(:shutdown_guest)" do
-            @record.stub(:is_available?).with(:shutdown_guest).and_return(false)
-            subject.should == true
-          end
+        it "and !@record.is_available?(:shutdown_guest)" do
+          @record.stub(:is_available?).with(:shutdown_guest).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.is_available?(:shutdown_guest)" do
-            subject.should == false
-          end
+        it "and @record.is_available?(:shutdown_guest)" do
+          subject.should == false
         end
       end
 
-      ["vm_guest_restart", "vm_vdi_guest_restart"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:is_available?).with(:reboot_guest).and_return(true)
-          end
+      context "and id = vm_guest_restart" do
+        before do
+          @id = "vm_guest_restart"
+          @record.stub(:is_available?).with(:reboot_guest).and_return(true)
+        end
 
-          it "and !@record.is_available?(:reboot_guest)" do
-            @record.stub(:is_available?).with(:reboot_guest).and_return(false)
-            subject.should == true
-          end
+        it "and !@record.is_available?(:reboot_guest)" do
+          @record.stub(:is_available?).with(:reboot_guest).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.is_available?(:reboot_guest)" do
-            subject.should == false
-          end
+        it "and @record.is_available?(:reboot_guest)" do
+          subject.should == false
         end
       end
 
-      ["vm_stop", "vm_vdi_power_off"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:is_available?).with(:stop).and_return(true)
-          end
+      context "and id = vm_stop" do
+        before do
+          @id = "vm_stop"
+          @record.stub(:is_available?).with(:stop).and_return(true)
+        end
 
-          it "and !@record.is_available?(:stop)" do
-            @record.stub(:is_available?).with(:stop).and_return(false)
-            subject.should == true
-          end
+        it "and !@record.is_available?(:stop)" do
+          @record.stub(:is_available?).with(:stop).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.is_available?(:stop)" do
-            subject.should == false
-          end
+        it "and @record.is_available?(:stop)" do
+          subject.should == false
         end
       end
 
-      ["vm_reset", "vm_vdi_power_reset"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:is_available?).with(:reset).and_return(true)
-          end
+      context "and id = vm_reset" do
+        before do
+          @id = "vm_reset"
+          @record.stub(:is_available?).with(:reset).and_return(true)
+        end
 
-          it "and !@record.is_available?(:reset)" do
-            @record.stub(:is_available?).with(:reset).and_return(false)
-            subject.should == true
-          end
+        it "and !@record.is_available?(:reset)" do
+          @record.stub(:is_available?).with(:reset).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.is_available?(:reset)" do
-            subject.should == false
-          end
+        it "and @record.is_available?(:reset)" do
+          subject.should == false
         end
       end
 
-      ["vm_suspend", "vm_vdi_power_suspend"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:is_available?).with(:suspend).and_return(true)
-          end
+      context "and id = vm_suspend" do
+        before do
+          @id = "vm_suspend"
+          @record.stub(:is_available?).with(:suspend).and_return(true)
+        end
 
-          it "and !@record.is_available?(:suspend)" do
-            @record.stub(:is_available?).with(:suspend).and_return(false)
-            subject.should == true
-          end
+        it "and !@record.is_available?(:suspend)" do
+          @record.stub(:is_available?).with(:suspend).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.is_available?(:suspend)" do
-            subject.should == false
-          end
+        it "and @record.is_available?(:suspend)" do
+          subject.should == false
         end
       end
 
-      ["vm_policy_sim","vm_protect", "vm_vdi_policy_sim","vm_vdi_protect"].each do |id|
+      ["vm_policy_sim","vm_protect"].each do |id|
         context "and id = #{id}" do
           before do
             @id = id
@@ -1942,43 +1900,39 @@ describe ApplicationHelper do
         end
       end
 
-      ["vm_refresh", "vm_vdi_refresh"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
-          end
+      context "and id = vm_refresh" do
+        before do
+          @id = "vm_refresh"
+          @record.stub(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
+        end
 
-          it "and !@record.ext_management_system & @record.host.vmm_product.downcase != workstation" do
-            @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
-            subject.should == true
-          end
+        it "and !@record.ext_management_system & @record.host.vmm_product.downcase != workstation" do
+          @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
+          subject.should == true
+        end
 
-          it "and @record.ext_management_system" do
-            subject.should == false
-          end
+        it "and @record.ext_management_system" do
+          subject.should == false
+        end
 
-          it "and @record.host.vmm_product.downcase = workstation" do
-            subject.should == false
-          end
+        it "and @record.host.vmm_product.downcase = workstation" do
+          subject.should == false
         end
       end
 
-      ["vm_scan", "vm_vdi_scan"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @record.stub(:has_proxy?).and_return(true)
-          end
+      context "and id = vm_scan" do
+        before do
+          @id = "vm_scan"
+          @record.stub(:has_proxy?).and_return(true)
+        end
 
-          it "and !@record.has_proxy?" do
-            @record.stub(:has_proxy?).and_return(false)
-            subject.should == true
-          end
+        it "and !@record.has_proxy?" do
+          @record.stub(:has_proxy?).and_return(false)
+          subject.should == true
+        end
 
-          it "and @record.has_proxy?" do
-            subject.should == false
-          end
+        it "and @record.has_proxy?" do
+          subject.should == false
         end
       end
 
@@ -2861,123 +2815,6 @@ describe ApplicationHelper do
       end
     end # end of Vm class
 
-    context "when record class = VmVdi" do
-      before { @record = FactoryGirl.create(:vm_vmware, :vdi => true) }
-
-      context "and id = vm_vdi_console" do
-        before do
-          @id = "vm_vdi_console"
-          @record.stub(:current_state => 'on')
-          setup_firefox_with_linux
-        end
-
-        it_behaves_like 'vm not powered on', "The web-based console is not available because the VM is not powered on"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_vdi_vnc_console" do
-        before { @id = "vm_vdi_vnc_console" }
-        it_behaves_like 'vm not powered on', "The web-based VNC console is not available because the VM is not powered on"
-      end
-
-      context "and id = vm_vdi_vmrc_console" do
-        before do
-          @id = "vm_vdi_vmrc_console"
-          @record.stub(:current_state => 'on', :validate_remote_console_vmrc_support => true)
-          setup_firefox_with_linux
-        end
-
-        it "raise MiqException::RemoteConsoleNotSupportedError when remote console url does not exist" do
-          @record.unstub(:validate_remote_console_vmrc_support)
-          subject.should include("VM VMRC Console error")
-          subject.should include("remote console requires the vm to be registered with a management system.")
-        end
-
-        it_behaves_like 'vm not powered on', "The web-based console is not available because the VM is not powered on"
-      end
-
-      context "and id = vm_guest_startup" do
-        before do
-          @id = "vm_guest_startup"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "start"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_start" do
-        before do
-          @id = "vm_start"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "start"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_guest_standby" do
-        before do
-          @id = "vm_guest_standby"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "standby_guest"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_guest_shutdown" do
-        before do
-          @id = "vm_guest_shutdown"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "shutdown_guest"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_guest_restart" do
-        before do
-          @id = "vm_guest_restart"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "reboot_guest"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_stop" do
-        before do
-          @id = "vm_stop"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "stop"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_reset" do
-        before do
-          @id = "vm_reset"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "reset"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_suspend" do
-        before do
-          @id = "vm_suspend"
-          @record.stub(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', "suspend"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_vdi_timeline" do
-        before do
-          @id = "vm_vdi_timeline"
-          @record.stub(:has_events?).and_return(true)
-        end
-        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this VM"
-        it_behaves_like 'default case'
-      end
-    end #end of class VmVdi
-
     context "Disable Snapshot buttons for RHEV VMs" do
       before(:each) { @record = FactoryGirl.create(:vm_redhat) }
 
@@ -3159,11 +2996,6 @@ describe ApplicationHelper do
         @tb_buttons[@item[:button]]
       }
 
-      it "when item[:pressed] exists" do
-        @item[:pressed] = "vdi_farm_edit"
-        subject.should have_key(:pressed )
-      end
-
       it "when item[:hidden] exists" do
         @item[:hidden] = 1
         subject.should have_key(:hidden)
@@ -3343,11 +3175,6 @@ describe ApplicationHelper do
     it "when layout likes 'miq_request*'" do
       @layout = "miq_request_some_thing"
       subject.should == title + ": Requests"
-    end
-
-    it "when layout likes 'vdi_*'" do
-      @layout = "vdi_desktop_pool"
-      subject.should == title + ": VDI - #{ui_lookup(:tables=>@layout)}"
     end
 
     it "when layout likes 'cim_*' or 'snia_*'" do
@@ -3869,7 +3696,7 @@ describe ApplicationHelper do
       end
 
       # Just a few tables that don't have custom toolbars
-      ["vm_vdi","ems_events","storage_managers"].each do |table|
+      ["ems_events","storage_managers"].each do |table|
 
         it "for table #{table}" do
           @layout = table
@@ -3919,7 +3746,7 @@ describe ApplicationHelper do
       end
 
       # Just a few tables that don't have custom toolbars
-      ["vm_vdi","ems_events","storage_managers"].each do |table|
+      ["ems_events","storage_managers"].each do |table|
 
         it "for table #{table}" do
           @layout = table
@@ -4015,7 +3842,6 @@ describe ApplicationHelper do
 
   describe '#pressed2model_action' do
     examples = {
-      'vm_vdi_foo'       => ['vm_vdi', 'foo'],
       'miq_template_bar' => ['miq_template', 'bar'],
       'boo_far'          => ['boo', 'far'],
       'boo_far_bar'      => ['boo', 'far_bar'],

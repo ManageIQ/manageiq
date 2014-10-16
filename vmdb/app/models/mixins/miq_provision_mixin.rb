@@ -227,11 +227,6 @@ module MiqProvisionMixin
     self.update_attribute(:options, self.options)
   end
 
-  def vdi_farm
-    return nil unless self.get_option(:vdi_enabled) == true
-    return VdiFarm.find_by_id(self.get_option(:vdi_farm))
-  end
-
   def target_type
     return 'template' if self.provision_type == 'clone_to_template'
     return 'vm'

@@ -50,19 +50,6 @@ class MiqExpression
     Zone
   }
 
-  if VdiFarm.is_available?
-    @@base_tables += %w{
-      VdiController
-      VdiDesktop
-      VdiDesktopPool
-      VdiEndpointDevice
-      VdiFarm
-      VdiSession
-      VdiUser
-      VmVdi
-    }
-  end
-
   @@include_tables = %w{
     advanced_settings
     audit_events
@@ -143,20 +130,6 @@ class MiqExpression
     base_storage_extents
     top_storage_extents
   }
-
-  if VdiFarm.is_available?
-    @@include_tables += %w{
-      vdi_controllers
-      vdi_desktop_pools
-      vdi_desktops
-      vdi_endpoint_devices
-      vdi_farms
-      vdi_sessions
-      vdi_users
-    }
-
-    @@include_tables += %w{ldaps} if VdiFarm::MGMT_ENABLED == true
-  end
 
   EXCLUDE_COLUMNS = %w{
     ^.*_id$

@@ -93,7 +93,6 @@ module ApplicationController::MiqRequestMethods
       params[:button] = nil                   # Clear the incoming button
       @edit = session[:edit]                  # Grab what we need from @edit
       @explorer = @edit[:explorer]
-      @vdi_users = @edit[:vdi_users] if @edit[:vdi_users]  # Hang on to selected VDI Users to populate prov
 
       if @edit[:wf].nil?
         @src_vm_id = @edit[:src_vm_id]          # Hang on to selected VM to populate prov
@@ -120,8 +119,7 @@ module ApplicationController::MiqRequestMethods
             page.redirect_to :controller     => @redirect_controller,
                              :action         => "prov_edit",
                              :src_vm_id      => @src_vm_id,
-                             :org_controller => "vm",
-                             :vdi_users      => @vdi_users
+                             :org_controller => "vm"
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end
@@ -156,7 +154,6 @@ module ApplicationController::MiqRequestMethods
       @edit[:vm_sortdir] ||= "ASC"
       @edit[:vm_sortcol] ||= "name"
       @edit[:prov_type] = "VM Provision"
-      @edit[:vdi_users] = params[:vdi_users] if params[:vdi_users]
       @edit[:template_kls] = get_template_kls
       templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by {|a| a.name.downcase}
       build_vm_grid(templates, @edit[:vm_sortdir],@edit[:vm_sortcol])
@@ -795,7 +792,6 @@ module ApplicationController::MiqRequestMethods
           options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
         end
 
-        options[:vdi_users_list] = @vdi_users ? @vdi_users.split('_') : params[:vdi_users].split('_') if @vdi_users || params[:vdi_users]
         options[:use_pre_dialog] = false if @workflow_exists
 
         if src_vm_id && !src_vm_id[0].blank?

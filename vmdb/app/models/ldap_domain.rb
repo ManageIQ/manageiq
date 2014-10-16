@@ -5,8 +5,6 @@ class LdapDomain < ActiveRecord::Base
   has_many :ldap_groups,  :dependent => :destroy
   has_many :ldap_users,   :dependent => :destroy
 
-  # has_many :vdi_users,   :dependent => :nullify
-
   default_value_for :get_direct_groups,          true
   default_value_for :group_membership_max_depth, 2
   default_value_for :bind_timeout,               30

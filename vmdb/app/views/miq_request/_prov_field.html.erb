@@ -36,7 +36,7 @@ pfx = "miq_request/"
               :owner_first_name,:owner_last_name,:owner_load_ldap,:owner_office,:owner_manager,:owner_manager_mail,:owner_manager_phone,
               :owner_phone,:owner_phone_mobile,:owner_state,:owner_title,:owner_zip,:request_notes,:subnet_mask,:memory_limit,:memory_reserve,:root_password,:sysprep_password,
               :sysprep_domain_admin,:sysprep_domain_password,:sysprep_workgroup_name,:sysprep_full_name,:sysprep_organization,:sysprep_product_id,
-              :sysprep_computer_name,:sysprep_per_server_max_connections,:vdi_desktop_pool_user_list,:vdi_new_desktop_pool_name,:vm_description,:vm_name,:wins_servers
+              :sysprep_computer_name,:sysprep_per_server_max_connections,:vm_description,:vm_name,:wins_servers
             ].include?(field) %>
         <td class="wide">
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
@@ -55,14 +55,6 @@ pfx = "miq_request/"
                                 :size                          => "25x4",
                                 :counter                       => "description_count",
                                 "data-miq_check_max_length"    => true,
-                                "data-miq_observe" => {:interval => '.5', 
-                                                       :url      => url}.to_json) 
-              %>
-            <% elsif [:vdi_desktop_pool_user_list].include?(field) %>
-              <%= text_area_tag(field_id,
-                                options[field],
-                                :maxlength         => field_hash[:max_length],
-                                :size              => "25x4",
                                 "data-miq_observe" => {:interval => '.5', 
                                                        :url      => url}.to_json) 
               %>
@@ -226,7 +218,7 @@ pfx = "miq_request/"
       <%# ### Pull Down fields %>
       <% elsif [:instance_type,:guest_access_key_pair,:security_groups,:monitoring,:vm_tag_1,:vm_tag_2,:vm_tag_3,:vm_tag_4,:vm_tag_5,:vm_tag_6,:vm_tag_7,:vm_tag_8,:vm_tag_9,:vm_tag_10,:provision_type,
                 :new_datastore_aggregate,:new_datastore_storage_controller,:new_datastore_volume,:network_adapters,:retirement,:retirement_warn,:cloud_network,:cloud_subnet,:floating_ip_address,
-                :sysprep_auto_logon_count,:sysprep_domain_name,:sysprep_server_license_mode,:vdi_desktop_pool,:vdi_new_desktop_pool_assignment,:vdi_farm,:vlan,:cloud_tenant].include?(field) %>
+                :sysprep_auto_logon_count,:sysprep_domain_name,:sysprep_server_license_mode,:vlan,:cloud_tenant].include?(field) %>
         <%# ### Multiple select Pull Down fields %>
         <% multiple = field == :security_groups %>
         <% td_class = field == :security_groups ? "wider" : "wide" %>
@@ -406,7 +398,7 @@ pfx = "miq_request/"
       <%# ### Checkbox fields %>
       <% elsif [:linked_clone,:new_datastore_autogrow,:new_datastore_create,:new_datastore_thin_provision,
                 :placement_auto,:stateless, :sysprep_auto_logon,:sysprep_change_sid,:sysprep_delete_accounts,
-                :sysprep_spec_override,:vdi_desktop_pool_create,:vdi_enabled,:vm_auto_start].include?(field) %>
+                :sysprep_spec_override,:vm_auto_start].include?(field) %>
         <td style="vertical-align: top">
           <% if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ] %> <%# Allow editing of the text field %>
             <% checked = options[field] && options[field][0].to_s == "true" %>

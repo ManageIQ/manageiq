@@ -6,9 +6,8 @@
 		<%  if ["host","vm","offline","retired","templates","repository","storage","service","management_system","miq_proxy",
 			"policy","policy_profile","policy_group","event","condition","action","scan_profile","miq_template",
 			"ems_cluster","resource_pool","miq_schedule","storage_manager",
-			"ontap_storage_system","ontap_storage_volume","ontap_file_share","snia_local_file_system","ontap_logical_disk","cim_base_storage_extent",
-			"vdi_controller","vdi_desktop","vdi_desktop_pool","vdi_endpoint_device","vdi_farm","vdi_user","vm_vdi"].include?(@layout) &&
-			@gtl_type	&& !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form && !@vdiitems %>
+			"ontap_storage_system","ontap_storage_volume","ontap_file_share","snia_local_file_system","ontap_logical_disk","cim_base_storage_extent"].include?(@layout) &&
+			@gtl_type	&& !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form %>
 			<%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"gtl_view_tb"} %>
 		<% elsif !["all_tasks","all_ui_tasks","timeline","diagnostics","my_tasks","my_ui_tasks","miq_server","usage"].include?(@layout) && !@layout.starts_with?("miq_request") && !@treesize_buttons && @display == "main" && @showtype == "main" && !@in_a_form %>
 			<%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"view_tb", :tb_yaml=>"summary_view_tb"} %>

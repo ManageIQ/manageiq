@@ -16,12 +16,6 @@ class EmsEvent < ActiveRecord::Base
   belongs_to :dest_miq_template,   :class_name => "MiqTemplate", :foreign_key => :dest_vm_or_template_id
   belongs_to :dest_host,           :class_name => "Host"
 
-  belongs_to :vdi_controller
-  belongs_to :vdi_desktop
-  belongs_to :vdi_desktop_pool
-  belongs_to :vdi_user
-  belongs_to :vdi_endpoint_device
-
   belongs_to :service
 
   include_concern 'Automate'
@@ -358,14 +352,6 @@ class EmsEvent < ActiveRecord::Base
 
   def ems_refresh_target
     return ext_management_system
-  end
-
-  def vdi_desktop_refresh_target
-    return self.vdi_desktop.nil? ? nil : self.vdi_desktop.vdi_farm
-  end
-
-  def vdi_desktop_pool_refresh_target
-    return self.vdi_desktop_pool.nil? ? nil : self.vdi_desktop_pool.vdi_farm
   end
 
   #

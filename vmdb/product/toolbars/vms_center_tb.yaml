@@ -52,14 +52,6 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :separator:
-    - :button: vm_mark_vdi
-      :image: mark_vdi
-      :text: "Mark selected items as VDI Desktops"
-      :title: "Mark selected items as VDI Desktops"
-      :url_parms: 'main_div'
-      :confirm: "Are you sure you want to mark selected VMs as VDI Desktops? VDI Desktops will be created for each VM being marked."
-      :enabled: 'false'
-      :onwhen: '1+'
 - :name: vm_policy
   :items:
   - :buttonSelect: vm_policy_choice

@@ -5,29 +5,13 @@ describe ApplicationController do
     controller.instance_variable_set(:@sb, {})
     ur = FactoryGirl.create(:miq_user_role)
     rptmenu = {:report_menus => [
-                                    ["Configuration Management",["Hosts",["Hosts Summary", "Hosts Summary"]]],
-                                    ["VDI",["Folder 1",["Report 1", "Report 2"]]]
+                                    ["Configuration Management",["Hosts",["Hosts Summary", "Hosts Summary"]]]
                                 ]
               }
     group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => rptmenu)
     user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
     session[:group] = user.current_group.id
     session[:userid] = user.userid
-  end
-  context "#get_reports_menu" do
-    it "VDI reports should be hidden" do
-      res = controller.send(:get_reports_menu, session[:group])
-      res.each do |menu|
-        menu[0].should_not include("VDI")
-      end
-    end
-
-    it "VDI reports should not be hidden" do
-      cfg = {:product => {:vdi => true}}
-      controller.stub(:get_vmdb_config).and_return(cfg)
-      res = controller.send(:get_reports_menu, session[:group])
-      res[1].should == ["VDI",["Folder 1",["Report 1", "Report 2"]]]
-    end
   end
 
   context "#find_by_id_filtered" do

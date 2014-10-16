@@ -10,8 +10,6 @@
       <script>
         var miq_after_onload = "miqAsyncAjax('<%= url_for(:action=>@ajax_action, :id=>@record) %>');"
       </script>
-  <% elsif @display == "vdi_desktop_pool" %>
-    <%= render(:partial => "layouts/gtl", :locals=>{:action_url=>"show/#{@ems.id.to_s}"}) %>
   <% elsif @showtype == "dialog_provision" %>
     <%= render(:partial => "shared/dialogs/dialog_provision") %>
   <% else %>

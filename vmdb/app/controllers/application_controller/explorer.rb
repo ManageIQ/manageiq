@@ -55,7 +55,7 @@ module ApplicationController::Explorer
   X_BUTTON_ALLOWED_ACTIONS = {
     # group 1
     'check_compliance' => :s1, 'collect_running_processes' => :s1, 'delete'              => :s1,
-    'mark_vdi'         => :s1, 'snapshot_delete'           => :s1, 'snapshot_delete_all' => :s1,
+    'snapshot_delete'  => :s1, 'snapshot_delete_all' => :s1,
     'refresh'          => :s1, 'scan'                      => :s1, 'guest_shutdown'      => :s1,
     'guest_restart'    => :s1, 'retire_now'                => :s1, 'snapshot_revert'     => :s1,
     'start'            => :s1, 'stop'                      => :s1, 'suspend'             => :s1,
@@ -122,9 +122,7 @@ module ApplicationController::Explorer
     end
 
     return if performed?
-
     # no need to render anything, method will render flash message when async task is completed
-    return if 'mark_vdi' == action
 
     x_button_response(model, action)
   end

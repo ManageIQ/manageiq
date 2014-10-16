@@ -13,7 +13,6 @@ class Zone < ActiveRecord::Base
   has_many :active_miq_servers, :class_name => "MiqServer", :conditions => {:status => MiqServer::STATUSES_ACTIVE}
   has_many :ext_management_systems
   has_many :file_depots, :dependent => :destroy, :as => :resource
-  has_many :vdi_farms
   has_many :miq_groups, :as => :resource
   has_many :miq_schedules, :dependent => :destroy
   has_many :storage_managers
@@ -204,11 +203,6 @@ class Zone < ActiveRecord::Base
   def miq_proxies
     ems_ids = self.ext_management_systems.collect {|e| e.id }
     MiqProxy.all(:include => :host, :conditions => ["hosts.ems_id in (?)", ems_ids])
-  end
-
-  def vdi_farms
-    ems_ids = self.ext_management_systems.collect(&:id)
-    VdiDesktopPool.joins(:ext_management_systems).where('ext_management_systems.id' => ems_ids).collect {|dp| dp.vdi_farm}.compact.uniq
   end
 
   # Used by AggregationMixin

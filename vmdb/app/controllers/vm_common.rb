@@ -7,56 +7,16 @@ module VmCommon
     params[:page] = @current_page if @current_page != nil   # Save current page for list refresh
     @refresh_div = "main_div" # Default div for button.rjs to refresh
 
-    assign_policies(VmOrTemplate) if params[:pressed] == "vm_vdi_protect"
-    check_compliance_vms          if params[:pressed] == "vm_vdi_check_compliance"
-    comparemiq                    if params[:pressed] == "vm_vdi_compare"
-    createbbvms                   if params[:pressed] == "vm_vdi_create_bb"
     custom_buttons                if params[:pressed] == "custom_button"
-    deleteallsnapsvms             if params[:pressed] == "vm_vdi_snapshot_delete_all"
-    deletebbvms                   if params[:pressed] == "vm_vdi_delete_bb"
-    deletevms                     if params[:pressed] == "vm_vdi_delete"
-    deletesnapsvms                if params[:pressed] == "vm_vdi_snapshot_delete"
-    drift_analysis                if params[:pressed] == "vm_vdi_drift"
-    edit_record                   if params[:pressed] == "vm_vdi_edit"
-    getprocessesvms               if params[:pressed] == "vm_vdi_collect_running_processes"
-    guestreboot                   if params[:pressed] == "vm_vdi_guest_restart"
-    guestshutdown                 if params[:pressed] == "vm_vdi_guest_shutdown"
-    gueststandby                  if params[:pressed] == "vm_vdi_guest_standby"
     perf_chart_chooser            if params[:pressed] == "perf_reload"
     perf_refresh_data             if params[:pressed] == "perf_refresh"
-    polsimvms                     if params[:pressed] == "vm_vdi_policy_sim"
-    prov_redirect                 if params[:pressed] == "vm_vdi_miq_request_new"
-    prov_redirect("clone")        if params[:pressed] == "vm_vdi_clone"
-    prov_redirect("migrate")      if params[:pressed] == "vm_vdi_migrate"
-    prov_redirect("publish")      if params[:pressed] == "vm_vdi_publish"
-    reconfigurevms                if params[:pressed] == "vm_vdi_reconfigure"
-    refreshvms                    if params[:pressed] == "vm_vdi_refresh"
     remove_service                if params[:pressed] == "remove_service"
-    resetvms                      if params[:pressed] == "vm_vdi_reset"
-    retirevms                     if params[:pressed] == "vm_vdi_retire"
-    retirevms_now                 if params[:pressed] == "vm_vdi_retire_now"
-    revertsnapsvms                if params[:pressed] == "vm_vdi_snapshot_revert"
-    set_ownership                 if params[:pressed] == "vm_vdi_ownership"
-    scanvms                       if params[:pressed] == "vm_vdi_scan"
-    smartvms                      if params[:pressed] == "vm_vdi_smart"
-    startvms                      if params[:pressed] == "vm_vdi_start"
-    stopvms                       if params[:pressed] == "vm_vdi_stop"
-    suspendvms                    if params[:pressed] == "vm_vdi_suspend"
-    syncvms                       if params[:pressed] == "vm_vdi_sync"
-    tag(VmOrTemplate)             if params[:pressed] == "vm_vdi_tag"
-    vm_right_size                 if params[:pressed] == "vm_vdi_right_size"
 
     return if ["custom_button"].include?(params[:pressed])    # custom button screen, so return, let custom_buttons method handle everything
     # VM sub-screen is showing, so return
-    return if ["perf_reload", "vm_vdi_compare",
-                "vm_vdi_tag", "vm_vdi_policy_sim",
-                "vm_vdi_retire", "vm_vdi_protect",
-                "vm_vdi_ownership", "vm_vdi_right_size",
-                "vm_vdi_reconfigure"].include?(params[:pressed]) && @flash_array == nil
+    return if ["perf_reload"].include?(params[:pressed]) && @flash_array == nil
 
-    if @flash_array == nil && !["vm_vdi_migrate", "vm_vdi_edit",
-                                "vm_vdi_miq_request_new","vm_vdi_clone",
-                                "vm_vdi_publish"].include?(params[:pressed]) # if no button handler ran, show not implemented msg
+    if @flash_array == nil # if no button handler ran, show not implemented msg
       add_flash(I18n.t("flash.button.not_implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
@@ -67,8 +27,6 @@ module VmCommon
         @refresh_partial = @showtype
       elsif @lastaction == "show_list"
         # default to the gtl_type already set
-      elsif @lastaction == "show" && ["vm_vdi_clone","vm_vdi_publish",
-                                      "vm_vdi_migrate"].include?(params[:pressed])
       else
         @refresh_partial = "layouts/flash_msg"
         @refresh_div = "flash_msg_div"
@@ -76,23 +34,14 @@ module VmCommon
     end
     @vm = @record = identify_record(params[:id], VmOrTemplate) unless @lastaction == "show_list"
 
-    if !@flash_array.nil? && ["vm_vdi_delete"].include?(params[:pressed]) && @single_delete
+    if !@flash_array.nil? && @single_delete
       render :update do |page|
         page.redirect_to :action => 'show_list', :flash_msg=>@flash_array[0][:message]  # redirect to build the retire screen
       end
-    elsif params[:pressed].ends_with?("_edit") || ["vm_vdi_miq_request_new",
-                                                    "vm_vdi_clone",
-                                                    "vm_vdi_publish",
-                                                    "vm_vdi_migrate"].include?(params[:pressed])
+    elsif params[:pressed].ends_with?("_edit")
       if @redirect_controller
-        if ["vm_vdi_clone","vm_vdi_publish","vm_vdi_migrate"].include?(params[:pressed])
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :prov_type=>@prov_type, :prov_id=>@prov_id, :org_controller=> request.parameters[:controller]
-          end
-        else
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :org_controller=>@org_controller
-          end
+        render :update do |page|
+          page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :org_controller=>@org_controller
         end
       else
         render :update do |page|
@@ -166,74 +115,6 @@ module VmCommon
     render :action=>"console"
   end
 
-  def vm_mark_vdi
-    unless params[:task_id]                       # First time thru
-      if params[:id]
-        items = [params[:id]]
-      else
-        items = find_checked_items
-      end
-      @sb[:items_already_marked] = Array.new
-      @sb[:items_to_mark] = Array.new
-      items.each do |item|
-        v = Vm.find_by_id(item)
-        if v.vdi?
-          @sb[:items_already_marked].push(item)
-        else
-          @sb[:items_to_mark].push(item)
-        end
-      end
-      @refresh_partial = "show_list"
-    end
-
-    #render here, there is nothing to mark
-    if @sb[:items_already_marked].length >= 1 && @sb[:items_to_mark].length == 0
-      #need to add this flash message only first time if there are vms already marked
-      add_flash("#{@sb[:items_already_marked].length} VM(s) were already marked as VDI Desktop(s)", :warning)
-      render :update do |page|                      # Use JS to update the display
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page << "miqSparkle(false);"
-      end
-    end
-
-    if @sb[:items_to_mark].length >= 1
-      unless params[:task_id]                       # First time thru, kick off the report generate task
-        initiate_wait_for_task(:task_id => VmVdi.queue_mark_as_vdi(@sb[:items_to_mark]))
-        return
-      end
-
-      @temp[:marked] = true
-      miq_task = MiqTask.find(params[:task_id])
-
-      if miq_task.task_results[:error_msgs]
-        miq_task.task_results[:error_msgs].each do |err|
-          add_flash(err,:error)
-        end
-      end
-
-      if miq_task.task_results[:success_msgs]
-        miq_task.task_results[:success_msgs].each do |msg|
-          add_flash(msg)
-        end
-      end
-
-      if miq_task.task_results[:warning_msgs]
-        miq_task.task_results[:warning_msgs].each do |msg|
-          add_flash(msg, :warning)
-        end
-      end
-
-      if @sb[:items_already_marked].length >= 1
-        #need to add this flash message only first time if there are vms already marked
-        add_flash("#{@sb[:items_already_marked].length} VM(s) were already marked as VDI Desktop(s)", :warning)
-      end
-      render :update do |page|                      # Use JS to update the display
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page << "miqSparkle(false);"
-      end
-    end
-  end
-
   # VM clicked on in the explorer right cell
   def x_show
     @explorer = true
@@ -270,9 +151,9 @@ module VmCommon
     @record = identify_record(id || params[:id], VmOrTemplate)
     return if record_no_longer_exists?(@record)
 
-    @explorer = true if request.xml_http_request? && !@record.vdi? # Ajax request means in explorer
+    @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
-    if !@explorer && @display != "download_pdf" && params[:controller] != "vm_vdi"
+    if !@explorer && @display != "download_pdf"
       prefix = X_TREE_NODE_PREFIXES_INVERTED[@record.class.base_model.to_s]
       tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
       session[:exp_parms] = {:display=>@display, :refresh=>params[:refresh], :id=>tree_node_id}
@@ -284,7 +165,7 @@ module VmCommon
     if @record.class.base_model.to_s == "MiqTemplate"
       rec_cls = @record.class.base_model.to_s.underscore
     else
-      rec_cls = @record.vdi? && !@explorer ? "vm_vdi" : "vm"
+      rec_cls = "vm"
     end
     @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
     if ["download_pdf","main","summary_only"].include?(@display)
@@ -334,10 +215,6 @@ module VmCommon
         drop_breadcrumb( {:name=>@record.name+" (Compliance History - Last #{count} Checks)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
       end
       @showtype = @display
-    elsif @display == "timeline" && params[:controller] == "vm_vdi"
-      #handle timeline button for non-explorer, VDI VM screen
-      @showtype = "timeline"
-      show_timeline
     elsif @display == "performance"
       @showtype = "performance"
       drop_breadcrumb( {:name=>"#{@record.name} Capacity & Utilization", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}&refresh=n"} )
@@ -393,7 +270,7 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     return if record_no_longer_exists?(@vm)
 
-    rec_cls = @record.class.kind_of?(Vm) ? "vm" : "vm_vdi"
+    rec_cls = "vm"
 
     @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
     get_tagdata(@record)
@@ -719,7 +596,7 @@ module VmCommon
     end
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     return if record_no_longer_exists?(@vm)
-    rec_cls = @record.class == Vm ? "vm" : "vm_vdi"
+    rec_cls = "vm"
 
     @sb[:action] = @lastaction = action
     if params[:show] != nil || params[:x_show] != nil
@@ -1640,7 +1517,7 @@ module VmCommon
       else
         @right_cell_text = I18n.t("cell_header.model_record",
                                   :name=>@record.name,
-                                  :model=>"#{@record.vdi? ? "VDI " : ""}#{ui_lookup(:model => model && model != "VmOrTemplate" ? model : X_TREE_NODE_PREFIXES[@nodetype])}")
+                                  :model=>"#{ui_lookup(:model => model && model != "VmOrTemplate" ? model : X_TREE_NODE_PREFIXES[@nodetype])}")
       end
     else      # Get list of child VMs of this node
       options = {:model=>model}
