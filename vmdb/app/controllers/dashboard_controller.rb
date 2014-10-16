@@ -636,6 +636,7 @@ class DashboardController < ApplicationController
     # Rebuild the session
     session_reset(db_user)
     session_init(db_user)
+    session[:group_changed] = true
     url = start_url_for_user(nil) || url_for(:controller => params[:controller], :action => 'show')
     render :update do |page|
       page.redirect_to(url)
