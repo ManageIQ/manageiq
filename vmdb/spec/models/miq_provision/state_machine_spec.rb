@@ -3,23 +3,49 @@ require "spec_helper"
 describe MiqProvision do
   context "::StateMachine" do
     let(:ems)      { FactoryGirl.create(:ems_openstack_with_authentication) }
-    let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ems_ref => "abcdefg") }
+    let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ems_ref => 24) }
     let(:options)  { {:src_vm_id => template.id, :vm_target_name => "test_vm_1"} }
-    let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems) }
+    let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems, :ems_ref => MiqUUID.new_guid) }
     let(:vm)       { FactoryGirl.create(:vm_openstack) }
 
-    let(:task)     { FactoryGirl.create(:miq_provision_openstack, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options ) }
+    let(:task)     { FactoryGirl.create(:miq_provision_openstack, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options) }
 
     context "#prepare_provision" do
-      it "merges :clone_options from automate" do
+      before do
         task.stub(:update_and_notify_parent)
+        task.stub(:instance_type => flavor)
+      end
 
-        task.should_receive(:instance_type).and_return(flavor)
+      it "sets default :clone_options" do
         task.should_receive(:signal).with(:prepare_provision).and_call_original
         task.should_receive(:signal).with(:start_clone_task)
 
-        task.prepare_provision
+        task.signal(:prepare_provision)
 
+        expect(task.phase_context[:clone_options]).to eq(
+          :flavor_ref      => flavor.ems_ref,
+          :image_ref       => template.ems_ref,
+          :name            => options[:vm_target_name],
+          :security_groups => [],
+        )
+      end
+
+      it "merges :clone_options from automate" do
+        options[:clone_options] = {:security_groups => ["test_sg"], :test_key => "test_value"}
+        task.update_attributes(:options => options)
+
+        task.should_receive(:signal).with(:prepare_provision).and_call_original
+        task.should_receive(:signal).with(:start_clone_task)
+
+        task.signal(:prepare_provision)
+
+        expect(task.phase_context[:clone_options]).to eq(
+          :flavor_ref      => flavor.ems_ref,
+          :image_ref       => template.ems_ref,
+          :name            => options[:vm_target_name],
+          :security_groups => ["test_sg"],
+          :test_key        => "test_value"
+        )
       end
     end
 
