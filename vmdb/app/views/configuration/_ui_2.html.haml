@@ -27,25 +27,6 @@
                 %td.key _('SmartProxies')
                 %td
                   %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
-        - if get_vmdb_config[:product][:vdi] && role_allows(:main_tab => MAIN_TABS[:vdi])
-          %fieldset
-            %p.legend _('VDI')
-            %table.style1
-              - keys = { :vdicontroller     => ["vdi_controller_show_list",      "vdi_controller"],
-                         :vdidesktop        => ["vdi_desktop_show_list",         "vdi_desktop"],
-                         :vdidesktoppool    => ["vdi_desktop_pool_show_list",    "vdi_desktop_pool"],
-                         :vdiendpointdevice => ["vdi_endpoint_device_show_list", "vdi_endpoint_device"],
-                         :vdifarm           => ["vdi_farm_show_list",            "vdi_farm"],
-                         :vdiuser           => ["vdi_user_show_list",            "vdi_user"],
-                         :vmvdi             => ["vm_vdi_show_list",              "vm_vdi"] }
-              - keys.each do |resource, values|
-                - feature = values.first
-                - table_view_name = values.last
-                - if role_allows(:feature => feature)
-                  %tr
-                    %td.key= ui_lookup(:tables => table_view_name)
-                    %td
-                      %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
         %fieldset
           %p.legend _('Services')
           %table.style1
@@ -54,9 +35,7 @@
                        :servicetemplate => ["catalog_items_view",             "Catalog Items"],
                        :vm              => ["vms_instances_filter_accord",    "VMs & Instances"],
                        :miqtemplate     => ["templates_images_filter_accord", "Templates & Images"] }
-            - keys.each do |resource, values|
-              - feature = values.first
-              - view_name = values.last
+            - keys.each do |resource, (feature, view_name)|
               - if role_allows(:feature => feature)
                 %tr
                   %td.key #{view_name}
