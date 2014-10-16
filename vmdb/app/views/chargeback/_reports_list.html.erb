@@ -11,7 +11,10 @@
 		<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
 		
 		<% if @temp[:parent_reports].empty? %>
-			<br/><strong>No Reports available.</strong>
+		  <div class="alert alert-info">
+        	<span class="pficon pficon-info"></span>
+        	<strong>No Reports available.</strong>
+      	  </div>
 		<% else %>
 			<table class="style3">
 				<thead>
@@ -36,7 +39,10 @@
 	<% elsif @temp[:saved_reports] %>
 			<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
 			<% if @temp[:saved_reports].empty? %>
-				<br/><strong>* No Reports available.</strong>
+				<div class="alert alert-info">
+        			<span class="pficon pficon-info"></span>
+        			<strong>No Reports available.</strong>
+      	  		</div>
 			<% else %>
 <!--
 				<br/>&nbsp;<input  id='masterToggle' type='checkbox' name='masterToggle' onclick="miqUpdateAllCheckboxes('reports_button_bar', null);">
@@ -94,6 +100,9 @@
 			</table>
 		<% end %>
 	<% else %>
-		<br/><strong>No Reports available.</strong>
+		<div class="alert alert-info">
+			<span class="pficon pficon-info"></span>
+			<strong>No Reports available.</strong>
+	  	</div>
 	<% end %>
 </div>

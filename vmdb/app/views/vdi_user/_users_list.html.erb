@@ -1,6 +1,9 @@
 <div id="users_list" style="width:<%= @winW - 419 %>px;height:<%= center_div_height %>px;overflow-y:auto;overflow-x:auto">
 <% if @edit[:users].empty? %>
-	<br/><strong>* No Records found.</strong>
+  <div class="alert alert-info">
+    <span class="pficon pficon-info"></span>
+    <strong>No Records found.</strong>
+  </div>
 <% else %>
     Selected <span id="selected_users_span"><%=  @edit[:selected_users].count %></span>/<%=  @edit[:users].count %> Users<br/>
     &nbsp;<input  id='masterToggle' type='checkbox' name='masterToggle' onclick="miqImportUserAllCheckboxes('reports_button_bar', null);">

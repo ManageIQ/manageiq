@@ -29,7 +29,10 @@
     <hr>
     <p class="legend">Servers</p>
     <% if @servers.empty? %>
-      <br/><strong>* No Servers Found.</strong>
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+        <strong>No Servers Found.</strong>
+      </div>
     <% else %>
       <table class="style3">
         <thead>

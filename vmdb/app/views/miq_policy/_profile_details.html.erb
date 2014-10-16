@@ -33,7 +33,10 @@
     <% unless @edit %>
         <p class="legend">Policies</p>
         <% if @profile_policies.empty? %>
-          <br/><strong>* No Policies are defined.</strong>
+          <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+            <strong>No Policies are defined.</strong>
+          </div>
         <% else %>
           <table class="style3">
             <thead>

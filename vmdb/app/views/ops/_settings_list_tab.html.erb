@@ -2,7 +2,10 @@
 	<% if @zones %>
 		<%= render(:partial=>"layouts/flash_msg") %>
 	  <% if @zones.empty? %>
-			<br/><strong>* No Zones found.</strong>
+	    <div class="alert alert-info">
+    		<span class="pficon pficon-info"></span>
+    		<strong>No Zones found.</strong>
+  		</div>
 		<% else %>
 			<table class="style3">
 				<thead>

@@ -1,13 +1,19 @@
 <% if x_active_tree == :widgets_tree %>
   <% if (@sb[:nodes].nil? || (@sb[:nodes] && @sb[:nodes].length == 1)) && @view %>
     <% if @view.table.data.empty? %>
-      <br/><strong>* No Widgets available.</strong>
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+        <strong>No Widgets available.</strong>
+      </div>
     <% else %>
       <%= render :partial => 'layouts/x_gtl'%>
     <% end %>
   <% elsif @sb[:nodes] && @sb[:nodes].length == 2 && !@in_a_form && @view %>
     <% if @view.table.data.empty? %>
-      <br/><strong>* No Widgets available.</strong>
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+        <strong>No Widgets available.</strong>
+      </div>
     <% else %>
       <%= render :partial => 'layouts/x_gtl'%>
     <% end %>
