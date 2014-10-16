@@ -205,6 +205,7 @@ class MiqExpression
     TemplateCloud miq_template
     TemplateInfra miq_template
     User user
+    Vm vm
     VmOrTemplate vm
     VmCloud vm
     VmInfra vm
