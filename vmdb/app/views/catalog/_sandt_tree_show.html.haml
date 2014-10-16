@@ -136,7 +136,7 @@
       - else
         No Resources found.
   - else
-    - unless @record.prov_type || (@record.prov_type && @record.prov_type != "generic")
+    - if !@record.prov_type || (@record.prov_type && @record.prov_type != "generic")
       #request{:name => "request", :width => "80px"}
         - if @options[:wf]
           %p.legend
