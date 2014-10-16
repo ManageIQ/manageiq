@@ -124,7 +124,6 @@ class GenericMailer < ActionMailer::Base
 
   def test_email(to, settings)
     set_mailer_smtp(settings)
-    options = {}
     options = {
       :to      => to,
       :from    => settings[:from],
