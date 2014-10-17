@@ -1107,19 +1107,22 @@ module ApplicationController::Compare
 
   # Build the total row of the compare grid xml
   def drift_add_total(view)
-    row = {:col0 => "<span class='cell-effort-driven cell-plain'>All Sections</span>"}
+    row = {
+      :col0  => "<span class='cell-effort-driven cell-plain'>All Sections</span>",
+      :id    => "id_#{@temp[:rows].length}",
+      :total => true
+    }
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row = row.merge(drift_add_same_image(idx, "Same as previous"))
+        row.merge!(drift_add_same_image(idx, "Same as previous"))
       else
         if view.results[view.ids[idx]][:_match_] == 100
-          row = row.merge(drift_add_same_image(idx, "Same as previous"))
+          row.merge!(drift_add_same_image(idx, "Same as previous"))
         else
-          row = row.merge(drift_add_diff_image(idx, "Changed from previous"))
+          row.merge!(drift_add_diff_image(idx, "Changed from previous"))
         end
       end
     end
-    row = row.merge(:id => "id_#{@temp[:rows].length}", :total => true)
     @temp[:rows] << row
   end
 
@@ -1131,14 +1134,16 @@ module ApplicationController::Compare
     else                # Show fields count
       cell_text += " (#{records.length})"
     end
-    row = {:col0 => cell_text}
-    row = row.merge(drift_section_data_cols(view, section))
-    row = row.merge(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 0,
-                    :parent     => nil,
-                    :section    => true,
-                    :exp_id     => "#{section[:name]}",
-                    :_collapsed => collapsed_state("#{section[:name]}"))
+    row = {
+      :col0       => cell_text,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 0,
+      :parent     => nil,
+      :section    => true,
+      :exp_id     => "#{section[:name]}",
+      :_collapsed => collapsed_state("#{section[:name]}")
+    }
+    row.merge!(drift_section_data_cols(view, section))
     @temp[:section_parent_id] = @temp[:rows].length
     @temp[:rows] << row
   end
@@ -1147,15 +1152,15 @@ module ApplicationController::Compare
     row = {}
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row = row.merge(drift_add_same_image(idx, "Starting values"))
+        row.merge!(drift_add_same_image(idx, "Starting values"))
       else
         match_condition = view.results[id][section[:name]][:_match_]
         match_condition = view.results[id][section[:name]][:_match_exists_] if @exists_mode
 
         if match_condition == 100
-          row = row.merge(drift_add_same_image(idx, "Same as previous"))
+          row.merge!(drift_add_same_image(idx, "Same as previous"))
         else
-          row = row.merge(drift_add_diff_image(idx, "Changed from previous"))
+          row.merge!(drift_add_diff_image(idx, "Changed from previous"))
         end
       end
     end
@@ -1165,14 +1170,16 @@ module ApplicationController::Compare
   # Build a record row for the compare grid xml
   def drift_add_record(view, section, record, ridx)
     @temp[:same] = true
-    row = {:col0 => record}
-    row = row.merge(drift_record_data_cols(view, section, record))
-    row = row.merge(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 1,
-                    :parent     => @temp[:section_parent_id],
-                    :record     => true,
-                    :exp_id     => "#{section[:name]}_#{ridx}",
-                    :_collapsed => collapsed_state("#{section[:name]}_#{ridx}"))
+    row = {
+      :col0       => record,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 1,
+      :parent     => @temp[:section_parent_id],
+      :record     => true,
+      :exp_id     => "#{section[:name]}_#{ridx}",
+      :_collapsed => collapsed_state("#{section[:name]}_#{ridx}")
+    }
+    row.merge!(drift_record_data_cols(view, section, record))
 
     @temp[:record_parent_id] = @temp[:rows].length
     @temp[:rows] << row
@@ -1186,12 +1193,12 @@ module ApplicationController::Compare
       val = view.results[id][section[:name]].include?(record) ? "Found" : "Missing" # Get the value for current object
       match = view.results[id][section[:name]][record][:_match_] if view.results[id][section[:name]][record]
       if idx == 0                                            # On the base?
-        row = row.merge(drift_add_same_image(idx, val))
+        row.merge!(drift_add_same_image(idx, val))
       else                                                   # On another object
         if @compressed  # Compressed, just check if it matches base
-          row = row.merge(drift_record_compressed(idx, match, val, basval))
+          row.merge!(drift_record_compressed(idx, match, val, basval))
         else
-          row = row.merge(drift_record_expanded(idx, match, val, basval))
+          row.merge!(drift_record_expanded(idx, match, val, basval))
         end
       end
       basval = val                                          # Save this record's val as the new base val
@@ -1202,10 +1209,10 @@ module ApplicationController::Compare
   def drift_record_compressed(idx, match, val, basval)
     row = {}
     if val == basval && match == 100
-      row = row.merge(drift_add_same_image(idx, val))
+      row.merge!(drift_add_same_image(idx, val))
     else
       @temp[:same] = false
-      row = row.merge(drift_add_diff_image(idx, val))
+      row.merge!(drift_add_diff_image(idx, val))
     end
     row
   end
@@ -1213,9 +1220,9 @@ module ApplicationController::Compare
   def drift_record_expanded(idx, match, val, basval)
     row = {}
     if !@exists_mode
-      row = row.merge(drift_record_nonexistmode(idx, match, val, basval))
+      row.merge!(drift_record_nonexistmode(idx, match, val, basval))
     else
-      row = row.merge(drift_record_existmode(idx, val, basval))
+      row.merge!(drift_record_existmode(idx, val, basval))
     end
     row
   end
@@ -1224,19 +1231,19 @@ module ApplicationController::Compare
     row = {}
     if val == "Found"                                             # This object has the record
       if basval == "Found" && match == 100
-        row = row.merge(drift_add_same_image(idx, val))
+        row.merge!(drift_add_same_image(idx, val))
       else                                                        # Base doesn't have the record
         @temp[:same] = false
-        row = row.merge(drift_add_diff_image(idx, val))
+        row.merge!(drift_add_diff_image(idx, val))
       end
     else                                                          # Record is missing from this object
       if basval == "Found"                                        # Base has the record, no match
         @temp[:same] = false
-        row = row.merge(drift_add_diff_image(idx, val))
+        row.merge!(drift_add_diff_image(idx, val))
       else
         img_src = "16/plus-black.png"              # Base doesn't have the record, match
         img_bkg = ""
-        row = row.merge(drift_add_image_col(idx, img_src, img_bkg, val))
+        row.merge!(drift_add_image_col(idx, img_src, img_bkg, val))
       end
     end
     row
@@ -1252,7 +1259,7 @@ module ApplicationController::Compare
         @temp[:same] = false
         img_src = "16/plus-orange.png"
       end
-      row = row.merge(drift_add_image_col(idx, img_src, img_bkg, val))
+      row.merge!(drift_add_image_col(idx, img_src, img_bkg, val))
     else                                                          # Record is missing from this object
       img_bkg = ""
       if basval == "Found"                                        # Base has the record, no match
@@ -1261,20 +1268,19 @@ module ApplicationController::Compare
       else                                                        # Base doesn't have the record, match
         img_src = "16/minus-black.png"
       end
-      row = row.merge(drift_add_image_col(idx, img_src, img_bkg, val))
+      row.merge!(drift_add_image_col(idx, img_src, img_bkg, val))
     end
     row
   end
 
   # Build a field row under a record row
   def drift_add_record_field(view, section, record, field)
-    row = {}
     if @compressed  # Compressed
-      row = row.merge(drift_record_field_compressed(view, section, record, field))
+      row = drift_record_field_compressed(view, section, record, field)
     else  # Expanded
-      row = row.merge(drift_record_field_expanded(view, section, record, field))
+      row = drift_record_field_expanded(view, section, record, field)
     end
-    row = row.merge(:id           => "id_#{@temp[:rows].length}",
+    row.merge!(:id           => "id_#{@temp[:rows].length}",
                     :indent       => 2,
                     :parent       => @temp[:record_parent_id],
                     :record_field => true)
@@ -1294,11 +1300,11 @@ module ApplicationController::Compare
           !view.results[id][section[:name]][record][field[:name]].nil?      # Field exists
 
         val = "#{view.results[id][section[:name]][record][field[:name]][:_value_]}"
-        row = row.merge(drift_record_field_exists_compressed(idx, match_condition, val))
+        row.merge!(drift_record_field_exists_compressed(idx, match_condition, val))
       else
         val = view.results[id][section[:name]].include?(record) ? "Found" : "Missing"
         basval = val if idx == 0       # On base object, # Hang on to base value
-        row = row.merge(drift_record_field_missing_compressed(idx, val, basval))
+        row.merge!(drift_record_field_missing_compressed(idx, val, basval))
       end
     end
     row
@@ -1316,13 +1322,13 @@ module ApplicationController::Compare
                 view.results[id][section[:name]][record][field[:name]][:_value_].to_s
 
         val = "#{view.results[id][section[:name]][record][field[:name]][:_value_]}"
-        row = row.merge(drift_record_field_exists_expanded(idx, match_condition, val))
+        row.merge!(drift_record_field_exists_expanded(idx, match_condition, val))
       else
         match_condition = !view.results[view.ids[0]][section[:name]][record].nil? &&
             !view.results[view.ids[0]][section[:name]][record][field[:name]].nil?
 
         val = "(missing)"
-        row = row.merge(drift_record_field_missing_expanded(idx, match_condition, val))
+        row.merge!(drift_record_field_missing_expanded(idx, match_condition, val))
       end
     end
     row
@@ -1334,9 +1340,9 @@ module ApplicationController::Compare
       row = drift_add_same_image(idx, val)
     else          # Not on base object
       if !match_condition
-        row = row.merge(drift_add_same_image(idx, val))
+        row.merge!(drift_add_same_image(idx, val))
       else
-        row = row.merge(drift_add_diff_image(idx, val))
+        row.merge!(drift_add_diff_image(idx, val))
       end
     end
     row
@@ -1346,14 +1352,14 @@ module ApplicationController::Compare
     row = {}
     if idx == 0
       img_bkg = "cell-stripe"
-      row = row.merge(drift_add_txt_col(idx, val, img_bkg))
+      row.merge!(drift_add_txt_col(idx, val, img_bkg))
     else
       if match_condition
         img_bkg = "cell-bkg-plain-no-shade"
-        row = row.merge(drift_add_txt_col(idx, val, img_bkg))
+        row.merge!(drift_add_txt_col(idx, val, img_bkg))
       else
         img_bkg = "cell-bkg-plain-mark-txt-no-shade"
-        row = row.merge(drift_add_txt_col(idx, val, img_bkg))
+        row.merge!(drift_add_txt_col(idx, val, img_bkg))
       end
     end
     row
@@ -1363,14 +1369,14 @@ module ApplicationController::Compare
     row = {}
     if idx == 0
       img_bkg = "cell-stripe"
-      row = row.merge(drift_add_txt_col(idx, val, img_bkg))
+      row.merge!(drift_add_txt_col(idx, val, img_bkg))
     else
       if match_condition
         img_bkg = "cell-bkg-plain-mark-txt-no-shade-no-bold"
-        row = row.merge(drift_add_txt_col(idx, val, img_bkg))
+        row.merge!(drift_add_txt_col(idx, val, img_bkg))
       else
         img_bkg = "cell-bkg-plain-mark-txt-black"
-        row = row.merge(drift_add_txt_col(idx, val, img_bkg))
+        row.merge!(drift_add_txt_col(idx, val, img_bkg))
       end
     end
     row
@@ -1379,12 +1385,12 @@ module ApplicationController::Compare
   def drift_record_field_missing_compressed(idx, val, basval)
     row = {}
     if idx == 0       # On base object
-      row = row.merge(drift_add_same_image(idx, val))
+      row.merge!(drift_add_same_image(idx, val))
     else              # Not on base object
       if basval == val # Matches base, then green
-        row = row.merge(drift_add_same_image(idx, val))
+        row.merge!(drift_add_same_image(idx, val))
       else            # Doesn't match, then red
-        row = row.merge(drift_add_same_image(idx, val))
+        row.merge!(drift_add_same_image(idx, val))
       end
     end
     row
@@ -1398,7 +1404,7 @@ module ApplicationController::Compare
     else            # Expanded
       row = drift_add_section_field_expanded(view, section, field)
     end
-    row = row.merge(:id            => "id_#{@temp[:rows].length}",
+    row.merge!(:id            => "id_#{@temp[:rows].length}",
                     :indent        => 1,
                     :parent        => @temp[:section_parent_id],
                     :section_field => true)
@@ -1410,17 +1416,17 @@ module ApplicationController::Compare
     view.ids.each_with_index do |id, idx|
       val = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
       if !view.results[id][section[:name]][field[:name]].nil? && idx == 0     # On base object
-        row = row.merge(drift_add_same_image(idx, val))
+        row.merge!(drift_add_same_image(idx, val))
       elsif !view.results[id][section[:name]].nil? && !view.results[id][section[:name]][field[:name]].nil?
         if view.results[id][section[:name]][field[:name]][:_match_]
-          row = row.merge(drift_add_same_image(idx, val))
+          row.merge!(drift_add_same_image(idx, val))
         else
           @temp[:same] = false
-          row = row.merge(drift_add_diff_image(idx, val))
+          row.merge!(drift_add_diff_image(idx, val))
         end
       else
         val = "No Value Found"
-        row = row.merge(drift_add_diff_image(idx, val))
+        row.merge!(drift_add_diff_image(idx, val))
       end
     end
     row
@@ -1432,17 +1438,17 @@ module ApplicationController::Compare
       if !view.results[id][section[:name]][field[:name]].nil? && idx == 0       # On base object
         col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
         img_bkg = "cell-stripe"
-        row = row.merge(drift_add_txt_col(idx, col, img_bkg))
+        row.merge!(drift_add_txt_col(idx, col, img_bkg))
       elsif !view.results[id][section[:name]].nil? && !view.results[id][section[:name]][field[:name]].nil?
         if view.results[id][section[:name]][field[:name]][:_match_]
           col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
           img_bkg = "cell-bkg-plain-no-shade"
-          row = row.merge(drift_add_txt_col(idx, col, img_bkg))
+          row.merge!(drift_add_txt_col(idx, col, img_bkg))
         else
           @temp[:same] = false
           col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
           img_bkg = "cell-bkg-plain-mark-txt-no-shade"
-          row = row.merge(drift_add_txt_col(idx, col, img_bkg))
+          row.merge!(drift_add_txt_col(idx, col, img_bkg))
         end
       end
     end
@@ -1612,7 +1618,12 @@ module ApplicationController::Compare
   end
 
   def comp_add_footer(view)
-    row = {:col0 => ""}
+    row = {
+      :col0       => "",
+      :id         => "id_#{@temp[:rows].length}",
+      :remove_col => true
+    }
+
     if view.ids.length > 2
       view.ids.each_with_index do |id, idx|
         if idx != 0
@@ -1623,11 +1634,10 @@ module ApplicationController::Compare
             return false;\" href='#'><img src='/images/toolbars/delete.png' width='24'
             alt='Remove this #{session[:db_title].singularize} from the comparison'
             title='Remove this #{session[:db_title].singularize} from the comparison' align='middle' border='0' /></a>"
-          row = row.merge("col#{idx + 1}".to_sym => html_text)
+          row.merge!("col#{idx + 1}".to_sym => html_text)
         end
       end
     end
-    row = row.merge(:id => "id_#{@temp[:rows].length}", :remove_col => true)
     @temp[:rows] << row
   end
 
@@ -1666,18 +1676,21 @@ module ApplicationController::Compare
 
   # Build the total row of the compare grid xml
   def comp_add_total(view)
-    row = {:col0 => "<span class='cell-effort-driven cell-plain'>Total Matches</span>"}
+    row = {
+      :col0  => "<span class='cell-effort-driven cell-plain'>Total Matches</span>",
+      :id    => "id_#{@temp[:rows].length}",
+      :total => true
+    }
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row = row.merge(compare_add_txt_col(idx, @compressed ? "%:" : "% Matched:", "% Matched"))
+        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : "% Matched:", "% Matched"))
       else
         key = @exists_mode ? :_match_exists_ : :_match_
         pct_match = view.results[view.ids[idx]][key]
         image = calculate_match_img(pct_match)
-        row = row.merge(compare_add_piechart_image(idx, "#{pct_match}% matched", image))
+        row.merge!(compare_add_piechart_image(idx, "#{pct_match}% matched", image))
       end
     end
-    row = row.merge(:id => "id_#{@temp[:rows].length}", :total => true)
     @temp[:rows] << row
   end
 
@@ -1689,14 +1702,17 @@ module ApplicationController::Compare
     else                # Show fields count
       cell_text += " (#{records.length})"
     end
-    row = {:col0 => cell_text}
-    row = row.merge(compare_section_data_cols(view, section, records))
-    row = row.merge(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 0,
-                    :parent     => nil,
-                    :section    => true,
-                    :exp_id     => "#{section[:name]}",
-                    :_collapsed => collapsed_state("#{section[:name]}"))
+    row = {
+      :col0       => cell_text,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 0,
+      :parent     => nil,
+      :section    => true,
+      :exp_id     => "#{section[:name]}",
+      :_collapsed => collapsed_state("#{section[:name]}")
+    }
+    row.merge!(compare_section_data_cols(view, section, records))
+
     @temp[:section_parent_id] = @temp[:rows].length
     @temp[:rows] << row
   end
@@ -1705,12 +1721,12 @@ module ApplicationController::Compare
     row = {}
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row = row.merge(compare_add_txt_col(idx, @compressed ? "%:" : "% Matched:", "% Matched"))
+        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : "% Matched:", "% Matched"))
       else
         key = @exists_mode && !records.nil? ? :_match_exists_ : :_match_
         pct_match = view.results[id][section[:name]][key]
         image = calculate_match_img(pct_match)
-        row = row.merge(compare_add_piechart_image(idx, "#{pct_match}% matched", image))
+        row.merge!(compare_add_piechart_image(idx, "#{pct_match}% matched", image))
       end
     end
     row
@@ -1724,14 +1740,16 @@ module ApplicationController::Compare
   # Build a record row for the compare grid xml
   def comp_add_record(view, section, record, ridx)
     @temp[:same] = true
-    row = {:col0 => record}
-    row = row.merge(comp_record_data_cols(view, section, record))
-    row = row.merge(:id         => "id_#{@temp[:rows].length}",
-                    :indent     => 1,
-                    :parent     => @temp[:section_parent_id],
-                    :record     => true,
-                    :exp_id     => "#{section[:name]}_#{ridx}",
-                    :_collapsed => collapsed_state("#{section[:name]}_#{ridx}"))
+    row = {
+      :col0       => record,
+      :id         => "id_#{@temp[:rows].length}",
+      :indent     => 1,
+      :parent     => @temp[:section_parent_id],
+      :record     => true,
+      :exp_id     => "#{section[:name]}_#{ridx}",
+      :_collapsed => collapsed_state("#{section[:name]}_#{ridx}")
+    }
+    row.merge!(comp_record_data_cols(view, section, record))
 
     @temp[:record_parent_id] = @temp[:rows].length
     @temp[:rows] << row
@@ -1750,9 +1768,9 @@ module ApplicationController::Compare
 
       match = view.results[id][section[:name]][record][:_match_] if view.results[id][section[:name]][record]
       if @compressed  # Compressed, just show passed with hover value
-        row = row.merge(comp_record_data_compressed(idx, match, val, basval))
+        row.merge!(comp_record_data_compressed(idx, match, val, basval))
       else
-        row = row.merge(comp_record_data_expanded(idx, match, val, basval))
+        row.merge!(comp_record_data_expanded(idx, match, val, basval))
       end
     end
     row
@@ -1761,9 +1779,9 @@ module ApplicationController::Compare
   def comp_record_data_compressed(idx, match, val, basval)
     row = {}
     if @exists_mode
-      row = row.merge(comp_record_data_compressed_existsmode(idx, match, val, basval))
+      row.merge!(comp_record_data_compressed_existsmode(idx, match, val, basval))
     else
-      row = row.merge(comp_record_data_compressed_nonexistsmode(idx, match, val, basval))
+      row.merge!(comp_record_data_compressed_nonexistsmode(idx, match, val, basval))
     end
     row
   end
@@ -1771,13 +1789,13 @@ module ApplicationController::Compare
   def comp_record_data_compressed_existsmode(idx, match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      row = row.merge(drift_add_image_col(idx, "new/blank.gif", "cell-stripe", val))
+      row.merge!(drift_add_image_col(idx, "new/blank.gif", "cell-stripe", val))
     else
       if val == basval  # Compare this object's value to the base
-        row = row.merge(compare_add_same_image(idx, val))
+        row.merge!(compare_add_same_image(idx, val))
       else
         unset_same_flag
-        row = row.merge(compare_add_diff_image(idx, val))
+        row.merge!(compare_add_diff_image(idx, val))
       end
     end
     row
@@ -1786,23 +1804,23 @@ module ApplicationController::Compare
   def comp_record_data_compressed_nonexistsmode(idx, match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      row = row.merge(compare_add_txt_col(idx, "%:", "% Matched"))
+      row.merge!(compare_add_txt_col(idx, "%:", "% Matched"))
     else
       if val == "Found"         # This object has the record
         if basval == "Found"    # Base has the record
           img_src = calculate_match_img(match)
           unset_same_flag(match)
-          row = row.merge(compare_add_piechart_image(idx, "#{match}% matched", img_src, ""))
+          row.merge!(compare_add_piechart_image(idx, "#{match}% matched", img_src, ""))
         else
           unset_same_flag
-          row = row.merge(compare_add_piechart_image(idx, "0% matched", "0", ""))
+          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
         end
       else
         if basval == "Found"
           unset_same_flag
-          row = row.merge(compare_add_piechart_image(idx, "0% matched", "0", ""))
+          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
         else
-          row = row.merge(compare_add_piechart_image(idx, "100% matched", "20", ""))
+          row.merge!(compare_add_piechart_image(idx, "100% matched", "20", ""))
         end
       end
     end
@@ -1812,9 +1830,9 @@ module ApplicationController::Compare
   def comp_record_data_expanded(idx, match, val, basval)
     row = {}
     if @exists_mode
-      row = row.merge(comp_record_data_expanded_existsmode(idx, match, val, basval))
+      row.merge!(comp_record_data_expanded_existsmode(idx, match, val, basval))
     else
-      row = row.merge(comp_record_data_expanded_nonexistsmode(idx, match, val, basval))
+      row.merge!(comp_record_data_expanded_nonexistsmode(idx, match, val, basval))
     end
     row
   end
@@ -1823,25 +1841,25 @@ module ApplicationController::Compare
     row = {}
     if idx == 0                                                     # On the base?
       if val == "Found"                                           # Base has the record
-        row = row.merge(drift_add_image_col(idx, "16/plus-black.png", "cell-stripe", val))
+        row.merge!(drift_add_image_col(idx, "16/plus-black.png", "cell-stripe", val))
       else                                                          # Base doesn't have the record
         unset_same_flag
-        row = row.merge(drift_add_image_col(idx, "16/minus-black.png", "cell-stripe", val))
+        row.merge!(drift_add_image_col(idx, "16/minus-black.png", "cell-stripe", val))
       end
     else
       if val == "Found"                                             # This object has the record
         if basval == "Found"                                        # Base has the record
-          row = row.merge(drift_add_image_col(idx, "16/plus-green.png", "", val))
+          row.merge!(drift_add_image_col(idx, "16/plus-green.png", "", val))
         else                                                        # Base doesn't have the record
           unset_same_flag
-          row = row.merge(drift_add_image_col(idx, "16/plus-red.png", "", val))
+          row.merge!(drift_add_image_col(idx, "16/plus-red.png", "", val))
         end
       else                                                          # Record is missing from this object
         if basval == "Found"                                        # Base has the record, no match
           unset_same_flag
-          row = row.merge(drift_add_image_col(idx, "16/minus-red.png", "", val))
+          row.merge!(drift_add_image_col(idx, "16/minus-red.png", "", val))
         else                                                        # Base doesn't have the record, match
-          row = row.merge(drift_add_image_col(idx, "16/minus-green.png", "", val))
+          row.merge!(drift_add_image_col(idx, "16/minus-green.png", "", val))
         end
       end
     end
@@ -1851,23 +1869,23 @@ module ApplicationController::Compare
   def comp_record_data_expanded_nonexistsmode(idx, match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      row = row.merge(compare_add_txt_col(idx, "% Matched:"))
+      row.merge!(compare_add_txt_col(idx, "% Matched:"))
     else
       if val == "Found"       # This object has the record
         if basval == "Found"  # Base has the record
           img_src = calculate_match_img(match)
           unset_same_flag(match)
-          row = row.merge(compare_add_piechart_image(idx, "#{match}% matched", img_src, ""))
+          row.merge!(compare_add_piechart_image(idx, "#{match}% matched", img_src, ""))
         else
           unset_same_flag
-          row = row.merge(compare_add_piechart_image(idx, "0% matched", "0", ""))
+          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
         end
       else
         if basval == "Found"
           unset_same_flag
-          row = row.merge(compare_add_piechart_image(idx, "0% matched", "0", ""))
+          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
         else
-          row = row.merge(compare_add_piechart_image(idx, "100% matched", "20", ""))
+          row.merge!(compare_add_piechart_image(idx, "100% matched", "20", ""))
         end
       end
     end
@@ -1885,17 +1903,19 @@ module ApplicationController::Compare
 
   # Build a field row under a record row
   def comp_add_record_field(view, section, record, field)
-    row = {:col0 => field[:header]}
+    row = {
+      :col0         => field[:header],
+      :id           => "id_#{@temp[:rows].length}",
+      :indent       => 2,
+      :parent       => @temp[:record_parent_id],
+      :record_field => true
+    }
 
     if @compressed  # Compressed
-      row = row.merge(comp_add_record_field_compressed(view, section, record, field))
+      row.merge!(comp_add_record_field_compressed(view, section, record, field))
     else  # Expanded
-      row = row.merge(comp_add_record_field_expanded(view, section, record, field))
+      row.merge!(comp_add_record_field_expanded(view, section, record, field))
     end
-    row = row.merge(:id           => "id_#{@temp[:rows].length}",
-                    :indent       => 2,
-                    :parent       => @temp[:record_parent_id],
-                    :record_field => true)
     @temp[:rows] << row
   end
 
@@ -1910,10 +1930,10 @@ module ApplicationController::Compare
 
       if fld.nil?
         val = rec_found
-        row = row.merge(comp_add_record_field_missing_compressed(idx, val, base_rec))
+        row.merge!(comp_add_record_field_missing_compressed(idx, val, base_rec))
       else
         val = fld[:_value_]
-        row = row.merge(comp_add_record_field_exists_compressed(idx, val, base_rec, field))
+        row.merge!(comp_add_record_field_exists_compressed(idx, val, base_rec, field))
       end
     end
     row
@@ -1934,9 +1954,9 @@ module ApplicationController::Compare
     base_rec_found = base_rec ? "Found" : "Missing"
 
     if idx == 0       # On base object
-      row = row.merge(drift_add_same_image(idx, val))
+      row.merge!(drift_add_same_image(idx, val))
     else              # Not on base object
-      row = row.merge(drift_add_image_col(idx,
+      row.merge!(drift_add_image_col(idx,
                                           "#{img_path}/#{base_rec_found == val ? passed_img : failed_img}.png",
                                           "",
                                           val))
@@ -1960,9 +1980,9 @@ module ApplicationController::Compare
     base_val = base_fld.nil? ? nil : base_fld[:_value_]
 
     if idx == 0   # On base object
-      row = row.merge(drift_add_same_image(idx, val))
+      row.merge!(drift_add_same_image(idx, val))
     else          # Not on base object
-      row = row.merge(drift_add_image_col(idx, "#{img_path}/#{base_val == val ? passed_img : failed_img}.png", "", val))
+      row.merge!(drift_add_image_col(idx, "#{img_path}/#{base_val == val ? passed_img : failed_img}.png", "", val))
     end
     row
   end
@@ -1976,9 +1996,9 @@ module ApplicationController::Compare
       val = fld.nil? ? nil : fld[:_value_]
 
       if fld.nil?
-        row = row.merge(comp_add_record_field_missing_expanded(idx, base_rec, field))
+        row.merge!(comp_add_record_field_missing_expanded(idx, base_rec, field))
       else
-        row = row.merge(comp_add_record_field_exists_expanded(idx, val, base_rec, field))
+        row.merge!(comp_add_record_field_exists_expanded(idx, val, base_rec, field))
       end
     end
     row
@@ -1997,10 +2017,10 @@ module ApplicationController::Compare
     base_val = base_fld.nil? ? nil : base_fld[:_value_]
 
     if idx == 0
-      row = row.merge(compare_add_txt_col(idx, val))
+      row.merge!(compare_add_txt_col(idx, val))
     else
       style = "color:#{base_val == val ? passed_text_color : failed_text_color};"
-      row = row.merge(compare_add_txt_col(idx, size_formatting(field[:name], val), "", "", style))
+      row.merge!(compare_add_txt_col(idx, size_formatting(field[:name], val), "", "", style))
     end
     row
   end
@@ -2016,10 +2036,10 @@ module ApplicationController::Compare
     base_fld = base_rec.nil? ? nil : base_rec[field[:name]]
 
     if idx == 0
-      row = row.merge(compare_add_txt_col(idx, "(missing)"))
+      row.merge!(compare_add_txt_col(idx, "(missing)"))
     else
       style = "color:#{base_fld.nil? ? passed_text_color : failed_text_color};"
-      row = row.merge(compare_add_txt_col(idx, "(missing)", "", "", style))
+      row.merge!(compare_add_txt_col(idx, "(missing)", "", "", style))
     end
     row
   end
@@ -2028,18 +2048,20 @@ module ApplicationController::Compare
   def comp_add_section_field(view, section, field)
     @temp[:same] = true
 
-    row = {:col0 => field[:header]}
+    row = {
+      :col0          => field[:header],
+      :id            => "id_#{@temp[:rows].length}",
+      :indent        => 1,
+      :parent        => @temp[:section_parent_id],
+      :section_field => true
+    }
 
     if @compressed  # Compressed
-      row = row.merge(comp_add_section_field_compressed(view, section, field))
+      row.merge!(comp_add_section_field_compressed(view, section, field))
     else            # Expanded
-      row = row.merge(comp_add_section_field_expanded(view, section, field))
+      row.merge!(comp_add_section_field_expanded(view, section, field))
     end
 
-    row = row.merge(:id            => "id_#{@temp[:rows].length}",
-                    :indent        => 1,
-                    :parent        => @temp[:section_parent_id],
-                    :section_field => true)
     @temp[:rows] << row
   end
 
@@ -2051,9 +2073,9 @@ module ApplicationController::Compare
       val = fld[:_value_] unless fld.nil?
 
       if fld.nil?
-        row = row.merge(compare_add_diff_image(idx, "No Value Found"))
+        row.merge!(compare_add_diff_image(idx, "No Value Found"))
       elsif idx == 0      # On base object
-        row = row.merge(compare_add_same_image(idx, val, "cell-stripe"))
+        row.merge!(compare_add_same_image(idx, val, "cell-stripe"))
       else
         if base_val == val
           img_bkg = "cell-stripe"
@@ -2063,7 +2085,7 @@ module ApplicationController::Compare
           img = "compare-diff"
           unset_same_flag
         end
-        row = row.merge(drift_add_image_col(idx, "new/#{img}.png", img_bkg, val))
+        row.merge!(drift_add_image_col(idx, "new/#{img}.png", img_bkg, val))
       end
     end
     row
@@ -2078,7 +2100,7 @@ module ApplicationController::Compare
       val = fld[:_value_]
 
       if idx == 0       # On base object
-        row = row.merge(compare_add_txt_col(idx, val))
+        row.merge!(compare_add_txt_col(idx, val))
       else
         if base_val == val
           style = "color:#403990;font-weight:bold;"
@@ -2088,7 +2110,7 @@ module ApplicationController::Compare
           img_bkg = ""
           unset_same_flag
         end
-        row = row.merge(compare_add_txt_col(idx, val, "", img_bkg, style))
+        row.merge!(compare_add_txt_col(idx, val, "", img_bkg, style))
       end
     end
     row
