@@ -1,38 +1,17 @@
 class Charting
-  # charting backend name
-  # FIXME: remove this method
-  def self.backend
-    instance.backend
-  end
-
-  def self.render_format
-    instance.render_format
-  end
-
-  # format for Ruport renderer
-  def self.format
-    instance.format
-  end
-
-  # javascript statement to reload charts
-  def self.js_load_statement(delayed = false)
-    instance.js_load_statement(delayed)
-  end
-
-  def self.load_helpers(klass)
-    instance.load_helpers(klass)
-  end
-
-  def self.data_ok?(data)
-    instance.data_ok?(data)
-  end
-
-  def self.sample_chart(options, report_theme)
-    instance.sample_chart(options, report_theme)
-  end
-
-  def self.chart_names_for_select
-    instance.chart_names_for_select
+  class << self
+    extend Forwardable
+    delegate [
+      :backend,               # charting backend name; FIXME: remove this method
+      :render_format,
+      :format,                # format for Ruport renderer
+      :load_helpers,
+      :data_ok?,
+      :sample_chart,
+      :chart_names_for_select,
+      :chart_themes_for_select,
+      :js_load_statement      # javascript statement to reload charts
+    ] => :instance
   end
 
   # discovery

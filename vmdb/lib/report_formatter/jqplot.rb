@@ -32,6 +32,10 @@ module ReportFormatter
       }
     end
 
+    def build_document_footer
+      mri.chart = Jqplot.apply_theme(mri.chart, options.report_theme) unless options.theme.nil?
+    end
+
     def no_records_found_chart(topic = "No records found for this chart")
       mri.chart = {
         :data    => [[nil]],

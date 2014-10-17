@@ -83,7 +83,7 @@
                                      "width: 32px;" +                                                      |
                                      "height: 32px;" +                                                     |
                                      "float: left;"}                                                       |
-            - [["Chart Theme", "display_reporttheme", ZiyaCharting::ZTHEMES, :reporttheme],
+            - [["Chart Theme", "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
                ["Time Zone",   "display_timezone",    ALL_TIMEZONES,         :timezone]].each do |display_settings|
               %tr
                 %td.key #{display_settings[0]}

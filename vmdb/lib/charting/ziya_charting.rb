@@ -33,7 +33,7 @@ class ZiyaCharting < Charting
   CHARTS  = %w{Area AreaThreed Bar CandleStick Column ColumnThreed Line ParallelThreedColumn
   Pie PieThreed StackedArea StackedBar StackedColumn StackedThreedArea StackedThreedColumn}
 
-  def js_load_statement(delayed)
+  def js_load_statement(_delayed = false)
     # FIXME: only for IE
     'miqLoadCharts();'
   end
@@ -110,6 +110,10 @@ class ZiyaCharting < Charting
     ["Pie (2D)",               "Pie"],
     ["Pie (3D)",               "PieThreed"]
   ]
+
+  def chart_themes_for_select
+    ZTHEMES.collect { |name| [name, name] }
+  end
 
   def self.priority
     100

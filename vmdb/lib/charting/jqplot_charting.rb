@@ -1,5 +1,5 @@
 class JqplotCharting < Charting
-  def js_load_statement(delayed)
+  def js_load_statement(delayed = false)
     delayed ? 'setTimeout(function(){ load_jqplot_charts(); }, 100);' : 'load_jqplot_charts();'
   end
 
@@ -47,6 +47,10 @@ class JqplotCharting < Charting
     ["Pie (2D)",              "Pie"],
   ]
 
+  def chart_themes_for_select
+    JqplotThemes::THEMES.collect { |name, _| [name, name] }
+  end
+
   private
 
   def add_sample_chart_data(options, chart)
@@ -76,6 +80,7 @@ class JqplotCharting < Charting
     chart = Jqplot.basic_chart(options[:graph_type])
     chart = Jqplot.horizontal_legend(
       Jqplot.horizontal_line_cursor(chart)) unless options[:graph_type] == 'Pie'
+    chart = Jqplot.apply_theme(chart, report_theme)
     chart
   end
 
