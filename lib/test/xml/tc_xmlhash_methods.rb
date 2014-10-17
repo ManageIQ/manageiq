@@ -5,12 +5,6 @@ require 'test/unit'
 require 'miq-xml'
 require 'xmlsimple'
 
-class Hash
-  def to_h
-    self
-  end
-end
-
 class TestXmlHashMethods < Test::Unit::TestCase
   require 'xml_base_parser_tests'
   include XmlBaseParserTests
