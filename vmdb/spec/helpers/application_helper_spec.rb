@@ -3263,42 +3263,42 @@ describe ApplicationHelper do
 
     context "when timer_type == 'Monthly'" do
       let(:timer_type) { 'Monthly' }
-      it { should include("$('weekly_span').hide();") }
-      it { should include("$('daily_span').hide();") }
-      it { should include("$('hourly_span').hide();") }
-      it { should include("$('monthly_span').show();") }
+      it { should include("$j('\#weekly_span').hide();") }
+      it { should include("$j('\#daily_span').hide();") }
+      it { should include("$j('\#hourly_span').hide();") }
+      it { should include("$j('\#monthly_span').show();") }
     end
 
     context "when timer_type == 'Weekly'" do
       let(:timer_type) { 'Weekly' }
-      it { should include("$('daily_span').hide();") }
-      it { should include("$('hourly_span').hide();") }
-      it { should include("$('monthly_span').hide();") }
-      it { should include("$('weekly_span').show();") }
+      it { should include("$j('\#daily_span').hide();") }
+      it { should include("$j('\#hourly_span').hide();") }
+      it { should include("$j('\#monthly_span').hide();") }
+      it { should include("$j('\#weekly_span').show();") }
     end
 
     context "when timer_type == 'Daily'" do
       let(:timer_type) { 'Daily' }
-      it { should include("$('hourly_span').hide();") }
-      it { should include("$('monthly_span').hide();") }
-      it { should include("$('weekly_span').hide();") }
-      it { should include("$('daily_span').show();") }
+      it { should include("$j('\#hourly_span').hide();") }
+      it { should include("$j('\#monthly_span').hide();") }
+      it { should include("$j('\#weekly_span').hide();") }
+      it { should include("$j('\#daily_span').show();") }
     end
 
     context "when timer_type == 'Hourly'" do
       let(:timer_type) { 'Hourly' }
-      it { should include("$('daily_span').hide();") }
-      it { should include("$('monthly_span').hide();") }
-      it { should include("$('weekly_span').hide();") }
-      it { should include("$('hourly_span').show();") }
+      it { should include("$j('\#daily_span').hide();") }
+      it { should include("$j('\#monthly_span').hide();") }
+      it { should include("$j('\#weekly_span').hide();") }
+      it { should include("$j('\#hourly_span').show();") }
     end
 
     context "when timer_type == 'something_else'" do
       let(:timer_type) { 'something_else' }
-      it { should include("$('daily_span').hide();") }
-      it { should include("$('hourly_span').hide();") }
-      it { should include("$('monthly_span').hide();") }
-      it { should include("$('weekly_span').hide();") }
+      it { should include("$j('\#daily_span').hide();") }
+      it { should include("$j('\#hourly_span').hide();") }
+      it { should include("$j('\#monthly_span').hide();") }
+      it { should include("$j('\#weekly_span').hide();") }
     end
   end
 

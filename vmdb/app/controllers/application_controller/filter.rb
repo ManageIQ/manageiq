@@ -70,9 +70,9 @@ module ApplicationController::Filter
           page.replace("exp_editor_div", :partial=>"layouts/exp_editor")
         end
         if ["not","discard","commit","remove"].include?(params[:pressed])
-          page << "$('exp_buttons_on').hide();"
-          page << "$('exp_buttons_not').hide();"
-          page << "$('exp_buttons_off').show();"
+          page << javascript_hide("exp_buttons_on")
+          page << javascript_hide("exp_buttons_not")
+          page << javascript_show("exp_buttons_off")
         end
         if changed != session[:changed]
           session[:changed] = changed
@@ -108,13 +108,13 @@ module ApplicationController::Filter
         page.replace("flash_msg_div#{div_num}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>div_num})
         page.replace("exp_editor_div", :partial=>"layouts/exp_editor")
         page << "$('exp_#{token}').setStyle('background-color: yellow')"
-        page << "$('exp_buttons_off').hide();"
+        page << javascript_hide("exp_buttons_off")
         if exp.has_key?("not") or @parent_is_not
-          page << "$('exp_buttons_on').hide();"
-          page << "$('exp_buttons_not').show();"
+          page << javascript_hide("exp_buttons_on")
+          page << javascript_show("exp_buttons_not")
         else
-          page << "$('exp_buttons_not').hide();"
-          page << "$('exp_buttons_on').show();"
+          page << javascript_hide("exp_buttons_not")
+          page << javascript_show("exp_buttons_on")
         end
 
         if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
@@ -449,15 +449,15 @@ module ApplicationController::Filter
       if @edit[:adv_search_open] == true
         @edit[:adv_search_open] = false
         page << "$('adv_search_img').src='/images/toolbars/squashed-true.png'"
-        page << "$('adv_search_div').hide();"
-        page << "$('blocker_div').hide();"
+        page << javascript_hide("adv_search_div")
+        page << javascript_hide("blocker_div")
 #       page << "$('adv_search_div').visualEffect('blind_up', {duration:1.5});"
       else
         @edit[:adv_search_open] = true
         page.replace_html("adv_search_div", :partial=>"layouts/adv_search")
         page << "$('adv_search_img').src='/images/toolbars/squashed-false.png'"
-        page << "$('adv_search_div').show();"
-        page << "$('blocker_div').show();"
+        page << javascript_show("adv_search_div")
+        page << javascript_show("blocker_div")
 #       page << "$('adv_search_div').visualEffect('blind_down', {duration:1.5});"
 
         if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
@@ -1024,9 +1024,9 @@ module ApplicationController::Filter
 
     render :update do |page|
       page.replace(:quicksearchbox, :partial => "layouts/quick_search")
-      page << "if ($('advsearchbox')) $('advsearchbox').hide();"
-      page << "$('blocker_div').show();"
-      page << "$('quicksearchbox').show();"
+      page << javascript_hide_if_exists("advsearchbox")
+      page << javascript_show("blocker_div")
+      page << javascript_show("quicksearchbox")
       page << "miqSparkle(false);"
     end
   end

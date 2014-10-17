@@ -29,9 +29,9 @@ module ApplicationController::Automate
         page.replace_html("main_div", :partial => "results_tabs")
         if c_buttons && c_xml
           page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-          page << "$('center_buttons_div').show();"
+          page << javascript_show("center_buttons_div")
         else
-          page << "$('center_buttons_div').hide();"
+          page << javascript_hide("center_buttons_div")
         end
         page << "miqSparkle(false);"
       end
@@ -183,9 +183,9 @@ module ApplicationController::Automate
       page.replace("results_tabs",     :partial => "results_tabs")
       if c_buttons && c_xml
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "$('center_buttons_div').show();"
+        page << javascript_show("center_buttons_div")
       else
-        page << "$('center_buttons_div').hide();"
+        page << javascript_hide("center_buttons_div")
       end
       page << "miqSparkle(false);"
     end

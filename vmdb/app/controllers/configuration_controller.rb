@@ -517,9 +517,9 @@ class ConfigurationController < ApplicationController
                    :locals  => {:disabled => false}) if @redraw
       if params.key?(:profile_tz) && ["super_administrator", "administrator"].include?(session[:userrole])
         if params[:profile_tz].blank?
-          page << "$('rollup_daily_tr').hide();"
+          page << javascript_hide("rollup_daily_tr")
         else
-          page << "$('rollup_daily_tr').show();"
+          page << javascript_show("rollup_daily_tr")
         end
       end
       if changed != session[:changed]

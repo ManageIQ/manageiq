@@ -307,11 +307,11 @@ module OpsController::Diagnostics
       page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
       page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:action=>"db_backup_form_field_changed", :validate_url=>"log_depot_validate",:div_num=>"validate" }) if @prev_uri_prefix != @edit[:new][:uri_prefix] ||  params[:backup_schedule]
       if (@edit[:selected_backup_schedule] == "" || @edit[:selected_backup_schedule].nil?) && (@edit[:new][:uri_prefix] == "" || @edit[:new][:uri_prefix].blank?)
-        page << "$('submit_on').hide()";
-        page << "$('submit_off').show()";
+        page << javascript_hide("submit_on")
+        page << javascript_show("submit_off")
       else
-        page << "$('submit_on').show()";
-        page << "$('submit_off').hide()";
+        page << javascript_show("submit_on")
+        page << javascript_hide("submit_off")
       end
       if @edit[:log_verify_status] != session[:log_depot_log_verify_status]
         session[:log_depot_log_verify_status] = @edit[:log_verify_status]
@@ -461,10 +461,10 @@ module OpsController::Diagnostics
       if c_buttons && c_xml
         page << "dhxLayoutB.cells('a').expand();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "if($('center_buttons_div')) $('center_buttons_div').show();"
+        page << javascript_show_if_exists("center_buttons_div")
       else
         page << "dhxLayoutB.cells('a').collapse();"
-        page << "if($('center_buttons_div')) $('center_buttons_div').hide();"
+        page << javascript_hide_if_exists("center_buttons_div")
       end
       page << "dhxLayoutB.cells('a').collapse();" if @sb[:center_tb_filename] == "blank_view_tb"
     end
@@ -502,16 +502,16 @@ module OpsController::Diagnostics
         if changed && @edit[:new][:requires_credentials] &&
             (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
             (required_fields.all?(&:blank?) || required_fields.all?(&:present?))
-          page << "$('submit_on').show()";
-          page << "$('submit_off').hide()";
+          page << javascript_show("submit_on")
+          page << javascript_hide("submit_off")
           page << "miqButtons('show');"
         else
           if changed
-            page << "$('submit_on').show()";
-            page << "$('submit_off').hide()";
+            page << javascript_show("submit_on")
+            page << javascript_hide("submit_off")
           else
-            page << "$('submit_on').hide()";
-            page << "$('submit_off').show()";
+            page << javascript_hide("submit_on")
+            page << javascript_show("submit_off")
           end
           page << javascript_for_miq_button_visibility(changed && @edit[:new][:uri_prefix] == "nfs")
         end
@@ -897,10 +897,10 @@ module OpsController::Diagnostics
       if c_buttons && c_xml
         page << "dhxLayoutB.cells('a').expand();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "if($('center_buttons_div')) $('center_buttons_div').show();"
+        page << javascript_show_if_exists("center_buttons_div")
       else
         page << "dhxLayoutB.cells('a').collapse();"
-        page << "if($('center_buttons_div')) $('center_buttons_div').hide();"
+        page << javascript_hide_if_exists("center_buttons_div")
       end
       page << "dhxLayoutB.cells('a').collapse();" if @sb[:center_tb_filename] == "blank_view_tb"
     end

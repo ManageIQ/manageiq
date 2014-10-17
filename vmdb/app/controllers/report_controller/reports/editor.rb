@@ -130,7 +130,7 @@ module ReportController::Reports::Editor
         page.replace_html("formatting_div", :partial=>"form_formatting")
       elsif @tl_repaint
         #page << "tl.paint();"
-        page << "$('notification').hide();"
+        page << javascript_hide("notification")
       end
     end
   end

@@ -261,17 +261,17 @@ module OpsController::Settings::Ldap
     render :update do |page|                    # Use JS to update the display
       if @authusertype_changed
         if @edit[:new][:user_type] == "dn-cn"
-          page << "$('upn-mail_prefix').hide();"
-          page << "$('dn-uid_prefix').hide();"
-          page << "$('dn-cn_prefix').show();"
+          page << javascript_hide("upn-mail_prefix")
+          page << javascript_hide("dn-uid_prefix")
+          page << javascript_show("dn-cn_prefix")
         elsif @edit[:new][:user_type] == "dn-uid"
-          page << "$('upn-mail_prefix').hide();"
-          page << "$('dn-cn_prefix').hide();"
-          page << "$('dn-uid_prefix').show();"
+          page << javascript_hide("upn-mail_prefix")
+          page << javascript_hide("dn-cn_prefix")
+          page << javascript_show("dn-uid_prefix")
         else
-          page << "$('dn-cn_prefix').hide();"
-          page << "$('dn-uid_prefix').hide();"
-          page << "$('upn-mail_prefix').show();"
+          page << javascript_hide("dn-cn_prefix")
+          page << javascript_hide("dn-uid_prefix")
+          page << javascript_show("upn-mail_prefix")
         end
       end
       @changed = (@edit[:new] != @edit[:current])

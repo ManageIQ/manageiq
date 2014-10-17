@@ -720,12 +720,12 @@ class OpsController < ApplicationController
       if @pages || @in_a_form
         if @pages
           page.replace_html("paging_div",:partial=>"layouts/x_pagingcontrols")
-          page << "if($('form_buttons_div'))$('form_buttons_div').hide();"
-          page << "if($('pc_div_1')) $('pc_div_1').show()";
+          page << javascript_hide_if_exists("form_buttons_div")
+          page << javascript_show_if_exists("pc_div_1")
         elsif @in_a_form
           page.replace_html("form_buttons_div", :partial => "layouts/x_edit_buttons", :locals => locals)
-          page << "if($('pc_div_1')) $('pc_div_1').hide()";
-          page << "if($('form_buttons_div'))$('form_buttons_div').show();"
+          page << javascript_hide_if_exists("pc_div_1")
+          page << javascript_show_if_exists("form_buttons_div")
         end
         page << "dhxLayoutB.cells('c').expand();"
       else
@@ -735,10 +735,10 @@ class OpsController < ApplicationController
       if c_buttons && c_xml
         page << "dhxLayoutB.cells('a').expand();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "if($('center_buttons_div')) $('center_buttons_div').show();"
+        page << javascript_show_if_exists("center_buttons_div")
       else
         page << "dhxLayoutB.cells('a').collapse();"
-        page << "if($('center_buttons_div')) $('center_buttons_div').hide();"
+        page << javascript_hide_if_exists("center_buttons_div")
       end
 
       page << "dhxLayoutB.cells('a').collapse();" if @sb[:center_tb_filename] == "blank_view_tb"

@@ -302,13 +302,13 @@ class DashboardController < ApplicationController
       if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
         page << javascript_add_class("w_#{w}_minmax", "minbox")
         page << javascript_del_class("w_#{w}_minmax", "maxbox")
-        page << "$('dd_w#{w}_box').show();"
+        page << javascript_show("dd_w#{w}_box")
         page << "$('w_#{w}_minmax').title = 'Minimize';"
         @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
       else
         page << javascript_add_class("w_#{w}_minmax", "maxbox")
         page << javascript_del_class("w_#{w}_minmax", "minbox")
-        page << "$('dd_w#{w}_box').hide();"
+        page << javascript_hide("dd_w#{w}_box")
         page << "$('w_#{w}_minmax').title = 'Restore';"
         @sb[:dashboards][@sb[:active_db]][:minimized].push(w)
       end
@@ -454,16 +454,16 @@ class DashboardController < ApplicationController
         render :update do |page|
           page.replace("login_more_div", :partial => "login_more")
           page << javascript_focus('user_new_password')
-          page << "$('back_button').show();"
-          page << "$('more_button').hide();"
+          page << javascript_show("back_button")
+          page << javascript_hide("more_button")
         end
         return
       when "back"
         render :update do |page|
           page.replace("login_more_div", :partial => "login_more")
           page << javascript_focus('user_name')
-          page << "$('back_button').hide();"
-          page << "$('more_button').show();"
+          page << javascript_hide("back_button")
+          page << javascript_show("more_button")
         end
         return
       end
@@ -502,7 +502,7 @@ class DashboardController < ApplicationController
       flash_msg = validation.flash_msg || "Error: Authentication failed"
       render :update do |page|
         page.replace_html('flash_div', flash_msg)
-        page << "$('flash_div').show();"
+        page << javascript_show("flash_div")
         page << "miqSparkle(false);"
         page << "miqEnableLoginFields(true);"
       end

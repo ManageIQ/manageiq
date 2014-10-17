@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
           page.replace_html("exception_div", :partial => "layouts/exception_contents", :locals => { :message => msg })
           page << "miqLayout.cells('a').attachObject('exception_div');"
           page << "miqSparkle(false);"
-          page << "if ($j('#adv_searchbox_div')) $j('#adv_searchbox_div').hide();"
+          page << javascript_hide_if_exists("adv_searchbox_div")
         end
       end
       format.html do                # HTML, send error screen
@@ -422,8 +422,8 @@ class ApplicationController < ActionController::Base
     render :update do |page|
       page.replace("report_html_div", :partial=>"layouts/report_html")
       page.replace_html("paging_div",:partial=>'layouts/saved_report_paging_bar', :locals=>{:pages=>@sb[:pages]})
-      page << "if($('form_buttons_div'))$('form_buttons_div').hide();"
-      page << "if($('rpb_div_1')) $('rpb_div_1').show()";
+      page << javascript_hide_if_exists("form_buttons_div")
+      page << javascript_show_if_exists("rpb_div_1")
       page << "miqSparkle(false)"
     end
   end

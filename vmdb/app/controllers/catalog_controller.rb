@@ -494,9 +494,9 @@ class CatalogController < ApplicationController
     render :update do |page|
       @changed = (@edit[:new] != @edit[:current])
       x_node_set(@edit[:active_id], :automate_tree)
-      page << "$('ae_tree_select_div').hide();"
-      page << "$('blocker_div').hide();"
-      page << "$('#{ae_tree_key}_div').hide();"
+      page << javascript_hide("ae_tree_select_div")
+      page << javascript_hide("blocker_div")
+      page << javascript_hide("#{ae_tree_key}_div")
       page << "$('#{ae_tree_key}').value = '#{@edit[:new][ae_tree_key]}';"
       page << "$('#{ae_tree_key}').title = '#{@edit[:new][ae_tree_key]}';"
       @edit[:ae_tree_select] = false

@@ -243,7 +243,7 @@ function miqOnMouseIn_HostNet(id) {
     var node = $(id);                                  // Get html node
     var top = getAbsoluteTop(node);
     $(nid).setStyle("top:" + (top-220) + "px");       // Set quad top location
-    $(nid).show();                                    // Show the quad div
+    $j("#" + nid).show();                                    // Show the quad div
     last_id = nid;                                    // Save current node id
   }
 }
@@ -251,7 +251,7 @@ function miqOnMouseIn_HostNet(id) {
 // For Host Network tree, clear selection and hide previously shown quad icon div
 function miqOnMouseOut_HostNet(id) {
   if (hover_node_id(id)) {                     // and div id exists
-    if (last_id != null) $(last_id).hide();           // Hide the quad div
+    if (last_id != null) $j("#" + last_id).hide();           // Hide the quad div
   }
   return true;
 }

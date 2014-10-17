@@ -35,9 +35,9 @@ class MiqAeClassController < ApplicationController
       page.replace("flash_msg_div#{div_suffix}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>div_suffix})
       if c_buttons && c_xml
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "$('center_buttons_div').show();"
+        page << javascript_show("center_buttons_div")
       else
-        page << "$('center_buttons_div').hide();"
+        page << javascript_hide("center_buttons_div")
       end
       page << "miqSparkle(false);"
     end
@@ -140,13 +140,13 @@ class MiqAeClassController < ApplicationController
     render :update do |page|                                # Use RJS to update the display
       if @sb[:squash_state]
         @sb[:squash_state] = false
-        page << "$('inputs_div').show();"
+        page << javascript_show("inputs_div")
         page << "$('exp_collapse_img').src='/images/toolbars/squashed-false.png';"
         page << "$('exp_collapse_img').title='Hide Input Parameters';"
         page << "$('exp_collapse_img').alt='Hide Input Parameters';"
       else
         @sb[:squash_state] = true
-        page << "$('inputs_div').hide();"
+        page << javascript_hide("inputs_div")
         page << "$('exp_collapse_img').src='/images/toolbars/squashed-true.png';"
         page << "$('exp_collapse_img').title='Show Input Parameters';"
         page << "$('exp_collapse_img').alt='Show Input Parameters';"
@@ -1141,13 +1141,13 @@ class MiqAeClassController < ApplicationController
       if !["up","down"].include?(params[:button])
         if params[:field_datatype]
           if session[:field_data][:datatype] == "password"
-            page << "$('field_default_value').hide();"
-            page << "$('field_password_value').show();"
-            page << "$('field_password_value').value = '';"
+            page << javascript_hide("field_default_value")
+            page << javascript_show("field_password_value")
+            page << "$j('\#field_password_value').value = '';"
           else
-            page << "$('field_password_value').hide();"
-            page << "$('field_default_value').show();"
-            page << "$('field_default_value').value = '';"
+            page << javascript_hide("field_password_value")
+            page << javascript_show("field_default_value")
+            page << "$j('\#field_default_value').value = '';"
           end
         end
         params.keys.each do |field|
@@ -1156,13 +1156,13 @@ class MiqAeClassController < ApplicationController
             def_field = "fields_default_value_" << f[1].to_s
             pwd_field = "fields_password_value_" << f[1].to_s
             if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
-              page << "$('#{def_field}').hide();"
-              page << "$('#{pwd_field}').show();"
+              page << javascript_hide(def_field)
+              page << javascript_show(pwd_field)
               page << "$('#{pwd_field}').value='';"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
-              page << "$('#{pwd_field}').hide();"
-              page << "$('#{def_field}').show();"
+              page << javascript_hide(pwd_field)
+              page << javascript_show(def_field)
               page << "$('#{def_field}').value='';"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
@@ -1209,23 +1209,23 @@ class MiqAeClassController < ApplicationController
         #page.replace_html("hider_1", :partial=>"method_data", :locals=>{:field_name=>@field_name})  if @prev_location != @edit[:new][:location]
         if params[:cls_field_datatype]
           if session[:field_data][:datatype] == "password"
-            page << "$('cls_field_default_value').hide();"
-            page << "$('cls_field_password_value').show();"
-            page << "$('cls_field_password_value').value = '';"
+            page << javascript_hide("cls_field_default_value")
+            page << javascript_show("cls_field_password_value")
+            page << "$j('\#cls_field_password_value').value = '';"
           else
-            page << "$('cls_field_password_value').hide();"
-            page << "$('cls_field_default_value').show();"
+            page << javascript_hide("cls_field_password_value")
+            page << javascript_show("cls_field_default_value")
             page << "$('cls_field_default_value').value = '';"
           end
         end
         if params[:method_field_datatype]
           if session[:field_data][:datatype] == "password"
-            page << "$('method_field_default_value').hide();"
-            page << "$('method_field_password_value').show();"
+            page << javascript_hide("method_field_default_value")
+            page << javascript_show("method_field_password_value")
             page << "$('method_field_password_value').value = '';"
           else
-            page << "$('method_field_password_value').hide();"
-            page << "$('method_field_default_value').show();"
+            page << javascript_hide("method_field_password_value")
+            page << javascript_show("method_field_default_value")
             page << "$('method_field_default_value').value = '';"
           end
         end
@@ -1243,13 +1243,13 @@ class MiqAeClassController < ApplicationController
 
           if f
             if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
-              page << "$('#{def_field}').hide();"
-              page << "$('#{pwd_field}').show();"
+              page << javascript_hide(def_field)
+              page << javascript_show(pwd_field)
               page << "$('#{pwd_field}').value='';"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
-              page << "$('#{pwd_field}').hide();"
-              page << "$('#{def_field}').show();"
+              page << javascript_hide(pwd_field)
+              page << javascript_show(def_field)
               page << "$('#{def_field}').value='';"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
@@ -1672,14 +1672,14 @@ class MiqAeClassController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial=>@refresh_partial) if @refresh_div
       if row_selected_in_grid?
-        page << "$('class_methods_div').show();"
+        page << javascript_show("class_methods_div")
         page << javascript_focus('cls_field_name')
       else
-        page << "$('method_inputs_div').show();"
-        page << javascript_focus('field_name')
+        page << javascript_show("method_inputs_div")
+        page << javascript_focus('cls_field_name')
       end
       page << javascript_for_miq_button_visibility(@changed)
-      page << "$('inputs_div').show();"
+      page << javascript_show("inputs_div")
       page << "miqSparkle(false);"
     end
   end
@@ -1700,12 +1700,12 @@ class MiqAeClassController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial=>@refresh_partial)  if @refresh_div
       if row_selected_in_grid?
-        page << "$('class_methods_div').show();"
+        page << javascript_show("class_methods_div")
       else
-        page << "$('method_inputs_div').show();"
+        page << javascript_show("method_inputs_div")
       end
       page << javascript_for_miq_button_visibility(@changed)
-      page << "$('inputs_div').show();"
+      page << javascript_show("inputs_div")
       page << "miqSparkle(false);"
     end
   end
@@ -1727,12 +1727,12 @@ class MiqAeClassController < ApplicationController
     render :update do |page|
       page.replace_html(@refresh_div, :partial => @refresh_partial)  if @refresh_div
       if row_selected_in_grid?
-        page << "$('class_methods_div').show();"
+        page << javascript_show("class_methods_div")
       else
-        page << "$('method_inputs_div').show();"
+        page << javascript_show("method_inputs_div")
       end
       page << javascript_for_miq_button_visibility(@changed)
-      page << "$('inputs_div').show();"
+      page << javascript_show("inputs_div")
       page << "miqSparkle(false);"
     end
   end

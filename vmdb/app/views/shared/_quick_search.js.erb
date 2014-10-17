@@ -5,7 +5,7 @@ hide_show_elements = options[:hide_show_elements]
 
 unless hide_show_elements.blank?
   hide_show_elements.each do |el, h_s| %>
-    <%= set_element_visible(el, h_s) %><%
+    <%= set_element_visible("#{el}", h_s) %><%
   end
 end
 
