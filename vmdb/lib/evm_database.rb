@@ -64,7 +64,7 @@ class EvmDatabase
   end
 
   def self.local?
-    ["localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(self.host)
+    host.blank? || ["localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(host)
   end
 
   # Determines the average time to the database in milliseconds
