@@ -18,6 +18,7 @@ module FixAuth
         opt :hardcode, "Password to use for all passwords",     :type => :string, :short => "P"
         opt :invalid,  "Password to use for invalid passwords", :type => :string, :short => "i"
         opt :key,      "Generate key",      :type => :boolean, :short => "k"
+        opt :v2,       "Fix V2 passwords also", :type => :boolean, :short => "f", :default => false
         opt :root,     "Rails Root",        :type => :string,  :short => "r",
             :default => (env['RAILS_ROOT'] || File.expand_path(File.join(File.dirname(__FILE__), %w{.. ..})))
       end

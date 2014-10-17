@@ -26,7 +26,7 @@ module FixAuth
     end
 
     def run_options
-      options.slice(:verbose, :dry_run, :hardcode, :invalid)
+      options.slice(:verbose, :dry_run, :hardcode, :invalid, :v2)
     end
 
     def databases
