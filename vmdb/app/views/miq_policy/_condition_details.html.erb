@@ -1,5 +1,5 @@
 <% if @edit %>
-<% url = url_for(:action => 'condition_field_changed', 
+<% url = url_for(:action => 'condition_field_changed',
                  :id     => "#{@condition.id || "new"}")
 %>
 <% end %>
@@ -20,11 +20,11 @@
                   <%= text_field_tag("description",
                                      @edit[:new][:description],
                                      :maxlength => MAX_DESC_LEN,
-                                     "data-miq_observe" => {:interval => '.5', 
-                                                            :url      => url}.to_json) 
+                                     "data-miq_observe" => {:interval => '.5',
+                                                            :url      => url}.to_json)
                   %>
                 </td>
-                <%= javascript_tag("$j('#description').focus()") %>
+                <%= javascript_tag(javascript_focus('description')) %>
               <% end %>
             </tr>
         </table>
@@ -66,7 +66,7 @@
               <div class="alert alert-info">
                 <span class="pficon pficon-info"></span>
                 <strong>A condition must contain a valid expression.</strong>
-              </div>  
+              </div>
             <% end %>
             <hr>
       <% else %>
@@ -82,10 +82,10 @@
             <strong>No notes have been entered.</strong>
           </div>
         <% else %>
-          <%= text_area_tag("notes", 
-                            @condition.notes, 
-                            :readonly => true, 
-                            :rows     => 5) 
+          <%= text_area_tag("notes",
+                            @condition.notes,
+                            :readonly => true,
+                            :rows     => 5)
           %>
         <% end %>
         <hr>
@@ -93,13 +93,13 @@
         <p class="legend">Notes (<span id="notes_count"><%= @edit[:new][:notes] ? @edit[:new][:notes].length : 0 %></span> / 512)</p>
 
           <%= text_area_tag("notes",
-                            @edit[:new][:notes], 
+                            @edit[:new][:notes],
                             :rows      => 4,
                             :maxlength => "512",
                             :counter   => "notes_count",
                             "data-miq_check_max_length" => true,
-                            "data-miq_observe"          => {:interval => '.5', 
-                                                            :url      => url}.to_json) 
+                            "data-miq_observe"          => {:interval => '.5',
+                                                            :url      => url}.to_json)
           %>
       <% end %>
       <% if x_active_tree == :condition_tree && !@edit %>

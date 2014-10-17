@@ -1,5 +1,5 @@
 <% if @edit %>
-  <% url = url_for(:action => 'profile_field_changed', 
+  <% url = url_for(:action => 'profile_field_changed',
                    :id     => "#{@profile.id || "new"}")
   %>
 <% end %>
@@ -20,11 +20,11 @@
                 <%= text_field_tag("description",
                                    @edit[:new][:description],
                                    :maxlength => MAX_DESC_LEN,
-                                   "data-miq_observe" => {:interval => '.5', 
-                                                          :url      => url}.to_json) 
+                                   "data-miq_observe" => {:interval => '.5',
+                                                          :url      => url}.to_json)
                 %>
               </td>
-              <%= javascript_tag("$j('#description').focus()") %>
+              <%= javascript_tag(javascript_focus('description')) %>
             <% end %>
           </tr>
         </table>
@@ -73,21 +73,21 @@
                       <span id="choices_chosen_div">
                         <%= select_tag 'choices_chosen[]',
                                        options_for_select(@edit[:choices].sort),
-                                       {:multiple => true, 
-                                        :class    => "widthed", 
-                                        :size     => 8, 
-                                        :id       => "choices_chosen"} 
+                                       {:multiple => true,
+                                        :class    => "widthed",
+                                        :size     => 8,
+                                        :id       => "choices_chosen"}
                         %>
                       </span>
                     <p>
                   </td>
                   <td width="20" valign="middle">
                     <%= link_to(image_tag("/images/toolbars/right.png",
-                                          :border => "0", 
-                                          :class  => "rollover small", 
+                                          :border => "0",
+                                          :class  => "rollover small",
                                           :alt    => "Move selected Policies into this Profile"),
-                                {:action => 'profile_edit', 
-                                 :button => 'move_right', 
+                                {:action => 'profile_edit',
+                                 :button => 'move_right',
                                  :id     => @profile},
                                 "data-miq_sparkle_on"  => true,
                                 "data-miq_sparkle_off" => true,
@@ -96,10 +96,10 @@
                                 :title  => "Move selected Policies into this Profile")
                     %>
                     <%= link_to(image_tag("/images/toolbars/allleft.png",
-                                          :border => "0", 
-                                          :class  => "rollover small", 
+                                          :border => "0",
+                                          :class  => "rollover small",
                                           :alt    => "Remove all Policies from this Profile"),
-                                {:action => 'profile_edit', 
+                                {:action => 'profile_edit',
                                  :button => 'move_allleft',
                                  :id     => @profile},
                                 "data-miq_sparkle_on"  => true,
@@ -108,10 +108,10 @@
                                 :title  => "Remove all Policies from this Profile")
                     %>
                     <%= link_to(image_tag("/images/toolbars/left.png",
-                                          :border => "0", 
-                                          :class  => "rollover small", 
+                                          :border => "0",
+                                          :class  => "rollover small",
                                           :alt    => "Remove selected Policies from this Profile"),
-                                {:action => 'profile_edit', 
+                                {:action => 'profile_edit',
                                  :button => 'move_left',
                                  :id     => @profile},
                                 "data-miq_sparkle_on"  => true,
@@ -125,10 +125,10 @@
                     <span id="members_chosen_div">
                       <%= select_tag 'members_chosen[]',
                                      options_for_select(@edit[:new][:policies].sort),
-                                     {:multiple => true, 
-                                      :class    => "widthed", 
-                                      :size     => 8, 
-                                      :id       => "members_chosen"} 
+                                     {:multiple => true,
+                                      :class    => "widthed",
+                                      :size     => 8,
+                                      :id       => "members_chosen"}
                       %>
                     </span>
                   </td>
@@ -155,13 +155,13 @@
     <% else %>
       <p class="legend">Notes (<span id="notes_count"><%= @edit[:new][:notes] ? @edit[:new][:notes].length : 0 %></span> / 512)</p>
       <%= text_area_tag("notes",
-                        @edit[:new][:notes], 
+                        @edit[:new][:notes],
                         :rows      => 4,
                         :maxlength => "512",
                         :counter   => "notes_count",
                         "data-miq_check_max_length" => true,
-                        "data-miq_observe"          => {:interval => '.5', 
-                                                        :url => url}.to_json) 
+                        "data-miq_observe"          => {:interval => '.5',
+                                                        :url => url}.to_json)
       %>
       <hr>
     <% end %>

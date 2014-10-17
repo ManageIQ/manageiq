@@ -9,9 +9,9 @@
           <% if @discover_type.length == 1 %>
             <td class="key">
               <%= check_box_tag("discover_type_#{@discover_type[i]}",
-                                value="1", 
-                                checked=true, 
-                                :id       => "discover_type_#{@discover_type[i]}", 
+                                value="1",
+                                checked=true,
+                                :id       => "discover_type_#{@discover_type[i]}",
                                 :disabled => "disabled")
               %>
             </td>
@@ -27,20 +27,19 @@
             </td>
           <% end %>
           <td>
-             <%= h(Dictionary::gettext(@discover_type[i], :type     => :discover_types, 
+             <%= h(Dictionary::gettext(@discover_type[i], :type     => :discover_types,
                                                           :notfound => :titleize))
              %>
           </td>
         </tr>
         <% i += 1 %>
-          <%#= javascript_tag("$j('#from_first').focus()") %>
         <% end %>
     </table>
     <hr>
   <%# need to show the box if coming back with error after pressing start button %>
   <% display = @discover_type_checked.include?("ipmi") ? "" : "display:none" %>
   <div id="discover_credentials" style=<%=display%>>
-    <%= render :partial => "layouts/discover_credentials", 
+    <%= render :partial => "layouts/discover_credentials",
                :locals  => {:label => "IPMI Credentials"} %>
   </div>
   <p class="legend">Subnet Range</p>
@@ -62,7 +61,7 @@
                                 :size              => "3",
                                 :maxlength         => 3,
                                 "data-miq_observe" => {:interval => '.5',
-                                                       :url      => url}.to_json) 
+                                                       :url      => url}.to_json)
           %>
            .
           <%= text_field_tag("from_third",
@@ -85,27 +84,27 @@
       <tr>
         <td class="key">To Address</td>
         <td>
-          <%= text_field 'to','first', 
+          <%= text_field 'to','first',
                          :readonly  => "readonly",
-                         :size      => "3", 
-                         :maxlength => "3", 
-                         :value     => @to[:first], 
-                         :disabled  => "disabled" 
+                         :size      => "3",
+                         :maxlength => "3",
+                         :value     => @to[:first],
+                         :disabled  => "disabled"
           %>
            .
-          <%= text_field 'to', 'second', 
+          <%= text_field 'to', 'second',
                          :readonly  => "readonly",
-                         :size      => "3", 
-                         :maxlength => "3", 
-                         :value     => @to[:second], 
-                         :disabled  => "disabled" 
+                         :size      => "3",
+                         :maxlength => "3",
+                         :value     => @to[:second],
+                         :disabled  => "disabled"
           %>
            .
           <%= text_field 'to', 'third',
                          :readonly => "readonly",
                          :size     => "3",
-                         :maxlength=>"3", 
-                         :value=>@to[:third], 
+                         :maxlength=>"3",
+                         :value=>@to[:third],
                          :disabled=>"disabled"
           %>
            .
@@ -121,19 +120,19 @@
   </table>
 
   <div id="formbuttonplacement">
-    <%= button_tag("Start", 
+    <%= button_tag("Start",
                    :class => "btn btn-primary",
-                   :name  => "start", 
-                   :alt   => "Start the Host Discovery", 
+                   :name  => "start",
+                   :alt   => "Start the Host Discovery",
                    :title => "Start the Host Discovery",
-                   :type  => "submit") 
+                   :type  => "submit")
     %>
     <%= button_tag("Cancel",
                    :class => "btn btn-default",
-                   :name  => "cancel", 
-                   :alt   => "Cancel", 
+                   :name  => "cancel",
+                   :alt   => "Cancel",
                    :title => "Cancel",
-                   :type  => "submit") 
+                   :type  => "submit")
     %>
   </div>
 <% end %>

@@ -21,7 +21,7 @@
                                       :disabled =>disabled_name,
                                       "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
 									<% if !@zone.id %>
-										<%= javascript_tag("$j('#name').focus()") %>
+										<%= javascript_tag(javascript_focus('name')) %>
 									<% end %>
 								</td>
 							</tr>
@@ -33,7 +33,7 @@
                                       :maxlength=>50,
                                       "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
 									<% if @zone.id && @zone.name.downcase != "default" %>
-										<%= javascript_tag("$j('#description').focus()") %>
+										<%= javascript_tag(javascript_focus('description')) %>
 									<% end %>
 								</td>
 							</tr>
@@ -45,7 +45,7 @@
                                       :maxlength=>50,
                                       "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
 									<% if @zone.id && @zone.name.downcase == "default" %>
-										<%= javascript_tag("$j('#proxy_server_ip').focus()") %>
+										<%= javascript_tag(javascript_focus('proxy_server_ip')) %>
 									<% end %>
 								</td>
 							</tr>

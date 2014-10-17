@@ -1,6 +1,6 @@
 <% if @edit %>
-  <% url = url_for(:action => 'alert_field_changed', 
-                   :id     => "#{@alert.id || "new"}") 
+  <% url = url_for(:action => 'alert_field_changed',
+                   :id     => "#{@alert.id || "new"}")
   %>
 <% end %>
 <div id="alert_details_div" style="width:100%;height:100%;overflow:auto;">
@@ -19,10 +19,10 @@
                 <%= text_field_tag("description",
                                    @edit[:new][:description],
                                    :maxlength => MAX_DESC_LEN,
-                                   "data-miq_observe" => {:interval => '.5', 
-                                                          :url      => url}.to_json) 
+                                   "data-miq_observe" => {:interval => '.5',
+                                                          :url      => url}.to_json)
                 %>
-                <%= javascript_tag("$j('#description').focus()") %>
+                <%= javascript_tag(javascript_focus('description')) %>
               </td>
             </tr>
           <% end %>
@@ -51,11 +51,11 @@
               <td>
                 <% if @alert.memberof.empty? %>
                   <%= select_tag('miq_alert_db',
-                                  options_for_select(@edit[:dbs].invert.sort, 
+                                  options_for_select(@edit[:dbs].invert.sort,
                                                      @edit[:new][:db]),
-                                  "data-miq_sparkle_on"  => true, 
+                                  "data-miq_sparkle_on"  => true,
                                   "data-miq_sparkle_off" => true,
-                                  "data-miq_observe"     => {:url => url}.to_json) 
+                                  "data-miq_observe"     => {:url => url}.to_json)
                   %>
                 <% else %>
                   <%= ui_lookup(:model => @edit[:new][:db]) %>
@@ -83,9 +83,9 @@
                   <%= select_tag('exp_name',
                                   options_for_select(@edit[:expression_types].invert.sort + [["Expression (Custom)",nil]],
                                                      @edit[:new][:expression][:eval_method].to_s),
-                                  "data-miq_sparkle_on"  => true, 
+                                  "data-miq_sparkle_on"  => true,
                                   "data-miq_sparkle_off" => true,
-                                  "data-miq_observe"     => {:url => url}.to_json) 
+                                  "data-miq_observe"     => {:url => url}.to_json)
                   %>
                 <% else %>
                   Expression (Custom)
@@ -110,9 +110,9 @@
                   <%= select_tag('exp_event',
                                   options_for_select([["<Choose>", nil],["Hourly Timer", "_hourly_timer_"]] +
                                                      @edit[:events].invert.sort, @edit[:new][:exp_event]),
-                                  "data-miq_sparkle_on"  => true, 
+                                  "data-miq_sparkle_on"  => true,
                                   "data-miq_sparkle_off" => true,
-                                  "data-miq_observe"     => {:url=>url}.to_json) 
+                                  "data-miq_observe"     => {:url=>url}.to_json)
                   %>
                 </td>
               </tr>
@@ -136,9 +136,9 @@
                   <%= select_tag('repeat_time',
                                   options_for_select(@sb[:alert][:hourly_repeat_times].invert.sort{|a,b|a.last<=>b.last},
                                                      @edit[:new][:repeat_time]),
-                                  "data-miq_sparkle_on"  => true, 
+                                  "data-miq_sparkle_on"  => true,
                                   "data-miq_sparkle_off" => true,
-                                  "data-miq_observe"     => {:url => url}.to_json) 
+                                  "data-miq_observe"     => {:url => url}.to_json)
                   %>
                 <% else %>
                   <%= select_tag('repeat_time',
@@ -146,7 +146,7 @@
                                                      @edit[:new][:repeat_time]),
                                   "data-miq_sparkle_on"  => true,
                                   "data-miq_sparkle_off" => true,
-                                  "data-miq_observe"     => {:url => url}.to_json) 
+                                  "data-miq_observe"     => {:url => url}.to_json)
                   %>
                 <% end %>
               </td>
@@ -177,8 +177,8 @@
                 <p class="legend"><%= h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]]) %> Parameters</p>
                 <table class="style1">
                   <% MiqAlert.expression_options(@alert.expression[:eval_method]).each do |eo| %>
-                    <%= render :partial => "alert_builtin_exp", 
-                               :locals  => {:option => eo} 
+                    <%= render :partial => "alert_builtin_exp",
+                               :locals  => {:option => eo}
                     %>
                   <% end %>
                 </table>
@@ -197,8 +197,8 @@
                 <p class="legend"><%= h(MiqAlert.expression_types(@edit[:new][:db])[@edit[:new][:expression][:eval_method]]) %> Parameters</p>
                 <table class="style1">
                   <% @edit[:expression_options].each do |eo| %>
-                    <%= render :partial => "alert_builtin_exp", 
-                               :locals  => {:option => eo} 
+                    <%= render :partial => "alert_builtin_exp",
+                               :locals  => {:option => eo}
                     %>
                   <% end %>
                 </table>
@@ -209,9 +209,9 @@
 
         <%# E-mail, SNMP, Timeline Event, Mgmt Event edit %>
         <% if @edit %>
-          <%= render(:partial => "layouts/edit_email", 
+          <%= render(:partial => "layouts/edit_email",
                      :locals  => {:action_url => "alert_field_changed",
-                                  :record     => @alert}) 
+                                  :record     => @alert})
           %>
           <%= render(:partial => "alert_snmp") %>
           <%= render(:partial => "alert_evm_event") %>

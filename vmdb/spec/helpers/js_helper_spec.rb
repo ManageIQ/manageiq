@@ -37,4 +37,16 @@ describe JsHelper do
 
   context '#update_element' do
   end
+
+  context '#javascript_focus' do
+    it 'returns js to focus on an element' do
+      javascript_focus('foo').should eq("$j('#foo').focus();")
+    end
+  end
+
+  context '#javascript_focus_if_exists' do
+    it 'returns js to check for the existence of an element and focus on the element if it exists' do
+      javascript_focus_if_exists('foo').should eq("if ($j('#foo').length) $j('#foo').focus();")
+    end
+  end
 end

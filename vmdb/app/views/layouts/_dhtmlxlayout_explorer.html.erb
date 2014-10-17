@@ -151,7 +151,7 @@
 
     <% if show_searchbar %>
       $('control_searchbar').show();
-      $j('#search_text').focus();
+      <%= javascript_focus('search_text') %>
     <% end %>
 	};
 </script>

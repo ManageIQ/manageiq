@@ -61,7 +61,7 @@ module OpsController::Settings::AnalysisProfiles
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace_html("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>session[:edit_filename], :edit=>true})
-        page << "$j('#entry_#{j_str(params[:field])}').focus();"
+        page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('entry_#{j_str(params[:field])}').select();"
       end
     elsif params[:edit_entry] == "edit_registry"
@@ -71,7 +71,7 @@ module OpsController::Settings::AnalysisProfiles
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>session[:reg_data], :edit=>true})
-        page << "$j('#entry_#{j_str(params[:field])}').focus();"
+        page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('entry_#{j_str(params[:field])}').select();"
       end
     elsif params[:edit_entry] == "edit_nteventlog"
@@ -91,7 +91,7 @@ module OpsController::Settings::AnalysisProfiles
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>session[:nteventlog_data], :edit=>true})
-        page << "$j('#entry_#{j_str(params[:field])}').focus();"
+        page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('entry_#{j_str(params[:field])}').select();"
       end
     else
@@ -101,7 +101,7 @@ module OpsController::Settings::AnalysisProfiles
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>"new", :edit=>true})
-        page << "$j('#entry_name').focus();"
+        page << javascript_focus('entry_name')
         page << "$('entry_name').select();"
       end
     end

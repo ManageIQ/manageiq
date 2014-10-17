@@ -16,7 +16,7 @@
               </div>
             </td>
           </tr>
-          <%= javascript_tag("$j('#name').focus()") %>
+          <%= javascript_tag(javascript_focus('name')) %>
           <tr>
             <td class="key">Description</td>
             <td class="wider">
@@ -78,7 +78,7 @@
                 <% groups.sort_by { | g | g[:name].downcase }.each_with_index do |sr,k| %>
                   <tr class="<%=cycle('row0 no-hover','row1 no-hover', :name => 'st_group')%>">
                     <td>
-                      <%= link_to(image_tag("/images/icons/16/notequal-red.png", 
+                      <%= link_to(image_tag("/images/icons/16/notequal-red.png",
                                             :border => "0",
                                             :alt    => "Click to remove this Resource from the Catalog Item"),
                                   {:action => "resource_delete",

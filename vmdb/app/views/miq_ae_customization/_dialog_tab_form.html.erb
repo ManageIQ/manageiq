@@ -9,7 +9,7 @@
                             @edit[:tab_label],
                             :maxlength=>MAX_NAME_LEN,
                             "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-        <%= javascript_tag("$j('#tab_label').focus()") %>
+        <%= javascript_tag(javascript_focus('tab_label')) %>
       </td>
     </tr>
     <tr>

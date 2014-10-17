@@ -427,7 +427,7 @@ module MiqAeCustomizationController::Dialogs
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>"new", :edit=>true})
-        page << "$j('#entry_name').focus();"
+        page << javascript_focus('entry_name')
         page << "$('entry_name').select();"
       end
       session[:entry] = "new"
@@ -441,7 +441,7 @@ module MiqAeCustomizationController::Dialogs
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>entry, :edit=>true})
-        page << "$j('#entry_#{j_str(params[:field])}').focus();"
+        page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('entry_#{j_str(params[:field])}').select();"
 
      end
@@ -467,7 +467,7 @@ module MiqAeCustomizationController::Dialogs
         if key[:values].include?([params["entry"]["value"],params["entry"]["description"]])
           add_flash(I18n.t("flash.edit.field_value_in_use", :field=>params["entry"]["description"], :value=>params["entry"]["value"]), :error)
           render_flash do |page|
-            page << "$j('#entry_name').focus();"
+            page << javascript_focus('entry_name')
           end
           return
         else
@@ -478,7 +478,7 @@ module MiqAeCustomizationController::Dialogs
       else
         add_flash(I18n.t("flash.edit.field_value_and_description_reuired", :field1=>"Value", :field2=>"Description"), :error)
         render_flash do |page|
-          page << "$j('#entry_value').focus();"
+          page << javascript_focus('entry_value')
         end
         return
       end
@@ -491,7 +491,7 @@ module MiqAeCustomizationController::Dialogs
           add_flash(I18n.t("flash.edit.field_value_in_use", :field=>params["entry"]["description"], :value=>params["entry"]["value"]), :error)
 
           render_flash do |page|
-            page << "$j('#entry_name').focus();"
+            page << javascript_focus('entry_name')
           end
           return
         else

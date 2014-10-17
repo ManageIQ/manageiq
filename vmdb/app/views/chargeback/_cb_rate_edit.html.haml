@@ -8,7 +8,7 @@
         %td
           = text_field_tag("description", @edit[:new][:description],
             :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          = javascript_tag("$j('#description').focus()")
+          = javascript_tag(javascript_focus('description'))
   %fieldset
     %p.legend Rate Details
     %table.style3

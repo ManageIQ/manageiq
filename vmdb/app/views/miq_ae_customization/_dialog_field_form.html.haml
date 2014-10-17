@@ -10,7 +10,7 @@
                             @edit[:field_label],
                             :maxlength=>MAX_NAME_LEN,
                             "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-          = javascript_tag("$j('#field_label').focus()")
+          = javascript_tag(javascript_focus('field_label'))
       %tr
         %td.key Name
         %td.wide
@@ -210,7 +210,7 @@
       %table.style1
         %tr
           %td.key Reconfigurable
-          %td 
+          %td
             = check_box_tag('field_reconfigurable', '1',
                             @edit[:field_reconfigurable],
                             "data-miq_observe_checkbox" => {:url => url}.to_json)

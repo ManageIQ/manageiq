@@ -7,7 +7,6 @@
 						<%= text_field("search", "text", :style=>"width: 255px; height: 16px; position: absolute; top: 0px; right: 14px; z-index:50", :value=>@search_text,
 													:alt=>"Search by Name within results", :title=>"Search by Name within results") %>
 				</div>
-				<%#= javascript_tag("$j('#search_text').focus()") Moved to miqOnLoad in sprint 60, was failing in IE %>
 				<div id="control_searchicon">
 					<%= image_submit_tag("/images/layout/search.gif", :name=>"search_button", :alt=>"Search by Name within results", :title=>"Search by Name within results")%>
 				</div>

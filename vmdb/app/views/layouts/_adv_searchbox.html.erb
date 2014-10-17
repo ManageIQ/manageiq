@@ -18,7 +18,7 @@
 											:alt=>"Search by Name within results",
 											:title=>"Search by Name within results",
 											:class=>"#{nameonly ? "nameonly" : nil}") %>
-		<%= javascript_tag("$j('#search_text').focus();") %>
+		<%= javascript_tag(javascript_focus('search_text')) %>
 		<%= link_to(image_tag('/images/layout/search.gif',
 													:id=>"searchicon", :name=>"search_button",
 													:alt=>"Search by Name within results",

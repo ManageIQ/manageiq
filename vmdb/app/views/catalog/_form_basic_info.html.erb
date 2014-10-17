@@ -1,8 +1,8 @@
-<% url = url_for(:action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed", 
+<% url = url_for(:action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed",
                  :id     => "#{@edit[:rec_id] || "new"}")
 %>
 <div id="basic_info_div">
-  <%= hidden_div_if(@edit && @edit[:ae_tree_select] != true, 
+  <%= hidden_div_if(@edit && @edit[:ae_tree_select] != true,
                     :id => "ae_tree_select_div" ) do
   %>
   <%# if @edit && @edit[:ae_tree_select] %>
@@ -35,7 +35,7 @@
             &nbsp;Display in Catalog
         </td>
       </tr>
-      <%= javascript_tag("$j('#name').focus()") %>
+      <%= javascript_tag(javascript_focus('name')) %>
       <% if @edit[:new][:display] %>
       <tr>
         <td class="key">Catalog</td>
@@ -74,9 +74,9 @@
                   <% display = @edit[:new][:fqname] != "" ? "" : "display:none" %>
                   <div id="fqname_div" style="<%=display%>">
                     <%= link_to(image_tag('/images/toolbars/discard.png',
-                                          :class => "rollover small", 
+                                          :class => "rollover small",
                                           :alt   => "Remove this Provisioning Entry Point"),
-                                {:action => 'ae_tree_select_discard', 
+                                {:action => 'ae_tree_select_discard',
                                  :typ    => "provision"},
                                 "data-miq_sparkle_on"  => true,
                                 "data-miq_sparkle_off" => true,
@@ -135,7 +135,7 @@
                   <% display = @edit[:new][:retire_fqname] != "" ? "" : "display:none" %>
                   <div id="retire_fqname_div" style="<%=display%>">
                     <%= link_to(image_tag('/images/toolbars/discard.png',
-                                          :class => "rollover small", 
+                                          :class => "rollover small",
                                           :alt   => "Remove this Retirement Entry Point"),
                                 {:action => 'ae_tree_select_discard',
                                  :typ    => "retirement"},

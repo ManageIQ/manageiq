@@ -1,6 +1,6 @@
 <% if @edit %>
-<% url = url_for(:action => 'policy_field_changed', 
-                 :id     => "#{@policy.id || "new"}") 
+<% url = url_for(:action => 'policy_field_changed',
+                 :id     => "#{@policy.id || "new"}")
 %>
 <% end %>
 <% read_only ||= false %>
@@ -8,7 +8,7 @@
   <% if @policy %>
     <div id="policy_info_div">
       <%= render(:partial => "layouts/flash_msg") %>
-      
+
       <%# Description and active fields %>
       <% unless @edit %>
         <p class="legend">Basic Information</p>
@@ -41,10 +41,10 @@
                     <%= text_field_tag("description",
                                         @edit[:new][:description],
                                         :maxlength => MAX_DESC_LEN,
-                                        "data-miq_observe" => {:interval => '.5', 
-                                                               :url => url}.to_json) 
+                                        "data-miq_observe" => {:interval => '.5',
+                                                               :url => url}.to_json)
                     %>
-                    <%= javascript_tag("$j('#description').focus()") %>
+                    <%= javascript_tag(javascript_focus('description')) %>
                   </td>
                 <% end %>
               </tr>
@@ -154,10 +154,10 @@
                           <span id="choices_chosen_div">
                             <%= select_tag('choices_chosen[]',
                                            options_for_select( @edit[:choices].sort ),
-                                           {:multiple => true, 
-                                            :class    => "widthed", 
-                                            :size     => 8, 
-                                            :id       => "choices_chosen" }) 
+                                           {:multiple => true,
+                                            :class    => "widthed",
+                                            :size     => 8,
+                                            :id       => "choices_chosen" })
                             %>
                           </span>
                           <p>
@@ -165,11 +165,11 @@
                         <td width="20" valign="middle">
 
                           <%= link_to(image_tag("/images/toolbars/right.png",
-                                                :border => "0", 
+                                                :border => "0",
                                                 :class  => "rollover small",
                                                 :alt    => "Move selected Conditions into this Policy"),
                                       {:action => 'policy_edit',
-                                       :button => 'move_right', 
+                                       :button => 'move_right',
                                        :id     => @policy},
                                       "data-miq_sparkle_on"  => true,
                                       "data-miq_sparkle_off" => true,
@@ -181,7 +181,7 @@
                                                 :border => "0",
                                                 :class  => "rollover small",
                                                 :alt    => "Remove all Conditions from this Policy"),
-                                      {:action => 'policy_edit', 
+                                      {:action => 'policy_edit',
                                        :button => 'move_allleft',
                                        :id     => @policy},
                                       "data-miq_sparkle_on"  => true,
@@ -190,11 +190,11 @@
                                       :title  => "Remove all Conditions from this Policy")
                           %>
                           <%= link_to(image_tag("/images/toolbars/left.png",
-                                                :border => "0", 
-                                                :class  => "rollover small", 
+                                                :border => "0",
+                                                :class  => "rollover small",
                                                 :alt    => "Remove selected Conditions from this Policy"),
-                                      {:action => 'policy_edit', 
-                                       :button => 'move_left', 
+                                      {:action => 'policy_edit',
+                                       :button => 'move_left',
                                        :id=>@policy},
                                       "data-miq_sparkle_on"  => true,
                                       "data-miq_sparkle_off" => true,
@@ -208,10 +208,10 @@
                           <span id="members_chosen_div">
                             <%= select_tag('members_chosen[]',
                                           options_for_select( @edit[:new][:conditions].sort ),
-                                          {:multiple => true, 
+                                          {:multiple => true,
                                            :class    => "widthed",
-                                           :size     => 8, 
-                                           :id       => "members_chosen" }) 
+                                           :size     => 8,
+                                           :id       => "members_chosen" })
                             %>
                           </span>
                         </td>
@@ -331,22 +331,22 @@
               <strong>No notes have been entered.</strong>
             </div>
           <% else %>
-            <%= text_area_tag("notes", 
-                              @policy.notes, 
+            <%= text_area_tag("notes",
+                              @policy.notes,
                               :readonly => true,
-                              :rows     => 4) 
+                              :rows     => 4)
             %>
           <% end %>
         <% else %>
           <% if @edit[:typ] == "basic" %>
             <p class="legend">Notes (<span id="notes_count"><%= @edit[:new][:notes] ? @edit[:new][:notes].length : 0 %></span> / 512)</p>
               <%= text_area_tag("notes",
-                                @edit[:new][:notes], 
-                                :rows      => 4, 
+                                @edit[:new][:notes],
+                                :rows      => 4,
                                 :maxlength => "512",
                                 :counter   => "notes_count",
                                 "data-miq_check_max_length" => true,
-                                "data-miq_observe"          => {:interval => '.5', 
+                                "data-miq_observe"          => {:interval => '.5',
                                                                 :url      => url}.to_json)
               %>
             <hr>

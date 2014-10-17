@@ -674,7 +674,7 @@ module ApplicationController::CiProcessing
     get_record(@db)
     @sb[:action] = params[:action]
     return if record_no_longer_exists?(@record)
- 
+
     @lastaction = "groups"
     if params[:show] != nil || params[:x_show] != nil
       id = params[:show] ? params[:show] : params[:x_show]
@@ -844,30 +844,30 @@ module ApplicationController::CiProcessing
           temp = params[:from_first].gsub(/[\.]/,"")
           field_shift = true if params[:from_first] =~ /[\.]/ && params[:from_first].gsub(/[\.]/,"") =~ /[0-9]/ && temp.gsub!(/[\D]/,"").nil?
           page << "$('from_first').value= '#{j_str(params[:from_first]).gsub(/[\D]/,"")}';"
-          page << "$j('#from_second').focus();" if field_shift
+          page << javascript_focus('from_second') if field_shift
         else
           page << "$('to_first').value='#{j_str(params[:from_first])}';"
-          page << "$j('#from_second').focus();" if params[:from_first].length == 3
+          page << javascript_focus('from_second') if params[:from_first].length == 3
         end
       elsif params[:from_second]
         if params[:from_second] =~ /[\D]/
           temp = params[:from_second].gsub(/[\.]/,"")
           field_shift = true if params[:from_second] =~ /[\.]/ && params[:from_second].gsub(/[\.]/,"") =~ /[0-9]/ && temp.gsub!(/[\D]/,"").nil?
           page << "$('from_second').value= '#{j_str(params[:from_second].gsub(/[\D]/,""))}';"
-          page << "$j('#from_third').focus();" if field_shift
+          page << javascript_focus('from_third') if field_shift
         else
           page << "$('to_second').value='#{j_str(params[:from_second])}';"
-          page << "$j('#from_third').focus();" if params[:from_second].length == 3
+          page << javascript_focus('from_third') if params[:from_second].length == 3
         end
       elsif params[:from_third]
         if params[:from_third] =~ /[\D]/
           temp = params[:from_third].gsub(/[\.]/,"")
           field_shift = true if params[:from_third] =~ /[\.]/ && params[:from_third].gsub(/[\.]/,"") =~ /[0-9]/ && temp.gsub!(/[\D]/,"").nil?
           page << "$('from_third').value= '#{j_str(params[:from_third].gsub(/[\D]/,""))}';"
-          page << "$j('#from_fourth').focus();" if field_shift
+          page << javascript_focus('from_fourth') if field_shift
         else
           page << "$('to_third').value='#{j_str(params[:from_third])}';"
-          page << "$j('#from_fourth').focus();" if params[:from_third].length == 3
+          page << javascript_focus('from_fourth') if params[:from_third].length == 3
         end
       elsif params[:from_fourth] && params[:from_fourth] =~ /[\D]/
         page << "$('from_fourth').value= '#{j_str(params[:from_fourth].gsub(/[\D]/,""))}';"

@@ -3,11 +3,11 @@
   <ul id="policy_bar">
     <% if @resolve[:uri] && Hash[*@resolve[:target_classes].flatten][@resolve[:target_class]] == @edit[:new][:target_class] %>
       <li>
-        <%= link_to(image_tag("/images/toolbars/paste.png", 
-                              :border => "0", 
-                              :class  => "", 
+        <%= link_to(image_tag("/images/toolbars/paste.png",
+                              :border => "0",
+                              :class  => "",
                               :alt    => "Paste object details for use in a Button."),
-                    {:action=>"resolve", 
+                    {:action=>"resolve",
                      :button=>"paste"},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -16,9 +16,9 @@
         %>
       </li>
     <% else %>
-      <%= image_tag("/images/toolbars/paste.png", 
+      <%= image_tag("/images/toolbars/paste.png",
                     :class => "dimmed",
-                    :title => "Paste is not available, no object information has been copied from the Simulation screen") 
+                    :title => "Paste is not available, no object information has been copied from the Simulation screen")
       %>
     <% end %>
   </ul>
@@ -34,7 +34,7 @@
                            "data-miq_observe" => {:interval=>'.5', :url => url}.to_json)
         %>
         &nbsp;
-        <%= check_box_tag("display", 
+        <%= check_box_tag("display",
                           value="1",
                           checked=@edit[:new][:display],
                           "data-miq_observe_checkbox" => {:interval=>'.5', :url => url}.to_json)
@@ -42,7 +42,7 @@
         &nbsp;Display on Button
       </td>
       <% if !is_browser_ie? %>
-        <%= javascript_tag("$j('#name').focus()") %>
+        <%= javascript_tag(javascript_focus('name')) %>
       <% end %>
     </tr>
     <tr>
@@ -85,13 +85,13 @@
     </tr>
   </table>
   <%= render :partial => "layouts/ae_resolve_options",
-             :locals  => {:resolve           => @edit, 
-                          :form_action       => "ae_resolve", 
-                          :ae_custom_button  => true, 
-                          :field_changed_url => "automate_button_field_changed"} 
+             :locals  => {:resolve           => @edit,
+                          :form_action       => "ae_resolve",
+                          :ae_custom_button  => true,
+                          :field_changed_url => "automate_button_field_changed"}
   %>
-  <%= render :partial => "layouts/role_visibility", 
-             :locals  => {:rec_id  => "#{@custom_button.id || "new"}", 
+  <%= render :partial => "layouts/role_visibility",
+             :locals  => {:rec_id  => "#{@custom_button.id || "new"}",
                           :action  => "automate_button_field_changed"}
   %>
   <%# Need this to bind checkbox observers when under DHTMLX tabs %>

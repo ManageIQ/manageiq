@@ -18,7 +18,7 @@
                                   @edit[:new][:name],
                                   :maxlength=>50,
                                   "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
-                <%= javascript_tag("$j('#name').focus()") %>
+                <%= javascript_tag(javascript_focus('name')) %>
               <% end %>
             </td>
           </tr>

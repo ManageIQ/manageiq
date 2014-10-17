@@ -15,7 +15,7 @@
                          options_for_select(@rss_roles, @rss_role),
                          :multiple => false,
                          "data-miq_observe" => {:url => url_for(:action => 'role_selected')}.to_json)
-            = javascript_tag("$j('#role').focus()")
+            = javascript_tag(javascript_focus('role'))
         %tr
           %th.icon
           %th Title
