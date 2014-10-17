@@ -1,0 +1,27 @@
+#maincontent
+  = render :partial => "layouts/flash_msg"
+  - if @display == "config_info"
+    %dl.col2
+      %dd
+        %table.style3
+          %thead
+            %tr
+              %th{:colspan => "2", :align => "left"} Info
+          - if @cluster_config.nil? || @cluster_config.empty?
+            %tr
+              %td Not Available
+          - else
+            - @cluster_config.each_slice(2) do |item1, item2|
+              %tr{:class => cycle('row0', 'row1')}
+                %td.label
+                  = h(item1[:field])
+                %td
+                  = h(item1[:description])
+              - if item2 != nil
+                %tr{:class => cycle('row0', 'row1')}
+                  %td.label
+                    = h(item2[:field])
+                  %td
+                    = h(item2[:description])
+  - elsif @display == "descendant_vms"
+    = render :partial => "layouts/dc_tree_page"
