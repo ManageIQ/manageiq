@@ -1,7 +1,7 @@
 #images_filter_tree_div{:style => "width:100%;height:100%;"}
   #images_filter_treebox{:style => "width:100%;height:100%;color:#000; overflow: hidden"}
   = render(:partial => "layouts/dynatree",
-    :locals => {:tree_id => "image{s_filter_treebox",
+    :locals => {:tree_id => "images_filter_treebox",
       :tree_name => "images_filter_tree",
       :id_prefix => "imf_",
       :json_tree => @temp[:images_filter_tree],
