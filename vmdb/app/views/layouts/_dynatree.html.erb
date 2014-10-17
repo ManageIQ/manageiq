@@ -52,6 +52,10 @@
     click_url = "<%= click_url %>";
   <% end %>
   cfme_changes_check = <%= cfme_changes_check %>
+  <% if session[:group_changed] %>
+    cfme_delete_dynatree_cookies();
+    <% session[:group_changed] = false %>
+  <% end %>
   <%# Create the Dynatree object from the passed in options %>
   $j("#<%= tree_id %>").dynatree({
     title: "<%= tree_name %>",
