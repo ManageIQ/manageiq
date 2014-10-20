@@ -682,8 +682,8 @@ class OpsController < ApplicationController
         when :diagnostics_tree
           #need to refresh all_tabs for server by roles and roles by servers screen
           #to show correct buttons on screen when tree node is selected
-          if ["accordion_select","change_tab","tree_select"].include?(params[:action]) ||
-                  ["diagnostics_roles_servers","diagnostics_servers_roles"].include?(@sb[:active_tab])
+          if %w(accordion_select change_tab explorer tree_select).include?(params[:action]) ||
+             %w(diagnostics_roles_servers diagnostics_servers_roles).include?(@sb[:active_tab])
             page.replace("ops_tabs", :partial=>"all_tabs")
           elsif nodetype == "log_depot_edit"
             @right_cell_text = "Editing Log Depot settings"

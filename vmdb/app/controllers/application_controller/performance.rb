@@ -301,7 +301,7 @@ module ApplicationController::Performance
       if f.nil?
         msg = "No events available for this #{new_opts[:model] == "EmsCluster" ? "Cluster" : new_opts[:model]}"
       elsif @record.kind_of?(MiqServer) # For server charts in OPS
-        change_tab("a6")                # Switch to the Timelines tab
+        change_tab("diagnostics_timelines")                # Switch to the Timelines tab
         return
       else
         if @explorer
@@ -340,7 +340,7 @@ module ApplicationController::Performance
       if f.nil?
         msg = "No events available for this #{model == "EmsCluster" ? "Cluster" : model}"
       elsif @record.kind_of?(MiqServer) # For server charts in OPS
-        change_tab("a6")                # Switch to the Timelines tab
+        change_tab("diagnostics_timelines")                # Switch to the Timelines tab
         return
       else
         if @explorer
