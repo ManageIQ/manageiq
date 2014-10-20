@@ -291,7 +291,7 @@ class HostController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -442,9 +442,9 @@ class HostController < ApplicationController
           @error = Host.multi_host_update(session[:host_items], settings, creds)
         end
         if @error || @error.blank?
-          #redirect_to :action => 'show_list', :flash_msg=>I18n.t("flash.credentials.saved")
+          #redirect_to :action => 'show_list', :flash_msg=>_("Credentials/Settings saved successfully")
           render :update do |page|
-            page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.credentials.saved")
+            page.redirect_to :action=>'show_list', :flash_msg=>_("Credentials/Settings saved successfully")
           end
         else
           drop_breadcrumb( {:name=>"Edit Host '#{@host.name}'", :url=>"/host/edit/#{@host.id}"} )
@@ -459,7 +459,7 @@ class HostController < ApplicationController
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -490,7 +490,7 @@ class HostController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -558,7 +558,7 @@ class HostController < ApplicationController
                 @flash_array == nil # Another screen showing, so return
 
       if @flash_array == nil && !@refresh_partial && !["host_miq_request_new"].include?(params[:pressed]) # if no button handler ran, show not implemented msg
-        add_flash(I18n.t("flash.button.not_implemented"), :error)
+        add_flash(_("Button not yet implemented"), :error)
         @refresh_partial = "layouts/flash_msg"
         @refresh_div = "flash_msg_div"
       elsif @flash_array && @lastaction == "show"

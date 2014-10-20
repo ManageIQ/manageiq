@@ -253,7 +253,7 @@ module MiqAeCustomizationController::Dialogs
       session[:changed] = false
       dialog_set_form_vars
       @sb[:node_typ] = nil
-      add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+      add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
       @in_a_form = true
       replace_right_cell(x_node)
     end

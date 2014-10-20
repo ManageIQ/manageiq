@@ -718,7 +718,7 @@ module ApplicationController::MiqRequestMethods
       begin
         options[:wf] = @miq_request.workflow_class.new(@options,session[:userid])                # Create a new provision workflow for this edit session
       rescue MiqException::MiqVmError => bang
-        @no_wf_msg = I18n.t("flash.request.cannot_create_workflow") << bang.message
+        @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
       end
       if options[:wf]
         options[:wf].init_from_dialog(@options,session[:userid])                                 # Create a new provision workflow for this edit session
@@ -805,7 +805,7 @@ module ApplicationController::MiqRequestMethods
           @edit[:wf] = req && req.type == "VmMigrateRequest" ? VmMigrateWorkflow.new(@edit[:new],session[:userid]) : wf_type.new(@edit[:new],session[:userid], options)   # Create a new provision workflow for this edit session
         rescue MiqException::MiqVmError => bang
           #only add this message if showing a list of Catalog items, show screen already handles this
-          @no_wf_msg = I18n.t("flash.request.cannot_create_workflow") << bang.message
+          @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
         end
         @edit[:prov_type] = req && req.request_type ? req.request_type_display : (req && req.type == "VmMigrateRequest" ? "VM Migrate" : "VM Provision")
       end

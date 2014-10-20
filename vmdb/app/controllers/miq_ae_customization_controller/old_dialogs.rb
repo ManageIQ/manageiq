@@ -255,7 +255,7 @@ module MiqAeCustomizationController::OldDialogs
       begin
         YAML.parse(@edit[:new][:content])
       rescue YAML::SyntaxError => ex
-        add_flash("#{I18n.t("flash.edit.field_syntax_error.yaml")}#{ex.message}", :error)
+        add_flash("#{_("Syntax error in YAML file: ")}#{ex.message}", :error)
       end
       if @flash_array
         render :update do |page|
@@ -296,7 +296,7 @@ module MiqAeCustomizationController::OldDialogs
         replace_right_cell(x_node,[:old_dialogs])
       end
     when "reset", nil	# Reset or first time in
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       old_dialogs_edit
     end

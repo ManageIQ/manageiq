@@ -216,7 +216,7 @@ module ApplicationController::Tags
     @display   = nil
     @in_a_form = true
     session[:changed] = false
-    add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+    add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
     if @explorer && ["service","vm_cloud","vm_infra","vm_or_template"].include?(request.parameters[:controller])
       @refresh_partial = "layouts/tagging"
       replace_right_cell(@sb[:action]) if params[:button]
@@ -296,7 +296,7 @@ module ApplicationController::Tags
   rescue StandardError => bang
     add_flash(I18n.t("flash.error_during", :task=>"Save Tags") << bang.message, :error) # Push msg and error flag
   else
-    add_flash(I18n.t("flash.ops.tags_saved"))
+    add_flash(_("Tag edits were successfully saved"))
   end
   private :tagging_save_tags
 

@@ -55,7 +55,7 @@ module ReportController::SavedReports
           return
         else
           if @report.table && @report.table.data.length == 0
-            add_flash(I18n.t("flash.report.no_records_found"), :warning)
+            add_flash(_("No records found for this report"), :warning)
           else
             @html = report_first_page(rr)             # Get the first page of the results
             if params[:type]
@@ -86,7 +86,7 @@ module ReportController::SavedReports
         @temp[:report_result] = rr
       end
     else
-      add_flash(I18n.t("flash.report.not_authorized_for_user"), :error)
+      add_flash(_("Report is not authorized for the logged in user"), :error)
       get_all_reps(@sb[:miq_report_id].to_s)
       return
     end

@@ -50,7 +50,7 @@ module OpsController::Settings
         msg = I18n.t("flash.error_during", :task=>"apply") << bang
         err = true
       else
-        msg = I18n.t("flash.ops.settings.import_successful")
+        msg = _("Records were successfully imported")
         err = false
         session[:imports] = @sb[:imports] = nil
       end
@@ -268,7 +268,7 @@ module OpsController::Settings
     when "reset", nil # Reset or first time in
       region_set_form_vars
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("root")
     end

@@ -52,14 +52,14 @@ class MiqAeCustomizationController < ApplicationController
     else
       begin
         import_file_upload_id = dialog_import_service.store_for_import(params[:upload][:file].read)
-        add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
+        add_flash(_("Import file was uploaded successfully"), :info)
         redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue DialogImportValidator::ImportNonYamlError
-        add_flash(I18n.t("flash.service_dialog.unsupported_import_format"), :error)
+        add_flash(_("Error: the file uploaded is not of the supported format"), :error)
       rescue DialogImportValidator::ParsedNonDialogYamlError
-        add_flash(I18n.t("flash.service_dialog.non_dialog_yaml"), :error)
+        add_flash(_("Error during upload: incorrect Dialog format, only service dialogs can be imported"), :error)
       rescue DialogImportValidator::InvalidDialogFieldTypeError
-        add_flash(I18n.t("flash.service_dialog.invalid_dialog_field_type"), :error)
+        add_flash(_("Error during upload: one of the DialogField types is not supported"), :error)
       end
     end
 
@@ -73,9 +73,9 @@ class MiqAeCustomizationController < ApplicationController
 
     if import_file_upload
       dialog_import_service.import_service_dialogs(import_file_upload, params[:dialogs_to_import])
-      add_flash(I18n.t("flash.service_dialog.import_successful"), :info)
+      add_flash(_("Service dialogs imported successfully"), :info)
     else
-      add_flash(I18n.t("flash.service_dialog.import_file_upload_expired"), :error)
+      add_flash(_("Error: ImportFileUpload expired"), :error)
     end
 
     respond_to do |format|
@@ -90,7 +90,7 @@ class MiqAeCustomizationController < ApplicationController
 
   def cancel_import
     dialog_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(I18n.t("flash.service_dialog.import_cancelled"), :info)
+    add_flash(_("Service dialog import cancelled"), :info)
 
     respond_to do |format|
       format.js { render :json => @flash_array.to_json, :status => 200 }

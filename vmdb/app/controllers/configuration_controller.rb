@@ -55,7 +55,7 @@ class ConfigurationController < ApplicationController
     edit_record if params[:pressed] == "tp_edit"
 
     if ! @refresh_partial && @flash_array == nil # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -255,7 +255,7 @@ class ConfigurationController < ApplicationController
           set_user_time_zone
           add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user => session[:username]))
         else
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_session"))
+          add_flash(_("User Interface settings saved for this session"))
         end
         edit
         render :action => "show"
@@ -281,7 +281,7 @@ class ConfigurationController < ApplicationController
           db_user.save
           add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user => session[:username]))
         else
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_session"))
+          add_flash(_("User Interface settings saved for this session"))
         end
         edit
         render :action => "show"
@@ -299,7 +299,7 @@ class ConfigurationController < ApplicationController
             s.save
           end
         end
-        add_flash(I18n.t("flash.configuration.default_filter_saved"))
+        add_flash(_("Default Filters saved successfully"))
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
@@ -316,7 +316,7 @@ class ConfigurationController < ApplicationController
             s.save
           end
         end
-        add_flash(I18n.t("flash.configuration.default_filter_saved"))
+        add_flash(_("Default Filters saved successfully"))
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
@@ -328,7 +328,7 @@ class ConfigurationController < ApplicationController
       if @update.validate                                           # Have VMDB class validate the settings
         @update.save                                              # Save other settings for current server
         AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
-        add_flash(I18n.t("flash.configuration.config_settings_saved"))
+        add_flash(_("Configuration settings saved"))
         edit
         render :action => "show"
       else
@@ -342,7 +342,7 @@ class ConfigurationController < ApplicationController
       end
     elsif params["reset"]
       edit
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       render :action => "show"
     end
   end
@@ -424,7 +424,7 @@ class ConfigurationController < ApplicationController
     set_form_vars
     @tp_restricted = true if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
     title = (@timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator") ? "Time Profile" : "Edit"
-    add_flash(I18n.t("flash.configuration.global_time_profile_cannot_edit")) if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
+    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
     session[:changed] = false
     @in_a_form = true
     drop_breadcrumb( {:name=>"#{title} '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
@@ -616,7 +616,7 @@ class ConfigurationController < ApplicationController
     elsif params[:button] == "reset"
       @edit[:new] = copy_hash(@edit[:current])
       params[:id] = @timeprofile.id
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
       drop_breadcrumb( {:name=>"Edit '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction

@@ -3,7 +3,7 @@ module ApplicationController::Automate
 
   def resolve_button_throw
     if valid_resolve_object?
-      add_flash(I18n.t("flash.automate.simulation_started"))
+      add_flash(_("Automation Simulation has been run"))
       @sb[:name] = @resolve[:new][:instance_name].blank? ? @resolve[:new][:other_name] : @resolve[:new][:instance_name]
       @sb[:attrs] = {}
       @resolve[:new][:attrs].each do |a|
@@ -16,7 +16,7 @@ module ApplicationController::Automate
       begin
         build_results
       rescue MiqAeException::Error => bang
-        add_flash(I18n.t("flash.automate.automate_error") << bang.message, :error)
+        add_flash(_("Automation Error: ") << bang.message, :error)
       end
     end
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
@@ -134,7 +134,7 @@ module ApplicationController::Automate
 
     @sb[:active_tab] = "tree"
     if params[:button] == "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       resolve_reset
     else
       render :layout => "explorer"

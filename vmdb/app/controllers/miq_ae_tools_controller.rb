@@ -28,7 +28,7 @@ class MiqAeToolsController < ApplicationController
     end
 
     if ! @refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -37,7 +37,7 @@ class MiqAeToolsController < ApplicationController
   def log
     @breadcrumbs = Array.new
     @log = $miq_ae_logger.contents(120,1000) if $miq_ae_logger
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning) if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     @lastaction = "log"
     @layout = "miq_ae_logs"
     @msg_title = "AE"
@@ -49,7 +49,7 @@ class MiqAeToolsController < ApplicationController
   def refresh_log
     assert_privileges("refresh_log")
     @log = $miq_ae_logger.contents(120,1000) if $miq_ae_logger
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning) if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("main_div", :partial=>"layouts/log_viewer", :locals=>{:legend_text=>"Last 1000 lines from the Automation log"})
     end
@@ -105,7 +105,7 @@ class MiqAeToolsController < ApplicationController
 
   def cancel_import
     automate_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(I18n.t("flash.automate.datastore_import_cancelled"), :info)
+    add_flash(_("Datastore import was cancelled"), :info)
 
     respond_to do |format|
       format.js { render :json => @flash_array.to_json, :status => 200 }
@@ -129,10 +129,10 @@ class MiqAeToolsController < ApplicationController
 
         add_flash(I18n.t("flash.automate.datastore_import_success", stat_options), :info)
       else
-        add_flash(I18n.t("flash.automate.datastore_import_expired"), :error)
+        add_flash(_("Error: Datastore import file upload expired"), :error)
       end
     else
-      add_flash(I18n.t("flash.automate.datastore_import_at_least_one"), :info)
+      add_flash(_("You must select at least one namespace to import"), :info)
     end
 
     respond_to do |format|
@@ -149,7 +149,7 @@ class MiqAeToolsController < ApplicationController
       add_flash("Use the browse button to locate an import file", :warning)
     else
       import_file_upload_id = automate_import_service.store_for_import(upload_file.read)
-      add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
+      add_flash(_("Import file was uploaded successfully"), :info)
       redirect_options[:import_file_upload_id] = import_file_upload_id
     end
 
@@ -176,7 +176,7 @@ class MiqAeToolsController < ApplicationController
       end
     else
       @in_a_form = true
-      add_flash(I18n.t("flash.locate_import_file"), :error)
+      add_flash(_("Use the Browse button to locate an Import file"), :error)
 #     render :action=>"import_export"
       import_export
     end
@@ -204,7 +204,7 @@ class MiqAeToolsController < ApplicationController
       add_flash(I18n.t("flash.error_with_stat_message", :task=>"reset", :status=>miq_task.status, :message=>miq_task.message), :error)
     else
       self.x_node = "root" if x_active_tree == :ae_tree && x_tree
-      add_flash(I18n.t("flash.automate.reset_to_default"))
+      add_flash(_("All custom classes and instances have been reset to default"))
     end
     render :update do |page|          # Use RJS to update the display
       page.replace("flash_msg_div", :partial=>"layouts/flash_msg")

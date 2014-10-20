@@ -1520,7 +1520,7 @@ module ApplicationHelper
 
   # Derive the browser title text based on the layout value
   def title_from_layout(layout)
-    title = I18n.t('product.name')
+    title = _("ManageIQ")
     if layout.blank?  # no layout, leave title alone
     elsif ["configuration", "dashboard", "chargeback", "about"].include?(layout)
       title += ": #{layout.titleize}"
@@ -1782,7 +1782,7 @@ module ApplicationHelper
 
   def check_if_button_is_implemented
     if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     elsif @flash_array && @lastaction == "show"
@@ -2499,7 +2499,7 @@ module ApplicationHelper
     return false unless what.nil?
     add_flash(@bang || model.present? ?
       I18n.t("flash.record.no_longer_exists", :model => ui_lookup(:model => model)) :
-      I18n.t("flash.error_no_longer_exists"))
+      _("Error: Record no longer exists in the database"))
     session[:flash_msgs] = @flash_array
     # Error message is displayed in 'show_list' action if such action exists
     # otherwise we assume that the 'explorer' action must exist that will display it.

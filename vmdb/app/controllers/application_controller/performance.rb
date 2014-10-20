@@ -167,7 +167,7 @@ module ApplicationController::Performance
     @record = identify_tl_or_perf_record
     @perf_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
     @perf_record.perf_capture_realtime_now
-    add_flash(I18n.t("flash.refresh_cu_data"))
+    add_flash(_("Refresh of recent C&U data has been initiated"))
   end
 
   # Correct any date that is out of the date/range or not allowed in a profile
@@ -176,7 +176,7 @@ module ApplicationController::Performance
     tz = options[:time_profile_tz] || options[:tz]  # Use time profile tz or chosen tz, if no profile tz
     s, e = @perf_record.first_and_last_capture
     if s.nil?
-      add_flash(I18n.t("flash.no_utilization_data_available"), :warning)
+      add_flash(_("No Utilization data available"), :warning)
       @temp[:no_util_data] = true
       return
     end
@@ -513,7 +513,7 @@ module ApplicationController::Performance
       msg = "Chart menu selection not yet implemented"
     end
 
-    msg ? add_flash(msg, :warning) : add_flash(I18n.t("flash.unknown_error", :error))
+    msg ? add_flash(msg, :warning) : add_flash(_("Unknown error has occurred", :error))
     render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page << "miqSparkle(false);"

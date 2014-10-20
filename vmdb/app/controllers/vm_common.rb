@@ -17,7 +17,7 @@ module VmCommon
     return if ["perf_reload"].include?(params[:pressed]) && @flash_array == nil
 
     if @flash_array == nil # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     else    # Figure out what was showing to refresh it
@@ -1050,11 +1050,11 @@ module VmCommon
       if @edit[:explorer]
         @explorer = true
         evm_relationship
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
         replace_right_cell
       else
         render :update do |page|
-          page.redirect_to :action=>'evm_relationship', :id=>@record.id, :flash_msg=>I18n.t("flash.edit.reset"), :flash_warning=>true, :escape=>true
+          page.redirect_to :action=>'evm_relationship', :id=>@record.id, :flash_msg=>_("All changes have been reset"), :flash_warning=>true, :escape=>true
         end
       end
     end
@@ -1100,7 +1100,7 @@ module VmCommon
         end
       end
     else
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       render :partial => "shared/ajax/flash_msg_replace"
     end
   end
@@ -1196,7 +1196,7 @@ module VmCommon
       end
     when "save"
       if @edit[:new][:parent] != -1 && @edit[:new][:kids].invert.include?(@edit[:new][:parent]) # Check if parent is a kid, if selected
-        add_flash(I18n.t("flash.vm.parent_child_cannot_be_same"), :error)
+        add_flash(_("Parent VM can not be one of the child VMs"), :error)
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         build_edit_screen
         if @edit[:explorer]
@@ -1242,7 +1242,7 @@ module VmCommon
       end
     when "reset"
       edit
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       session[:flash_msgs] = @flash_array.dup
       get_vm_child_selection if params["right.x"] || params["left.x"] || params["allright.x"]
       @changed = session[:changed] = false
@@ -1320,7 +1320,7 @@ module VmCommon
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
     @scan_history  = ScanHistory.find_by_vm_or_template_id(@record.id)
     if @scan_history == nil
-      redirect_to :action=>"scan_history", :flash_msg=>I18n.t("flash.error_no_longer_exists"), :flash_error=>true
+      redirect_to :action=>"scan_history", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return
     end
     @lastaction = "scan_histories"
@@ -1975,7 +1975,7 @@ module VmCommon
       end
     elsif params["allright.x"] || params[:button] == "allright"
       if @edit[:new][:kids].length == 0
-        add_flash(I18n.t("flash.vm.no_child_vm_to_move_right"), :error)
+        add_flash(_("No child VMs to move right, no action taken"), :error)
       else
         @edit[:new][:kids].each do |key, value|
           @edit[:choices][key] = value

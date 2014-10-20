@@ -68,7 +68,7 @@ class ReportController < ApplicationController
     @sb[:flash_msg] = Array.new
     if params.fetch_path(:upload, :file) && File.size(params[:upload][:file].tempfile) == 0
       redirect_to :action      => 'explorer',
-                  :flash_msg   => I18n.t("flash.report.import_file_empty_error"),
+                  :flash_msg   => _("Import file cannot be empty"),
                   :flash_error => true
       return
     end
@@ -87,7 +87,7 @@ class ReportController < ApplicationController
         redirect_to :action => 'explorer'
       end
     else
-      redirect_to :action => 'explorer', :flash_msg=>I18n.t("flash.locate_import_file"), :flash_error=>true
+      redirect_to :action => 'explorer', :flash_msg=>_("Use the Browse button to locate an Import file"), :flash_error=>true
     end
   end
 
@@ -283,10 +283,10 @@ class ReportController < ApplicationController
     else
       begin
         import_file_upload_id = widget_import_service.store_for_import(upload_file.read)
-        add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
+        add_flash(_("Import file was uploaded successfully"), :info)
         redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue WidgetImportValidator::NonYamlError
-        add_flash(I18n.t("flash.service_dialog.unsupported_import_format"), :error)
+        add_flash(_("Error: the file uploaded is not of the supported format"), :error)
       end
     end
 
@@ -301,9 +301,9 @@ class ReportController < ApplicationController
     if import_file_upload
       $log.info("[#{session[:userid]}] initiated import")
       widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
-      add_flash(I18n.t("flash.report.widget_import_successful"), :info)
+      add_flash(_("Widgets imported successfully"), :info)
     else
-      add_flash(I18n.t("flash.report.widget_import_file_upload_expired"), :error)
+      add_flash(_("Error: Widget import file upload expired"), :error)
     end
 
     respond_to do |format|
@@ -326,7 +326,7 @@ class ReportController < ApplicationController
 
   def cancel_import
     widget_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(I18n.t("flash.report.widget_import_cancelled"), :info)
+    add_flash(_("Widget import cancelled"), :info)
 
     respond_to do |format|
       format.js { render :json => @flash_array.to_json, :status => 200 }
@@ -715,7 +715,7 @@ class ReportController < ApplicationController
           presenter[:init_dashboard] = true
         end
       when :export_tree
-        @right_cell_text = I18n.t("cell_header.import_export_reports")
+        @right_cell_text = _("Import / Export")
       when :reports_tree
         if params[:pressed] == "miq_report_schedule_add"
           presenter[:open_accord] = 'schedules'

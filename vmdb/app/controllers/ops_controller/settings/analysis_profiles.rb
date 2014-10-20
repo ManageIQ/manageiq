@@ -20,7 +20,7 @@ module OpsController::Settings::AnalysisProfiles
     @new_gtl_type = params[:type] if params[:type]  # Set new list view type, if it's sent in
     #identify_scanitemset
     if @selected_scan == nil
-      redirect_to :action=>"show_list_set", :flash_msg=>I18n.t("flash.error_no_longer_exists"), :flash_error=>true
+      redirect_to :action=>"show_list_set", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return
     end
     @lastaction = "ap_show"
@@ -237,7 +237,7 @@ module OpsController::Settings::AnalysisProfiles
             (@edit[:new]["file"].nil? || @edit[:new]["file"][:definition]["stats"].length == 0) &&
             (@edit[:new]["registry"].nil? || @edit[:new]["registry"][:definition]["content"].length == 0) &&
             (@edit[:new]["nteventlog"].nil? || @edit[:new]["nteventlog"][:definition].nil? || @edit[:new]["nteventlog"][:definition]["content"].length == 0)
-          add_flash(I18n.t("flash.ops.settings.at_least_1_item_required"), :error)
+          add_flash(_("At least one item must be entered to create Analysis Profile"), :error)
           @sb[:miq_tab] = @edit[:new][:scan_mode] == "Host" ? "edit_2" : "edit_1"
           @edit[:new] = ap_sort_array(@edit[:new])
           @edit[:current] = ap_sort_array(@edit[:current])
@@ -338,7 +338,7 @@ module OpsController::Settings::AnalysisProfiles
         ap_build_edit_screen
         @sb[:ap_active_tab] = @edit[:new][:scan_mode] == "Host" ? "file" : "category"
         if params[:button] == "reset"
-          add_flash(I18n.t("flash.edit.reset"), :warning)
+          add_flash(_("All changes have been reset"), :warning)
         end
         @edit[:new] = ap_sort_array(@edit[:new])
         @edit[:current] = ap_sort_array(@edit[:current])

@@ -42,7 +42,7 @@ module MiqPolicyController::Alerts
       alert_build_edit_screen
       @sb[:action] = "alert_edit"
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("al")
     end
@@ -529,7 +529,7 @@ module MiqPolicyController::Alerts
   # Check alert record variables
   def alert_valid_record?(alert)
     if alert.expression.nil?
-      add_flash(I18n.t("flash.policy.valid_expression"), :error)
+      add_flash(_("A valid expression must be present"), :error)
     end
     unless @edit[:new][:expression][:eval_method] && @edit[:new][:expression][:eval_method] != "nothing"
       add_flash(I18n.t("flash.edit.select_required", :selection=>"A Driving Event"), :error) if alert.responds_to_events.blank?

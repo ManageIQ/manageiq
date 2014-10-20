@@ -171,12 +171,12 @@ module ApplicationController::CiProcessing
         @in_a_form = true
         if @edit[:explorer]
           ownership
-          add_flash(I18n.t("flash.edit.reset"), :warning)
+          add_flash(_("All changes have been reset"), :warning)
           request.parameters[:controller] == "service" ? replace_right_cell("ownership") : replace_right_cell
         else
           render :update do |page|
             page.redirect_to :action        => 'ownership',
-                             :flash_msg     => I18n.t("flash.edit.reset"),
+                             :flash_msg     => _("All changes have been reset"),
                              :flash_warning => true,
                              :escape        => true
           end
@@ -369,7 +369,7 @@ module ApplicationController::CiProcessing
     url = @breadcrumbs[1][:url].split('/')
     case params[:button]
     when "cancel"
-      flash = I18n.t("flash.vm.reconfigure_cancel")
+      flash = _("VM Reconfigure Request was cancelled by the user")
       if @edit[:explorer]
         add_flash(flash)
         @sb[:action] = nil
@@ -385,7 +385,7 @@ module ApplicationController::CiProcessing
       end
     when "submit"
       if !@edit[:new][:cb_cpu] && !@edit[:new][:cb_memory]
-        add_flash(I18n.t("flash.vm.reconfigure_atleast_1_option"), :error)
+        add_flash(_("At least one option must be selected to reconfigure"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -431,7 +431,7 @@ module ApplicationController::CiProcessing
       end
 
       if @edit[:req_id] ? VmReconfigureRequest.update_request(@edit[:req_id],options, session[:userid]) : VmReconfigureRequest.create_request(options, session[:userid])
-        flash = I18n.t("flash.vm.reconfigure_saved")
+        flash = _("VM Reconfigure Request was saved")
         render :update do |page|
           page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
         end
@@ -778,12 +778,12 @@ module ApplicationController::CiProcessing
           return
         end
         if params[:userid] == "" && params[:password] != ""
-          add_flash(I18n.t("flash.edit.userid_pwd_required"), :error)
+          add_flash(_("User ID must be entered if Password is entered"), :error)
           render :action => 'discover'
           return
         end
         if params[:password] != params[:verify]
-          add_flash(I18n.t("flash.edit.passwords_mismatch"), :error)
+          add_flash(_("Password/Verify Password do not match"), :error)
           render :action => 'discover'
           return
         end
@@ -1346,7 +1346,7 @@ module ApplicationController::CiProcessing
     if @lastaction == "show_list" || @layout != "vm" # showing a list
       vms = find_checked_items
       if vms.empty?
-        add_flash(I18n.t("flash.vm.no_vm_selected_to_delete_blackbox"), :error)
+        add_flash(_("No virtual machines were selected to delete Virtual BlackBoxes on"), :error)
       end
       i = 0
       vms_new = Array.new

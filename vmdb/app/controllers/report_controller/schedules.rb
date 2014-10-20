@@ -3,7 +3,7 @@ module ReportController::Schedules
 
   def show_schedule
     if @schedule.nil?
-      redirect_to :action=>"schedules", :flash_msg=>I18n.t("flash.error_no_longer_exists"), :flash_error=>true
+      redirect_to :action=>"schedules", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return
     end
 
@@ -99,7 +99,7 @@ module ReportController::Schedules
     assert_privileges("miq_report_schedule_run_now")
     scheds = find_checked_items
     if scheds.empty? && params[:id].nil?
-      add_flash(I18n.t("flash.report.no_schedules_selected_to_run"), :error)
+      add_flash(_("No Report Schedules were selected to be Run now"), :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
@@ -255,7 +255,7 @@ module ReportController::Schedules
           end
         end
       when "reset", nil # Reset or first time in
-        add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
         if x_active_tree != :reports_tree
           #dont set these if new schedule is being added from a report show screen
           obj = find_checked_items
@@ -326,7 +326,7 @@ module ReportController::Schedules
       if sched.run_at[:interval][:unit] == "once" &&
         sched.run_at[:start_time].to_time.utc < Time.now.utc &&
         sched.enabled == true
-        add_flash(I18n.t("flash.edit.timer_in_the_past"), :warning)
+        add_flash(_("Warning: This 'Run Once' timer is in the past and will never run as currently configured"), :warning)
       end
     end
     return valid

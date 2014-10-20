@@ -159,7 +159,7 @@ module OpsController::Settings::RHN
         add_flash(I18n.t("flash.credentials.error", :message=>miq_task.message), :error)
       else
         # task succeeded, we have the array of organization names in miq_task.task_results
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
         yield miq_task.task_results
       end
     else # First time --> run the task
@@ -273,18 +273,18 @@ module OpsController::Settings::RHN
     if params[:button] != 'refresh'
       server_ids = (@edit[:new][:servers].keys rescue [])
       if server_ids.empty?
-        add_flash(I18n.t('flash.ops.settings.no_server_selected'), :error)
+        add_flash(_("No Server was selected"), :error)
       else
         begin
           case params[:button]
           when 'register'
-            verb = I18n.t('flash.ops.settings.rhn.registration')
+            verb = _("Registration")
             MiqServer.queue_update_registration_status(server_ids)
           when 'check'
-            verb = I18n.t('flash.ops.settings.rhn.check_for_updates')
+            verb = _("Check for updates")
             MiqServer.queue_check_updates(server_ids)
           when 'update'
-            verb = I18n.t('flash.ops.settings.rhn.update')
+            verb = _("Update")
             MiqServer.queue_apply_updates(server_ids)
           end
 

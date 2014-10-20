@@ -61,7 +61,7 @@ class OntapStorageSystemController < CimInstanceController
       if role_allows(:feature=>"#{area}_tag")
         page.redirect_to :action => 'create_ld'
       else
-        add_flash(I18n.t("flash.user_not_authorized"), :error)
+        add_flash(_("The user is not authorized for this task or item."), :error)
         page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
       end
     end

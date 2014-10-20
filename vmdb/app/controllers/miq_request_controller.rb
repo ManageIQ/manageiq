@@ -23,7 +23,7 @@ class MiqRequestController < ApplicationController
     request_copy if params[:pressed] == "miq_request_copy"
 
     if ! @refresh_partial && params[:pressed] != "miq_request_reload" # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -337,7 +337,7 @@ class MiqRequestController < ApplicationController
       method = WORKFLOW_METHOD_WHITELIST[params[:field]]
       @edit[:wf].send(method, @edit[:new]) unless method.nil?
     rescue StandardError => bang
-      add_flash(I18n.t("flash.smartproxy.ldap_info_retrieval_error") << bang.message, :error)
+      add_flash(_("Error retrieving LDAP info: ") << bang.message, :error)
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -365,7 +365,7 @@ class MiqRequestController < ApplicationController
       end
     else
       @edit[:new][:sysprep_upload_text] = nil
-      msg = I18n.t("flash.request.locate_upload_file")
+      msg = _("Use the Browse button to locate an Upload file")
       redirect_to :action => 'prov_edit', :flash_msg=>msg, :flash_error=>true, :no_refresh=>true, :id=>params[:id]
     end
   end

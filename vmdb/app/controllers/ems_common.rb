@@ -189,7 +189,7 @@ module EmsCommon
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -296,7 +296,7 @@ module EmsCommon
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       set_verify_status
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
@@ -313,7 +313,7 @@ module EmsCommon
             rescue StandardError=>bang
               add_flash("#{bang}", :error)
             else
-              add_flash(I18n.t("flash.credentials.validated"))
+              add_flash(_("Credential validation was successful"))
             end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -520,10 +520,10 @@ module EmsCommon
   def valid_record?(ems)
     @edit[:errors] = Array.new
     if !ems.authentication_password.blank? && ems.authentication_userid.blank?
-      @edit[:errors].push(I18n.t("flash.edit.userid_pwd_required"))
+      @edit[:errors].push(_("User ID must be entered if Password is entered"))
     end
     if @edit[:new][:password] != @edit[:new][:verify]
-      @edit[:errors].push(I18n.t("flash.edit.passwords_mismatch"))
+      @edit[:errors].push(_("Password/Verify Password do not match"))
     end
     if ems.emstype == "rhevm" && @edit[:new][:metrics_password] != @edit[:new][:metrics_verify]
       @edit[:errors].push("C & U Database Login Password and Verify Password fields do not match")
@@ -539,12 +539,12 @@ module EmsCommon
           @edit[:new][:host_default_vnc_port_end].blank?) ||
           (!@edit[:new][:host_default_vnc_port_start].blank? &&
               !@edit[:new][:host_default_vnc_port_end].blank?)
-        @edit[:errors].push(I18n.t("flash.edit.host_vnc_range_required"))
+        @edit[:errors].push(_("To configure the Host Default VNC Port Range, both start and end ports are required"))
       end
       if !@edit[:new][:host_default_vnc_port_start].blank? &&
           !@edit[:new][:host_default_vnc_port_end].blank?
         if @edit[:new][:host_default_vnc_port_end].to_i < @edit[:new][:host_default_vnc_port_start].to_i
-          @edit[:errors].push(I18n.t("flash.edit.host_vnc_range_invalid"))
+          @edit[:errors].push(_("The Host Default VNC Port Range ending port must be equal to or higher than the starting point"))
         end
       end
     end

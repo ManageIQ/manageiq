@@ -119,7 +119,7 @@ module OpsController::Settings::Schedules
       @in_a_form = true
       session[:changed] = false
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("se")
     end
@@ -272,7 +272,7 @@ module OpsController::Settings::Schedules
       if sched.run_at[:interval][:unit] == "once" &&
           sched.run_at[:start_time].to_time.utc < Time.now.utc &&
           sched.enabled == true
-        add_flash(I18n.t("flash.edit.timer_in_the_past"), :warning)
+        add_flash(_("Warning: This 'Run Once' timer is in the past and will never run as currently configured"), :warning)
       end
     end
     return valid

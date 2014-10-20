@@ -234,7 +234,7 @@ class ChargebackController < ApplicationController
       cb_rate_set_form_vars
       @in_a_form = true
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell
     end
@@ -255,7 +255,7 @@ class ChargebackController < ApplicationController
     @sb[:selected_rate_details] = @record.chargeback_rate_details
     @sb[:selected_rate_details].sort!{|a,b| [a[:group].downcase,a[:description].downcase]<=>[b[:group].downcase,b[:description].downcase]}
     if @record == nil
-      redirect_to :action=>"cb_rates_list", :flash_msg=>I18n.t("flash.error_no_longer_exists"), :flash_error=>true
+      redirect_to :action=>"cb_rates_list", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return
     end
   end
@@ -311,7 +311,7 @@ class ChargebackController < ApplicationController
   def cb_assign_update
     if params[:button] == "reset"
       get_node_info(x_node)
-      add_flash(I18n.t("flash.edit.reset"),:warning)
+      add_flash(_("All changes have been reset"),:warning)
       replace_right_cell
     else
       return unless load_edit("cbassign_edit__#{x_node}","replace_cell__chargeback")
@@ -353,7 +353,7 @@ class ChargebackController < ApplicationController
     end
     @right_cell_text ||= "Saved Chargeback Report [#{rr.name}]"
     if rr.userid != session[:userid]
-      add_flash(I18n.t("flash.report.not_authorized_for_user"), :error)
+      add_flash(_("Report is not authorized for the logged in user"), :error)
       @temp[:saved_reports] = cb_rpts_get_all_reps(id.split('-')[1])
       return
     else
@@ -381,7 +381,7 @@ class ChargebackController < ApplicationController
         return
       else
         if @report.table && @report.table.data.length == 0
-          add_flash(I18n.t("flash.report.no_records_found"), :warning)
+          add_flash(_("No records found for this report"), :warning)
         else
           @html = report_first_page(rr)              # Get the first page of the results
           unless @report.graph.blank?

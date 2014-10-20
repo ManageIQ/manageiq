@@ -47,7 +47,7 @@ module ApplicationController::Buttons
     else
       if params[:button] == "reset"
         @changed = session[:changed] = false
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       group_reorder_set_form_vars
       @in_a_form = true
@@ -422,7 +422,7 @@ module ApplicationController::Buttons
   def group_button_reset
     group_set_form_vars
     @changed = session[:changed] = false
-    add_flash(I18n.t("flash.edit.reset"), :warning)
+    add_flash(_("All changes have been reset"), :warning)
     @in_a_form  = true
     @lastaction = "automate_button"
     @layout     = "miq_ae_automate_button"
@@ -567,7 +567,7 @@ module ApplicationController::Buttons
     elsif params[:button] == "reset"
       button_set_form_vars
       @changed = session[:changed] = false
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       @breadcrumbs = Array.new
       drop_breadcrumb( {:name=>"Edit of Button", :url=>"/miq_ae_customization/button_edit"} )
@@ -1073,7 +1073,7 @@ module ApplicationController::Buttons
       end
       @resolve[:throw_ready] = ready_to_throw
     else
-      add_flash(I18n.t("flash.automate.simulation_unavailable"), :warning)
+      add_flash(_("Simulation unavailable: Required Class \"System/Process\" is missing"), :warning)
     end
   end
 

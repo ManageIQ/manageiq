@@ -74,10 +74,10 @@ module OpsController::Settings::Upload
             :good_record=>pluralize(imp.stats[:good], 'good record'),
             :bad_record=>pluralize(imp.stats[:bad], 'bad record')), :warning)
         if imp.stats[:good] == 0
-           msg = I18n.t("flash.ops.settings.invalid_import")
+           msg = _("No valid import records were found, please upload another file")
            err = true
         else
-          msg = I18n.t("flash.ops.settings.apply_to_import")
+          msg = _("Press the Apply button to import the good records into the CFME database")
           err = false
           @sb[:good] = imp.stats[:good]
           @sb[:imports] = imp

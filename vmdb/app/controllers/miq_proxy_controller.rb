@@ -146,10 +146,10 @@ class MiqProxyController < ApplicationController
     end
     job = db_class.find_by_id(job_id)
     if job["state"].downcase == "finished"
-      add_flash(I18n.t("flash.smartproxy.finish_task_cancel"), :error)
+      add_flash(_("Finished Task cannot be cancelled"), :error)
     else
       process_jobs(job_id, "cancel")  if ! job_id.empty?
-      add_flash(I18n.t("flash.smartproxy.selected_task_cancelled"), :error) if @flash_array == nil
+      add_flash(_("The selected Task was cancelled"), :error) if @flash_array == nil
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -229,7 +229,7 @@ class MiqProxyController < ApplicationController
           :target_class=>db_class.base_class.name)
       add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Delete all older Tasks", :count_model=>pluralize(jobid.length,ui_lookup(:tables=>"miq_task"))))
     else
-      add_flash(I18n.t("flash.smartproxy.delete_older_not_completed"), :warning)
+      add_flash(_("The selected job no longer exists, Delete all older Tasks was not completed"), :warning)
     end
 
     jobs
@@ -308,7 +308,7 @@ class MiqProxyController < ApplicationController
     end
 
     if !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -456,7 +456,7 @@ class MiqProxyController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -509,10 +509,10 @@ class MiqProxyController < ApplicationController
           begin
           update_miq_proxy.change_agent_config          # Activate the new miq_proxy settings
           rescue StandardError=>bang
-            add_flash(I18n.t("flash.smartproxy.settings_activation_error") << bang.message, :error)
+            add_flash(_("Settings activation returned: ") << bang.message, :error)
             AuditEvent.failure(audit.merge(:message=>"[#{update_miq_proxy.name}] SmartProxy settings activation returned: #{bang}"))
           else
-            add_flash(I18n.t("flash.smartproxy.new_settings_activated"))
+            add_flash(_("New settings have been activated"))
             AuditEvent.success(audit.merge(:message=>"[#{update_miq_proxy.name}] SmartProxy settings have been activated"))
           end
         end
@@ -536,7 +536,7 @@ class MiqProxyController < ApplicationController
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -644,7 +644,7 @@ class MiqProxyController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -770,7 +770,7 @@ class MiqProxyController < ApplicationController
     drop_breadcrumb( {:name=>"#{@miq_proxy.name} SmartProxy Log (last 1000 lines)", :url=>"/miq_proxy/log_viewer/#{@miq_proxy.id}"} )
     @proxy_log = @miq_proxy.log_contents(100, 1000)
     if @proxy_log == nil || @proxy_log == ""
-      add_flash(I18n.t("flash.smartproxy.log_unavailable"), :warning)
+      add_flash(_("No log available, press Retrieve to get the SmartProxy log"), :warning)
       drop_breadcrumb( {:name=>"#{@miq_proxy.name} SmartProxy Log", :url=>"/miq_proxy/log_viewer/#{@miq_proxy.id}"} )
     else
       drop_breadcrumb( {:name=>"#{@miq_proxy.name} SmartProxy Log (last 1000 lines)", :url=>"/miq_proxy/log_viewer/#{@miq_proxy.id}"} )
@@ -784,7 +784,7 @@ class MiqProxyController < ApplicationController
     begin
       @miq_proxy.get_agent_logs
     rescue StandardError=>bang
-      add_flash(I18n.t("flash.smartproxy.retrieve_log_error") << bang.message, :error)
+      add_flash(_("Retrieve log returned: ") << bang.message, :error)
     else
       add_flash(I18n.t("flash.smartproxy.retrieve_log_started", :name=>@miq_proxy.name))
     end
@@ -1003,11 +1003,11 @@ class MiqProxyController < ApplicationController
     sps = find_checked_items
     sp = MiqProxy.find(sps[0])
     if sps.length > 1
-      add_flash(I18n.t("flash.smartproxy.only_1_selected_for_deployment"), :error)
+      add_flash(_("Only 1 SmartProxy can be selected for build deployment"), :error)
     elsif !sp.host.state.blank? && sp.host.state != "on"
-      add_flash(I18n.t("flash.smartproxy.host_not_powered_on"), :error)
+      add_flash(_("The selected SmartProxy can not be managed because the Host is not powered on"), :error)
     elsif sp.host.available_builds.length == 0
-      add_flash(I18n.t("flash.smartproxy.host_os_unknown"), :error)
+      add_flash(_("Host OS is unknown or there are no available SmartProxy builds for the Host's OS"), :error)
     end
     if flash_errors?
       @refresh_div = "flash_msg_div"

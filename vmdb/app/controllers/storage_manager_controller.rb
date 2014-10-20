@@ -21,7 +21,7 @@ class StorageManagerController < ApplicationController
     refresh_status_sm if params[:pressed] == "storage_manager_refresh_status"
 
     if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     elsif @flash_array && @lastaction == "show"
@@ -131,7 +131,7 @@ class StorageManagerController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -208,7 +208,7 @@ class StorageManagerController < ApplicationController
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       set_verify_status
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
@@ -225,7 +225,7 @@ class StorageManagerController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")

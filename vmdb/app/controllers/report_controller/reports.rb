@@ -60,7 +60,7 @@ module ReportController::Reports
       # all widgets for this report
       get_all_widgets("report",from_cid(nodes[3].split('_').last))
     end
-    add_flash(I18n.t("flash.report.queued"))
+    add_flash(_("Report has been successfully queued to run"))
     replace_right_cell(:replace_trees => [:reports,:savedreports])
   end
 
@@ -132,7 +132,7 @@ module ReportController::Reports
     rpt = MiqReport.find(params[:id])
     report_widgets = MiqWidget.all(:conditions => {:resource_id => rpt.id})
     if report_widgets.length > 0
-      add_flash(I18n.t("flash.report.has_widgets_cant_delete"), :error)
+      add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
       render :update do |page|
         page.replace("flash_msg_div_report_list", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_report_list"})
       end

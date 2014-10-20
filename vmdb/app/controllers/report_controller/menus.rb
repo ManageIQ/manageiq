@@ -46,8 +46,8 @@ module ReportController::Menus
 
   def menu_folder_message_display
     params[:typ] == "delete" ?
-      add_flash(I18n.t("flash.report.folder_contains_other_reports"),:warning) :
-      add_flash(I18n.t("flash.report.double_click_folder_name"), :warning)
+      add_flash(_("Can not delete folder, one or more reports in the selected folder are not owned by your group"),:warning) :
+      add_flash(_("Double Click on 'New Folder' to edit"), :warning)
     render :update do |page|                    # Use JS to update the display
       page.replace("flash_msg_div_menu_list", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_menu_list"})
     end
@@ -206,7 +206,7 @@ module ReportController::Menus
       @changed                   = session[:changed] = false
       @edit[:new]                = copy_array(@edit[:current])
       @menu_lastaction           = "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       get_tree_data
       replace_right_cell(:menu_edit_action => "menu_reset")
     elsif params[:button] == "default"
@@ -467,7 +467,7 @@ module ReportController::Menus
           if !user.admin_user? && r.miq_group_id.to_i != user.current_group.id.to_i && flg == 0
             flg = 1
             #only show this flash message once for all reports
-            add_flash(I18n.t("flash.edit.only_some_fields_moved.right", :field=>"fields"), :warning)
+            add_flash(_("One or more selected reports are not owned by your group, they cannot be moved", :field=>"fields"), :warning)
           end
           if user.admin_user? || r.miq_group_id.to_i == user.current_group.id.to_i
             @edit[:available_reports].push(nf) if @edit[:user_typ] || r.miq_group_id.to_i == user.current_group.id.to_i             # Add to the available fields list

@@ -87,7 +87,7 @@ module OpsController::Settings::Ldap
         @in_a_form = true
         session[:changed] = false
         if params[:button] == "reset"
-          add_flash(I18n.t("flash.edit.reset"), :warning)
+          add_flash(_("All changes have been reset"), :warning)
         end
         replace_right_cell("lre")
     end
@@ -151,7 +151,7 @@ module OpsController::Settings::Ldap
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div_entries", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"entries"})
@@ -176,7 +176,7 @@ module OpsController::Settings::Ldap
       end
 
       if !@edit[:new][:bind_pwd].blank? && @edit[:new][:bind_dn].blank?
-        add_flash(I18n.t("flash.edit.userid_pwd_required"), :error)
+        add_flash(_("User ID must be entered if Password is entered"), :error)
       end
 
       if @flash_array
@@ -248,7 +248,7 @@ module OpsController::Settings::Ldap
       @in_a_form = true
       session[:changed] = false
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("lde")
     end

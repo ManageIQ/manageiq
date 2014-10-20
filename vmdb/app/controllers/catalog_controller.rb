@@ -92,7 +92,7 @@ class CatalogController < ApplicationController
     when "reset", nil  # Reset or first time in
       @_params[:org_controller] = "service_template"
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       if !@record.id.nil? && @record.prov_type != "generic"
         prov_set_form_vars(MiqRequest.find(@record.service_resources[0].resource_id))      # Set vars from existing request
@@ -353,7 +353,7 @@ class CatalogController < ApplicationController
     when "reset", nil  # Reset or first time in
       st_set_form_vars
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       @changed = session[:changed] = false
       replace_right_cell("st_new")
@@ -397,7 +397,7 @@ class CatalogController < ApplicationController
       identify_catalog(params[:id])
       @record.picture = nil
       @record.save
-      msg = I18n.t("flash.image.removed")
+      msg = _("Custom Image successfully removed")
     elsif params[:upload] && params[:upload][:image] &&
         params[:upload][:image].respond_to?(:read)
       ext = params[:upload][:image].original_filename.split(".").last.downcase
@@ -543,7 +543,7 @@ class CatalogController < ApplicationController
       dialog_initialize(ra,options)
     else
       #if catalog item has no dialog and provision button was pressed from list view
-      add_flash(I18n.t("flash.request.st_no_dialog_available"), :warning)
+      add_flash(_("No Ordering Dialog is available"), :warning)
       replace_right_cell
     end
   end
@@ -593,7 +593,7 @@ class CatalogController < ApplicationController
       when "reset", nil  # Reset or first time in
         st_catalog_set_form_vars
         if params[:button] == "reset"
-          add_flash(I18n.t("flash.edit.reset"), :warning)
+          add_flash(_("All changes have been reset"), :warning)
         end
         @changed = session[:changed] = false
         replace_right_cell("st_catalog_edit")

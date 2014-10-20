@@ -42,7 +42,7 @@ module ApplicationController::Filter
       @edit[@expkey][:expression] = @edit[:new][@expkey].nil? ? {"???"=>"???"} : copy_hash(@edit[:new][@expkey])
       @edit.delete(:edit_exp)
     else
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
     end
 
     if flash_errors?
@@ -99,8 +99,8 @@ module ApplicationController::Filter
       begin
         exp_set_fields(@edit[:edit_exp])
       rescue StandardError=>bang
-        @exp_atom_errors = [I18n.t("flash.edit.exp_atom_error_1"),
-                            I18n.t("flash.edit.exp_atom_error_2"),
+        @exp_atom_errors = [_("There is an error in the selected expression element, perhaps it was imported or edited manually."),
+                            _("This element should be removed and recreated or you can report the error to your CFME administrator."),
                             I18n.t("flash.edit.error_details", :error=>bang)]
       end
       @edit[@expkey][:exp_token] = token
@@ -733,7 +733,7 @@ module ApplicationController::Filter
         end
       end
     when "reset"
-      add_flash(I18n.t("flash.edit.filter.current_search_reset"), :warning)
+      add_flash(_("The current search details have been reset"), :warning)
 
     when "apply"
       @edit[@expkey][:selected] = @edit[@expkey][:exp_last_loaded] # Save the last search loaded (saved)
@@ -887,9 +887,9 @@ module ApplicationController::Filter
       if params[:id] != "0"
         s = MiqSearch.find_by_id(params[:id])
         if s.nil?
-          add_flash(I18n.t("flash.search_not_found"), :error)
+          add_flash(_("The selected Filter record was not found"), :error)
         elsif MiqExpression.quick_search?(s.filter)
-          add_flash(I18n.t("flash.search_requires_input"), :error)
+          add_flash(_("The selected Filter can not be set as Default because it requires user input"), :error)
         end
       end
       if @flash_array.blank?
@@ -1459,7 +1459,7 @@ module ApplicationController::Filter
         add_flash(I18n.t("flash.edit.filter.must_be_chosen", :field=>"check field"), :error)
       elsif @edit[@expkey][:exp_check] == "checkcount" &&
             (@edit[@expkey][:exp_cvalue] == nil || is_integer?(@edit[@expkey][:exp_cvalue]) == false)
-        add_flash(I18n.t("flash.edit.filter.must_be_integer"), :error)
+        add_flash(_("The check count value must be an integer to commit this expression element"), :error)
       elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_field],
                                         @edit[@expkey][:exp_skey],
                                         @edit[@expkey][:exp_value].kind_of?(Array) ?
@@ -1509,7 +1509,7 @@ module ApplicationController::Filter
         exp[@edit[@expkey][:exp_key]]["search"][skey]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
       end
     else
-      add_flash(I18n.t("flash.edit.filter.select_expression_element_type"), :error)
+      add_flash(_("Select an expression element type"), :error)
       add_flash(I18n.t("flash.edit.select_required", :selection=>"Expression element type"), :error)
     end
   end

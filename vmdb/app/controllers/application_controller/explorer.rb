@@ -135,7 +135,7 @@ module ApplicationController::Explorer
     elsif @refresh_partial
       replace_right_cell unless action == 'download_pdf' # no need to render anything when download_pdf button is pressed on summary screen
     else
-      add_flash(I18n.t("flash.button.not_implemented") + " #{model}:#{action}", :error) unless @flash_array
+      add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
@@ -176,7 +176,7 @@ module ApplicationController::Explorer
     x_tags_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    add_flash(I18n.t("flash.edit.reset"), :warning)  if params[:button] == "reset"
+    add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
     @right_cell_text = I18n.t("cell_header.editing_model_for_record",:name=>ui_lookup(:models=>@tagging),:model=>"#{session[:customer_name]} Tags")
     replace_right_cell(@sb[:action])
   end

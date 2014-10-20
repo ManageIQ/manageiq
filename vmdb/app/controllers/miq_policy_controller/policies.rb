@@ -22,7 +22,7 @@ module MiqPolicyController::Policies
       @sb[:action] = "policy_edit"
       policy_build_edit_screen(session[:edit] ? session[:edit][:typ] : params[:typ])
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("p")
       return

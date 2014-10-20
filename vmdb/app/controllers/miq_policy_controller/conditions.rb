@@ -22,7 +22,7 @@ module MiqPolicyController::Conditions
       condition_build_edit_screen
       @sb[:action] = "condition_edit"
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("co")
       return
@@ -49,7 +49,7 @@ module MiqPolicyController::Conditions
       condition.applies_to_exp = @edit[:new][:applies_to_exp]["???"] ? nil : MiqExpression.new(@edit[:new][:applies_to_exp])
       if condition.expression.is_a?(MiqExpression) &&
           condition.expression.exp["???"]
-        add_flash(I18n.t("flash.policy.valid_expression"), :error)
+        add_flash(_("A valid expression must be present"), :error)
       end
       if condition.valid? && !@flash_array && condition.save
         if adding && x_active_tree != :condition_tree # If adding to a policy

@@ -30,10 +30,10 @@ module ApplicationController::PolicySupport
     elsif params[:button]                           # Button was pressed
       session[:changed] = false
       if params[:button] == "cancel"
-        add_flash(I18n.t("flash.policy.policy_assignment_cancelled"))
+        add_flash(_("Edit policy assignments was cancelled by the user"))
         @sb[:action] = nil
       elsif params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
         @explorer = true if @edit && @edit[:explorer]       #resetting @explorer from @edit incase reset button was pressed with explorer
         protect_build_screen                                #    build the protect screen
         if @edit[:explorer]
@@ -58,7 +58,7 @@ module ApplicationController::PolicySupport
             end
           end
         end
-        add_flash(I18n.t("flash.policy.policy_assignment_saved"))
+        add_flash(_("Policy assignments successfully changed"))
         @sb[:action] = nil
       end
       session[:flash_msgs] = @flash_array
@@ -150,7 +150,7 @@ module ApplicationController::PolicySupport
         end
       end
     else
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       render :update do |page|
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
       end

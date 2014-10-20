@@ -50,7 +50,7 @@ module ReportController::Reports::Editor
           return
         end
         if @edit[:new][:graph_type] && (@edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING)
-          add_flash(I18n.t("flash.report.sort_required_for_chart"), :error)
+          add_flash(_("Report can not be saved unless sort field has been configured for Charts"), :error)
           @sb[:miq_tab] = "new_4"
           build_edit_screen
           replace_right_cell
@@ -90,7 +90,7 @@ module ReportController::Reports::Editor
           replace_right_cell
         end
       else
-        add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
         @in_a_form = true
         @report = nil     # Clear any saved report object
         if params[:tab] # Came in to change the tab

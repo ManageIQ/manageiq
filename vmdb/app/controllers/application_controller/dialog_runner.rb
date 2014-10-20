@@ -59,7 +59,7 @@ module ApplicationController::DialogRunner
         end
       when "reset"  # Reset
         dialog_reset_form
-        flash = I18n.t("flash.edit.reset")
+        flash = _("All changes have been reset")
         if session[:edit][:explorer]
           add_flash(flash, :warning)
           replace_right_cell("dialog_provision")

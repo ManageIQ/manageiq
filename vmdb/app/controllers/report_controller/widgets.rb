@@ -83,7 +83,7 @@ module ReportController::Widgets
           end
         end
       else
-        add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
         @widget = params[:id] && params[:id] != "new" ? MiqWidget.find_by_id(params[:id]) :
             MiqWidget.new # Get existing or new record
         widget_set_form_vars
@@ -129,9 +129,9 @@ module ReportController::Widgets
     begin
       w.queue_generate_content
     rescue StandardError => bang
-      add_flash(I18n.t("flash.report.widget_generation_error") << bang.message, :error)
+      add_flash(_("Widget content generation error: ") << bang.message, :error)
     else
-      add_flash(I18n.t("flash.report.widget_generation_started"))
+      add_flash(_("Content generation for this Widget has been initiated"))
     end
     #refresh widget show to update buttons
     widget_refresh

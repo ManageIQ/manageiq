@@ -82,7 +82,7 @@ class RepositoryController < ApplicationController
           end
         end
       else
-        add_flash(I18n.t("flash.repository.path_invalid"), :error)
+        add_flash(_("Path must be a valid reference to a UNC location"), :error)
         @repo = Repository.new
       end
       @in_a_form = true
@@ -153,7 +153,7 @@ class RepositoryController < ApplicationController
       else
         session[:changed] = changed
         @changed = true
-        add_flash(I18n.t("flash.repository.path_invalid"), :error)
+        add_flash(_("Path must be a valid reference to a UNC location"), :error)
         drop_breadcrumb( {:name=>"Edit Repository '#{@repo.name}'", :url=>"/repository/edit/#{@repo.id}"} )
         @in_a_form = true
         render :update do |page|
@@ -161,7 +161,7 @@ class RepositoryController < ApplicationController
         end
       end
     when "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
         page.redirect_to :action=>'edit', :id=>@repo.id
@@ -206,7 +206,7 @@ class RepositoryController < ApplicationController
                 @flash_array == nil # Tag screen showing, so return
 
       if ! @refresh_partial # if no button handler ran, show not implemented msg
-        add_flash(I18n.t("flash.button.not_implemented"), :error)
+        add_flash(_("Button not yet implemented"), :error)
         @refresh_partial = "layouts/flash_msg"
         @refresh_div = "flash_msg_div"
       end
@@ -284,16 +284,16 @@ class RepositoryController < ApplicationController
       sp = nil                              # Init the smartproxy
       spid = current.config[:repository_scanning][:defaultsmartproxy]
       if spid == nil
-        add_flash(I18n.t("flash.repository.no_default_configured"), :error)
+        add_flash(_("No Default Repository SmartProxy is configured, contact your CFME Administrator"), :error)
         return
       elsif MiqProxy.exists?(spid) == false
-        add_flash(I18n.t("flash.repository.default_repository_doesnt_exist"), :error)
+        add_flash(_("The Default Repository SmartProxy no longer exists, contact your CFME Administrator"), :error)
         return
       else
         begin
           sp = MiqProxy.find(spid)
         rescue StandardError => bang
-          add_flash(I18n.t("flash.repository.default_repository_invalid"), :error)
+          add_flash(_("The Default Repository SmartProxy is not valid, contact your CFME Administrator"), :error)
           add_flash(I18n.t("flash.error_during", :task=>"refresh") << bang.message, :error)
           return
         end

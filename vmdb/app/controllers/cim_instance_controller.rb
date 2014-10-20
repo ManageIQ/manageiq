@@ -82,7 +82,7 @@ class CimInstanceController < ApplicationController
                 ].include?(params[:pressed]) && @flash_array == nil # Sub screen showing, so return
 
       if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented message
-        add_flash(I18n.t("flash.button.not_implemented"), :error)
+        add_flash(_("Button not yet implemented"), :error)
         @refresh_partial = "layouts/flash_msg"
         @refresh_div     = "flash_msg_div"
       elsif @flash_array && @lastaction == "show"

@@ -46,7 +46,7 @@ class ServiceController < ApplicationController
     if @refresh_partial
       replace_right_cell(action)
     else
-      add_flash(I18n.t("flash.button.not_implemented") + " #{model}:#{action}", :error) unless @flash_array
+      add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
@@ -187,7 +187,7 @@ class ServiceController < ApplicationController
       when "reset", nil # Reset or first time in
         service_set_form_vars
         if params[:button] == "reset"
-          add_flash(I18n.t("flash.edit.reset"), :warning)
+          add_flash(_("All changes have been reset"), :warning)
         end
         @changed = session[:changed] = false
         replace_right_cell("service_edit")

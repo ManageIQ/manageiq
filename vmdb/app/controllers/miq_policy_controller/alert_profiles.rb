@@ -21,7 +21,7 @@ module MiqPolicyController::AlertProfiles
       alert_profile_build_edit_screen
       @sb[:action] = "alert_profile_edit"
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("ap")
       return
@@ -88,7 +88,7 @@ module MiqPolicyController::AlertProfiles
         add_flash(I18n.t("flash.edit.select_required", :selection=>"A Tag Category"), :error)
       elsif @assign[:new][:assign_to] &&
             (@assign[:new][:assign_to] != "enterprise" && @assign[:new][:objects].length == 0)
-        add_flash(I18n.t("flash.edit.check_required"), :error)
+        add_flash(_("At least one Selection must be checked"), :error)
       end
       unless flash_errors?
         alert_profile_assign_save
@@ -100,7 +100,7 @@ module MiqPolicyController::AlertProfiles
     when "reset", nil # Reset or first time in
       alert_profile_build_assign_screen
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("ap")
     end

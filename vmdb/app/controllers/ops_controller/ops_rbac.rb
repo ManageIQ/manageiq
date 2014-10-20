@@ -203,7 +203,7 @@ module OpsController::OpsRbac
     case params[:button]
     when "cancel"
       @edit = nil
-      add_flash(I18n.t("flash.ops.rbac.user_group_sequence_cancelled"))
+      add_flash(_("Edit Sequence of User Groups was cancelled by the user"))
       get_node_info(x_node)
       replace_right_cell(x_node)
     when "save"
@@ -222,7 +222,7 @@ module OpsController::OpsRbac
         end
       end
       if !err
-        add_flash(I18n.t("flash.ops.rbac.user_group_sequence_saved"))
+        add_flash(_("User Group Sequence was saved"))
         @_in_a_form = false
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
@@ -236,7 +236,7 @@ module OpsController::OpsRbac
       rbac_group_seq_edit_screen
       @in_a_form = true
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("group_seq")
     end
@@ -393,7 +393,7 @@ module OpsController::OpsRbac
     rbac_tags_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    add_flash(I18n.t("flash.edit.reset"), :warning)  if params[:button] == "reset"
+    add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
     @right_cell_text = I18n.t("cell_header.editing_model_for_record",:name=>ui_lookup(:models=>@tagging),:model=>"#{session[:customer_name]} Tags")
     replace_right_cell("root")
@@ -486,7 +486,7 @@ module OpsController::OpsRbac
     self.send("rbac_#{what}_set_form_vars")
     @in_a_form = true
     session[:changed] = false
-    add_flash(I18n.t("flash.edit.reset"), :warning)  if params[:button] == "reset"
+    add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
     if @edit["#{key.to_s}_id".to_sym]
       caption = (key == :group) ? @record.description : @record.name
@@ -837,11 +837,11 @@ module OpsController::OpsRbac
   def rbac_user_validate?
     valid = true
     if @edit[:new][:password] != @edit[:new][:password2]
-      add_flash(I18n.t("flash.edit.passwords_mismatch"), :error)
+      add_flash(_("Password/Verify Password do not match"), :error)
       valid = false
     end
     if @edit[:new][:group].blank?
-      add_flash(I18n.t("flash.ops.rbac.user_assigned_to_group"), :error)
+      add_flash(_("A User must be assigned to a Group"), :error)
       valid = false
     end
     valid
@@ -1122,7 +1122,7 @@ module OpsController::OpsRbac
       @assigned_filters = []
     end
     if @edit[:new][:role].nil? || @edit[:new][:role] == ""
-      add_flash(I18n.t("flash.ops.settings.user_group_assign_role"), :error)
+      add_flash(_("A User Group must be assigned a Role"), :error)
       valid = false
     end
     valid

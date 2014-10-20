@@ -6,7 +6,7 @@ module ReportController::Dashboards
     case params[:button]
     when "cancel"
       @edit = session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.db_sequence_cancelled"))
+      add_flash(_("Edit of Dashboard Sequence was cancelled by the user"))
       replace_right_cell
     when "save"
       return unless load_edit("db_edit__seq","replace_cell__explorer")
@@ -28,7 +28,7 @@ module ReportController::Dashboards
           err = true
         end
       if !err
-        add_flash(I18n.t("flash.db_sequence_saved"))
+        add_flash(_("Dashboard Sequence was saved"))
         @edit = session[:edit] = nil    # clean out the saved info
         replace_right_cell(:replace_trees => [:db])
       else
@@ -41,7 +41,7 @@ module ReportController::Dashboards
     when "reset", nil # Reset or first time in
       db_seq_edit_screen
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       @lock_tree = true
       session[:changed] = @changed = false
@@ -102,7 +102,7 @@ module ReportController::Dashboards
           end
         end
       else
-        add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
         @db = params[:id] && params[:id] != "new" ? find_by_id_filtered(MiqWidgetSet, params[:id]) : MiqWidgetSet.new
         db_set_form_vars
         session[:changed] = false

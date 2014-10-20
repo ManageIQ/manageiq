@@ -70,7 +70,7 @@ module PxeController::PxeImageTypes
       end
     else
       #first time in or reset
-      add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+      add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
       unless params[:id]
         obj           = find_checked_items
         @_params[:id] = obj[0] unless obj.empty?

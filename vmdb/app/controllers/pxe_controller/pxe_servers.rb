@@ -89,7 +89,7 @@ module PxeController::PxeServers
         end
       end
     elsif params[:button] == "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       pxe_server_edit
     end
@@ -237,7 +237,7 @@ module PxeController::PxeServers
       @in_a_form = true
       session[:changed] = false
       if params[:button] == "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("pi")
     end
@@ -292,7 +292,7 @@ module PxeController::PxeServers
         @in_a_form = true
         session[:changed] = false
         if params[:button] == "reset"
-          add_flash(I18n.t("flash.edit.reset"), :warning)
+          add_flash(_("All changes have been reset"), :warning)
         end
         replace_right_cell("wi")
     end
@@ -330,7 +330,7 @@ module PxeController::PxeServers
       if @edit[:new][:log_password].blank?
         add_flash(I18n.t("flash.edit.field_required", :field=>"Password"), :error)
       elsif @edit[:new][:log_password] != @edit[:new][:log_verify]
-        add_flash(I18n.t("flash.edit.passwords_mismatch"), :error)
+        add_flash(_("Password/Verify Password do not match"), :error)
       end
     end
   end

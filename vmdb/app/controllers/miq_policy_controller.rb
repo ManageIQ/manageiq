@@ -159,7 +159,7 @@ class MiqPolicyController < ApplicationController
                                 :action => "export")
       end
     else
-      redirect_options.merge!(:flash_msg => I18n.t("flash.locate_import_file"),
+      redirect_options.merge!(:flash_msg => _("Use the Browse button to locate an Import file"),
                               :flash_error => true,
                               :action => "export")
     end
@@ -189,7 +189,7 @@ class MiqPolicyController < ApplicationController
         add_flash(I18n.t("flash.error_during", :task=>"upload") << bang.message, :error)
       else
         @sb[:hide] = false
-        add_flash(I18n.t("flash.import_success"))
+        add_flash(_("Import file was uploaded successfully"))
       end
 
       render :update do |page|
@@ -206,9 +206,9 @@ class MiqPolicyController < ApplicationController
     #init import
     else
       if @sb[:conflict]
-        add_flash(I18n.t("flash.policy.import_not_available"),:error)
+        add_flash(_("Import not available due to conflicts"),:error)
       else
-        add_flash(I18n.t("flash.policy.commit_import")) if !@flash_array
+        add_flash(_("Press commit to Import")) if !@flash_array
       end
       render :action=>"import", :layout=> true
     end
@@ -349,7 +349,7 @@ class MiqPolicyController < ApplicationController
   def log
     @breadcrumbs = Array.new
     @log = $policy_log.contents(nil,1000)
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     @lastaction = "policy_logs"
     @layout = "miq_policy_logs"
     @msg_title = "Policy"
@@ -364,7 +364,7 @@ class MiqPolicyController < ApplicationController
   def refresh_log
     @log = $policy_log.contents(nil,1000)
     @temp[:server] = MiqServer.my_server
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("main_div", :partial=>"layouts/log_viewer")
     end

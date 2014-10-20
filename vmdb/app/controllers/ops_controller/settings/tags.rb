@@ -128,7 +128,7 @@ module OpsController::Settings::Tags
       @in_a_form = true
       session[:changed] = false
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("ce")
     end

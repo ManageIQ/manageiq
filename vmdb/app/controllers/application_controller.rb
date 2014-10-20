@@ -110,8 +110,8 @@ class ApplicationController < ActionController::Base
 
   # Put out error msg if user's role is not authorized for an action
   def auth_error
-    add_flash(I18n.t("flash.user_not_authorized"), :error)
-    add_flash(I18n.t("flash.press_back_button"))
+    add_flash(_("The user is not authorized for this task or item."), :error)
+    add_flash(_("Press your browser's Back button or click a tab to continue"))
 #   render(:text=>"User is not authorized for this task . . . press your browser's Back button to continue")
   end
 
@@ -796,7 +796,7 @@ class ApplicationController < ActionController::Base
     title = @report.name
     @title = @report.title
     if @report.extras[:total_html_rows] == 0
-      add_flash(I18n.t("flash.report.no_records_found"), :warning)
+      add_flash(_("No records found for this report"), :warning)
       html = nil
     else
       html = report_build_html_table(@report,
@@ -819,7 +819,7 @@ class ApplicationController < ActionController::Base
   private :calculate_lastaction
 
   def report_edit_aborted(lastaction)
-    add_flash(I18n.t("flash.edit.aborted"), :error)
+    add_flash(_("Edit aborted!  CFME does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."), :error)
     session[:flash_msgs] = @flash_array.dup
     if request.xml_http_request?  # Is this an Ajax request?
       if lastaction == "configuration"
@@ -1331,7 +1331,7 @@ class ApplicationController < ActionController::Base
   def handle_button_rbac
     pass = check_button_rbac
     unless pass
-      add_flash(I18n.t("flash.user_not_authorized"), :error)
+      add_flash(_("The user is not authorized for this task or item."), :error)
       render_flash
     end
     pass
@@ -2695,7 +2695,7 @@ class ApplicationController < ActionController::Base
 
   def assert_privileges(feature)
     raise MiqException::RbacPrivilegeException,
-          I18n.t("flash.user_not_authorized") unless role_allows(:feature => feature)
+          _("The user is not authorized for this task or item.") unless role_allows(:feature => feature)
   end
 
   def valid_route?(request_method, controller,  action)

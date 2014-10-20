@@ -145,7 +145,7 @@ module PxeController::PxeCustomizationTemplates
         end
       end
     elsif params[:button] == "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       customization_template_edit
     end

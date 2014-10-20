@@ -74,7 +74,7 @@ class MiqAeClassController < ApplicationController
 
   def x_button
     @sb[:action] = action = params[:pressed]
-    raise ActionController::RoutingError, I18n.t("flash.invalid_button_action") unless
+    raise ActionController::RoutingError, _("Invalid button action.") unless
         AE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
     send(AE_X_BUTTON_ALLOWED_ACTIONS[action])
   end
@@ -919,7 +919,7 @@ class MiqAeClassController < ApplicationController
       end
     when "reset"
       set_instances_form_vars
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       @button = "reset"
       replace_right_cell
@@ -1100,7 +1100,7 @@ class MiqAeClassController < ApplicationController
     res = MiqAeMethod.validate_syntax(@edit[:new][:data])
     line = 0
     if !res
-      add_flash(I18n.t("flash.data_validation_success"))
+      add_flash(_("Data validated successfully"))
     else
       res.each do |err|
         line = err[0] if line == 0
@@ -1327,7 +1327,7 @@ class MiqAeClassController < ApplicationController
     when "reset"
       set_form_vars
       session[:changed] = @changed = false
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @button = "reset"
       replace_right_cell
     else
@@ -1382,7 +1382,7 @@ class MiqAeClassController < ApplicationController
     when "reset"
       fields_set_form_vars
       session[:changed] = @changed = false
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @button = "reset"
       @in_a_form = true
       replace_right_cell
@@ -1431,7 +1431,7 @@ class MiqAeClassController < ApplicationController
     when "reset"
       ns_set_form_vars
       session[:changed] = @changed = false
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @button = "reset"
       replace_right_cell
     else
@@ -1495,7 +1495,7 @@ class MiqAeClassController < ApplicationController
       set_method_form_vars
       session[:changed] = @changed = false
       @in_a_form = true
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @button = "reset"
       replace_right_cell
     else
@@ -1798,7 +1798,7 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       @sb[:action] = session[:edit] = nil # clean out the saved info
-      add_flash(I18n.t("flash.class_schema_sequence_cancelled"))
+      add_flash(_("Edit of Class Schema Sequence was cancelled by the user"))
       @in_a_form = false
       replace_right_cell
     when "save"
@@ -1817,7 +1817,7 @@ class MiqAeClassController < ApplicationController
         end
       end
       if !err
-        add_flash(I18n.t("flash.class_schema_sequence_saved"))
+        add_flash(_("Class Schema Sequence was saved"))
         @sb[:action] = @edit = session[:edit] = nil # clean out the saved info
         @in_a_form = false
         replace_right_cell
@@ -1833,7 +1833,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = true
       fields_seq_edit_screen(id)
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell
     end
@@ -1860,7 +1860,7 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.priority_order_cancelled"))
+      add_flash(_("Edit of Priority Order was cancelled by the user"))
       replace_right_cell
     when "save"
       return unless load_edit("priority__edit", "replace_cell__explorer")
@@ -1869,12 +1869,12 @@ class MiqAeClassController < ApplicationController
         domains.push(MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id)
       end
       MiqAeDomain.reset_priority_by_ordered_ids(domains)
-      add_flash(I18n.t("flash.priority_order_saved"))
+      add_flash(_("Priority Order was saved"))
       @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell([:ae])
     when "reset", nil # Reset or first time in
       priority_edit_screen
-      add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+      add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
       session[:changed] = @changed = false
       replace_right_cell
     end
@@ -2047,7 +2047,7 @@ private
     @changed = session[:changed] = @in_a_form = true
     copy_objects_edit_screen(typ, ids, button_pressed)
     if params[:button] == "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
     end
     build_ae_tree(:automate, :automate_tree)
     replace_right_cell

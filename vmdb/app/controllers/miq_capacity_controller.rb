@@ -98,7 +98,7 @@ class MiqCapacityController < ApplicationController
               planning_replace_right_cell
             else
               if @sb[:planning][:no_data] # to prevent double render error, making sure it's not wait_for_task transaction
-                add_flash(I18n.t("flash.capacity.utilization_data_not_available"), :warning)
+                add_flash(_("No Utilization data available to generate planning results"), :warning)
                 render :update do |page|
                   page.replace("planning_options_div", :partial=>"planning_options")
                   page << "miqSparkle(false);"
@@ -554,7 +554,7 @@ class MiqCapacityController < ApplicationController
     @right_cell_text = "Planning Summary"
     if params[:button] == "reset"
       session[:changed] = false
-      add_flash(I18n.t("flash.capacity.planning_reset"))
+      add_flash(_("Planning options have been reset by the user"))
       v_buttons, v_xml = build_toolbar_buttons_and_xml("miq_capacity_view_tb")
       render :update do |page|  # Redraw the screen
         page << "if($('view_buttons_div'))$('view_buttons_div').show();" if v_buttons && v_xml
@@ -722,7 +722,7 @@ class MiqCapacityController < ApplicationController
       begin
           @sb[:bottlenecks][:report].generate_table(:userid => session[:userid])
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_building_timeline") << bang.message, :error)
+        add_flash(_("Error building timeline ") << bang.message, :error)
       else
         bottleneck_tl_to_xml
       end
@@ -733,7 +733,7 @@ class MiqCapacityController < ApplicationController
   def bottleneck_tl_to_xml
     @timeline = true
     if @sb[:bottlenecks][:report].table.data.length == 0
-      add_flash(I18n.t("flash.no_timeline_records_found"), :warning)
+      add_flash(_("No records found for this timeline"), :warning)
     else
       tz = @sb[:bottlenecks][:report].tz ? @sb[:bottlenecks][:report].tz : Time.zone
       @sb[:bottlenecks][:report].extras[:browser_name] = browser_info("name").downcase

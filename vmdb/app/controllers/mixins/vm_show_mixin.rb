@@ -79,7 +79,7 @@ module VmShowMixin
     @vm = @record = identify_record(id, VmOrTemplate) unless @record
 
     if @record == nil
-      add_flash(I18n.t("flash.error_no_longer_exists"), :error)
+      add_flash(_("Error: Record no longer exists in the database"), :error)
       if request.xml_http_request?  && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
         @delete_node = params[:id]                  # Set node to be removed from the tree
       end

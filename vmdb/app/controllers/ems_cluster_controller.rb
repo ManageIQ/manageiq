@@ -187,7 +187,7 @@ class EmsClusterController < ApplicationController
     return if ["ems_cluster_tag","ems_cluster_compare","common_drift","ems_cluster_protect"].include?(params[:pressed]) && @flash_array == nil   # Tag screen showing, so return
 
     if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     elsif @flash_array && @lastaction == "show"
