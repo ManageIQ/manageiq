@@ -918,13 +918,13 @@ module ApplicationController::Compare
       title = request.parameters["controller"].pluralize.titleize
     end
     if vms.length < 2
-      add_flash(I18n.t("flash.button.at_least_2_selected", :model=>title, :action=>"Compare"), :error)
+      add_flash(_("At least 2 %{model} must be selected for %{action}") % {:model=>title, :action=>"Compare"}, :error)
       if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
         show_list
         @refresh_partial = "layouts/gtl"
       end
     elsif vms.length > 32
-      add_flash(I18n.t("flash.button.more_than_max_selected", :max=>32, :model=>title, :action=>"Compare"), :error)
+      add_flash(_("No more than %{max} %{model} can be selected for %{action}") % {:max=>32, :model=>title, :action=>"Compare"}, :error)
       if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
         show_list
         @refresh_partial = "layouts/gtl"
@@ -969,11 +969,11 @@ module ApplicationController::Compare
     identify_obj
     tss = find_checked_items                                        # Get the indexes of the checked timestamps
     if tss.length < 2
-      add_flash(I18n.t("flash.button.at_least_2_selected", :model=>"Analyses", :action=>"Drift"), :error)
+      add_flash(_("At least 2 %{model} must be selected for %{action}") % {:model=>"Analyses", :action=>"Drift"}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
     elsif tss.length > 10
-      add_flash(I18n.t("flash.button.more_than_max_selected", :max=>10, :model=>"Analyses", :action=>"Drift"), :error)
+      add_flash(_("No more than %{max} %{model} can be selected for %{action}") % {:max=>10, :model=>"Analyses", :action=>"Drift"}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
     else

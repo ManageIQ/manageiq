@@ -52,9 +52,7 @@ module OpsController::Analytics
                                   :model=>ui_lookup(:model=>svr.class.to_s),
                                   :name=>"#{svr.name} [#{svr.id.to_s}]")
     else
-      @right_cell_text = I18n.t("cell_header.model_record",
-                                  :name=>"Enterprise",
-                                  :model=>"Analytics")
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name=>"Enterprise", :model=>"Analytics"}
       @sb[:rpt_title] = "Analytics Report for Enterprise"
     end
     analytics_gen_report

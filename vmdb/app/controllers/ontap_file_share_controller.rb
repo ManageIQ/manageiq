@@ -80,7 +80,7 @@ class OntapFileShareController < CimInstanceController
     if create_ds_valid? &&
         sfs.queue_create_datastore(@edit[:new][:ds_name],
                             Host.find(@edit[:new][:host_id]))
-      add_flash(I18n.t("flash.record.task_started", :model=>ui_lookup(:model=>"OntapFileShare"), :name=>sfs.name, :task=>"Create Datastore"))
+      add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"OntapFileShare"), :name=>sfs.name, :task=>"Create Datastore"})
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -98,7 +98,7 @@ class OntapFileShareController < CimInstanceController
 
   def create_ds_cancel
     return unless load_edit("ontap_file_share_create_ds__#{params[:id]}")
-    add_flash(I18n.t("flash.task_cancelled", :task=>"Create Datastore"))
+    add_flash(_("%s was cancelled by the user") % "Create Datastore")
     @edit = nil # clean out the saved info
     session[:flash_msgs] = @flash_array.dup                   # Put msgs in session for next transaction
     render :update do |page|
@@ -116,8 +116,8 @@ class OntapFileShareController < CimInstanceController
   end
 
   def create_ds_valid?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error) if @edit[:new][:ds_name].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Host"), :error) if @edit[:new][:host_id].blank?
+    add_flash(_("%s is required") % "Name", :error) if @edit[:new][:ds_name].blank?
+    add_flash(_("%s is required") % "Host", :error) if @edit[:new][:host_id].blank?
     return @flash_array.nil?
   end
 

@@ -217,11 +217,9 @@ module OpsController::Settings::AnalysisProfiles
       when "cancel"
         @scan = ScanItemSet.find_by_id(session[:edit][:scan_id]) if session[:edit][:scan_id]
         if @scan
-          add_flash(I18n.t("flash.edit.cancelled",
-                        :model=>ui_lookup(:model=>"ScanItemSet"), :name=>@scan.name))
+          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"ScanItemSet"), :name=>@scan.name})
         else
-          add_flash(I18n.t("flash.add.cancelled",
-                           :model=>ui_lookup(:model=>"ScanItemSet")))
+          add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"ScanItemSet"))
         end
         get_node_info(x_node)
 #       @scan = @edit[:scan] = nil
@@ -261,15 +259,14 @@ module OpsController::Settings::AnalysisProfiles
               #scanitemset.add_member()
             rescue StandardError => bang
               title = params[:button] == "add" ? "add" : "update"
-              add_flash(I18n.t("flash.error_during", :task=>title) << bang.message, :error)
+              add_flash(_("Error during '%s': ") % title << bang.message, :error)
             end
             if params[:button] == "save"
               AuditEvent.success(ap_build_saved_audit(scanitemset))
             else
               AuditEvent.success(ap_build_created_audit_set(scanitemset))
             end
-            add_flash(I18n.t("flash.edit.saved",
-                            :model=>ui_lookup(:model=>"ScanItemSet"), :name=>@edit[:new][:name]))
+            add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"ScanItemSet"), :name=>@edit[:new][:name]})
             aps_list
             @scan = @edit[:scan_id] = nil
             @edit = session[:edit] = nil  # clean out the saved info
@@ -297,7 +294,7 @@ module OpsController::Settings::AnalysisProfiles
             @scan = ScanItemSet.find(@obj[0])           # Get existing or new record
             @sb[:miq_tab] = @scan.mode == "Host" ? "edit_2" : "edit_1"
             if @scan.read_only
-              add_flash(I18n.t("flash.cant_edit_sample", :model=>ui_lookup(:model=>"ScanItemSet"), :name=>@scan.name), :error)
+              add_flash(_("Sample %{model} \"%{name}\" can not be edited") % {:model=>ui_lookup(:model=>"ScanItemSet"), :name=>@scan.name}, :error)
               get_node_info(x_node)
               replace_right_cell(@nodetype)
               return
@@ -381,14 +378,14 @@ module OpsController::Settings::AnalysisProfiles
     if !params[:id] # showing a list
       scanitemsets = find_checked_items
       if scanitemsets.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:models=>"ScanItemSet"), :task=>"deletion"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:models=>"ScanItemSet"), :task=>"deletion"}, :error)
       else
         to_delete = Array.new
         scanitemsets.each do |s|
           scan = ScanItemSet.find(s)
           if scan.read_only
             to_delete.push(s)
-            add_flash(I18n.t("flash.cant_delete_sample", :model=>ui_lookup(:model=>"ScanItemSet"), :name=>scan.name), :error)
+            add_flash(_("Default %{model} \"%{name}\" can not be deleted") % {:model=>ui_lookup(:model=>"ScanItemSet"), :name=>scan.name}, :error)
           end
         end
         #deleting elements in temporary array, had to create temp array to hold id's to be delete, .each gets confused if i deleted them in above loop
@@ -412,13 +409,13 @@ module OpsController::Settings::AnalysisProfiles
       ap_process_scanitemsets(scanitemsets, "destroy")  unless scanitemsets.empty?
     else # showing 1 scanitemset, delete it
       if params[:id] == nil || ScanItemSet.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:model=>"ScanItemSet")), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:model=>"ScanItemSet"), :error)
       else
         scanitemsets.push(params[:id])
       end
       @single_delete = true
       ap_process_scanitemsets(scanitemsets, "destroy")  if ! scanitemsets.empty?
-      add_flash(I18n.t("flash.record.deleted_for_1_record", :model=>ui_lookup(:models=>"ScanItemSet"))) if @flash_array == nil
+      add_flash(_("The selected %s was deleted") % ui_lookup(:models=>"ScanItemSet")) if @flash_array == nil
     end
     self.x_node = "xx-sis"
     get_node_info(x_node)
@@ -512,8 +509,7 @@ module OpsController::Settings::AnalysisProfiles
             #resetting flash_array to not show a message for each memmber that is saved for a scanitemset
             @flash_array = Array.new
           rescue StandardError => bang
-            add_flash(I18n.t("flash.record.error_during_task",
-                            :model=>ui_lookup(:model=>"ScanItemSet"), :name=>scanitem.name, :task=>"update") << bang.message,
+            add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>ui_lookup(:model=>"ScanItemSet"), :name=>scanitem.name, :task=>"update"} << bang.message,
                       :error)
           end
         end
@@ -580,7 +576,7 @@ module OpsController::Settings::AnalysisProfiles
 
   def ap_get_form_vars_file
     unless params[:entry]['fname'].present?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"File Entry"), :error)
+      add_flash(_("%s is required") % "File Entry", :error)
       return
     end
     item_type = params[:item]['type1']
@@ -614,7 +610,7 @@ module OpsController::Settings::AnalysisProfiles
         :key   => params[:entry]['kname'],
         :value => params[:entry]['value'],
       }
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Registry Entry"), :error)
+      add_flash(_("%s is required") % "Registry Entry", :error)
       return
     end
     session[:reg_data] = {}
@@ -672,7 +668,7 @@ module OpsController::Settings::AnalysisProfiles
       #session[:nteventlog_data][:rec_count] = params[:entry]["rec_count"].to_i
       session[:nteventlog_data][:num_days] = params[:entry]["num_days"].to_i
       session[:nteventlog_data][:source] = params[:entry]["source"]
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Event log name"), :error)
+      add_flash(_("%s is required") % "Event log name", :error)
       return
     else
       session[:nteventlog_data] = Hash.new

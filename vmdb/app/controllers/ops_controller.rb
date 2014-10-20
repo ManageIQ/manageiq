@@ -590,12 +590,12 @@ class OpsController < ApplicationController
               #when editing zone in settings tree
               if @zone.id.blank?
                 partial_div = "settings_list"
-                right_cell_text = I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"Zone"))
+                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"Zone")
               else
                 partial_div = "settings_evm_servers"
                 right_cell_text = @edit ?
-                  I18n.t("cell_header.editing_model_record",:name=>@zone.description,:model=>ui_lookup(:model=>"Zone")) :
-                  I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"Zone"),:name=>@zone.description)
+                  _("Editing %{model} \"%{name}\"") % {:name=>@zone.description, :model=>ui_lookup(:model=>"Zone")} :
+                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"Zone"), :name=>@zone.description}
               end
               page.replace_html(partial_div, :partial=>"zone_form")
               page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
@@ -603,20 +603,20 @@ class OpsController < ApplicationController
               #when editing/adding category in settings tree
               page.replace_html("settings_co_categories", :partial=>"category_form")
               if !@category
-                right_cell_text = I18n.t("cell_header.adding_model_record",:model=>"Category")
+                right_cell_text = _("Adding a new %s") % "Category"
               else
-                right_cell_text = I18n.t("cell_header.editing_model_record",:name=>@category.description,:model=>"Category")
+                right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>@category.description, :model=>"Category"}
               end
               page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
             when "sie"        #scanitemset edit
               #when editing/adding scanitem in settings tree
               page.replace_html("settings_list", :partial=>"ap_form")
               if !@scan.id
-                right_cell_text = I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"ScanItemSet"))
+                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"ScanItemSet")
               else
                 right_cell_text = @edit ?
-                  I18n.t("cell_header.editing_model_record",:name=>@scan.name,:model=>ui_lookup(:model=>"ScanItemSet")) :
-                  I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"ScanItemSet"),:name=>@scan.name)
+                  _("Editing %{model} \"%{name}\"") % {:name=>@scan.name, :model=>ui_lookup(:model=>"ScanItemSet")} :
+                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"ScanItemSet"), :name=>@scan.name}
               end
               page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
             when "se"         #schedule edit
@@ -626,33 +626,33 @@ class OpsController < ApplicationController
               page << "miq_cal_dateTo = null;"
               page << "miqBuildCalendar();"
               if !@schedule.id
-                right_cell_text = I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqSchedule"))
+                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"MiqSchedule")
               else
                 right_cell_text = @edit ?
-                  I18n.t("cell_header.editing_model_record",:name=>@schedule.name,:model=>ui_lookup(:model=>"MiqSchedule")) :
-                  I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"MiqSchedule"),:name=>@schedule.name)
+                  _("Editing %{model} \"%{name}\"") % {:name=>@schedule.name, :model=>ui_lookup(:model=>"MiqSchedule")} :
+                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name}
               end
               page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
             when "lde"          #ldap_region edit
               #when editing/adding ldap domain in settings tree
               page.replace_html("settings_list", :partial=>"ldap_domain_form")
               if !@ldap_domain.id
-                right_cell_text = I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"LdapDomain"))
+                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"LdapDomain")
               else
                 right_cell_text = @edit ?
-                    I18n.t("cell_header.editing_model_record",:name=>@ldap_domain.name,:model=>ui_lookup(:model=>"LdapDomain")) :
-                    I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"LdapDomain"),:name=>@ldap_domain.name)
+                    _("Editing %{model} \"%{name}\"") % {:name=>@ldap_domain.name, :model=>ui_lookup(:model=>"LdapDomain")} :
+                    _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"LdapDomain"), :name=>@ldap_domain.name}
               end
               page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
             when "lre"          #ldap_region edit
                                 #when editing/adding ldap region in settings tree
               page.replace_html("settings_list", :partial=>"ldap_region_form")
               if !@ldap_region.id
-                right_cell_text = I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"LdapRegion"))
+                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"LdapRegion")
               else
                 right_cell_text = @edit ?
-                    I18n.t("cell_header.editing_model_record",:name=>@ldap_region.name,:model=>ui_lookup(:model=>"LdapRegion")) :
-                    I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"LdapRegion"),:name=>@ldap_region.name)
+                    _("Editing %{model} \"%{name}\"") % {:name=>@ldap_region.name, :model=>ui_lookup(:model=>"LdapRegion")} :
+                    _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"LdapRegion"), :name=>@ldap_region.name}
               end
               page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
             when 'rhn'          # rhn subscription edit

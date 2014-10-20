@@ -20,8 +20,7 @@ module ReportController::Reports
     build_report_listnav
     @report_result_id = MiqReportResult.find_by_miq_task_id(session[:rpt_task_id]).id       #need to save this for download buttons
     if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(I18n.t("flash.report.generation_error",
-                      :status=>miq_task.status, :message=>miq_task.message),
+      add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status=>miq_task.status, :message=>miq_task.message},
                 :error)
       title = MiqReport.find(session[:rpt_id]).name
     else
@@ -38,9 +37,7 @@ module ReportController::Reports
       page.replace_html("report_list_div", :partial=>"report_list")
       page << "reports_tree.saveOpenStates('reports_tree','path=/');"
       page << "reports_tree.selectItem('#{x_node(:reports_tree)}');"
-      cell_text = I18n.t("cell_header.model_record",
-                        :name=>title,
-                        :model=>ui_lookup(:model=>"MiqReport"))
+      cell_text = _("%{model} \"%{name}\"") % {:name=>title, :model=>ui_lookup(:model=>"MiqReport")}
       page << "dhxLayout.cells('b').setText(\'#{j_str(cell_text)}\');"
       page << "miqSparkle(false);"
     end
@@ -72,12 +69,8 @@ module ReportController::Reports
     savedreports = view.table.data
     r = savedreports.first
     @right_cell_div  = "report_list"
-    @right_cell_text ||= I18n.t("cell_header.model_record",
-                              :name=>r.name,
-                              :model=>"Saved Report")
-    add_flash(I18n.t("flash.edit.saved",
-                    :model=>ui_lookup(:model=>"MiqReport"),
-                    :name=>r.name))
+    @right_cell_text ||= _("%{model} \"%{name}\"") % {:name=>r.name, :model=>"Saved Report"}
+    add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>r.name})
     @sb[:rep_tree_build_time] = Time.now.utc
     replace_right_cell(:replace_trees => [:reports,:savedreports])
   end
@@ -95,8 +88,7 @@ module ReportController::Reports
     miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
     rpt = miq_task.task_results
     if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(I18n.t("flash.report.preview_error",
-                      :status=>miq_task.status, :message=>miq_task.message),
+      add_flash(_("Report preview generation returned: Status [%{status}] Message [%{message}]") % {:status=>miq_task.status, :message=>miq_task.message},
                 :error)
     else
       rr = miq_task.miq_report_result
@@ -139,7 +131,7 @@ module ReportController::Reports
     else
       begin
         if rpt.rpt_type == "Default"
-          add_flash(I18n.t("flash.cant_delete_default", :model=>ui_lookup(:model=>"MiqReport"), :name=>rpt.name), :error)
+          add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>rpt.name}, :error)
           redirect_to :action=>"editreport", :id=>rpt.id, :flash_msg=>flash, :flash_error=>true
           return
         end
@@ -147,15 +139,13 @@ module ReportController::Reports
         audit = {:event=>"report_record_delete", :message=>"[#{rpt_name}] Record deleted", :target_id=>rpt.id, :target_class=>"MiqReport", :userid => session[:userid]}
         rpt.destroy
       rescue StandardError => bang
-        add_flash(I18n.t("flash.record.error_during_task", :model=>ui_lookup(:model=>"MiqReport"), :name=>rpt_name, :task=>task) << bang.message, :error)
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>rpt_name, :task=>task} << bang.message, :error)
         render :update do |page|
           page.replace("flash_msg_div_report_list", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_report_list"})
         end
       else
         AuditEvent.success(audit)
-        add_flash(I18n.t("flash.record.deleted",
-                        :model=>ui_lookup(:model=>"MiqReport"),
-                        :name=>rpt_name))
+        add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>rpt_name})
       end
       params[:id] = nil
       @sb[:rep_tree_build_time] = Time.now.utc
@@ -255,9 +245,7 @@ module ReportController::Reports
     end
 
     @sb[:tree_typ]   = "reports"
-    @right_cell_text = I18n.t("cell_header.model_record",
-                              :name=>@miq_report.name,
-                              :model=>ui_lookup(:model=>"MiqReport"))
+    @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@miq_report.name, :model=>ui_lookup(:model=>"MiqReport")}
   end
 
   # Show the current report in text format
@@ -305,41 +293,41 @@ module ReportController::Reports
 
     if @edit[:new][:model] == TREND_MODEL
       unless @edit[:new][:perf_trend_col]
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Trending for"), :error)
+        add_flash(_("%s is required") % "Trending for", :error)
         @sb[:miq_tab] = "new_1"
       end
       unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
-        add_flash(I18n.t("flash.edit.field_must_be.configured", :field=>"Trend Target Limit"), :error)
+        add_flash(_("%s must be configured") % "Trend Target Limit", :error)
         @sb[:miq_tab] = "new_1"
       end
       if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
-        add_flash(I18n.t("flash.edit.field_must_be.numeric", :field=>"Trend Target Limit"), :error)
+        add_flash(_("%s must be numeric") % "Trend Target Limit", :error)
         @sb[:miq_tab] = "new_1"
       end
     else
       if @edit[:new][:fields].length == 0
-        add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Field"), :error)
+        add_flash(_("At least one %s must be selected") % "Field", :error)
         @sb[:miq_tab] = "new_1"
       end
     end
 
     if @edit[:new][:model] == "Chargeback"
       unless @edit[:new][:cb_show_typ]
-        add_flash(I18n.t("flash.edit.select_required", :selection=>"Show Costs by"), :error)
+        add_flash(_("%s must be selected") % "Show Costs by", :error)
         @sb[:miq_tab] = "new_3"
       else
         if @edit[:new][:cb_show_typ] == "owner"
           unless @edit[:new][:cb_owner_id]
-            add_flash(I18n.t("flash.edit.select_required", :selection=>"An Owner"), :error)
+            add_flash(_("%s must be selected") % "An Owner", :error)
             @sb[:miq_tab] = "new_3"
           end
         elsif @edit[:new][:cb_show_typ] == "tag"
           unless @edit[:new][:cb_tag_cat]
-            add_flash(I18n.t("flash.edit.select_required", :selection=>"A Tag Category"), :error)
+            add_flash(_("%s must be selected") % "A Tag Category", :error)
             @sb[:miq_tab] = "new_3"
           else
             unless @edit[:new][:cb_tag_value]
-              add_flash(I18n.t("flash.edit.select_required", :selection=>"A Tag"), :error)
+              add_flash(_("%s must be selected") % "A Tag", :error)
               @sb[:miq_tab] = "new_3"
             end
           end
@@ -384,50 +372,50 @@ module ReportController::Reports
     case @sb[:miq_tab].split("_")[1]
     when "8"
       if @edit[:new][:fields].length == 0
-        add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab=>"Consolidation"), :error)
+        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Consolidation", :error)
         @sb[:miq_tab] = "new_1"
       end
     when "2"
       if @edit[:new][:fields].length == 0
-        add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab=>"Formatting"), :error)
+        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Formatting", :error)
         @sb[:miq_tab] = "new_1"
       end
     when "3"
       if @edit[:new][:model] == TREND_MODEL
         unless @edit[:new][:perf_trend_col]
-          add_flash(I18n.t("flash.edit.tab_needs.field_selected", :tab=>"Filter", :field=>"Trending for"), :error)
+          add_flash(_("%{tab} tab is not available until %{field} field has been selected") % {:tab=>"Filter", :field=>"Trending for"}, :error)
           @sb[:miq_tab] = "new_1"
         end
         unless @edit[:new][:perf_limit_col] ||@edit[:new][:perf_limit_val]
-          add_flash(I18n.t("flash.edit.tab_needs.field_configured", :tab=>"Filter", :field=>"Trending Target Limit"), :error)
+          add_flash(_("%{tab} tab is not available until %{field} has been configured") % {:tab=>"Filter", :field=>"Trending Target Limit"}, :error)
           @sb[:miq_tab] = "new_1"
         end
         if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
-          add_flash(I18n.t("flash.edit.field_must_be.numeric", :field=>"Trend Target Limit"), :error)
+          add_flash(_("%s must be numeric") % "Trend Target Limit", :error)
           @sb[:miq_tab] = "new_1"
         end
       else
         if @edit[:new][:fields].length == 0
-          add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab=>"Filter"), :error)
+          add_flash(_("%s tab is not available until at least 1 field has been selected") % "Filter", :error)
           @sb[:miq_tab] = "new_1"
         end
       end
     when "4"
       if @edit[:new][:fields].length == 0
-        add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab=>"Summary"), :error)
+        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Summary", :error)
         @sb[:miq_tab] = "new_1"
       end
     when "5"
       if @edit[:new][:fields].length == 0
-        add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab=>"Charts"), :error)
+        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Charts", :error)
         @sb[:miq_tab] = "new_1"
       elsif @edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING
-        add_flash(I18n.t("flash.edit.tab_needs.sort_field", :tab=>"Charts"), :error)
+        add_flash(_("%s tab is not available unless a sort field has been selected") % "Charts", :error)
         @sb[:miq_tab] = "new_4"
       end
     when "6"
       if @edit[:new][:fields].length == 0
-        add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab=>"Timeline"), :error)
+        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Timeline", :error)
         @sb[:miq_tab] = "new_1"
       else
         found = false
@@ -438,40 +426,40 @@ module ReportController::Reports
           end
         end
         unless found
-          add_flash(I18n.t("flash.edit.tab_needs.time_field", :tab=>"Timeline"), :error)
+          add_flash(_("%s tab is not available unless at least 1 time field has been selected") % "Timeline", :error)
           @sb[:miq_tab] = "new_1"
         end
       end
     when "7"
       if @edit[:new][:model] == TREND_MODEL
         unless @edit[:new][:perf_trend_col]
-          add_flash(I18n.t("flash.edit.tab_needs.field_selected", :tab=>"Preview", :field=>"Trending for"), :error)
+          add_flash(_("%{tab} tab is not available until %{field} field has been selected") % {:tab=>"Preview", :field=>"Trending for"}, :error)
           @sb[:miq_tab] = "new_1"
         end
         unless @edit[:new][:perf_limit_col] ||@edit[:new][:perf_limit_val]
-          add_flash(I18n.t("flash.edit.tab_needs.field_configured", :tab=>"Preview", :field=>"Trend Target Limit"), :error)
+          add_flash(_("%{tab} tab is not available until %{field} has been configured") % {:tab=>"Preview", :field=>"Trend Target Limit"}, :error)
           @sb[:miq_tab] = "new_1"
         end
         if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
-          add_flash(I18n.t("flash.edit.field_must_be.numeric", :field=>"Trend Target Limit: Value"), :error)
+          add_flash(_("%s must be numeric") % "Trend Target Limit: Value", :error)
           @sb[:miq_tab] = "new_1"
         end
       else
         if @edit[:new][:fields].length == 0
-          add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab=>"Preview"), :error)
+          add_flash(_("%s tab is not available until at least 1 field has been selected") % "Preview", :error)
           @sb[:miq_tab] = "new_1"
         elsif @edit[:new][:model] == "Chargeback"
           unless @edit[:new][:cb_show_typ] &&
                   ((@edit[:new][:cb_show_typ] == "owner" && @edit[:new][:cb_owner_id]) ||
                     (@edit[:new][:cb_show_typ] == "tag" && @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]))
-            add_flash(I18n.t("flash.edit.tab_needs.field_configured", :tab=>"Preview", :field=>"Chargeback Filters"), :error)
+            add_flash(_("%{tab} tab is not available until %{field} has been configured") % {:tab=>"Preview", :field=>"Chargeback Filters"}, :error)
             @sb[:miq_tab] = "new_3"
           end
         end
       end
     when "9"
       if @edit[:new][:fields].length == 0
-        add_flash(I18n.t("flash.edit.tab_needs.1_field", :tab => "Styling"), :error)
+        add_flash(_("%s tab is not available until at least 1 field has been selected") %  "Styling", :error)
         @sb[:miq_tab] = "new_1"
       end
     end

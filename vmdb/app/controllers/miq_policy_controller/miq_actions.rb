@@ -8,11 +8,9 @@ module MiqPolicyController::MiqActions
       @edit = nil
       @action = MiqAction.find_by_id(session[:edit][:action_id]) if session[:edit] && session[:edit][:action_id]
       if @action && @action.id
-        add_flash(I18n.t("flash.edit.cancelled",
-                         :model=>ui_lookup(:model=>"MiqAction"),:name=>@action.description))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAction"), :name=>@action.description})
       else
-        add_flash(I18n.t("flash.add.cancelled",
-                         :model=>ui_lookup(:model=>"MiqAction")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAction"))
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
@@ -71,14 +69,13 @@ module MiqPolicyController::MiqActions
     actions = Array.new
     # showing 1 action, delete it
     if params[:id] == nil || MiqAction.find_by_id(params[:id]).nil?
-      add_flash(I18n.t("flash.button.record_gone",
-                        :model=>ui_lookup(:model=>"MiqAction")),
+      add_flash(_("%s no longer exists") % ui_lookup(:model=>"MiqAction"),
                   :error)
     else
       actions.push(params[:id])
     end
     process_actions(actions, "destroy") unless actions.empty?
-    add_flash(I18n.t("flash.selected_record_deleted",:model=>ui_lookup(:models=>"MiqAction"))) if @flash_array == nil
+    add_flash(_("The selected %s was deleted") % ui_lookup(:models=>"MiqAction")) if @flash_array == nil
     @new_action_node = self.x_node = "root"
     get_node_info(x_node)
     replace_right_cell("root", [:action])
@@ -187,7 +184,7 @@ module MiqPolicyController::MiqActions
                                       choices_chosen = :choices_chosen)
     if params[:button].ends_with?("_left")
       if params[members_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.left", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
       else
         mems = @edit[:new][members].invert
         params[members_chosen].each do |mc|
@@ -197,7 +194,7 @@ module MiqPolicyController::MiqActions
       end
     elsif params[:button].ends_with?("_right")
       if params[choices_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.right", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s were selected to move right") % members.to_s.split("_").first.titleize, :error)
       else
         mems = @edit[choices].invert
         params[choices_chosen].each do |mc|
@@ -207,7 +204,7 @@ module MiqPolicyController::MiqActions
       end
     elsif params[:button].ends_with?("_allleft")
       if @edit[:new][members].length == 0
-        add_flash(I18n.t("flash.edit.no_fields_to_move.left", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
       else
         @edit[:new][members].each do |key, value|
           @edit[choices][key] = value
@@ -380,33 +377,33 @@ module MiqPolicyController::MiqActions
   def action_valid_record?(rec)
     edit = @edit[:new]
     options = edit[:options]
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Description"), :error) if edit[:description].blank?
-    add_flash(I18n.t("flash.edit.select_required", :selection=>"Action Type"), :error) if edit[:action_type].blank?
+    add_flash(_("%s is required") % "Description", :error) if edit[:description].blank?
+    add_flash(_("%s must be selected") % "Action Type", :error) if edit[:action_type].blank?
     if edit[:action_type] == "assign_scan_profile" && options[:scan_item_set_name].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Analysis Profile"), :error)
+      add_flash(_("%s is required") % "Analysis Profile", :error)
     end
     if edit[:action_type] == "set_custom_attribute" && options[:attribute].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Attribute Name"), :error)
+      add_flash(_("%s is required") % "Attribute Name", :error)
     end
     edit[:attrs].each do |k,v|
-      add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Attribute", :field=>v), :error) if k.blank? && !v.blank?
-      add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Value", :field=>k), :error) if !k.blank? && v.blank?
+      add_flash(_("%{val} missing for %{field}") % {:val=>"Attribute", :field=>v}, :error) if k.blank? && !v.blank?
+      add_flash(_("%{val} missing for %{field}") % {:val=>"Value", :field=>k}, :error) if !k.blank? && v.blank?
     end
     if edit[:action_type] == "evaluate_alerts" && edit[:alerts].empty?
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"At least one Alert"), :error)
+      add_flash(_("%s must be selected") % "At least one Alert", :error)
     end
     if edit[:action_type] == "inherit_parent_tags" && options[:parent_type].blank?
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"Parent Type"), :error)
+      add_flash(_("%s must be selected") % "Parent Type", :error)
     end
     if ["inherit_parent_tags","remove_tags"].include?(edit[:action_type]) && options[:cats].blank?
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"At least one Category"), :error)
+      add_flash(_("%s must be selected") % "At least one Category", :error)
     end
     if edit[:action_type] == "delete_snapshots_by_age" && options[:age].blank?
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"Snapshot Age"), :error)
+      add_flash(_("%s must be selected") % "Snapshot Age", :error)
     end
     if edit[:action_type] == "email"
-      add_flash(I18n.t("flash.edit.email.not_valid", :type => 'From'), :error) unless edit[:options][:from].to_s.email?
-      add_flash(I18n.t("flash.edit.email.not_valid", :type => 'To'), :error) unless edit[:options][:to].to_s.email?
+      add_flash(_("E-mail address '%s' is not valid") %  'From', :error) unless edit[:options][:from].to_s.email?
+      add_flash(_("E-mail address '%s' is not valid") %  'To', :error) unless edit[:options][:to].to_s.email?
     end
     if edit[:action_type] == "snmp_trap"
       validate_snmp_options(options)
@@ -421,7 +418,7 @@ module MiqPolicyController::MiqActions
       end
     end
     if edit[:action_type] == "tag" && options[:tags].blank?
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"At least one Tag"), :error)
+      add_flash(_("%s must be selected") % "At least one Tag", :error)
     end
     return @flash_array == nil
   end
@@ -429,7 +426,7 @@ module MiqPolicyController::MiqActions
   # Get information for an action
   def action_get_info(action)
     @record = @action = action
-    @right_cell_text = I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"MiqAction"),:name=>action.description)
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAction"), :name=>action.description}
     @right_cell_div = "action_details"
     @temp[:alert_guids] = Array.new
     if action.options && action.options[:alert_guids]

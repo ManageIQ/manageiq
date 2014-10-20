@@ -244,7 +244,7 @@ module OpsController::Settings::Common
     rescue Exception => err
       add_flash(_("Error during sending test email: ") << err.class.name << ", " << err.to_s, :error)
     else
-      add_flash(I18n.t("flash.ops.settings.test_email_sent", :email=>@sb[:new_to]))
+      add_flash(_("The test email is being delivered, check \"%s\" to verify it was successful") % @sb[:new_to])
     end
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -353,9 +353,9 @@ module OpsController::Settings::Common
         begin
           MiqServer.my_server(true).restart_queue
         rescue StandardError => bang
-          add_flash(I18n.t("flash.ops.settings.error_during_task", :task=>"Server restart") << bang.message, :error)  # Push msg and error flag
+          add_flash(_("Error during %s: ") % "Server restart" << bang.message, :error)  # Push msg and error flag
         else
-          add_flash(I18n.t("flash.record.task_initiated", :model=>ui_lookup(:table=>"evm_server"), :task=>"Restart"))
+          add_flash(_("%{model}: %{task} successfully initiated") % {:model=>ui_lookup(:table=>"evm_server"), :task=>"Restart"})
         end
       else
         db_config.errors.each do |field,msg|
@@ -377,10 +377,10 @@ module OpsController::Settings::Common
         @update.config[category] = @edit[:new][category].dup
       end
       if @edit[:new][:agent][:wsListenPort] &&  !(@edit[:new][:agent][:wsListenPort] =~ /^\d+$/)
-        add_flash(I18n.t("flash.edit.field_must_be.numeric", :field=>"Web Services Listen Port"), :error)
+        add_flash(_("%s must be numeric") % "Web Services Listen Port", :error)
       end
       if @edit[:new][:agent][:log][:wrap_size] && (!(@edit[:new][:agent][:log][:wrap_size] =~ /^\d+$/) || @edit[:new][:agent][:log][:wrap_size].to_i == 0)
-        add_flash(I18n.t("flash.edit.field_must_be.numeric_greater_than_0", :field=>"Log Wrap Size"), :error)
+        add_flash(_("%s must be numeric and greater than zero") % "Log Wrap Size", :error)
       end
       if ! @flash_array
         @update.config[:agent][:log][:wrap_size] = @edit[:new][:agent][:log][:wrap_size].to_i * 1024 * 1024
@@ -406,7 +406,7 @@ module OpsController::Settings::Common
         end
         @changed = (@edit[:new] != @edit[:current])
       else
-        add_flash(I18n.t("flash.ops.settings.advanced_settings_saved", :filename=>AVAILABLE_CONFIG_NAMES[session[:config_file_name]]))
+        add_flash(_("%s file saved") % AVAILABLE_CONFIG_NAMES[session[:config_file_name]])
         @changed = false
       end
 #     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
@@ -431,9 +431,9 @@ module OpsController::Settings::Common
         end
         AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
         if @sb[:active_tab] == "settings_server"
-          add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Configuration", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone))
+          add_flash(_("%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") % {:typ=>"Configuration", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone})
         elsif @sb[:active_tab] == "settings_authentication"
-          add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Authentication", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone))
+          add_flash(_("%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") % {:typ=>"Authentication", :name=>server.name, :server_id=>server.id, :zone=>server.my_zone})
         else
           add_flash(_("Configuration settings saved"))
         end
@@ -486,7 +486,7 @@ module OpsController::Settings::Common
         @validate = server.set_config(@update)  # Save server settings against selected server
 
         AuditEvent.success(build_config_audit(@edit[:new].config, @edit[:current].config))
-        add_flash(I18n.t("flash.ops.settings.settings_saved", :typ=>"Configuration", :name=>server.name, :server_id=>@sb[:selected_server_id], :zone=>server.my_zone))
+        add_flash(_("%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") % {:typ=>"Configuration", :name=>server.name, :server_id=>@sb[:selected_server_id], :zone=>server.my_zone})
 
         if @sb[:active_tab] == "settings_workers" &&  @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
           session[:customer_name] = @update.config[:server][:company]
@@ -537,7 +537,7 @@ module OpsController::Settings::Common
     end
     if @sb[:active_tab] == "settings_server" && @edit[:new].fetch_path(:server, :remote_console_type) == "VNC"
       unless @edit[:new][:server][:vnc_proxy_port] =~ /^\d+$/ || @edit[:new][:server][:vnc_proxy_port].blank?
-        add_flash(I18n.t("flash.edit.field_must_be.numeric", :field=>"VNC Proxy Port"), :error)
+        add_flash(_("%s must be numeric") % "VNC Proxy Port", :error)
       end
       unless (@edit[:new][:server][:vnc_proxy_address].blank? &&
           @edit[:new][:server][:vnc_proxy_port].blank?) ||
@@ -612,8 +612,7 @@ module OpsController::Settings::Common
       end
     end
   rescue StandardError => bang
-    add_flash(I18n.t("flash.ops.settings.error_during_task",
-                     :task => "Analysis Affinity save") << bang.message, :error)
+    add_flash(_("Error during %s: ") %  "Analysis Affinity save" << bang.message, :error)
   else
     add_flash(_("Analysis Affinity was saved"))
   end
@@ -883,12 +882,12 @@ module OpsController::Settings::Common
   def settings_set_form_vars
     if x_node.split("-").first == "z"
       @right_cell_text = @sb[:my_zone] == @selected_zone.name ?
-        I18n.t("cell_header.type_of_model_record_current",:typ=>"Settings",:name=>@selected_zone.description,:model=>ui_lookup(:model=>@selected_zone.class.to_s)) :
-        I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>@selected_zone.description,:model=>ui_lookup(:model=>@selected_zone.class.to_s))
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
     else
       @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
-        I18n.t("cell_header.type_of_model_record_current",:typ=>"Settings",:name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]",:model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)) :
-        I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]",:model=>ui_lookup(:model=>@temp[:selected_server].class.to_s))
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
     end
     case @sb[:active_tab]
     when "settings_server"                                  # Server Settings tab
@@ -1120,7 +1119,7 @@ module OpsController::Settings::Common
     nodes = nodetype.downcase.split("-")
     case nodes[0]
       when "root"
-        @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",:model=>ui_lookup(:model=>"MiqRegion"))
+        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
         case @sb[:active_tab]
         when "settings_details"
           settings_set_view_vars
@@ -1164,16 +1163,16 @@ module OpsController::Settings::Common
       when "xx"
         case nodes[1]
           when "z"
-            @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>"Settings",:model=>ui_lookup(:models=>"Zone"))
+            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Settings", :model=>ui_lookup(:models=>"Zone")}
             @zones = Zone.in_my_region.all
           when "sis"
-            @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>"Settings",:model=>ui_lookup(:models=>"ScanItemSet"))
+            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Settings", :model=>ui_lookup(:models=>"ScanItemSet")}
             aps_list
           when "msc"
-            @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>"Settings",:model=>ui_lookup(:models=>"MiqSchedule"))
+            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Settings", :model=>ui_lookup(:models=>"MiqSchedule")}
             schedules_list
           when "l"
-            @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>"Settings",:model=>ui_lookup(:models=>"LdapRegion"))
+            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Settings", :model=>ui_lookup(:models=>"LdapRegion")}
             ldap_regions_list
         end
       when "svr"
@@ -1184,30 +1183,30 @@ module OpsController::Settings::Common
         settings_set_form_vars if params[:button] != "db_verify"
       when "msc"
         @record = @selected_schedule = MiqSchedule.find(from_cid(nodes.last))
-        @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>@selected_schedule.name,:model=>ui_lookup(:model=>"MiqSchedule"))
+        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_schedule.name, :model=>ui_lookup(:model=>"MiqSchedule")}
         schedule_show
       when "ld","lr"
         nodes = nodetype.split('-')
         if nodes[0] == "lr"
           @record = @selected_lr = LdapRegion.find(from_cid(nodes[1]))
-          @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>@selected_lr.name,:model=>ui_lookup(:model=>"LdapRegion"))
+          @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_lr.name, :model=>ui_lookup(:model=>"LdapRegion")}
           ldap_region_show
         else
           @record = @selected_ld = LdapDomain.find(from_cid(nodes[1]))
-          @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>@selected_ld.name,:model=>ui_lookup(:model=>"LdapDomain"))
+          @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_ld.name, :model=>ui_lookup(:model=>"LdapDomain")}
           ldap_domain_show
         end
       when "sis"
         @record = @selected_scan = ScanItemSet.find(from_cid(nodes.last))
-        @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>@selected_scan.name,:model=>ui_lookup(:model=>"ScanItemSet"))
+        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_scan.name, :model=>ui_lookup(:model=>"ScanItemSet")}
         ap_show
       when "z"
         @servers = Array.new
         @record = @zone = @selected_zone = Zone.find(from_cid(nodes.last))
         @sb[:tab_label] = @selected_zone.description
         @right_cell_text = @sb[:my_zone] == @selected_zone.name ?
-            I18n.t("cell_header.type_of_model_record_current",:typ=>"Settings",:name=>@selected_zone.description,:model=>ui_lookup(:model=>@selected_zone.class.to_s)) :
-            I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>@selected_zone.description,:model=>ui_lookup(:model=>@selected_zone.class.to_s))
+            _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)} :
+            _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
         MiqServer.all.each do |ms|
           if ms.zone_id == @selected_zone.id
             @servers.push(ms)

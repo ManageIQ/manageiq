@@ -179,46 +179,36 @@ class PxeController < ApplicationController
     when :pxe_servers_tree
       presenter[:update_partials][:main_div] = r[:partial=>"pxe_server_list"]
       if nodetype == "root"
-        right_cell_text = I18n.t("cell_header.all_model_records", :model=>ui_lookup(:models=>"PxeServer"))
+        right_cell_text = _("All %s") % ui_lookup(:models=>"PxeServer")
       else
         right_cell_text = case nodetype
           when 'ps'
             if @ps.id.blank?
-              I18n.t("cell_header.adding_model_record", :model=>ui_lookup(:model=>"PxeServer"))
+              _("Adding a new %s") % ui_lookup(:model=>"PxeServer")
             else
-              temp = I18n.t("cell_header.model_record",
-                            :name  => @ps.name.gsub(/'/,"\\\\'"),
-                            :model => ui_lookup(:model=>"PxeServer"))
+              temp = _("%{model} \"%{name}\"") % {:name  => @ps.name.gsub(/'/,"\\'"), :model => ui_lookup(:model=>"PxeServer")}
               @edit ? "Editing #{temp}" : temp
             end
           when 'pi'
-              I18n.t("cell_header.model_record",
-                     :name  => @img.name.gsub(/'/,"\\\\'"),
-                     :model => ui_lookup(:model=>"PxeImage"))
+              _("%{model} \"%{name}\"") % {:name  => @img.name.gsub(/'/,"\\'"), :model => ui_lookup(:model=>"PxeImage")}
           when 'wi'
-              I18n.t("cell_header.model_record",
-                     :name  => @wimg.name.gsub(/'/,"\\\\'"),
-                     :model => ui_lookup(:model=>"WindowsImage"))
+              _("%{model} \"%{name}\"") % {:name  => @wimg.name.gsub(/'/,"\\'"), :model => ui_lookup(:model=>"WindowsImage")}
         end
       end
     when :pxe_image_types_tree
       presenter[:update_partials][:main_div] = r[:partial=>"pxe_image_type_list"]
       right_cell_text = case nodetype
         when 'root'
-          I18n.t("cell_header.all_model_records", :model=>ui_lookup(:models=>"PxeImageType"))
+          _("All %s") % ui_lookup(:models=>"PxeImageType")
         when 'pit'
           if @pxe_image_type.id.blank?
-            I18n.t("cell_header.adding_model_record", :model=>ui_lookup(:model=>"PxeImageType"))
+            _("Adding a new %s") % ui_lookup(:model=>"PxeImageType")
           else
-            temp = I18n.t("cell_header.model_record",
-                          :name  => @pxe_image_type.name.gsub(/'/,"\\\\'"),
-                          :model => ui_lookup(:model=>"PxeImageType"))
+            temp = _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/,"\\'"), :model => ui_lookup(:model=>"PxeImageType")}
             @edit ? "Editing #{temp}" : temp
           end
         else
-          I18n.t("cell_header.model_record",
-                 :name  => @pxe_image_type.name.gsub(/'/,"\\\\'"),
-                 :model => ui_lookup(:model=>"PxeImageType"))
+          _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/,"\\'"), :model => ui_lookup(:model=>"PxeImageType")}
       end
     when :customization_templates_tree
       presenter[:update_partials][:main_div] = r[:partial=>"template_list"]
@@ -226,15 +216,10 @@ class PxeController < ApplicationController
       if @in_a_form
         right_cell_text =
           if @ct.id.blank?
-            I18n.t("cell_header.adding_model_record",
-                   :model=>ui_lookup(:model=>"PxeCustomizationTemplate"))
+            _("Adding a new %s") % ui_lookup(:model=>"PxeCustomizationTemplate")
           else
-            @edit ? I18n.t("cell_header.editing_model_record",
-                           :name  => @ct.name.gsub(/'/,"\\\\'"),
-                           :model => ui_lookup(:model => "PxeCustomizationTemplate")) :
-                    I18n.t("cell_header.model_record",
-                           :name  => @ct.name.gsub(/'/,"\\\\'"),
-                           :model => ui_lookup(:model => "PxeCustomizationTemplate"))
+            @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/,"\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
+                    _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/,"\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
           end
         presenter[:extra_js] << 'miqOneTrans = 0;' # resetting miqOneTrans when tab loads
         presenter[:extra_js] << 'miqIEButtonPressed = true' if ['save', 'reset'].include?(params[:button]) && is_browser_ie?
@@ -243,9 +228,9 @@ class PxeController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial=>"iso_datastore_list"]
       right_cell_text =
         case nodetype
-        when 'root' then I18n.t("cell_header.all_model_records",   :model => ui_lookup(:models => "IsoDatastore"))
-        when 'isd'  then I18n.t("cell_header.adding_model_record", :model => ui_lookup(:model  => "IsoDatastore"))
-        when 'isi'  then I18n.t("cell_header.model_record", :name => @img.name.gsub(/'/,"\\\\'"), :model => ui_lookup(:model => "IsoImage"))
+        when 'root' then _("All %s") %  ui_lookup(:models => "IsoDatastore")
+        when 'isd'  then _("Adding a new %s") %  ui_lookup(:model  => "IsoDatastore")
+        when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name.gsub(/'/,"\\'"), :model => ui_lookup(:model => "IsoImage")}
         end
     end
 

@@ -38,9 +38,9 @@ module OpsController::Settings::Schedules
     when "cancel"
       @schedule = MiqSchedule.find_by_id(session[:edit][:sched_id]) if session[:edit] && session[:edit][:sched_id]
       if !@schedule || @schedule.id.blank?
-        add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"MiqSchedule")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqSchedule"))
       else
-        add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name})
       end
       get_node_info(x_node)
       @schedule = nil
@@ -53,16 +53,16 @@ module OpsController::Settings::Schedules
       if @edit[:new][:action] == "db_backup"
         @schedule.sched_action = {:method=>"db_backup"}
         if @edit[:new][:uri_prefix].blank?
-          add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
+          add_flash(_("%s is required") % "Type", :error)
         elsif @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-          add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
+          add_flash(_("%s is required") % "URI", :error)
         elsif @edit[:new][:uri_prefix] == "smb" || @edit[:new][:uri_prefix] == "ftp"
           if @edit[:new][:uri].blank?
-            add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
+            add_flash(_("%s is required") % "URI", :error)
           elsif @edit[:new][:log_userid].blank?
-            add_flash(I18n.t("flash.edit.field_required", :field=>"Username"), :error)
+            add_flash(_("%s is required") % "Username", :error)
           elsif @edit[:new][:log_password].blank?
-            add_flash(I18n.t("flash.edit.field_required", :field=>"Password"), :error)
+            add_flash(_("%s is required") % "Password", :error)
           end
         end
         if @flash_array
@@ -90,7 +90,7 @@ module OpsController::Settings::Schedules
       schedule_validate?(@schedule)
       if @schedule.valid? && !flash_errors? && @schedule.save
         AuditEvent.success(build_saved_audit(@schedule, params[:button] == "add"))
-        add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name})
         @edit = session[:edit] = nil  # clean out the saved info
         if params[:button] == "add"
           self.x_node  = "xx-msc"  # reset node to show list
@@ -170,7 +170,7 @@ module OpsController::Settings::Schedules
     if !params[:id] # showing a list
       schedules = find_checked_items
       if schedules.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"miq_schedule"), :task=>"deletion"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"miq_schedule"), :task=>"deletion"}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -181,7 +181,7 @@ module OpsController::Settings::Schedules
       replace_right_cell("root",[:settings])
     else # showing 1 schedule, delete it
       if params[:id] == nil || MiqSchedule.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:table=>"miq_schedule")), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:table=>"miq_schedule"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -260,11 +260,11 @@ module OpsController::Settings::Schedules
     if @edit[:new][:action] != "db_backup"
       if ["global","my"].include?(@edit[:new][:filter])
         if @edit[:new][:filter_value].blank?  # Check for search filter chosen
-          add_flash(I18n.t("flash.edit.select_required", :selection=>"filter"), :error)
+          add_flash(_("%s must be selected") % "filter", :error)
           valid = false
         end
       elsif sched.filter.exp.keys.first != "IS NOT NULL" && @edit[:new][:filter_value].blank? # Check for empty filter value
-        add_flash(I18n.t("flash.edit.select_required", :selection=>"filter value"), :error)
+        add_flash(_("%s must be selected") % "filter value", :error)
         valid = false
       end
     end

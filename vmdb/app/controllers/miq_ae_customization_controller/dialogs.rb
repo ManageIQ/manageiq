@@ -189,9 +189,9 @@ module MiqAeCustomizationController::Dialogs
       @edit = session[:edit] = nil # clean out the saved info
       self.x_active_tree = :dialogs_tree
       if !@record || @record.id.blank?
-        add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"Dialog")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"Dialog"))
       else
-        add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"Dialog"), :name=>@record.label))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Dialog"), :name=>@record.label})
       end
       get_node_info
       replace_right_cell(x_node)
@@ -224,9 +224,9 @@ module MiqAeCustomizationController::Dialogs
 
       else
         if params[:button] == "add"
-          add_flash(I18n.t("flash.add.added", :model=>ui_lookup(:model=>"MiqDialog"), :name=>dialog.label))
+          add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqDialog"), :name=>dialog.label})
         else
-          add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"MiqDialog"), :name=>dialog.label))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqDialog"), :name=>dialog.label})
         end
 
         AuditEvent.success(build_saved_audit(dialog, @edit))
@@ -465,7 +465,7 @@ module MiqAeCustomizationController::Dialogs
       if params["entry"]["value"].strip! != "" && params["entry"]["description"].strip != ""
 
         if key[:values].include?([params["entry"]["value"],params["entry"]["description"]])
-          add_flash(I18n.t("flash.edit.field_value_in_use", :field=>params["entry"]["description"], :value=>params["entry"]["value"]), :error)
+          add_flash(_("%{field} '%{value}' is already in use") % {:field=>params["entry"]["description"], :value=>params["entry"]["value"]}, :error)
           render_flash do |page|
             page << javascript_focus('entry_name')
           end
@@ -476,7 +476,7 @@ module MiqAeCustomizationController::Dialogs
         end
 
       else
-        add_flash(I18n.t("flash.edit.field_value_and_description_reuired", :field1=>"Value", :field2=>"Description"), :error)
+        add_flash(_("%{field1} and %{field2} fields can't be blank") % {:field1=>"Value", :field2=>"Description"}, :error)
         render_flash do |page|
           page << javascript_focus('entry_value')
         end
@@ -488,7 +488,7 @@ module MiqAeCustomizationController::Dialogs
 
         if entry[0] == params["entry"]["value"] &&
             entry[1] == params["entry"]["description"]
-          add_flash(I18n.t("flash.edit.field_value_in_use", :field=>params["entry"]["description"], :value=>params["entry"]["value"]), :error)
+          add_flash(_("%{field} '%{value}' is already in use") % {:field=>params["entry"]["description"], :value=>params["entry"]["value"]}, :error)
 
           render_flash do |page|
             page << javascript_focus('entry_name')
@@ -647,7 +647,7 @@ module MiqAeCustomizationController::Dialogs
 
   def move_field_value_up
     if no_items_selected?(:entry_id)
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field => "fields"), :error)
+      add_flash(_("No %s were selected to move up") %  "fields", :error)
       return
     end
     prepare_move_field_value
@@ -656,7 +656,7 @@ module MiqAeCustomizationController::Dialogs
 
   def move_field_value_down
     if no_items_selected?(:entry_id)
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field => "fields"), :error)
+      add_flash(_("No %s were selected to move down") %  "fields", :error)
       return
     end
     prepare_move_field_value
@@ -670,38 +670,38 @@ module MiqAeCustomizationController::Dialogs
     nodes = x_node.split('_')
     if nodes.length == 1 && @sb[:node_typ].blank? #dialog is being edited
       if @edit[:new][:label].nil? || @edit[:new][:label].strip == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Dialog Label"), :error)
+        add_flash(_("%s is required") % "Dialog Label", :error)
         res = false
       end
     elsif (nodes.length == 2 && @sb[:node_typ] != "box") || (nodes.length == 1 && @sb[:node_typ] == "tab")  #tab is being added or edited
       if @edit[:tab_label].nil? || @edit[:tab_label].strip == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Tab Label"), :error)
+        add_flash(_("%s is required") % "Tab Label", :error)
         res = false
       end
     elsif (nodes.length == 3 &&  @sb[:node_typ] != "element") || (nodes.length == 2 && @sb[:node_typ] == "box")         ##group is being added or edited
       if @edit[:group_label].nil? || @edit[:group_label].strip == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Box Label"), :error)
+        add_flash(_("%s is required") % "Box Label", :error)
         res = false
       end
     elsif @sb[:node_typ] == "element"         ##field is being added or edited
       if @edit[:field_label].nil? || @edit[:field_label].strip == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Element Label"), :error)
+        add_flash(_("%s is required") % "Element Label", :error)
         res = false
       end
       if @edit[:field_typ].to_s == 'DialogFieldDynamicList' && @edit[:field_entry_point].blank?
-        add_flash(I18n.t("flash.edit.field_requires_entry_point", :field => @edit[:field_name]), :error)
+        add_flash(_("Entry Point must be given for field \"%s\".") %  @edit[:field_name], :error)
         res = false
       end
       if @edit[:field_name].to_s !~ %r{^[a-z0-9_]+$}i
-        add_flash(I18n.t("flash.edit.field_must_be.alphanumeric_and_underscore", :field=>"Element Name"), :error)
+        add_flash(_("%s must be alphanumeric characters and underscores without spaces") % "Element Name", :error)
         res = false
       end
       if ["action", "controller"].include?(@edit[:field_name].to_s)
-        add_flash(I18n.t("flash.edit.field_must_not_be.action_or_controller", :field=>"Element Name"), :error)
+        add_flash(_("%s must not be 'action' or 'controller'") % "Element Name", :error)
         res = false
       end
       if @edit[:field_typ].nil? || @edit[:field_typ].strip == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Element Type"), :error)
+        add_flash(_("%s is required") % "Element Type", :error)
         res = false
       end
     end
@@ -1311,7 +1311,7 @@ module MiqAeCustomizationController::Dialogs
     if !params[:id]
       dialogs = find_checked_items
       if dialogs.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:model=>"Dialog"), :task=>display_name), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:model=>"Dialog"), :task=>display_name}, :error)
       else
         process_dialogs(dialogs, method)
       end
@@ -1319,7 +1319,7 @@ module MiqAeCustomizationController::Dialogs
       replace_right_cell(x_node,[:dialogs])
     else # showing 1 dialog
       if params[:id].nil? || Dialog.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:model=>"Dialog")), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:model=>"Dialog"), :error)
         dialog_list
         @refresh_partial = "layouts/gtl"
       else
@@ -1340,8 +1340,7 @@ module MiqAeCustomizationController::Dialogs
   def dialog_get_node_info(treenodeid)
     if treenodeid == "root"
       dialog_list
-      @right_cell_text = I18n.t("cell_header.all_model_records",
-                                :model=>ui_lookup(:models=>"Dialog"))
+      @right_cell_text = _("All %s") % ui_lookup(:models=>"Dialog")
     else
       @sb[:active_tab] = "sample_tab" if !params[:tab_id]     #reset active tab if not coming in from change_tab
       @record = Dialog.find_by_id(from_cid(treenodeid.split('-').last))
@@ -1351,9 +1350,7 @@ module MiqAeCustomizationController::Dialogs
         dialog_get_node_info(x_node)
       else
         build_sample_tree
-        @right_cell_text = I18n.t("cell_header.model_record",
-                              :model=>ui_lookup(:model=>"Dialog"),
-                              :name=>@record.label)
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"Dialog"), :name=>@record.label}
       end
     end
   end

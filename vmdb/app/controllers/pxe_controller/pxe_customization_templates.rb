@@ -96,11 +96,8 @@ module PxeController::PxeCustomizationTemplates
     changed = (@edit[:new] != @edit[:current])
     if params[:button] == "cancel"
       @edit = session[:edit] = nil # clean out the saved info
-      @ct.id ? add_flash(I18n.t("flash.edit.cancelled",
-                                :model=>ui_lookup(:model=>"PxeCustomizationTemplate"),
-                                :name=>@ct.name)) :
-              add_flash(I18n.t("flash.add.cancelled",
-                       :model=>ui_lookup(:model=>"PxeCustomizationTemplate")))
+      @ct.id ? add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"PxeCustomizationTemplate"), :name=>@ct.name}) :
+              add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"PxeCustomizationTemplate"))
       get_node_info(x_node)
       replace_right_cell(x_node)
     elsif ["add","save"].include?(params[:button])
@@ -111,10 +108,10 @@ module PxeController::PxeCustomizationTemplates
             CustomizationTemplateKickstart.new : CustomizationTemplateSysprep.new
       end
       if @edit[:new][:name].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
       end
       if @edit[:new][:typ].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
+        add_flash(_("%s is required") % "Type", :error)
       end
       if @flash_array
         render :update do |page|
@@ -217,9 +214,7 @@ module PxeController::PxeCustomizationTemplates
     if !params[:id]
       templates = find_checked_items
       if templates.empty?
-        add_flash(I18n.t("flash.button.no_records_selected",
-                        :model=>ui_lookup(:models=>"PxeCustomizationTemplate"),
-                        :button=>display_name),
+        add_flash(_("No %{model} were selected to %{button}") % {:model=>ui_lookup(:models=>"PxeCustomizationTemplate"), :button=>display_name},
                   :error)
       else
         process_templates(templates, method)
@@ -229,8 +224,7 @@ module PxeController::PxeCustomizationTemplates
       replace_right_cell(x_node,[:customization_templates])
     else # showing 1 vm
       if params[:id].nil? || CustomizationTemplate.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.button.record_gone",
-                        :model=>ui_lookup(:model=>"PxeCustomizationTemplate")),
+        add_flash(_("%s no longer exists") % ui_lookup(:model=>"PxeCustomizationTemplate"),
                   :error)
         template_list
         @refresh_partial = "layouts/gtl"
@@ -255,30 +249,22 @@ module PxeController::PxeCustomizationTemplates
       @folders = PxeImageType.all.sort
       #to check if Add customization template button should be enabled
       @temp[:pxe_image_types_count] = @folders.count
-      @right_cell_text = I18n.t("cell_header.all_model_records_for_group",
-                                :model=>ui_lookup(:models=>"PxeCustomizationTemplate"),
-                                :group=>ui_lookup(:models=>"PxeImageType"))
+      @right_cell_text = _("All %{model} - %{group}") % {:model=>ui_lookup(:models=>"PxeCustomizationTemplate"), :group=>ui_lookup(:models=>"PxeImageType")}
       @right_cell_div  = "template_list"
     else
       nodes = treenodeid.split("-")
       if nodes[0] == "ct"
         @right_cell_div = "template_details"
         @record = @ct = CustomizationTemplate.find_by_id(from_cid(nodes[1]))
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                  :name=>@ct.name,
-                                  :model=>ui_lookup(:model=>"PxeCustomizationTemplate"))
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@ct.name, :model=>ui_lookup(:model=>"PxeCustomizationTemplate")}
       else
         template_list
         @temp[:pxe_image_types_count] = PxeImageType.count
         pxe_img_id = x_node.split('-').last
 
         pxe_img_type = PxeImageType.find_by_id(from_cid(pxe_img_id)) if pxe_img_id != "system"
-        @right_cell_text = pxe_img_id == "system" ? I18n.t("cell_header.model",
-                                    :model=>"Examples (read only)") :
-                                    I18n.t("cell_header.model_record_for_group",
-                                    :name=>pxe_img_type.name,
-                                    :model=>ui_lookup(:models=>"PxeCustomizationTemplate"),
-                                    :group=>ui_lookup(:model=>"PxeImageType"))
+        @right_cell_text = pxe_img_id == "system" ? _("%s") % "Examples (read only)" :
+                                    _("%{model} for %{group} \"%{name}\"") % {:name=>pxe_img_type.name, :model=>ui_lookup(:models=>"PxeCustomizationTemplate"), :group=>ui_lookup(:model=>"PxeImageType")}
         @right_cell_div  = "template_list"
       end
     end

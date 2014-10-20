@@ -27,7 +27,7 @@ module OpsController::Settings::Upload
         err = false
       end
     else
-      msg = I18n.t("flash.ops.settings.locate_file", :typ=>".png image")
+      msg = _("Use the Browse button to locate %s file") % ".png image"
       err = true
     end
     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
@@ -63,16 +63,14 @@ module OpsController::Settings::Upload
           end
         end
       rescue StandardError => bang
-         msg = I18n.t("flash.error_during", :task=>"upload") << bang
+         msg = _("Error during '%s': ") % "upload" << bang
          err = true
       else
         imp.errors.each do |field,msg|
           msg = msg
           err = true
         end
-        add_flash(I18n.t("flash.ops.settings.import_validation_complete",
-            :good_record=>pluralize(imp.stats[:good], 'good record'),
-            :bad_record=>pluralize(imp.stats[:bad], 'bad record')), :warning)
+        add_flash(_("Import validation complete: %{good_record}, %{bad_record}") % {:good_record=>pluralize(imp.stats[:good], 'good record'), :bad_record=>pluralize(imp.stats[:bad], 'bad record')}, :warning)
         if imp.stats[:good] == 0
            msg = _("No valid import records were found, please upload another file")
            err = true
@@ -84,7 +82,7 @@ module OpsController::Settings::Upload
         end
       end
     else
-      msg = I18n.t("flash.ops.settings.locate_file", :typ=>"CSV")
+      msg = _("Use the Browse button to locate %s file") % "CSV"
       err = true
     end
     @sb[:show_button] = (@sb[:good] && @sb[:good] > 0)

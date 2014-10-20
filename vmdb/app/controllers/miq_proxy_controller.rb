@@ -136,7 +136,7 @@ class MiqProxyController < ApplicationController
     job_id = Array.new
     job_id = find_checked_items
     if job_id.empty?
-      add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"miq_task"), :task=>"cancellation"), :error)
+      add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"miq_task"), :task=>"cancellation"}, :error)
     end
     case @layout
       when "my_tasks", "all_tasks"
@@ -161,7 +161,7 @@ class MiqProxyController < ApplicationController
     job_ids = Array.new
     job_ids = find_checked_items
     if job_ids.empty?
-      add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"miq_task"), :task=>"deletion"), :error)
+      add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"miq_task"), :task=>"deletion"}, :error)
     else
       case @layout
         when "my_tasks", "all_tasks"
@@ -173,7 +173,7 @@ class MiqProxyController < ApplicationController
       AuditEvent.success(:userid=>session[:userid],:event=>"Delete selected tasks",
           :message=>"Delete started for record ids: #{job_ids.inspect}",
           :target_class=>db_class.base_class.name)
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Delete", :count_model=>pluralize(job_ids.length,ui_lookup(:tables=>"miq_task")))) if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete", :count_model=>pluralize(job_ids.length,ui_lookup(:tables=>"miq_task"))}) if @flash_array == nil
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -187,7 +187,7 @@ class MiqProxyController < ApplicationController
       job_ids.push(rec["id"])
     end
     if job_ids.empty?
-      add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"miq_task"), :task=>"deletion"), :error)
+      add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"miq_task"), :task=>"deletion"}, :error)
     else
       case @layout
         when "my_tasks", "all_tasks"
@@ -199,7 +199,7 @@ class MiqProxyController < ApplicationController
       AuditEvent.success(:userid=>session[:userid],:event=>"Delete all finished tasks",
           :message=>"Delete started for record ids: #{job_ids.inspect}",
           :target_class=>db_class.base_class.name)
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Delete", :count_model=>pluralize(job_ids.length,ui_lookup(:tables=>"miq_task"))))  if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete", :count_model=>pluralize(job_ids.length,ui_lookup(:tables=>"miq_task"))})  if @flash_array == nil
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -227,7 +227,7 @@ class MiqProxyController < ApplicationController
       AuditEvent.success(:userid=>session[:userid],:event=>"Delete older tasks",
           :message=>"Delete started for records older than #{job.updated_on.to_s}, conditions: #{@tasks_options[@tabform].inspect}",
           :target_class=>db_class.base_class.name)
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Delete all older Tasks", :count_model=>pluralize(jobid.length,ui_lookup(:tables=>"miq_task"))))
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete all older Tasks", :count_model=>pluralize(jobid.length,ui_lookup(:tables=>"miq_task"))})
     else
       add_flash(_("The selected job no longer exists, Delete all older Tasks was not completed"), :warning)
     end
@@ -252,13 +252,13 @@ class MiqProxyController < ApplicationController
       begin
         job.send(task.to_sym) if job.respond_to?(task)    # Run the task
       rescue StandardError => bang
-        add_flash(I18n.t("flash.record.error_during_task", :model=>ui_lookup(:model=>"MiqProxy"), :name=>job_name, :task=>task) << bang.message, :error)
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>ui_lookup(:model=>"MiqProxy"), :name=>job_name, :task=>task} << bang.message, :error)
       else
         if task == "destroy"
           AuditEvent.success(audit)
-          add_flash(I18n.t("flash.record.deleted", :model=>ui_lookup(:tables=>"miq_task"), :name=>job_name), :error)
+          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:tables=>"miq_task"), :name=>job_name}, :error)
         else
-          add_flash(I18n.t("flash.record.task_initiated_for_record", :record=>job_name, :task=>task))
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record=>job_name, :task=>task})
         end
       end
     end
@@ -424,7 +424,7 @@ class MiqProxyController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.add.cancelled",:model=>ui_lookup(:model=>"MiqProxy"))
+        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqProxy")
       end
     when "add"
       add_miq_proxy = MiqProxy.new
@@ -433,7 +433,7 @@ class MiqProxyController < ApplicationController
         Host.find_by_name(@edit[:new][:name]).miq_proxy = add_miq_proxy
         AuditEvent.success(build_created_audit(add_miq_proxy, @edit))
         render :update do |page|
-          page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.add.added", :model=>ui_lookup(:model=>"MiqProxy"), :name=>add_miq_proxy.name)
+          page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqProxy"), :name=>add_miq_proxy.name}
         end
         return
       else
@@ -494,7 +494,7 @@ class MiqProxyController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      flash = I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"MiqProxy"), :name=>@miq_proxy.name)
+      flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqProxy"), :name=>@miq_proxy.name}
       render :update do |page|
         page.redirect_to :action=>@lastaction, :id=>@miq_proxy.id, :display=>session[:miqproxy_display], :flash_msg=>flash
       end
@@ -502,7 +502,7 @@ class MiqProxyController < ApplicationController
       update_miq_proxy = find_by_id_filtered(MiqProxy, params[:id])
       set_record_vars(update_miq_proxy)
       if valid_record?(update_miq_proxy) && update_miq_proxy.save
-        flash = I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"MiqProxy"), :name=>update_miq_proxy.name)
+        flash = _("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqProxy"), :name=>update_miq_proxy.name}
         AuditEvent.success(build_saved_audit(update_miq_proxy, @edit))
         if agent_settings_changed?
           audit = {:event=>"agent_settings_activate", :target_id=>update_miq_proxy.id, :target_class=>update_miq_proxy.class.base_class.name, :userid => session[:userid]}
@@ -591,7 +591,7 @@ class MiqProxyController < ApplicationController
     identify_miq_proxy
     case params[:button]
     when "cancel"
-      flash = I18n.t("flash.smartproxy.deploy_smaprtproxy_cancelled", :name=>@miq_proxy.host.name)
+      flash = _("Deploy of SmartProxy to Host \"%s\" was cancelled") % @miq_proxy.host.name
       redirect_to :action => @lastaction, :id=>@miq_proxy.id, :display=>"main", :flash_msg=>flash
     when "save"
       @edit = session[:edit]
@@ -618,13 +618,13 @@ class MiqProxyController < ApplicationController
           return
         end
       rescue StandardError=>bang
-        flash = I18n.t("flash.error_during", :task=>"SmartProxy deploy") << bang.message; flash_error = true
+        flash = _("Error during '%s': ") % "SmartProxy deploy" << bang.message; flash_error = true
         AuditEvent.failure(audit.merge(:message=>flash))
         render :update do |page|
           page.redirect_to :action => @lastaction, :id=>@miq_proxy.id, :display=>"main", :flash_msg=>flash, :flash_error=>true, :escape=>false
         end
       else
-        flash = I18n.t("flash.smartproxy.deploy_smaprtproxy_initiated", :name=>@miq_proxy.host.name)
+        flash = _("Deploy of SmartProxy to Host \"%s\" was initiated") % @miq_proxy.host.name
         AuditEvent.success(audit.merge(:message=>"[#{@miq_proxy.host.name}] Deploy of SmartProxy version initiated (version:[#{params[:install_build]}])"))
         render :update do |page|
           page.redirect_to :action => @lastaction, :id=>@miq_proxy.id, :display=>"main", :flash_msg=>flash, :escape=>false
@@ -651,7 +651,7 @@ class MiqProxyController < ApplicationController
       end
     else  # Reset or first time in, set up vars for the view
       if @miq_proxy.host.available_builds.length < 1
-        flash = I18n.t("flash.smartproxy.no_smartproxy_available", :name=>@miq_proxy.host.name)
+        flash = _("There are no available SmartProxies to deploy on Host \"%s\"") % @miq_proxy.host.name
         redirect_to :action => @lastaction, :id=>@miq_proxy.id, :display=>"main", :flash_msg=>flash
       end
       @edit = Hash.new
@@ -786,7 +786,7 @@ class MiqProxyController < ApplicationController
     rescue StandardError=>bang
       add_flash(_("Retrieve log returned: ") << bang.message, :error)
     else
-      add_flash(I18n.t("flash.smartproxy.retrieve_log_started", :name=>@miq_proxy.name))
+      add_flash(_("SmartProxy \"%s\" log retrieval has been started . . . refresh page to view the log") % @miq_proxy.name)
     end
     @proxy_log = @miq_proxy.log_contents(100)
     render :update do |page|                    # Use RJS to update the display

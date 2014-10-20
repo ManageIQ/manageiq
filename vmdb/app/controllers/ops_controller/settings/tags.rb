@@ -19,9 +19,7 @@ module OpsController::Settings::Tags
     audit = {:event=>"category_record_delete", :message=>"[#{c_name}] Record deleted", :target_id=>category.id, :target_class=>"Classification", :userid => session[:userid]}
     if category.destroy
       AuditEvent.success(audit)
-      add_flash(I18n.t("flash.record.deleted",
-                      :model=>ui_lookup(:model=>"Classification"),
-                      :name=>c_name))
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"Classification"), :name=>c_name})
       category_get_all
       render :update do |page|                    # Use JS to update the display
         page.replace_html 'settings_co_categories', :partial => 'settings_co_categories_tab'
@@ -39,12 +37,9 @@ module OpsController::Settings::Tags
     when "cancel"
       @category = session[:edit][:category] if session[:edit] && session[:edit][:category]
       if !@category || @category.id.blank?
-        add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"Classification")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"Classification"))
       else
-        add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"Classification"),
-                      :name=>@category.name))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Classification"), :name=>@category.name})
       end
       get_node_info(x_node)
       @category = @edit = session[:edit] = nil    # clean out the saved info
@@ -55,13 +50,13 @@ module OpsController::Settings::Tags
       @ldap_group = @edit[:ldap_group] if @edit && @edit[:ldap_group]
       @category = @edit[:category] if @edit && @edit[:category]
       if @edit[:new][:name].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
       end
       if @edit[:new][:description].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Display Name"), :error)
+        add_flash(_("%s is required") % "Display Name", :error)
       end
       if @edit[:new][:example_text].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Description"), :error)
+        add_flash(_("%s is required") % "Description", :error)
       end
       if @flash_array != nil
         render :update do |page|
@@ -78,16 +73,14 @@ module OpsController::Settings::Tags
                                 :example_text=>@edit[:new][:example_text],
                                 :show=>@edit[:new][:show])
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task=>"add") << bang.message, :error)
+          add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
           render :update do |page|
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         else
           @category = Classification.find_by_description(@edit[:new][:description])
           AuditEvent.success(build_created_audit(@category, @edit))
-          add_flash(I18n.t("flash.add.added",
-                          :model=>ui_lookup(:model=>"Classification"),
-                          :name=>@category.description))
+          add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"Classification"), :name=>@category.description})
           get_node_info(x_node)
           @category = @edit = session[:edit] = nil    # clean out the saved info
           replace_right_cell("root")
@@ -108,9 +101,7 @@ module OpsController::Settings::Tags
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         else
-          add_flash(I18n.t("flash.edit.saved",
-                          :model=>ui_lookup(:model=>"Classification"),
-                          :name=>update_category.name))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"Classification"), :name=>update_category.name})
           AuditEvent.success(build_saved_audit(update_category, params[:button] == "add"))
           session[:edit] = nil  # clean out the saved info
           get_node_info(x_node)

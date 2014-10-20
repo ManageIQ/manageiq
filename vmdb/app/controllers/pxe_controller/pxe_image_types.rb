@@ -26,12 +26,9 @@ module PxeController::PxeImageTypes
       id = params[:id] || "new"
       return unless load_edit("pxe_image_type_edit__#{id}","replace_cell__explorer")
       if @edit[:pxe_id]
-        add_flash(I18n.t("flash.edit.cancelled",
-                         :model=>ui_lookup(:model=>"PxeImageType"),
-                         :name=>@edit[:current][:name]))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"PxeImageType"), :name=>@edit[:current][:name]})
       else
-        add_flash(I18n.t("flash.add.cancelled",
-                         :model=>ui_lookup(:model=>"PxeImageType")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"PxeImageType"))
       end
       @edit = session[:edit] = nil # clean out the saved info
       get_node_info(x_node)
@@ -54,9 +51,7 @@ module PxeController::PxeImageTypes
       if add_pxe.save
         AuditEvent.success(build_created_audit(add_pxe, @edit))
         @edit = session[:edit] = nil # clean out the saved info
-        add_flash(I18n.t("flash.add.added",
-                         :model=>ui_lookup(:model=>"PxeImageType"),
-                         :name=>add_pxe.name))
+        add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"PxeImageType"), :name=>add_pxe.name})
         get_node_info(x_node)
         replace_right_cell(x_node, [:pxe_image_types, :customization_templates])
       else
@@ -102,9 +97,7 @@ module PxeController::PxeImageTypes
     if !params[:id]
       pxes = find_checked_items
       if pxes.empty?
-        add_flash(I18n.t("flash.button.no_records_selected",
-                        :model=>ui_lookup(:models=>"PxeImageType"),
-                        :button=>display_name),
+        add_flash(_("No %{model} were selected to %{button}") % {:model=>ui_lookup(:models=>"PxeImageType"), :button=>display_name},
                   :error)
       else
         process_pxe_image_type(pxes, method)
@@ -114,8 +107,7 @@ module PxeController::PxeImageTypes
       replace_right_cell("root", [:pxe_image_types, :customization_templates])
     else # showing 1 vm
       if params[:id].nil? || PxeImageType.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.button.record_gone",
-                        :model=>ui_lookup(:model=>"PxeImageType")),
+        add_flash(_("%s no longer exists") % ui_lookup(:model=>"PxeImageType"),
                   :error)
         pxe_image_type_list
         @refresh_partial = "layouts/x_gtl"
@@ -171,7 +163,7 @@ module PxeController::PxeImageTypes
 
   def pxe_image_type_validate_fields
     if @edit[:new][:name].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+      add_flash(_("%s is required") % "Name", :error)
     end
   end
 
@@ -221,16 +213,13 @@ module PxeController::PxeImageTypes
   def pxe_image_type_get_node_info(treenodeid)
     if treenodeid == "root"
       pxe_image_type_list
-      @right_cell_text = @right_cell_text = I18n.t("cell_header.all_model_records",
-                                :model=>ui_lookup(:models=>"PxeImageType"))
+      @right_cell_text = @right_cell_text = _("All %s") % ui_lookup(:models=>"PxeImageType")
       @right_cell_div  = "pxe_image_type_list"
     else
       @right_cell_div = "pxe_image_type_details"
       nodes = treenodeid.split("-")
       @record = @pxe_image_type = PxeImageType.find_by_id(from_cid(nodes.last))
-      @right_cell_text = I18n.t("cell_header.model_record",
-                                :name=>@pxe_image_type.name,
-                                :model=>ui_lookup(:model=>"PxeImageType"))
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@pxe_image_type.name, :model=>ui_lookup(:model=>"PxeImageType")}
     end
   end
 end

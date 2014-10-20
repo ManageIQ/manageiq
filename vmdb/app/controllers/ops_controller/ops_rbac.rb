@@ -104,7 +104,7 @@ module OpsController::OpsRbac
       ids = find_checked_items.collect{|r| from_cid(r.split("-").last)}
       users = User.find_all_by_id(ids).compact
       if users.empty?
-        add_flash(I18n.t("flash.cant_delete_default", :model=>ui_lookup(:model=>"User"), :name=>"Administrator"), :error)
+        add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model=>ui_lookup(:model=>"User"), :name=>"Administrator"}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -124,7 +124,7 @@ module OpsController::OpsRbac
       process_users(users, "destroy") unless users.empty?
     else # showing 1 user, delete it
       if params[:id] == nil || User.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>"User"), :error)
+        add_flash(_("%s no longer exists") % "User", :error)
       else
         user = User.find_by_id(params[:id])
         if rbac_user_delete_restriction?(user)
@@ -155,7 +155,7 @@ module OpsController::OpsRbac
       process_roles(roles, "destroy") unless roles.empty?
     else # showing 1 role, delete it
       if params[:id].nil? || MiqUserRole.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model => "Role"), :error)
+        add_flash(_("%s no longer exists") %  "Role", :error)
       else
         roles.push(params[:id])
       end
@@ -187,7 +187,7 @@ module OpsController::OpsRbac
       self.x_node  = "xx-g"  # reset node to show list
     else # showing 1 group, delete it
       if params[:id].nil? || MiqGroup.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model => "MiqGroup"), :error)
+        add_flash(_("%s no longer exists") %  "MiqGroup", :error)
       else
         groups.push(params[:id])
       end
@@ -262,12 +262,12 @@ module OpsController::OpsRbac
   def move_cols_up
     return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move up") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
     else
       if first_idx > 0
         @edit[:new][:ldap_groups_list][first_idx..last_idx].reverse.each do |field|
@@ -284,12 +284,12 @@ module OpsController::OpsRbac
   def move_cols_down
     return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move down") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
     else
       if last_idx < @edit[:new][:ldap_groups_list].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one
@@ -331,13 +331,13 @@ module OpsController::OpsRbac
   def rbac_group_user_lookup
     rbac_group_user_lookup_field_changed
     if @edit[:new][:user].nil? || @edit[:new][:user] == ""
-      add_flash(I18n.t("flash.ops.settings.ldap_group_lookup", :field=>"User"), :error)
+      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User", :error)
     end
     if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ""
-      add_flash(I18n.t("flash.ops.settings.ldap_group_lookup", :field=>"User Id"), :error)
+      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User Id", :error)
     end
     if @edit[:new][:user_pwd].nil? || @edit[:new][:user_pwd] == ""
-      add_flash(I18n.t("flash.ops.settings.ldap_group_lookup", :field=>"User Password"), :error)
+      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User Password", :error)
     end
     if @flash_array != nil
       render :update do |page|                    # Use JS to update the display
@@ -350,7 +350,7 @@ module OpsController::OpsRbac
         @edit[:ldap_groups_by_user] = MiqGroup.get_ldap_groups_by_user(@edit[:new][:user],@edit[:new][:user_id],@edit[:new][:user_pwd]) # Get the users from the DB
       rescue StandardError => bang
         @edit[:ldap_groups_by_user] = Array.new
-        add_flash(I18n.t("flash.ops.rbac.error_during_task", :task=>"LDAP Group Look Up") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "LDAP Group Look Up" << bang.message, :error)
         render :update do |page|                    # Use JS to update the display
           page.replace("flash_msg_div",:partial=>"layouts/flash_msg")
           page.replace("ldap_user_div",:partial=>"ldap_auth_users")
@@ -371,9 +371,9 @@ module OpsController::OpsRbac
 
   def rbac_restricted_user_delete_flash(user)
     if user.userid == "admin"
-      add_flash(I18n.t("flash.cant_delete_default", :model => ui_lookup(:model => "User"), :name => user.name), :error)
+      add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => user.name}, :error)
     elsif user.userid == session[:userid]
-      add_flash(I18n.t("flash.cant_delete_current", :model => ui_lookup(:model => "User"), :name => user.name), :error)
+      add_flash(_("Current %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => user.name}, :error)
     end
   end
 
@@ -395,7 +395,7 @@ module OpsController::OpsRbac
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
-    @right_cell_text = I18n.t("cell_header.editing_model_for_record",:name=>ui_lookup(:models=>@tagging),:model=>"#{session[:customer_name]} Tags")
+    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name=>ui_lookup(:models=>@tagging), :model=>"#{session[:customer_name]} Tags"}
     replace_right_cell("root")
   end
 
@@ -416,7 +416,7 @@ module OpsController::OpsRbac
   def rbac_edit_tags_cancel
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
-    add_flash(I18n.t("flash.task_cancelled", :task=>"Tag Edit"))
+    add_flash(_("%s was cancelled by the user") % "Tag Edit")
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
     @edit = nil # clean out the saved info
@@ -439,7 +439,7 @@ module OpsController::OpsRbac
     when :user
       record_id = @edit[:user_id]
     end
-    add_flash(record_id ? I18n.t("flash.edit.cancelled_model", :model=>what.titleize) : I18n.t("flash.add.cancelled", :model=>what.titleize))
+    add_flash(record_id ? _("Edit of %s was cancelled by the user") % what.titleize : _("Add of new %s was cancelled by the user") % what.titleize)
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
     @edit = nil # clean out the saved info
@@ -453,9 +453,7 @@ module OpsController::OpsRbac
     record = klass.find_by_id(from_cid(obj[0])) if obj[0]
 
     if [:group,:role].include?(key) && record && record.read_only && params[:typ] != "copy"
-      add_flash(I18n.t("flash.cant_edit_read_only",
-          :model=>key == :role ? ui_lookup(:model=>"MiqUserRole") : ui_lookup(:model=>"MiqGroup"),
-          :name=>key == :role ? record.name : record.description), :warning)
+      add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model=>key == :role ? ui_lookup(:model=>"MiqUserRole") : ui_lookup(:model=>"MiqGroup"), :name=>key == :role ? record.name : record.description}, :warning)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -490,9 +488,9 @@ module OpsController::OpsRbac
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
     if @edit["#{key.to_s}_id".to_sym]
       caption = (key == :group) ? @record.description : @record.name
-      @right_cell_text = I18n.t("cell_header.editing_model_record",:name=>caption,:model=>what.titleize)
+      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>caption, :model=>what.titleize}
     else
-      @right_cell_text = I18n.t("cell_header.adding_model_record",:model=>what.titleize)
+      @right_cell_text = _("Adding a new %s") % what.titleize
     end
     replace_right_cell(x_node)
   end
@@ -516,7 +514,7 @@ module OpsController::OpsRbac
     if record.valid? && !flash_errors? && record.save
       AuditEvent.success(build_saved_audit(record, add_pressed))
       subkey = (key == :group) ? :description : :name
-      add_flash(I18n.t("flash.edit.saved", :model => what.titleize, :name => @edit[:new][subkey]))
+      add_flash(_("%{model} \"%{name}\" was saved") % {:model => what.titleize, :name => @edit[:new][subkey]})
       @edit = session[:edit] = nil  # clean out the saved info
       if add_pressed
         suffix = case rbac_suffix
@@ -641,26 +639,26 @@ module OpsController::OpsRbac
       when "xx"
         case id
           when "u"
-            @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>"Access Control",:model=>ui_lookup(:models=>"User"))
+            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"User")}
             rbac_users_list
           when "g"
-            @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>"Access Control",:model=>ui_lookup(:models=>"MiqGroup"))
+            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqGroup")}
             rbac_groups_list
           when "ur"
-            @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>"Access Control",:model=>ui_lookup(:models=>"MiqUserRole"))
+            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqUserRole")}
             rbac_roles_list
         end
       when "u"
-        @right_cell_text = I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"User"),:name=>User.find_by_id(from_cid(id)).name)
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"User"), :name=>User.find_by_id(from_cid(id)).name}
         rbac_user_get_details(id)
       when "g"
-        @right_cell_text = I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"MiqGroup"),:name=>MiqGroup.find_by_id(from_cid(id)).description)
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqGroup"), :name=>MiqGroup.find_by_id(from_cid(id)).description}
         rbac_group_get_details(id)
       when "ur"
-        @right_cell_text = I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"MiqUserRole"),:name=>MiqUserRole.find_by_id(from_cid(id)).name)
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqUserRole"), :name=>MiqUserRole.find_by_id(from_cid(id)).name}
         rbac_role_get_details(id)
       else  # Root node
-        @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Access Control",:name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",:model=>ui_lookup(:model=>"MiqRegion"))
+        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Access Control", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
         @temp[:users_count] = User.in_my_region.count
         @temp[:groups_count] = MiqGroup.count
         @temp[:roles_count] = MiqUserRole.count
@@ -1109,7 +1107,7 @@ module OpsController::OpsRbac
   def rbac_role_validate?
     valid = true
     if @edit[:new][:features].empty?
-      add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Product Feature"), :error)
+      add_flash(_("At least one %s must be selected") % "Product Feature", :error)
       valid = false
     end
     valid

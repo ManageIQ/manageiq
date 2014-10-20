@@ -8,11 +8,9 @@ module MiqPolicyController::AlertProfiles
       @alert_profile = session[:edit][:alert_profile_id] ? MiqAlertSet.find_by_id(session[:edit][:alert_profile_id]) : MiqAlertSet.new
 
       if @alert_profile && @alert_profile.id.blank?
-        add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAlertSet")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAlertSet"))
       else
-        add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAlertSet"),:name=>@alert_profile.description))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :name=>@alert_profile.description})
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
@@ -35,7 +33,7 @@ module MiqPolicyController::AlertProfiles
     case params[:button]
     when "save", "add"
       assert_privileges("alert_profile_#{@alert_profile.id ? "edit" : "new"}")
-      add_flash(I18n.t("flash.edit.at_least_1.contain", :model=>ui_lookup(:model=>"MiqAlertSet"), :field=>ui_lookup(:model=>"MiqAlert")), :error) if @edit[:new][:alerts].length == 0 # At least one member is required
+      add_flash(_("%{model} must contain at least one %{field}") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :field=>ui_lookup(:model=>"MiqAlert")}, :error) if @edit[:new][:alerts].length == 0 # At least one member is required
       alert_profile = @alert_profile.id.blank? ? MiqAlertSet.new : MiqAlertSet.find(@alert_profile.id)  # Get new or existing record
       alert_profile.description = @edit[:new][:description]
       alert_profile.notes = @edit[:new][:notes]
@@ -49,7 +47,7 @@ module MiqPolicyController::AlertProfiles
           alerts.each {|a| alert_profile.remove_member(MiqAlert.find(a)) if !mems.include?(a.id) }  # Remove any alerts no longer in the members list box
           mems.each_key {|m| alert_profile.add_member(MiqAlert.find(m)) if !current.include?(m) }   # Add any alerts not in the set
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task=>"Alert Profile #{params[:button]}") << bang.message, :error)
+          add_flash(_("Error during '%s': ") % "Alert Profile #{params[:button]}" << bang.message, :error)
         end
         AuditEvent.success(build_saved_audit(alert_profile, params[:button] == "add"))
         add_flash(I18n.t("#{params[:button] == "save" ? "flash.edit.saved" : "flash.add.added"}",
@@ -80,19 +78,19 @@ module MiqPolicyController::AlertProfiles
     case params[:button]
     when "cancel"
       @assign = nil
-      add_flash(I18n.t("flash.policy.task_cancelled_by_user", :task=>"Edit #{ui_lookup(:model=>"MiqAlertSet")} assignments"))
+      add_flash(_("%s cancelled by user") % "Edit #{ui_lookup(:model=>"MiqAlertSet")} assignments")
       get_node_info(x_node)
       replace_right_cell(@nodetype)
     when "save"
       if @assign[:new][:assign_to].to_s.ends_with?("-tags") && !@assign[:new][:cat]
-        add_flash(I18n.t("flash.edit.select_required", :selection=>"A Tag Category"), :error)
+        add_flash(_("%s must be selected") % "A Tag Category", :error)
       elsif @assign[:new][:assign_to] &&
             (@assign[:new][:assign_to] != "enterprise" && @assign[:new][:objects].length == 0)
         add_flash(_("At least one Selection must be checked"), :error)
       end
       unless flash_errors?
         alert_profile_assign_save
-        add_flash(I18n.t("flash.policy.alert_profile_assignments_saved", :name=>@alert_profile.description))
+        add_flash(_("Alert Profile \"%s\" assignments succesfully saved") % @alert_profile.description)
         get_node_info(x_node)
         @assign = nil
       end
@@ -110,14 +108,13 @@ module MiqPolicyController::AlertProfiles
     alert_profiles = Array.new
     # showing 1 alert set, delete it
     if params[:id] == nil || MiqAlertSet.find_by_id(params[:id]).nil?
-      add_flash(I18n.t("flash.button.record_gone",
-                        :model=>ui_lookup(:model=>"MiqAlertSet")),
+      add_flash(_("%s no longer exists") % ui_lookup(:model=>"MiqAlertSet"),
                   :error)
     else
       alert_profiles.push(params[:id])
     end
     process_alert_profiles(alert_profiles, "destroy") unless alert_profiles.empty?
-    add_flash(I18n.t("flash.selected_record_deleted",:model=>ui_lookup(:models=>"MiqAlertSet"))) if @flash_array == nil
+    add_flash(_("The selected %s was deleted") % ui_lookup(:models=>"MiqAlertSet")) if @flash_array == nil
     nodes = x_node.split("_")
     nodes.pop
     self.x_node = nodes.join("_")
@@ -325,7 +322,7 @@ module MiqPolicyController::AlertProfiles
       [ui_lookup(:model=>db), db]
     end
 #   @folders = ["Compliance", "Control"]
-    @right_cell_text = I18n.t("cell_header.all_model_records",:model=>ui_lookup(:models=>"MiqAlertSet"))
+    @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqAlertSet")
     @right_cell_div = "alert_profile_folders"
   end
 
@@ -333,7 +330,7 @@ module MiqPolicyController::AlertProfiles
     @alert_profiles = MiqAlertSet.all.sort{|a,b|a.description.downcase<=>b.description.downcase}
     set_search_text
     @alert_profiles = apply_search_filter(@search_text,@alert_profiles) if !@search_text.blank?
-    @right_cell_text = I18n.t("cell_header.all_model_records",:model=>ui_lookup(:models=>"MiqAlertSet"))
+    @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqAlertSet")
     @right_cell_div = "alert_profile_list"
   end
 
@@ -345,7 +342,7 @@ module MiqPolicyController::AlertProfiles
     @alert_profile_alerts = @alert_profile.miq_alerts.sort do |a,b|
       a.description.downcase<=>b.description.downcase
     end
-    @right_cell_text = I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"MiqAlertSet"),:name=>alert_profile.description)
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :name=>alert_profile.description}
     @right_cell_div = "alert_profile_details"
   end
 

@@ -2498,7 +2498,7 @@ module ApplicationHelper
   def record_no_longer_exists?(what, model = nil)
     return false unless what.nil?
     add_flash(@bang || model.present? ?
-      I18n.t("flash.record.no_longer_exists", :model => ui_lookup(:model => model)) :
+      _("%s no longer exists") %  ui_lookup(:model => model) :
       _("Error: Record no longer exists in the database"))
     session[:flash_msgs] = @flash_array
     # Error message is displayed in 'show_list' action if such action exists

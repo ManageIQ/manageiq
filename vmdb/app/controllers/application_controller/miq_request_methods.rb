@@ -71,7 +71,7 @@ module ApplicationController::MiqRequestMethods
   def pre_prov
     if params[:button] == "cancel"
       req = session[:edit][:req_id] if session[:edit] && session[:edit][:req_id]
-      add_flash(I18n.t("flash.add.cancelled", :model=>"#{session[:edit][:prov_type]} Request"))
+      add_flash(_("Add of new %s was cancelled by the user") % "#{session[:edit][:prov_type]} Request")
       session[:flash_msgs] = @flash_array.dup unless session[:edit][:explorer]  # Put msg in session for next transaction to display
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
       @edit = session[:edit] =  nil                                               # Clear out session[:edit]
@@ -183,7 +183,7 @@ module ApplicationController::MiqRequestMethods
   def prov_edit
     if params[:button] == "cancel"
       req = MiqRequest.find_by_id(from_cid(session[:edit][:req_id])) if session[:edit] && session[:edit][:req_id]
-      add_flash(req && req.id ? I18n.t("flash.edit.cancelled", :model=>"#{session[:edit][:prov_type]} Request", :name=>req.description) : I18n.t("flash.provision.cancelled", :model=>"#{session[:edit][:prov_type]} Request"))
+      add_flash(req && req.id ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"#{session[:edit][:prov_type]} Request", :name=>req.description} : _("Provision %s was cancelled by the user") % "#{session[:edit][:prov_type]} Request")
       session[:flash_msgs] = @flash_array.dup unless session[:edit][:explorer]  # Put msg in session for next transaction to display
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
       @edit = session[:edit] =  nil                                               # Clear out session[:edit]
@@ -558,7 +558,7 @@ module ApplicationController::MiqRequestMethods
       else
         title = "Hosts"
       end
-      flash = @edit[:req_id] == nil ? I18n.t("flash.request.request_submitted", :typ=>@edit[:prov_type], :title=>title) : I18n.t("flash.request.request_resubmitted", :typ=>@edit[:prov_type], :title=>title)
+      flash = @edit[:req_id] == nil ? _("%{typ} Request was Submitted, you will be notified when your %{title} are ready") % {:typ=>@edit[:prov_type], :title=>title} : _("%{typ} Request was re-submitted, you will be notified when your %{title} are ready") % {:typ=>@edit[:prov_type], :title=>title}
       @explorer = @edit[:explorer] ? @edit[:explorer] : false
       @sb[:action] = @edit = session[:edit] =  nil                                                # Clear out session[:edit]
       if role_allows(:feature => "miq_request_show_list", :any => true)

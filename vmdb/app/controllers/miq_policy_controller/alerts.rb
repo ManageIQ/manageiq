@@ -8,11 +8,9 @@ module MiqPolicyController::Alerts
       @edit = nil
       @alert = session[:edit][:alert_id] ? MiqAlert.find_by_id(session[:edit][:alert_id]) : MiqAlert.new
       if @alert && @alert.id.blank?
-        add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAlert")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAlert"))
       else
-        add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAlert"),:name=>@alert.description))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAlert"), :name=>@alert.description})
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
@@ -53,14 +51,13 @@ module MiqPolicyController::Alerts
     alerts = Array.new
     # showing 1 alert, delete it
     if params[:id] == nil || MiqAlert.find_by_id(params[:id]).nil?
-      add_flash(I18n.t("flash.button.record_gone",
-                        :model=>ui_lookup(:model=>"MiqAlert")),
+      add_flash(_("%s no longer exists") % ui_lookup(:model=>"MiqAlert"),
                   :error)
     else
       alerts.push(params[:id])
     end
     process_alerts(alerts, "destroy") unless alerts.empty?
-    add_flash(I18n.t("flash.selected_record_deleted",:model=>ui_lookup(:models=>"MiqAlert"))) if @flash_array == nil
+    add_flash(_("The selected %s was deleted") % ui_lookup(:models=>"MiqAlert")) if @flash_array == nil
     @new_alert_node = self.x_node = "root"
     get_node_info(x_node)
     replace_right_cell("root", [:alert_profile, :alert])
@@ -482,7 +479,7 @@ module MiqPolicyController::Alerts
     begin
     alarms = MiqAlert.ems_alarms(@edit[:new][:db], @edit[:new][:expression][:options][:ems_id])
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task=>"ems_alarms") << bang.message, :error)
+      add_flash(_("Error during '%s': ") % "ems_alarms" << bang.message, :error)
     end
     return alarms
   end
@@ -532,20 +529,20 @@ module MiqPolicyController::Alerts
       add_flash(_("A valid expression must be present"), :error)
     end
     unless @edit[:new][:expression][:eval_method] && @edit[:new][:expression][:eval_method] != "nothing"
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"A Driving Event"), :error) if alert.responds_to_events.blank?
+      add_flash(_("%s must be selected") % "A Driving Event", :error) if alert.responds_to_events.blank?
     end
     if alert.options[:notifications][:automate]
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Event Name"), :error) if alert.options[:notifications][:automate][:event_name].blank?
+      add_flash(_("%s is required") % "Event Name", :error) if alert.options[:notifications][:automate][:event_name].blank?
     end
     if @edit.fetch_path(:new, :expression, :eval_method) == "realtime_performance"
       vt = @edit.fetch_path(:new, :expression, :options, :value_threshold)
       unless vt && is_integer?(vt)
-        add_flash(I18n.t("flash.edit.field_must_be.integer", :field=>"Value Threshold"), :error)
+        add_flash(_("%s must be an integer") % "Value Threshold", :error)
       end
       if @edit.fetch_path(:new, :expression, :options, :trend_direction).ends_with?("more_than")
         ts = @edit.fetch_path(:new, :expression, :options, :trend_steepness)
         unless ts && is_integer?(ts)
-          add_flash(I18n.t("flash.edit.field_must_be.integer", :field=>"Trend Steepness"), :error)
+          add_flash(_("%s must be an integer") % "Trend Steepness", :error)
         end
       end
     end
@@ -553,12 +550,11 @@ module MiqPolicyController::Alerts
             alert.options[:notifications][:snmp] ||
             alert.options[:notifications][:evm_event] ||
             alert.options[:notifications][:automate]
-      add_flash(I18n.t("flash.edit.at_least_1.configured",
-                      :field=>"of E-mail, SNMP Trap, Timeline Event, or Management Event"),
+      add_flash(_("At least one %s must be configured") % "of E-mail, SNMP Trap, Timeline Event, or Management Event",
                 :error)
     end
     if alert.options[:notifications][:email]
-      add_flash(I18n.t("flash.edit.at_least_1.configured", :field=>"E-mail recipient"), :error) if alert.options[:notifications][:email][:to].blank?
+      add_flash(_("At least one %s must be configured") % "E-mail recipient", :error) if alert.options[:notifications][:email][:to].blank?
     end
     if alert.options[:notifications][:snmp]
       validate_snmp_options(alert.options[:notifications][:snmp])
@@ -591,7 +587,7 @@ module MiqPolicyController::Alerts
         @temp[:email_to].push(u ? "#{u.name} (#{e})" : e)
       end
     end
-    @right_cell_text = I18n.t("cell_header.model_record",:model=>ui_lookup(:model=>"MiqAlert"),:name=>alert.description)
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlert"), :name=>alert.description}
     @right_cell_div = "alert_details"
 
     @record = @alert

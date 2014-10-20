@@ -59,7 +59,7 @@ module ApplicationController::Timelines
         (@tl_options[:filter1].nil? || @tl_options[:filter1] == "") &&
         (@tl_options[:filter2].nil? || @tl_options[:filter2] == "") &&
         (@tl_options[:filter3].nil? || @tl_options[:filter3] == "")
-      add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"filter"), :warning)
+      add_flash(_("At least one %s must be selected") % "filter", :warning)
     elsif @tl_options[:tl_show] == "policy_timeline"
       flg = true
       @tl_options[:events].sort.each_with_index do |e,i|
@@ -69,7 +69,7 @@ module ApplicationController::Timelines
           break
         end
       end
-      add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"filter"), :warning) if flg
+      add_flash(_("At least one %s must be selected") % "filter", :warning) if flg
     else
       tl_gen_timeline_data(refresh="n")
       return unless @temp[:timeline]

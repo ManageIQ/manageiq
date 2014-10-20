@@ -133,7 +133,7 @@ class MiqAeClassController < ApplicationController
     end
     @sb[:namespace_path].gsub!(/\//," / ") if @sb[:namespace_path]
     @right_cell_text = "#{txt} \
-      #{I18n.t("cell_header.name", :name => get_rec_name(rec))}" unless %w(root aei aem).include?(nodes[0])
+      #{_("\"%s\"") %  get_rec_name(rec)}" unless %w(root aei aem).include?(nodes[0])
   end
 
   def expand_toggle
@@ -826,8 +826,8 @@ class MiqAeClassController < ApplicationController
 
     @edit[:current] = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
-        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqAeInstance")) :
-        I18n.t("cell_header.editing_model_record",:model=>ui_lookup(:model=>"MiqAeInstance"), :name=>@ae_inst.name)
+        _("Adding a new %s") % ui_lookup(:model=>"MiqAeInstance") :
+        _("Editing %{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAeInstance"), :name=>@ae_inst.name}
     session[:edit] = @edit
   end
 
@@ -868,14 +868,12 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeInstance"),
-                      :name=>@ae_inst.name))
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAeInstance"), :name=>@ae_inst.name})
       @in_a_form = false
       replace_right_cell
     when "save"
       if @edit[:new][:ae_inst]["name"].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
       end
       if @flash_array
         render :update do |page|
@@ -898,7 +896,7 @@ class MiqAeClassController < ApplicationController
           end
         end   # end of transaction
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
         @in_a_form = true
         render :update do |page|
           if @sb[:row_selected]
@@ -911,9 +909,7 @@ class MiqAeClassController < ApplicationController
         AuditEvent.success(build_saved_audit(@ae_class, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
-        add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"MiqAeInstance"),
-                        :name=>@ae_inst.name))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqAeInstance"), :name=>@ae_inst.name})
         replace_right_cell([:ae])
         return
       end
@@ -931,15 +927,14 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeInstance")))
+      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAeInstance"))
       @in_a_form = false
       replace_right_cell
     when "add"
       return unless load_edit("aeinst_edit__new","replace_cell__explorer")
       get_instances_form_vars
       if @edit[:new][:ae_inst]["name"].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
       end
       if @flash_array
         render :update do |page|
@@ -959,7 +954,7 @@ class MiqAeClassController < ApplicationController
           end
         end  # end of transaction
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"add") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
         @in_a_form = true
         add_aeinst.errors.each do |field,msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -969,9 +964,7 @@ class MiqAeClassController < ApplicationController
         end
       else
         AuditEvent.success(build_created_audit(add_aeinst, @edit))
-        add_flash(I18n.t("flash.add.added",
-                        :model=>ui_lookup(:model=>"MiqAeInstance"),
-                        :name=>add_aeinst.name))
+        add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqAeInstance"), :name=>add_aeinst.name})
         @in_a_form = false
         replace_right_cell([:ae])
         return
@@ -1000,8 +993,8 @@ class MiqAeClassController < ApplicationController
     @edit[:inherits_from] = MiqAeClass.all.collect {|c| [ c.fqname, c.fqname ] }
     @edit[:current] = @edit[:new].dup
     @right_cell_text = @edit[:rec_id].nil? ?
-        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"Class")) :
-        I18n.t("cell_header.editing_model_record",:model=>ui_lookup(:model=>"Class"), :name=>@ae_class.name)
+        _("Adding a new %s") % ui_lookup(:model=>"Class") :
+        _("Editing %{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"Class"), :name=>@ae_class.name}
     session[:edit] = @edit
     @in_a_form = true
   end
@@ -1037,10 +1030,8 @@ class MiqAeClassController < ApplicationController
     @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
     @edit[:current]         = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
-                        I18n.t("cell_header.adding_model_record", :model => ui_lookup(:model => "Class Schema")) :
-                        I18n.t("cell_header.editing_model_record",
-                               :model => ui_lookup(:model => "Class Schema"),
-                               :name  => @ae_class.name)
+                        _("Adding a new %s") %  ui_lookup(:model => "Class Schema") :
+                        _("Editing %{model} \"%{name}\"") % {:model => ui_lookup(:model => "Class Schema"), :name  => @ae_class.name}
     session[:edit] = @edit
   end
 
@@ -1082,8 +1073,8 @@ class MiqAeClassController < ApplicationController
     @edit[:new][:available_datatypes] = MiqAeField.available_datatypes_for_ui
     @edit[:current] = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
-        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqAeMethod")) :
-        I18n.t("cell_header.editing_model_record",:model=>ui_lookup(:model=>"MiqAeMethod"), :name=>@ae_method.name)
+        _("Adding a new %s") % ui_lookup(:model=>"MiqAeMethod") :
+        _("Editing %{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAeMethod"), :name=>@ae_method.name}
     session[:log_depot_default_verify_status] = false
     session[:edit] = @edit
     session[:changed] = @changed = false
@@ -1104,7 +1095,7 @@ class MiqAeClassController < ApplicationController
     else
       res.each do |err|
         line = err[0] if line == 0
-        add_flash(I18n.t("flash.error_on_line", :line_num=>err[0], :err_txt=>err[1]), :error)
+        add_flash(_("Error on line %{line_num}: %{err_txt}") % {:line_num=>err[0], :err_txt=>err[1]}, :error)
       end
     end
     render :update do |page|
@@ -1295,9 +1286,7 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeClass"),
-                      :name=>@ae_class.name))
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAeClass"), :name=>@ae_class.name})
       @in_a_form = false
       replace_right_cell
     when "save"
@@ -1308,16 +1297,14 @@ class MiqAeClassController < ApplicationController
           ae_class.save!
         end  # end of transaction
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
         session[:changed] = @changed
         @changed = true
         render :update do |page|
           page.replace("flash_msg_div_class_props", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_props"})
         end
       else
-        add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"MiqAeClass"),
-                        :name=>ae_class.fqname))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqAeClass"), :name=>ae_class.fqname})
         AuditEvent.success(build_saved_audit(ae_class, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
@@ -1343,9 +1330,7 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.edit.cancelled_for_class",
-                      :model=>ui_lookup(:model=>"MiqAeClass"),
-                      :name=>@ae_class.name))
+      add_flash(_("Edit of schema for %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAeClass"), :name=>@ae_class.name})
       @in_a_form = false
       replace_right_cell
     when "save"
@@ -1362,7 +1347,7 @@ class MiqAeClassController < ApplicationController
           end
         end  # end of transaction
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
         session[:changed] = @changed = true
         render :update do |page|
           page.replace("flash_msg_div_class_fields",
@@ -1370,9 +1355,7 @@ class MiqAeClassController < ApplicationController
                        :locals  => {:div_num => "_class_fields"})
         end
       else
-        add_flash(I18n.t("flash.edit.saved_for_class",
-                      :model=>ui_lookup(:model=>"MiqAeClass"),
-                      :name=>ae_class.name))
+        add_flash(_("Schema for %{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqAeClass"), :name=>ae_class.name})
         AuditEvent.success(build_saved_audit(ae_class, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
@@ -1400,9 +1383,7 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.edit.cancelled",
-                       :model => ui_lookup(:model => @edit[:typ]),
-                       :name  => @ae_ns.name))
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => @edit[:typ]), :name  => @ae_ns.name})
       @in_a_form = false
       replace_right_cell
     when "save"
@@ -1411,7 +1392,7 @@ class MiqAeClassController < ApplicationController
       begin
         ae_ns.save!
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
         session[:changed] = @changed
         @changed = true
         render :update do |page|
@@ -1420,9 +1401,7 @@ class MiqAeClassController < ApplicationController
                        :locals  => {:div_num => "_ns_list"})
         end
       else
-        add_flash(I18n.t("flash.edit.saved",
-                         :model => ui_lookup(:model => @edit[:typ]),
-                         :name  => ae_ns.name))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => @edit[:typ]), :name  => ae_ns.name})
         AuditEvent.success(build_saved_audit(ae_ns, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
@@ -1448,9 +1427,7 @@ class MiqAeClassController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeMethod"),
-                      :name=>@ae_method.name))
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAeMethod"), :name=>@ae_method.name})
       @sb[:form_vars_set] = false
       @in_a_form = false
       replace_right_cell
@@ -1470,7 +1447,7 @@ class MiqAeClassController < ApplicationController
           end
         end  # end of transaction
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"save") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
         session[:changed] = @changed
         @changed = true
         render :update do |page|
@@ -1481,9 +1458,7 @@ class MiqAeClassController < ApplicationController
           end
         end
       else
-        add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"MiqAeMethod"),
-                        :name=>ae_method.name))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqAeMethod"), :name=>ae_method.name})
         AuditEvent.success(build_saved_audit(ae_method, @edit))
         session[:edit] = nil  # clean out the saved info
         @sb[:form_vars_set] = false
@@ -1535,8 +1510,7 @@ class MiqAeClassController < ApplicationController
     @in_a_form = true
     case params[:button]
     when "cancel"
-      add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeClass")))
+      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAeClass"))
       @in_a_form = false
       replace_right_cell([:ae])
     when "add"
@@ -1547,15 +1521,13 @@ class MiqAeClassController < ApplicationController
           add_aeclass.save!
         end
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"add") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
         @in_a_form = true
         render :update do |page|
           page.replace("flash_msg_div_class_props", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_props"})
         end
       else
-        add_flash(I18n.t("flash.add.added",
-                        :model=>ui_lookup(:model=>"MiqAeClass"),
-                        :name=>add_aeclass.fqname))
+        add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqAeClass"), :name=>add_aeclass.fqname})
         @in_a_form = false
         replace_right_cell([:ae])
       end
@@ -1570,8 +1542,7 @@ class MiqAeClassController < ApplicationController
     @in_a_form = true
     case params[:button]
     when "cancel"
-      add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"MiqAeMethod")))
+      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAeMethod"))
       @sb[:form_vars_set] = false
       @in_a_form = false
       replace_right_cell
@@ -1590,15 +1561,13 @@ class MiqAeClassController < ApplicationController
           end
         end
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"add") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
         @in_a_form = true
         render :update do |page|
           page.replace("flash_msg_div_class_methods", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_methods"})
         end
       else
-        add_flash(I18n.t("flash.add.added",
-                        :model=>ui_lookup(:model=>"MiqAeMethod"),
-                        :name=>add_aemethod.name))
+        add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqAeMethod"), :name=>add_aemethod.name})
         @sb[:form_vars_set] = false
         @in_a_form = false
         replace_right_cell([:ae])
@@ -1616,8 +1585,7 @@ class MiqAeClassController < ApplicationController
     get_ns_form_vars
     case params[:button]
     when "cancel"
-      add_flash(I18n.t("flash.add.cancelled",
-                       :model => ui_lookup(:model => @edit[:typ])))
+      add_flash(_("Add of new %s was cancelled by the user") %  ui_lookup(:model => @edit[:typ]))
       @in_a_form = false
       replace_right_cell
     when "add"
@@ -1625,9 +1593,7 @@ class MiqAeClassController < ApplicationController
       add_ae_ns = @edit[:typ].constantize.new(:parent_id => parent_id)
       ns_set_record_vars(add_ae_ns)      # Set the record variables, but don't save
       if add_ae_ns.valid? && !flash_errors? && add_ae_ns.save
-        add_flash(I18n.t("flash.add.added",
-                         :model => ui_lookup(:model => add_ae_ns.class.name),
-                         :name  => add_ae_ns.name))
+        add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => add_ae_ns.class.name), :name  => add_ae_ns.name})
         @in_a_form = false
         replace_right_cell([:ae])
       else
@@ -1898,9 +1864,7 @@ class MiqAeClassController < ApplicationController
   def copy_objects
     ids = objects_to_copy
     if ids.blank?
-      add_flash(I18n.t("flash.button.task_does_not_apply_to_model",
-                       :task  => "Copy",
-                       :model => ui_lookup(:model => "MiqAeNamespace")), :error)
+      add_flash(_("%{task} does not apply to selected %{model}") % {:task  => "Copy", :model => ui_lookup(:model => "MiqAeNamespace")}, :error)
       @sb[:action] = session[:edit] = nil
       @in_a_form = false
       replace_right_cell
@@ -2026,14 +1990,13 @@ private
     begin
       res = @edit[:typ].copy(options)
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during",
-                       :task => "#{ui_lookup(:model => "#{@edit[:typ]}")} copy") << bang.message, :error)
+      add_flash(_("Error during '%s': ") %  "#{ui_lookup(:model => "#{@edit[:typ]}")} copy" << bang.message, :error)
       render :update do |page|
         page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       end
     else
       model = @edit[:selected_items].count > 1 ? :models : :model
-      add_flash(I18n.t("flash.copy.copied", :model => ui_lookup(model => "#{@edit[:typ]}")))
+      add_flash(_("Copy selected %s was saved") %  ui_lookup(model => "#{@edit[:typ]}"))
       @record = res.kind_of?(Array) ? @edit[:typ].find_by_id(res.first) : res
       self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(@record.id)}"
       @in_a_form = @changed = session[:changed] = false
@@ -2058,9 +2021,8 @@ private
     @record = session[:edit][:typ].find_by_id(session[:edit][:rec_id])
     model = @edit[:selected_items].count > 1 ? :models : :model
     @sb[:action] = session[:edit] = nil # clean out the saved info
-    add_flash(I18n.t("flash.copy.cancelled",
-                     :model => ui_lookup(model => "#{@edit[:typ]}")
-              )
+    add_flash(_("Copy %s was cancelled by the user") %  ui_lookup(model => "#{@edit[:typ]}")
+              
     )
     @in_a_form = false
     replace_right_cell
@@ -2282,9 +2244,7 @@ private
         if record.editable?
           ns_list.push(from_cid(item[1]))
         else
-          add_flash(I18n.t("flash.cannot_delete",
-                           :model => ui_lookup(:model => "MiqAeDomain"),
-                           :field => record.name),
+          add_flash(_("\"%{field}\" %{model} can not be deleted") % {:model => ui_lookup(:model => "MiqAeDomain"), :field => record.name},
                     :error)
         end
       else
@@ -2384,7 +2344,7 @@ private
       end
     elsif params[:button] == "accept"
       if session[:field_data]['name'].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field => "Name"), :error)
+        add_flash(_("%s is required") %  "Name", :error)
         return
       end
       new_fields = {}
@@ -2450,7 +2410,7 @@ private
       session[:field_data] ||= Hash.new
     elsif params[:button] == "accept"
       if @edit[:new_field].blank? || @edit[:new_field][:name].nil? || @edit[:new_field][:name] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
         return
       end
       new_field = {}
@@ -2627,7 +2587,7 @@ private
 
   def move_selected_fields_up(available_fields, selected_fields, display_name)
     if no_items_selected?(selected_fields)
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field => display_name), :error)
+      add_flash(_("No %s were selected to move up") %  display_name, :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?(available_fields, selected_fields)
@@ -2639,14 +2599,14 @@ private
         end
       end
     else
-      add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field => display_name), :error)
+      add_flash(_("Select only one or consecutive %s to move up") %  display_name, :error)
     end
     @selected = selected_fields
   end
 
   def move_selected_fields_down(available_fields, selected_fields, display_name)
     if no_items_selected?(selected_fields)
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field => display_name), :error)
+      add_flash(_("No %s were selected to move down") %  display_name, :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?(available_fields, selected_fields)
@@ -2660,7 +2620,7 @@ private
         end
       end
     else
-      add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field => display_name), :error)
+      add_flash(_("Select only one or consecutive %s to move down") %  display_name, :error)
     end
     @selected = selected_fields
   end
@@ -2691,9 +2651,7 @@ private
     typ = params[:pressed] == "miq_ae_domain_edit" ? MiqAeDomain : MiqAeNamespace
     @ae_ns = typ.find(from_cid(obj[0].split('-')[1]))
     if @ae_ns.domain? && !@ae_ns.editable?
-      add_flash(I18n.t("flash.cant_edit_read_only",
-                       :model => ui_lookup(:model => "MiqAeDomain"),
-                       :name  => @ae_ns.name),
+      add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => ui_lookup(:model => "MiqAeDomain"), :name  => @ae_ns.name},
                 :error)
     else
       ns_set_form_vars
@@ -2777,18 +2735,14 @@ private
     assert_privileges("miq_ae_domain_#{locked ? 'lock' : 'unlock'}")
     action = locked ? "Locked" : "Unlocked"
     if params[:id].nil?
-      add_flash(I18n.t("flash.no_records_selected_to_be_marked",
-                       :model  => ui_lookup(:model => "MiqAeDomain"),
-                       :action => action),
+      add_flash(_("No %{model} were selected to be marked as %{action}") % {:model  => ui_lookup(:model => "MiqAeDomain"), :action => action},
                 :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
     domain_toggle_lock(params[:id], locked)
-    add_flash(I18n.t("flash.selected_records_were_marked",
-                     :model  => ui_lookup(:model => "MiqAeDomain"),
-                     :action => action),
+    add_flash(_("The selected %{model} were marked as %{action}") % {:model  => ui_lookup(:model => "MiqAeDomain"), :action => action},
               :info, true) unless flash_errors?
     replace_right_cell([:ae])
   end

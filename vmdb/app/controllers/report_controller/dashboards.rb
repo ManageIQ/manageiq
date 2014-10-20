@@ -59,9 +59,9 @@ module ReportController::Dashboards
       when "cancel"
         @db = MiqWidgetSet.find_by_id(session[:edit][:db_id]) if session[:edit] && session[:edit][:db_id]
         if !@db || @db.id.blank?
-          add_flash(I18n.t("flash.add.cancelled", :model=>"Dashboard"))
+          add_flash(_("Add of new %s was cancelled by the user") % "Dashboard")
         else
-          add_flash(I18n.t("flash.edit.cancelled", :model=>"Dashboard", :name=>@db.name))
+          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"Dashboard", :name=>@db.name})
         end
         get_node_info
         @edit = session[:edit] = nil # clean out the saved info
@@ -79,9 +79,7 @@ module ReportController::Dashboards
         if @flash_array.nil? && @db.save
           db_save_members
           AuditEvent.success(build_saved_audit(@db, @edit))
-          add_flash(I18n.t("flash.edit.saved",
-                           :model=>"Dashboard",
-                           :name=>@db.name))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>"Dashboard", :name=>@db.name})
           if params[:button] == "add"
             widgetset = MiqWidgetSet.where_unique_on(@edit[:new][:name], nil, nil).first
             settings = g.settings ? g.settings : Hash.new
@@ -118,8 +116,7 @@ module ReportController::Dashboards
     db = MiqWidgetSet.find_by_id(params[:id])       #temp var to determine the parent node of deleted items
     process_elements(db, MiqWidgetSet, "destroy")
     unless flash_errors?
-        add_flash(I18n.t("flash.selected_record_deleted",
-                  :model=>"Dashboard"),
+        add_flash(_("The selected %s was deleted") % "Dashboard",
                   :info, true)
     end
     g = MiqGroup.find(from_cid(@sb[:nodes][2].split('_').first))
@@ -217,8 +214,7 @@ module ReportController::Dashboards
     @sb[:nodes] = x_node.split('-')
     if @sb[:nodes].length == 1
       @temp[:default_ws] = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
-      @right_cell_text = I18n.t("cell_header.all_model_records",
-                                :model=>"Dashboards")
+      @right_cell_text = _("All %s") % "Dashboards"
       @right_cell_div  = "db_list"
       @temp[:db_nodes] = Hash.new
       @temp[:db_nodes_order] = [@temp[:default_ws].name, "All Groups"]
@@ -238,13 +234,10 @@ module ReportController::Dashboards
       #All groups node is selected
       @temp[:miq_groups] = MiqGroup.all
       @right_cell_div  = "db_list"
-      @right_cell_text = I18n.t("cell_header.all_model_records",
-                                :model=>ui_lookup(:models=>"MiqGroup"))
+      @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqGroup")
     elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g"
       g = MiqGroup.find(from_cid(@sb[:nodes].last))
-      @right_cell_text = I18n.t("cell_header.model_for_record",
-                                :model=>"Dashboards",
-                                :name=>g.description)
+      @right_cell_text = _("%{model} for \"%{name}\"") % {:model=>"Dashboards", :name=>g.description}
       @right_cell_div  = "db_list"
       widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup",g.id)
       @temp[:widgetsets] = Array.new
@@ -264,9 +257,7 @@ module ReportController::Dashboards
       #default dashboard nodes is selected or one under a specific group is selected
       #g = MiqGroup.find(@sb[:nodes][2])
       @record = @db = MiqWidgetSet.find(from_cid(@sb[:nodes].last))
-      @right_cell_text = I18n.t("cell_header.model_record",
-                                :model=>"Dashboard",
-                                :name=>"#{@db.description} (#{@db.name})")
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Dashboard", :name=>"#{@db.description} (#{@db.name})"}
       @right_cell_div  = "db_list"
       @sb[:new] = Hash.new
       @sb[:new][:name] = @db.name
@@ -340,7 +331,7 @@ module ReportController::Dashboards
 
   def db_fields_validation
     if @edit[:new][:name] && @edit[:new][:name].index('|')
-      add_flash(I18n.t("flash.edit.field_character_not_allowed", :field=>"Name", :character=>"|"), :error)
+      add_flash(_("%{field} cannot contain \"%{character}\"") % {:field=>"Name", :character=>"|"}, :error)
       return
     end
     #no need to check this for default dashboard, it doesn't belong to any group
@@ -349,13 +340,13 @@ module ReportController::Dashboards
       #make sure description is unique within group
       ws.each do |w|
         if w.description == @edit[:new][:description] && (@edit[:db_id] && w.id != @edit[:db_id])
-          add_flash(I18n.t("flash.edit.field_unique_within_group", :field=>"Tab Title"), :error)
+          add_flash(_("%s must be unique for this group") % "Tab Title", :error)
           break
         end
       end
     end
     if @edit[:new][:col1].empty? && @edit[:new][:col2].empty? && @edit[:new][:col3].empty?
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"One widget"), :error)
+      add_flash(_("%s must be selected") % "One widget", :error)
       return
     end
   end
@@ -453,14 +444,14 @@ module ReportController::Dashboards
   def db_move_cols_up
     return unless load_edit("db_edit__seq","replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move up") % "fields", :error)
       @refresh_div = "column_lists"
       @refresh_partial = "db_seq_form"
       return
     end
     consecutive, first_idx, last_idx = db_selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
     else
       if first_idx > 0
         @edit[:new][:dashboard_order][first_idx..last_idx].reverse.each do |field|
@@ -477,14 +468,14 @@ module ReportController::Dashboards
   def db_move_cols_down
     return unless load_edit("db_edit__seq","replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move down") % "fields", :error)
       @refresh_div = "column_lists"
       @refresh_partial = "db_seq_form"
       return
     end
     consecutive, first_idx, last_idx = db_selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
     else
       if last_idx < @edit[:new][:dashboard_order].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one

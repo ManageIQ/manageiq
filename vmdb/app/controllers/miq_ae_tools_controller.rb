@@ -127,7 +127,11 @@ class MiqAeToolsController < ApplicationController
 
         stat_options = generate_stat_options(import_stats)
 
-        add_flash(I18n.t("flash.automate.datastore_import_success", stat_options), :info)
+        add_flash(_("Datastore import was successful.
+Namespaces updated/added: %{namespace_stats}
+Classes updated/added: %{class_stats}
+Instances updated/added: %{instance_stats}
+Methods updated/added: %{method_stats}") % stat_options, :info)
       else
         add_flash(_("Error: Datastore import file upload expired"), :error)
       end
@@ -168,10 +172,14 @@ class MiqAeToolsController < ApplicationController
     if params[:upload] && !params[:upload][:datastore].blank?
       begin
         MiqAeDatastore.upload(params[:upload][:datastore])
-        add_flash(I18n.t("flash.automate.datastore_import_success", stat_options))
+        add_flash(_("Datastore import was successful.
+Namespaces updated/added: %{namespace_stats}
+Classes updated/added: %{class_stats}
+Instances updated/added: %{instance_stats}
+Methods updated/added: %{method_stats}") % stat_options)
         redirect_to :action => 'import_export', :flash_msg=>@flash_array[0][:message]         # redirect to build the retire screen
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"upload") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
         redirect_to :action => 'import_export', :flash_msg=>@flash_array[0][:message], :flash_error=>true         # redirect to build the retire screen
       end
     else
@@ -201,7 +209,7 @@ class MiqAeToolsController < ApplicationController
     session[:ae_task_id] = params[:task_id]
 
     if miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(I18n.t("flash.error_with_stat_message", :task=>"reset", :status=>miq_task.status, :message=>miq_task.message), :error)
+      add_flash(_("Error during %{task}: Status [%{status}] Message [%{message}]") % {:task=>"reset", :status=>miq_task.status, :message=>miq_task.message}, :error)
     else
       self.x_node = "root" if x_active_tree == :ae_tree && x_tree
       add_flash(_("All custom classes and instances have been reset to default"))
@@ -332,14 +340,14 @@ class MiqAeToolsController < ApplicationController
   end
 
   def valid_resolve_object?
-    add_flash(I18n.t("flash.edit.select_required", :field=>"Starting Class"), :error) if @resolve[:new][:starting_object].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Starting Process"), :error) if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Request"), :error) if @resolve[:new][:object_request].blank?
+    add_flash(_("%s must be selected") % "Starting Class", :error) if @resolve[:new][:starting_object].blank?
+    add_flash(_("%s is required") % "Starting Process", :error) if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
+    add_flash(_("%s is required") % "Request", :error) if @resolve[:new][:object_request].blank?
     AE_MAX_RESOLUTION_FIELDS.times do |i|
       f = ("attribute_" + (i+1).to_s)
       v = ("value_" + (i+1).to_s)
-      add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>f.titleize, :field=>v.titleize), :error) if @resolve[:new][:attrs][i][0].blank? && !@resolve[:new][:attrs][i][1].blank?
-      add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>v.titleize, :field=>f.titleize), :error) if !@resolve[:new][:attrs][i][0].blank? && @resolve[:new][:attrs][i][1].blank?
+      add_flash(_("%{val} missing for %{field}") % {:val=>f.titleize, :field=>v.titleize}, :error) if @resolve[:new][:attrs][i][0].blank? && !@resolve[:new][:attrs][i][1].blank?
+      add_flash(_("%{val} missing for %{field}") % {:val=>v.titleize, :field=>f.titleize}, :error) if !@resolve[:new][:attrs][i][0].blank? && @resolve[:new][:attrs][i][1].blank?
     end
     return !flash_errors?
   end

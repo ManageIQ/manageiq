@@ -43,12 +43,9 @@ module PxeController::PxeServers
     if params[:button] == "cancel"
       @edit = session[:edit] = nil # clean out the saved info
       if @ps && @ps.id
-        add_flash(I18n.t("flash.edit.cancelled",
-                         :model=>ui_lookup(:model=>"PxeServer"),
-                         :name=>@ps.name))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"PxeServer"), :name=>@ps.name})
       else
-        add_flash(I18n.t("flash.add.cancelled",
-                         :model=>ui_lookup(:model=>"PxeServer")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"PxeServer"))
       end
       get_node_info(x_node)
       replace_right_cell(x_node)
@@ -132,9 +129,7 @@ module PxeController::PxeServers
     if !params[:id]
       pxes = find_checked_items
       if pxes.empty?
-        add_flash(I18n.t("flash.button.no_records_selected",
-                        :model=>ui_lookup(:models=>"PxeServer"),
-                        :button=>display_name),
+        add_flash(_("No %{model} were selected to %{button}") % {:model=>ui_lookup(:models=>"PxeServer"), :button=>display_name},
                   :error)
       else
         process_pxes(pxes, method, display_name)
@@ -144,8 +139,7 @@ module PxeController::PxeServers
       replace_right_cell(x_node,[:pxe_servers])
     else # showing 1 vm
       if params[:id].nil? || PxeServer.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.button.record_gone",
-                        :model=>ui_lookup(:model=>"PxeServer")),
+        add_flash(_("%s no longer exists") % ui_lookup(:model=>"PxeServer"),
                   :error)
         pxe_server_list
         @refresh_partial = "layouts/x_gtl"
@@ -201,9 +195,7 @@ module PxeController::PxeServers
     assert_privileges("pxe_image_edit")
     case params[:button]
     when "cancel"
-      add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"PxeImage"),
-                      :name=>session[:edit][:img].name))
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"PxeImage"), :name=>session[:edit][:img].name})
       @edit = session[:edit] = nil  # clean out the saved info
       get_node_info(x_node)
       replace_right_cell(x_node)
@@ -212,9 +204,7 @@ module PxeController::PxeServers
       update_img = find_by_id_filtered(PxeImage, params[:id])
       pxe_img_set_record_vars(update_img)
       if update_img.valid? && !flash_errors? && update_img.save!
-        add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"PxeImage"),
-                        :name=>update_img.name))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"PxeImage"), :name=>update_img.name})
         AuditEvent.success(build_saved_audit(update_img, @edit))
         refresh_trees = @edit[:new][:default_for_windows] == @edit[:current][:default_for_windows] ? [] : [:pxe_server]
         @edit = session[:edit] = nil  # clean out the saved info
@@ -257,9 +247,7 @@ module PxeController::PxeServers
     assert_privileges("pxe_wimg_edit")
     case params[:button]
       when "cancel"
-        add_flash(I18n.t("flash.edit.cancelled",
-                         :model=>ui_lookup(:model=>"WindowsImage"),
-                         :name=>session[:edit][:wimg].name))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"WindowsImage"), :name=>session[:edit][:wimg].name})
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
         replace_right_cell(x_node)
@@ -268,9 +256,7 @@ module PxeController::PxeServers
         update_wimg = find_by_id_filtered(WindowsImage, params[:id])
         pxe_wimg_set_record_vars(update_wimg)
         if update_wimg.valid? && !flash_errors? && update_wimg.save!
-          add_flash(I18n.t("flash.edit.saved",
-                           :model=>ui_lookup(:model=>"WindowsImage"),
-                           :name=>update_wimg.name))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"WindowsImage"), :name=>update_wimg.name})
           AuditEvent.success(build_saved_audit(update_wimg, @edit))
           @edit = session[:edit] = nil  # clean out the saved info
           get_node_info(x_node)
@@ -312,23 +298,23 @@ module PxeController::PxeServers
 
   def pxe_server_validate_fields
     if @edit[:new][:name].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+      add_flash(_("%s is required") % "Name", :error)
     end
     if @edit[:new][:uri_prefix].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Depot Type"), :error)
+      add_flash(_("%s is required") % "Depot Type", :error)
     end
     if @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
+      add_flash(_("%s is required") % "URI", :error)
     end
     if @edit[:new][:uri_prefix] == "smb" || @edit[:new][:uri_prefix] == "ftp"
       if @edit[:new][:uri].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
+        add_flash(_("%s is required") % "URI", :error)
       end
       if @edit[:new][:log_userid].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"User ID"), :error)
+        add_flash(_("%s is required") % "User ID", :error)
       end
       if @edit[:new][:log_password].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Password"), :error)
+        add_flash(_("%s is required") % "Password", :error)
       elsif @edit[:new][:log_password] != @edit[:new][:log_verify]
         add_flash(_("Password/Verify Password do not match"), :error)
       end
@@ -499,8 +485,7 @@ module PxeController::PxeServers
   def pxe_server_get_node_info(treenodeid)
     if treenodeid == "root"
       pxe_server_list
-      @right_cell_text = @right_cell_text = I18n.t("cell_header.all_model_records",
-                                :model=>ui_lookup(:models=>"PxeServer"))
+      @right_cell_text = @right_cell_text = _("All %s") % ui_lookup(:models=>"PxeServer")
       @right_cell_div  = "pxe_server_list"
     else
       @right_cell_div = "pxe_server_details"
@@ -508,19 +493,13 @@ module PxeController::PxeServers
       if (nodes[0] == "ps" && nodes.length == 2) || (["pxe_xx","win_xx"].include?(nodes[1]) && nodes.length == 3)
         # on pxe server node OR folder node is selected
         @record = @ps = PxeServer.find_by_id(from_cid(nodes.last))
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                  :name=>@ps.name,
-                                  :model=>ui_lookup(:model=>"PxeServer"))
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@ps.name, :model=>ui_lookup(:model=>"PxeServer")}
       elsif nodes[0] == "pi"
         @record = @img = PxeImage.find_by_id(from_cid(nodes.last))
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                  :name=>@img.name,
-                                  :model=>ui_lookup(:model=>"PxeImage"))
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@img.name, :model=>ui_lookup(:model=>"PxeImage")}
       elsif nodes[0] == "wi"
         @record = @wimg = WindowsImage.find_by_id(from_cid(nodes[1]))
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                :name=>@wimg.name,
-                                :model=>ui_lookup(:model=>"WindowsImage"))
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@wimg.name, :model=>ui_lookup(:model=>"WindowsImage")}
       end
     end
   end

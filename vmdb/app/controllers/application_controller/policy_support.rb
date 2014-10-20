@@ -169,7 +169,7 @@ module ApplicationController::PolicySupport
       recs = [params[:id]]
     end
     if recs.length < 1
-      add_flash(I18n.t("flash.button.one_or_more_selected_for_task", :model=>Dictionary::gettext(db.to_s, :type=>:model, :notfound=>:titleize).pluralize, :task=>"Policy assignment"), :error)
+      add_flash(_("One or more %{model} must be selected to %{task}") % {:model=>Dictionary::gettext(db.to_s, :type=>:model, :notfound=>:titleize).pluralize, :task=>"Policy assignment"}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
       return

@@ -77,7 +77,7 @@ class ReportController < ApplicationController
       begin
         reps, mri = MiqReport.import(params[:upload][:file], :save => true, :overwrite => @sb[:overwrite], :userid => session[:userid])
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"upload") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
         @sb[:flash_msg] = @flash_array
         redirect_to :action => 'explorer'
       else
@@ -203,7 +203,7 @@ class ReportController < ApplicationController
     x_node_set("root", :roles_tree) if params[:load_edit_err]
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
     get_node_info
-    @right_cell_text ||= I18n.t("cell_header.all_model_records", :model=>ui_lookup(:models=>"MiqReport"))
+    @right_cell_text ||= _("All %s") % ui_lookup(:models=>"MiqReport")
     @sb[:rep_tree_build_time] = Time.now.utc
     @sb[:active_tab] = "report_info"
     @right_cell_text.gsub!(/'/, "&apos;")      # Need to escape single quote in title to load in right cell
@@ -267,7 +267,7 @@ class ReportController < ApplicationController
       timestamp = format_timezone(Time.current, Time.zone, "export_filename")
       send_data(widget_yaml, :filename => "widget_export_#{timestamp}.yml")
     else
-      add_flash(I18n.t("flash.button.at_least_selected", :num => 1, :model => "item", :action => "export"), :error)
+      add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num => 1, :model => "item", :action => "export"}, :error)
       @sb[:flash_msg] = @flash_array
       redirect_to :action => :explorer
     end
@@ -452,18 +452,14 @@ class ReportController < ApplicationController
     miq_report = MiqReport.find(@sb[:miq_report_id])
     @sb[:sel_saved_rep_id] = nodes.last
     @right_cell_div        = "savedreports_list"
-    @right_cell_text = I18n.t("cell_header.model_record",
-                              :name  => miq_report.name,
-                              :model => "Saved Reports")
+    @right_cell_text = _("%{model} \"%{name}\"") % {:name  => miq_report.name, :model => "Saved Reports"}
   end
 
   def reports_get_node_info
     nodes = x_node.split('-')
 
     if nodes.length == 2
-      @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
-                                  :typ   => @sb[:rpt_menu][nodes[1].to_i][0],
-                                  :model => ui_lookup(:models => "MiqReport"))
+      @right_cell_text ||= _("%{typ} %{model}") % {:typ   => @sb[:rpt_menu][nodes[1].to_i][0], :model => ui_lookup(:models => "MiqReport")}
 
     elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present?
       @sb[:rep_details] = {}
@@ -483,9 +479,7 @@ class ReportController < ApplicationController
         end
       end
 
-      @right_cell_text ||= I18n.t("cell_header.type_of_model_records",
-                                  :typ   => @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][0],
-                                  :model => ui_lookup(:models => "MiqReport"))
+      @right_cell_text ||= _("%{typ} %{model}") % {:typ   => @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][0], :model => ui_lookup(:models => "MiqReport")}
 
     elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].nil?
       x_node_set("root", x_active_tree)
@@ -505,7 +499,7 @@ class ReportController < ApplicationController
     end
 
     @right_cell_div  ||= "report_list"
-    @right_cell_text ||= I18n.t("cell_header.all_model_records", :model => ui_lookup(:models => "MiqReport"))
+    @right_cell_text ||= _("All %s") %  ui_lookup(:models => "MiqReport")
   end
 
   # Get all info for the node about to be displayed
@@ -702,13 +696,11 @@ class ReportController < ApplicationController
         presenter[:open_accord] = 'db'   # have to make db accordion active incase coming from report list
         if @in_a_form
           if @edit[:new][:dashboard_order]
-            @right_cell_text = I18n.t("cell_header.editing_model_record_sequence",
-                                      :name=>@sb[:group_desc],
-                                      :model=>"Dashboard")
+            @right_cell_text = _("Editing %{model} sequence for \"%{name}\"") % {:name=>@sb[:group_desc], :model=>"Dashboard"}
           else
             @right_cell_text = @db.id ?
-                I18n.t("cell_header.editing_model_record",:name=>@db.name,:model=>"Dashboard")  :
-                I18n.t("cell_header.adding_model_record",:model=>"dashboard")
+                _("Editing %{model} \"%{name}\"") % {:name=>@db.name, :model=>"Dashboard"}  :
+                _("Adding a new %s") % "dashboard"
           end
           # URL to be used in miqDropComplete method
           presenter[:miq_widget_dd_url] = "report/db_widget_dd_done"
@@ -722,14 +714,14 @@ class ReportController < ApplicationController
           if @in_a_form
             presenter[:build_calendar] = true
             @right_cell_text = @schedule.id ?
-                I18n.t("cell_header.editing_model_record",:name=>@schedule.name,:model=>ui_lookup(:model=>"MiqSchedule")) :
-                I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqSchedule"))
+                _("Editing %{model} \"%{name}\"") % {:name=>@schedule.name, :model=>ui_lookup(:model=>"MiqSchedule")} :
+                _("Adding a new %s") % ui_lookup(:model=>"MiqSchedule")
           end
         else
           if @in_a_form
             @right_cell_text = @rpt.id ?
-                I18n.t("cell_header.editing_model_record",:name=>@rpt.name,:model=>ui_lookup(:model=>"MiqReport"))  :
-                I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqReport"))
+                _("Editing %{model} \"%{name}\"") % {:name=>@rpt.name, :model=>ui_lookup(:model=>"MiqReport")}  :
+                _("Adding a new %s") % ui_lookup(:model=>"MiqReport")
           end
         end
       when :schedules_tree
@@ -737,8 +729,8 @@ class ReportController < ApplicationController
         if @in_a_form
           presenter[:build_calendar] = true
           @right_cell_text = @schedule.id ?
-              I18n.t('cell_header.editing_model_record',:name=>@schedule.name,:model=>ui_lookup(:model=>'MiqSchedule')) :
-              I18n.t('cell_header.adding_model_record',:model=>ui_lookup(:model=>'MiqSchedule'))
+              _("Editing %{model} \"%{name}\"") % {:name=>@schedule.name, :model=>ui_lookup(:model=>'MiqSchedule')} :
+              _("Adding a new %s") % ui_lookup(:model=>'MiqSchedule')
         end
       when :widgets_tree
         presenter[:open_accord] = 'widgets'
@@ -753,8 +745,8 @@ class ReportController < ApplicationController
             presenter[:init_dashboard] = true
           end
           @right_cell_text = @widget.id ?
-              I18n.t('cell_header.editing_model_record',:name=>@widget.name,:model=>ui_lookup(:model=>'MiqWidget')) :
-              I18n.t('cell_header.adding_model_record',:model=>ui_lookup(:model=>'MiqWidget'))
+              _("Editing %{model} \"%{name}\"") % {:name=>@widget.name, :model=>ui_lookup(:model=>'MiqWidget')} :
+              _("Adding a new %s") % ui_lookup(:model=>'MiqWidget')
         end
       end
     elsif nodetype == "g"
@@ -882,9 +874,7 @@ class ReportController < ApplicationController
     end
 
     if x_active_tree == :roles_tree && x_node != "root"
-      @right_cell_text = I18n.t("cell_header.editing_model_record",
-                                :name=>session[:role_choice],
-                                :model=>ui_lookup(:model=>"MiqGroup"))
+      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>session[:role_choice], :model=>ui_lookup(:model=>"MiqGroup")}
     end
     presenter[:right_cell_text] = @right_cell_text
 

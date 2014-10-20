@@ -8,11 +8,9 @@ module MiqPolicyController::Policies
       return unless load_edit("policy_edit__#{id}","replace_cell__explorer")
       @policy = MiqPolicy.find_by_id(@edit[:policy_id]) if @edit[:policy_id]
       if @policy && @policy.id
-        add_flash(I18n.t("flash.edit.cancelled",
-                         :model=>ui_lookup(:model=>"MiqPolicy"),:name=>@policy.description))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqPolicy"), :name=>@policy.description})
       else
-        add_flash(I18n.t("flash.add.cancelled",
-                         :model=>ui_lookup(:model=>"MiqPolicy")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqPolicy"))
       end
       @edit = nil
       get_node_info(x_node)
@@ -97,7 +95,7 @@ module MiqPolicyController::Policies
     policy = MiqPolicy.find(params[:id])
     new_desc = truncate("Copy of #{policy.description}", :length => 255, :omission => "")
     if MiqPolicy.find_by_description(new_desc)
-      add_flash(I18n.t("flash.already_exists", :model=>ui_lookup(:model=>"MiqPolicy"), :name=>new_desc), :error)
+      add_flash(_("%{model} \"%{name}\" already exists") % {:model=>ui_lookup(:model=>"MiqPolicy"), :name=>new_desc}, :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
@@ -108,9 +106,7 @@ module MiqPolicyController::Policies
                           :target_class=>"MiqPolicy",
                           :userid => session[:userid],
                           :message=>"New Policy ID #{new_pol.id} was copied from Policy ID #{policy.id}"})
-      add_flash(I18n.t("flash.add.added",
-                        :model=>ui_lookup(:model=>"MiqPolicy"),
-                        :name=>new_desc))
+      add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqPolicy"), :name=>new_desc})
       @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.downcase}_p-#{to_cid(policy.id)}"
       get_node_info(@new_policy_node)
       replace_right_cell("p", [:policy])
@@ -123,15 +119,14 @@ module MiqPolicyController::Policies
     # showing 1 policy, delete it
     pol = MiqPolicy.find_by_id(params[:id])
     if params[:id] == nil || pol.nil?
-      add_flash(I18n.t("flash.button.record_gone",
-                        :model=>ui_lookup(:model=>"MiqPolicy")),
+      add_flash(_("%s no longer exists") % ui_lookup(:model=>"MiqPolicy"),
                   :error)
     else
       policies.push(params[:id])
       self.x_node = @new_policy_node = "xx-#{pol.mode.downcase}_xx-#{pol.mode.downcase}-#{pol.towhat.downcase}"
     end
     process_policies(policies, "destroy") unless policies.empty?
-    add_flash(I18n.t("flash.selected_record_deleted",:model=>ui_lookup(:models=>"MiqPolicy"))) if @flash_array == nil
+    add_flash(_("The selected %s was deleted") % ui_lookup(:models=>"MiqPolicy")) if @flash_array == nil
     get_node_info(@new_policy_node)
     replace_right_cell("xx", [:policy, :policy_profile])
   end
@@ -225,11 +220,11 @@ module MiqPolicyController::Policies
   def policy_get_all_folders(parent = nil)
     if parent != nil
       @folders = ["Host", "Vm"]
-      @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>parent,:model=>ui_lookup(:models=>"MiqPolicy"))
+      @right_cell_text = _("%{typ} %{model}") % {:typ=>parent, :model=>ui_lookup(:models=>"MiqPolicy")}
       @right_cell_div = "policy_folders"
     else
       @folders = ["Compliance", "Control"]
-      @right_cell_text = I18n.t("cell_header.all_model_records",:model=>ui_lookup(:models=>"MiqPolicy"))
+      @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqPolicy")
       @right_cell_div = "policy_folders"
     end
   end
@@ -237,7 +232,7 @@ module MiqPolicyController::Policies
   # Get information for a policy
   def policy_get_info(policy)
     @record = @policy = policy
-    @right_cell_text = I18n.t("cell_header.model_record",:model=>"#{ui_lookup(:model=>@sb[:folder])} #{@sb[:mode]} Policy", :name=>@policy.description.gsub(/'/,"\\\\'"))
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"#{ui_lookup(:model=>@sb[:folder])} #{@sb[:mode]} Policy", :name=>@policy.description.gsub(/'/,"\\'")}
     @right_cell_div = "policy_details"
     @policy_conditions = @policy.conditions
     @policy_events = @policy.miq_events

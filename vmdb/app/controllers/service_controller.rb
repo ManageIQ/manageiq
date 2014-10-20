@@ -148,11 +148,9 @@ class ServiceController < ApplicationController
     case params[:button]
       when "cancel"
         if session[:edit][:rec_id]
-          add_flash(I18n.t("flash.edit.cancelled",
-                           :model=>"Service",:name=>session[:edit][:new][:description]))
+          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"Service", :name=>session[:edit][:new][:description]})
         else
-          add_flash(I18n.t("flash.add.cancelled",
-                           :model=>"Service"))
+          add_flash(_("Add of new %s was cancelled by the user") % "Service")
         end
         @edit = nil
         @in_a_form = false
@@ -160,7 +158,7 @@ class ServiceController < ApplicationController
       when "save","add"
         return unless load_edit("service_edit__#{params[:id] || "new"}","replace_cell__explorer")
         if @edit[:new][:name].blank?
-          add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+          add_flash(_("%s is required") % "Name", :error)
         end
 
         if @flash_array
@@ -174,11 +172,9 @@ class ServiceController < ApplicationController
         begin
           @service.save
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task=>"Service Edit") << bang.message, :error)
+          add_flash(_("Error during '%s': ") % "Service Edit" << bang.message, :error)
         else
-          add_flash(I18n.t("flash.edit.saved",
-                           :model=>"Service",
-                           :name=>@edit[:new][:name]))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>"Service", :name=>@edit[:new][:name]})
         end
         @changed = session[:changed] = false
         @in_a_form = false
@@ -200,10 +196,7 @@ class ServiceController < ApplicationController
     st = s.service_template
     ra = st.resource_actions.find_by_action('Reconfigure') if st
     if ra && ra.dialog_id
-      @right_cell_text = I18n.t("cell_header.task_model_record",
-                                :task  => "Reconfigure",
-                                :name  => st.name,
-                                :model => ui_lookup(:model => "Service"))
+      @right_cell_text = _("%{task} %{model} \"%{name}\"") % {:task  => "Reconfigure", :name  => st.name, :model => ui_lookup(:model => "Service")}
       @explorer = true
       options = {
         :header      => @right_cell_text,
@@ -267,7 +260,7 @@ class ServiceController < ApplicationController
     else # showing 1 element, delete it
       elements = find_checked_items
       if elements.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"service"), :task=>"deletion"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"service"), :task=>"deletion"}, :error)
       end
       process_elements(elements, Service, 'destroy') unless elements.empty?
     end
@@ -287,9 +280,7 @@ class ServiceController < ApplicationController
     case X_TREE_NODE_PREFIXES[@nodetype]
     when "Service"  # VM or Template record, show the record
       show_record(from_cid(id))
-      @right_cell_text = I18n.t("cell_header.model_record",
-                                :name=>@record.name,
-                                :model=>ui_lookup(:model=>X_TREE_NODE_PREFIXES[@nodetype]))
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>X_TREE_NODE_PREFIXES[@nodetype])}
       @no_checkboxes = true
       @gtl_type = "grid"
       @items_per_page = ONE_MILLION
@@ -298,16 +289,13 @@ class ServiceController < ApplicationController
       if x_node == "root"
         typ = x_active_tree == :svcs_tree ? "Service" : "ServiceTemplate"
         process_show_list(:where_clause=>"service_id is null")
-        @right_cell_text = I18n.t("cell_header.all_model_records",
-                                  :model=>ui_lookup(:models=>typ))
+        @right_cell_text = _("All %s") % ui_lookup(:models=>typ)
         sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
       else
         show_record(from_cid(id))
         add_pictures_to_sync(@record.picture.id) if @record.picture
         typ = x_active_tree == :svcs_tree ? "Service" : X_TREE_NODE_PREFIXES[@nodetype]
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                :name=>@record.name,
-                                :model=>ui_lookup(:model=>typ))
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
       end
     end
     x_history_add_item(:id=>treenodeid, :text=>@right_cell_text)
@@ -323,21 +311,19 @@ class ServiceController < ApplicationController
         action = "dialog_form_button_pressed"
       when "ownership"
         partial = "shared/views/ownership"
-        header = I18n.t("cell_header.set_ownership", :model=>ui_lookup(:model=>"Service"))
+        header = _("Set Ownership for %s") % ui_lookup(:model=>"Service")
         action = "ownership_update"
       when "retire"
         partial = "shared/views/retire"
-        header = I18n.t("cell_header.retire", :model=>ui_lookup(:model=>"Service"))
+        header = _("Set/Remove retirement date for %s") % ui_lookup(:model=>"Service")
         action = "retire"
       when "service_edit"
         partial = "service_form"
-        header = I18n.t("cell_header.editing_model_record",
-                          :name=>@record.name,
-                          :model=>ui_lookup(:model=>"Service"))
+        header = _("Editing %{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>"Service")}
         action = "service_edit"
       when "tag"
         partial = "layouts/tagging"
-        header = I18n.t("cell_header.edit_tags", :model=>ui_lookup(:model=>"Service"))
+        header = _("Edit Tags for %s") % ui_lookup(:model=>"Service")
         action = "service_tag"
       else
         action = nil

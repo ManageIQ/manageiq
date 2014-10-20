@@ -4,8 +4,7 @@ module ApplicationController::DialogRunner
   def dialog_form_button_pressed
     case params[:button]
       when "cancel"
-        flash = I18n.t("flash.task_cancelled",
-                       :task=>"#{ui_lookup(:model=>'Service')} Order")
+        flash = _("%s was cancelled by the user") % "#{ui_lookup(:model=>'Service')} Order"
         @sb[:action] = @edit = nil
         @in_a_form = false
         if session[:edit][:explorer]
@@ -22,7 +21,7 @@ module ApplicationController::DialogRunner
         begin
           result = @edit[:wf].submit_request(session[:userid])
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task => "Provisioning") << bang.message, :error)
+          add_flash(_("Error during '%s': ") %  "Provisioning" << bang.message, :error)
           render :update do |page|                    # Use RJS to update the display
             page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
           end
@@ -36,7 +35,7 @@ module ApplicationController::DialogRunner
               page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
             end
           else
-            flash = I18n.t("flash.request.st_request_submitted", :typ=>"Order")
+            flash = _("%s Request was Submitted") % "Order"
             @sb[:action] = @edit = nil
             @in_a_form = false
             if session[:edit][:explorer]
@@ -70,7 +69,7 @@ module ApplicationController::DialogRunner
         end
       else
         return unless load_edit("dialog_edit__#{params[:id]}","replace_cell__explorer")
-        add_flash(I18n.t("flash.button.typ_not_implemented", :typ=>"#{params[:button].capitalize}"), :error)
+        add_flash(_("%s Button not yet implemented") % "#{params[:button].capitalize}", :error)
         render :update do |page|                    # Use RJS to update the display
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end

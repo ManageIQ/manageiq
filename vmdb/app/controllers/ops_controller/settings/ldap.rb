@@ -33,9 +33,9 @@ module OpsController::Settings::Ldap
     case params[:button]
       when "cancel"
         if !session[:edit][:ldap_region_id]
-          add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"LdapRegion")))
+          add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"LdapRegion"))
         else
-          add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"LdapRegion"), :name=>session[:edit][:new][:name]))
+          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"LdapRegion"), :name=>session[:edit][:new][:name]})
         end
         get_node_info(x_node)
         @ldap_region = nil
@@ -46,7 +46,7 @@ module OpsController::Settings::Ldap
         return unless load_edit("ldap_region_edit__#{id}","replace_cell__explorer")
         ldap_region_get_form_vars
         if @edit[:new][:name].blank?
-          add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+          add_flash(_("%s is required") % "Name", :error)
         end
 
         if @flash_array
@@ -59,7 +59,7 @@ module OpsController::Settings::Ldap
         ldap_region_set_record_vars(@ldap_region)
         if @ldap_region.valid? && !flash_errors? && @ldap_region.save
           AuditEvent.success(build_saved_audit(@ldap_region, params[:button] == "add"))
-          add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"LdapRegion"), :name=>@ldap_region.name))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"LdapRegion"), :name=>@ldap_region.name})
           @edit = session[:edit] = nil  # clean out the saved info
           if params[:button] == "add"
             self.x_node  = "xx-l"  # reset node to show list
@@ -110,7 +110,7 @@ module OpsController::Settings::Ldap
     if !params[:id] # showing a list
       ldap_regions = find_checked_items
       if ldap_regions.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"ldap_region"), :task=>"deletion"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"ldap_region"), :task=>"deletion"}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -118,7 +118,7 @@ module OpsController::Settings::Ldap
       process_ldap_regions(ldap_regions, "destroy") unless ldap_regions.empty?
     else # showing 1 ldap_region, delete it
       if params[:id] == nil || LdapRegion.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:table=>"ldap_region")), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:table=>"ldap_region"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -159,9 +159,9 @@ module OpsController::Settings::Ldap
     elsif params[:button] == "cancel"
       @ldap_domain = session[:edit][:ldap_domain] if session[:edit] && session[:edit][:ldap_domain]
       if !@ldap_domain || @ldap_domain.id.blank?
-        add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"LdapDomain")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"LdapDomain"))
       else
-        add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"Ldapomain"), :name=>@ldap_domain.name))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Ldapomain"), :name=>@ldap_domain.name})
       end
       get_node_info(x_node)
       @ldap_domain = nil
@@ -172,7 +172,7 @@ module OpsController::Settings::Ldap
       return unless load_edit("ldap_domain_edit__#{id}","replace_cell__explorer")
       ldap_domain_get_form_vars
       if @edit[:new][:name].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
       end
 
       if !@edit[:new][:bind_pwd].blank? && @edit[:new][:bind_dn].blank?
@@ -189,7 +189,7 @@ module OpsController::Settings::Ldap
       ldap_domain_set_record_vars(@ldap_domain)
       if @ldap_domain.valid? && !flash_errors? && @ldap_domain.save
         AuditEvent.success(build_saved_audit(@ldap_domain, params[:button] == "add"))
-        add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"LdapDomain"), :name=>@ldap_domain.name))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"LdapDomain"), :name=>@ldap_domain.name})
         @in_a_form = @edit = session[:edit] = nil # clean out the saved info
         if params[:button] == "add"
           self.x_node  = "lr-#{to_cid(@ldap_domain.ldap_region_id)}"  # reset node to show list
@@ -215,7 +215,7 @@ module OpsController::Settings::Ldap
         server = Hash.new
         server[:hostname] = params[:entry][:hostname]
         if params[:entry][:hostname] == ""
-          add_flash(I18n.t("flash.edit.field_required", :field=>"Host Name"), :error)
+          add_flash(_("%s is required") % "Host Name", :error)
           render :update do |page|                    # Use JS to update the display
             page.replace("flash_msg_div_entries", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"entries"})
           end
@@ -294,7 +294,7 @@ module OpsController::Settings::Ldap
   def ldap_domain_delete
     ldap_domains = Array.new
     if params[:id] == nil || LdapDomain.find_by_id(params[:id]).nil?
-      add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:table=>"ldap_domain")), :error)
+      add_flash(_("%s no longer exists") % ui_lookup(:table=>"ldap_domain"), :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end

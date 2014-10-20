@@ -50,12 +50,12 @@ module ApplicationController::Automate
         :userid           => session[:userid]
       )
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task => "save") << bang.message, :error)
+      add_flash(_("Error during '%s': ") %  "save" << bang.message, :error)
     else
       if @resolve[:button_text].blank?
-        add_flash(I18n.t("flash.automate.button_cleared", :btn_num => @resolve[:button_number]))
+        add_flash(_("Automate button %s has been cleared") %  @resolve[:button_number])
       else
-        add_flash(I18n.t("flash.automate.button_set", :btn_num => @resolve[:button_number], :btn_txt => @resolve[:button_text]))
+        add_flash(_("Automate button %{btn_num} has been set to %{btn_txt}") % {:btn_num => @resolve[:button_number], :btn_txt => @resolve[:button_text]})
       end
     end
     render_flash

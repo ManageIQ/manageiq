@@ -112,7 +112,7 @@ class MiqAeCustomizationController < ApplicationController
       timestamp = format_timezone(Time.current, Time.zone, "export_filename")
       send_data(dialog_yaml, :filename => "dialog_export_#{timestamp}.yml")
     else
-      add_flash(I18n.t("flash.button.at_least_selected", :num => 1, :model => "item", :action => "export"), :error)
+      add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num => 1, :model => "item", :action => "export"}, :error)
       @sb[:flash_msg] = @flash_array
       redirect_to :action => :explorer
     end
@@ -421,14 +421,14 @@ class MiqAeCustomizationController < ApplicationController
     case nodetype
     when 'button_edit'
       @right_cell_text = @custom_button && @custom_button.id ?
-        I18n.t("cell_header.editing_model_record",:name=>@custom_button.name,:model=>ui_lookup(:model=>"CustomButton")) :
-        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"CustomButton"))
+        _("Editing %{model} \"%{name}\"") % {:name=>@custom_button.name, :model=>ui_lookup(:model=>"CustomButton")} :
+        _("Adding a new %s") % ui_lookup(:model=>"CustomButton")
     when 'group_edit'
       @right_cell_text = @custom_button_set && @custom_button_set.id ?
-        I18n.t("cell_header.editing_model_record",:name=>@custom_button_set.name,:model=>ui_lookup(:model=>"CustomButtonSet")) :
-        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"CustomButtonSet"))
+        _("Editing %{model} \"%{name}\"") % {:name=>@custom_button_set.name, :model=>ui_lookup(:model=>"CustomButtonSet")} :
+        _("Adding a new %s") % ui_lookup(:model=>"CustomButtonSet")
     when 'group_reorder'
-      @right_cell_text = I18n.t("flash.edit.group_reorder", :model=>ui_lookup(:models=>"CustomButton"))
+      @right_cell_text = _("%s Group Reorder") % ui_lookup(:models=>"CustomButton")
     end
 
     # Replace right side with based on selected tree node type
@@ -441,8 +441,8 @@ class MiqAeCustomizationController < ApplicationController
     presenter[:cell_a_view] = 'custom'
 
     @right_cell_text = @record.id.blank? ?
-      I18n.t("cell_header.adding_model_record", :model => ui_lookup(:model=>"Dialog")) :
-      I18n.t("cell_header.editing_model_record", :name => @record.label.to_s, :model=>"#{ui_lookup(:model=>"Dialog")}")
+      _("Adding a new %s") %  ui_lookup(:model=>"Dialog") :
+      _("Editing %{model} \"%{name}\"") % {:name => @record.label.to_s, :model=>"#{ui_lookup(:model=>"Dialog")}"}
     @right_cell_text << " [#{@sb[:txt]} Information]"
 
     # url to be used in url in miqDropComplete method
@@ -473,10 +473,10 @@ class MiqAeCustomizationController < ApplicationController
     else
       presenter[:update_partials][:main_div] = render_proc[:partial=>'old_dialogs_details']
       if @dialog.id.blank? && !@dialog.dialog_type
-        @right_cell_text = I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"MiqDialog"))
+        @right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"MiqDialog")
       else
         title = @edit ? (params[:typ] == "copy" ? "Copy " : "Editing ") : ""
-        @right_cell_text = I18n.t("cell_header.editing_model_record",:name=>@dialog.description.gsub(/'/,"\\\\'"),:model=>"#{title} #{ui_lookup(:model=>"MiqDialog")}")
+        @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>@dialog.description.gsub(/'/,"\\'"), :model=>"#{title} #{ui_lookup(:model=>"MiqDialog")}"}
       end
 
       presenter[:extra_js] << 'miqOneTrans = 0;' # resetting miqOneTrans when tab loads

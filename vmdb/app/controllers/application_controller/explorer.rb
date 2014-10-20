@@ -177,7 +177,7 @@ module ApplicationController::Explorer
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
-    @right_cell_text = I18n.t("cell_header.editing_model_for_record",:name=>ui_lookup(:models=>@tagging),:model=>"#{session[:customer_name]} Tags")
+    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name=>ui_lookup(:models=>@tagging), :model=>"#{session[:customer_name]} Tags"}
     replace_right_cell(@sb[:action])
   end
 
@@ -198,7 +198,7 @@ module ApplicationController::Explorer
   def x_edit_tags_cancel
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
-    add_flash(I18n.t("flash.task_cancelled", :task=>"Tag Edit"))
+    add_flash(_("%s was cancelled by the user") % "Tag Edit")
     get_node_info(x_node)
     @edit = nil # clean out the saved info
     replace_right_cell
@@ -1175,20 +1175,20 @@ module ApplicationController::Explorer
     unless kls.where(:id => from_cid(id)).exists?
       @replace_trees = [@sb[:active_accord]]      #refresh trees
       self.x_node = "root"
-      add_flash(I18n.t("flash.record.item_no_longer_exists", :model => ui_lookup(:model => kls.to_s)),:error)
+      add_flash(_("Last selected %s no longer exists") %  ui_lookup(:model => kls.to_s),:error)
     end
     return x_node
   end
 
   def model_from_nodetype(nodetype)
     model_name = X_TREE_NODE_PREFIXES[nodetype]
-    raise I18n.t("flash.no_model_found_for_nodetype", :nodetype => nodetype) if model_name.nil?
+    raise _("No Class found for explorer tree node type '%s'") %  nodetype if model_name.nil?
     return model_name.constantize
   end
 
   def nodetype_from_model(model)
     nodetype = X_TREE_NODE_PREFIXES_INVERTED[model.to_s]
-    raise I18n.t("flash.no_nodetype_found_for_model", :model => model.to_s) if nodetype.nil?
+    raise _("No explorer tree node type found for '%s'") %  model.to_s if nodetype.nil?
     return nodetype
   end
 
