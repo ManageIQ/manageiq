@@ -1777,7 +1777,6 @@ module ApplicationHelper
                            row[col],
                            :tz=>tz
     ).gsub(/\\/, '\&')    # Call format, then escape any backslashes
-    celltext.gsub!(/(['""<>\n\r\t]{1})/,'\\\\\&')                   # Now escape special characters
     return celltext
   end
 
