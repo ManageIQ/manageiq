@@ -31,13 +31,12 @@ module Vmdb
       end
 
       hash = YAML.load(data)
-      hash = symbolize(stringify(hash)) if symbolize_keys
+      symbolize!(stringify!(hash)) if symbolize_keys
 
       if block_given?
-        hash = hash.deep_clone
         walk_nested_hashes(hash, &block)
       else
-        decrypt_password_fields(hash)
+        decrypt_password_fields!(hash)
       end
     end
 
