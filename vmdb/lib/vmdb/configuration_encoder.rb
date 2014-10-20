@@ -41,13 +41,14 @@ module Vmdb
     end
 
     def self.dump(hash, fd = nil, stringify_keys = true, &block)
+      hash = hash.deep_clone
+
       if block_given?
-        hash = hash.deep_clone
         walk_nested_hashes(hash, &block)
       else
-        hash = encrypt_password_fields(hash)
+        encrypt_password_fields!(hash)
       end
-      hash = stringify(hash) if stringify_keys
+      stringify!(hash) if stringify_keys
       YAML.dump(hash, fd)
     end
 
