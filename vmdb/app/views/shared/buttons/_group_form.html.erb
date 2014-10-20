@@ -11,7 +11,7 @@
         <%= text_field_tag("name",
                           @edit[:new][:name],
                           :maxlength         => 15,
-                          "data-miq_observe" => {:url => url}.to_json)
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         %>
         &nbsp;
         <%= check_box_tag("display", value="1",
@@ -30,7 +30,7 @@
         <%= text_field_tag("description",
                            @edit[:new][:description],
                            :maxlength         => 30,
-                           "data-miq_observe" => {:url => url}.to_json) %>
+                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json) %>
       </td>
     </tr>
     <tr>
