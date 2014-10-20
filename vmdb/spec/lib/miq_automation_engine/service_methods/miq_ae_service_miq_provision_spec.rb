@@ -243,45 +243,5 @@ module MiqAeServiceMiqProvisionSpec
         @miq_provision.reload.options[:placement_rp_name].should == [@rsc.id, @rsc.name]
       end
     end
-
-    pending "Not yet implemented: 39 specs" do
-      it "#options"
-      it "#get_option"
-      it "#get_option_last"
-      it "#set_option"
-      it "#get_tag"
-      it "#get_tags"
-      it "#get_classification"
-      it "#get_classifications"
-      it "#set_vm_notes"
-      it "#set_customization_spec"
-      it "#set_dvs"
-      it "#set_vlan"
-      it "#set_network_address_mode"
-      it "#get_network_scope"
-      it "#get_domain_name"
-      it "#get_network_details"
-      it "#get_domain_details"
-      it "#set_vm_notes"
-      it "#set_folder"
-      it "#get_folder_paths"
-      it "#clear_tag"
-      it "#add_tag"
-      it "#check_quota"
-      it "#eligible_resources"
-      it "#eligible_hosts"
-      it "#eligible_storages"
-      it "#eligible_folders"
-      it "#eligible_clusters"
-      it "#set_resource"
-      it "#set_host"
-      it "#set_storage"
-      it "#set_cluster"
-      it "#message="
-      it "#finished"
-      it "#status"
-      it "#set_nic_settings"
-      it "#set_network_adapter"
-    end
   end
 end
