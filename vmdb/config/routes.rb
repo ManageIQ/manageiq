@@ -606,7 +606,6 @@ Vmdb::Application.routes.draw do
     },
     :miq_ae_customization => {
       :get => %w(
-        dialog_res_reorder
         explorer
         export_service_dialogs
         review_import
@@ -625,6 +624,7 @@ Vmdb::Application.routes.draw do
         dialog_edit
         dialog_form_field_changed
         dialog_res_remove
+        dialog_res_reorder
         explorer
         field_value_accept
         field_value_delete
