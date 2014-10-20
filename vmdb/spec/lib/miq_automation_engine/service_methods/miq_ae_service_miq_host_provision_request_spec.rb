@@ -71,18 +71,5 @@ module MiqAeServiceMiqHostProvisionRequestSpec
       @ae_method.update_attributes(:data => method)
       invoke_ae.root(@ae_result_key).should == 'host'
     end
-
-    pending "Not yet implemented: 10 specs" do
-      it "#options"
-      it "#get_option"
-      it "#set_option"
-      it "#set_message"
-      it "#get_tag"
-      it "#get_tags"
-      it "#clear_tag"
-      it "#add_tag"
-      it "#get_classification"
-      it "#get_classifications"
-    end
   end
 end

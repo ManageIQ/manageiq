@@ -20,9 +20,6 @@ describe TreeNodeBuilderDynatree do
       node.should_not be_nil
     end
 
-    pending 'Condition node' do
-    end
-
     it 'CustomButton node' do
       button = FactoryGirl.build(:custom_button,
         :applies_to_class => 'bleugh',
@@ -105,12 +102,6 @@ describe TreeNodeBuilderDynatree do
       node.should_not be_nil
     end
 
-    pending 'LdapDomain node' do
-    end
-
-    pending 'LdapRegion node' do
-    end
-
     it 'MiqAeClass node' do
       namespace = FactoryGirl.build(:miq_ae_namespace)
       aclass = FactoryGirl.build(:miq_ae_class, :namespace_id => namespace.id)
@@ -122,9 +113,6 @@ describe TreeNodeBuilderDynatree do
       instance = FactoryGirl.build(:miq_ae_instance)
       node = TreeNodeBuilderDynatree.build(instance, nil, {})
       node.should_not be_nil
-    end
-
-    pending 'MiqAeMethod node' do
     end
 
     it 'MiqAeNamespace node' do
@@ -239,9 +227,6 @@ describe TreeNodeBuilderDynatree do
       node.should_not be_nil
     end
 
-    pending 'ScanItemSet node' do
-    end
-
     it 'Service node' do
       service = FactoryGirl.create(:service)
       node = TreeNodeBuilderDynatree.build(service, nil, {})
@@ -276,9 +261,6 @@ describe TreeNodeBuilderDynatree do
       user = FactoryGirl.build(:user)
       node = TreeNodeBuilderDynatree.build(user, nil, {})
       node.should_not be_nil
-    end
-
-    pending 'MiqSearch node' do
     end
 
     pending 'MiqDialog node' do
@@ -321,9 +303,6 @@ describe TreeNodeBuilderDynatree do
       zone = FactoryGirl.build(:zone)
       node = TreeNodeBuilderDynatree.build(zone, nil, {})
       node.should_not be_nil
-    end
-
-    pending 'Hash node' do
     end
   end
 end

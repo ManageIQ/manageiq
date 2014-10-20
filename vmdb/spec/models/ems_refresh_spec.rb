@@ -53,11 +53,6 @@ describe EmsRefresh do
   end
 
   context ".get_ar_objects" do
-    it "instance"
-    it "array of instances"
-    it "class/id pair"
-    it "class_name/id pair"
-
     it "array of class/ids pairs" do
       ems1 = FactoryGirl.create(:ems_vmware,     :name => "ems_vmware1")
       ems2 = FactoryGirl.create(:ems_redhat, :name => "ems_redhat1")
@@ -68,8 +63,5 @@ describe EmsRefresh do
 
       described_class.get_ar_objects(pairs).should have_same_elements([ems1, ems2])
     end
-
-    it "array of class_name/id pairs"
-
   end
 end

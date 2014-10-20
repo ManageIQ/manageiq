@@ -124,10 +124,5 @@ EOF
         Service.find_by_name(service_name).should_not be_nil
       end
     end
-
-    pending "Not yet implemented: specs" do
-      it "#retires_on="
-      it "#retirement_warn="
-    end
   end
 end
