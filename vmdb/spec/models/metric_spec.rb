@@ -592,7 +592,7 @@ describe Metric do
 
         it "should find the correct rows" do
           Metric::Finders.day_to_range("2010-04-14T00:00:00Z", @time_profile).should == ["2010-04-14T00:00:00Z", "2010-04-14T23:59:59Z"]
-          Metric::Finders.find_all_by_day(@vm1, "2010-04-14T00:00:00Z", 'hourly', @time_profile).should == @vm1.metric_rollups.sort_by(&:timestamp)[1..5]
+          Metric::Finders.find_all_by_day(@vm1, "2010-04-14T00:00:00Z", 'hourly', @time_profile).should == @vm1.metric_rollups.sort_by(&:id)[1..5]
         end
 
         it "should find multiple resource types" do

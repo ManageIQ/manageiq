@@ -47,7 +47,7 @@ module Metric::Finders
     cond.nil? ? cond = [res_cond] : cond[0] << " AND #{res_cond}"
     cond += res_params
 
-    return klass.all(:conditions => cond)
+    return klass.all(:conditions => cond).order(:id)
   end
 
   #
