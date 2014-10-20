@@ -6,17 +6,11 @@
 		<%= render :partial => "show_schedule" %>
 	<% elsif @temp[:schedules] && @view %>
 		<% if @view.table.data.empty? %>
-		<div class="alert alert-info">
-	  	<span class="pficon pficon-info"></span>
-	  	<strong>No Schedules available.</strong>
-		</div>
+		  <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Schedules available."}%>
 		<% else %>
 			<%= render :partial => 'layouts/x_gtl'%>
 		<% end %>
 	<% else %>
-		<div class="alert alert-info">
-			<span class="pficon pficon-info"></span>
-			<strong>Choose a Schedule to view from the menus on the left.</strong>
-		</div>
+	  <%= render :partial => 'layouts/info_msg', :locals => {:message => "Choose a Schedule to view from the menus on the left."}%>
 	<% end %>
 <% end %>

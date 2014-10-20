@@ -29,10 +29,7 @@
             (nodes.length == 2 && @sb[:rpt_menu][nodes[1].to_i][1].blank?) ||
             (nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present? &&
               @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].blank?) %>
-        <div class="alert alert-info">
-          <span class="pficon pficon-info"></span>
-          <strong>No Reports available.</strong>
-        </div>
+        <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Reports available."}%>
       <% else %>
         <%= render :partial => "layouts/flash_msg", :locals=>{:top_pad=>10, :div_num=>"_report_list"} %>
           <table class="style3">
@@ -173,10 +170,7 @@
     <% elsif !@report && @temp[:report_result] %>
       <%= render(:partial=>"report_status") %>
     <% else %>
-      <div class="alert alert-info">
-        <span class="pficon pficon-info"></span>
-        <strong>Choose a Report to view from the menus on the left.</strong>
-      </div>
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "Choose a Report to view from the menus on the left."}%>
     <% end %>
   <% end %>
 </div>
