@@ -64,7 +64,11 @@
   <% elsif db == "LdapServer" %>
     <img src="/images/icons/new/ldap_server.png" valign="middle" border="0" height="20" width="20"  />
   <% elsif db == "MiqSchedule" %>
-    <img src="/images/icons/new/miq_schedule.png" valign="middle" border="0" height="20" width="20"  />
+    <ul class="icons">
+      <li>
+        <span class="fa fa-clock-o">
+      </li>
+    </ul>
   <% elsif db == "MiqGroup" %>
     <img src="/images/icons/new/miq_group.png" valign="middle" border="0" height="20" width="20"  />
   <% elsif db == "MiqReportResult" %>
@@ -94,23 +98,41 @@
       </li>
     </ul>
   <% elsif db == "MiqWidget" %>
-    <img src="/images/icons/new/<%=row.content_type%>_widget.png" valign="middle" border="0" height="20" width="20"  />
-    <%
-      status = row.status
-      case status.downcase
-      when "complete"
-        img = "complete"
-      when "queued"
-        img = "queued"
-      when "running"
-        img = "running"
-      when "error"
-        img = "error"
-      end
-    %>
-    <% if status.downcase != "none" %>
-      <img src="/images/icons/new/status_<%=img%>.png" valign="middle" border="0" height="20" width="20"  />
-    <% end %>
+    <ul class="icons">
+      <li>
+        <%
+          case row['content_type'].downcase
+          when "chart"
+            glyph = "product product-chart"
+          when "menu"
+            glyph = "fa fa-share-square-o"
+          when "report"
+            glyph = "product product-report"
+          when "rss"
+            glyph = "fa fa-rss"
+          end
+        %>
+        <span class="<%=glyph%>"></span>
+
+        <%
+          status = row.status
+          case status.downcase
+          when "complete"
+            glyph = "pficon pficon-ok"
+          when "queued"
+            glyph = "fa fa-pause"
+          when "running"
+            glyph = "fa fa-play"
+          when "error"
+            glyph = "fa fa-warning"
+          end
+        %>
+        <% if status.downcase != "none" %>
+          <span class="<%=glyph%>"></span>
+        <% end %>
+
+      </li>
+    </ul>
   <% elsif db == "MiqWorker" %>
     <% worker = @targets_hash[from_cid(@id)] if @targets_hash %>
       <img src="/images/icons/new/processmanager-<%=worker.normalized_type%>.png" valign="middle" border="0" height="20" width="20"  />
