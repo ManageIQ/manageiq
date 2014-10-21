@@ -10,7 +10,7 @@
 
 .import-or-export
   %fieldset
-    %p.legend Import Datastore classes
+    %p.legend Import Datastore classes (*.zip)
     = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
       = file_field("upload", "file")
       = submit_tag("Upload", :id => "upload-datastore-import", :class => "upload")
