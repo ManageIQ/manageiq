@@ -145,12 +145,20 @@ module ApplicationController::DialogRunner
 
     field.refresh_button_pressed
 
+    @select_options = field.values
+    @select_options = @select_options.collect(&:reverse) if field.type == "DialogFieldDynamicList"
+
     render :update do |page|
-      page.replace(params[:id],
-        select_tag(field.name, options_for_select(field.values, @edit[:wf].value(field.name)),
-                   'data-miq_sparkle_on'  => true,
-                   'data-miq_sparkle_off' => true,
-                   'data-miq_observe'     => { :url => url }.to_json))
+      data_params = {
+        'data-miq_sparkle_on'  => true,
+        'data-miq_sparkle_off' => true,
+        'data-miq_observe'     => {:url => url}.to_json
+      }
+
+      page.replace(
+        params[:id],
+        select_tag(field.name, options_for_select(@select_options, @edit[:wf].value(field.name)), data_params)
+      )
     end
   end
 
