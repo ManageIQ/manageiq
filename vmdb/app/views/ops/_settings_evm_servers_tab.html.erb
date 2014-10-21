@@ -23,7 +23,7 @@
     <hr>
     <p class="legend">Servers</p>
     <% if @servers.empty? %>
-      <br/><strong>* No Servers Found.</strong>
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Servers Found."}%>
     <% else %>
       <table class="style3">
         <thead>

@@ -2,9 +2,6 @@
   <% if @view && !@view.table.data.empty? %>
     <%= render :partial => 'layouts/x_gtl'%>
   <% else %>
-     <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>No Saved Reports available.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Saved Reports available."}%>
   <% end %>
 <% end %>
