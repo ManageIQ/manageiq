@@ -1,7 +1,7 @@
 <div id="condition_list_div" style="width:100%;height:100%;overflow:auto;">
 	<% if @conditions %>
 		<div style="padding-top:10px;"></div>
-		<%= render :partial=>"layouts/flash_msg" %>
+		<%= render :partial => "layouts/flash_msg" %>
 		<% if @conditions.empty? %>
 			<div class="note">* No <%= ui_lookup(:model=>@sb[:folder]) %> Conditions are defined<%= @search_text.blank? ? "" : " that match the entered search string" %>.</div>
 		<% else %>
