@@ -86,7 +86,7 @@ class MiqCapacityController < ApplicationController
                   (vm_opts[:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
                   (vm_opts[:memory] && @sb[:planning][:options][:trend_memory]) ||
                   (vm_opts[:storage] && @sb[:planning][:options][:trend_storage])
-            add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"VM Options"), :error)
+            add_flash(_("At least one %s must be selected") % "VM Options", :error)
             render :update do |page|                    # Use JS to update the display
               page.replace("planning_options_div", :partial=>"planning_options")
               page << "miqSparkle(false);"
@@ -98,7 +98,7 @@ class MiqCapacityController < ApplicationController
               planning_replace_right_cell
             else
               if @sb[:planning][:no_data] # to prevent double render error, making sure it's not wait_for_task transaction
-                add_flash(I18n.t("flash.capacity.utilization_data_not_available"), :warning)
+                add_flash(_("No Utilization data available to generate planning results"), :warning)
                 render :update do |page|
                   page.replace("planning_options_div", :partial=>"planning_options")
                   page << "miqSparkle(false);"
@@ -226,7 +226,7 @@ class MiqCapacityController < ApplicationController
             (@sb[:planning][:vm_opts][:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
             (@sb[:planning][:vm_opts][:memory] && @sb[:planning][:options][:trend_memory]) ||
             (@sb[:planning][:vm_opts][:storage] && @sb[:planning][:options][:trend_storage])
-      add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"VM Options"), :error)
+      add_flash(_("At least one %s must be selected") % "VM Options", :error)
       @sb[:planning][:options][:trend_cpu] = true if params[:trend_cpu]
       @sb[:planning][:options][:trend_vcpus] = true if params[:trend_vcpus]
       @sb[:planning][:options][:trend_memory] = true if params[:trend_memory]
@@ -399,8 +399,8 @@ class MiqCapacityController < ApplicationController
     treenodeid = valid_active_node(treenodeid)
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.class.base_class.to_s == "MiqEnterprise" ?
-      I18n.t("cell_header.model", :model => ui_lookup(:model => "MiqEnterprise")) :
-      I18n.t("cell_header.model_record_typ", :model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Utilization Trend Summary")
+      _("%s") %  ui_lookup(:model => "MiqEnterprise") :
+      _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Utilization Trend Summary"}
     @sb[:util][:title] = @right_cell_text
     @right_cell_text += " - Filtered by #{@sb[:util][:tags][@sb[:util][:options][:tag]]}" unless @sb[:util][:options].nil? || @sb[:util][:options][:tag].blank?
 
@@ -554,7 +554,7 @@ class MiqCapacityController < ApplicationController
     @right_cell_text = "Planning Summary"
     if params[:button] == "reset"
       session[:changed] = false
-      add_flash(I18n.t("flash.capacity.planning_reset"))
+      add_flash(_("Planning options have been reset by the user"))
       v_buttons, v_xml = build_toolbar_buttons_and_xml("miq_capacity_view_tb")
       render :update do |page|  # Redraw the screen
         page << "if($('view_buttons_div'))$('view_buttons_div').show();" if v_buttons && v_xml
@@ -611,8 +611,7 @@ class MiqCapacityController < ApplicationController
 
     presenter[:expand_collapse_cells][:a] = 'expand'
     presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
-    presenter[:replace_cell_text] = I18n.t("cell_header.best_fit_model",
-                                           :model=>@sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters')
+    presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
 
     presenter[:extra_js] << "curTab = $j('#planning_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
     presenter[:extra_js] << "tab = curTab.prop('id');"
@@ -645,8 +644,8 @@ class MiqCapacityController < ApplicationController
 
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.class.base_class.to_s == "MiqEnterprise" ?
-        I18n.t("cell_header.model", :model => ui_lookup(:model => "MiqEnterprise")) :
-        I18n.t("cell_header.model_record_typ", :model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Bottlenecks Summary")
+        _("%s") %  ui_lookup(:model => "MiqEnterprise") :
+        _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Bottlenecks Summary"}
 
     # Get the where clause to limit records to the selected tree node (@record)
     @sb[:bottlenecks][:objects_where_clause] = nil
@@ -722,7 +721,7 @@ class MiqCapacityController < ApplicationController
       begin
           @sb[:bottlenecks][:report].generate_table(:userid => session[:userid])
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_building_timeline") << bang.message, :error)
+        add_flash(_("Error building timeline ") << bang.message, :error)
       else
         bottleneck_tl_to_xml
       end
@@ -733,7 +732,7 @@ class MiqCapacityController < ApplicationController
   def bottleneck_tl_to_xml
     @timeline = true
     if @sb[:bottlenecks][:report].table.data.length == 0
-      add_flash(I18n.t("flash.no_timeline_records_found"), :warning)
+      add_flash(_("No records found for this timeline"), :warning)
     else
       tz = @sb[:bottlenecks][:report].tz ? @sb[:bottlenecks][:report].tz : Time.zone
       @sb[:bottlenecks][:report].extras[:browser_name] = browser_info("name").downcase

@@ -77,11 +77,9 @@ class CatalogController < ApplicationController
     case params[:button]
     when "cancel"
       if session[:edit][:rec_id]
-        add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>"#{ui_lookup(:model=>'ServiceTemplate')}",:name=>session[:edit][:new][:description]))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"#{ui_lookup(:model=>'ServiceTemplate')}", :name=>session[:edit][:new][:description]})
       else
-        add_flash(I18n.t("flash.add.cancelled",
-                      :model=>"#{ui_lookup(:model=>'ServiceTemplate')}"))
+        add_flash(_("Add of new %s was cancelled by the user") % "#{ui_lookup(:model=>'ServiceTemplate')}")
       end
       @edit = @record = nil
       @in_a_form = false
@@ -92,7 +90,7 @@ class CatalogController < ApplicationController
     when "reset", nil  # Reset or first time in
       @_params[:org_controller] = "service_template"
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       if !@record.id.nil? && @record.prov_type != "generic"
         prov_set_form_vars(MiqRequest.find(@record.service_resources[0].resource_id))      # Set vars from existing request
@@ -278,15 +276,15 @@ class CatalogController < ApplicationController
     if params[:id]
       elements.push(params[:id])
       process_sts(elements, 'destroy') unless elements.empty?
-      add_flash(I18n.t("flash.record.deleted_for_1_record", :model=>ui_lookup(:table=>"service_template"))) if @flash_array.nil?
+      add_flash(_("The selected %s was deleted") % ui_lookup(:table=>"service_template")) if @flash_array.nil?
       self.x_node = "root"
     else # showing 1 element, delete it
       elements = find_checked_items
       if elements.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"service_template"), :task=>"deletion"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"service_template"), :task=>"deletion"}, :error)
       end
       process_sts(elements, 'destroy') unless elements.empty?
-      add_flash(I18n.t("flash.record.deleted_for_records", :model=>pluralize(elements.length,ui_lookup(:table=>"service_template")))) unless flash_errors?
+      add_flash(_("The selected %s were deleted") % pluralize(elements.length,ui_lookup(:table=>"service_template"))) unless flash_errors?
     end
     params[:id] = nil
     replace_right_cell(nil, [:sandt, :svccat])
@@ -298,11 +296,9 @@ class CatalogController < ApplicationController
     case params[:button]
     when "cancel"
       if session[:edit][:rec_id]
-        add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>"Catalog Bundle",:name=>session[:edit][:new][:description]))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"Catalog Bundle", :name=>session[:edit][:new][:description]})
       else
-        add_flash(I18n.t("flash.add.cancelled",
-                      :model=>"Catalog Bundle"))
+        add_flash(_("Add of new %s was cancelled by the user") % "Catalog Bundle")
       end
       @edit = @record = nil
       @in_a_form = false
@@ -311,11 +307,11 @@ class CatalogController < ApplicationController
       return unless load_edit("st_edit__#{params[:id] || "new"}","replace_cell__explorer")
       get_form_vars
       if @edit[:new][:name].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
       end
 
       if @edit[:new][:selected_resources].empty?
-        add_flash(I18n.t("flash.edit.select_required", :selection=>"Resource"), :error)
+        add_flash(_("%s must be selected") % "Resource", :error)
       end
 
       if @flash_array
@@ -353,7 +349,7 @@ class CatalogController < ApplicationController
     when "reset", nil  # Reset or first time in
       st_set_form_vars
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       @changed = session[:changed] = false
       replace_right_cell("st_new")
@@ -397,12 +393,12 @@ class CatalogController < ApplicationController
       identify_catalog(params[:id])
       @record.picture = nil
       @record.save
-      msg = I18n.t("flash.image.removed")
+      msg = _("Custom Image successfully removed")
     elsif params[:upload] && params[:upload][:image] &&
         params[:upload][:image].respond_to?(:read)
       ext = params[:upload][:image].original_filename.split(".").last.downcase
       if !["png", "jpg"].include?(ext)
-        msg = I18n.t("flash.image.type", :typ=>".png or .jpg")
+        msg = _("Custom Image must be a %s file") % ".png or .jpg"
         err = true
       else
         identify_catalog(params[:id])
@@ -411,10 +407,10 @@ class CatalogController < ApplicationController
         @record.picture.extension = ext
         @record.save
         add_pictures_to_sync(@record.picture.id)
-        msg = I18n.t("flash.image.uploaded", :filename=>params[:upload][:image].original_filename)
+        msg = _("Custom Image file \"%s\" successfully uploaded") % params[:upload][:image].original_filename
       end
     else
-      msg = I18n.t("flash.image.locate_file", :typ=>".png or .jpg")
+      msg = _("Use the Browse button to locate a %s image file") % ".png or .jpg"
       err = true
     end
     add_flash(msg, err == true ? :error : nil)
@@ -523,9 +519,7 @@ class CatalogController < ApplicationController
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
     st = find_by_id_filtered(ServiceTemplate, checked[0])
-    @right_cell_text = I18n.t("cell_header.task_model_record",
-                              :task=>"Order", :name=>st.name,
-                              :model=>ui_lookup(:model=>"Service"))
+    @right_cell_text = _("%{task} %{model} \"%{name}\"") % {:task=>"Order", :name=>st.name, :model=>ui_lookup(:model=>"Service")}
     ra = nil
     st.resource_actions.each do |r|
       if r.action.downcase == "provision" && r.dialog_id
@@ -543,7 +537,7 @@ class CatalogController < ApplicationController
       dialog_initialize(ra,options)
     else
       #if catalog item has no dialog and provision button was pressed from list view
-      add_flash(I18n.t("flash.request.st_no_dialog_available"), :warning)
+      add_flash(_("No Ordering Dialog is available"), :warning)
       replace_right_cell
     end
   end
@@ -552,11 +546,9 @@ class CatalogController < ApplicationController
     case params[:button]
       when "cancel"
         if session[:edit][:rec_id]
-          add_flash(I18n.t("flash.edit.cancelled",
-                           :model=>"ServiceTemplateCatalog",:name=>session[:edit][:new][:name]))
+          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"ServiceTemplateCatalog", :name=>session[:edit][:new][:name]})
         else
-          add_flash(I18n.t("flash.add.cancelled",
-                           :model=>"ServiceTemplateCatalog"))
+          add_flash(_("Add of new %s was cancelled by the user") % "ServiceTemplateCatalog")
         end
         @edit = nil
         @in_a_form = false
@@ -570,12 +562,10 @@ class CatalogController < ApplicationController
         begin
           @stc.save
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task=>"Catalog Edit") << bang.message, :error)
+          add_flash(_("Error during '%s': ") % "Catalog Edit" << bang.message, :error)
         else
           if @stc.errors.empty?
-            add_flash(I18n.t("flash.edit.saved",
-                             :model=>"ServiceTemplateCatalog",
-                             :name=>@edit[:new][:name]))
+            add_flash(_("%{model} \"%{name}\" was saved") % {:model=>"ServiceTemplateCatalog", :name=>@edit[:new][:name]})
           else
             @stc.errors.each do |field, msg|
               add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -593,7 +583,7 @@ class CatalogController < ApplicationController
       when "reset", nil  # Reset or first time in
         st_catalog_set_form_vars
         if params[:button] == "reset"
-          add_flash(I18n.t("flash.edit.reset"), :warning)
+          add_flash(_("All changes have been reset"), :warning)
         end
         @changed = session[:changed] = false
         replace_right_cell("st_catalog_edit")
@@ -622,8 +612,7 @@ class CatalogController < ApplicationController
       begin
         st.public_send(task.to_sym) if st.respond_to?(task)    # Run the task
       rescue StandardError => bang
-        add_flash(I18n.t("flash.record.error_during_task",
-                        :model=>model_name, :name=>st_name, :task=>task) << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>model_name, :name=>st_name, :task=>task} << bang.message,
                   :error)
       else
         AuditEvent.success(audit)
@@ -639,7 +628,7 @@ class CatalogController < ApplicationController
     return unless load_edit("prov_edit__#{id}","show_list")
     if @edit[:new][:name].blank?
       # check for service template required fields before creating a request
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+      add_flash(_("%s is required") % "Name", :error)
     end
 
     #set request for non generic ST
@@ -730,8 +719,8 @@ class CatalogController < ApplicationController
 
     @record = checked[0] ? find_by_id_filtered(ServiceTemplateCatalog, checked[0]) : ServiceTemplateCatalog.new
     @right_cell_text = @record.id ?
-        I18n.t("cell_header.editing_model_record",:name=>@record.name,:model=>ui_lookup(:model=>"ServiceTemplateCatalog")) :
-        I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"ServiceTemplateCatalog"))
+        _("Editing %{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>"ServiceTemplateCatalog")} :
+        _("Adding a new %s") % ui_lookup(:model=>"ServiceTemplateCatalog")
     @edit = Hash.new
     @edit[:key] = "st_catalog_edit__#{@record.id || "new"}"
     @edit[:new] = Hash.new
@@ -777,7 +766,7 @@ class CatalogController < ApplicationController
     else # showing 1 element, delete it
       elements = find_checked_items
       if elements.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:models=>"ServiceTemplateCatalog"), :task=>"deletion"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:models=>"ServiceTemplateCatalog"), :task=>"deletion"}, :error)
       end
       process_elements(elements, ServiceTemplateCatalog, "destroy") unless elements.empty?
     end
@@ -839,7 +828,7 @@ class CatalogController < ApplicationController
                 st.add_resource(rsc,options)
               rescue MiqException::MiqServiceCircularReferenceError => bang
                 @add_rsc = false
-                add_flash(I18n.t("flash.error_during", :task=>"Resource Add") << bang.message, :error)
+                add_flash(_("Error during '%s': ") % "Resource Add" << bang.message, :error)
                 break
               else
               end
@@ -878,11 +867,9 @@ class CatalogController < ApplicationController
     end
     get_available_dialogs
     if @record.id.blank?
-      @right_cell_text = I18n.t("cell_header.adding_model_record",:model=>ui_lookup(:model=>"ServiceTemplate"))
+      @right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"ServiceTemplate")
     else
-      @right_cell_text = I18n.t("cell_header.editing_model_record",
-                                :name=>@record.name,
-                                :model=>ui_lookup(:model=>"ServiceTemplate"))
+      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>"ServiceTemplate")}
     end
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
   end
@@ -929,11 +916,9 @@ class CatalogController < ApplicationController
     get_available_dialogs
     @edit[:current] = copy_hash(@edit[:new])
     if @record.id.blank?
-      @right_cell_text = I18n.t("cell_header.adding_model_record",:model=>"Catalog Bundle")
+      @right_cell_text = _("Adding a new %s") % "Catalog Bundle"
     else
-      @right_cell_text = I18n.t("cell_header.editing_model_record",
-                                :name=>@record.name,
-                                :model=>"Catalog Bundle")
+      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>@record.name, :model=>"Catalog Bundle"}
     end
 
     @in_a_form = true
@@ -1124,9 +1109,7 @@ class CatalogController < ApplicationController
       case X_TREE_NODE_PREFIXES[@nodetype]
       when "Vm", "MiqTemplate", "ServiceResource"  # VM or Template record, show the record
         show_record(from_cid(id))
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                  :name=>@record.name,
-                                  :model=>ui_lookup(:model=>X_TREE_NODE_PREFIXES[@nodetype]))
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>X_TREE_NODE_PREFIXES[@nodetype])}
       else      # Get list of child Catalog Items/Services of this node
         if x_node == "root"
           case x_active_tree
@@ -1145,35 +1128,26 @@ class CatalogController < ApplicationController
             model = x_active_tree == :stcat_tree ? ServiceTemplateCatalog : ServiceTemplate
             process_show_list({:model=>model})
           end
-          @right_cell_text = I18n.t("cell_header.all_model_records",
-                                    :model=>ui_lookup(:models=>typ))
+          @right_cell_text = _("All %s") % ui_lookup(:models=>typ)
           sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
         else
           if x_active_tree == :stcat_tree
             @record = ServiceTemplateCatalog.find_by_id(from_cid(id))
             @record_service_templates = rbac_filtered_objects(@record.service_templates)
             typ = x_active_tree == :svccat_tree ? "Service" : X_TREE_NODE_PREFIXES[@nodetype]
-            @right_cell_text = I18n.t("cell_header.model_record",
-                                      :name=>@record.name,
-                                      :model=>ui_lookup(:model=>typ))
+            @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
           else
             if id == "Unassigned" || @nodetype == "stc"
               model = x_active_tree == :svccat_tree ? "ServiceCatalog" : "ServiceTemplate"
               if id == "Unassigned"
                 condition = ["service_template_catalog_id IS NULL"]
                 service_template_list(condition,{:model => model, :no_order_button => true})
-                @right_cell_text = I18n.t("cell_header.model_typ_name",
-                                         :name=>"Unassigned",
-                                         :typ=>ui_lookup(:models=>"Service"),
-                                         :model=>ui_lookup(:model=>"ServiceTemplateCatalog"))
+                @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name=>"Unassigned", :typ=>ui_lookup(:models=>"Service"), :model=>ui_lookup(:model=>"ServiceTemplateCatalog")}
               else
                 condition = ["display=? and service_template_catalog_id=? and service_template_catalog_id IS NOT NULL", true,from_cid(id)]
                 service_template_list(condition,{:model => model, :no_order_button => true})
                 stc = ServiceTemplateCatalog.find_by_id(from_cid(id))
-                @right_cell_text = I18n.t("cell_header.model_typ_name",
-                           :name=>stc.name,
-                           :typ=>ui_lookup(:models=>"Service"),
-                           :model=>ui_lookup(:model=>"ServiceTemplateCatalog"))
+                @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name=>stc.name, :typ=>ui_lookup(:models=>"Service"), :model=>ui_lookup(:model=>"ServiceTemplateCatalog")}
               end
             else
               show_record(from_cid(id))
@@ -1206,9 +1180,7 @@ class CatalogController < ApplicationController
                 self.x_node = "#{prefix}_#{params[:id]}"
               end
               typ = x_active_tree == :svccat_tree ? "Service" : X_TREE_NODE_PREFIXES[@nodetype]
-              @right_cell_text = I18n.t("cell_header.model_record",
-                                        :name=>@record.name,
-                                        :model=>ui_lookup(:model=>typ))
+              @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
             end
           end
         end
@@ -1316,14 +1288,14 @@ class CatalogController < ApplicationController
     if @sb[:buttons_node]
       if action == "button_edit"
         right_cell_text = @custom_button && @custom_button.id ?
-            I18n.t("cell_header.editing_model_record",:name=>@custom_button.name,:model=>"Button") :
-            I18n.t("cell_header.adding_model_record",:model=>"Button")
+            _("Editing %{model} \"%{name}\"") % {:name=>@custom_button.name, :model=>"Button"} :
+            _("Adding a new %s") % "Button"
       elsif action == "group_edit"
         right_cell_text = @custom_button_set && @custom_button_set.id ?
-            I18n.t("cell_header.editing_model_record",:name=>@custom_button_set.name.split('|').first,:model=>"Button Group") :
-            I18n.t("cell_header.adding_model_record",:model=>"Button Group")
+            _("Editing %{model} \"%{name}\"") % {:name=>@custom_button_set.name.split('|').first, :model=>"Button Group"} :
+            _("Adding a new %s") % "Button Group"
       elsif action == "group_reorder"
-        right_cell_text = I18n.t("flash.edit.group_reorder", :model=>"Buttons")
+        right_cell_text = _("%s Group Reorder") % "Buttons"
       end
     end
     presenter[:right_cell_text] = right_cell_text

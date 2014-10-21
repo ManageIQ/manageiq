@@ -23,7 +23,7 @@ class MiqRequestController < ApplicationController
     request_copy if params[:pressed] == "miq_request_copy"
 
     if ! @refresh_partial && params[:pressed] != "miq_request_reload" # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -196,7 +196,7 @@ class MiqRequestController < ApplicationController
   def stamp
     assert_privileges("miq_request_approval")
     if params[:button] == "cancel"
-      add_flash(I18n.t("flash.request.task_cancelled", :task=>(session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approval" : "denial"))
+      add_flash(_("Request %s was cancelled by the user") % (session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approval" : "denial")
       session[:flash_msgs] = @flash_array.dup
       @edit = nil
       render :update do |page|
@@ -211,7 +211,7 @@ class MiqRequestController < ApplicationController
         stamp_request.deny(session[:userid], @edit[:reason])
       end
 #     AuditEvent.success(build_saved_audit(request, @edit))
-      add_flash(I18n.t("flash.request.request_approved_denied", :name=>stamp_request.description, :task=>(session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approved" : "denied"))
+      add_flash(_("Request \"%{name}\" was %{task}") % {:name=>stamp_request.description, :task=>(session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approved" : "denied"})
       session[:flash_msgs] = @flash_array.dup                     # Put msg in session for next transaction to display
       @edit = nil
       render :update do |page|
@@ -337,7 +337,7 @@ class MiqRequestController < ApplicationController
       method = WORKFLOW_METHOD_WHITELIST[params[:field]]
       @edit[:wf].send(method, @edit[:new]) unless method.nil?
     rescue StandardError => bang
-      add_flash(I18n.t("flash.smartproxy.ldap_info_retrieval_error") << bang.message, :error)
+      add_flash(_("Error retrieving LDAP info: ") << bang.message, :error)
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -356,16 +356,16 @@ class MiqRequestController < ApplicationController
       @edit[:new][:sysprep_upload_file] = params[:upload][:file].original_filename
       begin
         @edit[:new][:sysprep_upload_text] = MiqProvisionWorkflow.validate_sysprep_file(params[:upload][:file])
-        msg = I18n.t("flash.request.sysprep_file_upload", :filename=>params[:upload][:file].original_filename)
+        msg = _("Sysprep \"%s\" upload was successful") % params[:upload][:file].original_filename
         redirect_to :action => 'prov_edit', :flash_msg=>msg, :no_refresh=>true, :id=>params[:id]
       rescue StandardError => bang
         @edit[:new][:sysprep_upload_text] = nil
-        msg = I18n.t("flash.request.error_during_sysprep_upload", :name=>params[:upload][:file].original_filename) << bang.message
+        msg = _("Error during Sysprep \"%s\" file upload: ") % params[:upload][:file].original_filename << bang.message
         redirect_to :action => 'prov_edit', :flash_msg=>msg, :flash_error=>true, :no_refresh=>true, :id=>params[:id]
       end
     else
       @edit[:new][:sysprep_upload_text] = nil
-      msg = I18n.t("flash.request.locate_upload_file")
+      msg = _("Use the Browse button to locate an Upload file")
       redirect_to :action => 'prov_edit', :flash_msg=>msg, :flash_error=>true, :no_refresh=>true, :id=>params[:id]
     end
   end
@@ -387,7 +387,7 @@ class MiqRequestController < ApplicationController
     end
 
     applied_states_blank = @sb[:def_prov_options][resource_type][:applied_states].blank?
-    add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"status"), :warning) if applied_states_blank
+    add_flash(_("At least one %s must be selected") % "status", :warning) if applied_states_blank
 
     render :update do |page| # Do nothing to the page
       unless applied_states_blank
@@ -620,19 +620,19 @@ class MiqRequestController < ApplicationController
     if @lastaction == "show_list" # showing a list
       miq_requests = find_checked_items
       if miq_requests.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:tables=>"miq_request"), :task=>"deletion"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"miq_request"), :task=>"deletion"}, :error)
       end
       process_requests(miq_requests, "destroy") unless miq_requests.empty?
-      add_flash(I18n.t("flash.record.deleted_for_records", :model=>ui_lookup(:tables=>"miq_request"))) if ! flash_errors?
+      add_flash(_("The selected %s were deleted") % ui_lookup(:tables=>"miq_request")) if ! flash_errors?
     else # showing 1 request, delete it
       if params[:id] == nil || MiqRequest.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:table=>"miq_request")), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:table=>"miq_request"), :error)
       else
         miq_requests.push(params[:id])
       end
       @single_delete = true
       process_requests(miq_requests, "destroy") if ! miq_requests.empty?
-      add_flash(I18n.t("flash.record.deleted_for_1_record", :model=>ui_lookup(:table=>"miq_request"))) if ! flash_errors?
+      add_flash(_("The selected %s was deleted") % ui_lookup(:table=>"miq_request")) if ! flash_errors?
     end
     show_list
     @refresh_partial = "layouts/gtl"
@@ -649,15 +649,14 @@ class MiqRequestController < ApplicationController
       begin
         miq_request.public_send(task.to_sym) if miq_request.respond_to?(task)    # Run the task
       rescue StandardError => bang
-        add_flash(I18n.t("flash.record.error_during_task",
-                        :model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name, :task=>task) << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name, :task=>task} << bang.message,
                   :error)
       else
         if task == "destroy"
           AuditEvent.success(audit)
-          add_flash(I18n.t("flash.record.deleted", :model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name))
+          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name})
         else
-          add_flash(I18n.t("flash.record.task_started", :model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name, :task=>task))
+          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name, :task=>task})
         end
       end
     end

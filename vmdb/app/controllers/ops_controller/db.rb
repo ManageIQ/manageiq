@@ -102,7 +102,7 @@ module OpsController::Db
     end
     miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
     if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(I18n.t("flash.ops.export_generation_error", :status=>miq_task.status, :message=>miq_task.message), :error)
+      add_flash(_("Export generation returned: Status [%{status}] Message [%{message}]") % {:status=>miq_task.status, :message=>miq_task.message}, :error)
       render :update do |page|                      # Use JS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page << "miqSparkle(false);"
@@ -176,29 +176,23 @@ module OpsController::Db
       # If root node is selected
       if @sb[:active_tab] == "db_summary"
         @record = VmdbDatabase.my_database
-        @right_cell_text = I18n.t("cell_header.summary",
-                                    :model=>"VMDB")
+        @right_cell_text = _("%s Summary") % "VMDB"
       elsif @sb[:active_tab] == "db_utilization"
         @record = VmdbDatabase.my_database
         perf_gen_init_options               # Initialize perf chart options, charts will be generated async
         @sb[:record_class] = @record.class.base_class.name  # Hang on to record class/id for async trans
         @sb[:record_id] = @record.id
-        @right_cell_text = I18n.t("cell_header.utilization",
-                                    :model=>"VMDB")
+        @right_cell_text = _("%s Utilization") % "VMDB"
       else
         @right_cell_text = case @sb[:active_tab]
         when "db_connections"
-          @right_cell_text = I18n.t("cell_header.model_client_connections",
-                                    :model=>"VMDB")
+          @right_cell_text = _("%s Client Connections") % "VMDB"
         when "db_details"
-          @right_cell_text = I18n.t("cell_header.all_model_records",
-                                    :model=>ui_lookup(:models=>"VmdbTable"))
+          @right_cell_text = _("All %s") % ui_lookup(:models=>"VmdbTable")
         when "db_indexes"
-          @right_cell_text = I18n.t("cell_header.all_model_indexes",
-                                    :model=>"VMDB")
+          @right_cell_text = _("All %s Indexes") % "VMDB"
         else
-          @right_cell_text = I18n.t("cell_header.model_settings",
-                                    :model=>"VMDB")
+          @right_cell_text = _("%s Settings") % "VMDB"
         end
         @force_no_grid_xml = true
         db_list
@@ -211,15 +205,11 @@ module OpsController::Db
         if nodes.first == "xx"
           tb = VmdbTableEvm.find_by_id(from_cid(nodes.last))
           @temp[:indexes] = get_indexes(tb)
-          @right_cell_text = I18n.t("cell_header.model_record_indexes",
-                                    :model=>ui_lookup(:model=>"VmdbTable"),
-                                    :name=>tb.name)
+          @right_cell_text = _("Indexes for %{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbTable"), :name=>tb.name}
           @tab_text = "#{tb.name}: Indexes"
         else
           @temp[:vmdb_index] = VmdbIndex.find_by_id(from_cid(nodes.last))
-          @right_cell_text = I18n.t("cell_header.model_record",
-                                    :model=>ui_lookup(:model=>"VmdbIndex"),
-                                    :name=>@temp[:vmdb_index].name)
+          @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbIndex"), :name=>@temp[:vmdb_index].name}
           @tab_text = @temp[:vmdb_index].name
         end
       elsif @sb[:active_tab] == "db_utilization"
@@ -227,16 +217,13 @@ module OpsController::Db
         perf_gen_init_options               # Initialize perf chart options, charts will be generated async
         @sb[:record_class] = @record.class.base_class.name  # Hang on to record class/id for async trans
         @sb[:record_id] = @record.id
-        @right_cell_text = I18n.t("cell_header.utilization",
-                                    :model=>"VMDB Table \"#{@record.name}\"")
+        @right_cell_text = _("%s Utilization") % "VMDB Table \"#{@record.name}\""
         @tab_text = @record.name
       else
         @sb[:active_tab] = "db_details"
         @temp[:table] = VmdbTable.find_by_id(from_cid(x_node.split('-').last))
         @temp[:indexes] = get_indexes(@temp[:table])
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                  :model=>ui_lookup(:model=>"VmdbTable"),
-                                  :name=>@temp[:table].name)
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbTable"), :name=>@temp[:table].name}
         @tab_text = @temp[:table].name
       end
     end

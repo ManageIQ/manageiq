@@ -3,7 +3,7 @@ module ApplicationController::Automate
 
   def resolve_button_throw
     if valid_resolve_object?
-      add_flash(I18n.t("flash.automate.simulation_started"))
+      add_flash(_("Automation Simulation has been run"))
       @sb[:name] = @resolve[:new][:instance_name].blank? ? @resolve[:new][:other_name] : @resolve[:new][:instance_name]
       @sb[:attrs] = {}
       @resolve[:new][:attrs].each do |a|
@@ -16,7 +16,7 @@ module ApplicationController::Automate
       begin
         build_results
       rescue MiqAeException::Error => bang
-        add_flash(I18n.t("flash.automate.automate_error") << bang.message, :error)
+        add_flash(_("Automation Error: ") << bang.message, :error)
       end
     end
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
@@ -50,12 +50,12 @@ module ApplicationController::Automate
         :userid           => session[:userid]
       )
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task => "save") << bang.message, :error)
+      add_flash(_("Error during '%s': ") %  "save" << bang.message, :error)
     else
       if @resolve[:button_text].blank?
-        add_flash(I18n.t("flash.automate.button_cleared", :btn_num => @resolve[:button_number]))
+        add_flash(_("Automate button %s has been cleared") %  @resolve[:button_number])
       else
-        add_flash(I18n.t("flash.automate.button_set", :btn_num => @resolve[:button_number], :btn_txt => @resolve[:button_text]))
+        add_flash(_("Automate button %{btn_num} has been set to %{btn_txt}") % {:btn_num => @resolve[:button_number], :btn_txt => @resolve[:button_text]})
       end
     end
     render_flash
@@ -134,7 +134,7 @@ module ApplicationController::Automate
 
     @sb[:active_tab] = "tree"
     if params[:button] == "reset"
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       resolve_reset
     else
       render :layout => "explorer"

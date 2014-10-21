@@ -25,7 +25,7 @@ class MiqPolicyController < ApplicationController
     when "cancel"
       @sb = nil
       if @lastaction != "fetch_yaml"
-        add_flash(I18n.t("flash.policy.task_cancelled_by_user", :task=>"Export"))
+        add_flash(_("%s cancelled by user") % "Export")
       end
       render :update do |page|                    # Use JS to update the display
         page.redirect_to :action=>"explorer"
@@ -37,7 +37,7 @@ class MiqPolicyController < ApplicationController
         @sb[:new][:choices_chosen] = Array.new
       end
       if @sb[:new][:choices_chosen].length == 0 # At least one member is required
-        add_flash(I18n.t("flash.button.at_least_selected", :num=>1,:model=>"item", :action=>"export"), :error)
+        add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num=>1, :model=>"item", :action=>"export"}, :error)
         render :update do |page|                    # Use JS to update the display
           page.replace_html("profile_export_div", :partial=>"export")
           page << "miqSparkle(false);"
@@ -60,7 +60,7 @@ class MiqPolicyController < ApplicationController
             page.redirect_to :action=>'fetch_yaml', :fname=>filename, :escape=>false
           end
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task=>"export") << bang.message, :error)
+          add_flash(_("Error during '%s': ") % "export" << bang.message, :error)
           render :update do |page|                    # Use JS to update the display
             page.replace_html("profile_export_div", :partial=>"export")
             page << "miqSparkle(false);"
@@ -154,12 +154,12 @@ class MiqPolicyController < ApplicationController
 
         redirect_options.merge!(:import_file_upload_id => import_file_upload.id)
       rescue => err
-        redirect_options.merge!(:flash_msg => I18n.t("flash.error_during", :task => "Policy Import") + err.message,
+        redirect_options.merge!(:flash_msg => _("Error during '%s': ") %  "Policy Import" + err.message,
                                 :flash_error => true,
                                 :action => "export")
       end
     else
-      redirect_options.merge!(:flash_msg => I18n.t("flash.locate_import_file"),
+      redirect_options.merge!(:flash_msg => _("Use the Browse button to locate an Import file"),
                               :flash_error => true,
                               :action => "export")
     end
@@ -186,10 +186,10 @@ class MiqPolicyController < ApplicationController
       begin
         miq_policy_import_service.import_policy(@import_file_upload_id)
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"upload") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
       else
         @sb[:hide] = false
-        add_flash(I18n.t("flash.import_success"))
+        add_flash(_("Import file was uploaded successfully"))
       end
 
       render :update do |page|
@@ -200,15 +200,15 @@ class MiqPolicyController < ApplicationController
       miq_policy_import_service.cancel_import(params[:import_file_upload_id])
 
       render :update do |page|
-        page.redirect_to :action => 'export', :flash_msg=>I18n.t("flash.policy.task_cancelled_by_user", :task=>"Import")
+        page.redirect_to :action => 'export', :flash_msg=>_("%s cancelled by user") % "Import"
       end
 
     #init import
     else
       if @sb[:conflict]
-        add_flash(I18n.t("flash.policy.import_not_available"),:error)
+        add_flash(_("Import not available due to conflicts"),:error)
       else
-        add_flash(I18n.t("flash.policy.commit_import")) if !@flash_array
+        add_flash(_("Press commit to Import")) if !@flash_array
       end
       render :action=>"import", :layout=> true
     end
@@ -289,7 +289,7 @@ class MiqPolicyController < ApplicationController
       if MiqPolicySet.exists?(:id => profile_id)
         self.x_node = "pp_#{profile_id}"
       else
-        add_flash(I18n.t("flash.button.record_gone", :model => ui_lookup(:model => "MiqPolicySet")), :error)
+        add_flash(_("%s no longer exists") %  ui_lookup(:model => "MiqPolicySet"), :error)
         self.x_node = "root"
       end
     end
@@ -349,7 +349,7 @@ class MiqPolicyController < ApplicationController
   def log
     @breadcrumbs = Array.new
     @log = $policy_log.contents(nil,1000)
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     @lastaction = "policy_logs"
     @layout = "miq_policy_logs"
     @msg_title = "Policy"
@@ -364,7 +364,7 @@ class MiqPolicyController < ApplicationController
   def refresh_log
     @log = $policy_log.contents(nil,1000)
     @temp[:server] = MiqServer.my_server
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("main_div", :partial=>"layouts/log_viewer")
     end
@@ -466,7 +466,7 @@ class MiqPolicyController < ApplicationController
     end
 
     @sb[:tree_typ]   = what.pluralize
-    @right_cell_text = I18n.t("cell_header.all_model_records",:model=>what.pluralize.titleize)
+    @right_cell_text = _("All %s") % what.pluralize.titleize
     @right_cell_div  = "#{what}_list"
   end
 
@@ -634,28 +634,28 @@ class MiqPolicyController < ApplicationController
       end
 
       presenter[:update_partials][:main_div] = r[:partial => partial_name]
-      right_cell_text = I18n.t('cell_header.all_model_records', :model=> model)
+      right_cell_text = _("All %s") %  model
     when 'pp'
       presenter[:update_partials][:main_div] = r[:partial => 'profile_details']
       right_cell_text =
         if @profile && @profile.id.blank?
-          I18n.t('cell_header.adding_model_record', :model=>ui_lookup(:model=>'MiqPolicySet'))
+          _("Adding a new %s") % ui_lookup(:model=>'MiqPolicySet')
         else
-          @edit ? I18n.t("cell_header.editing_model_record", :name=>@profile.description.gsub(/'/,"\\\\'"),:model=>ui_lookup(:model=>"MiqPolicySet")) :
-                  I18n.t("cell_header.model_record", :model=>ui_lookup(:model=>"MiqPolicySet"), :name=>@profile.description.gsub(/'/,"\\\\'"))
+          @edit ? _("Editing %{model} \"%{name}\"") % {:name=>@profile.description.gsub(/'/,"\\'"), :model=>ui_lookup(:model=>"MiqPolicySet")} :
+                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqPolicySet"), :name=>@profile.description.gsub(/'/,"\\'")}
         end
     when 'xx'
       presenter[:update_partials][:main_div] =
         if @profiles
           r[:partial => 'profile_list']
         elsif @policies || (@view && @sb[:tree_typ] == 'policies')
-          right_cell_text = I18n.t("cell_header.all_type_model_records", :typ => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""}", :model => ui_lookup(:models => "MiqPolicy"))
+          right_cell_text = _("All %{typ} %{model}") % {:typ => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""}", :model => ui_lookup(:models => "MiqPolicy")}
           r[:partial => 'policy_list']
         elsif @conditions
-          right_cell_text = I18n.t('cell_header.all_type_model_records', :typ => ui_lookup(:model => @sb[:folder].titleize), :model => ui_lookup(:models => 'Condition'))
+          right_cell_text = _("All %{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:folder].titleize), :model => ui_lookup(:models => 'Condition')}
           r[:partial => 'condition_list']
         elsif @folders
-          right_cell_text = I18n.t("cell_header.type_of_model_records", :typ => ui_lookup(:model => @sb[:folder]), :model => ui_lookup(:models => 'MiqPolicy'))
+          right_cell_text = _("%{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:folder]), :model => ui_lookup(:models => 'MiqPolicy')}
           r[:partial => 'policy_folders']
         elsif @alert_profiles
           r[:partial => 'alert_profile_list']
@@ -663,14 +663,13 @@ class MiqPolicyController < ApplicationController
     when 'p'
       presenter[:update_partials][:main_div] = r[:partial => 'policy_details', :locals=>{:read_only=>true}]
       if @policy.id.blank?
-        right_cell_text = I18n.t('cell_header.adding_model_record',
-                                 :model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy")
+        right_cell_text = _("Adding a new %s") %  "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy"
       else
         right_cell_text = @edit ?
-            I18n.t("cell_header.editing_model_record", :model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/,"\\\\'")) :
-            I18n.t("cell_header.model_record",         :model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/,"\\\\'"))
-        right_cell_text += I18n.t('cell_header.model_assignments', :model=>ui_lookup(:model=>'Condition')) if @edit && @edit[:typ] == 'conditions'
-        right_cell_text += I18n.t('cell_header.model_assignments', :model=>ui_lookup(:model=>'Event'))     if @edit && @edit[:typ] == 'events'
+            _("Editing %{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/,"\\'")} :
+            _("%{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/,"\\'")}
+        right_cell_text += _(" %s Assignments") % ui_lookup(:model=>'Condition') if @edit && @edit[:typ] == 'conditions'
+        right_cell_text += _(" %s Assignments") % ui_lookup(:model=>'Event')     if @edit && @edit[:typ] == 'events'
       end
     when 'co'
       # Set the JS types and titles vars if value fields are showing (needed because 2 expression editors are present)
@@ -687,11 +686,11 @@ class MiqPolicyController < ApplicationController
       end
       presenter[:update_partials][:main_div] = r[:partial => 'condition_details', :locals=>{:read_only=>true}]
       right_cell_text = if @condition.id.blank?
-        I18n.t('cell_header.adding_model_record', :model=>ui_lookup(:model=>'Condition'))
+        _("Adding a new %s") % ui_lookup(:model=>'Condition')
       else
         @right_cell_text = @edit ?
-          I18n.t("cell_header.editing_model_record", :name=>@condition.description.gsub(/'/,"\\\\'"), :model=>"#{ui_lookup(:model=>@edit[:new][:towhat])} Condition") :
-          I18n.t("cell_header.model_record",         :name=>@condition.description.gsub(/'/,"\\\\'"), :model=>"#{ui_lookup(:model=>@condition.towhat)} Condition")
+          _("Editing %{model} \"%{name}\"") % {:name=>@condition.description.gsub(/'/,"\\'"), :model=>"#{ui_lookup(:model=>@edit[:new][:towhat])} Condition"} :
+          _("%{model} \"%{name}\"") % {:name=>@condition.description.gsub(/'/,"\\'"), :model=>"#{ui_lookup(:model=>@condition.towhat)} Condition"}
       end
     when 'ev'
       presenter[:update_partials][:main_div] = r[:partial => 'event_details', :locals=>{:read_only=>true}]
@@ -699,20 +698,20 @@ class MiqPolicyController < ApplicationController
     when 'a', 'ta', 'fa'
       presenter[:update_partials][:main_div] = r[:partial => 'action_details', :locals=>{:read_only=>true}]
       right_cell_text = @action.id.blank? ?
-        I18n.t('cell_header.adding_model_record', :model=>ui_lookup(:model=>'MiqAction')) :
+        _("Adding a new %s") % ui_lookup(:model=>'MiqAction') :
         I18n.t("cell_header.#{edit_str}model_record", :name=>@action.description.gsub(/'/,"\\\\'"), :model=>ui_lookup(:model=>'MiqAction'))
     when 'ap'
       presenter[:update_partials][:main_div] = r[:partial => 'alert_profile_details', :locals=>{:read_only=>true}]
       right_cell_text = if @alert_profile.id.blank?
-        I18n.t('cell_header.adding_model_record', :model=>ui_lookup(:model=>'MiqAlertSet'))
+        _("Adding a new %s") % ui_lookup(:model=>'MiqAlertSet')
       else
-        @edit ? I18n.t("cell_header.editing_model_record", :name=>@alert_profile.description.gsub(/'/,"\\\\'"), :model=>"#{ui_lookup(:model=>@edit[:new][:mode])} #{ui_lookup(:model=>'MiqAlertSet')}") :
-                I18n.t("cell_header.model_record",         :name=>@alert_profile.description.gsub(/'/,"\\\\'"), :model=>ui_lookup(:model=>'MiqAlertSet'))
+        @edit ? _("Editing %{model} \"%{name}\"") % {:name=>@alert_profile.description.gsub(/'/,"\\'"), :model=>"#{ui_lookup(:model=>@edit[:new][:mode])} #{ui_lookup(:model=>'MiqAlertSet')}"} :
+                _("%{model} \"%{name}\"") % {:name=>@alert_profile.description.gsub(/'/,"\\'"), :model=>ui_lookup(:model=>'MiqAlertSet')}
       end
     when 'al'
       presenter[:update_partials][:main_div] = r[:partial => 'alert_details', :locals=>{:read_only=>true}]
       right_cell_text = if @alert.id.blank?
-        I18n.t('cell_header.adding_model_record', :model=>ui_lookup(:model=>'MiqAlert'))
+        _("Adding a new %s") % ui_lookup(:model=>'MiqAlert')
       else
         pfx = @assign ? ' assignments for ' : ''
         I18n.t("#{@edit ? 'cell_header.editing_model_record' : 'cell_header.model_record'}", :name=>@alert.description.gsub(/'/,"\\\\'"), :model=>"#{pfx} #{ui_lookup(:model=>"MiqAlert")}")
@@ -808,7 +807,7 @@ class MiqPolicyController < ApplicationController
                                 choices_chosen = :choices_chosen)
     if params[:button].ends_with?("_left")
       if params[members_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.left", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
       else
         if @edit[:event_id]                                           # Handle Actions for an Event
           params[members_chosen].each do |mc|
@@ -829,7 +828,7 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_right")
       if params[choices_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.right", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s were selected to move right") % members.to_s.split("_").first.titleize, :error)
       else
         mems = @edit[choices].invert
         if @edit[:event_id]                                           # Handle Actions for an Event
@@ -846,7 +845,7 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_allleft")
       if @edit[:new][members].length == 0
-        add_flash(I18n.t("flash.edit.no_fields_to_move.left", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
       else
         if @edit[:event_id]                                           # Handle Actions for an Event
           @edit[:new][members].each do |m|
@@ -861,7 +860,7 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_up")
       if params[members_chosen] == nil || params[members_chosen].length != 1
-        add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field=>members.to_s.split("_").first.singularize.titleize), :error)
+        add_flash(_("Select only one or consecutive %s to move up") % members.to_s.split("_").first.singularize.titleize, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -877,7 +876,7 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_down")
       if params[members_chosen] == nil || params[members_chosen].length != 1
-        add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field=>members.to_s.split("_").first.singularize.titleize), :error)
+        add_flash(_("Select only one or consecutive %s to move down") % members.to_s.split("_").first.singularize.titleize, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -893,7 +892,7 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_sync")
       if params[members_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.sync", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s selected to set to Synchronous") % members.to_s.split("_").first.titleize, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -910,7 +909,7 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_async")
       if params[members_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.async", :field=>members.to_s.split("_").first.titleize), :error)
+        add_flash(_("No %s selected to set to Asynchronous") % members.to_s.split("_").first.titleize, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -957,14 +956,14 @@ class MiqPolicyController < ApplicationController
     if x_active_tree == :policy_tree
       if nodeid.nil? && ["compliance","control"].include?(nodetype.split('-').last)
         @folders = ["Host #{nodetype.split('-').last.titleize}", "Vm #{nodetype.split('-').last.titleize}"]
-        @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>nodetype.split('-').last.titleize,:model=>ui_lookup(:models=>"MiqPolicy"))
+        @right_cell_text = _("%{typ} %{model}") % {:typ=>nodetype.split('-').last.titleize, :model=>ui_lookup(:models=>"MiqPolicy")}
       else
         @sb[:mode] = nodeid.split("-")[1]
         @sb[:nodeid] = nodeid.split("-").last
         @sb[:folder] = "#{nodeid.split("-")[1]}-#{nodeid.split("-")[2]}"
         set_search_text
         policy_get_all if folder_node.split("_").length <= 2
-        @right_cell_text = I18n.t("cell_header.all_type_model_records",:typ=>ui_lookup(:model=>@sb[:nodeid]),:model=>ui_lookup(:models=>"MiqPolicy"))
+        @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:nodeid]), :model=>ui_lookup(:models=>"MiqPolicy")}
         @right_cell_div = "policy_list"
       end
     elsif x_active_tree == :condition_tree
@@ -972,14 +971,14 @@ class MiqPolicyController < ApplicationController
       set_search_text
       @conditions = apply_search_filter(@search_text, @conditions) if !@search_text.blank?
       @right_cell_text = "All #{ui_lookup(:model=>@sb[:folder])} Conditions"
-      @right_cell_text = I18n.t("cell_header.all_type_model_records",:typ=>ui_lookup(:model=>@sb[:folder]),:model=>ui_lookup(:models=>"Condition"))
+      @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:folder]), :model=>ui_lookup(:models=>"Condition")}
       @right_cell_div = "condition_list"
     elsif x_active_tree == :alert_profile_tree
       @alert_profiles = MiqAlertSet.all(:conditions=>["mode = ?", @sb[:folder]]).sort{|a,b|a.description.downcase<=>b.description.downcase}
       set_search_text
       @alert_profiles = apply_search_filter(@search_text, @alert_profiles) if !@search_text.blank?
       @right_cell_text = "All #{ui_lookup(:model=>@sb[:folder])} Alert Profiles"
-      @right_cell_text = I18n.t("cell_header.all_type_model_records",:typ=>ui_lookup(:model=>@sb[:folder]),:model=>ui_lookup(:models=>"MiqAlertSet"))
+      @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:folder]), :model=>ui_lookup(:models=>"MiqAlertSet")}
       @right_cell_div = "alert_profile_list"
     end
   end
@@ -1038,27 +1037,27 @@ class MiqPolicyController < ApplicationController
 
   def validate_snmp_options(options)
     if options[:host].nil? || options[:host] == ""
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Host"), :error)
+      add_flash(_("%s is required") % "Host", :error)
     end
     trap_text = options[:snmp_version] == "v1" || options[:snmp_version].nil? ? "Trap Number" : "Trap Object ID"
     if options[:trap_id].nil? || options[:trap_id] == ""
-      add_flash(I18n.t("flash.edit.field_required", :field=>"#{trap_text}"), :error)
+      add_flash(_("%s is required") % "#{trap_text}", :error)
     end
     options[:variables].each_with_index do |var,i|
       if var[:oid].blank? || var[:value].blank? || var[:var_type] == "<None>"
         if !var[:oid].blank? && var[:var_type] != "<None>" && var[:var_type] != "Null" && var[:value].blank?
-          add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Value", :field=>var[:oid]), :error)
+          add_flash(_("%{val} missing for %{field}") % {:val=>"Value", :field=>var[:oid]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "<None>" && var[:var_type] != "Null" && !var[:value].blank?
-          add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Object ID", :field=>var[:value]), :error)
+          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID", :field=>var[:value]}, :error)
         elsif !var[:oid].blank? && var[:var_type] == "<None>" && var[:value].blank?
-          add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Type", :field=>var[:oid]), :error)
-          add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Value", :field=>var[:oid]), :error)
+          add_flash(_("%{val} missing for %{field}") % {:val=>"Type", :field=>var[:oid]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val=>"Value", :field=>var[:oid]}, :error)
         elsif var[:oid].blank? && var[:var_type] == "Null" && var[:value].blank?
-          add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Object ID", :field=>var[:var_type]), :error)
+          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID", :field=>var[:var_type]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "<None>" && var[:value].blank?
-          add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Object ID and Values", :field=>var[:var_type]), :error)
+          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID and Values", :field=>var[:var_type]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "Null" && var[:var_type] != "<None>" && var[:value].blank?
-          add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>"Object ID", :field=>var[:var_type]), :error)
+          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID", :field=>var[:var_type]}, :error)
         end
       end
     end

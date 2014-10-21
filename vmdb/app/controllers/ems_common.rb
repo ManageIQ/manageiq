@@ -151,11 +151,11 @@ module EmsCommon
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>@model.to_s))
+        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>@model.to_s)
       end
     when "add"
       if @edit[:new][:emstype].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
+        add_flash(_("%s is required") % "Type", :error)
       end
       if !@flash_array
         add_ems = @model.model_from_emstype(@edit[:new][:emstype]).new
@@ -165,7 +165,7 @@ module EmsCommon
         AuditEvent.success(build_created_audit(add_ems, @edit))
         session[:edit] = nil  # Clear the edit object from the session object
         render :update do |page|
-          page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.edit.saved", :model=>ui_lookup(:tables=>@table_name), :name=>add_ems.name)
+          page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:tables=>@table_name), :name=>add_ems.name}
         end
       else
         @in_a_form = true
@@ -189,7 +189,7 @@ module EmsCommon
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -265,16 +265,14 @@ module EmsCommon
     when "cancel"
       session[:edit] = nil  # clean out the saved info
       render :update do |page|
-        page.redirect_to :action=>@lastaction, :id=>@ems.id, :display=>session[:ems_display], :flash_msg=>I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>@model.to_s), :name=>@ems.name)
+        page.redirect_to :action=>@lastaction, :id=>@ems.id, :display=>session[:ems_display], :flash_msg=>_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>@model.to_s), :name=>@ems.name}
       end
     when "save"
       update_ems = find_by_id_filtered(@model, params[:id])
       set_record_vars(update_ems)
       if valid_record?(update_ems) && update_ems.save
         update_ems.reload
-        flash = I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>@model.to_s),
-                        :name=>update_ems.name)
+        flash = _("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>@model.to_s), :name=>update_ems.name}
         AuditEvent.success(build_saved_audit(update_ems, @edit))
         session[:edit] = nil  # clean out the saved info
         render :update do |page|
@@ -296,7 +294,7 @@ module EmsCommon
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       set_verify_status
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
@@ -313,7 +311,7 @@ module EmsCommon
             rescue StandardError=>bang
               add_flash("#{bang}", :error)
             else
-              add_flash(I18n.t("flash.credentials.validated"))
+              add_flash(_("Credential validation was successful"))
             end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -520,31 +518,31 @@ module EmsCommon
   def valid_record?(ems)
     @edit[:errors] = Array.new
     if !ems.authentication_password.blank? && ems.authentication_userid.blank?
-      @edit[:errors].push(I18n.t("flash.edit.userid_pwd_required"))
+      @edit[:errors].push(_("User ID must be entered if Password is entered"))
     end
     if @edit[:new][:password] != @edit[:new][:verify]
-      @edit[:errors].push(I18n.t("flash.edit.passwords_mismatch"))
+      @edit[:errors].push(_("Password/Verify Password do not match"))
     end
     if ems.emstype == "rhevm" && @edit[:new][:metrics_password] != @edit[:new][:metrics_verify]
       @edit[:errors].push("C & U Database Login Password and Verify Password fields do not match")
     end
     if ems.is_a?(EmsVmware)
       unless @edit[:new][:host_default_vnc_port_start] =~ /^\d+$/ || @edit[:new][:host_default_vnc_port_start].blank?
-        @edit[:errors].push(I18n.t("flash.edit.field_must_be.numeric", :field=>"Default Host VNC Port Range Start"))
+        @edit[:errors].push(_("%s must be numeric") % "Default Host VNC Port Range Start")
       end
       unless @edit[:new][:host_default_vnc_port_end] =~ /^\d+$/ || @edit[:new][:host_default_vnc_port_end].blank?
-        @edit[:errors].push(I18n.t("flash.edit.field_must_be.numeric", :field=>"Default Host VNC Port Range End"))
+        @edit[:errors].push(_("%s must be numeric") % "Default Host VNC Port Range End")
       end
       unless (@edit[:new][:host_default_vnc_port_start].blank? &&
           @edit[:new][:host_default_vnc_port_end].blank?) ||
           (!@edit[:new][:host_default_vnc_port_start].blank? &&
               !@edit[:new][:host_default_vnc_port_end].blank?)
-        @edit[:errors].push(I18n.t("flash.edit.host_vnc_range_required"))
+        @edit[:errors].push(_("To configure the Host Default VNC Port Range, both start and end ports are required"))
       end
       if !@edit[:new][:host_default_vnc_port_start].blank? &&
           !@edit[:new][:host_default_vnc_port_end].blank?
         if @edit[:new][:host_default_vnc_port_end].to_i < @edit[:new][:host_default_vnc_port_start].to_i
-          @edit[:errors].push(I18n.t("flash.edit.host_vnc_range_invalid"))
+          @edit[:errors].push(_("The Host Default VNC Port Range ending port must be equal to or higher than the starting point"))
         end
       end
     end
@@ -681,8 +679,7 @@ module EmsCommon
 
     if task == "refresh_ems"
       @model.refresh_ems(emss, true)
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>Dictionary::gettext(task, :type=>:task).titleize.gsub("Ems","#{ui_lookup(:tables=>@table_name)}"),
-          :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name))))
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>Dictionary::gettext(task, :type=>:task).titleize.gsub("Ems","#{ui_lookup(:tables=>@table_name)}"), :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name))})
       AuditEvent.success(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
           :message=>"'#{task}' successfully initiated for #{pluralize(emss.length,"#{ui_lookup(:tables=>@table_name)}")}",
           :target_class=>@model.to_s)
@@ -694,7 +691,7 @@ module EmsCommon
         AuditEvent.success(audit)
       end
       @model.destroy_queue(emss)
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Delete", :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name)))) if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete", :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name))}) if @flash_array == nil
     else
       @model.find_all_by_id(emss, :order => "lower(name)").each do |ems|
         id = ems.id
@@ -705,8 +702,7 @@ module EmsCommon
         begin
           ems.send(task.to_sym) if ems.respond_to?(task)    # Run the task
         rescue StandardError => bang
-          add_flash(I18n.t("flash.record.error_during_task",
-                          :model=>@model.to_s, :name=>ems_name, :task=>task) << bang.message,
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>@model.to_s, :name=>ems_name, :task=>task} << bang.message,
                     :error)
           AuditEvent.failure(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
             :message=>"#{ems_name}: Error during '" << task << "': " << bang.message,
@@ -714,14 +710,12 @@ module EmsCommon
         else
           if task == "destroy"
             AuditEvent.success(audit)
-            add_flash(I18n.t("flash.record.deleted",
-                            :model=>ui_lookup(:model=>@model.to_s),
-                            :name=>ems_name))
+            add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>@model.to_s), :name=>ems_name})
             AuditEvent.success(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
               :message=>"#{ems_name}: Delete successful",
               :target_class=>@model.to_s, :target_id=>id)
           else
-            add_flash(I18n.t("flash.record.task_started", :model=>@model.to_s, :name=>ems_name, :task=>task))
+            add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>@model.to_s, :name=>ems_name, :task=>task})
             AuditEvent.success(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
               :message=>"#{ems_name}: '" + task + "' successfully initiated",
               :target_class=>@model.to_s, :target_id=>id)
@@ -738,19 +732,19 @@ module EmsCommon
     if @lastaction == "show_list" # showing a list, scan all selected emss
       emss = find_checked_items
       if emss.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_delete", :model=>ui_lookup(:table=>@table_name)), :error)
+        add_flash(_("No %s were selected for deletion") % ui_lookup(:table=>@table_name), :error)
       end
       process_emss(emss, "destroy") if ! emss.empty?
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Delete", :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name)))) if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete", :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name))}) if @flash_array == nil
     else # showing 1 ems, scan it
       if params[:id] == nil || @model.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:table=>@table_name)), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:table=>@table_name), :error)
       else
         emss.push(params[:id])
       end
       process_emss(emss, "destroy") if ! emss.empty?
       @single_delete = true unless flash_errors?
-      add_flash(I18n.t("flash.record.deleted_for_1_record", :model=>ui_lookup(:tables=>@table_name))) if @flash_array == nil
+      add_flash(_("The selected %s was deleted") % ui_lookup(:tables=>@table_name)) if @flash_array == nil
     end
     if @lastaction == "show_list"
       show_list
@@ -765,20 +759,20 @@ module EmsCommon
     if @lastaction == "show_list" # showing a list, scan all selected emss
       emss = find_checked_items
       if emss.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:table=>@table_name), :task=>"scanning"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:table=>@table_name), :task=>"scanning"}, :error)
       end
       process_emss(emss, "scan")  if ! emss.empty?
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Analysis", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name))))if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Analysis", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name))})if @flash_array == nil
       show_list
       @refresh_partial = "layouts/gtl"
     else # showing 1 ems, scan it
       if params[:id] == nil || @model.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:tables=>@table_name)), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:tables=>@table_name), :error)
       else
         emss.push(params[:id])
       end
       process_emss(emss, "scan")  if ! emss.empty?
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Analysis", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name))))if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Analysis", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name))})if @flash_array == nil
       params[:display] = @display
       show
       if ["vms","hosts","storages"].include?(@display)
@@ -796,20 +790,20 @@ module EmsCommon
     if @lastaction == "show_list" # showing a list, scan all selected emss
       emss = find_checked_items
       if emss.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:table=>@table_name), :task=>"refresh"), :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:table=>@table_name), :task=>"refresh"}, :error)
       end
       process_emss(emss, "refresh_ems") if ! emss.empty?
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Refresh", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name)))) if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Refresh", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name))}) if @flash_array == nil
       show_list
       @refresh_partial = "layouts/gtl"
     else # showing 1 ems, scan it
       if params[:id] == nil || @model.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:table=>@table_name)), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:table=>@table_name), :error)
       else
         emss.push(params[:id])
       end
       process_emss(emss, "refresh_ems") if ! emss.empty?
-      add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>"Refresh", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name))))if @flash_array == nil
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Refresh", :count_model=>pluralize(emss.length,ui_lookup(:tables=>@table_name))})if @flash_array == nil
       params[:display] = @display
       show
       if ["vms","hosts","storages"].include?(@display)

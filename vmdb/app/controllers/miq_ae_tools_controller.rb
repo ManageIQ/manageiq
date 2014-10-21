@@ -28,7 +28,7 @@ class MiqAeToolsController < ApplicationController
     end
 
     if ! @refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -37,7 +37,7 @@ class MiqAeToolsController < ApplicationController
   def log
     @breadcrumbs = Array.new
     @log = $miq_ae_logger.contents(120,1000) if $miq_ae_logger
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning) if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     @lastaction = "log"
     @layout = "miq_ae_logs"
     @msg_title = "AE"
@@ -49,7 +49,7 @@ class MiqAeToolsController < ApplicationController
   def refresh_log
     assert_privileges("refresh_log")
     @log = $miq_ae_logger.contents(120,1000) if $miq_ae_logger
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning) if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("main_div", :partial=>"layouts/log_viewer", :locals=>{:legend_text=>"Last 1000 lines from the Automation log"})
     end
@@ -105,7 +105,7 @@ class MiqAeToolsController < ApplicationController
 
   def cancel_import
     automate_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(I18n.t("flash.automate.datastore_import_cancelled"), :info)
+    add_flash(_("Datastore import was cancelled"), :info)
 
     respond_to do |format|
       format.js { render :json => @flash_array.to_json, :status => 200 }
@@ -127,12 +127,16 @@ class MiqAeToolsController < ApplicationController
 
         stat_options = generate_stat_options(import_stats)
 
-        add_flash(I18n.t("flash.automate.datastore_import_success", stat_options), :info)
+        add_flash(_("Datastore import was successful.
+Namespaces updated/added: %{namespace_stats}
+Classes updated/added: %{class_stats}
+Instances updated/added: %{instance_stats}
+Methods updated/added: %{method_stats}") % stat_options, :info)
       else
-        add_flash(I18n.t("flash.automate.datastore_import_expired"), :error)
+        add_flash(_("Error: Datastore import file upload expired"), :error)
       end
     else
-      add_flash(I18n.t("flash.automate.datastore_import_at_least_one"), :info)
+      add_flash(_("You must select at least one namespace to import"), :info)
     end
 
     respond_to do |format|
@@ -149,7 +153,7 @@ class MiqAeToolsController < ApplicationController
       add_flash("Use the browse button to locate an import file", :warning)
     else
       import_file_upload_id = automate_import_service.store_for_import(upload_file.read)
-      add_flash(I18n.t("flash.service_dialog.upload_successful"), :info)
+      add_flash(_("Import file was uploaded successfully"), :info)
       redirect_options[:import_file_upload_id] = import_file_upload_id
     end
 
@@ -168,15 +172,19 @@ class MiqAeToolsController < ApplicationController
     if params[:upload] && !params[:upload][:datastore].blank?
       begin
         MiqAeDatastore.upload(params[:upload][:datastore])
-        add_flash(I18n.t("flash.automate.datastore_import_success"))
+        add_flash(_("Datastore import was successful.
+Namespaces updated/added: %{namespace_stats}
+Classes updated/added: %{class_stats}
+Instances updated/added: %{instance_stats}
+Methods updated/added: %{method_stats}") % stat_options)
         redirect_to :action => 'import_export', :flash_msg=>@flash_array[0][:message]         # redirect to build the retire screen
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"upload") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
         redirect_to :action => 'import_export', :flash_msg=>@flash_array[0][:message], :flash_error=>true         # redirect to build the retire screen
       end
     else
       @in_a_form = true
-      add_flash(I18n.t("flash.locate_import_file"), :error)
+      add_flash(_("Use the Browse button to locate an Import file"), :error)
 #     render :action=>"import_export"
       import_export
     end
@@ -201,10 +209,10 @@ class MiqAeToolsController < ApplicationController
     session[:ae_task_id] = params[:task_id]
 
     if miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(I18n.t("flash.error_with_stat_message", :task=>"reset", :status=>miq_task.status, :message=>miq_task.message), :error)
+      add_flash(_("Error during %{task}: Status [%{status}] Message [%{message}]") % {:task=>"reset", :status=>miq_task.status, :message=>miq_task.message}, :error)
     else
       self.x_node = "root" if x_active_tree == :ae_tree && x_tree
-      add_flash(I18n.t("flash.automate.reset_to_default"))
+      add_flash(_("All custom classes and instances have been reset to default"))
     end
     render :update do |page|          # Use RJS to update the display
       page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -332,14 +340,14 @@ class MiqAeToolsController < ApplicationController
   end
 
   def valid_resolve_object?
-    add_flash(I18n.t("flash.edit.select_required", :field=>"Starting Class"), :error) if @resolve[:new][:starting_object].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Starting Process"), :error) if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Request"), :error) if @resolve[:new][:object_request].blank?
+    add_flash(_("%s must be selected") % "Starting Class", :error) if @resolve[:new][:starting_object].blank?
+    add_flash(_("%s is required") % "Starting Process", :error) if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
+    add_flash(_("%s is required") % "Request", :error) if @resolve[:new][:object_request].blank?
     AE_MAX_RESOLUTION_FIELDS.times do |i|
       f = ("attribute_" + (i+1).to_s)
       v = ("value_" + (i+1).to_s)
-      add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>f.titleize, :field=>v.titleize), :error) if @resolve[:new][:attrs][i][0].blank? && !@resolve[:new][:attrs][i][1].blank?
-      add_flash(I18n.t("flash.policy.value_missing_for_field", :val=>v.titleize, :field=>f.titleize), :error) if !@resolve[:new][:attrs][i][0].blank? && @resolve[:new][:attrs][i][1].blank?
+      add_flash(_("%{val} missing for %{field}") % {:val=>f.titleize, :field=>v.titleize}, :error) if @resolve[:new][:attrs][i][0].blank? && !@resolve[:new][:attrs][i][1].blank?
+      add_flash(_("%{val} missing for %{field}") % {:val=>v.titleize, :field=>f.titleize}, :error) if !@resolve[:new][:attrs][i][0].blank? && @resolve[:new][:attrs][i][1].blank?
     end
     return !flash_errors?
   end

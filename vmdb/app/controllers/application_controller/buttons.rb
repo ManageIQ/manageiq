@@ -15,7 +15,7 @@ module ApplicationController::Buttons
     assert_privileges("ab_group_reorder")
     case params[:button]
     when "cancel"
-      add_flash(I18n.t("flash.edit.group_reorder_cancelled", :model=>ui_lookup(:model=>"CustomButton")))
+      add_flash(_("%s Group Reorder cancelled") % ui_lookup(:model=>"CustomButton"))
       @edit = session[:edit] = nil  # clean out the saved info
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
       replace_right_cell(x_node)
@@ -40,14 +40,14 @@ module ApplicationController::Buttons
         st.options[:button_order] = button_order
         st.save
       end
-      add_flash(I18n.t("flash.edit.group_reorder_saved", :model=>ui_lookup(:model=>"CustomButton")))
+      add_flash(_("%s Group Reorder saved") % ui_lookup(:model=>"CustomButton"))
       @edit = session[:edit] = nil  # clean out the saved info
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
       replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
     else
       if params[:button] == "reset"
         @changed = session[:changed] = false
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       group_reorder_set_form_vars
       @in_a_form = true
@@ -175,7 +175,7 @@ module ApplicationController::Buttons
     end
     if custom_button.destroy
       AuditEvent.success(audit)
-      add_flash(I18n.t("flash.record.deleted", :model=>ui_lookup(:model=>"CustomButton"), :name=>description))
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"CustomButton"), :name=>description})
       id = x_node.split('_')
       id.pop
       self.x_node = id.join("_")
@@ -235,7 +235,7 @@ module ApplicationController::Buttons
   def ab_group_delete
     assert_privileges("ab_group_delete")
     if x_node.split('_').last == "ub"
-      add_flash(I18n.t("flash.cant_delete_unassigned", :model=>"Unassigned Buttons Group"), :error)
+      add_flash(_("'%s' can not be deleted") % "Unassigned Buttons Group", :error)
       get_node_info
       replace_right_cell(x_node)
       return
@@ -253,7 +253,7 @@ module ApplicationController::Buttons
 
     if custom_button_set.destroy
       AuditEvent.success(audit)
-      add_flash(I18n.t("flash.record.deleted", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>description))
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"CustomButtonSet"), :name=>description})
       id = x_node.split('_')
       id.pop
       self.x_node = id.join("_")
@@ -291,9 +291,7 @@ module ApplicationController::Buttons
         cls = Storage
     end
     obj = cls.find_by_id(params[:id].to_i)
-    @right_cell_text = I18n.t("cell_header.dialog_runner_for_record",
-                              :record=>obj.name,
-                              :button_text=>button.name)
+    @right_cell_text = _("%{record} - \"%{button_text}\"") % {:record=>obj.name, :button_text=>button.name}
     if button.resource_action.dialog_id
       options = Hash.new
       options[:header] = @right_cell_text
@@ -304,9 +302,9 @@ module ApplicationController::Buttons
       begin
         button.invoke(obj)    # Run the task
       rescue StandardError => bang
-        add_flash(I18n.t("flash.automate.custom_button_error", :name=>params[:desc]) << bang.message, :error) # Push msg and error flag
+        add_flash(_("Error executing: \"%s\" ") % params[:desc] << bang.message, :error) # Push msg and error flag
       else
-        add_flash(I18n.t("flash.automate.custom_button_executed", :name=>params[:desc]))
+        add_flash(_("\"%s\" was executed") % params[:desc])
       end
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -323,9 +321,9 @@ module ApplicationController::Buttons
 
   def group_button_cancel(typ)
     if typ == "update"
-      add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model => "CustomButtonSet"), :name => @edit[:current][:name]))
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model => "CustomButtonSet"), :name => @edit[:current][:name]})
     else
-      add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model => "CustomButtonSet")))
+      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "CustomButtonSet"))
     end
     @edit = session[:edit] = nil  # clean out the saved info
     ab_get_node_info(x_node) if x_active_tree == :ab_tree
@@ -336,15 +334,15 @@ module ApplicationController::Buttons
   def group_button_add_save(typ)
     assert_privileges(params[:button] == "add" ? "ab_group_new" : "ab_group_edit")
     if @edit[:new][:name].blank?
-      render_flash(I18n.t("flash.edit.field_required", :field => "Name"), :error)
+      render_flash(_("%s is required") %  "Name", :error)
       return
     end
     if @edit[:new][:description].blank?
-      render_flash(I18n.t("flash.edit.field_required", :field => "Description"), :error)
+      render_flash(_("%s is required") %  "Description", :error)
       return
     end
     if @edit[:new][:button_image].blank? || @edit[:new][:button_image] == 0
-      render_flash(I18n.t("flash.edit.select_required", :selection=>"Button Image"), :error)
+      render_flash(_("%s must be selected") % "Button Image", :error)
       return
     end
     group_set_record_vars(@custom_button_set)
@@ -369,13 +367,13 @@ module ApplicationController::Buttons
         else                  #remove members if nothing was selected
           @custom_button_set.remove_all_children
         end
-        add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:new][:description]))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"CustomButtonSet"), :name=>@edit[:new][:description]})
         @edit = session[:edit] = nil  # clean out the saved info
         ab_get_node_info(x_node) if x_active_tree == :ab_tree
         replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
       else
         @custom_button_set.errors.each do |field, msg|
-          add_flash(I18n.t("flash.error_during", :task=>"edit") << "#{field.to_s.capitalize} #{msg}", :error)
+          add_flash(_("Error during '%s': ") % "edit" << "#{field.to_s.capitalize} #{msg}", :error)
         end
         @lastaction = "automate_button"
         @layout     = "miq_ae_automate_button"
@@ -403,13 +401,13 @@ module ApplicationController::Buttons
           end
         end
 
-        add_flash(I18n.t("flash.add.added", :model => ui_lookup(:model => "CustomButtonSet"), :name => @edit[:new][:description]))
+        add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "CustomButtonSet"), :name => @edit[:new][:description]})
         @edit = session[:edit] = nil  # clean out the saved info
         ab_get_node_info(x_node) if x_active_tree == :ab_tree
         replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
       else
         @custom_button_set.errors.each do |field,msg|
-          add_flash(I18n.t("flash.error_during", :task => "add") << "#{field.to_s.capitalize} #{msg}", :error)
+          add_flash(_("Error during '%s': ") %  "add" << "#{field.to_s.capitalize} #{msg}", :error)
         end
         @lastaction = "automate_button"
         @layout     = "miq_ae_automate_button"
@@ -422,7 +420,7 @@ module ApplicationController::Buttons
   def group_button_reset
     group_set_form_vars
     @changed = session[:changed] = false
-    add_flash(I18n.t("flash.edit.reset"), :warning)
+    add_flash(_("All changes have been reset"), :warning)
     @in_a_form  = true
     @lastaction = "automate_button"
     @layout     = "miq_ae_automate_button"
@@ -448,9 +446,9 @@ module ApplicationController::Buttons
     @changed = (@edit[:new] != @edit[:current])
     if params[:button] == "cancel"
       if typ == "update"
-        add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"CustomButton"), :name=>@edit[:current][:name]))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"CustomButton"), :name=>@edit[:current][:name]})
       else
-        add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"CustomButton")))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"CustomButton"))
       end
       @edit = session[:edit] = nil  # clean out the saved info
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
@@ -491,7 +489,7 @@ module ApplicationController::Buttons
         end
 
         if @custom_button.save
-          add_flash(I18n.t("flash.add.added", :model=>ui_lookup(:model=>"CustomButton"), :name=>@edit[:new][:description]))
+          add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"CustomButton"), :name=>@edit[:new][:description]})
           @edit = session[:edit] = nil  # clean out the saved info
           au = CustomButton.find_by_id(@custom_button.id)
           if @aset && nodes[0].split('-')[1] != "ub" && nodes.length >= 3
@@ -515,7 +513,7 @@ module ApplicationController::Buttons
           replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
         else
           @custom_button.errors.each do |field, msg|
-            add_flash(I18n.t("flash.error_during", :task => "add") <<
+            add_flash(_("Error during '%s': ") %  "add" <<
                       @custom_button.errors.full_message(field, msg), :error)
           end
           @lastaction = "automate_button"
@@ -547,13 +545,13 @@ module ApplicationController::Buttons
         return
       else
         if @custom_button.save
-          add_flash(I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"CustomButton"), :name=>@edit[:new][:description]))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"CustomButton"), :name=>@edit[:new][:description]})
           @edit = session[:edit] = nil  # clean out the saved info
           ab_get_node_info(x_node) if x_active_tree == :ab_tree
           replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
         else
           @custom_button.errors.each do |field,msg|
-            add_flash(I18n.t("flash.error_during", :task=>"edit") << "#{field.to_s.capitalize} #{msg}", :error)
+            add_flash(_("Error during '%s': ") % "edit" << "#{field.to_s.capitalize} #{msg}", :error)
           end
           @breadcrumbs = Array.new
           drop_breadcrumb( {:name=>"Edit of Button", :url=>"/miq_ae_customization/button_edit"} )
@@ -567,7 +565,7 @@ module ApplicationController::Buttons
     elsif params[:button] == "reset"
       button_set_form_vars
       @changed = session[:changed] = false
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       @breadcrumbs = Array.new
       drop_breadcrumb( {:name=>"Edit of Button", :url=>"/miq_ae_customization/button_edit"} )
@@ -613,7 +611,7 @@ module ApplicationController::Buttons
         CustomButtonSet.new :
         CustomButtonSet.find(from_cid(params[:id]))
     if typ == "edit" && x_node.split('_').last == "ub"
-      add_flash(I18n.t("flash.cant_edit_unassigned", :model=>"Unassigned Buttons Group"), :error)
+      add_flash(_("'%s' can not be edited") % "Unassigned Buttons Group", :error)
       get_node_info
       replace_right_cell(x_node)
       return
@@ -714,12 +712,12 @@ module ApplicationController::Buttons
 
   def move_cols_top
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.top", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move top") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.top", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move to the top") %  "fields", :error)
     else
       if first_idx > 0
         @edit[:new][:fields][first_idx..last_idx].reverse.each do |field|
@@ -735,12 +733,12 @@ module ApplicationController::Buttons
 
   def move_cols_bottom
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.bottom", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move bottom") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.bottom", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move to the bottom") %  "fields", :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
         @edit[:new][:fields][first_idx..last_idx].each do |field|
@@ -757,16 +755,16 @@ module ApplicationController::Buttons
   def button_valid?
     name = @edit[:new][:instance_name].blank? ? @edit[:new][:other_name] : @edit[:new][:instance_name]
     if @edit[:new][:name].blank? || @edit[:new][:name].strip == ""
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Button Text"), :error)
+      add_flash(_("%s is required") % "Button Text", :error)
     end
     if @edit[:new][:button_image].blank? || @edit[:new][:button_image] == 0
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"Button Image"), :error)
+      add_flash(_("%s must be selected") % "Button Image", :error)
     end
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Button Hover Text"), :error) if @edit[:new][:description].blank?
+    add_flash(_("%s is required") % "Button Hover Text", :error) if @edit[:new][:description].blank?
 #   add_flash("Object Attribute Name must be entered", :error) if @edit[:new][:target_attr_name].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Starting Process"), :error) if name.blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Request"), :error) if @edit[:new][:object_request].blank?
-    add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Role"), :error) if @edit[:new][:visibility_typ] == "role" && @edit[:new][:roles].blank?
+    add_flash(_("%s is required") % "Starting Process", :error) if name.blank?
+    add_flash(_("%s is required") % "Request", :error) if @edit[:new][:object_request].blank?
+    add_flash(_("At least one %s must be selected") % "Role", :error) if @edit[:new][:visibility_typ] == "role" && @edit[:new][:roles].blank?
     return !flash_errors?
   end
 
@@ -967,7 +965,7 @@ module ApplicationController::Buttons
       record = ServiceTemplate.find_by_id(nodetype[2].split('-').last)
       #saving id of catalogitem to use it in view to build id for right cell
       @sb[:rec_id] = record.id
-      @right_cell_text = I18n.t("cell_header.buttons_for_model_record", :model=>"Buttons", :record=>record.name.split("|").first)
+      @right_cell_text = _("%{model} for \"%{record}\"") % {:model=>"Buttons", :record=>record.name.split("|").first}
       @sb[:applies_to_class] = "ServiceTemplate"
       asets = CustomButtonSet.find_all_by_class_name("ServiceTemplate",record.id)
       @sb[:button_groups] = Array.new
@@ -995,7 +993,7 @@ module ApplicationController::Buttons
       @record = CustomButtonSet.find(from_cid(nodetype[3].split('-').last))
       #saving id of catalogitem to use it in view to build id for right cell
       @sb[:rec_id] = @record.id
-      @right_cell_text = I18n.t("cell_header.model_record",:model=>"Button Group", :name=>@record.name.split("|").first)
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Button Group", :name=>@record.name.split("|").first}
       @sb[:buttons] = Array.new
       button_order = @record[:set_data] && @record[:set_data][:button_order] ? @record[:set_data][:button_order] : nil
       if button_order     # show assigned buttons in order they were saved
@@ -1037,7 +1035,7 @@ module ApplicationController::Buttons
       @resolve[:new][:target_class] = @sb[:target_classes].invert["ServiceTemplate"]
       dialog_id = @temp[:custom_button].resource_action.dialog_id
       @sb[:dialog_label] = dialog_id ? Dialog.find_by_id(dialog_id).label : "No Dialog"
-      @right_cell_text = I18n.t("cell_header.model_record",:model=>"Button",:name=>@temp[:custom_button].name)
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Button", :name=>@temp[:custom_button].name}
     end
     @right_cell_div  = "ab_list"
   end
@@ -1071,18 +1069,18 @@ module ApplicationController::Buttons
       end
       @resolve[:throw_ready] = ready_to_throw
     else
-      add_flash(I18n.t("flash.automate.simulation_unavailable"), :warning)
+      add_flash(_("Simulation unavailable: Required Class \"System/Process\" is missing"), :warning)
     end
   end
 
   def move_cols_up
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move up") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
     else
       if first_idx > 0
         @edit[:new][:fields][first_idx..last_idx].reverse.each do |field|
@@ -1098,12 +1096,12 @@ module ApplicationController::Buttons
 
   def move_cols_down
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move down") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one

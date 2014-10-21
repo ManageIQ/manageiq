@@ -189,7 +189,7 @@ module ApplicationController::Tags
       recs = [params[:id]]
     end
     if recs.length < 1
-      add_flash(I18n.t("flash.button.one_or_more_selected_for_task", :model=>Dictionary::gettext(db.to_s, :type=>:model, :notfound=>:titleize).pluralize, :task=>"Smart Tagging"), :error)
+      add_flash(_("One or more %{model} must be selected to %{task}") % {:model=>Dictionary::gettext(db.to_s, :type=>:model, :notfound=>:titleize).pluralize, :task=>"Smart Tagging"}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
       return
@@ -216,7 +216,7 @@ module ApplicationController::Tags
     @display   = nil
     @in_a_form = true
     session[:changed] = false
-    add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+    add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
     if @explorer && ["service","vm_cloud","vm_infra","vm_or_template"].include?(request.parameters[:controller])
       @refresh_partial = "layouts/tagging"
       replace_right_cell(@sb[:action]) if params[:button]
@@ -241,7 +241,7 @@ module ApplicationController::Tags
   def tagging_edit_tags_cancel
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}")
-    add_flash(I18n.t("flash.task_cancelled", :task=>"Tag Edit"))
+    add_flash(_("%s was cancelled by the user") % "Tag Edit")
     session[:flash_msgs] = @flash_array.dup                   # Put msg in session for next transaction to display
     session[:tag_items] = nil                                 # reset tag_items in session
     if @explorer && ["vm_infra","vm_cloud","service","vm_or_template"].include?(request.parameters[:controller])
@@ -294,9 +294,9 @@ module ApplicationController::Tags
                                       :delete_ids=>@edit[:current][:assignments] - @edit[:new][:assignments]
                                     })
   rescue StandardError => bang
-    add_flash(I18n.t("flash.error_during", :task=>"Save Tags") << bang.message, :error) # Push msg and error flag
+    add_flash(_("Error during '%s': ") % "Save Tags" << bang.message, :error) # Push msg and error flag
   else
-    add_flash(I18n.t("flash.ops.tags_saved"))
+    add_flash(_("Tag edits were successfully saved"))
   end
   private :tagging_save_tags
 

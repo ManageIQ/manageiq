@@ -6,8 +6,8 @@ module OpsController::Settings::Zones
     when "cancel"
       @edit = nil
       @zone = Zone.find_by_id(session[:edit][:zone_id]) if session[:edit] && session[:edit][:zone_id]
-      add_flash((@zone && @zone.id) ? I18n.t("flash.edit.cancelled", :model=>ui_lookup(:table=>"miq_zone"), :name=>@zone.name) :
-          I18n.t("flash.add.cancelled", :model=>ui_lookup(:table=>"miq_zone")))
+      add_flash((@zone && @zone.id) ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:table=>"miq_zone"), :name=>@zone.name} :
+          _("Add of new %s was cancelled by the user") % ui_lookup(:table=>"miq_zone"))
       get_node_info(x_node)
       replace_right_cell(@nodetype)
     when "save", "add"
@@ -16,10 +16,10 @@ module OpsController::Settings::Zones
       return unless load_edit("zone_edit__#{id}","replace_cell__explorer")
       @zone = @edit[:zone_id] ? Zone.find_by_id(@edit[:zone_id]) : Zone.new
       if @edit[:new][:name] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Zone name"), :error)
+        add_flash(_("%s is required") % "Zone name", :error)
       end
       if @edit[:new][:description] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Description"), :error)
+        add_flash(_("%s is required") % "Description", :error)
       end
       if @flash_array != nil
         replace_right_cell("ze")
@@ -48,7 +48,7 @@ module OpsController::Settings::Zones
     when "reset", nil # Reset or first time in
       zone_build_edit_screen
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("ze")
     end
@@ -68,7 +68,7 @@ module OpsController::Settings::Zones
       self.x_node = "z-#{zone.id}"
       get_node_info(x_node)
     else
-      add_flash(I18n.t("flash.record.deleted", :model=>ui_lookup(:model=>"Zone"), :name=>zonename))
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"Zone"), :name=>zonename})
       @sb[:active_tab] = "settings_list"
       self.x_node = "xx-z"
       get_node_info(x_node)

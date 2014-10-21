@@ -21,7 +21,7 @@ class StorageManagerController < ApplicationController
     refresh_status_sm if params[:pressed] == "storage_manager_refresh_status"
 
     if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     elsif @flash_array && @lastaction == "show"
@@ -77,18 +77,18 @@ class StorageManagerController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.add.cancelled", :model=>ui_lookup(:table =>"StorageManager"))
+        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:table =>"StorageManager")
       end
     when "add"
       if @edit[:new][:sm_type].nil?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
+        add_flash(_("%s is required") % "Type", :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
         return
       end
       if @edit[:new][:sm_type].nil? || @edit[:new][:sm_type] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
+        add_flash(_("%s is required") % "Type", :error)
       end
       if !@flash_array
         add_sm = StorageManager.new_of_type(@edit[:new][:sm_type])
@@ -99,7 +99,7 @@ class StorageManagerController < ApplicationController
         AuditEvent.success(build_created_audit(add_sm, @edit))
         session[:edit] = nil  # Clear the edit object from the session object
         render :update do |page|
-          page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.add.added",:model=>ui_lookup(:model=>"StorageManager"),:name=>add_sm.name)
+          page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"StorageManager"), :name=>add_sm.name}
         end
       else
         @in_a_form = true
@@ -117,7 +117,7 @@ class StorageManagerController < ApplicationController
     when "validate"
       # Need to pass in smtype so the proper mixins are loaded.
       if @edit[:new][:sm_type].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
+        add_flash(_("%s is required") % "Type", :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -131,7 +131,7 @@ class StorageManagerController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -178,7 +178,7 @@ class StorageManagerController < ApplicationController
     case params[:button]
     when "cancel"
       session[:edit] = nil  # clean out the saved info
-      flash = I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"StorageManager"), :name=>@sm.name)
+      flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"StorageManager"), :name=>@sm.name}
       render :update do |page|
         page.redirect_to :action=>@lastaction, :id=>@sm.id, :display=>session[:sm_display], :flash_msg=>flash
       end
@@ -190,7 +190,7 @@ class StorageManagerController < ApplicationController
         AuditEvent.success(build_saved_audit(update_sm, @edit))
         session[:edit] = nil  # clean out the saved info
         render :update do |page|
-          page.redirect_to :action=>'show', :id=>@sm.id.to_s, :flash_msg=>I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>"StorageManager"), :name=>update_sm.name)
+          page.redirect_to :action=>'show', :id=>@sm.id.to_s, :flash_msg=>_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"StorageManager"), :name=>update_sm.name}
         end
         return
       else
@@ -208,7 +208,7 @@ class StorageManagerController < ApplicationController
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       set_verify_status
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
@@ -225,7 +225,7 @@ class StorageManagerController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -414,7 +414,7 @@ class StorageManagerController < ApplicationController
     if @lastaction == "show_list"
       sms = find_checked_items
       if sms.empty?
-        add_flash(I18n.t("flash.button.no_records_selected", :model=>ui_lookup(:model=>"StorageManager"), :button=>display_name), :error)
+        add_flash(_("No %{model} were selected to %{button}") % {:model=>ui_lookup(:model=>"StorageManager"), :button=>display_name}, :error)
       else
         process_sms(sms, method)
       end
@@ -426,7 +426,7 @@ class StorageManagerController < ApplicationController
 
     else # showing 1 Storage Manager
       if params[:id].nil? || StorageManager.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:model=>"StorageManager")), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:model=>"StorageManager"), :error)
         show_list
         @refresh_partial = "layouts/gtl"
       else
@@ -449,14 +449,13 @@ class StorageManagerController < ApplicationController
       begin
         StorageManager.refresh_inventory(sms, true)
       rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during",
-                          :task=>task) << bang.message,
+          add_flash(_("Error during '%s': ") % task << bang.message,
                     :error)
           AuditEvent.failure(:userid=>session[:userid],:event=>"storage_manager_#{task}",
             :message=>"Error during '" << task << "': " << bang.message,
             :target_class=>"StorageManager", :target_id=>id)
        else
-        add_flash(I18n.t("flash.record.task_initiated_for_model", :task=>Dictionary::gettext(task, :type=>:task).titleize, :count_model=>pluralize(sms.length,"Storage Manager")))
+        add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>Dictionary::gettext(task, :type=>:task).titleize, :count_model=>pluralize(sms.length,"Storage Manager")})
         AuditEvent.success(:userid=>session[:userid],:event=>"storage_manager_#{task}",
             :message=>"'#{task}' successfully initiated for #{pluralize(sms.length,"Storage Manager")}",
             :target_class=>"StorageManager")
@@ -471,8 +470,7 @@ class StorageManagerController < ApplicationController
         begin
           sm.send(task.to_sym) if sm.respond_to?(task)    # Run the task
         rescue StandardError => bang
-          add_flash(I18n.t("flash.record.error_during_task",
-                          :model=>ui_lookup(:model=>"StorageManager"), :name=>sm_name, :task=>task) << bang.message,
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>ui_lookup(:model=>"StorageManager"), :name=>sm_name, :task=>task} << bang.message,
                     :error)
           AuditEvent.failure(:userid=>session[:userid],:event=>"storage_manager_#{task}",
             :message=>"#{sm_name}: Error during '" << task << "': " << bang.message,
@@ -480,12 +478,12 @@ class StorageManagerController < ApplicationController
         else
           if task == "destroy"
             AuditEvent.success(audit)
-            add_flash(I18n.t("flash.record.deleted", :model=>ui_lookup(:model=>"StorageManager"), :name=>sm_name))
+            add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"StorageManager"), :name=>sm_name})
             AuditEvent.success(:userid=>session[:userid],:event=>"storage_manager_#{task}",
               :message=>"#{sm_name}: Delete successful",
               :target_class=>"StorageManager", :target_id=>id)
           else
-            add_flash(I18n.t("flash.record.task_started", :model=>ui_lookup(:model=>"StorageManager"), :name=>sm_name, :task=>task))
+            add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"StorageManager"), :name=>sm_name, :task=>task})
            AuditEvent.success(:userid=>session[:userid],:event=>"storage_manager_#{task}",
               :message=>"#{sm_name}: '" + task + "' successfully initiated",
               :target_class=>"StorageManager", :target_id=>id)

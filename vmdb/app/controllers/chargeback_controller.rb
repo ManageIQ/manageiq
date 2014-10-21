@@ -69,9 +69,9 @@ class ChargebackController < ApplicationController
 
     cb_rates_list
     @right_cell_text = case x_active_tree
-    when :cb_rates_tree       then I18n.t("cell_header.all_model_records",:model=>ui_lookup(:models=>"ChargebackRate"))
-    when :cb_assignments_tree then I18n.t("cell_header.all_model_records",:model=>"Assignments")
-    when :cb_reports_tree     then I18n.t("cell_header.all_model_records",:model=>"Saved Chargeback Reports")
+    when :cb_rates_tree       then _("All %s") % ui_lookup(:models=>"ChargebackRate")
+    when :cb_assignments_tree then _("All %s") % "Assignments"
+    when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
     end
     get_node_info(x_node)
 
@@ -108,8 +108,8 @@ class ChargebackController < ApplicationController
     assert_privileges(params[:pressed]) if params[:pressed]
     case params[:button]
     when "cancel"
-      add_flash("#{!@sb[:rate] || @sb[:rate].id.blank? ? I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"ChargebackRate")) :
-        I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"ChargebackRate"), :name=>@sb[:rate].description)}")
+      add_flash("#{!@sb[:rate] || @sb[:rate].id.blank? ? _("Add of new %s was cancelled by the user") % ui_lookup(:model=>"ChargebackRate") :
+        _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"ChargebackRate"), :name=>@sb[:rate].description}}")
       get_node_info(x_node)
       @sb[:rate] = @sb[:rate_details] = nil
       @edit = session[:edit] = nil  # clean out the saved info
@@ -120,7 +120,7 @@ class ChargebackController < ApplicationController
       return unless load_edit("cbrate_edit__#{id}","replace_cell__chargeback")
       @sb[:rate] = @edit[:rate] if @edit && @edit[:rate]
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Description"), :error)
+        add_flash(_("%s is required") % "Description", :error)
         replace_right_cell
         return
       end
@@ -132,9 +132,7 @@ class ChargebackController < ApplicationController
 
         if @sb[:rate].save
           AuditEvent.success(build_saved_audit(@sb[:rate], @edit))
-          add_flash(I18n.t("flash.add.added",
-                          :model=>ui_lookup(:model=>"ChargebackRate"),
-                          :name=>@sb[:rate].description))
+          add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"ChargebackRate"), :name=>@sb[:rate].description})
           @edit = session[:edit] = nil  # clean out the saved info
           session[:changed] =  @changed = false
           get_node_info(x_node)
@@ -158,9 +156,7 @@ class ChargebackController < ApplicationController
         @sb[:rate_details].each {|detail| rate_detail_error = true if detail.save == false}
         if rate_detail_error==false && @sb[:rate].save
           AuditEvent.success(build_saved_audit(@sb[:rate], @edit))
-          add_flash(I18n.t("flash.edit.saved",
-                          :model=>ui_lookup(:model=>"ChargebackRate"),
-                          :name=>@sb[:rate].description))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"ChargebackRate"), :name=>@sb[:rate].description})
           @edit = session[:edit] = nil  # clean out the saved info
           @changed = false
           get_node_info(x_node)
@@ -234,7 +230,7 @@ class ChargebackController < ApplicationController
       cb_rate_set_form_vars
       @in_a_form = true
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell
     end
@@ -255,7 +251,7 @@ class ChargebackController < ApplicationController
     @sb[:selected_rate_details] = @record.chargeback_rate_details
     @sb[:selected_rate_details].sort!{|a,b| [a[:group].downcase,a[:description].downcase]<=>[b[:group].downcase,b[:description].downcase]}
     if @record == nil
-      redirect_to :action=>"cb_rates_list", :flash_msg=>I18n.t("flash.error_no_longer_exists"), :flash_error=>true
+      redirect_to :action=>"cb_rates_list", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return
     end
   end
@@ -267,19 +263,19 @@ class ChargebackController < ApplicationController
     if !params[:id] # showing a list
       rates = find_checked_items
       if rates.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_delete", :model=>ui_lookup(:models=>"ChargebackRate")), :error)
+        add_flash(_("No %s were selected for deletion") % ui_lookup(:models=>"ChargebackRate"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
-      add_flash(I18n.t("flash.record.deleted_for_records", :model=>ui_lookup(:models=>"ChargebackRate")), :info, true) if ! flash_errors?
+      add_flash(_("The selected %s were deleted") % ui_lookup(:models=>"ChargebackRate"), :info, true) if ! flash_errors?
       cb_rates_list
-      @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>x_node,:model=>ui_lookup(:models=>"ChargebackRate"))
+      @right_cell_text = _("%{typ} %{model}") % {:typ=>x_node, :model=>ui_lookup(:models=>"ChargebackRate")}
       replace_right_cell([:cb_rates])
     else # showing 1 rate, delete it
       if params[:id] == nil || ChargebackRate.find_by_id(params[:id]).nil?
-        add_flash(I18n.t("flash.no_longer_exists", :model=>ui_lookup(:model=>"ChargebackRate")), :error)
+        add_flash(_("%s no longer exists") %  ui_lookup(:model => "ChargebackRate"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
@@ -288,10 +284,10 @@ class ChargebackController < ApplicationController
       end
       cb_rate = ChargebackRate.find_by_id(params[:id])
       process_cb_rates(rates, "destroy")  if !rates.empty?
-      add_flash(I18n.t("flash.record.deleted_for_1_record", :model=>ui_lookup(:model=>"ChargebackRate")), :info, true) if ! flash_errors?
+      add_flash(_("The selected %s was deleted") % ui_lookup(:model=>"ChargebackRate"), :info, true) if ! flash_errors?
       self.x_node = "xx-#{cb_rate.rate_type}"
       cb_rates_list
-      @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>x_node.split('-').last,:model=>ui_lookup(:models=>"ChargebackRate"))
+      @right_cell_text = _("%{typ} %{model}") % {:typ=>x_node.split('-').last, :model=>ui_lookup(:models=>"ChargebackRate")}
       replace_right_cell([:cb_rates])
     end
   end
@@ -310,7 +306,7 @@ class ChargebackController < ApplicationController
   def cb_assign_update
     if params[:button] == "reset"
       get_node_info(x_node)
-      add_flash(I18n.t("flash.edit.reset"),:warning)
+      add_flash(_("All changes have been reset"),:warning)
       replace_right_cell
     else
       return unless load_edit("cbassign_edit__#{x_node}","replace_cell__chargeback")
@@ -319,12 +315,12 @@ class ChargebackController < ApplicationController
       begin
         ChargebackRate.set_assignments(rate_type, @edit[:set_assignments])
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"Rate assignments") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "Rate assignments" << bang.message, :error)
         render :update do |page|                    # Use RJS to update the display
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
       else
-        add_flash(I18n.t("flash.edit.task_saved", :task=>"Rate Assignments"))
+        add_flash(_("%s saved") % "Rate Assignments")
         get_node_info(x_node)
         replace_right_cell
       end
@@ -352,7 +348,7 @@ class ChargebackController < ApplicationController
     end
     @right_cell_text ||= "Saved Chargeback Report [#{rr.name}]"
     if rr.userid != session[:userid]
-      add_flash(I18n.t("flash.report.not_authorized_for_user"), :error)
+      add_flash(_("Report is not authorized for the logged in user"), :error)
       @temp[:saved_reports] = cb_rpts_get_all_reps(id.split('-')[1])
       return
     else
@@ -361,7 +357,7 @@ class ChargebackController < ApplicationController
       @report = rr.report_results
       session[:rpt_task_id] = nil
       if @report.blank?
-        add_flash(I18n.t("flash.report.not_found_schedule_failed", :name=>format_timezone(report.last_run_on,Time.zone,"gtl")), :error)
+        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") % format_timezone(report.last_run_on,Time.zone,"gtl"), :error)
         @temp[:saved_reports] = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
         rep = MiqReport.find_by_id(rr.miq_report_id)
         if x_active_tree == :cb_reports
@@ -380,7 +376,7 @@ class ChargebackController < ApplicationController
         return
       else
         if @report.table && @report.table.data.length == 0
-          add_flash(I18n.t("flash.report.no_records_found"), :warning)
+          add_flash(_("No records found for this report"), :warning)
         else
           @html = report_first_page(rr)              # Get the first page of the results
           unless @report.graph.blank?
@@ -401,23 +397,23 @@ class ChargebackController < ApplicationController
     if x_active_tree == :cb_rates_tree
       if node == "root"
         @sb[:rate] = @record = @sb[:selected_rate_details] = nil
-        @right_cell_text = I18n.t("cell_header.all_model_records",:model=>ui_lookup(:models=>"ChargebackRate"))
+        @right_cell_text = _("All %s") % ui_lookup(:models=>"ChargebackRate")
       elsif ["xx-Compute","xx-Storage"].include?(node)
         @sb[:rate] = @record = @sb[:selected_rate_details] = nil
-        @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>x_node.split('-').last,:model=>ui_lookup(:models=>"ChargebackRate"))
+        @right_cell_text = _("%{typ} %{model}") % {:typ=>x_node.split('-').last, :model=>ui_lookup(:models=>"ChargebackRate")}
         cb_rates_list
       else
         @record = ChargebackRate.find(from_cid(node.split('_').last.split('-').last))
         @sb[:action] = nil
-        @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>@record.rate_type,:model=>ui_lookup(:model=>"ChargebackRate"),:name=>@record.description)
+        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>@record.rate_type, :model=>ui_lookup(:model=>"ChargebackRate"), :name=>@record.description}
         cb_rate_show
       end
     elsif x_active_tree == :cb_assignments_tree
       if ["xx-Compute","xx-Storage"].include?(node)
         cb_assign_set_form_vars
-        @right_cell_text = I18n.t("cell_header.type_of_model_records",:typ=>node.split('-').last,:model=>"Rate Assignments")
+        @right_cell_text = _("%{typ} %{model}") % {:typ=>node.split('-').last, :model=>"Rate Assignments"}
       else
-        @right_cell_text = I18n.t("cell_header.all_model_records",:model=>"Assignments")
+        @right_cell_text = _("All %s") % "Assignments"
       end
     elsif x_active_tree == :cb_reports_tree
       @nodetype = node.split("-")[0]
@@ -429,16 +425,16 @@ class ChargebackController < ApplicationController
       if x_node == "root"
         cb_rpt_build_folder_nodes
         @right_cell_div = "reports_list_div"
-        @right_cell_text = I18n.t("cell_header.all_model_records",:model=>"Saved Chargeback Reports")
+        @right_cell_text = _("All %s") % "Saved Chargeback Reports"
       elsif nodes_len == 2
         # On a saved report node
         cb_rpts_show_saved_report
         if @report
           s = MiqReportResult.find_by_id(from_cid(nodes.last.split('-').last))
           @right_cell_div = "reports_list_div"
-          @right_cell_text = I18n.t("cell_header.model_record",:model=>"Saved Chargeback Report",:name=>format_timezone(s.last_run_on,Time.zone,"gtl"))
+          @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Saved Chargeback Report", :name=>format_timezone(s.last_run_on,Time.zone,"gtl")}
         else
-          add_flash(I18n.t("flash.report.selected_no_longer_exists", :typ=>"Saved Chargeback"), :warning)
+          add_flash(_("Selected %s Report no longer exists") % "Saved Chargeback", :warning)
           nodes_len = 2  # Force to show the parent node
           self.x_node = nodes[0..1].join("_")
           cb_rpts_build_tree # Rebuild tree
@@ -451,10 +447,10 @@ class ChargebackController < ApplicationController
           @sb[:sel_saved_rep_id] = nodes[1]
           @right_cell_div = "reports_list_div"
           miq_report = MiqReport.find(@sb[:miq_report_id])
-          @right_cell_text = I18n.t("cell_header.model_record",:model=>"Saved Chargeback Reports",:name=>miq_report.name)
+          @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Saved Chargeback Reports", :name=>miq_report.name}
           @sb[:parent_reports] = nil  if !@sb[:saved_reports].blank?    # setting it to nil so saved reports can be displayed, unless all saved reports were deleted
         else
-          add_flash(I18n.t("flash.report.selected_no_longer_exists", :typ=>"Chargeback"), :warning)
+          add_flash(_("Selected %s Report no longer exists") % "Chargeback", :warning)
           nodes_len = 1  # Force to show the parent node
           self.x_node = nodes[0]
           @temp[:saved_reports] = nil
@@ -487,7 +483,7 @@ class ChargebackController < ApplicationController
       @sb[:last_run_on][s.last_run_on] = "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}"
     end
     @sb[:tree_typ] = "reports"
-    @right_cell_text = I18n.t("cell_header.model_record",:model=>"Reports",:name=>miq_report.name)
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Reports", :name=>miq_report.name}
     return saved_reports
   end
 

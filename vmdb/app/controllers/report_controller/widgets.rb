@@ -44,9 +44,9 @@ module ReportController::Widgets
       when "cancel"
         @widget = MiqWidget.find_by_id(session[:edit][:widget_id]) if session[:edit] && session[:edit][:widget_id]
         if !@widget || @widget.id.blank?
-          add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"MiqWidget")))
+          add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqWidget"))
         else
-          add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"MiqWidget"), :name=>@widget.name))
+          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqWidget"), :name=>@widget.name})
         end
         get_node_info
         @widget = nil
@@ -61,9 +61,7 @@ module ReportController::Widgets
         widget_set_record_vars(widget)
         if widget_validate_entries && widget.save_with_shortcuts(@edit[:new][:shortcuts].to_a)
           AuditEvent.success(build_saved_audit(widget, @edit))
-          add_flash(I18n.t("flash.edit.saved",
-                           :model=>ui_lookup(:model=>"MiqWidget"),
-                           :name=>widget.title))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqWidget"), :name=>widget.title})
           params[:id] = @widget.id.to_s   # reset id in params for show
                                            # Build the filter expression and attach widget to schedule filter
           exp = Hash.new
@@ -83,7 +81,7 @@ module ReportController::Widgets
           end
         end
       else
-        add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
         @widget = params[:id] && params[:id] != "new" ? MiqWidget.find_by_id(params[:id]) :
             MiqWidget.new # Get existing or new record
         widget_set_form_vars
@@ -99,8 +97,7 @@ module ReportController::Widgets
     assert_privileges("widget_delete")
     widgets = find_checked_items
     if params[:id] != nil && MiqWidget.find_by_id(params[:id]).nil?
-      add_flash(I18n.t("flash.record.no_longer_exists",
-                      :model=>ui_lookup(:models=>"MiqWidget")),
+      add_flash(_("%s no longer exists") % ui_lookup(:models=>"MiqWidget"),
                 :error)
     else
       widgets.push(params[:id]) if params[:id]
@@ -109,12 +106,10 @@ module ReportController::Widgets
     process_widgets(widgets, "destroy") unless widgets.empty?
     unless flash_errors?
       if widgets.length > 1
-        add_flash(I18n.t("flash.selected_records_deleted",
-                        :model=>ui_lookup(:models=>"MiqWidget")),
+        add_flash(_("The selected %s were deleted") % ui_lookup(:models=>"MiqWidget"),
                   :info, true)
       else
-        add_flash(I18n.t("flash.selected_record_deleted",
-                        :model=>ui_lookup(:model=>"MiqWidget")),
+        add_flash(_("The selected %s was deleted") % ui_lookup(:model=>"MiqWidget"),
                   :info, true)
       end
     end
@@ -129,9 +124,9 @@ module ReportController::Widgets
     begin
       w.queue_generate_content
     rescue StandardError => bang
-      add_flash(I18n.t("flash.report.widget_generation_error") << bang.message, :error)
+      add_flash(_("Widget content generation error: ") << bang.message, :error)
     else
-      add_flash(I18n.t("flash.report.widget_generation_started"))
+      add_flash(_("Content generation for this Widget has been initiated"))
     end
     #refresh widget show to update buttons
     widget_refresh
@@ -251,7 +246,7 @@ module ReportController::Widgets
     if x_active_tree == :widgets_tree
       # dont need to set these for report show screen
       @right_cell_div     = "widget_list"
-      @right_cell_text  ||= I18n.t("cell_header.all_model_records", :model=>"MiqWidget")
+      @right_cell_text  ||= _("All %s") % "MiqWidget"
     end
 
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
@@ -265,25 +260,19 @@ module ReportController::Widgets
     @sb[:nodes] = x_node.split('-')
     if @sb[:nodes].length == 1
       get_all_widgets
-      @right_cell_text = I18n.t("cell_header.all_model_records",
-                                :model=>ui_lookup(:models=>"MiqWidget"))
+      @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqWidget")
       @right_cell_div  = "widget_list"
     elsif @sb[:nodes].length == 2
       # If a folder node is selected
       get_all_widgets(WIDGET_CONTENT_TYPE[@sb[:nodes][1]])
       @right_cell_div  = "widget_list"
-      @right_cell_text = I18n.t("cell_header.type_of_model_records",
-                                :typ=>WIDGET_TYPES[@sb[:nodes][1]].singularize,
-                                :model=>ui_lookup(:models=>"MiqWidget"))
+      @right_cell_text = _("%{typ} %{model}") % {:typ=>WIDGET_TYPES[@sb[:nodes][1]].singularize, :model=>ui_lookup(:models=>"MiqWidget")}
     else
       @record = @widget = MiqWidget.find_by_id(from_cid(@sb[:nodes].last))
       @temp[:widget_running] = true if ["running","queued"].include?(@widget.status.downcase)
       typ = WIDGET_CONTENT_TYPE.invert[@widget.content_type]
       content_type = WIDGET_TYPES[typ].singularize
-      @right_cell_text = I18n.t("cell_header.type_of_model_record",
-                                :typ=>content_type,
-                                :name=>@widget.title,
-                                :model=>ui_lookup(:model=>"MiqWidget"))
+      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>content_type, :name=>@widget.title, :model=>ui_lookup(:model=>"MiqWidget")}
       @right_cell_div  = "widget_list"
       @sb[:wtype] = WIDGET_CONTENT_TYPE.invert[@widget.content_type]
       @sb[:col_order] = Array.new
@@ -756,21 +745,21 @@ module ReportController::Widgets
   # Validate widget entries before updating record
   def widget_validate_entries
     if ["r", "c"].include?(@sb[:wtype]) && (!@edit[:new][:repfilter] || @edit[:new][:repfilter] == "")
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"A Report"), :error)
+      add_flash(_("%s must be selected") % "A Report", :error)
     end
     if @sb[:wtype] == "rf" && @edit[:new][:visibility_typ] == "role" && @edit[:new][:roles].blank?
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"A Role"), :error)
+      add_flash(_("%s must be selected") % "A Role", :error)
     end
     if @sb[:wtype] == "r" && @edit[:new][:pivotby1] == "<<< Nothing >>>"
-      add_flash(I18n.t("flash.edit.select_required", :selection=>"At least one Column"), :error)
+      add_flash(_("%s must be selected") % "At least one Column", :error)
     end
     if @sb[:wtype] == "m"
       if @edit[:new][:shortcuts].empty?
-        add_flash(I18n.t("flash.edit.select_required", :selection=>"At least one Shortcut"), :error)
+        add_flash(_("%s must be selected") % "At least one Shortcut", :error)
       else
         @edit[:new][:shortcuts].each do |s|
           if s.last.blank?
-            add_flash(I18n.t("flash.edit.field_required", :field=>"Shortcut description"), :error)
+            add_flash(_("%s is required") % "Shortcut description", :error)
           end
         end
       end

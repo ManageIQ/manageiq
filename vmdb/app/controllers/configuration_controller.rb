@@ -55,7 +55,7 @@ class ConfigurationController < ApplicationController
     edit_record if params[:pressed] == "tp_edit"
 
     if ! @refresh_partial && @flash_array == nil # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -253,9 +253,9 @@ class ConfigurationController < ApplicationController
           @css.merge!(@settings[:display])
           @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
           set_user_time_zone
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user => session[:username]))
+          add_flash(_("User Interface settings saved for User %s") %  session[:username])
         else
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_session"))
+          add_flash(_("User Interface settings saved for this session"))
         end
         edit
         render :action => "show"
@@ -279,9 +279,9 @@ class ConfigurationController < ApplicationController
           db_user.settings[:display].delete(:vm_summary_cool)     # :vm_summary_cool moved to :views hash
           db_user.settings[:views].delete(:vm_summary_cool)       # :views/:vm_summary_cool changed to :dashboards
           db_user.save
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_user", :user => session[:username]))
+          add_flash(_("User Interface settings saved for User %s") %  session[:username])
         else
-          add_flash(I18n.t("flash.configuration.ui_settings_saved_for_session"))
+          add_flash(_("User Interface settings saved for this session"))
         end
         edit
         render :action => "show"
@@ -299,7 +299,7 @@ class ConfigurationController < ApplicationController
             s.save
           end
         end
-        add_flash(I18n.t("flash.configuration.default_filter_saved"))
+        add_flash(_("Default Filters saved successfully"))
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
@@ -316,7 +316,7 @@ class ConfigurationController < ApplicationController
             s.save
           end
         end
-        add_flash(I18n.t("flash.configuration.default_filter_saved"))
+        add_flash(_("Default Filters saved successfully"))
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
@@ -328,7 +328,7 @@ class ConfigurationController < ApplicationController
       if @update.validate                                           # Have VMDB class validate the settings
         @update.save                                              # Save other settings for current server
         AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
-        add_flash(I18n.t("flash.configuration.config_settings_saved"))
+        add_flash(_("Configuration settings saved"))
         edit
         render :action => "show"
       else
@@ -342,7 +342,7 @@ class ConfigurationController < ApplicationController
       end
     elsif params["reset"]
       edit
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       render :action => "show"
     end
   end
@@ -424,7 +424,7 @@ class ConfigurationController < ApplicationController
     set_form_vars
     @tp_restricted = true if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
     title = (@timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator") ? "Time Profile" : "Edit"
-    add_flash(I18n.t("flash.configuration.global_time_profile_cannot_edit")) if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
+    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
     session[:changed] = false
     @in_a_form = true
     drop_breadcrumb( {:name=>"#{title} '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
@@ -437,29 +437,23 @@ class ConfigurationController < ApplicationController
     if !params[:id] # showing a list, scan all selected timeprofiles
       timeprofiles = find_checked_items
       if timeprofiles.empty?
-        add_flash(I18n.t("flash.no_records_selected_for_delete", :model=>ui_lookup(:models=>"TimeProfile")), :error)
+        add_flash(_("No %s were selected for deletion") % ui_lookup(:models=>"TimeProfile"), :error)
       else
         selected_timeprofiles = TimeProfile.find_all_by_id(timeprofiles)
         selected_timeprofiles.each do |tp|
           if tp.description == "UTC"
             timeprofiles.delete(tp.id.to_s)
-            add_flash(I18n.t("flash.cant_delete_default",
-                             :model => ui_lookup(:model => "TimeProfile"),
-                             :name  => tp.description),
+            add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "TimeProfile"), :name  => tp.description},
                       :error)
           elsif tp.profile_type == "global" &&
               session[:userrole] != "super_administrator" &&
               session[:userrole] != "administrator"
             timeprofiles.delete(tp.id.to_s)
-            add_flash(I18n.t("flash.configuration.global_time_profile_cannot_delete",
-                             :name  => tp.description,
-                             :model => ui_lookup(:models => "TimeProfile")),
+            add_flash(_("\"%{name}\": Global %{model} cannot be deleted") % {:name  => tp.description, :model => ui_lookup(:models => "TimeProfile")},
                       :error)
           elsif !tp.miq_reports.empty?
             timeprofiles.delete(tp.id.to_s)
-            add_flash(I18n.t("flash.configuration.time_profile_in_use",
-                             :name      => tp.description,
-                             :rep_count => pluralize(tp.miq_reports.count, "report")),
+            add_flash(_("\"%{name}\": In use by %{rep_count}, cannot be deleted") % {:name      => tp.description, :rep_count => pluralize(tp.miq_reports.count, "report")},
                       :error)
           end
         end
@@ -558,20 +552,20 @@ class ConfigurationController < ApplicationController
     timeprofile_get_form_vars
     case params[:button]
     when "cancel"
-      add_flash(I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"TimeProfile")))
+      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"TimeProfile"))
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
         page.redirect_to :action=>'change_tab', :typ=>"timeprofiles", :tab=>4
       end
     when "add"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Description"), :error)
+        add_flash(_("%s is required") % "Description", :error)
       end
       if @edit[:new][:profile][:days].length <= 0
-        add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Day"), :error)
+        add_flash(_("At least one %s must be selected") % "Day", :error)
       end
       if @edit[:new][:profile][:hours].length <= 0
-        add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Hour"), :error)
+        add_flash(_("At least one %s must be selected") % "Hour", :error)
       end
       if @flash_array != nil
         drop_breadcrumb( {:name=>"Add New Time Profile", :url=>"/configuration/timeprofile_edit"} )
@@ -584,7 +578,7 @@ class ConfigurationController < ApplicationController
       begin
         @timeprofile.save!
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"add") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
         @in_a_form = true
         drop_breadcrumb( {:name=>"Add New Time Profile", :url=>"/configuration/timeprofile_edit"} )
         render :update do |page|
@@ -592,9 +586,7 @@ class ConfigurationController < ApplicationController
         end
       else
         AuditEvent.success(build_created_audit(@timeprofile, @edit))
-        add_flash(I18n.t("flash.add.added",
-                        :model=>ui_lookup(:model=>"TimeProfile"),
-                        :name=>@timeprofile.description))
+        add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"TimeProfile"), :name=>@timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
         render :update do |page|
           page.redirect_to :action=>'change_tab', :typ=>"timeprofiles", :tab=>4
@@ -607,7 +599,7 @@ class ConfigurationController < ApplicationController
     assert_privileges("tp_edit")
     timeprofile_get_form_vars
     if params[:button] == "cancel"
-      add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"TimeProfile"), :name=>@timeprofile.description))
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"TimeProfile"), :name=>@timeprofile.description})
       params[:id] = @timeprofile.id.to_s
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -616,7 +608,7 @@ class ConfigurationController < ApplicationController
     elsif params[:button] == "reset"
       @edit[:new] = copy_hash(@edit[:current])
       params[:id] = @timeprofile.id
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
       drop_breadcrumb( {:name=>"Edit '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
@@ -625,13 +617,13 @@ class ConfigurationController < ApplicationController
       end
     elsif params[:button] == "save"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Description"), :error)
+        add_flash(_("%s is required") % "Description", :error)
       end
       if @edit[:new][:profile][:days].length <= 0
-        add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Day"), :error)
+        add_flash(_("At least one %s must be selected") % "Day", :error)
       end
       if @edit[:new][:profile][:hours].length <= 0
-        add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"Hour"), :error)
+        add_flash(_("At least one %s must be selected") % "Hour", :error)
       end
       unless @flash_array.nil?
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
@@ -646,8 +638,7 @@ class ConfigurationController < ApplicationController
       begin
         timeprofile.save!
       rescue StandardError => bang
-        add_flash(I18n.t("flash.record.error_during_task",
-                        :model=>"TimeProfile", :name=>timeprofile.description, :task=>"save") << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>"TimeProfile", :name=>timeprofile.description, :task=>"save"} << bang.message,
                   :error)
         @in_a_form = true
         drop_breadcrumb( {:name=>"Edit '#{timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
@@ -656,9 +647,7 @@ class ConfigurationController < ApplicationController
         end
       else
         AuditEvent.success(build_created_audit(timeprofile, @edit))
-        add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"TimeProfile"),
-                        :name=>timeprofile.description))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"TimeProfile"), :name=>timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
         render :update do |page|
           page.redirect_to :action=>'change_tab', :typ=>"timeprofiles", :tab=>4, :id =>@timeprofile.id.to_s

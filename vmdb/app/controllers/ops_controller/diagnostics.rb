@@ -26,11 +26,11 @@ module OpsController::Diagnostics
       svr = MiqServer.find(@sb[:selected_server_id])
       svr.restart_queue
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task=>"Appliance restart") << bang.message, :error)
+      add_flash(_("Error during '%s': ") % "Appliance restart" << bang.message, :error)
     else
       audit = {:event=>"restart_server", :message=>"Server '#{svr.name}' restarted", :target_id=>svr.id, :target_class=>"MiqServer", :userid => session[:userid]}
       AuditEvent.success(audit)
-      add_flash(I18n.t("flash.ops.diagnostics.appliance_restarted"))
+      add_flash(_("CFME Appliance restart initiated successfully"))
     end
     render :update do |page|
       page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -49,11 +49,11 @@ module OpsController::Diagnostics
     #   svr = MiqServer.find(@sb[:selected_server_id])
     #   Object.const_get("Miq#{wtype.capitalize}Worker").restart_workers(@sb[:selected_server_id])
     # rescue StandardError => bang
-    #   add_flash(I18n.t("flash.ops.diagnostics.error_during_worker_restart", :wtype=>wtype) << bang.message, :error)
+    #   add_flash(_("Error during %s workers restart: ") % wtype << bang.message, :error)
     # else
     #   audit = {:event=>"restart_workers", :message=>"#{wtype} Workers on Server '#{svr.name}' restarted", :target_id=>svr.id, :target_class=>"MiqServer", :userid => session[:userid]}
     #   AuditEvent.success(audit)
-    #   add_flash(I18n.t("flash.ops.diagnostics.workers_restarted", :wtype=>wtype))
+    #   add_flash(_("%s workers restart initiated successfully") % wtype)
     # end
     when "ems_vimbroker"
       pm_reset_broker
@@ -62,11 +62,11 @@ module OpsController::Diagnostics
         svr = MiqServer.find(@sb[:selected_server_id])
         worker.restart
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"workers restart") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "workers restart" << bang.message, :error)
       else
         audit = {:event=>"restart_workers", :message=>"Worker on Server '#{svr.name}' restarted", :target_id=>svr.id, :target_class=>"MiqWorker", :userid => session[:userid]}
         AuditEvent.success(audit)
-        add_flash(I18n.t("flash.ops.diagnostics.worker_1_restarted", :wtype=>wtype))
+        add_flash(_("'%s' Worker restart initiated successfully") % wtype)
       end
     end
     @refresh_partial = "layouts/gtl"
@@ -91,7 +91,7 @@ module OpsController::Diagnostics
     case params[:button]
     when "cancel"
       @edit = session[:edit] = nil
-      add_flash(I18n.t("flash.ops.diagnostics.edit_log_depot_cancelled"))
+      add_flash(_("Edit Log Depot settings was cancelled by the user"))
       @record = nil
       diagnostics_set_form_vars
       replace_right_cell(x_node)
@@ -120,13 +120,13 @@ module OpsController::Diagnostics
           @record.save!
         end
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"Save") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "Save" << bang.message, :error)
         @changed = true
         render :update do |page|                    # Use RJS to update the display
           page.replace_html("diagnostics_collect_logs", :partial=>"layouts/edit_log_depot_settings")
         end
       else
-        add_flash(I18n.t("flash.ops.diagnostics.log_depot_saved"))
+        add_flash(_("Log Depot Settings were saved"))
         @edit = nil
         @record = nil
         diagnostics_set_form_vars
@@ -140,9 +140,9 @@ module OpsController::Diagnostics
       begin
         LogFile.verify_log_depot_settings(settings)
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"Validate") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
       else
-        add_flash(I18n.t("flash.ops.diagnostics.log_depot_validated"))
+        add_flash(_("Log Depot Settings were validated"))
       end
       @changed = (@edit[:new] != @edit[:current])
       render :update do |page|                    # Use RJS to update the display
@@ -153,7 +153,7 @@ module OpsController::Diagnostics
       log_depot_build_edit_screen
       if params[:button] == "reset"
         #diagnostics
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("log_depot_edit")
     end
@@ -190,7 +190,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_log")
     @log = $log.contents(120,1000)
     @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("diagnostics_evm_log", :partial=>"diagnostics_evm_log_tab")
       page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -201,7 +201,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_audit_log")
     @log = $audit_log.contents(nil,1000)
     @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("diagnostics_audit_log", :partial=>"diagnostics_audit_log_tab")
       page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -212,7 +212,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_production_log")
     @log = $rails_log.contents(nil,1000)
     @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("diagnostics_production_log", :partial=>"diagnostics_production_log_tab")
       page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -241,7 +241,7 @@ module OpsController::Diagnostics
   def cu_repair
     return unless load_edit("curepair_edit__new","replace_cell__explorer")
     if @edit[:new][:end_date].to_time < @edit[:new][:start_date].to_time
-      add_flash(I18n.t("flash.ops.diagnostics.end_date_error"),:error)
+      add_flash(_("End Date cannot be greater than Start Date"),:error)
     else
       # converting string to time, and then converting into user selected timezone
       from =  "#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}:00".to_time.in_time_zone(@edit[:new][:timezone])
@@ -250,10 +250,10 @@ module OpsController::Diagnostics
       begin
         Metric::Capture.perf_capture_gap_queue(from, to, selected_zone)
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"C & U Gap Collection") << bang.message, :error)  # Push msg and error flag
+        add_flash(_("Error during '%s': ") % "C & U Gap Collection" << bang.message, :error)  # Push msg and error flag
       else
         @edit[:new][:start_date] = @edit[:new][:end_date] = ""
-        add_flash(I18n.t("flash.ops.diagnostics.task_initiated", :task=>"C & U Gap Collection"))
+        add_flash(_("%s successfully initiated") % "C & U Gap Collection")
       end
     end
 
@@ -273,9 +273,9 @@ module OpsController::Diagnostics
     begin
       MiqReplicationWorker.reset_replication
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task=>"Reset/synchronization process") << bang.message, :error)
+      add_flash(_("Error during '%s': ") % "Reset/synchronization process" << bang.message, :error)
     else
-      add_flash(I18n.t("flash.ops.diagnostics.task_initiated", :task=>"Reset/synchronization process"))
+      add_flash(_("%s successfully initiated") % "Reset/synchronization process")
     end
     render :update do |page|
       page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -324,18 +324,18 @@ module OpsController::Diagnostics
 
   def validate_uri_settings
     if @edit[:new][:uri_prefix].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Type"), :error)
+      add_flash(_("%s is required") % "Type", :error)
     elsif @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
+      add_flash(_("%s is required") % "URI", :error)
     elsif @edit[:new][:requires_credentials]
       if @edit[:new][:uri].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"URI"), :error)
+        add_flash(_("%s is required") % "URI", :error)
       elsif @edit[:new][:log_userid].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Username"), :error)
+        add_flash(_("%s is required") % "Username", :error)
       elsif @edit[:new][:log_password].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Password"), :error)
+        add_flash(_("%s is required") % "Password", :error)
       elsif @edit[:new][:log_password] != @edit[:new][:log_verify]
-        add_flash(I18n.t("flash.edit.passwords_mismatch"), :error)
+        add_flash(_("Password/Verify Password do not match"), :error)
       end
     end
   end
@@ -367,7 +367,7 @@ module OpsController::Diagnostics
     schedule_validate?(@schedule)
     if @schedule.valid? && !flash_errors? && @schedule.save
       @schedule.run_adhoc_db_backup
-      add_flash(I18n.t("flash.ops.diagnostics.task_initiated", :task=>"Database Backup"))
+      add_flash(_("%s successfully initiated") % "Database Backup")
       diagnostics_set_form_vars
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
@@ -392,9 +392,9 @@ module OpsController::Diagnostics
     begin
       MiqSchedule.run_adhoc_db_gc(:userid => session[:userid])
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task=>"Database Garbage Collection") << bang.message, :error)
+      add_flash(_("Error during '%s': ") % "Database Garbage Collection" << bang.message, :error)
     else
-      add_flash(I18n.t("flash.ops.diagnostics.task_initiated", :task=>"Database Garbage Collection"))
+      add_flash(_("%s successfully initiated") % "Database Garbage Collection")
     end
     render :update do |page|                    # Use RJS to update the display
       page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
@@ -407,7 +407,7 @@ module OpsController::Diagnostics
     begin
       MiqReportResult.delete_by_userid(params[:userid])
     rescue StandardError => bang
-      add_flash(I18n.t("flash.ops.diagnostics.error_during_orphaned_record_delete", :userid=>params[:userid]) << bang.message, :error)
+      add_flash(_("Error during Orphaned Records delete for user %s: ") % params[:userid] << bang.message, :error)
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page << "miqSparkle(false);"
@@ -415,7 +415,7 @@ module OpsController::Diagnostics
     else
       audit = {:event=>"orphaned_record_delete", :message=>"Orphaned Records deleted for userid [#{params[:userid]}]", :target_id=>params[:userid], :target_class=>"MiqReport", :userid => session[:userid]}
       AuditEvent.success(audit)
-      add_flash(I18n.t("flash.ops.diagnostics.orphaned_records_deleted", :userid=>params[:userid]))
+      add_flash(_("Orphaned Records for userid %s were successfully deleted") % params[:userid])
       orphaned_records_get
       render :update do |page|                    # Use JS to update the display
         page.replace_html 'diagnostics_orphaned_data', :partial => 'diagnostics_savedreports'
@@ -686,11 +686,11 @@ module OpsController::Diagnostics
       begin
         ms.reset_vim_cache_queue              # Run the task
       rescue StandardError => bang
-        add_flash(I18n.t("flash.error_during", :task=>"Clear Connection Broker cache") << bang.message, :error)
+        add_flash(_("Error during '%s': ") % "Clear Connection Broker cache" << bang.message, :error)
       else
         audit = {:event=>"reset_broker", :message=>"Connection Broker cache cleared successfully", :target_id=>ms.id, :target_class=>"ExtManagementSystem", :userid => session[:userid]}
         AuditEvent.success(audit)
-        add_flash(I18n.t("flash.ops.diagnostics.connection_broker_cache_cleared"))
+        add_flash(_("Connection Broker cache cleared successfully"))
       end
     end
     pm_get_workers
@@ -704,16 +704,16 @@ module OpsController::Diagnostics
     klass    = obj == "svr" ? MiqServer : Zone
     instance = @temp[:selected_server] = klass.find(from_cid(id).to_i)
     if !instance.active?
-      add_flash(I18n.t("flash.ops.diagnostics.log_collection_error_no_server_started"), :error)
+      add_flash(_("Cannot start log collection, requires a started server"), :error)
     elsif instance.log_collection_active_recently?
-      add_flash(I18n.t("flash.ops.diagnostics.log_collection_error_already_in_progress"), :error)
+      add_flash(_("Cannot start log collection, a log collection is already in progress within this scope"), :error)
     else
       begin
         instance.synchronize_logs(session[:userid], options)
       rescue StandardError => bang
-        add_flash(I18n.t("flash.ops.diagnostics.log_collection_error") << bang.message, :error)
+        add_flash(_("Log collection error returned: ") << bang.message, :error)
       else
-        add_flash(I18n.t("flash.ops.diagnostics.log_collection_initiated", :object_type => klass.name, :name => instance.display_name))
+        add_flash(_("Log collection for CFME %{object_type} %{name} has been initiated") % {:object_type => klass.name, :name => instance.display_name})
       end
     end
     get_node_info(x_node)
@@ -750,7 +750,7 @@ module OpsController::Diagnostics
   def role_start
     assert_privileges("role_start")
     if @sb[:diag_selected_model] != "AssignedServerRole"
-      add_flash(I18n.t("flash.ops.diagnostics.task_not_allowed", :task=>"Start"), :error)
+      add_flash(_("%s is not allowed for the selected item") % "Start", :error)
     else
       asr = AssignedServerRole.find(@sb[:diag_selected_id])
       begin
@@ -758,7 +758,7 @@ module OpsController::Diagnostics
       rescue StandardError => bang
         add_flash(bang, :error)
       else
-        add_flash(I18n.t("flash.ops.diagnostics.task_initiated", :task=>"Start"))
+        add_flash(_("%s successfully initiated") % "Start")
       end
     end
     refresh_screen
@@ -767,7 +767,7 @@ module OpsController::Diagnostics
   def role_suspend
     assert_privileges("role_suspend")
     if @sb[:diag_selected_model] != "AssignedServerRole"
-      add_flash(I18n.t("flash.ops.diagnostics.task_not_allowed", :task=>"Suspend"), :error)
+      add_flash(_("%s is not allowed for the selected item") % "Suspend", :error)
     else
       asr = AssignedServerRole.find(@sb[:diag_selected_id])
       begin
@@ -775,7 +775,7 @@ module OpsController::Diagnostics
       rescue StandardError => bang
         add_flash(bang, :error)
       else
-        add_flash(I18n.t("flash.ops.diagnostics.task_initiated", :task=>"Suspend"), :error)
+        add_flash(_("%s successfully initiated") % "Suspend", :error)
       end
     end
     refresh_screen
@@ -786,12 +786,12 @@ module OpsController::Diagnostics
     assert_privileges("delete_server")
     servers = Array.new
     if @sb[:diag_selected_id].nil?
-      add_flash(I18n.t("flash.record.no_longer_exists", :model=>ui_lookup(:table=>"evm_server")), :error)
+      add_flash(_("%s no longer exists") % ui_lookup(:table=>"evm_server"), :error)
     else
       servers.push(@sb[:diag_selected_id])
     end
     process_servers(servers, "destroy") if ! servers.empty?
-    add_flash(I18n.t("flash.record.deleted_for_1_record", :model=>ui_lookup(:table=>"evm_server"))) if @flash_array == nil
+    add_flash(_("The selected %s was deleted") % ui_lookup(:table=>"evm_server")) if @flash_array == nil
     refresh_screen
   end
 
@@ -806,15 +806,14 @@ module OpsController::Diagnostics
       begin
         svr.send(task.to_sym) if svr.respond_to?(task)    # Run the task
       rescue StandardError => bang
-        add_flash(I18n.t("flash.record.error_during_task",
-                        :model=>ui_lookup(:model=>"MiqServer"), :name=>svr_name, :task=>task) << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>ui_lookup(:model=>"MiqServer"), :name=>svr_name, :task=>task} << bang.message,
                   :error)
       else
         if task == "destroy"
           AuditEvent.success(audit)
-          add_flash(I18n.t("flash.record.deleted", :model=>ui_lookup(:model=>"MiqServer"), :name=>"#{svr_name} [#{svr.id}]"))
+          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"MiqServer"), :name=>"#{svr_name} [#{svr.id}]"})
         else
-          add_flash(I18n.t("flash.record.task_started", :model=>ui_lookup(:model=>"MiqServer"), :name=>"#{svr_name} [#{svr.id}]", :task=>task))
+          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"MiqServer"), :name=>"#{svr_name} [#{svr.id}]", :task=>task})
         end
       end
     end
@@ -823,7 +822,7 @@ module OpsController::Diagnostics
   def promote_server
     assert_privileges("promote_server")
     if @sb[:diag_selected_model] != "AssignedServerRole"
-      add_flash(I18n.t("flash.ops.diagnostics.setting_priority_not_allowed"), :error)
+      add_flash(_("Setting priority is not allowed for the selected item"), :error)
     else
       asr = AssignedServerRole.find(@sb[:diag_selected_id])
       begin
@@ -832,8 +831,7 @@ module OpsController::Diagnostics
         add_flash(bang, :error)
       else
         priority = asr.priority == 1 ? "primary" : (asr.priority == 2 ? "secondary" : "normal")
-        add_flash(I18n.t("flash.ops.diagnostics.priority_set_for_server",
-            :name=>asr.miq_server.name, :priority=>priority, :role_description=>asr.server_role.description))
+        add_flash(_("CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\"") % {:name=>asr.miq_server.name, :priority=>priority, :role_description=>asr.server_role.description})
       end
     end
     refresh_screen
@@ -842,7 +840,7 @@ module OpsController::Diagnostics
   def demote_server
     assert_privileges("demote_server")
     if @sb[:diag_selected_model] != "AssignedServerRole"
-      add_flash(I18n.t("flash.ops.diagnostics.setting_priority_not_allowed"), :error)
+      add_flash(_("Setting priority is not allowed for the selected item"), :error)
     else
       asr = AssignedServerRole.find(@sb[:diag_selected_id])
       begin
@@ -851,8 +849,7 @@ module OpsController::Diagnostics
         add_flash(bang, :error)
       else
         priority = asr.priority == 1 ? "primary" : (asr.priority == 2 ? "secondary" : "normal")
-        add_flash(I18n.t("flash.ops.diagnostics.priority_set_for_server",
-            :name=>asr.miq_server.name, :priority=>priority, :role_description=>asr.server_role.description))
+        add_flash(_("CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\"") % {:name=>asr.miq_server.name, :priority=>priority, :role_description=>asr.server_role.description})
       end
     end
     refresh_screen
@@ -936,8 +933,8 @@ module OpsController::Diagnostics
       cu_repair_set_form_vars if @sb[:active_tab] == "diagnostics_cu_repair"
       diagnostics_server_list if @sb[:active_tab] == "diagnostics_server_list"
       @right_cell_text = @sb[:my_zone] == @temp[:selected_server].name ?
-        I18n.t("cell_header.type_of_model_record_current",:typ=>"Diagnostics",:name=>@temp[:selected_server].description,:model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)) :
-        I18n.t("cell_header.type_of_model_record",:typ=>"Diagnostics",:name=>@temp[:selected_server].description,:model=>ui_lookup(:model=>@temp[:selected_server].class.to_s))
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>@temp[:selected_server].description, :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>@temp[:selected_server].description, :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
     elsif x_node == "root"
       if @sb[:active_tab] == "diagnostics_zones"
         @zones = Zone.in_my_region.all
@@ -993,25 +990,25 @@ module OpsController::Diagnostics
       elsif @sb[:active_tab] == "diagnostics_server_list"
       diagnostics_server_list
       end
-      @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Diagnostics",:name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",:model=>ui_lookup(:model=>"MiqRegion"))
+      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
     elsif active_node && active_node.split('-').first == "svr"
       @temp[:selected_server] ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       if @sb[:selected_server_id] == @sb[:my_server_id]
         if @sb[:active_tab] == "diagnostics_evm_log"
           @log = $log.contents(120,1000)
-          add_flash(I18n.t("flash.evm_log_unavailable"), :warning) if @log.blank?
+          add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
           @msg_title = "CFME"
           @refresh_action = "refresh_log"
           @download_action = "fetch_log"
         elsif @sb[:active_tab] == "diagnostics_audit_log"
           @log = $audit_log.contents(nil,1000)
-          add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+          add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
           @msg_title = "Audit"
           @refresh_action = "refresh_audit_log"
           @download_action = "fetch_audit_log"
         elsif @sb[:active_tab] == "diagnostics_production_log"
           @log = $rails_log.contents(nil,1000)
-          add_flash(I18n.t("flash.evm_log_unavailable"), :warning)  if @log.blank?
+          add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
           @msg_title = @sb[:rails_log]
           @refresh_action = "refresh_production_log"
           @download_action = "fetch_production_log"
@@ -1055,8 +1052,8 @@ module OpsController::Diagnostics
         end
       end
       @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
-        I18n.t("cell_header.type_of_model_record_current",:typ=>"Diagnostics",:name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]",:model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)) :
-        I18n.t("cell_header.type_of_model_record",:typ=>"Diagnostics",:name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]",:model=>ui_lookup(:model=>@temp[:selected_server].class.to_s))
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
     end
   end
 

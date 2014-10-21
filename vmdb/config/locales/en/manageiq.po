@@ -1,0 +1,1245 @@
+# English translations for manageiq package.
+# Template file for strings which can be localized in the ManageIQ Application.
+# This file is distributed under the same license as the Manageiq package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: manageiq master\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2014-10-20 17:32+0200\n"
+"Last-Translator: Jozef Zigmund <jzigmund@redhat.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"\n"
+
+msgid " %s Assignments"
+msgstr ""
+
+msgid " (Names with \"%s\")"
+msgstr ""
+
+msgid "\"#{db}Performance.#{c}\""
+msgstr ""
+
+msgid "\"%s\" was executed"
+msgstr ""
+
+msgid "\"%s\": VM does not have BlackBox."
+msgstr ""
+
+msgid "\"%s\": VM needs to be in a Powered Off state to delete the BlackBox."
+msgstr ""
+
+msgid "\"%s\": cannot be removed, has vms or hosts"
+msgstr ""
+
+msgid "\"%{action}\" for %{model} \"%{name}\""
+msgstr ""
+
+msgid "\"%{field}\" %{model} can not be deleted"
+msgstr ""
+
+msgid "\"%{name}\": Global %{model} cannot be deleted"
+msgstr ""
+
+msgid "\"%{name}\": In use by %{rep_count}, cannot be deleted"
+msgstr ""
+
+msgid "\"%{record}\": %{task} successfully initiated"
+msgstr ""
+
+msgid "%s"
+msgstr ""
+
+msgid "%s Button not yet implemented"
+msgstr ""
+
+msgid "%s Client Connections"
+msgstr ""
+
+msgid "%s Credentials validated successfully"
+msgstr ""
+
+msgid "%s Discovery returned: "
+msgstr ""
+
+msgid "%s Group Reorder"
+msgstr ""
+
+msgid "%s Group Reorder cancelled"
+msgstr ""
+
+msgid "%s Group Reorder saved"
+msgstr ""
+
+msgid "%s Policy Assignment"
+msgstr ""
+
+msgid "%s Policy Simulation"
+msgstr ""
+
+msgid "%s Request was Submitted"
+msgstr ""
+
+msgid "%s Settings"
+msgstr ""
+
+msgid "%s Summary"
+msgstr ""
+
+msgid "%s Utilization"
+msgstr ""
+
+msgid "%s are not in the current region and will be skipped"
+msgstr ""
+
+msgid "%s cancelled by user"
+msgstr ""
+
+msgid "%s file saved"
+msgstr ""
+
+msgid "%s has been initiated for the selected Servers"
+msgstr ""
+
+msgid "%s is currently being used in the Display Filter"
+msgstr ""
+
+msgid "%s is not allowed for the selected item"
+msgstr ""
+
+msgid "%s is not in the current region and will be skipped"
+msgstr ""
+
+msgid "%s is required"
+msgstr ""
+
+msgid "%s must be alphanumeric characters and underscores without spaces"
+msgstr ""
+
+msgid "%s must be an integer"
+msgstr ""
+
+msgid "%s must be configured"
+msgstr ""
+
+msgid "%s must be entered to perform LDAP Group Look Up"
+msgstr ""
+
+msgid "%s must be numeric"
+msgstr ""
+
+msgid "%s must be numeric and greater than zero"
+msgstr ""
+
+msgid "%s must be selected"
+msgstr ""
+
+msgid "%s must be unique for this group"
+msgstr ""
+
+msgid "%s must not be 'action' or 'controller'"
+msgstr ""
+
+msgid "%s no longer exists"
+msgstr ""
+
+msgid "%s no longer exists in the database"
+msgstr ""
+
+msgid "%s saved"
+msgstr ""
+
+msgid "%s set to default"
+msgstr ""
+
+msgid "%s should be unique"
+msgstr ""
+
+msgid "%s successfully initiated"
+msgstr ""
+
+msgid "%s tab is not available unless a sort field has been selected"
+msgstr ""
+
+msgid "%s tab is not available unless at least 1 time field has been selected"
+msgstr ""
+
+msgid "%s tab is not available until at least 1 field has been selected"
+msgstr ""
+
+msgid "%s was cancelled by the user"
+msgstr ""
+
+msgid "%{action} \"%{item_name}\" for %{model} \"%{name}\""
+msgstr ""
+
+msgid "%{field1} and %{field2} fields can't be blank"
+msgstr ""
+
+msgid "%{field} '%{value}' is already in use"
+msgstr ""
+
+msgid "%{field} Value Error: %{msg}"
+msgstr ""
+
+msgid "%{field} cannot contain \"%{character}\""
+msgstr ""
+
+msgid "%{model} \"%{name}\""
+msgstr ""
+
+msgid "%{model} \"%{name}\" %{typ}"
+msgstr ""
+
+msgid "%{model} \"%{name}\" already exists"
+msgstr ""
+
+msgid "%{model} \"%{name}\" successfully added to Service \"%{to_name}\""
+msgstr ""
+
+msgid "%{model} \"%{name}\" was added"
+msgstr ""
+
+msgid "%{model} \"%{name}\" was saved"
+msgstr ""
+
+msgid "%{model} \"%{name}\" was successfully loaded"
+msgstr ""
+
+msgid "%{model} \"%{name}\": %{task} successfully initiated"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Delete successful"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Error during '%{task}': "
+msgstr ""
+
+msgid "%{model} for \"%{name}\""
+msgstr ""
+
+msgid "%{model} for \"%{record}\""
+msgstr ""
+
+msgid "%{model} for %{group} \"%{name}\""
+msgstr ""
+
+msgid "%{model} for role \"%{role}\" was saved"
+msgstr ""
+
+msgid "%{model} must contain at least one %{field}"
+msgstr ""
+
+msgid "%{model}: %{task} successfully initiated"
+msgstr ""
+
+msgid "%{record} - \"%{button_text}\""
+msgstr ""
+
+msgid "%{tab} tab is not available until %{field} field has been selected"
+msgstr ""
+
+msgid "%{tab} tab is not available until %{field} has been configured"
+msgstr ""
+
+msgid "%{task} %{model}"
+msgstr ""
+
+msgid "%{task} %{model} \"%{name}\""
+msgstr ""
+
+msgid "%{task} does not apply because you selected at least one %{model}"
+msgstr ""
+
+msgid "%{task} does not apply to selected %{model}"
+msgstr ""
+
+msgid "%{task} initiated for %{count_model} from the CFME Database"
+msgstr ""
+
+msgid "%{typ} %{model}"
+msgstr ""
+
+msgid "%{typ} %{model} \"%{name}\""
+msgstr ""
+
+msgid "%{typ} %{model} \"%{name}\" (current)"
+msgstr ""
+
+msgid ""
+"%{typ} Request was Submitted, you will be notified when your %{title} are read"
+"y"
+msgstr ""
+
+msgid ""
+"%{typ} Request was re-submitted, you will be notified when your %{title} are r"
+"eady"
+msgstr ""
+
+msgid "%{typ} in %{model} \"%{name}\""
+msgstr ""
+
+msgid ""
+"%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone"
+"}\""
+msgstr ""
+
+msgid "%{val} missing for %{field}"
+msgstr ""
+
+msgid "'%s' Worker restart initiated successfully"
+msgstr ""
+
+msgid "'%s' can not be deleted"
+msgstr ""
+
+msgid "'%s' can not be edited"
+msgstr ""
+
+msgid "A %s must be chosen to commit this expression element"
+msgstr ""
+
+msgid "A %s must be entered to commit this expression element"
+msgstr ""
+
+msgid "A User Group must be assigned a Role"
+msgstr ""
+
+msgid "A User must be assigned to a Group"
+msgstr ""
+
+msgid "A valid expression must be present"
+msgstr ""
+
+msgid "Actions for Policy Event \"%s\" were saved"
+msgstr ""
+
+msgid "Add VM \"%s\" to a Service was cancelled by the user"
+msgstr ""
+
+msgid "Add of new %s was cancelled by the user"
+msgstr ""
+
+msgid "Adding a new %s"
+msgstr ""
+
+msgid "Alert Profile \"%s\" assignments succesfully saved"
+msgstr ""
+
+msgid "All %s"
+msgstr ""
+
+msgid "All %s Indexes"
+msgstr ""
+
+msgid "All %{model} - %{group}"
+msgstr ""
+
+msgid "All %{typ} %{model}"
+msgstr ""
+
+msgid "All changes have been reset"
+msgstr ""
+
+msgid "All custom classes and instances have been reset to default"
+msgstr ""
+
+msgid "All selected %s are not in the current region"
+msgstr ""
+
+msgid "Amazon Settings validation was successful"
+msgstr ""
+
+msgid "Analysis Affinity was saved"
+msgstr ""
+
+msgid "At least %{num} %{model} must be selected for %{action}"
+msgstr ""
+
+msgid "At least 2 %{model} must be selected for %{action}"
+msgstr ""
+
+msgid "At least one %s must be configured"
+msgstr ""
+
+msgid "At least one %s must be selected"
+msgstr ""
+
+msgid "At least one Selection must be checked"
+msgstr ""
+
+msgid "At least one item must be entered to create Analysis Profile"
+msgstr ""
+
+msgid "At least one option must be selected to reconfigure"
+msgstr ""
+
+msgid "Automate button %s has been cleared"
+msgstr ""
+
+msgid "Automate button %{btn_num} has been set to %{btn_txt}"
+msgstr ""
+
+msgid "Automation Error: "
+msgstr ""
+
+msgid "Automation Simulation has been run"
+msgstr ""
+
+msgid "Best Fit %s"
+msgstr ""
+
+msgid "Button not yet implemented"
+msgstr ""
+
+msgid "CFME Appliance restart initiated successfully"
+msgstr ""
+
+msgid "CFME Database settings validation was successful"
+msgstr ""
+
+msgid "CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
+msgstr ""
+
+msgid ""
+"Can not delete folder, one or more reports in the selected folder are not owne"
+"d by your group"
+msgstr ""
+
+msgid "Cannot create Request Info, error: "
+msgstr ""
+
+msgid ""
+"Cannot start log collection, a log collection is already in progress within th"
+"is scope"
+msgstr ""
+
+msgid "Cannot start log collection, requires a started server"
+msgstr ""
+
+msgid "Capacity & Utilization data for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Capacity and Utilization Collection settings saved"
+msgstr ""
+
+msgid "Change %s value to submit reconfigure request"
+msgstr ""
+
+msgid "Changing the UI Workers Count will immediately restart the webserver"
+msgstr ""
+
+msgid "Check for updates"
+msgstr ""
+
+msgid "Choose the type of custom variables to be imported"
+msgstr ""
+
+msgid "Class Schema Sequence was saved"
+msgstr ""
+
+msgid "Compare %s"
+msgstr ""
+
+msgid "Condition \"%{cond_name}\" has been removed from Policy \"%{pol_name}\""
+msgstr ""
+
+msgid "Configuration settings saved"
+msgstr ""
+
+msgid "Connection Broker cache cleared successfully"
+msgstr ""
+
+msgid "Console access failed: %s"
+msgstr ""
+
+msgid "Content generation for this Widget has been initiated"
+msgstr ""
+
+msgid "Copy %s was cancelled by the user"
+msgstr ""
+
+msgid "Copy selected %s was saved"
+msgstr ""
+
+msgid "Create Snapshot for %{model} \"%{name}\" was started"
+msgstr ""
+
+msgid "Credential validation returned: %s"
+msgstr ""
+
+msgid "Credential validation was successful"
+msgstr ""
+
+msgid "Credentials/Settings saved successfully"
+msgstr ""
+
+msgid "Current %{model} \"%{name}\" cannot be deleted"
+msgstr ""
+
+msgid "Custom Image file \"%s\" successfully uploaded"
+msgstr ""
+
+msgid "Custom Image must be a %s file"
+msgstr ""
+
+msgid "Custom Image successfully removed"
+msgstr ""
+
+msgid "Custom Support URL and Description both must be entered."
+msgstr ""
+
+msgid "Customer Information successfully saved"
+msgstr ""
+
+msgid "Dashboard Sequence was saved"
+msgstr ""
+
+msgid "Data validated successfully"
+msgstr ""
+
+msgid ""
+"Database settings successfully saved, they will take effect upon CFME Server r"
+"estart"
+msgstr ""
+
+msgid "Datastore import was cancelled"
+msgstr ""
+
+msgid ""
+"Datastore import was successful.\n"
+"Namespaces updated/added: %{namespace_stats}\n"
+"Classes updated/added: %{class_stats}\n"
+"Instances updated/added: %{instance_stats}\n"
+"Methods updated/added: %{method_stats}"
+msgstr ""
+
+msgid "Default %{model} \"%{name}\" can not be deleted"
+msgstr ""
+
+msgid "Default %{model} \"%{name}\" can not be edited"
+msgstr ""
+
+msgid "Default %{model} \"%{name}\" cannot be deleted"
+msgstr ""
+
+msgid "Default Filters saved successfully"
+msgstr ""
+
+msgid "Deploy of SmartProxy to Host \"%s\" was cancelled"
+msgstr ""
+
+msgid "Deploy of SmartProxy to Host \"%s\" was initiated"
+msgstr ""
+
+msgid "Double Click on 'New Folder' to edit"
+msgstr ""
+
+msgid "Drift for %{model} \"%{name}\""
+msgstr ""
+
+msgid "E-mail address '%s' is not valid"
+msgstr ""
+
+msgid "Edit CFME Server Relationship for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Edit Log Depot settings was cancelled by the user"
+msgstr ""
+
+msgid "Edit Sequence of User Groups was cancelled by the user"
+msgstr ""
+
+msgid "Edit Tags for %s"
+msgstr ""
+
+msgid ""
+"Edit aborted!  CFME does not support the browser's back button or access from "
+"multiple tabs or windows of the same browser.  Please close any duplicate sess"
+"ions before proceeding."
+msgstr ""
+
+msgid "Edit of %s was cancelled by the user"
+msgstr ""
+
+msgid "Edit of %{model} \"%{name}\" was cancelled by the user"
+msgstr ""
+
+msgid "Edit of %{model} for role \"%{role}\" was cancelled by the user"
+msgstr ""
+
+msgid "Edit of Class Schema Sequence was cancelled by the user"
+msgstr ""
+
+msgid "Edit of Customer Information was cancelled"
+msgstr ""
+
+msgid "Edit of Dashboard Sequence was cancelled by the user"
+msgstr ""
+
+msgid "Edit of Priority Order was cancelled by the user"
+msgstr ""
+
+msgid "Edit of credentials for selected %s was cancelled by the user"
+msgstr ""
+
+msgid "Edit of schema for %{model} \"%{name}\" was cancelled by the user"
+msgstr ""
+
+msgid "Edit policy assignments was cancelled by the user"
+msgstr ""
+
+msgid "Editing %{model} \"%{name}\""
+msgstr ""
+
+msgid "Editing %{model} for \"%{name}\""
+msgstr ""
+
+msgid "Editing %{model} sequence for \"%{name}\""
+msgstr ""
+
+msgid "End Date cannot be greater than Start Date"
+msgstr ""
+
+msgid "Entry Point must be given for field \"%s\"."
+msgstr ""
+
+msgid "Error building timeline "
+msgstr ""
+
+msgid "Error details: %s"
+msgstr ""
+
+msgid "Error during %s delete from the CFME Database"
+msgstr ""
+
+msgid "Error during %s: "
+msgstr ""
+
+msgid "Error during %{task}: Status [%{status}] Message [%{message}]"
+msgstr ""
+
+msgid "Error during '%s': "
+msgstr ""
+
+msgid "Error during Orphaned Records delete for user %s: "
+msgstr ""
+
+msgid "Error during Sysprep \"%s\" file upload: "
+msgstr ""
+
+msgid "Error during sending test email: "
+msgstr ""
+
+msgid ""
+"Error during upload: incorrect Dialog format, only service dialogs can be impo"
+"rted"
+msgstr ""
+
+msgid "Error during upload: one of the DialogField types is not supported"
+msgstr ""
+
+msgid "Error executing: \"%s\" "
+msgstr ""
+
+msgid "Error occured when queuing action: %s"
+msgstr ""
+
+msgid "Error on line %{line_num}: %{err_txt}"
+msgstr ""
+
+msgid "Error retrieving LDAP info: "
+msgstr ""
+
+msgid "Error: Datastore import file upload expired"
+msgstr ""
+
+msgid "Error: ImportFileUpload expired"
+msgstr ""
+
+msgid "Error: Record no longer exists in the database"
+msgstr ""
+
+msgid "Error: Widget import file upload expired"
+msgstr ""
+
+msgid "Error: the file uploaded is not of the supported format"
+msgstr ""
+
+msgid "Export generation returned: Status [%{status}] Message [%{message}]"
+msgstr ""
+
+msgid "ExtManagementSystem|Hostname"
+msgstr "Host Name"
+
+msgid "ExtManagementSystem|Ipaddress"
+msgstr "IP Address"
+
+msgid "ExtManagementSystem|Provider region"
+msgstr "Region"
+
+msgid ""
+"Fields not added: Adding the selected %{count} fields will exceed the maximum "
+"of %{max} fields"
+msgstr ""
+
+msgid "Finished Task cannot be cancelled"
+msgstr ""
+
+msgid "Global Time Profile cannot be edited"
+msgstr ""
+
+msgid ""
+"Host OS is unknown or there are no available SmartProxy builds for the Host's "
+"OS"
+msgstr ""
+
+msgid "Import / Export"
+msgstr ""
+
+msgid "Import file cannot be empty"
+msgstr ""
+
+msgid "Import file was uploaded successfully"
+msgstr ""
+
+msgid "Import not available due to conflicts"
+msgstr ""
+
+msgid "Import validation complete: %{good_record}, %{bad_record}"
+msgstr ""
+
+msgid "Indexes for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Invalid button action."
+msgstr ""
+
+msgid "LDAP Settings validation was successful"
+msgstr ""
+
+msgid "Last selected %s no longer exists"
+msgstr ""
+
+msgid "Locate and upload a file to start the import process"
+msgstr ""
+
+msgid "Log Depot Settings were saved"
+msgstr ""
+
+msgid "Log Depot Settings were validated"
+msgstr ""
+
+msgid "Log collection error returned: "
+msgstr ""
+
+msgid "Log collection for CFME %{object_type} %{name} has been initiated"
+msgstr ""
+
+msgid "Logs for this CFME Server are not available for viewing"
+msgstr ""
+
+msgid "ManageIQ"
+msgstr ""
+
+msgid "MiqGroup"
+msgstr ""
+
+msgid "New settings have been activated"
+msgstr ""
+
+msgid "No %s selected to set to Asynchronous"
+msgstr ""
+
+msgid "No %s selected to set to Synchronous"
+msgstr ""
+
+msgid "No %s were moved up"
+msgstr ""
+
+msgid "No %s were selected for deletion"
+msgstr ""
+
+msgid "No %s were selected to move bottom"
+msgstr ""
+
+msgid "No %s were selected to move down"
+msgstr ""
+
+msgid "No %s were selected to move left"
+msgstr ""
+
+msgid "No %s were selected to move right"
+msgstr ""
+
+msgid "No %s were selected to move to the bottom"
+msgstr ""
+
+msgid "No %s were selected to move to the top"
+msgstr ""
+
+msgid "No %s were selected to move top"
+msgstr ""
+
+msgid "No %s were selected to move up"
+msgstr ""
+
+msgid "No %{model} were selected for %{task}"
+msgstr ""
+
+msgid "No %{model} were selected to %{button}"
+msgstr ""
+
+msgid "No %{model} were selected to be marked as %{action}"
+msgstr ""
+
+msgid "No Class found for explorer tree node type '%s'"
+msgstr ""
+
+msgid ""
+"No Default Repository SmartProxy is configured, contact your CFME Administrato"
+"r"
+msgstr ""
+
+msgid "No Ordering Dialog is available"
+msgstr ""
+
+msgid "No Report Schedules were selected to be Run now"
+msgstr ""
+
+msgid "No Server was selected"
+msgstr ""
+
+msgid "No Utilization data available"
+msgstr ""
+
+msgid "No Utilization data available to generate planning results"
+msgstr ""
+
+msgid "No VMs match the selection criteria"
+msgstr ""
+
+msgid "No child VMs to move right, no action taken"
+msgstr ""
+
+msgid "No events available for this timeline"
+msgstr ""
+
+msgid "No explorer tree node type found for '%s'"
+msgstr ""
+
+msgid "No log available, press Retrieve to get the SmartProxy log"
+msgstr ""
+
+msgid "No more than %{max} %{model} can be selected for %{action}"
+msgstr ""
+
+msgid "No records found for this report"
+msgstr ""
+
+msgid "No records found for this timeline"
+msgstr ""
+
+msgid "No usage data found for specified options"
+msgstr ""
+
+msgid "No valid import records were found, please upload another file"
+msgstr ""
+
+msgid "No virtual machines were selected to delete Virtual BlackBoxes on"
+msgstr ""
+
+msgid "One or more %{model} must be selected to %{task}"
+msgstr ""
+
+msgid "One or more selected reports are not owned by your group, they cannot be moved"
+msgstr ""
+
+msgid "Only 1 SmartProxy can be selected for build deployment"
+msgstr ""
+
+msgid "Orphaned Records for userid %s were successfully deleted"
+msgstr ""
+
+msgid "Ownership saved for selected %s"
+msgstr ""
+
+msgid "Parent VM can not be one of the child VMs"
+msgstr ""
+
+msgid "Password/Verify Password do not match"
+msgstr ""
+
+msgid "Path must be a valid reference to a UNC location"
+msgstr ""
+
+msgid "Planning options have been reset by the user"
+msgstr ""
+
+msgid "Policy Simulation generation returned: "
+msgstr ""
+
+msgid "Policy assignments successfully changed"
+msgstr ""
+
+msgid "Press commit to Import"
+msgstr ""
+
+msgid "Press the Apply button to import the good records into the CFME database"
+msgstr ""
+
+msgid "Press your browser's Back button or click a tab to continue"
+msgstr ""
+
+msgid "Priority Order was saved"
+msgstr ""
+
+msgid "Provision %s"
+msgstr ""
+
+msgid "Provision %s was cancelled by the user"
+msgstr ""
+
+msgid "Provision %{model} - Select %{typ}"
+msgstr ""
+
+msgid "Read Only %{model} \"%{name}\" can not be edited"
+msgstr ""
+
+msgid "Reconfigure %s"
+msgstr ""
+
+msgid "Records were successfully imported"
+msgstr ""
+
+msgid "Refresh of recent C&U data has been initiated"
+msgstr ""
+
+msgid "Registration"
+msgstr ""
+
+msgid "Report can not be saved unless sort field has been configured for Charts"
+msgstr ""
+
+msgid "Report cannot be deleted if it's being used by one or more Widgets"
+msgstr ""
+
+msgid "Report generation returned: Status [%{status}] Message [%{message}]"
+msgstr ""
+
+msgid "Report has been successfully queued to run"
+msgstr ""
+
+msgid "Report is not authorized for the logged in user"
+msgstr ""
+
+msgid "Report preview generation returned: Status [%{status}] Message [%{message}]"
+msgstr ""
+
+msgid "Request \"%{name}\" was %{task}"
+msgstr ""
+
+msgid "Request %s was cancelled by the user"
+msgstr ""
+
+msgid "Retirement %s removed"
+msgstr ""
+
+msgid "Retirement %{date_text} set to %{rdate}"
+msgstr ""
+
+msgid "Retrieve log returned: "
+msgstr ""
+
+msgid "Right Size Recommendation for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Sample %{model} \"%{name}\" can not be edited"
+msgstr ""
+
+msgid "Saved Report \"%s\" not found, Schedule may have failed"
+msgstr ""
+
+msgid "Schema for %{model} \"%{name}\" was saved"
+msgstr ""
+
+msgid "Select an expression element type"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move down"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move to the bottom"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move to the top"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move up"
+msgstr ""
+
+msgid "Selected %s Report no longer exists"
+msgstr ""
+
+msgid "Selected %s no longer exists"
+msgstr ""
+
+msgid "Service dialog import cancelled"
+msgstr ""
+
+msgid "Service dialogs imported successfully"
+msgstr ""
+
+msgid "Session was timed out due to inactivity. Please log in again."
+msgstr ""
+
+msgid "Set Ownership for %s"
+msgstr ""
+
+msgid "Set/Remove retirement date for %s"
+msgstr ""
+
+msgid "Setting priority is not allowed for the selected item"
+msgstr ""
+
+msgid "Settings activation returned: "
+msgstr ""
+
+msgid "Simulation unavailable: Required Class \"System/Process\" is missing"
+msgstr ""
+
+msgid ""
+"SmartProxy \"%s\" log retrieval has been started . . . refresh page to view the "
+"log"
+msgstr ""
+
+msgid "SmartProxy default settings saved"
+msgstr ""
+
+msgid "Successfully deleted %s from the CFME Database"
+msgstr ""
+
+msgid "Sysprep \"%s\" upload was successful"
+msgstr ""
+
+msgid "Tag edits were successfully saved"
+msgstr ""
+
+msgid ""
+"The Default Repository SmartProxy is not valid, contact your CFME Administrato"
+"r"
+msgstr ""
+
+msgid ""
+"The Default Repository SmartProxy no longer exists, contact your CFME Administ"
+"rator"
+msgstr ""
+
+msgid ""
+"The Default Repository SmartProxy, \"%s\", is not running, contact your CFME Adm"
+"inistrator"
+msgstr ""
+
+msgid ""
+"The Host Default VNC Port Range ending port must be equal to or higher than th"
+"e starting point"
+msgstr ""
+
+msgid "The check count value must be an integer to commit this expression element"
+msgstr ""
+
+msgid "The current search details have been reset"
+msgstr ""
+
+msgid "The selected %s is not in the current region"
+msgstr ""
+
+msgid "The selected %s was deleted"
+msgstr ""
+
+msgid "The selected %s were deleted"
+msgstr ""
+
+msgid "The selected %{model} were marked as %{action}"
+msgstr ""
+
+msgid "The selected Filter can not be set as Default because it requires user input"
+msgstr ""
+
+msgid "The selected Filter record was not found"
+msgstr ""
+
+msgid "The selected SmartProxy can not be managed because the Host is not powered on"
+msgstr ""
+
+msgid "The selected Task was cancelled"
+msgstr ""
+
+msgid "The selected job no longer exists, Delete all older Tasks was not completed"
+msgstr ""
+
+msgid "The test email is being delivered, check \"%s\" to verify it was successful"
+msgstr ""
+
+msgid "The user is not authorized for this task or item."
+msgstr ""
+
+msgid "There are no available SmartProxies to deploy on Host \"%s\""
+msgstr ""
+
+msgid ""
+"There is an error in the selected expression element, perhaps it was imported "
+"or edited manually."
+msgstr ""
+
+msgid ""
+"This element should be removed and recreated or you can report the error to yo"
+"ur CFME administrator."
+msgstr ""
+
+msgid "Timelines for %{model} \"%{name}\""
+msgstr ""
+
+msgid ""
+"To configure the Host Default VNC Port Range, both start and end ports are req"
+"uired"
+msgstr ""
+
+msgid "Unknown error has occurred"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Use the Browse button to locate %s file"
+msgstr ""
+
+msgid "Use the Browse button to locate a %s image file"
+msgstr ""
+
+msgid "Use the Browse button to locate an Import file"
+msgstr ""
+
+msgid "Use the Browse button to locate an Upload file"
+msgstr ""
+
+msgid "User Group Sequence was saved"
+msgstr ""
+
+msgid "User ID must be entered if Password is entered"
+msgstr ""
+
+msgid "User Interface settings saved for User %s"
+msgstr ""
+
+msgid "User Interface settings saved for this session"
+msgstr ""
+
+msgid "VM Reconfigure Request was cancelled by the user"
+msgstr ""
+
+msgid "VM Reconfigure Request was saved"
+msgstr ""
+
+msgid "VM successfully removed from service \"%s\""
+msgstr ""
+
+msgid ""
+"Warning: This 'Run Once' timer is in the past and will never run as currently "
+"configured"
+msgstr ""
+
+msgid "When configuring a VNC Proxy, both Address and Port are required"
+msgstr ""
+
+msgid "Widget content generation error: "
+msgstr ""
+
+msgid "Widget import cancelled"
+msgstr ""
+
+msgid "Widgets imported successfully"
+msgstr ""
+
+msgid "You are not authorized to view %s"
+msgstr ""
+
+msgid "You must select at least one namespace to import"
+msgstr ""
+
+msgid "avg_read_size"
+msgstr ""
+
+msgid "avg_write_size"
+msgstr ""
+
+msgid "cpu_affinity"
+msgstr ""
+
+msgid "fqname"
+msgstr ""
+
+msgid "interval"
+msgstr ""
+
+msgid "k_bytes_read_per_sec"
+msgstr ""
+
+msgid "k_bytes_transferred_per_sec"
+msgstr ""
+
+msgid "k_bytes_written_per_sec"
+msgstr ""
+
+msgid "memory_cpu"
+msgstr ""
+
+msgid "numvcpus"
+msgstr ""
+
+msgid "pct_hit"
+msgstr ""
+
+msgid "pct_read"
+msgstr ""
+
+msgid "pct_write"
+msgstr ""
+
+msgid "queue_depth"
+msgstr ""
+
+msgid "read_hit_ios_per_sec"
+msgstr ""
+
+msgid "read_ios_per_sec"
+msgstr ""
+
+msgid "response_time_sec"
+msgstr ""
+
+msgid "service_time_sec"
+msgstr ""
+
+msgid "statistic_time"
+msgstr ""
+
+msgid "total_ios_per_sec"
+msgstr ""
+
+msgid "utilization"
+msgstr ""
+
+msgid "wait_time_sec"
+msgstr ""
+
+msgid "write_hit_ios_per_sec"
+msgstr ""
+
+msgid "write_ios_per_sec"
+msgstr ""

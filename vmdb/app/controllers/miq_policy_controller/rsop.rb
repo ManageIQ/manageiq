@@ -25,12 +25,12 @@ module MiqPolicyController::Rsop
           initiate_wait_for_task(:task_id => Vm.rsop_async(MiqEvent.find(@sb[:rsop][:event_value]), vms))
           return
         else
-          add_flash(I18n.t("flash.policy.no_vm_match"), :error)
+          add_flash(_("No VMs match the selection criteria"), :error)
         end
       else
         miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
         if miq_task.task_results.blank?               # Check to see if any results came back
-          add_flash(I18n.t("flash.policy.simulations_generation_error") << miq_task.message, :error)
+          add_flash(_("Policy Simulation generation returned: ") << miq_task.message, :error)
         else
           @sb[:rsop][:results] = miq_task.task_results
           session[:rsop_tree] = rsop_build_tree

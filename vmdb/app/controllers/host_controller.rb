@@ -258,7 +258,7 @@ class HostController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.add.cancelled", :model=>ui_lookup(:model=>"Host"))
+        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"Host")
       end
     when "add"
       add_host = Host.new
@@ -268,7 +268,7 @@ class HostController < ApplicationController
         set_record_vars(add_host)                                 # Save the authentication records for this host
         AuditEvent.success(build_created_audit(add_host, @edit))
         render :update do |page|
-          page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.add.added", :model=>ui_lookup(:model=>"Host"), :name=>add_host.name)
+          page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"Host"), :name=>add_host.name}
         end
         return
       else
@@ -291,7 +291,7 @@ class HostController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -393,13 +393,13 @@ class HostController < ApplicationController
       flash = "Edit for Host \""
       @breadcrumbs.pop if @breadcrumbs
       if !session[:host_items].nil?
-        flash = I18n.t("flash.credentials.cancelled", :model=>ui_lookup(:models=>"Host"))
+        flash = _("Edit of credentials for selected %s was cancelled by the user") % ui_lookup(:models=>"Host")
         #redirect_to :action => @lastaction, :display=>session[:host_display], :flash_msg=>flash
         render :update do |page|
           page.redirect_to :action=>@lastaction, :display=>session[:host_display], :flash_msg=>flash
         end
       else
-        flash = I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>"Host"), :name=>@host.name)
+        flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Host"), :name=>@host.name}
         render :update do |page|
           page.redirect_to :action=>@lastaction, :id=>@host.id, :display=>session[:host_display], :flash_msg=>flash
         end
@@ -411,9 +411,7 @@ class HostController < ApplicationController
         valid_host = find_by_id_filtered(Host, params[:id])
         set_record_vars(valid_host, :validate)                      # Set the record variables, but don't save
         if valid_record?(valid_host) && set_record_vars(update_host) && update_host.save
-          add_flash(I18n.t("flash.edit.saved",
-                          :model=>ui_lookup(:model=>"host"),
-                          :name=>update_host.name))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"host"), :name=>update_host.name})
           @breadcrumbs.pop if @breadcrumbs
           AuditEvent.success(build_saved_audit(update_host, @edit))
           session[:edit] = nil  # clean out the saved info
@@ -442,9 +440,9 @@ class HostController < ApplicationController
           @error = Host.multi_host_update(session[:host_items], settings, creds)
         end
         if @error || @error.blank?
-          #redirect_to :action => 'show_list', :flash_msg=>I18n.t("flash.credentials.saved")
+          #redirect_to :action => 'show_list', :flash_msg=>_("Credentials/Settings saved successfully")
           render :update do |page|
-            page.redirect_to :action=>'show_list', :flash_msg=>I18n.t("flash.credentials.saved")
+            page.redirect_to :action=>'show_list', :flash_msg=>_("Credentials/Settings saved successfully")
           end
         else
           drop_breadcrumb( {:name=>"Edit Host '#{@host.name}'", :url=>"/host/edit/#{@host.id}"} )
@@ -459,7 +457,7 @@ class HostController < ApplicationController
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -490,7 +488,7 @@ class HostController < ApplicationController
       rescue StandardError=>bang
         add_flash("#{bang}", :error)
       else
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -558,7 +556,7 @@ class HostController < ApplicationController
                 @flash_array == nil # Another screen showing, so return
 
       if @flash_array == nil && !@refresh_partial && !["host_miq_request_new"].include?(params[:pressed]) # if no button handler ran, show not implemented msg
-        add_flash(I18n.t("flash.button.not_implemented"), :error)
+        add_flash(_("Button not yet implemented"), :error)
         @refresh_partial = "layouts/flash_msg"
         @refresh_div = "flash_msg_div"
       elsif @flash_array && @lastaction == "show"

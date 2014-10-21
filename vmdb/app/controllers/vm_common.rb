@@ -17,7 +17,7 @@ module VmCommon
     return if ["perf_reload"].include?(params[:pressed]) && @flash_array == nil
 
     if @flash_array == nil # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     else    # Figure out what was showing to refresh it
@@ -449,7 +449,7 @@ module VmCommon
     @vm = @record = identify_record(x_node.split('-').last, VmOrTemplate)
     if @temp[:snap_selected].nil?
       @display = "snapshot_info"
-      add_flash(I18n.t("flash.record.item_no_longer_exists", :model => "Snapshot"), :error)
+      add_flash(_("Last selected %s no longer exists") %  "Snapshot", :error)
     end
     build_snapshot_tree
     @active = @temp[:snap_selected].current.to_i == 1 if @temp[:snap_selected]
@@ -683,7 +683,7 @@ module VmCommon
   def snap_vm
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     if params["cancel"] || params[:button] == "cancel"
-      flash = I18n.t("flash.edit.task_cancelled", :task=>"Snapshot of VM #{@record.name}")
+      flash = _("%s was cancelled by the user") % "Snapshot of VM #{@record.name}"
       if session[:edit] && session[:edit][:explorer]
         add_flash(flash)
         @_params[:display] = "snapshot_info"
@@ -695,7 +695,7 @@ module VmCommon
       @name = params[:name]
       @description = params[:description]
       if params[:name].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error)
+        add_flash(_("%s is required") % "Name", :error)
         @in_a_form = true
         drop_breadcrumb( {:name=>"Snapshot VM '" + @record.name + "'", :url=>"/vm_common/snap"} )
         if session[:edit] && session[:edit][:explorer]
@@ -717,10 +717,10 @@ module VmCommon
                             :memory       => params[:snap_memory] == "1")
         rescue StandardError => bang
           puts bang.backtrace.join("\n")
-          flash = I18n.t("flash.error_during", :task=>"Create Snapshot") << bang.message; flash_error = true
+          flash = _("Error during '%s': ") % "Create Snapshot" << bang.message; flash_error = true
 #         AuditEvent.failure(audit.merge(:message=>"[#{@record.name} -- #{@record.location}] Update returned: #{bang}"))
         else
-          flash = I18n.t("flash.vm.create_snapshot_started", :model=>ui_lookup(:model=>"Vm"), :name=>@record.name)
+          flash = _("Create Snapshot for %{model} \"%{name}\" was started") % {:model=>ui_lookup(:model=>"Vm"), :name=>@record.name}
 #         AuditEvent.success(build_saved_vm_audit(@record))
         end
         params[:id] = @record.id.to_s   # reset id in params for show
@@ -1021,7 +1021,7 @@ module VmCommon
     evm_relationship_get_form_vars
     case params[:button]
     when "cancel"
-      msg = I18n.t("flash.edit.task_cancelled", :task=>"Edit Management Engine Relationship")
+      msg = _("%s was cancelled by the user") % "Edit Management Engine Relationship"
       if @edit[:explorer]
         add_flash(msg)
         @sb[:action] = nil
@@ -1035,7 +1035,7 @@ module VmCommon
       svr = @edit[:new][:server] && @edit[:new][:server] != "" ? MiqServer.find(@edit[:new][:server]) : nil
       @record.miq_server = svr
       @record.save
-      msg = I18n.t("flash.edit.task_saved", :task=>"Management Engine Relationship")
+      msg = _("%s saved") % "Management Engine Relationship"
       if @edit[:explorer]
         add_flash(msg)
         @sb[:action] = nil
@@ -1050,11 +1050,11 @@ module VmCommon
       if @edit[:explorer]
         @explorer = true
         evm_relationship
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
         replace_right_cell
       else
         render :update do |page|
-          page.redirect_to :action=>'evm_relationship', :id=>@record.id, :flash_msg=>I18n.t("flash.edit.reset"), :flash_warning=>true, :escape=>true
+          page.redirect_to :action=>'evm_relationship', :id=>@record.id, :flash_msg=>_("All changes have been reset"), :flash_warning=>true, :escape=>true
         end
       end
     end
@@ -1100,7 +1100,7 @@ module VmCommon
         end
       end
     else
-      add_flash(I18n.t("flash.button.not_implemented"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       render :partial => "shared/ajax/flash_msg_replace"
     end
   end
@@ -1116,15 +1116,15 @@ module VmCommon
   def add_vm_to_service
     @record = find_by_id_filtered(Vm, params[:id])
     if params["cancel.x"]
-      flash = I18n.t("flash.vm.add_vm_to_service_cancelled", :name=>@record.name)
+      flash = _("Add VM \"%s\" to a Service was cancelled by the user") % @record.name
       redirect_to :action=>@lastaction, :id=>@record.id, :flash_msg=>flash
     else
       chosen = params[:chosen_service].to_i
-      flash = I18n.t("flash.vm.added_to", :model=>ui_lookup(:model=>"Vm"), :name=>@record.name, :to_name=>Service.find(chosen).name)
+      flash = _("%{model} \"%{name}\" successfully added to Service \"%{to_name}\"") % {:model=>ui_lookup(:model=>"Vm"), :name=>@record.name, :to_name=>Service.find(chosen).name}
       begin
         @record.add_to_vsc(Service.find(chosen).name)
       rescue StandardError => bang
-        flash = I18n.t("flash.error_during", :task=>"Add VM to service") << bang
+        flash = _("Error during '%s': ") % "Add VM to service" << bang
       end
       redirect_to :action => @lastaction, :id=>@record.id, :flash_msg=>flash
     end
@@ -1137,9 +1137,9 @@ module VmCommon
       @vervice_name = Service.find_by_name(@record.location).name
       @record.remove_from_vsc(@vervice_name)
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task=>"Remove VM from service") + bang.message, :error)
+      add_flash(_("Error during '%s': ") % "Remove VM from service" + bang.message, :error)
     else
-      add_flash(I18n.t("flash.vm.vm_removed_from_service", :name=>@vervice_name))
+      add_flash(_("VM successfully removed from service \"%s\"") % @vervice_name)
     end
   end
 
@@ -1184,11 +1184,11 @@ module VmCommon
     case params[:button]
     when "cancel"
       if @edit[:explorer]
-        add_flash(I18n.t("flash.edit.cancelled", :model=>ui_lookup(:model=>@record.class.base_model.name), :name=>@record.name))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>@record.class.base_model.name), :name=>@record.name})
         @record = @sb[:action] = nil
         replace_right_cell
       else
-        add_flash(I18n.t("flash.edit.cancelled", :model => ui_lookup(:model => "Vm"), :name => @record.name))
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Vm"), :name => @record.name})
         session[:flash_msgs] = @flash_array.dup
         render :update do |page|
           page.redirect_to(previous_breadcrumb_url)
@@ -1196,7 +1196,7 @@ module VmCommon
       end
     when "save"
       if @edit[:new][:parent] != -1 && @edit[:new][:kids].invert.include?(@edit[:new][:parent]) # Check if parent is a kid, if selected
-        add_flash(I18n.t("flash.vm.parent_child_cannot_be_same"), :error)
+        add_flash(_("Parent VM can not be one of the child VMs"), :error)
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         build_edit_screen
         if @edit[:explorer]
@@ -1221,10 +1221,10 @@ module VmCommon
           vms.each { |v| @record.remove_child(v) if !kids.include?(v.id) }                                # Remove any VMs no longer in the kids list box
           kids.each_key { |k| @record.set_child(VmOrTemplate.find(k)) }                                             # Add all VMs in kids hash, dups will not be re-added
         rescue StandardError => bang
-          add_flash(I18n.t("flash.error_during", :task=>"#{@record.class.base_model.name} update") << bang.message, :error)
+          add_flash(_("Error during '%s': ") % "#{@record.class.base_model.name} update" << bang.message, :error)
           AuditEvent.failure(audit.merge(:message=>"[#{@record.name} -- #{@record.location}] Update returned: #{bang}"))
         else
-          flash = I18n.t("flash.edit.saved", :model=>ui_lookup(:model=>@record.class.base_model.name), :name=>@record.name)
+          flash = _("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>@record.class.base_model.name), :name=>@record.name}
           AuditEvent.success(build_saved_vm_audit(@record))
         end
         params[:id] = @record.id.to_s   # reset id in params for show
@@ -1242,7 +1242,7 @@ module VmCommon
       end
     when "reset"
       edit
-      add_flash(I18n.t("flash.edit.reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)
       session[:flash_msgs] = @flash_array.dup
       get_vm_child_selection if params["right.x"] || params["left.x"] || params["allright.x"]
       @changed = session[:changed] = false
@@ -1320,7 +1320,7 @@ module VmCommon
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
     @scan_history  = ScanHistory.find_by_vm_or_template_id(@record.id)
     if @scan_history == nil
-      redirect_to :action=>"scan_history", :flash_msg=>I18n.t("flash.error_no_longer_exists"), :flash_error=>true
+      redirect_to :action=>"scan_history", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return
     end
     @lastaction = "scan_histories"
@@ -1389,11 +1389,11 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     api_version = @record.ext_management_system.api_version.to_s
     if !api_version.starts_with?("5")
-      add_flash(I18n.t("flash.console_access_failed", :reason => "Unsupported Provider API version #{api_version}"), :error)
+      add_flash(_("Console access failed: %s") %  "Unsupported Provider API version #{api_version}", :error)
     else
       task_id = @record.remote_console_acquire_ticket_queue(console_type.to_sym, session[:userid], MiqServer.my_server.id)
       unless task_id.is_a?(Fixnum)
-        add_flash(I18n.t("flash.console_access_failed", :reason => "Task start failed: ID [#{task_id.inspect}]"), :error)
+        add_flash(_("Console access failed: %s") %  "Task start failed: ID [#{task_id.inspect}]", :error)
       end
     end
     if @flash_array
@@ -1407,7 +1407,7 @@ module VmCommon
   def console_after_task(console_type)
     miq_task = MiqTask.find(params[:task_id])
     if miq_task.status == "Error" || miq_task.task_results.blank?
-      add_flash(I18n.t("flash.console_access_failed", :reason => miq_task.message), :error)
+      add_flash(_("Console access failed: %s") %  miq_task.message, :error)
     else
       @vm = @record = identify_record(params[:id], VmOrTemplate)
       case console_type
@@ -1515,9 +1515,7 @@ module VmCommon
         get_node_info("root")
         return
       else
-        @right_cell_text = I18n.t("cell_header.model_record",
-                                  :name=>@record.name,
-                                  :model=>"#{ui_lookup(:model => model && model != "VmOrTemplate" ? model : X_TREE_NODE_PREFIXES[@nodetype])}")
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>"#{ui_lookup(:model => model && model != "VmOrTemplate" ? model : X_TREE_NODE_PREFIXES[@nodetype])}"}
       end
     else      # Get list of child VMs of this node
       options = {:model=>model}
@@ -1526,10 +1524,9 @@ module VmCommon
         options[:where_clause] =
           ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
         process_show_list(options)  # Get all VMs & Templates
-        @right_cell_text = I18n.t("cell_header.all_model_records",
-#                                 :model=>ui_lookup(:models=>"VmOrTemplate"))
-# TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
-                                  :model=>title ? "#{title}" : "VMs & Templates")
+        # :model=>ui_lookup(:models=>"VmOrTemplate"))
+        # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
+        @right_cell_text = _("All %s") % title ? "#{title}" : "VMs & Templates"
       else
         if X_TREE_NODE_PREFIXES[@nodetype] == "Hash"
           options[:where_clause] =
@@ -1545,8 +1542,7 @@ module VmCommon
           end
         elsif X_TREE_NODE_PREFIXES[@nodetype] == "MiqSearch"
           process_show_list(options)  # Get all VMs & Templates
-          @right_cell_text = I18n.t("cell_header.all_model_records",
-                                    :model=>model ? "#{ui_lookup(:models=>model)}" : "VMs & Templates")
+          @right_cell_text = _("All %s") % model ? "#{ui_lookup(:models=>model)}" : "VMs & Templates"
         else
           rec = X_TREE_NODE_PREFIXES[@nodetype].constantize.find(from_cid(id))
           options.merge!({:association=>"#{@nodetype == "az" ? "vms" : "all_vms_and_templates"}", :parent=>rec})
@@ -1577,7 +1573,7 @@ module VmCommon
     # After adding to history, add name filter suffix if showing a list
     unless ["Vm", "MiqTemplate"].include?(X_TREE_NODE_PREFIXES[@nodetype])
       unless @search_text.blank?
-        @right_cell_text += I18n.t("cell_header.name_filter_suffix", :name_filter=>@search_text)
+        @right_cell_text += _(" (Names with \"%s\")") % @search_text
       end
     end
 
@@ -1832,14 +1828,14 @@ module VmCommon
     when "compare","drift"
       partial = "layouts/#{@sb[:action]}"
       if @sb[:action] == "compare"
-        header = I18n.t("cell_header.compare", :model => ui_lookup(:model => @sb[:compare_db]))
+        header = _("Compare %s") %  ui_lookup(:model => @sb[:compare_db])
       else
-        header = I18n.t("cell_header.drift", :name => name, :model => ui_lookup(:model => @sb[:compare_db]))
+        header = _("Drift for %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:model => @sb[:compare_db])}
       end
       action = nil
     when "clone","migrate","publish"
       partial = "miq_request/prov_edit"
-      header = I18n.t("cell_header.request_task", :task=>@sb[:action].capitalize, :model=>ui_lookup(:table => table))
+      header = _("%{task} %{model}") % {:task=>@sb[:action].capitalize, :model=>ui_lookup(:table => table)}
       action = "prov_edit"
     when "dialog_provision"
       partial = "shared/dialogs/dialog_provision"
@@ -1847,75 +1843,75 @@ module VmCommon
       action = "dialog_form_button_pressed"
     when "edit"
       partial = "vm_common/form"
-      header = I18n.t("cell_header.editing_model_record", :name=>name, :model=>ui_lookup(:table => table))
+      header = _("Editing %{model} \"%{name}\"") % {:name=>name, :model=>ui_lookup(:table => table)}
       action = "edit_vm"
     when "evm_relationship"
       partial = "vm_common/evm_relationship"
-      header = I18n.t("cell_header.evm_relationship", :model=>ui_lookup(:table => table), :name => name)
+      header = _("Edit CFME Server Relationship for %{model} \"%{name}\"") % {:model=>ui_lookup(:table => table), :name => name}
       action = "evm_relationship_update"
     #when "miq_request_new"
     # partial = "miq_request/prov_edit"
-    # header = I18n.t("cell_header.miq_request_new", :model=>ui_lookup(:models=>"Vm"))
+    # header = _("Provision %s") % ui_lookup(:models=>"Vm")
     # action = "prov_edit"
     when "miq_request_new"
       partial = "miq_request/pre_prov"
       typ = request.parameters[:controller] == "vm_cloud" ? "an #{ui_lookup(:table => "template_cloud")}" : "a #{ui_lookup(:table => "template_infra")}"
-      header = I18n.t("cell_header.pre_provision", :model=>ui_lookup(:tables => table), :typ => typ)
+      header = _("Provision %{model} - Select %{typ}") % {:model=>ui_lookup(:tables => table), :typ => typ}
       action = "pre_prov"
     when "pre_prov"
       partial = "miq_request/prov_edit"
-      header = I18n.t("cell_header.miq_request_new", :model=>ui_lookup(:tables => table))
+      header = _("Provision %s") % ui_lookup(:tables => table)
       action = "pre_prov_continue"
     when "pre_prov_continue"
       partial = "miq_request/prov_edit"
-      header = I18n.t("cell_header.miq_request_new", :model => ui_lookup(:tables => table))
+      header = _("Provision %s") %  ui_lookup(:tables => table)
       action = "prov_edit"
     when "ownership"
       partial = "shared/views/ownership"
-      header = I18n.t("cell_header.set_ownership", :model=>ui_lookup(:table => table))
+      header = _("Set Ownership for %s") % ui_lookup(:table => table)
       action = "ownership_update"
     when "performance"
       partial = "layouts/performance"
-      header = I18n.t("cell_header.utilization_summary", :model=>ui_lookup(:table => table), :name => name)
+      header = _("Capacity & Utilization data for %{model} \"%{name}\"") % {:model=>ui_lookup(:table => table), :name => name}
       x_history_add_item(:id=>x_node, :text=>header, :button=>params[:pressed], :display=>params[:display])
       action = nil
     when "policy_sim"
       if params[:action] == "policies"
         partial = "vm_common/policies"
-        header = I18n.t("cell_header.policy_sim", :model=>ui_lookup(:table => table))
+        header = _("%s Policy Simulation") % ui_lookup(:table => table)
         action = nil
       else
         partial = "layouts/policy_sim"
-        header = I18n.t("cell_header.policy_sim", :model=>ui_lookup(:table => table))
+        header = _("%s Policy Simulation") % ui_lookup(:table => table)
         action = nil
       end
     when "protect"
       partial = "layouts/protect"
-      header = I18n.t("cell_header.policy_assignment", :model=>ui_lookup(:table => table))
+      header = _("%s Policy Assignment") % ui_lookup(:table => table)
       action = "protect"
     when "reconfigure"
       partial = "vm_common/reconfigure"
-      header = I18n.t("cell_header.reconfigure", :model=>ui_lookup(:table => table))
+      header = _("Reconfigure %s") % ui_lookup(:table => table)
       action = "reconfigure_update"
     when "retire"
       partial = "shared/views/retire"
-      header = I18n.t("cell_header.retire", :model=>ui_lookup(:table => table))
+      header = _("Set/Remove retirement date for %s") % ui_lookup(:table => table)
       action = "retire"
     when "right_size"
       partial = "vm_common/right_size"
-      header = I18n.t("cell_header.right_size", :name=>name, :model=>ui_lookup(:table => table))
+      header = _("Right Size Recommendation for %{model} \"%{name}\"") % {:name=>name, :model=>ui_lookup(:table => table)}
       action = nil
     when "tag"
       partial = "layouts/tagging"
-      header = I18n.t("cell_header.edit_tags", :model=>ui_lookup(:table => table))
+      header = _("Edit Tags for %s") % ui_lookup(:table => table)
       action = "tagging_edit"
     when "snapshot_add"
       partial = "vm_common/snap"
-      header = I18n.t("cell_header.adding_model_record", :model=>ui_lookup(:model => "Snapshot"))
+      header = _("Adding a new %s") % ui_lookup(:model => "Snapshot")
       action = "snap_vm"
     when "timeline"
       partial = "layouts/tl_show"
-      header = I18n.t("cell_header.show_timelines", :model=>ui_lookup(:table => table), :name=>name)
+      header = _("Timelines for %{model} \"%{name}\"") % {:model=>ui_lookup(:table => table), :name=>name}
       x_history_add_item(:id=>x_node, :text=>header, :button=>params[:pressed])
       action = nil
     else
@@ -1930,13 +1926,10 @@ module VmCommon
         partial = "#{@showtype == "compliance_history" ? "shared/views" : "vm_common"}/#{@showtype}"
       end
       if @showtype == "item"
-        header = I18n.t("cell_header.ui_action_for_item_model_record",:model=>ui_lookup(:table => table),
-          :name=>name, :item_name=>@item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
-          :action=>Dictionary::gettext(@sb[:action], :type=>:ui_action, :notfound=>:titleize).singularize)
+        header = _("%{action} \"%{item_name}\" for %{model} \"%{name}\"") % {:model=>ui_lookup(:table => table), :name=>name, :item_name=>@item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name, :action=>Dictionary::gettext(@sb[:action], :type=>:ui_action, :notfound=>:titleize).singularize}
         x_history_add_item(:id=>x_node, :text=>header, :action=>@sb[:action], :item=>@item.id)
       else
-        header = I18n.t("cell_header.ui_action_for_model_record",:model=>ui_lookup(:table => table),
-          :name=>name, :action=>Dictionary::gettext(@sb[:action], :type=>:ui_action, :notfound=>:titleize))
+        header = _("\"%{action}\" for %{model} \"%{name}\"") % {:model=>ui_lookup(:table => table), :name=>name, :action=>Dictionary::gettext(@sb[:action], :type=>:ui_action, :notfound=>:titleize)}
         if @display && @display != "main"
           x_history_add_item(:id=>x_node, :text=>header, :display=>@display)
         else
@@ -1951,7 +1944,7 @@ module VmCommon
   def get_vm_child_selection
     if params["right.x"] || params[:button] == "right"
       if params[:kids_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.right", :field=>"VMs"), :error)
+        add_flash(_("No %s were selected to move right") % "VMs", :error)
       else
         kids = @edit[:new][:kids].invert
         params[:kids_chosen].each do |kc|
@@ -1963,7 +1956,7 @@ module VmCommon
       end
     elsif params["left.x"] || params[:button] == "left"
       if params[:choices_chosen] == nil
-        add_flash(I18n.t("flash.edit.no_fields_to_move.left", :field=>"VMs"), :error)
+        add_flash(_("No %s were selected to move left") % "VMs", :error)
       else
         kids = @edit[:choices].invert
         params[:choices_chosen].each do |cc|
@@ -1975,7 +1968,7 @@ module VmCommon
       end
     elsif params["allright.x"] || params[:button] == "allright"
       if @edit[:new][:kids].length == 0
-        add_flash(I18n.t("flash.vm.no_child_vm_to_move_right"), :error)
+        add_flash(_("No child VMs to move right, no action taken"), :error)
       else
         @edit[:new][:kids].each do |key, value|
           @edit[:choices][key] = value

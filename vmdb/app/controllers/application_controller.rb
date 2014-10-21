@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_filter :set_user_time_zone
+  before_filter :set_gettext_locale
   after_filter :set_global_session_data, :except => [:window_sizes]
 
   ensure_security_headers
@@ -109,8 +110,8 @@ class ApplicationController < ActionController::Base
 
   # Put out error msg if user's role is not authorized for an action
   def auth_error
-    add_flash(I18n.t("flash.user_not_authorized"), :error)
-    add_flash(I18n.t("flash.press_back_button"))
+    add_flash(_("The user is not authorized for this task or item."), :error)
+    add_flash(_("Press your browser's Back button or click a tab to continue"))
 #   render(:text=>"User is not authorized for this task . . . press your browser's Back button to continue")
   end
 
@@ -250,8 +251,7 @@ class ApplicationController < ActionController::Base
 
     miq_task = MiqTask.find(params[:task_id])
     if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(I18n.t("flash.report.generation_error", :status  => miq_task.status,
-                                                        :message => miq_task.message), :error)
+      add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status  => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|
         page << "if ($('flash_msg_div_report_list')){"
         page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg",
@@ -555,7 +555,7 @@ class ApplicationController < ActionController::Base
         MiqSchedule.verify_depot_hash(settings)
       end
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_during", :task=>"Validate") << bang.message, :error)
+      add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
     else
       add_flash(msg)
     end
@@ -795,7 +795,7 @@ class ApplicationController < ActionController::Base
     title = @report.name
     @title = @report.title
     if @report.extras[:total_html_rows] == 0
-      add_flash(I18n.t("flash.report.no_records_found"), :warning)
+      add_flash(_("No records found for this report"), :warning)
       html = nil
     else
       html = report_build_html_table(@report,
@@ -818,7 +818,7 @@ class ApplicationController < ActionController::Base
   private :calculate_lastaction
 
   def report_edit_aborted(lastaction)
-    add_flash(I18n.t("flash.edit.aborted"), :error)
+    add_flash(_("Edit aborted!  CFME does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."), :error)
     session[:flash_msgs] = @flash_array.dup
     if request.xml_http_request?  # Is this an Ajax request?
       if lastaction == "configuration"
@@ -964,8 +964,8 @@ class ApplicationController < ActionController::Base
     rec = MiqGroup.find_by_id(group)
     user = User.find_by_userid(session[:userid])
     @sb[:grp_title] = user.admin_user? ?
-      "#{session[:customer_name]} (#{I18n.t("cell_header.all_model_records",:model=>ui_lookup(:models=>"MiqGroup"))})" :
-      "#{session[:customer_name]} (#{I18n.t("cell_header.model",:model=>"#{ui_lookup(:model=>"MiqGroup")}: #{user.current_group.description}")})"
+      "#{session[:customer_name]} (#{_("All %s") % ui_lookup(:models=>"MiqGroup")})" :
+      "#{session[:customer_name]} (#{_("%s") % "#{ui_lookup(:model=>"MiqGroup")}: #{user.current_group.description}"})"
     @data = Array.new
     if (!rec.settings || !rec.settings[:report_menus] || rec.settings[:report_menus].blank?) || mode == "default"
       #array of all reports if menu not configured
@@ -1330,7 +1330,7 @@ class ApplicationController < ActionController::Base
   def handle_button_rbac
     pass = check_button_rbac
     unless pass
-      add_flash(I18n.t("flash.user_not_authorized"), :error)
+      add_flash(_("The user is not authorized for this task or item."), :error)
       render_flash
     end
     pass
@@ -1761,15 +1761,15 @@ class ApplicationController < ActionController::Base
           AuditEvent.success(audit)
           success_count += 1
         else
-          add_flash(I18n.t("flash.record.task_initiated_for_record", :record=>rep_name, :task=>task))
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record=>rep_name, :task=>task})
         end
       end
     end
     if success_count > 0
-      add_flash(I18n.t("flash.selected_records_deleted_with_count", :count_model=>pluralize(success_count,"Saved Report")))
+      add_flash(_("Successfully deleted %s from the CFME Database") % pluralize(success_count,"Saved Report"))
     end
     if failure_count > 0
-      add_flash(I18n.t("flash.error_during_delete_with_count", :count_model=>pluralize(failure_count,"Saved Report")))
+      add_flash(_("Error during %s delete from the CFME Database") % pluralize(failure_count,"Saved Report"))
     end
   end
 
@@ -1781,13 +1781,13 @@ class ApplicationController < ActionController::Base
   def filter_ids_in_region(ids, label)
     in_reg, out_reg = ActiveRecord::Base.partition_ids_by_remote_region(ids)
     if ids.length == 1
-      add_flash(I18n.t("flash.not_in_current_region", :label=>label), :error) if in_reg.empty?
+      add_flash(_("The selected %s is not in the current region") % label, :error) if in_reg.empty?
     elsif in_reg.empty?
-      add_flash(I18n.t("flash.all_not_in_current_region", :label=>label.pluralize), :error)
+      add_flash(_("All selected %s are not in the current region") % label.pluralize, :error)
     else
       add_flash(out_reg.length == 1 ?
-          I18n.t("flash.1_not_in_current_region", :label=>pluralize(out_reg.length, label)) :
-          I18n.t("flash.count_not_in_current_region", :label=>pluralize(out_reg.length, label)), :error) unless out_reg.empty?
+          _("%s is not in the current region and will be skipped") % pluralize(out_reg.length, label) :
+          _("%s are not in the current region and will be skipped") % pluralize(out_reg.length, label), :error) unless out_reg.empty?
     end
     return in_reg, out_reg
   end
@@ -2592,7 +2592,7 @@ class ApplicationController < ActionController::Base
     userid     = session[:userid]
 
     unless db.where(:id => from_cid(id)).exists?
-      msg = I18n.t("flash.record.selected_item_no_longer_exists", :model => ui_lookup(:model => db.to_s))
+      msg = _("Selected %s no longer exists") %  ui_lookup(:model => db.to_s)
       raise msg
     end
 
@@ -2668,12 +2668,10 @@ class ApplicationController < ActionController::Base
     end
     if rec.nil?
       record_name = resource_name ? "#{ui_lookup(:model=>model)} '#{resource_name}'" : "The selected record"
-      add_flash(I18n.t("flash.record_no_longer_exists",
-                      :record_name=>record_name),
+      add_flash(_("%s no longer exists in the database") % record_name,
                 :error)
     elsif authrec.nil?
-      add_flash(I18n.t("flash.record_not_authorized_for_user",
-                      :record_name=>"#{ui_lookup(:model=>rec.class.base_model.to_s)} '#{resource_name}'"),
+      add_flash(_("You are not authorized to view %s") % "#{ui_lookup(:model=>rec.class.base_model.to_s)} '#{resource_name}'",
                 :error)
     end
     return rec
@@ -2694,7 +2692,7 @@ class ApplicationController < ActionController::Base
 
   def assert_privileges(feature)
     raise MiqException::RbacPrivilegeException,
-          I18n.t("flash.user_not_authorized") unless role_allows(:feature => feature)
+          _("The user is not authorized for this task or item.") unless role_allows(:feature => feature)
   end
 
   def valid_route?(request_method, controller,  action)
@@ -2717,9 +2715,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_flash_not_applicable_to_model(type)
-    add_flash(I18n.t("flash.button.task_does_not_apply_to_model",
-                     :model => ui_lookup(:table => "miq_template"),
-                     :task  => type.capitalize), :error)
+    add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
     render_flash { |page| page << '$(\'main_div\').scrollTop = 0;' }
   end
 end

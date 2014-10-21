@@ -29,11 +29,8 @@ module ReportController::Reports::Editor
     case params[:button]
       when "cancel"
         @edit[:rpt_id] ?
-          add_flash(I18n.t("flash.edit.cancelled",
-                      :model=>ui_lookup(:model=>"MiqReport"),
-                      :name=>@edit[:rpt_title])) :
-          add_flash(I18n.t("flash.add.cancelled",
-                      :model=>ui_lookup(:model=>"MiqReport")))
+          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>@edit[:rpt_title]}) :
+          add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqReport"))
         @edit = session[:edit] = nil # clean out the saved info
         replace_right_cell
       when "add", "save"
@@ -50,7 +47,7 @@ module ReportController::Reports::Editor
           return
         end
         if @edit[:new][:graph_type] && (@edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING)
-          add_flash(I18n.t("flash.report.sort_required_for_chart"), :error)
+          add_flash(_("Report can not be saved unless sort field has been configured for Charts"), :error)
           @sb[:miq_tab] = "new_4"
           build_edit_screen
           replace_right_cell
@@ -61,12 +58,8 @@ module ReportController::Reports::Editor
           menu_repname_update(@edit[:current][:name],@edit[:new][:name]) if @edit[:current][:name] != @edit[:new][:name]
           AuditEvent.success(build_saved_audit(@rpt, @edit))
           @edit[:rpt_id] ?
-            add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"MiqReport"),
-                        :name=>@rpt.name)) :
-            add_flash(I18n.t("flash.add.added",
-                        :model=>ui_lookup(:model=>"MiqReport"),
-                        :name=>@rpt.name))
+            add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>@rpt.name}) :
+            add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>@rpt.name})
           #only do this for new reports
           if !@edit[:rpt_id]
             self.x_node = "xx-#{@sb[:rpt_menu].length}_xx-#{@sb[:rpt_menu].length}-0"
@@ -90,7 +83,7 @@ module ReportController::Reports::Editor
           replace_right_cell
         end
       else
-        add_flash(I18n.t("flash.edit.reset"), :warning) if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
         @in_a_form = true
         @report = nil     # Clear any saved report object
         if params[:tab] # Came in to change the tab
@@ -952,11 +945,9 @@ module ReportController::Reports::Editor
 
   def move_cols_right
     if !params[:available_fields] || params[:available_fields].length == 0 || params[:available_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move down") % "fields", :error)
     elsif params[:available_fields].length + @edit[:new][:fields].length > MAX_REPORT_COLUMNS
-      add_flash(I18n.t("flash.edit.adding_fields_exceeds_max",
-                       :count=>params[:available_fields].length + @edit[:new][:fields].length,
-                       :max=>MAX_REPORT_COLUMNS),
+      add_flash(_("Fields not added: Adding the selected %{count} fields will exceed the maximum of %{max} fields") % {:count=>params[:available_fields].length + @edit[:new][:fields].length, :max=>MAX_REPORT_COLUMNS},
                 :error)
     else
       MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).each do |af| # Go thru all available columns
@@ -984,9 +975,9 @@ module ReportController::Reports::Editor
 
   def move_cols_left
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move up") % "fields", :error)
     elsif display_filter_contains?(params[:selected_fields])
-      add_flash(I18n.t("flash.edit.no_fields_moved.up", :field=>"fields"), :error)
+      add_flash(_("No %s were moved up") % "fields", :error)
     else
       @edit[:new][:fields].each do |nf|               # Go thru all new fields
         if params[:selected_fields].include?(nf.last) # See if this col was selected to move
@@ -1053,7 +1044,7 @@ module ReportController::Reports::Editor
     exp = @edit[:new][:display_filter].inspect
     @edit[:new][:fields].each do |f|          # Go thru all of the selected fields
       if fields.include?(f.last)              # Is this field being removed?
-        add_flash(I18n.t("flash.edit.field_in_display_filter", :field=>f.first), :error) if exp.include?(f.last)
+        add_flash(_("%s is currently being used in the Display Filter") % f.first, :error) if exp.include?(f.last)
       end
     end
     return !@flash_array.nil?
@@ -1061,12 +1052,12 @@ module ReportController::Reports::Editor
 
   def move_cols_up
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move up") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.up", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
     else
       if first_idx > 0
         @edit[:new][:fields][first_idx..last_idx].reverse.each do |field|
@@ -1083,12 +1074,12 @@ module ReportController::Reports::Editor
 
   def move_cols_down
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move down") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.down", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one
@@ -1107,12 +1098,12 @@ module ReportController::Reports::Editor
 
   def move_cols_top
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.to_the_top", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move to the top") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.to_the_top", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move to the top") % "fields", :error)
     else
       if first_idx > 0
         @edit[:new][:fields][first_idx..last_idx].reverse.each do |field|
@@ -1129,12 +1120,12 @@ module ReportController::Reports::Editor
 
   def move_cols_bottom
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.to_the_bottom", :field=>"fields"), :error)
+      add_flash(_("No %s were selected to move to the bottom") % "fields", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if ! consecutive
-      add_flash(I18n.t("flash.edit.select_fields_to_move.to_the_bottom", :field=>"fields"), :error)
+      add_flash(_("Select only one or consecutive %s to move to the bottom") % "fields", :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
         @edit[:new][:fields][first_idx..last_idx].each do |field|

@@ -411,7 +411,7 @@ class DashboardController < ApplicationController
     @settings = copy_hash(DEFAULT_SETTINGS)               # Need settings, else pages won't display
     @settings[:css] = css if css                          # Restore CSS settings for other tabs previusly logged in
     @more = params[:type] && params[:type] != "less"
-    flash[:notice] = I18n.t('flash.authentication.session_timed_out') if params[:timeout] == "true"
+    flash[:notice] = _("Session was timed out due to inactivity. Please log in again.") if params[:timeout] == "true"
     logon_details = MiqServer.my_server(true).logon_status_details
     @login_message = logon_details[:message] if logon_details[:status] == :starting && logon_details[:message]
 
@@ -814,13 +814,13 @@ class DashboardController < ApplicationController
     @report  = miq_task.task_results
     session[:rpt_task_id] = miq_task.id
     if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
-      add_flash(I18n.t("flash.error_building_timeline") << miq_task.message, :error)
+      add_flash(_("Error building timeline ") << miq_task.message, :error)
       return
     end
 
     @timeline = true
     if @report.table.data.empty?
-      add_flash(I18n.t("flash.no_timeline_records_found"), :warning)
+      add_flash(_("No records found for this timeline"), :warning)
       return
     end
 

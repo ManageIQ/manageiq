@@ -10,7 +10,7 @@ module ReportController::Usage
     @usage_options = session[:usage_options] ? session[:usage_options] : Hash.new
     if sdate.nil?
       @usage_options[:sdate] = @usage_options[:edate] = nil
-      add_flash(I18n.t("flash.no_usage_data_found"), :error)
+      add_flash(_("No usage data found for specified options"), :error)
     else
       @usage_options[:typ]   ||= "daily"
       @usage_options[:cats]  ||= usage_build_cats
@@ -150,7 +150,7 @@ module ReportController::Usage
       (@usage_options[:typ] == "daily" ? "" : " at #{@usage_options[:hour]}:00")
 
     if rpt.table.data.length == 0
-      add_flash(I18n.t("flash.no_usage_data_found"), :error)
+      add_flash(_("No usage data found for specified options"), :error)
     end
     @usage_options[:report] = rpt
     @html = rpt.to_html             # Create html from the usage report

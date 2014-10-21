@@ -27,7 +27,7 @@ module OpsController::Settings
     if params[:button] == "activate"
       message = "Feature Disabled, see RHN tab on Region."
       product_updates_list
-      add_flash(I18n.t("flash.ops.settings.error_during_task", :task=>"Build activation") << message, :error)
+      add_flash(_("Error during %s: ") % "Build activation" << message, :error)
       get_node_info(x_node)
       replace_right_cell(@nodetype)
     else      #cancel button is pressed
@@ -47,15 +47,15 @@ module OpsController::Settings
       begin
         session[:imports].apply
       rescue StandardError => bang
-        msg = I18n.t("flash.error_during", :task=>"apply") << bang
+        msg = _("Error during '%s': ") % "apply" << bang
         err = true
       else
-        msg = I18n.t("flash.ops.settings.import_successful")
+        msg = _("Records were successfully imported")
         err = false
         session[:imports] = @sb[:imports] = nil
       end
     else
-      msg = I18n.t("flash.ops.settings.locate_file", :typ=>"CSV")
+      msg = _("Use the Browse button to locate %s file") % "CSV"
       err = true
     end
     @sb[:show_button] = err
@@ -67,7 +67,7 @@ module OpsController::Settings
     builds = Array.new
     builds = find_checked_items
     if builds.empty?
-      add_flash(I18n.t("flash.no_records_selected_for_task", :model=>ui_lookup(:models=>"ProductUpdate"), :task=>"deletion"), :error)
+      add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:models=>"ProductUpdate"), :task=>"deletion"}, :error)
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
@@ -180,14 +180,14 @@ module OpsController::Settings
     forest_get_form_vars
     no_changes = true
     if @temp[:ldaphost] == ""
-      add_flash(I18n.t("flash.edit.field_required", :field=>"LDAP Host"), :error)
+      add_flash(_("%s is required") % "LDAP Host", :error)
     elsif @edit[:new][:authentication][:user_proxies].blank? || @edit[:new][:authentication][:user_proxies][0].blank?   # if adding forest first time, delete a blank record
       @edit[:new][:authentication][:user_proxies].delete_at(0)
     else
       @edit[:new][:authentication][:user_proxies].each do |f|
         if f[:ldaphost] == @temp[:ldaphost] && session[:entry][:ldaphost] != @temp[:ldaphost]   #check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
           no_changes = false
-          add_flash(I18n.t("flash.edit.field_unique", :field=>"LDAP Host"), :error)
+          add_flash(_("%s should be unique") % "LDAP Host", :error)
           break
         end
       end
@@ -216,7 +216,7 @@ module OpsController::Settings
     w = wb[:replication_worker][:replication][:destination]
     valid = MiqRegionRemote.validate_connection_settings(w[:host],w[:port],w[:username],w[:password],w[:database])
     if valid.nil?
-      add_flash(I18n.t("flash.ops.settings.worker_credentials_validated", :wtype=>"Replication Worker"))
+      add_flash(_("%s Credentials validated successfully") % "Replication Worker")
     else
       valid.each do |v|
         add_flash(v,:error)
@@ -229,7 +229,7 @@ module OpsController::Settings
 
   def region_edit
     settings_set_view_vars
-    @right_cell_text = I18n.t("cell_header.type_of_model_record",:typ=>"Settings",:name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",:model=>ui_lookup(:model=>"MiqRegion"))
+    @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
     case params[:button]
     when "cancel"
       session[:edit] = @edit = nil
@@ -237,7 +237,7 @@ module OpsController::Settings
     when "save"
       return unless load_edit("region_edit__#{params[:id]}","replace_cell__explorer")
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Region description"), :error)
+        add_flash(_("%s is required") % "Region description", :error)
       end
       if @flash_array != nil
         session[:changed] = @changed = true
@@ -258,9 +258,7 @@ module OpsController::Settings
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
-        add_flash(I18n.t("flash.edit.saved",
-                        :model=>ui_lookup(:model=>"MiqRegion"),
-                        :name=>@edit[:region].description))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqRegion"), :name=>@edit[:region].description})
         AuditEvent.success(build_saved_audit(@edit[:region], params[:button] == "edit"))
         @edit = session[:edit] = nil  # clean out the saved info
         replace_right_cell("root",[:settings])
@@ -268,7 +266,7 @@ module OpsController::Settings
     when "reset", nil # Reset or first time in
       region_set_form_vars
       if params[:button] == "reset"
-        add_flash(I18n.t("flash.edit.reset"), :warning)
+        add_flash(_("All changes have been reset"), :warning)
       end
       replace_right_cell("root")
     end

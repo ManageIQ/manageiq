@@ -156,10 +156,10 @@ module OpsController::Settings::RHN
     if params[:task_id] # wait_for_task is done --> read the task record
       miq_task = MiqTask.find(params[:task_id])
       if miq_task.status != 'Ok'
-        add_flash(I18n.t("flash.credentials.error", :message=>miq_task.message), :error)
+        add_flash(_("Credential validation returned: %s") % miq_task.message, :error)
       else
         # task succeeded, we have the array of organization names in miq_task.task_results
-        add_flash(I18n.t("flash.credentials.validated"))
+        add_flash(_("Credential validation was successful"))
         yield miq_task.task_results
       end
     else # First time --> run the task
@@ -209,8 +209,7 @@ module OpsController::Settings::RHN
       if @edit[:new][field].present?
         false
       else
-        add_flash(I18n.t('flash.edit.field_required',
-                         :field => RHN_OBLIGATORY_FIELD_NAMES[field]), :error)
+        add_flash(_("%s is required") %  RHN_OBLIGATORY_FIELD_NAMES[field], :error)
         true
       end
     end.empty?
@@ -273,25 +272,24 @@ module OpsController::Settings::RHN
     if params[:button] != 'refresh'
       server_ids = (@edit[:new][:servers].keys rescue [])
       if server_ids.empty?
-        add_flash(I18n.t('flash.ops.settings.no_server_selected'), :error)
+        add_flash(_("No Server was selected"), :error)
       else
         begin
           case params[:button]
           when 'register'
-            verb = I18n.t('flash.ops.settings.rhn.registration')
+            verb = _("Registration")
             MiqServer.queue_update_registration_status(server_ids)
           when 'check'
-            verb = I18n.t('flash.ops.settings.rhn.check_for_updates')
+            verb = _("Check for updates")
             MiqServer.queue_check_updates(server_ids)
           when 'update'
-            verb = I18n.t('flash.ops.settings.rhn.update')
+            verb = _("Update")
             MiqServer.queue_apply_updates(server_ids)
           end
 
-          add_flash(I18n.t('flash.ops.settings.action_has_been_queued', :action => verb))
+          add_flash(_("%s has been initiated for the selected Servers") %  verb)
         rescue => error
-          add_flash(I18n.t('flash.ops.settings.error_when_queuing_action',
-                           :error => error.message), :error)
+          add_flash(_("Error occured when queuing action: %s") %  error.message, :error)
         end
       end
     end

@@ -61,7 +61,7 @@ class OntapStorageSystemController < CimInstanceController
       if role_allows(:feature=>"#{area}_tag")
         page.redirect_to :action => 'create_ld'
       else
-        add_flash(I18n.t("flash.user_not_authorized"), :error)
+        add_flash(_("The user is not authorized for this task or item."), :error)
         page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
       end
     end
@@ -86,7 +86,7 @@ class OntapStorageSystemController < CimInstanceController
         ccs.create_logical_disk(@edit[:new][:ld_name],
                                 @edit[:new][:aggregate_name],
                                 @edit[:new][:ld_size].to_i)
-      add_flash(I18n.t("flash.record.task_started", :model=>ui_lookup(:model=>"OntapStorageSystem"), :name=>ccs.name, :task=>"Create Logical Disk"))
+      add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"OntapStorageSystem"), :name=>ccs.name, :task=>"Create Logical Disk"})
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -104,7 +104,7 @@ class OntapStorageSystemController < CimInstanceController
 
   def create_ld_cancel
     return unless load_edit("ontap_storage_system_create_ld__#{params[:id]}")
-    add_flash(I18n.t("flash.task_cancelled", :task=>"Create Logical Disk"))
+    add_flash(_("%s was cancelled by the user") % "Create Logical Disk")
     @edit = nil # clean out the saved info
     session[:flash_msgs] = @flash_array.dup                   # Put msgs in session for next transaction
     render :update do |page|
@@ -123,10 +123,10 @@ class OntapStorageSystemController < CimInstanceController
   end
 
   def create_ld_valid?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Name"), :error) if @edit[:new][:ld_name].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Aggregate"), :error) if @edit[:new][:aggregate_name].blank?
-    add_flash(I18n.t("flash.edit.field_required", :field=>"Size"), :error) if @edit[:new][:ld_size].blank?
-    add_flash(I18n.t("flash.edit.field_must_be.integer", :field=>"Size"), :error) if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
+    add_flash(_("%s is required") % "Name", :error) if @edit[:new][:ld_name].blank?
+    add_flash(_("%s is required") % "Aggregate", :error) if @edit[:new][:aggregate_name].blank?
+    add_flash(_("%s is required") % "Size", :error) if @edit[:new][:ld_size].blank?
+    add_flash(_("%s must be an integer") % "Size", :error) if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
     return @flash_array.nil?
   end
 end

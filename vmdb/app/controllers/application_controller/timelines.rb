@@ -59,7 +59,7 @@ module ApplicationController::Timelines
         (@tl_options[:filter1].nil? || @tl_options[:filter1] == "") &&
         (@tl_options[:filter2].nil? || @tl_options[:filter2] == "") &&
         (@tl_options[:filter3].nil? || @tl_options[:filter3] == "")
-      add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"filter"), :warning)
+      add_flash(_("At least one %s must be selected") % "filter", :warning)
     elsif @tl_options[:tl_show] == "policy_timeline"
       flg = true
       @tl_options[:events].sort.each_with_index do |e,i|
@@ -69,7 +69,7 @@ module ApplicationController::Timelines
           break
         end
       end
-      add_flash(I18n.t("flash.edit.at_least_1.selected", :field=>"filter"), :warning) if flg
+      add_flash(_("At least one %s must be selected") % "filter", :warning) if flg
     else
       tl_gen_timeline_data(refresh="n")
       return unless @temp[:timeline]
@@ -104,7 +104,7 @@ module ApplicationController::Timelines
       end
     end
     @temp[:timeline] = true
-    add_flash(I18n.t("flash.no_timeline_events_found"), :warning) if @tl_options[:sdate].nil? && @tl_options[:edate].nil?
+    add_flash(_("No events available for this timeline"), :warning) if @tl_options[:sdate].nil? && @tl_options[:edate].nil?
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("tl_options_div", :partial=>"layouts/tl_options")
@@ -252,10 +252,10 @@ module ApplicationController::Timelines
     begin
       @report.generate_table(:userid => session[:userid])
     rescue StandardError => bang
-      add_flash(I18n.t("flash.error_building_timeline") << bang.message, :error)
+      add_flash(_("Error building timeline ") << bang.message, :error)
     else
       if @report.table.data.length == 0
-        add_flash(I18n.t("flash.no_timeline_records_found"), :warning)
+        add_flash(_("No records found for this timeline"), :warning)
       else
         @timeline = true
         @report.extras[:browser_name] = browser_info("name").downcase
@@ -505,11 +505,11 @@ module ApplicationController::Timelines
       @report = miq_task.task_results
 
       if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-        add_flash(I18n.t("flash.error_building_timeline") << miq_task.message, :error)
+        add_flash(_("Error building timeline ") << miq_task.message, :error)
       else
         @timeline = @timeline_filter = true
         if @report.table.data.length == 0
-          add_flash(I18n.t("flash.no_timeline_records_found"), :warning)
+          add_flash(_("No records found for this timeline"), :warning)
         else
           @report.extras[:browser_name] = browser_info("name").downcase
           if is_browser_ie?
