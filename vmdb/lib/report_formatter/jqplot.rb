@@ -15,6 +15,7 @@ module ReportFormatter
     end
 
     def add_axis_category_text(categories)
+      mri.chart[:axis_category_text] << categories
     end
 
     def add_series_label(label)
@@ -25,8 +26,9 @@ module ReportFormatter
     def build_document_header
       super
       mri.chart = {
-        :data    => [],
-        :options => {
+        :axis_category_text => [],
+        :data               => [],
+        :options            => {
           :series => []
         }
       }
@@ -53,7 +55,25 @@ module ReportFormatter
           :seriesDefaults => {:fill => true},
         )
       end
+
       horizontal_legend
+      x_axis_cathegory_labels
+
+      mri.chart[:options][:axes] ||= {}
+      mri.chart[:options][:axes][:yaxis] ||= {}
+      mri.chart[:options][:axes][:yaxis][:min] = 0
+    end
+
+    def x_axis_cathegory_labels
+      return if Array(mri.chart[:axis_category_text]).empty?
+
+      mri.chart[:data] = mri.chart[:data]
+        .zip(mri.chart[:axis_category_text])
+          .collect do |series, labels|
+            (labels || mri.chart[:axis_category_text][0]).zip(series)
+          end
+
+      mri.chart[:options].update(:axes => {:xaxis => {:renderer => 'jQuery.jqplot.CategoryAxisRenderer'}})
     end
 
     # Utilization timestamp charts
@@ -62,6 +82,7 @@ module ReportFormatter
       horizontal_line_cursor
       horizontal_legend
       mri.chart[:options].update(:seriesDefaults => {:renderer => 'jQuery.jqplot.BarRenderer'})
+      x_axis_cathegory_labels
     end
 
     def build_reporting_chart_dim2
@@ -93,6 +114,7 @@ module ReportFormatter
       horizontal_line_cursor
       default_legend
       mri.chart[:options].update(:seriesDefaults => {:renderer => 'jQuery.jqplot.BarRenderer'})
+      x_axis_cathegory_labels
     end
 
     def build_reporting_chart_other
@@ -101,6 +123,7 @@ module ReportFormatter
     end
 
     def finalize_document
+      mri.chart.delete(:axis_category_text)
       mri.chart[:options][:title] ||= mri.title if options.show_title
       mri.chart
     end
