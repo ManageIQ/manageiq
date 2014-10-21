@@ -33,7 +33,7 @@
     <% unless @edit %>
         <p class="legend">Policies</p>
         <% if @profile_policies.empty? %>
-          <br/><strong>* No Policies are defined.</strong>
+          <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Policies are defined."} %>
         <% else %>
           <table class="style3">
             <thead>
@@ -144,10 +144,7 @@
     <% unless @edit %>
       <p class="legend">Notes</p>
       <% if @profile.notes.blank? %>
-        <div class="alert alert-info">
-          <span class="pficon pficon-info"></span>
-          <strong>No notes have been entered.</strong>
-        </div>
+        <%= render :partial => 'layouts/info_msg', :locals => {:message => "No notes have been entered."}%>
       <% else %>
         <%= text_area_tag("notes", @profile.notes, :readonly=>true, :rows=>4) %>
       <% end %>
