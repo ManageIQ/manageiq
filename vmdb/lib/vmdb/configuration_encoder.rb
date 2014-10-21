@@ -6,14 +6,17 @@ module Vmdb
       load(dump(hash))
     end
 
-    def self.stringify(h)
-      ret = h.deep_clone
-      ret.each_key {|k| ret[k].stringify_keys!}.stringify_keys!
+    def self.stringify!(h)
+      h.each_key { |k| h[k].stringify_keys! }.stringify_keys!
     end
 
-    def self.symbolize(h)
-      ret = h.deep_clone
-      ret.each_key {|k| ret[k].symbolize_keys!}.symbolize_keys!
+    # TODO: Stringify, why does MiqDbConfig have to call stringify directly?
+    def self.stringify(h)
+      stringify!(h.deep_clone)
+    end
+
+    def self.symbolize!(h)
+      h.each_key { |k| h[k].symbolize_keys! }.symbolize_keys!
     end
 
     def self.load(data, symbolize_keys = true, &block)
@@ -25,24 +28,24 @@ module Vmdb
       end
 
       hash = YAML.load(data)
-      hash = symbolize(stringify(hash)) if symbolize_keys
+      symbolize!(stringify!(hash)) if symbolize_keys
 
       if block_given?
-        hash = hash.deep_clone
         walk_nested_hashes(hash, &block)
       else
-        decrypt_password_fields(hash)
+        decrypt_password_fields!(hash)
       end
     end
 
     def self.dump(hash, fd = nil, stringify_keys = true, &block)
+      hash = hash.deep_clone
+
       if block_given?
-        hash = hash.deep_clone
         walk_nested_hashes(hash, &block)
       else
-        hash = encrypt_password_fields(hash)
+        encrypt_password_fields!(hash)
       end
-      hash = stringify(hash) if stringify_keys
+      stringify!(hash) if stringify_keys
       YAML.dump(hash, fd)
     end
 
@@ -55,20 +58,24 @@ module Vmdb
       hash
     end
 
-    def self.encrypt_password_fields(hash)
-      hash = hash.deep_clone
-
+    def self.encrypt_password_fields!(hash)
       walk_nested_hashes(hash) do |k, v, h|
         h[k] = MiqPassword.try_encrypt(v) if k.to_s.in?(PASSWORD_FIELDS) && v.present?
       end
     end
 
-    def self.decrypt_password_fields(hash)
-      hash = hash.deep_clone
+    def self.encrypt_password_fields(hash)
+      encrypt_password_fields!(hash.deep_clone)
+    end
 
+    def self.decrypt_password_fields!(hash)
       walk_nested_hashes(hash) do |k, v, h|
         h[k] = MiqPassword.try_decrypt(v) if k.to_s.in?(PASSWORD_FIELDS) && v.present?
       end
+    end
+
+    def self.decrypt_password_fields(hash)
+      decrypt_password_fields!(hash.deep_clone)
     end
   end
 end
