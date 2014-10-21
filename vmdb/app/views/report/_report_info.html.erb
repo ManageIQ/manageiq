@@ -62,10 +62,7 @@
   <% end %>
   <p class="legend">Schedules</p>
   <% if @temp[:schedules].blank? %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>Report is not Scheduled.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "Report is not Scheduled."}%>
   <% else %>
     <table class="style3">
       <thead>
@@ -124,10 +121,7 @@
   <% end %>
     <p class="legend">Widgets</p>
     <% if @temp[:widget_nodes].nil? || (@temp[:widget_nodes] && @temp[:widget_nodes].empty?) %>
-      <div class="alert alert-info">
-        <span class="pficon pficon-info"></span>
-        <strong>Report doesn't belong to Widgets.</strong>
-      </div>
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "Report doesn't belong to Widgets."}%>
     <% else %>
       <table class="style3">
         <thead>
