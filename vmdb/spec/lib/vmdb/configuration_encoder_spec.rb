@@ -172,15 +172,8 @@ describe Vmdb::ConfigurationEncoder do
     end
   end
 
-  context ".symbolize" do
-    subject { described_class.symbolize(@config) }
-
-    it "should not change original hash" do
-      @config = {"one"=> {"two"=> "three"}}
-
-      subject.should == {:one => {:two => "three"}}
-      @config.should == {"one"=> {"two"=> "three"}}
-    end
+  context ".symbolize!" do
+    subject { described_class.symbolize!(@config) }
 
     it "should handle two layers deep hash" do
       @config = {"one"=> {"two"=> {"three" => "four"}}}

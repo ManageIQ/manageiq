@@ -10,16 +10,13 @@ module Vmdb
       h.each_key { |k| h[k].stringify_keys! }.stringify_keys!
     end
 
+    # TODO: Stringify, why does MiqDbConfig have to call stringify directly?
     def self.stringify(h)
       stringify!(h.deep_clone)
     end
 
     def self.symbolize!(h)
       h.each_key { |k| h[k].symbolize_keys! }.symbolize_keys!
-    end
-
-    def self.symbolize(h)
-      symbolize!(h.deep_clone)
     end
 
     def self.load(data, symbolize_keys = true, &block)
