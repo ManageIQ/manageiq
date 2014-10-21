@@ -9,10 +9,7 @@
 		<%= render(:partial => 'layouts/tl_options') %>
 		<%= render :partial=>'layouts/tl_detail' %>
 	<% else %>
-		<div class="alert alert-info">
-			<span class="pficon pficon-info"></span>
-			<strong>This Server's Virtual Machine has not been identified.</strong>
-		</div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Server's Virtual Machine has not been identified."}%>
 	<% end %>
 	<div style="padding-bottom:20px;"></div>
 <% end %>

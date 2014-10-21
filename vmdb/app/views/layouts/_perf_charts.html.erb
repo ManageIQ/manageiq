@@ -22,10 +22,7 @@
             <% end %>
           <% end %>
         <% else %>
-          <div class="alert alert-info">
-            <span class="pficon pficon-info"></span>
-            <strong>No Capacity & Utilization data available.</strong>
-          </div>
+           <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Capacity & Utilization data available."}%>
         <% end %>
 
         <% if @html %>
@@ -85,10 +82,7 @@
               </tr>
             <% end %>
           <% else %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>No Capacity & Utilization data available.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Capacity & Utilization data available."}%>
           <% end %>
         </table>
       <% elsif perf_compare_vm? %><%# Show main charts along with Compare to VM charts %>
@@ -111,10 +105,7 @@
               <% end %>
             <% end %>
           <% else %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>No Capacity & Utilization data available.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Capacity & Utilization data available."}%>
           <% end %>
 
           <% if @html %>
@@ -144,10 +135,7 @@
               <% end %>
             <% end %>
           <% else %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>No Capacity & Utilization data available.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Capacity & Utilization data available."}%>
           <% end %>
 
           <% if @c_html %>

@@ -73,10 +73,7 @@
               <% end %>
             <% end %>
           <% else %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>No Policy scope defined, the scope of this policy includes all elements.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Policy scope defined, the scope of this policy includes all elements."}%>
           <% end %>
           <hr>
         <% else %>
@@ -92,10 +89,7 @@
         <% unless @edit %>
           <p class="legend">Conditions</p>
           <% if @policy_conditions.empty? %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>No conditions defined. This policy is unconditional and will ALWAYS return true.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "No conditions defined. This policy is unconditional and will ALWAYS return true."}%>
           <% else %>
             <table class="style3">
               <thead>
@@ -229,10 +223,7 @@
         <% unless @edit %>
           <p class="legend">Events</p>
           <% if @policy_events.empty? %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>This policy does not currently respond to any Events.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "This policy does not currently respond to any Events."}%>
           <% else %>
             <table class="style3">
               <thead>
@@ -326,10 +317,7 @@
         <% unless @edit %>
           <p class="legend">Notes</p>
           <% if @policy.notes.blank? %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>No notes have been entered.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "No notes have been entered."}%>
           <% else %>
             <%= text_area_tag("notes",
                               @policy.notes,
@@ -358,10 +346,7 @@
           <% if x_active_tree == :policy_tree %>
             <p class="legend">Belongs to Profiles</p>
             <% if @policy_profiles.empty? %>
-              <div class="alert alert-info">
-                <span class="pficon pficon-info"></span>
-                <strong>This Policy is not assigned to any Profiles.</strong>
-              </div>
+              <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Policy is not assigned to any Profiles."}%>
             <% else %>
               <table class="style3">
                 <thead>

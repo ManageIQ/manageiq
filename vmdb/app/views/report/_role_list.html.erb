@@ -41,10 +41,7 @@
   <% elsif @sb[:menu] %>
     <%= render(:partial=>"layouts/flash_msg", :locals=>{:div_num=>"_menu_list"}) %>
     <% if @sb[:menu].empty? %>
-      <div class="alert alert-info">
-        <span class="pficon pficon-info"></span>
-        <strong>No Saved Reports available.</strong>
-      </div>
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Saved Reports available."}%>
     <% else %>
       <table class="style3">
         <thead>
@@ -71,10 +68,7 @@
       </table>
     <% end %>
   <% else %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>Choose a Role to edit from the left.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "Choose a Role to edit from the left."}%>
   <% end %>
 <% end %>
 </div>

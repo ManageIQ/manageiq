@@ -22,11 +22,7 @@
 <% elsif @sb[:button_groups] %>
   <% if @sb[:button_groups].blank? %>
     <hr>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>No Items found.</strong>
-    </div>
-
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Items found."}%>
   <% else %>
     <%= render(:partial => "layouts/flash_msg") %>
     <table class="style3">
@@ -122,11 +118,7 @@
 
   <% end %>
   <% if @sb[:buttons].blank? %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>No Buttons found.</strong>
-    </div>
-
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Buttons found."}%>
   <% else %>
       <hr>
       <table class="style3">

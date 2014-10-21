@@ -10,9 +10,6 @@
       </script>
     <% end %>
   <% else %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>Enter Automation Simulation options on the left and press Submit.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "Enter Automation Simulation options on the left and press Submit."}%>
   <% end %>
 </div>

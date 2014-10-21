@@ -28,11 +28,7 @@
       %>
 
     <% else %>
-      <div class="alert alert-info">
-        <span class="pficon pficon-info"></span>
-        <strong>No planning data is available for the selected item.</strong>
-      </div>
-      
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "No planning data is available for the selected item."}%>
     <% end %>
 <br clear="all">
 <hr>

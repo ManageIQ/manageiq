@@ -1,10 +1,7 @@
   <%= render :partial => "layouts/flash_msg" %>
     <p class="legend">Report Results by User</p>
     <% if @sb[:orphaned_records].blank? %>
-      <div class="alert alert-info">
-        <span class="pficon pficon-info"></span>
-        <strong>No Records Found</strong>
-      </div>
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Records Found."}%>
     <% else %>
       <table class="style3">
         <thead>
