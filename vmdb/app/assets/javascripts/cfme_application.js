@@ -191,9 +191,9 @@ function miqGetBrowserInfo() {
 // Turn highlight on or off
 function miqHighlight(elem, status) {
   if (status) {
-    if($(elem)) $(elem).addClassName('active');
+    if($j(elem).length) $j(elem).addClass('active');
   } else {
-    if($(elem)) $(elem).removeClassName('active');
+    if($j(elem).length) $j(elem).removeClass('active');
   }
 }
 
@@ -223,11 +223,11 @@ function miqSparkleOff() {
 
 // dim/un-dim a div: pass divname and status (true to dim, false to un-dim)
 function miqDimDiv(divname, status) {
-  if ($(divname)) {
+  if ($j(divname).length) {
     if (status)
-      $(divname).addClassName('dimmed');
+      $j(divname).addClass('dimmed');
     else
-      $(divname).removeClassName('dimmed');
+      $j(divname).removeClass('dimmed');
 } }
 
 // Check for changes and prompt
@@ -743,9 +743,9 @@ function miqSetInputValues(fld, evt){
 
 function miqSetInputClass(fld,cname,typ){
   if (typ == "remove"){
-    $(fld).removeClassName(cname)
+    $j(fld).removeClass(cname)
   } else {
-    $(fld).addClassName(cname)
+    $j(fld).addClass(cname)
   }
 }
 

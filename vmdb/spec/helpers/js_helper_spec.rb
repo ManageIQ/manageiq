@@ -22,7 +22,7 @@ describe JsHelper do
       tree_lock('bar',true).should eq(
     "
       $j('#barbox').dynatree('disable');
-      miqDimDiv('bar_div',true);
+      miqDimDiv('\#bar_div', true);
     ")
     end
 
@@ -30,7 +30,7 @@ describe JsHelper do
       tree_lock('bar',false).should eq(
     "
       $j('#barbox').dynatree('enable');
-      miqDimDiv('bar_div',false);
+      miqDimDiv('\#bar_div', false);
     ")
     end
   end
@@ -47,6 +47,32 @@ describe JsHelper do
   context '#javascript_focus_if_exists' do
     it 'returns js to check for the existence of an element and focus on the element if it exists' do
       javascript_focus_if_exists('foo').should eq("if ($j('#foo').length) $j('#foo').focus();")
+    end
+  end
+
+  context '#javascript_highlight' do
+    it 'returns js to to add or remove the active class on the element' do
+      javascript_highlight('foo', true).should eq("miqHighlight('\#foo', true);")
+      javascript_highlight('foo', false).should eq("miqHighlight('\#foo', false);")
+    end
+  end
+
+  context '#javascript_dim' do
+    it 'returns js to to add or remove the dimmed class on the element' do
+      javascript_dim('foo', true).should eq("miqDimDiv('\#foo', true);")
+      javascript_dim('foo', false).should eq("miqDimDiv('\#foo', false);")
+    end
+  end
+
+  context '#javascript_add_class' do
+    it 'returns js to add a class on the element' do
+      javascript_add_class('foo', 'bar').should eq("$j('\#foo').addClass('bar');")
+    end
+  end
+
+  context '#javascript_del_class' do
+    it 'returns js to remove a class on the element' do
+      javascript_del_class('foo', 'bar').should eq("$j('\#foo').removeClass('bar');")
     end
   end
 end

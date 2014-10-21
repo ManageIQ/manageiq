@@ -114,10 +114,10 @@ function applyCSS(cellNode, row, dataContext, colDef) {
     }
   }
   if (dataContext.section && colDef.field == 'col0')
-    $(cellNode).addClassName('cell-bkg-plain');
+    $j(cellNode).addClass('cell-bkg-plain');
 
   if(value.search('cell-stripe') > -1)
-    $(cellNode).addClassName('cell-bkg');
+    $j(cellNode).addClass('cell-bkg');
   else if(value.search('cell-plain') > -1)
-    $(cellNode).addClassName('cell-bkg-plain');
+    $j(cellNode).addClass('cell-bkg-plain');
 }

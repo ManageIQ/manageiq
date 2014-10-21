@@ -750,19 +750,19 @@ class OpsController < ApplicationController
       end
 
       if role_allows(:feature=>"ops_settings")
-        page << "miqDimDiv('settings_tree_div',false);"
+        page << javascript_dim("settings_tree_div", false)
       end
       if role_allows(:feature=>"ops_rbac")
-        page << "miqDimDiv('rbac_tree_div',false);"
+        page << javascript_dim("rbac_tree_div", false)
       end
       if role_allows(:feature=>"ops_diagnostics")
-        page << "miqDimDiv('diagnostics_tree_div',false);"
+        page << javascript_dim("diagnostics_tree_div", false)
       end
       if role_allows(:feature=>"ops_db")
-        page << "miqDimDiv('vmdb_tree_div',false);"
+        page << javascript_dim("vmdb_tree_div", false)
       end
       if get_vmdb_config[:product][:analytics]
-        page << "miqDimDiv('analytics_tree_div',false);"
+        page << javascript_dim("analytics_tree_div", false)
       end
 
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '#{x_node}');"
