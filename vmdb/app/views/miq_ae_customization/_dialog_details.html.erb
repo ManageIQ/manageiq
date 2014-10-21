@@ -2,7 +2,7 @@
 <%# Need to include the tree JS files in case no tree is initially displayed %>
 <% if @record %>
 	<% unless @edit %>
-		<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+		<%= render :partial=>"layouts/flash_msg" %>
 		<div id="dialog_info_tabs" style="display:none;width:100%;height:100%;overflow:auto;">
 			<ul class="tab">
 				<li><a href="#sample_tab">Sample</a></li>

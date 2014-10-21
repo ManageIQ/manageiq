@@ -1,6 +1,6 @@
 <% url = url_for(:action => 'db_form_field_changed', :id=>"#{@db.id || "new"}") %>
 <div id="form_div">
-  <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+  <%= render :partial=>"layouts/flash_msg" %>
   <% read_only = @edit && @edit[:db_id] && @edit[:db_id] ? true : false %>
     <p class="legend">Basic Information</p>
     <table class="style1">
