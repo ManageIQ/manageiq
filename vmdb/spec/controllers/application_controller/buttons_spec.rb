@@ -88,7 +88,7 @@ describe ApplicationController do
   end
 
   context "#button_set_form_vars" do
-    it "check button_set_form_vars sets correct applies_to_class when edititng a button" do
+    it "check button_set_form_vars sets correct applies_to_class when editing a button" do
       # button_set_form_vars expects that the simulation screen will be built,
       #   which, in turn, needs *something* to come back from automate
       MiqAeClass.stub(:find_distinct_instances_across_domains => [double(:name => "foo")])
