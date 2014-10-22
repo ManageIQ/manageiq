@@ -2,7 +2,6 @@ class Classification < ActiveRecord::Base
   acts_as_tree
 
   belongs_to :tag
-  attr_accessor :name
 
   before_save    :save_tag
   before_destroy :delete_tags_and_entries
