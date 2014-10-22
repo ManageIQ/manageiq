@@ -473,18 +473,6 @@ describe Rbac do
       Vm.scope :group_scope,   lambda { |group_num| {:conditions => ["name LIKE ?", "Test Group #{group_num}%"]} }
     end
 
-    it "has the correct setup" do
-      Classification.seed
-      Vm.count.should == 100
-      Classification.categories.length.should > 0
-      Vm.find_tagged_with(:any => "/managed/environment/prod",     :ns => "*").length.should == 50
-      Vm.find_tagged_with(:any => "/managed/environment/dev",      :ns => "*").length.should == 34
-      Vm.find_tagged_with(:any => "/managed/service_level/gold",   :ns => "*").length.should == 25
-      Vm.find_tagged_with(:any => "/managed/service_level/silver", :ns => "*").length.should == 20
-      Vm.find_tagged_with(:all => "/managed/environment/prod /managed/service_level/silver", :ns => "*").length.should == 10
-      Vm.count(:conditions => ["hardwares.guest_os = ? AND hardwares.numvcpus >= ? AND hardwares.memory_cpu >= ?", "ubuntu", 4, 3.megabytes], :include => {:hardware=>{}}).should == 25
-    end
-
     context ".search" do
 
       it "self-service group" do
