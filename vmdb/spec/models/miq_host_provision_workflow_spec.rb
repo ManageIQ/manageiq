@@ -5,11 +5,6 @@ silence_warnings { MiqHostProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", fa
 describe MiqHostProvisionWorkflow do
 
   context "seeded" do
-    before(:each) do
-      MiqRegion.seed
-      MiqDialog.seed
-    end
-
     context "After setup," do
       before(:each) do
         @guid = MiqUUID.new_guid
@@ -35,6 +30,8 @@ describe MiqHostProvisionWorkflow do
                           root_password=smartvm|
                           addr_mode=dhcp|
                       HOST_FIELDS
+
+        FactoryGirl.create(:miq_dialog_host_provision)
       end
 
       context "Without a Valid IPMI Host," do
@@ -52,7 +49,6 @@ describe MiqHostProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
-          pending
           request = MiqHostProvisionWorkflow.from_ws("1.1", "admin", @templateFields, @hostFields, @requester, false, nil, nil)
           request.should be_a_kind_of(MiqRequest)
           opt = request.options

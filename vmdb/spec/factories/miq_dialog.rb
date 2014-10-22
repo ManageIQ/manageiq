@@ -27,4 +27,9 @@ FactoryGirl.define do
       }
     end
   end
+
+  factory :miq_dialog_host_provision, :parent => :miq_dialog do
+    name        "miq_host_provision_dialogs"
+    dialog_type "MiqHostProvisionWorkflow"
+  end
 end
