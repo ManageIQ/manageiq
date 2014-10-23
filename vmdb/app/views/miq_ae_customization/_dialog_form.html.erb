@@ -1,6 +1,6 @@
 <% url = url_for(:action=>'dialog_form_field_changed', :id=>"#{@record.id || "new"}") %>
 <% nodes = x_node.split('_') %>
-<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+<%= render :partial => "layouts/flash_msg" %>
 <div id="form_div">
   <%= hidden_field_tag(:ignore_form_changes) %>
   <% if nodes.length == 1 && @sb[:node_typ].blank? %>

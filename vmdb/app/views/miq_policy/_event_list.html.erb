@@ -1,6 +1,6 @@
 <div id="event_list_div" style="width:100%;height:100%;overflow:auto;">
 	<% if @events %>
-		<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+		<%= render :partial => "layouts/flash_msg" %>
 		<% if @events.empty? %>
 			<div class="note">* No Events are defined<%= @search_text.blank? ? "" : " that match the entered search string" %>.</div>
 		<% else %>

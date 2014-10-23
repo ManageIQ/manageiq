@@ -1,4 +1,4 @@
-<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+<%= render :partial => "layouts/flash_msg" %>
 <% if @temp[:vmdb_index] %>
   <p class="legend">Index: <%= h(@temp[:vmdb_index].name) %></p>
   <table class="style1">

@@ -3,7 +3,7 @@
     <% if @in_a_form %>
     <%= render :partial => 'form' %>
     <% elsif @report && !@temp[:report_result] %>
-      <%= render(:partial => "layouts/flash_msg", :locals => {:top_pad => 10, :div_num => "_report_list"}) %>
+      <%= render(:partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"}) %>
 
       <% if @zgraph
            width, height = @html ? [350, 250] : [700, 500] %>
@@ -31,7 +31,7 @@
               @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][1].blank?) %>
         <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Reports available."}%>
       <% else %>
-        <%= render :partial => "layouts/flash_msg", :locals=>{:top_pad=>10, :div_num=>"_report_list"} %>
+        <%= render :partial => "layouts/flash_msg", :locals => {:div_num=>"_report_list"} %>
           <table class="style3">
             <% if nodes.length == 1 %>
               <%# level1 folders list%>

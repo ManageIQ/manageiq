@@ -1,4 +1,4 @@
-<%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10, :div_num=>"_report_list"}) %>
+<%= render(:partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"}) %>
 <% if @sb[:active_tab] == "report_info" %>
   <% if @sb[:miq_report_id] && @miq_report %>
     <p class="legend"><%= @miq_report.name %></p>

@@ -1,6 +1,6 @@
 <% if x_active_tree == :db_tree %>
   <% if @sb[:nodes].nil? || (@sb[:nodes] && @sb[:nodes].length == 1) %>
-    <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+    <%= render :partial => "layouts/flash_msg" %>
     <table class="style3">
       <thead>
         <tr>
@@ -28,7 +28,7 @@
       </tbody>
     </table>
   <% elsif @sb[:nodes] && @sb[:nodes].last == "g" && !@in_a_form %>
-    <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+    <%= render :partial => "layouts/flash_msg" %>
     <%# All Groups node is selected  %>
     <table class="style3">
       <thead>
@@ -59,12 +59,9 @@
       </tbody>
     </table>
   <% elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g" && !@in_a_form %>
-    <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+    <%= render :partial => "layouts/flash_msg" %>
     <% if @temp[:widgetsets].empty? %>
-      <div class="alert alert-info">
-        <span class="pficon pficon-info"></span>
-        <strong>No Dashboards are defined for this group. Default dashboard will be shown.</strong>
-      </div>
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Dashboards are defined for this group. Default dashboard will be shown."}%>
     <% else %>
       <table class="style3">
         <thead>
@@ -97,7 +94,7 @@
     <% end %>
   <% elsif ((@sb[:nodes].length == 4 && @sb[:nodes][1] == "g_g") ||
             (@sb[:nodes].length == 2 && @sb[:nodes].first == "xx")) && !@in_a_form %>
-    <%= render(:partial=>"layouts/flash_msg", :locals=>{:top_pad=>10}) %>
+    <%= render :partial => "layouts/flash_msg" %>
     <%= render :partial => "db_show", :locals=>{:widget=>@db} %>
   <% elsif @in_a_form %>
     <% if @edit[:new][:dashboard_order] %>
