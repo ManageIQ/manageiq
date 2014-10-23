@@ -169,13 +169,6 @@ class LogFile < ActiveRecord::Base
     URI.split(URI.encode(settings[:uri]))[0]
   end
 
-  def self.validate_log_depot_settings(settings)
-    post_method = self.get_post_method(settings) # This will raise an error if URI is malformed
-    raise "Unsupported schema in URI, '#{post_method}', for log depot" unless post_method.blank? || FileDepot.supported_depots.keys.include?("FileDepot#{post_method.capitalize}")
-    raise "no credentials defined" unless settings[:username] && settings[:password] || post_method == 'nfs' # NFS doesn't require credentials
-    return true
-  end
-
   # Added tcp ping stuff here until ftp is refactored into a separate class
   def self.get_ping_depot_options
     @@ping_depot_options ||= VMDB::Config.new("vmdb").config[:log][:collection]
