@@ -101,7 +101,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it "should be able to get and set ems tags" do
-      FactoryGirl.create(:classification_tag_cost_center)
+      FactoryGirl.create(:classification_cost_center_with_tags)
 
       ems = ExtManagementSystem.first
       invoke(:EmsGetTags, ems.guid).should == []
@@ -363,7 +363,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it "should be able to get and set resourcepool tags" do
-      FactoryGirl.create(:classification_tag_cost_center)
+      FactoryGirl.create(:classification_cost_center_with_tags)
 
       resourcepool = ResourcePool.first
       invoke(:ResourcePoolGetTags, resourcepool.id).should == []
@@ -458,7 +458,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it "should be able to get and set datastore tags" do
-      FactoryGirl.create(:classification_tag_cost_center)
+      FactoryGirl.create(:classification_cost_center_with_tags)
 
       datastore = Storage.first
       invoke(:DatastoreGetTags, datastore.id).should == []
@@ -538,7 +538,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it "should be able to get and set vm tags" do
-      FactoryGirl.create(:classification_tag_cost_center)
+      FactoryGirl.create(:classification_cost_center_with_tags)
 
       vm = Vm.first
       invoke(:VmGetTags, vm.guid).should == []
@@ -571,7 +571,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it "should be able to get and set cluster tags" do
-      FactoryGirl.create(:classification_tag_cost_center)
+      FactoryGirl.create(:classification_cost_center_with_tags)
 
       cluster = EmsCluster.first
       invoke(:ClusterGetTags, cluster.id).should == []
