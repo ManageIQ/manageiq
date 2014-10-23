@@ -176,23 +176,6 @@ class LogFile < ActiveRecord::Base
     return true
   end
 
-  def self.verify_log_depot_settings(settings)
-    # FTP based connections now use the methods on FileDepotFtp, everything else should move there
-    method = self.get_post_method(settings)
-
-    if respond_to?("connect_#{method}")
-      conn = self.send("connect_#{method}", settings)
-      conn.close if conn.respond_to?(:close)
-      return true
-    end
-
-    # At this point db should have returned
-    klass = Object.const_get("Miq#{method.capitalize}Session")
-    res   = klass.new(settings).verify
-    raise "Log Depot Settings validation failed with error: #{res.last}" unless res.first
-    res
-  end
-
   # Added tcp ping stuff here until ftp is refactored into a separate class
   def self.get_ping_depot_options
     @@ping_depot_options ||= VMDB::Config.new("vmdb").config[:log][:collection]
