@@ -31,15 +31,28 @@ module VmShowMixin
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
 
+    if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
+      upload_sysprep_file
+      set_form_locals_for_sysprep
+    end
     if params[:id]
       # if you click on a link to VM on a dashboard widget that will redirect you
       # to explorer with params[:id] and you get into the true branch
       redirected = set_elements_and_redirect_unauthorized_user
     else
-      set_active_elements
+      set_active_elements unless @upload_sysprep_file
     end
 
     render :layout => "explorer" unless redirected
+  end
+
+  def set_form_locals_for_sysprep
+    _partial, action, @right_cell_text = set_right_cell_vars
+    locals = {:submit_button => true,
+              :no_reset      => true,
+              :action_url    => action
+             }
+    @temp[:x_edit_buttons_locals] = locals
   end
 
   # VM or Template show selected, redirect to proper controller, to get links on tasks screen working

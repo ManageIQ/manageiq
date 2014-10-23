@@ -186,6 +186,9 @@ class CatalogController < ApplicationController
     @built_trees = []
     @accords     = []
 
+    x_last_active_tree = x_active_tree if x_active_tree
+    x_last_active_accord = x_active_accord if x_active_accord
+
     if role_allows(:feature => "catalog_items_view")
       self.x_active_tree   = 'sandt_tree'
       self.x_active_accord = 'sandt'
@@ -205,6 +208,9 @@ class CatalogController < ApplicationController
       @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
     end
 
+    self.x_active_tree = x_last_active_tree if x_last_active_tree
+    self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
+
     if params[:id]  # If a tree node id came in, show in one of the trees
       @nodetype, id = params[:id].split("_").last.split("-")
       self.x_active_tree   = 'sandt_tree'
@@ -222,7 +228,20 @@ class CatalogController < ApplicationController
       @in_a_form = false
     end
 
+    if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
+      upload_sysprep_file
+      set_form_locals_for_sysprep
+    end
+
     render :layout => "explorer"
+  end
+
+  def set_form_locals_for_sysprep
+    @pages = false
+    @edit[:explorer] = true
+    @sb[:st_form_active_tab] = "request"
+    @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ServiceTemplate")
+    @temp[:x_edit_buttons_locals] = {:action_url => "servicetemplate_edit"}
   end
 
   def identify_catalog(id = nil)

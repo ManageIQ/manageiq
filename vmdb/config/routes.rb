@@ -101,6 +101,7 @@ Vmdb::Application.routes.draw do
         sort_host_grid
         sort_iso_img_grid
         sort_pxe_img_grid
+        sort_vc_grid
         sort_vm_grid
         st_catalog_edit
         st_catalog_form_field_changed
@@ -1754,6 +1755,7 @@ Vmdb::Application.routes.draw do
         sort_ds_grid
         sort_host_grid
         sort_iso_img_grid
+        sort_vc_grid
         sort_vm_grid
         squash_toggle
         tagging_edit

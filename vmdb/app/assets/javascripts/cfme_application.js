@@ -47,6 +47,13 @@ function miqOnLoad() {
   }
 }
 
+function miqPrepRightCellForm(tree) {
+  if ($j('#adv_searchbox_div')) $j('#adv_searchbox_div').hide();
+  dhxLayoutB.cells("a").collapse();
+  $j('#' + tree).dynatree('disable');
+  miqDimDiv(tree + '_div', true);
+}
+
 // Things to be done on page resize
 function miqOnResize() {
 //  if ($('miq_timeline')) miqResizeTL();

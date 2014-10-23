@@ -480,9 +480,17 @@ pfx = "miq_request/"
         </td>
       <% elsif [:sysprep_upload_file].include?(field) %>
         <td>
-          <%= form_tag({:action=>"upload", :id=>"#{@edit[:req_id] || "new"}"}, :multipart => true) do %>
+          <% path = Rails.application.routes.recognize_path request.referrer %>
+          <% if path[:controller] == "miq_request" %>
+            <%= form_tag({:action => "prov_edit", :req_id => "#{@edit[:req_id]}"}, :multipart => true) do %>
               <%= file_field("upload", "file") %>
               <%= submit_tag("Upload", :class => "upload") %>
+            <% end %>
+          <% else %>
+            <%= form_tag({:controller => path[:controller], :action => "explorer"}, :multipart => true) do %>
+              <%= file_field("upload", "file") %>
+              <%= submit_tag("Upload", :class => "upload") %>
+            <% end %>
           <% end %>
           </td>
       <% end %>

@@ -202,9 +202,8 @@ module ApplicationController::MiqRequestMethods
       else
         @layout = "miq_request_vm"
       end
-      if params[:no_refresh]
-        @edit = session[:edit]
-        @edit[:new][:current_tab_key] = :customize
+      if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
+        upload_sysprep_file
         @tabactive = "customize_div"
       else
         if params[:req_id]
