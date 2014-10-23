@@ -5,6 +5,11 @@ class FileDepotFtp < FileDepot
     "ftp"
   end
 
+  def self.validate(settings)
+    depot = new(:uri => settings[:uri])
+    depot.with_connection(:username => settings[:username], :password => settings[:password]) { |c| c.last_response }
+  end
+
   def upload_file(file)
     log_header = "MIQ(#{self.class.name}##{__method__})"
     super
