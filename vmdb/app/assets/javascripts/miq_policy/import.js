@@ -37,7 +37,7 @@ $j.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(r
   };
 
   var grid;
-  var dataview = new Slick.Data.DataView({inlineFilters: true});
+  var dataview = new Slick.Data.DataView();
 
   var columns = [
     {id: "title", name: "Details", field: "title", width: 300, formatter: PolicyNameFormatter },
