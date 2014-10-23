@@ -138,6 +138,7 @@ module VMDB
     end
 
     def self.zip_logs(zip_filename, dirs, userid = "system")
+      require 'zip/zipfilesystem'
       log_header = "MIQ(#{self.name}.zip_logs)"
 
       zip_dir = Rails.root.join("data", "user", userid)
