@@ -545,8 +545,9 @@ class ApplicationController < ActionController::Base
     begin
       case pfx
       when 'logdepot'
-        msg = 'Log Depot Settings successfuly validated'
-        LogFile.verify_log_depot_settings(settings)
+        msg  = 'Log Depot Settings successfuly validated'
+        type = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
+        type.validate(settings)
       when 'pxe'
         msg = 'PXE Credentials successfuly validated'
         PxeServer.verify_depot_settings(settings)
