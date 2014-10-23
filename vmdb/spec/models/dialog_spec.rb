@@ -3,23 +3,20 @@ require "spec_helper"
 describe Dialog do
   describe ".seed" do
     let(:dialog_import_service) { instance_double("DialogImportService") }
-    let(:my_region) { active_record_instance_double("MiqRegion") }
-    let(:test_file_path) { Rails.root.join("product/dialogs/service_dialogs/test.yaml") }
+    let(:test_file_path) { Rails.root.join("spec/fixtures/files/dialogs") }
 
     before do
-      MiqRegion.stub(:my_region).and_return(my_region)
-      my_region.stub(:lock).and_yield
+      MiqRegion.seed
       DialogImportService.stub(:new).and_return(dialog_import_service)
-      File.new(test_file_path, "w").write("test")
-    end
-
-    after do
-      File.delete(test_file_path)
     end
 
     it "delegates to the dialog import service" do
-      dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(test_file_path.to_path)
-      Dialog.seed
+      Dialog.with_constants(:DIALOG_DIR => test_file_path) do
+        dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
+          test_file_path.join("seed_test.yaml").to_path
+        )
+        Dialog.seed
+      end
     end
   end
 
