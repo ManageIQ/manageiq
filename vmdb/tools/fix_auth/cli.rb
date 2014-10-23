@@ -21,6 +21,7 @@ module FixAuth
         opt :v2,       "Fix V2 passwords also", :type => :boolean, :short => "f", :default => false
         opt :root,     "Rails Root",        :type => :string,  :short => "r",
             :default => (env['RAILS_ROOT'] || File.expand_path(File.join(File.dirname(__FILE__), %w{.. ..})))
+        opt :databaseyml, "rewrite databaseyml", :type => :boolean, :short => "y", :default => false
       end
 
       options[:databases] = args.presence || %w(vmdb_production)

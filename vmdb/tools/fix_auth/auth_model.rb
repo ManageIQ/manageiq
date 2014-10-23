@@ -87,9 +87,5 @@ module FixAuth
         clear_active_connections!
       end
     end
-
-    def fix_passwords
-      self.class.fix_passwords(self)
-    end
   end
 end

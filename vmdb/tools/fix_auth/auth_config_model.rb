@@ -10,6 +10,10 @@ module FixAuth
       # true if we want to output the keys as symbols (default: false - output as string keys)
       attr_accessor :symbol_keys
 
+      def display_record(r)
+        puts "  #{r.id}:"
+      end
+
       def display_column(r, column)
         puts "    #{column}:"
         traverse_column([], YAML.load(r.send(column)))
@@ -34,7 +38,7 @@ module FixAuth
           h[k] = new_value if password_field?(k) && v.present?
         end
         Vmdb::ConfigurationEncoder.dump(hash, nil, !symbol_keys) do |k, v, h|
-          h[k] = MiqPassword.try_encrypt(new_value) if password_field?(k) && v.present?
+          h[k] = MiqPassword.try_encrypt(v) if password_field?(k) && v.present?
         end
       end
 

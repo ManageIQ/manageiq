@@ -73,10 +73,6 @@ module FixAuth
     self.symbol_keys = true
     self.table_name = "miq_requests"
 
-    def self.display_record(r)
-      puts "  #{r.id}:"
-    end
-
     def self.contenders(_ = nil)
       where("options like '%password%'")
     end
@@ -92,12 +88,39 @@ module FixAuth
     self.symbol_keys = true
     self.table_name = "miq_request_tasks"
 
-    def self.display_record(r)
-      puts "  #{r.id}:"
-    end
-
     def self.contenders(_ = nil)
       where("options like '%password%'")
+    end
+  end
+
+  class FixDatabaseYml
+    attr_accessor :id
+    attr_accessor :yaml
+    include FixAuth::AuthConfigModel
+
+    class << self
+      attr_accessor :available_columns
+      attr_accessor :file_name
+    end
+
+    def initialize(options = {})
+      options.each { |n, v| public_send("#{n}=", v) }
+    end
+
+    def load
+      @yaml = File.read(id)
+      self
+    end
+
+    def save!
+      File.write(id, @yaml)
+    end
+
+    self.password_fields = %w(password)
+    self.available_columns = %w(yaml)
+
+    def self.contenders(_options = {})
+      [new(:id => file_name).load]
     end
   end
 end

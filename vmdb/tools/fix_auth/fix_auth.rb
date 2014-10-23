@@ -63,10 +63,17 @@ module FixAuth
       end
     end
 
+    def fix_database_yml
+      FixDatabaseYml.file_name = "#{options[:root]}/config/database.yml"
+      FixDatabaseYml.run(run_options.merge(:hardcode => options[:password]))
+    end
+
     def run
       MiqPassword.key_root = cert_dir if cert_dir
+
       generate_password if options[:key]
-      fix_database_passwords
+      fix_database_yml if options[:databaseyml]
+      fix_database_passwords if !options[:key] && !options[:databaseyml]
     end
   end
 end
