@@ -96,9 +96,15 @@ class Condition < ActiveRecord::Base
       result = SafeNamespace.eval_script(script, context)
       raise "Expected return value of true or false from ruby script but instead got result: [#{result.inspect}]" unless result.kind_of?(TrueClass) || result.kind_of?(FalseClass)
     else
-      result = eval(expr) ? true : false
+      begin
+        result = eval(expr) ? true : false
+      rescue SyntaxError
+        MiqPolicy.logger.error("MIQ(condition-do_eval): Syntax Error while evaluating expression: [#{expr}]")
+        # Always evaluate to false if the expression is invalid
+        result = false
+      end
     end
-    return result
+    result
   end
 
   def self.subst(expr, rec, inputs)
