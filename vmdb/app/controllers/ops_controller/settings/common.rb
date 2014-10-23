@@ -419,9 +419,7 @@ module OpsController::Settings::Common
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
       end
-      if @edit[:new][:ntp]
-        @update.config[:ntp] = @edit[:new][:ntp].dup
-      end
+      @update.config[:ntp][:server].reject!(&:blank?) if @update.config[:ntp]
       if @update.validate                                           # Have VMDB class validate the settings
         if ["settings_server","settings_authentication"].include?(@sb[:active_tab])
           server = MiqServer.find(@sb[:selected_server_id])
@@ -671,12 +669,6 @@ module OpsController::Settings::Common
       @edit[:new][:ntp][:server][0] = params[:ntp_server_1] if params[:ntp_server_1]
       @edit[:new][:ntp][:server][1] = params[:ntp_server_2] if params[:ntp_server_2]
       @edit[:new][:ntp][:server][2] = params[:ntp_server_3] if params[:ntp_server_3]
-
-      @edit[:new][:ntp][:server].each_with_index do |ntp,i|
-        if @edit[:new][:ntp][:server][i].nil? || @edit[:new][:ntp][:server][i] == ""
-          @edit[:new][:ntp][:server].delete_at(i)
-        end
-      end
 
       @edit[:new][:server][:custom_support_url] = params[:custom_support_url].strip if params[:custom_support_url]
       @edit[:new][:server][:custom_support_url_description] = params[:custom_support_url_description] if params[:custom_support_url_description]
