@@ -6,8 +6,7 @@
     -# setting it to nil so saved reports can be displayed, unless all saved
     -# reports were deleted
     - if @view.table.data.empty?
-      %br
-      %strong No Reports available.
+      = render :partial => 'layouts/info_msg', :locals => {:message => "No Reports available."}
     - else
       = render :partial => 'layouts/x_gtl'
   - elsif x_node.split('-').length == 2 && @view
@@ -19,6 +18,4 @@
   - elsif x_active_tree == :savedreports_tree && x_node.split('-').length == 3 && !@report && @temp[:report_result]
     = render :partial => 'report_status'
   - else
-    #alert.alert-info
-      %span.pficon.pficon-info
-      %strong Choose a Report to view from the menus on the left.
+    = render :partial => 'layouts/info_msg', :locals => {:message => "Choose a Report from the menus on the left."}

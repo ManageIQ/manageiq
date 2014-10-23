@@ -35,10 +35,7 @@
       <% if !(@edit || @assign) %>
         <p class="legend">Alerts</p>
         <% if @alert_profile_alerts.empty? %>
-          <div class="alert alert-info">
-            <span class="pficon pficon-info"></span>
-            <strong>No Alerts are defined.</strong>
-          </div>
+          <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Alerts are defined."}%>
         <% else %>
           <table class="style3">
             <thead>
@@ -141,10 +138,7 @@
       <% unless @edit %>
         <p class="legend">Notes</p>
         <% if @alert_profile.notes.blank? %>
-          <div class="alert alert-info">
-            <span class="pficon pficon-info"></span>
-            <strong>No notes have been entered.</strong>
-          </div>
+          <%= render :partial => 'layouts/info_msg', :locals => {:message => ">No notes have been entered."}%>
         <% else %>
           <%= text_area_tag("notes", @alert_profile.notes, :readonly=>true, :rows=>4) %>
         <% end %>

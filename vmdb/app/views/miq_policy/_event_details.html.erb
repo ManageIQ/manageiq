@@ -29,10 +29,7 @@
       <% if x_active_tree == :event_tree %>
         <p class="legend">Assigned to Policies</p>
         <% if @event_policies.empty? %>
-          <div class="alert alert-info">
-            <span class="pficon pficon-info"></span>
-            <strong>This Event is not assigned to any Policies.</strong>
-          </div>
+          <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Event is not assigned to any Policies."}%>
         <% else %>
           <table class="style3">
             <thead>
@@ -60,10 +57,7 @@
         <p class="legend">Order of Actions if ALL Conditions are True</p>
         <% unless @edit %>
           <% if @event_true_actions.empty? %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>This Event has no true Actions.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Event has no true Actions."}%>
           <% else %>
             <table class="style3">
               <thead>
@@ -228,10 +222,7 @@
         <p class="legend">Order of Actions if ANY Conditions are False</p>
         <% unless @edit %>
           <% if @event_false_actions.empty? %>
-            <div class="alert alert-info">
-              <span class="pficon pficon-info"></span>
-              <strong>This Event has no false Actions.</strong>
-            </div>
+            <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Event has no false Actions."}%>
           <% else %>
             <table class="style3">
               <thead>

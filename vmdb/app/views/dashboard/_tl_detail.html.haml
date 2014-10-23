@@ -15,6 +15,4 @@
     - if @report.filter_summary
       = @report.filter_summary
   - else
-    .alert.alert-info
-      %span.pficon.pficon-info
-      %strong Choose a Timeline from the menus on the left.
+      = render :partial => 'layouts/info_msg', :locals => {:message => "Choose a Timeline from the menus on the left."}

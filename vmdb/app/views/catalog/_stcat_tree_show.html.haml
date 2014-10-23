@@ -25,6 +25,4 @@
               :title       => "Click to this Catalog Item"}
             %td=obj.name
   - else
-    .alert.alert-info
-      %span.pficon.pficon-info
-      %strong No Catalog Items found
+    = render :partial => 'layouts/info_msg', :locals => {:message => "No Catalog Items found."}

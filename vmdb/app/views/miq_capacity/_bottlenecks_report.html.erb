@@ -15,9 +15,6 @@
 
   </table>
   <% else %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>Select a node on the left to view Bottlenecks report.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "Select a node on the left to view Bottlenecks report."}%>
   <% end %>
 </div>

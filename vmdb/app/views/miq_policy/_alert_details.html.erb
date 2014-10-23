@@ -322,10 +322,7 @@
                 <td>
                   <p class="legend">Belongs to Alert Profiles</p>
                   <% if @alert_profiles.empty? %>
-                    <div class="alert alert-info">
-                      <span class="pficon pficon-info"></span>
-                      <strong>This Alert is not assigned to any Alert Profiles.</strong>
-                    </div>
+                    <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Alert is not assigned to any Alert Profiles."}%>
                   <% else %>
                     <table class="style3">
                       <thead>
@@ -363,10 +360,7 @@
                 <td>
                   <p class="legend">Referenced by Actions</p>
                   <% if @alert.owning_miq_actions.empty? %>
-                    <div class="alert alert-info">
-                      <span class="pficon pficon-info"></span>
-                      <strong>This Alert is not referenced by any Actions.</strong>
-                    </div>
+                    <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Alert is not referenced by any Actions."}%>
                   <% else %>
                     <table class="style3">
                       <thead>

@@ -209,10 +209,7 @@
           <% elsif @action.action_type == "evaluate_alerts" %>
             <p class="legend">Alerts to Evaluate</p>
             <% if @temp[:alert_guids].empty? %>
-              <div class="alert alert-info">
-                <span class="pficon pficon-info"></span>
-                <strong>No Alerts have been selected.</strong>
-              </div>
+              <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Alerts have been selected."}%>
             <% else %>
               <table class="style3">
                 <thead>
@@ -266,10 +263,7 @@
           <% if x_active_tree == :action_tree %>
             <p class="legend">Assigned to Policies</p>
             <% if @action_policies.empty? %>
-              <div class="alert alert-info">
-                <span class="pficon pficon-info"></span>
-                <strong>This Action is not assigned to any Policies.</strong>
-              </div>
+              <%= render :partial => 'layouts/info_msg', :locals => {:message => "This Action is not assigned to any Policies."}%>
             <% else %>
               <table class="style3">
                 <thead>

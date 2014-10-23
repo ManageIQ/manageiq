@@ -2,16 +2,13 @@
   <%= render :partial => "layouts/flash_msg" %>
   <p class="legend">Select Policy Profiles</p>
   <% if @sb[:no_policy_profiles] %>
-    No Policy Profiles available
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Policy Profiles available."}%>
   <% else %>
     <%= render(:partial => '/layouts/protect_tree') %>
   <% end %>
   <br/>
   <% if @politems.length > 1 %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>Policy Profile is only applied to some of the items below.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "Policy Profile is only applied to some of the items below."}%>
   <% end %>
   <% if !@edit[:explorer] %>
     <%= render(:partial => '/layouts/edit_form_buttons',

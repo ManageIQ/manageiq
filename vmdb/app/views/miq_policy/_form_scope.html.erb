@@ -26,10 +26,7 @@
         <% end %>
       <% end %>
     <% else %>
-      <div class="alert alert-info">
-        <span class="pficon pficon-info"></span>
-        <strong>No scope defined, the scope of this condition includes all elements.</strong>
-      </div>
+      <%= render :partial => 'layouts/info_msg', :locals => {:message => "No scope defined, the scope of this condition includes all elements."}%>
     <% end %>
     <hr>
   <% end %>

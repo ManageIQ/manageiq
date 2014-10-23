@@ -10,9 +10,6 @@
         </dd>
       </dl>
   <% else %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>No Servers found.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "No Servers found."}%>
   <% end %>
 <% end %>

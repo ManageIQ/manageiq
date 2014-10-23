@@ -7,10 +7,7 @@
                :locals  => {:typ => "summ"})
     %>
   <% else %>
-    <div class="alert alert-info">
-      <span class="pficon pficon-info"></span>
-      <strong>Select a node on the left to view Bottlenecks timeline.</strong>
-    </div>
+    <%= render :partial => 'layouts/info_msg', :locals => {:message => "Select a node on the left to view Bottlenecks timeline."}%>
   <% end %>
   <%= render :partial=>'bottlenecks_tl_detail' %>
 </div>
