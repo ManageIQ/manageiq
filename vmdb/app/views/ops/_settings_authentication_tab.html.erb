@@ -107,7 +107,7 @@
             <td class="key">Access Key</td>
               <td class="wide">
                 <%= text_field_tag("authentication_amazon_key",
-                                    @edit[:new][:authentication][:amazon_key],
+                                    '',
                                     :maxlength=>50,
                                     "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
               </td>
@@ -116,7 +116,7 @@
               <td class="key">Secret Key</td>
               <td class="wide">
                 <%= password_field_tag("authentication_amazon_secret",
-                                    @edit[:new][:authentication][:amazon_secret],
+                                    '',
                                     :maxlength=>50,
                                     "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
               </td>
@@ -190,7 +190,7 @@
         <td class="key">Bind Password</td>
         <td class="wide">
           <%= password_field_tag("authentication_bind_pwd",
-                              @edit[:new][:authentication][:bind_pwd],
+                              '',
                               :maxlength=>128,
                               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
         </td>
