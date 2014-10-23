@@ -142,6 +142,49 @@ describe DialogImportService do
     end
   end
 
+  describe "#import_all_service_dialogs_from_yaml_file" do
+    include_context "DialogImportService dialog setup"
+
+    before do
+      YAML.stub(:load_file).with("filename").and_return(dialogs)
+    end
+
+    context "when there is already an existing dialog" do
+      before do
+        Dialog.create!(:label => "Test2", :description => "not potato")
+      end
+
+      it "overwrites the existing dialog" do
+        dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+        Dialog.where(:label => "Test2").first.description.should == "potato"
+      end
+    end
+
+    context "when there are no existing dialogs" do
+      it "builds a new dialog" do
+        dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+        Dialog.first.should_not be_nil
+      end
+
+      it "builds a dialog tab associated to the dialog" do
+        dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+        dialog = Dialog.first
+        DialogTab.first.dialog.should == dialog
+      end
+
+      it "builds a dialog group associated to the dialog tab" do
+        dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+        dialog_tab = DialogTab.first
+        DialogGroup.first.dialog_tab.should == dialog_tab
+      end
+
+      it "imports the dialog fields" do
+        dialog_field_importer.should_receive(:import_field).with(dialog_fields[0])
+        dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+      end
+    end
+  end
+
   describe "#import_service_dialogs" do
     include_context "DialogImportService dialog setup"
 
