@@ -47,12 +47,21 @@ module ApplianceConsole
     end
 
     def activate
-      return true unless remove_key(force)
-
-      if fetch_key?
-        fetch_key
+      if remove_key(force)
+        if fetch_key?
+          fetch_key
+        else
+          create_key
+        end
       else
-        create_key
+        # probably only got here via the cli
+        $stderr.puts
+        $stderr.puts "Only generate one v2_key per installation."
+        $stderr.puts "Chances are you did not want to overwrite this file."
+        $stderr.puts "If you do this all encrypted secrets in the database will not be readable."
+        $stderr.puts "Please backup your key and run this command again with --force-key."
+        $stderr.puts
+        false
       end
     end
 

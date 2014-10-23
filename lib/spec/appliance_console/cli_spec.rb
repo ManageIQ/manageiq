@@ -261,7 +261,7 @@ describe ApplianceConsole::Cli do
         end
 
         context "remote database" do
-          it "doesnt auto generate a key" do
+          it "does not generate an encryption key" do
             subject.parse(%w(--hostname xyc.com))
             expect_v2_key(false)
             expect(subject).not_to be_key
@@ -270,15 +270,24 @@ describe ApplianceConsole::Cli do
       end
       context "key exists" do
         context "local database" do
-          it "doesnt generate key" do
+          it "does not generate an encryption key" do
             subject.parse(%w(--internal --region 1))
             expect_v2_key(true)
             expect(subject).not_to be_key
+            expect(key_configuration.force).to eq(false)
           end
         end
 
-        it "should setup a key if passing --key" do
+        it "fails to generate an encryption key" do
           subject.parse(%w(--internal --region 1 --key))
+          expect_v2_key(true)
+          expect(subject).to be_key
+          expect(key_configuration.force).to eq(false)
+          expect(key_configuration.activate).to eq(false)
+        end
+
+        it "forecefully removes existing encryption keys" do
+          subject.parse(%w(--internal --region 1 --key --force-key))
           expect_v2_key(true)
           expect(subject).to be_key
           expect(key_configuration.force).to eq(true)
