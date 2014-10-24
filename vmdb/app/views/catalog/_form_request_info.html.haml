@@ -1,0 +1,12 @@
+- if !@edit[:wf]
+  %span{:style => "color: red;"}
+    = @no_wf_msg
+
+- else
+  - url = url_for(:id => "#{@edit[:rec_id] || "new"}",
+    :action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed")
+
+  %p.legend Request Info
+  = render :partial => "miq_request/prov_wf", :locals  => {:wf => @edit[:wf]}
+  %br
+  = "Note: Fields marked with * are required."

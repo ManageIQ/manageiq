@@ -18,7 +18,7 @@
     %table.style1
       %tr
         %td.key Name / Description
-        %td 
+        %td
           #{@record.name} / #{@record.description}
           = check_box_tag(display, true, @record.display, :disabled => true)
           &nbsp; Display in Catalog
