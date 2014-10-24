@@ -5,11 +5,6 @@ silence_warnings { MiqProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false)
 describe MiqProvisionWorkflow do
 
   context "seeded" do
-    before(:each) do
-      MiqRegion.seed
-      MiqDialog.seed
-    end
-
     context "After setup," do
       before(:each) do
         @guid = MiqUUID.new_guid
@@ -26,6 +21,8 @@ describe MiqProvisionWorkflow do
         @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred',     :ui_task_set_id => super_role.id)
         @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver', :ui_task_set_id => super_role.id)
         UiTaskSet.stub(:find_by_name).and_return(@approver)
+
+        FactoryGirl.create(:miq_dialog_provision)
       end
 
       context "Without a Valid Template," do
