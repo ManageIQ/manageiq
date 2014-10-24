@@ -80,8 +80,6 @@ postgresql92-postgresql          # appliance section
 postgresql92-postgresql-devel    # for pg gem
 postgresql92-postgresql-server   # appliance section
 qpid-cpp-client-ssl              # Enable AMQP SSL connections: https://github.com/ManageIQ/cfme/pull/2150
-ruby193-ruby
-ruby193-ruby-devel               # build requires
 scl-utils-build                  # build requires
 yum-utils
 zip                              # build requires
@@ -102,28 +100,11 @@ ipa-admintools
 certmonger
 sneakernet_ca
 
-# bundler has some downstream patches we need or shared objects are not found
-ruby193-rubygem-bundler
-ruby193-rubygem-net-http-persistent # bundler rpm dependency
-ruby193-rubygem-thor                # bundler rpm dependency
-
-# thin has some downstream patches we need or thin_parser is not found
-ruby193-rubygem-thin
-ruby193-rubygem-daemons      # thin rpm dependency
-ruby193-rubygem-eventmachine # thin rpm dependency
-ruby193-rubygem-rack         # thin rpm dependency
-
-# TODO: prototype-rails initializer wants to load minitest/unit, which exists as a separate gem/rpm in rhel/centos/fedora:
-# Fix prototype rails initializer and determine if we really need the separate minitest gem/rpm
-ruby193-rubygem-minitest
-
 <% if @target == "ovirt" %>
 ovirt-guest-agent
 <% elsif @target == "vsphere" %>
 open-vm-tools
 <% end %>
-
-ruby193-rubygem-qpid_messaging
 
 # exclude these defaults from the @core group, with a few (commented) exceptions
 -aic94xx-firmware
@@ -217,13 +198,6 @@ pushd /etc/yum.repos.d/
   wget http://copr.fedoraproject.org/coprs/adelton/identity_demo/repo/epel-6/adelton-identity_demo-epel-6.repo
   wget http://copr.fedoraproject.org/coprs/nalin/certmonger/repo/epel-6/nalin-certmonger-epel-6.repo
 popd
-
-# Add the rubygems binary path to the PATH so we can find bundle and friends:
-cat <<'EOF' >> /etc/default/evm
-export PATH=$PATH:/opt/rh/ruby193/root/usr/local/bin
-EOF
-
-cat /etc/default/evm
 
 cat <<'EOF' > /root/.gemrc
 ---

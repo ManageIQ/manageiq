@@ -23,6 +23,5 @@ export QPID_LOAD_MODULE=/usr/lib64/qpid/client/sslconnector.so
 export QPID_SSL_CERT_DB=/etc/qpid/certs
 
 [[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
-[[ -s /opt/rh/ruby193/enable ]] && source /opt/rh/ruby193/enable
 [[ -s /opt/rh/postgresql92/enable ]] && source /opt/rh/postgresql92/enable
 [[ -s /opt/rh/nodejs010/enable ]] && source /opt/rh/nodejs010/enable
