@@ -66,5 +66,47 @@ describe ResourceActionWorkflow do
         expect { @wf.validate(nil) }.to_not raise_error
       end
     end
+
+    context "#submit_request" do
+      subject { ResourceActionWorkflow.new({}, @admin.name, resource_action, :target => target) }
+      let(:resource_action) { @resource_action }
+
+      context "with request class" do
+        let(:target) { FactoryGirl.build(:service) }
+
+        it "creates requests" do
+          expect(subject).to receive(:create_request)
+
+          subject.submit_request(@admin.name)
+        end
+      end
+
+      context "without request class" do
+        let(:target) { FactoryGirl.build(:vm_vmware) }
+
+        it "calls automate" do
+          expect(subject).not_to receive(:create_request)
+          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
+
+          subject.submit_request(@admin.name)
+        end
+      end
+
+      context "with custom button request" do
+        let(:target) { FactoryGirl.build(:service) }
+        let(:resource_action) do
+          @resource_action.tap do |ra|
+            ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name))
+          end
+        end
+
+        it "calls automate" do
+          expect(subject).not_to receive(:create_request)
+          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
+
+          subject.submit_request(@admin.name)
+        end
+      end
+    end
   end
 end
