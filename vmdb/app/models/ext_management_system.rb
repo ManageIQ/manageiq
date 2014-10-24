@@ -92,7 +92,14 @@ class ExtManagementSystem < ActiveRecord::Base
   include AuthenticationMixin
   include Metric::CiMixin
   include AsyncDeleteMixin
+  include ReservedMixin
 
+  attr_via_reserved :realm
+  attr_via_reserved :security_protocol
+
+
+  virtual_column :realm, :type => :string, :uses => :reserved_rec
+  virtual_column :security_protocol, :type => :string, :uses => :reserved_rec
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
   virtual_column :last_refresh_status,     :type => :string
