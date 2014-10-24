@@ -134,36 +134,6 @@
   :url: /repository/show_list
   :rbac_feature_name: repository_show_list
   :startup: true
-- :name: storage_systems
-  :description: Storage / Storage Systems
-  :url: /ontap_storage_system/show_list
-  :rbac_feature_name: ontap_storage_system_show_list
-  :startup: true
-- :name: file_shares
-  :description: Storage / File Shares
-  :url: /ontap_file_share/show_list
-  :rbac_feature_name: ontap_file_share_show_list
-  :startup: true
-- :name: logical_disks
-  :description: Storage / Logical Disks
-  :url: /ontap_logical_disk/show_list
-  :rbac_feature_name: ontap_logical_disk_show_list
-  :startup: true
-- :name: base_extents
-  :description: Storage / Base Extents
-  :url: /cim_base_storage_extent/show_list
-  :rbac_feature_name: cim_storage_extent_show_list
-  :startup: true
-- :name: storage_volumes
-  :description: Storage / Storage Volumes
-  :url: /ontap_storage_volume/show_list
-  :rbac_feature_name: ontap_storage_volume_show_list
-  :startup: true
-- :name: storage_managers
-  :description: Storage / Storage Managers
-  :url: /storage_manager/show_list
-  :rbac_feature_name: storage_manager_show_list
-  :startup: true
 - :name: control_explorer
   :description: Control / Explorer
   :url: /miq_policy/explorer
