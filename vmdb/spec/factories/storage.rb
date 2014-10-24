@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :storage do
-    sequence(:name) { |n| "storage_#{n}" }
+    sequence(:name) { |n| "storage_#{seq_padded_for_sorting(n)}" }
   end
 
   factory :storage_vmware, :parent => :storage do
