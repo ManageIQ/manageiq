@@ -13,7 +13,7 @@ class FileDepotFtp < FileDepot
         return if destination_file_exists?(ftp, destination_file)
 
         create_directory_structure(ftp)
-        $log.info("#{log_header} Uploading file: #{file.name} to File Depot: #{name}...")
+        $log.info("#{log_header} Uploading file: #{destination_file} to File Depot: #{name}...")
         ftp.putbinaryfile(file.local_file, destination_file)
       rescue => err
         msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
@@ -24,7 +24,7 @@ class FileDepotFtp < FileDepot
           :state   => "available",
           :log_uri => destination_file
         )
-        $log.info("#{log_header} Uploading file: #{file.name}... Complete")
+        $log.info("#{log_header} Uploading file: #{destination_file}... Complete")
         file.post_upload_tasks
       end
     end
@@ -97,11 +97,11 @@ class FileDepotFtp < FileDepot
   end
 
   def destination_file
-    @destination_file ||= File.join(destination_path, file.destination_file_name)
+    File.join(destination_path, file.destination_file_name)
   end
 
   def destination_path
-    @destination_path ||= File.join(base_path, file.destination_directory)
+    File.join(base_path, file.destination_directory)
   end
 
   def base_path
