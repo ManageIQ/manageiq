@@ -5,6 +5,11 @@ class FileDepotFtp < FileDepot
     "ftp"
   end
 
+  def self.validate(settings)
+    depot = new(:uri => settings[:uri])
+    depot.with_connection(:username => settings[:username], :password => settings[:password]) { |c| c.last_response }
+  end
+
   def upload_file(file)
     log_header = "MIQ(#{self.class.name}##{__method__})"
     super
@@ -46,20 +51,18 @@ class FileDepotFtp < FileDepot
     false
   end
 
-  private
-
-  def with_connection
+  def with_connection(cred_hash = nil)
     raise "no block given" unless block_given?
     $log.info("MIQ(#{self.class.name}##{__method__}) Connecting through #{self.class.name}: [#{name}]")
     begin
-      connection = connect
+      connection = connect(cred_hash)
       yield connection
     ensure
       connection.try(:close)
     end
   end
 
-  def connect
+  def connect(cred_hash = nil)
     log_header = "MIQ(#{self.class.name}##{__method__})"
     host       = URI.split(URI.encode(uri))[2]
 
@@ -68,8 +71,9 @@ class FileDepotFtp < FileDepot
       ftp         = Net::FTP.new(host)
       ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
       # ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
-      ftp.login(*login_credentials)
-      $log.info("#{log_header} Connected to #{self.class.name}: #{name}")
+      creds = cred_hash ? [cred_hash[:username], cred_hash[:password]] : login_credentials
+      ftp.login(*creds)
+      $log.info("#{log_header} Connected to #{self.class.name}: #{name} host: #{host}")
     rescue SocketError => err
       $log.error("#{log_header} Failed to connect.  #{err.message}")
       raise
@@ -80,6 +84,8 @@ class FileDepotFtp < FileDepot
       ftp
     end
   end
+
+  private
 
   def create_directory_structure(ftp)
     $log.info("MIQ(#{self.class.name}##{__method__}) Creating directory structure on server...")
