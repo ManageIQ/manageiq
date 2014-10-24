@@ -5,7 +5,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_microsoft_with_authentication, :zone => zone,
-        :hostname => "scvmm1111.manageiq.com", :ipaddress => "192.168.252.90")
+        :hostname => "scvmm1111.manageiq.com", :ipaddress => "192.168.252.90", :security_protocol => "ssl")
     data_file = File.join(File.dirname(__FILE__), %w{.. .. .. tools scvmm_data get_inventory_output.yml})
 
     # See HACK comment in EmsMicrosoft.raw_connect for details around suppressing
