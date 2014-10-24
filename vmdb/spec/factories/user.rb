@@ -24,8 +24,8 @@ FactoryGirl.define do
   end
 
   factory :user_miq_request_approver, :parent => :user do
-    sequence(:name)   { |n| "Request Approver #{n}" }
-    sequence(:userid) { |n| "request_approver_#{n}" }
+    sequence(:name)   { |n| "Request Approver #{seq_padded_for_sorting(n)}" }
+    sequence(:userid) { |n| "request_approver_#{seq_padded_for_sorting(n)}" }
 
     miq_groups { [FactoryGirl.create(:miq_group_miq_request_approver)] }
   end

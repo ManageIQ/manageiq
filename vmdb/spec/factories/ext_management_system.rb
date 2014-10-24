@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :ext_management_system do
-    sequence(:name)      { |n| "ems_#{n}" }
-    sequence(:hostname)  { |n| "ems_#{n}" }
+    sequence(:name)      { |n| "ems_#{seq_padded_for_sorting(n)}" }
+    sequence(:hostname)  { |n| "ems_#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
     guid                 { MiqUUID.new_guid }
   end

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :template_amazon do
-    sequence(:name) { |n| "template_#{n}" }
+    sequence(:name) { |n| "template_#{seq_padded_for_sorting(n)}" }
     location        { |x| "#{x.name}/#{x.name}.xml" }
     uid_ems         { MiqUUID.new_guid }
     vendor          "amazon"

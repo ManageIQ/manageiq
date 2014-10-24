@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :miq_group do
-    sequence(:description) { |n| "Test Group #{n}" }
+    sequence(:description) { |n| "Test Group #{seq_padded_for_sorting(n)}" }
   end
 
   factory :miq_group_miq_request_approver, :parent => :miq_group do
