@@ -199,6 +199,21 @@ pushd /etc/yum.repos.d/
   wget http://copr.fedoraproject.org/coprs/nalin/certmonger/repo/epel-6/nalin-certmonger-epel-6.repo
 popd
 
+wget -O ruby-install-0.5.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.5.0.tar.gz
+tar -xzvf ruby-install-0.5.0.tar.gz
+rm -f ruby-install-0.5.0.tar.gz
+cd ruby-install-0.5.0/
+make install
+
+/usr/local/bin/ruby-install ruby 2.0.0-p594
+
+# Add the ruby binaries path to the PATH so we can find bundle and friends:
+cat <<'EOF' >> /etc/default/evm
+export PATH=$PATH:/opt/rubies/ruby-2.0.0-p594/bin/
+EOF
+
+cat /etc/default/evm
+
 cat <<'EOF' > /root/.gemrc
 ---
 gem: --no-rdoc --no-ri
@@ -210,6 +225,9 @@ EOF
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+[[ -s /etc/default/evm ]] && source /etc/default/evm
+gem install bundler -v "~>1.3"
 
 /var/www/miq/system/cfme-setup.sh
 
