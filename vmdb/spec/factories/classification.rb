@@ -1,13 +1,13 @@
 FactoryGirl.define do
   factory :classification do
-    sequence(:name)        { |n| "category_#{n}" }
-    sequence(:description) { |n| "category #{n}" }
+    sequence(:name)        { |n| "category_#{seq_padded_for_sorting(n)}" }
+    sequence(:description) { |n| "category #{seq_padded_for_sorting(n)}" }
     parent_id 0
   end
 
   factory :classification_tag, :class => :Classification do
-    sequence(:name)        { |n| "tag_#{n}" }
-    sequence(:description) { |n| "tag #{n}" }
+    sequence(:name)        { |n| "tag_#{seq_padded_for_sorting(n)}" }
+    sequence(:description) { |n| "tag #{seq_padded_for_sorting(n)}" }
   end
 
   #

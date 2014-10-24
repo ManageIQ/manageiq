@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :availability_zone do
-    sequence(:name)     { |n| "availability_zone_#{n}" }
+    sequence(:name)     { |n| "availability_zone_#{seq_padded_for_sorting(n)}" }
   end
 
   factory :availability_zone_amazon, :parent => :availability_zone, :class => "AvailabilityZoneAmazon" do

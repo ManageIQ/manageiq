@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :miq_server do
-    sequence(:name) { |n| "miq_server_#{n}" }
+    sequence(:name) { |n| "miq_server_#{seq_padded_for_sorting(n)}" }
     last_heartbeat  { Time.now.utc }
     status          "started"
     started_on      { Time.now.utc }

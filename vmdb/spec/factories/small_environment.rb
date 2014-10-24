@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :small_environment, :parent => :zone do
-    sequence(:name)         { |n| "small_environment_#{n}" }
-    sequence(:description)  { |n| "Small Environment #{n}" }
+    sequence(:name)         { |n| "small_environment_#{seq_padded_for_sorting(n)}" }
+    sequence(:description)  { |n| "Small Environment #{seq_padded_for_sorting(n)}" }
     ext_management_systems  { [FactoryGirl.create(:ems_small_environment)] }
 
     # Hackery: Due to ntp reload occurring on save, we need to add the servers after saving the zone.
@@ -27,8 +27,8 @@ FactoryGirl.define do
 end
 
 # Factory.define :small_environment, :parent => :zone do |z|
-#   z.sequence(:name)         { |n| "small_environment_#{n}" }
-#   z.sequence(:description)  { |n| "Small Environment #{n}" }
+#   z.sequence(:name)         { |n| "small_environment_#{seq_padded_for_sorting(n)}" }
+#   z.sequence(:description)  { |n| "Small Environment #{seq_padded_for_sorting(n)}" }
 #   z.ext_management_systems  { [FactoryGirl.create(:ems_small_environment)] }
 
 #   # Hackery: Due to ntp reload occurring on save, we need to add the servers after saving the zone.

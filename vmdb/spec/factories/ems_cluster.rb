@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :ems_cluster do
-    sequence(:name) { |n| "cluster_#{n}" }
+    sequence(:name) { |n| "cluster_#{seq_padded_for_sorting(n)}" }
   end
 
   factory :cluster_target, :parent => :ems_cluster do

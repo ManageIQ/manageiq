@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :miq_ae_class do
-    sequence(:name) { |n| "miq_ae_class_#{n}" }
+    sequence(:name) { |n| "miq_ae_class_#{seq_padded_for_sorting(n)}" }
 
     trait :with_instances_and_methods do
 

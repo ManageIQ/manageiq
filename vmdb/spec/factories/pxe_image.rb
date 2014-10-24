@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :pxe_image do
-    sequence(:name)         { |n| "pxe_image_#{n}" }
-    sequence(:description)  { |n| "pxe_desc_#{n}"  }
+    sequence(:name)         { |n| "pxe_image_#{seq_padded_for_sorting(n)}" }
+    sequence(:description)  { |n| "pxe_desc_#{seq_padded_for_sorting(n)}"  }
     kernel                  'ubuntu-10.10-desktop-i386/vmlinuz'
     kernel_options          "vga=788 -- quiet"
   end

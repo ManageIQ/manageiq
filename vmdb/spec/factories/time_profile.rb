@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :time_profile do
-    sequence(:description) { |n| "Time Profile #{n}" }
+    sequence(:description) { |n| "Time Profile #{seq_padded_for_sorting(n)}" }
   end
 
   factory :time_profile_with_rollup, :parent => :time_profile do

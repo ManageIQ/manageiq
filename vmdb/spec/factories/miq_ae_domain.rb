@@ -1,11 +1,11 @@
 FactoryGirl.define do
   factory :miq_ae_domain_enabled, :parent => :miq_ae_namespace do
-    sequence(:name) { |n| "miq_ae_domain#{n}" }
+    sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     enabled true
   end
 
   factory :miq_ae_domain_disabled, :parent => :miq_ae_namespace do
-    sequence(:name) { |n| "miq_ae_domain#{n}" }
+    sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
   end
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace do

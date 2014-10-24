@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :miq_report do
-    sequence(:name) { |n| "Test Report #{n}" }
+    sequence(:name) { |n| "Test Report #{seq_padded_for_sorting(n)}" }
     db              'Vm'
     title           'some title'
     rpt_type        'Default'
