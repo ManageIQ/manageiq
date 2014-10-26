@@ -127,9 +127,6 @@ class MiqParser < MiqOptionParser::MiqCommandParser
 		self.add_command(GetVMProductInfo.new)
 		self.add_command(StartVM.new)
 		self.add_command(StopVM.new(@miqRet))
-		self.add_command(CreateBlackBox.new)
-		self.add_command(ReadBlackBox.new)
-		self.add_command(WriteBlackBox.new)
 		self.add_command(SyncMetadata.new(@miqRet))
 		self.add_command(GetVMAttributes.new)
 		self.add_command(GetVersion.new)
@@ -161,9 +158,6 @@ class MiqParser < MiqOptionParser::MiqCommandParser
 		self.add_command(AgentConfig.new)
 		self.add_command(PolicyCheckVm.new)
 		self.add_command(ServerPing.new(@miqRet))
-		self.add_command(DeleteBlackBox.new(@miqRet))
-		self.add_command(RecordBlackBoxEvent.new)
-		self.add_command(ValidateBlackBox.new)
     self.add_command(CreateSnapshot.new(@miqRet))
     self.add_command(RemoveSnapshot.new)
     self.add_command(RemoveAllSnapshots.new)
@@ -296,34 +290,6 @@ class StopVM < VerbBase
 				exit
 			end
 		end
-	end
-end
-
-class CreateBlackBox < VerbBase
- 	def initialize
- 		super('createblackbox', false, :vmSwitch, :write)
- 		self.short_desc = "Create black box for given virtual machine"
- 	end
-end
-
-class ValidateBlackBox < VerbBase
- 	def initialize
- 		super('validateblackbox', false, :vmSwitch, :read)
- 		self.short_desc = "Validate black box for given virtual machine"
- 	end
-end
-
-class ReadBlackBox < VerbBase
-	def initialize
-		super('readblackbox', false, :vmSwitch, :read)
-		self.short_desc = "Read the contents of a virtual machines black box"
-	end
-end
-
-class WriteBlackBox < VerbBase
-	def initialize
-		super('writeblackbox', false, :vmSwitch, :write)
-		self.short_desc = "Write the contents of a virtual machine's black box"
 	end
 end
 
@@ -646,20 +612,6 @@ class ServerPing < VerbBase
 			opt.on('--debug=[0|1]', 'enable/disable wire trace', Integer) {|val| ostruct.pingCfg.debug = val}
 			opt.on('--mode=[agent|server]', 'ping agent or server', String) {|val| ostruct.pingCfg.mode = val}
 		end
-	end
-end
-
-class DeleteBlackBox < VerbBase
-	def initialize(ostruct)
-		super('deleteblackbox', false, :vmSwitch, :write)
-		self.short_desc = "Delete the black box of the given virtual machine"
-	end
-end
-
-class RecordBlackBoxEvent < VerbBase
-	def initialize
-		super('recordblackboxevent', false, :vmSwitch, :write)
-		self.short_desc = "Record an event to the black box of the given virtual machine"
 	end
 end
 

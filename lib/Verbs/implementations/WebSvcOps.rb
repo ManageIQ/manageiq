@@ -48,11 +48,7 @@ class WebSvcOps
 		@driver.add_method('miqActivateAgent', 'uri', 'stats')
 		@driver.add_method('miqGetAgentLogs', 'uri', 'options')
 		@driver.add_method('miqPolicyCheckVm', 'vmName')
-		@driver.add_method('miqDeleteBlackBox', 'vmName', 'data')
-		@driver.add_method('miqRecordBlackBoxEvent', 'vmName', 'eventData')
 		@driver.add_method('miqReplicateHost', 'installSettings')
-		@driver.add_method('miqCreateBlackBox', 'vmName', 'data')
-		@driver.add_method('miqValidateBlackBox', 'vmName', 'data')
 		@driver.add_method('miqShutdown', 'data')
     @driver.add_method('miqClearQueueItems', 'data')
     @driver.add_method('miqCreateSnapshot', 'vmName', 'name', 'desc', 'memory', 'quiesce', 'guid')
@@ -109,30 +105,6 @@ class WebSvcOps
 	def HasSnapshot(ost)
 	end
 
-	def DeleteBlackBox(ost)
-		vmName = ost.args[0]
-		data = ost.args[1]
-		ost.value = @driver.miqDeleteBlackBox(vmName, data)
-  end
-	
-	def RecordBlackBoxEvent(ost)
-		vmName = ost.args[0]
-		eventData = ost.args[1]
-		ost.value = @driver.miqRecordBlackBoxEvent(vmName, eventData)
-  end
-	
-	def CreateBlackBox(ost)
-		vmName = ost.args[0]
-		data = ost.args[1]
-		ost.value = @driver.miqCreateBlackBox(vmName, data)
-  end
-
-	def ValidateBlackBox(ost)
-		vmName = ost.args[0]
-		data = ost.args[1]
-		ost.value = @driver.miqValidateBlackBox(vmName, data)
-  end
-	
 	def SyncMetadata(ost)
     vmName = ost.args[0]
     options = ost.args[1]

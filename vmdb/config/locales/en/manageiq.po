@@ -37,12 +37,6 @@ msgstr ""
 msgid "\"%s\" was executed"
 msgstr ""
 
-msgid "\"%s\": VM does not have BlackBox."
-msgstr ""
-
-msgid "\"%s\": VM needs to be in a Powered Off state to delete the BlackBox."
-msgstr ""
-
 msgid "\"%s\": cannot be removed, has vms or hosts"
 msgstr ""
 

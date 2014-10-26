@@ -133,7 +133,6 @@ class MiqExpression
 
   EXCLUDE_COLUMNS = %w{
     ^.*_id$
-    ^blackbox_.*$
     ^id$
     ^min_derived_storage.*$
     ^max_derived_storage.*$

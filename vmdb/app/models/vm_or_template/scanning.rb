@@ -150,7 +150,6 @@ module VmOrTemplate::Scanning
       self.last_scan_attempt_on = Time.now.utc
       self.save
       job = Job.create_job("VmScan", options)
-      #validate_blackbox()
       return job
     rescue => err
       $log.log_backtrace(err)
@@ -163,7 +162,6 @@ module VmOrTemplate::Scanning
     $log.debug "MIQ(#{self.class.name}#sync_metadata) category=[#{category}] [#{category.class}]"
     options = {
       "category" => category.join(","),
-      # TODO: XXX blackbox code expects this to be a string?
       "from_time" => self.last_drift_state_timestamp.try(:to_i),
       "taskid" => nil,
       "vm_id" => self.id

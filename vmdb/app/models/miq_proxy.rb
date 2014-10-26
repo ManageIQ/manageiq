@@ -449,10 +449,6 @@ class MiqProxy < ActiveRecord::Base
     call_ws(OpenStruct.new("method_name" => "ScanRepository", "repository_id" => repository.id, "path" => repository.path, "fmt" => true))
   end
 
-  def delete_blackbox
-    call_ws(OpenStruct.new("args" => [], "deleteall" => true, "method_name" => "DeleteBlackBox"))
-  end
-
   # Ask host to update all locally registered vm state data
   def refresh_vm_state
     begin

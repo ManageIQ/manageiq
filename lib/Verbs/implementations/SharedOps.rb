@@ -291,18 +291,6 @@ module SharedOps
 		ost.value = driver.HostHeartbeat(hostId, xmlDoc.miqEncode, "b64,zlib,xml")
 	end
 	
-	def MakeSmart(ost)
-		return if !checkArg(ost)
-		vmName = getVmFile(ost)
-		
-		# Set Internal blackbox smart flag to true, if not already
-		bb = Manageiq::BlackBox.new(vmName)
-		raise "MakeSmart failed for vm with no registered ID.  [#{vmName}]" if bb.vmId.nil?
-		bb.smart = true
-		bb.close
-		return
-	end
-	
 	def SendVMState(ost)
 		return if !checkArg(ost)
 		vmName = getVmFile(ost)
@@ -320,69 +308,6 @@ module SharedOps
 		ost.value = "OK\n"
 	end
 	
-	def RecordBlackBoxEvent(ost)
-		return if !checkArg(ost) or ost.args[1].blank? or ost.args[1] == '""'
-		
-		vmName = getVmFile(ost)
-		
-		eventData = ost.args[1]
-		eventData = eventData[1..-2] if eventData[0,1] == '"' and eventData[-1,1] == '"'
-		dataHash = YAML.load(eventData)
-
-		Manageiq::BlackBox.recordEvent(vmName, dataHash)
-		
-		ost.value = "OK\n"
-	end
-	
-	def ValidateBlackBox(ost)
-    blackBoxHelper(ost, "validate")
-  end
-  
-  def CreateBlackBox(ost)
-    blackBoxHelper(ost, "create")
-  end
-  
-  def DeleteBlackBox(ost)
-    blackBoxHelper(ost, "delete")
-  end  
-  
-  def blackBoxHelper(ost, mode)
-		return if !checkArg(ost) or ost.args[1].blank? or ost.args[1] == '""'
-		
-		vmName = getVmFile(ost)
-		
-		eventData = ost.args[1]
-		eventData = eventData[1..-2] if eventData[0,1] == '"' and eventData[-1,1] == '"'
-		dataHash = YAML.load(eventData)
-    # Get the jobid out of the data hash
-    ost.taskid = dataHash[:options][:jobid]
-    
-    xml_summary = MiqXml.createDoc("<summary/>")
-    xmlNode = xml_summary.root.add_element("#{mode}blackbox")
-    xml_summary.root.add_attributes({"taskid"=>ost.taskid})
-    
-		begin
-      bb = nil; vmId = nil; cfg = nil
-      bb = Manageiq::BlackBox.new(vmName)
-			cfg = bb.send(mode, dataHash)
-			vmId = bb.vmId
-    rescue => bbErr
-      cfg = {:results=>{:error=>true, :error_message=>bbErr.to_s}} if cfg.nil?
-		ensure
-			bb.close if bb
-      xmlNode.add_attributes("return" => YAML.dump(cfg))
-
-			$log.info "Starting:  Sending #{mode}blackbox summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
-      driver = get_ws_driver(ost)
-			driver.SaveVmmetadata(vmId, xml_summary.miqEncode, "b64,zlib,xml", ost.taskid)
-			$log.info "Completed: Sending #{mode}blackbox summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
-      
-      raise bbErr if bbErr
-		end
-		
-		ost.value = "OK\n"		
-	end
-
 	def checkArg(ost)
 		if (!ost.args || (ost.args.length == 0))
 			ost.error = "Command requires an argument\n"
