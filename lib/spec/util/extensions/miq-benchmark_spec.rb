@@ -21,9 +21,9 @@ describe Benchmark do
       "test"
     end
     result.should == "test"
-    timings[:test1].should be_within(0.01).of(1500)
-    timings[:test2].should be_within(0.01).of(1000)
-    timings[:test3].should be_within(0.01).of(500)
+    timings[:test1].should be_within(0.5).of(1500)
+    timings[:test2].should be_within(0.5).of(1000)
+    timings[:test3].should be_within(0.5).of(500)
   end
 
   it '.realtime_store with an Exception' do
@@ -34,7 +34,7 @@ describe Benchmark do
         raise Exception
       end
     rescue Exception
-      timings[:test1].should be_within(0.01).of(500)
+      timings[:test1].should be_within(0.5).of(500)
     end
   end
 
@@ -50,9 +50,9 @@ describe Benchmark do
       "test"
     end
     result.should == "test"
-    timings[:test1].should be_within(0.01).of(1500)
-    timings[:test2].should be_within(0.01).of(1000)
-    timings[:test3].should be_within(0.01).of(500)
+    timings[:test1].should be_within(0.5).of(1500)
+    timings[:test2].should be_within(0.5).of(1000)
+    timings[:test3].should be_within(0.5).of(500)
   end
 
   it '.in_realtime_block?' do
