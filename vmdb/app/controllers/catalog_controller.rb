@@ -477,6 +477,7 @@ class CatalogController < ApplicationController
         @edit[:new][:available_resources][r[:resource_id]] = r[:name]       #add it back to available resources pulldown
         @edit[:new][:selected_resources].delete(r[:resource_id])            #delete it from to selected resources
         @edit[:new][:rsc_groups][params[:grp_id].to_i].delete(r)            #delete element from group
+        rearrange_provision_order(@edit[:new][:rsc_groups], r[:provision_index])
       end
     end
 
@@ -1331,6 +1332,7 @@ class CatalogController < ApplicationController
     end
     #add one extra group to show in pulldown so resources can be moved into it.
     @edit[:new][:rsc_groups].push(Array.new) if @edit[:new][:selected_resources].length > 1
+    @edit[:new][:provision_order] = recalculate_provision_order
 
     @edit[:new][:available_resources] = Hash.new
     get_available_resources("ServiceTemplate")
@@ -1469,6 +1471,7 @@ class CatalogController < ApplicationController
           break
         end
       end
+      @edit[:new][:provision_order] = recalculate_provision_order
     else
       #check if group idx change transaction came in
       params.each do |var, val|
@@ -1520,20 +1523,21 @@ class CatalogController < ApplicationController
                     if param_value
                       p_index = @edit[:new][:rsc_groups].flatten.collect { |r| r[:provision_index].to_i }.sort
 
-                      # if resource is being assigned index that's already in use
-                      if p_index.include?(param_value.to_i)
+                      # if index that came in is being used more than once
+                      if p_index.count(g[key]) > 1
                         g[key] = param_value.to_i - 1
-                      else
-                        # if index came in is not already being used,
-                        # check previous value to make sure we are not emptying an index value
-                        if p_index.count(g[key]) > 1
-                          g[key] = param_value.to_i - 1
-                        elsif p_index[p_index.length - 1] + 1 == param_value.to_i
-                          g[key] = param_value.to_i - 1
+                      elsif p_index.count(g[key]) == 1
+                        # if index being changed occur once
+                        # rearrange all provision order values
+                        rearrange_provision_order(@edit[:new][:rsc_groups], g[key])
+                        if param_value.to_i > p_index.last
+                          g[key] = p_index.last
                         else
-                          g[key] = p_index[p_index.length - 1]
+                          g[key] = param_value.to_i - 1
                         end
                       end
+                      # recalculate values for pull-down
+                      @edit[:new][:provision_order] = recalculate_provision_order
                     end
                   else
                     g[key] = param_value if param_value
@@ -1549,6 +1553,20 @@ class CatalogController < ApplicationController
     #recalculate available resources, if resource id selected
     get_available_resources("ServiceTemplate") if params[:resource_id]
     @in_a_form = true
+  end
+
+  # building/rebuilding provision order pull down
+  # add one extra number in pull down
+  def recalculate_provision_order
+    order = @edit[:new][:rsc_groups].flatten.collect { |r| r[:provision_index].to_i }.sort.uniq
+    order.empty? ? order.push(1) : order.push(order.last + 1)
+  end
+
+  # rearrange provision order values so numbers aren't skipped
+  def rearrange_provision_order(resources, current_index_value)
+    resources.flatten.collect do |group|
+      group[:provision_index] -= 1 if group[:provision_index] > current_index_value
+    end
   end
 
   # Get all info for the node about to be displayed
