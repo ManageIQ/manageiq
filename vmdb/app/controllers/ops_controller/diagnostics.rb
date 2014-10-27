@@ -133,21 +133,24 @@ module OpsController::Diagnostics
         replace_right_cell(x_node)
       end
     when "validate"
-      id = params[:id] ? params[:id] : "new"
-      return unless load_edit("logdepot_edit__#{id}","replace_cell__explorer")
-      settings = @edit[:new].dup
-      settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
+      settings = {
+        :username => @edit[:new][:log_userid],
+        :password => @edit[:new][:log_password],
+        :uri      => "#{@edit[:new][:uri_prefix]}://#{@edit[:new][:uri]}"
+      }
+
       begin
-        LogFile.verify_log_depot_settings(settings)
+        type = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
+        type.validate(settings)
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
       else
         add_flash(_("Log Depot Settings were validated"))
       end
+
       @changed = (@edit[:new] != @edit[:current])
-      render :update do |page|                    # Use RJS to update the display
-        #page.replace_html(tab_div, :partial=>"layouts/edit_log_depot_settings")
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg", :locals => {:div_num => ""})
       end
     when "reset", nil # Reset or first time in
       log_depot_build_edit_screen
