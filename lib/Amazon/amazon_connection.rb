@@ -15,6 +15,14 @@ class AmazonConnection
     AWS.const_get(service).new(params)
   end
 
+  def self.sqs(access_key_id, secret_access_key, region = nil, proxy_uri = nil)
+    raw_connect(access_key_id, secret_access_key, "SQS", region, proxy_uri)
+  end
+
+  def self.sns(access_key_id, secret_access_key, region = nil, proxy_uri = nil)
+    raw_connect(access_key_id, secret_access_key, "SNS", region, proxy_uri)
+  end
+
   def self.verify_credentials(access_key_id, secret_access_key)
     begin
       self.raw_connect(access_key_id, secret_access_key).regions.map(&:name)
