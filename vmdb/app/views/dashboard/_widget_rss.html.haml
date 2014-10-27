@@ -8,4 +8,4 @@
       No RSS Feed data found . . .
     - else
       = widget.contents_for_user(session[:userid]).contents.gsub("https://localhost:3000",
-          "#{request.protocol}://#{request.host}:#{request.port}").html_safe
+          "#{request.protocol}#{request.host}:#{request.port}").html_safe

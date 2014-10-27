@@ -111,7 +111,7 @@ describe "Widget RSS Content" do
     content = widget.generate_one_content_for_user(@admin_group, @admin)
     content.should be_kind_of MiqWidgetContent
     content.contents.scan("</tr>").length.should == widget.options[:row_count]
-    content.contents.scan("<a href").length.should == widget.options[:row_count]
+    content.contents.scan("onclick").length.should eq(widget.options[:row_count])
     widget.contents_for_user(@admin).should == content
     Net::HTTP.unstub(:get)
   end
@@ -133,7 +133,7 @@ describe "Widget RSS Content" do
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
     content.should be_kind_of MiqWidgetContent
     content.contents.scan("</tr>").length.should == widget.options[:row_count]
-    content.contents.scan("<a href").length.should == widget.options[:row_count]
+    content.contents.scan("onclick").length.should eq(widget.options[:row_count])
     widget.contents_for_user(@admin).should == content
     Net::HTTP.unstub(:get)
   end
