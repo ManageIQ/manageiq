@@ -39,6 +39,7 @@ module FixAuth
     end
 
     def generate_password
+      MiqPassword.backup_symetric("#{cert_dir}/v2_key")
       MiqPassword.generate_symmetric("#{cert_dir}/v2_key")
     end
 

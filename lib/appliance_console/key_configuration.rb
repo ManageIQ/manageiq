@@ -47,7 +47,7 @@ module ApplianceConsole
     end
 
     def activate
-      return true unless remove_key(force)
+      MiqPassword.backup_symetric(KEY_FILE)
 
       if fetch_key?
         fetch_key
@@ -84,12 +84,6 @@ module ApplianceConsole
     def ask_for_action(default_action)
       options = {'Create key' => :create, 'Fetch key from remote machine' => :fetch}
       ask_with_menu("Encryption Key", options, default_action, false)
-    end
-
-    # return true if key is gone, otherwise false (and we should probably abort)
-    # throws an exception if rm fails e.g.: Errno::EACCES
-    def remove_key(force)
-      !key_exist? || (force && FileUtils.rm(KEY_FILE))
     end
   end
 end
