@@ -97,7 +97,6 @@ class ExtManagementSystem < ActiveRecord::Base
   attr_via_reserved :realm
   attr_via_reserved :security_protocol
 
-
   virtual_column :realm, :type => :string, :uses => :reserved_rec
   virtual_column :security_protocol, :type => :string, :uses => :reserved_rec
   virtual_column :emstype,                 :type => :string
