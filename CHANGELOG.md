@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 14 end 2014-10-20
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3Aenhancement)
+
+- Support SSL for OpenStack
+  - Deals with different ways to configure SSL for OpenStack
+    - SSL termination at OpenStack services
+    - SSL termination at proxy
+    - Doesn’t always change the service ports
+  - Attempts non-SSL first, then fails over to SSL
+- Model Template many-to-many Cloud Tenant
+- Support Version 5 XFS filesystem
+- Allow Automate methods to override or extend parameters passed to provider by
+  updating the clone_options during provisioning
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3Aenhancement)
+
+- Updated report listviews to use glyphicons
+- Chart Themes
+- Allow Default Zone description to be changed   
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3A%22technical+debt%22)
+
+- Graphical summary screens
+- VDI support
+- Various monkey patches to prepare for Ruby 2 and Rails 4 upgrades  
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3Abug)
+
+- 42 issues closed.
+
 ## Unreleased - as of Sprint 13 end 2014-09-29
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+13+Ending+Sept+29%2C+2014%22+is%3Aclosed+label%3Aenhancement)
