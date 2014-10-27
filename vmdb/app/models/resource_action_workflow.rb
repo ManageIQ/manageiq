@@ -32,7 +32,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     values = create_values_hash
     values[:src_id] = @target.id
 
-    if has_request_class?
+    if create_request?(values)
       event_message = "Request by [#{requester_id}] for #{@target.class.name}:#{@target.id}"
       result[:request] = create_request(values, requester_id, @target.class.name,
                                         'resource_action_request_created', event_message, auto_approve)
@@ -40,7 +40,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
       ra = load_resource_action(values)
       ra.deliver_to_automate_from_dialog(values, @target)
     end
-    return result
+    result
   end
 
   def request_class
@@ -113,5 +113,12 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def validate(values=nil)
     @dialog.try(:validate)
+  end
+
+  private
+
+  def create_request?(values)
+    ra = load_resource_action(values)
+    !ra.resource.kind_of?(CustomButton) && has_request_class?
   end
 end
