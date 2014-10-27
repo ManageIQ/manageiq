@@ -35,7 +35,7 @@ class EmsMicrosoft < EmsInfra
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    hostname      = options[:hostname] || self.hostname
+    hostname       = options[:hostname] || self.hostname
     auth_url       = self.class.auth_url(hostname, port)
     connect_params = build_connect_params(options)
 
@@ -50,7 +50,7 @@ class EmsMicrosoft < EmsInfra
     rescue WinRM::WinRMHTTPTransportError => e # Error 401
       raise MiqException::MiqHostError, "Check credentials and WinRM configuration settings. " \
       "Remote error message: #{e.message}"
-    rescue GSSAPI::GssApiError => e
+    rescue GSSAPI::GssApiError
       raise MiqException::MiqHostError, "Unable to reach any KDC in realm #{realm}"
     end
 
