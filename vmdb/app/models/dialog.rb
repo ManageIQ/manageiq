@@ -1,4 +1,5 @@
 class Dialog < ActiveRecord::Base
+  DIALOG_DIR = Rails.root.join("product/dialogs/service_dialogs")
 
   has_many :dialog_tabs, :dependent => :destroy, :order => :position
 
@@ -12,6 +13,16 @@ class Dialog < ActiveRecord::Base
   alias_attribute  :name, :label
 
   attr_accessor :target_resource
+
+  def self.seed
+    dialog_import_service = DialogImportService.new
+
+    MiqRegion.my_region.lock do
+      Dir.glob(DIALOG_DIR.join("*.yaml")).each do |file|
+        dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
+      end
+    end
+  end
 
   def each_dialog_field
     self.dialog_tabs.each {|dt| dt.each_dialog_field {|df| yield(df)}}
@@ -75,5 +86,4 @@ class Dialog < ActiveRecord::Base
   def reject_if_has_resource_actions
     raise "Dialog cannot be deleted because it is connected to other components." if self.resource_actions.length > 0
   end
-
 end

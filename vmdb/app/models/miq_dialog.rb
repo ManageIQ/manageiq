@@ -2,7 +2,7 @@ class MiqDialog < ActiveRecord::Base
   validates_presence_of   :name, :description
   validates_uniqueness_of :name, :scope => :dialog_type, :case_sensitive => false
 
-  DIALOG_DIR = File.expand_path(File.join(Rails.root, "product/dialogs"))
+  DIALOG_DIR = Rails.root.join("product/dialogs/miq_dialogs")
 
   DIALOG_TYPES = [
     ["VM Provision"  , "MiqProvisionWorkflow"    ],
@@ -28,7 +28,7 @@ class MiqDialog < ActiveRecord::Base
     log_header = "MiqDialog.sync_from_file"
     item = YAML.load_file(filename)
 
-    item[:filename] = filename.sub(DIALOG_DIR + "/", "")
+    item[:filename] = filename.sub(DIALOG_DIR.to_path + "/", "")
     item[:file_mtime] = File.mtime(filename).utc
     item[:default] = true
 

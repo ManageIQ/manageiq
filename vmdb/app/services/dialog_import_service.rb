@@ -32,6 +32,12 @@ class DialogImportService
     end
   end
 
+  def import_all_service_dialogs_from_yaml_file(filename)
+    dialogs = YAML.load_file(filename)
+
+    import_from_dialogs(dialogs)
+  end
+
   def import_service_dialogs(import_file_upload, dialogs_to_import)
     unless dialogs_to_import.nil?
       dialogs = YAML.load(import_file_upload.uploaded_content)

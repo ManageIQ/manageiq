@@ -1,6 +1,25 @@
 require "spec_helper"
 
 describe Dialog do
+  describe ".seed" do
+    let(:dialog_import_service) { instance_double("DialogImportService") }
+    let(:test_file_path) { Rails.root.join("spec/fixtures/files/dialogs") }
+
+    before do
+      MiqRegion.seed
+      DialogImportService.stub(:new).and_return(dialog_import_service)
+    end
+
+    it "delegates to the dialog import service" do
+      Dialog.with_constants(:DIALOG_DIR => test_file_path) do
+        dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
+          test_file_path.join("seed_test.yaml").to_path
+        )
+        Dialog.seed
+      end
+    end
+  end
+
   it "#name" do
     dialog = FactoryGirl.create(:dialog, :label => 'dialog')
     dialog.label.should == dialog.name
