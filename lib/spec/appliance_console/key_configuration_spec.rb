@@ -89,6 +89,7 @@ describe ApplianceConsole::KeyConfiguration do
         end
 
         it "fails if key exists (no force)" do
+          expect($stderr).to receive(:puts).at_least(2).times
           subject.force = false
           v2_exists(true)
           expect(FileUtils).not_to receive(:rm)

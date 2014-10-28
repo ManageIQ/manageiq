@@ -49,7 +49,7 @@ describe OpenstackHandle::Handle do
 
       # setup the socket error for the initial non-ssl failure
       socket_error = double('socket_error')
-      socket_error.should_receive(:message).any_number_of_times.and_return("end of file reached (EOFError)")
+      allow(socket_error).to receive(:message).and_return("end of file reached (EOFError)")
       socket_error.should_receive(:class).and_return(Object)
       socket_error.should_receive(:backtrace)
 

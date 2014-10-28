@@ -279,6 +279,7 @@ describe ApplianceConsole::Cli do
         end
 
         it "fails to generate an encryption key" do
+          expect($stderr).to receive(:puts).at_least(2).times
           subject.parse(%w(--internal --region 1 --key))
           expect_v2_key(true)
           expect(subject).to be_key
