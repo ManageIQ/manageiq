@@ -211,10 +211,10 @@ pushd /etc/yum.repos.d/
   wget http://copr.fedoraproject.org/coprs/nalin/certmonger/repo/epel-6/nalin-certmonger-epel-6.repo
 popd
 
-wget -O ruby-install-0.5.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.5.0.tar.gz
-tar -xzvf ruby-install-0.5.0.tar.gz
-rm -f ruby-install-0.5.0.tar.gz
-cd ruby-install-0.5.0/
+wget -O ruby-install.tar.gz https://github.com/postmodern/ruby-install/archive/v0.5.0.tar.gz
+tar -xzvf ruby-install.tar.gz
+rm -f ruby-install.tar.gz
+cd ruby-install*/
 make install
 
 /usr/local/bin/ruby-install ruby 2.0.0-p594
