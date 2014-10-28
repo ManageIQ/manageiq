@@ -84,8 +84,9 @@ module ApplianceConsole
         opt :username, "Database Username",  :type => :string,  :short => 'U', :default => "root"
         opt :password, "Database Password",  :type => :string,  :short => "p"
         opt :dbname,   "Database Name",      :type => :string,  :short => "d", :default => "vmdb_production"
-        opt :key,      "Create encryption key (forcefully)",  :type => :boolean, :short => "k"
-        opt :fetch_key, "SSH host with encryption key", :type => :string
+        opt :key,      "Create encryption key",  :type => :boolean, :short => "k"
+        opt :fetch_key, "SSH host with encryption key", :type => :string, :short => "K"
+        opt :force_key, "Forcefully create encryption key", :type => :boolean, :short => "f"
         opt :sshlogin,  "SSH login",         :type => :string,                 :default => "root"
         opt :sshpassword, "SSH password",    :type => :string
         opt :verbose,  "Verbose",            :type => :boolean, :short => "v"
@@ -171,7 +172,7 @@ module ApplianceConsole
     def key_configuration
       @key_configuration ||= KeyConfiguration.new(
         :action   => options[:fetch_key] ? :fetch : :create,
-        :force    => options[:fetch_key] ? true : options[:key],
+        :force    => options[:fetch_key] ? true : options[:force_key],
         :host     => options[:fetch_key],
         :login    => options[:sshlogin],
         :password => options[:sshpassword],
@@ -180,7 +181,9 @@ module ApplianceConsole
 
     def create_key
       say "#{key_configuration.action} encryption key"
-      key_configuration.activate
+      unless key_configuration.activate
+        raise "Could not create encryption key (v2_key)"
+      end
     end
 
     def install_certs

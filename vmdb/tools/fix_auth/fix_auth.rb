@@ -40,6 +40,14 @@ module FixAuth
 
     def generate_password
       MiqPassword.generate_symmetric("#{cert_dir}/v2_key")
+    rescue Errno::EEXIST => e
+      $stderr.puts
+      $stderr.puts "Only generate one v2_key per installation."
+      $stderr.puts "Chances are you did not want to overwrite this file."
+      $stderr.puts "If you do this all encrypted secrets in the database will not be readable."
+      $stderr.puts "Please backup your key and run again."
+      $stderr.puts
+      raise Errno::EEXIST, e.message
     end
 
     def fix_database_passwords

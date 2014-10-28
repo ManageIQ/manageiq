@@ -88,12 +88,12 @@ describe ApplianceConsole::KeyConfiguration do
           expect(subject.activate).to be_true
         end
 
-        it "skips if key exists (no force)" do
+        it "fails if key exists (no force)" do
           subject.force = false
           v2_exists(true)
           expect(FileUtils).not_to receive(:rm)
           expect(Net::SCP).not_to receive(:start)
-          expect(subject.activate).to be_true
+          expect(subject.activate).to be_false
         end
       end
     end
