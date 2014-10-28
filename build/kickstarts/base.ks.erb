@@ -217,6 +217,10 @@ rm -f ruby-install.tar.gz
 cd ruby-install*/
 make install
 
+# Note, we hardcode the ruby patch level for now.
+# Once the --update option is available, we could ask
+# ruby-install to "learn" what new rubies are available
+# See: https://github.com/postmodern/ruby-install/issues/175
 /usr/local/bin/ruby-install ruby 2.0.0-p594
 
 # Add the ruby binaries path to the PATH so we can find bundle and friends:
