@@ -62,6 +62,20 @@ freeipmi
 fuse-libs
 httpd
 ipmitool
+
+# ruby dependencies auto-installed by ruby-install
+# prefer to have these dependencies explicitly required in the kickstart
+# https://github.com/postmodern/ruby-install/blob/8957e0d1a52d59b45cf48cef8f15a1d8ed921cd4/share/ruby-install/ruby/dependencies.txt
+automake
+gcc
+gdbm-devel
+libffi-devel
+libyaml-devel
+ncurses-devel
+openssl-devel
+readline-devel
+zlib-devel
+
 libxml2-devel                    # For nokogiri gem
 libxslt-devel                    # For nokogiri gem
 lshw                             # From epel
@@ -74,7 +88,6 @@ nfs-utils
 nodejs010-nodejs                 # used for asset pipeline asset compilation
 OpenIPMI
 openslp-devel                    # build requires
-openssl-devel                    # lib build requires
 portmap
 postgresql92-postgresql          # appliance section
 postgresql92-postgresql-devel    # for pg gem
@@ -83,7 +96,6 @@ qpid-cpp-client-ssl              # Enable AMQP SSL connections: https://github.c
 scl-utils-build                  # build requires
 yum-utils
 zip                              # build requires
-zlib-devel                       # lib build requires
 
 # IPA Identity RPMs for External Authentication
 c-ares
