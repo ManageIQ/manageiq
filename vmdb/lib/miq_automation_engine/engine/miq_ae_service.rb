@@ -313,9 +313,7 @@ module MiqAeMethodService
 
         aec.ae_instances.select { |i| instance_re =~ i.name }.each do |aei|
           iname = if options[:path]
-                    MiqAeEngine::MiqAePath.new(:ae_namespace => aec.namespace,
-                                               :ae_class     => aec.name,
-                                               :ae_instance  => aei.name).to_s
+                    aei.fqname
                   else
                     aei.name
                   end

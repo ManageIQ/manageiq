@@ -88,7 +88,7 @@ describe MiqAeDomain do
 
     it "get same named classes" do
       create_multiple_domains
-      expected = %w(DOM2/A/b/C/cLaSS1 DOM1/A/B/C/CLASS1 DOM3/a/B/c/CLASs1)
+      expected = %w(/DOM2/A/b/C/cLaSS1 /DOM1/A/B/C/CLASS1 /DOM3/a/B/c/CLASs1)
       result = MiqAeClass.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1', true)
       expected.should match_array(result.each.collect(&:fqname))
     end
@@ -107,10 +107,10 @@ describe MiqAeDomain do
     it "get same named instances" do
       create_multiple_domains
       expected = %w(
-        DOM5/A/B/C/CLASS1/instance1
-        DOM2/A/b/C/cLaSS1/instance1
-        DOM1/A/B/C/CLASS1/instance1
-        DOM3/a/B/c/CLASs1/instance1
+        /DOM5/A/B/C/CLASS1/instance1
+        /DOM2/A/b/C/cLaSS1/instance1
+        /DOM1/A/B/C/CLASS1/instance1
+        /DOM3/a/B/c/CLASs1/instance1
       )
       result = MiqAeInstance.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1/instance1')
       expected.should match_array(result.each.collect(&:fqname))
@@ -129,7 +129,7 @@ describe MiqAeDomain do
 
     it "get same named methods" do
       create_multiple_domains_with_methods
-      expected = %w(DOM2/A/b/C/cLaSS1/method1 DOM1/A/B/C/CLASS1/method1 DOM3/a/B/c/CLASs1/method1)
+      expected = %w(/DOM2/A/b/C/cLaSS1/method1 /DOM1/A/B/C/CLASS1/method1 /DOM3/a/B/c/CLASs1/method1)
       result = MiqAeMethod.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1/method1', true)
       expected.should match_array(result.each.collect(&:fqname))
     end

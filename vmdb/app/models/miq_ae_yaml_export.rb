@@ -93,7 +93,7 @@ class MiqAeYamlExport
   def write_namespace_file(ns_obj)
     $log.info("#{self.class} Exporting namespace: <#{ns_obj.fqname}>")
     envelope_hash = setup_envelope(ns_obj, NAMESPACE_OBJ_TYPE).to_yaml
-    write_export_file('fqname'          => swap_domain_name(ns_obj.fqname),
+    write_export_file('fqname'          => swap_domain_path(ns_obj.fqname),
                       'output_filename' => NAMESPACE_YAML_FILENAME,
                       'export_data'     => envelope_hash,
                       'created_on'      => ns_obj.created_on,
@@ -132,7 +132,7 @@ class MiqAeYamlExport
   def write_class_schema(ns_fqname, class_obj)
     envelope_hash = setup_envelope(class_obj, CLASS_OBJ_TYPE)
     envelope_hash['object']['schema'] = class_obj.export_schema
-    write_export_file('fqname'          => swap_domain_name(ns_fqname),
+    write_export_file('fqname'          => swap_domain_path(ns_fqname),
                       'class_name'      => "#{class_obj.name}#{CLASS_DIR_SUFFIX}",
                       'output_filename' => CLASS_YAML_FILENAME,
                       'export_data'     => envelope_hash.to_yaml,
@@ -142,7 +142,7 @@ class MiqAeYamlExport
   end
 
   def write_all_instances(ns_fqname, class_obj)
-    export_file_hash = {'fqname'     => swap_domain_name(ns_fqname),
+    export_file_hash = {'fqname'     => swap_domain_path(ns_fqname),
                         'class_name' => "#{class_obj.name}#{CLASS_DIR_SUFFIX}"}
     class_obj.ae_instances.sort_by(&:fqname).each do |inst|
       file_name = inst.name.gsub('.', '_')
@@ -158,7 +158,7 @@ class MiqAeYamlExport
   end
 
   def write_all_methods(ns_fqname, class_obj)
-    export_file_hash = {'fqname' => swap_domain_name(ns_fqname)}
+    export_file_hash = {'fqname' => swap_domain_path(ns_fqname)}
     export_file_hash['class_name'] = "#{class_obj.name}#{CLASS_DIR_SUFFIX}/#{METHOD_FOLDER_NAME}"
     class_obj.ae_methods.sort_by(&:fqname).each do |meth_obj|
       export_file_hash['created_on'] = meth_obj.created_on
@@ -252,8 +252,13 @@ class MiqAeYamlExport
     end
   end
 
-  def swap_domain_name(fqname)
+  def swap_domain_name(name)
+    return name if @options['export_as'].blank?
+    name.gsub(/^#{@domain}/, @options['export_as'])
+  end
+
+  def swap_domain_path(fqname)
     return fqname if @options['export_as'].blank?
-    fqname.gsub(/^#{@domain}/, @options['export_as'])
+    fqname.gsub(/^\/#{@domain}/, @options['export_as'])
   end
 end
