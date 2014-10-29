@@ -46,15 +46,16 @@
         <tr>
           <td class="key">Change Password / Confirm Password</td>
           <td>
-            <%= password_field_tag("password", @edit[:new][:password],
+            <%= password_field_tag("password", '',
                               :maxlength         => 50,
+                              :placeholder       => placeholder_if_present(@edit[:new][:password]),
                               "data-miq_observe" => observe_url_json) %>
             <% if @edit[:new][:userid] == "admin" %>
               <%= javascript_tag(javascript_focus('password')) %>
-          <% end %>
-            <%= password_field_tag("password2",
-                              @edit[:new][:password2],
-                              :maxlength=>50,
+            <% end %>
+            <%= password_field_tag("password2", '',
+                              :maxlength         => 50,
+                              :placeholder       => placeholder_if_present(@edit[:new][:password2]),
                               "data-miq_observe" => observe_url_json) %>
           </td>
         </tr>

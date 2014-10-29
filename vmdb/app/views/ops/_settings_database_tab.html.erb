@@ -27,9 +27,9 @@
         <td class="key"><%= option[:description]%></td>
         <td>
           <% if option[:name].to_s == "password" %>
-            <%= password_field_tag("production_#{option[:name]}",
-                                   '',
+            <%= password_field_tag("production_#{option[:name]}", '',
                                    :maxlength         => 50,
+                                   :placeholder       => placeholder_if_present(@edit[:new][option[:name]]),
                                    "data-miq_observe" => {:interval => '.5', :url => url}.to_json) 
             %>
           <% else %>
@@ -46,9 +46,9 @@
         <tr>
           <td class="key">Verify Password</td>
           <td>
-            <%= password_field_tag("production_verify",
-                                   '',
+            <%= password_field_tag("production_verify", '',
                                    :maxlength         => 50,
+                                   :placeholder       => placeholder_if_present(@edit[:new][option[:verify]]),
                                    "data-miq_observe" => {:interval => '.5', 
                                                           :url      => url}.to_json)
             %>
