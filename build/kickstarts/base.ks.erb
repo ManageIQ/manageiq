@@ -225,16 +225,11 @@ make install
 
 # Add the ruby binaries path to the PATH so we can find bundle and friends:
 ruby_bin_path=(/opt/rubies/ruby-2.0.0*/bin)
-cat <<EOF >> /etc/default/evm
-export PATH=\$PATH:$ruby_bin_path
-EOF
+echo "export PATH=\$PATH:$ruby_bin_path" >> /etc/default/evm
 
 cat /etc/default/evm
 
-cat <<'EOF' > /root/.gemrc
----
-gem: --no-rdoc --no-ri
-EOF
+echo "gem: --no-ri --no-rdoc --no-document" > /root/.gemrc
 
 # https://github.com/plataformatec/devise/issues/909
 # Verify this is needed to fix bundle install issue: ArgumentError: invalid byte sequence in US-ASCII
