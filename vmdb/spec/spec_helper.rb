@@ -99,20 +99,3 @@ VCR.configure do |c|
   #c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")
   #c.debug_logger = File.open(File.join(ENV['CC_BUILD_ARTIFACTS'], "vcr_debug.log"), "w") if ENV['CC_BUILD_ARTIFACTS']
 end
-
-# TODO: Remove this once 1.9.3 has this fixed
-# ruby 1.9.2+ (1.9.3-p194) doesn't propagate exit codes properly when exceptions occur in an at_exit.
-# The vmdb project reported 'green' despite test failures raising exceptions which set non-zero exit codes.
-# http://bugs.ruby-lang.org/issues/5218
-if defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby"
-  module Kernel
-    alias :__at_exit :at_exit
-    def at_exit(&block)
-      __at_exit do
-        exit_status = $!.status if $!.is_a?(SystemExit)
-        block.call
-        exit exit_status if exit_status
-      end
-    end
-  end
-end
