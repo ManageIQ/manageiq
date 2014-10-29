@@ -231,6 +231,8 @@ cat /etc/default/evm
 
 echo "gem: --no-ri --no-rdoc --no-document" > /root/.gemrc
 
+echo "export BUNDLE_WITHOUT=$BUNDLE_WITHOUT:qpid" >> /etc/default/evm_bundler
+
 # https://github.com/plataformatec/devise/issues/909
 # Verify this is needed to fix bundle install issue: ArgumentError: invalid byte sequence in US-ASCII
 # Perhaps during kickstart the locale/lang is not set and defaults to US-ASCII.
