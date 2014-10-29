@@ -15,6 +15,7 @@ class MiqAeYamlExportConsolidated < MiqAeYamlExport
 
   def write_data(base_path, export_hash)
     path = File.join(base_path, export_hash['output_filename']).split('/')
+    path.shift  if base_path[0, 1]  == '/'
     data = export_hash['export_data']
     data = YAML.load(data) if export_hash['output_filename'].ends_with?('.yaml')
     path << data

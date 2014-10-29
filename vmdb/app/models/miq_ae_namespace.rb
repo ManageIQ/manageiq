@@ -14,7 +14,7 @@ class MiqAeNamespace < ActiveRecord::Base
   def self.find_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
-    fqname   = fqname[1..-1] if fqname[0] == '/'
+    fqname   = fqname[0] == '/' ? fqname : "/#{fqname}"
     fqname   = fqname.downcase
     last     = fqname.split('/').last
     low_name = arel_table[:name].lower
@@ -69,7 +69,7 @@ class MiqAeNamespace < ActiveRecord::Base
   end
 
   def fqname
-    @fqname ||= ancestors.collect(&:name).reverse.push(name).join('/')
+    @fqname ||= "/#{ancestors.collect(&:name).reverse.push(name).join('/')}"
   end
 
   def editable?
@@ -84,7 +84,7 @@ class MiqAeNamespace < ActiveRecord::Base
   end
 
   def fqname_sans_domain
-    fqname.split('/')[1..-1].join("/")
+    fqname.split('/')[2..-1].join("/")
   end
 
   def domain_name
