@@ -623,6 +623,7 @@ Vmdb::Application.routes.draw do
         change_tab
         dialog_edit
         dialog_form_field_changed
+        dialog_list
         dialog_res_remove
         dialog_res_reorder
         explorer
