@@ -19,7 +19,7 @@ describe Metric::CiMixin::Capture::Openstack do
     @vm.stub(:perf_init_openstack).and_return(@ems_openstack)
   end
 
-  context "with non-aggregated data" do
+  context "with standard interval data" do
     before :each do
       @ems_openstack.stub(:get_statistics) { |name, options| OpenstackApiResult.new(@mock_stats_data.get_statistics(name)) }
     end
@@ -75,13 +75,64 @@ describe Metric::CiMixin::Capture::Openstack do
     end
   end
 
-  context "with aggregated data" do
-    before :each do
-      @ems_openstack.stub(:get_statistics) { |name, options| OpenstackApiResult.new(@mock_stats_data.get_statistics(name, "aggregate")) }
+  context "with irregular interval data" do
+    before do
+      @ems_openstack.stub(:get_statistics) do |name, _options|
+        OpenstackApiResult.new(@mock_stats_data.get_statistics(name, "irregular_interval"))
+      end
+
+      @orig_log = $log
+      $log = double.as_null_object
     end
 
-    it "aggregates results for collection intervals not divisible by 20sec" do
-      pending "tests to be written for aggregating openstack metric results for irregular intervals"
+    after do
+      $log = @orig_log
+    end
+
+    it "normalizes irregular intervals into 20sec intervals" do
+      _, values_by_id_and_ts = @vm.perf_collect_metrics_openstack("realtime")
+      values_by_ts = values_by_id_and_ts[@vm.ems_ref]
+      ts_keys = values_by_ts.keys
+
+      # the first two openstack metrics should look like:
+      #   ts: 2013-08-28T11:01:09 => cpu_util: 50
+      #   ts: 2013-08-28T11:02:12 => cpu_util: 100
+      #
+      # after capture and processing, the first six statistics should look like:
+      #   ts: 2013-08-28T11:01:09 => cpu_usage_rate_average: 50
+      #   ts: 2013-08-28T11:01:29 => cpu_usage_rate_average: 50
+      #   ts: 2013-08-28T11:01:49 => cpu_usage_rate_average: 50
+      #   ts: 2013-08-28T11:02:09 => cpu_usage_rate_average: 75
+      #   ts: 2013-08-28T11:02:29 => cpu_usage_rate_average: 100
+      #   ts: 2013-08-28T11:02:49 => cpu_usage_rate_average: 100
+      #
+      # where:
+      #   * the first 3 stats are an equal 20 second break down of the first
+      #     openstack metric
+      #   * the 4th stat is an average of the two captured openstack metrics
+      #     because the stored timestamp (keeping with the 20 second periods) is
+      #     between the two captured openstack metrics
+      #   * and the next 2 stats are an equal 20 second break down of the second
+      #     openstack metric
+
+      # these values are pulled directly from spec/tools/openstack_data/openstack_perf_data/irregular_interval.yml
+      avg_stat1 = 50
+      avg_stat2 = 100
+
+      # ensure that the first three statistics match avg_stat1
+      (0..2).each { |i| values_by_ts[ts_keys[i]]["cpu_usage_rate_average"].should eq avg_stat1 }
+
+      # ensure the fourth statistic is the avg of stat1 and stat2
+      stat = (avg_stat1 + avg_stat2) / 2
+      values_by_ts[ts_keys[3]]["cpu_usage_rate_average"].should eq stat
+
+      # the fifth and sixth stat should match avg_stat2
+      (4..5).each { |i| values_by_ts[ts_keys[i]]["cpu_usage_rate_average"].should eq avg_stat2 }
+    end
+
+    it "logs when capture intervals are too small" do
+      $log.should_receive(:warn).with(/Capture interval invalid/).at_least(:once)
+      @vm.perf_collect_metrics_openstack("realtime")
     end
   end
 
