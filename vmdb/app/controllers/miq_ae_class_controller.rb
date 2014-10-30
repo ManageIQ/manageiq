@@ -2553,7 +2553,7 @@ private
   # Set record variables to new values
   def set_instances_record_vars(miqaeinst)
     instance_column_names.each do |attr|
-      miqaeinst.send("#{attr}=", @edit[:new][:ae_inst][attr].strip) if @edit[:new][:ae_inst][attr]
+      miqaeinst.send("#{attr}=", @edit[:new][:ae_inst][attr].try(:strip))
     end
     miqaeinst.class_id = from_cid(@edit[:ae_class_id])
   end
