@@ -7,7 +7,7 @@
       %tr
         %td.key Type
         %td.wide
-          - img_types = [["<Unkown>",nil]] + @edit[:pxe_image_types]
+          - img_types = [["<Unknown>",nil]] + @edit[:pxe_image_types]
           = select_tag("image_typ", options_for_select(img_types, @edit[:new][:img_type]),
             "data-miq_observe" => {:url => url}.to_json)
       %tr
