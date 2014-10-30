@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Helper Script to access the CFME REST API
+# Helper Script to access the ManageIQ REST API
 #
 # Makes use of the Trollop and Faraday Client Gems
 #   gem install trollop
@@ -19,8 +19,8 @@ require 'faraday'
 require 'faraday_middleware'
 
 api_cmd   = File.basename($PROGRAM_NAME)
-api_ver   = "1.0"
-cmd_title = "CFME REST API Access Script"
+api_ver   = "2.0.0"
+cmd_title = "ManageIQ REST API Access Script"
 
 sep       = "_" * 60
 prefix    = "/api"
@@ -72,7 +72,8 @@ actions              = methods.keys
 methods_needing_data = %w(put post patch)
 scriptdir_actions    = %w(ls run)
 sub_commands         = actions + %w(edit vi) + scriptdir_actions
-api_parameters       = %w(expand attributes limit offset sort_by sort_order sqlfilter by_tag)
+api_parameters       = %w(expand attributes limit offset sort_by sort_order filter by_tag)
+multi_params         = %w(filter)
 
 opts = Trollop.options do
   version "#{api_cmd} #{api_ver} - #{cmd_title}"
@@ -107,7 +108,7 @@ EOS
       :default => false,                    :short => '-v'
   opt :apiversion, "Version of the API to access",
       :default => "",                       :short => '-V'
-  opt :url,        "Base URL of CFME to access",
+  opt :url,        "Base URL of Appliance to access",
       :default => "http://localhost:3000",  :short => '-l'
   opt :user,       "User to authentication as",
       :default => "admin",                  :short => '-u'
@@ -173,7 +174,9 @@ if action == "run"
   msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
 else
   api_params = Trollop.options do
-    api_parameters.each { |param| opt param.intern, param, :default => "" }
+    norm_options  = {:default => ""}
+    multi_options = {:default => "", :multi => true}
+    api_parameters.each { |p| opt p.intern, p, (multi_params.include?(p) ? multi_options.dup : norm_options.dup) }
   end
   api_parameters.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
 end
