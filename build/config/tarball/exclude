@@ -9,6 +9,7 @@
 *Gemfile.appliance_excludes.rb
 *test.rb
 .git
+*system/initialize_appliance.sh
 *vmdb/Gemfile.lock
 *vmdb/.bundle
 *vmdb/bin
