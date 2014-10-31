@@ -45,8 +45,9 @@ class EmsMicrosoft < EmsInfra
 
     begin
       run_dos_command("hostname")
-    rescue WinRM::WinRMHTTPTransportError # Error 401
-      raise MiqException::MiqHostError, "Login failed due to a bad username or password."
+    rescue WinRM::WinRMHTTPTransportError => e # Error 401
+      raise MiqException::MiqHostError, "Check credentials and WinRM configuration settings. " \
+      "Remote error message: #{e.message}"
     end
 
     true
