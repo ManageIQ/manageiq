@@ -4,8 +4,9 @@ class MiqAeMethod < ActiveRecord::Base
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
-  belongs_to :ae_class,     :class_name => "MiqAeClass", :foreign_key => :class_id
-  has_many   :inputs,       :class_name => "MiqAeField", :foreign_key => :method_id, :dependent => :destroy, :order => :priority
+  belongs_to :ae_class, :class_name => "MiqAeClass", :foreign_key => :class_id
+  has_many   :inputs,   :class_name => "MiqAeField", :foreign_key => :method_id,
+                        :dependent => :destroy, :order => :priority, :autosave => true
 
   validates_presence_of   :name, :scope
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :scope]
