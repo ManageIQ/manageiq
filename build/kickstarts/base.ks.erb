@@ -62,6 +62,20 @@ freeipmi
 fuse-libs
 httpd
 ipmitool
+
+# ruby dependencies auto-installed by ruby-install
+# prefer to have these dependencies explicitly required in the kickstart
+# https://github.com/postmodern/ruby-install/blob/8957e0d1a52d59b45cf48cef8f15a1d8ed921cd4/share/ruby-install/ruby/dependencies.txt
+automake
+gcc
+gdbm-devel
+libffi-devel
+libyaml-devel
+ncurses-devel
+openssl-devel
+readline-devel
+zlib-devel
+
 libxml2-devel                    # For nokogiri gem
 libxslt-devel                    # For nokogiri gem
 lshw                             # From epel
@@ -74,18 +88,14 @@ nfs-utils
 nodejs010-nodejs                 # used for asset pipeline asset compilation
 OpenIPMI
 openslp-devel                    # build requires
-openssl-devel                    # lib build requires
 portmap
 postgresql92-postgresql          # appliance section
 postgresql92-postgresql-devel    # for pg gem
 postgresql92-postgresql-server   # appliance section
 qpid-cpp-client-ssl              # Enable AMQP SSL connections: https://github.com/ManageIQ/cfme/pull/2150
-ruby193-ruby
-ruby193-ruby-devel               # build requires
 scl-utils-build                  # build requires
 yum-utils
 zip                              # build requires
-zlib-devel                       # lib build requires
 
 # IPA Identity RPMs for External Authentication
 c-ares
@@ -102,28 +112,11 @@ ipa-admintools
 certmonger
 sneakernet_ca
 
-# bundler has some downstream patches we need or shared objects are not found
-ruby193-rubygem-bundler
-ruby193-rubygem-net-http-persistent # bundler rpm dependency
-ruby193-rubygem-thor                # bundler rpm dependency
-
-# thin has some downstream patches we need or thin_parser is not found
-ruby193-rubygem-thin
-ruby193-rubygem-daemons      # thin rpm dependency
-ruby193-rubygem-eventmachine # thin rpm dependency
-ruby193-rubygem-rack         # thin rpm dependency
-
-# TODO: prototype-rails initializer wants to load minitest/unit, which exists as a separate gem/rpm in rhel/centos/fedora:
-# Fix prototype rails initializer and determine if we really need the separate minitest gem/rpm
-ruby193-rubygem-minitest
-
 <% if @target == "ovirt" %>
 ovirt-guest-agent
 <% elsif @target == "vsphere" %>
 open-vm-tools
 <% end %>
-
-ruby193-rubygem-qpid_messaging
 
 # exclude these defaults from the @core group, with a few (commented) exceptions
 -aic94xx-firmware
@@ -218,17 +211,27 @@ pushd /etc/yum.repos.d/
   wget http://copr.fedoraproject.org/coprs/nalin/certmonger/repo/epel-6/nalin-certmonger-epel-6.repo
 popd
 
-# Add the rubygems binary path to the PATH so we can find bundle and friends:
-cat <<'EOF' >> /etc/default/evm
-export PATH=$PATH:/opt/rh/ruby193/root/usr/local/bin
-EOF
+wget -O ruby-install.tar.gz https://github.com/postmodern/ruby-install/archive/v0.5.0.tar.gz
+tar -xzvf ruby-install.tar.gz
+rm -f ruby-install.tar.gz
+cd ruby-install*/
+make install
+
+# Note, we hardcode the ruby patch level for now.
+# Once the --update option is available, we could ask
+# ruby-install to "learn" what new rubies are available
+# See: https://github.com/postmodern/ruby-install/issues/175
+/usr/local/bin/ruby-install ruby 2.0.0-p594 -- --disable-install-doc --enable-shared
+
+# Add the ruby binaries path to the PATH so we can find bundle and friends:
+ruby_bin_path=(/opt/rubies/ruby-2.0.0*/bin)
+echo "export PATH=\$PATH:$ruby_bin_path" >> /etc/default/evm
 
 cat /etc/default/evm
 
-cat <<'EOF' > /root/.gemrc
----
-gem: --no-rdoc --no-ri
-EOF
+echo "gem: --no-ri --no-rdoc --no-document" > /root/.gemrc
+
+echo "export BUNDLE_WITHOUT=$BUNDLE_WITHOUT:qpid" >> /etc/default/evm_bundler
 
 # https://github.com/plataformatec/devise/issues/909
 # Verify this is needed to fix bundle install issue: ArgumentError: invalid byte sequence in US-ASCII
@@ -236,6 +239,9 @@ EOF
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+[[ -s /etc/default/evm ]] && source /etc/default/evm
+gem install bundler -v "~>1.5"
 
 /var/www/miq/system/cfme-setup.sh
 
