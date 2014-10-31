@@ -508,7 +508,7 @@ class ApplicationController < ActionController::Base
   end
 
   # moved this method here so it can be accessed from pxe_server controller as well
-  def log_depot_validate
+  def log_depot_validate # this is a terrible name, it doesn't validate log_depots
     @schedule = nil # setting to nil, since we are using same view for both db_back and log_depot edit
     # if zone is selected in tree replace tab#3
     if x_active_tree == :diagnostics_tree
@@ -516,10 +516,6 @@ class ApplicationController < ActionController::Base
         #coming from diagnostics/database tab
         pfx = "dbbackup"
         flash_div_num = "validate"
-      else
-        @record = MiqServer.find_by_id(@sb[:selected_server_id])
-        pfx = "logdepot"
-        flash_div_num = ""
       end
     else
       if session[:edit] && session[:edit][:pxe]
@@ -543,12 +539,7 @@ class ApplicationController < ActionController::Base
     settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
 
     begin
-      case pfx
-      when 'logdepot'
-        msg  = 'Log Depot Settings successfuly validated'
-        type = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
-        type.validate(settings)
-      when 'pxe'
+      if pfx == "pxe"
         msg = 'PXE Credentials successfuly validated'
         PxeServer.verify_depot_settings(settings)
       else
