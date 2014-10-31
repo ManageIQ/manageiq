@@ -88,6 +88,7 @@ Vmdb::Application.routes.draw do
         get_ae_tree_edit_key
         group_create
         group_form_field_changed
+        group_update
         identify_catalog
         process_sts
         prov_field_changed
