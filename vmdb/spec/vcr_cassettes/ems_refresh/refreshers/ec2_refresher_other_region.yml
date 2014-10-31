@@ -5,16 +5,16 @@ http_interactions:
     uri: https://ec2.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeAvailabilityZones&Signature=1FxUW%2B%2FlEnL7Rdc7LkrvPy%2FSaI9ZtIccwqQbOTq02%2B8%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A51Z&Version=2013-02-01
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeAvailabilityZones&Signature=usQPMrFKRdC2e2QXC99K4z1eWCQ1%2FubEfEKVrqpHsNQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A37Z&Version=2013-02-01
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
       Accept-Encoding:
       - ''
       Content-Length:
-      - '233'
+      - '227'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -27,13 +27,13 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:53 GMT
+      - Fri, 01 Aug 2014 19:31:37 GMT
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeAvailabilityZonesResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>16ee7126-6e38-4b0c-b711-e2060bab10b8</requestId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>4bf085a1-6a1a-4f09-999f-6abc757aab6a</requestId>\n
         \   <availabilityZoneInfo>\n        <item>\n            <zoneName>us-west-1a</zoneName>\n
         \           <zoneState>available</zoneState>\n            <regionName>us-west-1</regionName>\n
         \           <messageSet/>\n        </item>\n        <item>\n            <zoneName>us-west-1b</zoneName>\n
@@ -42,22 +42,22 @@ http_interactions:
         \           <zoneState>available</zoneState>\n            <regionName>us-west-1</regionName>\n
         \           <messageSet/>\n        </item>\n    </availabilityZoneInfo>\n</DescribeAvailabilityZonesResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:52 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:38 GMT
 - request:
     method: post
     uri: https://ec2.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeKeyPairs&Signature=SikCmsb%2FGuomCw5dnpo2rPJ2ZRgSt6liyD9LLRcDkPk%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A52Z&Version=2013-02-01
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeKeyPairs&Signature=L7B6nj9AbOcSic2tn5YwbHklizSlAHO65%2F04%2FWZozfc%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A38Z&Version=2013-02-01
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
       Accept-Encoding:
       - ''
       Content-Length:
-      - '218'
+      - '220'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -70,35 +70,82 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:53 GMT
+      - Fri, 01 Aug 2014 19:31:38 GMT
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeKeyPairsResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>73d9252d-39a8-4b3c-b583-2107fbf43e84</requestId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>4efe56bd-d0b2-4b62-bcb8-61ca0ab70c32</requestId>\n
         \   <keySet>\n        <item>\n            <keyName>EmsRefreshSpec-KeyPair-OtherRegion</keyName>\n
         \           <keyFingerprint>fc:53:30:aa:d2:23:c7:8d:e2:e8:05:95:a0:d2:90:fb:15:30:a2:51</keyFingerprint>\n
         \       </item>\n        <item>\n            <keyName>jf-west-1</keyName>\n
         \           <keyFingerprint>5f:a8:de:1b:56:ba:3c:12:78:13:79:d6:d0:1d:b9:12:7d:b9:6d:91</keyFingerprint>\n
         \       </item>\n    </keySet>\n</DescribeKeyPairsResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:53 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:39 GMT
 - request:
     method: post
-    uri: https://ec2.us-west-1.amazonaws.com/
+    uri: https://cloudformation.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeVpcs&Signature=Mpn6yjfcL6mkGsbVOs6QiU5ufAyku%2BVXfxeG%2Bb%2F6j5Y%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A53Z&Version=2013-02-01
+      string: Action=DescribeStacks&Timestamp=2014-08-01T19%3A31%3A39Z&Version=2010-05-15
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
       Accept-Encoding:
       - ''
       Content-Length:
-      - '218'
+      - '75'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
+      X-Amz-Date:
+      - 20140801T193139Z
+      X-Amz-Content-Sha256:
+      - !binary |-
+        NTgwMDc0MmIyODg1MWExN2M1MDFmY2JhZWZmZTlhYWIxNzg5YjFhZjM1N2Ew
+        NzAxNjE3MmQ2N2E1ODhiM2JmOQ==
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=0123456789ABCDEFGHIJ/20140801/us-west-1/cloudformation/aws4_request,
+        SignedHeaders=content-length;content-type;host;user-agent;x-amz-content-sha256;x-amz-date,
+        Signature=30de23bfdc0d75103bf9e55448fe8676d7af56a5fbc83154de258c5febe8f736
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Amzn-Requestid:
+      - 756b0b4d-19b2-11e4-9020-1749931ecc8e
+      Content-Type:
+      - text/xml
+      Content-Length:
+      - '283'
+      Date:
+      - Fri, 01 Aug 2014 19:31:39 GMT
+    body:
+      encoding: US-ASCII
+      string: ! "<DescribeStacksResponse xmlns=\"http://cloudformation.amazonaws.com/doc/2010-05-15/\">\n
+        \ <DescribeStacksResult>\n    <Stacks/>\n  </DescribeStacksResult>\n  <ResponseMetadata>\n
+        \   <RequestId>756b0b4d-19b2-11e4-9020-1749931ecc8e</RequestId>\n  </ResponseMetadata>\n</DescribeStacksResponse>\n"
+    http_version: 
+  recorded_at: Fri, 01 Aug 2014 19:31:40 GMT
+- request:
+    method: post
+    uri: https://ec2.us-west-1.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeVpcs&Signature=9q4faoTYV0lK1nR8jFVMngEGUtSyMmFRdzRsV4wrf%2Bw%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A40Z&Version=2013-02-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      Content-Length:
+      - '214'
+      User-Agent:
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -111,31 +158,31 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:55 GMT
+      - Fri, 01 Aug 2014 19:31:39 GMT
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeVpcsResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>a45129c4-c363-4d01-b522-1e16657b93cb</requestId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>bf660d94-24e2-4ea6-a268-60aaab4c59b8</requestId>\n
         \   <vpcSet/>\n</DescribeVpcsResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:54 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:40 GMT
 - request:
     method: post
     uri: https://ec2.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeSecurityGroups&Signature=f5CSyLG2eTw0ONLAmsxMtAyYRXjLwcj%2Fxl6tKMxrpXE%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A54Z&Version=2013-02-01
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeSecurityGroups&Signature=E1cYPkPH0FQyjXA7u6VkAC5SwA%2BjKX4GUhA2Pb%2BWyTg%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A40Z&Version=2013-02-01
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
       Accept-Encoding:
       - ''
       Content-Length:
-      - '224'
+      - '226'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -148,14 +195,14 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:55 GMT
+      - Fri, 01 Aug 2014 19:31:39 GMT
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeSecurityGroupsResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>6a7f072d-6118-47a8-b184-cabae8587d74</requestId>\n
-        \   <securityGroupInfo>\n        <item>\n            <ownerId>123456789012</ownerId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>5fd08588-3251-4108-be14-c12f9505c4ac</requestId>\n
+        \   <securityGroupInfo>\n        <item>\n            <ownerId>0123456789ABCDEFGHIJ0123456789ABCDEFGHIJ</ownerId>\n
         \           <groupId>sg-e94055ac</groupId>\n            <groupName>default</groupName>\n
         \           <groupDescription>default group</groupDescription>\n            <ipPermissions>\n
         \               <item>\n                    <ipProtocol>tcp</ipProtocol>\n
@@ -184,13 +231,13 @@ http_interactions:
         \                   </ipRanges>\n                </item>\n            </ipPermissions>\n
         \           <ipPermissionsEgress/>\n        </item>\n    </securityGroupInfo>\n</DescribeSecurityGroupsResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:55 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:41 GMT
 - request:
     method: post
     uri: https://ec2.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Filter.1.Name=image-type&Filter.1.Value.1=machine&Owner.1=self&Signature=Xrsr%2B88faP4FWoOgaNOioLMSvQrEZzq2pR7at2dlpRI%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A55Z&Version=2013-02-01
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&Filter.1.Name=image-type&Filter.1.Value.1=machine&Owner.1=self&Signature=Np51fmyMX92SYCR6dm0W3%2FTbzzlOolfd6lhbTt7NrS0%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A41Z&Version=2013-02-01
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
@@ -199,7 +246,7 @@ http_interactions:
       Content-Length:
       - '279'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -212,13 +259,13 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:57 GMT
+      - Fri, 01 Aug 2014 19:31:41 GMT
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>f740a85a-8a7e-4fe7-955e-c6189234893d</requestId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>3e930507-ae29-4ba8-84d2-2f0937aa4e56</requestId>\n
         \   <imagesSet>\n        <item>\n            <imageId>ami-183e175d</imageId>\n
         \           <imageLocation>123456789012/EmsRefreshSpec-Image-OtherRegion</imageLocation>\n
         \           <imageState>available</imageState>\n            <imageOwnerId>123456789012</imageOwnerId>\n
@@ -233,13 +280,13 @@ http_interactions:
         \               </item>\n            </blockDeviceMapping>\n            <virtualizationType>paravirtual</virtualizationType>\n
         \           <hypervisor>xen</hypervisor>\n        </item>\n    </imagesSet>\n</DescribeImagesResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:55 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:42 GMT
 - request:
     method: post
     uri: https://ec2.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Filter.1.Name=image-type&Filter.1.Value.1=machine&Signature=vjk7NJWl4F6BfO2BFgPraO5TzSdgNwJIRuxucVfKHZk%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A55Z&Version=2013-02-01
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeImages&ExecutableBy.1=self&Filter.1.Name=image-type&Filter.1.Value.1=machine&Signature=dkh2hoPO18nLJvX28cAT2slKTNCdnyI9dFkYShABxiU%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A42Z&Version=2013-02-01
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
@@ -248,7 +295,7 @@ http_interactions:
       Content-Length:
       - '284'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -261,22 +308,22 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:57 GMT
+      - Fri, 01 Aug 2014 19:31:41 GMT
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeImagesResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>4308253c-4279-45e6-80cc-2ec20008e97d</requestId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>7c8f8296-8f7c-481e-b053-fed19444f896</requestId>\n
         \   <imagesSet/>\n</DescribeImagesResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:56 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:43 GMT
 - request:
     method: post
     uri: https://ec2.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=P1qTBsdK6UCOrYMh7p0ifaxTUTAygdI8wu6S7UJN0zQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A56Z&Version=2013-02-01
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeInstances&Signature=AO91h1YTNUPlhWtC31ZRDguEdlT8tuFqgiVszEPgSTQ%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A43Z&Version=2013-02-01
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
@@ -285,7 +332,7 @@ http_interactions:
       Content-Length:
       - '217'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -295,49 +342,17 @@ http_interactions:
     headers:
       Content-Type:
       - text/xml;charset=UTF-8
-      Transfer-Encoding:
-      - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:58 GMT
+      - Fri, 01 Aug 2014 19:31:42 GMT
+      Connection:
+      - close
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeInstancesResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>eadecaf6-cf9b-40d3-9c84-2d60238c1348</requestId>\n
-        \   <reservationSet>\n        <item>\n            <reservationId>r-18afd25e</reservationId>\n
-        \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
-        \                   <groupId>sg-e94055ac</groupId>\n                    <groupName>default</groupName>\n
-        \               </item>\n            </groupSet>\n            <instancesSet>\n
-        \               <item>\n                    <instanceId>i-fdd815a4</instanceId>\n
-        \                   <imageId>ami-3bc9997e</imageId>\n                    <instanceState>\n
-        \                       <code>16</code>\n                        <name>running</name>\n
-        \                   </instanceState>\n                    <privateDnsName>ip-10-160-177-126.us-west-1.compute.internal</privateDnsName>\n
-        \                   <dnsName>ec2-184-169-243-31.us-west-1.compute.amazonaws.com</dnsName>\n
-        \                   <reason/>\n                    <amiLaunchIndex>0</amiLaunchIndex>\n
-        \                   <productCodes/>\n                    <instanceType>m1.small</instanceType>\n
-        \                   <launchTime>2012-10-01T18:11:04.000Z</launchTime>\n                    <placement>\n
-        \                       <availabilityZone>us-west-1a</availabilityZone>\n
-        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
-        \                   </placement>\n                    <kernelId>aki-99a0f1dc</kernelId>\n
-        \                   <monitoring>\n                        <state>disabled</state>\n
-        \                   </monitoring>\n                    <privateIpAddress>10.160.177.126</privateIpAddress>\n
-        \                   <ipAddress>184.169.243.31</ipAddress>\n                    <groupSet>\n
-        \                       <item>\n                            <groupId>sg-e94055ac</groupId>\n
-        \                           <groupName>default</groupName>\n                        </item>\n
-        \                   </groupSet>\n                    <architecture>i386</architecture>\n
-        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
-        \                   <blockDeviceMapping>\n                        <item>\n
-        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
-        \                               <volumeId>vol-93f7b6bd</volumeId>\n                                <status>attached</status>\n
-        \                               <attachTime>2012-10-01T18:11:08.000Z</attachTime>\n
-        \                               <deleteOnTermination>true</deleteOnTermination>\n
-        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
-        \                   <virtualizationType>paravirtual</virtualizationType>\n
-        \                   <clientToken>5bfd4308-0bf3-11e2-96b9-a4b197fffe9a</clientToken>\n
-        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
-        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
-        \           </instancesSet>\n        </item>\n        <item>\n            <reservationId>r-9fde5ac4</reservationId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>361608c5-fd92-49f7-96c6-db8f90d597cc</requestId>\n
+        \   <reservationSet>\n        <item>\n            <reservationId>r-9fde5ac4</reservationId>\n
         \           <ownerId>123456789012</ownerId>\n            <groupSet>\n                <item>\n
         \                   <groupId>sg-2b87746f</groupId>\n                    <groupName>EmsRefreshSpec-SecurityGroup-OtherRegion</groupName>\n
         \               </item>\n            </groupSet>\n            <instancesSet>\n
@@ -371,24 +386,57 @@ http_interactions:
         \                           <value>EmsRefreshSpec-PoweredOn-OtherRegion</value>\n
         \                       </item>\n                    </tagSet>\n                    <hypervisor>xen</hypervisor>\n
         \                   <networkInterfaceSet/>\n                    <ebsOptimized>false</ebsOptimized>\n
-        \               </item>\n            </instancesSet>\n        </item>\n    </reservationSet>\n</DescribeInstancesResponse>"
+        \               </item>\n            </instancesSet>\n        </item>\n        <item>\n
+        \           <reservationId>r-18afd25e</reservationId>\n            <ownerId>123456789012</ownerId>\n
+        \           <groupSet>\n                <item>\n                    <groupId>sg-e94055ac</groupId>\n
+        \                   <groupName>default</groupName>\n                </item>\n
+        \           </groupSet>\n            <instancesSet>\n                <item>\n
+        \                   <instanceId>i-fdd815a4</instanceId>\n                    <imageId>ami-3bc9997e</imageId>\n
+        \                   <instanceState>\n                        <code>16</code>\n
+        \                       <name>running</name>\n                    </instanceState>\n
+        \                   <privateDnsName>ip-10-160-177-126.us-west-1.compute.internal</privateDnsName>\n
+        \                   <dnsName>ec2-184-169-243-31.us-west-1.compute.amazonaws.com</dnsName>\n
+        \                   <reason/>\n                    <amiLaunchIndex>0</amiLaunchIndex>\n
+        \                   <productCodes/>\n                    <instanceType>m1.small</instanceType>\n
+        \                   <launchTime>2012-10-01T18:11:04.000Z</launchTime>\n                    <placement>\n
+        \                       <availabilityZone>us-west-1a</availabilityZone>\n
+        \                       <groupName/>\n                        <tenancy>default</tenancy>\n
+        \                   </placement>\n                    <kernelId>aki-99a0f1dc</kernelId>\n
+        \                   <monitoring>\n                        <state>disabled</state>\n
+        \                   </monitoring>\n                    <privateIpAddress>10.160.177.126</privateIpAddress>\n
+        \                   <ipAddress>184.169.243.31</ipAddress>\n                    <groupSet>\n
+        \                       <item>\n                            <groupId>sg-e94055ac</groupId>\n
+        \                           <groupName>default</groupName>\n                        </item>\n
+        \                   </groupSet>\n                    <architecture>i386</architecture>\n
+        \                   <rootDeviceType>ebs</rootDeviceType>\n                    <rootDeviceName>/dev/sda1</rootDeviceName>\n
+        \                   <blockDeviceMapping>\n                        <item>\n
+        \                           <deviceName>/dev/sda1</deviceName>\n                            <ebs>\n
+        \                               <volumeId>vol-93f7b6bd</volumeId>\n                                <status>attached</status>\n
+        \                               <attachTime>2012-10-01T18:11:08.000Z</attachTime>\n
+        \                               <deleteOnTermination>true</deleteOnTermination>\n
+        \                           </ebs>\n                        </item>\n                    </blockDeviceMapping>\n
+        \                   <virtualizationType>paravirtual</virtualizationType>\n
+        \                   <clientToken>5bfd4308-0bf3-11e2-96b9-a4b197fffe9a</clientToken>\n
+        \                   <hypervisor>xen</hypervisor>\n                    <networkInterfaceSet/>\n
+        \                   <ebsOptimized>false</ebsOptimized>\n                </item>\n
+        \           </instancesSet>\n        </item>\n    </reservationSet>\n</DescribeInstancesResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:57 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:43 GMT
 - request:
     method: post
     uri: https://ec2.us-west-1.amazonaws.com/
     body:
       encoding: UTF-8
-      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeAddresses&Signature=s3T0IxTAsY3KlivtKxjziQj3eHY4npEcDgVK8QqO45E%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2013-11-06T19%3A51%3A57Z&Version=2013-02-01
+      string: AWSAccessKeyId=0123456789ABCDEFGHIJ&Action=DescribeAddresses&Signature=6OK%2F%2B%2BxfYeWVQdpg48mMLDLn3lN5JrfV4DThmvRjS8c%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2014-08-01T19%3A31%3A43Z&Version=2013-02-01
     headers:
       Content-Type:
       - application/x-www-form-urlencoded; charset=utf-8
       Accept-Encoding:
       - ''
       Content-Length:
-      - '217'
+      - '223'
       User-Agent:
-      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin12.4.0 memoizing
+      - aws-sdk-ruby/1.11.3 ruby/1.9.3 x86_64-darwin13.1.0 memoizing
       Accept:
       - ! '*/*'
   response:
@@ -401,16 +449,16 @@ http_interactions:
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 06 Nov 2013 19:51:59 GMT
+      - Fri, 01 Aug 2014 19:31:43 GMT
       Server:
       - AmazonEC2
     body:
       encoding: US-ASCII
       string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DescribeAddressesResponse
-        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>405adf40-d204-40f7-9aa8-ac47abc9f83d</requestId>\n
+        xmlns=\"http://ec2.amazonaws.com/doc/2013-02-01/\">\n    <requestId>701def57-edd6-427e-99f5-13b1dfbfaf06</requestId>\n
         \   <addressesSet>\n        <item>\n            <publicIp>54.215.0.230</publicIp>\n
         \           <domain>standard</domain>\n            <instanceId/>\n        </item>\n
         \   </addressesSet>\n</DescribeAddressesResponse>"
     http_version: 
-  recorded_at: Wed, 06 Nov 2013 19:51:58 GMT
+  recorded_at: Fri, 01 Aug 2014 19:31:44 GMT
 recorded_with: VCR 2.4.0
