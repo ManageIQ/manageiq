@@ -95,8 +95,8 @@ describe "MiqWorker Monitor" do
         end
 
         it "should have them in its relationship" do
-          @worker.messages.should        have_same_elements @messages
-          @worker.active_messages.should have_same_elements @actives
+          @worker.messages.should        match_array @messages
+          @worker.active_messages.should match_array @actives
         end
 
         it "on worker destroy, will destroy its processed messages" do
@@ -122,8 +122,8 @@ describe "MiqWorker Monitor" do
         end
 
         it "should timeout the expired active messages" do
-          @worker.messages.should        have_same_elements @messages
-          @worker.active_messages.should have_same_elements @actives
+          @worker.messages.should        match_array @messages
+          @worker.active_messages.should match_array @actives
 
           Timecop.travel 5.minutes do
             @worker.validate_active_messages

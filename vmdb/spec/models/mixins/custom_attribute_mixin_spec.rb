@@ -60,7 +60,7 @@ describe CustomAttributeMixin do
                           :resource_id   => object.id,
                           :name          => key2,
                           :value         => "bar")
-      object.reload.miq_custom_keys.should have_same_elements([key, key2])
+      object.reload.miq_custom_keys.should match_array([key, key2])
     end
   end
 

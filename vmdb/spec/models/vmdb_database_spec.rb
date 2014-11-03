@@ -18,7 +18,7 @@ describe VmdbDatabase do
 
       if bloat.first.kind_of?(Hash)
         expected_keys = ["wasted_size", "wasted_bytes", "wasted_pages", "otta", "table_name", "pages", "pagesize", "percent_bloat", "rows"]
-        bloat.first.keys.should have_same_elements(expected_keys)
+        bloat.first.keys.should match_array(expected_keys)
       end
     end
   end
@@ -30,7 +30,7 @@ describe VmdbDatabase do
 
       if bloat.first.kind_of?(Hash)
         expected_keys = ["wasted_size", "wasted_bytes", "wasted_pages", "otta", "table_name", "pages", "pagesize", "percent_bloat", "rows", "index_name"]
-        bloat.first.keys.should have_same_elements(expected_keys)
+        bloat.first.keys.should match_array(expected_keys)
       end
     end
   end
@@ -42,7 +42,7 @@ describe VmdbDatabase do
 
       if bloat.first.kind_of?(Hash)
         expected_keys = ["wasted_size", "wasted_bytes", "wasted_pages", "otta", "table_name", "pages", "pagesize", "percent_bloat", "rows", "index_name"]
-        bloat.first.keys.should have_same_elements(expected_keys)
+        bloat.first.keys.should match_array(expected_keys)
       end
     end
   end
@@ -54,7 +54,7 @@ describe VmdbDatabase do
 
       expected_keys = ["table_name", "table_scans", "sequential_rows_read", "index_scans", "index_rows_fetched", "rows_inserted", "rows_updated", "rows_deleted",
                        "rows_hot_updated", "rows_live", "rows_dead", "last_vacuum_date", "last_autovacuum_date", "last_analyze_date", "last_autoanalyze_date"]
-      stats.first.keys.should have_same_elements(expected_keys)
+      stats.first.keys.should match_array(expected_keys)
     end
   end
 
@@ -64,7 +64,7 @@ describe VmdbDatabase do
       sizes.should be_kind_of(Array)
 
       expected_keys = ["table_name", "rows", "size", "pages", "average_row_size"]
-      sizes.first.keys.should have_same_elements(expected_keys)
+      sizes.first.keys.should match_array(expected_keys)
     end
   end
 
@@ -75,7 +75,7 @@ describe VmdbDatabase do
       connections.should be_kind_of(Array)
 
       expected_keys = ["client_address", "database", "spid", "number_waiting", "query"]
-      connections.first.keys.should have_same_elements(expected_keys)
+      connections.first.keys.should match_array(expected_keys)
     end
   end
 

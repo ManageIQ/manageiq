@@ -88,7 +88,7 @@ describe PxeServer do
 
       it "without existing data" do
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }.should have_same_elements @expected
+        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }.should match_array @expected
       end
 
       it "with existing data" do
@@ -99,7 +99,7 @@ describe PxeServer do
         ]
 
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }.should have_same_elements @expected
+        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }.should match_array @expected
       end
     end
 
@@ -221,7 +221,7 @@ PXE
 
       it "without existing images" do
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }.should have_same_elements @expected
+        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }.should match_array @expected
       end
 
       it "with existing images" do
@@ -232,7 +232,7 @@ PXE
         ]
 
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }.should have_same_elements @expected
+        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }.should match_array @expected
       end
     end
 
@@ -307,7 +307,7 @@ PXE
     end
 
     it "#pxe_images" do
-      @pxe_server.pxe_images.should  have_same_elements([@advertised_image, @discovered_image])
+      @pxe_server.pxe_images.should  match_array([@advertised_image, @discovered_image])
     end
 
     it "#advertised_pxe_images" do

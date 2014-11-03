@@ -205,7 +205,7 @@ describe RelationshipMixin do
       new_vms = (0...2).collect { FactoryGirl.create(:vm_vmware) }
       @vms[0].with_relationship_type(TEST_REL_TYPE) do |v|
         v.replace_children(new_vms)
-        new_vms.should have_same_elements(v.children)
+        new_vms.should match_array(v.children)
       end
 
       @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
@@ -249,12 +249,12 @@ describe RelationshipMixin do
 
     it "#ancestors" do
       @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors.empty? }.should be_true
-      @vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors }.should have_same_elements([@vms[7], @vms[2], @vms[0]])
+      @vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors }.should match_array([@vms[7], @vms[2], @vms[0]])
     end
 
     it "#descendants" do
       @vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants.empty? }.should be_true
-      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants }.should have_same_elements(@vms - [@vms[0]])
+      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants }.should match_array(@vms - [@vms[0]])
     end
   end
 
@@ -328,17 +328,17 @@ describe RelationshipMixin do
     parent.with_relationship_type(rel_type) do
       parent.relationships.length.should == p_rels_count
       parent.parents.length.should       == p_parents.length
-      parent.parents.should              have_same_elements(p_parents)
+      parent.parents.should              match_array(p_parents)
       parent.children.length.should      == p_children.length
-      parent.children.should             have_same_elements(p_children)
+      parent.children.should             match_array(p_children)
     end
 
     child.with_relationship_type(rel_type) do
       child.relationships.length.should == c_rels_count
       child.parents.length.should       == c_parents.length
-      child.parents.should              have_same_elements(c_parents)
+      child.parents.should              match_array(c_parents)
       child.children.length.should      == c_children.length
-      child.children.should             have_same_elements(c_children)
+      child.children.should             match_array(c_children)
     end
   end
 end

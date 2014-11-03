@@ -208,7 +208,7 @@ describe Rbac do
         results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects)
         objects = results.first
         objects.length.should == 2
-        objects.should have_same_elements([@vm, @template])
+        objects.should match_array([@vm, @template])
 
         @group.update_attributes(:filters => { "managed" => [], "belongsto" => [@vm_folder_path] })
         results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :userid => @user.userid)
@@ -224,14 +224,14 @@ describe Rbac do
         results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :userid => @user.userid)
         objects = results.first
         objects.length.should == 2
-        objects.should have_same_elements([@vm, @template])
+        objects.should match_array([@vm, @template])
       end
 
       it "search on VMs should return a single object" do
         results = Rbac.search(:class => "Vm", :results_format => :objects)
         objects = results.first
         objects.length.should == 1
-        objects.should have_same_elements([@vm])
+        objects.should match_array([@vm])
 
         @group.update_attributes(:filters => { "managed" => [], "belongsto" => [@vm_folder_path] })
 
@@ -248,14 +248,14 @@ describe Rbac do
         results = Rbac.search(:class => "Vm", :results_format => :objects, :userid => @user.userid)
         objects = results.first
         objects.length.should == 1
-        objects.should have_same_elements([@vm])
+        objects.should match_array([@vm])
       end
 
       it "search on Templates should return a single object" do
         results = Rbac.search(:class => "MiqTemplate", :results_format => :objects)
         objects = results.first
         objects.length.should == 1
-        objects.should have_same_elements([@template])
+        objects.should match_array([@template])
 
         @group.update_attributes(:filters => { "managed" => [], "belongsto" => [@vm_folder_path] })
 
@@ -272,7 +272,7 @@ describe Rbac do
         results = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :userid => @user.userid)
         objects = results.first
         objects.length.should == 1
-        objects.should have_same_elements([@template])
+        objects.should match_array([@template])
       end
     end
 

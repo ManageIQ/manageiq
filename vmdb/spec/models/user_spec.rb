@@ -290,7 +290,7 @@ describe User do
       end
 
       it "sets miq_groups" do
-        @user.miq_groups.should have_same_elements [@group3]
+        @user.miq_groups.should match_array [@group3]
       end
 
       it "sets current_group" do
@@ -394,7 +394,7 @@ describe User do
     end
 
     it "#active_vms" do
-      @user.active_vms.should have_same_elements([@active_vm])
+      @user.active_vms.should match_array([@active_vm])
     end
 
     it "#allocated_memory" do
@@ -456,7 +456,7 @@ describe User do
     it "multiple groups" do
       group2 = FactoryGirl.create(:miq_group, :description => '2nd group')
       FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => group2.id)
-      expect(subject).to have_same_elements([@group.id, group2.id])
+      expect(subject).to match_array([@group.id, group2.id])
     end
 
     it "a belong to group is deleted" do

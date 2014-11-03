@@ -11,7 +11,7 @@ describe MiqVimBrokerWorker do
   end
 
   it ".emses_to_monitor" do
-    described_class.emses_to_monitor.should have_same_elements @zone.ext_management_systems
+    described_class.emses_to_monitor.should match_array @zone.ext_management_systems
   end
 
 end

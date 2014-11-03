@@ -18,7 +18,7 @@ describe ExtManagementSystem do
       "openstack"
     ]
 
-    described_class.types.should have_same_elements(expected_types)
+    described_class.types.should match_array(expected_types)
   end
 
   it ".supported_types" do
@@ -30,7 +30,7 @@ describe ExtManagementSystem do
       "openstack"
     ]
 
-    described_class.supported_types.should have_same_elements(expected_types)
+    described_class.supported_types.should match_array(expected_types)
   end
 
   it ".ems_discovery_types" do

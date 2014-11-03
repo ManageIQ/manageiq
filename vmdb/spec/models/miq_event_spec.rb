@@ -71,7 +71,7 @@ describe MiqEvent do
         MiqEvent.should_receive(:raise_event_for_children).with(@cluster, raw_event, {:type => @cluster.class.name } )
         results = MiqEvent.raise_evm_event(@cluster, event)
 
-        results.keys.should have_same_elements([:policy, :alert, :children_events])
+        results.keys.should match_array([:policy, :alert, :children_events])
         results.should_not have_key(:automate)
       end
 

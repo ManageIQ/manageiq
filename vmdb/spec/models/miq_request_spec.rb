@@ -13,8 +13,8 @@ describe MiqRequest do
     end
 
     it "#requests_for_userid" do
-      MiqRequest.requests_for_userid(@barney.userid).should have_same_elements(@requests_for_barney)
-      MiqRequest.requests_for_userid(@fred.userid).should   have_same_elements(@requests_for_fred)
+      MiqRequest.requests_for_userid(@barney.userid).should match_array(@requests_for_barney)
+      MiqRequest.requests_for_userid(@fred.userid).should   match_array(@requests_for_fred)
     end
 
     it "#all_requesters" do

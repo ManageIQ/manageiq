@@ -20,7 +20,7 @@ describe RemoveReservedFromAutomation do
       migrate
 
       actual = reserve_stub.all.collect { |r| r.attributes.slice("resource_type", "resource_id", "reserved") }
-      actual.should have_same_elements expected
+      actual.should match_array expected
     end
   end
 end

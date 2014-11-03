@@ -12,19 +12,19 @@ describe Zone do
     end
 
     it "zone1#hosts will return hosts in zone1" do
-      @zone1.hosts.should have_same_elements([@host1])
+      @zone1.hosts.should match_array([@host1])
     end
 
     it "zone2#hosts will return hosts in zone2" do
-      @zone2.hosts.should have_same_elements([@host2])
+      @zone2.hosts.should match_array([@host2])
     end
 
     it "zone1#vms will return vms in zone1" do
-      @zone1.vms.should have_same_elements(@host1.vms)
+      @zone1.vms.should match_array(@host1.vms)
     end
 
     it "zone2#vms will return vms in zone2" do
-      @zone2.vms.should have_same_elements(@host2.vms)
+      @zone2.vms.should match_array(@host2.vms)
     end
 
     it "zone1#miq_proxies will be empty due to no proxies" do

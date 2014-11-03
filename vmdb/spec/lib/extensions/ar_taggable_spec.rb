@@ -128,8 +128,8 @@ describe ActsAsTaggable do
   end
 
   it "#tag_list" do
-    Host.find_by_name("HOST1").tag_list(:ns => "/test", :cat => "tags").split.should have_same_elements %w{red blue yellow}
-    Vm.find_by_name("VM1").tag_list(:ns => "/test/tags").split.should have_same_elements %w{red blue yellow}
+    Host.find_by_name("HOST1").tag_list(:ns => "/test", :cat => "tags").split.should match_array %w{red blue yellow}
+    Vm.find_by_name("VM1").tag_list(:ns => "/test/tags").split.should match_array %w{red blue yellow}
   end
 
   it "#to_tag" do

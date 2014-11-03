@@ -266,7 +266,7 @@ describe MiqTask do
       message.args.first.length.should == 2
       str, arr = message.args.first
       str.should                 == "id in (?)"
-      arr.should                 have_same_elements([@miq_task1.id, @miq_task3.id])
+      arr.should                 match_array([@miq_task1.id, @miq_task3.id])
       message.zone.should        == @zone
     end
 
@@ -286,7 +286,7 @@ describe MiqTask do
       message.args.first.length.should == 2
       str, arr = message.args.first
       str.should                 == "id in (?)"
-      arr.should                 have_same_elements([@miq_task2.id, @miq_task3.id])
+      arr.should                 match_array([@miq_task2.id, @miq_task3.id])
       message.zone.should        == @zone
 
       message.destroy

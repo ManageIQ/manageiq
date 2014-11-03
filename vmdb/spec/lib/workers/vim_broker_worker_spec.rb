@@ -27,7 +27,7 @@ describe VimBrokerWorker do
     described_class.any_instance.should_receive(:reset_broker_update_sleep_interval).once
     vim_broker_worker = described_class.new({:guid => @worker_guid})
 
-    vim_broker_worker.instance_variable_get(:@initial_emses_to_monitor).should have_same_elements @zone.ext_management_systems
+    vim_broker_worker.instance_variable_get(:@initial_emses_to_monitor).should match_array @zone.ext_management_systems
 
     @worker_record.reload
     @worker_record.uri.should == @drb_uri
