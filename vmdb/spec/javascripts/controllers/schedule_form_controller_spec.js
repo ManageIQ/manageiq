@@ -12,6 +12,7 @@ describe('scheduleFormController', function() {
     spyOn(miqService, 'miqAjaxButton');
     spyOn(miqService, 'sparkleOn');
     spyOn(miqService, 'sparkleOff');
+    spyOn(timerOptionService, 'getOptions').and.returnValue(['some', 'options']);
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     oneMonthAgo = {
@@ -76,6 +77,12 @@ describe('scheduleFormController', function() {
           $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond({
             action_type: 'actionType',
             filter_type: 'all',
+            filtered_item_list: ['lol', 'lol2'],
+            filter_value: 'filterValue',
+            log_userid: 'logUserId',
+            log_password: 'logPassword',
+            log_verify: 'logVerify',
+            protocol: 'protocol',
             schedule_name: 'scheduleName',
             schedule_description: 'scheduleDescription',
             schedule_enabled: '1',
@@ -84,7 +91,9 @@ describe('scheduleFormController', function() {
             schedule_start_date: 'now',
             schedule_start_hour: '12',
             schedule_start_min: '25',
-            schedule_time_zone: 'UTC'
+            schedule_time_zone: 'UTC',
+            uri: 'uri',
+            uri_prefix: 'uriPrefix'
           });
 
           $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
@@ -93,6 +102,22 @@ describe('scheduleFormController', function() {
 
         it('sets the action type to the type returned from the http request', function() {
           expect($scope.actionType).toEqual('actionType');
+        });
+
+        it('sets the logUserid to the log_userid returned from the http request', function() {
+          expect($scope.logUserid).toEqual('logUserId');
+        });
+
+        it('sets the logPassword to the log_password returned from the http request', function() {
+          expect($scope.logPassword).toEqual('logPassword');
+        });
+
+        it('sets the logVerify to the log_verify returned from the http request', function() {
+          expect($scope.logVerify).toEqual('logVerify');
+        });
+
+        it('sets the protocol', function() {
+          expect($scope.protocol).toEqual('protocol');
         });
 
         it('sets the scheduleName to the name returned from the http request', function() {
@@ -138,6 +163,18 @@ describe('scheduleFormController', function() {
         it('sets the scheduleTimeZone', function() {
           expect($scope.scheduleTimeZone).toEqual('UTC');
         });
+
+        it('sets the uri', function() {
+          expect($scope.uri).toEqual('uri');
+        });
+
+        it('sets the uriPrefix', function() {
+          expect($scope.uriPrefix).toEqual('uriPrefix');
+        });
+
+        it('sets the timer items', function() {
+          expect($scope.timerItems).toEqual(["some", "options"]);
+        });
       });
 
       describe('when the filter type is not all', function() {
@@ -147,6 +184,10 @@ describe('scheduleFormController', function() {
             filter_type: 'filterType',
             filtered_item_list: ['lol', 'lol2'],
             filter_value: 'filterValue',
+            log_userid: 'logUserId',
+            log_password: 'logPassword',
+            log_verify: 'logVerify',
+            protocol: 'protocol',
             schedule_name: 'scheduleName',
             schedule_description: 'scheduleDescription',
             schedule_enabled: '1',
@@ -155,7 +196,9 @@ describe('scheduleFormController', function() {
             schedule_start_date: 'now',
             schedule_start_hour: '12',
             schedule_start_min: '25',
-            schedule_time_zone: 'UTC'
+            schedule_time_zone: 'UTC',
+            uri: 'uri',
+            uri_prefix: 'uriPrefix'
           });
 
           $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
@@ -168,6 +211,22 @@ describe('scheduleFormController', function() {
 
         it('sets the filter type to the type returned from the http request', function() {
           expect($scope.filterType).toEqual('filterType');
+        });
+
+        it('sets the logUserid to the log_userid returned from the http request', function() {
+          expect($scope.logUserid).toEqual('logUserId');
+        });
+
+        it('sets the logPassword to the log_password returned from the http request', function() {
+          expect($scope.logPassword).toEqual('logPassword');
+        });
+
+        it('sets the logVerify to the log_verify returned from the http request', function() {
+          expect($scope.logVerify).toEqual('logVerify');
+        });
+
+        it('sets the protocol', function() {
+          expect($scope.protocol).toEqual('protocol');
         });
 
         it('sets the scheduleName to the name returned from the http request', function() {
@@ -214,12 +273,24 @@ describe('scheduleFormController', function() {
           expect($scope.scheduleTimeZone).toEqual('UTC');
         });
 
+        it('sets the uri', function() {
+          expect($scope.uri).toEqual('uri');
+        });
+
+        it('sets the uriPrefix', function() {
+          expect($scope.uriPrefix).toEqual('uriPrefix');
+        });
+
         it('turns sparkle on', function() {
           expect(miqService.sparkleOn).toHaveBeenCalled();
         });
 
         it('turns sparkle off', function() {
           expect(miqService.sparkleOff).toHaveBeenCalled();
+        });
+
+        it('sets the timer items', function() {
+          expect($scope.timerItems).toEqual(["some", "options"]);
         });
       });
     });
@@ -267,7 +338,7 @@ describe('scheduleFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save');
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save', true);
     });
   });
 
@@ -469,6 +540,10 @@ describe('scheduleFormController', function() {
       it('sets the log protocol to network file system', function() {
         expect($scope.logProtocol).toEqual('Network File System');
       });
+
+      it('sets filter values empty to true', function() {
+        expect($scope.filterValuesEmpty).toBe(true);
+      });
     });
 
     describe('when the action type is not db_backup', function() {
@@ -520,10 +595,6 @@ describe('scheduleFormController', function() {
   });
 
   describe('#scheduleTimerTypeChanged', function() {
-    beforeEach(function() {
-      spyOn(timerOptionService, 'getOptions').and.returnValue(['some', 'options']);
-    });
-
     describe('when the timer type is changed to once', function() {
       beforeEach(function() {
         $scope.scheduleTimerType = 'Once';

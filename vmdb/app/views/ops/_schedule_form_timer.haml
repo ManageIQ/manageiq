@@ -1,5 +1,3 @@
-- url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
-
 #form_timer_div
   %fieldset
     %p.legend Timer
@@ -16,7 +14,6 @@
         %td.key Time Zone
         %td
           = select_tag("time_zone", options_for_select(ALL_TIMEZONES), "ng-model" => "scheduleTimeZone")
-          &nbsp;&nbsp;* Changing the Time Zone will reset the Starting Date and Time fields below
 
       %tr
         %td.key Starting Date
