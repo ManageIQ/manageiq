@@ -207,7 +207,7 @@ describe MiqGroup do
     end
 
     it "#active_vms" do
-      @miq_group.active_vms.should have_same_elements([@active_vm])
+      @miq_group.active_vms.should match_array([@active_vm])
     end
 
     it "#allocated_memory" do

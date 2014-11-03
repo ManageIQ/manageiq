@@ -8,9 +8,9 @@ describe Service do
     service_c21 = FactoryGirl.create(:service, :service => service_c2)
     service_c22 = FactoryGirl.create(:service, :service => service_c2)
 
-    service_c1.all_service_children.should have_same_elements []
-    service_c2.all_service_children.should have_same_elements [service_c21, service_c22]
-    service.all_service_children.should    have_same_elements [service_c1, service_c2, service_c21, service_c22]
+    service_c1.all_service_children.should match_array []
+    service_c2.all_service_children.should match_array [service_c21, service_c22]
+    service.all_service_children.should    match_array [service_c1, service_c2, service_c21, service_c22]
   end
 
   context "service events" do
@@ -79,13 +79,13 @@ describe Service do
     end
 
     it "#direct_vms" do
-      @service_c1.direct_vms.should have_same_elements [@vm_1]
-      @service.direct_vms.should    have_same_elements [@vm]
+      @service_c1.direct_vms.should match_array [@vm_1]
+      @service.direct_vms.should    match_array [@vm]
     end
 
     it "#all_vms" do
-      @service_c1.all_vms.should have_same_elements [@vm_1]
-      @service.all_vms.should    have_same_elements [@vm, @vm_1]
+      @service_c1.all_vms.should match_array [@vm_1]
+      @service.all_vms.should    match_array [@vm, @vm_1]
     end
 
     it "#root_service" do

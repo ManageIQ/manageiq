@@ -77,7 +77,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
       :last_update_time => Time.parse("2011-05-17T15:54:37Z")
     )
     cspec.spec.should      be_a_kind_of(VimHash)
-    cspec.spec.keys.should have_same_elements(["identity", "encryptionKey", "nicSettingMap", "globalIPSettings", "options"])
+    cspec.spec.keys.should match_array(["identity", "encryptionKey", "nicSettingMap", "globalIPSettings", "options"])
   end
 
   def assert_specific_cluster

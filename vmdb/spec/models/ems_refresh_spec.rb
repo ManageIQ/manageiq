@@ -61,7 +61,7 @@ describe EmsRefresh do
         [ems2.class, ems2.id]
       ]
 
-      described_class.get_ar_objects(pairs).should have_same_elements([ems1, ems2])
+      described_class.get_ar_objects(pairs).should match_array([ems1, ems2])
     end
   end
 end

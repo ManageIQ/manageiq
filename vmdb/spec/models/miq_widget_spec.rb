@@ -103,7 +103,7 @@ describe MiqWidget do
         result = @widget_report_vendor_and_guest_os.grouped_subscribers
 
         result.size.should eq(1)
-        result[@group1].should have_same_elements([@user1, user_temp])
+        result[@group1].should match_array([@user1, user_temp])
       end
 
       it "ignores the legacy format admin|db_name" do
@@ -129,7 +129,7 @@ describe MiqWidget do
 
         result.size.should eq(2)
         result[@group1].should eq([@user1])
-        result[@group2].should have_same_elements(users)
+        result[@group2].should match_array(users)
       end
 
       def add_user(userid, group)

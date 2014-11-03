@@ -107,7 +107,7 @@ describe Storage do
     it "#active_hosts" do
       @storage1.active_hosts.should == [@host1]
       @storage2.active_hosts.should == [@host2]
-      @storage3.active_hosts.should have_same_elements [@host1, @host2]
+      @storage3.active_hosts.should match_array [@host1, @host2]
     end
 
     it "#my_zone" do
@@ -139,16 +139,16 @@ describe Storage do
       miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
       miq_task.context_data[:complete] = []
       miq_task.context_data[:pending]  = {}
-      Storage.scan_storages_unprocessed(miq_task).should have_same_elements [@storage1.id, @storage2.id, @storage3.id]
+      Storage.scan_storages_unprocessed(miq_task).should match_array [@storage1.id, @storage2.id, @storage3.id]
 
       miq_task.context_data[:complete] = [@storage3.id]
-      Storage.scan_storages_unprocessed(miq_task).should have_same_elements [@storage1.id, @storage2.id]
+      Storage.scan_storages_unprocessed(miq_task).should match_array [@storage1.id, @storage2.id]
 
       miq_task.context_data[:pending][@storage2.id] = 12345
       Storage.scan_storages_unprocessed(miq_task).should == [@storage1.id]
 
       miq_task.context_data[:pending].delete(@storage2.id)
-      Storage.scan_storages_unprocessed(miq_task).should have_same_elements [@storage1.id, @storage2.id]
+      Storage.scan_storages_unprocessed(miq_task).should match_array [@storage1.id, @storage2.id]
 
       miq_task.context_data[:complete]  = [@storage1.id, @storage2.id, @storage3.id]
       Storage.scan_storages_unprocessed(miq_task).should == []
@@ -181,7 +181,7 @@ describe Storage do
       it "#ext_management_systems" do
         @storage1.ext_management_systems.should == [@ems1]
         @storage2.ext_management_systems.should == [@ems2]
-        @storage3.ext_management_systems.should have_same_elements [@ems1, @ems2]
+        @storage3.ext_management_systems.should match_array [@ems1, @ems2]
       end
 
       it "#ext_management_systems_in_zone" do
@@ -254,8 +254,8 @@ describe Storage do
         end
 
         it "#scan_eligible_storages" do
-          Storage.scan_eligible_storages.should              have_same_elements [@storage1, @storage2]
-          Storage.scan_eligible_storages(nil).should         have_same_elements [@storage1, @storage2]
+          Storage.scan_eligible_storages.should              match_array [@storage1, @storage2]
+          Storage.scan_eligible_storages(nil).should         match_array [@storage1, @storage2]
           Storage.scan_eligible_storages(@zone.name).should  == [@storage1]
           Storage.scan_eligible_storages(@zone2.name).should == [@storage2]
         end
@@ -404,7 +404,7 @@ describe Storage do
           miq_task.name.should    == "SmartState Analysis for All Storages"
           miq_task.state.should   == MiqTask::STATE_QUEUED
           cdata = miq_task.context_data
-          cdata[:targets].should  have_same_elements Storage.scan_eligible_storages.collect { |s| s.id }
+          cdata[:targets].should  match_array Storage.scan_eligible_storages.collect { |s| s.id }
           cdata[:complete].should be_empty
           cdata[:pending].should  be_empty
         end
@@ -412,7 +412,7 @@ describe Storage do
         it "#scan_timer(zone)" do
           miq_task = Storage.scan_timer(@zone.name)
           miq_task.name.should == "SmartState Analysis for All Storages in Zone \"#{@zone.name}\""
-          miq_task.context_data[:targets].should have_same_elements Storage.scan_eligible_storages(@zone.name).collect { |s| s.id }
+          miq_task.context_data[:targets].should match_array Storage.scan_eligible_storages(@zone.name).collect { |s| s.id }
         end
 
       end

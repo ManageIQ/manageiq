@@ -35,9 +35,9 @@ describe ActsAsArModel do
     it { TestClass1.should respond_to(:aar_columns) }
 
     it { TestClass1.columns_hash.values[0].should be_kind_of(ActsAsArModelColumn) }
-    it { TestClass1.columns_hash.keys.should      have_same_elements(@col_names_strs) }
-    it { TestClass1.column_names.should           have_same_elements(@col_names_strs) }
-    it { TestClass1.column_names_symbols.should   have_same_elements(@col_names_syms) }
+    it { TestClass1.columns_hash.keys.should      match_array(@col_names_strs) }
+    it { TestClass1.column_names.should           match_array(@col_names_strs) }
+    it { TestClass1.column_names_symbols.should   match_array(@col_names_syms) }
 
     it { TestClass1.columns_hash["str_with_options"].options[:some_opt].should == 'opt_value' }
 

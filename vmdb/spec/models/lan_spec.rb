@@ -8,7 +8,7 @@ describe Lan do
   end
 
   it "#vms_and_templates" do
-    @lan.vms_and_templates.should have_same_elements [@vm, @template]
+    @lan.vms_and_templates.should match_array [@vm, @template]
   end
 
   it "#vms" do

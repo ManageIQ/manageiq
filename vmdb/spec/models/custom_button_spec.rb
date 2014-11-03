@@ -101,7 +101,7 @@ describe CustomButton do
 
     described_class.buttons_for(Host).all.should == []
     described_class.buttons_for(Vm).all.should   == [button1all]
-    described_class.buttons_for(vm).all.should  have_same_elements([button1vm, button2vm])
+    described_class.buttons_for(vm).all.should  match_array([button1vm, button2vm])
     described_class.buttons_for(vm_other).all.should == []
   end
 

@@ -194,7 +194,7 @@ describe VirtualFields do
         }
 
         TestClass.virtual_columns_hash.length.should == 2
-        TestClass.virtual_columns_hash.keys.should have_same_elements(["vcol1", "vcol2"])
+        TestClass.virtual_columns_hash.keys.should match_array(["vcol1", "vcol2"])
         TestClass.virtual_columns_hash.values.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
       end
 
@@ -205,7 +205,7 @@ describe VirtualFields do
         }
 
         TestClass.virtual_columns_hash.length.should == 2
-        TestClass.virtual_columns_hash.keys.should have_same_elements(["vcol1", "vcol2"])
+        TestClass.virtual_columns_hash.keys.should match_array(["vcol1", "vcol2"])
         TestClass.virtual_columns_hash.values.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
       end
 
@@ -218,7 +218,7 @@ describe VirtualFields do
         }
 
         TestClass.virtual_columns_hash.length.should == 3
-        TestClass.virtual_columns_hash.keys.should have_same_elements(["existing_vcol", "vcol1", "vcol2"])
+        TestClass.virtual_columns_hash.keys.should match_array(["existing_vcol", "vcol1", "vcol2"])
         TestClass.virtual_columns_hash.values.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
       end
     end
@@ -226,39 +226,39 @@ describe VirtualFields do
     shared_examples_for "TestClass with virtual columns" do
       context "TestClass" do
         it ".virtual_columns_hash" do
-          TestClass.virtual_columns_hash.keys.should have_same_elements(@vcols_strs)
+          TestClass.virtual_columns_hash.keys.should match_array(@vcols_strs)
           TestClass.virtual_columns_hash.values.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
-          TestClass.virtual_columns_hash.values.collect(&:name).should have_same_elements(@vcols_strs)
+          TestClass.virtual_columns_hash.values.collect(&:name).should match_array(@vcols_strs)
         end
 
         it ".virtual_columns" do
           TestClass.virtual_columns.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
-          TestClass.virtual_columns.collect(&:name).should have_same_elements(@vcols_strs)
+          TestClass.virtual_columns.collect(&:name).should match_array(@vcols_strs)
         end
 
         it ".virtual_column_names" do
-          TestClass.virtual_column_names.should have_same_elements(@vcols_strs)
+          TestClass.virtual_column_names.should match_array(@vcols_strs)
         end
 
         it ".virtual_column_names_symbols" do
-          TestClass.virtual_column_names_symbols.should have_same_elements(@vcols_syms)
+          TestClass.virtual_column_names_symbols.should match_array(@vcols_syms)
         end
 
         it ".columns_hash_with_virtual" do
-          TestClass.columns_hash_with_virtual.keys.should have_same_elements(@cols_strs)
-          TestClass.columns_hash_with_virtual.values.collect(&:name).should have_same_elements(@cols_strs)
+          TestClass.columns_hash_with_virtual.keys.should match_array(@cols_strs)
+          TestClass.columns_hash_with_virtual.values.collect(&:name).should match_array(@cols_strs)
         end
 
         it ".columns_with_virtual" do
-          TestClass.columns_with_virtual.collect(&:name).should have_same_elements(@cols_strs)
+          TestClass.columns_with_virtual.collect(&:name).should match_array(@cols_strs)
         end
 
         it ".column_names_with_virtual" do
-          TestClass.column_names_with_virtual.should have_same_elements(@cols_strs)
+          TestClass.column_names_with_virtual.should match_array(@cols_strs)
         end
 
         it ".column_names_symbols_with_virtual" do
-          TestClass.column_names_symbols_with_virtual.should have_same_elements(@cols_syms)
+          TestClass.column_names_symbols_with_virtual.should match_array(@cols_syms)
         end
 
         context ".virtual_column?" do
@@ -287,39 +287,39 @@ describe VirtualFields do
     shared_examples_for "TestSubclass with virtual columns" do
       context "TestSubclass" do
         it ".virtual_columns_hash" do
-          TestSubclass.virtual_columns_hash.keys.should have_same_elements(@vcols_sub_strs)
+          TestSubclass.virtual_columns_hash.keys.should match_array(@vcols_sub_strs)
           TestSubclass.virtual_columns_hash.values.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
-          TestSubclass.virtual_columns_hash.values.collect(&:name).should have_same_elements(@vcols_sub_strs)
+          TestSubclass.virtual_columns_hash.values.collect(&:name).should match_array(@vcols_sub_strs)
         end
 
         it ".virtual_columns" do
           TestSubclass.virtual_columns.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
-          TestSubclass.virtual_columns.collect(&:name).should have_same_elements(@vcols_sub_strs)
+          TestSubclass.virtual_columns.collect(&:name).should match_array(@vcols_sub_strs)
         end
 
         it ".virtual_column_names" do
-          TestSubclass.virtual_column_names.should have_same_elements(@vcols_sub_strs)
+          TestSubclass.virtual_column_names.should match_array(@vcols_sub_strs)
         end
 
         it ".virtual_column_names_symbols" do
-          TestSubclass.virtual_column_names_symbols.should have_same_elements(@vcols_sub_syms)
+          TestSubclass.virtual_column_names_symbols.should match_array(@vcols_sub_syms)
         end
 
         it ".columns_hash_with_virtual" do
-          TestSubclass.columns_hash_with_virtual.keys.should have_same_elements(@cols_sub_strs)
-          TestSubclass.columns_hash_with_virtual.values.collect(&:name).should have_same_elements(@cols_sub_strs)
+          TestSubclass.columns_hash_with_virtual.keys.should match_array(@cols_sub_strs)
+          TestSubclass.columns_hash_with_virtual.values.collect(&:name).should match_array(@cols_sub_strs)
         end
 
         it ".columns_with_virtual" do
-          TestSubclass.columns_with_virtual.collect(&:name).should have_same_elements(@cols_sub_strs)
+          TestSubclass.columns_with_virtual.collect(&:name).should match_array(@cols_sub_strs)
         end
 
         it ".column_names_with_virtual" do
-          TestSubclass.column_names_with_virtual.should have_same_elements(@cols_sub_strs)
+          TestSubclass.column_names_with_virtual.should match_array(@cols_sub_strs)
         end
 
         it ".column_names_symbols_with_virtual" do
-          TestSubclass.column_names_symbols_with_virtual.should have_same_elements(@cols_sub_syms)
+          TestSubclass.column_names_symbols_with_virtual.should match_array(@cols_sub_syms)
         end
 
         context ".virtual_column?" do
@@ -464,7 +464,7 @@ describe VirtualFields do
         }
 
         TestClass.virtual_reflections.length.should == 2
-        TestClass.virtual_reflections.keys.should have_same_elements([:vref1, :vref2])
+        TestClass.virtual_reflections.keys.should match_array([:vref1, :vref2])
         TestClass.virtual_reflections.values.all? { |c| c.kind_of?(VirtualReflection) }.should be_true
       end
 
@@ -475,7 +475,7 @@ describe VirtualFields do
         }
 
         TestClass.virtual_reflections.length.should == 2
-        TestClass.virtual_reflections.keys.should have_same_elements([:vref1, :vref2])
+        TestClass.virtual_reflections.keys.should match_array([:vref1, :vref2])
         TestClass.virtual_reflections.values.all? { |c| c.kind_of?(VirtualReflection) }.should be_true
       end
 
@@ -488,7 +488,7 @@ describe VirtualFields do
         }
 
         TestClass.virtual_reflections.length.should == 3
-        TestClass.virtual_reflections.keys.should have_same_elements([:existing_vref, :vref1, :vref2])
+        TestClass.virtual_reflections.keys.should match_array([:existing_vref, :vref1, :vref2])
         TestClass.virtual_reflections.values.all? { |c| c.kind_of?(VirtualReflection) }.should be_true
       end
     end
@@ -496,14 +496,14 @@ describe VirtualFields do
     shared_examples_for "TestClass with virtual reflections" do
       context "TestClass" do
         it ".virtual_reflections" do
-          TestClass.virtual_reflections.keys.should have_same_elements(@vrefs_syms)
+          TestClass.virtual_reflections.keys.should match_array(@vrefs_syms)
           TestClass.virtual_reflections.values.all? { |c| c.kind_of?(VirtualReflection) }.should be_true
-          TestClass.virtual_reflections.values.collect(&:name).should have_same_elements(@vrefs_syms)
+          TestClass.virtual_reflections.values.collect(&:name).should match_array(@vrefs_syms)
         end
 
         it ".reflections_with_virtual" do
-          TestClass.reflections_with_virtual.keys.should have_same_elements(@refs_syms)
-          TestClass.reflections_with_virtual.values.collect(&:name).should have_same_elements(@refs_syms)
+          TestClass.reflections_with_virtual.keys.should match_array(@refs_syms)
+          TestClass.reflections_with_virtual.values.collect(&:name).should match_array(@refs_syms)
         end
 
         context ".virtual_reflection?" do
@@ -532,14 +532,14 @@ describe VirtualFields do
     shared_examples_for "TestSubclass with virtual reflections" do
       context "TestSubclass" do
         it ".virtual_reflections" do
-          TestSubclass.virtual_reflections.keys.should have_same_elements(@vrefs_sub_syms)
+          TestSubclass.virtual_reflections.keys.should match_array(@vrefs_sub_syms)
           TestSubclass.virtual_reflections.values.all? { |c| c.kind_of?(VirtualReflection) }.should be_true
-          TestSubclass.virtual_reflections.values.collect(&:name).should have_same_elements(@vrefs_sub_syms)
+          TestSubclass.virtual_reflections.values.collect(&:name).should match_array(@vrefs_sub_syms)
         end
 
         it ".reflections_with_virtual" do
-          TestSubclass.reflections_with_virtual.keys.should have_same_elements(@refs_sub_syms)
-          TestSubclass.reflections_with_virtual.values.collect(&:name).should have_same_elements(@refs_sub_syms)
+          TestSubclass.reflections_with_virtual.keys.should match_array(@refs_sub_syms)
+          TestSubclass.reflections_with_virtual.values.collect(&:name).should match_array(@refs_sub_syms)
         end
 
         context ".virtual_reflection?" do

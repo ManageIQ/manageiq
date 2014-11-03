@@ -20,7 +20,7 @@ describe RemoveMiqAlertContents do
 
         alert.reload
         alert.options[:notifications][:email][:from].should == "abc"
-        alert.options[:notifications][:email][:to].should have_same_elements ["def", "ghi"]
+        alert.options[:notifications][:email][:to].should match_array ["def", "ghi"]
       end
 
       it "email missing :from" do

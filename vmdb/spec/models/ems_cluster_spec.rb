@@ -21,34 +21,34 @@ describe EmsCluster do
       @template2 = FactoryGirl.create(:template_vmware, :host => @host2, :ems_cluster => @cluster)
     end
 
-    it('#vms_and_templates')              { @cluster.vms_and_templates.should              have_same_elements [@vm1, @vm2, @template1, @template2] }
-    it('#direct_vms_and_templates')       { @cluster.direct_vms_and_templates.should       have_same_elements [@vm1, @template1, @template2] }
-    it('#vm_or_template_ids')             { @cluster.vm_or_template_ids.should             have_same_elements [@vm1.id, @vm2.id, @template1.id, @template2.id] }
-    it('#direct_vm_or_template_ids')      { @cluster.direct_vm_or_template_ids.should      have_same_elements [@vm1.id, @template1.id, @template2.id] }
+    it('#vms_and_templates')              { @cluster.vms_and_templates.should              match_array [@vm1, @vm2, @template1, @template2] }
+    it('#direct_vms_and_templates')       { @cluster.direct_vms_and_templates.should       match_array [@vm1, @template1, @template2] }
+    it('#vm_or_template_ids')             { @cluster.vm_or_template_ids.should             match_array [@vm1.id, @vm2.id, @template1.id, @template2.id] }
+    it('#direct_vm_or_template_ids')      { @cluster.direct_vm_or_template_ids.should      match_array [@vm1.id, @template1.id, @template2.id] }
     it('#total_direct_vms_and_templates') { @cluster.total_direct_vms_and_templates.should == 3 }
 
-    it('#vms')              { @cluster.vms.should              have_same_elements [@vm1, @vm2] }
-    it('#direct_vms')       { @cluster.direct_vms.should       have_same_elements [@vm1] }
-    it('#vm_ids')           { @cluster.vm_ids.should           have_same_elements [@vm1.id, @vm2.id] }
-    it('#direct_vm_ids')    { @cluster.direct_vm_ids.should    have_same_elements [@vm1.id] }
+    it('#vms')              { @cluster.vms.should              match_array [@vm1, @vm2] }
+    it('#direct_vms')       { @cluster.direct_vms.should       match_array [@vm1] }
+    it('#vm_ids')           { @cluster.vm_ids.should           match_array [@vm1.id, @vm2.id] }
+    it('#direct_vm_ids')    { @cluster.direct_vm_ids.should    match_array [@vm1.id] }
     it('#total_direct_vms') { @cluster.total_direct_vms.should == 1 }
 
-    it('#miq_templates')              { @cluster.miq_templates.should              have_same_elements [@template1, @template2] }
-    it('#direct_miq_templates')       { @cluster.direct_miq_templates.should       have_same_elements [@template1, @template2] }
-    it('#miq_template_ids')           { @cluster.miq_template_ids.should           have_same_elements [@template1.id, @template2.id] }
-    it('#direct_miq_template_ids')    { @cluster.direct_miq_template_ids.should    have_same_elements [@template1.id, @template2.id] }
+    it('#miq_templates')              { @cluster.miq_templates.should              match_array [@template1, @template2] }
+    it('#direct_miq_templates')       { @cluster.direct_miq_templates.should       match_array [@template1, @template2] }
+    it('#miq_template_ids')           { @cluster.miq_template_ids.should           match_array [@template1.id, @template2.id] }
+    it('#direct_miq_template_ids')    { @cluster.direct_miq_template_ids.should    match_array [@template1.id, @template2.id] }
     it('#total_direct_miq_templates') { @cluster.total_direct_miq_templates.should == 2 }
 
-    it('#all_vms_and_templates')   { @cluster.all_vms_and_templates.should   have_same_elements [@vm1, @vm2, @template1, @template2] }
-    it('#all_vm_or_template_ids')  { @cluster.all_vm_or_template_ids.should  have_same_elements [@vm1.id, @vm2.id, @template1.id, @template2.id] }
+    it('#all_vms_and_templates')   { @cluster.all_vms_and_templates.should   match_array [@vm1, @vm2, @template1, @template2] }
+    it('#all_vm_or_template_ids')  { @cluster.all_vm_or_template_ids.should  match_array [@vm1.id, @vm2.id, @template1.id, @template2.id] }
     it('#total_vms_and_templates') { @cluster.total_vms_and_templates.should == 4 }
 
-    it('#all_vms')    { @cluster.all_vms.should    have_same_elements [@vm1, @vm2] }
-    it('#all_vm_ids') { @cluster.all_vm_ids.should have_same_elements [@vm1.id, @vm2.id] }
+    it('#all_vms')    { @cluster.all_vms.should    match_array [@vm1, @vm2] }
+    it('#all_vm_ids') { @cluster.all_vm_ids.should match_array [@vm1.id, @vm2.id] }
     it('#total_vms')  { @cluster.total_vms.should  == 2 }
 
-    it('#all_miq_templates')    { @cluster.all_miq_templates.should    have_same_elements [@template1, @template2] }
-    it('#all_miq_template_ids') { @cluster.all_miq_template_ids.should have_same_elements [@template1.id, @template2.id] }
+    it('#all_miq_templates')    { @cluster.all_miq_templates.should    match_array [@template1, @template2] }
+    it('#all_miq_template_ids') { @cluster.all_miq_template_ids.should match_array [@template1.id, @template2.id] }
     it('#total_miq_templates')  { @cluster.total_miq_templates.should  == 2 }
 
     it('ResourcePool#v_direct_vms') { @rp1.v_direct_vms.should == 1 }
@@ -79,34 +79,34 @@ describe EmsCluster do
       @template2 = FactoryGirl.create(:template_redhat, :ems_cluster => @cluster)
     end
 
-    it('#vms_and_templates')              { @cluster.vms_and_templates.should              have_same_elements [@vm1, @vm2, @template1, @template2] }
-    it('#direct_vms_and_templates')       { @cluster.direct_vms_and_templates.should       have_same_elements [@vm1, @template1, @template2] }
-    it('#vm_or_template_ids')             { @cluster.vm_or_template_ids.should             have_same_elements [@vm1.id, @vm2.id, @template1.id, @template2.id] }
-    it('#direct_vm_or_template_ids')      { @cluster.direct_vm_or_template_ids.should      have_same_elements [@vm1.id, @template1.id, @template2.id] }
+    it('#vms_and_templates')              { @cluster.vms_and_templates.should              match_array [@vm1, @vm2, @template1, @template2] }
+    it('#direct_vms_and_templates')       { @cluster.direct_vms_and_templates.should       match_array [@vm1, @template1, @template2] }
+    it('#vm_or_template_ids')             { @cluster.vm_or_template_ids.should             match_array [@vm1.id, @vm2.id, @template1.id, @template2.id] }
+    it('#direct_vm_or_template_ids')      { @cluster.direct_vm_or_template_ids.should      match_array [@vm1.id, @template1.id, @template2.id] }
     it('#total_direct_vms_and_templates') { @cluster.total_direct_vms_and_templates.should == 3 }
 
-    it('#vms')              { @cluster.vms.should              have_same_elements [@vm1, @vm2] }
-    it('#direct_vms')       { @cluster.direct_vms.should       have_same_elements [@vm1] }
-    it('#vm_ids')           { @cluster.vm_ids.should           have_same_elements [@vm1.id, @vm2.id] }
-    it('#direct_vm_ids')    { @cluster.direct_vm_ids.should    have_same_elements [@vm1.id] }
+    it('#vms')              { @cluster.vms.should              match_array [@vm1, @vm2] }
+    it('#direct_vms')       { @cluster.direct_vms.should       match_array [@vm1] }
+    it('#vm_ids')           { @cluster.vm_ids.should           match_array [@vm1.id, @vm2.id] }
+    it('#direct_vm_ids')    { @cluster.direct_vm_ids.should    match_array [@vm1.id] }
     it('#total_direct_vms') { @cluster.total_direct_vms.should == 1 }
 
-    it('#miq_templates')              { @cluster.miq_templates.should              have_same_elements [@template1, @template2] }
-    it('#direct_miq_templates')       { @cluster.direct_miq_templates.should       have_same_elements [@template1, @template2] }
-    it('#miq_template_ids')           { @cluster.miq_template_ids.should           have_same_elements [@template1.id, @template2.id] }
-    it('#direct_miq_template_ids')    { @cluster.direct_miq_template_ids.should    have_same_elements [@template1.id, @template2.id] }
+    it('#miq_templates')              { @cluster.miq_templates.should              match_array [@template1, @template2] }
+    it('#direct_miq_templates')       { @cluster.direct_miq_templates.should       match_array [@template1, @template2] }
+    it('#miq_template_ids')           { @cluster.miq_template_ids.should           match_array [@template1.id, @template2.id] }
+    it('#direct_miq_template_ids')    { @cluster.direct_miq_template_ids.should    match_array [@template1.id, @template2.id] }
     it('#total_direct_miq_templates') { @cluster.total_direct_miq_templates.should == 2 }
 
-    it('#all_vms_and_templates')   { @cluster.all_vms_and_templates.should   have_same_elements [@vm1, @vm2, @template1, @template2] }
-    it('#all_vm_or_template_ids')  { @cluster.all_vm_or_template_ids.should  have_same_elements [@vm1.id, @vm2.id, @template1.id, @template2.id] }
+    it('#all_vms_and_templates')   { @cluster.all_vms_and_templates.should   match_array [@vm1, @vm2, @template1, @template2] }
+    it('#all_vm_or_template_ids')  { @cluster.all_vm_or_template_ids.should  match_array [@vm1.id, @vm2.id, @template1.id, @template2.id] }
     it('#total_vms_and_templates') { @cluster.total_vms_and_templates.should == 4 }
 
-    it('#all_vms')    { @cluster.all_vms.should    have_same_elements [@vm1, @vm2] }
-    it('#all_vm_ids') { @cluster.all_vm_ids.should have_same_elements [@vm1.id, @vm2.id] }
+    it('#all_vms')    { @cluster.all_vms.should    match_array [@vm1, @vm2] }
+    it('#all_vm_ids') { @cluster.all_vm_ids.should match_array [@vm1.id, @vm2.id] }
     it('#total_vms')  { @cluster.total_vms.should  == 2 }
 
-    it('#all_miq_templates')    { @cluster.all_miq_templates.should    have_same_elements [@template1, @template2] }
-    it('#all_miq_template_ids') { @cluster.all_miq_template_ids.should have_same_elements [@template1.id, @template2.id] }
+    it('#all_miq_templates')    { @cluster.all_miq_templates.should    match_array [@template1, @template2] }
+    it('#all_miq_template_ids') { @cluster.all_miq_template_ids.should match_array [@template1.id, @template2.id] }
     it('#total_miq_templates')  { @cluster.total_miq_templates.should  == 2 }
   end
 

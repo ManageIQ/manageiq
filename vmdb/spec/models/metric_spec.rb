@@ -1374,7 +1374,7 @@ describe Metric do
       expected_enabled.should be_true
     end
 
-    selected_types.should have_same_elements(expected_types)
+    selected_types.should match_array(expected_types)
   end
 
   def assert_cloud_targets_enabled(targets, expected_types)

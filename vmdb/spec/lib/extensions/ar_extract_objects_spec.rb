@@ -29,12 +29,12 @@ describe "ArExtractObjects" do
 
       it "should extract multiple objects" do
         # Test list of ids
-        Vm.extract_objects([@id1, @id2]).should have_same_elements([@vm1, @vm2])
-        Vm.extract_objects(@id1, @id2).should have_same_elements([@vm1, @vm2])
+        Vm.extract_objects([@id1, @id2]).should match_array([@vm1, @vm2])
+        Vm.extract_objects(@id1, @id2).should match_array([@vm1, @vm2])
 
         # Test list of objects
-        Vm.extract_objects([@vm1, @vm2]).should have_same_elements([@vm1, @vm2])
-        Vm.extract_objects(@vm1, @vm2).should have_same_elements([@vm1, @vm2])
+        Vm.extract_objects([@vm1, @vm2]).should match_array([@vm1, @vm2])
+        Vm.extract_objects(@vm1, @vm2).should match_array([@vm1, @vm2])
 
         # Test invalid id
         Vm.extract_objects([@id1, @id2 + 1]).should == [@vm1]
@@ -64,19 +64,19 @@ describe "ArExtractObjects" do
 
       it "should extract multiple objects" do
         # Test list of ids
-        Vm.extract_ids([@id1, @id2]).should have_same_elements([@id1, @id2])
-        Vm.extract_ids(@id1, @id2).should have_same_elements([@id1, @id2])
+        Vm.extract_ids([@id1, @id2]).should match_array([@id1, @id2])
+        Vm.extract_ids(@id1, @id2).should match_array([@id1, @id2])
 
         # Test list of objects
-        Vm.extract_ids([@vm1, @vm2]).should have_same_elements([@id1, @id2])
-        Vm.extract_ids(@vm1, @vm2).should have_same_elements([@id1, @id2])
+        Vm.extract_ids([@vm1, @vm2]).should match_array([@id1, @id2])
+        Vm.extract_ids(@vm1, @vm2).should match_array([@id1, @id2])
 
         # Test invalid ids
-        Vm.extract_ids([@id1, @id2 + 1]).should have_same_elements([@id1, @id2 + 1])
-        Vm.extract_ids(@id1, @id2 + 1).should have_same_elements([@id1, @id2 + 1])
+        Vm.extract_ids([@id1, @id2 + 1]).should match_array([@id1, @id2 + 1])
+        Vm.extract_ids(@id1, @id2 + 1).should match_array([@id1, @id2 + 1])
 
-        Vm.extract_ids([@id2 + 1, @id2 + 2]).should have_same_elements([@id2 + 1, @id2 + 2])
-        Vm.extract_ids(@id2 + 1, @id2 + 2).should have_same_elements([@id2 + 1, @id2 + 2])
+        Vm.extract_ids([@id2 + 1, @id2 + 2]).should match_array([@id2 + 1, @id2 + 2])
+        Vm.extract_ids(@id2 + 1, @id2 + 2).should match_array([@id2 + 1, @id2 + 2])
       end
     end
   end

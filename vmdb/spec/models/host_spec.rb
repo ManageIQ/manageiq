@@ -72,7 +72,7 @@ describe Host do
       Host.check_for_vms_to_scan
       jobs = Job.all(:conditions => {:target_class => 'VmOrTemplate'})
       jobs.length.should == 2
-      jobs.collect(&:target_id).should have_same_elements vms.collect(&:id)
+      jobs.collect(&:target_id).should match_array vms.collect(&:id)
     end
   end
 

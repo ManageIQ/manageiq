@@ -332,7 +332,7 @@ describe MiqServer do
       end
 
       it "should have all server roles" do
-        @miq_server.server_roles.should have_same_elements(@server_roles)
+        @miq_server.server_roles.should match_array(@server_roles)
       end
 
       context "activating All roles" do
@@ -341,7 +341,7 @@ describe MiqServer do
         end
 
         it "should have activated All roles" do
-          @miq_server.active_roles.should have_same_elements(@server_roles)
+          @miq_server.active_roles.should match_array(@server_roles)
         end
       end
 

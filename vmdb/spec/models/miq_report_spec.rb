@@ -230,7 +230,7 @@ describe MiqReport do
           options[:association] = :all_vms
           results, attrs = report.paged_view_search(options)
           found_ids = results.data.collect { |rec| rec.data['id'] }
-          found_ids.should have_same_elements(@vms_in_silver_folder.collect(&:id))
+          found_ids.should match_array(@vms_in_silver_folder.collect(&:id))
         end
       end
 
