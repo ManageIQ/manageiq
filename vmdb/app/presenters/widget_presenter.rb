@@ -12,28 +12,6 @@ class WidgetPresenter
   delegate [:session, :url_for, :initiate_wait_for_task, :session_init,
             :session_reset, :get_vmdb_config, :start_url_for_user] => :@controller
 
-  def render_widget_buttons
-    [if @view.role_allows(:feature => "dashboard_add")
-       button_close
-     end,
-     button_minmax,
-     if ["report", "chart"].include?(@widget.content_type) &&
-        !@widget.contents_for_user(@session[:userid]).blank?
-       button_fullscreen +
-       button_pdf
-     end,
-     if ["chart"].include?(@widget.content_type) &&
-        !@widget.contents_for_user(@session[:userid]).blank?
-       button_zoom
-     end].join("").html_safe
-  end
-
-  def render_widget_layout
-    # TODO call in partials
-  end
-
-  private
-
   def button_fullscreen
     if @widget.content_type == "chart"
       @view.link_to("",

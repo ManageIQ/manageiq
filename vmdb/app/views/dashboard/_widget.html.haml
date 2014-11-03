@@ -5,10 +5,18 @@
   #test.modbox
     %h2.modtitle{:style => "cursor:move"}
       %a{:class => "#{widget.content_type}box"}
-      = wp.render_widget_buttons
+      - if role_allows(:feature => "dashboard_add")
+        = wp.button_close
+      = wp.button_minmax
+      - if ["report","chart"].include?(widget.content_type) &&
+      - !widget.contents_for_user(session[:userid]).blank?
+        = wp.button_fullscreen
+        = wp.button_pdf
+      - if ["chart"].include?(widget.content_type) &&
+      - !widget.contents_for_user(session[:userid]).blank?
+        = wp.button_zoom
       %div
         %span.modtitle_text= h(widget.title)
-    -# TODO call rendering from presenter method
     - if widget.content_type == "menu"
       = render :partial => 'widget_menu', :locals => {:widget => widget}
     - elsif widget.contents_for_user(session[:userid]).blank?
