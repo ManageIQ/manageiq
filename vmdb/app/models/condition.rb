@@ -96,13 +96,7 @@ class Condition < ActiveRecord::Base
       result = SafeNamespace.eval_script(script, context)
       raise "Expected return value of true or false from ruby script but instead got result: [#{result.inspect}]" unless result.kind_of?(TrueClass) || result.kind_of?(FalseClass)
     else
-      begin
-        result = eval(expr) ? true : false
-      rescue SyntaxError
-        MiqPolicy.logger.error("MIQ(condition-do_eval): Syntax Error while evaluating expression: [#{expr}]")
-        # Always evaluate to false if the expression is invalid
-        result = false
-      end
+      result = eval(expr) ? true : false
     end
     result
   end
@@ -142,12 +136,12 @@ class Condition < ActiveRecord::Base
       else
         ref.nil? ? value = "" : value = ref.tag_list(:ns => tag)
       end
-      value = MiqExpression.quote(value, ohash[:type])
+      value = MiqExpression.quote(value, ohash[:type] || "string")
     when "count"
       ref.nil? ? value = 0 : value = ref.tag_list(:ns => tag).length
     when "registry"
       ref.nil? ? value = "" : value = self.registry_data(ref, tag, ohash)
-      value = MiqExpression.quote(value, ohash[:type])
+      value = MiqExpression.quote(value, ohash[:type] || "string")
     end
     value
   end
