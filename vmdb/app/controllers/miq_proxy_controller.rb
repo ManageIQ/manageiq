@@ -15,7 +15,7 @@ class MiqProxyController < ApplicationController
       @tabform ||= "tasks_3" if role_allows(:feature=>"job_all_smartproxy") && role_allows(:feature=>"job_all_smartproxy")
       @tabform ||= "tasks_4" if role_allows(:feature=>"miq_task_all_ui") && role_allows(:feature=>"miq_task_all_ui")
       jobs
-      render :action=>"jobs"
+      render :action => "jobs" unless request.xml_http_request?
     end
   end
 
@@ -23,7 +23,7 @@ class MiqProxyController < ApplicationController
   def change_tab
     @tabform = "tasks_" + params[:tab]
     jobs
-    render :action=>"jobs"
+    render :action => "jobs" unless request.xml_http_request?
   end
 
   def build_jobs_tab
@@ -71,21 +71,16 @@ class MiqProxyController < ApplicationController
   def jobs
     build_jobs_tab
     @title = "Tasks for #{session[:username]}"
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     @lastaction = "jobs"
+    @edit = {:opts => copy_hash(@tasks_options[@tabform])} # Backup current settings
 
-    @edit = Hash.new
-    @edit[:opts] = Hash.new
-    @edit[:opts] = copy_hash(@tasks_options[@tabform])   # Backup current settings
-
+    get_jobs(tasks_condition(@tasks_options[@tabform]))
     if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:user_choice])
-      get_jobs(tasks_condition(@tasks_options[@tabform]))
       render :update do |page|
-        page.replace_html("gtl_div", :partial=>"layouts/gtl", :locals=>{:action_url=>@lastaction})
+        page.replace_html("gtl_div", :partial => "layouts/gtl", :locals => {:action_url => @lastaction})
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
-    else                      # Came in from non-ajax, just get the jobs
-      get_jobs(tasks_condition(@tasks_options[@tabform]))
     end
   end
 

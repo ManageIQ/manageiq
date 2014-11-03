@@ -19,6 +19,9 @@ describe "routes for MiqProxyController" do
     it 'routes with GET' do
       expect(get("/miq_proxy/change_tab")).to route_to("miq_proxy#change_tab")
     end
+    it 'routes with POST' do
+      expect(post("/miq_proxy/change_tab")).to route_to("miq_proxy#change_tab")
+    end
   end
 
   describe "#create" do
@@ -64,6 +67,9 @@ describe "routes for MiqProxyController" do
   describe "#index" do
     it 'routes with GET' do
       expect(get("miq_proxy/index")).to route_to("miq_proxy#index")
+    end
+    it 'routes with POST' do
+      expect(post("miq_proxy/index")).to route_to("miq_proxy#index")
     end
   end
 

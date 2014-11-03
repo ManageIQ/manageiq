@@ -758,10 +758,12 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        change_tab
         create
         credential_field_changed
         form_field_changed
         get_log
+        index
         install_007
         jobs
         panel_control
