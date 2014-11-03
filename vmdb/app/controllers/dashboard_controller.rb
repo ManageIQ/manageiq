@@ -300,14 +300,14 @@ class DashboardController < ApplicationController
     w = params[:widget].to_i
     render :update do |page|
       if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
-        page << "$('w_#{w}_minmax').addClassName('minbox');"
-        page << "$('w_#{w}_minmax').removeClassName('maxbox');"
+        page << javascript_add_class("w_#{w}_minmax", "minbox")
+        page << javascript_del_class("w_#{w}_minmax", "maxbox")
         page << "$('dd_w#{w}_box').show();"
         page << "$('w_#{w}_minmax').title = 'Minimize';"
         @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
       else
-        page << "$('w_#{w}_minmax').addClassName('maxbox');"
-        page << "$('w_#{w}_minmax').removeClassName('minbox');"
+        page << javascript_add_class("w_#{w}_minmax", "maxbox")
+        page << javascript_del_class("w_#{w}_minmax", "minbox")
         page << "$('dd_w#{w}_box').hide();"
         page << "$('w_#{w}_minmax').title = 'Restore';"
         @sb[:dashboards][@sb[:active_db]][:minimized].push(w)
@@ -553,14 +553,14 @@ class DashboardController < ApplicationController
 
     @temp[:timeline] = true
     render :update do |page|
-      page << "miqHighlight('report_#{session[:last_rpt_id]}_link', false);" if session[:last_rpt_id]
+      page << javascript_highlight("report_#{session[:last_rpt_id]}_link", false)  if session[:last_rpt_id]
       center_tb_buttons = {
         'timeline_txt' => "text",
         'timeline_csv' => "CSV"
       }
       center_tb_buttons['timeline_pdf'] = "PDF" if PdfGenerator.available?
       if @report
-        page << "miqHighlight('report_#{@report.id}_link', true);"
+        page << javascript_highlight("report_#{@report.id}_link", true)
         status = @report.table.data.length == 0 ? :disabled : :enabled
 
         center_tb_buttons.each do |button_id, typ|

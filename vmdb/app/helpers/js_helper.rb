@@ -15,9 +15,10 @@ module JsHelper
   # replacement for app/views/shared/ajax/_tree_lock_unlock.js.erb
   def tree_lock(tree_var, lock = true)
     bool_str = (!!lock).to_s
+    element = "#{tree_var}_div"
     "
       $j('##{tree_var}box').dynatree('#{lock ? 'disable' : 'enable'}');
-      miqDimDiv('#{tree_var}_div',#{bool_str});
+      #{javascript_dim(element, bool_str)}
     "
   end
 
@@ -45,5 +46,21 @@ module JsHelper
 
   def javascript_focus_if_exists(element)
     "if ($j('##{element}').length) #{javascript_focus(element)}"
+  end
+
+  def javascript_highlight(element, status)
+    "miqHighlight('##{element}', #{status});"
+  end
+
+  def javascript_dim(element, status)
+    "miqDimDiv('##{element}', #{status});"
+  end
+
+  def javascript_add_class(element, cls)
+    "$j('##{element}').addClass('#{cls}');"
+  end
+
+  def javascript_del_class(element, cls)
+    "$j('##{element}').removeClass('#{cls}');"
   end
 end
