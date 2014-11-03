@@ -16,30 +16,31 @@
             %option(value="") &lt;Choose&gt;
           %input(type="hidden" name="filter_value" value="{{filterValue}}")
 
-      %tr(ng-show="determineActionType() == 'db_backup'")
+      %tr(ng-show="dbBackup()")
         %td.key URI
         %td.wide
-          = "#{@uri_prefix}://"
-          = text_field_tag("uri", @uri, :maxlength => 100)
-        = javascript_tag("$('uri').focus()")
+          %input.uri-prefix-input(type="text" ng-required="dbBackup()" name="uri_prefix" ng-model="uriPrefix" maxlength=5)
+          = "://"
+          %input.uri-input(type="text" ng-required="dbBackup()" name="uri" ng-model="uri" maxlength=100)
+        = javascript_tag("$j('.uri-input').focus()")
 
       %tr(ng-show="sambaBackup()")
         %td.key
           User ID
         %td
-          = text_field_tag("log_userid", @log_userid, :maxlength => 50)
+          %input(type="text" ng-required="sambaBackup()" name="log_userid" ng-model="logUserid" maxlength=50)
 
       %tr(ng-show="sambaBackup()")
         %td.key
           Password
         %td
-          = password_field_tag("log_password", @log_password, :maxlength => 50)
+          %input(type="password" ng-required="sambaBackup()" name="log_password" ng-model="logPassword" maxlength=50)
 
       %tr(ng-show="sambaBackup()")
         %td.key
           Verify Password
         %td
-          = password_field_tag("log_verify", @log_verify, :maxlength => 50)
+          %input(type="password" ng-required="sambaBackup()" name="log_verify" ng-model="logVerify" maxlength=50)
 
       %tr(ng-show="sambaBackup()")
         %td

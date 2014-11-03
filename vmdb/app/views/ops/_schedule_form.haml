@@ -1,5 +1,3 @@
-- url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
-
 %form#form_div(name="scheduleForm" ng-controller="scheduleFormController")
   = render :partial => "layouts/flash_msg"
   %fieldset
@@ -9,11 +7,11 @@
         %tr
           %td.key Name
           %td
-            %input(type="text" name="name" ng-model="scheduleName" maxlength="#{MAX_NAME_LEN}")
+            %input(type="text" name="name" required ng-model="scheduleName" maxlength="#{MAX_NAME_LEN}")
         %tr
           %td.key Description
           %td
-            %input(type="text" name="description" ng-model="scheduleDescription" maxlength="#{MAX_DESC_LEN}")
+            %input(type="text" name="description" required ng-model="scheduleDescription" maxlength="#{MAX_DESC_LEN}")
 
         %tr
           %td.key Active
@@ -28,7 +26,7 @@
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
 
-  = button_tag("Save", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !scheduleForm.$dirty}", "ng-click" => "saveClicked()", "ng-disabled" => "!scheduleForm.$dirty")
+  = button_tag("Save", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !scheduleForm.$valid}", "ng-click" => "saveClicked()", "ng-disabled" => "!scheduleForm.$valid")
   = button_tag("Reset", :class => "btn btn-default", "ng-class" => "{'btn-disabled': !scheduleForm.$dirty}", "ng-click" => "resetClicked()", "ng-disabled" => "!scheduleForm.$dirty")
   = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
 

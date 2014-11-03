@@ -47,75 +47,28 @@ module OpsController::Settings::Schedules
       @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell(@nodetype)
     when "save", "add"
-      id = params[:id] ? params[:id] : "new"
-      return unless load_edit("schedule_edit__#{id}","replace_cell__explorer")
-      @schedule = @edit && @edit[:sched_id] ? MiqSchedule.find_by_id(@edit[:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
-      if @edit[:new][:action] == "db_backup"
-        @schedule.sched_action = {:method=>"db_backup"}
-        if @edit[:new][:uri_prefix].blank?
-          add_flash(_("%s is required") % "Type", :error)
-        elsif @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-          add_flash(_("%s is required") % "URI", :error)
-        elsif @edit[:new][:uri_prefix] == "smb" || @edit[:new][:uri_prefix] == "ftp"
-          if @edit[:new][:uri].blank?
-            add_flash(_("%s is required") % "URI", :error)
-          elsif @edit[:new][:log_userid].blank?
-            add_flash(_("%s is required") % "Username", :error)
-          elsif @edit[:new][:log_password].blank?
-            add_flash(_("%s is required") % "Password", :error)
-          end
-        end
-        if @flash_array
-          render :update do |page|
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
-          return
-        end
-        uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
-        settings_new = {:uri      => uri,
-                        :username => @edit[:new][:log_userid],
-                        :password => @edit[:new][:log_password],
-                        :name     => @edit[:new][:depot_name]}
-        settings_current = {:uri      => @edit[:current][:uri],
-                            :username => @edit[:current][:log_userid],
-                            :password => @edit[:current][:log_password],
-                            :name     => @edit[:current][:depot_name]}
+      schedule = params[:id] != "new" ? MiqSchedule.find_by_id(params[:id]) : MiqSchedule.new(:userid => session[:userid])
+      old_schedule_attributes = schedule.attributes.dup
+      schedule_set_record_vars(schedule)
+      schedule_validate?(schedule)
 
-        # only verify_depot_hash if anything has changed in depot settings
-        if settings_new != settings_current
-          if MiqSchedule.verify_depot_hash(settings_new)
-            @schedule.depot_hash = settings_new
-          else
-            add_flash(_("Failed to add depot. See logs for detail."), :error)
-          end
-        end
-      end
+      schedule.save
 
-      schedule_set_record_vars(@schedule)
-      schedule_validate?(@schedule)
+      AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
 
-      if @schedule.valid? && !flash_errors? && @schedule.save
-        AuditEvent.success(build_saved_audit(@schedule, params[:button] == "add"))
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name})
-        @edit = session[:edit] = nil  # clean out the saved info
-        if params[:button] == "add"
-          self.x_node  = "xx-msc"  # reset node to show list
-          schedules_list
-          settings_get_info("st")
-        else          #set selected schedule
-          @selected_schedule = MiqSchedule.find(@schedule.id)
-          get_node_info(x_node)
-        end
-        replace_right_cell("root",[:settings])
+      add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
+
+      if params[:button] == "add"
+        self.x_node  = "xx-msc"
+        schedules_list
+        settings_get_info("st")
       else
-        @schedule.errors.each do |field,msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
-        @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        @selected_schedule = schedule
+        get_node_info(x_node)
       end
+
+      replace_right_cell("root", [:settings])
+
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
@@ -147,133 +100,60 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_form_fields
-    @schedule = MiqSchedule.find_by_id(params[:id])
+    schedule = MiqSchedule.find_by_id(params[:id])
 
-    if @schedule.sched_action && @schedule.sched_action[:method] && @schedule.sched_action[:method] == "check_compliance"
-      action_type = @schedule.towhat.downcase + "_" + @schedule.sched_action[:method]
-    elsif @schedule.sched_action && @schedule.sched_action[:method] && @schedule.sched_action[:method] == "db_backup"
-      action_type = @schedule.sched_action[:method]
+    if schedule_check_compliance?(schedule)
+      action_type = schedule.towhat.downcase + "_" + schedule.sched_action[:method]
+    elsif schedule_db_backup?(schedule)
+      action_type = schedule.sched_action[:method]
 
-      # have to create array to add <choose> on the top in the form
-      @protocols_arr = []
-      DatabaseBackup.supported_depots.each do |p|
-        @protocols_arr.push(p[1])
-      end
+      settings = schedule.depot_hash
 
-      settings = @schedule.depot_hash
       unless settings[:uri].nil?
-        @protocol = DatabaseBackup.supported_depots[settings[:uri].split('://')[0]]
-        @uri_prefix = settings[:uri].split('://')[0]
-        @uri = settings[:uri].split('://')[1]
+        uri_prefix = settings[:uri].split('://')[0]
+        uri = settings[:uri].split('://')[1]
+        protocol = DatabaseBackup.supported_depots[uri_prefix]
       end
-      @log_userid = settings[:username]
-      @log_password = settings[:password]
-      @log_verify = settings[:password]
+
+      log_userid = settings[:username]
+      log_password = settings[:password]
+      log_verify = settings[:password]
     else
-      if @schedule.towhat.nil?
+      if schedule.towhat.nil?
         action_type = "vm"
       else
-        action_type ||= @schedule.towhat == "EmsCluster" ? "emscluster" : @schedule.towhat.underscore
+        action_type ||= schedule.towhat == "EmsCluster" ? "emscluster" : schedule.towhat.underscore
       end
     end
 
-    if @schedule.sched_action && @schedule.sched_action[:method] && @schedule.sched_action[:method] != "db_backup"
-      if @schedule.miq_search                         # See if a search filter is attached
-        filter_type = @schedule.miq_search.search_type == "user" ? "my" : "global"
-        filter_value = @schedule.miq_search.id
-      elsif @schedule.filter.nil?                   # Set to All if not set
-        filter_type = "all"
-        filter_value = nil
-      else
-        key = @schedule.filter.exp.keys.first
-        if key == "IS NOT NULL"                       # All
-          filter_type = "all"
-          filter_value = nil
-        elsif key == "AND"                            # Cluster name and datacenter
-          filter_type = "cluster"
-          filter_value = @schedule.filter.exp[key][0]["="]["value"] + "__" + @schedule.filter.exp[key][1]["="]["value"]
-        else
-          case @schedule.filter.exp[key]["field"]
-          when "Vm.ext_management_system-name",
-               "MiqTemplate.ext_management_system-name",
-               "Storage.ext_management_system-name",
-               "Host.ext_management_system-name",
-               "EmsCluster.ext_management_system-name"
-            filter_type = "ems"
-          when "Vm.host-name", "MiqTemplate.host-name", "Storage.host-name", "Host-name"
-            filter_type = "host"
-          when "Vm-name"
-            filter_type = "vm"
-          when "MiqTemplate-name"
-            filter_type = "miq_template"
-          when "Storage-name"
-            filter_type = "storage"
-          end
-
-          filter_value = @schedule.filter.exp[key]["value"]
-        end
-      end
-    end
-
-    case filter_type
-    when "vm"
-      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
-    when "host"
-      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
-    when "ems"
-      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
-    when "cluster"
-      filtered_item_list = find_filtered(EmsCluster, :all).collect { |cluster|
-        [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
-      }.sort_by { |cluster| cluster.first.downcase }
-    when "global"
-      build_listnav_search_list("Vm")
-      filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
-    when "my"
-      build_listnav_search_list("Vm")
-      filtered_item_list = @my_searches.collect { |search| [search.id, search.description] }
-    else
-      DatabaseBackup.supported_depots.each { |depot| @protocols_arr.push(depot[1]) }
-    end
+    filter_type, filter_value = determine_filter_type_and_value(schedule)
+    filtered_item_list = build_filtered_item_list(filter_type)
 
     render :json => {
       :action_type          => action_type,
       :filter_type          => filter_type,
       :filtered_item_list   => filtered_item_list,
       :filter_value         => filter_value,
-      :schedule_description => @schedule.description,
-      :schedule_enabled     => @schedule.enabled ? "1" : "0",
-      :schedule_name        => @schedule.name,
-      :schedule_timer_type  => @schedule.run_at[:interval][:unit].capitalize,
-      :schedule_timer_value => @schedule.run_at[:interval][:value],
-      :schedule_start_date  => @schedule.run_at[:start_time].strftime("%m/%d/%Y"),
-      :schedule_start_hour  => @schedule.run_at[:start_time].strftime("%H"),
-      :schedule_start_min   => @schedule.run_at[:start_time].strftime("%M"),
-      :schedule_time_zone   => @schedule.run_at[:tz]
+      :log_userid           => log_userid,
+      :log_password         => log_password,
+      :log_verify           => log_verify,
+      :protocol             => protocol,
+      :schedule_description => schedule.description,
+      :schedule_enabled     => schedule.enabled ? "1" : "0",
+      :schedule_name        => schedule.name,
+      :schedule_timer_type  => schedule.run_at[:interval][:unit].capitalize,
+      :schedule_timer_value => schedule.run_at[:interval][:value],
+      :schedule_start_date  => schedule.run_at[:start_time].strftime("%m/%d/%Y"),
+      :schedule_start_hour  => schedule.run_at[:start_time].strftime("%H").to_i,
+      :schedule_start_min   => schedule.run_at[:start_time].strftime("%M").to_i,
+      :schedule_time_zone   => schedule.run_at[:tz],
+      :uri                  => uri,
+      :uri_prefix           => uri_prefix
     }
   end
 
   def schedule_form_filter_type_field_changed
-    case params[:filter_type]
-    when "vm"
-      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
-    when "host"
-      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
-    when "ems"
-      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
-    when "cluster"
-      filtered_item_list = find_filtered(EmsCluster, :all).collect { |cluster|
-        [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
-      }.sort_by { |cluster| cluster.first.downcase }
-    when "global"
-      build_listnav_search_list("Vm")
-      filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
-    when "my"
-      build_listnav_search_list("Vm")
-      filtered_item_list = @my_searches.collect { |search| [search.id, search.description] }
-    else
-      DatabaseBackup.supported_depots.each { |depot| @protocols_arr.push(depot[1]) }
-    end
+    filtered_item_list = build_filtered_item_list(params[:filter_type])
 
     render :json => {:filtered_item_list => filtered_item_list}
   end
@@ -341,6 +221,106 @@ module OpsController::Settings::Schedules
   end
 
   private
+
+  def build_saved_audit_hash(old_schedule_attributes, new_schedule, add)
+    name  = new_schedule.respond_to?(:name) ? new_schedule.name : new_schedule.description
+    msg   = "[#{name}] Record #{add ? "added" : "updated"} ("
+    event = "#{new_schedule.class.to_s.downcase}_record_#{add ? "add" : "update"}"
+
+    attribute_difference = old_schedule_attributes.diff(new_schedule.attributes)
+
+    difference_messages = []
+
+    attribute_difference.each do |key, value|
+      difference_messages << "#{key} changed to #{value}"
+    end
+
+    msg = msg + difference_messages.join(", ") + ")"
+
+    {
+      :event        => event,
+      :target_id    => new_schedule.id,
+      :target_class => new_schedule.class.base_class.name,
+      :userid       => session[:userid],
+      :message      => msg
+    }
+  end
+
+  def schedule_check_compliance?(schedule)
+    schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] == "check_compliance"
+  end
+
+  def schedule_db_backup?(schedule)
+    schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] == "db_backup"
+  end
+
+  def build_filtered_item_list(filter_type)
+    case filter_type
+    when "vm"
+      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "host"
+      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "ems"
+      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "cluster"
+      filtered_item_list = find_filtered(EmsCluster, :all).collect { |cluster|
+        [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
+      }.sort_by { |cluster| cluster.first.downcase }
+    when "global"
+      build_listnav_search_list("Vm")
+      filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
+    when "my"
+      build_listnav_search_list("Vm")
+      filtered_item_list = @my_searches.collect { |search| [search.id, search.description] }
+    else
+      filtered_item_list = []
+      DatabaseBackup.supported_depots.each { |depot| filtered_item_list.push(depot[1]) }
+    end
+
+    filtered_item_list
+  end
+
+  def determine_filter_type_and_value(schedule)
+    if schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] != "db_backup"
+      if schedule.miq_search                         # See if a search filter is attached
+        filter_type = schedule.miq_search.search_type == "user" ? "my" : "global"
+        filter_value = schedule.miq_search.id
+      elsif schedule.filter.nil?                   # Set to All if not set
+        filter_type = "all"
+        filter_value = nil
+      else
+        key = schedule.filter.exp.keys.first
+        if key == "IS NOT NULL"                       # All
+          filter_type = "all"
+          filter_value = nil
+        elsif key == "AND"                            # Cluster name and datacenter
+          filter_type = "cluster"
+          filter_value = schedule.filter.exp[key][0]["="]["value"] + "__" + schedule.filter.exp[key][1]["="]["value"]
+        else
+          case schedule.filter.exp[key]["field"]
+          when "Vm.ext_management_system-name",
+               "MiqTemplate.ext_management_system-name",
+               "Storage.ext_management_system-name",
+               "Host.ext_management_system-name",
+               "EmsCluster.ext_management_system-name"
+            filter_type = "ems"
+          when "Vm.host-name", "MiqTemplate.host-name", "Storage.host-name", "Host-name"
+            filter_type = "host"
+          when "Vm-name"
+            filter_type = "vm"
+          when "MiqTemplate-name"
+            filter_type = "miq_template"
+          when "Storage-name"
+            filter_type = "storage"
+          end
+
+          filter_value = schedule.filter.exp[key]["value"]
+        end
+      end
+    end
+
+    return filter_type, filter_value
+  end
 
   # Create the view and associated vars for the schedules list
   def schedule_build_list

@@ -16,8 +16,6 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     });
   };
 
-  var oldScheduleFormValues = {};
-
   var testType = function(type) {
     return type.test($scope.actionType);
   };
@@ -37,13 +35,13 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       type = 'VM';
     } else if (isHostType()) {
       type = 'Host';
-    } else if ($scope.actionType == 'miq_template') {
+    } else if ($scope.actionType === 'miq_template') {
       type = 'Template';
-    } else if ($scope.actionType == 'emscluster') {
+    } else if ($scope.actionType === 'emscluster') {
       type = 'Cluster';
-    } else if ($scope.actionType == 'storage') {
+    } else if ($scope.actionType === 'storage') {
       type = storageTable;
-    } else if ($scope.actionType == 'db_backup') {
+    } else if ($scope.actionType === 'db_backup') {
       type = 'Database Backup';
     }
 
@@ -60,17 +58,22 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     }
   };
 
+  $scope.dbBackup = function() {
+    return $scope.actionType === 'db_backup';
+  };
+
   $scope.sambaBackup = function() {
-    return $scope.actionType === 'db_backup' && $scope.logProtocol === 'Samba';
+    return $scope.dbBackup() && $scope.logProtocol === 'Samba';
   };
 
   $scope.actionTypeChanged = function() {
-    if ($scope.actionType === 'db_backup') {
+    if ($scope.dbBackup()) {
       $scope.logProtocol = 'Network File System';
     } else {
       $scope.filterType = 'all';
-      $scope.filterValuesEmpty = true;
     }
+
+    $scope.filterValuesEmpty = true;
   };
 
   $scope.filterTypeChanged = function() {
@@ -123,7 +126,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
   $scope.saveClicked = function() {
     miqService.sparkleOn();
     var url = '/ops/schedule_edit/' + scheduleFormId + '?button=save';
-    miqService.miqAjaxButton(url);
+    miqService.miqAjaxButton(url, true);
   };
 
   if (scheduleFormId == 'new') {
@@ -141,6 +144,10 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     $http.get('/ops/schedule_form_fields/' + scheduleFormId).success(function(data) {
       $scope.actionType = data.action_type;
       $scope.filterType = data.filter_type;
+      $scope.logUserid = data.log_userid;
+      $scope.logPassword = data.log_password;
+      $scope.logVerify = data.log_verify;
+      $scope.protocol = data.protocol;
       $scope.scheduleDescription = data.schedule_description;
       $scope.scheduleEnabled = data.schedule_enabled;
       $scope.scheduleName = data.schedule_name;
@@ -150,6 +157,10 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.scheduleStartHour = data.schedule_start_hour;
       $scope.scheduleStartMinute = data.schedule_start_min;
       $scope.scheduleTimeZone = data.schedule_time_zone;
+      $scope.uri = data.uri;
+      $scope.uriPrefix = data.uri_prefix;
+
+      $scope.timerItems = timerOptionService.getOptions($scope.scheduleTimerType);
 
       if (data.filter_type === 'all') {
         $scope.filterValuesEmpty = true;
