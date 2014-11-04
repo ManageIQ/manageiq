@@ -277,14 +277,10 @@ RUBY
     def self.setup_drb_for_ruby_method
       drb_front  = MiqAeMethodService::MiqAeServiceFront.new
       drb        = DRb.start_service("druby://127.0.0.1:0", drb_front)
-      # Turn off Ruby Garbage Collection to avoid DRb throwing RangeError: 0x15ae6d1a6874 is recycled object
-      GC.disable
     end
 
     def self.teardown_drb_for_ruby_method
       DRb.stop_service
-      # Re-enable Ruby Garbage Collection after stopping DRb
-      GC.enable
     end
 
     def self.invoke_inline_ruby(aem, obj, inputs)
