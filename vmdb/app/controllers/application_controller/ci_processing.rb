@@ -289,11 +289,11 @@ module ApplicationController::CiProcessing
     render :update do |page|
       if session[:retire_date].blank?
         session[:retire_warn] = ""
-        page << "$('remove_button').hide();"
+        page << javascript_hide("remove_button")
         page << "$('retirement_warn').disable();"
         page << "$('retirement_warn').value = '';"
       else
-        page << "$('remove_button').show();"
+        page << javascript_show("remove_button")
         page << "$('retirement_warn').enable();"
       end
       page << "miqSparkle(false);"
@@ -351,14 +351,14 @@ module ApplicationController::CiProcessing
     reconfigure_get_form_vars
     render :update do |page|                    # Use JS to update the display
       if @edit[:new][:cb_memory]
-        page << "$('memory_div').show();"
+        page << javascript_show("memory_div")
       else
-        page << "$('memory_div').hide();"
+        page << javascript_hide("memory_div")
       end
       if @edit[:new][:cb_cpu]
-        page << "$('cpu_div').show();"
+        page << javascript_show("cpu_div")
       else
-        page << "$('cpu_div').hide();"
+        page << javascript_hide("cpu_div")
       end
     end
   end
@@ -876,12 +876,12 @@ module ApplicationController::CiProcessing
       end
       if request.parameters[:controller] == "ems_cloud" || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
         @ipmi = true
-        page << "$('discover_credentials').show();"
+        page << javascript_show("discover_credentials")
       elsif params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "null"
         @ipmi = false
-        page << "$('discover_credentials').hide();"
+        page << javascript_hide("discover_credentials")
       elsif @ipmi == false
-        page << "$('discover_credentials').hide();"
+        page << javascript_hide("discover_credentials")
       end
     end
   end

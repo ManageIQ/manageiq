@@ -128,7 +128,7 @@ class MiqCapacityController < ApplicationController
     end
     render :update do |page|                      # Use JS to update the display
       if x_active_tree != :bottlenecks_tree
-        page << "if($('view_buttons_div'))$('view_buttons_div').show();" if v_buttons && v_xml
+        page << javascript_show_if_exists("view_buttons_div") if v_buttons && v_xml
         page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml) if v_buttons && v_xml
         page << "dhxLayoutB.cells('a').expand();"
       end
@@ -557,7 +557,7 @@ class MiqCapacityController < ApplicationController
       add_flash(_("Planning options have been reset by the user"))
       v_buttons, v_xml = build_toolbar_buttons_and_xml("miq_capacity_view_tb")
       render :update do |page|  # Redraw the screen
-        page << "if($('view_buttons_div'))$('view_buttons_div').show();" if v_buttons && v_xml
+        page << javascript_show_if_exists("view_buttons_div") if v_buttons && v_xml
         page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml) if v_buttons && v_xml
         page << "dhxLayoutB.cells('a').expand();"
         page << javascript_for_miq_button_visibility(session[:changed])

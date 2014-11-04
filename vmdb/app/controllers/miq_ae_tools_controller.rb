@@ -75,11 +75,11 @@ class MiqAeToolsController < ApplicationController
           page.replace("resolve_form_div", :partial=>"resolve_form")
         end
         if @resolve[:throw_ready]
-          page << "$('throw_off').hide();"
-          page << "$('throw_on').show();"
+          page << javascript_hide("throw_off")
+          page << javascript_show("throw_on")
         else
-          page << "$('throw_on').hide();"
-          page << "$('throw_off').show();"
+          page << javascript_hide("throw_on")
+          page << javascript_show("throw_off")
         end
       end
     end

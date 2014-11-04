@@ -38,7 +38,7 @@ function miqAeRowSelected(row_id,cell_idx) {
 
 // Method to hide flash_msg when folde ris being edited in menu editor
 function miqMenuRowSelected(row_id,cell_idx) {
-  $('flash_msg_div_menu_list').hide();
+  $j('#flash_msg_div_menu_list').hide();
   folder_list_grid.editCell();
 }
 

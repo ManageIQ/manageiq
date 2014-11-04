@@ -1606,30 +1606,30 @@ module ApplicationHelper
     unless timer_type.nil?
       case timer_type
       when "Monthly"
-        js_array << "$('weekly_span').hide();"
-        js_array << "$('daily_span').hide();"
-        js_array << "$('hourly_span').hide();"
-        js_array << "$('monthly_span').show();"
+        js_array << javascript_hide("weekly_span")
+        js_array << javascript_hide("daily_span")
+        js_array << javascript_hide("hourly_span")
+        js_array << javascript_show("monthly_span")
       when "Weekly"
-        js_array << "$('daily_span').hide();"
-        js_array << "$('hourly_span').hide();"
-        js_array << "$('monthly_span').hide();"
-        js_array << "$('weekly_span').show();"
+        js_array << javascript_hide("daily_span")
+        js_array << javascript_hide("hourly_span")
+        js_array << javascript_hide("monthly_span")
+        js_array << javascript_show("weekly_span")
       when "Daily"
-        js_array << "$('hourly_span').hide();"
-        js_array << "$('monthly_span').hide();"
-        js_array << "$('weekly_span').hide();"
-        js_array << "$('daily_span').show();"
+        js_array << javascript_hide("hourly_span")
+        js_array << javascript_hide("monthly_span")
+        js_array << javascript_hide("weekly_span")
+        js_array << javascript_show("daily_span")
       when "Hourly"
-        js_array << "$('daily_span').hide();"
-        js_array << "$('monthly_span').hide();"
-        js_array << "$('weekly_span').hide();"
-        js_array << "$('hourly_span').show();"
+        js_array << javascript_hide("daily_span")
+        js_array << javascript_hide("monthly_span")
+        js_array << javascript_hide("weekly_span")
+        js_array << javascript_show("hourly_span")
       else
-        js_array << "$('daily_span').hide();"
-        js_array << "$('hourly_span').hide();"
-        js_array << "$('monthly_span').hide();"
-        js_array << "$('weekly_span').hide();"
+        js_array << javascript_hide("daily_span")
+        js_array << javascript_hide("hourly_span")
+        js_array << javascript_hide("monthly_span")
+        js_array << javascript_hide("weekly_span")
       end
     end
     js_array

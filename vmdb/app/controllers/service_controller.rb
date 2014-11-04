@@ -392,8 +392,8 @@ class ServiceController < ApplicationController
       if ["dialog_provision","ownership","retire","service_edit", "tag"].include?(action)
         page << "dhxLayoutB.cells('a').collapse();"
         page << "dhxLayoutB.cells('c').expand();" #incase it was collapsed for summary screen, and incase there were no records on show_list
-        page << "$('form_buttons_div').show();"
-        page << "if($('pc_div_1')) $('pc_div_1').hide()";
+        page << javascript_show("form_buttons_div")
+        page << javascript_hide_if_exists("pc_div_1")
         if action == "dialog_provision"
           page.replace_html("form_buttons_div", :partial => "layouts/x_dialog_buttons", :locals => {:action_url =>action_url, :record_id => @edit[:rec_id]})
         else
@@ -419,12 +419,12 @@ class ServiceController < ApplicationController
       elsif record_showing ||
           (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
         #Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
-        page << "if($('buttons_on')) $('buttons_on').hide();"
+        page << javascript_hide_if_exists("buttons_on")
         page << "dhxLayoutB.cells('a').expand();"
         page << "dhxLayoutB.cells('c').collapse();"
       else
-        page << "if ($('form_buttons_div')) $('form_buttons_div').hide();"
-        page << "$('pc_div_1').show()"
+        page << javascript_hide_if_exists("form_buttons_div")
+        page << javascript_show("pc_div_1")
         page << "dhxLayoutB.cells('a').expand();"
         page << "dhxLayoutB.cells('c').expand();"
       end
@@ -439,31 +439,31 @@ class ServiceController < ApplicationController
       # Rebuild the toolbars
       if cb_buttons && cb_xml
         page << javascript_for_toolbar_reload('custom_tb', cb_buttons, cb_xml)
-        page << "if($('custom_buttons_div')) $('custom_buttons_div').show();"
+        page << javscript_show_if_exists("custom_buttons_div")
       else
-        page << "if($('custom_buttons_div')) $('custom_buttons_div').hide();"
+        page << javascript_hide_if_exists("custom_buttons_div")
       end
 
       # Rebuild the toolbars
       if h_buttons && h_xml
         page << javascript_for_toolbar_reload('history_tb', h_buttons, h_xml)
-        page << "if($('history_buttons_div')) $('history_buttons_div').show();"
+        page << javascript_show_if_exists("history_buttons_div")
       else
-        page << "if($('history_buttons_div')) $('history_buttons_div').hide();"
+        page << javascript_hide_if_exists("history_buttons_div")
       end
 
       if v_buttons && v_xml
         page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml)
-        page << "if($('view_buttons_div')) $('view_buttons_div').show();"
+        page << javascript_show_if_exists("view_buttons_div")
       else
-        page << "if($('view_buttons_div')) $('view_buttons_div').hide();"
+        page << javascript_hide_if_exists("view_buttons_div")
       end
 
       if c_buttons && c_xml
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "if($('center_buttons_div')) $('center_buttons_div').show();"
+        page << javascript_show_if_exists("center_buttons_div")
       else
-        page << "if($('center_buttons_div')) $('center_buttons_div').hide();"
+        page << javascript_hide_if_exists("center_buttons_div")
       end
 
       if h_buttons || c_buttons || v_buttons

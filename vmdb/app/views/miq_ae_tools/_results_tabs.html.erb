@@ -19,5 +19,5 @@
 	//url to go to when tab is changed, and whether to check for abandon changes or not
 	miq_jquery_tabs_init({tabs_div: "results_tabs", show_buttons_tab: "object"})
   // on initial load don't show toolbar buttons
-  $("center_buttons_div").hide();
+  <%= javascript_hide("center_buttons_div") %>
 </script>

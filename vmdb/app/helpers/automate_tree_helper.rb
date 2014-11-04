@@ -7,8 +7,8 @@ module AutomateTreeHelper
         @changed = (@edit[:new] != @edit[:current])
         @changed = @edit[:new][:override_source] if params[:controller] == "miq_ae_class" &&
                                                     @edit[:new][:namespace].nil?
-        page << "$('ae_tree_select_div').hide();"
-        page << "$('blocker_div').hide();"
+        page << javascript_hide("ae_tree_select_div")
+        page << javascript_hide("blocker_div")
         page << javascript_for_miq_button_visibility(@changed)
         page << "miqSparkle(false);"
       end
@@ -32,8 +32,8 @@ module AutomateTreeHelper
         @edit[:ae_field_typ] = params[:typ]
         @changed = @edit[:new][edit_key] != @edit[:automate_tree_selected_path]
         self.x_active_tree = :automate_tree
-        page << "$('ae_tree_select_div').show();"
-        page << "$('blocker_div').show();"
+        page << javascript_show("ae_tree_select_div")
+        page << javascript_show("blocker_div")
         @edit[:ae_tree_select] = true
         if x_node(:automate_tree)
           page << "cfmeDynatree_activateNodeSilently('#{x_node(:automate_tree)}', '#{x_node}');"

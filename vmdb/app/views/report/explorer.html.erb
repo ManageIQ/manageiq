@@ -37,8 +37,8 @@
         cfmeDynatree_activateNode('roles_tree','<%= x_node %>');
         <% if x_node.split('-').length > 1 %>
           <%# if Role was selected when refreshing screen %>
-          $('menu_div1').hide();
-          $('menu_div3').show();
+          <%= javascript_hide("menu_div1") %>
+          <%= javascript_show("menu_div3") %>
         <% end %>
       <% end %>
     <% else %>

@@ -9,11 +9,11 @@ describe JsHelper do
 
   context '#set_element_visible' do
     it 'returns js to hide element' do
-      set_element_visible('foo',false).should eq("if ($('foo')) $('foo').hide();")
+      set_element_visible('foo', false).should eq("if ($j('\#foo').length) $j('\#foo').hide();")
     end
 
     it 'returns js to show element' do
-      set_element_visible('foo',true).should eq("if ($('foo')) $('foo').show();")
+      set_element_visible('foo', true).should eq("if ($j('\#foo').length) $j('\#foo').show();")
     end
   end
 
@@ -73,6 +73,30 @@ describe JsHelper do
   context '#javascript_del_class' do
     it 'returns js to remove a class on the element' do
       javascript_del_class('foo', 'bar').should eq("$j('\#foo').removeClass('bar');")
+    end
+  end
+
+  context '#javascript_show' do
+    it 'returns js to show an element' do
+      javascript_show('foo').should eq("$j('#foo').show();")
+    end
+  end
+
+  context '#javascript_hide' do
+    it 'returns js to hide an element' do
+      javascript_hide('foo').should eq("$j('#foo').hide();")
+    end
+  end
+
+  context '#javascript_show_if_exists' do
+    it 'returns js to check for the existence of an element and show the element if it exists' do
+      javascript_show_if_exists('foo').should eq("if ($j('#foo').length) $j('#foo').show();")
+    end
+  end
+
+  context '#javascript_hide_if_exists' do
+    it 'returns js to check for the existence of an element and hide the element if it exists' do
+      javascript_hide_if_exists('foo').should eq("if ($j('#foo').length) $j('#foo').hide();")
     end
   end
 end

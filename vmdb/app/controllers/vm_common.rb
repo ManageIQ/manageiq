@@ -460,9 +460,9 @@ module VmCommon
       if c_buttons && c_xml
         page << "dhxLayoutB.cells('a').expand();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "if($('center_buttons_div'))$('center_buttons_div').show();"
+        page << javascript_show_if_exists("center_buttons_div")
       else
-        page << "if($('center_buttons_div'))$('center_buttons_div').hide();"
+        page << javascript_hide_if_exists("center_buttons_div")
       end
 
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -1091,11 +1091,11 @@ module VmCommon
       render :update do |page|
         if @catinfo[cat]
           @catinfo[cat] = false
-          page << "$('cat_#{policy_escaped}_div').show();"
+          page << javascript_show("cat_#{policy_escaped}_div")
           page << "$('cat_#{policy_escaped}_icon').src='/images/tree/compress.png';"
         else
           @catinfo[cat] = true # Set squashed = true
-          page << "$('cat_#{policy_escaped}_div').hide();"
+          page << javascript_hide("cat_#{policy_escaped}_div")
           page << "$('cat_#{policy_escaped}_icon').src='/images/tree/expand.png';"
         end
       end

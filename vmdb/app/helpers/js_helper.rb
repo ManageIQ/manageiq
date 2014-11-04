@@ -1,9 +1,6 @@
 module JsHelper
-  # replacement for app/views/shared/ajax/_element_hide_show.js.erb
-  def set_element_visible(el, visible)
-    el     = j(el.to_s)
-    action = visible ? 'show' : 'hide'
-    "if ($('#{el}')) $('#{el}').#{action}();".html_safe
+  def set_element_visible(element, status)
+    status ? javascript_show_if_exists(j_str(element)) : javascript_hide_if_exists(j_str(element))
   end
 
   # replacement for app/views/shared/ajax/_spinner_control.js.erb
@@ -62,5 +59,21 @@ module JsHelper
 
   def javascript_del_class(element, cls)
     "$j('##{element}').removeClass('#{cls}');"
+  end
+
+  def javascript_show(element)
+    "$j('\##{element}').show();"
+  end
+
+  def javascript_hide(element)
+    "$j('\##{element}').hide();"
+  end
+
+  def javascript_show_if_exists(element)
+    "if ($j('\##{element}').length) #{javascript_show(element)}"
+  end
+
+  def javascript_hide_if_exists(element)
+    "if ($j('\##{element}').length) #{javascript_hide(element)}"
   end
 end

@@ -55,11 +55,11 @@ module OpsController::Settings::Common
       case @sb[:active_tab]
       when 'settings_server'
         if @test_email_button
-          page << "$('email_verify_button_off').hide();"
-          page << "$('email_verify_button_on').show();"
+          page << javscript_hide("email_verify_button_off")
+          page << javascript_show("email_verify_button_on")
         else
-          page << "$('email_verify_button_on').hide();"
-          page << "$('email_verify_button_off').show();"
+          page << javascript_hide("email_verify_button_on")
+          page << javscript_show("email_verify_button_off")
         end
 
         verb = @smtp_auth_none ? 'disable' : 'enable'
@@ -67,75 +67,74 @@ module OpsController::Settings::Common
         page << "$('smtp_password').#{verb}();"
 
         if @changed || @login_text_changed
-          page << "if ($('server_options_on')) $('server_options_on').hide();"
-          page << "if ($('server_options_off')) $('server_options_off').show();"
+          page << javascript_hide_if_exists("server_options_on")
+          page << javascript_show_if_exists("server_options_off")
         else
-          page << "if ($('server_options_off')) $('server_options_off').hide();"
-          page << "if ($('server_options_on')) $('server_options_on').show();"
+          page << javascript_hide_if_exists("server_options_off")
+          page << javascript_show_if_exists("server_options_on")
         end
       when 'settings_advanced'
         if @changed || @login_text_changed
-          page << "$('message_on').show();"
-          page << "$('message_off').hide();"
+          page << javascript_show("message_on")
+          page << javascript_hide("message_off")
         end
       when 'settings_authentication'
         if @authmode_changed
           if ["ldap","ldaps"].include?(@edit[:new][:authentication][:mode])
-            page << "$('ldap_div').show();"
-            page << "$('ldap_role_div').show();"
-            page << "$('user_proxies_div').show();" if @edit[:new][:authentication][:ldap_role]
+            page << javascript_show("ldap_div")
+            page << javascript_show("ldap_role_div")
+            page << javascript_show("user_proxies_div") if @edit[:new][:authentication][:ldap_role]
           else
-            page << "$('ldap_div').hide();"
-            page << "$('ldap_role_div').hide();"
-            page << "$('user_proxies_div').hide();"
+            page << javascript_hide("ldap_div")
+            page << javascript_hide("ldap_role_div")
+            page << javascript_hide("user_proxies_div")
           end
-          verb = @edit[:new][:authentication][:mode] == 'amazon' ? 'show' : 'hide'
-          page << "$('amazon_div').#{verb}();"
-          page << "$('amazon_role_div').#{verb}();"
+          verb = @edit[:new][:authentication][:mode] == 'amazon'
+          page << set_element_visible("amazon_div", verb)
+          page << set_element_visible("amazon_role_div", verb)
 
-          verb = @edit[:new][:authentication][:mode] == 'httpd' ? 'show' : 'hide'
-          page << "$('httpd_div').#{verb}();"
-          page << "$('httpd_role_div').#{verb}();"
+          verb = @edit[:new][:authentication][:mode] == 'httpd'
+          page << set_element_visible("httpd_div", verb)
+          page << set_element_visible("httpd_role_div", verb)
         end
         if @authusertype_changed
           if @edit[:new][:authentication][:user_type] == "dn-cn"
-            page << "$('upn-mail_prefix').hide();"
-            page << "$('dn-uid_prefix').hide();"
-            page << "$('dn-cn_prefix').show();"
+            page << javascript_hide("upn-mail_prefix")
+            page << javascript_hide("dn-uid_prefix")
+            page << javascript_show("dn-cn_prefix")
           elsif @edit[:new][:authentication][:user_type] == "dn-uid"
-            page << "$('upn-mail_prefix').hide();"
-            page << "$('dn-cn_prefix').hide();"
-            page << "$('dn-uid_prefix').show();"
+            page << javascript_hide("upn-mail_prefix")
+            page << javascript_hide("dn-cn_prefix")
+            page << javascript_show("dn-uid_prefix")
           else
-            page << "$('dn-cn_prefix').hide();"
-            page << "$('dn-uid_prefix').hide();"
-            page << "$('upn-mail_prefix').show();"
+            page << javascript_hide("dn-cn_prefix")
+            page << javascript_hide("dn-uid_prefix")
+            page << javascript_show("upn-mail_prefix")
           end
         end
         if @authldaprole_changed
-          verb = @edit[:new][:authentication][:ldap_role] ? 'show' : 'hide'
-          page << "$('user_proxies_div').#{verb}();"
-          page << "$('ldap_role_details_div').#{verb}();"
+          page << javascript_set_visible("user_proxies_div", @edit[:new][:authentication][:ldap_role])
+          page << javascript_set_visible("ldap_role_details_div", @edit[:new][:authentication][:ldap_role])
         end
         if @authldapport_reset
           page << "$('authentication_ldapport').value = '#{@edit[:new][:authentication][:ldapport]}'"
         end
         if @reset_verify_button
           if !@edit[:new][:authentication][:ldaphost].empty? && @edit[:new][:authentication][:ldapport] != nil
-            page << "$('verify_button_off').hide();"
-            page << "$('verify_button_on').show();"
+            page << javascript_hide("verify_button_off")
+            page << javascript_show("verify_button_on")
           else
-            page << "$('verify_button_on').hide();"
-            page << "$('verify_button_off').show();"
+            page << javascript_hide("verify_button_on")
+            page << javascript_show("verify_button_off")
           end
         end
         if @reset_amazon_verify_button
           if @edit[:new][:authentication][:amazon_key] != nil && @edit[:new][:authentication][:amazon_secret] != nil
-            page << "$('amazon_verify_button_off').hide();"
-            page << "$('amazon_verify_button_on').show();"
+            page << javascript_hide("amazon_verify_button_off")
+            page << javascript_show("amazon_verify_button_on")
           else
-            page << "$('amazon_verify_button_on').hide();"
-            page << "$('amazon_verify_button_off').show();"
+            page << javascript_hide("amazon_verify_button_on")
+            page << javascript_show("amazon_verify_button_off")
           end
         end
       when 'settings_workers'
@@ -153,11 +152,11 @@ module OpsController::Settings::Common
         @changed = (@edit[:new] != @edit[:current])
         # only disable validate button if passwords don't match
         if @edit[:new][:password] == @edit[:new][:verify]
-          page << "$('validate_button_off').hide();"
-          page << "$('validate_button_on').show();"
+          page << javascript_hide("validate_button_off")
+          page << javascript_show("validate_button_on")
         else
-          page << "$('validate_button_on').hide();"
-          page << "$('validate_button_off').show();"
+          page << javascript_hide("validate_button_on")
+          page << javascript_show("validate_button_off")
         end
         page.replace_html("settings_database", :partial=>"settings_database_tab") if @prev_selected_dbtype != @edit[:new][:name]
       end

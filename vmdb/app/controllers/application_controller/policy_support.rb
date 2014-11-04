@@ -141,11 +141,11 @@ module ApplicationController::PolicySupport
       render :update do |page|
         if @catinfo[cat]
           @catinfo[cat] = false
-          page << "$('cat_#{policy_escaped}_div').show();"
+          page << javascript_show("cat_#{policy_escaped}_div")
           page << "$('cat_#{policy_escaped}_icon').src='/images/tree/compress.png';"
         else
           @catinfo[cat] = true # Set squashed = true
-          page << "$('cat_#{policy_escaped}_div').hide();"
+          page << javascript_hide("cat_#{policy_escaped}_div")
           page << "$('cat_#{policy_escaped}_icon').src='/images/tree/expand.png';"
         end
       end

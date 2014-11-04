@@ -53,7 +53,7 @@ class MiqRequestController < ApplicationController
         render :update do |page|
           page.replace("request_div", :partial => "miq_request/request")
           page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-          page << "$('center_buttons_div').show();"
+          page << javascript_show("center_buttons_div")
         end
       elsif @display == "miq_provisions"
         show
@@ -324,7 +324,7 @@ class MiqRequestController < ApplicationController
       else
         page.replace_html("#{@options[:current_tab_key].to_s}_div", :partial=>"prov_host_dialog", :locals=>{:wf=>@options[:wf], :dialog=>@options[:current_tab_key]})
       end
-      #page << "$('hider_#{@options[:current_tab_key].to_s}_div').show();"
+      # page << javascript_show("hider_#{@options[:current_tab_key].to_s}_div")
       page << "miqSparkle(false);"
     end
   end
@@ -415,11 +415,11 @@ class MiqRequestController < ApplicationController
     render :update do |page|
       page.replace("prov_options_div", :partial=>"prov_options")
       if @view.table.data.length >= 1
-        page << "$('no_records_div').hide();"
-        page << "$('records_div').show();"
+        page << javascript_hide("no_records_div")
+        page << javascript_show("records_div")
       else
-        page << "$('no_records_div').show();"
-        page << "$('records_div').hide();"
+        page << javascript_show("no_records_div")
+        page << javascript_hide("records_div")
       end
       page << "xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
       page << "gtl_list_grid.clearAll(true);"               # Clear grid data, including headers

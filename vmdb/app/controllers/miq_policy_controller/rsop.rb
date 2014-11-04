@@ -41,9 +41,9 @@ module MiqPolicyController::Rsop
         page.replace_html("main_div", :partial=>"rsop_results")
         if c_buttons && c_xml
           page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-          page << "$('center_buttons_div').show();"
+          page << javascript_show("center_buttons_div")
         else
-          page << "$('center_buttons_div').hide();"
+          page << javascript_hide("center_buttons_div")
         end
         page << "miqSparkle(false);"
       end
@@ -94,11 +94,11 @@ module MiqPolicyController::Rsop
       session[:changed] = @sb[:rsop][:filter_value] && @sb[:rsop][:event_value] ? true : false
       page.replace("rsop_form_div", :partial=>"rsop_form")
       if session[:changed]
-        page << "$('form_buttons_off').hide();"
-        page << "$('form_buttons_on').show();"
+        page << javascript_hide("form_buttons_off")
+        page << javascript_show("form_buttons_on")
       else
-        page << "$('form_buttons_on').hide();"
-        page << "$('form_buttons_off').show();"
+        page << javascript_hide("form_buttons_on")
+        page << javascript_show("form_buttons_off")
       end
     end
   end
@@ -156,9 +156,9 @@ module MiqPolicyController::Rsop
       end
       if c_buttons && c_xml
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << "$('center_buttons_div').show();"
+        page << javascript_show("center_buttons_div")
       else
-        page << "$('center_buttons_div').hide();"
+        page << javascript_hide("center_buttons_div")
       end
     end
   end

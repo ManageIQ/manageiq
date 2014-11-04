@@ -211,14 +211,14 @@ function miqSparkle(status) {
 }
 
 function miqSparkleOn() {
-  if($('notification')) $('notification').show();
+  if($j('#notification').length) $j('#notification').show();
   miqSpinner(true);
 }
 
 function miqSparkleOff() {
   miqSpinner(false);
-  if($('notification')) $('notification').hide();
-  if($('rep_notification')) $('rep_notification').hide();
+  if($j('#notification').length) $j('#notification').hide();
+  if($j('#rep_notification').length) $j('#rep_notification').hide();
 }
 
 // dim/un-dim a div: pass divname and status (true to dim, false to un-dim)
@@ -259,36 +259,36 @@ function miqNewTagPrompt() {
 
 // Hide/show form buttons
 function miqButtons(h_or_s) {
-  if ($('flash_msg_div')) $('flash_msg_div').hide();
+  if ($j('#flash_msg_div').length) $j('#flash_msg_div').hide();
     if (h_or_s == "show") {
       // checking if more than one buttons exist on screen turn them all on/off
-      $$('#buttons_on').each(function(b) {
-        b.show();
+      $j('#buttons_on').each(function(b) {
+        $j(this).hide();
       })
-      $$('#buttons_off').each(function(b) {
-        b.hide();
+      $j('#buttons_off').each(function(b) {
+        $j(this).hide();
       })
     } else {
-      $$('#buttons_off').each(function(b) {
-        b.show();
+      $j('#buttons_off').each(function(b) {
+        $j(this).hide();
       })
-      $$('#buttons_on').each(function(b) {
-        b.hide();
+      $j('#buttons_on').each(function(b) {
+        $j(this).hide();
       })
 }   }
 
 // Hide/show form buttons
 function miqValidateButtons(h_or_s, prefix) {
   var prefix = (prefix == null) ? "" : prefix;
-  on_id = prefix + 'validate_buttons_on';
-  off_id = prefix + 'validate_buttons_off';
-  if ($('flash_msg_div')) $('flash_msg_div').hide();
+  on_id = "#" + prefix + 'validate_buttons_on';
+  off_id = "#" + prefix + 'validate_buttons_off';
+  if ($j('flash_msg_div')) $j('flash_msg_div').hide();
     if (h_or_s == "show") {
-      if($(on_id)) $(on_id).show();
-      if($(off_id)) $(off_id).hide();
+      if($j(on_id)) $j(on_id).show();
+      if($j(off_id)) $j(off_id).hide();
     } else {
-      if($(off_id)) $(off_id).show();
-      if($(on_id)) $(on_id).hide();
+      if($j(off_id)) $j(off_id).show();
+      if($j(on_id)) $j(on_id).hide();
 }   }
 
 // Convert Button image to hyperlink
@@ -400,26 +400,26 @@ function miqSetButtons(count, button_div) {
     }
   } else {  // Handle older li based buttons
     if (count == 0) {
-      $$('#' + button_div + ' li[id~=on_1]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=on_2]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=on_only_1]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=off_0]').each(function(b) {b.show()})
-      $$('#' + button_div + ' li[id~=off_1]').each(function(b) {b.show()})
-      $$('#' + button_div + ' li[id~=off_not_1]').each(function(b) {b.show()})
+      $j('#' + button_div + ' li[id~=on_1]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_2]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_only_1]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_0]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_1]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_not_1]').each(function(b) {$j(this).show()})
     } else if (count == 1) {
-      $$('#' + button_div + ' li[id~=off_0]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=on_2]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=off_not_1]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=off_1]').each(function(b) {b.show()})
-      $$('#' + button_div + ' li[id~=on_1]').each(function(b) {b.show()})
-      $$('#' + button_div + ' li[id~=on_only_1]').each(function(b) {b.show()})
+      $j('#' + button_div + ' li[id~=off_0]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_2]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_not_1]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_1]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=on_1]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=on_only_1]').each(function(b) {$j(this).show()})
     } else {
-      $$('#' + button_div + ' li[id~=off_0]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=off_1]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=on_only_1]').each(function(b) {b.hide()})
-      $$('#' + button_div + ' li[id~=on_1]').each(function(b) {b.show()})
-      $$('#' + button_div + ' li[id~=on_2]').each(function(b) {b.show()})
-      $$('#' + button_div + ' li[id~=off_not_1]').each(function(b) {b.show()})
+      $j('#' + button_div + ' li[id~=off_0]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_1]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_only_1]').each(function(b) {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_1]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=on_2]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_not_1]').each(function(b) {$j(this).show()})
 }}}
 
 // ChangeColor and DoNav are for making a full table row clickable and
@@ -623,7 +623,7 @@ function miqBuildChartMenu(col, row, value, category, series, id, message) {
 
 // Handle chart context menu clicks
 function miqChartMenuClick(itemId, itemValue) {
-  if ($('menu_div')) $('menu_div').hide();
+  if ($j('#menu_div').length) $j('#menu_div').hide();
 //  if (itemId != "cancel") miqAjax("?menu_click=" + itemId);
   if (itemId != "cancel") miqAsyncAjax("?menu_click=" + itemId);
 }
@@ -633,7 +633,7 @@ var miqAjaxTimers = 0;
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q, then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields){
   if (typeof serialize_fields == "unknown") serialize_fields = false;
-  if($('notification')) $('notification').show();
+  if($j('#notification').length) $j('#notification').show();
   miqAjaxTimers++;
   self.setTimeout("miqAjaxButtonSend('" + url + "', " + serialize_fields + ")",700);
 }
@@ -1114,9 +1114,9 @@ function miq_jquery_tabs_init(options){
     // show/hide toolbar div based on selected tab
     $j( "#" + options['tabs_div'] ).bind( "tabsselect", function(event, ui) {
       if (options['show_buttons_tab'] == ui.panel.id) {
-        $("center_buttons_div").show();
+        $j("#center_buttons_div").show();
       } else {
-        $("center_buttons_div").hide();
+        $j("#center_buttons_div").hide();
       }
     });
   }
@@ -1126,7 +1126,7 @@ function miq_jquery_tabs_init(options){
     $j("#" + options['tabs_div'] + " ul:first li")[0].hide();
   }
 
-  $(options['tabs_div']).show();
+  $j("#" + options['tabs_div']).show();
 }
 
 // OnSelect handler for change tab transaction for jquery ui tabs
