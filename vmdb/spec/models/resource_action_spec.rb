@@ -20,7 +20,7 @@ describe ResourceAction do
         :method_name => 'deliver',
         :args        => [q_args],
         :role        => 'automate',
-        :zone        => nil,
+        :zone        => zone_name,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :task_id     => "#{ra.class.name.underscore}_#{ra.id}",
         :msg_timeout => 3600
@@ -32,6 +32,8 @@ describe ResourceAction do
     end
 
     context 'with no target' do
+      let(:zone_name) { nil }
+
       it "validates queue entry" do
         target             = nil
         MiqQueue.should_receive(:put).with(q_options).once
