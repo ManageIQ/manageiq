@@ -1226,7 +1226,7 @@ describe Metric do
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
           end.flatten
 
-          selected.should == expected
+          selected.should match_array(expected)
         end
       end
     end
