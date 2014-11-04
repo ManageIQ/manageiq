@@ -72,12 +72,4 @@ class EvmDatabase
     query = "SELECT 1"
     Benchmark.realtime { 10.times { connection.select_value(query) } } / 10 * 1000
   end
-
-  # Legacy method for destroying database content:
-  # Instead use rake evm:db:destroy which drops and recreates the database.
-  def self.destroy
-    ActiveRecord::Base.connection.views.each  {|v| ActiveRecord::Schema.define { drop_view  v.to_sym, :force => true } rescue nil}
-    ActiveRecord::Base.connection.tables.each {|t| ActiveRecord::Schema.define { drop_table t.to_sym, :force => true } rescue nil}
-    ActiveRecord::Base.connection_handler.clear_all_connections!
-  end
 end
