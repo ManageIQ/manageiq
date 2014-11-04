@@ -622,6 +622,11 @@ module OpsController::Settings::Common
     @in_a_form = true
     nodes = x_node.downcase.split("-")
     cls = nodes.first.split('__').last == "z" ? Zone : MiqServer
+
+    params = self.params
+    new = @edit[:new]
+    auth = new[:authentication]
+
     # WTF? here we can have a Zone or a MiqServer, what about Region? --> rescue from exception
     @temp[:selected_server] = (cls.find(from_cid(nodes.last)) rescue nil)
 
@@ -630,28 +635,28 @@ module OpsController::Settings::Common
       for key in [:proxy_address, :use_proxy, :proxy_userid, :proxy_password, :proxy_verify,
                   :register_to, :server_url, :repo_name, :customer_org,
                   :customer_userid, :customer_password, :customer_verify]
-        @edit[:new][key] = params[key] if params[key]
+        new[key] = params[key] if params[key]
       end
       if params[:register_to] || params[:action] == "repo_default_name"
-        @edit[:new][:repo_name] = reset_repo_name_from_default
+        new[:repo_name] = reset_repo_name_from_default
       end
-      @changed = (@edit[:new] != @edit[:current])
+      @changed = (new != @edit[:current])
     when "settings_server"                                                # Server Settings tab
       if !params[:smtp_test_to].nil? && params[:smtp_test_to] != ""
         @sb[:new_to] = params[:smtp_test_to]
       elsif params[:smtp_test_to] && (params[:smtp_test_to] == "" || params[:smtp_test_to].nil?)
         @sb[:new_to] = nil
       end
-      @edit[:new][:smtp][:authentication] = params[:smtp_authentication] if params[:smtp_authentication]
-      @smtp_auth_none = (@edit[:new][:smtp][:authentication] == "none")
-      if !@edit[:new][:smtp][:host].blank? && !@edit[:new][:smtp][:port].blank? && !@edit[:new][:smtp][:domain].blank? &&
-          (!@edit[:new][:smtp][:user_name].blank? || @edit[:new][:smtp][:authentication] == "none") &&
-          !@edit[:new][:smtp][:from].blank? && !@sb[:new_to].blank?
+      new[:smtp][:authentication] = params[:smtp_authentication] if params[:smtp_authentication]
+      @smtp_auth_none = (new[:smtp][:authentication] == "none")
+      if !new[:smtp][:host].blank? && !new[:smtp][:port].blank? && !new[:smtp][:domain].blank? &&
+          (!new[:smtp][:user_name].blank? || new[:smtp][:authentication] == "none") &&
+          !new[:smtp][:from].blank? && !@sb[:new_to].blank?
         @test_email_button = true
       else
         @test_email_button = false
       end
-      @sb[:roles] = @edit[:new][:server][:role].split(",")
+      @sb[:roles] = new[:server][:role].split(",")
       params.each do |var, val|
         if var.starts_with?("server_roles_") && val.to_s == "1"
           @sb[:roles].push(var.split("server_roles_").last) unless @sb[:roles].include?(var.split("server_roles_").last)
@@ -659,41 +664,41 @@ module OpsController::Settings::Common
           @sb[:roles].delete(var.split("server_roles_").last)
         end
         server_role = @sb[:roles].sort.join(",")
-        @edit[:new][:server][:role] = server_role
-        session[:selected_roles] = @edit[:new][:server][:role].split(",") if !@edit[:new][:server].nil? && !@edit[:new][:server][:role].nil?
+        new[:server][:role] = server_role
+        session[:selected_roles] = new[:server][:role].split(",") if !new[:server].nil? && !new[:server][:role].nil?
       end
       @host_choices = session[:host_choices]
-      @edit[:new][:server][:remote_console_type] = params[:console_type] if params[:console_type]
+      new[:server][:remote_console_type] = params[:console_type] if params[:console_type]
 
-      @edit[:new][:ntp][:server] ||= Array.new
-      @edit[:new][:ntp][:server][0] = params[:ntp_server_1] if params[:ntp_server_1]
-      @edit[:new][:ntp][:server][1] = params[:ntp_server_2] if params[:ntp_server_2]
-      @edit[:new][:ntp][:server][2] = params[:ntp_server_3] if params[:ntp_server_3]
+      new[:ntp][:server] ||= Array.new
+      new[:ntp][:server][0] = params[:ntp_server_1] if params[:ntp_server_1]
+      new[:ntp][:server][1] = params[:ntp_server_2] if params[:ntp_server_2]
+      new[:ntp][:server][2] = params[:ntp_server_3] if params[:ntp_server_3]
 
-      @edit[:new][:server][:custom_support_url] = params[:custom_support_url].strip if params[:custom_support_url]
-      @edit[:new][:server][:custom_support_url_description] = params[:custom_support_url_description] if params[:custom_support_url_description]
+      new[:server][:custom_support_url] = params[:custom_support_url].strip if params[:custom_support_url]
+      new[:server][:custom_support_url_description] = params[:custom_support_url_description] if params[:custom_support_url_description]
     when "settings_authentication"                                        # Authentication/SmartProxy Affinity tab
       @sb[:form_vars][:session_timeout_mins] = params[:session_timeout_mins] if params[:session_timeout_mins]
       @sb[:form_vars][:session_timeout_hours] = params[:session_timeout_hours] if params[:session_timeout_hours]
-      @edit[:new][:session][:timeout] = @sb[:form_vars][:session_timeout_hours].to_i * 3600 + @sb[:form_vars][:session_timeout_mins].to_i * 60 if params[:session_timeout_hours] || params[:session_timeout_mins]
+      new[:session][:timeout] = @sb[:form_vars][:session_timeout_hours].to_i * 3600 + @sb[:form_vars][:session_timeout_mins].to_i * 60 if params[:session_timeout_hours] || params[:session_timeout_mins]
       @sb[:newrole] = (params[:ldap_role].to_s == "1") if params[:ldap_role]
       @sb[:new_amazon_role] = (params[:amazon_role].to_s == "1") if params[:amazon_role]
       @sb[:new_httpd_role] = (params[:httpd_role].to_s == "1") if params[:httpd_role]
-      if params[:authentication_user_type] && params[:authentication_user_type] != @edit[:new][:authentication][:user_type]
+      if params[:authentication_user_type] && params[:authentication_user_type] != auth[:user_type]
         @authusertype_changed = true
       end
-      @edit[:new][:authentication][:user_suffix] = params[:authentication_user_suffix] if params[:authentication_user_suffix]
-      if @sb[:newrole] != @edit[:new][:authentication][:ldap_role]
-        @edit[:new][:authentication][:ldap_role] = @sb[:newrole]
+      auth[:user_suffix] = params[:authentication_user_suffix] if params[:authentication_user_suffix]
+      if @sb[:newrole] != auth[:ldap_role]
+        auth[:ldap_role] = @sb[:newrole]
         @authldaprole_changed = true
       end
-      if @sb[:new_amazon_role] != @edit[:new][:authentication][:amazon_role]
-        @edit[:new][:authentication][:amazon_role] = @sb[:new_amazon_role]
+      if @sb[:new_amazon_role] != auth[:amazon_role]
+        auth[:amazon_role] = @sb[:new_amazon_role]
       end
-      if @sb[:new_httpd_role] != @edit[:new][:authentication][:httpd_role]
-        @edit[:new][:authentication][:httpd_role] = @sb[:new_httpd_role]
+      if @sb[:new_httpd_role] != auth[:httpd_role]
+        auth[:httpd_role] = @sb[:new_httpd_role]
       end
-      if params[:authentication_mode] && params[:authentication_mode] != @edit[:new][:authentication][:mode]
+      if params[:authentication_mode] && params[:authentication_mode] != auth[:mode]
         if params[:authentication_mode] == "ldap"
           params[:authentication_ldapport] = "389"
           @authldapport_reset = true
@@ -701,35 +706,35 @@ module OpsController::Settings::Common
           params[:authentication_ldapport] = "636"
           @authldapport_reset = true
         else
-          @sb[:newrole] = @edit[:new][:authentication][:ldap_role] = false    # setting it to false if database was selected to hide user_proxies box
+          @sb[:newrole] = auth[:ldap_role] = false    # setting it to false if database was selected to hide user_proxies box
         end
         @authmode_changed = true
       end
       if (params[:authentication_ldaphost_1] || params[:authentication_ldaphost_2] || params[:authentication_ldaphost_3]) ||
-          (params[:authentication_ldapport] != @edit[:new][:authentication][:ldapport])
+          (params[:authentication_ldapport] != auth[:ldapport])
         @reset_verify_button = true
       end
-      if (params[:authentication_amazon_key] != @edit[:new][:authentication][:amazon_key]) ||
-          (params[:authentication_amazon_secret] != @edit[:new][:authentication][:amazon_secret])
+      if (params[:authentication_amazon_key] != auth[:amazon_key]) ||
+          (params[:authentication_amazon_secret] != auth[:amazon_secret])
         @reset_amazon_verify_button = true
       end
 
-      @edit[:new][:authentication][:amazon_key] = params[:authentication_amazon_key] if params[:authentication_amazon_key]
-      @edit[:new][:authentication][:amazon_secret] = params[:authentication_amazon_secret] if params[:authentication_amazon_secret]
-      @edit[:new][:authentication][:ldaphost] ||= Array.new
-      @edit[:new][:authentication][:ldaphost][0] = params[:authentication_ldaphost_1] if params[:authentication_ldaphost_1]
-      @edit[:new][:authentication][:ldaphost][1] = params[:authentication_ldaphost_2] if params[:authentication_ldaphost_2]
-      @edit[:new][:authentication][:ldaphost][2] = params[:authentication_ldaphost_3] if params[:authentication_ldaphost_3]
+      auth[:amazon_key] = params[:authentication_amazon_key] if params[:authentication_amazon_key]
+      auth[:amazon_secret] = params[:authentication_amazon_secret] if params[:authentication_amazon_secret]
+      auth[:ldaphost] ||= Array.new
+      auth[:ldaphost][0] = params[:authentication_ldaphost_1] if params[:authentication_ldaphost_1]
+      auth[:ldaphost][1] = params[:authentication_ldaphost_2] if params[:authentication_ldaphost_2]
+      auth[:ldaphost][2] = params[:authentication_ldaphost_3] if params[:authentication_ldaphost_3]
 
-      @edit[:new][:authentication][:ldaphost].each_with_index do |ntp,i|
-        if @edit[:new][:authentication][:ldaphost][i].nil? || @edit[:new][:authentication][:ldaphost][i] == ""
-          @edit[:new][:authentication][:ldaphost].delete_at(i)
+      auth[:ldaphost].each_with_index do |ntp,i|
+        if auth[:ldaphost][i].nil? || auth[:ldaphost][i] == ""
+          auth[:ldaphost].delete_at(i)
         end
       end
 
-      @edit[:new][:authentication][:follow_referrals] = (params[:follow_referrals].to_s == "1") if params[:follow_referrals]
-      @edit[:new][:authentication][:get_direct_groups] = (params[:get_direct_groups].to_s == "1") if params[:get_direct_groups]
-      if params[:user_proxies] && params[:user_proxies][:mode] != @edit[:new][:authentication][:user_proxies][0][:mode]
+      auth[:follow_referrals] = (params[:follow_referrals].to_s == "1") if params[:follow_referrals]
+      auth[:get_direct_groups] = (params[:get_direct_groups].to_s == "1") if params[:get_direct_groups]
+      if params[:user_proxies] && params[:user_proxies][:mode] != auth[:user_proxies][0][:mode]
         if params[:user_proxies][:mode] == "ldap"
           params[:user_proxies][:ldapport] = "389"
           @user_proxies_port_reset = true
@@ -739,9 +744,9 @@ module OpsController::Settings::Common
         end
         @authmode_changed = true
       end
-      @edit[:new][:authentication][:sso_enabled] = (params[:sso_enabled].to_s == "1") if params[:sso_enabled]
+      auth[:sso_enabled] = (params[:sso_enabled].to_s == "1") if params[:sso_enabled]
     when "settings_workers"                                       # Workers Settings tab
-      wb  = @edit[:new].config[:workers][:worker_base]
+      wb  = new.config[:workers][:worker_base]
       qwb = wb[:queue_worker_base]
 
       w = qwb[:generic_worker]
@@ -794,27 +799,27 @@ module OpsController::Settings::Common
 
       set_workers_verify_status
     when "settings_database"                                        # database tab
-      @edit[:new][:name] = params[:production_dbtype]  if params[:production_dbtype]
-      @options = MiqDbConfig.get_db_type_options(@edit[:new][:name])
+      new[:name] = params[:production_dbtype]  if params[:production_dbtype]
+      @options = MiqDbConfig.get_db_type_options(new[:name])
       @options.each do |option|
-        @edit[:new][option[:name]] = params["production_#{option[:name]}".to_sym]  if params["production_#{option[:name]}".to_sym]
+        new[option[:name]] = params["production_#{option[:name]}".to_sym]  if params["production_#{option[:name]}".to_sym]
       end
-      @edit[:new][:verify] = params[:production_verify]  if params[:production_verify]
+      new[:verify] = params[:production_verify]  if params[:production_verify]
     when "settings_host"                                        # Smart Hosts tab
       if params[:host_autoscan]
-        @edit[:new][:host][:autoscan] = params[:host_autoscan] == "1" ? true : nil
+        new[:host][:autoscan] = params[:host_autoscan] == "1" ? true : nil
       end
       if params[:host_inherit_mgt_tags]
-        @edit[:new][:host][:inherit_mgt_tags] = params[:host_inherit_mgt_tags] == "1" ? true : nil
+        new[:host][:inherit_mgt_tags] = params[:host_inherit_mgt_tags] == "1" ? true : nil
       end
-      #@edit[:new][:host][:scan_frequency] = params[:host_scan_frequency][:days] .to_i * 3600 * 24 if params[:host_scan_frequency]
+      #new[:host][:scan_frequency] = params[:host_scan_frequency][:days] .to_i * 3600 * 24 if params[:host_scan_frequency]
     when "settings_custom_logos"                                            # Custom Logo tab
-      @edit[:new][:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
-      @edit[:new][:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
-      @edit[:new][:server][:use_custom_login_text] = (params[:server_uselogintext] == "1") if params[:server_uselogintext]
+      new[:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
+      new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
+      new[:server][:use_custom_login_text] = (params[:server_uselogintext] == "1") if params[:server_uselogintext]
       if params[:login_text]
-        @edit[:new][:server][:custom_login_text] = params[:login_text]
-        @login_text_changed = @edit[:new][:server][:custom_login_text] != @edit[:current].config[:server][:custom_login_text].to_s
+        new[:server][:custom_login_text] = params[:login_text]
+        @login_text_changed = new[:server][:custom_login_text] != @edit[:current].config[:server][:custom_login_text].to_s
       end
     when "settings_maintenance"                                       # Maintenance tab
     when "settings_smartproxy"                                        # SmartProxy Defaults tab
@@ -823,33 +828,34 @@ module OpsController::Settings::Common
       @sb[:form_vars][:agent_heartbeat_frequency_secs] = params[:agent_heartbeat_frequency_secs] if params[:agent_heartbeat_frequency_secs]
       @sb[:form_vars][:agent_log_wraptime_days] = params[:agent_log_wraptime_days] if params[:agent_log_wraptime_days]
       @sb[:form_vars][:agent_log_wraptime_hours] = params[:agent_log_wraptime_hours] if params[:agent_log_wraptime_hours]
-      @edit[:new][:agent][:heartbeat_frequency] = @sb[:form_vars][:agent_heartbeat_frequency_mins].to_i * 60 + @sb[:form_vars][:agent_heartbeat_frequency_secs].to_i if params[:agent_heartbeat_frequency_mins] || params[:agent_heartbeat_frequency_secs]
-      @edit[:new][:agent][:log][:level] = params[:agent_log_level] if params[:agent_log_level]
-      @edit[:new][:agent][:log][:wrap_size] = params[:agent_log_wrapsize] if params[:agent_log_wrapsize]
-      @edit[:new][:agent][:log][:wrap_time] = @sb[:form_vars][:agent_log_wraptime_days].to_i * 3600 * 24 + @sb[:form_vars][:agent_log_wraptime_hours].to_i * 3600 if params[:agent_log_wraptime_days] || params[:agent_log_wraptime_hours]
-      @edit[:new][:agent][:readonly] = (params[:agent_readonly] == "1") if params[:agent_readonly]
+      new[:agent][:heartbeat_frequency] = @sb[:form_vars][:agent_heartbeat_frequency_mins].to_i * 60 + @sb[:form_vars][:agent_heartbeat_frequency_secs].to_i if params[:agent_heartbeat_frequency_mins] || params[:agent_heartbeat_frequency_secs]
+      new[:agent][:log][:level] = params[:agent_log_level] if params[:agent_log_level]
+      new[:agent][:log][:wrap_size] = params[:agent_log_wrapsize] if params[:agent_log_wrapsize]
+      new[:agent][:log][:wrap_time] = @sb[:form_vars][:agent_log_wraptime_days].to_i * 3600 * 24 + @sb[:form_vars][:agent_log_wraptime_hours].to_i * 3600 if params[:agent_log_wraptime_days] || params[:agent_log_wraptime_hours]
+      new[:agent][:readonly] = (params[:agent_readonly] == "1") if params[:agent_readonly]
     when "settings_advanced"                                        # Advanced tab
       if params[:file_name] && params[:file_name] != session[:config_file_name] # If new file name was selected
         session[:config_file_name] = params[:file_name]
         settings_set_form_vars
       elsif params[:file_data]                        # If save sent in the file data
-        @edit[:new][:file_data] = params[:file_data]  # Put into @edit[:new] hash
+        new[:file_data] = params[:file_data]          # Put into @edit[:new] hash
       else
-        @edit[:new][:file_data] += "..."              # Update the new data to simulate a change
+        new[:file_data] += "..."                      # Update the new data to simulate a change
       end
     end
 
     # This section scoops up the config second level keys changed in the UI
+
     if !['settings_rhn_edit',"settings_database","settings_maintenance","settings_advanced","settings_smartproxy_affinity"].include?(@sb[:active_tab])
       @edit[:current].config.each_key do |category|
         @edit[:current].config[category].symbolize_keys.each_key do |key|
           if category == :smtp && key == :enable_starttls_auto  # Checkbox is handled differently
-            @edit[:new][category][key] = params["#{category}_#{key}"] == "1" if params.has_key?("#{category}_#{key}")
+            new[category][key] = params["#{category}_#{key}"] == "1" if params.has_key?("#{category}_#{key}")
           else
-            @edit[:new][category][key] = params["#{category}_#{key}"] if params["#{category}_#{key}"]
+            new[category][key] = params["#{category}_#{key}"] if params["#{category}_#{key}"]
           end
         end
-        @edit[:new][:authentication][:user_proxies][0] = copy_hash(params[:user_proxies]) if params[:user_proxies] && category == :authentication
+        auth[:user_proxies][0] = copy_hash(params[:user_proxies]) if params[:user_proxies] && category == :authentication
       end
     end
   end
