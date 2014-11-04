@@ -48,6 +48,8 @@ describe MiqAeField do
 
     it "should enforce necessary parameters upon create" do
       lambda { @c1.ae_fields.new.save! }.should raise_error(ActiveRecord::RecordInvalid)
+      # remove the invalid unsaved record in the association by clearing it
+      @c1.ae_fields.clear
       f1 = @c1.ae_fields.build(:name => "TEST")
       f1.should_not be_nil
       f1.save!.should be_true
@@ -100,8 +102,8 @@ describe MiqAeField do
       fname1 = "TEST_UNIQ"
       fname2 = "Test_Uniq"
       f1 = @c1.ae_fields.build(:name => fname1)
-      f2 = @c1.ae_fields.build(:name => fname2)
       f1.save!.should be_true
+      f2 = @c1.ae_fields.build(:name => fname2)
       lambda { f2.save! }.should raise_error(ActiveRecord::RecordInvalid)
 
       f2.destroy
@@ -139,7 +141,7 @@ describe MiqAeField do
       }
       @c1.reload.ae_fields.length.should == MiqAeField.available_datatypes.length
 
-      @c1.ae_fields.each { |f| f.destroy }
+      @c1.ae_fields.destroy_all
       @c1.reload.ae_fields.length.should == 0
 
       ["foo", "bar"].each { |datatype|
@@ -151,7 +153,7 @@ describe MiqAeField do
     it "should not change boolean value for substitute field when updating existing AE field record" do
       field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false)
       field1.substitute.should be_false
-      field2 = MiqAeField.find_by_name("test_field")
+      field2 = MiqAeField.find_by_name_and_class_id("test_field", @c1.id)
       field2.save.should be_true
       field2.substitute.should be_false
     end
