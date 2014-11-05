@@ -3,32 +3,32 @@
 #form_div
   = render :partial => "layouts/flash_msg"
   - if session[:host_items].nil?
-    %p.legend Basic Information
+    %p.legend=_('Basic Information')
     %table.style1
       %tr
-        %td.key Name
+        %td.key=_('Name')
         %td.wide
-          = text_field_tag("name", 
-            @edit[:new][:name], 
+          = text_field_tag("name",
+            @edit[:new][:name],
             :maxlength => MAX_NAME_LEN,
             "data-miq_focus" => true,
             "data-miq_observe" => observe)
       %tr
-        %td.key Host Name
+        %td.key=_('Host Name')
         %td.wide
           = text_field_tag("hostname",
             @edit[:new][:hostname],
             :maxlength => MAX_HOSTNAME_LEN,
             "data-miq_observe" => observe)
       %tr
-        %td.key IP Address
+        %td.key=_('IP Address')
         %td.wide
           = text_field_tag("ipaddress",
             @edit[:new][:ipaddress],
             :maxlength => 15,
             "data-miq_observe" => observe)
       %tr
-        %td.key Custom Identifier
+        %td.key=_('Custom Identifier')
         %td.wide
           = text_field_tag("custom_1",
             @edit[:new][:custom_1],
@@ -36,56 +36,58 @@
             "data-miq_observe" => observe)
       - if @host.operating_system.nil? || @host.operating_system.product_name.nil?
         %tr
-          %td.key Host platform
+          %td.key=_('Host platform')
           %td.wide
             = select_tag("user_assigned_os",
-              options_for_select([["<not specified>", nil]] + Host.host_platforms.to_a,
+              options_for_select([["<#{_('not specified')}>", nil]] + Host.host_platforms.to_a,
               @edit[:new][:user_assigned_os]),
               "data-miq_observe" => { :url => url }.to_json)
       %tr
-        %td.key IPMI IP Address
-        %td.wide 
+        %td.key=_('IPMI IP Address')
+        %td.wide
           = text_field_tag("ipmi_address",
             @edit[:new][:ipmi_address],
             :maxlength => 15,
             "data-miq_observe" => observe)
       %tr
-        %td.key MAC Address
+        %td.key=_('MAC Address')
         %td.wide
           = text_field_tag("mac_address",
             @edit[:new][:mac_address],
             :maxlength => MAX_NAME_LEN,
             "data-miq_observe" => observe)
     %hr
-    
+
   = render(:partial => "/layouts/multi_auth_credentials", :locals => {:record => @host})
   - if ["new", "create"].include?(controller.action_name)
     %table{:width => '100%'}
       %tr
         %td{:align => 'right'}
           #buttons_on
-            = button_tag('Add',
+            = button_tag(_('Add'),
               :class => 'btn btn-primary',
-              :alt => "Add this Host",
-              :title => "Add this Host",
+              :alt => (t = _("Add this Host")),
+              :title => t,
               :onclick => "miqAjaxButton('#{url_for(:action => "create",
                 :id     => "new",
                 :button => "add")}');")
-            = button_tag('Cancel',
+            = button_tag((t = _('Cancel')),
               :class => 'btn btn-default',
-              :alt => 'Cancel',
-              :title => 'Cancel',
+              :alt => t,
+              :title => t,
               :onclick => "miqAjaxButton('#{url_for(:action => 'create',
                 :id => 'new',
                 :button => 'cancel')}');")
   - else
     = render(:partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @host.id, :ajax_buttons => true})
-  
+
   - unless session[:host_items].nil?
-    %p.legend 
+    %p.legend
       = pluralize(session[:host_items].length,Dictionary::gettext(Host.to_s, :type => :model, :notfound => :titleize))
-      |  Selected
-    | Click on a Host to fetch its settings
+      |
+      =_('Selected')
+    |
+    =_('Click on a Host to fetch its settings')
     %table.admittable{:height => '75'}
       %tbody
         %tr
