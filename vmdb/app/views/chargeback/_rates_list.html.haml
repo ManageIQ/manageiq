@@ -1,12 +1,12 @@
 .ops_details
   = render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
   %fieldset
-    %div{:title => "View Compute Rates", :onmouseover => "this.style.cursor='pointer';",
+    %div{:title => _("View Compute Rates"), :onmouseover => "this.style.cursor='pointer';",
       :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-Compute');"}
       %img{:src => "/images/icons/new/hardware-processor.png"}
       Compute
   %fieldset
-    %div{:title => "View Storage Rates", :onmouseover => "this.style.cursor='pointer';",
+    %div{:title => _("View Storage Rates"), :onmouseover => "this.style.cursor='pointer';",
       :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-Storage');"}
       %img{:src => "/images/icons/new/hardware-disk.png"}
       Storage

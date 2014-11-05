@@ -3,22 +3,22 @@
   = render :partial => "cb_rate_edit"
 - else
   %fieldset
-    %p.legend Basic Info
+    %p.legend=_('Basic Info')
     %table.style1
       %tr
-        %td.key Description
+        %td.key=_('Description')
         %td
           = h(@record.description)
   %fieldset
-    %p.legend Rate Details
+    %p.legend=_('Rate Details')
     %table.style3
       %thead
         %tr
-          %th Group
-          %th Description
-          %th Rate
-          %th Per Time
-          %th Per Unit
+          %th=_('Group')
+          %th=_('Description')
+          %th=_('Rate')
+          %th=_('Per Time')
+          %th=_('Per Unit')
       %tbody
         - @sb[:selected_rate_details].each do |r|
           - @cur_group = r[:group] if @cur_group.nil?
