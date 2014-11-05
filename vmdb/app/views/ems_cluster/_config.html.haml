@@ -9,7 +9,7 @@
               %th{:colspan => "2", :align => "left"} Info
           - if @cluster_config.nil? || @cluster_config.empty?
             %tr
-              %td Not Available
+              %td=_('Not Available')
           - else
             - @cluster_config.each_slice(2) do |item1, item2|
               %tr{:class => cycle('row0', 'row1')}
