@@ -16,9 +16,6 @@
 - :title: Number of VMs by Type
   :type: None
 
-- :title: Non-VM Files Space
-  :type: None
-
 - :title: Used Disk Space
   :type: StackedArea
   :columns:
