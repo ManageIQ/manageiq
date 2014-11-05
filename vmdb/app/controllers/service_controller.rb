@@ -439,7 +439,7 @@ class ServiceController < ApplicationController
       # Rebuild the toolbars
       if cb_buttons && cb_xml
         page << javascript_for_toolbar_reload('custom_tb', cb_buttons, cb_xml)
-        page << javscript_show_if_exists("custom_buttons_div")
+        page << javascript_show_if_exists("custom_buttons_div")
       else
         page << javascript_hide_if_exists("custom_buttons_div")
       end

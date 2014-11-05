@@ -55,11 +55,11 @@ module OpsController::Settings::Common
       case @sb[:active_tab]
       when 'settings_server'
         if @test_email_button
-          page << javscript_hide("email_verify_button_off")
+          page << javascript_hide("email_verify_button_off")
           page << javascript_show("email_verify_button_on")
         else
           page << javascript_hide("email_verify_button_on")
-          page << javscript_show("email_verify_button_off")
+          page << javascript_show("email_verify_button_off")
         end
 
         verb = @smtp_auth_none ? 'disable' : 'enable'
