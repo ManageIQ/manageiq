@@ -1,4 +1,4 @@
-- content_for :trees do 
+- content_for :trees do
   = render(:partial=>"layouts/x_adv_searchbox", :locals=>{:nameonly=>(x_active_tree == :vandt_tree)})
   = render(:partial=>'layouts/quick_search')
 
@@ -10,16 +10,16 @@
   = render :partial => "layouts/custom_left_cell"
 
 
-- content_for :accords do 
+- content_for :accords do
   - # Create the explorer dhtmlx layout/accordion JS objects
   = render(:partial => "layouts/dhtmlxlayout_explorer",
     :locals=>{:accords=>@accords,
       :active_accord=>@sb[:active_accord],
-      :accord_select_function=>"miqAccordVmInfraSelect"}) 
+      :accord_select_function=>"miqAccordVmInfraSelect"})
 
 - # These are the initial divs that will go inside center_cell_div
-- if @record 
-  - # Showing a specific VM or Template record 
+- if @record
+  - # Showing a specific VM or Template record
   #main_div.main_div
     - if @showtype == "performance"
       = render(:partial => "layouts/performance")

@@ -62,7 +62,7 @@
 
         if (cs == CS_CONNECTED) {
           hideSpinner();
-          $("#hint").text("Hint: Press Ctrl-Alt to release the cursor from the guest");
+          $("#hint").text("#{_('Hint: Press Ctrl-Alt to release the cursor from the guest')}");
           $("#hint").fadeTo("fast", 0.5);
           $("#doc").fadeTo("fast", 0.5);
         } else {
@@ -71,7 +71,7 @@
             if (reason != null && reason.length > 0) {
               alert(reason);
             } else {
-              alert("The VM has been suspended, powered off or the connection to the server has been lost. \nThis console window will now close.");
+              alert("#{_('The VM has been suspended, powered off or the connection to the server has been lost. \nThis console window will now close.')}");
             }
             window.opener = self;
             window.close();
@@ -87,7 +87,7 @@
 
         //XXX bug: IE has integer (enum), FF has string as "state" parameter
         if (state == GS_GRABBED || state == "grabbed") {
-          hint.text("Hint: Press Ctrl-Alt to release the cursor from the guest");
+          hint.text("#{_('Hint: Press Ctrl-Alt to release the cursor from the guest')}");
           hint.fadeTo("fast", 1.0);
           doc.fadeTo("fast", 1.0);
         } else if (state == GS_UNGRABBED_SOFT || state == GS_UNGRABBED_HARD ||
@@ -402,7 +402,7 @@
           alert(error);
           $("#hint").text("");
         } else {
-          $("#hint").text("Remote Console plugin is not properly installed.");
+          $("#hint").text("#{_('Remote Console plugin is not properly installed.')}");
         }
       }
       });
@@ -423,11 +423,11 @@
       #buttonBar
         #fullScreenButton.buttonT
           .buttonR &#160;
-          .buttonC Full&#160;Screen
+          .buttonC=_('Full&#160;Screen')
           .buttonL &#160;
         #cadButton.buttonT
           .buttonR &#160;
-          .buttonC Send&#160;Ctrl-Alt-Delete
+          .buttonC=_('Send&#160;Ctrl-Alt-Delete')
           .buttonL &#160;
     #vmName
       %span#vmTitle
@@ -435,10 +435,12 @@
     #vmNameTooltip
       / filled programmatically
     #doc
-      Use CTRL-ALT-INS for CTRL-ALT-DEL
+      =_('Use CTRL-ALT-INS for CTRL-ALT-DEL')
       %br
-      Use CTRL-ALT-Enter to toggle full screen
-    #hint The Remote Console is connecting ...
+      =_('Use CTRL-ALT-Enter to toggle full screen')
+    #hint
+      =_('The Remote Console is connecting')
+      \...
     #container
       / [if IE]
         %object#vmrc{:classid => "CLSID:4AEA1010-0A0C-405E-9B74-767FC8A998CB"}

@@ -8,7 +8,7 @@
           %table.style3
             %thead
               %tr
-                %th{:colspan => "2", :align => "left"} Basic Information
+                %th{:colspan => "2", :align => "left"}=_('Basic Information')
             - @osinfo.each do |item|
               %tr.no-hover{:class => cycle('row1', 'row1')}
                 %td.label
@@ -25,11 +25,11 @@
           %table.style3
             %thead
               %tr
-                %th{:colspan => "2", :align => "left"} Account Policies
+                %th{:colspan => "2", :align => "left"}=_('Account Policies')
             - if @account_policy.nil? || @account_policy.empty?
               %tr
                 %td{:width => "495"}
-                  %strong Not Available
+                  %strong=_('Not Available')
             - else
               - @account_policy.each_slice(2) do |items|
                 %tr.no-hover{:class => cycle('row0', 'row1')}
@@ -45,7 +45,7 @@
           %table.style3
             %thead
               %tr
-                %th{:colspan => "2", :align => "left"} Basic Information
+                %th{:colspan => "2", :align => "left"}=_('Basic Information')
             - @vmminfo.each do |item|
               %tr.no-hover{:class => cycle('row0', 'row1')}
                 %td.label
@@ -55,7 +55,7 @@
           %table.style3
             %thead
               %tr
-                %th{:colspan => "2", :align => "left"} Devices
+                %th{:colspan => "2", :align => "left"}=_('Devices')
             - unless @devices.empty?
               - @devices.each do |item|
                 %tr.no-hover{:class => cycle('row0', 'row1')}
@@ -66,7 +66,7 @@
                     = h(item[:description])
                 - unless item[:mode].nil?
                   %tr.no-hover{:class => cycle('row0', 'row1')}
-                    %td.label Network Type
+                    %td.label=_('Network Type')
                     %td
                       = h(item[:mode])
   - when "snapshot_info"
@@ -91,17 +91,17 @@
   - when "networks"
     - if @vmminfo
       .modbox{:style => "margin: 0px 0px 20px 30px"}
-        %h2.modtitle Network Adapters
+        %h2.modtitle=_('Network Adapters')
         %table.style3
           - if @record.hardware.networks.blank?
             %tr.no-hover{:class => cycle('row0', 'row1')}
               %td
                 %strong
-                  = "#{@record.name} has no network adapters"
+                  =_("%s has no network adapters") % @record.name
           - else
             %thead
               %tr
-                - ["IPAddress", "Description", "DHCP Server", "DHCP Enabled", "Default Gateway", "Subnet Mask", "DNS Server"].each do |title|
+                - [_("IPAddress"), _("Description"), _("DHCP Server"), _("DHCP Enabled"), _("Default Gateway"), _("Subnet Mask"), _("DNS Server")].each do |title|
                   %th
                     = h(title)
             %tbody
@@ -115,17 +115,17 @@
     %table.style3
       %thead
         %tr
-          %th{:colspan => "2"} Account Policies
-      - {:cpu_limit => "CPU Limit",
-          :cpu_reserve => "CPU Reserve",
-          :cpu_reserve_expand => "CPU Reserve Expand",
-          :cpu_shares => "CPU Shares",
-          :cpu_shares_level => "CPU Shares Level",
-          :memory_limit => "Memory Limit",
-          :memory_reserve => "Memory Reserve",
-          :memory_reserve_expand => "Memory Reserve Expand",
-          :memory_shares => "Memory Shares",
-          :memory_shares_level => "Memory Shares Level"}.each do |sym, label|
+          %th{:colspan => "2"}=_('Account Policies')
+      - {:cpu_limit => _("CPU Limit"),
+          :cpu_reserve => _("CPU Reserve"),
+          :cpu_reserve_expand => _("CPU Reserve Expand"),
+          :cpu_shares => _("CPU Shares"),
+          :cpu_shares_level => _("CPU Shares Level"),
+          :memory_limit => _("Memory Limit"),
+          :memory_reserve => _("Memory Reserve"),
+          :memory_reserve_expand => _("Memory Reserve Expand"),
+          :memory_shares => _("Memory Shares"),
+          :memory_shares_level => _("Memory Shares Level")}.each do |sym, label|
         %tr.no-hover{:class => cycle('row0', 'row1')}
           %td.label
             = label

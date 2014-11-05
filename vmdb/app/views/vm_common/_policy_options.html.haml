@@ -2,10 +2,10 @@
 - url2 = {:url => url_for(:action => 'policy_show_options', :id=>@record.id)}.to_json
 #policy_options_div
   %fieldset
-    %p.legend Options
+    %p.legend=_('Options')
     %table.style1
       %tr
-        %td.key Show out of scope items:
+        %td.key=_('Show out of scope items:')
         %td
           = check_box_tag("out_of_scope",
             value   = "1",
@@ -14,7 +14,7 @@
             "data-miq_sparkle_off" => true,
             "data-miq_observe_checkbox" => url)
       %tr
-        %td.key Show policies:
+        %td.key=_('Show policies:')
         %td
           = check_box_tag("passed",
             value   = "1",
