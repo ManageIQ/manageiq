@@ -20,7 +20,7 @@
 
 		<div id="flash_text_div<%= div_num %>"
 			<% if click_remove == true %>
-				onclick="<%= javascript_hide("flash_msg_div#{div_num}"); %>" title="Click to remove messages"
+				onclick="<%= javascript_hide("flash_msg_div#{div_num}") %>" title="Click to remove messages"
 			<% end %>
 		>
 			<% @flash_array.each do |fl| %>
