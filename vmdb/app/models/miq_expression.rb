@@ -191,25 +191,25 @@ class MiqExpression
     guid
   }
 
-  TAG_CLASSES = %w(
-    EmsCloud ext_management_system
-    EmsCluster ems_cluster
-    EmsInfra ext_management_system
-    Host host
-    MiqGroup miq_group
-    MiqTemplate miq_template
-    Repository repository
-    ResourcePool resource_pool
-    Service service
-    Storage storage
-    TemplateCloud miq_template
-    TemplateInfra miq_template
-    User user
-    Vm vm
-    VmOrTemplate vm
-    VmCloud vm
-    VmInfra vm
-  )
+  TAG_CLASSES = {
+    'EmsCloud'      => 'ext_management_system',
+    'EmsCluster'    => 'ems_cluster',
+    'EmsInfra'      => 'ext_management_system',
+    'Host'          => 'host',
+    'MiqGroup'      => 'miq_group',
+    'MiqTemplate'   => 'miq_template',
+    'Repository'    => 'repository',
+    'ResourcePool'  => 'resource_pool',
+    'Service'       => 'service',
+    'Storage'       => 'storage',
+    'TemplateCloud' => 'miq_template',
+    'TemplateInfra' => 'miq_template',
+    'User'          => 'user',
+    'Vm'            => 'vm',
+    'VmOrTemplate'  => 'vm',
+    'VmCloud'       => 'vm',
+    'VmInfra'       => 'vm',
+  }
   EXCLUDE_FROM_RELATS = {
     "EmsCloud" => ["hosts", "ems_clusters", "resource_pools"]
   }
@@ -1362,12 +1362,11 @@ class MiqExpression
     if opts[:typ] == "tag"
       tags_for_model = self.tag_details(model, model, opts)
       result = []
-
-      TAG_CLASSES.each_slice(2) {|tc, name|
+      TAG_CLASSES.invert.each do |name, tc|
         next if tc.constantize.base_class == model.constantize.base_class
         path = [model, name].join(".")
         result.concat(self.tag_details(tc, path, opts))
-      }
+      end
       @classifications = nil
       return tags_for_model.concat(result.sort!{|a,b|a.to_s<=>b.to_s})
     end
