@@ -4,8 +4,8 @@
   = link_to("",
     {:controller => "dashboard", :action => "widget_close", :widget => widget.id},
     :id => "w_#{widget.id}_close",
-    :title => "Remove from Dashboard",
+    :title => _("Remove from Dashboard"),
     :remote => true,
-    :confirm => "Are you sure you want to remove '#{widget.title}' from the Dashboard?",
+    :confirm => _("Are you sure you want to remove '%s' from the Dashboard?") % widget.title,
     'data-miq_sparkle_on' => true,
     :class => "delbox")
