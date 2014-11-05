@@ -20,7 +20,9 @@ module PerEmsWorkerMixin
     end
 
     def all_valid_ems_in_zone
-      self.all_ems_in_zone.select { |e| e.authentication_valid? }
+      self.all_ems_in_zone.select { |e| e.ems_connections.first.authentication_valid? }  # come back to - cover all or any valid connections...??
+      # self.all_ems_in_zone.select { |e| e.ems_connections.find_by_provider_component("events").authentication_valid? }
+
     end
 
     def desired_queue_names

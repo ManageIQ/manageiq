@@ -188,13 +188,13 @@ module EmsCommon
       verify_ems = @model.model_from_emstype(@edit[:new][:emstype]).new
       set_record_vars(verify_ems, :validate)
       @in_a_form = true
-      begin
-        verify_ems.verify_credentials(params[:type])
-      rescue StandardError=>bang
-        add_flash("#{bang}", :error)
-      else
-        add_flash(I18n.t("flash.credentials.validated"))
-      end
+      # begin
+      #   verify_ems.verify_credentials(params[:type])
+      # rescue StandardError=>bang
+      #   add_flash("#{bang}", :error)
+      # else
+      #   add_flash(I18n.t("flash.credentials.validated"))
+      # end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
@@ -309,16 +309,16 @@ module EmsCommon
       end
     when "validate"
       verify_ems = find_by_id_filtered(@model, params[:id])
-            set_record_vars(verify_ems, :validate)
-            @in_a_form = true
-            @changed = session[:changed]
-            begin
-              verify_ems.verify_credentials(params[:type])
-            rescue StandardError=>bang
-              add_flash("#{bang}", :error)
-            else
-              add_flash(I18n.t("flash.credentials.validated"))
-            end
+      set_record_vars(verify_ems, :validate)
+      @in_a_form = true
+      @changed = session[:changed]
+      # begin
+      #   verify_ems.verify_credentials(params[:type])
+      # rescue StandardError=>bang
+      #   add_flash("#{bang}", :error)
+      # else
+      #   add_flash(I18n.t("flash.credentials.validated"))
+      # end
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
@@ -657,9 +657,9 @@ module EmsCommon
   def set_record_vars(ems, mode = nil)
     ems.name = @edit[:new][:name]
     ems.provider_region = @edit[:new][:provider_region]
-    ems.hostname = @edit[:new][:hostname]
+    ems.hostname = @edit[:new][:hostname]  #move hostname into ems_connection
     ems.ipaddress = @edit[:new][:ipaddress]
-    ems.port = @edit[:new][:port] if ["openstack", "rhevm"].include?(ems.emstype)
+    # ems.port = @edit[:new][:port] if ["openstack", "rhevm"].include?(ems.emstype)
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
     if ems.is_a?(EmsVmware)
@@ -675,10 +675,44 @@ module EmsCommon
     if ems.emstype == "openstack" && !@edit[:new][:amqp_userid].blank?
       creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
     end
-    ems.update_authentication(creds, {:save=>(mode != :validate)})
+
+    connection_details = Hash.new
+    connection_details[:ipaddress]            = @edit[:new][:ipaddress]
+    connection_details[:port]                 = @edit[:new][:port] if ["openstack", "rhevm"].include?(ems.emstype)
+    connection_details[:provider_component]   = "refresh"  # this will be a variable that comes from the refresh UI control
+
+    ems_conn = ems.create_connection_record(connection_details, {:save=>(mode != :validate)})
+    ems_conn.update_authentication(creds, {:save=>(mode != :validate)})
+
+    # connection_details1 = Hash.new
+    # connection_details1[:ipaddress]            = @edit[:new][:ipaddress]
+    # connection_details1[:port]                 = @edit[:new][:port] if ["openstack", "rhevm"].include?(ems.emstype)
+    # connection_details1[:provider_component]   = "events"
+
+    # ems_conn1 = ems.create_connection_record(connection_details1, {:save=>(mode != :validate)})
+    # ems_conn1.update_authentication(creds, {:save=>(mode != :validate)})
+
+
+    if mode == :validate
+      verify_ems_connection_credentials(ems, ems_conn)
+    end
+  end
+
+  def verify_ems_connection_credentials(ems, ems_conn)
+    # $fog_log.info("verify_ems_connection_credentials ems_conn.make_options_hash #{ems_conn.make_options_hash(params[:type])}  params[:type] #{params[:type]}")
+    begin
+      auth_hash = ems_conn.make_options_hash(params[:type])
+      $fog_log.info("verify_ems_connection_credentials auth_hash #{auth_hash}")
+      ems.verify_credentials(params[:type], auth_hash)
+    rescue StandardError=>bang
+      add_flash("#{bang}", :error)
+    else
+      add_flash(I18n.t("flash.credentials.validated"))
+    end
   end
 
   def process_emss(emss, task)
+    $scvmm_log.info("process_emss #{emss.inspect}")
     emss, emss_out_region = filter_ids_in_region(emss, "Provider")
     return if emss.empty?
 
@@ -736,6 +770,7 @@ module EmsCommon
 
   # Delete all selected or single displayed ems(s)
   def deleteemss
+    $scvmm_log.info("deleteemss")
     assert_privileges(params[:pressed])
     emss = Array.new
     if @lastaction == "show_list" # showing a list, scan all selected emss
@@ -794,6 +829,7 @@ module EmsCommon
 
   # Refresh VM states for all selected or single displayed ems(s)
   def refreshemss
+    $scvmm_log.info("refreshemss")
     assert_privileges(params[:pressed])
     emss = Array.new
     if @lastaction == "show_list" # showing a list, scan all selected emss

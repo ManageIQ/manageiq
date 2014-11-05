@@ -29,13 +29,16 @@ module EmsRefresh::Refreshers
     end
 
     def group_targets_by_ems(targets)
+      $scvmm_log.info("group_targets_by_ems #{targets.inspect}")
       non_ems_targets = targets.select { |t| !t.kind_of?(ExtManagementSystem) }
       ActiveRecord::Associations::Preloader.new(non_ems_targets, :ext_management_system).run
 
       self.ems_by_ems_id     = {}
       self.targets_by_ems_id = Hash.new { |h, k| h[k] = Array.new }
+      $scvmm_log.info("targets_by_ems_id #{targets_by_ems_id.inspect}")
 
       targets.each do |t|
+        $scvmm_log.info("Targets #{targets.inspect}")
         ems = t.kind_of?(ExtManagementSystem) ? t : t.ext_management_system
         if ems.nil?
           $log.warn "MIQ(#{self.class.name}.group_targets_by_ems) Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS."

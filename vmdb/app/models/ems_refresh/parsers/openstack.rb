@@ -6,6 +6,7 @@ module EmsRefresh::Parsers
     # power state value corresponds to an array index for the human readable
     # power state.
     RAW_POWER_STATES = %w(NO_STATE RUNNING BLOCKED PAUSED SHUTDOWN SHUTOFF CRASHED SUSPENDED FAILED BUILDING)
+    PROVIDER_COMPONENT = "refresh"
 
     def self.ems_inv_to_hashes(ems, options = nil)
       self.new(ems, options).ems_inv_to_hashes
@@ -13,7 +14,12 @@ module EmsRefresh::Parsers
 
     def initialize(ems, options = nil)
       @ems           = ems
-      @connection    = ems.connect
+      # $fog.info("Iitialize EMS #{ems}")
+      # $fog.info("Iitialize EMS #{ems.ems_connections}")
+
+      # @connection    = ems.connect
+      ems_conn_os    = ems.ems_connections.find_by_provider_component(PROVIDER_COMPONENT) || return
+      @connection    = ems.connect(ems_conn_os.make_options_hash)
       @options       = options || {}
       @data          = {}
       @data_index    = {}

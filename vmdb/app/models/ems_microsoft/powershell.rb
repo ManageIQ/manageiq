@@ -41,12 +41,13 @@ class EmsMicrosoft
       end
     end
 
-    def run_dos_command(command)
+    def run_dos_command(command, options)
       log_header = "MIQ(#{self.class.name}##{__method__})"
-      $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...")
+      $scvmm_log.info("#{log_header} Execute DOS command <#{command}>...")
 
+      $scvmm_log.info("#{__FILE__}  #{options}")
       _result, timings = Benchmark.realtime_block(:execution) do
-        with_provider_connection do |connection|
+        with_provider_connection(options) do |connection|
           results = connection.run_cmd(command)
           self.class.log_dos_error_results(results)
         end

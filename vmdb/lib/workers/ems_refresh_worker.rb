@@ -6,13 +6,15 @@ class EmsRefreshWorker < QueueWorkerBase
   ]
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}]"
+    @log_prefix ||= "MIQ(#{self.class.name})" # EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}]"
   end
 
   def after_initialize
+    $log.info("#{__FILE__}  #{log_prefix}")
+
     @ems = ExtManagementSystem.find(@cfg[:ems_id])
     do_exit("Unable to find instance for EMS id [#{@cfg[:ems_id]}].", 1) if @ems.nil?
-    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check
+    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.ems_connections.find_by_provider_component("refresh").authentication_check
   end
 
   def do_before_work_loop

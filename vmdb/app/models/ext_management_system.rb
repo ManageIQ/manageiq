@@ -42,6 +42,7 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy
 
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy
+  has_many :ems_connections, :foreign_key => "ems_id", :dependent => :destroy
 
   has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy
 
@@ -193,6 +194,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def refresh_ems
+    $scvmm_log.info("refresh_ems")
     raise "no #{ui_lookup(:table=>"ext_management_systems")} credentials defined" if self.authentication_invalid?
     raise "refresh requires a valid user id and password" if self.authentication_invalid?
     EmsRefresh.queue_refresh(self)
@@ -414,5 +416,20 @@ class ExtManagementSystem < ActiveRecord::Base
       $log.info("MIQ(#{self.class.name}#stop_event_monitor_queue) EMS: [#{self.name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       self.stop_event_monitor_queue
     end
+  end
+
+  def create_connection_record(conn_details, options = {})
+    #Put save into options???
+    #EDIt?
+    ems_connection                    = self.ems_connections.build # Can I pass in conn_details?
+    ems_connection.ipaddress          = conn_details[:ipaddress]
+    ems_connection.port               = conn_details.has_key?(:port) ? conn_details[:port] : nil   #conn_details[:port]
+    ems_connection.provider_component = conn_details[:provider_component]
+
+    $scvmm_log.info("#{__FILE__} #{ems_connection.inspect}")
+
+    ems_connection.save if options[:save] == true && id      #TO DO: What is ID?
+
+    ems_connection
   end
 end

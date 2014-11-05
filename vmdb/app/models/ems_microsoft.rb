@@ -31,20 +31,18 @@ class EmsMicrosoft < EmsInfra
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+    username  = options[:user]
+    password  = options[:pass]
+    ipaddress = options[:ipaddress]
+    auth_url  = self.class.auth_url(ipaddress, port)
 
-    username = options[:user] || authentication_userid(options[:auth_type])
-    password = options[:pass] || authentication_password(options[:auth_type])
-    ipaddress = options[:ipaddress] || self.ipaddress
-    auth_url = self.class.auth_url(ipaddress, port)
     self.class.raw_connect(username, password, auth_url)
   end
 
   def verify_credentials(_auth_type = nil, options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(options[:auth_type])
-
+    $scvmm_log.info("#{__FILE__} verify_credentials #{options}")
     begin
-      run_dos_command("hostname")
+      run_dos_command("hostname", options)
     rescue WinRM::WinRMHTTPTransportError # Error 401
       raise MiqException::MiqHostError, "Login failed due to a bad username or password."
     end

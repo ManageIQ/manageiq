@@ -1,16 +1,18 @@
 
 module EmsRefresh::Parsers
   class Scvmm < Infra
-    INVENTORY_SCRIPT = File.join(File.dirname(__FILE__), 'ps_scripts/get_inventory.ps1')
-    DRIVE_LETTER     = /\A[a-z][:]/i
+    INVENTORY_SCRIPT   = File.join(File.dirname(__FILE__), 'ps_scripts/get_inventory.ps1')
+    DRIVE_LETTER       = /\A[a-z][:]/i
+    PROVIDER_COMPONENT = "refresh"
 
     def self.ems_inv_to_hashes(ems, options = nil)
       new(ems, options).ems_inv_to_hashes
     end
 
-    def initialize(ems, _options = nil)
+    def initialize(ems, options = nil)
       @ems                = ems
-      @connection         = ems.connect
+      scvmm_conn          = ems.ems_connections.find_by_provider_component(PROVIDER_COMPONENT) || return
+      @connection         = ems.connect(scvmm_conn.make_options_hash)
       @data               = {}
       @data_index         = {}
       @host_hash_by_name  = {}
@@ -486,9 +488,19 @@ module EmsRefresh::Parsers
     end
 
     def identify_primary_ip(nics)
+
+      # nics = [{ :ToString=>"Ethernet - HP CN1100E Converged Network Adapter #2", 
+      #           :Props=> {:Name=>"HP CN1100E Converged Network Adapter #2", 
+      #             :IPAddresses=>[],
+      #             :DHCPEnabled=>true,
+      #             :IPSubnets=>[],
+      #             :UsedForManagement => true,
+      #             :DefaultIPGateways =>[]}
+      #         }]
       nics.each do |nic|
+        $scvmm_log.info("nic[:Props][:UsedForManagement]  #{nic[:Props][:UsedForManagement] == false}")
         next if nic[:Props][:UsedForManagement] == false
-        return nic[:Props][:IPAddresses][0][:MS][:IPAddressToString]
+        return nic[:Props][:IPAddresses][0][:MS][:IPAddressToString]# unless nic[:Props][:IPAddresses].empty?
       end
     end
 

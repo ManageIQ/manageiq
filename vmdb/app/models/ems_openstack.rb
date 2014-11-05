@@ -30,13 +30,22 @@ class EmsOpenstack < EmsCloud
   end
 
   def openstack_handle(options = {})
+    $fog_log.info("openstack_handle #{options}")
+
     require 'openstack/openstack_handle'
     @openstack_handle ||= begin
-      raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+      # raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
 
-      username = options[:user] || self.authentication_userid(options[:auth_type])
-      password = options[:pass] || self.authentication_password(options[:auth_type])
+      # username = options[:user] || self.authentication_userid(options[:auth_type])
+        # password = options[:pass] || self.authentication_password(options[:auth_type])
+      username  = options[:user]
+      password  = options[:pass]
+      ipaddress = options[:ipaddress]
+      port      = options[:port]
+
       osh = OpenstackHandle::Handle.new(username, password, address, port)
+      $fog_log.info("OSH  #{osh.inspect}")
+
       osh.connection_options = {:instrumentor => $fog_log}
       osh
     end
@@ -47,6 +56,7 @@ class EmsOpenstack < EmsCloud
   end
 
   def connect(options = {})
+    $fog_log.info("connect #{options}")
     openstack_handle(options).connect(options)
   end
 
@@ -81,6 +91,8 @@ class EmsOpenstack < EmsCloud
   end
 
   def verify_api_credentials(options={})
+        $log.info("verify_api_credentials #{options}")
+
     begin
       with_provider_connection(options) {}
     rescue Excon::Errors::Unauthorized => err
@@ -96,6 +108,7 @@ class EmsOpenstack < EmsCloud
 
   def verify_amqp_credentials(options={})
     require 'openstack/openstack_event_monitor'
+    $log.info("verify_amqp_credentials #{options}")
     OpenstackEventMonitor.test_amqp_connection(event_monitor_options)
   rescue Exception => e
     $log.error("MIQ(#{self.class.name}.verify_amqp_credentials) Error Class=#{e.class.name}, Message=#{e.message}")
@@ -104,11 +117,15 @@ class EmsOpenstack < EmsCloud
   private :verify_amqp_credentials
 
   def verify_credentials(auth_type=nil, options={})
+    $fog_log.info("#{__FILE__} verify_credentials auth_type #{auth_type} options #{options}")
     auth_type ||= 'default'
 
-    raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(auth_type)
+    # raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(auth_type)
 
     options.merge!(:auth_type => auth_type)
+    $log.info(" #{__FILE__} verify_credentials options #{options.inspect}")
+    $log.info("#{__FILE__} verify_credentials auth_type #{auth_type}")
+
     case auth_type.to_s
     when 'default'; verify_api_credentials(options)
     when 'amqp';    verify_amqp_credentials(options)

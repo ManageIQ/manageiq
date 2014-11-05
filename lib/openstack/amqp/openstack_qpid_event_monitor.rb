@@ -30,6 +30,8 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
+    $log.info("#{__FILE__}  initialize options  #{options}")
+
     @options = options
     @options[:port] ||= DEFAULT_AMQP_PORT
     @receiver_options = options.slice(:duration, :capacity)
@@ -61,6 +63,8 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
 
   private
   def connection
+    $log.info("#{__FILE__}  connection options  #{options}")
+
     @connection ||= create_connection(@options)
   end
 

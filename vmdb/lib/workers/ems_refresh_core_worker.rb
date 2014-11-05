@@ -11,9 +11,10 @@ class EmsRefreshCoreWorker < WorkerBase
   ]
 
   def after_initialize
+    $log.info("#{__FILE__}  #{log_prefix}")
     @ems = ExtManagementSystem.find(@cfg[:ems_id])
-    do_exit("Unable to find instance for EMS id [#{@cfg[:ems_id]}].", 1) if @ems.nil?
-    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check
+    do_exit("Unable to find instance for EMS id [#{@cfg[:ems_id]}].", 1) if @ems.ems_connections.find_by_provider_component("refresh").nil?
+    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.ems_connections.find_by_provider_component("refresh").authentication_check
 
     # Global Work Queue
     @queue = Queue.new
@@ -24,7 +25,7 @@ class EmsRefreshCoreWorker < WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}]"
+    @log_prefix ||= "MIQ(#{self.class.name}) " #EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}]"
   end
 
   def before_exit(message, exit_code)
@@ -52,7 +53,7 @@ class EmsRefreshCoreWorker < WorkerBase
 
     begin
       $log.info("#{self.log_prefix} Validating Connection/Credentials")
-      @ems.verify_credentials
+      @ems.ems_connections.find_by_provider_component("refresh").verify_credentials
     rescue => err
       $log.warn("#{self.log_prefix} #{err.message}")
       return nil

@@ -64,6 +64,7 @@ module AuthenticationMixin
   # Only for AuthUseridPassword class authentications.
   #
   def update_authentication(data, options = {})
+    $scvmm_log.info("update_authentication data #{data}")
     return if data.blank?
 
     options.reverse_merge!({:save => true})
@@ -118,6 +119,7 @@ module AuthenticationMixin
     # Look for the supplied type and if that is not found return the default credentials
     cred = authentication_type(type, class_name)
     cred = authentication_default(class_name) if cred.blank?
+
     return nil if cred.blank?
     return cred
   end
@@ -207,7 +209,6 @@ module AuthenticationMixin
     end
 
     verify_args = self.is_a?(Host) ? [types, options] : types
-
     begin
       result = self.verify_credentials(*verify_args)
     rescue MiqException::MiqUnreachableError => err

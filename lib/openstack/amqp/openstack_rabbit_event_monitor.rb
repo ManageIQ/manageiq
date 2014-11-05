@@ -28,6 +28,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def self.test_connection(options={})
+    $fog_log.info("#{__FILE__} test_connection options #{options}")
     connection = nil
     begin
       connection = connect(options)
@@ -44,6 +45,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
+    $fog_log.info("#{__FILE__} initialize #{options}")
     @options = options
     @options[:port] ||= DEFAULT_AMQP_PORT
     @collecting_events = false

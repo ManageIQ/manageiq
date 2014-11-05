@@ -15,6 +15,8 @@ class ControlMonitor < WorkerBase
   ]
 
   def after_initialize
+    $log.info("#{log_prefix}")
+
     @ems = ExtManagementSystem.find_by_id(@cfg[:ems_id])
   end
 
@@ -23,7 +25,7 @@ class ControlMonitor < WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}] "
+    @log_prefix ||= "MIQ(#{self.class.name}) " #EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}] "
   end
 
   alias old_do_exit do_exit
@@ -36,7 +38,7 @@ class ControlMonitor < WorkerBase
   def start_control_monitor
     begin
       $log.info("#{self.log_prefix}Validating Connection/Credentials")
-      @ems.verify_credentials
+      @ems.ems_connections.find_by_provider_component("refresh").verify_credentials #COME BACK TO
     rescue => err
       $log.warn("#{self.log_prefix}#{err.message}")
       return nil

@@ -20,6 +20,7 @@ module EmsRefresh
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
 
   def self.queue_refresh(target, id = nil)
+    $scvmm_log.info("#{__FILE__} queue_refresh")
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
     targets = self.get_ar_objects(target, id)
 
@@ -48,6 +49,7 @@ module EmsRefresh
   end
 
   def self.refresh(target, id = nil)
+    $scvmm_log.info("#{__FILE__} self.refresh")
     EmsRefresh.init_console if MiqEnvironment::Process.is_rails_console?
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
@@ -75,6 +77,8 @@ module EmsRefresh
   end
 
   def self.get_ar_objects(target, id = nil)
+    $scvmm_log.info("#{__FILE__} get_ar_objects")
+
     # Handle targets passed as a single class/id pair, an array of class/id pairs, an array of references
     target = [[target, id]] unless id.nil?
     target = [target] unless target.kind_of?(Array)
@@ -111,7 +115,15 @@ module EmsRefresh
   end
 
   def self.queue_merge(targets, ems)
+    $log.info("*********************")
+
+    $scvmm_log.info("#{__FILE__} queue_merge  classname #{self.name} EMS: #{ems.inspect}")
     # Items will be naturally serialized since there is a dedicated worker.
+
+    $log.info("queue_name_for_ems #{MiqEmsRefreshWorker.queue_name_for_ems(ems)}")
+    $log.info("self.name #{self.name}")
+
+
     MiqQueue.put_or_update(
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
       :class_name  => self.name,
@@ -120,11 +132,16 @@ module EmsRefresh
       :zone        => ems.my_zone
     ) do |msg, item|
       targets = msg.nil? ? targets : (msg.args[0] | targets)
+          # $log.info("targets #{targets}")
+
       item.merge(
         :args        => [targets],
         :msg_timeout => queue_timeout,
         :task_id     => nil)
+
     end
+        $log.info("*********************")
+
   end
 
   #
