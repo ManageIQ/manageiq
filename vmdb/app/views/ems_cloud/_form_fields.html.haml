@@ -1,21 +1,21 @@
 - if @edit[:new][:emstype] == "ec2"
   %tr
-    %td.key Region
+    %td.key=_('Region')
     %td.wide
       = select_tag("provider_region",
-                   options_for_select([["<Choose>", nil]] + Array(@edit[:amazon_regions].invert).sort { |a, b| a[0] <=> b[0] },
+                   options_for_select([["<#{_('Choose')}>", nil]] + Array(@edit[:amazon_regions].invert).sort { |a, b| a[0] <=> b[0] },
                                       @edit[:new][:provider_region]),
                    "data-miq_observe" => {:url => url}.to_json)
 - elsif @edit[:new][:emstype].present?
   %tr
-    %td.key Host Name
+    %td.key=_('Host Name')
     %td.wide
       = text_field_tag("hostname",
                        @edit[:new][:hostname],
                        :maxlength => MAX_HOSTNAME_LEN,
                        "data-miq_observe" => {:interval => ".5", :url => url}.to_json)
   %tr
-    %td.key IP Address
+    %td.key=_('IP Address')
     %td.wide
       = text_field_tag("ipaddress",
                        @edit[:new][:ipaddress],
