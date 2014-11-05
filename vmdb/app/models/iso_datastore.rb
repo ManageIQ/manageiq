@@ -28,7 +28,7 @@ class IsoDatastore < ActiveRecord::Base
       self.ext_management_system.with_provider_connection do |rhevm|
         rhevm.iso_images.collect { |image| image[:name] }
       end
-    rescue RhevmApiError => err
+    rescue Ovirt::Error => err
       $log.error("#{log_header} Error Getting ISO Images on ISO Datastore on Management System <#{self.name}>: #{err.class.name}: #{err}")
       raise
     end
@@ -53,7 +53,7 @@ class IsoDatastore < ActiveRecord::Base
     clear_association_cache
     self.update_attribute(:last_refresh_on, Time.now.utc)
     $log.info("#{log_header} Synchronizing images on #{log_for}...Complete")
-  rescue RhevmApiError => err
+  rescue Ovirt::Error
   end
 
 end

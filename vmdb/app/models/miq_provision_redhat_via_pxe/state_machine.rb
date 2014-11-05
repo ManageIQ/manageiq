@@ -24,7 +24,7 @@ module MiqProvisionRedhatViaPxe::StateMachine
 
     begin
       get_provider_destination.boot_from_network
-    rescue RhevmApiVmNotReadyToBoot
+    rescue Ovirt::VmNotReadyToBoot
       $log.info("MIQ(#{self.class.name}#boot_from_network) #{destination_type} [#{dest_name}] is not yet ready to boot, will retry")
       requeue_phase
     else

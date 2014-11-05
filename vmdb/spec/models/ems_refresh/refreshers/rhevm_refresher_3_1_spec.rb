@@ -4,7 +4,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.252.230", :ipaddress => "192.168.252.230", :port => 443)
-    @ems.update_authentication(:default => {:userid => "evm@manageiq.com", :password => "smartvm"})
+    @ems.update_authentication(:default => {:userid => "evm@manageiq.com", :password => "password"})
   end
 
   it "will perform a full refresh on v3.1" do
@@ -30,27 +30,27 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
     EmsCluster.count.should          == 4
     Host.count.should                == 2
     ResourcePool.count.should        == 4
-    VmOrTemplate.count.should        == 40
-    Vm.count.should                  == 29
+    VmOrTemplate.count.should        == 38
+    Vm.count.should                  == 27
     MiqTemplate.count.should         == 11
     Storage.count.should             == 7
 
     CustomAttribute.count.should     == 0 # TODO: 3.0 spec has values for this
     CustomizationSpec.count.should   == 0
     Disk.count.should                == 66
-    GuestDevice.count.should         == 34
-    Hardware.count.should            == 42
+    GuestDevice.count.should         == 29
+    Hardware.count.should            == 40
     Lan.count.should                 == 3
     MiqScsiLun.count.should          == 0
     MiqScsiTarget.count.should       == 0
     Network.count.should             == 5
-    OperatingSystem.count.should     == 42
-    Snapshot.count.should            == 33
+    OperatingSystem.count.should     == 40
+    Snapshot.count.should            == 32
     Switch.count.should              == 3
     SystemService.count.should       == 0
 
-    Relationship.count.should        == 85
-    MiqQueue.count.should            == 43
+    Relationship.count.should        == 81
+    MiqQueue.count.should            == 41
   end
 
   def assert_ems
@@ -64,8 +64,8 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
     @ems.resource_pools.size.should    == 4
     @ems.storages.size.should          == 7
     @ems.hosts.size.should             == 2
-    @ems.vms_and_templates.size.should == 40
-    @ems.vms.size.should               == 29
+    @ems.vms_and_templates.size.should == 38
+    @ems.vms.size.should               == 27
     @ems.miq_templates.size.should     == 11
 
     @ems.customization_specs.size.should == 0
@@ -109,14 +109,30 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
   end
 
   def assert_specific_storage
-    @storage = Storage.find_by_name("RHEVM31-1")
+    @storage = Storage.find_by_name("NetApp01Lun2")
     @storage.should have_attributes(
+      :ems_ref                       => "/api/storagedomains/6284e934-9f11-486a-b9d8-aaacfa4f226f",
+      :ems_ref_obj                   => "/api/storagedomains/6284e934-9f11-486a-b9d8-aaacfa4f226f",
+      :name                          => "NetApp01Lun2",
+      :store_type                    => "ISCSI",
+      :total_space                   => 106300440576,
+      :free_space                    => 57982058496,
+      :uncommitted                   => 36507222016,
+      :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
+      :location                      => "360a980005034442f525a716549583947",
+      :directory_hierarchy_supported => nil,
+      :thin_provisioning_supported   => nil,
+      :raw_disk_mappings_supported   => nil
+    )
+
+    @storage2 = Storage.find_by_name("RHEVM31-1")
+    @storage2.should have_attributes(
       :ems_ref                       => "/api/storagedomains/d0a7d751-46bc-495a-a312-e5d010059f96",
       :ems_ref_obj                   => "/api/storagedomains/d0a7d751-46bc-495a-a312-e5d010059f96",
       :name                          => "RHEVM31-1",
       :store_type                    => "ISCSI",
       :total_space                   => 273804165120,
-      :free_space                    => 130996502528,
+      :free_space                    => 137438953472,
       :uncommitted                   => 45097156608,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
       :location                      => nil,
@@ -239,7 +255,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
       :power_state           => "on",
       :location              => "fe052832-2350-48ce-8e56-c24b4cd91876.ovf",
       :tools_status          => nil,
-      :boot_time             => Time.parse("2014-05-22T22:02:20.509000Z"),
+      :boot_time             => Time.parse("2014-10-07T21:01:24.183000Z"),
       :standby_action        => nil,
       :connection_state      => "connected",
       :cpu_affinity          => nil,
@@ -294,13 +310,13 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
     )
 
     v.hardware.disks.size.should == 3
-    disk = v.hardware.disks.find_by_device_name("Disk 1")
+    disk = v.hardware.disks.find_by_device_name("EmsRefreshSpec-PoweredOn_Disk1")
     disk.should have_attributes(
-      :device_name     => "Disk 1",
+      :device_name     => "EmsRefreshSpec-PoweredOn_Disk1",
       :device_type     => "disk",
-      :controller_type => "virtio",
+      :controller_type => "ide",
       :present         => true,
-      :filename        => "186ea05f-891f-4807-bbd7-4872987e3fd6",
+      :filename        => "5fc5484d-1730-42bc-adc3-262592ea595a",
       :location        => "0",
       :size            => 5.gigabytes,
       :mode            => "persistent",
@@ -316,14 +332,14 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
       :device_type     => "disk",
       :controller_type => "virtio",
       :present         => true,
-      :filename        => "9442c476-8b94-469f-99f9-8abb18c7d9d8",
+      :filename        => "b7139a48-854b-49b4-b4a0-92ef88261b7b",
       :location        => "1",
-      :size            => 15.gigabytes,
+      :size            => 1.gigabytes,
       :mode            => "persistent",
       :disk_type       => "thick",
       :start_connected => true
     )
-    disk.storage.should be_nil
+    disk.storage.should == @storage
 
     v.hardware.guest_devices.size.should == 3
     v.hardware.nics.size.should == 3
@@ -343,7 +359,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
     network = v.hardware.networks.first
     network.should have_attributes(
       :hostname    => nil, # TODO: Should be miq-winxpsp3 (or something like that)?
-      :ipaddress   => "192.168.253.54",
+      :ipaddress   => "192.168.253.45",
       :ipv6address => nil
     )
     # nic.network.should == network # TODO: Hook up this connection
@@ -411,7 +427,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
     v.ems_cluster.should           == @cluster
     v.parent_resource_pool.should  == @default_rp
     v.host.should                  be_nil
-    v.storages.should              == [@storage]
+    v.storages.should              == [@storage2]
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     v.operating_system.should have_attributes(
@@ -475,7 +491,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
       :disk_type       => "thin",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    disk.storage.should == @storage2
 
     v.hardware.guest_devices.size.should == 3
     v.hardware.nics.size.should == 3
@@ -556,7 +572,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
     v.ems_cluster.should           == @cluster
     v.parent_resource_pool.should  be_nil
     v.host.should                  be_nil
-    v.storages.should              == [@storage]
+    v.storages.should              == [@storage2]
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     v.operating_system.should have_attributes(
@@ -591,7 +607,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
       :disk_type       => "thin",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    disk.storage.should == @storage2
 
     v.hardware.guest_devices.size.should == 0 # TODO: Should this be 3 like the other tests?
     v.hardware.nics.size.should == 0
@@ -630,11 +646,11 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
 
   def assert_relationship_tree
     @ems.descendants_arranged.should match_relationship_tree(
-      [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
-        [EmsFolder, "Default", {:is_datacenter => true}] => {
-          [EmsFolder, "host", {:is_datacenter => false}] => {
+      [EmsFolder, "Datacenters"] => {
+        [EmsFolder, "Default"] => {
+          [EmsFolder, "host"] => {
             [EmsCluster, "iSCSI"] => {
-              [ResourcePool, "Default for Cluster iSCSI", {:is_default => true}] => {
+              [ResourcePool, "Default for Cluster iSCSI"] => {
                 [VmRedhat, "BD-F17-Desktop"] => {},
                 [VmRedhat, "EVM-DHS-Test"] => {},
                 [VmRedhat, "EmsRefreshSpec-NoDisks-NoNics"] => {},
@@ -646,11 +662,12 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
                 [VmRedhat, "bd-isotest-14-pr"] => {},
                 [VmRedhat, "bd-wintest"] => {},
                 [VmRedhat, "bd-wintest-01-18-c"] => {},
-                [VmRedhat, "billt1"] => {},
-                [VmRedhat, "billt2"] => {},
-                [VmRedhat, "billt3"] => {},
+                [VmRedhat, "bill-t1"] => {},
                 [VmRedhat, "evm-5012"] => {},
                 [VmRedhat, "lucy-test"] => {},
+                [VmRedhat, "lucy_cpu"] => {},
+                [VmRedhat, "lucy_cpu7"] => {},
+                [VmRedhat, "lucy_cpu8"] => {},
                 [VmRedhat, "miqutil"] => {},
                 [VmRedhat, "rmtest06"] => {},
                 [VmRedhat, "rpo-evm-iscsi"] => {},
@@ -658,7 +675,7 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}] => {
+          [EmsFolder, "vm"] => {
             [TemplateRedhat, "CFME_Base"] => {},
             [TemplateRedhat, "EVM-v50017"] => {},
             [TemplateRedhat, "EVM-v50025"] => {},
@@ -677,46 +694,41 @@ describe EmsRefresh::Refreshers::RhevmRefresher do
             [VmRedhat, "bd-isotest-14-pr"] => {},
             [VmRedhat, "bd-wintest"] => {},
             [VmRedhat, "bd-wintest-01-18-c"] => {},
-            [VmRedhat, "billt1"] => {},
-            [VmRedhat, "billt2"] => {},
-            [VmRedhat, "billt3"] => {},
+            [VmRedhat, "bill-t1"] => {},
             [VmRedhat, "evm-5012"] => {},
             [VmRedhat, "lucy-test"] => {},
+            [VmRedhat, "lucy_cpu"] => {},
+            [VmRedhat, "lucy_cpu7"] => {},
+            [VmRedhat, "lucy_cpu8"] => {},
             [VmRedhat, "miqutil"] => {},
             [VmRedhat, "rmtest06"] => {},
             [VmRedhat, "rpo-evm-iscsi"] => {},
             [VmRedhat, "rpo-test1"] => {},
           }
         },
-        [EmsFolder, "NFS", {:is_datacenter => true}] => {
-          [EmsFolder, "host", {:is_datacenter => false}] => {
+        [EmsFolder, "NFS"] => {
+          [EmsFolder, "host"] => {
             [EmsCluster, "NFS"] => {
-              [ResourcePool, "Default for Cluster NFS", {:is_default => true}] => {
-                [VmRedhat, "aab-api-7001"] => {},
-                [VmRedhat, "aab-pr-1"] => {},
-                [VmRedhat, "aab-pr-2"] => {},
-                [VmRedhat, "aab-rhevm_0001"] => {},
-                [VmRedhat, "aab-rhevm_0002"] => {},
-                [VmRedhat, "aab-sprint7-1"] => {},
-                [VmRedhat, "aab-sprint7-2"] => {},
+              [ResourcePool, "Default for Cluster NFS"] => {
+                [VmRedhat, "MK_AUG_05_003_DELETE"] => {},
+                [VmRedhat, "aab_demo_vm"] => {},
+                [VmRedhat, "aab_test_vm"] => {},
                 [VmRedhat, "bd-testiso1"] => {},
+                [VmRedhat, "bd1"] => {},
                 [VmRedhat, "rpo-test2"] => {},
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}] => {
+          [EmsFolder, "vm"] => {
             [TemplateRedhat, "757e824d-6d97-4568-be29-9346c354e802"] => {},
             [TemplateRedhat, "bd-clone-template"] => {},
             [TemplateRedhat, "bd-temp1"] => {},
             [TemplateRedhat, "prov-template"] => {},
-            [VmRedhat, "aab-api-7001"] => {},
-            [VmRedhat, "aab-pr-1"] => {},
-            [VmRedhat, "aab-pr-2"] => {},
-            [VmRedhat, "aab-rhevm_0001"] => {},
-            [VmRedhat, "aab-rhevm_0002"] => {},
-            [VmRedhat, "aab-sprint7-1"] => {},
-            [VmRedhat, "aab-sprint7-2"] => {},
+            [VmRedhat, "MK_AUG_05_003_DELETE"] => {},
+            [VmRedhat, "aab_demo_vm"] => {},
+            [VmRedhat, "aab_test_vm"] => {},
             [VmRedhat, "bd-testiso1"] => {},
+            [VmRedhat, "bd1"] => {},
             [VmRedhat, "rpo-test2"] => {},
           },
         }

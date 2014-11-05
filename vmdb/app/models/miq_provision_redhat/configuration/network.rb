@@ -40,7 +40,7 @@ module MiqProvisionRedhat::Configuration::Network
 
   def find_network_in_cluster(network_name)
     network = self.source.with_provider_connection do |rhevm|
-      RhevmCluster.find_by_href(rhevm, dest_cluster.ems_ref).try(:find_network_by_name, network_name)
+      Ovirt::Cluster.find_by_href(rhevm, dest_cluster.ems_ref).try(:find_network_by_name, network_name)
     end
 
     $log.warn "MIQ(#{self.class.name}#find_network_in_cluster) Cannot find network name=#{network_name}" if network.nil?

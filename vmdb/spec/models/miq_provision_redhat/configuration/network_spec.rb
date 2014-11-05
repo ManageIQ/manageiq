@@ -1,11 +1,11 @@
 require "spec_helper"
-require 'RedHatEnterpriseVirtualizationManagerAPI/rhevm_api'
+require "ovirt"
 
 describe MiqProvisionRedhat::Configuration::Network do
   let(:mac_address)   { "mac_address" }
   let(:network_id)    { "network1-id" }
   let(:network_name)  { "network1-name" }
-  let(:rhevm_cluster) { double("RhevmCluster", :find_network_by_name => {:id => network_id}) }
+  let(:rhevm_cluster) { double("Ovirt::Cluster", :find_network_by_name => {:id => network_id}) }
   let(:rhevm_nic1)    { {:name => "nic1", :network => {:id => network_id}, :mac => {:address => mac_address}} }
   let(:rhevm_nic2)    { {:name => "nic2", :network => {:id => "network2-id"}} }
   let(:set_vlan)      { @task.options[:vlan] = [network_name, network_name] }
@@ -28,7 +28,7 @@ describe MiqProvisionRedhat::Configuration::Network do
     )
 
     rhevm_vm.stub(:nics => [rhevm_nic1, rhevm_nic2])
-    RhevmCluster.stub(:find_by_href => rhevm_cluster)
+    Ovirt::Cluster.stub(:find_by_href => rhevm_cluster)
   end
 
   context "#configure_network_adapters" do

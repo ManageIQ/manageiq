@@ -8,7 +8,7 @@ class EmsRedhat < EmsInfra
   end
 
   def self.raw_connect(server, port, username, password, service = "Service")
-    require 'RedHatEnterpriseVirtualizationManagerAPI/rhevm_api'
+    require 'ovirt'
     params = {
       :server   => server,
       :port     => port,
@@ -20,8 +20,7 @@ class EmsRedhat < EmsInfra
     params[:timeout]      = read_timeout if read_timeout
     params[:open_timeout] = open_timeout if open_timeout
 
-    service = "Rhevm#{service}"
-    Object.const_get(service).new(params)
+    Ovirt.const_get(service).new(params)
   end
 
   def connect(options = {})
@@ -63,8 +62,8 @@ class EmsRedhat < EmsInfra
     password = options[:pass] || self.authentication_password(:default)
 
     begin
-      require 'RedHatEnterpriseVirtualizationManagerAPI/rhevm_api'
-      rhevm = RhevmInventory.new(
+      require 'ovirt'
+      rhevm = Ovirt::Inventory.new(
                     :server   => server,
                     :port     => port,
                     :username => username,
