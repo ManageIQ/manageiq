@@ -2,9 +2,8 @@
 #tab_div
   = form_tag({:action => 'update'}, {:id => "config_form"}) do
     %fieldset
-      %p{:class => "legend"}
-        Filters
-      Checked default filters will be visible.
+      %p{:class => "legend"}=_('Filters')
+      =_('Checked default filters will be visible.')
       - tree_id = "#{session[:tree_name]}box"
       %div{:id => "#{tree_id}", :style => "color:#000; height:#{center_div_height}px;color:#000;overflow-Y:scroll"}
         = render(:partial => "layouts/dynatree",
