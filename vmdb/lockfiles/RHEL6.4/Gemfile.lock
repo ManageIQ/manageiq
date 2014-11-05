@@ -62,21 +62,46 @@ GEM
     elif (0.1.0)
     erubis (2.7.0)
     eventmachine (1.0.0)
-    excon (0.31.0)
+    excon (0.40.0)
     execjs (2.0.2)
     ezcrypto (0.7)
     facade (1.0.5)
     ffi (1.9.3)
-    fog (1.19.0)
+    fog (1.24.0)
+      fog-brightbox
+      fog-core (~> 1.23)
+      fog-json
+      fog-radosgw (>= 0.0.2)
+      fog-sakuracloud (>= 0.0.4)
+      fog-softlayer
+      ipaddress (~> 0.5)
+      nokogiri (~> 1.5, >= 1.5.11)
+    fog-brightbox (0.5.1)
+      fog-core (~> 1.22)
+      fog-json
+      inflecto
+    fog-core (1.24.0)
       builder
-      excon (~> 0.31.0)
-      formatador (~> 0.2.0)
+      excon (~> 0.38)
+      formatador (~> 0.2)
       mime-types
-      multi_json (~> 1.0)
       net-scp (~> 1.1)
       net-ssh (>= 2.1.3)
-      nokogiri (~> 1.5)
-      ruby-hmac
+    fog-json (1.0.0)
+      multi_json (~> 1.0)
+    fog-radosgw (0.0.3)
+      fog-core (>= 1.21.0)
+      fog-json
+      fog-xml (>= 0.0.1)
+    fog-sakuracloud (0.1.1)
+      fog-core
+      fog-json
+    fog-softlayer (0.3.20)
+      fog-core
+      fog-json
+    fog-xml (0.1.0)
+      fog-core
+      nokogiri (~> 1.5, >= 1.5.11)
     formatador (0.2.4)
     gssapi (1.1.2)
       ffi (>= 1.0.1)
@@ -99,8 +124,10 @@ GEM
     httpi (2.0.2)
       rack
     i18n (0.6.9)
+    inflecto (0.0.2)
     inifile (2.0.2)
     io-extra (1.2.6)
+    ipaddress (0.8.0)
     jbuilder (2.0.7)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -175,7 +202,6 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
       netrc
-    ruby-hmac (0.4.0)
     ruby-plsql (0.4.1)
     ruby-progressbar (0.0.10)
     rubyntlm (0.4.0)
@@ -263,11 +289,11 @@ DEPENDENCIES
   dalli (~> 2.2.1)
   default_value_for (~> 1.0.7)
   elif (= 0.1.0)
-  excon (~> 0.31.0)
+  excon (~> 0.40)
   ezcrypto (= 0.7)
   facade (~> 1.0.5)
   ffi (~> 1.9.3)
-  fog (~> 1.19.0)
+  fog (~> 1.24.0)
   haml (~> 4.0.5)
   haml-rails (~> 0.4)
   handsoap (~> 0.2.5)
