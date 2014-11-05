@@ -2,8 +2,8 @@ class JqplotThemes
   # for global css styles see http://www.jqplot.com/docs/files/jqPlotCssStyling-txt.html
 
   THEMES = {
-    'theme1' => {
-      :seriesColors => ['#85802b', '#00749F', '#73C774', '#C7754C', '#17BDB8'],
+    'MIQ' => { # name of 1st theme is hardcoded in UiConstants
+      :seriesColors => ['#0099d3', '#00618a', '#0b3a54', '#979a9c', '#686b6e', '#505459', '#393f44', '#bde0ed'],
     }
   }
 

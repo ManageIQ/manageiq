@@ -102,8 +102,8 @@ class Jqplot
       end
     end
 
-    def apply_theme(chart, report_theme)
-      theme = JqplotThemes.get_theme(report_theme)
+    def apply_theme(chart, theme_name)
+      theme = JqplotThemes.get_theme(theme_name)
       return chart if theme.nil?
 
       chart[:options][:seriesColors] = theme[:seriesColors] if theme[:seriesColors]
