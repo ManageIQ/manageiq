@@ -2,7 +2,7 @@
 - url = url_for(:action => action, :id => "#{@edit[:rec_id] || "new"}")
 - url_one_trans = url_for(:action => action, :id => "#{@edit[:rec_id] || "new"}", :transOne => '1')
 
-%p.legend Long Description
+%p.legend=_('Long Description')
 = text_area_tag("long_description", @edit[:new][:long_description],
   :size => "350x600", :style => "display:none;")
 

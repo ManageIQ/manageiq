@@ -3,12 +3,11 @@
 
 #form_div
   = render :partial => "layouts/flash_msg"
-  -# show form if Catalog bundle is being added or if it's an edit of existing
-    catalog item, else force user to select type
-  %p.legend Basic Info
+  -# show form if Catalog bundle is being added or if it's an edit of existing catalog item, else force user to select type
+  %p.legend=_('Basic Info')
   %table.style1
     %tr
-      %td.key Name
+      %td.key=_('Name')
       %td.wider
         = text_field_tag("name",
                          @edit[:new][:name].to_s,
@@ -17,7 +16,7 @@
                                                 :url      => url}.to_json)
         = javascript_tag(javascript_focus('name'))
     %tr
-      %td.key Description
+      %td.key=_('Description')
       %td.wider
         = text_field_tag("description",
                          @edit[:new][:description],
@@ -25,5 +24,5 @@
                          "data-miq_observe" => {:interval => ".5",
                                                 :url      => url}.to_json)
   %hr
-  %p.legend Assign Catalog Items
+  %p.legend=_('Assign Catalog Items')
   = render :partial => "column_lists"

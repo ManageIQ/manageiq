@@ -3,27 +3,27 @@
 
 #resources_info_div
   - if @edit[:new][:service_type] == "composite"
-    %p.legend Resources
+    %p.legend=_('Resources')
     %table.style1
       %tr
-        %td.key Add a Resource
+        %td.key=_('Add a Resource')
         %td.notwide
           = select_tag('resource_id',
-            options_for_select(([["<Choose>",nil]]) + Array(@edit[:new][:available_resources].invert).sort_by{ |a,b| a.first.downcase }, nil),
+            options_for_select(([["<#{_('Choose')}>",nil]]) + Array(@edit[:new][:available_resources].invert).sort_by{ |a,b| a.first.downcase }, nil),
             "data-miq_sparkle_on" => true,
             "data-miq_observe" => {:url => url}.to_json)
     - if !@edit[:new][:selected_resources].empty?
-      %p.legend Selected Resources
+      %p.legend=_('Selected Resources')
       %table.style3
         %thead
           %tr
             %th.icon
-            - %w(Name Action\ Order Provision\ Order Action Delay\ (mins)).each do |title|
-              %th{:colspan => %w(Action Delay\ (mins)).include?(title) ? 2 : 1}
+            - [_('Name'), _('Action Order'), _('Provision Order'), _('Action'), _('Delay (mins)')].each_with_index do |title, id|
+              %th{:colspan => (id >= 3) ? 2 : 1}
                 = title
           %tr
             %th{:colspan => '4'}
-            - %w(Start Stop Start Stop).each do |st|
+            - [_('Start'), _('Stop'), _('Start'), _('Stop')].each do |st|
               %th
                 = st
         %tbody
@@ -36,12 +36,12 @@
             - groups.sort_by { | g | g[:name].downcase }.each_with_index do |sr,k|
               %tr.no-hover{:class => cycle('row0', 'row1'), :name => 'st_group'}
                 %td
-                  = link_to(image_tag("/images/icons/16/notequal-red.png", :border => "0", :alt => "Click to remove this Resource from the Catalog Item"),
+                  = link_to(image_tag("/images/icons/16/notequal-red.png", :border => "0", :alt => _("Click to remove this Resource from the Catalog Item")),
                     {:action => "resource_delete", :rec_id => sr[:id], :id => "#{@edit[:rec_id] || "new"}", :grp_id => i},
                     "data-miq_sparkle_on" => true,
                     "data-miq_sparkle_off" => true,
                     :remote => true,
-                    :title => "Click to remove this Resource from the Catalog Item")
+                    :title => _("Click to remove this Resource from the Catalog Item"))
                 %td
                   = h(sr[:name])
                 %td.select
@@ -60,9 +60,9 @@
                       options_for_select(Array.new(@edit[:new][:rsc_groups].length) {|j| j+1}, (sr[:provision_index]+1).to_s),
                       "data-miq_sparkle_on" => true,
                       "data-miq_observe" => {:url => url}.to_json)
-                - start_action_values = %w(Do\ Nothing Power\ On)
-                - stop_action_values = %w(Do\ Nothing Suspend Shutdown Power\ Off)
-                - delay_values = [["None",0],[1,1],[2,2],[3,3],[4,4],[5,5],[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
+                - start_action_values = [_('Do Nothing'), _('Power On')]
+                - stop_action_values = [_('Do Nothing'), _('Suspend'), _('Shutdown'), _('Power Off')]
+                - delay_values = [[_("None"),0],[1,1],[2,2],[3,3],[4,4],[5,5],[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
                 %td.select
                   = select_tag("start_action_#{i}_#{k}",
                     options_for_select(start_action_values, sr[:start_action]),

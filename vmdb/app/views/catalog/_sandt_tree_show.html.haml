@@ -2,44 +2,45 @@
 #st_tabs{:style => "display:none;width:auto;height:99%;overflow:auto;"}
   %ul.tab
     %li#li_basic
-      %a{:href => "#basic"} Basic Info
+      %a{:href => "#basic"}=_('Basic Info')
     - if @record.display
       %li#li_details
-        %a{:href => "#details"} Details
+        %a{:href => "#details"}=_('Details')
     - if @record.composite?
       %li#li_resources
-        %a{:href => "#resources"} Selected Resources
+        %a{:href => "#resources"}=_('Selected Resources')
     - else
       - unless @record.prov_type.eql?("generic")
         %li#li_request
-          %a{:href => "#request"} Request Info
+          %a{:href => "#request"}=_('Request Info')
   #basic{:name => "basic", :width => "80px"}
-    %p.legend Basic Information
+    %p.legend=_('Basic Information')
     %table.style1
       %tr
-        %td.key Name / Description
+        %td.key=_('Name / Description')
         %td
           #{@record.name} / #{@record.description}
           = check_box_tag(display, true, @record.display, :disabled => true)
-          &nbsp; Display in Catalog
+          &nbsp;
+          =_('Display in Catalog')
       - if @record.display
         %tr
-          %td.key Catalog
-          %td= h(@record.service_template_catalog ? @record.service_template_catalog.name : "<Unassigned>")
+          %td.key=_('Catalog')
+          %td= h(@record.service_template_catalog ? @record.service_template_catalog.name : "<#{_('Unassigned')}>")
       %tr
-        %td.key Dialog
+        %td.key=_('Dialog')
         %td= h(@sb[:dialog_label])
-      - [["Provisioning", :fqname],
-         ["Reconfigure",  :reconfigure_fqname],
-         ["Retirement",   :retire_fqname]].each do |entry_points_op|
+      - [[_("Provisioning"), :fqname],
+         [_("Reconfigure"),  :reconfigure_fqname],
+         [_("Retirement"),   :retire_fqname]].each do |entry_points_op|
         %tr
-          %td.key{:title => "#{entry_points_op[0]} Entry Point (NameSpace/Class/Instance)"}
-            #{entry_points_op[0]} Entry Point
+          %td.key{:title => _("%s Entry Point (NameSpace/Class/Instance)") % entry_points_op[0]}
+            ="#{entry_points_op[0]} #{_('Entry Point')}"
             %br
-            (NS/Cls/Inst)
+            =_('(NS/Cls/Inst)')
           %td= h(@sb[entry_points_op[1]])
     %hr
-    %p.legend Custom Image
+    %p.legend=_('Custom Image')
     - if @record.picture
       %table
         %tr
@@ -49,17 +50,17 @@
           %td{:valign => "bottom"}
             = link_to(image_tag("/images/toolbars/remove.png",
                                 :class => "rollover small",
-                                :alt   => t = "Remove this Custom Image"),
+                                :alt   => t = _("Remove this Custom Image")),
                       {:action  => "st_upload_image",
                        :id      => @record.id,
                        :pressed => "remove"},
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
-                      :confirm               => "Are you sure you want to remove this Custom Image?",
+                      :confirm               => _("Are you sure you want to remove this Custom Image?"),
                       :title                 => t)
     - else
-      No custom image has been uploaded
+      =_('No custom image has been uploaded')
       %br
       %br
     - if is_browser_ie?
@@ -67,40 +68,39 @@
                   :id        => @record.id},
                   :multipart => true) do
         = file_field("upload", "image")
-        = submit_tag("Upload", :id => "upload", :class => "upload")
-        * Requirements: File-type - PNG; Dimensions - 350x70.
+        = submit_tag(_("Upload"), :id => "upload", :class => "upload")
+        =_('* Requirements: File-type - PNG; Dimensions - 350x70.')
     - else
       = form_tag({:action  => "st_upload_image",
                   :id      => @record.id},
                  :id        => "uploadForm",
                  :multipart => true) do
         = file_field("upload", "image")
-        * Requirements - Type: jpg/png  Size: 100x100
+        =_('* Requirements - Type: jpg/png  Size: 100x100')
       %script{:type => "text/javascript"} miqInitJqueryForm();
 
   - if @record.display
     #details{:name => "details", :width => "80px"}
-      %p.legend Basic Information
+      %p.legend=_('Basic Information')
       %table.style1
         %tr
-          %td.key Long Description
+          %td.key=_('Long Description')
           %td.wide= @record.long_description.to_s.html_safe
 
   - if @record.composite?
     #resources{:name => "resources", :width => "80px"}
-      %p.legend Resources
+      %p.legend=_('Resources')
       - resources = @record.service_resources
       - unless resources.empty?
         %table.style3
           %thead
             %tr
               %th.icon
-              - titles = ["Name", "Description", "Action Order", 
-                          "Provision Order", "Action", "Delay (mins)"]
-              - colspan = ["Action", "Delay (mins)"]
+              - titles = [_("Name"), _("Description"), _("Action Order"), _("Provision Order"), _("Action"), _("Delay (mins)")]
+              - colspan = [_("Action"), _("Delay (mins)")]
               - titles.each do |title|
                 %th{:colspan => colspan.include?(title) ? 2 : 1}= title
-            - sub_titles = ["Start", "Stop", "Start", "Stop"]
+            - sub_titles = [_("Start"), _("Stop"), _("Start"), _("Stop")]
             %tr
               %th{:colspan => "5"}
               - sub_titles.each do |st|
@@ -118,7 +118,7 @@
                                                   :complete => "miqSparkle(false);",
                                                   :url      => "/catalog/x_show/#{to_cid(r.resource_id)}"),
                   :onmouseover => "this.style.cursor='pointer'",
-                  :title       => "Click to this Catalog Item"}
+                  :title       => _("Click to this Catalog Item")}
                 %td.icon{:style => "white-space:nowrap"}
                   %img{:src    => "/images/icons/new/service_template.png",
                        :valign => "middle",
@@ -134,13 +134,13 @@
                     - else
                       = ["group_idx", "provision_index"].include?(key) ? r.send(key).to_i + 1 : r.send(key)
       - else
-        No Resources found.
+        =_('No Resources found.')
   - else
     - if !@record.prov_type || (@record.prov_type && @record.prov_type != "generic")
       #request{:name => "request", :width => "80px"}
         - if @options[:wf]
           %p.legend
-            Request Info
+            =_('Request Info')
             = render :partial => "miq_request/prov_wf",
                      :locals  => {:wf   => @options[:wf],
                                   :show => true}

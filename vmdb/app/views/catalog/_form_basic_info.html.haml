@@ -5,10 +5,10 @@
   = hidden_div_if(@edit && @edit[:ae_tree_select] != true, :id => "ae_tree_select_div" ) do
     = render(:partial=>'layouts/ae_tree_select')
 
-  %p.legend Basic Info
+  %p.legend=_('Basic Info')
   %table.style1
     %tr
-      %td.key Name / Description
+      %td.key=_('Name / Description')
       %td
         = text_field_tag("name",
           @edit[:new][:name].to_s,
@@ -22,28 +22,29 @@
         &nbsp;
         = check_box_tag("display", value = "1", checked = @edit[:new][:display],
           "data-miq_observe_checkbox" => {:url => url}.to_json)
-        &nbsp;Display in Catalog
+        &nbsp;
+        =_('Display in Catalog')
     = javascript_tag(javascript_focus('name'))
     - if @edit[:new][:display]
       %tr
-        %td.key Catalog
+        %td.key=_('Catalog')
         %td.wide
           = select_tag('catalog_id',
-            options_for_select(([["<Unassigned>",nil]]) + @edit[:new][:available_catalogs], @edit[:new][:catalog_id]),
+            options_for_select(([["<_#{('Unassigned')}>",nil]]) + @edit[:new][:available_catalogs], @edit[:new][:catalog_id]),
             "data-miq_sparkle_on" => true,
             "data-miq_observe" => {:url => url}.to_json)
       %tr
-        %td.key Dialog
+        %td.key=_('Dialog')
         %td.wide
-          - options = [["<No Dialog>",nil]] + @edit[:new][:available_dialogs].invert.to_a.sort_by{ |a| a.first.downcase }
+          - options = [["<#{_('No Dialog')}>",nil]] + @edit[:new][:available_dialogs].invert.to_a.sort_by{ |a| a.first.downcase }
           = select_tag('dialog_id',
             options_for_select(options, @edit[:new][:dialog_id]),
             "data-miq_sparkle_on" => true, "data-miq_observe" => {:url => url}.to_json)
       %tr
-        %td.key{:title => "Provisioning Entry Point (NameSpace/Class/Instance)"}
-          Provisioning Entry Point
+        %td.key{:title => _("Provisioning Entry Point (NameSpace/Class/Instance)")}
+          =_('Provisioning Entry Point')
           %br
-          (NS/Cls/Inst)
+          =_('(NS/Cls/Inst)')
         %td.wider{:title => @edit[:new][:fqname]}
           %table
             %tr
@@ -53,18 +54,18 @@
               %td
                 - display = @edit[:new][:fqname] != "" ? "" : "display:none"
                 #fqname_div{:style => @edit[:new][:fqname] != "" ? "" : "display:none"}
-                  = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Provisioning Entry Point"),
+                  = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => _("Remove this Provisioning Entry Point")),
                     {:action => 'ae_tree_select_discard', :typ => "provision"},
                     "data-miq_sparkle_on" => true,
                     "data-miq_sparkle_off" => true,
-                    "data-confirm" => "Are you sure you want to remove this Provisioning Entry Point?",
+                    "data-confirm" => _("Are you sure you want to remove this Provisioning Entry Point?"),
                     :remote => true,
-                    :title => "Remove this Provisioning Entry Point")
+                    :title => _("Remove this Provisioning Entry Point"))
       %tr
-        %td.key{:title => "Reconfigure Entry Point (NameSpace/Class/Instance)"}
-          Reconfigure Entry Point
+        %td.key{:title => _("Reconfigure Entry Point (NameSpace/Class/Instance)")}
+          =_('Reconfigure Entry Point')
           %br
-          (NS/Cls/Inst)
+          =_('(NS/Cls/Inst)')
         %td.wider{:title => @edit[:new][:reconfigure_fqname]}
           %table
             %tr
@@ -79,14 +80,14 @@
                   {:action => 'ae_tree_select_discard', :typ => "reconfigure"},
                   "data-miq_sparkle_on" => true,
                   "data-miq_sparkle_off" => true,
-                  "data-confirm" => "Are you sure you want to remove this Reconfigure Entry Point?",
+                  "data-confirm" => _("Are you sure you want to remove this Reconfigure Entry Point?"),
                   :remote => true,
-                  :title => "Remove this Reconfigure Entry Point")
+                  :title => _("Remove this Reconfigure Entry Point"))
       %tr
         %td.key{:title => "Retirement Entry Point (NameSpace/Class/Instance)"}
-          Retirement Entry Point
+          =_('Retirement Entry Point')
           %br
-          (NS/Cls/Inst)
+          =_('(NS/Cls/Inst)')
         %td.wider{:title => @edit[:new][:retire_fqname]}
           %table
             %tr
@@ -99,9 +100,9 @@
                     {:action => 'ae_tree_select_discard', :typ => "retirement"},
                     "data-miq_sparkle_on" => true,
                     "data-miq_sparkle_off" => true,
-                    "data-confirm" => "Are you sure you want to remove this Retirement Entry Point?",
+                    "data-confirm" => _("Are you sure you want to remove this Retirement Entry Point?"),
                     :remote => true,
-                    :title => "Remove this Retirement Entry Point")
+                    :title => _("Remove this Retirement Entry Point"))
     /
       %tr
         %td.key Cost

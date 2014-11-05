@@ -13,9 +13,9 @@
         %br
         #buttons
           - res_acts = @record.resource_actions.find_all { |ra| ra.action.downcase.eql? "provision" }
-          = button_tag("Order",
+          = button_tag(_("Order"),
                        :class   => "btn btn-default",
-                       :alt     => t = "Order this Service",
+                       :alt     => t = _("Order this Service"),
                        :title   => t,
                        :onclick => "miqAjaxButton('#{url_for(:action => "svc_catalog_provision",
                                                              :id     => @record.id,
@@ -23,11 +23,11 @@
       %td{:valign => "top"}
         %table.style1
           %tr
-            %td.key Name
+            %td.key=_('Name')
             %td.notwide= @record.name
           %tr
-            %td.key Description
+            %td.key=_('Description')
             %td.notwide= @record.description
           %tr
-            %td.key Long Description
+            %td.key=_('Long Description')
             %td.wide= @record.long_description.to_s.html_safe
