@@ -65,7 +65,7 @@ describe CustomButton do
           q.class_name.should  == "MiqAeEngine"
           q.method_name.should == "deliver"
           q.role.should        == "automate"
-          q.zone.should        == nil
+          q.zone.should eq("default")
           q.priority.should    == MiqQueue::HIGH_PRIORITY
           a = q.args
           a.should be_kind_of(Array)
