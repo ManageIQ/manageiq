@@ -120,7 +120,7 @@
 
       <%# Show search box for VMX tree list nodes or when in control explorer%>
       <% if x_tree && (([:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record) || @show_adv_search) %>
-        <%= javascript_show_if_exists("#adv_searchbox_div") %>
+        <%= javascript_show_if_exists("adv_searchbox_div") %>
       <% end %>
 
     <% else %>  <%# Not using new explorer right cell layout %>

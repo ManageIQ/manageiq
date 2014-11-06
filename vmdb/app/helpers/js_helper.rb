@@ -1,6 +1,6 @@
 module JsHelper
   def set_element_visible(element, status)
-    status ? javascript_show_if_exists(j_str(element)) : javascript_hide_if_exists(j_str(element))
+    status ? javascript_show_if_exists(element) : javascript_hide_if_exists(element)
   end
 
   # replacement for app/views/shared/ajax/_spinner_control.js.erb
@@ -14,9 +14,9 @@ module JsHelper
     bool_str = (!!lock).to_s
     element = "#{tree_var}_div"
     "
-      $j('##{tree_var}box').dynatree('#{lock ? 'disable' : 'enable'}');
+      $j('##{j_str(tree_var)}box').dynatree('#{lock ? 'disable' : 'enable'}');
       #{javascript_dim(element, bool_str)}
-    "
+    ".html_safe
   end
 
   # options:
@@ -38,42 +38,42 @@ module JsHelper
   end
 
   def javascript_focus(element)
-    "$j('##{element}').focus();"
+    "$j('##{j_str(element)}').focus();".html_safe
   end
 
   def javascript_focus_if_exists(element)
-    "if ($j('##{element}').length) #{javascript_focus(element)}"
+    "if ($j('##{j_str(element)}').length) #{javascript_focus(element)}".html_safe
   end
 
   def javascript_highlight(element, status)
-    "miqHighlight('##{element}', #{status});"
+    "miqHighlight('##{j_str(element)}', #{j_str(status)});".html_safe
   end
 
   def javascript_dim(element, status)
-    "miqDimDiv('##{element}', #{status});"
+    "miqDimDiv('##{j_str(element)}', #{j_str(status)});".html_safe
   end
 
   def javascript_add_class(element, cls)
-    "$j('##{element}').addClass('#{cls}');"
+    "$j('##{j_str(element)}').addClass('#{j_str(cls)}');".html_safe
   end
 
   def javascript_del_class(element, cls)
-    "$j('##{element}').removeClass('#{cls}');"
+    "$j('##{j_str(element)}').removeClass('#{j_str(cls)}');".html_safe
   end
 
   def javascript_show(element)
-    "$j('\##{element}').show();"
+    "$j('##{j_str(element)}').show();".html_safe
   end
 
   def javascript_hide(element)
-    "$j('\##{element}').hide();"
+    "$j('##{j_str(element)}').hide();".html_safe
   end
 
   def javascript_show_if_exists(element)
-    "if ($j('\##{element}').length) #{javascript_show(element)}"
+    "if ($j('##{j_str(element)}').length) #{javascript_show(element)}".html_safe
   end
 
   def javascript_hide_if_exists(element)
-    "if ($j('\##{element}').length) #{javascript_hide(element)}"
+    "if ($j('##{j_str(element)}').length) #{javascript_hide(element)}".html_safe
   end
 end
