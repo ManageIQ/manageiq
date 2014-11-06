@@ -1143,11 +1143,11 @@ class MiqAeClassController < ApplicationController
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("field_default_value")
             page << javascript_show("field_password_value")
-            page << "$j('\#field_password_value').value = '';"
+            page << "$('field_password_value').value = '';"
           else
             page << javascript_hide("field_password_value")
             page << javascript_show("field_default_value")
-            page << "$j('\#field_default_value').value = '';"
+            page << "$('field_default_value').value = '';"
           end
         end
         params.keys.each do |field|
@@ -1211,7 +1211,7 @@ class MiqAeClassController < ApplicationController
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("cls_field_default_value")
             page << javascript_show("cls_field_password_value")
-            page << "$j('\#cls_field_password_value').value = '';"
+            page << "$('cls_field_password_value').value = '';"
           else
             page << javascript_hide("cls_field_password_value")
             page << javascript_show("cls_field_default_value")
@@ -1676,7 +1676,7 @@ class MiqAeClassController < ApplicationController
         page << javascript_focus('cls_field_name')
       else
         page << javascript_show("method_inputs_div")
-        page << javascript_focus('cls_field_name')
+        page << javascript_focus('field_name')
       end
       page << javascript_for_miq_button_visibility(@changed)
       page << javascript_show("inputs_div")
