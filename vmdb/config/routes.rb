@@ -1907,7 +1907,7 @@ Vmdb::Application.routes.draw do
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 
     # Default route with no action to controller's index action
-    match "#{controller_name}", :controller => controller_name, :action => :index
+    match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
 
     # One-by-one get/post routes for defined controllers
     if controller_actions.is_a?(Hash)
