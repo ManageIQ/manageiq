@@ -20,6 +20,12 @@ describe EmsCloudController do
     end
   end
 
+  describe "#dynamic_list_refresh" do
+    it "routes with POST" do
+      expect(post("/ems_cloud/dynamic_list_refresh")).to route_to("ems_cloud#dynamic_list_refresh")
+    end
+  end
+
   describe "#form_field_changed" do
     it "routes with POST" do
       expect(post("/ems_cloud/form_field_changed")).to route_to("ems_cloud#form_field_changed")

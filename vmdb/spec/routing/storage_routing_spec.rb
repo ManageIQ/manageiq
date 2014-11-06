@@ -35,6 +35,12 @@ describe "routes for StorageController" do
     end
   end
 
+  describe "#dynamic_list_refresh" do
+    it "routes with POST" do
+      expect(post("/#{controller_name}/dynamic_list_refresh")).to route_to("#{controller_name}#dynamic_list_refresh")
+    end
+  end
+
   describe "#files" do
     it "routes with GET" do
       expect(get("/#{controller_name}/files")).to route_to("#{controller_name}#files")

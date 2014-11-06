@@ -278,6 +278,7 @@ Vmdb::Application.routes.draw do
         create
         discover
         discover_field_changed
+        dynamic_list_refresh
         exp_button
         exp_changed
         exp_token_pressed
@@ -340,6 +341,7 @@ Vmdb::Application.routes.draw do
         drift_history
         drift_mode
         drift_same
+        dynamic_list_refresh
         exp_button
         exp_changed
         exp_token_pressed
@@ -526,6 +528,7 @@ Vmdb::Application.routes.draw do
         drift_differences
         drift_mode
         drift_same
+        dynamic_list_refresh
         exp_button
         exp_changed
         exp_token_pressed
@@ -1464,6 +1467,7 @@ Vmdb::Application.routes.draw do
         compare_mode
         compare_remove
         compare_set_state
+        dynamic_list_refresh
         exp_button
         exp_changed
         exp_token_pressed
@@ -1598,6 +1602,7 @@ Vmdb::Application.routes.draw do
         drift_history
         drift_mode
         drift_same
+        dynamic_list_refresh
         edit_vm
         event_logs
         evm_relationship_field_changed
@@ -1702,6 +1707,7 @@ Vmdb::Application.routes.draw do
         drift_history
         drift_mode
         drift_same
+        dynamic_list_refresh
         edit_vm
         event_logs
         evm_relationship_field_changed
@@ -1820,6 +1826,7 @@ Vmdb::Application.routes.draw do
         drift_history
         drift_mode
         drift_same
+        dynamic_list_refresh
         edit_vm
         event_logs
         evm_relationship_field_changed

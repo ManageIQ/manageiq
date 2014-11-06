@@ -13,6 +13,12 @@ describe VmOrTemplateController do
   it_behaves_like "A controller that has timeline routes"
   it_behaves_like "A controller that has utilization routes"
 
+  describe "#dynamic_list_refresh" do
+    it "routes with POST" do
+      expect(post("/vm_or_template/dynamic_list_refresh")).to route_to("vm_or_template#dynamic_list_refresh")
+    end
+  end
+
   describe "#explorer" do
     it "routes with GET" do
       expect(get("/vm_or_template/explorer")).to route_to("vm_or_template#explorer")
