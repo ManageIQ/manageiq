@@ -264,16 +264,7 @@ class Condition < ActiveRecord::Base
     end
     return nil unless rec
 
-    # TODO: We can't look at the value type now because we have no visibility to the type at the time the expression is
-    # defined so all values come here as strings. Later that will change and this code can be uncommented.
-    #
-    # case rec.format.to_sym
-    # when :REG_DWORD, :REG_DWORD_BIG_ENDIAN, :REG_QWORD
-    #   ret = is_numeric?(rec.data) ? rec.data.to_f : rec.data
-    # else
-    ret = rec.data
-    # end
-    ret
+    rec.data
   end
 
   def export_to_array
