@@ -1,7 +1,7 @@
 - url = url_for(:action => 'iso_datastore_form_field_changed', :id => "#{@isd.id || "new"}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend Basic Information
+  %p.legend=_('Basic Information')
   %table.style1
     %tbody
       %tr
@@ -9,5 +9,5 @@
           = ui_lookup(:table => "ext_management_system")
         %td.wide
           = select_tag("ems_id",
-            options_for_select([["<Choose>",nil]] + @edit[:emses].sort, @edit[:new][:ems_id]),
+            options_for_select([["<#{_('Choose')}>",nil]] + @edit[:emses].sort, @edit[:new][:ems_id]),
             "data-miq_observe" => {:url => url}.to_json)

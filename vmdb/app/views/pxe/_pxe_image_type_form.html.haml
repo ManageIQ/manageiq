@@ -1,18 +1,18 @@
 - url = url_for(:action => 'pxe_image_type_form_field_changed', :id => "#{@pxe_image_type.id || "new"}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend Basic Information
+  %p.legend=_('Basic Information')
   %table.style1
     %tbody
       %tr
-        %td.key Name
+        %td.key=_('Name')
         %td.wide
           = text_field_tag("name", @edit[:new][:name], :maxlength => MAX_NAME_LEN,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           = javascript_tag(javascript_focus('name'))
       %tr
-        %td.key Type
+        %td.key=_('Type')
         %td.wide
           = select_tag("provision_type",
-            options_for_select([["<Any>",nil]] + @edit[:prov_types].invert.sort, @edit[:new][:provision_type]),
+            options_for_select([["<#{_('Any')}>",nil]] + @edit[:prov_types].invert.sort, @edit[:new][:provision_type]),
             "data-miq_observe" => {:url => url}.to_json)

@@ -7,9 +7,9 @@
       - else
         = render :partial => "layouts/flash_msg"
         = render(:partial => "shared/summary/textual",
-          :locals  => {:title => "Basic Information", :items => textual_template_basicinfo})
+          :locals  => {:title => _("Basic Information"), :items => textual_template_basicinfo})
         %hr
-        %p.legend Script
+        %p.legend=_('Script')
         = text_area("script1", "data",
           :value => @ct.script,
           :size => "90x20",
