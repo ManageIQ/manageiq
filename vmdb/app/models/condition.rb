@@ -18,8 +18,6 @@ class Condition < ActiveRecord::Base
   belongs_to :miq_policy
   has_and_belongs_to_many :miq_policies
 
-  CONDITIONS_DIR = File.join(File.expand_path(Rails.root), "product/conditions")
-
   serialize :expression
   serialize :applies_to_exp
 
@@ -356,20 +354,6 @@ class Condition < ActiveRecord::Base
     end
   end
 
-  def self.sync_from_dir
-    begin
-      # Add missing conditions to model
-      Dir.glob(File.join(CONDITIONS_DIR, "*.yml")).each {|f|
-        self.sync_from_file(File.basename(f))
-      }
-      Dir.glob(File.join(CONDITIONS_DIR, "*.xml")).each {|f|
-        self.sync_from_file(File.basename(f))
-      }
-    rescue => err
-      MiqPolicy.logger.log_backtrace(err)
-    end
-  end
-
   def self.from_file(filename)
     path = self.path(filename)
     file_type = File.extname(filename).split(".").last
@@ -380,10 +364,6 @@ class Condition < ActiveRecord::Base
     when "xml"
       from_xml(File.read(path))
     end
-  end
-
-  def self.path(filename)
-    File.join(CONDITIONS_DIR, filename)
   end
 
   def to_yml(p)
