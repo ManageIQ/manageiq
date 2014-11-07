@@ -315,37 +315,6 @@ class Condition < ActiveRecord::Base
 
   protected
 
-  def self.from_yml(data)
-    cond = YAML::load(data)
-
-    unless cond.has_key?("expression")
-      cond["expression"] = cond["rule"]
-      cond.delete("rule")
-    end
-
-    if cond["expression"]["mode"] == "tag_expr_v2"
-      cond["expression"] = MiqExpression.new(cond["expression"]["expr"])
-    end
-    cond
-  end
-
-  def self.from_xml(data)
-    cond = {}
-    doc=MiqXml.load(data)
-    doc.root.attributes.each_key {|k| cond[k]=doc.root.attributes[k]}
-
-    expression_node=doc.find_first("//expr")
-    cond["expression"] = {}
-    cond["expression"]["mode"] = expression_node.attributes["mode"]
-
-    expr_node=doc.find_first(doc, "//expression/expr")
-    handler = ConditionXmlHandler.new
-    REXML::Document.parse_stream(expr_node.to_s, handler)
-    cond["expression"]["expr"] = handler.expr
-
-    cond
-  end
-
   def self.seed
     MiqRegion.my_region.lock do
       self.sync_from_dir
