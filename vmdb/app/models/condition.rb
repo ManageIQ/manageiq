@@ -6,8 +6,6 @@ class Condition < ActiveRecord::Base
 
   validates_presence_of     :name, :description, :guid, :modifier, :expression, :towhat
   validates_uniqueness_of   :name, :description, :guid
-  # validates_format_of       :name, :with => %r{^[a-z0-9_\-]+$}i,
-  #   :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"
   validates_inclusion_of    :modifier, :in => %w{ allow deny }
 
   acts_as_miq_taggable
@@ -58,7 +56,6 @@ class Condition < ActiveRecord::Base
 
       result = expression["include"] != "any"
       expression["tag"].split.each {|tag|
-        # p "rec.is_tagged_with?(#{tag}, :ns => #{expression["ns"]})"
         if rec.is_tagged_with?(tag, :ns => expression["ns"])
           result = true if expression["include"] == "any"
           result = false if expression["include"] == "none"
@@ -120,9 +117,6 @@ class Condition < ActiveRecord::Base
   end
 
   def self._subst(rec, inputs, opts, tag, mode)
-    # $log.info "opts: [#{opts}]"
-    # $log.info "tag: [#{tag}]"
-    # $log.info "mode: [#{mode}]"
     ohash, ref, object = self.options2hash(opts, rec)
 
     case mode.downcase
