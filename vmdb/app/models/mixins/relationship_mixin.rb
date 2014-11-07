@@ -1,3 +1,5 @@
+require 'memoist'
+
 module RelationshipMixin
   extend ActiveSupport::Concern
 
@@ -20,7 +22,7 @@ module RelationshipMixin
   ]
 
   included do
-    ActiveSupport::Deprecation.silence { extend ActiveSupport::Memoizable }
+    extend Memoist
 
     cattr_accessor :default_relationship_type
 
