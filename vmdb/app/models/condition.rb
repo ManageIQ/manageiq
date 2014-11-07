@@ -327,33 +327,6 @@ class Condition < ActiveRecord::Base
 
   protected
 
-  def self.sync_from_file(filename)
-    cond = self.from_file(filename)
-    cond["file_mtime"] = File.mtime(self.path(filename)).utc
-    rec = self.find_by_filename(filename)
-    if rec.nil?
-      name = cond["old_name"] ? cond["old_name"] : cond["name"]
-      rec = self.find_by_name(name) if name
-    end
-    rec ||= self.new
-
-    if rec.file_mtime.nil? || rec.file_mtime.utc < cond["file_mtime"]
-      rec.name        = cond["name"]
-      rec.filename    = filename
-      rec.file_mtime  = cond["file_mtime"]
-      rec.modifier    = cond["modifier"]
-      rec.expression  = cond["expression"]
-      rec.description = cond["description"]
-      rec.towhat      = cond["towhat"]
-      if rec.new_record?
-        $log.info("MIQ(Condition.sync_from_file) Creating Condition [#{cond["name"]}]")
-      else
-        $log.info("MIQ(Condition.sync_from_file) Updating Condition [#{cond["name"]}]")
-      end
-      rec.save!
-    end
-  end
-
   def self.from_file(filename)
     path = self.path(filename)
     file_type = File.extname(filename).split(".").last
