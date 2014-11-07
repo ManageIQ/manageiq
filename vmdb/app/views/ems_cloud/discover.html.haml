@@ -2,20 +2,20 @@
 = form_tag({:action => "discover"},
            {:id     => "discover_form"}) do
   = render :partial => "layouts/discover_credentials",
-           :locals  => {:label => "Credentials"}
+           :locals  => {:label => _("Credentials")}
   %table{:width => "100%"}
     %tr
       %td{:align => "right"}
         #buttons_on
-          = button_tag("Start",
+          = button_tag(_("Start"),
                        :name  => "start",
                        :class => "btn btn-primary",
-                       :alt   => t = "Start the Host Discovery",
+                       :alt   => t = _("Start the Host Discovery"),
                        :title => t,
                        :type  => "submit")
-          = button_tag("Cancel",
+          = button_tag(_("Cancel"),
                        :name  => "cancel",
                        :class => "btn btn-default",
-                       :alt   => t = "Cancel",
+                       :alt   => t = _("Cancel"),
                        :title => t,
                        :type  => "submit")
