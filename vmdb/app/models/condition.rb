@@ -276,18 +276,6 @@ class Condition < ActiveRecord::Base
     ret
   end
 
-  def policy_description
-    return nil unless self.filename
-    cond = Condition.from_file(self.filename)
-    cond["policy_description"] unless cond.empty?
-  end
-
-  def old_name
-    return nil unless self.filename
-    cond = Condition.from_file(self.filename)
-    cond["old_name"] unless cond.empty?
-  end
-
   def export_to_array
     h = self.attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
