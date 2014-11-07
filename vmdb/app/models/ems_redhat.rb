@@ -10,10 +10,11 @@ class EmsRedhat < EmsInfra
   def self.raw_connect(server, port, username, password, service = "Service")
     require 'ovirt'
     params = {
-      :server   => server,
-      :port     => port,
-      :username => username,
-      :password => password
+      :server     => server,
+      :port       => port,
+      :username   => username,
+      :password   => password,
+      :verify_ssl => false
     }
 
     read_timeout, open_timeout = ems_timeouts(:ems_redhat, service)
