@@ -315,10 +315,6 @@ class Condition < ActiveRecord::Base
 
   protected
 
-  def to_yml(p)
-    YAML::dump(p)
-  end
-
   def self.from_yml(data)
     cond = YAML::load(data)
 
@@ -331,10 +327,6 @@ class Condition < ActiveRecord::Base
       cond["expression"] = MiqExpression.new(cond["expression"]["expr"])
     end
     cond
-  end
-
-  def to_xml(p)
-    # TODO: convert condition from hash to xml
   end
 
   def self.from_xml(data)
@@ -352,10 +344,6 @@ class Condition < ActiveRecord::Base
     cond["expression"]["expr"] = handler.expr
 
     cond
-  end
-
-  def self.from_hash(data)
-    data
   end
 
   def self.seed
