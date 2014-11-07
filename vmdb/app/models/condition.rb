@@ -315,12 +315,6 @@ class Condition < ActiveRecord::Base
 
   protected
 
-  def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-    end
-  end
-
   module SafeNamespace
     def self.eval_script(script, context)
       log_prefix = "MIQ(SafeNamespace.eval_script)"
