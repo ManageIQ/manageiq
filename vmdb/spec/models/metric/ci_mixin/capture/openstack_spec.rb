@@ -4,7 +4,6 @@ describe Metric::CiMixin::Capture::Openstack do
   require File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. .. tools openstack_data openstack_data_test_helper}))
 
   before :each do
-    GC.disable
     MiqRegion.seed
     guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
@@ -18,10 +17,6 @@ describe Metric::CiMixin::Capture::Openstack do
 
     @vm = FactoryGirl.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
     @vm.stub(:perf_init_openstack).and_return(@ems_openstack)
-  end
-
-  after do
-    GC.enable
   end
 
   context "with non-aggregated data" do
