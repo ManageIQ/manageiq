@@ -58,6 +58,12 @@ describe EmsClusterController do
     end
   end
 
+  describe "#dynamic_list_refresh" do
+    it "routes with POST" do
+      expect(post("/ems_cluster/dynamic_list_refresh")).to route_to("ems_cluster#dynamic_list_refresh")
+    end
+  end
+
   describe "#listnav_search_selected" do
     it "routes with POST" do
       expect(post("/ems_cluster/listnav_search_selected/123")).to route_to(
