@@ -315,18 +315,6 @@ class Condition < ActiveRecord::Base
 
   protected
 
-  def self.from_file(filename)
-    path = self.path(filename)
-    file_type = File.extname(filename).split(".").last
-    return [] unless File.exists?(path)
-    case file_type
-    when "yml"
-      from_yml(File.read(path))
-    when "xml"
-      from_xml(File.read(path))
-    end
-  end
-
   def to_yml(p)
     YAML::dump(p)
   end
