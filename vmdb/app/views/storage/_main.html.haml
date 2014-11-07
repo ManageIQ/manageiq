@@ -2,11 +2,11 @@
   = render :partial => "layouts/flash_msg"
   %dl.col2
     %dd
-      = render :partial => "shared/summary/textual", :locals => { :title => "Properties", :items => textual_group_properties }
-      = render :partial => "shared/summary/textual", :locals => { :title => "Information for Registered VMs", :items => textual_group_registered_vms }
-      = render :partial => "shared/summary/textual", :locals => { :title => "Relationships", :items => textual_group_relationships }
+      = render :partial => "shared/summary/textual", :locals => { :title => _("Properties"), :items => textual_group_properties }
+      = render :partial => "shared/summary/textual", :locals => { :title => _("Information for Registered VMs"), :items => textual_group_registered_vms }
+      = render :partial => "shared/summary/textual", :locals => { :title => _("Relationships"), :items => textual_group_relationships }
     %dd
       - if get_vmdb_config[:product][:storage]
-        = render :partial => "shared/summary/textual", :locals => { :title => "Storage Relationships", :items => textual_group_storage_relationships }
-      = render :partial => "shared/summary/textual", :locals => { :title => "Content", :items => textual_group_content}
-      = render :partial => "shared/summary/textual_tags", :locals => { :title => "Smart Management", :items => textual_group_smart_management }
+        = render :partial => "shared/summary/textual", :locals => { :title => _("Storage Relationships"), :items => textual_group_storage_relationships }
+      = render :partial => "shared/summary/textual", :locals => { :title => _("Content"), :items => textual_group_content}
+      = render :partial => "shared/summary/textual_tags", :locals => { :title => _("Smart Management"), :items => textual_group_smart_management }
