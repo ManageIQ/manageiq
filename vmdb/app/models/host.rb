@@ -47,7 +47,6 @@ class Host < ActiveRecord::Base
   has_many                  :vms_and_templates, :dependent => :nullify
   has_many                  :vms
   has_many                  :miq_templates
-  has_one                   :miq_proxy, :dependent => :destroy
   has_and_belongs_to_many   :storages
   has_many                  :switches, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
@@ -506,18 +505,6 @@ class Host < ActiveRecord::Base
     self.update_attributes!(:ipaddress => addr) unless addr.nil?
   end
 
-  def call_ws(ost)
-    raise "Host does not have a #{MIQHOST_PRODUCT_NAME}" unless self.miq_proxy
-    self.miq_proxy.call_ws(ost)
-  end
-
-  def self.call_ws_from_queue(id, options)
-    options = Marshal.load(options)
-    $log.info "MIQ(host-call_ws_from_queue): Calling: [#{options.inspect}]"
-    host = Host.find(id)
-    host.call_ws(OpenStruct.new(options))
-  end
-
   # Scan for new vms and get OS/hardware details if we do not already have them.
   def add_vms(ret)
     disconnect_vm_list = []
@@ -708,12 +695,6 @@ class Host < ActiveRecord::Base
     return self.operating_system.nil? ? "" : self.operating_system.service_pack
   end
 
-  def available_builds
-    data = self.platform_arch
-    return [] if data.blank?
-    ProductUpdate.where(:component => "smartproxy", :platform => data[0], :arch => data[1]).to_a
-  end
-
   def arch
     if self.vmm_product.to_s.include?('ESX')
       return 'x86_64' if self.vmm_version.to_i >= 4
@@ -733,26 +714,6 @@ class Host < ActiveRecord::Base
     return ret
   end
 
-  def mediapath
-    data = self.platform_arch
-    return nil if data.blank?
-    File.join(MiqProxyBuild.media_root, data[0], data[1])
-  end
-
-  def is_a_proxy?
-    self.miq_proxy ? true : false
-  end
-
-  def is_proxy_active?
-    return false unless self.miq_proxy
-
-    self.miq_proxy.state == "on"
-  end
-
-  def miq_proxies
-    MiqProxy.all.select { |p| p.hosts.include?(self) }
-  end
-
   def acts_as_ems?
     product = self.vmm_product.to_s.downcase
     ['hyperv', 'hyper-v'].each {|p| return true if product.include?(p)}
@@ -764,16 +725,7 @@ class Host < ActiveRecord::Base
       return {:show => true, :enabled => true, :message => ""}
     end
 
-    if self.platform == "windows"
-      s =  {:show => true, :enabled => true, :message => ""}
-      unless self.is_proxy_active?
-        s[:enabled] = false
-        s[:message] = "Proxy not active"
-      end
-      return s
-    end
-
-    return {:show => false, :enabled => false, :message => "Host not configured for refresh"}
+    {:show => false, :enabled => false, :message => "Host not configured for refresh"}
   end
 
   def scannable_status
@@ -829,11 +781,6 @@ class Host < ActiveRecord::Base
     return scannable_status[:message]
   end
 
-  def supports_miqproxy?
-    # Check for ESX Server 3i which does not support a console
-    self.is_vmware_esxi? ? false : true
-  end
-
   def is_vmware?
     self.vmm_vendor.to_s.strip.downcase == 'vmware'
   end
@@ -848,7 +795,7 @@ class Host < ActiveRecord::Base
   end
 
   def state
-    return (self.ext_management_system || self.miq_proxy.nil?) ? self.power_state : self.miq_proxy.state
+    self.power_state
   end
 
   def state=(new_state)
@@ -901,14 +848,7 @@ class Host < ActiveRecord::Base
     # fill-in os/hardware inforamtion for the host
     newHost.get_config_data(xmlDoc) if xmlDoc && newHost
 
-    # create/update MiqProxy instance
-    proxy = newHost.miq_proxy
-    proxy ||= newHost.build_miq_proxy
-    proxy.name = newHost.name
-    proxy.version = version
-    proxy.save
-
-    return {:hostId => newHost.guid, :settings => newHost.miq_proxy.settings}
+    {:hostId => newHost.guid}
   end
 
   def self.lookUpHost(hostname, ipaddr)
@@ -1109,16 +1049,7 @@ class Host < ActiveRecord::Base
     when 'ws';     verify_credentials_with_ws(auth_type)
     when 'ipmi';   verify_credentials_with_ipmi(auth_type)
     else
-      if self.supports_miqproxy? && !self.has_authentication_type?(:remote)
-        begin
-          verify_credentials_with_ssh(auth_type, options)
-        rescue MiqException::MiqHostError, MiqException::MiqInvalidCredentialsError
-          verify_credentials_with_ws(auth_type)
-          raise MiqException::MiqInvalidCredentialsError, "SSH credential validation failed.  Web Service credential validation was successful."
-        end
-      else
-        verify_credentials_with_ws(auth_type)
-      end
+      verify_credentials_with_ws(auth_type)
     end
 
     return true
@@ -1161,10 +1092,6 @@ class Host < ActiveRecord::Base
     else
       raise MiqException::MiqHostError, "IPMI is not available on this Host"
     end
-  end
-
-  def myport
-    self.miq_proxy ? self.miq_proxy.myport : nil
   end
 
   def self.discoverByIpRange(starting, ending, options={:ping => true})
@@ -1696,26 +1623,6 @@ class Host < ActiveRecord::Base
     end
   end
 
-  def is_vix_disk?
-    self.is_a_proxy? && self.miq_proxy.capabilities && self.miq_proxy.capabilities[:vixDisk] == true
-  end
-
-  def self.available_vix_disk_hosts
-    self.vix_disk_hosts.collect {|h| h && h.state == "on" ? h : nil}.compact
-  end
-
-  def self.vix_disk_hosts()
-    vixHosts = []
-    Host.find(:all).each do |h|
-      vixHosts << h if h.is_a_proxy? && h.miq_proxy.capabilities && h.miq_proxy.capabilities[:vixDisk] == true
-    end
-    return vixHosts
-  end
-
-  def concurrent_job_max
-    self.miq_proxy.concurrent_job_max()
-  end
-
   # TODO: Rename this to scan_queue and rename scan_from_queue to scan to match
   #   standard from other places.
   def scan(userid = "system", options={})
@@ -2016,11 +1923,6 @@ class Host < ActiveRecord::Base
     self.with_relationship_type("vm_scan_affinity") { self.parents }
   end
   alias get_vm_scan_affinity vm_scan_affinity
-
-  def after_update_authentication
-    # Force Miqproxy to restart on credential change
-    self.miq_proxy.change_agent_config() if self.is_a_proxy? && self.credentials_changed?
-  end
 
   def processes
     return [] if self.operating_system.nil?

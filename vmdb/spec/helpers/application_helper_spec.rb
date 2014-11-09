@@ -2526,30 +2526,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when record class = MiqProxy" do
-      before { @record = MiqProxy.new }
-
-      context "and id = miq_proxy_deploy" do
-        before do
-          @id = "miq_proxy_deploy"
-        end
-        it "when host state not blank and host not on" do
-          @record.stub(:host => double(:state => 'suspend'))
-          subject.should == "The SmartProxy can not be managed because the Host is not powered on"
-        end
-
-        context "when host state blank or host is on" do
-          before { @record.stub(:host => double(:state => 'on', :available_builds => ['1.1'] )) }
-
-          it "and no available builds for the host" do
-            @record.stub(:host => double(:state => 'on', :available_builds => [] ))
-            subject.should == "Host OS is unknown or there are no available SmartProxy versions for the Host's OS"
-          end
-          it_behaves_like 'default case'
-        end
-      end
-    end
-
     context "when record class = MiqServer" do
       context "and id = delete_server" do
         before do

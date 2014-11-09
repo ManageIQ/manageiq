@@ -205,11 +205,6 @@ class Zone < ActiveRecord::Base
     self.ext_management_systems.collect(&:storages).flatten.uniq
   end
 
-  def miq_proxies
-    ems_ids = self.ext_management_systems.collect(&:id)
-    MiqProxy.includes(:host).references(:host).where("hosts.ems_id in (?)", ems_ids).to_a
-  end
-
   # Used by AggregationMixin
   alias all_storages           storages
   alias all_hosts              hosts

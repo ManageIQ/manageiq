@@ -23,7 +23,6 @@ module OpsController::Settings::Common
          'settings_custom_logos', 'settings_smartproxy'
       @changed = (@edit[:new] != @edit[:current].config)
       if params[:console_type]
-        get_smartproxy_choices
         @refresh_div     = 'settings_server'              # Replace main area
         @refresh_partial = 'settings_server_tab'
       end
@@ -898,7 +897,6 @@ module OpsController::Settings::Common
       @edit[:current].config[:smtp][:openssl_verify_mode] ||= nil
       @edit[:current].config[:ntp] ||= Hash.new
       @edit[:current].config[:ntp][:server] ||= Array.new
-      get_smartproxy_choices
       @in_a_form = true
     when "settings_authentication"        # Authentication tab
       @edit = Hash.new
@@ -1216,13 +1214,6 @@ module OpsController::Settings::Common
 #   # Enterprise Roles tab
 #   elsif @sb[:tabform] == "operations_4"
 #     @temp[:roles] = UiTaskSet.all.sort_by{ |role| role[:description] }
-    end
-  end
-
-  def get_smartproxy_choices
-    @smartproxy_choices = Hash.new
-    MiqProxy.all.each do |mp|
-      @smartproxy_choices[mp.name] = mp.id
     end
   end
 

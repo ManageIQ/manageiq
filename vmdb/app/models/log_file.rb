@@ -254,7 +254,6 @@ class LogFile < ActiveRecord::Base
     resource = server.who_am_i
 
     # server must implement an instance method: started_on? which returns whether the server is started
-    #  Add alias in MiqProxy:  alias :started? :state
     raise MiqException::Error, "started? not implemented for #{server.class.name}" unless server.respond_to?(:started?)
     raise MiqException::Error, "Log request failed since [#{resource} #{server.name if server.respond_to?(:name)}] is not started" unless server.started?
 

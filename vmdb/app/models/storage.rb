@@ -66,10 +66,6 @@ class Storage < ActiveRecord::Base
 
   SUPPORTED_STORAGE_TYPES = ["VMFS", "NFS"]
 
-  def miq_proxies
-    MiqProxy.all.select { |p| p.storages.include?(self) }
-  end
-
   def to_s
     self.name
   end

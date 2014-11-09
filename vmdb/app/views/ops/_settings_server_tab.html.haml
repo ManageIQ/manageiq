@@ -82,7 +82,7 @@
           %tr
             %td.key=_("Default Repository SmartProxy")
             %td{:style => "width: 350px"}
-              - if @smartproxy_choices.empty?
+              - if @smartproxy_choices.blank?
                 =_("None Available")
               - else
                 = select_tag('repository_scanning_defaultsmartproxy',
