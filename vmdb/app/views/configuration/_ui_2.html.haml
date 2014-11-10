@@ -5,14 +5,13 @@
     %dl.col2
       %dd
         %fieldset
-          %p.legend _('General')
+          %p.legend= _('General')
           %table.style1
             - keys = { :tagging      => _('Tagging'),
                        :compare      => _('Compare'),
                        :compare_mode => _('Compare Mode'),
                        :drift        => _('Drift'),
                        :drift_mode   => _('Drift Mode'),
-                       :dashboards   => _('Summary Screens'),
                        :vmitem       => _('VM and Instance Items') }
             - keys.each do |resource, view_name|
               %tr
@@ -21,20 +20,20 @@
                   %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
         - if role_allows(:feature => "miq_proxy_show_list")
           %fieldset
-            %p.legend _('Management Engine')
+            %p.legend= _('Management Engine')
             %table.style1
               %tr
-                %td.key _('SmartProxies')
+                %td.key= _('SmartProxies')
                 %td
                   %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
         %fieldset
-          %p.legend _('Services')
+          %p.legend= _('Services')
           %table.style1
-            - keys = { :service         => ["service",                        "My Services"],
-                       :catalog         => ["catalog_items_accord",           "Service Catalogs"],
-                       :servicetemplate => ["catalog_items_view",             "Catalog Items"],
-                       :vm              => ["vms_instances_filter_accord",    "VMs & Instances"],
-                       :miqtemplate     => ["templates_images_filter_accord", "Templates & Images"] }
+            - keys = { :service         => ["service",                        _('My Services')],
+                       :catalog         => ["catalog_items_accord",           _('Service Catalogs')],
+                       :servicetemplate => ["catalog_items_view",             _('Catalog Items')],
+                       :vm              => ["vms_instances_filter_accord",    _('VMs & Instances')],
+                       :miqtemplate     => ["templates_images_filter_accord", _('Templates & Images')] }
             - keys.each do |resource, (feature, view_name)|
               - if role_allows(:feature => feature)
                 %tr
@@ -49,7 +48,7 @@
           || role_allows(:feature => "instances_filter_accord")     |
           || role_allows(:feature => "images_filter_accord")        |
           %fieldset
-            %p.legend _('Clouds')
+            %p.legend= _('Clouds')
             %table.style1
               - if role_allows(:feature => "ems_cloud_show_list")
                 %tr
@@ -58,24 +57,24 @@
                     %ul#toolbars= render_view_buttons(:emscloud, @edit[:new][:views][:emscloud])
               - if role_allows(:feature => "availability_zone_show_list")
                 %tr
-                  %td.key _('Availability Zones')
+                  %td.key= _('Availability Zones')
                   %td
                     %ul#toolbars= render_view_buttons(:availabilityzone, @edit[:new][:views][:availabilityzone])
               - if role_allows(:feature => "flavor_show_list")
                 %tr
-                  %td.key _('Flavors')
+                  %td.key= _('Flavors')
                   %td
                     %ul#toolbars= render_view_buttons(:flavor, @edit[:new][:views][:flavor])
               - if role_allows(:feature => "instances_accord")        |
                 || role_allows(:feature => "instances_filter_accord") |
                 %tr
-                  %td.key _('Instances')
+                  %td.key= _('Instances')
                   %td
                     %ul#toolbars= render_view_buttons(:vmcloud, @edit[:new][:views][:vmcloud])
               - if role_allows(:feature => "images_accord")        |
                 || role_allows(:feature => "images_filter_accord") |
                 %tr
-                  %td.key _('Images')
+                  %td.key= _('Images')
                   %td
                     %ul#toolbars= render_view_buttons(:templatecloud, @edit[:new][:views][:templatecloud])
         - if role_allows(:feature => "ems_cloud_show_list")     |
@@ -88,7 +87,7 @@
           || role_allows(:feature => "vms_filter_accord")       |
           || role_allows(:feature => "templates_filter_accord") |
           %fieldset
-            %p.legend _('Infrastructure')
+            %p.legend= _('Infrastructure')
             %table.style1
               - if role_allows(:feature => "ems_infra_show_list")
                 %tr
@@ -97,33 +96,33 @@
                     %ul#toolbars= render_view_buttons(:emsinfra, @edit[:new][:views][:emsinfra])
               - if role_allows(:feature => "ems_cluster_show_list")
                 %tr
-                  %td.key _('Clusters')
+                  %td.key= _('Clusters')
                   %td
                     %ul#toolbars= render_view_buttons(:emscluster, @edit[:new][:views][:emscluster])
               - if role_allows(:feature => "host_show_list")
                 %tr
-                  %td.key _('Hosts')
+                  %td.key= _('Hosts')
                   %td
                     %ul#toolbars= render_view_buttons(:host, @edit[:new][:views][:host])
                 %tr
-                  %td.key _('Host Items')
+                  %td.key= _('Host Items')
                   %td
                     %ul#toolbars= render_view_buttons(:hostitem, @edit[:new][:views][:hostitem])
               - if role_allows(:feature => "vandt_accord")      |
                 || role_allows(:feature => "vms_filter_accord") |
                 %tr
-                  %td.key _('VMs')
+                  %td.key= _('VMs')
                   %td
                     %ul#toolbars= render_view_buttons(:vminfra, @edit[:new][:views][:vminfra])
               - if role_allows(:feature => "vandt_accord")            |
                 || role_allows(:feature => "templates_filter_accord") |
                 %tr
-                  %td.key _('Templates')
+                  %td.key= _('Templates')
                   %td
                     %ul#toolbars= render_view_buttons(:templateinfra, @edit[:new][:views][:templateinfra])
               - if role_allows(:feature => "resource_pool_show_list")
                 %tr
-                  %td.key _('Resource Pools')
+                  %td.key= _('Resource Pools')
                   %td
                     %ul#toolbars= render_view_buttons(:resourcepool, @edit[:new][:views][:resourcepool])
               - if role_allows(:feature => "storage_show_list")
@@ -133,12 +132,12 @@
                     %ul#toolbars= render_view_buttons(:storage, @edit[:new][:views][:storage])
               - if role_allows(:feature => "repository_show_list")
                 %tr
-                  %td.key _('Repositories')
+                  %td.key= _('Repositories')
                   %td
                     %ul#toolbars= render_view_buttons(:repo, @edit[:new][:views][:repo])
         - if get_vmdb_config[:product][:storage]
           %fieldset
-            %p.legend _('Storage')
+            %p.legend= _('Storage')
             %table.style1
               - keys = { :ontapstoragesystem   => "ontap_storage_system",
                          :ontapstoragevolume   => "ontap_storage_volume",
@@ -152,7 +151,7 @@
                   %td
                     %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
               %tr
-                %td.key _('Storage Managers')
+                %td.key= _('Storage Managers')
                 %td
                   %ul#toolbars= render_view_buttons(:storagemanager, @edit[:new][:views][:storagemanager])
       = render :partial => "/layouts/form_buttons"

@@ -6,8 +6,6 @@ module ConfigurationHelper
          view == "compressed" ? compare_or_drift_compressed(resource) : compare_or_drift_expanded(resource)
        when :compare_mode, :drift_mode
          view == "details" ? compare_or_drift_mode_details(resource) : compare_or_drift_mode_exists(resource)
-       when :dashboards
-         view == "textual" ? dashboards_textual : dashboards_graphical
        when :treesize
          view == "20" ?  treesize_small : treesize_large
        else
@@ -44,61 +42,51 @@ module ConfigurationHelper
     end
 
     def compare_or_drift_compressed(resource)
-      inactive_icon("view_expanded.png", "Expanded View", resource, "expanded") +
-      active_icon("view_compressed.png", "Compressed View")
+      inactive_icon("view_expanded.png", _('Expanded View'), resource, "expanded") +
+      active_icon("view_compressed.png", _('Compressed View'))
     end
 
     def compare_or_drift_expanded(resource)
-      active_icon("view_expanded.png", "Expanded View") +
-      inactive_icon("view_compressed.png", "Compressed View", resource, "compressed")
+      active_icon("view_expanded.png", _('Expanded View')) +
+      inactive_icon("view_compressed.png", _('Compressed View'), resource, "compressed")
     end
 
     def compare_or_drift_mode_exists(resource)
-      inactive_icon("view_list.png", "Details View", resource, "details") +
-      active_icon("exists.png", "Exist Mode")
+      inactive_icon("view_list.png", _('Details View'), resource, "details") +
+      active_icon("exists.png", _('Exist Mode'))
     end
 
     def compare_or_drift_mode_details(resource)
-      active_icon("view_list.png", "Details Mode") +
-      inactive_icon("exists.png", "Exists Mode", resource, "exists")
-    end
-
-    def dashboards_textual
-      inactive_icon("view_graphical.png", "Graphical View", :dashboards, "dashboards") +
-      active_icon("view_textual.png", "Text View")
-    end
-
-    def dashboards_graphical
-      active_icon("view_graphical.png", "Graphical View") +
-      inactive_icon("view_textual.png", "Text View", :dashboards, "textual")
+      active_icon("view_list.png", _('Details Mode')) +
+      inactive_icon("exists.png", _('Exists Mode'), resource, "exists")
     end
 
     def treesize_small
-      inactive_icon("tree-large.png", "Large Trees", :treesize, "32") +
-      active_icon("tree-small.png", "Small Trees")
+      inactive_icon("tree-large.png", _('Large Trees'), :treesize, "32") +
+      active_icon("tree-small.png", _('Small Trees'))
     end
 
     def treesize_large
-      active_icon("tree-large.png", "Large Trees") +
-      inactive_icon("tree-small.png", "Small Trees", :treesize, "20")
+      active_icon("tree-large.png", _('Large Trees')) +
+      inactive_icon("tree-small.png", _('Small Trees'), :treesize, "20")
     end
 
     def grid_view(resource)
-      [(active_icon("view_grid.png", "Grid View") if resource != :catalog),
-       inactive_icon("view_tile.png", "Tile View", resource, "tile"),
-       inactive_icon("view_list.png", "List View", resource, "list")].compact.join('')
+      [(active_icon("view_grid.png", _('Grid View')) if resource != :catalog),
+       inactive_icon("view_tile.png", _('Tile View'), resource, "tile"),
+       inactive_icon("view_list.png", _('List View'), resource, "list")].compact.join('')
     end
 
     def tile_view(resource)
-      [(inactive_icon("view_grid.png", "Grid View", resource, "grid") if resource != :catalog),
-       active_icon("view_tile.png", "Tile View"),
-       inactive_icon("view_list.png", "List View", resource, "list")].compact.join('')
+      [(inactive_icon("view_grid.png", _('Grid View'), resource, "grid") if resource != :catalog),
+       active_icon("view_tile.png", _('Tile View')),
+       inactive_icon("view_list.png", _('List View'), resource, "list")].compact.join('')
     end
 
     def list_view(resource)
-      [(inactive_icon("view_grid.png", "Grid View", resource, "grid") if resource != :catalog),
-       inactive_icon("view_tile.png", "Tile View", resource, "tile"),
-       active_icon("view_list.png", "List View")].compact.join('')
+      [(inactive_icon("view_grid.png", _('Grid View'), resource, "grid") if resource != :catalog),
+       inactive_icon("view_tile.png", _('Tile View'), resource, "tile"),
+       active_icon("view_list.png", _('List View'))].compact.join('')
     end
   end
 end
