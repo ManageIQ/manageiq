@@ -6,8 +6,6 @@ class Condition < ActiveRecord::Base
 
   validates_presence_of     :name, :description, :guid, :modifier, :expression, :towhat
   validates_uniqueness_of   :name, :description, :guid
-  # validates_format_of       :name, :with => %r{^[a-z0-9_\-]+$}i,
-  #   :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"
   validates_inclusion_of    :modifier, :in => %w{ allow deny }
 
   acts_as_miq_taggable
@@ -17,8 +15,6 @@ class Condition < ActiveRecord::Base
 
   belongs_to :miq_policy
   has_and_belongs_to_many :miq_policies
-
-  CONDITIONS_DIR = File.join(File.expand_path(Rails.root), "product/conditions")
 
   serialize :expression
   serialize :applies_to_exp
@@ -60,7 +56,6 @@ class Condition < ActiveRecord::Base
 
       result = expression["include"] != "any"
       expression["tag"].split.each {|tag|
-        # p "rec.is_tagged_with?(#{tag}, :ns => #{expression["ns"]})"
         if rec.is_tagged_with?(tag, :ns => expression["ns"])
           result = true if expression["include"] == "any"
           result = false if expression["include"] == "none"
@@ -122,9 +117,6 @@ class Condition < ActiveRecord::Base
   end
 
   def self._subst(rec, inputs, opts, tag, mode)
-    # $log.info "opts: [#{opts}]"
-    # $log.info "tag: [#{tag}]"
-    # $log.info "mode: [#{mode}]"
     ohash, ref, object = self.options2hash(opts, rec)
 
     case mode.downcase
@@ -266,28 +258,7 @@ class Condition < ActiveRecord::Base
     end
     return nil unless rec
 
-    # TODO: We can't look at the value type now because we have no visibility to the type at the time the expression is
-    # defined so all values come here as strings. Later that will change and this code can be uncommented.
-    #
-    # case rec.format.to_sym
-    # when :REG_DWORD, :REG_DWORD_BIG_ENDIAN, :REG_QWORD
-    #   ret = is_numeric?(rec.data) ? rec.data.to_f : rec.data
-    # else
-    ret = rec.data
-    # end
-    ret
-  end
-
-  def policy_description
-    return nil unless self.filename
-    cond = Condition.from_file(self.filename)
-    cond["policy_description"] unless cond.empty?
-  end
-
-  def old_name
-    return nil unless self.filename
-    cond = Condition.from_file(self.filename)
-    cond["old_name"] unless cond.empty?
+    rec.data
   end
 
   def export_to_array
@@ -329,112 +300,6 @@ class Condition < ActiveRecord::Base
 
   protected
 
-  def self.sync_from_file(filename)
-    cond = self.from_file(filename)
-    cond["file_mtime"] = File.mtime(self.path(filename)).utc
-    rec = self.find_by_filename(filename)
-    if rec.nil?
-      name = cond["old_name"] ? cond["old_name"] : cond["name"]
-      rec = self.find_by_name(name) if name
-    end
-    rec ||= self.new
-
-    if rec.file_mtime.nil? || rec.file_mtime.utc < cond["file_mtime"]
-      rec.name        = cond["name"]
-      rec.filename    = filename
-      rec.file_mtime  = cond["file_mtime"]
-      rec.modifier    = cond["modifier"]
-      rec.expression  = cond["expression"]
-      rec.description = cond["description"]
-      rec.towhat      = cond["towhat"]
-      if rec.new_record?
-        $log.info("MIQ(Condition.sync_from_file) Creating Condition [#{cond["name"]}]")
-      else
-        $log.info("MIQ(Condition.sync_from_file) Updating Condition [#{cond["name"]}]")
-      end
-      rec.save!
-    end
-  end
-
-  def self.sync_from_dir
-    begin
-      # Add missing conditions to model
-      Dir.glob(File.join(CONDITIONS_DIR, "*.yml")).each {|f|
-        self.sync_from_file(File.basename(f))
-      }
-      Dir.glob(File.join(CONDITIONS_DIR, "*.xml")).each {|f|
-        self.sync_from_file(File.basename(f))
-      }
-    rescue => err
-      MiqPolicy.logger.log_backtrace(err)
-    end
-  end
-
-  def self.from_file(filename)
-    path = self.path(filename)
-    file_type = File.extname(filename).split(".").last
-    return [] unless File.exists?(path)
-    case file_type
-    when "yml"
-      from_yml(File.read(path))
-    when "xml"
-      from_xml(File.read(path))
-    end
-  end
-
-  def self.path(filename)
-    File.join(CONDITIONS_DIR, filename)
-  end
-
-  def to_yml(p)
-    YAML::dump(p)
-  end
-
-  def self.from_yml(data)
-    cond = YAML::load(data)
-
-    unless cond.has_key?("expression")
-      cond["expression"] = cond["rule"]
-      cond.delete("rule")
-    end
-
-    if cond["expression"]["mode"] == "tag_expr_v2"
-      cond["expression"] = MiqExpression.new(cond["expression"]["expr"])
-    end
-    cond
-  end
-
-  def to_xml(p)
-    # TODO: convert condition from hash to xml
-  end
-
-  def self.from_xml(data)
-    cond = {}
-    doc=MiqXml.load(data)
-    doc.root.attributes.each_key {|k| cond[k]=doc.root.attributes[k]}
-
-    expression_node=doc.find_first("//expr")
-    cond["expression"] = {}
-    cond["expression"]["mode"] = expression_node.attributes["mode"]
-
-    expr_node=doc.find_first(doc, "//expression/expr")
-    handler = ConditionXmlHandler.new
-    REXML::Document.parse_stream(expr_node.to_s, handler)
-    cond["expression"]["expr"] = handler.expr
-
-    cond
-  end
-
-  def self.from_hash(data)
-    data
-  end
-
-  def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-    end
-  end
-
   module SafeNamespace
     def self.eval_script(script, context)
       log_prefix = "MIQ(SafeNamespace.eval_script)"
@@ -472,74 +337,3 @@ class Condition < ActiveRecord::Base
     end
   end
 end # class Condition
-
-require 'rexml/document'
-require 'rexml/streamlistener'
-
-class ConditionXmlHandler
-  OPERATORS = {
-    "not" => "!",
-    "and" => "&&",
-    "or"  => "||",
-    "equalitymatch" => "==",
-    "greaterorequal" => ">=",
-    "lessorequal" => "<="
-  }
-
-  def expr
-    @expr || nil
-  end
-
-  def tag_start(name, attrs)
-    name = name.downcase
-
-    case name
-    when "expr"
-      @stack = []
-    when "not", "and", "or"
-      @stack.push(OPERATORS[name])
-    when "equalitymatch", "greaterorequal", "lessorequal"
-      subst = attrs["substitute"]
-      item = "<#{subst}"
-      attrs["ref"] ? item += " ref=#{attrs["ref"]}>" : item += ">"
-      item += attrs["name"]
-      item += "</#{subst}>"
-      @stack.push(OPERATORS[name])
-      @stack.push(item)
-    when "value"
-    end
-  end
-
-  def text(value)
-    return if value.strip.blank?
-    @stack.push(value)
-  end
-
-  def tag_end(name)
-    name = name.downcase
-    case name
-    when "expr"
-      @expr = @stack.pop
-    when "not"
-      operand_1 = @stack.pop
-      operator = @stack.pop
-      @stack.push("#{operator}(#{operand_1})")
-    when "and", "or"
-      operator = OPERATORS[name]
-      list = []
-      item = @stack.pop
-      until item == operator do
-        list.push(item)
-        item = @stack.pop
-      end
-      @stack.push("(#{list.join(" #{operator} ")})")
-    when "equalitymatch", "greaterorequal", "lessorequal"
-      operand_2 = @stack.pop
-      operand_1 = @stack.pop
-      operator = @stack.pop
-      @stack.push "\"#{operand_1}\" #{operator} \"#{operand_2}\""
-    when "value"
-    end
-  end
-end # class ConditionXmlHandler
-

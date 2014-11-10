@@ -45,7 +45,7 @@ class MiqAction < ActiveRecord::Base
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
   SCRIPT_DIR = File.expand_path(File.join(Rails.root, "product/conditions/scripts"))
-  Dir.mkdir SCRIPT_DIR unless File.exists?(SCRIPT_DIR)
+  FileUtils.mkdir_p(SCRIPT_DIR) unless File.exist?(SCRIPT_DIR)
 
   RE_SUBST = /\$\{([^}]+)\}/
 
