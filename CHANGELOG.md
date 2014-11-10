@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## Unreleased - as of Sprint 15 end 2014-11-10
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3Aenhancement)
+
+- Security: Lock down [POODLE](http://en.wikipedia.org/wiki/POODLE) attacks.
+- Ruby 2.0
+  - Appliance now built using Ruby 2.0
+  - New commits and pull requests - tested with Ruby 2.0
+- Service Dialogs: Exports can be copied onto an appliance and seeded during appliance startup
+- UI: Continued work on supporting I18N.
+   
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3Aenhancement)
+
+- Security
+  - Command tool fix_auth now can update passwords in database.yml
+  - Better messaging around overwriting database encryption keys (aka v2_key)
+- More Rails patches removed/upstreamed/backported
+  - Bigint id columns
+  - Memoist gem replaced deprecated ActiveSupport::Memoizable
+- UI: Replaced many legacy Prototype calls with jQuery equivalents.
+- Upgraded AWS SDK gem
+- Upgraded Fog gem
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3A%22technical+debt%22)
+
+- Old C-Language VixDiskLib binding code
+- Code from product that has been upstreamed into Rails.
+- Testing: Removed have_same_elements custom matcher in favor of built-in match_array
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3Abug)
+
+- 45 issues closed.
+
 ## Unreleased - as of Sprint 14 end 2014-10-20
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3Aenhancement)
