@@ -5,9 +5,9 @@ describe ConfigurationHelper, :helper do
    [:tagging, "tile", 2]].each do |resource, view, inactive_icon_count|
     context ".render_view_buttons" do
       it "should render HTML tags for #{resource} view button" do
-        helper.stub(:link_to)   { "inactive_icon" }
-        icons = helper.render_view_buttons(resource, view)
-        icons.scan(/inactive_icon/).length.should eql(inactive_icon_count)
+        helper.stub(:inactive_icon) { "" }
+        helper.render_view_buttons(resource, view)
+        helper.should have_received(:inactive_icon).exactly(inactive_icon_count).times
       end
     end
   end
