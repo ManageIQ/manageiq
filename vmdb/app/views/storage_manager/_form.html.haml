@@ -3,10 +3,10 @@
 
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend Basic Information
+  %p.legend=_('Basic Information')
   %table.style1
     %tr
-      %td.key Name
+      %td.key=_('Name')
       %td.wide
         = text_field_tag("name",
           @edit[:new][:name],
@@ -14,37 +14,37 @@
           "data-miq_focus" => true,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key Type
+      %td.key=_('Type')
       %td.wide
         - if @sm.id
           = h(@edit[:new][:sm_type])
         - else
           = select_tag("sm_type",
-            options_for_select([["<Choose>",nil]] + @edit[:sm_types].invert.sort, @edit[:new][:sm_type]),
+            options_for_select([["<#{_('Choose')}>",nil]] + @edit[:sm_types].invert.sort, @edit[:new][:sm_type]),
             "data-miq_observe" => {:url => url}.to_json)
     %tr
-      %td.key Host Name
+      %td.key=_('Host Name')
       %td.wide
         = text_field_tag("hostname",
           @edit[:new][:hostname],
           :maxlength => MAX_NAME_LEN,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key IP Address
+      %td.key=_('IP Address')
       %td.wide
         = text_field_tag("ipaddress",
           @edit[:new][:ipaddress],
           :maxlength => 15,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key Port
+      %td.key=_('Port')
       %td.wide
         = text_field_tag("port",
           @edit[:new][:port],
           :maxlength => 15,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key Zone
+      %td.key=_('Zone')
       %td.wide
         - if @edit[:server_zones].length <= 1
           = text_field_tag("server_zone",
@@ -58,24 +58,24 @@
             "data-miq_observe" => {:url => url}.to_json)
 
   %hr
-  %p.legend Credentials
+  %p.legend=_('Credentials')
   %table.style1
     %tr
-      %td.key User ID
+      %td.key=_('User ID')
       %td.wide
         = text_field_tag("userid",
           @edit[:new][:userid],
           :maxlength => 50,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key Password
+      %td.key=_('Password')
       %td.wide
         = password_field_tag("password",
           @edit[:new][:password],
           :maxlength => 50,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key Verify Password
+      %td.key=_('Verify Password')
       %td.wide
         = password_field_tag("verify",
           @edit[:new][:verify],
@@ -92,15 +92,15 @@
       %tr
         %td{:align => 'right'}
           #buttons_on
-            = button_tag('Add',
+            = button_tag(_('Add'),
               :class => "btn btn-primary",
-              :alt => "Add this Storage Manager",
-              :title => "Add this Storage Manager",
+              :alt => (t = _("Add this Storage Manager")),
+              :title => t,
               :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "add")}');")
-            = button_tag('Cancel',
+            = button_tag((t = _('Cancel')),
               :class => "btn btn-default",
-              :alt => "Cancel",
-              :title => "Cancel",
+              :alt => t,
+              :title => t,
               :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "cancel")}');")
   - else
     = render(:partial => '/layouts/edit_form_buttons',:locals => {:record_id => @sm.id, :ajax_buttons => true})
