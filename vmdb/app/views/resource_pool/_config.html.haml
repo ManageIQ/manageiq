@@ -3,12 +3,12 @@
 
   - if @display == "config_info"
     %fieldset
-      %p.legend Info
+      %p.legend=_('Info')
       %table.style3
         - if @rp_config.nil? || @rp_config.empty?
           %tr
             %td{:width => "495"}
-              %strong Not Available
+              %strong=_('Not Available')
         - else
           - @rp_config.each_slice(2) do |items|
             %tr{:class => cycle('row0', 'row1')}
