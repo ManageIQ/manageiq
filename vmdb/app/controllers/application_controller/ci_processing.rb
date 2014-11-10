@@ -957,7 +957,7 @@ module ApplicationController::CiProcessing
       bc_name = ui_lookup(:tables => self.class.table_name)
       bc_name += " - " + session["#{self.class.session_key_prefix}_type".to_sym].titleize if session["#{self.class.session_key_prefix}_type".to_sym]
       bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
-      action = ["vm_cloud","vm_infra","vm_or_template"].include?(self.class.table_name) ? "explorer" : "show_list"
+      action = %w(service vm_cloud vm_infra vm_or_template).include?(self.class.table_name) ? "explorer" : "show_list"
       drop_breadcrumb( { :name => bc_name, :url => "/#{self.class.table_name}/#{action}"} )
     end
     @layout = session["#{self.class.session_key_prefix}_type".to_sym] if session["#{self.class.session_key_prefix}_type".to_sym]
