@@ -350,26 +350,6 @@ class MiqRequestController < ApplicationController
     end
   end
 
-  def upload
-    @edit = session[:edit]
-    if params.fetch_path(:upload, :file).respond_to?(:read)
-      @edit[:new][:sysprep_upload_file] = params[:upload][:file].original_filename
-      begin
-        @edit[:new][:sysprep_upload_text] = MiqProvisionWorkflow.validate_sysprep_file(params[:upload][:file])
-        msg = _("Sysprep \"%s\" upload was successful") % params[:upload][:file].original_filename
-        redirect_to :action => 'prov_edit', :flash_msg=>msg, :no_refresh=>true, :id=>params[:id]
-      rescue StandardError => bang
-        @edit[:new][:sysprep_upload_text] = nil
-        msg = _("Error during Sysprep \"%s\" file upload: ") % params[:upload][:file].original_filename << bang.message
-        redirect_to :action => 'prov_edit', :flash_msg=>msg, :flash_error=>true, :no_refresh=>true, :id=>params[:id]
-      end
-    else
-      @edit[:new][:sysprep_upload_text] = nil
-      msg = _("Use the Browse button to locate an Upload file")
-      redirect_to :action => 'prov_edit', :flash_msg=>msg, :flash_error=>true, :no_refresh=>true, :id=>params[:id]
-    end
-  end
-
   # Gather any changed options
   def prov_change_options
     resource_type = get_request_tab_type.to_sym

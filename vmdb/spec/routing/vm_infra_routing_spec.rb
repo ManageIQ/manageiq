@@ -127,6 +127,12 @@ describe 'routes for VmInfra' do
     end
   end
 
+  describe '#sort_vc_grid' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/sort_vc_grid")).to route_to("#{controller_name}#sort_vc_grid")
+    end
+  end
+
   describe '#sort_vm_grid' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/sort_vm_grid")).to route_to("#{controller_name}#sort_vm_grid")

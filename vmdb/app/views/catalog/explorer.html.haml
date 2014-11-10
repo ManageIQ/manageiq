@@ -26,6 +26,12 @@
   #main_div.main_div
     - if @sb[:buttons_node]
       = render :partial => "shared/buttons/ab_list"
+    - elsif @upload_sysprep_file
+      = render :partial => "layouts/flash_msg"
+      = render :partial => "catalog/form"
+      - @upload_sysprep_file = false
+      :javascript
+        var miq_after_onload = "miqPrepRightCellForm('#{x_active_tree}');"
     - else
       = render :partial => "layouts/x_gtl"
 

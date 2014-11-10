@@ -37,6 +37,7 @@ class ApplicationController < ActionController::Base
   include_concern 'Tags'
   include_concern 'Timelines'
   include_concern 'TreeSupport'
+  include_concern 'SysprepAnswerFile'
 
   before_filter :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_filter :set_user_time_zone
