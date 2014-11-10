@@ -5,16 +5,16 @@
       %td{:valign => "center"}
         %table.style1
           %tr
-            %td.key Name
+            %td.key=_('Name')
             %td.notwide= @record.name
           %tr
-            %td.key Description
+            %td.key=_('Description')
             %td.notwide= @record.description
   - unless @record_service_templates.empty?
     %hr
     %table.style3
       %thead
-        %th Catalog Items
+        %th=_('Catalog Items')
       %tbody
         - @record_service_templates.sort_by { |a| a.name.downcase }.each do |obj|
           %tr{:class       => cycle("row0", "row1"),
@@ -22,7 +22,7 @@
                                               :complete => "miqSparkle(false);",
                                               :url      => "/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}"),
               :onmouseover => "this.style.cursor='pointer'",
-              :title       => "Click to this Catalog Item"}
+              :title       => _("Click to this Catalog Item")}
             %td=obj.name
   - else
-    = render :partial => 'layouts/info_msg', :locals => {:message => "No Catalog Items found."}
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Catalog Items found.")}

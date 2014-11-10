@@ -1,9 +1,9 @@
 #column_lists
   %table.form#formtest{:width => "100%"}
     %tr
-      %td.widthed{:align => "left"} Unassigned:
+      %td.widthed{:align => "left"}=_('Unassigned:')
       %td
-      %td{:align => "left"} Selected:
+      %td{:align => "left"}=_('Selected:')
     %tr
       %td{:align => "right", :valign => "top"}
         = select_tag("available_fields[]",
@@ -19,26 +19,26 @@
         - else
           = link_to(image_tag("/images/toolbars/right.png",
                               :class => "rollover small",
-                              :alt   => "Move Selected fields right"),
+                              :alt   => _("Move Selected fields right")),
                     {:action => "st_catalog_form_field_changed",
                      :button => "right",
                      :id     => "#{@edit[:rec_id] || "new"}"},
                     "data-submit" => "column_lists",
                     :remote       => true,
-                    :title        => "Move Selected buttons right")
+                    :title        => _("Move Selected buttons right"))
         - if @edit[:new][:fields].length == 0
           = image_tag("/images/toolbars/left.png",
                       :class => "dimmed rollover small")
         - else
           = link_to(image_tag("/images/toolbars/left.png",
                               :class => "rollover small",
-                              :alt   => "Move Selected fields left"),
+                              :alt   => _("Move Selected fields left")),
                     {:action => "st_catalog_form_field_changed",
                      :button => "left",
                      :id     => "#{@edit[:rec_id] || "new"}"},
                     "data-submit" => "column_lists",
                     :remote       => true,
-                    :title        => "Move Selected buttons left")
+                    :title        => _("Move Selected buttons left"))
       %td{:align => "left", :valign => "top"}
         = select_tag("selected_fields[]",
                      options_for_select(@edit[:new][:fields], @selected),
