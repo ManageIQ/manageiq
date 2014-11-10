@@ -10,6 +10,15 @@ module MiqRequestMixin
     MiqRequestMixin.get_option(key, value, self.options)
   end
 
+  def display_message(default_msg = nil)
+    MiqRequestMixin.get_option(:user_message, nil, options) || default_msg
+  end
+
+  def user_message=(msg)
+    options[:user_message] = msg
+    update_attribute(:options, options)
+  end
+
   def self.get_option_last(key, from)
     # Return value - Support array and non-array types
     data = from[key]

@@ -177,15 +177,16 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     log_header = "MIQ(#{self.class.name}.after_ae_delivery)"
 
     $log.info("#{log_header} ae_result=#{ae_result.inspect}")
+    reload
 
     return if ae_result == 'retry'
     return if self.miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state => "finished", :status => "Ok",    :message => "#{self.request_class::TASK_DESCRIPTION} completed")
+      update_and_notify_parent(:state => "finished", :status => "Ok", :message => display_message("#{request_class::TASK_DESCRIPTION} completed"))
     else
       mark_pending_items_as_finished
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => "#{self.request_class::TASK_DESCRIPTION} failed")
+      update_and_notify_parent(:state => "finished", :status => "Error", :message => display_message("#{request_class::TASK_DESCRIPTION} failed"))
     end
   end
 
