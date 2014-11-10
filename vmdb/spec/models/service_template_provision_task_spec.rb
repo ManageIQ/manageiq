@@ -65,6 +65,19 @@ describe ServiceTemplateProvisionTask do
       @task_1_2.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
     end
 
+    it "update_request_status - no message" do
+      expect(@task_1_2.message).to be_nil
+      @task_1_2.update_request_status
+      expect(@task_1_2.message).to be_blank
+    end
+
+    it "update_request_status with message override" do
+      expect(@task_1_2.message).to be_nil
+      @task_1_2.update_attribute(:options, :user_message => "New test message")
+      @task_1_2.update_request_status
+      expect(@task_1_2.message).to eq("New test message")
+    end
+
     context "with a service" do
       before(:each) do
         @service = FactoryGirl.create(:service, :name => 'Test Service')
