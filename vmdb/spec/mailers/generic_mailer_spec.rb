@@ -196,7 +196,7 @@ describe GenericMailer do
     mail.parts[0].mime_type.should == "text/plain"
     mail.parts[0].body.should =~ /Do something on vm start policy/
     mail.parts[1].mime_type.should == "text/html"
-    mail.parts[1].body.should =~ /<h3>Alert Triggered<\/h3>/
+    mail.parts[1].body.should =~ /<h3>[\s]*Alert Triggered[\s]*<\/h3>/
   end
 
   describe "#test_mail" do
