@@ -1,17 +1,17 @@
 .maincontent
   = render :partial => "layouts/flash_msg"
   - case @display
-  - when "devices" 
+  - when "devices"
     %table.style3
       %thead
         %tr
-          %th{:colspan => 2, :align => 'left'} Devices
+          %th{:colspan => 2, :align => 'left'}=_('Devices')
       - unless @devices.empty?
         - @devices.each do |item|
           %tr.no-hover{:class => cycle('row0', 'row1'), :name => 'rel'}
-            %td.label 
+            %td.label
               = h(item[:device])
-            %td 
+            %td
               %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}
               = h(item[:description])
   - when "os_info"
@@ -19,38 +19,38 @@
       %table.style3
         %thead
           %tr
-            %th{:colspan => 2, :align => 'left'} OS Information
+            %th{:colspan => 2, :align => 'left'}=_('OS Information')
         - @osinfo.each do |item|
           %tr.no-hover{:class => cycle('row0', 'row1'), :name => 'rel'}
-            %td.label 
+            %td.label
               = h(item[:osinfo])
-            %td 
+            %td
               = h(item[:description])
         %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label Hostname
-          %td 
+          %td.label=_('Hostname')
+          %td
             = h(@host.hostname)
         %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label IP Address
-          %td 
+          %td.label=_('IP Address')
+          %td
             = h(@host.ipaddress)
   - when "hv_info"
     - if @vmminfo
       %table.style3
         %thead
           %tr
-            %th{:colspan => 2, :align => 'left'} OS Information
+            %th{:colspan => 2, :align => 'left'}=_('OS Information')
         - @vmminfo.each do |item|
           %tr.no-hover{:class => cycle('row0', 'row1')}
-            %td.label 
+            %td.label
               = h(item[:vmminfo])
-            %td 
+            %td
               = h(item[:description])
   - when "network"
     %table{:style => "height: 100px;"}
       %tr
         %td{:width => "55%", :valign => 'top'}
-          / Create divs for each VM to display as the mouse hovers over each VM node
+          - # Create divs for each VM to display as the mouse hovers over each VM node
           - @tree_vms.each do |v|
             #outer
               #inner
@@ -67,4 +67,4 @@
     %table{:style => "height: 100px;"}
       %tr
         %td{:width => "55%", :valign => "top"}
-          = render :partial => "network_tree"         
+          = render :partial => "network_tree"
