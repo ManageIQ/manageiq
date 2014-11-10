@@ -1,0 +1,39 @@
+- url = url_for(:action => 'create_ds_field_changed', :id => @sb[:sfs_id])
+#form_div
+  = render :partial => "layouts/flash_msg"
+
+  %p.legend=_('Options')
+  %table.style1
+    %tr
+      %td.key=_('Name')
+      %td
+        = text_field_tag("ds_name",
+          @edit[:new][:ds_name],
+          :maxlength         => MAX_NAME_LEN,
+          "data-miq_focus"   => true,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %tr
+      %td.key=_('Host')
+      %td
+        = select_tag("host_id",
+          options_for_select([["<#{_('Choose')}>",nil]] + @edit[:hosts].invert.sort,
+          @edit[:new][:host_id]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+
+  #buttons_div
+    %table{:width => '100%'}
+      %tr
+        %td{:align => 'right'}
+          %div
+            = button_tag(_('Submit'),
+              :class   => "btn btn-primary",
+              :alt     => (t = _("Submit this Create Datastore request")),
+              :title   => t,
+              :onclick => "miqAjaxButton('#{url_for(:action => 'create_ds', :id => @sb[:sfs_id], :button => "submit")}');")
+            = button_tag((t = _('Cancel')),
+              :class   => "btn btn-default",
+              :alt     => t,
+              :title   => t,
+              :onclick => "miqAjaxButton('#{url_for(:action => "create_ds", :id => @sb[:sfs_id], :button => "cancel")}');")

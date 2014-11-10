@@ -1,0 +1,9 @@
+#maincontent
+  = render :partial => "layouts/flash_msg"
+  %dl.col2
+    %dd
+      = render :partial => "shared/summary/textual", :locals => { :title => _("Properties"), :items => textual_group_properties }
+      = render :partial => "shared/summary/textual_tags", :locals => { :title => _("Smart Management"), :items => textual_group_smart_management }
+    %dd
+      = render :partial => "shared/summary/textual", :locals => { :title => _("Relationships"), :items => textual_group_relationships }
+      = render :partial => "shared/summary/textual", :locals => { :title => _("Infrastructure Relationships"), :items => textual_group_infrastructure_relationships }
