@@ -4,18 +4,20 @@
     %dl.col2
       %dd
         %fieldset
-          %p.legend Session Information
+          %p.legend=_('Session Information')
           %table.style1
-            - [["Server Name",     h(session[:vmdb_name])],
-               ["Version",         h(session[:vmdb][:version] + "." + session[:vmdb][:build])],
-               ["User Name",       h(session[:username])],
-               ["User Role",       h(@temp[:user_role])],
-               ["Browser",         h(browser_info("name"))],
-               ["Browser Version", h(browser_info("version"))],
-               ["Browser OS",      h(browser_info("os"))]].each do |session_info|
+            - [[_("Server Name"),     h(session[:vmdb_name])],
+               [_("Version"),         h(session[:vmdb][:version] + "." + session[:vmdb][:build])],
+               [_("User Name"),       h(session[:username])],
+               [_("User Role"),       h(@temp[:user_role])],
+               [_("Browser"),         h(browser_info("name"))],
+               [_("Browser Version"), h(browser_info("version"))],
+               [_("Browser OS"),      h(browser_info("os"))]].each do |session_info|
               %tr
-                %td.key= session_info[0]
-                %td.wide= session_info[1]
+                %td.key
+                  = session_info[0]
+                %td.wide
+                  = session_info[1]
       - desc = get_vmdb_config[:server][:custom_support_url_description]
       - url  = get_vmdb_config[:server][:custom_support_url]
       - cond_url      = desc.present? && url.present?
@@ -23,26 +25,26 @@
       - if cond_userrole || cond_url
         %dd
           %fieldset
-            %p.legend Product Assistance
+            %p.legend=_('Product Assistance')
             - if cond_userrole
-              - [["Quick Start",              "cfme_quickstart.pdf"],
-                 ["Insight",                  "cfme_insight.pdf"],
-                 ["Control",                  "cfme_control.pdf"],
-                 ["Lifecycle and Automation", "cfme_automate.pdf"],
-                 ["Integration Services",     "cfme_integrate.pdf"],
-                 ["Settings and Operations",  "cfme_settingandops.pdf"]].each do |title, filename|
+              - [[_("Quick Start"),              "cfme_quickstart.pdf"],
+                 [_("Insight"),                  "cfme_insight.pdf"],
+                 [_("Control"),                  "cfme_control.pdf"],
+                 [_("Lifecycle and Automation"), "cfme_automate.pdf"],
+                 [_("Integration Services"),     "cfme_integrate.pdf"],
+                 [_("Settings and Operations"),  "cfme_settingandops.pdf"]].each do |title, filename|
                 %br
                 = link_to(image_tag("/images/icons/new/acrobat.png",
                                     :border => "0",
                                     :width  => "20",
                                     :height => "20",
                                     :align  => "left",
-                                    :alt    => t = "View the #{title} Guide"),
+                                    :alt    => t = _("View the %s Guide") % title),
                           docfile_path = "/doc/#{filename}",
                           :title   => t,
                           :onclick => "return miqClickAndPop(this);")
                 &nbsp;
-                = link_to("#{title} Guide", docfile_path, :onclick => "return miqClickAndPop(this);")
+                = link_to((_("%s Guide") % title), docfile_path, :onclick => "return miqClickAndPop(this);")
                 %br
               - if cond_url
                 %br
@@ -50,8 +52,8 @@
                 = link_to(desc, url, :onclick => "return miqClickAndPop(this);")
                 %br
               %br
-              - rh_cust_portal = link_to("Red Hat Customer Portal",
+              - rh_cust_portal = link_to(_("Red Hat Customer Portal"),
                                          "https://access.redhat.com/home",
                                          :onclick => "return miqClickAndPop(this);")
-              For questions or problem reporting, go to the #{rh_cust_portal}
+              =_("For questions or problem reporting, go to the %s") % rh_cust_portal
               %br
