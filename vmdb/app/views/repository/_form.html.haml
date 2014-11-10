@@ -3,16 +3,16 @@
 #form_div
   = render :partial => "layouts/flash_msg"
   %fieldset
-    %p.legend Basic Information
+    %p.legend=_('Basic Information')
     %table.admintable
       %tbody
         %tr
-          %td.key Name
+          %td.key=_('Name')
           %td.wide
             = text_field_tag("repo_name", @edit[:new][:name], :maxlength => MAX_NAME_LEN,
               "data-miq_focus" => true, "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
         %tr
-          %td.key Path
+          %td.key=_('Path')
           %td.wide
             = text_field_tag("repo_path", @edit[:new][:path], :maxlength => 100,
               "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
