@@ -1,0 +1,97 @@
+- url = url_for(:action => 'form_instance_field_changed', :id => "#{@ae_inst.id || "new"}")
+- obs = {:interval => '.5', :url => url}.to_json
+%p.legend=_('Main Info')
+%table.style1
+  %tr
+    %td.key
+      = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+    %td.wide
+      = h(@sb[:namespace_path])
+  %tr
+    %td.key=_('Name')
+    %td.wide
+      = text_field_tag("#{prefix}inst_name",
+        @edit[:new][:ae_inst]["name"],
+        :maxlength         => MAX_NAME_LEN,
+        "data-miq_observe" => obs)
+      = javascript_tag(javascript_focus("#{prefix}inst_name"))
+  %tr
+    %td.key=_('Display Name')
+    %td.wide
+      = text_field_tag("#{prefix}inst_display_name",
+        @edit[:new][:ae_inst]["display_name"],
+        :maxlength         => MAX_NAME_LEN,
+        "data-miq_observe" => obs)
+  %tr
+    %td.key=_('Description')
+    %td.wide
+      = text_field_tag("#{prefix}inst_description",
+        @edit[:new][:ae_inst]["description"],
+        :maxlength         => MAX_NAME_LEN,
+        "data-miq_observe" => obs)
+%hr
+%p.legend=_('Fields')
+%table.style3{:cellspacing => '1'}
+  %thead
+    %tr
+      %th=_('Name')
+      %th=_('Value')
+      %th=_('On Entry')
+      %th=_('On Exit')
+      %th=_('On Error')
+      %th=_('Collect')
+  %tbody
+    - @edit[:new][:ae_values].each_with_index do |flds, i|
+      %tr{:class => cycle('row0', 'row1')}
+        - image = @edit[:new][:ae_fields][i]["substitute"] ? "passed.png" : "failed.png"
+        %td
+          %img{:src => "/images/icons/new/ae_#{@edit[:new][:ae_fields][i]["aetype"]}.png",
+            :alt => (t = "#{_('Type:')} #{@edit[:new][:ae_fields][i]["aetype"]}"),
+            :title => t}
+          - if !@edit[:new][:ae_fields][i]["datatype"].blank? && @edit[:new][:ae_fields][i]["datatype"] != "string"
+            %img{:src => "/images/icons/new/#{@edit[:new][:ae_fields][i]["datatype"]}.png",
+            :alt => (t = "#{_('Data Type:')} #{@edit[:new][:ae_fields][i]["datatype"]}"),
+            :title => t}
+          %img{:src => "/images/icons/16/#{image}",
+            :alt => (t = "#{_('Substitution:')} #{@edit[:new][:ae_fields][i]["substitute"]}"),
+            :title => t}
+          &nbsp;
+          = h(@edit[:new][:ae_fields][i]["display_name"])
+          (#{h(@edit[:new][:ae_fields][i]["name"])})
+        %td
+          - default_value = @edit[:new][:ae_fields][i]["default_value"]
+          - cls = flds["value"].blank? && !default_value.blank? ? "input_def_val" : ""
+          - if @edit[:new][:ae_fields][i]["datatype"] == "password"
+            = password_field_tag("#{prefix}inst_password_value_#{i}",
+              flds["value"].blank? ? '' : flds["value"],
+              :placeholder       => default_value,
+              "data-miq_observe" => obs)
+          - else
+            = text_field_tag("#{prefix}inst_value_#{i}",
+              flds["value"].blank? ? '' : flds["value"],
+              :placeholder       => default_value,
+              "data-miq_observe" => obs)
+        %td
+          - default_value = @edit[:new][:ae_fields][i]["on_entry"]
+          = text_field_tag("#{prefix}inst_on_entry_#{i}",
+            flds["on_entry"].blank? ? '' : flds["on_entry"],
+            :placeholder       => default_value,
+            "data-miq_observe" => obs)
+        %td
+          - default_value = @edit[:new][:ae_fields][i]["on_exit"]
+          = text_field_tag("#{prefix}inst_on_exit_#{i}",
+            flds["on_exit"].blank? ? '' : flds["on_exit"],
+            :placeholder       => default_value,
+            "data-miq_observe" => obs)
+        %td
+          - default_value = @edit[:new][:ae_fields][i]["on_error"]
+          = text_field_tag("#{prefix}inst_on_error_#{i}",
+            flds["on_error"].blank? ? '' : flds["on_error"],
+            :placeholder       => default_value,
+            "data-miq_observe" => obs)
+        %td
+          - default_value = @edit[:new][:ae_fields][i]["collect"]
+          = text_field_tag("#{prefix}inst_collect_#{i}",
+            flds["collect"].blank? ? '' : flds["collect"],
+            :placeholder       => default_value,
+            "data-miq_observe" => obs)

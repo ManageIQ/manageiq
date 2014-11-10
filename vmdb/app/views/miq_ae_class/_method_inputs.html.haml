@@ -1,0 +1,66 @@
+#method_inputs_div
+  - if !@in_a_form && @ae_method
+    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"}
+    %p.legend=_('Main Info')
+    %table.style1
+      %tr
+        %td.key
+          = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+        %td.wide
+          = h(@sb[:namespace_path])
+      %tr
+        %td.key=_('Name')
+        %td.wide
+          = @ae_method.name
+      </tr>
+      %tr
+        %td.key=_('Display Name')
+        %td.wide
+          = @ae_method.display_name
+      </tr>
+      %tr
+        %td.key=_('Location')
+        %td.wide
+          = @ae_method.location
+      </tr>
+      %tr
+        %td.key=_('Created On')
+        %td.wide
+          = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
+    = render :partial => "domain_overrides", :locals => {:node_prefix => "aem", :model => "Method"}
+    %p.legend=_('Data')
+    - if @ae_method.location == "inline"
+      = text_area("method1",
+        "data",
+        :value    => @ae_method.data,
+        :size     => "90x20",
+        :disabled => true,
+        :style    => "display:none;")
+      - # Create a MyCodeMirror editor for the text area
+      = render :partial => "/layouts/my_code_mirror",
+        :locals  => {:text_area_id => "method1_data",
+          :mode                    => "ruby",
+          :line_numbers            => true,
+          :read_only               => true}
+    - else
+      = @ae_method.data
+    - # show inputs parameters grid if there are any inputs
+    #params_div{:style => @temp[:grid_methods_xml] ? "" : "display: none;"}
+      %hr
+      %p.legend=_('Input Parameters')
+      = render :partial => 'layouts/dhtmlxgrid',
+        :locals  => {:options => {:grid_id => "method_inputs_grid_div",
+        :grid_name                         => "method_inputs_grid",
+        :grid_url                          => "/miq_ae_class/tree_select/",
+        :grid_xml                          => @temp[:grid_methods_xml],
+        :no_resize                         => true,
+        :autosize                          => true,
+        :set_sizes                         => true,
+        :skin                              => "style3",
+        :alt_row                           => true,
+        :div_in_js                         => true}}
+  - else
+    #method_form_div
+      = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_method_inputs"}
+      = render :partial => "method_form", :locals  => {:prefix => ""}
+  %br

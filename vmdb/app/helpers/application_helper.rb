@@ -2456,6 +2456,26 @@ module ApplicationHelper
     end
   end
 
+  # Function returns a HTML fragment that represents an image with certain
+  # options or an image with link and different options in case of a condition
+  # has a true or a false value.
+  #
+  # args
+  #     :cond         --- bool    - the condition to be met
+  #     :image        --- string  - the URL of the image
+  #     :opts_true    --- hash    - HTML options for image_tag() if cond == true
+  #     :opts_false   --- hash    - HTML options for image_tag() if cond == false
+  #     :link         --- hash    - options for link_to()
+  #     :opts_link    --- hash    - HTML options for link_to()
+  #
+  def link_image_if(args)
+    if args[:cond]
+      image_tag(args[:image], args[:opts_true])
+    else
+      link_to(image_tag(args[:image], args[:opts_false]), args[:link], args[:opts_link])
+    end
+  end
+
   def link_to_with_icon(link_text, link_params, tag_args, image_path=nil)
     tag_args ||= {}
     image_path ||= '/images/icons/16/link_internal.gif'

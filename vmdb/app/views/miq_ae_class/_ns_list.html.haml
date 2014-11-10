@@ -1,0 +1,57 @@
+#ns_list_div
+  - if !@in_a_form
+    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
+    .checkall
+      %input#Toggle1{:type => "checkbox", :name => "masterToggle", :onclick => "miqCheck_AE_All('center_tb', 'ns_list_grid');"}
+      (#{_('Check All')})
+    = render :partial => 'layouts/dhtmlxgrid',
+      :locals  => {:options => {:grid_id    => "ns_list_grid_div",
+        :grid_name                          => "ns_list_grid",
+        :grid_url                           => "/miq_ae_class/tree_select/",
+        :grid_xml                           => @temp[:grid_xml],
+        :autosize                           => true,
+        :set_sizes                          => true,
+        :no_resize                          => true,
+        :skin                               => "style3",
+        :alt_row                            => true,
+        :div_in_js                          => true}}
+  - else
+    - url = url_for(:action => 'form_ns_field_changed', :id => "#{@ae_ns.id || 'new'}")
+    - obs = {:interval => '.5', :url => url}.to_json
+    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
+    #form_ns_div
+      %p.legend=_('Info')
+      %table.style1
+        - unless @ae_ns.domain?
+          %tr
+            %td.key
+              = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+            %td.wide
+              = h(@sb[:namespace_path])
+        %tr
+          %td.key=_('Name')
+          %td.wide
+            = text_field_tag("ns_name",
+              @edit[:new][:ns_name],
+              :maxlength         => MAX_NAME_LEN,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            = javascript_tag(javascript_focus('ns_name'))
+        %tr
+          %td.key=_('Description')
+          %td.wide
+            = text_field_tag("ns_description",
+              @edit[:new][:ns_description],
+              :maxlength         => MAX_NAME_LEN,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        - if @ae_ns.domain?
+          %tr
+            %td.key=_('Enabled')
+            %td
+              = check_box_tag("ns_enabled",
+                value   = "1",
+                checked = @edit[:new][:enabled],
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
+    - # Need this to bind checkbox observers when under DHTMLX tabs
+    - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+    :javascript
+      miqObserveCheckboxes();
