@@ -1,0 +1,20 @@
+= render :partial => "domain_overrides", :locals => {:node_prefix => "aei", :model => "Instance"}
+%p.legend=_('Fields')
+#instance_fields_div
+  - if !@in_a_form
+    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"}
+    = render(:partial => 'layouts/dhtmlxgrid',
+      :locals         => {:options => {:grid_id => "inst_grid_div",
+        :grid_name                              => "instance_fields_grid",
+        :grid_url                               => "/miq_ae_class/tree_select/",
+        :grid_xml                               => @temp[:grid_inst_xml],
+        :no_resize                              => false,
+        :autosize                               => true,
+        :set_sizes                              => true,
+        :skin                                   => "style3",
+        :alt_row                                => true,
+        :div_in_js                              => true}})
+  - else
+    #form_div
+      = render :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"}
+      = render :partial => "instance_form", :locals => {:prefix => ""}

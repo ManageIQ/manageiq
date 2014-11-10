@@ -1,0 +1,28 @@
+- url = url_for(:action => 'form_field_changed', :id => "#{@ae_class.id || 'new'}")
+- obs = {:interval => '.5', :url => url}.to_json
+%p.legend=_('Properties')
+%table.style1
+  %tr
+    %td.key
+      = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+    %td.wide
+      = @sb[:namespace_path]
+  %tr
+    %td.key=_('Name')
+    %td.wide
+      = text_field_tag("name", @edit[:new][:name],
+        :maxlength         => MAX_NAME_LEN,
+        "data-miq_observe" => obs)
+      = javascript_tag(javascript_focus('name'))
+  %tr
+    %td.key=_('Display Name')
+    %td.wide
+      = text_field_tag("display_name", @edit[:new][:display_name],
+        :maxlength         => MAX_NAME_LEN,
+        "data-miq_observe" => obs)
+  %tr
+    %td.key=_('Description')
+    %td.wide
+      = text_field_tag("description", @edit[:new][:description],
+       :maxlength => MAX_NAME_LEN,
+       "data-miq_observe" => obs)

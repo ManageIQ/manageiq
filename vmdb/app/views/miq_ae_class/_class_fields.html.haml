@@ -1,0 +1,140 @@
+#class_fields_div{:style => "width:100%;height:100%;"}
+  - if x_node.split('-')[0] == "aec" || params[:pressed] || %w(field_select field_accept field_delete).include?(params[:action])
+    - if !@in_a_form_fields
+      / Show Schema
+      = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
+      %p.legend=_('Schema')
+      %table.style3
+        %thead
+          %tr
+          - [_('Name'), _('Description'), _('Default Value'), _('Collect'), _('Message'), _('On Entry'),
+            _('On Exit'), _('On Error'), _('Max Retries'), _('Max Time')].each do |title|
+            %th
+              = title
+        %tbody
+        - @ae_class.ae_fields.each do |ae_field|
+          - image = ae_field.substitute ? "passed.png" : "failed.png"
+          %tr.no-hover{:class => cycle('row0', 'row1')}
+            - %w(name description default_value collect message on_entry on_exit on_error max_retries max_time).each do |fname|
+              %td
+                / Name is special processed
+                - if fname == 'name'
+                  %img{:src => "/images/icons/new/ae_#{ae_field.aetype}.png", :alt => (t = "#{_('Type:')} #{ae_field.aetype}"), :title => t}
+                  - if !ae_field.datatype.blank? && ae_field.datatype != "string"
+                    %img{:src => "/images/icons/new/#{ae_field.datatype}.png", :alt => (t = "#{_('Data Type:')} #{ae_field.datatype}"), :title => t}
+                  %img{:src => "/images/icons/16/#{image}", :alt => (t = "#{_('Substitution:')} #{ae_field.substitute}"), :title => t}
+                  = h(ae_field.display_name)
+                  (#{h(ae_field.name)})
+                - elsif fname == 'default_value'
+                  /-- show astericks if its a password field
+                  = h((ae_field.datatype == "password") ? "********" : ae_field.send(fname))
+                - else
+                  = h(ae_field.send(fname))
+    - else
+      - url = url_for(:action => 'fields_form_field_changed', :id => "#{@ae_class.id || 'new'}")
+      - obs = {:interval => '.5', :url => url}.to_json
+      / Edit Schema
+      #form_div
+        = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
+        %p.legend=_('Schema')
+        %table.style3
+          %thead
+            %tr
+              %th.icon
+              - [_('Name'), _('Type'), _('Data Type'), _('Default Value'), _('Display Name'), _('Description'), _('Sub'), _('Collect'),
+                _('Message'), _('On Entry'), _('On Exit'), _('On Error'), _('Max Retries'), _('Max Time')].each do |title|
+                %th
+                  = title
+          %tbody
+          - @edit[:new][:fields].each_with_index do |field, i|
+            - unless @edit[:fields_to_delete].include?(field["id"])
+              %tr{:class => cycle('row0', 'row1')}
+                %td
+                  = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => (t = _("Click to delete this field from schema"))),
+                    {:action => "field_delete", :id => field['id'].to_s, :arr_id => i},
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote                => true,
+                    :confirm               => _('Are you sure you want to delete field from schema?'),
+                    :title                 => t)
+                - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
+                  %td
+                    - if %w(aetype datatype).include?(fname)
+                      - combo_id   = "fields_#{fname}_id#{i}"
+                      - combo_name = "fields_#{fname}#{i}"
+                      - symbol     = (fname == 'aetype') ? :combo_xml : :dtype_combo_xml
+                      - xml_combo  = @temp[symbol][i]
+                      - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
+                      %div{:id => combo_id}
+                      = render(:partial => 'layouts/dhtmlxcombo',
+                        :locals     => {:combo_id => combo_id,
+                          :combo_name             => combo_name,
+                          :xml_combo              => xml_combo,
+                          :combo_url              => combo_url})
+                    - elsif fname == 'substitute'
+                      = check_box_tag("fields_#{fname}_#{i}", value = "1", checked = field['substitute'],
+                        "data-miq_observe_checkbox" => {:url => url}.to_json)
+                    - elsif fname == 'default_value'
+                      - default_value = field['default_value']
+                      = text_field_tag("fields_default_value_#{i}", default_value,
+                        :style             => field['datatype'] == "password" ? "display:none" : "",
+                        "data-miq_observe" => obs)
+                      = password_field_tag("fields_password_value_#{i}", default_value,
+                        :style             => field['datatype'] == "password" ? "" : "display:none",
+                        "data-miq_observe" => obs)
+                    - else
+                      = text_field_tag("fields_#{fname}_#{i}", field[fname],
+                        "data-miq_observe" => obs)
+          - if !params[:add] && params[:add] != "new" && (session[:field_data].blank? || session[:field_data].empty?)
+            %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => {:action => 'field_select', :add => 'new', :item => "field"})}
+              %td
+                = image_tag("/images/icons/16/equal-green.png")
+              %td
+                = h("<#{_('New Field')}>")
+              - 13.times do
+                %td &nbsp;
+          - else
+            - @prty = 1
+            - @edit[:new][:fields].sort_by { |a| [a['priority'].to_i] }.each_with_index do |field, i|
+              - @prty = (field['priority'].to_i + 1) if i == (@edit[:new][:fields].length - 1)
+
+            %tr{:class => cycle('row0', 'row1')}
+              %td
+                = link_to(image_tag("/images/icons/16/na.png", :alt => (t = _("Add this entry"))),
+                  {:action => "field_accept", :button => "accept"},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => t)
+              - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
+                %td
+                  - if %w(aetype datatype).include?(fname)
+                    - combo_id   = "field_#{fname}_id"
+                    - combo_name = "field_#{fname}"
+                    - xml_combo  = @edit[:new]["#{fname}s".to_sym][0]
+                    - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
+                    %div{:id => combo_id}
+                    = render(:partial => 'layouts/dhtmlxcombo',
+                      :locals => {:combo_id => combo_id,
+                        :combo_name          => combo_name,
+                        :xml_combo           => xml_combo,
+                        :combo_url           => combo_url})
+                  - elsif fname == 'substitute'
+                    - checked = !session[:field_data].blank? && session[:field_data][:substitute]
+                    = check_box_tag("field_#{fname}", value = "1", checked = checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
+                  - elsif fname == 'default_value'
+                    = text_field_tag("field_default_value", session[:field_data][:default_value],
+                      :style             => session[:field_data][:datatype] == "password" ? "display:none" : "",
+                      "data-miq_observe" => obs)
+                    = password_field_tag("field_password_value", session[:field_data][:default_value],
+                      :style             => session[:field_data][:datatype] == "password" ? "" : "display:none",
+                      "data-miq_observe" => obs)
+                  - else
+                    = text_field_tag("field_#{fname}", session[:field_data][fname.to_sym],
+                      "data-miq_observe" => obs)
+
+      - # Need this to bind checkbox observers when under DHTMLX tabs
+      - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+      :javascript
+        miqObserveCheckboxes();
+

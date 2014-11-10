@@ -1,0 +1,125 @@
+- if @sb[:active_tab] == "methods"
+- url = url_for(:action => 'form_method_field_changed', :id => "#{@ae_method.id || 'new'}")
+- obs = {:interval => '.5', :url => url}.to_json
+  %p.legend=_('Main Info')
+  %table.style1
+    %tr
+      %td.key
+        = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+      %td.wide
+        = h(@sb[:namespace_path])
+    %tr
+      %td.key=_('Name')
+      %td.wide
+        = text_field_tag("#{prefix}method_name",
+          @edit[:new][:name],
+          :maxlength         => MAX_NAME_LEN,
+          "data-miq_observe" => obs)
+    %tr
+      %td.key=_('Display Name')
+      %td.wide
+        = text_field_tag("#{prefix}method_display_name",
+          @edit[:new][:display_name],
+          :maxlength         => MAX_NAME_LEN,
+          "data-miq_observe" => obs)
+    %tr
+      %td.key=_('Location')
+      %td.wide
+        = select_tag("#{prefix}method_location",
+          options_for_select(@edit[:new][:available_locations].sort,
+          @edit[:new][:location]),
+          "data-miq_observe" => {:url => url}.to_json)
+    - if @ae_method.created_on
+      %tr
+        %td.key=_("Created On")
+        %td.wide
+          = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
+  %hr
+  %p.legend=_("Data")
+  = render :partial => "method_data", :locals => {:field_name => "#{prefix}method"}
+  %hr
+  %p.legend=_("Input Parameters")
+  %table.style3{:style => "margin: 0;"}
+    %thead
+      %tr
+        %th.special
+          = link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png",
+            :class => "rollover small",
+            :id    => "exp_collapse_img",
+            :style => "z-index:50",
+            :alt   => (t = (@sb[:squash_state] ? _("Show Input Parameters") : _("Hide Input Parameters"))),
+            :title => t),
+            {:action => 'expand_toggle', :id => "exp_collapse"}, :remote  => true)
+
+  #inputs_div{:style => @sb[:squash_state] ? "display: none;" : ""}
+    %table.style3
+      %thead
+        %tr
+          %th.icon
+          %th=_('Name')
+          %th=_('Default Value')
+          %th=_('Data Type')
+      %tbody
+        - @edit[:new][:fields].each_with_index do |flds, i|
+          - unless @edit[:fields_to_delete].include?(flds["id"])
+            %tr{:class => cycle('row0', 'row1')}
+              %td
+                = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => _("Click to delete this input field from method")),
+                  {:action => "field_method_delete", :id => flds["id"].to_s, :arr_id => i},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :confirm               => _('Are you sure you want to delete input field from method?'),
+                  :title                 => _("Click to delete this input field from method"))
+              %td
+                = text_field_tag("#{prefix}fields_name_#{i}",
+                  flds["name"],
+                  :maxlength         => 50,
+                  "data-miq_observe" => obs)
+              %td
+                = text_field_tag("#{prefix}fields_value_#{i}", flds["default_value"],
+                  :style             => flds["datatype"] == "password" ? "display:none" : "",
+                  "data-miq_observe" => obs)
+                = password_field_tag("#{prefix}fields_password_value_#{i}", flds["default_value"],
+                  :style             => flds["datatype"] == "password" ? "" : "display:none",
+                  "data-miq_observe" => obs)
+              %td
+                = select_tag("#{prefix}fields_datatype_#{i}",
+                  options_for_select(@edit[:new][:available_datatypes], flds["datatype"]),
+                  "data-miq_observe" => {:url => url}.to_json)
+        - if !params[:add] && params[:add] != "new" && (session[:field_data].blank? || session[:field_data].empty?)
+          %tr{:class => cycle('row0', 'row1'),
+            :onclick => remote_function(:url => {:action => 'field_method_select', :add => 'new', :item => "field"}),
+            :title => _("Click to add a new parameter")}
+            %td
+              = image_tag("/images/icons/16/equal-green.png")
+            %td
+              = h("<#{_('New Parameter')}>")
+            %td
+              &nbsp;
+            %td
+              &nbsp;
+        - else
+          %tr{:class => cycle('row0', 'row1')}
+            %td
+              = link_to(image_tag("/images/icons/16/na.png", :alt => "Add this entry"),
+              {:action => "field_method_accept", :button => "accept"},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true,
+              :title                 => _("Add this entry"))
+            %td
+              = text_field_tag("#{prefix}field_name",
+                session[:field_data][:name],
+                "data-miq_observe" => obs)
+            %td
+              = text_field_tag("#{prefix}field_default_value",
+                session[:field_data][:default_value],
+                :style             => session[:field_data][:datatype] == "password" ? "display:none" : "",
+                "data-miq_observe" => obs)
+              = password_field_tag("#{prefix}field_password_value",
+                session[:field_data][:data_value],
+                :style             => session[:field_data][:datatype] == "password" ? "" : "display:none",
+                "data-miq_observe" => obs)
+            %td
+              = select_tag("#{prefix}field_datatype", options_for_select(@edit[:new][:available_datatypes], session[:field_data][:datatype]), "data-miq_observe" => {:url => url}.to_json)
