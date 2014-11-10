@@ -468,18 +468,18 @@ class MiqWidget < ActiveRecord::Base
     role = user.miq_user_role_name || user.role.name
     group = user.miq_group_description
 
-    # Return all widgets that either the user owns, has this user's role or is allowed for all roles, or has this user's group
-    self.includes(:resource).all.select do |w|
-      (user && w.resource == user) || w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group)
+    # Return all widgets that either has this user's role or is allowed for all roles, or has this user's group
+    self.all.select do |w|
+      w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group)
     end
   end
 
   def self.available_for_group(group)
     group = self.get_group(group)
     role = group.miq_user_role_name || group.role.name
-    # Return all widgets that either the group owns, has this group's role or is allowed for all roles.
-    self.includes(:resource).all.select do |w|
-      (group && w.resource == group) || w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group.description)
+    # Return all widgets that either has this group's role or is allowed for all roles.
+    self.all.select do |w|
+      w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group.description)
     end
   end
 
