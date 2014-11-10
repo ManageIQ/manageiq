@@ -2,12 +2,12 @@
 #div.ops_details
   %fieldset
     %div{:onclick => remote_function(:url => {:action => 'tree_select', :id => 'xx-Compute'}),
-      :onmouseover => "this.style.cursor='pointer'", :title => "Edit Compute Rate Assignments"}
+      :onmouseover => "this.style.cursor='pointer'", :title => _("Edit Compute Rate Assignments")}
       %img{:src => "/images/icons/new/hardware-processor.png"}
-      Compute
+      =_('Compute')
   %fieldset
     %div{:onclick => remote_function(:url => {:action => 'tree_select', :id => "xx-Storage"}),
-      :onmouseover => "this.style.cursor='pointer'", :title => "Edit Compute Rate Assignments"}
+      :onmouseover => "this.style.cursor='pointer'", :title => _("Edit Compute Rate Assignments")}
       %img{:src => "/images/icons/new/hardware-disk.png", :valign => "middle",
         :border => "0", :height => "40", :width => "40"}
-      Storage
+      =_('Storage')

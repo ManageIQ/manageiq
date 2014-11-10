@@ -1,7 +1,7 @@
 #chargeback_rates_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   - if @sb[:chargeback][:report]
     %fieldset
-      %p.legend Current Rates
+      %p.legend=_('Current Rates')
       %table.style1
         - Chargeback::default_rates().sort_by{ |a| a.description.downcase }.each do |r|
           %tr

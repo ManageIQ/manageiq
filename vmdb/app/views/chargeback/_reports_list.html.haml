@@ -9,7 +9,7 @@
     = render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
     - if @temp[:parent_reports].empty?
       %br
-      %strong No Reports available.
+      %strong=_('No Reports available.')
     - else
       %table.style3
         %thead
@@ -17,7 +17,7 @@
           %th
         %tbody
         - @temp[:parent_reports].each do |r|
-          %tr{:class => cycle('row0', 'row1'), :title => "View this Report",
+          %tr{:class => cycle('row0', 'row1'), :title => _("View this Report"),
             :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-#{r[1]}');",
             :onmouseover => "this.style.cursor='pointer';"}
             %td.nowrap
@@ -29,31 +29,32 @@
     = render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
     - if @temp[:saved_reports].empty?
       %br
-        %strong No Reports available.
+        %strong=_('No Reports available.')
     - else
       %table.style3
         %thead
           %tr
             %th.icon &nbsp;
-            %th Run On
-            %th Name
-            %th Source
+            %th=_('Run On')
+            %th=_('Name')
+            %th=_('Source')
         %tbody
           - @temp[:saved_reports].each_with_index do |row,i|
             - row_id = "#{x_node}_rr-#{to_cid(row['id'])}"
             %tr{:class => cycle('row0', 'row1')}
-              %td{:title => "Click to view saved report", :onclick => remote_function(:loading => "miqSparkle(true);",
+              - t = _("Click to view saved report")
+              %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
                 :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => row_id})}
                 %ul.icons
                   %li
                     %span.fa.fa-clock-o{:title => "Saved Report: #{row['name']}"}
-              %td{:title => "Click to view saved report", :onclick => remote_function(:loading => "miqSparkle(true);",
+              %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
                 :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => row_id})}
                 = h(format_timezone(row['last_run_on'], Time.zone, "gtl"))
-              %td{:title => "Click to view saved report", :onclick => remote_function(:loading => "miqSparkle(true);",
+              %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
                 :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => row_id})}
                 = h(row['name'])
-              %td{:title => "Click to view saved report", :onclick => remote_function(:loading => "miqSparkle(true);",
+              %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
                 :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => row_id})}
                 = h(row['report_source'])
         %tfoot
@@ -62,4 +63,4 @@
 
   - else
     %br
-      %strong No Reports available.
+      %strong=_('No Reports available.')

@@ -1,34 +1,35 @@
+- nothing = "<#{_('Nothing')}>"
 - url = url_for(:action => 'cb_assign_field_changed', :id => "#{x_node}")
 #cb_assignment_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   = render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
   %fieldset
-    %p.legend Basic Info
+    %p.legend=_('Basic Info')
     %table.style1
       %tr
-        %td.key Assign To
+        %td.key=_('Assign To')
         %td
           - options = ASSIGN_TOS[x_node.split('-').last == "Compute" ? "chargeback_compute".to_sym : "chargeback_storage".to_sym].invert.sort
-          = select_tag("cbshow_typ", options_for_select([["<Nothing>", "nil"]] + options, @edit[:new][:cbshow_typ]),
+          = select_tag("cbshow_typ", options_for_select([[nothing, "nil"]] + options, @edit[:new][:cbshow_typ]),
             "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json)
 
       - if !@edit[:new][:cbshow_typ].blank? && @edit[:new][:cbshow_typ].ends_with?("-tags")
         %tr
-          %td.key Tag Category
+          %td.key=_('Tag Category')
           %td
             - options = Array(@edit[:cb_assign][:cats].invert).sort_by{ |a| a.first.downcase }
-            = select_tag("cbtag_cat", options_for_select([["<Choose a Category>", ""]] + options, @edit[:new][:cbtag_cat].to_s),
+            = select_tag("cbtag_cat", options_for_select([["<#{_('Choose a Category')}>", ""]] + options, @edit[:new][:cbtag_cat].to_s),
               "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json)
 
       - unless @edit[:new][:cbshow_typ].nil? || @edit[:new][:cbshow_typ] == "nil"
         - if !@edit[:new][:cbshow_typ].ends_with?("-tags") || (@edit[:new][:cbshow_typ].ends_with?("-tags") && !@edit[:new][:cbtag_cat].blank?)
           %tr
-            %td.key Selections
+            %td.key=_('Selections')
             %td
               %table.style3
                 %thead
                   %tr
-                    %th Name
-                    %th Rate
+                    %th=_('Name')
+                    %th=_('Rate')
                 %tbody
                   - if @edit[:new][:cbshow_typ].ends_with?("-tags")
                     - @edit[:cb_assign][:tags].invert.sort_by{ |a| a.first.downcase }.each do |tag,id|
@@ -38,7 +39,7 @@
                         %td
                           - options = @edit[:cb_rates].invert.sort
                           = select_tag("#{@edit[:new][:cbshow_typ]}__#{id}",
-                            options_for_select([["<Nothing>", "nil"]] + options, @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
+                            options_for_select([[nothing, "nil"]] + options, @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
                             "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json)
                   - else
                     - @edit[:cb_assign][:cis].invert.sort_by{ |a| a.first.downcase }.each do |ci,id|
@@ -48,7 +49,7 @@
                         %td
                           - options = @edit[:cb_rates].invert.sort
                           = select_tag("#{@edit[:new][:cbshow_typ]}__#{id}",
-                            options_for_select([["<Nothing>", "nil"]] + options, @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
+                            options_for_select([[nothing, "nil"]] + options, @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
                             "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json)
                 %tfoot
                   %tr
