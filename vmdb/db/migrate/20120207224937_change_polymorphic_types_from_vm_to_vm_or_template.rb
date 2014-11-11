@@ -3,7 +3,7 @@ require Rails.root.join('lib/migration_helper')
 class ChangePolymorphicTypesFromVmToVmOrTemplate < ActiveRecord::Migration
   include MigrationHelper
 
-  self.no_transaction = true
+  disable_ddl_transaction!
 
   COLUMNS_TO_UPDATE = [
     # Table              Column             Index on the column

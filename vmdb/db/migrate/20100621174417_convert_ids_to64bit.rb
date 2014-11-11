@@ -4,7 +4,7 @@ class ConvertIdsTo64bit < ActiveRecord::Migration
   include MigrationHelper
   include MigrationHelper::PerformancesViews
 
-  self.no_transaction = true
+  disable_ddl_transaction!
 
   TABLES = [
     :accounts,                         [:id, :vm_id, :host_id],

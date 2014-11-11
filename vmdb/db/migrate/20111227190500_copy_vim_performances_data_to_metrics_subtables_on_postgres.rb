@@ -7,7 +7,7 @@ class CopyVimPerformancesDataToMetricsSubtablesOnPostgres < ActiveRecord::Migrat
 
   extend MigrationHelper
 
-  self.no_transaction = true
+  disable_ddl_transaction!
 
   class VimPerformance < ActiveRecord::Base; end
 

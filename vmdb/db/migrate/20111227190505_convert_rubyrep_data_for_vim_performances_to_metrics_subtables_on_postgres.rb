@@ -8,7 +8,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   include MigrationHelper
   include MigrationHelper::SharedStubs
 
-  self.no_transaction = true
+  disable_ddl_transaction!
 
   class VimPerformance < ActiveRecord::Base; end
 
