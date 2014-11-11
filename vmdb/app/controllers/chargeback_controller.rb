@@ -375,9 +375,7 @@ class ChargebackController < ApplicationController
         end
         return
       else
-        if @report.table && @report.table.data.length == 0
-          add_flash(_("No records found for this report"), :warning)
-        else
+        if @report.contains_records?
           @html = report_first_page(rr)              # Get the first page of the results
           unless @report.graph.blank?
             @zgraph = true
@@ -387,6 +385,8 @@ class ChargebackController < ApplicationController
           end
           @report.extras ||= Hash.new                # Create extras hash
           @report.extras[:to_html] ||= @html        # Save the html report
+        else
+          add_flash(_("No records found for this report"), :warning)
         end
       end
     end
