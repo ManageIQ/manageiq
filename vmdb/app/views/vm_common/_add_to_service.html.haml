@@ -7,24 +7,24 @@
 
 = form_tag(:action => 'add_vm_to_service', :id => @vm) do
 
-  p.legend Service Selection
+  %p.legend=_('Service Selection')
   %table.style1
     %tr
-      %td.key Service
+      %td.key=_('Service')
       %td
         = select_tag('chosen_service', options_for_select(@svcs.sort), {:multiple => false,
           :class => "widthed",
           "data-miq_focus" => true })
 
   #formbuttonplacement
-    = button_tag("Add",
+    = button_tag(_("Add"),
       :name  => "add",
       :class => "btn btn-primary",
-      :alt   => "Add VM to the selected Service",
-      :title => "Add VM to the selected Service",
+      :alt   => (t = _("Add VM to the selected Service")),
+      :title => t,
       :type  => "submit")
-    = button_tag("Cancel",
+    = button_tag((t = _("Cancel")),
       :name  => "cancel",
       :class => "btn btn-default",
-      :alt   => "Cancel",
+      :alt   => t,
       :type  => "submit")

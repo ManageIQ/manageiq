@@ -3,10 +3,10 @@
 
   = render :partial => "layouts/flash_msg"
 
-  %p.legend Basic Information
+  %p.legend=_('Basic Information')
   %table.style1
     %tr
-      %td.key Custom Identifier
+      %td.key=_('Custom Identifier')
       %td.wide
         = text_field_tag("custom_1",
           @edit[:new][:custom_1],
@@ -15,7 +15,8 @@
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
       %td.key
-        Description (
+        =_('Description')
+        (
         %span#description_count>= @edit[:new][:description] ? @edit[:new][:description].length : 0
         \/100)
       %td
@@ -28,10 +29,10 @@
             "data-miq_check_max_length" => true,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %hr
-  %p.legend Parent VM Selection
+  %p.legend=_('Parent VM Selection')
   %table.style1
     %tr
-      %td.key Parent VM
+      %td.key=_('Parent VM')
       %td
         = select_tag("chosen_parent",
           options_for_select(@edit[:pchoices].sort, @edit[:new][:parent]),
@@ -42,12 +43,12 @@
           "data-miq_observe" => {:url => url}.to_json)
 
   %hr
-  %p.legend Child VM Selection
+  %p.legend=_('Child VM Selection')
   %table
     %tr
-      %td.widthed{:align => "left"} Child VMs:
+      %td.widthed{:align => "left"}=_('Child VMs:')
       %td
-      %td{:align => "left"} Available VMs:
+      %td{:align => "left"}=_('Available VMs:')
     %tr
       %td{:align => "right", :valign => "top"}
         %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
@@ -62,38 +63,38 @@
         = link_to(image_tag("/images/toolbars/right.png",
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
-            :alt => "Move selected VMs to right"),
+            :alt => (t = _("Move selected VMs to right"))),
           {:action => 'form_field_changed',
             :button => 'right',
             :id => "#{@record.id || "new"}"},
           "data-submit" => 'main_div',
           "data-miq_sparkle_on" => true,
           :remote => true,
-          :title => 'Move selected VMs to right')
+          :title => t)
 
         = link_to(image_tag("/images/toolbars/allright.png",
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
-            :alt => "Move all VMs to right"),
+            :alt => (t = _("Move all VMs to right"))),
           {:action => 'form_field_changed',
             :button => 'allright',
             :id => "#{@record.id || "new"}"},
           "data-submit" => 'main_div',
           "data-miq_sparkle_on" => true,
           :remote => true,
-          :title => 'Move all VMs to right')
+          :title => t)
 
         = link_to(image_tag("/images/toolbars/left.png",
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
-            :alt => "Move selected VMs to left"),
+            :alt => (t = _("Move selected VMs to left"))),
           {:action => 'form_field_changed',
             :button => 'left',
             :id => "#{@record.id || "new"}"},
           "data-submit" => 'main_div',
           "data-miq_sparkle_on" => true,
           :remote => true,
-          :title => 'Move all selected VMs to left')
+          :title => t)
       %td{:align => "left", :valign => "top"}
         %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
           = select_tag('choices_chosen[]',

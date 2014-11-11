@@ -1,7 +1,7 @@
 #vm_tree_div
   = render :partial => "layouts/flash_msg"
   %input#masterToggle{:type => "checkbox", :name => "masterToggle", :onclick => "cfmeCheckAll(this, 'genealogy_tree');"}
-  (Check All)
+  =_("(Check All)")
   %p
 
   #genealogy_treebox{:style => "width:100%"}

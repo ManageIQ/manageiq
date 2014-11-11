@@ -1,11 +1,11 @@
 = render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"}
 = render :partial => "layouts/flash_msg"
 %fieldset.adminform
-  %legend Set/Remove Retirement Date
+  %legend=_('Set/Remove Retirement Date')
   %table.admintable{:cellspacing => "1"}
     %tbody
       %tr
-        %td.key Retirement Date
+        %td.key=_('Retirement Date')
         %td#retirement_date
           = text_field_tag("miq_date_1", h(session[:retire_date]), :class=>"css1", :readonly=>"true")
           = observe_field("miq_date_1",
@@ -19,11 +19,11 @@
 
       %tr
         - disabled = session[:retire_date] == nil
-        %td.key Retirement Warning
+        %td.key=_('Retirement Warning')
         %td.wide
           = select("retirement",
             "warn",
-            [["None",""],["1 Week before retirement",7],["2 Weeks before retirement",14],["30 Days before retirement",30]],
+            [[_("None"),""],[_("1 Week before retirement"),7],[_("2 Weeks before retirement"),14],[_("30 Days before retirement"),30]],
             {:selected=>session[:retire_warn]},
             {:disabled=>disabled})
         = observe_field("retirement_warn",
@@ -31,13 +31,13 @@
           :complete=>"miqSparkle(false);",
           :with=>"retirement_warn",
           :url => { :action => 'retire_date_changed' })
-  * Saving a blank date will remove all retirement dates
+  =_('* Saving a blank date will remove all retirement dates')
 
 = render(:partial => '/layouts/edit_form_buttons', :locals=>{:noreset=>true, :action_url=>"retire"})
 
 %fieldset.adminform
   %legend
-    = "New setting will affect #{pluralize(@retireitems.length,'VM')}"
+    = _("New setting will affect %s") % pluralize(@retireitems.length,'VM')
   %table.admintable{:cellspacing => "1", :height => "75"}
     %tbody
       %tr

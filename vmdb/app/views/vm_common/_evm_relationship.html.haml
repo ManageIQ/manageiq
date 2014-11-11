@@ -2,13 +2,13 @@
 #tab_div
   = render :partial => "layouts/flash_msg"
   %fieldset
-    %p.legend Servers
+    %p.legend=_('Servers')
     %table.style1
       %tr
-        %td.key Select Server:
+        %td.key=_('Select Server:')
         %td.wide
           = select_tag("server_id",
-            options_for_select([["<Not a Server>",""]] + @servers.sort, @edit[:new][:server]),
+            options_for_select([["<#{_('Not a Server')}>",""]] + @servers.sort, @edit[:new][:server]),
             "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
             "data-miq_observe" => {:url => url}.to_json)
         %td{:width => '100'}

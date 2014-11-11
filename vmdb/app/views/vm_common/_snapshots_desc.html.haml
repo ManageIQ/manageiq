@@ -3,7 +3,7 @@
   - display_name = selected_id[:name]
 - else
   - if session[:snap_selected].nil?
-    - display_name = "Basic Information"
+    - display_name =_("Basic Information")
   - else
     - selected_id = @temp[:snap_selected]
     - display_name = selected_id[:name]
@@ -17,21 +17,21 @@
         %tr
           %td.key{:rowspan => "9", :valign => "top", :style => "width: 64px"}
             %img{:src => "/images/icons/new/snapshot.png", :width => "64", :height => "64"}
-          %td.key Description
+          %td.key=_('Description')
           %td
             = selected_id[:description]
         %tr
-          %td.key Size
+          %td.key=_('Size')
           - unless selected_id[:total_size].blank?
             %td
-              = number_to_human_size(selected_id[:total_size], :precision => 2) 
-              (#{number_with_delimiter(selected_id[:total_size], :delimiter => ",",:separator => ".")} bytes) 
+              = number_to_human_size(selected_id[:total_size], :precision => 2)
+              = _("(%s bytes)") % number_with_delimiter(selected_id[:total_size], :delimiter => ",",:separator => ".")
         %tr
-          %td.key Created On
+          %td.key=_('Created On')
           %td
             - if !selected_id[:create_time].blank?
               = format_timezone(selected_id[:create_time].to_time,Time.zone,"view")
       - else
         %tr{:class => cycle('row0', 'row1')}
           %td
-            %strong #{@record.name} has no snapshots.
+            %strong=_('%s has no snapshots.') % @record.name

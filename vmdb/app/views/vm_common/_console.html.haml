@@ -2,7 +2,7 @@
   %html
     %head
       %title
-        VM #{@record.name} Remote Console
+        =_("VM %s Remote Console") % @record.name
       :javascript
         function connect() {
           mks.Connect("<%= @mks["host"] %>", 902, "<%= @mks["cfgFile"] %>", "<%= @mks["ticket"] %>", "<%= @mks["ticket"] %>");
@@ -16,14 +16,14 @@
         %script#win{:event => "OnWindowStateChange(windowState)", :for => "mks"}
           :cdata
             if (windowState == 3) {
-              if (confirm("You are about to enter fullscreen mode. Press Ctl+Alt to return to windowed mode.")) {
+              if (confirm("#{_('You are about to enter fullscreen mode. Press Ctl+Alt to return to windowed mode.')}")) {
                 mks.setFullScreen(true);
               }
             }
         %script#grab{:event => "OnGrabStateChange(grabState)", :for => "mks"}
           :cdata
             if (grabState == 1) {
-              window.status = "Press Ctl+Alt to release cursor.";
+              window.status = "#{_('Press Ctl+Alt to release cursor.')}";
             } else {
               window.status = "";
             }
@@ -46,7 +46,7 @@
   %html
     %head
       %title
-        VM #{@record.name} Remote Console
+        =_("VM %s Remote Console") % @record.name
     :javascript
       const IMessageListener = Components.interfaces.xpcomIMessageListener;
       const IGrabStateListener = Components.interfaces.xpcomIGrabStateListener;
@@ -86,7 +86,7 @@
           if (msgType == IMessageListener.MT_INFO) {
             window.status = message;
           } else {
-            alert("Connection failed.");
+            alert("#{_('Connection failed.')}");
           }
         }
       };
@@ -95,7 +95,7 @@
       GrabStateListener.prototype = {
         onGrabStateChange : function (grabState) {
           if (grabState == IGrabStateListener.GS_GRABBED) {
-            window.status = 'Press Ctrl+Alt to release cursor.';
+            window.status = "#{_('Press Ctrl+Alt to release cursor.')}";
           } else {
             window.status = "";
           }
@@ -142,5 +142,5 @@
     %object#mks{:height => "100%", :type => "application/x-vmware-mks;version=#{@mks_version}", :width => "100%"}
 
     #install{:style => "display:none"}
-      This page requires the VMware MKS plugin. Install the plugin and try again.
+      =_('This page requires the VMware MKS plugin. Install the plugin and try again.')
     %iframe#pluginDownload{:name => "pluginDownload", :style => "display:none"}

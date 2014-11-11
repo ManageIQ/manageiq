@@ -1,221 +1,233 @@
+- notavail = _("Not Available")
+- max = _("Max")
+- high = _("High")
+- avg = _("Average")
+- curr = _("Current")
+- rec = _("Recommended")
+- sav = _("Savings")
+- psav = _("% Savings")
+- mem = _("Memory")
+- proc = _("Processors")
+
 #tab_div
   = render :partial => "layouts/flash_msg"
   %dl.col2
     %dd
       %fieldset
-        %p.legend Normal Operating Ranges (up to 30 days' data)
+        %p.legend=_("Normal Operating Ranges (up to 30 days' data)")
         %table.style3
           %thead
             %tr
               %th{:colspan => "2"}
           %tr.no-hover{:class => cycle('row0','row1',:name => 'vmsafe')}
-            %td.label{:valign => "middle"} CPU
+            %td.label{:valign => "middle"}=_('CPU')
             %td
               %table{:style => "line-height: 5px; white-space: nowrap;"}
                 %tr
-                  %td Max
+                  %td=max
                   %td
                     - if @record.cpu_usagemhz_rate_average_max_over_time_period
                       = mhz_to_human_size(@record.cpu_usagemhz_rate_average_max_over_time_period, 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td High
+                  %td=high
                   %td
                     - if @record.cpu_usagemhz_rate_average_high_over_time_period
                       = mhz_to_human_size(@record.cpu_usagemhz_rate_average_high_over_time_period, 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td Average
+                  %td=avg
                   %td
                     - if @record.cpu_usagemhz_rate_average_avg_over_time_period
                       = mhz_to_human_size(@record.cpu_usagemhz_rate_average_avg_over_time_period, 2)
                     - else
-                      Not Available
+                      = notavail
           %tr.no-hover{:class => cycle('row0','row1',:name => 'vmsafe')}
-            %td.label{:valign => "middle"} CPU Usage
+            %td.label{:valign => "middle"}=_('CPU Usage')
             %td
               %table{:style => "line-height: 5px; white-space: nowrap;"}
                 %tr
-                  %td Max
+                  %td=max
                   %td
                     - if @record.max_cpu_usage_rate_average_max_over_time_period
                       = number_to_percentage(@record.max_cpu_usage_rate_average_max_over_time_period,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td High
+                  %td=high
                   %td
                     - if @record.max_cpu_usage_rate_average_high_over_time_period
                       = number_to_percentage(@record.max_cpu_usage_rate_average_high_over_time_period,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td Average
+                  %td=avg
                   %td
                     - if @record.max_cpu_usage_rate_average_avg_over_time_period
                       = number_to_percentage(@record.max_cpu_usage_rate_average_avg_over_time_period,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
           %tr.no-hover{:class => cycle('row0','row1',:name => 'vmsafe')}
-            %td.label{:valign => "middle"} Memory
+            %td.label{:valign => "middle"}=mem
             %td
               %table{:style => "line-height: 5px; white-space: nowrap;"}
                 %tr
-                  %td Max
+                  %td=max
                   %td
                     - if @record.derived_memory_used_max_over_time_period
                       = number_to_human_size(@record.derived_memory_used_max_over_time_period * 1024 * 1024,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td High
+                  %td=high
                   %td
                     - if @record.derived_memory_used_high_over_time_period
                       = number_to_human_size(@record.derived_memory_used_high_over_time_period * 1024 * 1024,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td Average
+                  %td=avg
                   %td
                     - if @record.derived_memory_used_avg_over_time_period
                       = number_to_human_size(@record.derived_memory_used_avg_over_time_period * 1024 * 1024,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
           %tr.no-hover{:class => cycle('row0','row1',:name => 'vmsafe')}
-            %td.label{:valign => "middle"} Memory Usage
+            %td.label{:valign => "middle"}=_('Memory Usage')
             %td
               %table{:style => "line-height: 5px; white-space: nowrap;"}
                 %tr
-                  %td Max
+                  %td=max
                   %td
                     - if @record.max_mem_usage_absolute_average_max_over_time_period
                       = number_to_percentage(@record.max_mem_usage_absolute_average_max_over_time_period,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td High
+                  %td=high
                   %td
                     - if @record.max_mem_usage_absolute_average_high_over_time_period
                       = number_to_percentage(@record.max_mem_usage_absolute_average_high_over_time_period,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
                 %tr
-                  %td Average
+                  %td=avg
                   %td
                     - if @record.max_mem_usage_absolute_average_avg_over_time_period
                       = number_to_percentage(@record.max_mem_usage_absolute_average_avg_over_time_period,:precision => 2)
                     - else
-                      Not Available
+                      = notavail
       %fieldset
-        %p.legend Right-Sizing (Conservative - derived from Absolute Maximum)
+        %p.legend=_('Right-Sizing (Conservative - derived from Absolute Maximum)')
         %table.style3
           %thead
             %tr
               %th &#160;
-              %th Current
-              %th Recommended
-              %th % Savings
-              %th Savings
+              %th=curr
+              %th=rec
+              %th=psav
+              %th=sav
           %tbody
             %tr.no-hover{:class => cycle('row0', 'row1')}
               %td
-                Processors
+                =proc
               %td{:align => "right"}
-                = @record.num_cpu ? @record.num_cpu : "Not Available"
+                = @record.num_cpu ? @record.num_cpu : = notavail
               %td{:align => "right"}
-                = @record.conservative_recommended_vcpus ? @record.conservative_recommended_vcpus : "Not Available"
+                = @record.conservative_recommended_vcpus ? @record.conservative_recommended_vcpus : = notavail
               %td{:align => "right"}
-                = @record.conservative_vcpus_recommended_change_pct ? "#{@record.conservative_vcpus_recommended_change_pct}%" : "Not Available"
+                = @record.conservative_vcpus_recommended_change_pct ? "#{@record.conservative_vcpus_recommended_change_pct}%" : = notavail
               %td{:align => "right"}
-                = @record.conservative_vcpus_recommended_change ? @record.conservative_vcpus_recommended_change : "Not Available"
+                = @record.conservative_vcpus_recommended_change ? @record.conservative_vcpus_recommended_change : = notavail
             %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
               %td
-                Memory
+                =mem
               %td{:align => "right"}
-                = @record.mem_cpu ? "#{@record.mem_cpu} MB" : "Not Available"
+                = @record.mem_cpu ? "#{@record.mem_cpu} MB" : = notavail
               %td{:align => "right"}
-                = @record.conservative_recommended_mem ? "#{@record.conservative_recommended_mem} MB" : "Not Available"
+                = @record.conservative_recommended_mem ? "#{@record.conservative_recommended_mem} MB" : = notavail
               %td{:align => "right"}
-                = @record.conservative_mem_recommended_change_pct ? "#{@record.conservative_mem_recommended_change_pct}%" : "Not Available"
+                = @record.conservative_mem_recommended_change_pct ? "#{@record.conservative_mem_recommended_change_pct}%" : = notavail
               %td{:align => "right"}
-                = @record.conservative_mem_recommended_change ? "#{@record.conservative_mem_recommended_change} MB" : "Not Available"
+                = @record.conservative_mem_recommended_change ? "#{@record.conservative_mem_recommended_change} MB" : = notavail
     %dd
       %fieldset
-        %p.legend Right-Sizing (Moderate - derived from High NORM)
+        %p.legend=_('Right-Sizing (Moderate - derived from High NORM)')
         %table.style3
           %thead
             %tr
               %th &#160;
-              %th Current
-              %th Recommended
-              %th % Savings
-              %th Savings
+              %th=curr
+              %th=rec
+              %th=psav
+              %th=sav
           %tbody
             %tr.no-hover{:class => cycle('row0', 'row1')}
               %td
-                Processors
+                =proc
               %td{:align => "right"}
-                = @record.num_cpu ? @record.num_cpu : "Not Available"
+                = @record.num_cpu ? @record.num_cpu : = notavail
               %td{:align => "right"}
-                = @record.moderate_recommended_vcpus ? @record.moderate_recommended_vcpus : "Not Available"
+                = @record.moderate_recommended_vcpus ? @record.moderate_recommended_vcpus : = notavail
               %td{:align => "right"}
-                = @record.moderate_vcpus_recommended_change_pct ? "#{@record.moderate_vcpus_recommended_change_pct}%" : "Not Available"
+                = @record.moderate_vcpus_recommended_change_pct ? "#{@record.moderate_vcpus_recommended_change_pct}%" : = notavail
               %td{:align => "right"}
-                = @record.moderate_vcpus_recommended_change ? @record.moderate_vcpus_recommended_change : "Not Available"
+                = @record.moderate_vcpus_recommended_change ? @record.moderate_vcpus_recommended_change : = notavail
             %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
               %td
-                Memory
+                =mem
               %td{:align => "right"}
-                = @record.mem_cpu ? "#{@record.mem_cpu} MB" : "Not Available"
+                = @record.mem_cpu ? "#{@record.mem_cpu} MB" : = notavail
               %td{:align => "right"}
-                = @record.moderate_recommended_mem ? "#{@record.moderate_recommended_mem} MB" : "Not Available"
+                = @record.moderate_recommended_mem ? "#{@record.moderate_recommended_mem} MB" : = notavail
               %td{:align => "right"}
-                = @record.moderate_mem_recommended_change_pct ? "#{@record.moderate_mem_recommended_change_pct}%" : "Not Available"
+                = @record.moderate_mem_recommended_change_pct ? "#{@record.moderate_mem_recommended_change_pct}%" : = notavail
               %td{:align => "right"}
-                = @record.moderate_mem_recommended_change ? "#{@record.moderate_mem_recommended_change} MB" : "Not Available"
+                = @record.moderate_mem_recommended_change ? "#{@record.moderate_mem_recommended_change} MB" : = notavail
       %fieldset
-        %p.legend Right-Sizing (Aggressive - derived from Average NORM)
+        %p.legend=_('Right-Sizing (Aggressive - derived from Average NORM)')
         %table.style3
           %thead
             %tr
               %th &#160;
-              %th Current
-              %th Recommended
-              %th % Savings
-              %th Savings
+              %th=curr
+              %th=rec
+              %th=psav
+              %th=sav
           %tbody
             %tr.no-hover{:class => cycle('row0', 'row1')}
               %td
-                Processors
+                =proc
               %td{:align => "right"}
-                = @record.num_cpu ? @record.num_cpu : "Not Available"
+                = @record.num_cpu ? @record.num_cpu : = notavail
               %td{:align => "right"}
-                = @record.aggressive_recommended_vcpus ? @record.aggressive_recommended_vcpus : "Not Available"
+                = @record.aggressive_recommended_vcpus ? @record.aggressive_recommended_vcpus : = notavail
               %td{:align => "right"}
-                = @record.aggressive_vcpus_recommended_change_pct ? "#{@record.aggressive_vcpus_recommended_change_pct}%" : "Not Available"
+                = @record.aggressive_vcpus_recommended_change_pct ? "#{@record.aggressive_vcpus_recommended_change_pct}%" : = notavail
               %td{:align => "right"}
-                = @record.aggressive_vcpus_recommended_change ? @record.aggressive_vcpus_recommended_change : "Not Available"
+                = @record.aggressive_vcpus_recommended_change ? @record.aggressive_vcpus_recommended_change : = notavail
             %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
               %td
-                Memory
+                =mem
               %td{:align => "right"}
-                = @record.mem_cpu ? "#{@record.mem_cpu} MB" : "Not Available"
+                = @record.mem_cpu ? "#{@record.mem_cpu} MB" : = notavail
               %td{:align => "right"}
-                = @record.aggressive_recommended_mem ? "#{@record.aggressive_recommended_mem} MB" : "Not Available"
+                = @record.aggressive_recommended_mem ? "#{@record.aggressive_recommended_mem} MB" : = notavail
               %td{:align => "right"}
-                = @record.aggressive_mem_recommended_change_pct ? "#{@record.aggressive_mem_recommended_change_pct}%" : "Not Available"
+                = @record.aggressive_mem_recommended_change_pct ? "#{@record.aggressive_mem_recommended_change_pct}%" : = notavail
               %td{:align => "right"}
-                = @record.aggressive_mem_recommended_change ? "#{@record.aggressive_mem_recommended_change} MB" : "Not Available"
+                = @record.aggressive_mem_recommended_change ? "#{@record.aggressive_mem_recommended_change} MB" : = notavail
       .note
-        = "* Recommendations are subject to minimum of CPU: #{Vm.cpu_recommendation_minimum} and Memory: #{MiqReport.new.format_mbytes_to_human_size(Vm.mem_recommendation_minimum)}."
+        - arr = [Vm.cpu_recommendation_minimum, MiqReport.new.format_mbytes_to_human_size(Vm.mem_recommendation_minimum)]
+        = _("* Recommendations are subject to minimum of CPU: %s and Memory: %s.") % arr
   - unless @explorer
     #buttons_on{:style => "float: right"}
-      = button_tag('Back',
+      = button_tag((t = _('Back')),
         :class   => 'btn btn-default',
-        :alt     => 'Back',
-        :title   => 'Back',
+        :alt     => t,
+        :title   => t,
         :onclick => "miqAjaxButton('#{url_for(:action => "right_size",
                                               :id     => @record_id,
                                               :button => "back")}');")
