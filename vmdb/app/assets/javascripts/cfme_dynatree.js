@@ -454,7 +454,7 @@ function miqCheck_CU_All(cb, treename) {
     return node.data.key;
   });
   new Ajax.Request(encodeURI(check_url + "?check_all=" + cb.checked +
-        "&all_checked=" + selectedKeys + "&tree_name=" + treename
+        "&tree_name=" + treename
     ),
     {asynchronous:true, evalScripts:true}
   );
@@ -462,8 +462,8 @@ function miqCheck_CU_All(cb, treename) {
 }
 
 // OnCheck handler for the C&U collection trees
-function miqOnCheck_CU_Filters(tree_name, key, checked, all_checked) {
-  new Ajax.Request(encodeURI(check_url + "?id=" + key +"&check=" + checked + "&all_checked=" + all_checked + "&tree_name=" + tree_name),
+function miqOnCheck_CU_Filters(tree_name, key, checked) {
+  new Ajax.Request(encodeURI(check_url + "?id=" + key +"&check=" + checked + "&tree_name=" + tree_name),
     {asynchronous:true, evalScripts:true}
   );
   return true;

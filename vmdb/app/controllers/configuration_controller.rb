@@ -923,7 +923,6 @@ class ConfigurationController < ApplicationController
     @config_tab   = session[:config_tab]        if session[:config_tab]
     @tabform      = session[:config_tabform]    if session[:config_tabform]
     @schema_ver   = session[:config_schema_ver] if session[:config_schema_ver]
-    @all_checked  = session[:all_checked]       if session[:all_checked]
     @zone_options = session[:zone_options]      if session[:zone_options]
   end
 
@@ -934,7 +933,6 @@ class ConfigurationController < ApplicationController
     session[:vm_filters]        = @filters
     session[:vm_catinfo]        = @catinfo
     session[:vm_cats]           = @cats
-    session[:all_checked]       = @all_checked if @all_checked
     session[:zone_options]      = @zone_options
   end
 end

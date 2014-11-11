@@ -134,4 +134,42 @@ describe EmsCluster do
       :hosts                   => [],
     }
   end
+
+  context("#perf_capture_enabled_host_ids=") do
+    before do
+      @miq_region = FactoryGirl.create(:miq_region, :region => 1)
+      MiqRegion.stub(:my_region).and_return(@miq_region)
+      @cluster = FactoryGirl.create(:ems_cluster)
+      @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster)
+      @host2 = FactoryGirl.create(:host, :ems_cluster => @cluster)
+    end
+
+    it "Initially Performance capture for cluster and its hosts should not be set" do
+      @cluster.perf_capture_enabled.should eq(false)
+      @host1.perf_capture_enabled.should eq(false)
+      @host2.perf_capture_enabled.should eq(false)
+    end
+
+    it "Performance capture for cluster and its hosts should be set" do
+      @cluster.perf_capture_enabled_host_ids = [@host1.id, @host2.id]
+      @cluster.perf_capture_enabled.should eq(true)
+      @host1.perf_capture_enabled.should eq(true)
+      @host2.perf_capture_enabled.should eq(true)
+    end
+
+    it "Performance capture for cluster and only 1 hosts should be set" do
+      @cluster.perf_capture_enabled_host_ids = [@host2.id]
+      @cluster.perf_capture_enabled.should eq(true)
+      @host1.perf_capture_enabled.should eq(false)
+      @host2.perf_capture_enabled.should eq(true)
+    end
+
+    it "Performance capture for cluster and its hosts should get unset" do
+      @cluster.perf_capture_enabled_host_ids = [@host2.id]
+      @cluster.perf_capture_enabled_host_ids = []
+      @cluster.perf_capture_enabled.should eq(false)
+      @host1.perf_capture_enabled.should eq(false)
+      @host2.perf_capture_enabled.should eq(false)
+    end
+  end
 end
