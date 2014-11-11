@@ -36,6 +36,88 @@ describe('scheduleFormController', function() {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
+  var sharedBehaviorForInitialization = function() {
+    it('sets the action type to the type returned from the http request', function() {
+      expect($scope.actionType).toEqual('actionType');
+    });
+
+    it('sets the logUserid to the log_userid returned from the http request', function() {
+      expect($scope.logUserid).toEqual('logUserId');
+    });
+
+    it('sets the logPassword to the log_password returned from the http request', function() {
+      expect($scope.logPassword).toEqual('logPassword');
+    });
+
+    it('sets the logVerify to the log_verify returned from the http request', function() {
+      expect($scope.logVerify).toEqual('logVerify');
+    });
+
+    it('sets the protocol', function() {
+      expect($scope.protocol).toEqual('protocol');
+    });
+
+    it('sets the scheduleName to the name returned from the http request', function() {
+      expect($scope.scheduleName).toEqual('scheduleName');
+    });
+
+    it('sets the scheduleDescription to the description returned from the http request', function() {
+      expect($scope.scheduleDescription).toEqual('scheduleDescription');
+    });
+
+    it('sets the scheduleEnabled to the enabled attribute returned from the http request', function() {
+      expect($scope.scheduleEnabled).toEqual('1');
+    });
+
+    it('sets the scheduleTimerType', function() {
+      expect($scope.scheduleTimerType).toEqual('Hourly');
+    });
+
+    it('sets the scheduleTimerValue', function() {
+      expect($scope.scheduleTimerValue).toEqual('8');
+    });
+
+    it('sets the scheduleDate', function() {
+      expect($scope.scheduleDate).toEqual('now');
+    });
+
+    it('sets the scheduleStartHour', function() {
+      expect($scope.scheduleStartHour).toEqual('12');
+    });
+
+    it('sets the scheduleStartMinute', function() {
+      expect($scope.scheduleStartMinute).toEqual('25');
+    });
+
+    it('sets the scheduleTimeZone', function() {
+      expect($scope.scheduleTimeZone).toEqual('UTC');
+    });
+
+    it('sets the uri', function() {
+      expect($scope.uri).toEqual('uri');
+    });
+
+    it('sets the uriPrefix', function() {
+      expect($scope.uriPrefix).toEqual('uriPrefix');
+    });
+
+    it('sets the timer items', function() {
+      expect($scope.timerItems).toEqual(["some", "options"]);
+    });
+
+    it('sets finishedLoading', function() {
+      expect($scope.finishedLoading).toBe(true);
+    });
+
+    it('turns sparkle on', function() {
+      expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('turns sparkle off', function() {
+      expect(miqService.sparkleOff).toHaveBeenCalled();
+    });
+  };
+
   describe('initialization', function() {
     describe('when the scheduleFormId is new', function() {
       it('sets the action type to vm', function() {
@@ -69,76 +151,48 @@ describe('scheduleFormController', function() {
       it('sets the scheduleStartMinute to 0', function() {
         expect($scope.scheduleStartMinute).toEqual('0');
       });
+
+      it('sets finishedLoading', function() {
+        expect($scope.finishedLoading).toBe(true);
+      });
     });
 
     describe('when the scheduleFormId is an id', function() {
+      var scheduleFormResponse = {
+        action_type: 'actionType',
+        filter_type: 'all',
+        filtered_item_list: ['lol', 'lol2'],
+        filter_value: 'filterValue',
+        log_userid: 'logUserId',
+        log_password: 'logPassword',
+        log_verify: 'logVerify',
+        protocol: 'protocol',
+        schedule_name: 'scheduleName',
+        schedule_description: 'scheduleDescription',
+        schedule_enabled: '1',
+        schedule_timer_type: 'Hourly',
+        schedule_timer_value: '8',
+        schedule_start_date: 'now',
+        schedule_start_hour: '12',
+        schedule_start_min: '25',
+        schedule_time_zone: 'UTC',
+        uri: 'uri',
+        uri_prefix: 'uriPrefix'
+      };
+
       describe('when the filter type is all', function() {
         beforeEach(inject(function(_$controller_) {
-          $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond({
-            action_type: 'actionType',
-            filter_type: 'all',
-            filtered_item_list: ['lol', 'lol2'],
-            filter_value: 'filterValue',
-            log_userid: 'logUserId',
-            log_password: 'logPassword',
-            log_verify: 'logVerify',
-            protocol: 'protocol',
-            schedule_name: 'scheduleName',
-            schedule_description: 'scheduleDescription',
-            schedule_enabled: '1',
-            schedule_timer_type: 'Hourly',
-            schedule_timer_value: '8',
-            schedule_start_date: 'now',
-            schedule_start_hour: '12',
-            schedule_start_min: '25',
-            schedule_time_zone: 'UTC',
-            uri: 'uri',
-            uri_prefix: 'uriPrefix'
-          });
+          scheduleFormResponse.filter_type = 'all';
+
+          $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond(scheduleFormResponse);
+
+          $scope.filterValuesEmpty = false;
 
           $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
           $httpBackend.flush();
         }));
 
-        it('sets the action type to the type returned from the http request', function() {
-          expect($scope.actionType).toEqual('actionType');
-        });
-
-        it('sets the logUserid to the log_userid returned from the http request', function() {
-          expect($scope.logUserid).toEqual('logUserId');
-        });
-
-        it('sets the logPassword to the log_password returned from the http request', function() {
-          expect($scope.logPassword).toEqual('logPassword');
-        });
-
-        it('sets the logVerify to the log_verify returned from the http request', function() {
-          expect($scope.logVerify).toEqual('logVerify');
-        });
-
-        it('sets the protocol', function() {
-          expect($scope.protocol).toEqual('protocol');
-        });
-
-        it('sets the scheduleName to the name returned from the http request', function() {
-          expect($scope.scheduleName).toEqual('scheduleName');
-        });
-
-        it('sets the scheduleDescription to the description returned from the http request', function() {
-          expect($scope.scheduleDescription).toEqual('scheduleDescription');
-        });
-
-        it('sets the scheduleEnabled to the enabled attribute returned from the http request', function() {
-          expect($scope.scheduleEnabled).toEqual('1');
-        });
-
-        it('sets the scheduleTimerType', function() {
-          expect($scope.scheduleTimerType).toEqual('Hourly');
-        });
-
-        it('sets the scheduleTimerValue', function() {
-          expect($scope.scheduleTimerValue).toEqual('8');
-        });
+        sharedBehaviorForInitialization();
 
         it('sets the filter type to the type returned from the http request', function() {
           expect($scope.filterType).toEqual('all');
@@ -147,106 +201,22 @@ describe('scheduleFormController', function() {
         it('sets the filterValuesEmpty to true', function() {
           expect($scope.filterValuesEmpty).toBe(true);
         });
-
-        it('sets the scheduleDate', function() {
-          expect($scope.scheduleDate).toEqual('now');
-        });
-
-        it('sets the scheduleStartHour', function() {
-          expect($scope.scheduleStartHour).toEqual('12');
-        });
-
-        it('sets the scheduleStartMinute', function() {
-          expect($scope.scheduleStartMinute).toEqual('25');
-        });
-
-        it('sets the scheduleTimeZone', function() {
-          expect($scope.scheduleTimeZone).toEqual('UTC');
-        });
-
-        it('sets the uri', function() {
-          expect($scope.uri).toEqual('uri');
-        });
-
-        it('sets the uriPrefix', function() {
-          expect($scope.uriPrefix).toEqual('uriPrefix');
-        });
-
-        it('sets the timer items', function() {
-          expect($scope.timerItems).toEqual(["some", "options"]);
-        });
       });
 
       describe('when the filter type is not all', function() {
         beforeEach(inject(function(_$controller_) {
-          $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond({
-            action_type: 'actionType',
-            filter_type: 'filterType',
-            filtered_item_list: ['lol', 'lol2'],
-            filter_value: 'filterValue',
-            log_userid: 'logUserId',
-            log_password: 'logPassword',
-            log_verify: 'logVerify',
-            protocol: 'protocol',
-            schedule_name: 'scheduleName',
-            schedule_description: 'scheduleDescription',
-            schedule_enabled: '1',
-            schedule_timer_type: 'Hourly',
-            schedule_timer_value: '8',
-            schedule_start_date: 'now',
-            schedule_start_hour: '12',
-            schedule_start_min: '25',
-            schedule_time_zone: 'UTC',
-            uri: 'uri',
-            uri_prefix: 'uriPrefix'
-          });
+          scheduleFormResponse.filter_type = 'filterType';
+
+          $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond(scheduleFormResponse);
 
           $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
           $httpBackend.flush();
         }));
 
-        it('sets the action type to the type returned from the http request', function() {
-          expect($scope.actionType).toEqual('actionType');
-        });
+        sharedBehaviorForInitialization();
 
         it('sets the filter type to the type returned from the http request', function() {
           expect($scope.filterType).toEqual('filterType');
-        });
-
-        it('sets the logUserid to the log_userid returned from the http request', function() {
-          expect($scope.logUserid).toEqual('logUserId');
-        });
-
-        it('sets the logPassword to the log_password returned from the http request', function() {
-          expect($scope.logPassword).toEqual('logPassword');
-        });
-
-        it('sets the logVerify to the log_verify returned from the http request', function() {
-          expect($scope.logVerify).toEqual('logVerify');
-        });
-
-        it('sets the protocol', function() {
-          expect($scope.protocol).toEqual('protocol');
-        });
-
-        it('sets the scheduleName to the name returned from the http request', function() {
-          expect($scope.scheduleName).toEqual('scheduleName');
-        });
-
-        it('sets the scheduleDescription to the description returned from the http request', function() {
-          expect($scope.scheduleDescription).toEqual('scheduleDescription');
-        });
-
-        it('sets the scheduleEnabled to the enabled attribute returned from the http request', function() {
-          expect($scope.scheduleEnabled).toEqual('1');
-        });
-
-        it('sets the scheduleTimerType', function() {
-          expect($scope.scheduleTimerType).toEqual('Hourly');
-        });
-
-        it('sets the scheduleTimerValue', function() {
-          expect($scope.scheduleTimerValue).toEqual('8');
         });
 
         it('sets the filter list', function() {
@@ -257,40 +227,8 @@ describe('scheduleFormController', function() {
           expect($scope.filterValue).toEqual('filterValue');
         });
 
-        it('sets the scheduleDate', function() {
-          expect($scope.scheduleDate).toEqual('now');
-        });
-
-        it('sets the scheduleStartHour', function() {
-          expect($scope.scheduleStartHour).toEqual('12');
-        });
-
-        it('sets the scheduleStartMinute', function() {
-          expect($scope.scheduleStartMinute).toEqual('25');
-        });
-
-        it('sets the scheduleTimeZone', function() {
-          expect($scope.scheduleTimeZone).toEqual('UTC');
-        });
-
-        it('sets the uri', function() {
-          expect($scope.uri).toEqual('uri');
-        });
-
-        it('sets the uriPrefix', function() {
-          expect($scope.uriPrefix).toEqual('uriPrefix');
-        });
-
-        it('turns sparkle on', function() {
-          expect(miqService.sparkleOn).toHaveBeenCalled();
-        });
-
-        it('turns sparkle off', function() {
-          expect(miqService.sparkleOff).toHaveBeenCalled();
-        });
-
-        it('sets the timer items', function() {
-          expect($scope.timerItems).toEqual(["some", "options"]);
+        it('sets the filterValuesEmpty to false', function() {
+          expect($scope.filterValuesEmpty).toBe(false);
         });
       });
     });
