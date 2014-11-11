@@ -55,13 +55,6 @@
   - derived_storage_vm_count_unregistered
   - derived_storage_vm_count_unmanaged
 
-- :title: Non-VM Files Space
-  :type: Line
-  :columns:
-  - derived_storage_other_managed
-  :decimals: 2
-  :units: GB
-
 - :title: Used Disk Space
   :type: Line
   :columns:

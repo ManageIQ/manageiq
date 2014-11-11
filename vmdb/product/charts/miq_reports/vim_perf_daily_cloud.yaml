@@ -71,7 +71,6 @@ cols:
 - derived_storage_mem_registered
 - derived_storage_mem_unregistered
 - derived_storage_mem_unmanaged
-- derived_storage_other_managed
 - assoc_ids
 
 # Included tables (joined, has_one, has_many) and columns
@@ -138,7 +137,6 @@ col_order:
 - derived_storage_mem_registered
 - derived_storage_mem_unregistered
 - derived_storage_mem_unmanaged
-- derived_storage_other_managed
 - resource.cpu_usagemhz_rate_average_high_over_time_period
 - resource.cpu_usagemhz_rate_average_low_over_time_period
 - resource.cpu_usage_rate_average_high_over_time_period
