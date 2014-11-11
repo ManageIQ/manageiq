@@ -1,4 +1,4 @@
-%form#form_div(name="scheduleForm" ng-controller="scheduleFormController")
+%form#form_div(name="scheduleForm" ng-controller="scheduleFormController" ng-show="finishedLoading")
   = render :partial => "layouts/flash_msg"
   %fieldset
     %p.legend
@@ -26,7 +26,7 @@
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
 
-  = button_tag("Save", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !scheduleForm.$valid}", "ng-click" => "saveClicked()", "ng-disabled" => "!scheduleForm.$valid")
+  = button_tag("Save", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !saveable(scheduleForm)}", "ng-click" => "saveClicked()", "ng-disabled" => "!saveable(scheduleForm)")
   = button_tag("Reset", :class => "btn btn-default", "ng-class" => "{'btn-disabled': !scheduleForm.$dirty}", "ng-click" => "resetClicked()", "ng-disabled" => "!scheduleForm.$dirty")
   = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
 

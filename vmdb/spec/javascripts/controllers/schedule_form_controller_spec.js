@@ -649,4 +649,60 @@ describe('scheduleFormController', function() {
       });
     });
   });
+
+  describe('#saveable', function() {
+    var scheduleForm = {};
+
+    describe('when the schedule form is valid', function() {
+      beforeEach(function() {
+        scheduleForm.$valid = true;
+      });
+
+      describe('when the schedule form is dirty', function() {
+        beforeEach(function() {
+          scheduleForm.$dirty = true;
+        });
+
+        it('returns true', function() {
+          expect($scope.saveable(scheduleForm)).toBe(true);
+        });
+      });
+
+      describe('when the schedule form is not dirty', function() {
+        beforeEach(function() {
+          scheduleForm.$dirty = false;
+        });
+
+        it('returns false', function() {
+          expect($scope.saveable(scheduleForm)).toBe(false);
+        });
+      });
+    });
+
+    describe('when the schedule form is not valid', function() {
+      beforeEach(function() {
+        scheduleForm.$valid = false;
+      });
+
+      describe('when the schedule form is dirty', function() {
+        beforeEach(function() {
+          scheduleForm.$dirty = true;
+        });
+
+        it('returns false', function() {
+          expect($scope.saveable(scheduleForm)).toBe(false);
+        });
+      });
+
+      describe('when the schedule form is not dirty', function() {
+        beforeEach(function() {
+          scheduleForm.$dirty = false;
+        });
+
+        it('returns false', function() {
+          expect($scope.saveable(scheduleForm)).toBe(false);
+        });
+      });
+    });
+  });
 });
