@@ -1,52 +1,73 @@
 #login-screen{:class =>"#{get_vmdb_config[:server][:custom_login_logo] ? 'whitelabel' : ''}"}
   %img#logo{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("layout/login-screen-logo.png")}"}
   .form
-    = render(:partial=>"layouts/spinner", :locals=>{:login=>true})
+    = render(:partial => "layouts/spinner", :locals => {:login => true})
     #flash_div{:style =>"#{flash[:notice] ? "" : "display:none"}"}
       #{flash[:notice]}
     %fieldset
       %legend
-        %img{:src=>image_path("layout/product-name.png")}
+        %img{:src => image_path("layout/product-name.png")}
       #login_div
         %p
-          %label Username
-          = text_field_tag('user_name', @user_name,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();")
+          %label=_('Username')
+          = text_field_tag('user_name', @user_name,:onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();")
           = javascript_tag(javascript_focus('user_name'))
         %p
-          %label Password
-          = password_field_tag('user_password', @user_password,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();",:autocomplete => "off")
+          %label=_('Password')
+          = password_field_tag('user_password',
+            @user_password,
+            :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();",
+            :autocomplete => "off")
 
         - if User.mode == 'database'
           = render :partial => 'login_more'
 
         -# Fields collected via JS functions, sent up with credentials
-        %input{:type=>"hidden", :id=>"browser_name", :name=>"browser_name"}
-        %input{:type=>"hidden", :id=>"browser_version", :name=>"browser_version"}
-        %input{:type=>"hidden", :id=>"browser_os", :name=>"browser_os"}
-        %input{:type=>"hidden", :id=>"user_TZO", :name=>"user_TZO"}
+        %input{:type => "hidden", :id => "browser_name", :name => "browser_name"}
+        %input{:type => "hidden", :id => "browser_version", :name => "browser_version"}
+        %input{:type => "hidden", :id => "browser_os", :name => "browser_os"}
+        %input{:type => "hidden", :id => "user_TZO", :name => "user_TZO"}
 
       %ul.login_buttons
         %li
-          = link_to({:action=>"authenticate", :button=>"login", :method=>:post}, "data-miq_sparkle_on" => true,"data-submit"=>'login_div',:remote=>true,:id=>"login",:class=>"button", :title=>"Login") { "Log In" }
-          = link_to({:action=>"kerberos_authenticate", :button => "sso_login", :method => :post}, "data-miq_sparkle_on" => true, "data-miq_login_error" => true, "data-submit" => 'login_div', :remote => true, :id => "sso_login", :class => "button", :hidden => true, :title => "SSO Login" ) { "SSO Log In"}
+          = link_to({:action => "authenticate", :button => "login", :method => :post},
+            "data-miq_sparkle_on" => true,
+            "data-submit" => 'login_div',
+            :remote => true,
+            :id => "login",
+            :class => "button",
+            :title => _("Login")) { _("Log In") }
+          = link_to({:action => "kerberos_authenticate", :button => "sso_login", :method => :post},
+            "data-miq_sparkle_on" => true,
+            "data-miq_login_error" => true,
+            "data-submit" => 'login_div',
+            :remote => true,
+            :id => "sso_login",
+            :class => "button",
+            :hidden => true,
+            :title => _("SSO Login")) { _("SSO Log In") }
 
         - if User.mode == "database"
-          %li#back_button{:style=>"display:none"}
-            = link_to({:action=>"authenticate", :button=>"back", :method=>:post},:remote=>true,:title=>"Back") { "Back" }
+          %li#back_button{:style => "display:none"}
+            = link_to({:action => "authenticate", :button => "back", :method => :post},
+              :remote => true,
+              :title => _("Back")) { _("Back") }
           %li#more_button
-            = link_to({:action=>"authenticate", :button=>"more", :method=>:post}, :remote=>true,:title=>"Update Password") { "Update password" }
+            = link_to({:action => "authenticate", :button => "more", :method => :post},
+            :remote => true,
+            :title => _("Update Password")) { _("Update password") }
     - if get_vmdb_config[:session][:show_login_info]
       %aside
         %p
-          Region:
+          =_('Region:')
           %span
             = (MiqRegion.my_region.description)
         %p
-          Zone:
+          =_('Zone:')
           %span
             = (MiqServer.my_zone)
         %p
-          Appliance:
+          =_('Appliance:')
           %span
             = (MiqServer.my_server.name)
         %p.message

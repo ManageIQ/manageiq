@@ -3,7 +3,7 @@
 = link_to("",
   {:controller => "dashboard", :action => "widget_zoom", :widget => widget.id},
   :id => "w_#{widget.id}_zoom",
-  :title => "Zoom in on this chart",
+  :title => _("Zoom in on this chart"),
   'data-miq_sparkle_on' => true,
   :remote => true,
   :class => "zoombox")

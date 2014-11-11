@@ -11,6 +11,7 @@
             - has_items = true
             %tr
               %td{:align => "center"}
-                = link_to(ws.description, ws.miq_shortcut.url, :title => "Click to go to this location")
+                = link_to(ws.description, ws.miq_shortcut.url, :title => _("Click to go to this location"))
         - unless has_items
-          No shortcuts are authorized for this user, contact your Administrator . . .
+          =_('No shortcuts are authorized for this user, contact your Administrator')
+          \. . .

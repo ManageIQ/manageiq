@@ -7,7 +7,8 @@
     :style => @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display:none' : ''}
 
     - if widget.contents_for_user(session[:userid]).contents.blank?
-      No chart data found . . .
+      =_('No chart data found')
+      \. . .
     - datum = widget.contents_for_user(session[:userid]).contents
     - if Charting.data_ok?(datum)
       -# we need to count all charts to be able to display multiple
@@ -24,4 +25,4 @@
                     :width  => width,
                     :height => height)
     - else
-      Invalid chart data. Try regenerating the widgets.
+      =_('Invalid chart data. Try regenerating the widgets.')

@@ -1,10 +1,10 @@
 -if @more
   #login_more_div
     %p
-      %label New Password
+      %label=_('New Password')
       = password_field_tag('user_new_password', nil,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();",:autocomplete => "off")
     %p
-      %label Verify Password
+      %label=_('Verify Password')
       = password_field_tag('user_verify_password', nil,:onkeypress=>"if(miqEnterPressed(event)) miqAjaxAuth();",:autocomplete => "off")
 
 -else
