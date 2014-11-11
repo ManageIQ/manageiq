@@ -131,6 +131,10 @@ class MiqReport < ActiveRecord::Base
     self.db.is_a?(Class) ? self.db : Object.const_get(self.db)
   end
 
+  def contains_records?
+    table && table.data.length > 0
+  end
+
   #
   # HACK: Rails 3 added the association method which you would pass a name of
   # an association.  This conflicts with an existing attr_accessor used in

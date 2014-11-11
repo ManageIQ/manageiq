@@ -289,6 +289,12 @@ module ApplicationHelper
           end
           props["openAll"] = true # Open/close the button select on click
 
+          if bgi[:buttonSelect] == "chargeback_download_choice" && x_active_tree == :cb_reports_tree &&
+            @report && !@report.contains_records?
+            props["enabled"] = "false"
+            props["title"] = _("No records found for this report")
+          end
+
           # Add a separator, if needed, before this buttonSelect
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
@@ -359,6 +365,12 @@ module ApplicationHelper
           bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
           eval("title = \"#{bgi[:title]}\"") if !bgi[:title].blank? # Evaluate substitutions in text
           props["title"] = dis_title.is_a?(String) ? dis_title : title
+
+          if bgi[:button] == "chargeback_report_only" && x_active_tree == :cb_reports_tree &&
+             @report && !@report.contains_records?
+            props["enabled"] = "false"
+            props["title"] = _("No records found for this report")
+          end
 
           # Add a separator, if needed, before this button
           if !sep_added && sep_needed
