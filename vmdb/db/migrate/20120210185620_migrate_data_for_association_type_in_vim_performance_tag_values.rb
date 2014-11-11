@@ -3,7 +3,7 @@ require Rails.root.join('lib/migration_helper')
 class MigrateDataForAssociationTypeInVimPerformanceTagValues < ActiveRecord::Migration
   include MigrationHelper
 
-  self.no_transaction = true
+  disable_ddl_transaction!
 
   def up
     change_data :vim_performance_tag_values, :association_type, 'Vm', 'VmOrTemplate'

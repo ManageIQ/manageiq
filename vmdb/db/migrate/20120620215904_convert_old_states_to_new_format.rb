@@ -7,7 +7,7 @@ class ConvertOldStatesToNewFormat < ActiveRecord::Migration
 
   include MigrationHelper
 
-  self.no_transaction = true
+  disable_ddl_transaction!
 
   class State < ActiveRecord::Base; end
 
