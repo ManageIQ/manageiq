@@ -187,6 +187,22 @@ describe MiqWidget do
         @widget_report_vendor_and_guest_os.contents_for_user(@user1).should == content2
       end
     end
+
+    context ".available_for_user" do
+      subject { MiqWidget.available_for_user(@user) }
+
+      it "by role" do
+        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:roles => "Role2"})
+        expect(MiqWidget.available_for_user(@user1).count).to eq(1)
+        expect(MiqWidget.available_for_user(@user2).count).to eq(2)
+      end
+
+      it "by group" do
+        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:groups => "Group2"})
+        expect(MiqWidget.available_for_user(@user1).count).to eq(1)
+        expect(MiqWidget.available_for_user(@user2).count).to eq(2)
+      end
+    end
   end
 
   it "should not delete schedule when zone is gone" do
