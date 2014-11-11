@@ -971,7 +971,7 @@ module ApplicationController::Filter
     else
       any_empty = @edit[:qs_tokens].values.any? { |v| v[:value].to_s.empty? }
       render :update do |page|
-        page << javascript_for_miq_button_visibility(!any_empty)
+        page << javascript_for_miq_button_visibility(!any_empty, 'quick_search')
       end
     end
   end

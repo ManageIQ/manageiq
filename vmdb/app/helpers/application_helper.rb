@@ -1636,8 +1636,12 @@ module ApplicationHelper
   end
 
   # Show/hide the Save and Reset buttons based on whether changes have been made
-  def javascript_for_miq_button_visibility(display)
-    "miqButtons('#{display ? 'show' : 'hide'}');".html_safe
+  def javascript_for_miq_button_visibility(display, prefix = nil)
+    if prefix
+      "miqButtons('#{display ? 'show' : 'hide'}', '#{prefix}');".html_safe
+    else
+      "miqButtons('#{display ? 'show' : 'hide'}');".html_safe
+    end
   end
 
   def javascript_for_miq_button_visibility_changed(changed)
