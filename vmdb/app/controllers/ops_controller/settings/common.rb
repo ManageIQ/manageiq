@@ -113,8 +113,8 @@ module OpsController::Settings::Common
           end
         end
         if @authldaprole_changed
-          page << javascript_set_visible("user_proxies_div", @edit[:new][:authentication][:ldap_role])
-          page << javascript_set_visible("ldap_role_details_div", @edit[:new][:authentication][:ldap_role])
+          page << set_element_visible("user_proxies_div", @edit[:new][:authentication][:ldap_role])
+          page << set_element_visible("ldap_role_details_div", @edit[:new][:authentication][:ldap_role])
         end
         if @authldapport_reset
           page << "$('authentication_ldapport').value = '#{@edit[:new][:authentication][:ldapport]}'"
