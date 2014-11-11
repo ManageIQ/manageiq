@@ -3,6 +3,7 @@ require "spec_helper"
 describe AutomationRequest do
   before(:each) do
     MiqServer.stub(:my_zone).and_return("default")
+    @zone        = FactoryGirl.create(:zone, :name => "fred")
     User.any_instance.stub(:role).and_return("admin")
     @user        = FactoryGirl.create(:user)
     @approver    = FactoryGirl.create(:user_miq_request_approver)
@@ -137,6 +138,42 @@ describe AutomationRequest do
       @ar.automation_tasks.length.should == 1
       AutomationTask.count.should == 1
       AutomationTask.first.should == @ar.automation_tasks.first
+    end
+
+  end
+
+  context "validate zone" do
+    it "zone specified" do
+      @parameters  = "miq_zone=#{@zone.name}|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
+      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
+      queue = MiqQueue.first
+      queue.zone.should eq(@zone.name)
+    end
+
+    it "zone not specified" do
+      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
+      queue = MiqQueue.first
+      queue.zone.should eq("default")
+    end
+
+    it "non existent zone specified" do
+      @parameters  = "miq_zone=nothing|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
+      expect { AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "") }
+        .to raise_error(ArgumentError)
+    end
+
+    it "blank zone should result in empty zone" do
+      @parameters  = "miq_zone=""|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
+      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
+      queue = MiqQueue.first
+      queue.zone.should eq(nil)
+    end
+
+    it "nil zone should result in empty zone" do
+      @parameters  = "miq_zone=|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
+      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
+      queue = MiqQueue.first
+      queue.zone.should eq(nil)
     end
 
   end

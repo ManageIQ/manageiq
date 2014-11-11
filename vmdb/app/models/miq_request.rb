@@ -140,7 +140,7 @@ class MiqRequest < ActiveRecord::Base
       :instance_id => self.id,
       :method_name => "call_automate_event",
       :args        => [event_name],
-      :zone        => MiqServer.my_zone,
+      :zone        => options.fetch(:miq_zone, MiqServer.my_zone),
       :msg_timeout => 3600
     )
   end

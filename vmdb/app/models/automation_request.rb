@@ -36,9 +36,10 @@ class AutomationRequest < MiqRequest
     attrs = MiqRequestWorkflow.parse_ws_string(parameters)
     attrs[:userid] = userid
 
-    user              = User.find_by_userid(userid)
-    options[:user_id] = user.id unless user.nil?
-    options[:attrs]   = attrs
+    user               = User.find_by_userid(userid)
+    options[:user_id]  = user.id unless user.nil?
+    options[:attrs]    = attrs
+    options[:miq_zone] = zone(options) if options[:attrs].key?(:miq_zone)
 
     self.create_request(options, userid, auto_approve)
   end
@@ -53,6 +54,13 @@ class AutomationRequest < MiqRequest
     request.approve(userid, "Auto-Approved") if auto_approve == true
 
     return request.reload # if approved, need to reload
+  end
+
+  def self.zone(options)
+    zone_name = options[:attrs][:miq_zone]
+    return nil if zone_name.blank?
+    raise ArgumentError, "unknown zone #{zone_name}" unless Zone.where(:name => zone_name).exists?
+    zone_name
   end
 
   def requested_task_idx
