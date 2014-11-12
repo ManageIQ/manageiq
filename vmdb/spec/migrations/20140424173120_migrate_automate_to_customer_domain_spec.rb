@@ -6,7 +6,7 @@ describe MigrateAutomateToCustomerDomain do
   let(:miq_ae_class_stub)     { migration_stub(:MiqAeClass) }
 
   migration_context :up do
-    before(:all) do
+    before do
       migration_stub(:MiqAeNamespace).create!(:name => '$')
     end
 
@@ -76,7 +76,7 @@ describe MigrateAutomateToCustomerDomain do
   end
 
   migration_context :down do
-    before(:all) do
+    before do
       migration_stub(:MiqAeNamespace).create!(:name => '$')
     end
 
