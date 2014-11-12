@@ -2,8 +2,10 @@ class MiqAeInstance < ActiveRecord::Base
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
-  belongs_to :ae_class,  :class_name => "MiqAeClass", :foreign_key => :class_id,    :include => :ae_fields
-  has_many   :ae_values, :class_name => "MiqAeValue", :foreign_key => :instance_id, :include => :ae_field, :dependent => :destroy
+  belongs_to :ae_class,  :class_name => "MiqAeClass", :foreign_key => :class_id,
+                         :include => :ae_fields
+  has_many   :ae_values, :class_name => "MiqAeValue", :foreign_key => :instance_id,
+                         :include => :ae_field, :dependent => :destroy, :autosave => true
 
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :class_id
   validates_presence_of   :name

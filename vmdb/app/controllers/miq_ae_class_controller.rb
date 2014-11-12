@@ -177,7 +177,7 @@ class MiqAeClassController < ApplicationController
         else
           records = Array.new
           # Add Namespaces under a namespace
-          details = MiqAeNamespace.all(:conditions => {:parent_id => @record.id.to_i})
+          details = @record.ae_namespaces
           details.flatten.sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}.each do |r|
             records.push(r)
           end
@@ -605,11 +605,7 @@ class MiqAeClassController < ApplicationController
       kids.datatype = kids.datatype == nil ? "string" : kids.datatype
 
       val = MiqAeValue.find_by_instance_id_and_field_id(inst.id,kids.id)
-      if val.nil?
-        val = MiqAeValue.new
-        val.field_id = kids.id.to_i
-        val.instance_id = inst.id.to_i
-      end
+      val ||= MiqAeValue.new(:field_id => kids.id, :instance_id => inst.id)
       field_val = val.value
       rec_name = get_rec_name(kids)
       def_val = kids.default_value
@@ -722,7 +718,7 @@ class MiqAeClassController < ApplicationController
       id = @sb[:row_selected].split('-')
       @ae_class = MiqAeClass.find(from_cid(id[1]))
     else
-      @ae_class = MiqAeClass.find(params[:id].to_i)
+      @ae_class = MiqAeClass.find(params[:id].to_s)
     end
     set_form_vars
     # have to get name and set node info, to load multiple tabs correctly
@@ -740,7 +736,7 @@ class MiqAeClassController < ApplicationController
       id = @sb[:row_selected].split('-')
       @ae_class = MiqAeClass.find(from_cid(id[1]))
     else
-      @ae_class = MiqAeClass.find(params[:id].to_i)
+      @ae_class = MiqAeClass.find(params[:id].to_s)
     end
     fields_set_form_vars
     @in_a_form = true
@@ -886,18 +882,18 @@ class MiqAeClassController < ApplicationController
         return
       end
       set_instances_record_vars(@ae_inst)    # Set the instance record variables, but don't save
-      set_instances_value_vars(@ae_values)   # Set the instance record variables, but don't save
+      # Update the @ae_inst.ae_values directly because of update bug in RAILS
+      # When saving a parent, the childrens updates are not getting saved
+      set_instances_value_vars(@ae_values, @ae_inst.ae_values)  # Set the instance record variables, but don't save
       begin
         MiqAeInstance.transaction do
+          @ae_inst.ae_values.each { |v| v.value = nil if v.value == "" }
           @ae_inst.save!
-          @ae_values.each do |val|
-            val = nil if val == ""
-            val.save!
-          end
         end   # end of transaction
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
         @in_a_form = true
+        flash_validation_errors(@ae_inst)
         render :update do |page|
           if @sb[:row_selected]
             page.replace("flash_msg_div_class_instances", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_instances"})
@@ -947,18 +943,14 @@ class MiqAeClassController < ApplicationController
       set_instances_value_vars(@ae_values)   # Set the instance value record variables, but don't save
       begin
         MiqAeInstance.transaction do
+          add_aeinst.ae_values = @ae_values
+          add_aeinst.ae_values.each { |v| v.value = nil if v.value == "" }
           add_aeinst.save!
-          @ae_values.each do |val|
-            val.instance_id = add_aeinst.id
-            val.save!
-          end
         end  # end of transaction
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
         @in_a_form = true
-        add_aeinst.errors.each do |field,msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
+        flash_validation_errors(add_aeinst)
         render :update do |page|
           page.replace("flash_msg_div_class_instances", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_instances"})
         end
@@ -1335,19 +1327,16 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     when "save"
       ae_class = find_by_id_filtered(MiqAeClass, params[:id])
-      fields = set_field_vars
+      set_field_vars(ae_class)
       begin
         MiqAeClass.transaction do
-          MiqAeField.find_all_by_id(@edit[:fields_to_delete]).each do |fld|
-            fld.destroy
-          end
-          fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-            fld.default_value = nil if fld.default_value == ""
-            fld.save!
-          end
+          ae_class.ae_fields.destroy(MiqAeField.find_all_by_id(@edit[:fields_to_delete]))
+          ae_class.ae_fields.each { |fld| fld.default_value = nil if fld.default_value == "" }
+          ae_class.save!
         end  # end of transaction
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
+        flash_validation_errors(ae_class)
         session[:changed] = @changed = true
         render :update do |page|
           page.replace("flash_msg_div_class_fields",
@@ -1434,20 +1423,16 @@ class MiqAeClassController < ApplicationController
     when "save"
       ae_method = find_by_id_filtered(MiqAeMethod, params[:id])
       set_method_record_vars(ae_method)                     # Set the record variables, but don't save
-      fields = set_input_vars
+      set_input_vars(ae_method)
       begin
         MiqAeMethod.transaction do
+          ae_method.inputs.destroy(MiqAeField.find_all_by_id(@edit[:fields_to_delete]))
+          ae_method.inputs.each { |fld| fld.default_value = nil if fld.default_value == "" }
           ae_method.save!
-          MiqAeField.find_all_by_id(@edit[:fields_to_delete]).each do |fld|
-            fld.destroy
-          end
-          fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-            fld.default_value = nil if fld.default_value == ""
-            fld.save!
-          end
         end  # end of transaction
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
+        flash_validation_errors(ae_method)
         session[:changed] = @changed
         @changed = true
         render :update do |page|
@@ -1553,15 +1538,12 @@ class MiqAeClassController < ApplicationController
       set_method_record_vars(add_aemethod)                        # Set the record variables, but don't save
       begin
         MiqAeMethod.transaction do
+          add_aemethod.inputs.build(@edit[:new][:fields])
           add_aemethod.save!
-          ae_method = MiqAeMethod.find_by_name_and_class_id(add_aemethod.name, from_cid(@edit[:ae_class_id]))
-          @edit[:new][:fields].each do |fld|
-            fld.method_id = ae_method.id
-            fld.save!
-          end
         end
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
+        flash_validation_errors(add_aemethod)
         @in_a_form = true
         render :update do |page|
           page.replace("flash_msg_div_class_methods", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_methods"})
@@ -1646,7 +1628,10 @@ class MiqAeClassController < ApplicationController
     @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields])
     @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])
 
-    @edit[:fields_to_delete].push(params[:id]) unless @edit[:fields_to_delete].include?(params[:id])
+    if params.key?(:id) && @edit[:fields_to_delete].exclude?(params[:id])
+      @edit[:fields_to_delete].push(params[:id])
+    end
+
     @edit[:new][:fields].delete_at(params[:arr_id].to_i)
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
@@ -1720,7 +1705,11 @@ class MiqAeClassController < ApplicationController
       @refresh_div = "method_inputs_div"
       @refresh_partial = "method_inputs"
     end
-    @edit[:fields_to_delete].push(params[:id]) unless @edit[:fields_to_delete].include?(params[:id])
+
+    if params.key?(:id) && @edit[:fields_to_delete].exclude?(params[:id])
+      @edit[:fields_to_delete].push(params[:id])
+    end
+
     @edit[:new][:fields].delete_at(params[:arr_id].to_i)
 
     @changed = (@edit[:new] != @edit[:current])
@@ -1770,17 +1759,17 @@ class MiqAeClassController < ApplicationController
     when "save"
       return unless load_edit("fields_edit__seq","replace_cell__explorer")
       err = false
+      ae_class = MiqAeClass.find(@edit[:ae_class_id])
+      indexed_ae_fields = ae_class.ae_fields.index_by(&:name)
       @edit[:new][:fields_list].each_with_index do |f, i|
-        fld = MiqAeField.find_by_name_and_class_id(f.split('(').last.split(')').first, from_cid(@edit[:ae_class_id]))   #leave display name and parenthesis out
-        fld.priority = i+1
-        if fld.save
-          AuditEvent.success(build_saved_audit(fld, @edit))
-        else
-          fld.errors.each do |field,msg|
-            add_flash("#{field.to_s.capitalize} #{msg}", :error)
-          end
-          err = true
-        end
+        fname = f.split('(').last.split(')').first # leave display name and parenthesis out
+        indexed_ae_fields[fname].try(:priority=, i + 1)
+      end
+      if ae_class.save
+        AuditEvent.success(build_saved_audit(ae_class, @edit))
+      else
+        flash_validation_errors(ae_class)
+        err = true
       end
       if !err
         add_flash(_("Class Schema Sequence was saved"))
@@ -1928,12 +1917,8 @@ private
     @ae_values = []
 
     @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_i, @ae_inst.id.to_i)
-      if val.nil?
-        val             = MiqAeValue.new
-        val.field_id    = fld.id.to_i
-        val.instance_id = @ae_inst.id.to_i
-      end
+      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
+      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
       @ae_values.push(val)
     end
   end
@@ -2459,12 +2444,8 @@ private
     @ae_values = Array.new
 
     @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_i,@ae_inst.id.to_i)
-      if val.nil?
-        val = MiqAeValue.new
-        val.field_id = fld.id.to_i
-        val.instance_id = @ae_inst.id.to_i
-      end
+      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
+      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
       @ae_values.push(val)
     end
 
@@ -2486,7 +2467,7 @@ private
     ns = x_node.split("-")
     if ns.first == "aen" && !miqaeclass.namespace_id
       rec = MiqAeNamespace.find(from_cid(ns[1]))
-      miqaeclass.namespace_id = rec.id.to_i
+      miqaeclass.namespace_id = rec.id.to_s
       #miqaeclass.namespace = rec.name
     end
   end
@@ -2510,8 +2491,8 @@ private
   end
 
   # Set record variables to new values
-  def set_field_vars
-    fields = []
+  def set_field_vars(parent = nil)
+    fields = parent_fields(parent)
     @edit[:new][:fields].each_with_index do |fld, i|
       if fld['id'].nil?
         new_field = MiqAeField.new
@@ -2521,7 +2502,7 @@ private
           new_field.class_id = @ae_class.id
         end
       else
-        new_field = MiqAeField.find_by_id(fld['id'])
+        new_field = parent.nil? ? MiqAeField.find_by_id(fld['id']) : fields.detect { |f| f.id == fld['id'] }
       end
 
       field_attributes.each do |attr|
@@ -2531,18 +2512,23 @@ private
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr]) if @edit[:new][:fields][i][attr]
         end
       end
-      fields.push(new_field)
+      fields.push(new_field) if new_field.new_record? || parent.nil?
     end
 
     reset_field_priority(fields)
   end
   alias_method :set_input_vars, :set_field_vars
 
+  def parent_fields(parent)
+    return [] unless parent
+    parent.class == MiqAeClass ? parent.ae_fields : parent.inputs
+  end
+
   def reset_field_priority(fields)
     #reset priority to be in order 1..3
     i = 0
     fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      if !@edit[:fields_to_delete].include?(fld.id) || fld.id.blank?
+      if !@edit[:fields_to_delete].include?(fld.id.to_s) || fld.id.blank?
         i += 1
         fld.priority = i
       end
@@ -2559,8 +2545,9 @@ private
   end
 
   # Set record variables to new values
-  def set_instances_value_vars(vals)
+  def set_instances_value_vars(vals, original_values = [])
     vals.each_with_index do |v,i|
+      v = original_values.detect { |ov| ov.id == v.id } unless original_values.empty?
       value_column_names.each do |attr|
         v.send("#{attr}=", @edit[:new][:ae_values][i][attr]) if @edit[:new][:ae_values][i][attr]
       end
@@ -2828,5 +2815,11 @@ private
   def set_session_data
     session[:aeclass_lastaction] = @lastaction
     session[:edit]               = @edit
+  end
+
+  def flash_validation_errors(am_obj)
+    am_obj.errors.each do |field, msg|
+      add_flash("#{field.to_s.capitalize} #{msg}", :error)
+    end
   end
 end

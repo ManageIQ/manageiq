@@ -107,7 +107,7 @@
                 <%= link_to(image_tag("/images/icons/16/notequal-red.png",
                                       :alt     => "Click to delete this input field from method"),
                             {:action => "field_method_delete",
-                             :id     => flds["id"].to_i,
+                             :id     => flds["id"].to_s,
                              :arr_id => i},
                             "data-miq_sparkle_on"  => true,
                             "data-miq_sparkle_off" => true,

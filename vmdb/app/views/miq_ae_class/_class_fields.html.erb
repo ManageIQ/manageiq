@@ -67,7 +67,7 @@
                     <%= link_to(image_tag("/images/icons/16/notequal-red.png",
                                           :alt     => "Click to delete this field from schema"),
                                 {:action => "field_delete", 
-                                 :id     => field['id'].to_i,
+                                 :id     => field['id'].to_s,
                                  :arr_id => i },
                                 "data-miq_sparkle_on"  => true,
                                 "data-miq_sparkle_off" => true,
