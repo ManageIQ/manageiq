@@ -49,14 +49,24 @@ module OpsController::Settings::Schedules
     when "save", "add"
       schedule = params[:id] != "new" ? MiqSchedule.find_by_id(params[:id]) : MiqSchedule.new(:userid => session[:userid])
       old_schedule_attributes = schedule.attributes.dup
+
       schedule_set_record_vars(schedule)
       schedule_validate?(schedule)
 
-      schedule.save
+      humanized_old = old_schedule_attributes.merge("filter" => old_schedule_attributes["filter"].to_human)
+      humanized_new = schedule.attributes.merge("filter" => schedule.filter.to_human)
 
-      AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
+      attribute_difference = humanized_old.diff(humanized_new)
 
-      add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
+      if attribute_difference.blank?
+        add_flash(I18n.t("flash.edit.nothing_changed", :name => schedule.name))
+      else
+        schedule.save
+
+        AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
+
+        add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
+      end
 
       if params[:button] == "add"
         self.x_node  = "xx-msc"
