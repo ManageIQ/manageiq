@@ -1110,6 +1110,7 @@ Vmdb::Application.routes.draw do
         explorer
         fetch_build
         forest_accept
+        forest_delete
         forest_form_field_changed
         forest_select
         log_depot_edit
