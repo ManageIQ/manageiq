@@ -13,6 +13,7 @@
  *= require angular
  *= require miq_timeline
  *= require angular
+ *= require schedule_editor
  *= require ../javascripts/dynatree_1.2.4/skin-cfme/ui.dynatree
  *= require jquery/miq/jquery-ui-1.9.2.custom
  *= require codemirror-4.2/lib/codemirror.css
