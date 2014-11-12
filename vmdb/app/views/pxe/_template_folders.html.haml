@@ -8,14 +8,14 @@
       %tbody
         %tr{:class => cycle('row0', 'row1'),
           :onclick => "cfmeDynatree_activateNode('customization_templates_tree', 'xx-xx-system');",
-          :onmouseover => "this.style.cursor='pointer'", :title => "View Examples (read only)' Folder"}
+          :onmouseover => "this.style.cursor='pointer'", :title => _("View Examples (read only)' Folder")}
           %td{:nowrap => 'nowrap'}
             %img{:src => '/images/icons/new/folder.png', :valign => 'middle', :border => '0', :height => "20", :width => "20"}
           %td Examples (read only)
         - @folders.each do |f|
           %tr{:class => cycle('row0', 'row1'),
             :onclick => "cfmeDynatree_activateNode('customization_templates_tree', 'xx-xx-#{to_cid(f.id)}');",
-            :onmouseover => "this.style.cursor='pointer'", :title => "View '#{f.name}' Folder"}
+            :onmouseover => "this.style.cursor='pointer'", :title => _("View '%s' Folder") % f.name}
             %td{:nowrap => 'nowrap'}
               %img{:src => '/images/icons/new/folder.png', :valign => 'middle', :border => '0', :height => "20", :width => "20"}
             %td

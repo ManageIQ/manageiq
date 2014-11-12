@@ -7,20 +7,20 @@
       - else
         = render :partial=>"layouts/flash_msg"
         = render(:partial => "shared/summary/textual",
-          :locals  => {:title => "Basic Information", :items => textual_group_basicinfo})
+          :locals  => {:title => _("Basic Information"), :items => textual_group_basicinfo})
         - if @ps.pxe_menus.count > 0
           %hr
           = render :partial => "shared/summary/textual",
-            :locals  => {:title => "PXE Image Menus", :items => textual_group_pxe_image_menus}
+            :locals  => {:title => _("PXE Image Menus"), :items => textual_group_pxe_image_menus}
         - if false
           - # this code can be uncommented when we have multiple pxe_menus
           - if !@ps.pxe_menus.empty?
             %hr
-            %p.legend PXE Image Menus
+            %p.legend=_('PXE Image Menus')
             %table.style3
               %thead
                 %tr
-                  %th Filename
+                  %th=_('Filename')
               %tbody
                 - @ps.pxe_menus.sort_by{ |a| a.file_name }.each do |menu|
                   %tr{:class => cycle('row0', 'row1')}
@@ -28,17 +28,17 @@
                       = h(menu.file_name)
         - unless @ps.pxe_images.empty?
           %hr
-          %p.legend PXE Images
+          %p.legend=_('PXE Images')
           %table.style3
             %thead
               %tr
-                %th Name
-                %th Description
-                %th Kernel
-                %th Windows Boot Env
+                %th=_('Name')
+                %th=_('Description')
+                %th=_('Kernel')
+                %th=_('Windows Boot Env')
             %tbody
               - @ps.pxe_images.sort_by { |a| a.name.downcase }.each do |i|
-                %tr{:class => cycle('row0', 'row1'), :title => "View this PXE Image",
+                %tr{:class => cycle('row0', 'row1'), :title => _("View this PXE Image"),
                   :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');",
                   :onmouseover => "this.style.cursor='pointer'"}
                   %td
@@ -51,17 +51,17 @@
                     = h(i.default_for_windows ? "Yes" : "")
         - unless @ps.windows_images.empty?
           %hr
-          %p.legend Windows Images
+          %p.legend=_('Windows Images')
           %table.style3
             %thead
             %tr
-              %th Name
-              %th Description
-              %th Path
-              %th Index
+              %th=_('Name')
+              %th=_('Description')
+              %th=_('Path')
+              %th=_('Index')
             %tbody
               - @ps.windows_images.sort_by { |a| a.name.downcase }.each do |i|
-                %tr{:class => cycle('row0', 'row1'), :title => "View this Windows Image",
+                %tr{:class => cycle('row0', 'row1'), :title => _("View this Windows Image"),
                   :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');",
                   :onmouseover => "this.style.cursor='pointer'"}
                   %td
@@ -81,7 +81,7 @@
       - else
         = render(:partial => "layouts/flash_msg")
         = render :partial => "shared/summary/textual",
-          :locals  => {:title => "Basic Information", :items => textual_pxe_img_basicinfo}
+          :locals  => {:title => _("Basic Information"), :items => textual_pxe_img_basicinfo}
 
   - # Windows Image is selected
   - if @wimg
@@ -91,4 +91,4 @@
       - else
         = render(:partial => "layouts/flash_msg")
         = render :partial => "shared/summary/textual",
-          :locals  => {:title => "Basic Information", :items => textual_win_img_basicinfo}
+          :locals  => {:title => _("Basic Information"), :items => textual_win_img_basicinfo}
