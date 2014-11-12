@@ -1,0 +1,32 @@
+= render :partial => "layouts/flash_msg"
+
+#tab_div
+  %fieldset
+    %p.legend=_('Editing MyTags')
+    %table{:border => 0, :cellpadding => 0, :cellspacing => 0, :width => '100%',
+      :style => "border-bottom: 1px solid #e5e5e5; padding: 5px 20px 5px 2px; background: #f9f9f9;"}
+      %tr
+        %td{:width => '90%', :align => 'left'}
+          = form_tag(url_for(:action => 'mytag_create', :id => "newtags_form"), :remote => true) do
+            %strong=_('Type one or more tags to create and press "Enter":')
+            = text_field_tag("newtags", nil, :maxlength => "50","data-miq_focus" => true)
+            = javascript_tag(javscript_focus('newtags'))
+
+    #table_div
+      %table.style3
+        %tbody
+          %tr
+            %td
+              - if session[:mytags].empty?
+                =_('No MyTags have been created')
+              - else
+                - session[:mytags].sort.each_with_index do |t, idx|
+                  - if idx > 0
+                    |
+                  = link_to_remote(h(t), {:url => {:action => "mytag_delete", :tag => t},
+                    :confirm => _("Deleting the MyTag '%s' will also unassign it from all items, are you sure?") % t},
+                    :id => "mytag_#{t}",
+                    :title => _("Delete and unassign MyTag '%s'") % s )
+    - unless session[:mytags].empty?
+      %br
+        =_('* Click on any MyTag to permanently delete and unassign it.')

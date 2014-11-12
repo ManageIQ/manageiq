@@ -4,12 +4,13 @@
   %table.style1
     %tbody
       %tr
-        %td.key Days
+        %td.key=_('Days')
         %td
           %table
             %tr
-              - ["(All)", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].each do |day|
-                %td{:style => "width:50px", :align => "center"} #{day}
+              - [_("(All)"), _("Sunday"), _("Monday"), _("Tuesday"), _("Wednesday"), _("Thursday"), _("Friday"), _("Saturday")].each do |day|
+                %td{:style => "width:50px", :align => "center"}
+                  = day
             %tr
               %td{:align => "center"}
                 = check_box_tag("all_days",
@@ -32,9 +33,9 @@
         %td
           %table
             %tr
-              %td{:style => "width:50px", :align => "center"} (All)
+              %td{:style => "width:50px", :align => "center"}=_('(All)')
               %td{:style => "width:35px", :align => "center"}
-                %b AM:
+                %b=_('AM:')
               - hours.length.times do |i|
                 %td{:style => "width:35px", :align => "center"} #{hours[i-1]}-#{hours[i]}
             %tr
@@ -57,7 +58,7 @@
             %tr
               %td &nbsp;
               %td{:align => "center"}
-                %b PM:
+                %b=_('PM:')
               - hours.length.times do |i|
                 %td{:align => "center"} #{hours[i-1]}-#{hours[i]}
             %tr

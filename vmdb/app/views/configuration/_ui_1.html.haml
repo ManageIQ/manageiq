@@ -7,68 +7,68 @@
     %dl.col2
       %dd
         %fieldset
-          %p.legend Grid/Tile Icons
+          %p.legend=_('Grid/Tile Icons')
           %table.style1
             -# render condition                                 title                                      check_box label & checked T/F
             -# Host Item is commented (condition set as false) until we have host item quads
             - [[role_allows(:feature => "ems_infra_show_list"), ui_lookup(:table => "ems_infra"),          "ems"],
                [role_allows(:feature => "ems_cloud_show_list"), ui_lookup(:table => "ems_cloud"),          "ems_cloud"],
-               [role_allows(:feature => "host_show_list"),      "Host",                                    "host"],
-               [false,                                          "Host Item",                               "hostitem"],
+               [role_allows(:feature => "host_show_list"),      _("Host"),                                 "host"],
+               [false,                                          _("Host Item"),                            "hostitem"],
                [role_allows(:feature => "storage_show_list"),   ui_lookup(:table => "storages"),           "storage"],
                [role_allows(:feature => "storage_show_list"),   "#{ui_lookup(:table => "storages")} Item", "storageitem"],
-               [true,                                           "VM",                                      "vm"],
-               [true,                                           "VM Item",                                 "vmitem"],
-               [true,                                           "Template",                                "miq_template"]].each do |icons_checkbox|
+               [true,                                           _("VM"),                                   "vm"],
+               [true,                                           _("VM Item"),                              "vmitem"],
+               [true,                                           _("Template"),                             "miq_template"]].each do |icons_checkbox|
               - if icons_checkbox[0]
                 %tr
-                  %td.key Show #{icons_checkbox[1]} Quadrants
+                  %td.key=_("Show %s Quadrants") % icons_checkbox[1]
                   %td
                     = check_box_tag("quadicons_#{icons_checkbox[2]}",
                                     "1",
                                     @edit[:new][:quadicons][icons_checkbox[2].to_sym],
                                     "data-miq_observe_checkbox" => url_json)
             %tr
-              %td.key Truncate Long Text
+              %td.key=_('Truncate Long Text')
               %td
                 = select_tag("quad_truncate",
-                             options_for_select([["Front (...1234)", "f"],
-                                                 ["Middle (AB...34)", "m"],
-                                                 ["Back (ABCD...)", "b"]],
+                             options_for_select([[_("Front (...1234)"), "f"],
+                                                 [_("Middle (AB...34)"), "m"],
+                                                 [_("Back (ABCD...)"), "b"]],
                              @edit[:new][:display][:quad_truncate]),
                              "data-miq_observe" => url_json)
         %fieldset
-          %p.legend Start Page
+          %p.legend=_('Start Page')
           %table.style1
             %tr
-              %td.key Show at Login
+              %td.key=_('Show at Login')
               %td
                 = select_tag("start_page",
                              options_for_select(session[:start_pages], @edit[:new][:display][:startpage]),
                              "data-miq_observe" => url_json)
       %dd
         %fieldset
-          %p.legend Default Items Per Page
+          %p.legend=_('Default Items Per Page')
           %table.style1
-            - [["Grid View", "perpage_grid",    :grid],
-               ["Tile View", "perpage_tile",    :tile],
-               ["List View", "perpage_list",    :list],
-               ["Reports",   "perpage_reports", :reports]].each do |item_per_page|
+            - [[_("Grid View"), "perpage_grid",    :grid],
+               [_("Tile View"), "perpage_tile",    :tile],
+               [_("List View"), "perpage_list",    :list],
+               [_("Reports"),   "perpage_reports", :reports]].each do |item_per_page|
               %tr
-                %td.key #{item_per_page[0]}
+                %td.key=_(item_per_page[0])
                 %td
-                  = select_tag(item_per_page[1],
+                  = select_tag(_(item_per_page[1]),
                                options_for_select(PPCHOICES, @edit[:new][:perpage][item_per_page[2]]),
                                "data-miq_observe" => url_json)
         %fieldset
-          %p.legend Display Settings
+          %p.legend=_('Display Settings')
           %table.style1
             %tr
-              %td.key Header Accent Color
+              %td.key=_('Header Accent Color')
               %td.wide
                 - THEMES.each do |t|
                   - if t.last == @edit[:new][:display][:theme]
-                    %div{:title => "The #{t.first} theme is currently selected",
+                    %div{:title => _("The %s theme is currently selected") % t.first,
                          :style => "background-color: #{THEME_CSS_SETTINGS[t.last][:background_color]};" |
                                    "border: 3px solid #000;" +                                           |
                                    "width: 32px;" +                                                      |
@@ -77,16 +77,17 @@
                   - else
                     %div{:onclick => "#{remote_function(:url => {:action => 'theme_changed',
                                                                  :theme  => t.last})}",
-                         :title   => "Click to select the #{t.first} theme",
+                         :title   => _("Click to select the %s theme") % t.first,
                          :style   => "background-color: #{THEME_CSS_SETTINGS[t.last][:background_color]};" |
                                      "border: 3px solid #fff;" +                                           |
                                      "width: 32px;" +                                                      |
                                      "height: 32px;" +                                                     |
                                      "float: left;"}                                                       |
-            - [["Chart Theme", "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
-               ["Time Zone",   "display_timezone",    ALL_TIMEZONES,         :timezone]].each do |display_settings|
+            - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
+               [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,         :timezone]].each do |display_settings|
               %tr
-                %td.key #{display_settings[0]}
+                %td.key
+                  = display_settings[0]
                 %td.wide
                   = select_tag(display_settings[1],
                                options_for_select(display_settings[2], @edit[:new][:display][display_settings[3]]),

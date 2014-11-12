@@ -4,29 +4,25 @@
     - if @temp[:timeprofiles].empty?
       .alert.alert-info
         %span.pficon.pficon
-          %strong No Records Found
+          %strong=_('No Records Found')
     - else
       %table.style3
         %thead
           %tr
             %th.checkbox{:width => "10"}
-            - ["Description", "Type", "User ID", "Days",
-               "Hours", "Timezone", "Roll Up Performance"].each do |title|
-              %th.nowrap= title
+            - [_('Description'), _('Type'), _('User ID'), _('Days'), _('Hours'), _('Timezone'), _('Roll Up Performance')].each do |title|
+              %th.nowrap
+                = title
         %tbody
           - @temp[:timeprofiles].each do |row|
             %tr{:class => "#{cycle("row0", "row1")}"}
               %td.checkbox
-                = check_box_tag("check_#{row['id']}", "1", false, :id => "listcheckbox",
-                                :onclick => "miqUpdateButtons(this, 'center_tb');")
-              - title = row["description"] == "UTC" ? |
-                "Click to view Time Profile" :        |
-                "Click to view/edit Time Profile"     |
+                = check_box_tag("check_#{row['id']}", "1", false, :id => "listcheckbox", :onclick => "miqUpdateButtons(this, 'center_tb');")
+              - title = row["description"] == "UTC" ? _("Click to view Time Profile") : _("Click to view/edit Time Profile")
               - [row["description"], row["profile_type"], row["profile_key"],
                   @temp[:timeprofile_details][row.description][:days].join(", "),
                   @temp[:timeprofile_details][row.description][:hours].join(", "),
                   @temp[:timeprofile_details][row.description][:tz],
                   row["rollup_daily_metrics"].to_s.capitalize].each do |column|
-                %td{:onclick => "DoNav('/configuration/timeprofile_edit/#{row["id"]}');",
-                    :title   => title}
+                %td{:onclick => "DoNav('/configuration/timeprofile_edit/#{row["id"]}');", :title => title}
                   = h(column)
