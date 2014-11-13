@@ -57,25 +57,14 @@ class EmsRedhat < EmsInfra
   end
 
   def verify_credentials_for_rhevm(options={})
-    server   = options[:ip]   || self.ipaddress
-    port     = options[:port] || self.port
-    username = options[:user] || self.authentication_userid(:default)
-    password = options[:pass] || self.authentication_password(:default)
-
     begin
-      require 'ovirt'
-      rhevm = Ovirt::Inventory.new(
-                    :server   => server,
-                    :port     => port,
-                    :username => username,
-                    :password => password)
-      raise "Invalid RHEV server ip address specified." if rhevm.api.nil?
+      connect(options).api
+    rescue URI::InvalidURIError
+      raise "Invalid URI specified for RHEV server."
     rescue => err
       err = err.to_s.split('<html>').first.strip.chomp(':')
       raise MiqException::MiqEVMLoginError, err
     end
-
-    return true
   end
 
   def verify_credentials_for_rhevm_metrics(options={})
