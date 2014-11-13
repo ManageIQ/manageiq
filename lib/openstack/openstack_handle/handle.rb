@@ -221,6 +221,10 @@ module OpenstackHandle
 
     def accessible_tenants
       @accessible_tenants ||= tenants.select do |t|
+        # avoid 401 Unauth errors when checking for accessible tenants
+        # the "services" tenant is a special tenant in openstack reserved
+        # specifically for the various services
+        next if t.name == "services"
         begin
           compute_service(t.name)
           true
