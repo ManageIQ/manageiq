@@ -481,7 +481,10 @@ module OpsController::Settings::Schedules
               unless params[:filter_value].blank?
                 exp["AND"] = [
                   {"=" => {"field" => "EmsCluster-name", "value" => params[:filter_value].split("__").first}},
-                  {"=" => {"field" => "EmsCluster-v_parent_datacenter", "value" => params[:filter_value].split("__").last}}
+                  {"=" => {
+                    "field" => "EmsCluster-v_parent_datacenter",
+                    "value" => params[:filter_value].split("__").last
+                  }}
                 ]
               end
             else
@@ -490,12 +493,21 @@ module OpsController::Settings::Schedules
         elsif params[:action_typ].ends_with?("check_compliance")
           case params[:filter_typ]
           when "ems"
-            exp["="] = {"field" => "#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name", "value" => params[:filter_value]}
+            exp["="] = {
+              "field" => "#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name",
+              "value" => params[:filter_value]
+            }
           when "cluster"
             unless params[:filter_value].blank?
               exp["AND"] = [
-                {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
-                {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter", "value" => params[:filter_value].split("__").last}}
+                {"=" => {
+                  "field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_cluster",
+                  "value" => params[:filter_value].split("__").first
+                }},
+                {"=" => {
+                  "field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter",
+                  "value" => params[:filter_value].split("__").last
+                }}
               ]
             end
           when "host"
@@ -513,8 +525,14 @@ module OpsController::Settings::Schedules
             when "cluster"
               unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"=" => {"field" => "#{model}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
-                  {"=" => {"field" => "#{model}-v_owning_datacenter", "value" => params[:filter_value].split("__").last}}
+                  {"=" => {
+                    "field" => "#{model}-v_owning_cluster",
+                    "value" => params[:filter_value].split("__").first
+                  }},
+                  {"=" => {
+                    "field" => "#{model}-v_owning_datacenter",
+                    "value" => params[:filter_value].split("__").last
+                  }}
                 ]
               end
             when "host"
