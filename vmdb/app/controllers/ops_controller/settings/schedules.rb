@@ -50,11 +50,19 @@ module OpsController::Settings::Schedules
       schedule = params[:id] != "new" ? MiqSchedule.find_by_id(params[:id]) : MiqSchedule.new(:userid => session[:userid])
       old_schedule_attributes = schedule.attributes.dup
 
+      humanized_old = old_schedule_attributes.merge(
+        "depot_hash" => schedule.depot_hash,
+        "filter"     => old_schedule_attributes["filter"].try(:to_human)
+      )
+
       schedule_set_record_vars(schedule)
+
       schedule_validate?(schedule)
 
-      humanized_old = old_schedule_attributes.merge("filter" => old_schedule_attributes["filter"].to_human)
-      humanized_new = schedule.attributes.merge("filter" => schedule.filter.to_human)
+      humanized_new = schedule.attributes.merge(
+        "depot_hash" => schedule.depot_hash,
+        "filter"     => schedule.filter.try(:to_human)
+      )
 
       attribute_difference = humanized_old.diff(humanized_new)
 
@@ -125,6 +133,7 @@ module OpsController::Settings::Schedules
         protocol = DatabaseBackup.supported_depots[uri_prefix]
       end
 
+      depot_name = settings[:name]
       log_userid = settings[:username]
       log_password = settings[:password]
       log_verify = settings[:password]
@@ -141,22 +150,23 @@ module OpsController::Settings::Schedules
 
     render :json => {
       :action_type          => action_type,
+      :depot_name           => depot_name,
       :filter_type          => filter_type,
-      :filtered_item_list   => filtered_item_list,
       :filter_value         => filter_value,
-      :log_userid           => log_userid,
+      :filtered_item_list   => filtered_item_list,
       :log_password         => log_password,
+      :log_userid           => log_userid,
       :log_verify           => log_verify,
       :protocol             => protocol,
       :schedule_description => schedule.description,
       :schedule_enabled     => schedule.enabled ? "1" : "0",
       :schedule_name        => schedule.name,
-      :schedule_timer_type  => schedule.run_at[:interval][:unit].capitalize,
-      :schedule_timer_value => schedule.run_at[:interval][:value],
       :schedule_start_date  => schedule.run_at[:start_time].strftime("%m/%d/%Y"),
       :schedule_start_hour  => schedule.run_at[:start_time].strftime("%H").to_i,
       :schedule_start_min   => schedule.run_at[:start_time].strftime("%M").to_i,
       :schedule_time_zone   => schedule.run_at[:tz],
+      :schedule_timer_type  => schedule.run_at[:interval][:unit].capitalize,
+      :schedule_timer_value => schedule.run_at[:interval][:value],
       :uri                  => uri,
       :uri_prefix           => uri_prefix
     }
@@ -524,6 +534,14 @@ module OpsController::Settings::Schedules
         schedule.filter = nil                             # Clear out existing filter expression
         schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
       end
+    else
+      schedule.filter = nil
+      schedule.depot_hash = {
+        :uri      => "#{params[:uri_prefix]}://#{params[:uri]}",
+        :username => params[:log_userid],
+        :password => params[:log_password],
+        :name     => params[:depot_name]
+      }
     end
 
     schedule.run_at ||= Hash.new

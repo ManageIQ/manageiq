@@ -89,6 +89,16 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     }
   };
 
+  $scope.logProtocolChanged = function() {
+    if ($scope.logProtocol === "Samba") {
+      $scope.uriPrefix = "smb";
+    }
+
+    if ($scope.logProtocol === "Network File System") {
+      $scope.uriPrefix = "nfs";
+    }
+  };
+
   $scope.filterValueChanged = function() {
     if ($scope.formAltered) {
       miqService.showButtons();
@@ -150,11 +160,12 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
     $http.get('/ops/schedule_form_fields/' + scheduleFormId).success(function(data) {
       $scope.actionType = data.action_type;
+      $scope.depotName = data.depot_name;
       $scope.filterType = data.filter_type;
       $scope.logUserid = data.log_userid;
       $scope.logPassword = data.log_password;
       $scope.logVerify = data.log_verify;
-      $scope.protocol = data.protocol;
+      $scope.logProtocol = data.protocol;
       $scope.scheduleDescription = data.schedule_description;
       $scope.scheduleEnabled = data.schedule_enabled;
       $scope.scheduleName = data.schedule_name;
@@ -169,7 +180,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
       $scope.timerItems = timerOptionService.getOptions($scope.scheduleTimerType);
 
-      if (data.filter_type === 'all') {
+      if (data.filter_type === 'all' || data.protocol !== undefined) {
         $scope.filterValuesEmpty = true;
       } else {
         buildFilterList(data);

@@ -41,6 +41,10 @@ describe('scheduleFormController', function() {
       expect($scope.actionType).toEqual('actionType');
     });
 
+    it('sets the depot name', function() {
+      expect($scope.depotName).toEqual('depotName');
+    });
+
     it('sets the logUserid to the log_userid returned from the http request', function() {
       expect($scope.logUserid).toEqual('logUserId');
     });
@@ -51,10 +55,6 @@ describe('scheduleFormController', function() {
 
     it('sets the logVerify to the log_verify returned from the http request', function() {
       expect($scope.logVerify).toEqual('logVerify');
-    });
-
-    it('sets the protocol', function() {
-      expect($scope.protocol).toEqual('protocol');
     });
 
     it('sets the scheduleName to the name returned from the http request', function() {
@@ -160,13 +160,13 @@ describe('scheduleFormController', function() {
     describe('when the scheduleFormId is an id', function() {
       var scheduleFormResponse = {
         action_type: 'actionType',
+        depot_name: 'depotName',
         filter_type: 'all',
         filtered_item_list: ['lol', 'lol2'],
         filter_value: 'filterValue',
         log_userid: 'logUserId',
         log_password: 'logPassword',
         log_verify: 'logVerify',
-        protocol: 'protocol',
         schedule_name: 'scheduleName',
         schedule_description: 'scheduleDescription',
         schedule_enabled: '1',
@@ -200,6 +200,25 @@ describe('scheduleFormController', function() {
 
         it('sets the filterValuesEmpty to true', function() {
           expect($scope.filterValuesEmpty).toBe(true);
+        });
+      });
+
+      describe('when the protocol exists', function() {
+        beforeEach(inject(function(_$controller_) {
+          scheduleFormResponse.procotol = 'protocol';
+
+          $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond(scheduleFormResponse);
+
+          $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
+          $httpBackend.flush();
+        }));
+
+        it('sets the filterValuesEmpty to true', function() {
+          expect($scope.filterValuesEmpty).toBe(true);
+        });
+
+        it('sets the log protocol', function() {
+          $scope.logProtocol = 'protocol';
         });
       });
 
@@ -440,6 +459,30 @@ describe('scheduleFormController', function() {
             expect(miqService.sparkleOff).toHaveBeenCalled();
           });
         });
+      });
+    });
+  });
+
+  describe('#logProtocolChanged', function() {
+    describe('when the log protocol is samba', function() {
+      beforeEach(function() {
+        $scope.logProtocol = 'Samba';
+      });
+
+      it('sets the uriPrefix to smb', function() {
+        $scope.logProtocolChanged();
+        expect($scope.uriPrefix).toEqual('smb');
+      });
+    });
+
+    describe('when the log protocol is network file system', function() {
+      beforeEach(function() {
+        $scope.logProtocol = 'Network File System';
+      });
+
+      it('sets the uriPrefix to nfs', function() {
+        $scope.logProtocolChanged();
+        expect($scope.uriPrefix).toEqual('nfs');
       });
     });
   });
