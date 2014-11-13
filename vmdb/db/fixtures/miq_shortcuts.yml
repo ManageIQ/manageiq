@@ -54,9 +54,9 @@
   :url: /ems_cloud/show_list
   :rbac_feature_name: ems_cloud_show_list
   :startup: true
-- :name: availabilty_zones
+- :name: availability_zones
   :description: Clouds / Availability Zones
-  :url: /availabilty_zone/show_list
+  :url: /availability_zone/show_list
   :rbac_feature_name: availability_zone_show_list
   :startup: true
 - :name: cloud_tenants
