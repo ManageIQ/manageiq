@@ -1063,7 +1063,8 @@ module ApplicationController::Explorer
         el1 = nodes.length == 2 ?
               nodes[0].split('_').first.to_i : nodes[1].split('_').first.to_i
         @sb[:rpt_menu][el1][1][nodes.last.to_i][1].each_with_index do |r,i|
-          objects.push(MiqReport.find_by_name(r))
+          report = MiqReport.find_by_name(r)
+          objects.push(report) if report
           # break after adding 1 report for a count_only,
           # don't need to go thru them all to determine if node has children
           break if options[:count_only]
