@@ -1,6 +1,10 @@
 module ActiveRecord
   module ConnectionAdapters
     class PostgreSQLAdapter < AbstractAdapter
+      def database_version
+        select_value("SELECT version()")
+      end
+
       def client_connections
         data = select(<<-SQL, "Client Connections")
                       SELECT client_addr   AS client_address
