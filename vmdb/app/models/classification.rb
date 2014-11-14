@@ -448,16 +448,6 @@ class Classification < ActiveRecord::Base
               stats[:ents][:u] += 1
             end
           end
-        else
-          c.delete(:show) unless cat.show.nil?
-          c.delete(:ns)
-
-          cat.attributes = c
-          if cat.changed?
-            $log.info("MIQ(Classification.seed) Updating #{c[:name]}")
-            cat.save
-            stats[:cats][:u] += 1
-          end
         end
       end
     end
