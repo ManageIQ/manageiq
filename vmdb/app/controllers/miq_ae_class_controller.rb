@@ -1651,7 +1651,6 @@ class MiqAeClassController < ApplicationController
       @refresh_div = "method_inputs_div"
       @refresh_partial = "method_inputs"
     end
-    session[:field_data] = Hash.new
     @changed = (@edit[:new] != @edit[:current])
     @in_a_form = true
     render :update do |page|                    # Use JS to update the display
@@ -2390,7 +2389,6 @@ private
       session[:field_data][:datatype] = @edit[:new_field][:datatype] = params[:cls_field_datatype] if params[:cls_field_datatype]
       session[:field_data][:default_value] = @edit[:new_field][:default_value] = params[:cls_field_default_value] if params[:cls_field_default_value]
       session[:field_data][:default_value] = @edit[:new_field][:default_value] = params[:cls_field_password_value] if params[:cls_field_password_value]
-
       @edit[:new_field][:method_id] = @ae_method.id
       session[:field_data] ||= Hash.new
     elsif params[:button] == "accept"
@@ -2404,7 +2402,17 @@ private
       new_field['default_value'] = @edit[:new_field][:default_value]
       new_field['method_id']     = @ae_method.id
       @edit[:new][:fields].push(new_field)
-      @edit[:new_field][:name] = @edit[:new_field][:datatype] = @edit[:new_field][:default_value] = ""
+      @edit[:new_field] = {
+        :name          => '',
+        :default_value => '',
+        :datatype      => 'string'
+      }
+    elsif params[:add] == 'new'
+      session[:fields_data] = {
+        :name          => '',
+        :default_value => '',
+        :datatype      => 'string'
+      }
     end
   end
 
