@@ -16,7 +16,7 @@ module MiqProvisionOpenstack::Cloning
     clone_options[:image_ref]         = self.source.ems_ref
     clone_options[:flavor_ref]        = instance_type.ems_ref
     clone_options[:availability_zone] = nil if dest_availability_zone.kind_of?(AvailabilityZoneOpenstackNull)
-    clone_options[:security_groups]   = security_groups.collect(&:name)
+    clone_options[:security_groups]   = security_groups.collect(&:ems_ref)
     clone_options[:nics]              = configure_network_adapters unless configure_network_adapters.blank?
 
     clone_options

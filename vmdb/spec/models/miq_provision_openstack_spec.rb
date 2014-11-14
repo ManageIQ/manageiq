@@ -67,8 +67,8 @@ describe MiqProvisionOpenstack do
     end
 
     context "security_groups" do
-      let(:security_group_1) { FactoryGirl.create(:security_group_openstack, :name => "group_1") }
-      let(:security_group_2) { FactoryGirl.create(:security_group_openstack, :name => "group_2") }
+      let(:security_group_1) { FactoryGirl.create(:security_group_openstack, :ems_ref => "340c315c-6c30-11e4-a103-56847afe9799") }
+      let(:security_group_2) { FactoryGirl.create(:security_group_openstack, :ems_ref => "41a73064-6c30-11e4-a103-56847afe9799") }
 
       it "with no security groups" do
         expect(subject.prepare_for_clone_task[:security_groups]).to eq([])
@@ -76,17 +76,17 @@ describe MiqProvisionOpenstack do
 
       it "with one security group" do
         subject.options[:security_groups] = [security_group_1.id]
-        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.name])
+        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.ems_ref])
       end
 
       it "with two security group" do
         subject.options[:security_groups] = [security_group_1.id, security_group_2.id]
-        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.name, security_group_2.name])
+        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.ems_ref, security_group_2.ems_ref])
       end
 
       it "with a missing security group" do
         subject.options[:security_groups] = [security_group_1.id, (security_group_1.id + 1)]
-        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.name])
+        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.ems_ref])
       end
     end
   end
