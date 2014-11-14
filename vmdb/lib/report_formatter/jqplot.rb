@@ -57,14 +57,12 @@ module ReportFormatter
       end
 
       horizontal_legend
-      x_axis_cathegory_labels
+      x_axis_category_labels
 
-      mri.chart[:options][:axes] ||= {}
-      mri.chart[:options][:axes][:yaxis] ||= {}
-      mri.chart[:options][:axes][:yaxis][:min] = 0
+      mri.chart.store_path(:options, :axes, :yaxis, :min, 0)
     end
 
-    def x_axis_cathegory_labels
+    def x_axis_category_labels
       return if Array(mri.chart[:axis_category_text]).empty?
 
       mri.chart[:data] = mri.chart[:data]
@@ -73,7 +71,7 @@ module ReportFormatter
             (labels || mri.chart[:axis_category_text][0]).zip(series)
           end
 
-      mri.chart[:options].update(:axes => {:xaxis => {:renderer => 'jQuery.jqplot.CategoryAxisRenderer'}})
+      mri.chart.store_path(:options, :axes, :xaxis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
     end
 
     # Utilization timestamp charts
@@ -81,8 +79,8 @@ module ReportFormatter
       return unless super
       horizontal_line_cursor
       horizontal_legend
-      mri.chart[:options].update(:seriesDefaults => {:renderer => 'jQuery.jqplot.BarRenderer'})
-      x_axis_cathegory_labels
+      mri.chart.store_path(:options, :seriesDefaults, :renderer, 'jQuery.jqplot.BarRenderer')
+      x_axis_category_labels
     end
 
     def build_reporting_chart_dim2
@@ -113,8 +111,8 @@ module ReportFormatter
       return unless super
       horizontal_line_cursor
       default_legend
-      mri.chart[:options].update(:seriesDefaults => {:renderer => 'jQuery.jqplot.BarRenderer'})
-      x_axis_cathegory_labels
+      mri.chart.store_path(:options, :seriesDefaults, :renderer, 'jQuery.jqplot.BarRenderer')
+      x_axis_category_labels
     end
 
     def build_reporting_chart_other
