@@ -29,12 +29,6 @@ describe MiqProvisionOpenstack do
       expect { subject.validate_dest_name }.to_not raise_error
     end
 
-    it "with a blank name" do
-      subject.stub(:dest_name).and_return("")
-
-      expect { subject.validate_dest_name }.to raise_error(MiqException::MiqProvisionError)
-    end
-
     it "with a nil name" do
       subject.stub(:dest_name).and_return(nil)
 
