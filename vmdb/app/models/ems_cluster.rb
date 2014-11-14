@@ -340,8 +340,9 @@ class EmsCluster < ActiveRecord::Base
     self.perf_capture_enabled? ? [self] + hosts : hosts
   end
 
-  def set_perf_collection_object_list(list)
-    ([self] + self.hosts).each { |obj| obj.perf_capture_enabled = list.include?(obj) }
+  def perf_capture_enabled_host_ids=(ids)
+    self.perf_capture_enabled = ids.any?
+    hosts.each { |h| h.perf_capture_enabled = ids.include?(h.id) }
   end
 
   def hosts_enabled_for_perf_capture

@@ -3,36 +3,21 @@ module OpsController::Settings::CapAndU
 
   def cu_collection_update
     return unless load_edit("cu_edit__collection","replace_cell__explorer")
-    cu_collection_get_form_vars
     if params[:button] == "save"
       # C & U collection settings
-      Metric::Targets.perf_capture_always = {
-        :host_and_cluster => @edit[:new][:all_clusters],
-        :storage          => @edit[:new][:all_storages]
-      }
-      unless @edit[:new][:clusters] == @edit[:current][:clusters] # Check for cluster changes
-        @temp[:cl_recs] = EmsCluster.all.inject({}) {|h,cl| h[cl.id] = cl; h}
-        @temp[:ho_recs] = Host.all.inject({}) {|h,ho| h[ho.id] = ho; h}
-        @edit[:new][:clusters].each do |c|
-          cl = @temp[:cl_recs][c[:id]]
-          en_list ||= Array.new
-          if !session[:all_checked].blank?    # pass list of hosts and cluster that are checked, or pass empty list
-            if session[:all_checked] != 0
-              all_checked = session[:all_checked].split(',')
-              all_checked.each do |item|
-                h = item.split(':')
-                if h.length > 1 && h[0] == "Cluster_#{c[:id]}"
-                  en_list.push(@temp[:ho_recs][h[1].split('_')[1].to_i])
-                  en_list.push(cl) unless en_list.include?(cl)
-                else
-                  en_list.push(cl) if !en_list.include?(cl) && all_checked.include?("Cluster_#{c[:id]}")
-                end
-              end
-            end
-            cl.set_perf_collection_object_list(en_list)
-          end
-        end
+      if @edit[:new][:all_clusters] != @edit[:current][:all_clusters]
+        Metric::Targets.perf_capture_always = {
+          :host_and_cluster => @edit[:new][:all_clusters]
+        }
       end
+
+      if @edit[:new][:all_storages] != @edit[:current][:all_storages]
+        Metric::Targets.perf_capture_always = {
+          :storage => @edit[:new][:all_storages]
+        }
+      end
+
+      set_perf_collection_for_clusters if @edit[:new] != @edit[:current]
 
       if !@edit[:current][:non_cl_hosts].blank?   # if there are any hosts without clusters
         @edit[:current][:non_cl_hosts].each do |h_id|
@@ -53,17 +38,23 @@ module OpsController::Settings::CapAndU
 
       add_flash(_("Capacity and Utilization Collection settings saved"))
       get_node_info(x_node)
-      session[:all_checked] = nil
-      replace_right_cell(@nodetype)
-      return                                                    # No config file for Visuals yet, just return
-      get_node_info(x_node)
       replace_right_cell(@nodetype)
     elsif params[:button] == "reset"
       @changed = false
-      session[:all_checked] = nil
       add_flash(_("All changes have been reset"), :warning)
       get_node_info(x_node)
       replace_right_cell(@nodetype)
+    end
+  end
+
+  def set_perf_collection_for_clusters
+    cluster_ids = @edit[:new][:clusters].collect { |c| c[:id] }.uniq
+    clusters = EmsCluster.where(:id => cluster_ids).includes(:hosts)
+
+    clusters.each do |cl|
+      enabled_hosts = @edit[:new][cl.name.to_sym].select { |h| h[:capture] }
+      enabled_host_ids = enabled_hosts.collect { |h| h[:id] }.uniq
+      cl.perf_capture_enabled_host_ids = enabled_host_ids
     end
   end
 
@@ -162,12 +153,10 @@ module OpsController::Settings::CapAndU
     @edit[:current][:all_clusters] = Metric::Targets.perf_capture_always[:host_and_cluster]
     @edit[:current][:all_storages] = Metric::Targets.perf_capture_always[:storage]
     @edit[:current][:clusters] = Array.new
-    @temp[:cl_recs] = Hash.new
     @temp[:cl_hash] = EmsCluster.get_perf_collection_object_list
     @temp[:cl_hash].each_with_index do |h,j|
       cid, cl_hash = h
       c = cl_hash[:cl_rec]
-      @temp[:cl_recs][c.id] = c
       enabled = cl_hash[:ho_enabled]
       enabled_host_ids = enabled.collect {|e| e.id}
       hosts = (cl_hash[:ho_enabled] + cl_hash[:ho_disabled]).sort {|a,b| a.name.downcase <=> b.name.downcase}
@@ -226,10 +215,6 @@ module OpsController::Settings::CapAndU
     end
     @edit[:new][:all_clusters] = params[:all_clusters] == "1" if params[:all_clusters]
     @edit[:new][:all_storages] = params[:all_storages] == "1" if params[:all_storages]
-    if params[:tree_name] == "clhosts_tree"
-      session[:all_checked] = @all_checked = params[:all_checked] if params[:all_checked]
-    end
-    session[:all_checked] = 0 if (params[:tree_name] == "clhosts_tree" && params[:check_all] && params[:check_all] == "false" && !params[:check])  #if uncheck all was selected, and individual clusters werent checked
     if params[:tree_name] == "clhosts_tree"     # User checked/unchecked a cluster tree node
       if params[:check_all]                         #to handle check/uncheck cluster all checkbox
         @edit[:new][:clusters].each do |c|                                  # Check each clustered host

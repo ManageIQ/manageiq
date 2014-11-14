@@ -65,7 +65,6 @@ module Metric::Targets
   # If a Cluster, standalone Host, or Storage is not enabled, skip it.
   # If a Cluster is enabled, capture all of its Hosts.
   # If a Host is enabled, capture all of its Vms.
-  # We assume that if a Host is tagged enabled, it's Cluster will also be tagged enabled.  TODO: code this directly?
   def self.capture_targets(zone = nil, options = {})
     zone = MiqServer.my_server.zone(true) if zone.nil?
     zone = Zone.find(zone) if zone.kind_of?(Integer)
