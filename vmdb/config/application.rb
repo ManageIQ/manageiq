@@ -75,19 +75,16 @@ module Vmdb
     # ActiveSupport::Dependencies.autoload_paths empty, thus breaking autoloading.  Thus, in
     # order to prevent eager loading, but still populate autoload_paths, we copy them.
     config.autoload_paths += config.eager_load_paths
-    config.autoload_paths << Rails.root.join("app", "models", "mixins")
-    config.autoload_paths << Rails.root.join("app", "controllers", "mixins")
-    config.autoload_paths << Rails.root.join("lib")
-    config.autoload_paths << Rails.root.join('app', 'presenters')
+    config.autoload_paths << Rails.root.join("app", "models", "mixins").to_s
+    config.autoload_paths << Rails.root.join("app", "controllers", "mixins").to_s
+    config.autoload_paths << Rails.root.join("lib").to_s
+    config.autoload_paths << Rails.root.join('app', 'presenters').to_s
 
     # config.eager_load_paths accepts an array of paths from which Rails will eager load on boot if cache classes is enabled.
     # Defaults to every folder in the app directory of the application.
     config.eager_load_paths = []
 
     require_relative 'environments/patches/database_configuration'
-
-    # Rails3 TODO: check if anything in lib cannot be autoloaded
-    $:.push Rails.root.join("lib")
 
     console do
       Rails::ConsoleMethods.class_eval do
