@@ -67,28 +67,26 @@ describe MiqProvisionOpenstack do
     end
 
     context "security_groups" do
+      let(:security_group_1) { FactoryGirl.create(:security_group_openstack, :name => "group_1") }
+      let(:security_group_2) { FactoryGirl.create(:security_group_openstack, :name => "group_2") }
+
       it "with no security groups" do
-        subject.prepare_for_clone_task[:security_groups].should == []
+        expect(subject.prepare_for_clone_task[:security_groups]).to eq([])
       end
 
       it "with one security group" do
-        security_group = FactoryGirl.create(:security_group_openstack, :name => "group_1")
-        subject.options[:security_groups] = [security_group.id]
-        subject.prepare_for_clone_task[:security_groups].should == [security_group.name]
+        subject.options[:security_groups] = [security_group_1.id]
+        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.name])
       end
 
       it "with two security group" do
-        security_group_1 = FactoryGirl.create(:security_group_openstack, :name => "group_1")
-        security_group_2 = FactoryGirl.create(:security_group_openstack, :name => "group_2")
         subject.options[:security_groups] = [security_group_1.id, security_group_2.id]
-        subject.prepare_for_clone_task[:security_groups].should == [security_group_1.name, security_group_2.name]
+        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.name, security_group_2.name])
       end
 
       it "with a missing security group" do
-        security_group = FactoryGirl.create(:security_group_openstack, :name => "group_1")
-        bad_security_group_id = security_group.id + 1
-        subject.options[:security_groups] = [security_group.id, bad_security_group_id]
-        subject.prepare_for_clone_task[:security_groups].should == [security_group.name]
+        subject.options[:security_groups] = [security_group_1.id, (security_group_1.id + 1)]
+        expect(subject.prepare_for_clone_task[:security_groups]).to eq([security_group_1.name])
       end
     end
   end
