@@ -461,6 +461,19 @@ describe MiqExpression do
     end
   end
 
+  context ".model_details" do
+    it "should not contain duplicate tag fields" do
+      category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
+      FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
+      tags = MiqExpression.model_details('Host',
+                                         :typ             => 'tag',
+                                         :include_model   => true,
+                                         :include_my_tags => false,
+                                         :userid          => 'admin')
+      tags.uniq.length.should eq(tags.length)
+    end
+  end
+
   context "Date/Time Support" do
     context "Testing expression conversion ruby, sql and human with static dates and times" do
       it "should generate the correct ruby expression with an expression having static dates and times with no time zone" do
