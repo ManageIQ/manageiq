@@ -7,6 +7,7 @@ class SecurityGroup < ActiveRecord::Base
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "EmsCloud"
   belongs_to :cloud_network
   belongs_to :cloud_tenant
+  belongs_to :orchestration_stack
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
   has_and_belongs_to_many :vms
 
