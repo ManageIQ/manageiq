@@ -107,7 +107,7 @@
             <td class="key">Access Key</td>
               <td class="wide">
                 <%= text_field_tag("authentication_amazon_key",
-                                    '',
+                                    @edit[:new][:authentication][:amazon_key],
                                     :maxlength=>50,
                                     "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
               </td>
