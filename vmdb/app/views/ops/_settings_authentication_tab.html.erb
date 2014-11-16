@@ -117,7 +117,7 @@
               <td class="wide">
                 <%= password_field_tag("authentication_amazon_secret", '',
                                     :maxlength         => 50,
-                                    :placeholder       => "●●●●●●●●",
+                                    :placeholder       => placeholder_if_present(@edit[:new][:authentication][:amazon_secret]),
                                     "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json) %>
               </td>
             </tr>
@@ -191,7 +191,7 @@
         <td class="wide">
           <%= password_field_tag("authentication_bind_pwd", '',
                               :maxlength         => 128,
-                              :placeholder       => "●●●●●●●●",
+                              :placeholder       => placeholder_if_present(@edit[:new][:authentication][:bind_pwd]),
                               "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json) %>
         </td>
       </tr>
