@@ -29,11 +29,13 @@ $log = toplog if $log.nil?
 begin
 
   $rhevm = Ovirt::Inventory.new(
-            :server   => RHEVM_SERVER,
-            :port     => RHEVM_PORT,
-            :domain   => RHEVM_DOMAIN,
-            :username => RHEVM_USERNAME,
-            :password => RHEVM_PASSWORD)
+    :server     => RHEVM_SERVER,
+    :port       => RHEVM_PORT,
+    :domain     => RHEVM_DOMAIN,
+    :username   => RHEVM_USERNAME,
+    :password   => RHEVM_PASSWORD,
+    :verify_ssl => false
+  )
 
   puts "Attempting to scan VM: #{VM_NAME}"
 

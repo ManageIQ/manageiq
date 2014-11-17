@@ -16,9 +16,10 @@ class RedHatRhevmProbe
     if PortScanner.portOpen(ost, Ovirt::Service::DEFAULT_PORT)
       begin
         rhevm = Ovirt::Inventory.new(
-          :server   => ost.ipaddr,
-          :username => 'test',
-          :password => 'test'
+          :server     => ost.ipaddr,
+          :username   => 'test',
+          :password   => 'test',
+          :verify_ssl => false
         )
         rhevm.api
       rescue => err

@@ -441,9 +441,10 @@ class MIQExtract
       begin
         require 'rhevm_inventory'
         ems_opt = {
-          :server   => miqVimHost[:address],
-          :username => miqVimHost[:username],
-          :password => miqVimHost[:password_decrypt]
+          :server     => miqVimHost[:address],
+          :username   => miqVimHost[:username],
+          :password   => miqVimHost[:password_decrypt],
+          :verify_ssl => false
         }
         ems_opt[:port] = miqVimHost[:port] unless miqVimHost[:port].blank?
 

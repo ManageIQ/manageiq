@@ -4,10 +4,12 @@ class EventCatcherRedhat < EventCatcher
   def event_monitor_handle
     require 'ovirt'
     @event_monitor_handle ||= Ovirt::EventMonitor.new(
-                                :server   => @ems.ipaddress,
-                                :port     => @ems.port,
-                                :username => @ems.authentication_userid,
-                                :password => @ems.authentication_password)
+      :server     => @ems.ipaddress,
+      :port       => @ems.port,
+      :username   => @ems.authentication_userid,
+      :password   => @ems.authentication_password,
+      :verify_ssl => false,
+    )
   end
 
   def reset_event_monitor_handle
