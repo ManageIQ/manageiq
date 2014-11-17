@@ -62,11 +62,6 @@ class EvmServer
       exit
     end
 
-    at_exit {
-      # register a shutdown method to run when server exits
-      MiqServer.stop
-    }
-
     PidFile.create(MiqServer.pidfile)
     MiqServer.start
   end

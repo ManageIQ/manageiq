@@ -323,14 +323,26 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def start
+    # ENV['MIQ_GUID'] = self.guid
+    # self.pid = Kernel.spawn(self.command_line, :out => "/dev/null", :err => [ Rails.root.join("log", "evm.log"), "a" ])
+    # Process.detach(pid)
+
+    self.save
+    if self.pid = fork
+      ActiveRecord::Base.connection.reconnect!
+      self.save
+      Process.detach(self.pid)
+    else
+      ActiveRecord::Base.connection.reconnect!
+      $log.info("XXX: worker guid: #{self.guid}")
+      type = self.class.corresponding_helper.to_s
+      require "workers/#{type}"
+      type.camelize.constantize.start_worker(command_line_params)
+      exit!
+    end
+
     msg = "Worker started: ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}]"
     MiqEvent.raise_evm_event_queue(self.miq_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
-
-    ENV['MIQ_GUID'] = self.guid
-    self.pid = Kernel.spawn(self.command_line, :out => "/dev/null", :err => [ Rails.root.join("log", "evm.log"), "a" ])
-    Process.detach(pid)
-    self.save
-
     $log.info("MIQ(#{self.class.name}.start) #{msg}")
   end
 
