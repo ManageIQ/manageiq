@@ -216,18 +216,12 @@ module MiqAeCustomizationController::Dialogs
         return
       end
 
-      dialog_set_record_vars(dialog)
-
       begin
-        dialog.save!
+        dialog_set_record_vars(dialog)
       rescue StandardError => @bang
-        dialog.errors.each do |field,msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
-
+        add_flash(@bang.message, :error)
         @changed = true
         render_flash
-
       else
         if params[:button] == "add"
           add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqDialog"), :name=>dialog.label})
@@ -371,7 +365,6 @@ module MiqAeCustomizationController::Dialogs
       self.x_node = nodes.join("_")
       @sb[:node_typ] = nil
     end
-    dialog_edit_build_tree
     dialog_edit_set_form_vars
 
     replace_right_cell(x_node, [:dialog_edit])
@@ -1231,13 +1224,11 @@ module MiqAeCustomizationController::Dialogs
         @edit[:new][:tabs].each_with_index do |tab,i|
           dt = DialogTab.new(:label => tab[:label], :description => tab[:description], :display => :edit)
           dialog.add_resource(dt, {:order => i})
-          dialog.save!
 
           if tab[:groups]
             tab[:groups].each_with_index do |group,j|
               dg = DialogGroup.new(:label => group[:label], :description => group[:description], :display => :edit)
               dt.add_resource(dg, {:order => j})
-              dt.save!
 
               if group[:fields]
                 group[:fields].each_with_index do |field,k|
@@ -1294,12 +1285,17 @@ module MiqAeCustomizationController::Dialogs
                   df = field[:typ].constantize.new(fld)
                   df.resource_action.fqname = field[:entry_point] if field[:typ] == 'DialogFieldDynamicList'
                   dg.add_resource(df, {:order => k})
-                  dg.save!
                 end
               end
             end
           end
         end
+      end
+
+      if dialog.dialog_fields.blank?
+        raise "Dialog must have at least one Element"
+      else
+        dialog.save!
       end
     end
   end

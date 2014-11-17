@@ -237,7 +237,7 @@ class MiqAeCustomizationController < ApplicationController
           }
       ] if tree
     end
-    presenter[:osf_node] = x_node
+    presenter[:osf_node] = x_node unless @in_a_form
 
     if ['dialog_edit', 'dialog_copy'].include?(params[:pressed])
       presenter[:clear_tree_cookies] = "edit_treeOpenStatex"
