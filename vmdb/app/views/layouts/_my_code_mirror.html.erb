@@ -8,6 +8,7 @@
 <% width ||= "auto"							%><%# Edit box width in pixels %>
 <% read_only ||= false					%><%# Edit box height in pixels %>
 <% multi_mode ||= false         %><%# to load/switch between multiple modes, for customization template editor %>
+<% no_focus ||= false           %><%# don't focus on code mirror textbox if there are other fields on screen %>
 
 <% if multi_mode %>
   <% modes.each do |mode| %>
@@ -40,6 +41,8 @@
     miqEditor.on("blur", function(cm) {miqEditor.save()}),
 		$j('.CodeMirror-scroll')[0].style.height = '<%= height %>px';
 		$j('.CodeMirror-scroll')[0].style.width = '<%= width %>px';
-		miqEditor.focus();
+    <% unless no_focus %>
+      miqEditor.focus();
+    <% end %>
 	}
 </script>
