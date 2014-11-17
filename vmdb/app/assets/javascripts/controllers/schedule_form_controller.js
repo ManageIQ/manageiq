@@ -87,6 +87,8 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else {
       $scope.filterValuesEmpty = true;
     }
+
+    $scope.filterValue = null;
   };
 
   $scope.logProtocolChanged = function() {
@@ -180,7 +182,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
       $scope.timerItems = timerOptionService.getOptions($scope.scheduleTimerType);
 
-      if (data.filter_type === 'all' || data.protocol !== undefined) {
+      if (data.filter_type === 'all' || (data.protocol !== undefined && data.protocol !== null)) {
         $scope.filterValuesEmpty = true;
       } else {
         buildFilterList(data);

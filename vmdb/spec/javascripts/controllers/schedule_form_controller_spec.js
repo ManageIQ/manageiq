@@ -404,6 +404,10 @@ describe('scheduleFormController', function() {
       it('sets filter values empty to true', function() {
         expect($scope.filterValuesEmpty).toBe(true);
       });
+
+      it('sets the filterValue to null', function() {
+        expect($scope.filterValue).toEqual(null);
+      });
     });
 
     describe('when the filter type is not all', function() {
@@ -434,6 +438,10 @@ describe('scheduleFormController', function() {
           it('turns the sparkle off', function() {
             expect(miqService.sparkleOff).toHaveBeenCalled();
           });
+
+          it('sets the filterValue to null', function() {
+            expect($scope.filterValue).toEqual(null);
+          });
         });
 
         describe('when the item list is a multi dimension array', function() {
@@ -457,6 +465,10 @@ describe('scheduleFormController', function() {
 
           it('turns the sparkle off', function() {
             expect(miqService.sparkleOff).toHaveBeenCalled();
+          });
+
+          it('sets the filterValue to null', function() {
+            expect($scope.filterValue).toEqual(null);
           });
         });
       });

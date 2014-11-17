@@ -48,20 +48,36 @@ module OpsController::Settings::Schedules
       replace_right_cell(@nodetype)
     when "save", "add"
       schedule = params[:id] != "new" ? MiqSchedule.find_by_id(params[:id]) : MiqSchedule.new(:userid => session[:userid])
-      old_schedule_attributes = schedule.attributes.dup
 
+      # This should be changed to something like schedule.changed? and schedule.changes
+      # when we have a version of Rails that supports detecting changes on serialized
+      # fields
+      old_schedule_attributes = schedule.attributes.clone
       humanized_old = old_schedule_attributes.merge(
-        "depot_hash" => schedule.depot_hash,
-        "filter"     => old_schedule_attributes["filter"].try(:to_human)
+        "depot_hash" => {
+          :uri      => schedule.depot_hash[:uri],
+          :username => schedule.depot_hash[:username],
+          :password => schedule.depot_hash[:password],
+          :name     => schedule.depot_hash[:name]
+        },
+        "filter"     => old_schedule_attributes["filter"].try(:to_human),
+        "run_at"     => {
+          :start_time => schedule.run_at[:start_time],
+          :tz         => schedule.run_at[:tz],
+          :interval   => {
+            :unit  => schedule.run_at[:interval][:unit],
+            :value => schedule.run_at[:interval][:value]
+          }
+        }
       )
 
       schedule_set_record_vars(schedule)
-
       schedule_validate?(schedule)
 
       humanized_new = schedule.attributes.merge(
         "depot_hash" => schedule.depot_hash,
-        "filter"     => schedule.filter.try(:to_human)
+        "filter"     => schedule.filter.try(:to_human),
+        "run_at"     => schedule.run_at
       )
 
       attribute_difference = humanized_old.diff(humanized_new)
@@ -166,7 +182,7 @@ module OpsController::Settings::Schedules
       :schedule_start_min   => schedule.run_at[:start_time].strftime("%M").to_i,
       :schedule_time_zone   => schedule.run_at[:tz],
       :schedule_timer_type  => schedule.run_at[:interval][:unit].capitalize,
-      :schedule_timer_value => schedule.run_at[:interval][:value],
+      :schedule_timer_value => schedule.run_at[:interval][:value].to_i,
       :uri                  => uri,
       :uri_prefix           => uri_prefix
     }
