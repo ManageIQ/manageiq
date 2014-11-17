@@ -1,14 +1,10 @@
-<% if @edit %>
-  <% url = url_for(:action =>'rbac_user_field_changed', :id=>"#{@edit[:user_id] || "new"}") %>
-<% end %>
-<%= render :partial => "layouts/flash_msg" %>
-<%
-  if @edit && @edit[:new][:userid] == "admin"
-    disabled = true
-  else
-    disabled = false
+<% if @edit
+    url = url_for(:action =>'rbac_user_field_changed', :id=>"#{@edit[:user_id] || "new"}")
   end
+  observe_url_json = {:interval => '.5', :url => url}.to_json
 %>
+<%= render :partial => "layouts/flash_msg" %>
+<% disabled = @edit && @edit[:new][:userid] == "admin" %>
 <div id='main_div'>
  <p class="legend">User Information</p>
   <table class="style1">
@@ -21,9 +17,9 @@
             <%= text_field_tag("name",
                               @edit[:new][:name],
                               :autocomplete => 'off',
-                              :maxlength=>50,
-                              :disabled=>disabled,
-                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                              :maxlength    => 50,
+                              :disabled     => disabled,
+                              "data-miq_observe" => observe_url_json) %>
             <% unless @edit[:new][:userid] == "admin" %>
               <%= javascript_tag(javascript_focus('name')) %>
             <% end %>
@@ -36,12 +32,11 @@
           <% unless @edit %>
             <%= h(@user.userid) %>
           <% else %>
-            <%= text_field_tag("userid",
-                              @edit[:new][:userid],
+            <%= text_field_tag("userid", @edit[:new][:userid],
                               :autocomplete => 'off',
-                              :maxlength=>50,
-                              :disabled=>disabled,
-                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                              :maxlength    => 50,
+                              :disabled     => disabled,
+                              "data-miq_observe" => observe_url_json) %>
           <% end %>
         </td>
       </tr>
@@ -51,17 +46,17 @@
         <tr>
           <td class="key">Change Password / Confirm Password</td>
           <td>
-            <%= password_field_tag("password",
-                              @edit[:new][:password],
-                              :maxlength=>50,
-                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+            <%= password_field_tag("password", '',
+                              :maxlength         => 50,
+                              :placeholder       => placeholder_if_present(@edit[:new][:password]),
+                              "data-miq_observe" => observe_url_json) %>
             <% if @edit[:new][:userid] == "admin" %>
               <%= javascript_tag(javascript_focus('password')) %>
-          <% end %>
-            <%= password_field_tag("password2",
-                              @edit[:new][:password2],
-                              :maxlength=>50,
-                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+            <% end %>
+            <%= password_field_tag("password2", '',
+                              :maxlength         => 50,
+                              :placeholder       => placeholder_if_present(@edit[:new][:password2]),
+                              "data-miq_observe" => observe_url_json) %>
           </td>
         </tr>
         <% end %>
@@ -72,11 +67,10 @@
           <% unless @edit %>
             <%= h(@user.email) %>
           <% else %>
-            <%= text_field_tag("email",
-                                @edit[:new][:email],
-                                :autocomplete => 'off',
-                                :maxlength=>50,
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+            <%= text_field_tag("email", @edit[:new][:email],
+                                :autocomplete     => 'off',
+                                :maxlength        => 50,
+                                "data-miq_observe"=> observe_url_json) %>
           <% end %>
         </td>
       </tr>
@@ -148,6 +142,4 @@
 <% unless @edit %>
   <%= render :partial => "rbac_tag_box" %>
 <% end %>
-
 </div>
-

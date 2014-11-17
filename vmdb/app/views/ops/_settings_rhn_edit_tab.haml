@@ -67,11 +67,11 @@
   %br
     %table.style1
       = render :partial => '/layouts/auth_credentials2',
-               :locals  => { :prefix       => 'customer', :record_id => 'new',
-                             :change_url   => url,
-                             :validate_url => 'rhn_validate',
-                             :validate     => rhn_validate_enabled,
-                             :labels       => { :user => 'Login' } }
+               :locals  => {:prefix       => 'customer',
+                            :record_id    => 'new',
+                            :change_url   => url,
+                            :validate_url => 'rhn_validate',
+                            :validate     => rhn_validate_enabled}
 
       - if 'rhn_satellite' == @edit[:new][:register_to]
         %tr

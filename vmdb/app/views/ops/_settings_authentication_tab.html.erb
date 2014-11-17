@@ -115,10 +115,10 @@
             <tr>
               <td class="key">Secret Key</td>
               <td class="wide">
-                <%= password_field_tag("authentication_amazon_secret",
-                                    @edit[:new][:authentication][:amazon_secret],
-                                    :maxlength=>50,
-                                    "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                <%= password_field_tag("authentication_amazon_secret", '',
+                                    :maxlength         => 50,
+                                    :placeholder       => placeholder_if_present(@edit[:new][:authentication][:amazon_secret]),
+                                    "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json) %>
               </td>
             </tr>
           </table>
@@ -189,10 +189,10 @@
       <tr>
         <td class="key">Bind Password</td>
         <td class="wide">
-          <%= password_field_tag("authentication_bind_pwd",
-                              @edit[:new][:authentication][:bind_pwd],
-                              :maxlength=>128,
-                              "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+          <%= password_field_tag("authentication_bind_pwd", '',
+                              :maxlength         => 128,
+                              :placeholder       => placeholder_if_present(@edit[:new][:authentication][:bind_pwd]),
+                              "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json) %>
         </td>
       </tr>
       <tr>

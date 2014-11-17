@@ -2571,4 +2571,8 @@ module ApplicationHelper
     updated_query_string.delete_if { | k, _v | exclude_params.include? k.to_s }
     updated_query_string.merge!(update_this_param)
   end
+
+  def placeholder_if_present(password)
+    password.present? ? "\u25cf" * 8 : ''
+  end
 end

@@ -246,11 +246,11 @@
             <tr>
               <td class="key">Password</td>
               <td class="wide">
-                <%= password_field_tag("smtp_password",
-                                    @edit[:new][:smtp][:password],
-                                    :maxlength=>MAX_NAME_LEN,
-                                    :disabled=>chk,
-                                    "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
+                <%= password_field_tag("smtp_password", '',
+                                    :maxlength         => MAX_NAME_LEN,
+                                    :placeholder       => placeholder_if_present(@edit[:new][:smtp][:password]),
+                                    :disabled          => chk,
+                                    "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json) %>
               </td>
             </tr>
             <tr>
