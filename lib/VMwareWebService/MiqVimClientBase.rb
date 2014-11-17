@@ -29,10 +29,24 @@ class MiqVimClientBase < VimService
 		on_log_header { |msg| $vim_log.info msg }
 		on_log_body   { |msg| $vim_log.debug msg if $miq_wiredump }
 	
-		super(:uri => "https://#{@server}/sdk", :version => 1)
+		super(:uri => sdk_uri, :version => 1)
 		
 		@connected	= false
 		@connLock	= Sync.new
+	end
+
+	def sdk_uri
+		require 'uri'
+		uri = URI::HTTPS.build(:path => "/sdk")
+
+		# IPv6 addresses need to be wrapped in [] in URI's
+		# See: https://www.ietf.org/rfc/rfc2732.txt
+		# URI::Generic#hostname= will automatically wrap an ipv6 address in []
+		# uri.hostname = "::1"
+		# uri.to_s => "http://[::1]/foo"
+		# Feature request to URI::Generic.build: https://github.com/ruby/ruby/pull/765
+		uri.hostname = @server
+		uri
 	end
 	
 	def self.receiveTimeout=(val)
