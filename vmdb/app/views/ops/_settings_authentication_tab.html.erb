@@ -143,14 +143,14 @@
       </tr>
     </table>
 
-    <div id="ldap_default_group_div" <%= 'style="display:none"' if @edit[:new][:authentication][:ldap_role] %> >
+    <div id="ldap_default_group_div" style = "<%= @edit[:new][:authentication][:ldap_role] ? 'display:none' : '' %>">
     <table class="style1">
       <tr>
         <td class="key">Default Group for Users</td>
         <td class="wide">
           <%= select_tag('authentication_default_group_for_users',
                         options_for_select(
-                          [["<Choose>", nil]] + MiqGroup.pluck(:description).sort,
+                          [["<No Default Group>", nil]] + MiqGroup.pluck(:description).sort,
                           @edit[:new][:authentication][:default_group_for_users]),
                         "data-miq_observe" => {:url => url}.to_json) %>
         </td>
