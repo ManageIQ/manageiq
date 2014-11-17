@@ -19,6 +19,19 @@ describe ServiceTemplateProvisionRequest do
       @task_2.miq_request_tasks << @task_2_1
     end
 
+    it "update_request_status - no message" do
+      expect(@request.message).to eq("Service_Template_Provisioning - Request Created")
+      @request.update_request_status
+      expect(@request.message).to eq("Pending = 4")
+    end
+
+    it "update_request_status with message override" do
+      expect(@request.message).to eq("Service_Template_Provisioning - Request Created")
+      @request.update_attribute(:options, :user_message => "New test message")
+      @request.update_request_status
+      expect(@request.message).to eq("New test message")
+    end
+
     it "pending state" do
       @request.update_request_status
       @request.message.should == "Pending = 4"

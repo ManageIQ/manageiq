@@ -382,7 +382,7 @@ class MiqRequest < ActiveRecord::Base
       msg = child.message unless child.nil?
     end
 
-    self.update_attributes(:request_state=>req_state, :status=>req_status, :message=>msg)
+    update_attributes(:request_state => req_state, :status => req_status, :message => display_message(msg))
   end
 
   def my_zone

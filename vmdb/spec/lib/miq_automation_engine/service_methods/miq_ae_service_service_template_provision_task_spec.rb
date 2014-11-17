@@ -2,6 +2,10 @@ require "spec_helper"
 
 module MiqAeServiceServiceTemplateProvisionTaskSpec
   describe MiqAeMethodService::MiqAeServiceServiceTemplateProvisionTask do
+    let(:service_service_template_provision_task) do
+      MiqAeMethodService::MiqAeServiceServiceTemplateProvisionTask.find(@service_template_provision_task.id)
+    end
+
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
@@ -20,6 +24,12 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
       @ae_method.update_attributes(:data => method)
       ServiceTemplateProvisionTask.any_instance.should_receive(:execute_queue).once
       invoke_ae.root(@ae_result_key).should be_true
+    end
+
+    it "#user_message" do
+      service_service_template_provision_task.user_message = "fred"
+
+      expect(@service_template_provision_task.reload.options[:user_message]).to eq("fred")
     end
 
     context "#status" do

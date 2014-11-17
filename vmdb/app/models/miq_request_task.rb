@@ -78,7 +78,7 @@ class MiqRequestTask < ActiveRecord::Base
       msg = child.message unless child.nil?
     end
 
-    update_and_notify_parent(:state => req_state, :status => req_status, :message => msg)
+    update_and_notify_parent(:state => req_state, :status => req_status, :message => display_message(msg))
   end
 
   def execute_callback(state, message, result)
