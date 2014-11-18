@@ -9,7 +9,7 @@ module AutomateTreeHelper
                                                     @edit[:new][:namespace].nil?
         page << javascript_hide("ae_tree_select_div")
         page << javascript_hide("blocker_div")
-        page << javascript_for_miq_button_visibility(@changed)
+        page << javascript_for_miq_button_visibility(@changed, 'automate')
         page << "miqSparkle(false);"
       end
 
@@ -58,7 +58,7 @@ module AutomateTreeHelper
       @changed = @edit[:new][edit_key] != @edit[:automate_tree_selected_path]
     end
     render :update do |page|
-      page << javascript_for_miq_button_visibility(@changed)
+      page << javascript_for_miq_button_visibility(@changed, 'automate')
     end
   end
 end
