@@ -306,7 +306,7 @@ class CatalogController < ApplicationController
       add_flash(_("The selected %s were deleted") % pluralize(elements.length,ui_lookup(:table=>"service_template"))) unless flash_errors?
     end
     params[:id] = nil
-    replace_right_cell(nil, [:sandt, :svccat])
+    replace_right_cell(nil, trees_to_replace([:sandt, :svccat]))
   end
 
   def st_edit
@@ -349,7 +349,7 @@ class CatalogController < ApplicationController
           @changed = session[:changed] = false
           @in_a_form = false
           @edit = session[:edit] = @record = nil
-          replace_right_cell(nil, [:sandt,:svccat,:stcat])
+          replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
         else
           @st.errors.each do |field,msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -573,7 +573,7 @@ class CatalogController < ApplicationController
         @in_a_form = false
         replace_right_cell
       when "save","add"
-        assert_privileges("catalogitem_#{params[:id] ? "edit" : "new"}")
+        assert_privileges("st_catalog_#{params[:id] ? "edit" : "new"}")
         return unless load_edit("st_catalog_edit__#{params[:id] || "new"}","replace_cell__explorer")
 
         @stc = @edit[:rec_id] ? ServiceTemplateCatalog.find_by_id(@edit[:rec_id]) : ServiceTemplateCatalog.new
@@ -584,7 +584,11 @@ class CatalogController < ApplicationController
           add_flash(_("Error during '%s': ") % "Catalog Edit" << bang.message, :error)
         else
           if @stc.errors.empty?
-            add_flash(_("%{model} \"%{name}\" was saved") % {:model=>"ServiceTemplateCatalog", :name=>@edit[:new][:name]})
+            add_flash(_("%{model} \"%{name}\" was saved") %
+                        {:model => "#{ui_lookup(:model => 'ServiceTemplateCatalog')}",
+                         :name  => @edit[:new][:name]
+                        }
+            )
           else
             @stc.errors.each do |field, msg|
               add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -598,7 +602,7 @@ class CatalogController < ApplicationController
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
-        replace_right_cell(nil, [:sandt,:svccat,:stcat])
+        replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
       when "reset", nil  # Reset or first time in
         st_catalog_set_form_vars
         if params[:button] == "reset"
@@ -696,7 +700,7 @@ class CatalogController < ApplicationController
       @changed = session[:changed] = false
       @in_a_form = false
       @edit = session[:edit] = @record = nil
-      replace_right_cell(nil, [:sandt,:svccat,:stcat])
+      replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
     else
       st.errors.each do |field,msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -790,7 +794,15 @@ class CatalogController < ApplicationController
       process_elements(elements, ServiceTemplateCatalog, "destroy") unless elements.empty?
     end
     params[:id] = nil
-    replace_right_cell(nil, [:sandt,:stcat,:svccat])
+    replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
+  end
+
+  def trees_to_replace(trees)
+    trees_to_replace = []
+    trees_to_replace.push(:stcat) if trees.include?(:stcat) && role_allows(:feature => "st_catalog_accord")
+    trees_to_replace.push(:sandt) if trees.include?(:sandt) && role_allows(:feature => "catalog_items_view")
+    trees_to_replace.push(:svccat) if trees.include?(:svccat) && role_allows(:feature => "svc_catalog_accord")
+    trees_to_replace
   end
 
   def set_resource_action(st)
