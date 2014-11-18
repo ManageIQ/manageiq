@@ -6,7 +6,6 @@
 		<% h = @winH < 627 ? 200 : @winH - 427 %>
 		<% w = @winW - 150 %>
 
-	<%#= text_area_tag("logview", @log, :readonly=>"readonly", :style=>"height:#{h}px;") %>
-	<%= text_area("logview","data", :value=>@log, :readonly=>true, :style=>"height:#{h}px;width:#{w}px;") %>
+	<%= text_area("logview","data", :value=>@log, :readonly=>true, :style=>"height:#{h}px;", :wrap=>"off") %>
 
 <%= javascript_tag "$('logview_data').scrollTop = $('logview_data').scrollHeight - $('logview_data').clientHeight;" %>
