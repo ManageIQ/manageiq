@@ -115,6 +115,7 @@ module OpsController::Settings::Common
         if @authldaprole_changed
           page << set_element_visible("user_proxies_div", @edit[:new][:authentication][:ldap_role])
           page << set_element_visible("ldap_role_details_div", @edit[:new][:authentication][:ldap_role])
+          page << set_element_visible("ldap_default_group_div", !@edit[:new][:authentication][:ldap_role])
         end
         if @authldapport_reset
           page << "$('authentication_ldapport').value = '#{@edit[:new][:authentication][:ldapport]}'"
@@ -744,6 +745,7 @@ module OpsController::Settings::Common
         @authmode_changed = true
       end
       auth[:sso_enabled] = (params[:sso_enabled].to_s == "1") if params[:sso_enabled]
+      auth[:default_group_for_users] = params[:authentication_default_group_for_users] if params[:authentication_default_group_for_users]
     when "settings_workers"                                       # Workers Settings tab
       wb  = new.config[:workers][:worker_base]
       qwb = wb[:queue_worker_base]
