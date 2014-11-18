@@ -266,39 +266,15 @@ function miqNewTagPrompt() {
 
 // Hide/show form buttons
 function miqButtons(h_or_s, prefix) {
-  if ($j('#flash_msg_div').length) $j('#flash_msg_div').hide();
-  if (h_or_s == "show") {
-    // checking if more than one buttons exist on screen turn them all on/off
-    $j('#buttons_on').each(function(b) {
-      $j(this).show();
-    })
-    $j('#buttons_off').each(function(b) {
-      $j(this).hide();
-    })
-    if (prefix != 'undefined') {
-      $j('#' + prefix + '_buttons_on').each(function(b) {
-        $j(this).show();
-      })
-      $j('#' + prefix + '_buttons_off').each(function(b) {
-        $j(this).hide();
-      })
-    }
-  } else {
-    $j('#buttons_off').each(function(b) {
-      $j(this).show();
-    })
-    $j('#buttons_on').each(function(b) {
-      $j(this).hide();
-    })
-    if (prefix != 'undefined') {
-      $j('#' + prefix + 'buttons_off').each(function(b) {
-        $j(this).show();
-      })
-      $j('#' + prefix + 'buttons_on').each(function(b) {
-        $j(this).hide();
-      })
-    }
-  }
+  $j('#flash_msg_div').hide();
+
+  var on  = h_or_s == 'show' ? 'on'  : 'off';
+  var off = h_or_s == 'show' ? 'off' : 'on';
+
+  prefix = (typeof(prefix) === 'undefined' || prefix === '') ? '' : (prefix + '_');
+
+  $j('#' + prefix + 'buttons_' + on).show();
+  $j('#' + prefix + 'buttons_' + off).hide();
 }
 
 // Hide/show form buttons

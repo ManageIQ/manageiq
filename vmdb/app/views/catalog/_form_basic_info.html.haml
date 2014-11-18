@@ -50,7 +50,7 @@
             %tr
               %td
                 = text_field_tag("fqname", @edit[:new][:fqname],
-                  :onFocus => 'miqShowAE_Tree("provision");miqButtons(false);')
+                  :onFocus => 'miqShowAE_Tree("provision");miqButtons("hide");')
               %td
                 - display = @edit[:new][:fqname] != "" ? "" : "display:none"
                 #fqname_div{:style => @edit[:new][:fqname] != "" ? "" : "display:none"}
@@ -93,7 +93,7 @@
             %tr
               %td
                 = text_field_tag("retire_fqname", @edit[:new][:retire_fqname],
-                  :onFocus => 'miqShowAE_Tree("retire");miqButtons(false);')
+                  :onFocus => 'miqShowAE_Tree("retire");miqButtons("hide");')
               %td
                 #retire_fqname_div{:style => @edit[:new][:retire_fqname] != "" ? "" : "display:none"}
                   = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Retirement Entry Point"),
