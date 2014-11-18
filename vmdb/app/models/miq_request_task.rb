@@ -138,7 +138,7 @@ class MiqRequestTask < ActiveRecord::Base
         :method_name => 'deliver',
         :args        => [args],
         :role        => 'automate',
-        :zone        => zone,
+        :zone        => options.fetch(:miq_zone, zone),
         :task_id     => my_task_id,
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
@@ -158,13 +158,13 @@ class MiqRequestTask < ActiveRecord::Base
       deliver_on = self.get_option(:schedule_time).utc rescue nil
     end
 
-    zone = self.source.my_zone rescue nil
+    zone = source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
 
     queue_options.reverse_merge!(
       :class_name  => self.class.name,
       :instance_id => self.id,
       :method_name => "execute",
-      :zone        => zone,
+      :zone        => options.fetch(:miq_zone, zone),
       :role        => self.miq_request.my_role,
       :task_id     => my_task_id,
       :deliver_on  => deliver_on,

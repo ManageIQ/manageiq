@@ -73,7 +73,7 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def my_zone
-    self.source.ext_management_system.zone.name
+    source.my_zone
   end
 
   def my_role

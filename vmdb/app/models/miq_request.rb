@@ -140,7 +140,7 @@ class MiqRequest < ActiveRecord::Base
       :instance_id => self.id,
       :method_name => "call_automate_event",
       :args        => [event_name],
-      :zone        => options.fetch(:miq_zone, MiqServer.my_zone),
+      :zone        => options.fetch(:miq_zone, my_zone),
       :msg_timeout => 3600
     )
   end
@@ -386,7 +386,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def my_zone
-    nil
+    MiqServer.my_zone
   end
 
   def my_role
@@ -412,7 +412,7 @@ class MiqRequest < ActiveRecord::Base
       :class_name  => self.class.name,
       :instance_id => self.id,
       :method_name => "create_request_tasks",
-      :zone        => self.my_zone,
+      :zone        => options.fetch(:miq_zone, my_zone),
       :role        => self.my_role,
       :task_id     => "#{self.class.name.underscore}_#{self.id}",
       :msg_timeout => 3600,

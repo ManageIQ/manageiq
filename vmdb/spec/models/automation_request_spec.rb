@@ -143,37 +143,47 @@ describe AutomationRequest do
   end
 
   context "validate zone" do
+
+    before do
+      MiqRequest.any_instance.stub(:automate_event_failed?).and_return(false)
+    end
+
+    def deliver(zone_name)
+      parameters  = "miq_zone=#{zone_name}|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
+      AutomationRequest.create_from_ws(@version, @approver.userid, @uri_parts, parameters,
+                                       "auto_approve=true")
+      MiqQueue.where(:method_name => "create_request_tasks").first.deliver
+    end
+
+    def check_zone(zone_name)
+      expect(MiqQueue.count).to eq(4)
+      expect(MiqQueue.pluck(:zone).uniq).to eq([zone_name])
+    end
+
     it "zone specified" do
-      @parameters  = "miq_zone=#{@zone.name}|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
-      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
-      queue = MiqQueue.first
-      queue.zone.should eq(@zone.name)
+      deliver(@zone.name)
+      check_zone(@zone.name)
     end
 
     it "zone not specified" do
-      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
-      queue = MiqQueue.first
-      queue.zone.should eq("default")
+      AutomationRequest.create_from_ws(@version, @approver.userid, @uri_parts, @parameters,
+                                       "auto_approve=true")
+      MiqQueue.where(:method_name => "create_request_tasks").first.deliver
+      check_zone("default")
     end
 
     it "non existent zone specified" do
-      @parameters  = "miq_zone=nothing|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
-      expect { AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "") }
-        .to raise_error(ArgumentError)
+      expect { deliver("does_not_exist") }.to raise_error(ArgumentError)
     end
 
     it "blank zone should result in empty zone" do
-      @parameters  = "miq_zone=""|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
-      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
-      queue = MiqQueue.first
-      queue.zone.should eq(nil)
+      deliver("")
+      check_zone(nil)
     end
 
     it "nil zone should result in empty zone" do
-      @parameters  = "miq_zone=|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
-      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
-      queue = MiqQueue.first
-      queue.zone.should eq(nil)
+      deliver(nil)
+      check_zone(nil)
     end
 
   end
