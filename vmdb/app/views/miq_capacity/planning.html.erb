@@ -1,5 +1,50 @@
 <% content_for :trees do %>
   <div style="display:none"><%= render :partial =>"planning_options" %></div>
+
+  <div id="left_cell_bottom" align="center">
+    <div id="buttons_on" style="display:<%= session[:changed] ? "display" : "none" %>;">
+          <%= link_to(button_tag("Submit",
+                                 :class => "btn btn-primary",
+                                 :alt   => "Submit Planning options"),
+                        {:action => "planning",
+                         :button => "submit"},
+                        "data-miq_sparkle_on" => true,
+                        :remote               => true,
+                        :title                => "Submit Planning options")
+          %>
+
+          <%= link_to(button_tag("Reset",
+                                  :class => "btn btn-default",
+                                  :alt   => "Reset all Planning options"),
+                        {:action => "planning",
+                         :button => "reset"},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        :title                 => "Reset all Planning options")
+          %>
+
+    </div>
+    <div id="buttons_off" style="display:<%= session[:changed] ? "none" : "display" %>;">
+
+      <%= button_tag("Submit",
+                     :class => "btn btn-primary btn-disabled",
+                     :title => "Select a reference VM or Manual Input source to Submit the Planning Options")
+      %>
+
+      <%= link_to(button_tag("Reset",
+                             :class => "btn btn-default",
+                             :alt   => "Reset all Planning options"),
+                  {:action => "planning",
+                   :button => "reset"},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  :title                 => "Reset all Planning options")
+      %>
+
+    </div>
+  </div>
 <% end %>
 
 <% content_for :accords do %>
