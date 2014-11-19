@@ -1,5 +1,118 @@
 Vmdb::Application.routes.draw do
 
+  #grouped routes
+  adv_search_post = %w(
+    adv_search_button
+    adv_search_clear
+    adv_search_load_choice
+    adv_search_name_typed
+    adv_search_toggle
+  )
+
+  button_post = %w(
+    button_create
+    button_update
+  )
+
+  compare_get = %w(
+    compare_miq
+    compare_to_csv
+    compare_to_pdf
+    compare_to_txt
+  )
+
+  compare_post = %w(
+    compare_choose_base
+    compare_compress
+    compare_miq
+    compare_miq_all
+    compare_miq_differences
+    compare_miq_same
+    compare_mode
+    compare_remove
+    compare_set_state
+  )
+
+  discover_get_post = %w(
+    discover
+    discover_field_changed
+  )
+
+  drift_get = %w(
+    drift
+    drift_history
+    drift_to_csv
+    drift_to_pdf
+    drift_to_txt
+  )
+
+  drift_post = %w(
+    drift_all
+    drift_compress
+    drift_differences
+    drift_history
+    drift_mode
+    drift_same
+  )
+
+  exp_post = %w(
+    exp_button
+    exp_changed
+    exp_token_pressed
+  )
+
+  evm_relationship_post = %w(
+    evm_relationship_field_changed
+    evm_relationship_update
+  )
+
+  ownership_post = %w(
+    ownership
+    ownership_field_changed
+    ownership_update
+  )
+
+  perf_post = %w(
+    perf_chart_chooser
+    perf_top_chart
+  )
+
+  policy_post = %w(
+    policy_options
+    policy_show_options
+    policy_sim
+    policy_sim_add
+    policy_sim_remove
+  )
+
+  pre_prov_post = %w(
+    pre_prov
+    pre_prov_continue
+  )
+
+  retire_post = %w(
+    retire
+    retire_date_changed
+  )
+
+  save_post = %w(
+    save_col_widths
+    save_default_search
+  )
+
+  snap_post = %w(
+    snap_pressed
+    snap_vm
+  )
+
+  x_post = %w(
+    x_button
+    x_history
+    x_search_by_name
+    x_settings_changed
+    x_show
+  )
+
   CONTROLLER_ACTIONS = {
     :agent => {
       :get  => %w(get),
@@ -20,39 +133,17 @@ Vmdb::Application.routes.draw do
 
     :availability_zone       => {
       :get  => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         index
         perf_top_chart
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
-        exp_button
-        exp_changed
-        exp_token_pressed
         panel_control
-        perf_chart_chooser
-        perf_top_chart
         quick_search
         save_col_widths
         sections_field_changed
@@ -62,7 +153,11 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tl_chooser
         wait_for_task
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post +
+        perf_post
     },
 
     :catalog                 => {
@@ -79,8 +174,6 @@ Vmdb::Application.routes.draw do
         atomic_form_field_changed
         atomic_st_edit
         automate_button_field_changed
-        button_create
-        button_update
         dialog_field_changed
         dialog_form_button_pressed
         dynamic_list_refresh
@@ -118,7 +211,8 @@ Vmdb::Application.routes.draw do
         x_history
         x_settings_changed
         x_show
-      ),
+      ) +
+        button_post
     },
 
     :chargeback              => {
@@ -148,10 +242,6 @@ Vmdb::Application.routes.draw do
 
     :cloud_tenant            => {
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         edit
         index
@@ -159,18 +249,10 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         protect
         sections_field_changed
         show
@@ -179,7 +261,8 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         update
         panel_control
-      )
+      ) +
+        compare_post
     },
 
     :configuration => {
@@ -246,10 +329,6 @@ Vmdb::Application.routes.draw do
 
     :ems_cloud => {
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         discover
         download_data
         edit
@@ -259,30 +338,12 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         create
-        discover
-        discover_field_changed
         dynamic_list_refresh
-        exp_button
-        exp_changed
-        exp_token_pressed
         form_field_changed
         panel_control
         protect
@@ -296,22 +357,17 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        discover_get_post +
+        exp_post
     },
 
     :ems_cluster => {
       :get => %w(
         columns_json
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
-        drift
-        drift_history
-        drift_to_csv
-        drift_to_pdf
-        drift_to_txt
         index
         perf_top_chart
         protect
@@ -319,41 +375,16 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get +
+        drift_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
-        drift_all
-        drift_compress
-        drift_differences
-        drift_history
-        drift_mode
-        drift_same
         dynamic_list_refresh
-        exp_button
-        exp_changed
-        exp_token_pressed
         listnav_search_selected
         panel_control
-        perf_chart_chooser
-        perf_top_chart
         protect
         quick_search
-        save_col_widths
-        save_default_search
         sections_field_changed
         show
         show_list
@@ -361,15 +392,17 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tl_chooser
         wait_for_task
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        drift_post +
+        exp_post +
+        perf_post +
+        save_post
     },
 
     :ems_infra => {
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         discover
         download_data
         edit
@@ -379,29 +412,11 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         create
-        discover
-        discover_field_changed
-        exp_button
-        exp_changed
-        exp_token_pressed
         form_field_changed
         panel_control
         protect
@@ -417,7 +432,11 @@ Vmdb::Application.routes.draw do
         tree_autoload_quads
         update
         wait_for_task
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        discover_get_post +
+        exp_post
     },
 
     :flavor => {
@@ -426,35 +445,15 @@ Vmdb::Application.routes.draw do
       # a role of a method call.
       # Then remove this route from all other controllers too.
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         index
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
-        exp_button
-        exp_changed
-        exp_token_pressed
         quick_search
         panel_control
         save_col_widths
@@ -463,25 +462,17 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
     },
 
     :host  => {
       :get => %w(
         advanced_settings
-        compare_miq
-        compare_to_csv
-        compare_to_txt
-        compare_to_pdf
         dialog_load
-        discover
-        discover_field_changed
         download_data
-        drift
-        drift_history
-        drift_to_csv
-        drift_to_pdf
-        drift_to_txt
         edit
         filesystems
         firewall_rules
@@ -501,38 +492,22 @@ Vmdb::Application.routes.draw do
         start
         tagging_edit
         users
-        ),
+      ) +
+        compare_get +
+        discover_get_post +
+        drift_get,
       :post => %w(
         advanced_settings
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         create
         dialog_field_changed
         dialog_form_button_pressed
-        discover
-        discover_field_changed
         drift_all
         drift_compress
         drift_differences
         drift_mode
         drift_same
         dynamic_list_refresh
-        exp_button
-        exp_changed
-        exp_token_pressed
         filesystems
         firewall_rules
         firewallrules
@@ -544,11 +519,7 @@ Vmdb::Application.routes.draw do
         quick_search
         panel_control
         patches
-        perf_chart_chooser
-        perf_top_chart
         protect
-        save_col_widths
-        save_default_search
         sections_field_changed
         show
         show_list
@@ -560,7 +531,13 @@ Vmdb::Application.routes.draw do
         update
         users
         wait_for_task
-        )
+      ) +
+        adv_search_post +
+        compare_post +
+        discover_get_post +
+        exp_post +
+        perf_post +
+        save_post
     },
 
     :miq_ae_class => {
@@ -622,8 +599,6 @@ Vmdb::Application.routes.draw do
         ae_tree_select_toggle
         accordion_select
         automate_button_field_changed
-        button_create
-        button_update
         cancel_import
         change_tab
         dialog_edit
@@ -653,7 +628,8 @@ Vmdb::Application.routes.draw do
         x_history
         x_settings_changed
         x_show
-      )
+      ) +
+        button_post
     },
 
     :miq_ae_tools => {
@@ -718,11 +694,6 @@ Vmdb::Application.routes.draw do
         action_field_changed
         action_get_all
         action_tag_pressed
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         alert_delete
         alert_edit
         alert_field_changed
@@ -738,9 +709,6 @@ Vmdb::Application.routes.draw do
         event_edit
         export
         export_field_changed
-        exp_button
-        exp_changed
-        exp_token_pressed
         import
         panel_control
         policy_edit
@@ -758,21 +726,15 @@ Vmdb::Application.routes.draw do
         tree_select
         upload
         wait_for_task
-        x_button
-        x_history
-        x_search_by_name
-        x_settings_changed
-        x_show
-      )
+      ) +
+        adv_search_post +
+        exp_post +
+        x_post
     },
 
     :miq_proxy              => {
       :get => %w(
         change_tab
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         edit
         fetch_zip
@@ -787,18 +749,10 @@ Vmdb::Application.routes.draw do
         show_list
         tagging
         tasks_show_option
-      ),
+      ) +
+        compare_get,
       :post => %w(
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         create
         credential_field_changed
         form_field_changed
@@ -813,7 +767,8 @@ Vmdb::Application.routes.draw do
         tasks_button
         tasks_change_options
         update
-      )
+      ) +
+        compare_post
     },
 
     :miq_request            => {
@@ -870,11 +825,9 @@ Vmdb::Application.routes.draw do
         edit
         edit_vm
         form_field_changed
-        ownership
-        ownership_field_changed
-        ownership_update
         show
-      )
+      ) +
+        ownership_post
     },
 
     :miqservices            => {
@@ -883,10 +836,6 @@ Vmdb::Application.routes.draw do
     :ontap_file_share       => {
       :get => %w(
         cim_base_storage_extents
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         create_ds
         download_data
         index
@@ -895,28 +844,12 @@ Vmdb::Application.routes.draw do
         show_list
         snia_local_file_systems
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         create_ds
         create_ds_field_changed
-        exp_button
-        exp_changed
-        exp_token_pressed
         panel_control
         protect
         quick_search
@@ -926,15 +859,14 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
     },
     :ontap_logical_disk     => {
       :get  => %w(
         cim_base_storage_extents
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         index
         protect
@@ -942,26 +874,10 @@ Vmdb::Application.routes.draw do
         show_list
         snia_local_file_systems
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
-        exp_button
-        exp_changed
-        exp_token_pressed
         panel_control
         perf_chart_chooser
         protect
@@ -973,15 +889,14 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         wait_for_task
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
     },
     :ontap_storage_system   => {
       :get  => %w(
         cim_base_storage_extents
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         create_ld
         download_data
         index
@@ -990,28 +905,12 @@ Vmdb::Application.routes.draw do
         show_list
         snia_local_file_systems
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         create_ld
         create_ld_field_changed
-        exp_button
-        exp_changed
-        exp_token_pressed
         panel_control
         protect
         quick_search
@@ -1021,41 +920,24 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
     },
     :ontap_storage_volume   => {
       :get => %w(
         cim_base_storage_extents
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         index
         protect
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
-        exp_button
-        exp_changed
-        exp_token_pressed
         panel_control
         protect
         quick_search
@@ -1065,7 +947,10 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
     },
     :ops => {
       :get => %w(
@@ -1226,9 +1111,6 @@ Vmdb::Application.routes.draw do
         db_seq_edit
         db_widget_remove
         discard_changes
-        exp_button
-        exp_changed
-        exp_token_pressed
         explorer
         export_field_changed
         filter_change
@@ -1260,15 +1142,12 @@ Vmdb::Application.routes.draw do
         x_history
         x_settings_changed
         x_show
-      )
+      ) +
+        exp_post
     },
 
     :repository => {
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_txt
-        compare_to_pdf
         download_data
         edit
         index
@@ -1277,74 +1156,40 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         create
-        exp_button
-        exp_changed
-        exp_token_pressed
         form_field_changed
         listnav_search_selected
         quick_search
         panel_control
         protect
-        save_col_widths
-        save_default_search
         show
         show_list
         tag_edit_form_field_changed
         tagging_edit
         update
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post +
+        save_post
     },
 
     :resource_pool => {
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         index
         protect
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
-        exp_button
-        exp_changed
-        exp_token_pressed
         panel_control
         protect
         save_col_widths
@@ -1354,38 +1199,22 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         quick_search
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
     },
+
     :security_group => {
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         index
         show
         show_list
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
-        exp_button
-        exp_changed
-        exp_token_pressed
         quick_search
         panel_control
         save_col_widths
@@ -1393,7 +1222,10 @@ Vmdb::Application.routes.draw do
         show_list
         tag_edit_form_field_changed
         tagging_edit
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
     },
 
     :service => {
@@ -1411,8 +1243,6 @@ Vmdb::Application.routes.draw do
         ownership_field_changed
         ownership_update
         reload
-        retire
-        retire_date_changed
         save_col_widths
         service_edit
         service_form_field_changed
@@ -1424,7 +1254,8 @@ Vmdb::Application.routes.draw do
         x_history
         x_settings_changed
         x_show
-      )
+      ) +
+        retire_post
     },
 
     # TODO: revisit this controller/route, might be removed after other storage issues are sorted out
@@ -1435,10 +1266,6 @@ Vmdb::Application.routes.draw do
     :storage                => {
       :get  => %w(
         button
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         debris_files
         disk_files
         download_data
@@ -1452,35 +1279,17 @@ Vmdb::Application.routes.draw do
         tagging_edit
         vm_ram_files
         vm_misc_files
-      ),
+      ) +
+        compare_get,
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_toggle
-        adv_search_load_choice
-        adv_search_name_typed
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         dynamic_list_refresh
-        exp_button
-        exp_changed
-        exp_token_pressed
         files
         listnav_search_selected
         panel_control
         perf_chart_chooser
         protect
         quick_search
-        save_col_widths
-        save_default_search
         sections_field_changed
         show
         show_association
@@ -1489,7 +1298,11 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         wait_for_task
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post +
+        save_post
     },
 
     :storage_manager        => {
@@ -1502,16 +1315,8 @@ Vmdb::Application.routes.draw do
         show_list
       ),
       :post => %w(
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
         create
-        exp_button
-        exp_changed
-        exp_token_pressed
         form_field_changed
         panel_control
         quick_search
@@ -1519,7 +1324,9 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
-      )
+      ) +
+        adv_search_post +
+        exp_post
     },
 
     :support                => {
@@ -1541,33 +1348,25 @@ Vmdb::Application.routes.draw do
       :post => %w(
         edit_vm
         form_field_changed
-        ownership
-        ownership_field_changed
-        ownership_update
         policy_sim
         policy_sim_add
         policy_sim_remove
-        pre_prov
-        pre_prov_continue
         provision
         reconfigure
         reconfigure_field_changed
         reconfigure_update
-        retire
-        retire_date_changed
         right_size
         set_checked_items
         show_list
         vmtree_selected
-      )
+      ) +
+        ownership_post +
+        pre_prov_post +
+        retire_post
     },
 
     :vm_cloud               => {
       :get  => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         drift_to_csv
         drift_to_pdf
@@ -1577,42 +1376,18 @@ Vmdb::Application.routes.draw do
         protect
         show
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
         advanced_settings
         accordion_select
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         dialog_form_button_pressed
         dialog_field_changed
-        drift_all
-        drift_compress
-        drift_differences
-        drift_history
-        drift_mode
-        drift_same
         dynamic_list_refresh
         edit_vm
         event_logs
-        evm_relationship_field_changed
-        evm_relationship_update
         explorer
-        exp_button
-        exp_changed
-        exp_token_pressed
         filesystems
         filesystem_drivers
         form_field_changed
@@ -1626,13 +1401,6 @@ Vmdb::Application.routes.draw do
         patches
         perf_chart_chooser
         policies
-        policy_options
-        policy_show_options
-        policy_sim
-        policy_sim_add
-        policy_sim_remove
-        pre_prov
-        pre_prov_continue
         processes
         protect
         prov_edit
@@ -1640,8 +1408,6 @@ Vmdb::Application.routes.draw do
         quick_search
         registry_items
         reload
-        retire
-        retire_date_changed
         save_col_widths
         scan_histories
         sections_field_changed
@@ -1657,20 +1423,20 @@ Vmdb::Application.routes.draw do
         vm_pre_prov
         wait_for_task
         win32_services
-        x_button
-        x_history
-        x_search_by_name
-        x_settings_changed
-        x_show
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        drift_post +
+        evm_relationship_post +
+        exp_post +
+        policy_post +
+        pre_prov_post +
+        retire_post +
+        x_post
     },
 
     :vm_infra               => {
       :get  => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         drift_to_csv
         drift_to_pdf
@@ -1682,42 +1448,18 @@ Vmdb::Application.routes.draw do
         protect
         show
         tagging_edit
-      ),
+      ) +
+        compare_get,
       :post => %w(
         accordion_select
         advanced_settings
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         dialog_field_changed
         dialog_form_button_pressed
-        drift_all
-        drift_compress
-        drift_differences
-        drift_history
-        drift_mode
-        drift_same
         dynamic_list_refresh
         edit_vm
         event_logs
-        evm_relationship_field_changed
-        evm_relationship_update
         explorer
-        exp_button
-        exp_changed
-        exp_token_pressed
         filesystems
         filesystem_drivers
         form_field_changed
@@ -1735,15 +1477,8 @@ Vmdb::Application.routes.draw do
         patches
         perf_chart_chooser
         policies
-        policy_options
-        policy_show_options
-        policy_sim
-        policy_sim_add
-        policy_sim_remove
         protect
         processes
-        pre_prov
-        pre_prov_continue
         prov_edit
         prov_field_changed
         quick_search
@@ -1751,15 +1486,11 @@ Vmdb::Application.routes.draw do
         reconfigure_update
         registry_items
         reload
-        retire
-        retire_date_changed
         save_col_widths
         scan_histories
         sections_field_changed
         security_groups
         show
-        snap_pressed
-        snap_vm
         sort_ds_grid
         sort_host_grid
         sort_iso_img_grid
@@ -1776,20 +1507,21 @@ Vmdb::Application.routes.draw do
         vm_pre_prov
         wait_for_task
         win32_services
-        x_button
-        x_history
-        x_search_by_name
-        x_settings_changed
-        x_show
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        drift_post +
+        evm_relationship_post +
+        exp_post +
+        policy_post +
+        pre_prov_post +
+        retire_post +
+        snap_post +
+        x_post
     },
 
     :vm_or_template => {
       :get => %w(
-        compare_miq
-        compare_to_csv
-        compare_to_pdf
-        compare_to_txt
         download_data
         drift_to_csv
         drift_to_pdf
@@ -1802,25 +1534,12 @@ Vmdb::Application.routes.draw do
         util_report_download
         utilization
         vm_show
-      ),
+      ) +
+        compare_get,
       :post => %w(
         accordion_select
-        adv_search_button
-        adv_search_clear
-        adv_search_load_choice
-        adv_search_name_typed
-        adv_search_toggle
         advanced_settings
         button
-        compare_choose_base
-        compare_compress
-        compare_miq
-        compare_miq_all
-        compare_miq_differences
-        compare_miq_same
-        compare_mode
-        compare_remove
-        compare_set_state
         console
         dialog_field_changed
         dialog_form_button_pressed
@@ -1832,11 +1551,6 @@ Vmdb::Application.routes.draw do
         dynamic_list_refresh
         edit_vm
         event_logs
-        evm_relationship_field_changed
-        evm_relationship_update
-        exp_button
-        exp_changed
-        exp_token_pressed
         explorer
         filesystem_drivers
         filesystems
@@ -1854,13 +1568,6 @@ Vmdb::Application.routes.draw do
         patches
         perf_chart_chooser
         policies
-        policy_options
-        policy_show_options
-        policy_sim
-        policy_sim_add
-        policy_sim_remove
-        pre_prov
-        pre_prov_continue
         processes
         protect
         prov_edit
@@ -1870,14 +1577,10 @@ Vmdb::Application.routes.draw do
         reconfigure_update
         registry_items
         reload
-        retire
-        retire_date_changed
         save_col_widths
         scan_histories
         sections_field_changed
         show
-        snap_pressed
-        snap_vm
         sort_ds_grid
         sort_host_grid
         sort_iso_img_grid
@@ -1897,7 +1600,15 @@ Vmdb::Application.routes.draw do
         x_history
         x_search_by_name
         x_show
-      )
+      ) +
+        adv_search_post +
+        compare_post +
+        evm_relationship_post +
+        exp_post +
+        policy_post +
+        pre_prov_post +
+        snap_post +
+        retire_post
     },
 
     :vmdbws                 => {
