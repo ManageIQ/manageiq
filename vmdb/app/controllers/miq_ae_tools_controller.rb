@@ -36,7 +36,7 @@ class MiqAeToolsController < ApplicationController
 
   def log
     @breadcrumbs = Array.new
-    @log = $miq_ae_logger.contents(last=1000) if $miq_ae_logger
+    @log = $miq_ae_logger.contents() if $miq_ae_logger
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     @lastaction = "log"
     @layout = "miq_ae_logs"
@@ -48,7 +48,7 @@ class MiqAeToolsController < ApplicationController
 
   def refresh_log
     assert_privileges("refresh_log")
-    @log = $miq_ae_logger.contents(last=1000) if $miq_ae_logger
+    @log = $miq_ae_logger.contents() if $miq_ae_logger
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("main_div", :partial=>"layouts/log_viewer", :locals=>{:legend_text=>"Last 1000 lines from the Automation log"})
