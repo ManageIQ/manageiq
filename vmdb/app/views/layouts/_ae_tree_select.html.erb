@@ -22,33 +22,33 @@
       <table width="100%">
         <tr>
           <td align="right">
-            <div id="buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
+            <div id="automate_buttons_on" style="display:<%= @changed ? "display" : "none" %>;">
               <%= link_to(button_tag('Apply',
-                                     :class => "btn btn-primary", 
+                                     :class => "btn btn-primary",
                                      :alt   => 'Apply'),
-                          {:action => "ae_tree_select_toggle", 
+                          {:action => "ae_tree_select_toggle",
                            :button => "submit"},
                           :remote => true,
-                          :title  => "Apply") 
+                          :title  => "Apply")
               %>
               <%= link_to(button_tag('Cancel',
-                                     :class => "btn btn-default", 
+                                     :class => "btn btn-default",
                                      :alt   => 'Cancel'),
-                          {:action => "ae_tree_select_toggle", 
+                          {:action => "ae_tree_select_toggle",
                            :button => "cancel"},
                           :remote => true,
-                          :title  => "Cancel") 
+                          :title  => "Cancel")
               %>
             </div>
-            <div id="buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
+            <div id="automate_buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
               <%= button_tag("Apply",	:class => "btn btn-primary btn-disabled") %>
-              <%= link_to(button_tag('Cancel', 
-                                     :class => "btn btn-disabled", 
+              <%= link_to(button_tag('Cancel',
+                                     :class => "btn btn-disabled",
                                      :alt   => 'Cancel'),
-                          {:action => "ae_tree_select_toggle", 
+                          {:action => "ae_tree_select_toggle",
                            :button => "cancel"},
                           :remote => true,
-                          :title  => "Cancel") 
+                          :title  => "Cancel")
               %>
             </div>
           </td>
