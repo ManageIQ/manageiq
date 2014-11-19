@@ -2506,6 +2506,7 @@ private
         new_field = MiqAeField.new
         if @ae_method
           new_field.method_id = @ae_method.id
+          new_field.priority  = i + 1
         else
           new_field.class_id = @ae_class.id
         end
