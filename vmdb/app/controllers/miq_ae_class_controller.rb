@@ -884,7 +884,7 @@ class MiqAeClassController < ApplicationController
       set_instances_record_vars(@ae_inst)    # Set the instance record variables, but don't save
       # Update the @ae_inst.ae_values directly because of update bug in RAILS
       # When saving a parent, the childrens updates are not getting saved
-      set_instances_value_vars(@ae_values, @ae_inst.ae_values)  # Set the instance record variables, but don't save
+      set_instances_value_vars(@ae_values, @ae_inst)  # Set the instance record variables, but don't save
       begin
         MiqAeInstance.transaction do
           @ae_inst.ae_values.each { |v| v.value = nil if v.value == "" }
@@ -2553,9 +2553,16 @@ private
   end
 
   # Set record variables to new values
-  def set_instances_value_vars(vals, original_values = [])
+  def set_instances_value_vars(vals, ae_instance = nil)
+    original_values = ae_instance ? ae_instance.ae_values : []
+
     vals.each_with_index do |v,i|
-      v = original_values.detect { |ov| ov.id == v.id } unless original_values.empty?
+      original = original_values.detect { |ov| ov.id == v.id } unless original_values.empty?
+      if original
+        v = original
+      else
+        ae_instance.ae_values << v if ae_instance
+      end
       value_column_names.each do |attr|
         v.send("#{attr}=", @edit[:new][:ae_values][i][attr]) if @edit[:new][:ae_values][i][attr]
       end
