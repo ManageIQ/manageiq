@@ -1,7 +1,6 @@
 module FixAuth
   module AuthConfigModel
     extend ActiveSupport::Concern
-
     include FixAuth::AuthModel
 
     module ClassMethods
@@ -33,29 +32,11 @@ module FixAuth
         end
       end
 
-      def hardcode(old_value, new_value)
-        hash = Vmdb::ConfigurationEncoder.load(old_value, !symbol_keys) do |k, v, h|
-          h[k] = new_value if password_field?(k) && v.present?
-        end
-        Vmdb::ConfigurationEncoder.dump(hash, nil, !symbol_keys) do |k, v, h|
-          h[k] = MiqPassword.try_encrypt(v) if password_field?(k) && v.present?
-        end
-      end
-
       def recrypt(old_value, options = {})
         hash = Vmdb::ConfigurationEncoder.load(old_value, !symbol_keys) do |k, v, h|
-          if password_field?(k) && v.present?
-            begin
-              h[k] = MiqPassword.try_decrypt(v)
-            rescue
-              raise unless options[:invalid]
-              h[k] = options[:invalid]
-            end
-          end
+          h[k] = super(v, options) if password_field?(k) && v.present?
         end
-        Vmdb::ConfigurationEncoder.dump(hash, nil, !symbol_keys) do |k, v, h|
-          h[k] = MiqPassword.try_encrypt(v) if password_field?(k) && v.present?
-        end
+        Vmdb::ConfigurationEncoder.dump(hash, nil, !symbol_keys) { |_k, _v, _h| }
       end
     end
   end
