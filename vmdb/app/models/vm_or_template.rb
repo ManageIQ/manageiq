@@ -1288,40 +1288,13 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def post_create_actions
-    log_header = "MIQ(#{self.class.name}#post_create_actions)"
-    self.reconnect_events
+    reconnect_events
+    classify_with_parent_folder_path
+    raise_created_event
+  end
 
-    self.classify_with_parent_folder_path
-
-    if self.host
-      if self.host.inherit_mgt_tags
-        begin
-          $log.info("#{log_header} Applying tags from [(#{self.host.class.to_s}) #{self.host.name}] to [(#{self.class.to_s}) #{self.name}]")
-          tags = self.host.tag_list(:ns=>"/managed").split
-          tags.delete_if {|t| t =~ /^power_state/} # omit power state since this is assigned by the system
-
-          self.tag_add(tags, :ns => "/managed")
-        rescue => err
-          $log.log_backtrace(err)
-        end
-      end
-
-      if self.host.autoscan
-        begin
-          $log.info("#{log_header} Creating scan job on [(#{self.class.to_s}) #{self.name}]")
-          self.scan
-        rescue => err
-          $log.log_backtrace(err)
-        end
-      end
-
-      begin
-        inputs = {:vm => self, :host => self.host}
-        MiqEvent.raise_evm_event(self, "vm_create", inputs)
-      rescue => err
-        $log.log_backtrace(err)
-      end
-    end
+  def raise_created_event
+    raise NotImplementedError, "raise_created_event must be implemented in a subclass"
   end
 
   # TODO: Vmware specific
