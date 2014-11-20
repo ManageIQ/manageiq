@@ -189,24 +189,32 @@ class CatalogController < ApplicationController
     x_last_active_tree = x_active_tree if x_active_tree
     x_last_active_accord = x_active_accord if x_active_accord
 
+    if role_allows(:feature => "svc_catalog_accord")
+      self.x_active_tree   = 'svccat_tree'
+      self.x_active_accord = 'svccat'
+      default_active_tree   ||= self.x_active_tree
+      default_active_accord ||= self.x_active_accord
+      @built_trees << build_svccat_tree
+      @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
+    end
     if role_allows(:feature => "catalog_items_view")
       self.x_active_tree   = 'sandt_tree'
       self.x_active_accord = 'sandt'
+      default_active_tree   ||= self.x_active_tree
+      default_active_accord ||= self.x_active_accord
       @built_trees << build_st_tree
       @accords.push(:name => "sandt", :title => "Catalog Items", :container => "sandt_tree_div")
     end
     if role_allows(:feature => "st_catalog_accord")
       self.x_active_tree   = 'stcat_tree'
       self.x_active_accord = 'stcat'
+      default_active_tree   ||= self.x_active_tree
+      default_active_accord ||= self.x_active_accord
       @built_trees << build_stcat_tree
       @accords.push(:name => "stcat", :title => "Catalogs", :container => "stcat_tree_div")
     end
-    if role_allows(:feature => "svc_catalog_accord")
-      self.x_active_tree   = 'svccat_tree'
-      self.x_active_accord = 'svccat'
-      @built_trees << build_svccat_tree
-      @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
-    end
+    self.x_active_tree = default_active_tree
+    self.x_active_accord = default_active_accord.to_s
 
     self.x_active_tree = x_last_active_tree if x_last_active_tree
     self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
