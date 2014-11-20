@@ -14,43 +14,35 @@ describe EmsCloudController do
   it_behaves_like "A controller that has tagging routes"
   it_behaves_like "A controller that has timeline routes"
 
-  describe "#button" do
-    it "routes with POST" do
-      expect(post("/ems_cloud/button")).to route_to("ems_cloud#button")
+  %w(
+    edit
+    index
+    new
+    show
+    show_list
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with GET' do
+        expect(get("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 
-  describe "#dynamic_list_refresh" do
-    it "routes with POST" do
-      expect(post("/ems_cloud/dynamic_list_refresh")).to route_to("ems_cloud#dynamic_list_refresh")
-    end
-  end
-
-  describe "#form_field_changed" do
-    it "routes with POST" do
-      expect(post("/ems_cloud/form_field_changed")).to route_to("ems_cloud#form_field_changed")
-    end
-  end
-
-  describe "#new" do
-    it "routes with GET" do
-      expect(get("/ems_cloud/new")).to route_to("ems_cloud#new")
-    end
-  end
-
-  describe "#sections_field_changed" do
-    it "routes with POST" do
-      expect(post("/ems_cloud/sections_field_changed")).to route_to("ems_cloud#sections_field_changed")
-    end
-  end
-
-  describe "#show_list" do
-    it "routes with GET" do
-      expect(get("/ems_cloud/show_list")).to route_to("ems_cloud#show_list")
-    end
-
-    it "routes with POST" do
-      expect(post("/ems_cloud/show_list")).to route_to("ems_cloud#show_list")
+  %w(
+    button
+    create
+    dynamic_list_refresh
+    form_field_changed
+    listnav_search_selected
+    save_default_search
+    show
+    show_list
+    update
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with POST' do
+        expect(post("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 end

@@ -12,24 +12,27 @@ describe "routes for AvailabilityZoneController" do
   it_behaves_like "A controller that has tagging routes"
   it_behaves_like "A controller that has policy protect routes"
 
-  describe "#index" do
-    it "routes with GET" do
-      expect(get("/#{controller_name}")).to route_to("#{controller_name}#index")
+  %w(
+    index
+    show
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with GET' do
+        expect(get("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 
-  describe "#show" do
-    it "routes with GET" do
-      expect(get("/#{controller_name}/show/123")).to route_to("#{controller_name}#show", :id => "123")
-    end
-    it "routes with POST" do
-      expect(post("/#{controller_name}/show/123")).to route_to("#{controller_name}#show", :id => "123")
-    end
-  end
-
-  describe "#button" do
-    it "routes with POST" do
-      expect(post("/#{controller_name}/button")).to route_to("#{controller_name}#button")
+  %w(
+    button
+    listnav_search_selected
+    save_default_search
+    show
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with POST' do
+        expect(post("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 end

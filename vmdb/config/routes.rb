@@ -346,6 +346,7 @@ Vmdb::Application.routes.draw do
         create
         dynamic_list_refresh
         form_field_changed
+        listnav_search_selected
         panel_control
         protect
         quick_search
@@ -362,7 +363,8 @@ Vmdb::Application.routes.draw do
         adv_search_post +
         compare_post +
         discover_get_post +
-        exp_post
+        exp_post +
+        save_post
     },
 
     :ems_cluster => {
@@ -419,6 +421,7 @@ Vmdb::Application.routes.draw do
         button
         create
         form_field_changed
+        listnav_search_selected
         panel_control
         protect
         quick_search
@@ -437,7 +440,8 @@ Vmdb::Application.routes.draw do
         adv_search_post +
         compare_post +
         discover_get_post +
-        exp_post
+        exp_post +
+        save_post
     },
 
     :flavor => {
@@ -1192,6 +1196,7 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        listnav_search_selected
         panel_control
         protect
         save_col_widths
@@ -1204,7 +1209,8 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
-        exp_post
+        exp_post +
+        save_post
     },
 
     :security_group => {

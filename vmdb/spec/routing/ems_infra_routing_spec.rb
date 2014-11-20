@@ -14,49 +14,36 @@ describe EmsInfraController do
   it_behaves_like "A controller that has tagging routes"
   it_behaves_like "A controller that has timeline routes"
 
-  describe "#button" do
-    it "routes with POST" do
-      expect(post("/ems_infra/button")).to route_to("ems_infra#button")
+  %w(
+    edit
+    index
+    new
+    show
+    show_list
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with GET' do
+        expect(get("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 
-  describe "#form_field_changed" do
-    it "routes with POST" do
-      expect(post("/ems_infra/form_field_changed")).to route_to("ems_infra#form_field_changed")
-    end
-  end
-
-  describe "#new" do
-    it "routes with GET" do
-      expect(get("/ems_infra/new")).to route_to("ems_infra#new")
-    end
-  end
-
-  describe "#sections_field_changed" do
-    it "routes with POST" do
-      expect(post("/ems_infra/sections_field_changed")).to route_to("ems_infra#sections_field_changed")
-    end
-  end
-
-  describe "#show_list" do
-    it "routes with GET" do
-      expect(get("/ems_infra/show_list")).to route_to("ems_infra#show_list")
-    end
-
-    it "routes with POST" do
-      expect(post("/ems_infra/show_list")).to route_to("ems_infra#show_list")
-    end
-  end
-
-  describe "#tree_autoload_dynatree" do
-    it "routes with POST" do
-      expect(post("/ems_infra/tree_autoload_dynatree")).to route_to("ems_infra#tree_autoload_dynatree")
-    end
-  end
-
-  describe "#tree_autoload_quads" do
-    it "routes with POST" do
-      expect(post("/ems_infra/tree_autoload_quads")).to route_to("ems_infra#tree_autoload_quads")
+  %w(
+    button
+    create
+    form_field_changed
+    listnav_search_selected
+    save_default_search
+    show
+    show_list
+    tree_autoload_dynatree
+    tree_autoload_quads
+    update
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with POST' do
+        expect(post("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 end
