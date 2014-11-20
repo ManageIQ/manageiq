@@ -152,7 +152,6 @@ class ApplicationController < ActionController::Base
 
   # Send chart data to the client
   def render_chart
-    show_title = !params[:show_title].present? || params[:show_title] == "no"
     if params[:report]
       rpt = MiqReport.find_by_name(params[:report])
       rpt.generate_table(:userid => session[:userid])
@@ -174,7 +173,7 @@ class ApplicationController < ActionController::Base
       response.headers["Pragma"] = "public"
     end
 
-    rpt.to_chart(@settings[:display][:reporttheme], show_title, MiqReport.graph_options(params[:width], params[:height]))
+    rpt.to_chart(@settings[:display][:reporttheme], true, MiqReport.graph_options(params[:width], params[:height]))
     render Charting.render_format => rpt.chart
   end
 

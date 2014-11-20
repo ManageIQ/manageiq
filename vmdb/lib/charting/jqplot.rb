@@ -2,7 +2,11 @@ class Jqplot
   # FIXME: move to a different dir or change the charting/* loading
   class << self
     def default_legend(chart)
-      chart[:options].update(:legend => {:show => true, :location => 'e', :fontSize => '8px'})
+      chart[:options].update(:legend => {
+        :show     => true,
+        :location => 'e',
+        :renderer => 'jQuery.jqplot.EnhancedLegendRenderer'
+      })
       chart
     end
 
@@ -11,7 +15,6 @@ class Jqplot
         :renderer        => 'jQuery.jqplot.EnhancedLegendRenderer',
         :show            => true,
         :location        => 'n',
-        :fontSize        => '10px',
         :rendererOptions => {:numberColumns => 3}
       })
       chart
@@ -107,7 +110,19 @@ class Jqplot
       return chart if theme.nil?
 
       chart[:options][:seriesColors] = theme[:seriesColors] if theme[:seriesColors]
+      apply_theme_fragment(chart, theme, :seriesDefaults)
+      apply_theme_fragment(chart, theme, :grid)
+      apply_theme_fragment(chart, theme, :legend)
       chart
+    end
+
+    private
+
+    def apply_theme_fragment(chart, theme, fragment_name)
+      if theme[fragment_name]
+        chart[:options][fragment_name] ||= {}
+        chart[:options][fragment_name].deep_merge!(theme[fragment_name])
+      end
     end
   end
 end

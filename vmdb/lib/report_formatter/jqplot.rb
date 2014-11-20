@@ -15,6 +15,7 @@ module ReportFormatter
     end
 
     def add_axis_category_text(categories)
+      mri.chart[:axis_category_text] << categories
     end
 
     def add_series_label(label)
@@ -25,8 +26,9 @@ module ReportFormatter
     def build_document_header
       super
       mri.chart = {
-        :data    => [],
-        :options => {
+        :axis_category_text => [],
+        :data               => [],
+        :options            => {
           :series => []
         }
       }
@@ -52,8 +54,28 @@ module ReportFormatter
           :stackSeries    => true,
           :seriesDefaults => {:fill => true},
         )
+      elsif mri.graph[:type] =~ /Line/
+        # Optimize / Utilization / Details has no titles inside charts
+        mri.chart[:options][:title] = ''
+        # FIXME: horizontal cursor missing here
       end
+
       horizontal_legend
+      x_axis_category_labels
+
+      mri.chart.store_path(:options, :axes, :yaxis, :min, 0)
+    end
+
+    def x_axis_category_labels
+      return if Array(mri.chart[:axis_category_text]).empty?
+
+      mri.chart[:data] = mri.chart[:data]
+        .zip(mri.chart[:axis_category_text])
+          .collect do |series, labels|
+            (labels || mri.chart[:axis_category_text][0]).zip(series)
+          end
+
+      mri.chart.store_path(:options, :axes, :xaxis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
     end
 
     # Utilization timestamp charts
@@ -61,7 +83,8 @@ module ReportFormatter
       return unless super
       horizontal_line_cursor
       horizontal_legend
-      mri.chart[:options].update(:seriesDefaults => {:renderer => 'jQuery.jqplot.BarRenderer'})
+      mri.chart.store_path(:options, :seriesDefaults, :renderer, 'jQuery.jqplot.BarRenderer')
+      x_axis_category_labels
     end
 
     def build_reporting_chart_dim2
@@ -92,7 +115,8 @@ module ReportFormatter
       return unless super
       horizontal_line_cursor
       default_legend
-      mri.chart[:options].update(:seriesDefaults => {:renderer => 'jQuery.jqplot.BarRenderer'})
+      mri.chart.store_path(:options, :seriesDefaults, :renderer, 'jQuery.jqplot.BarRenderer')
+      x_axis_category_labels
     end
 
     def build_reporting_chart_other
@@ -101,6 +125,7 @@ module ReportFormatter
     end
 
     def finalize_document
+      mri.chart.delete(:axis_category_text)
       mri.chart[:options][:title] ||= mri.title if options.show_title
       mri.chart
     end
