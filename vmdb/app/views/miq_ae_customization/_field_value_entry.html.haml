@@ -3,60 +3,63 @@
     %tr#new_tr{:class => cycle('row0', 'row1')}
       %td
         = image_submit_tag("/images/toolbars/import.png",
-          :class=>"rollover small",
-          :id=>"accept", :name=>"accept", :alt=>"Add this entry", :title=>"Add this entry")
+          :class => "rollover small",
+          :id => "accept", :name => "accept", :alt => (t = _("Add this entry")), :title => t)
       %td.all
-        = text_field("entry", "value", :maxlength=>MAX_NAME_LEN)
+        = text_field("entry", "value", :maxlength => MAX_NAME_LEN)
       %td.all
-        = text_field("entry", "description", :maxlength=>MAX_DESC_LEN)
+        = text_field("entry", "description", :maxlength => MAX_DESC_LEN)
   - else
     %tr{:class => cycle('row0', 'row1'), :id => "#{idx}_tr"}
       %td
         = image_submit_tag("/images/toolbars/import.png",
-          :class=>"rollover small",
-          :id=>"accept", :name=>"accept", :alt=>"Update this entry", :title=>"Update this entry")
+          :class => "rollover small",
+          :id => "accept", :name => "accept", :alt => (t = _("Update this entry")), :title => t)
       %td.all
-        = text_field("entry", "value", :maxlength=>MAX_NAME_LEN, "value"=>entry[0])
+        = text_field("entry", "value", :maxlength => MAX_NAME_LEN, "value" => entry[0])
       %td.all
-        = text_field("entry", "description", :maxlength=>MAX_DESC_LEN, "value"=>entry[1])
-        = hidden_field("entry", "id", "value"=>h(idx))
+        = text_field("entry", "description", :maxlength => MAX_DESC_LEN, "value" => entry[1])
+        = hidden_field("entry", "id", "value" => h(idx))
 - else
   - if entry == "new"
-    %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'field_value_select', :id=>"#{@record.id || "new"}", :entry_id=>'new'}), :title => "Click to add a new entry"}
+    %tr#new_tr{:class => cycle('row0', 'row1'),
+      :onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => 'new'}),
+      :title => _("Click to add a new entry")}
       %td
-        = image_tag("/images/toolbars/new.png", :class=>"rollover small")
+        = image_tag("/images/toolbars/new.png", :class => "rollover small")
       %td
-        = h("<New Entry>")
-      %td= h("<Click on this row to create a new entry>")
+        = h("<#{_('New Entry')}>")
+      %td= h("<#{_('Click on this row to create a new entry')}>")
   - else
     %tr{:class => cycle('row0', 'row1'), :id => "#{idx}_tr"}
       - if @edit[:field_sort_by] == "none"
         %td
           %nobr
             - if @edit[:field_values].length < 2 || idx == 0
-              = image_tag("/images/icons/16/sort_up.png", :class=>"dimmed", :border=>"0")
+              = image_tag("/images/icons/16/sort_up.png", :class => "dimmed", :border => "0")
             - else
-              = link_to(image_tag("/images/icons/16/sort_up.png", :border=>"0", :alt=>"Move selected field up"),
-                {:action=>'dialog_form_field_changed', :button=>'up',
-                        :id=>"#{@record.id || "new"}", :entry_id=>idx,},
-                {:remote=>true, :title=>'Move selected field up'})
+              = link_to(image_tag("/images/icons/16/sort_up.png", :border => "0", :alt => (t = _("Move selected field up"))),
+                {:action => 'dialog_form_field_changed', :button => 'up', :id => "#{@record.id || 'new'}", :entry_id => idx},
+                {:remote => true, :title => t})
             - if @edit[:field_values].length < 2 || idx == @edit[:field_values].length - 1
-              = image_tag("/images/icons/16/sort_down.png", :class=>"dimmed", :border=>"0")
+              = image_tag("/images/icons/16/sort_down.png", :class => "dimmed", :border => "0")
             - else
-              = link_to(image_tag("/images/icons/16/sort_down.png", :border=>"0", :alt=>"Move selected field down"),
-                {:action=>'dialog_form_field_changed', :button=>'down',
-                        :id=>"#{@record.id || "new"}", :entry_id=>idx,},
-                {:remote=>true, :title=>'Move selected field down'})
-            = link_to(image_tag("/images/toolbars/delete.png", :border=>"0", :alt=>"Click to delete this entry"),
-              {:action=>'field_value_delete',:button=>'down',
-               :id=>"#{@record.id || "new"}", :entry_id=>idx, :field=>"name"},
-              "data-submit"=>'form_div',
-              :remote=>true,
-              :title=>"Click to delete this entry")
+              = link_to(image_tag("/images/icons/16/sort_down.png", :border => "0", :alt => (t = _("Move selected field down"))),
+                {:action => 'dialog_form_field_changed', :button => 'down', :id => "#{@record.id || 'new'}", :entry_id => idx},
+                {:remote => true, :title => t})
+            = link_to(image_tag("/images/toolbars/delete.png", :border => "0", :alt => (t = _("Click to delete this entry"))),
+              {:action => 'field_value_delete', :button => 'down', :id => "#{@record.id || 'new'}",
+              :entry_id => idx, :field => "name"},
+              "data-submit" => 'form_div',
+              :remote => true,
+              :title => t)
       - else
-        %td{:onclick => remote_function(:url=>{:action=>'field_value_delete', :id=>"#{@record.id || "new"}",:entry_id=>idx}), :title => "Click to delete this entry"}
-          = image_tag("/images/toolbars/delete.png", :class=>"rollover small")
-      %td{:onclick => remote_function(:url=>{:action=>'field_value_select', :id=>"#{@record.id || "new"}", :entry_id=>idx, :field=>"name"}), :title => "Click to update this entry"}
+        %td{:onclick => remote_function(:url => {:action => 'field_value_delete', :id => "#{@record.id || 'new'}", :entry_id => idx}),
+          :title => _("Click to delete this entry")}
+          = image_tag("/images/toolbars/delete.png", :class => "rollover small")
+      %td{:onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => idx, :field => "name"}),
+        :title => _("Click to update this entry")}
         = h(entry[0])
-      %td{:onclick => remote_function(:url=>{:action=>'field_value_select', :id=>"#{@record.id || "new"}", :entry_id=>idx, :field=>"description"}), :title => "Click to update this entry"}
+      %td{:onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => idx, :field => "description"}),
+        :title => _("Click to update this entry")}
         = h(entry[1])

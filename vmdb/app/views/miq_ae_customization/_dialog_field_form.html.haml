@@ -1,219 +1,218 @@
-- url = url_for(:action=>'dialog_form_field_changed', :id=>"#{@record.id || "new"}")
+- url = url_for(:action => 'dialog_form_field_changed', :id => "#{@record.id || 'new'}")
 #dialog_field_div
   %fieldset
-    %p.legend Element Information
+    %p.legend=_('Element Information')
     %table.style1
       %tr
-        %td.key Label
+        %td.key=_('Label')
         %td.wide
           = text_field_tag("field_label",
-                            @edit[:field_label],
-                            :maxlength=>MAX_NAME_LEN,
-                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+            @edit[:field_label],
+            :maxlength         => MAX_NAME_LEN,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           = javascript_tag(javascript_focus('field_label'))
       %tr
-        %td.key Name
+        %td.key=_('Name')
         %td.wide
           = text_field_tag("field_name",
-                            @edit[:field_name],
-                            :maxlength=>MAX_NAME_LEN,
-                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+            @edit[:field_name],
+            :maxlength         => MAX_NAME_LEN,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
       %tr
-        %td.key Description
+        %td.key_=('Description')
         %td.wide
           = text_field_tag("field_description",
-                            @edit[:field_description],
-                            :maxlength=>100,
-                            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+            @edit[:field_description],
+            :maxlength         => 100,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
       %tr
-        %td.key Type
+        %td.key=_('Type')
         %td.wide
           = select_tag('field_typ',
-                        options_for_select(([["<Choose>",nil]]) + Array(@edit[:field_types].invert).sort,
-                                           @edit[:field_typ]),
-                        "data-miq_observe"=>{:url=>url}.to_json)
-          - if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(@edit[:field_typ])
-            \&nbsp;Only 1 Date or Date/Time element can be present in a Dialog
+            options_for_select(([["<#{_('Choose')}>", nil]]) + Array(@edit[:field_types].invert).sort, @edit[:field_typ]),
+            "data-miq_observe" => {:url => url}.to_json)
+          - if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(@edit[:field_typ])
+            &nbsp;
+            =_('Only 1 Date or Date/Time element can be present in a Dialog')
   - unless @edit[:field_typ].nil?
     %fieldset
-      %p.legend Options
+      %p.legend=_('Options')
       %table.style1
         - if @edit[:field_typ] =~ /Text|Check/
           %tr
-            %td.key Default Value
+            %td.key=_('Default Value')
             %td
               - if @edit[:field_typ] =~ /TextArea/
-                = text_area_tag("field_default_value",@edit[:field_default_value],
-                                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json,
-                                :maxlength=>8196, :size=>"50x6")
+                = text_area_tag("field_default_value",
+                  @edit[:field_default_value],
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                  :maxlength         => 8196,
+                  :size              => "50x6")
               - elsif @edit[:field_typ] =~ /TextBox/
-                - if @edit[:field_protected] == false
-                  = text_field_tag("field_default_value",@edit[:field_default_value],
-                                   "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json,
-                                   :maxlength=>50)
+                - if @edit[:field_protected]
+                  = password_field_tag('field_default_value__protected',
+                    @edit[:field_default_value],
+                    'data-miq_observe' => {:interval => '.5', :url => url}.to_json)
                 - else
-                  = password_field_tag('field_default_value__protected', @edit[:field_default_value],
-                                       'data-miq_observe'=>{:interval=>'.5', :url=>url}.to_json)
+                  = text_field_tag("field_default_value",
+                    @edit[:field_default_value],
+                    "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                    :maxlength         => 50)
               - else
                 = check_box_tag("field_default_value", "1",
-                                @edit[:field_default_value],
-                                "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                  @edit[:field_default_value],
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
           - if @edit[:field_typ].include?('TextBox')
             %tr
-              %td.key Protected
+              %td.key=_('Protected')
               %td
                 = check_box_tag('field_protected', 'true',
-                                @edit[:field_protected],
-                                "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                  @edit[:field_protected],
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
           %tr
-            %td.key Required
+            %td.key=_('Required')
             %td
               = check_box_tag('field_required', 'true',
-                            @edit[:field_required],
-                            "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                @edit[:field_required],
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
           - if @edit[:field_typ].include?('TextBox')
             %tr
-              %td.key Validator Type
+              %td.key=_('Validator Type')
               %td
                 = select_tag('field_validator_type',
-                              options_for_select([["None", nil], ["Regular Expression", 'regex']],
-                                                 @edit[:field_validator_type]),
-                              "data-miq_sparkle_on" => true,
-                              "data-miq_observe"    => {:url => url}.to_json)
+                  options_for_select([[_("None"), nil], [_("Regular Expression"), 'regex']], @edit[:field_validator_type]),
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_observe"    => {:url => url}.to_json)
             %tr
-              %td.key Validator Rule
+              %td.key=_('Validator Rule')
               %td
                 \/
-                = text_field_tag("field_validator_rule", @edit[:field_validator_rule],
-                                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
-                                 :disabled          => @edit[:field_validator_type].blank?,
-                                 :maxlength         => 250)
+                = text_field_tag("field_validator_rule",
+                  @edit[:field_validator_rule],
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                  :disabled          => @edit[:field_validator_type].blank?,
+                  :maxlength         => 250)
                 \/
-        - elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(@edit[:field_typ])
+        - elsif %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(@edit[:field_typ])
           %tr
-            %td.key Show Past Dates
+            %td.key=_('Show Past Dates')
             %td
               = check_box_tag("field_past_dates", "1",
-                              @edit[:field_past_dates],
-                              "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-        - elsif ["DialogFieldDropDownList", "DialogFieldRadioButton"].include?(@edit[:field_typ])
+                @edit[:field_past_dates],
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
+        - elsif %w(DialogFieldDropDownList DialogFieldRadioButton).include?(@edit[:field_typ])
           %tr
-            %td.key Required
+            %td.key=_('Required')
             %td.wide
               = select_tag('field_required',
-                            options_for_select([["True",true],["False",false]],
-                                               @edit[:field_required].to_s),
-                            "data-miq_sparkle_on"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json)
+                options_for_select([[_("True"), true], [_("False"), false]], @edit[:field_required].to_s),
+                "data-miq_sparkle_on" => true,
+                "data-miq_observe" => {:url => url}.to_json)
           %tr
-            %td.key Default Value
+            %td.key=_('Default Value')
             %td
-              - none = [['<None>', nil]]
-              - values = @edit[:field_values].empty? ? none : none + @edit[:field_values].collect{|el| el.reverse}
+              - none = [["<#{_('None')}>", nil]]
+              - values = @edit[:field_values].empty? ? none : none + @edit[:field_values].collect(&:reverse)
               - selected = @edit[:field_default_value] || nil
-              = select_tag("field_default_value", options_for_select(values, selected),
-                           "data-miq_observe"=>{:url=>url}.to_json)
+              = select_tag("field_default_value",
+                options_for_select(values, selected),
+                "data-miq_observe" => {:url => url}.to_json)
           %tr
-            %td.key Value Type
+            %td.key=_('Value Type')
             %td.wide
               = select_tag('field_data_typ',
-                            options_for_select([["Integer","integer"],["String","string"]],
-                                               @edit[:field_data_typ]),
-                            "data-miq_sparkle_on"=>true,
-                            "data-miq_observe"=>{:url=>url}.to_json)
+                options_for_select([[_("Integer"), "integer"], [_("String"), "string"]], @edit[:field_data_typ]),
+                "data-miq_sparkle_on" => true,
+                "data-miq_observe"    => {:url => url}.to_json)
           %tr
-            %td.key Sort By
+            %td.key=_('Sort By')
             %td.wide
               = select_tag('field_sort_by',
-                           options_for_select([["None","none"],["Description","description"],["Value","value"]],
-                                              @edit[:field_sort_by]),
-                           "data-miq_observe"=>{:url=>url}.to_json)
+                options_for_select([[_("None"), "none"], [_("Description"), "description"], [_("Value"), "value"]], @edit[:field_sort_by]),
+                "data-miq_observe" => {:url => url}.to_json)
           - if @edit[:field_sort_by] != "none"
             %tr
-              %td.key Sort Order
+              %td.key=_('Sort Order')
               %td.wide
                 = select_tag('field_sort_order',
-                             options_for_select([["Ascending","ascending"],["Descending","descending"]],
-                                                @edit[:field_sort_order]),
-                             "data-miq_observe"=>{:url=>url}.to_json)
+                  options_for_select([[_("Ascending"), "ascending"], [_("Descending"), "descending"]], @edit[:field_sort_order]),
+                  "data-miq_observe" => {:url => url}.to_json)
         - elsif @edit[:field_typ].include?("TagControl")
           %tr
-            %td.key Category
+            %td.key=_('Category')
             %td.wide
+              - none = [["<#{_('Choose')}>", nil]]
+              - values = none + DialogFieldTagControl.allowed_tag_categories.map { |cat| [cat[:description], cat[:id]] }
               = select_tag('field_category',
-                           options_for_select([["<Choose>",nil]]+DialogFieldTagControl.allowed_tag_categories.map {|cat| [cat[:description], cat[:id]]},
-                                              @edit[:field_category]),
-                           "data-miq_observe"=>{:url=>url}.to_json)
+                options_for_select(values, @edit[:field_category]), "data-miq_observe" => {:url => url}.to_json)
           %tr
-            %td.key Single Select
+            %td.key=_('Single Select')
             %td
               = check_box_tag('field_single_value', true,
-                              @edit[:field_single_value],
-                              :disabled => disable_check_box?,
-                              "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                @edit[:field_single_value],
+                :disabled                   => disable_check_box?,
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
           %tr
-            %td.key Value Type
+            %td.key=_('Value Type')
             %td.wide
               = select_tag('field_data_typ',
-                           options_for_select([["Integer","integer"],["String","string"]], @edit[:field_data_typ]),
-                           "data-miq_sparkle_on"=>true,
-                           "data-miq_observe"=>{:url=>url}.to_json)
+                options_for_select([[_("Integer"), "integer"], [_("String"), "string"]], @edit[:field_data_typ]),
+                "data-miq_sparkle_on" => true,
+                "data-miq_observe"    => {:url => url}.to_json)
           %tr
-            %td.key Sort By
+            %td.key=_('Sort By')
             %td.wide
               = select_tag('field_sort_by',
-                           options_for_select([["None","none"],["Description","description"],["Value","value"]],
-                                              @edit[:field_sort_by]),
-                           "data-miq_observe"=>{:url=>url}.to_json)
+                options_for_select([[_("None"), "none"], [_("Description"), "description"], [_("Value"), "value"]], @edit[:field_sort_by]),
+                "data-miq_observe" => {:url => url}.to_json)
           %tr
-            %td.key Sort Order
+            %td.key=_('Sort Order')
             %td.wide
               = select_tag('field_sort_order',
-                           options_for_select([["Ascending","ascending"],["Descending","descending"]],
-                                              @edit[:field_sort_order]),
-                           "data-miq_observe"=>{:url=>url}.to_json)
+                options_for_select([[_("Ascending"), "ascending"], [_("Descending"), "descending"]], @edit[:field_sort_order]),
+                "data-miq_observe" => {:url => url}.to_json)
           %tr
-            %td.key Required
+            %td.key=_('Required')
             %td
               = check_box_tag('field_required', 'true',
-                              @edit[:field_required],
-                              "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                @edit[:field_required],
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
         - elsif 'DialogFieldDynamicList' == @edit[:field_typ]
           %tr
-            %td.key Entry Point (NS/Cls/Inst)
+            %td.key=_('Entry Point (NS/Cls/Inst)')
             %td.wide
               = text_field_tag('field_entry_point',
-                               @edit[:field_entry_point],
-                               :onFocus => 'miqShowAE_Tree("field_entry_point");miqButtons("hide");')
+                @edit[:field_entry_point],
+                :onFocus => 'miqShowAE_Tree("field_entry_point"); miqButtons("hide");')
           %tr
-            %td.key Show Refresh Button
+            %td.key=_('Show Refresh Button')
             %td
               = check_box_tag('field_show_refresh_button', '1',
-                              @edit[:field_show_refresh_button],
-                              'data-miq_observe_checkbox' => {:url=>url}.to_json)
+                @edit[:field_show_refresh_button],
+                'data-miq_observe_checkbox' => {:url => url}.to_json)
           - if @edit[:field_show_refresh_button] # show only if field_show_refresh_button is on
             %tr
-              %td.key Load Values on Init
+              %td.key=_('Load Values on Init')
               %td
                 = check_box_tag('field_load_on_init', '1',
-                                @edit[:field_load_on_init],
-                                'data-miq_observe_checkbox' => {:url=>url}.to_json)
+                  @edit[:field_load_on_init],
+                  'data-miq_observe_checkbox' => {:url => url}.to_json)
 
   - if @edit[:field_typ] =~ /Drop|Radio/
-    = render :partial => 'field_values', :locals=>{:entry=>nil}
+    = render :partial => 'field_values', :locals => {:entry => nil}
   - elsif @edit[:field_typ] && @edit[:field_typ].include?("TagControl") && @edit[:field_category]
-    = render :partial => 'tag_field_values', :locals=>{:entry=>nil}
+    = render :partial => 'tag_field_values', :locals => {:entry => nil}
 
   - unless @edit[:field_typ].nil?
     %fieldset
-      %p.legend Advanced
+      %p.legend=_('Advanced')
       %table.style1
         %tr
-          %td.key Reconfigurable
+          %td.key=_('Reconfigurable')
           %td
             = check_box_tag('field_reconfigurable', '1',
-                            @edit[:field_reconfigurable],
-                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+              @edit[:field_reconfigurable],
+              "data-miq_observe_checkbox" => {:url => url}.to_json)
 
 %script
   miqObserveCheckboxes();

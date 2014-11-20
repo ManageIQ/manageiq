@@ -1,0 +1,29 @@
+- url = url_for(:action => 'dialog_form_field_changed', :id => "#{@record.id || 'new'}")
+- # dialog info form fields
+%fieldset
+  %p.legend=_('Dialog Information')
+  %table.style1
+    %tr
+      %td.key=_('Label')
+      %td.wide
+        = text_field_tag("label",
+          @edit[:new][:label],
+          :maxlength         => MAX_NAME_LEN,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        = javascript_tag(javascript_focus('label'))
+    %tr
+      %td.key=_('Description')
+      %td.wide
+        = text_field_tag("description",
+          @edit[:new][:description],
+          :maxlength         => 100,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %tr
+      %td.key=_('Buttons')
+      %td
+        - @edit[:dialog_buttons].each do |b|
+          - checked = !@edit[:new][:buttons].nil? && @edit[:new][:buttons].include?(b) ? true : false
+          = check_box_tag("chkbx_#{b}", value = "1", checked = checked,
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+          = h(b.capitalize)
+          &nbsp;

@@ -1,0 +1,116 @@
+- # if dialogs is selected
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+%dl.col1
+  %dd
+    #dialog_tabs{:style => "display: none; width: 100%; height: 100%; overflow: auto;", "data-miq_url" => "_none_"}
+      %ul.tab
+        - @record.ordered_dialog_resources.each do |dt|
+          %li
+            %a{:href => "##{dt.resource.id}_tab", :title => dt.resource.description}
+              = dt.resource.label
+      - @record.ordered_dialog_resources.each do |dt|
+        - # dialog tabs
+        - tab = dt.resource
+        %div{:id => (t = "#{tab.id}_tab"), :name => t, :width => "80px"}
+          - tab.ordered_dialog_resources.each do |tg|
+            - # dialog groups/fields
+            - group = tg.resource
+            %fieldset
+              %p.legend{:title => group.description}
+                = group.label
+              %table.style1
+                %tbody
+                  - group.ordered_dialog_resources.each do |g|
+                    - field = g.resource
+                    %tr
+                      %td.key{:title => field.description}
+                        = field.label
+                      %td{:title => field.description}
+                        - case field.type
+                        - when "DialogFieldTextBox"
+                          - if field.protected?
+                            = password_field_tag('field.id', field.default_value, :maxlength => 20, :disabled => true)
+                          - else
+                            = text_field_tag('field.id', field.default_value, :maxlength => 20, :disabled => true)
+                        - when "DialogFieldTextAreaBox"
+                          = text_area_tag(field.id, field.default_value, :size => "50x6", :disabled => true)
+                        - when "DialogFieldCheckBox"
+                          - checked = field.default_value != "f"
+                          = check_box_tag("field.id", value = "1", checked = checked, :disabled => true)
+                        - when "DialogFieldDateControl", "DialogFieldDateTimeControl"
+                          - if field.show_past_dates
+                            :javascript
+                              miq_cal_dateFrom = undefined ;
+                          - else
+                            :javascript
+                              miq_cal_dateFrom = new Date("#{Time.now.in_time_zone(session[:user_tz]).strftime("%Y, %m, %d")}");
+                          - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
+                          - date_val = field.value ? field.value.split(" ") : "#{t.month}/#{t.day}/#{t.year}"
+                          = text_field_tag("miq_date_1",
+                            h(date_val),
+                            :class    => "css1",
+                            :readonly => "true")
+                          - if field.type == "DialogFieldDateTimeControl"
+                            &nbsp;
+                            =_('at')
+                            &nbsp;
+                            = select_tag("start_hour", options_for_select(Array.new(24) { |i| i }, 0))
+                            \:
+                            = select_tag("start_min", options_for_select(Array.new(12)  { |i| i * 5 }, 0))
+                        - when 'DialogFieldDynamicList'
+                          = select_tag('field.id', options_for_select([_('Option 1'), _('Option 2')], field.default_value))
+                          - if field.show_refresh_button?
+                            = button_tag('Refresh', :disabled => true)
+                        - when "DialogFieldDropDownList", "DialogFieldRadioButton"
+                          - if field.values.length > 1
+                            - if field.sort_by.to_s != "none"
+                              - if field.data_type == "integer"
+                                - val = field.values.sort_by { |d| field.sort_by == :value ? d.first.to_i : d.last.to_i }
+                                - val = val.reverse if field.sort_order == :descending
+                              - else
+                                - val = field.values.sort_by { |d| field.sort_by == :value ? d.first : d.last }
+                                - val = val.reverse if field.sort_order == :descending
+                            - else
+                              - val = copy_array(field.values)
+
+                            - if field.type == "DialogFieldDropDownList"
+                              - if field.required
+                                - if field.default_value.nil?
+                                  = select_tag('field.id',
+                                    options_for_select(val.collect(&:reverse), field.default_value))
+                                - else
+                                  = select_tag('field.id',
+                                    options_for_select([["<#{_('Choose')}>", nil]] + val.collect(&:reverse), field.default_value))
+
+                              - else
+                                - # NOT REQUIRED
+                                = select_tag('field.id',
+                                  options_for_select([["#{_('None')}", nil]] + val.collect(&:reverse), field.default_value))
+
+                            - else
+                              - val.each_with_index do |rb, i|
+                                - unless field.required || i != 0
+                                  %input{:type => "radio", :disabled => true, :checked => field.default_value.nil?,
+                                    :id => "None", :value => "nil", :name => "None"}
+                                %input{:type => "radio", :disabled => true, :checked => (field.default_vaule == rb[0]),
+                                  :id => rb[0], :value => rb[1], :name => rb[0]}
+                                &nbsp;
+                                = rb[1]
+                                &nbsp;
+                          - else
+                            = h(field.values[0].last) unless field.values.empty?
+                        - when "DialogFieldButton"
+                          = button_tag(_('Save'), :disabled => true)
+                        - when "DialogFieldTagControl"
+                          - category_tags = DialogFieldTagControl.category_tags(field.category).map do |cat|
+                            - [cat[:description], cat[:id]]
+                          - if field.single_value?
+                            = select_tag('field.id', options_for_select(category_tags),
+                              :prompt => field.required? ? "<#{_('Choose')}>" : "<#{_('None')}>")
+                          - else
+                            = select_tag('field.id', options_for_select(category_tags), :multiple => true)
+- # Initialize jQuery UI tabs based on tabs ul
+:javascript
+  //method takes hash that can have 4 keys: tabs div id, active tab label,
+  //url to go to when tab is changed, and whether to check for abandon changes or not
+  miq_jquery_tabs_init({tabs_div: "dialog_tabs"})
