@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe "miq_ae_tools/_results_xml.html.erb" do
+describe "miq_ae_tools/_results_xml.html.haml" do
   before do
-    assign(:sb, {:active_tab => "xml"})
-    assign(:temp, {:results => "<MiqAeAttribute>MiqAeService \n \"EmsCluster\"</send></MiqAeAttribute>"})
+    assign(:sb, :active_tab => "xml")
+    assign(:temp, :results => "<MiqAeAttribute>MiqAeService \n \"EmsCluster\"</send></MiqAeAttribute>")
   end
 
   it "html_safe XML and escape characters in results" do

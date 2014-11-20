@@ -1,0 +1,8 @@
+#resolve_form_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  #form_div
+    = render :partial => "layouts/flash_msg"
+    - if @resolve[:instance_names]
+      = render(:partial => "layouts/ae_resolve_options",
+        :locals         => {:resolve => @resolve,
+          :form_action               => "ae_resolve",
+          :ae_sim_form               => true})

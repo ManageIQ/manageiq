@@ -1,0 +1,12 @@
+= stylesheet_link_tag 'XMLDisplay'
+= javascript_include_tag 'XMLDisplay'
+#results_xml_div
+  - if @temp[:results]
+    #XMLHolder
+    - if @temp[:results]
+      :javascript
+        var tempxml = "#{@temp[:results].gsub(/[\r\n]/, '').gsub(/["]/, '\\\\"').html_safe}"
+        LoadXMLString('XMLHolder', tempxml);
+  - else
+    = render(:partial => 'layouts/info_msg',
+      :locals => {:message => _("Enter Automation Simulation options on the left and press Submit.")})

@@ -1,0 +1,18 @@
+#results_tabs{:style => "display: none;"}
+  %ul.tab
+    %li
+      %a{:href => "#tree"}=_('Tree View')
+      %a{:href => "#xml"}=_('XML View')
+      %a{:href => "#object"}=_('Object')
+  #tree{:name => "tree", :width => "80px;"}
+    = render :partial => "results_tree"
+  #xml{:name => "xml", :width => "80px;"}
+    = render :partial => "results_xml"
+  #object{:name => "object", :width => "80px;"}
+    = render :partial => "results_uri"
+:javascript
+  //method takes hash that can have 4 keys: tabs div id, active_tab label,
+  //url to go to when tab is changed, and whether to check for abandon changes or not
+  miq_jquery_tabs_init({tabs_div: "results_tabs", show_buttons_tab: "object"})
+  // on initial load don't show toolbar buttons
+  #{javascript_hide("center_buttons_div")}

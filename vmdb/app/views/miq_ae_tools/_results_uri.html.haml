@@ -1,0 +1,21 @@
+#results_uri_div
+  - if @temp[:results]
+    %br
+    %fieldset
+      %p.legend=_('Object Info')
+      %table.style1
+        %tr
+          %td.key=_('URI')
+          %td.wide
+            = @resolve[:uri]
+        - if !@resolve[:button_attr_name].blank? && !@resolve[:button_class].blank?
+          %tr
+            %td.key=_('Object Attribute Name')
+            %td.wide
+              = @resolve[:button_attr_name]
+          %tr
+            %td.key=_('Object Attribute Type')
+            %td.wide
+              = ui_lookup(:model => @resolve[:button_class])
+  - else
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("Enter Automation Simulation options on the left and press Submit.")}
