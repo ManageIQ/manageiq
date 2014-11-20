@@ -87,7 +87,9 @@ class ReportController < ApplicationController
         redirect_to :action => 'explorer'
       end
     else
-      redirect_to :action => 'explorer', :flash_msg=>_("Use the Browse button to locate an Import file"), :flash_error=>true
+      redirect_to :action        => 'explorer',
+                  :flash_msg     => _("Use the Browse button to locate an Import file"),
+                  :flash_warning => true
     end
   end
 
@@ -434,15 +436,14 @@ class ReportController < ApplicationController
   end
 
   def export_get_node_info
+    @right_cell_text = "Import / Export"
     if x_node.split('-').last == "exportcustomreports"
       get_export_reports
       @right_cell_div = "export_custom_reports"
-      @right_cell_text = "Custom Reports"
     else
       @in_a_form = true
       @widget_exports = MiqWidget.all.reject(&:read_only).collect { |widget| [widget.title, widget.id] }
       @right_cell_div = "export_widgets"
-      @right_cell_text = "Widgets"
     end
   end
 
