@@ -74,78 +74,55 @@
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i]["default_value"] %>
-            <% cls = flds["value"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <% if @edit[:new][:ae_fields][i]["datatype"] == "password" %>
               <%= password_field_tag("#{prefix}inst_password_value_#{i}",
-                                     flds["value"].blank? ? default_value : flds["value"],
-                                     :class  => cls,
-                                     :onBlur =>"miqSetInputValues(this, 'blur')",
-                                     #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
-                                     "data-miq_default_value" => default_value,
-                                     "data-miq_observe"       => {:interval => '.5',
+                                     flds["value"].blank? ? '' : flds["value"],
+                                     :placeholder       => default_value,
+                                     "data-miq_observe" => {:interval => '.5',
                                                                   :url      => url}.to_json)
               %>
             <% else %>
               <%= text_field_tag("#{prefix}inst_value_#{i}",
-                                 flds["value"].blank? ? default_value : flds["value"],
-                                 :class  => cls,
-                                 :onBlur => "miqSetInputValues(this, 'blur')",
-                                 #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
-                                 "data-miq_default_value" => default_value,
-                                 "data-miq_observe"       => {:interval => '.5',
+                                 flds["value"].blank? ? '' : flds["value"],
+                                 :placeholder       => default_value,
+                                 "data-miq_observe" => {:interval => '.5',
                                                               :url      => url}.to_json)
               %>
             <% end %>
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i]["on_entry"] %>
-            <% cls = flds["on_entry"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_entry_#{i}",
-                               flds["on_entry"].blank? ? default_value : flds["on_entry"],
-                               :class => cls,
-                               :onBlur => "miqSetInputValues(this, 'blur')",
-                               #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
-                               "data-miq_default_value" => default_value,
+                               flds["on_entry"].blank? ? '' : flds["on_entry"],
+                               :placeholder       => default_value,
                                "data-miq_observe" => {:interval => '.5',
-                                                      :url      => url}.to_json)
+                                                            :url      => url}.to_json)
             %>
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i]["on_exit"] %>
-            <% cls = flds["on_exit"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_exit_#{i}",
-                               flds["on_exit"].blank? ? default_value : flds["on_exit"],
-                               :class  => cls,
-                               :onBlur =>"miqSetInputValues(this, 'blur')",
-                               #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
-                               "data-miq_default_value" => default_value,
+                               flds["on_exit"].blank? ? '' : flds["on_exit"],
+                               :placeholder       => default_value,
                                "data-miq_observe" => {:interval => '.5',
-                                                      :url      => url}.to_json)
+                                                            :url      => url}.to_json)
             %>
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i]["on_error"] %>
-            <% cls = flds["on_error"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_on_error_#{i}",
-                               flds["on_error"].blank? ? default_value : flds["on_error"],
-                               :class  => cls,
-                               :onBlur => "miqSetInputValues(this, 'blur')",
-                               #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
-                               "data-miq_default_value" => default_value,
-                               "data-miq_observe"       => {:interval => '.5',
+                               flds["on_error"].blank? ? '' : flds["on_error"],
+                               :placeholder       => default_value,
+                               "data-miq_observe" => {:interval => '.5',
                                                             :url      => url}.to_json)
             %>
           </td>
           <td>
             <% default_value = @edit[:new][:ae_fields][i]["collect"] %>
-            <% cls = flds["collect"].blank? && !default_value.blank? ? "input_def_val" : "" %>
             <%= text_field_tag("#{prefix}inst_collect_#{i}",
-                               flds["collect"].blank? ? default_value : flds["collect"],
-                               :class  => cls,
-                               :onBlur => "miqSetInputValues(this, 'blur')",
-                               #:onFocus =>"miqSetInputValues(this, 'focus')",  # UJS binding will call this
-                               "data-miq_default_value" => default_value,
-                               "data-miq_observe"       => {:interval => '.5',
+                               flds["collect"].blank? ? '' : flds["collect"],
+                               :placeholder       => default_value,
+                               "data-miq_observe" => {:interval => '.5',
                                                             :url      => url}.to_json)
             %>
           </td>

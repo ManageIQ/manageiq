@@ -49,10 +49,7 @@ $j(document).ready(function(){
 		} else {
       $j(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
 
-      // If the field has a default value, call function to remove the greyed out default before turning on the observer
-      if (typeof this.attributes['data-miq_default_value'] != 'undefined') miqSetInputValues(this, 'focus');
-
-			$j(this).observe_field(interval, function(){
+      $j(this).observe_field(interval, function(){
 				var oneTrans = this.getAttribute('data-miq_send_one_trans');	// Grab one trans URL, if present
 				if (typeof submit != "undefined"){										// If submit element passed in
 					new Ajax.Request(encodeURI(url),										//  serialize the element
@@ -64,14 +61,12 @@ $j(document).ready(function(){
 				} else if (oneTrans) {
 					miqSendOneTrans(url);
 				} else {
-          if (!$j(this).hasClass('input_def_val')) { // Do not send up transaction if showing the default value
-            urlstring = url + "?" + this.id + "=" + encodeURIComponent(this.value);	//  tack on the id and value to the URL
-            new Ajax.Request(urlstring,
-                            {
-                              asynchronous:true, evalScripts:true
-                            }
-            );
-          }
+          urlstring = url + "?" + this.id + "=" + encodeURIComponent(this.value);	//  tack on the id and value to the URL
+          new Ajax.Request(urlstring,
+                          {
+                            asynchronous:true, evalScripts:true
+                          }
+          );
         }
 			});
 		}
