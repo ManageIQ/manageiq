@@ -767,24 +767,6 @@ class HostController < ApplicationController
     end
   end
 
-  # Recursive method to build a snapshot tree node
-  def snaptree(node)
-    branch = Hash.new
-    branch['id'] = node.id
-    branch['text'] = node.name
-    if node.current?
-      branch['text'] += " (Active)"
-    end
-    if node.children.count > 0
-      kids = Array.new
-      node.children.each do |kid|
-        kids.push(snaptree(kid))
-      end
-      branch['item'] = kids
-    end
-    return branch
-  end
-
   # Validate the host record fields
   def valid_record?(host)
     valid = true

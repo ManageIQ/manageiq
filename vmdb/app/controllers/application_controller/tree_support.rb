@@ -150,7 +150,7 @@ module ApplicationController::TreeSupport
       )
       unless @edit[:new][profile.id] == 0              # If some have this policy: set check if all, set mixed check if some
         policy_profile_node[:select] = true if @edit[:new][profile.id] == session[:pol_items].length
-        policy_profile_node[:title]  = "* #{policy_profile_node['text']}" unless @edit[:new][profile.id] == session[:pol_items].length
+        policy_profile_node[:title]  = "* #{policy_profile_node[:title]}" unless @edit[:new][profile.id] == session[:pol_items].length
       end
       if @edit[:new][profile.id] != @edit[:current][profile.id]
         policy_profile_node[:addClass] = "cfme-blue-bold-node"
@@ -654,8 +654,6 @@ module ApplicationController::TreeSupport
       node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       if vat
         node[:icon] = "blue_folder.png"
-        #node['im1'] = "blue_folder_open.png"
-        #node['im2'] = "blue_folder_closed.png"
         if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
           node[:addClass] = "cfme-blue-bold-node"  # Show node as different
         end

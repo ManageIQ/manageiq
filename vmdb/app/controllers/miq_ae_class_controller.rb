@@ -2091,11 +2091,6 @@ private
     end
   end
 
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    return x_get_child_nodes(x_active_tree, id)
-  end
-
   # Delete all selected or single displayed aeclasses(s)
   def deleteclasses
     assert_privileges("miq_ae_class_delete")

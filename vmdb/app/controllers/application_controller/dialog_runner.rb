@@ -172,26 +172,6 @@ module ApplicationController::DialogRunner
     @in_a_form = true
   end
 
-  def build_sample_tree
-    parent_node = Hash.new                        # Build the ci node
-    parent_node['id'] = "Tags"
-    parent_node['text'] = "Tags"
-    parent_node['tooltip'] = "Tags"
-    parent_node['style'] = "cursor:default;font-weight:bold;" # Show node as different
-    parent_node['nocheckbox'] = true
-    parent_node['radio'] = "1"
-    child_node = Array.new
-    temp = Hash.new
-    temp['id'] = "tag_1"
-    temp['tooltip'] = "Tag 1"
-    temp['style'] = "cursor:default"
-    temp['text'] = "Tag 1"
-    temp['im0'] = temp['im1'] = temp['im2'] = "tag.png"
-    child_node.push(temp)
-    parent_node['item'] = child_node
-    @temp[:sample_tree] = {"id"=>0, "item"=>[parent_node]}.to_json
-  end
-
   def dialog_initialize(ra, options)
     @edit = Hash.new
     @edit[:new] = options[:dialog] || {}
@@ -208,7 +188,6 @@ module ApplicationController::DialogRunner
     @edit[:dialog_mode] = options[:dialog_mode]
     @edit[:current] = copy_hash(@edit[:new])
     @edit[:right_cell_text] = options[:header].to_s
-    build_sample_tree
     @in_a_form = true
     @changed = session[:changed] = true
     if @edit[:explorer]

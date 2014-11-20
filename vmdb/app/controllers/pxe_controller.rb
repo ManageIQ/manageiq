@@ -113,11 +113,6 @@ class PxeController < ApplicationController
     render :layout => "explorer"
   end
 
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes(x_active_tree, id)
-  end
-
   private
 
   def get_node_info(node)

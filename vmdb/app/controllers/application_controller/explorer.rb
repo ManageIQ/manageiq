@@ -209,35 +209,6 @@ module ApplicationController::Explorer
   end
 
   # Build an explorer tree, from scratch
-  def x_build_tree(options)
-    # Options:
-    # :type                   # Type of tree, i.e. :handc, :vandt, :filtered, etc
-    # :leaf                   # Model name of leaf nodes, i.e. "Vm"
-    # :open_nodes             # Tree node ids of currently open nodes
-    # :add_root               # If true, put a root node at the top
-    # :full_ids               # stack parent id on top of each node id
-
-    roots = x_get_tree_objects(options.merge({
-                                            :userid=>session[:userid],  # Userid for RBAC filtering
-                                            :parent=>nil                # Asking for roots, no parent
-                                            }))
-    root_nodes = Array.new
-    roots.each do |r|
-      root_nodes += x_build_node(r, nil, options) # Build the node(s), passing in the parent object and the options
-    end
-
-    if options[:add_root]
-      node = Hash.new                         # Build the root node
-      node['id'] = "root"
-      node['style'] = "cursor:default"        # No cursor pointer
-      node['item'] = root_nodes
-      return [node]                           # Return top node as an array
-    else
-      return root_nodes
-    end
-  end
-
-  # Build an explorer tree, from scratch
   def x_build_dynatree(options)
     # Options:
     # :type                   # Type of tree, i.e. :handc, :vandt, :filtered, etc
@@ -320,7 +291,7 @@ module ApplicationController::Explorer
   end
 
   # Return a tree node for the passed in object
-  def x_build_node(object, pid, options, dynatree = false)    # Called with object, tree node parent id, tree options
+  def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
     @sb[:my_server_id] = MiqServer.my_server(true).id      if object.kind_of?(MiqServer)
     @sb[:my_zone]      = MiqServer.my_server(true).my_zone if object.kind_of?(Zone)
 
@@ -334,8 +305,7 @@ module ApplicationController::Explorer
     # open nodes to show selected automate entry point
     x_tree(options[:tree])[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
 
-    builder_class = dynatree ? TreeNodeBuilderDynatree : TreeNodeBuilderDHTMLX
-    node = builder_class.build(object, pid, options)
+    node = TreeNodeBuilderDynatree.build(object, pid, options)
 
     case object
     when Service, ServiceTemplate
@@ -347,68 +317,32 @@ module ApplicationController::Explorer
       @sb[:auto_select_node] = node['id']||node[:key] if options[:active_tree] == :vmdb_tree
     end
 
-    if dynatree
-      # FIXME: missing this for non-dynatree
-      x_tree(options[:tree])[:open_nodes].push(node[:key]) if [:policy_profile_tree, :policy_tree].include?(options[:tree])
-    else
-      # FIXME: missing this for dynatree
-      node['select'] = 1 if x_node(options[:tree]) == node['id']
+    if [:policy_profile_tree, :policy_tree].include?(options[:tree])
+      x_tree(options[:tree])[:open_nodes].push(node[:key])
     end
 
     # Process the node's children
-    key_name = dynatree ? :key : 'id'
-    if x_tree(options[:tree])[:open_nodes].include?(node[key_name]) || options[:open_all]
+    if x_tree(options[:tree])[:open_nodes].include?(node[:key]) || options[:open_all]
       kids = []
       x_get_tree_objects(options.merge({:parent => object})).each do |o|
-        kids += x_build_node(o, node[key_name], options, dynatree)
+        kids += x_build_node(o, node[:key], options)
       end
-      node[dynatree ? :children : 'item'] = kids unless kids.empty?
+      node[:children] = kids unless kids.empty?
     else
       if x_get_tree_objects(options.merge({:parent => object, :count_only => true})) > 0
-        if dynatree
-          node[:isLazy] = true  # set child flag if children exist
-        else
-          node['child'] = '1' # set child flag if children exist
-        end
+        node[:isLazy] = true  # set child flag if children exist
       end
     end
     [node]
   end
 
   def x_build_node_dynatree(object, pid, options)   # Called with object, tree node parent id, tree options
-    x_build_node(object, pid, options, true)
+    x_build_node(object, pid, options)
   end
 
   # Build a tree node id based on the object
   def x_build_node_id(object, pid = nil, options = {})
     TreeNodeBuilder.build_id(object, pid, options)
-  end
-
-  # Get the children of a tree node that is being expanded (autoloaded)
-  def x_get_child_nodes(tree, id)
-    prefix, rec_id = id.split("_").last.split('-')      # Get this nodes model and id
-    model = X_TREE_NODE_PREFIXES[prefix]                # Get this nodes model (folder, Vm, Cluster, etc)
-    if model == "Hash"
-      object = {:type=>prefix, :id=>rec_id, :full_id=>id}
-    elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
-      object = ServiceTemplateCatalog.new()   # Get the object from the DB
-    else
-      object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
-    end
-    node = Hash.new
-    node['id'] = id
-    kids = Array.new
-    x_tree(tree)[:open_nodes].push(id) unless x_tree(tree)[:open_nodes].include?(id) # Save node as open
-
-    options = x_tree(tree)         # Get options from sandbox
-
-    # Process the node's children
-    x_get_tree_objects(options.merge({:parent=>object})).each do |o|
-      kids += x_build_node(o, node['id'], options)
-    end
-
-    node['item'] = kids unless kids.empty?              # Add in the node's children, if any
-    return node                                         # Return the node that is being expanded
   end
 
   # Get the children of a dynatree node that is being expanded (autoloaded)
