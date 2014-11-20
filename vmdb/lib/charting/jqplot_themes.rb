@@ -3,18 +3,19 @@ class JqplotThemes
   # for chart styling options see http://www.jqplot.com/docs/files/jqPlotOptions-txt.html
 
   THEMES = {
-    'MIQ' => { # name of 1st theme is hardcoded in UiConstants
-      :seriesColors => ['#0099d3', '#00618a', '#0b3a54', '#979a9c', '#686b6e', '#505459', '#393f44', '#bde0ed'],
+    # name of 1st theme is hardcoded in UiConstants
+    'MIQ' => {
+      :seriesColors   => ['#0099d3', '#00618a', '#0b3a54', '#979a9c', '#686b6e', '#505459', '#393f44', '#bde0ed'],
       :seriesDefaults => {
         :shadow => false
       },
-      :grid => {
+      :grid           => {
         :drawGridlines => true,     # mind the lowecase 'l'
         :gridLineColor => '#cccccc'
       },
       # use EnhancedLegendRenderer by default
       # http://www.jqplot.com/docs/files/plugins/jqplot-enhancedLegendRenderer-js.html
-      :legend => {
+      :legend         => {
         :fontSize => '10px'
       }
     }

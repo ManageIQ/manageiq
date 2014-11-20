@@ -117,6 +117,7 @@ class Jqplot
     end
 
     private
+
     def apply_theme_fragment(chart, theme, fragment_name)
       if theme[fragment_name]
         chart[:options][fragment_name] ||= {}
