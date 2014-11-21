@@ -1254,15 +1254,22 @@ event_handling:
   compute.instance.create.end:
   - refresh:
     - ems
+  # Ignore compute.instance.create.end for policy, the vm_create event will be raised when the VM is created
   compute.instance.delete.end:
   - refresh:
     - ems
   compute.instance.shutdown.end:
   - refresh:
     - ems
+  - policy:
+    - src_vm
+    - vm_shutdown_guest
   compute.instance.power_off.end:
   - refresh:
     - ems
+  - policy:
+    - src_vm
+    - vm_poweroff
   image.update:
   - refresh:
     - ems
