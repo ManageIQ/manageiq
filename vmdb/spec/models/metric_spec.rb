@@ -532,7 +532,7 @@ describe Metric do
 
         it "should find the correct rows" do
           Metric::Finders.hour_to_range("2010-04-14T21:00:00Z").should == ["2010-04-14T21:00:00Z", "2010-04-14T21:59:59Z"]
-          Metric::Finders.find_all_by_hour(@vm1, "2010-04-14T21:00:00Z", 'realtime').should == @vm1.metrics.sort_by(&:timestamp)[1..5]
+          Metric::Finders.find_all_by_hour(@vm1, "2010-04-14T21:00:00Z", 'realtime').should match_array @vm1.metrics.sort_by(&:timestamp)[1..5]
         end
 
         context "calling perf_rollup to hourly on the Vm" do
