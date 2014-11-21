@@ -1,6 +1,9 @@
 class Dialog < ActiveRecord::Base
   DIALOG_DIR = Rails.root.join("product/dialogs/service_dialogs")
 
+  # The following gets around a glob symbolic link issue
+  ALL_YAML_FILES = DIALOG_DIR.join("{,*/**/}*.{yaml,yml}")
+
   has_many :dialog_tabs, :dependent => :destroy, :order => :position
 
   include DialogMixin
@@ -18,7 +21,7 @@ class Dialog < ActiveRecord::Base
     dialog_import_service = DialogImportService.new
 
     MiqRegion.my_region.lock do
-      Dir.glob(DIALOG_DIR.join("*.yaml")).each do |file|
+      Dir.glob(ALL_YAML_FILES).each do |file|
         dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
       end
     end

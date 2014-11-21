@@ -4,17 +4,40 @@ describe Dialog do
   describe ".seed" do
     let(:dialog_import_service) { instance_double("DialogImportService") }
     let(:test_file_path) { Rails.root.join("spec/fixtures/files/dialogs") }
+    let(:all_yaml_files) { test_file_path.join("{,*/**/}*.{yaml,yml}") }
 
     before do
       MiqRegion.seed
       DialogImportService.stub(:new).and_return(dialog_import_service)
+      dialog_import_service.stub(:import_all_service_dialogs_from_yaml_file)
     end
 
-    it "delegates to the dialog import service" do
-      Dialog.with_constants(:DIALOG_DIR => test_file_path) do
+    it "delegates to the dialog import service with a file in the default directory" do
+      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
         dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("seed_test.yaml").to_path
-        )
+          test_file_path.join("seed_test.yaml").to_path)
+        dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
+          test_file_path.join("seed_test.yml").to_path)
+        Dialog.seed
+      end
+    end
+
+    it "delegates to the dialog import service with a file in a sub directory" do
+      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
+        dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
+          test_file_path.join("service_dialogs/service_seed_test.yaml").to_path)
+        dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
+          test_file_path.join("service_dialogs/service_seed_test.yml").to_path)
+        Dialog.seed
+      end
+    end
+
+    it "delegates to the dialog import service with a symlinked file" do
+      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
+        dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
+          test_file_path.join("service_dialog_symlink/service_seed_test.yaml").to_path)
+        dialog_import_service.should_receive(:import_all_service_dialogs_from_yaml_file).with(
+          test_file_path.join("service_dialog_symlink/service_seed_test.yml").to_path)
         Dialog.seed
       end
     end
