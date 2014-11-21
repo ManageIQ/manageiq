@@ -1,7 +1,0 @@
-<div id='main_div'>
-	<% if @showtype == "details" %>
-			<%= render(:partial=>"layouts/gtl", :locals=>{:action_url=>@lastaction}) %>
-		<% else %>
-			<%= render(:partial=>@showtype) %>
-		<% end %>
-</div>
