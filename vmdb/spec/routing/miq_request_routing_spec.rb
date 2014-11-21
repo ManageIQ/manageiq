@@ -20,6 +20,10 @@ describe 'routes for MiqRequestController' do
   end
 
   describe '#post_install_callback' do
+    it 'routes with GET' do
+      expect(get("/#{controller_name}/post_install_callback")).to route_to("#{controller_name}#post_install_callback")
+    end
+
     it 'routes with POST' do
       expect(post("/#{controller_name}/post_install_callback")).to route_to("#{controller_name}#post_install_callback")
     end

@@ -775,6 +775,7 @@ Vmdb::Application.routes.draw do
       # FIXME: Change stamp to POST only; We need to remove the redirect
       :get  => %w(
         index
+        post_install_callback
         pre_prov
         prov_copy
         prov_edit
