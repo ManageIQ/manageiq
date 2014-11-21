@@ -276,7 +276,7 @@ module MiqPolicyController::MiqActions
                                   [ui_lookup(:table=>"ems_cluster"), "ems_cluster"],
                                   ["Host","host"],
                                   [ui_lookup(:table=>"storage"),"storage"],
-                                  ["Resource Pool","resource_pool"]
+                                  ["Resource Pool","parent_resource_pool"]
                                 ].sort{|a,b| a.first.downcase<=>b.first.downcase}
     @edit[:cats] = MiqAction.inheritable_cats.sort{|a,b| a.description.downcase <=> b.description.downcase}.collect{|c| [c.name, c.description]}
 
