@@ -1,0 +1,240 @@
+- url = url_for(:action => 'planning_option_changed')
+- # Div to hold the planning options
+#planning_options_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  = render :partial => "layouts/flash_msg", :locals => {:div_num => "0"}
+  %fieldset{:style => "background-color: #f0f0f0; padding: 10px;"}
+    %p.legend=_('Reference VM Selection')
+    - options = [["<#{_('Choose')}>"],
+      [_("By %s") % ui_lookup(:table => "ems_infras"), "ems"],
+      [_("By %s") % ui_lookup(:table => "ems_clusters"), "cluster"],
+      [_("By Host"), "host"],
+      [_("By Filter"), "filter"],
+      [_("All VMs"), "all"],]
+    = select_tag("filter_typ",
+      options_for_select(options, @sb[:planning][:options][:filter_typ]),
+        :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)
+    - if @sb[:planning][:options][:filter_typ] == "host"
+      %br
+      - options = [["<#{_('Choose a Host')}>", "<Choose>"]] + Array(@sb[:planning][:hosts].invert).sort_by { |a| a.first.downcase }
+      = select_tag("filter_value",
+        options_for_select(options, @sb[:planning][:options][:filter_value]),
+        :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)
+    - elsif @sb[:planning][:options][:filter_typ] == "cluster"
+      %br
+      - options = [["<#{_('Choose a %s')}>" % ui_lookup(:table => "ems_clusters"), "<Choose>"]] + Array(@sb[:planning][:clusters].invert).sort_by { |a| a.first.downcase }
+      = select_tag("filter_value",
+        options_for_select(options, @sb[:planning][:options][:filter_value]),
+        :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)
+    - elsif @sb[:planning][:options][:filter_typ] == "ems"
+      %br
+      - options = [["<#{_('Choose a %s')}>" % ui_lookup(:table => "ext_management_systems"), "<Choose>"]] + Array(@sb[:planning][:emss].invert).sort_by{ |a| a.first.downcase }
+      = select_tag("filter_value",
+        options_for_select(options, @sb[:planning][:options][:filter_value]),
+        :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)
+    - elsif @sb[:planning][:options][:filter_typ] == "filter"
+      %br
+      - options = [["<#{_('Choose a Filter')}>", "<Choose>"]] + Array(@sb[:planning][:vm_filters].invert).sort_by { |a| a.first.downcase }
+      = select_tag("filter_value",
+        options_for_select(options, @sb[:planning][:options][:filter_value]),
+        :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)
+    - if @sb[:planning][:vms]
+      %br
+      - if @sb[:planning][:vms].empty?
+        &nbsp;
+        =_('No VMs found')
+      - else
+        - options = [["<#{_('Choose a VM')}>", "<Choose>"]] + Array(@sb[:planning][:vms].invert).sort_by{ |a| a.first.downcase }
+        = select_tag("chosen_vm",
+          options_for_select(options, @sb[:planning][:options][:chosen_vm]),
+          :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+
+  %fieldset{:style => "background-color: #f0f0f0; padding: 10px"}
+    %p.legend=_('VM Options')
+    %table.style1
+      %tr
+        %td.key{:style => "width: 120px;"}=_('Source')
+        %td
+          = select_tag("vm_mode",
+            options_for_select(PLANNING_VM_MODES.invert.sort, @sb[:planning][:options][:vm_mode]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      - vm_opts = VimPerformancePlanning.vm_default_options(@sb[:planning][:options][:vm_mode])
+      - if vm_opts[:cpu]
+        %tr
+          %td.key{:style => "width: 120px;"}=_('CPU Speed')
+          %td
+            = check_box_tag("trend_cpu", value = "1", checked = @sb[:planning][:options][:trend_cpu],
+              "data-miq_sparkle_on"       => true,
+              "data-miq_sparkle_off"      => true,
+              "data-miq_observe_checkbox" => {:url => url}.to_json)
+            - if @sb[:planning][:options][:vm_mode] == :manual
+              = text_field_tag("trend_cpu_val",
+                @sb[:planning][:options][:values][:cpu],
+                :maxlength         => 15,
+                :disabled          => @sb[:planning][:options][:trend_cpu] ? false : true,
+                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            - else
+              = @sb[:planning][:options][:values][:cpu]
+            =_('MHz')
+      - if vm_opts[:vcpus]
+        %tr
+          %td.key{:style => "width: 120px;"}vCPU Count</td>
+          %td
+            = check_box_tag("trend_vcpus", value = "1", checked = @sb[:planning][:options][:trend_vcpus],
+            "data-miq_sparkle_on"       => true,
+            "data-miq_sparkle_off"      => true,
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+            - if @sb[:planning][:options][:vm_mode] == :manual
+              = text_field_tag("trend_vcpus_val",
+                @sb[:planning][:options][:values][:vcpus],
+                :maxlength         => 15,
+                :disabled          => @sb[:planning][:options][:trend_vcpus] ? false : true,
+                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            - else
+              = @sb[:planning][:options][:values][:vcpus]
+      - if vm_opts[:memory]
+        %tr
+          %td.key{:style => "width: 120px;"}=_('Memory Size')
+          %td
+            = check_box_tag("trend_memory", value = "1", checked = @sb[:planning][:options][:trend_memory],
+              "data-miq_sparkle_on"       => true,
+              "data-miq_sparkle_off"      => true,
+              "data-miq_observe_checkbox" => {:url => url}.to_json)
+            - if @sb[:planning][:options][:vm_mode] == :manual
+              = text_field_tag("trend_memory_val",
+                @sb[:planning][:options][:values][:memory],
+                :maxlength         => 15,
+                :disabled          => @sb[:planning][:options][:trend_memory] ? false : true,
+                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            - else
+              = @sb[:planning][:options][:values][:memory]
+            =_('MB')
+      - if vm_opts[:storage]
+        %tr
+          %td.key{:style => "width: 120px;"}=_('Disk Space')
+          %td
+            = check_box_tag("trend_storage", value = "1", checked = @sb[:planning][:options][:trend_storage],
+              "data-miq_sparkle_on"       => true,
+              "data-miq_sparkle_off"      => true,
+              "data-miq_observe_checkbox" => {:url => url}.to_json)
+            - if @sb[:planning][:options][:vm_mode] == :manual
+              = text_field_tag("trend_storage_val",
+                @sb[:planning][:options][:values][:storage],
+                :maxlength         => 15,
+                :disabled          => @sb[:planning][:options][:trend_storage] ? false : true,
+                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            - else
+              = @sb[:planning][:options][:values][:storage]
+            =_('GB')
+
+  %fieldset{:style => "background-color: #f0f0f0; padding: 10px;"}
+    %p.legend=_('Target Options / Limits')
+    %table.style1
+      %tr
+        %td.key{:style => "width: 120px;"}=_('Show')
+        %td
+          = select_tag("target_typ",
+            options_for_select(TARGET_TYPE_CHOICES.invert.sort_by(&:last), @sb[:planning][:options][:target_typ]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      - unless @sb[:planning][:options][:target_filters].blank?
+        %tr
+          %td.key{:style => "width: 120px;"}=_('Filter')
+          %td
+            - options = [["<#{_('All')}>", nil]] + Array(@sb[:planning][:options][:target_filters].invert).sort_by { |a| a.first.downcase }
+            = select_tag("target_filter",
+              options_for_select(options, @sb[:planning][:options][:target_filter]),
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+      - if vm_opts[:cpu]
+        %tr
+          %td.key{:style => "width: 120px;"}=_('CPU Speed')
+          %td
+            = select_tag("limit_cpu",
+              options_for_select(TREND_LIMIT_PERCENTS.invert.sort_by(&:last).reverse, @sb[:planning][:options][:limit_cpu]),
+              :disabled              => @sb[:planning][:options][:trend_cpu] ? false : true,
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+      - if vm_opts[:vcpus]
+        %tr
+          %td.key{:style => "width: 120px;"}=_('vCPUs per Core')
+          %td
+            = select_tag("limit_vcpus",
+              options_for_select((1..25).to_a.reverse, @sb[:planning][:options][:limit_vcpus]),
+              :disabled => @sb[:planning][:options][:trend_vcpus] ? false : true,
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+      - if vm_opts[:memory]
+        %tr
+          %td.key{:style => "width: 120px;"}=_('Memory Size')
+          %td
+            = select_tag("limit_memory",
+              options_for_select(TREND_LIMIT_PERCENTS.invert.sort_by(&:last).reverse, @sb[:planning][:options][:limit_memory]),
+              :disabled              => @sb[:planning][:options][:trend_memory] ? false : true,
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+      - if vm_opts[:storage]
+        %tr
+          %td.key{:style => "width: 120px;"}=_('Datastore Space')
+          %td
+            = select_tag("limit_storage",
+              options_for_select(TREND_LIMIT_PERCENTS.invert.sort_by(&:last).reverse, @sb[:planning][:options][:limit_storage]),
+              :disabled => @sb[:planning][:options][:trend_storage] ? false : true,
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+
+  %fieldset{:style => "background-color: #f0f0f0; padding: 10px"}
+    %p.legend=_('Trend Options')
+    %table.style1
+      %tr
+        %td.key{:style => "width: 120px;"}=_('Trends for past')
+        %td
+          = select_tag("trend_days",
+            options_for_select(WEEK_CHOICES.invert.sort_by(&:last), @sb[:planning][:options][:days].to_i),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      %tr
+        %td.key{:style => "width: 120px;"}=_('Time Profile')
+        %td.wide{:style => "padding-right: 5px;", :valign => "top"}
+          - if session[:time_profiles].blank?
+            =_('No Time Profiles found')
+          - elsif session[:time_profiles].length == 1
+            - # Only 1 choice, show the value
+            = session[:time_profiles][@sb[:planning][:options][:time_profile].to_i]
+          - else
+            = select_tag("time_profile",
+              options_for_select(session[:time_profiles].invert.sort_by(&:first), @sb[:planning][:options][:time_profile]),
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+
+- # Need this to bind checkbox observers when under DHTMLX tabs
+- # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+:javascript
+  miqObserveCheckboxes();

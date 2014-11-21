@@ -1,0 +1,10 @@
+#bottlenecks_report_div
+  - if x_node == ""
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("Select a node on the left to view Bottlenecks report.")}
+  - else
+    = render :partial => "layouts/flash_msg", :locals => {:div_num => "2"}
+    = render :partial => 'bottlenecks_options', :locals  => {:typ => "report"}
+    - if @sb[:bottlenecks] && @sb[:bottlenecks][:report]
+      %hr
+      %p.legend=_('Bottleneck Event Details')
+      = @sb[:bottlenecks][:report].to_html.html_safe

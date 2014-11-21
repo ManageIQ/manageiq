@@ -1,0 +1,13 @@
+- content_for :trees do
+  %div{:style => "display: none"}
+    = render :partial => "utilization_tree"
+
+- content_for :accords do
+  - # Create the explorer dhtmlx layout/accordion JS objects
+  = render :partial => "layouts/dhtmlxlayout_explorer", :locals => {:accords => @accords}
+
+#main_div.main_div
+  = render :partial => "utilization_tabs"
+
+:javascript
+  var miq_after_onload = "miqAsyncAjax('#{url_for(:action => @ajax_action)}');"

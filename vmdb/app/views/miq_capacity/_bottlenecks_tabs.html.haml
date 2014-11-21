@@ -1,0 +1,19 @@
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+= render :partial => "layouts/dhtmlx_tags", :locals  => {:control => "menu"}
+#context_div
+  - # Div to refer context menu to
+#bottlenecks_tabs{:style => "display: none;"}
+  %ul.tab
+    %li
+      %a{:href => "#summary"}=_('Summary')
+    %li
+      %a{:href => "#report"}=_('Report')
+  #summary{:name => "summary"}
+    = render :partial => "bottlenecks_summary"
+  #report{:name => "report"}
+    = render :partial => "bottlenecks_report"
+
+- # method takes hash that can have 4 keys: tabs div id, active_tab label,
+- # url to go to when tab is changed, and whether to check for abandon changes or not
+:javascript
+  miq_jquery_tabs_init({tabs_div: "bottlenecks_tabs", active_tab: "#{@sb[:active_tab]}", url: "/miq_capacity/change_tab/"})
