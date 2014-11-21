@@ -51,7 +51,7 @@ class ChargebackRate < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
-      if File.exists?(fixture_file)
+      if File.exist?(fixture_file)
         fixture = YAML.load_file(fixture_file)
 
         fixture.each do |cbr|

@@ -87,7 +87,7 @@ module MiqEnvironment
 
     def self.is_appliance?
       return @is_appliance unless @is_appliance.nil?
-      return @is_appliance = self.is_linux? && File.exists?('/var/www/miq/vmdb')
+      return @is_appliance = self.is_linux? && File.exist?('/var/www/miq/vmdb')
     end
 
     def self.is_production?

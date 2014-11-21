@@ -7,7 +7,7 @@ module ToModelHash
       r = MiqReport.find_by_filename_and_template_type(fname, "compare").try(:attributes)
       if r.nil?
         fname = Rails.root.join("product", "compare", fname)
-        r = YAML.load_file(fname) if File.exists?(fname)
+        r = YAML.load_file(fname) if File.exist?(fname)
       end
       r ||= {}
       to_model_hash_options_fixup(r)

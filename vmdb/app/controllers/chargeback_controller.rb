@@ -203,7 +203,7 @@ class ChargebackController < ApplicationController
         @sb[:rate_details] = @sb[:rate].chargeback_rate_details
         if @sb[:rate_details].blank?
           fixture_file = File.join(@@fixture_dir, "chargeback_rates.yml")
-          if File.exists?(fixture_file)
+          if File.exist?(fixture_file)
             fixture = YAML.load_file(fixture_file)
             fixture.each do |cbr|
               if cbr[:rate_type] == x_node.split('-').last

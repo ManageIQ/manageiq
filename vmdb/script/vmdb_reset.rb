@@ -12,7 +12,7 @@ def stop_mongrel
     if File.exist?('/etc/init.d/evmserverd')
       `/etc/init.d/evmserverd stop`
       i = 30
-      while (i -= 1) > 0 && File.exists?("tmp/pids/evm.pid")
+      while (i -= 1) > 0 && File.exist?("tmp/pids/evm.pid")
         sleep(1)
       end
     end
@@ -37,7 +37,7 @@ def clear_files()
   # Remove everything in the log folder
   Dir.glob(File.join(Dir.pwd, 'log', '*')).each {|f| FileUtils.rm_rf(f)}
   $files_to_delete << File.join(Dir.pwd, 'GUID')
-  $files_to_delete.each {|f| File.delete(f) if File.exists?(f)}
+  $files_to_delete.each {|f| File.delete(f) if File.exist?(f)}
 end
 
 begin

@@ -264,7 +264,7 @@ class Ec2Extractor
 	
 	def done
 		s3object(@outputBucket, File.join(@timeStampStr, @logTarget)).write(File.read(@logFile), :content_type => "text/plain")
-		@keyFiles.each { |kf| File.delete(kf) if File.exists?(kf) }
+		@keyFiles.each { |kf| File.delete(kf) if File.exist?(kf) }
 		`rm -rf #{IMAGE_DIR}/*`
 	end
 	
@@ -512,7 +512,7 @@ class Ec2Extractor
 	def getKeyFile(keyName)
 		keyFile	= File.join(Dir.tmpdir, keyName + $$.to_s)
 		
-		if !File.exists?(keyFile)
+		if !File.exist?(keyFile)
 			File.open(keyFile, "w+", 0600) { |f| f.write(@payload[:account_info][:key_pair_info][keyName]) }
 			@keyFiles << keyFile
 		end

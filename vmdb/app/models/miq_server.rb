@@ -115,7 +115,7 @@ class MiqServer < ActiveRecord::Base
   def self.setup_data_directory
     # create root data directory
     data_dir = File.join(File.expand_path(Rails.root), "data")
-    Dir.mkdir data_dir unless File.exists?(data_dir)
+    Dir.mkdir data_dir unless File.exist?(data_dir)
   end
 
   def self.pidfile
@@ -624,7 +624,7 @@ class MiqServer < ActiveRecord::Base
   def self.my_guid
     @@my_guid_cache ||= begin
       guid_file = File.join(File.expand_path(Rails.root), "GUID")
-      unless File.exists?(guid_file)
+      unless File.exist?(guid_file)
         new_guid = MiqUUID.new_guid
         File.open(guid_file, "w") {|f| f.write(new_guid)}
       end

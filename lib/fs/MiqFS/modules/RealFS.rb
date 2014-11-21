@@ -19,7 +19,7 @@ module RealFS
 	end
 
 	def fs_fileExists?(p)
-		File.exists?(p)
+		File.exist?(p)
 	end
 
 	def fs_fileFile?(p)

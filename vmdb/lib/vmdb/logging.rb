@@ -140,7 +140,7 @@ module Vmdb
 
       path = config[:path].to_s
       unless path.blank?
-        if !File.exists?(File.dirname(path))
+        if !File.exist?(File.dirname(path))
           valid = false
           errors << [:path, "path, \"#{path}\", is invalid, directory does not exist"]
         end

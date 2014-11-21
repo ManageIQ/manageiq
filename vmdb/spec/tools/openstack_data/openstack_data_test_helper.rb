@@ -21,7 +21,7 @@ class OpenstackTestData
     @data[dir][test_data_file.to_sym] ||= {}
     @data[dir][test_data_file.to_sym][:data] ||= begin
       file = File.expand_path(File.join(base_data_dir, dir, "#{test_data_file}.yml"))
-      File.exists?(file) ? YAML.load_file(file) : nil
+      File.exist?(file) ? YAML.load_file(file) : nil
     end
   end
 end

@@ -415,11 +415,11 @@ module SharedOps
 			# 
 			# Save the VM's disk file.
 			# 
-			File.rename(diskFile, diskFileSave) if File.exists?(diskFile)
+			File.rename(diskFile, diskFileSave) if File.exist?(diskFile)
 			#
 			# Restore the black box.
 			# 
-			File.rename(bbFileSave, diskFile) if File.exists?(bbFileSave)
+			File.rename(bbFileSave, diskFile) if File.exist?(bbFileSave)
 		rescue => err #Errno::EACCES
 			sleep(0.1)
 			attempt+=1

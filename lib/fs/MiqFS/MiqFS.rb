@@ -311,7 +311,7 @@ class MiqFS
         
         raise "copyOut: no source files matched" if allTargets.length == 0
         if (allTargets.length > 1 || recursive)
-            raise "copyOut: destination directory does not exist" if !File.exists?(to)
+            raise "copyOut: destination directory does not exist" if !File.exist?(to)
             raise "copyOut: destination must be a directory for multi-file copy" if !File.directory?(to)
         end
             
@@ -340,7 +340,7 @@ class MiqFS
             owd = @cwd
             chdir(f)
             td = File.join(to, f)
-            Dir.mkdir(td) if !File.exists?(td)
+            Dir.mkdir(td) if !File.exist?(td)
             findEach('.') do |ff|
                 tf = File.join(td, ff)
                 if fileDirectory?(ff)

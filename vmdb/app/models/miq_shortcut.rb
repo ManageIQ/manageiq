@@ -35,7 +35,7 @@ class MiqShortcut < ActiveRecord::Base
   end
 
   def self.seed_data
-    File.exists?(fixture_file_name) ? YAML.load_file(fixture_file_name) : []
+    File.exist?(fixture_file_name) ? YAML.load_file(fixture_file_name) : []
   end
 
   def self.start_pages

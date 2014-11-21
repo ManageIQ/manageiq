@@ -173,7 +173,7 @@ class MiqEc2IstoreInstance < MiqEc2VmBase
 	def getKeyFile(keyName)
 		keyFile	= File.join(Dir.tmpdir, keyName + $$.to_s)
 		
-		unless File.exists?(keyFile)
+		unless File.exist?(keyFile)
 			File.open(keyFile, "w+", 0600) { |f| f.write(@instance_args[:account_info][:key_pair_info][keyName]) }
 			@keyFiles << keyFile
 		end

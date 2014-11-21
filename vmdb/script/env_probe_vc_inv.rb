@@ -17,12 +17,12 @@ VC_ACCESSORS = [
 
 LOG_DIR ||= "./"
 logfile = File.join(LOG_DIR, "env_probe_vc_inv.log")
-File.delete(logfile) if File.exists?(logfile)
+File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
 $log.level = VMDBLogger.const_get("DEBUG")
 
 inv_yml = File.join(LOG_DIR, "env_probe_vc_inv.yml")
-File.delete(inv_yml) if File.exists?(inv_yml)
+File.delete(inv_yml) if File.exist?(inv_yml)
 $yml_fd = File.open(inv_yml, "w")
 
 require 'MiqVim'
@@ -48,7 +48,7 @@ end
 ### Main
 
 # verify we are in the vmdb directory
-unless File.exists?('app')
+unless File.exist?('app')
   log :error, "Please run this script using 'script/runner perf_environment.rb' from vmdb directory"
   exit 1
 end

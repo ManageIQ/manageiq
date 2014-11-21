@@ -709,7 +709,7 @@ class MiqAlert < ActiveRecord::Base
     MiqRegion.my_region.lock do
       log_prefix = "MIQ(MiqAlert.seed)"
       action_fixture_file = File.join(FIXTURE_DIR, "miq_alert_default_action.yml")
-      if File.exists?(action_fixture_file)
+      if File.exist?(action_fixture_file)
         action_hash = YAML.load_file(action_fixture_file)
         action = MiqAction.new(action_hash)
       else
@@ -717,7 +717,7 @@ class MiqAlert < ActiveRecord::Base
       end
 
       alert_fixture_file = File.join(FIXTURE_DIR, "miq_alerts.yml")
-      if File.exists?(alert_fixture_file)
+      if File.exist?(alert_fixture_file)
         alist = YAML.load_file(alert_fixture_file)
 
         alist.each do |alert_hash|

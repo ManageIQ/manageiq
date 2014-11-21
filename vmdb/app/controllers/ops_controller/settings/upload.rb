@@ -2,7 +2,7 @@ module OpsController::Settings::Upload
   extend ActiveSupport::Concern
 
   logo_dir = File.expand_path(File.join(Rails.root, "public/upload"))
-  Dir.mkdir logo_dir unless File.exists?(logo_dir)
+  Dir.mkdir logo_dir unless File.exist?(logo_dir)
   @@logo_file = File.join(logo_dir, "custom_logo.png")
   @@login_logo_file = File.join(logo_dir, "custom_login_logo.png")
   def upload_logo

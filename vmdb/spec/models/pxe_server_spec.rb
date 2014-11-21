@@ -120,11 +120,11 @@ PXE
         image = @pxe_server.pxe_images.find_by_name("Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
-          File.exists?(expected_name).should be_true
+          File.exist?(expected_name).should be_true
 
           File.read(expected_name).should == expected_contents
         ensure
-          File.delete(expected_name) if File.exists?(expected_name)
+          File.delete(expected_name) if File.exist?(expected_name)
         end
       end
 
@@ -154,14 +154,14 @@ PXE
 
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
-          File.exists?(expected_name).should be_true
+          File.exist?(expected_name).should be_true
           File.read(expected_name).should == expected_contents
 
-          File.exists?(expected_ks_name).should be_true
+          File.exist?(expected_ks_name).should be_true
           File.read(expected_ks_name).should == ks_contents
         ensure
-          File.delete(expected_name) if File.exists?(expected_name)
-          File.delete(expected_ks_name) if File.exists?(expected_ks_name)
+          File.delete(expected_name) if File.exist?(expected_name)
+          File.delete(expected_ks_name) if File.exist?(expected_ks_name)
         end
       end
 
@@ -253,11 +253,11 @@ boot
 PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
-          File.exists?(expected_name).should be_true
+          File.exist?(expected_name).should be_true
 
           File.read(expected_name).should == expected_contents
         ensure
-          File.delete(expected_name) if File.exists?(expected_name)
+          File.delete(expected_name) if File.exist?(expected_name)
         end
       end
 
@@ -286,14 +286,14 @@ boot
 PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
-          File.exists?(expected_name).should be_true
+          File.exist?(expected_name).should be_true
           File.read(expected_name).should == expected_contents
 
-          File.exists?(expected_ks_name).should be_true
+          File.exist?(expected_ks_name).should be_true
           File.read(expected_ks_name).should == ks_contents
         ensure
-          File.delete(expected_name) if File.exists?(expected_name)
-          File.delete(expected_ks_name) if File.exists?(expected_ks_name)
+          File.delete(expected_name) if File.exist?(expected_name)
+          File.delete(expected_ks_name) if File.exist?(expected_ks_name)
         end
       end
     end

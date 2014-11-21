@@ -128,7 +128,7 @@ module Vmdb
     def self.get_build
       build_file = File.join(File.expand_path(Rails.root), "BUILD")
 
-      if File.exists?(build_file)
+      if File.exist?(build_file)
         build = File.read(build_file).strip.split("-").last
       else
         date  = Time.now.strftime("%Y%m%d%H%M%S")
@@ -143,7 +143,7 @@ module Vmdb
       retVal = {}
       miqnet = "/bin/miqnet.sh"
 
-      if File.exists?(miqnet)
+      if File.exist?(miqnet)
         # Make a call to the virtual appliance to get the network information
         cmd     = "#{miqnet} -GET"
         netinfo = `#{cmd}`

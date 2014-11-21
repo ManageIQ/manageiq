@@ -191,12 +191,12 @@ class MiqDbConfig
   end
 
   def delete_io_files
-    [IO_DOLLAR_STDOUT, IO_DOLLAR_STDERR].each {|f| File.delete(f) if File.exists?(f)}
+    [IO_DOLLAR_STDOUT, IO_DOLLAR_STDERR].each {|f| File.delete(f) if File.exist?(f)}
   end
 
   def get_output_and_error
-    output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exists?(IO_DOLLAR_STDOUT)
-    error_message = File.open(IO_DOLLAR_STDERR) {|f| f.read} if File.exists?(IO_DOLLAR_STDERR)
+    output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exist?(IO_DOLLAR_STDOUT)
+    error_message = File.open(IO_DOLLAR_STDERR) {|f| f.read} if File.exist?(IO_DOLLAR_STDERR)
     return output, error_message
   end
 
@@ -218,7 +218,7 @@ class MiqDbConfig
       delete_io_files
       opt_file_for_conn_test(from_save) { MiqUtil.runcmd("ruby #{script}")}
       output, error_message = get_output_and_error
-      output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exists?(IO_DOLLAR_STDOUT)
+      output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exist?(IO_DOLLAR_STDOUT)
       msg = "MIQ(DbConfig-verify_config) Output:\n#{output}"
       msg << "\nError: #{error_message}" if error_message && error_message.length > 0
       $log.info(msg)

@@ -22,8 +22,8 @@ end
 
 # Copy the postgres template yml to database.yml if it doesn't exist
 db_yml = File.join(File.dirname(__FILE__), 'database.yml')
-unless File.exists?(db_yml)
+unless File.exist?(db_yml)
   db_template = File.join(File.dirname(__FILE__), 'database.pg.yml')
   require 'fileutils'
-  FileUtils.cp(db_template, db_yml) if File.exists?(db_template)
+  FileUtils.cp(db_template, db_yml) if File.exist?(db_template)
 end

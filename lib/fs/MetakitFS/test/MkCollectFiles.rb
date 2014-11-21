@@ -54,7 +54,7 @@ private
         # Loop through the files and directories that are to be included in the collection.
         #
         cs.include.each do |i|
-            raise "File: #{i} does not exist" if !File.exists? i
+            raise "File: #{i} does not exist" if !File.exist? i
             #
             # If this is a plain file, then include it in the collection.
             #

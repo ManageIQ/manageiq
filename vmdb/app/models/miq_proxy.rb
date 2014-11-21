@@ -571,7 +571,7 @@ class MiqProxy < ActiveRecord::Base
     logdir = File.join(File.expand_path(Rails.root))
     ["data", "host", self.id.to_s, "log"].each {|part|
       logdir = File.join(logdir, part)
-      Dir.mkdir logdir unless File.exists?(logdir)
+      Dir.mkdir logdir unless File.exist?(logdir)
     }
     return logdir
   end
@@ -636,7 +636,7 @@ class MiqProxy < ActiveRecord::Base
 
     # Remove the most recent log so we can fetch any updates in the file
     flist = sorted_log_list()
-    File.delete(flist.last[0]) if !flist.empty? && File.exists?(flist.last[0])
+    File.delete(flist.last[0]) if !flist.empty? && File.exist?(flist.last[0])
 
     # Make the request to the proxy for the logs and go away.  Upon final log upload, post_zip_to_db will be called
     ret = get_agent_logs("taskid" => task.id)
@@ -690,7 +690,7 @@ class MiqProxy < ActiveRecord::Base
     self.log_files << log
     self.save
     log.upload
-    File.delete(file) if File.exists?(file)
+    File.delete(file) if File.exist?(file)
 
     msg = "Log files from #{resource} are posted"
     $log.info("#{log_header} #{msg}")
@@ -1028,7 +1028,7 @@ class MiqProxy < ActiveRecord::Base
 
   def get_agent_file(product_update)
     file = product_update.file_from_db(self)
-    raise MiqException::MiqDeploymentError, "no media found for version \"#{product_update.build}\"" unless File.exists?(file)
+    raise MiqException::MiqDeploymentError, "no media found for version \"#{product_update.build}\"" unless File.exist?(file)
     return file
   end
 

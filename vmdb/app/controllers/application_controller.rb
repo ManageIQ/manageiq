@@ -2063,9 +2063,9 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    view_yaml = if viewfilerestricted && File.exists?(viewfilerestricted)
+    view_yaml = if viewfilerestricted && File.exist?(viewfilerestricted)
       viewfilerestricted
-    elsif File.exists?(viewfilebyrole)
+    elsif File.exist?(viewfilebyrole)
       viewfilebyrole
     else
       viewfile

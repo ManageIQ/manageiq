@@ -20,7 +20,7 @@ module MicrosoftOpsWin
 		#raise "VM is not smart" if !File.exists?(diskFileSave)
 		
 		
-		if File.exists?(diskFileSave)
+		if File.exist?(diskFileSave)
 			#
 			# The current disk file is the black box, save it before we
 			# restore the real disk file.

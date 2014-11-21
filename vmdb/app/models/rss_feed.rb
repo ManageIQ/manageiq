@@ -67,7 +67,7 @@ class RssFeed < ActiveRecord::Base
     return @options unless @options.nil?
 
     file = RssFeed.yml_file_name(self.name)
-    raise "no yml file found for name \"#{self.name}\"" unless File.exists?(file)
+    raise "no yml file found for name \"#{self.name}\"" unless File.exist?(file)
     @options = YAML.load(File.read(file)).symbolize_keys
   end
 
@@ -161,7 +161,7 @@ class RssFeed < ActiveRecord::Base
 
       # Remove deleted feeds from model
       RssFeed.find(:all).each {|f|
-        f.destroy unless File.exists?(RssFeed.yml_file_name(f.name))
+        f.destroy unless File.exist?(RssFeed.yml_file_name(f.name))
       }
     rescue => err
       $log.log_backtrace(err)

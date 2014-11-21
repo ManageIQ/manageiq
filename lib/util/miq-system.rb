@@ -397,7 +397,7 @@ class MiqSystem
   ##############################################################################################################################
   def self.disk_usage(file=nil)
     file = nil if file.blank?
-    raise "file #{file} does not exist" unless File.exists?(file.to_s) || file.nil?
+    raise "file #{file} does not exist" unless File.exist?(file.to_s) || file.nil?
 
     case Platform::IMPL
     when :linux

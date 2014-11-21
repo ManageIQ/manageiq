@@ -4,7 +4,7 @@ require 'miq-process'
 host, user, pass, logfile = ARGV
 
 logfile ||= "./env_probe_event_catcher.log"
-File.delete(logfile) if File.exists?(logfile)
+File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
 $log.level = VMDBLogger.const_get("INFO")
 

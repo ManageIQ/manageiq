@@ -5,7 +5,7 @@ class MiqNtp
 
   class << self
     def sync_settings(ntp_settings)
-      return unless Platform::IMPL == :linux && File.exists?(SCRIPT)
+      return unless Platform::IMPL == :linux && File.exist?(SCRIPT)
       update_ntp_conf(ntp_settings[:server])
 
       sync_to_ntpd if use_ntpd?
@@ -36,7 +36,7 @@ class MiqNtp
       server = [server] unless server.is_a?(Array)
 
       # Read the current config
-      if File.exists?(NTP_CONF)
+      if File.exist?(NTP_CONF)
         data = File.read(NTP_CONF)
 
         # Remove existing lines beginning with "server"

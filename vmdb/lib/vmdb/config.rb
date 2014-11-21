@@ -96,7 +96,7 @@ module VMDB
         $log.debug "#{log_header} #{@@cached_configs.has_key?(name) && !@@cached_configs[name][:mtime].nil? ? "Rel" : "L"}oading configuration file for \"#{name}\"" if $log
 
         @@sync_cfile.synchronize(:EX) do
-          if configuration_source == :filesystem && 'database' == name && !File.exists?(@cfile) && File.exists?(@ctmpl)
+          if configuration_source == :filesystem && 'database' == name && !File.exist?(@cfile) && File.exist?(@ctmpl)
             puts("MIQ(Config.initialize) Creating #{@cfile} from #{@ctmpl}")
             FileUtils.copy(@ctmpl, @cfile)
           end
@@ -123,7 +123,7 @@ module VMDB
 
           @@sync_cfile.synchronize(:EX) do
             # rename the config file if we already created the db_record and the file exists
-            if File.exists?(@cfile) && !@db_record.nil?
+            if File.exist?(@cfile) && !@db_record.nil?
               File.rename(@cfile, @cfile_db)
               $log.info("#{log_header} [#{@name}] Config in DB will now be used.  Renamed file to [#{@cfile_db}]") if $log
             end
@@ -145,7 +145,7 @@ module VMDB
     end
 
     def self.load_config_file(fname)
-      data = IO.read(fname) if File.exists?(fname)
+      data = IO.read(fname) if File.exist?(fname)
       Vmdb::ConfigurationEncoder.load(data)
     end
 
@@ -175,7 +175,7 @@ module VMDB
     def config_mtime_from_file(typ)
       #log_header = "MIQ(Config.config_mtime_from_file) [#{@name}] type: [#{typ}]"
       fname = typ == :yml ? @cfile : @ctmpl
-      mtime = File.mtime(fname) if File.exists?(fname)
+      mtime = File.mtime(fname) if File.exist?(fname)
       #$log.debug("#{log_header} Config mtime retrieved from file [#{mtime}]") unless $log.nil? || mtime.nil?
       self.normalize_time(mtime)
     end
@@ -286,7 +286,7 @@ module VMDB
       @@sync_cfile.synchronize(:EX) do
         comments = Config.get_comments(filename) # Save comments from cfg file before deleting.
         comments = Config.get_comments(@ctmpl) if comments == "" # Try the template file if none in the cfg file.
-        File.delete(filename) if File.exists?(filename)
+        File.delete(filename) if File.exist?(filename)
         #File.open(@cfile, "w") {|f| YAML.dump(Config.stringify(@config), f)}
         fd = File.open(filename, "w")
         fd.write(comments.join) if comments.kind_of?(Array)
@@ -378,7 +378,7 @@ module VMDB
     private
 
     def self.get_comments(file)
-      return "" unless File.exists?(file)
+      return "" unless File.exist?(file)
 
       fd = File.open(file, "r")
       comments = []

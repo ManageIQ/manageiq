@@ -43,7 +43,7 @@ module EvmWatchdog
     fd = if path_or_io.respond_to?(:gets)
       path_or_io.read
     else
-      return unless File.exists?(path_or_io)
+      return unless File.exist?(path_or_io)
       File.read(path_or_io)
     end
     fd.chomp.strip

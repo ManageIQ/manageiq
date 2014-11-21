@@ -107,7 +107,7 @@ class ProductUpdate < ActiveRecord::Base
   end
 
   def cleanup_file(file)
-    File.delete(file) if File.exists?(file)
+    File.delete(file) if File.exist?(file)
   end
 
   def self.server_link_to_current_update(server)
