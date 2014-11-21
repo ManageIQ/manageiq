@@ -32,6 +32,11 @@ class VmCloud < Vm
     true
   end
 
+  private
+
+  def raise_created_event
+    MiqEvent.raise_evm_event(self, "vm_create", :vm => self)
+  end
 end
 
 # Preload any subclasses of this class, so that they will be part of the
