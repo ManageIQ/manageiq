@@ -1,204 +1,157 @@
 = render :partial => "layouts/flash_msg"
 
 #tab_div
-  = form_tag( {:action => 'update'}, {:id => "config_form"}) do
+  = form_tag(:action => "update", :id => "config_form") do
     %dl.col2
       %dd
         %fieldset
-          %p.legend=_('General')
+          %p.legend= _('General')
           %table.style1
-            %tr
-              %td.key=_('Tagging')
-              %td
-                = render :partial => "ui_1_gtl", :locals => {:resource => :tagging, :view => @edit[:new][:views][:tagging]}
-            %tr
-              %td.key=_('Compare')
-              %td
-                = render :partial => "ui_1_gtl", :locals => {:resource => :compare, :view => @edit[:new][:views][:compare]}
-            %tr
-              %td.key=_('Compare Mode')
-              %td
-                = render :partial => "ui_1_gtl", :locals => {:resource => :compare_mode, :view => @edit[:new][:views][:compare_mode]}
-            %tr
-              %td.key=_('Drift')
-              %td
-                = render :partial => "ui_1_gtl", :locals => {:resource => :drift, :view => @edit[:new][:views][:drift]}
-            %tr
-              %td.key=_('Drift Mode')
-              %td
-                = render :partial => "ui_1_gtl", :locals => {:resource => :drift_mode, :view => @edit[:new][:views][:drift_mode]}
-            %tr
-              %td.key=_('VM and Instance Items')
-              %td
-                = render :partial => "ui_1_gtl", :locals => {:resource => :vmitem, :view => @edit[:new][:views][:vmitem]}
+            - keys = { :tagging      => _('Tagging'),
+                       :compare      => _('Compare'),
+                       :compare_mode => _('Compare Mode'),
+                       :drift        => _('Drift'),
+                       :drift_mode   => _('Drift Mode'),
+                       :vmitem       => _('VM and Instance Items') }
+            - keys.each do |resource, view_name|
+              %tr
+                %td.key #{view_name}
+                %td
+                  %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
         - if role_allows(:feature => "miq_proxy_show_list")
           %fieldset
-            %p.legend=_('Management Engine')
+            %p.legend= _('Management Engine')
             %table.style1
               %tr
-                %td.key=_('SmartProxies')
+                %td.key= _('SmartProxies')
                 %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :miqproxy, :view => @edit[:new][:views][:miqproxy]}
+                  %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
         %fieldset
-          %p.legend=_('Services')
+          %p.legend= _('Services')
           %table.style1
-            - if role_allows(:feature => "service")
-              %tr
-                %td.key=_('My Services')
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :service, :view => @edit[:new][:views][:service]}
-            - if role_allows(:feature => "catalog_items_accord") || role_allows(:feature => "catalog_items_view")
-              - if role_allows(:feature => "catalog_items_accord")
+            - keys = { :service         => ["service",                        _('My Services')],
+                       :catalog         => ["catalog_items_accord",           _('Service Catalogs')],
+                       :servicetemplate => ["catalog_items_view",             _('Catalog Items')],
+                       :vm              => ["vms_instances_filter_accord",    _('VMs & Instances')],
+                       :miqtemplate     => ["templates_images_filter_accord", _('Templates & Images')] }
+            - keys.each do |resource, (feature, view_name)|
+              - if role_allows(:feature => feature)
                 %tr
-                  %td.key=_('Service Catalogs')
+                  %td.key #{view_name}
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :catalog, :view => @edit[:new][:views][:catalog]}
-              - if role_allows(:feature => "catalog_items_view")
-                %tr
-                  %td.key=_('Catalog Items')
-                  %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :servicetemplate, :view => @edit[:new][:views][:servicetemplate]}
-            - if role_allows(:feature => "vms_instances_filter_accord")
-              %tr
-                %td.key=_('VMs & Instances')
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :vm, :view => @edit[:new][:views][:vm]}
-            - if role_allows(:feature => "templates_images_filter_accord")
-              %tr
-                %td.key=_('Templates & Images')
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :miqtemplate, :view => @edit[:new][:views][:miqtemplate]}
+                    %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
       %dd
-        - if role_allows(:feature => "ems_cloud_show_list") ||
-          role_allows(:feature => "availability_zone_show_list") ||
-          role_allows(:feature => "flavor_show_list") ||
-          role_allows(:feature => "instances_accord") ||
-          role_allows(:feature => "instances_filter_accord") ||
-          role_allows(:feature => "images_filter_accord")
+        - if role_allows(:feature => "ems_cloud_show_list")         |
+          || role_allows(:feature => "availability_zone_show_list") |
+          || role_allows(:feature => "flavor_show_list")            |
+          || role_allows(:feature => "instances_accord")            |
+          || role_allows(:feature => "instances_filter_accord")     |
+          || role_allows(:feature => "images_filter_accord")        |
           %fieldset
-            %p.legend=_('Clouds')
+            %p.legend= _('Clouds')
             %table.style1
               - if role_allows(:feature => "ems_cloud_show_list")
                 %tr
-                  %td.key
-                    = ui_lookup(:tables => "ems_clouds")
+                  %td.key #{ui_lookup(:tables => "ems_clouds")}
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :emscloud, :view => @edit[:new][:views][:emscloud]}
+                    %ul#toolbars= render_view_buttons(:emscloud, @edit[:new][:views][:emscloud])
               - if role_allows(:feature => "availability_zone_show_list")
                 %tr
-                  %td.key=_('Availability Zones')
+                  %td.key= _('Availability Zones')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :availabilityzone, :view => @edit[:new][:views][:availabilityzone]}
+                    %ul#toolbars= render_view_buttons(:availabilityzone, @edit[:new][:views][:availabilityzone])
               - if role_allows(:feature => "flavor_show_list")
                 %tr
-                  %td.key=_('Flavors')
+                  %td.key= _('Flavors')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :flavor, :view => @edit[:new][:views][:flavor]}
-              - if role_allows(:feature => "instances_accord") || role_allows(:feature => "instances_filter_accord")
+                    %ul#toolbars= render_view_buttons(:flavor, @edit[:new][:views][:flavor])
+              - if role_allows(:feature => "instances_accord")        |
+                || role_allows(:feature => "instances_filter_accord") |
                 %tr
-                  %td.key=_('Instances')
+                  %td.key= _('Instances')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :vmcloud, :view => @edit[:new][:views][:vmcloud]}
-              - if role_allows(:feature => "images_accord") || role_allows(:feature => "images_filter_accord")
+                    %ul#toolbars= render_view_buttons(:vmcloud, @edit[:new][:views][:vmcloud])
+              - if role_allows(:feature => "images_accord")        |
+                || role_allows(:feature => "images_filter_accord") |
                 %tr
-                  %td.key Images
+                  %td.key= _('Images')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :templatecloud, :view => @edit[:new][:views][:templatecloud]}
-        - if role_allows(:feature => "ems_infra_show_list") ||
-          role_allows(:feature => "ems_cluster_show_list") ||
-          role_allows(:feature => "host_show_list") ||
-          role_allows(:feature => "resource_pool_show_list") ||
-          role_allows(:feature => "storage_show_list") ||
-          role_allows(:feature => "repository_show_list" ||
-          role_allows(:feature => "vandt_accord") ||
-          role_allows(:feature => "vms_filter_accord") ||
-          role_allows(:feature => "templates_filter_accord"))
+                    %ul#toolbars= render_view_buttons(:templatecloud, @edit[:new][:views][:templatecloud])
+        - if role_allows(:feature => "ems_cloud_show_list")     |
+          || role_allows(:feature => "ems_cluster_show_list")   |
+          || role_allows(:feature => "host_show_list")          |
+          || role_allows(:feature => "resource_pool_show_list") |
+          || role_allows(:feature => "storage_show_list")       |
+          || role_allows(:feature => "repository_show_list")    |
+          || role_allows(:feature => "vandt_accord")            |
+          || role_allows(:feature => "vms_filter_accord")       |
+          || role_allows(:feature => "templates_filter_accord") |
           %fieldset
-            %p.legend=_('Infrastructure')
+            %p.legend= _('Infrastructure')
             %table.style1
               - if role_allows(:feature => "ems_infra_show_list")
                 %tr
-                  %td.key
-                    = ui_lookup(:tables => "ems_infras")
+                  %td.key= ui_lookup(:tables => "ems_infras")
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :emsinfra, :view => @edit[:new][:views][:emsinfra]}
+                    %ul#toolbars= render_view_buttons(:emsinfra, @edit[:new][:views][:emsinfra])
               - if role_allows(:feature => "ems_cluster_show_list")
                 %tr
-                  %td.key=_('Clusters')
+                  %td.key= _('Clusters')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :emscluster, :view => @edit[:new][:views][:emscluster]}
+                    %ul#toolbars= render_view_buttons(:emscluster, @edit[:new][:views][:emscluster])
               - if role_allows(:feature => "host_show_list")
                 %tr
-                  %td.key=_('Hosts')
+                  %td.key= _('Hosts')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :host, :view => @edit[:new][:views][:host]}
-              - if role_allows(:feature => "host_show_list")
+                    %ul#toolbars= render_view_buttons(:host, @edit[:new][:views][:host])
                 %tr
-                  %td.key=_('Host Items')
+                  %td.key= _('Host Items')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :hostitem, :view => @edit[:new][:views][:hostitem]}
-              - if role_allows(:feature => "vandt_accord") || role_allows(:feature => "vms_filter_accord")
+                    %ul#toolbars= render_view_buttons(:hostitem, @edit[:new][:views][:hostitem])
+              - if role_allows(:feature => "vandt_accord")      |
+                || role_allows(:feature => "vms_filter_accord") |
                 %tr
-                  %td.key=_('VMs')
+                  %td.key= _('VMs')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :vminfra, :view => @edit[:new][:views][:vminfra]}
-              - if role_allows(:feature => "vandt_accord") || role_allows(:feature => "templates_filter_accord")
+                    %ul#toolbars= render_view_buttons(:vminfra, @edit[:new][:views][:vminfra])
+              - if role_allows(:feature => "vandt_accord")            |
+                || role_allows(:feature => "templates_filter_accord") |
                 %tr
-                  %td.key=_('Templates')
+                  %td.key= _('Templates')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :templateinfra, :view => @edit[:new][:views][:templateinfra]}
+                    %ul#toolbars= render_view_buttons(:templateinfra, @edit[:new][:views][:templateinfra])
               - if role_allows(:feature => "resource_pool_show_list")
                 %tr
-                  %td.key=_('Resource Pools')
+                  %td.key= _('Resource Pools')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :resourcepool, :view => @edit[:new][:views][:resourcepool]}
+                    %ul#toolbars= render_view_buttons(:resourcepool, @edit[:new][:views][:resourcepool])
               - if role_allows(:feature => "storage_show_list")
                 %tr
-                  %td.key
-                    = ui_lookup(:tables => "storages")
+                  %td.key= ui_lookup(:tables => "storages")
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :storage, :view => @edit[:new][:views][:storage]}
+                    %ul#toolbars= render_view_buttons(:storage, @edit[:new][:views][:storage])
               - if role_allows(:feature => "repository_show_list")
                 %tr
-                  %td.key=_('Repositories')
+                  %td.key= _('Repositories')
                   %td
-                    = render :partial => "ui_1_gtl", :locals => {:resource => :repo, :view => @edit[:new][:views][:repo]}
+                    %ul#toolbars= render_view_buttons(:repo, @edit[:new][:views][:repo])
         - if get_vmdb_config[:product][:storage]
           %fieldset
-            %p.legend=_('Storage')
+            %p.legend= _('Storage')
             %table.style1
+              - keys = { :ontapstoragesystem   => "ontap_storage_system",
+                         :ontapstoragevolume   => "ontap_storage_volume",
+                         :ontaplogicaldisk     => "ontap_logical_disk",
+                         :ontapfileshare       => "ontap_file_share",
+                         :cimbasestorageextent => "cim_base_storage_extent",
+                         :snialocalfilesystem  => "snia_local_file_system" }
+              - keys.each do |resource, table_view_name|
+                %tr
+                  %td.key= ui_lookup(:tables => table_view_name)
+                  %td
+                    %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
               %tr
-                %td.key
-                  = ui_lookup(:tables => "ontap_storage_system")
+                %td.key= _('Storage Managers')
                 %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :ontapstoragesystem, :view => @edit[:new][:views][:ontapstoragesystem]}
-              %tr
-                %td.key
-                  = ui_lookup(:tables => "ontap_storage_volume")
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :ontapstoragevolume, :view => @edit[:new][:views][:ontapstoragevolume]}
-              %tr
-                %td.key
-                  = ui_lookup(:tables => "ontap_logical_disk")
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :ontaplogicaldisk, :view => @edit[:new][:views][:ontaplogicaldisk]}
-              %tr
-                %td.key
-                  = ui_lookup(:tables => "ontap_file_share")
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :ontapfileshare, :view => @edit[:new][:views][:ontapfileshare]}
-              %tr
-                %td.key
-                  = ui_lookup(:tables => "cim_base_storage_extent")
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :cimbasestorageextent, :view => @edit[:new][:views][:cimbasestorageextent]}
-              %tr
-                %td.key
-                  = ui_lookup(:tables => "snia_local_file_system")
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :snialocalfilesystem, :view => @edit[:new][:views][:snialocalfilesystem]}
-              %tr
-                %td.key=_('Storage Managers')
-                %td
-                  = render :partial => "ui_1_gtl", :locals => {:resource => :storagemanager, :view => @edit[:new][:views][:storagemanager]}
-      = render :partial => '/layouts/form_buttons'
+                  %ul#toolbars= render_view_buttons(:storagemanager, @edit[:new][:views][:storagemanager])
+      = render :partial => "/layouts/form_buttons"
