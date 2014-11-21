@@ -725,22 +725,6 @@ function miqCheckMaxLength(obj){
     else $(counter).innerText = obj.value.length;
 }
 
-// Handle showing/hiding default values as grey in automate instance editor if field value is blank
-function miqSetInputValues(fld, evt){
-  if (evt == 'blur' && fld.value == '' && typeof fld.attributes['data-miq_default_value'] != 'undefined') {
-    self.setTimeout(function(el, default_value) {
-      $j(el).off();
-      $j(el).addClass('input_def_val');
-      el.setValue(default_value);
-    }, 700, fld, fld.attributes['data-miq_default_value'].value);
-  }
-  if (evt == 'focus' && $j(fld).hasClass('input_def_val')) {
-    fld.setValue('');
-    $j(fld).removeClass('input_def_val');
-  }
-  return true;
-}
-
 function miqSetInputClass(fld,cname,typ){
   if (typ == "remove"){
     $j(fld).removeClass(cname)
