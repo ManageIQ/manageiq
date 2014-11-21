@@ -300,6 +300,66 @@ describe Classification do
     end
   end
 
+  describe ".seed" do
+    before do
+      MiqRegion.seed
+
+      YAML.stub(:load_file).and_return([
+        {:name         => "cc",
+         :description  => "Cost Center",
+         :example_text => "Cost Center",
+         :read_only    => "0",
+         :syntax       => "string",
+         :show         => true,
+         :parent_id    => 0,
+         :default      => true,
+         :single_value => "1",
+         :entries      => [{:description => "Cost Center 001", :name => "001"},
+                           {:description => "Cost Center 002", :name => "002"}]
+        }]
+      )
+    end
+
+    context "after seeding" do
+      before { Classification.seed }
+
+      it "loads categories and tags" do
+        expect(Classification.categories.count).to               eq(1)
+        expect(Classification.categories.first.entries.count).to eq(2)
+      end
+
+      it "re-seeds deleted categories" do
+        Classification.categories.first.destroy
+        expect(Classification.count).to eq(0)
+
+        Classification.seed
+        expect(Classification.count).to eq(3)
+      end
+
+      it "does not re-seed deleted tags" do
+        Classification.where("parent_id != 0").destroy_all
+        expect(Classification.count).to eq(1)
+
+        Classification.seed
+        expect(Classification.count).to eq(1)
+      end
+    end
+
+    it "does not re-seed existing categories" do
+      category = FactoryGirl.create(:classification_cost_center,
+                                    :description  => "user defined",
+                                    :example_text => "user defined",
+                                    :show         => false,
+                                    :single_value => "0")
+
+      category_attrs = category.attributes
+      Classification.seed
+      category.reload
+
+      expect(category_attrs).to eq(category.attributes)
+    end
+  end
+
   def all_tagged_with(target, all, category)
     tagged_with(target, :all => all, :cat => category)
   end

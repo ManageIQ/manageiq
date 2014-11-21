@@ -428,36 +428,27 @@ class Classification < ActiveRecord::Base
 
   def self.seed
     MiqRegion.my_region.lock do
-      stats = {:cats => {:a => 0, :u => 0}, :ents => {:a => 0, :u => 0}}
-      cats = YAML.load_file(FIXTURE_FILE)
-      cats.each do |c|
-        entries = c.delete(:entries)
-        cat = self.find_by_name(c[:name], self.my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
-        if cat.nil?
-          $log.info("MIQ(Classification.seed) Creating #{c[:name]}")
-          cat = self.create(c)
-          stats[:cats][:a] += 1
-          # Only add entries if category was newly created. This will allow users to detete entries under default categories.
-          entries.each do |e|
-            ent = cat.find_entry_by_name(e[:name])
-            if ent.nil?
-              ent = cat.add_entry(e)
-              stats[:ents][:a] += 1
-            else
-              ent.update_attributes(e)
-              stats[:ents][:u] += 1
-            end
-          end
-        end
+      YAML.load_file(FIXTURE_FILE).each do |c|
+        cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
+        next if cat
+
+        $log.info("MIQ(Classification.seed) Creating #{c[:name]}")
+        add_entries_from_hash(create(c.except(:entries)), c[:entries])
       end
     end
 
     # Fix categories that have a nill parent_id
-    self.all(:conditions => {:parent_id => nil}).each {|c| c.update_attribute(:parent_id, 0)}
-    #
+    where(:parent_id => nil).update_all(:parent_id => 0)
   end
 
   private
+
+  def self.add_entries_from_hash(cat, entries)
+    entries.each do |entry|
+      ent = cat.find_entry_by_name(entry[:name])
+      ent ? ent.update_attributes(entry) : cat.add_entry(entry)
+    end
+  end
 
   def validate_uniqueness_on_tag_name
     tag = find_tag
