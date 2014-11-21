@@ -122,6 +122,17 @@ module ReportFormatter
     def build_reporting_chart_other
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
+      mri.chart[:options].update(
+        :highlighter    => {
+          :show                 => true,
+          :useAxesFormatters    => false,
+          :tooltipAxes          => 'y',
+          :tooltipContentEditor => "foobar = function(str, seriesIndex, pointIndex, plot) {
+              return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
+                     plot.series[seriesIndex].data[pointIndex][1];
+          }",
+        }
+      ) if @is_pie
     end
 
     def finalize_document
