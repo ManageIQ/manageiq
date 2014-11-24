@@ -488,6 +488,7 @@ workers:
       :performance_realtime_purging_start_delay: 5.minutes
       :performance_rollup_purging_interval: 4.hours
       :performance_rollup_purging_start_delay: 5.minutes
+      :policy_events_purge_interval: 1.day
       :poll: 15.seconds
       :server_log_stats_interval: 5.minutes
       :server_stats_interval: 60.seconds

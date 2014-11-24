@@ -508,17 +508,18 @@ describe ScheduleWorker do
             scheduled_jobs = @schedule_worker.schedules_for_event_role
 
             scheduled_jobs.each do |job|
+              job.should be_kind_of(Rufus::Scheduler::EveryJob)
+              job.t.should == 1.day
+              job.trigger_block
+              @schedule_worker.do_work
+
               case job.tags
               when [:ems_event, :purge_schedule]
-                job.should be_kind_of(Rufus::Scheduler::EveryJob)
-                job.t.should == 1.day
-                job.trigger_block
-                @schedule_worker.do_work
-                MiqQueue.count.should == 1
-                message = MiqQueue.where(:class_name  => "EmsEvent", :method_name => "purge_timer").first
-                message.should_not be_nil
-
-                MiqQueue.delete_all
+                messages = MiqQueue.where(:class_name  => "EmsEvent", :method_name => "purge_timer")
+                messages.count.should == 1
+              when [:policy_event, :purge_schedule]
+                messages = MiqQueue.where(:class_name  => "PolicyEvent", :method_name => "purge_timer")
+                messages.count.should == 1
               else
                 raise "Unexpected Job: tags=#{job.tags.inspect}, t=#{job.t.inspect}, last=#{job.last.inspect}, id=#{job.job_id.inspect}, thr=#{job.last_job_thread.inspect}, next=#{job.next_time.inspect}, block=#{job.block.inspect}"
               end

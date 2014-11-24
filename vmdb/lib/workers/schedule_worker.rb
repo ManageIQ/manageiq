@@ -321,6 +321,12 @@ class ScheduleWorker < WorkerBase
     @schedules[:event] << self.system_schedule_every(interval, :first_in => "300s", :tags => [:ems_event, :purge_schedule]) do
       @queue.enq :ems_event_purge_timer
     end
+
+    # Schedule - Policy Event Purging
+    interval = worker_setting_or_default(:policy_events_purge_interval, 1.day)
+    @schedules[:event] << self.system_schedule_every(interval, :first_in => "300s", :tags => [:policy_event, :purge_schedule]) do
+      @queue.enq :policy_event_purge_timer
+    end
   end
 
   def schedules_for_storage_metrics_coordinator_role
