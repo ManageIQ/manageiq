@@ -5,7 +5,7 @@ require "pathname"
 ROOT ||= [
   "/var/www/miq",
   File.expand_path(File.join(File.dirname(__FILE__), "../../.."))
-].detect { |f| File.exists?(f) }
+].detect { |f| File.exist?(f) }
 RAILS_ROOT ||= Pathname.new("#{ROOT}/vmdb")
 
 ENV['BUNDLE_GEMFILE'] ||= "#{ROOT}/vmdb/Gemfile"

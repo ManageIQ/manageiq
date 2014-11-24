@@ -24,7 +24,7 @@ class AgentController < ApplicationController
     end
 
     file = update.file_from_db(proxy)
-    unless File.exists?(file)
+    unless File.exist?(file)
       task.update_status("Active", "Warn", "No media found for Proxy #{proxy.id} and version #{update.build}") if task
       raise "no media found for proxy\"#{proxy.id}\" and version\"#{update.build}\""
     end
@@ -62,7 +62,7 @@ class AgentController < ApplicationController
 
     $log.info "MIQ(agent-log): [#{params[:options].inspect}]" if params[:options].present?
 
-    File.delete(file) if File.exists?(file)
+    File.delete(file) if File.exist?(file)
     $log.info "MIQ(agent-log): Create file: #{file}"
     File.open(file, "wb") { |f| f.write(data) }
     begin

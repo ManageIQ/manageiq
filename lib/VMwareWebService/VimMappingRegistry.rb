@@ -6,7 +6,7 @@ module VimMappingRegistry
 	def self.registry
 		@registry ||= Hash.new do |h, k|
 			file = File.join(YML_DIR, "#{k}.yml")
-			h[k] = File.exists?(file) ? YAML.load_file(file) : nil
+			h[k] = File.exist?(file) ? YAML.load_file(file) : nil
 		end
 	end
 

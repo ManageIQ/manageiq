@@ -3,12 +3,12 @@ require 'bcrypt'
 
 describe "User Password" do
   def read_miq_pass
-    filename = File.exists?("config/miq_pass") ? "config/miq_pass" : "config/miq_pass_default"
+    filename = File.exist?("config/miq_pass") ? "config/miq_pass" : "config/miq_pass_default"
     File.open(File.join(Rails.root, filename), 'r') {|f| f.read.chomp }
   end
 
   def save_old_miq_pass
-    @has_miq_pass = File.exists?("config/miq_pass")
+    @has_miq_pass = File.exist?("config/miq_pass")
     @old_miq_pass = read_miq_pass
   end
 
@@ -16,7 +16,7 @@ describe "User Password" do
     if @has_miq_pass
       File.open(File.join(Rails.root, "config/miq_pass"), 'w') {|f| f.write(@old_miq_pass) }
     else
-      File.delete("config/miq_pass") if File.exists?("config/miq_pass")
+      File.delete("config/miq_pass") if File.exist?("config/miq_pass")
     end
   end
 

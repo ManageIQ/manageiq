@@ -35,7 +35,7 @@ class MiqSearch < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")
-      slist        = YAML.load_file(fixture_file) if File.exists?(fixture_file)
+      slist        = YAML.load_file(fixture_file) if File.exist?(fixture_file)
       slist      ||= []
 
       slist.each do |search|

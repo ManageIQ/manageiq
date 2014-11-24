@@ -2,7 +2,7 @@ class ZiyaCharting < Charting
   def self.config
     @config ||= begin
       yml = Rails.root.join("config/ziya_charting.yml")
-      File.exists?(yml) ? YAML.load_file(yml) : {}
+      File.exist?(yml) ? YAML.load_file(yml) : {}
     end
   end
 
@@ -120,6 +120,6 @@ class ZiyaCharting < Charting
   end
 
   def self.available?
-    File.exists?(File.join(File.dirname(__FILE__), "../../public/charts/"))
+    File.exist?(File.join(File.dirname(__FILE__), "../../public/charts/"))
   end
 end

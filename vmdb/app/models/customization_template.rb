@@ -13,7 +13,7 @@ class CustomizationTemplate < ActiveRecord::Base
   end
 
   def self.seed_data
-    File.exists?(seed_file_name) ? YAML.load_file(seed_file_name) : []
+    File.exist?(seed_file_name) ? YAML.load_file(seed_file_name) : []
   end
 
   def self.seed

@@ -36,7 +36,7 @@ module MiqReport::Seeding
 
       self.find(:all, :conditions => cond).each do |f|
         next unless f.filename
-        unless File.exists?(File.join(dir, f.filename))
+        unless File.exist?(File.join(dir, f.filename))
           $log.info("#{typ.titleize}: file [#{f.filename}] has been deleted from disk, deleting from model")
           f.destroy
         end

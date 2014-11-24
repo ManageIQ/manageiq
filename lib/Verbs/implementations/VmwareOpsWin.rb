@@ -19,15 +19,15 @@ module VMWareOpsWin
 		vmName = getVmFile(ost)
 		
 		#diskFile, diskFileSave, bbFileSave = diskNames(vmName)
-		#raise "VM is not smart" if !File.exists?(diskFileSave)
+		#raise "VM is not smart" if !File.exist?(diskFileSave)
 
 		
-		#if File.exists?(diskFileSave)
+		#if File.exist?(diskFileSave)
 		#
 		# The current disk file is the black box, save it before we
 		# restore the real disk file.
 		# 
-		#			File.rename(diskFile, bbFileSave) if File.exists?(diskFile)
+		#			File.rename(diskFile, bbFileSave) if File.exist?(diskFile)
 		#
 		# Restore the VM's disk file.
 		# 

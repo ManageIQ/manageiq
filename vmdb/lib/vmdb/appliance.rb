@@ -128,7 +128,7 @@ module Vmdb
     def self.get_build
       build_file = File.join(File.expand_path(Rails.root), "BUILD")
 
-      if File.exists?(build_file)
+      if File.exist?(build_file)
         build = File.read(build_file).strip.split("-").last
       else
         date  = Time.now.strftime("%Y%m%d%H%M%S")
@@ -143,7 +143,7 @@ module Vmdb
       retVal = {}
       miqnet = "/bin/miqnet.sh"
 
-      if File.exists?(miqnet)
+      if File.exist?(miqnet)
         # Make a call to the virtual appliance to get the network information
         cmd     = "#{miqnet} -GET"
         netinfo = `#{cmd}`
@@ -174,8 +174,8 @@ module Vmdb
         {:cmd => "route", :msg => "IP Routing table"},
         {:cmd => "netstat -i -a", :msg => "Network interface table"},
         {:cmd => "netstat -s", :msg => "Network statistics"},
-        {:cmd => "File.open('/etc/hosts','r'){|f| f.read} if File.exists?('/etc/hosts')", :evaluate? => true, :msg => "Hosts file contents"},
-        {:cmd => "File.open('/etc/fstab','r'){|f| f.read} if File.exists?('/etc/fstab')", :evaluate? => true, :msg => "Fstab file contents"},
+        {:cmd => "File.open('/etc/hosts','r'){|f| f.read} if File.exist?('/etc/hosts')", :evaluate? => true, :msg => "Hosts file contents"},
+        {:cmd => "File.open('/etc/fstab','r'){|f| f.read} if File.exist?('/etc/fstab')", :evaluate? => true, :msg => "Fstab file contents"},
         {:cmd => "echo start: date time is: #{Time.now.utc} >> #{gem_log}; gem list > #{gem_log}"},
         {:cmd => "echo start: date time is: #{Time.now.utc} >> #{ven_gem_log}; ls -1 vendor/gems > #{ven_gem_log}"},
         {:cmd => "echo start: date time is: #{Time.now.utc} >> #{rpm_log}; rpm -qa --queryformat '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n' |sort -k 1  > #{rpm_log} 2> /dev/null"},

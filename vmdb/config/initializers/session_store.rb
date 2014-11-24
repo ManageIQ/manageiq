@@ -10,7 +10,7 @@ if MiqEnvironment::Process.is_web_server_worker?
   # 2) the vmdb.tmpl.yml file
   db_file  = Rails.root.join("config", "vmdb.yml.db")
   template = Rails.root.join("config", "vmdb.tmpl.yml")
-  config_file = File.exists?(db_file) ? db_file : template
+  config_file = File.exist?(db_file) ? db_file : template
 
   config = YAML.load(File.read(config_file))
   evm_store = config.fetch_path("server", "session_store")

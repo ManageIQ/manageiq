@@ -159,7 +159,7 @@ module WebServerWorkerMixin
 
     def start
       pid_file = self.thin_pid_file
-      File.delete(pid_file) if File.exists?(pid_file)
+      File.delete(pid_file) if File.exist?(pid_file)
       ENV['PORT'] = self.port.to_s
       super
     end
@@ -192,7 +192,7 @@ module WebServerWorkerMixin
     def kill
       pid_file       = self.thin_pid_file
       deleted_worker = super
-      File.delete(pid_file) if File.exists?(pid_file)
+      File.delete(pid_file) if File.exist?(pid_file)
       deleted_worker
     end
 

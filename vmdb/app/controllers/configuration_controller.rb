@@ -1,7 +1,7 @@
 require 'miq_bulk_import'
 class ConfigurationController < ApplicationController
   logo_dir = File.expand_path(File.join(Rails.root, "public/upload"))
-  Dir.mkdir logo_dir unless File.exists?(logo_dir)
+  Dir.mkdir logo_dir unless File.exist?(logo_dir)
   @@logo_file = File.join(logo_dir, "custom_logo.png")
 
   before_filter :check_privileges

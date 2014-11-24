@@ -18,7 +18,7 @@ module MiqAeEngine
       raise  MiqAeException::MethodNotFound, "Invalid file specification -- #{aem.data}" if path.nil?
       # Create the filename corresponding to the URI specification
       fname = File.join(AE_METHODS_DIR, path)
-      raise  MiqAeException::MethodNotFound, "Method [#{aem.data}] Not Found (fname=#{fname})" unless File.exists?(fname)
+      raise  MiqAeException::MethodNotFound, "Method [#{aem.data}] Not Found (fname=#{fname})" unless File.exist?(fname)
       cmd = "#{aem.language} #{fname}"
       return MiqAeEngine::MiqAeMethod.invoke_external(cmd, obj.workspace)
     end

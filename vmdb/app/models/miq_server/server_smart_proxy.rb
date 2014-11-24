@@ -131,7 +131,7 @@ module MiqServer::ServerSmartProxy
 
       $miqHostCfg ||= OpenStruct.new()
       data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
-      Dir.mkdir(data_dir) unless File.exists?(data_dir)
+      Dir.mkdir(data_dir) unless File.exist?(data_dir)
       $miqHostCfg.dataDir = data_dir
       $miqHostCfg.forceFleeceDefault = true
 

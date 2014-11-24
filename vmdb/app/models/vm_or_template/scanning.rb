@@ -257,7 +257,7 @@ module VmOrTemplate::Scanning
     xml_summary.root.add_attributes("taskid"=>ost.taskid)
 
     data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
-    Dir.mkdir(data_dir) unless File.exists?(data_dir)
+    Dir.mkdir(data_dir) unless File.exist?(data_dir)
     ost.skipConfig = true
     ost.config = OpenStruct.new(
       :dataDir => data_dir,

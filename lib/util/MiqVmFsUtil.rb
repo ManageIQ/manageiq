@@ -14,7 +14,7 @@ class MiqVmFsUtil
         raise "MiqVmFsUtil::flatDirCopyOut - #{fromDir} does not exist." if !@fs.fileExists?(fromDir)
         raise "MiqVmFsUtil::flatDirCopyOut - #{fromDir} is not a directory." if !@fs.fileDirectory?(fromDir)
         
-        Dir.mkdir(toDir) if !File.exists?(toDir)
+        Dir.mkdir(toDir) if !File.exist?(toDir)
         raise "MiqVmFsUtil::flatDirCopyOut - #{toDir} is not a directory." if !File.directory?(toDir)
         
         @fs.chdir(fromDir)

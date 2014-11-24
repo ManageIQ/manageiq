@@ -27,7 +27,7 @@ class FakeMiqVimHandleBase
     @data[dir] ||= {}
     @data[dir][m.to_sym] ||= begin
       file = File.expand_path(File.join(VIM_DATA_DIR, dir, "#{m}.yml"))
-      File.exists?(file) ? YAML.load_file(file) : nil
+      File.exist?(file) ? YAML.load_file(file) : nil
     end
   end
 

@@ -74,7 +74,7 @@ end
 #
 # Create a new metakit filesystem.
 #
-File.delete(MK_FILE) if File.exists?(MK_FILE)
+File.delete(MK_FILE) if File.exist?(MK_FILE)
 dobj = OpenStruct.new
 dobj.mkfile = MK_FILE
 dobj.create = true
@@ -128,5 +128,5 @@ end
 #
 # Clean up.
 #
-File.delete(MK_FILE) if File.exists?(MK_FILE)
+File.delete(MK_FILE) if File.exist?(MK_FILE)
 toFs.rmBranch(DST_DIR) if toFs.fileDirectory?(DST_DIR)

@@ -33,7 +33,7 @@ module LocalFS
 	end
 
 	def fs_fileExists?(p)
-		File.exists?(internalPath(p))
+		File.exist?(internalPath(p))
 	end
 
 	def fs_fileFile?(p)

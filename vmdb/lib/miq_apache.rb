@@ -145,7 +145,7 @@ module MiqApache
 
     private
     def self.run_apache_cmd(command)
-      Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exists?(File.dirname(APACHE_CONTROL_LOG))
+      Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exist?(File.dirname(APACHE_CONTROL_LOG))
       begin
         cmd = "apachectl -E #{APACHE_CONTROL_LOG} -k #{command}"
         cmd << " -e debug" if $log && $log.debug?
@@ -217,7 +217,7 @@ module MiqApache
     end
 
     def self.create_conf_file(filename, content)
-      raise ConfFileAlreadyExists if File.exists?(filename)
+      raise ConfFileAlreadyExists if File.exist?(filename)
 
       FileUtils.touch(filename)
       file = self.new(filename)

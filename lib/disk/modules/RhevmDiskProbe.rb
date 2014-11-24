@@ -14,7 +14,7 @@ module RhevmDiskProbe
     return QCOW_MOD if format == 'cow'
 
     descriptor_file = ostruct.fileName + '.meta'
-    return nil unless File.exists?(descriptor_file)
+    return nil unless File.exist?(descriptor_file)
 
     # If this ostruct already has a descriptor don't bother checking.
     # NOTE: If it does have a descriptor, we're coming from RhevmDescriptor.rb

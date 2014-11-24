@@ -151,7 +151,7 @@ describe MiqApache::Conf do
 
   context ".create_conf_file" do
     it "with existing file should raise error" do
-      File.stub(:exists? => true)
+      File.stub(:exist? => true)
       expect { described_class.create_conf_file("xxx", []) }.to raise_error(MiqApache::ConfFileAlreadyExists)
     end
 
@@ -204,7 +204,7 @@ My test
 
 </VirtualHost>
 EOF
-      File.stub(:exists? => false)
+      File.stub(:exist? => false)
       FileUtils.stub(:touch)
       File.stub(:file? => true)
       File.stub(:read => "")
@@ -224,7 +224,7 @@ EOF
         },
       ]
 
-      File.stub(:exists? => false)
+      File.stub(:exist? => false)
       FileUtils.stub(:touch)
       File.stub(:file? => true)
       File.stub(:read => "")

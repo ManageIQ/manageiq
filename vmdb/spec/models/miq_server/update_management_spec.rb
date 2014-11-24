@@ -109,7 +109,7 @@ describe MiqServer do
     it "unregistered should use subscription-manager" do
       reg_system.stub(:registered?).once.and_return(false, true)
       LinuxAdmin::SubscriptionManager.should_receive(:register).once.and_return(true)
-      File.should_receive(:exists?).once.and_return(true)
+      File.should_receive(:exist?).once.and_return(true)
       reg_system.should_receive(:registration_type).once
 
       @server.register
@@ -124,7 +124,7 @@ describe MiqServer do
 
       reg_system.stub(:registered?).once.and_return(false, true)
       LinuxAdmin::SubscriptionManager.should_receive(:register).once.and_return(true)
-      File.should_receive(:exists?).once.and_return(true)
+      File.should_receive(:exist?).once.and_return(true)
       reg_system.should_receive(:registration_type).once
 
       @server.register
@@ -138,7 +138,7 @@ describe MiqServer do
 
       reg_system.stub(:registered?).once.and_return(false, true)
       LinuxAdmin::Rhn.should_receive(:register).once.and_return(true)
-      File.should_receive(:exists?).twice.and_return(false, true)
+      File.should_receive(:exist?).twice.and_return(false, true)
       reg_system.should_receive(:registration_type).once
 
       @server.register

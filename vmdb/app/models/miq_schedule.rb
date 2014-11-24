@@ -401,7 +401,7 @@ class MiqSchedule < ActiveRecord::Base
   def self.preload_schedules
     $log.info("MIQ(scheule-preload_schedules) Preloading sample schedules...")
     fixture_file = File.join(FIXTURE_DIR, "miq_schedules.yml")
-    slist = YAML.load_file(fixture_file) if File.exists?(fixture_file)
+    slist = YAML.load_file(fixture_file) if File.exist?(fixture_file)
 
     slist.each do |sched|
       rec = self.find_by_name(sched[:attributes][:name])

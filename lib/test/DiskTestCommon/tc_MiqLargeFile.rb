@@ -43,7 +43,7 @@ module DiskTestCommon
 			params = [FILE_1MB, FILE_1GB, FILE_4GB, FILE_5GB]
 			
 			params.each do |filename|
-				next unless File.exists?(filename)
+				next unless File.exist?(filename)
 	      
 				f = MiqLargeFile.open(filename, "r")
 				assert_not_nil(MiqLargeFile, f)
@@ -58,7 +58,7 @@ module DiskTestCommon
 								FILE_5GB, SIZE_5GB]
 
 			params.each_slice(2) do |filename, filesize|
-				next unless File.exists?(filename)
+				next unless File.exist?(filename)
 				
 	      # Test both class method and instance method
 				f = MiqLargeFile.size(filename)
@@ -78,7 +78,7 @@ module DiskTestCommon
 								]
 			
 			params.each_slice(2) do |filename, offsets|
-				next unless File.exists?(filename)
+				next unless File.exist?(filename)
 				
 	      f = MiqLargeFile.open(filename, "r")
 				offsets.each do |offset|
@@ -100,10 +100,10 @@ module DiskTestCommon
 								#FILE_5GB, SIZE_5GB, '5c5bcb1e258ffdf69faadc5ae4c09ac4',
 								]
 			
-			Dir.mkdir(FILE_WRITE_PATH) unless File.exists?(FILE_WRITE_PATH)
+			Dir.mkdir(FILE_WRITE_PATH) unless File.exist?(FILE_WRITE_PATH)
 			
 			params.each_slice(3) do |filename, filesize, md5|
-				next unless File.exists?(filename)
+				next unless File.exist?(filename)
 	      
 				# Temporarily create the file, as MiqLargeFile only opens existing files
 				File.new(FILE_WRITE, "w").close

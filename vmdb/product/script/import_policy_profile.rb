@@ -16,7 +16,7 @@ end
 def import_file(fname)
   puts "Import Beginning for #{fname}"
 
-  if !File.exists?(fname)
+  if !File.exist?(fname)
     puts "Specified file does not exist"
     return
   end

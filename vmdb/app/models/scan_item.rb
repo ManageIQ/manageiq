@@ -6,7 +6,7 @@ class ScanItem < ActiveRecord::Base
   include UuidMixin
 
   YAML_DIR = File.expand_path(File.join(Rails.root, "product/scan_items"))
-  Dir.mkdir YAML_DIR unless File.exists?(YAML_DIR)
+  Dir.mkdir YAML_DIR unless File.exist?(YAML_DIR)
 
   SAMPLE_VM_PROFILE    = {:name => "sample",       :description => "VM Sample",       :mode => 'Vm',   :read_only => true, }.freeze
   SAMPLE_HOST_PROFILE  = {:name => "host sample",  :description => "Host Sample",  :mode => 'Host', :read_only => true}.freeze
@@ -15,7 +15,7 @@ class ScanItem < ActiveRecord::Base
   def self.sync_from_dir
     self.find(:all, :conditions => "prod_default = 'Default'").each {|f|
       next unless f.filename
-      unless File.exists?(File.join(YAML_DIR, f.filename))
+      unless File.exist?(File.join(YAML_DIR, f.filename))
         $log.info("Scan Item: file [#{f.filename}] has been deleted from disk, deleting from model")
         f.destroy
       end

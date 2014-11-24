@@ -55,7 +55,7 @@ cf.update
 #
 # Create a new metakit filesystem.
 #
-File.delete(MK_FILE_NC) if File.exists?(MK_FILE_NC)
+File.delete(MK_FILE_NC) if File.exist?(MK_FILE_NC)
 dobj = OpenStruct.new
 dobj.mkfile = MK_FILE_NC
 dobj.create = true
@@ -79,7 +79,7 @@ cf.update
 #
 # Create a new metakit filesystem.
 #
-File.delete(MK_FILE) if File.exists?(MK_FILE)
+File.delete(MK_FILE) if File.exist?(MK_FILE)
 dobj = OpenStruct.new
 dobj.mkfile = MK_FILE
 dobj.create = true
@@ -184,7 +184,7 @@ end
 #
 # Clean up.
 #
-File.delete(MK_FILE) if File.exists?(MK_FILE)
-File.delete(MK_FILE_NC) if File.exists?(MK_FILE_NC)
+File.delete(MK_FILE) if File.exist?(MK_FILE)
+File.delete(MK_FILE_NC) if File.exist?(MK_FILE_NC)
 toFs.rmBranch(DST_DIR) if toFs.fileDirectory?(DST_DIR)
 toFs.rmBranch(REF_DIR) if toFs.fileDirectory?(REF_DIR)

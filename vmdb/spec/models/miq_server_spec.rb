@@ -29,18 +29,18 @@ describe MiqServer do
     end
 
     it "should generate a new GUID file" do
-      File.exists?(GUID_FILE).should be_false
+      File.exist?(GUID_FILE).should be_false
       guid = MiqServer.my_guid
-      File.exists?(GUID_FILE).should be_true
+      File.exist?(GUID_FILE).should be_true
       File.read(GUID_FILE).strip.should == guid
     end
 
     it "should not generate a new GUID file if new_guid blows up" do
       # Test for case 10942
-      File.exists?(GUID_FILE).should be_false
+      File.exist?(GUID_FILE).should be_false
       MiqUUID.should_receive(:new_guid).and_raise(StandardError)
       lambda { MiqServer.my_guid }.should raise_error(StandardError)
-      File.exists?(GUID_FILE).should be_false
+      File.exist?(GUID_FILE).should be_false
     end
   end
 

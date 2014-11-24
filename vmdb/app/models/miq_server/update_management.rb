@@ -79,7 +79,7 @@ module MiqServer::UpdateManagement
       registration_class.register(assemble_registration_options)
 
       # Rhn is slow at writing the systemid file, wait up to 30 seconds for it to appear
-      30.times { File.exists?("/etc/sysconfig/rhn/systemid") ? break : (sleep 1) }
+      30.times { File.exist?("/etc/sysconfig/rhn/systemid") ? break : (sleep 1) }
 
       # Reload the registration_type
       LinuxAdmin::RegistrationSystem.registration_type(true)

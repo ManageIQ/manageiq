@@ -82,7 +82,7 @@ module VMDB
       end_time   = nil
 
       # Get the start and end time from the log
-      unless filename.nil? || !File.exists?(filename)
+      unless filename.nil? || !File.exist?(filename)
         if filename.match(/\.gz$/)
           start_time, end_time = log_duration_gz(filename)
         else
@@ -142,7 +142,7 @@ module VMDB
       log_header = "MIQ(#{self.name}.zip_logs)"
 
       zip_dir = Rails.root.join("data", "user", userid)
-      FileUtils.mkdir_p(zip_dir) unless File.exists?(zip_dir)
+      FileUtils.mkdir_p(zip_dir) unless File.exist?(zip_dir)
 
       zfile = zip_dir.join(zip_filename)
       File.delete(zfile) if File.exist?(zfile)

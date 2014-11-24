@@ -70,7 +70,7 @@
 				<%#= entry.icon %>
 			</td>
 			<td onclick="<%#= remote_function(:url=>{:action=>'ce_select', :id=>entry.id, :field=>"icon"}) %>" title="Click to update this entry">
-				<%# if File.exists?(entry.icon) %>
+				<%# if File.exist?(entry.icon) %>
 					<%#= image_tag(entry.icon, :size => "16x16", :border => 0) %>
 				<%# end %>
 			</td>-->

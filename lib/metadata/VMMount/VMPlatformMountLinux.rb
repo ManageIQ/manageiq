@@ -19,8 +19,8 @@ module VMPlatformMountLinux
         
         return unless $miqHostCfg
         return unless $miqHostCfg.emsLocal
-        return unless File.exists? VCBNAME
-        return unless File.exists? VCBSNAPSHOT
+        return unless File.exist? VCBNAME
+        return unless File.exist? VCBSNAPSHOT
         return unless File.extname(@dInfo.fileName) == ".vmdk"
         
         $log.debug "VMPlatformMountLinux::init: emsLocal = #{$miqHostCfg.emsLocal}" if $log

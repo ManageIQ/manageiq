@@ -31,7 +31,7 @@ class MiqProcess
     pid ||= Process.pid
 
     filename = "/proc/#{pid}/stat"
-    raise Errno::ESRCH.new(pid.to_s) unless File.exists?(filename)
+    raise Errno::ESRCH.new(pid.to_s) unless File.exist?(filename)
 
     result = { :pid => pid }
     raw_stats = MiqSystem.readfile_async(filename)

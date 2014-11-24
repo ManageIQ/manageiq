@@ -18,7 +18,7 @@ def dump_csv(type, hashes)
   output = "#{$outdir}/#{type}.csv"
   if hashes.empty?
     puts "No #{type} data points found."
-    File.truncate(output, 0) if File.exists?(output)
+    File.truncate(output, 0) if File.exist?(output)
   else
     puts "#{hashes.length} #{type} data points found."
 
