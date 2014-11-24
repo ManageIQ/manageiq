@@ -35,7 +35,7 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :vms,               :foreign_key => :ems_id
 
   has_many :ems_events,     :class_name => "EmsEvent",    :foreign_key => "ems_id", :order => "timestamp"
-  has_many :policy_events,  :class_name => "PolicyEvent", :foreign_key => "ems_id", :dependent => :nullify, :order => "timestamp"
+  has_many :policy_events,  :class_name => "PolicyEvent", :foreign_key => "ems_id", :order => "timestamp"
 
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy

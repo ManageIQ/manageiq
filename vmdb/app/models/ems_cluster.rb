@@ -15,7 +15,7 @@ class EmsCluster < ActiveRecord::Base
   has_many    :metric_rollups,         :as => :resource  # Destroy will be handled by purger
   has_many    :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many    :policy_events,          :dependent => :nullify, :order => "timestamp"
+  has_many    :policy_events,          :order => "timestamp"
 
   virtual_column :v_ram_vr_ratio,      :type => :float,   :uses => [:aggregate_memory, :aggregate_vm_memory]
   virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_logical_cpus, :aggregate_vm_cpus]
