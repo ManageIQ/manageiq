@@ -67,7 +67,6 @@ class ChargebackController < ApplicationController
 
     @sb[:open_tree_nodes] ||= []
 
-    cb_rates_list
     @right_cell_text = case x_active_tree
     when :cb_rates_tree       then _("All %s") % ui_lookup(:models=>"ChargebackRate")
     when :cb_assignments_tree then _("All %s") % "Assignments"
