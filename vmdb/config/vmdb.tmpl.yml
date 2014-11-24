@@ -145,6 +145,10 @@ performance:
   host_overhead:
     :memory: 2.01.percent
     :cpu: 0.15.percent
+policy_events:
+  history:
+    :keep_policy_events: 6.months
+    :purge_window_size: 1000
 product:
   maindb: ExtManagementSystem
 reporting:

@@ -1,4 +1,6 @@
 class PolicyEvent < ActiveRecord::Base
+  include_concern 'Purging'
+
   belongs_to  :miq_event
   belongs_to  :miq_policy
   has_many    :contents,        :class_name => "PolicyEventContent", :dependent => :destroy
