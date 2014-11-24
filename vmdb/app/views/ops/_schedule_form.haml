@@ -27,8 +27,27 @@
   = render :partial => "schedule_form_timer"
 
   .button-group
-    = button_tag("Save", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !saveable(scheduleForm)}", "ng-click" => "saveClicked()", "ng-disabled" => "!saveable(scheduleForm)")
-    = button_tag("Reset", :class => "btn btn-default", "ng-class" => "{'btn-disabled': !scheduleForm.$dirty}", "ng-click" => "resetClicked()", "ng-disabled" => "!scheduleForm.$dirty")
+    = button_tag("Add",
+      :class        => "btn btn-primary",
+      "ng-class"    => "{'btn-disabled': !saveable(scheduleForm)}",
+      "ng-click"    => "saveClicked()",
+      "ng-disabled" => "!saveable(scheduleForm)",
+      "ng-show"     => "newSchedule")
+
+    = button_tag("Save",
+      :class        => "btn btn-primary",
+      "ng-class"    => "{'btn-disabled': !saveable(scheduleForm)}",
+      "ng-click"    => "saveClicked()",
+      "ng-disabled" => "!saveable(scheduleForm)",
+      "ng-hide"     => "newSchedule")
+
+    = button_tag("Reset",
+      :class        => "btn btn-default",
+      "ng-class"    => "{'btn-disabled': !scheduleForm.$dirty}",
+      "ng-click"    => "resetClicked()",
+      "ng-disabled" => "!scheduleForm.$dirty",
+      "ng-hide"     => "newSchedule")
+
     = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
 
 :javascript

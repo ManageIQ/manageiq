@@ -28,6 +28,16 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     return testType(/^host/);
   };
 
+  var scheduleEditButtonClicked = function(buttonName, serializeFields) {
+    miqService.sparkleOn();
+    var url = '/ops/schedule_edit/' + scheduleFormId + '?button=' + buttonName;
+    if (serializeFields === undefined) {
+      miqService.miqAjaxButton(url);
+    } else {
+      miqService.miqAjaxButton(url, serializeFields);
+    }
+  };
+
   $scope.buildLegend = function() {
     var type;
 
@@ -128,36 +138,39 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
   };
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
-    var url = '/ops/schedule_edit/' + scheduleFormId + '?button=cancel';
-    miqService.miqAjaxButton(url);
+    scheduleEditButtonClicked('cancel');
   };
 
   $scope.resetClicked = function() {
-    miqService.sparkleOn();
-    var url = '/ops/schedule_edit/' + scheduleFormId + '?button=reset';
-    miqService.miqAjaxButton(url);
+    scheduleEditButtonClicked('reset');
   };
 
   $scope.saveClicked = function() {
-    miqService.sparkleOn();
-    var url = '/ops/schedule_edit/' + scheduleFormId + '?button=save';
-    miqService.miqAjaxButton(url, true);
+    scheduleEditButtonClicked('save', true);
+  };
+
+  $scope.addClicked = function() {
+    scheduleEditButtonClicked('add', true);
   };
 
   $scope.finishedLoading = false;
 
   if (scheduleFormId == 'new') {
+    $scope.newSchedule = true;
     $scope.actionType = 'vm';
     $scope.filterType = 'all';
     $scope.scheduleEnabled = '1';
     $scope.filterValuesEmpty = true;
+    var today = new Date();
+    $scope.scheduleDate = today.getMonth() + 1 + "/" + today.getDate() + "/" + today.getFullYear();
     $scope.scheduleTimerType = 'Once';
     $scope.scheduleTimeZone = 'UTC';
     $scope.scheduleStartHour = '0';
     $scope.scheduleStartMinute = '0';
     $scope.finishedLoading = true;
   } else {
+    $scope.newSchedule = false;
+
     miqService.sparkleOn();
 
     $http.get('/ops/schedule_form_fields/' + scheduleFormId).success(function(data) {

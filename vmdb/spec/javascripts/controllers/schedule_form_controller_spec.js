@@ -20,6 +20,11 @@ describe('scheduleFormController', function() {
       month: 2,
       date: 3
     };
+
+    // For the initialization scheduleDate test. This freezes time to 1/2/2014.
+    var fakeToday = new Date(2014, 0, 2);
+    jasmine.clock().mockDate(fakeToday);
+
     $httpBackend.whenGET('/ops/schedule_form_fields/new').respond();
     $controller = _$controller_('scheduleFormController', {
       $scope: $scope,
@@ -37,6 +42,10 @@ describe('scheduleFormController', function() {
   });
 
   var sharedBehaviorForInitialization = function() {
+    it('sets newSchedule to false', function() {
+      expect($scope.newSchedule).toBe(false);
+    });
+
     it('sets the action type to the type returned from the http request', function() {
       expect($scope.actionType).toEqual('actionType');
     });
@@ -120,6 +129,10 @@ describe('scheduleFormController', function() {
 
   describe('initialization', function() {
     describe('when the scheduleFormId is new', function() {
+      it('sets newSchedule to true', function() {
+        expect($scope.newSchedule).toBe(true);
+      });
+
       it('sets the action type to vm', function() {
         expect($scope.actionType).toEqual('vm');
       });
@@ -130,6 +143,10 @@ describe('scheduleFormController', function() {
 
       it('sets the filterValuesEmpty to true', function() {
         expect($scope.filterValuesEmpty).toBe(true);
+      });
+
+      it('sets the scheduleDate to today', function() {
+        expect($scope.scheduleDate).toEqual("1/2/2014");
       });
 
       it('sets the scheduleTimerType to once', function() {
@@ -212,6 +229,8 @@ describe('scheduleFormController', function() {
           $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
           $httpBackend.flush();
         }));
+
+        sharedBehaviorForInitialization();
 
         it('sets the filterValuesEmpty to true', function() {
           expect($scope.filterValuesEmpty).toBe(true);
@@ -296,6 +315,20 @@ describe('scheduleFormController', function() {
 
     it('delegates to miqService.miqAjaxButton', function() {
       expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save', true);
+    });
+  });
+
+  describe('#addClicked', function() {
+    beforeEach(function() {
+      $scope.addClicked();
+    });
+
+    it('turns the spinner on via the miqService', function() {
+      expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('delegates to miqService.miqAjaxButton', function() {
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=add', true);
     });
   });
 
