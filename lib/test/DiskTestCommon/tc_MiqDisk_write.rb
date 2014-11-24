@@ -23,7 +23,7 @@ class TestMiqDiskWrite < Test::Unit::TestCase
 			@disk_specs = vms.find_vms_with_criteria
 			@disk_specs.each do |spec|
 				filename = spec['location']
-				next unless File.exists?(filename)
+				next unless File.exist?(filename)
 
 				di = OpenStruct.new
 				di.fileName = filename

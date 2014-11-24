@@ -47,7 +47,7 @@ module Extract
 
     def scan_vm_metadata(vmParms)
       fileName = vmParms[:vmName]
-      return unless File.exists?(fileName)
+      return unless File.exist?(fileName)
 
       # Load VM object
       @vm = MiqVm.new(fileName)

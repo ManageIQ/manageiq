@@ -27,7 +27,7 @@ class TestSeek < Test::Unit::TestCase
 		@disks = Array.new
 		@disk_specs.each do |spec|
 			filename = spec['location']
-			next unless File.exists?(filename)
+			next unless File.exist?(filename)
 
 			di = OpenStruct.new
 			di.fileName = filename

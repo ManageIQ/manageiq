@@ -144,6 +144,6 @@ MiqBundler.include_gemfile("Gemfile.mingw.rb", binding) if RUBY_PLATFORM =~ /min
 #   their local development.  This can be any gem under evaluation that other
 #   developers may not need or may not easily install, such as rails-dev-boost,
 #   any git based gem, and compiled gems like rbtrace or memprof.
-if File.exists?(File.expand_path("Gemfile.dev.rb", File.dirname(__FILE__)))
+if File.exist?(File.expand_path("Gemfile.dev.rb", File.dirname(__FILE__)))
   MiqBundler.include_gemfile("Gemfile.dev.rb", binding)
 end

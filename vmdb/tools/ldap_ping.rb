@@ -1,6 +1,6 @@
 LOG_DIR = "./"
 logfile = File.join(LOG_DIR, "ldap_ping.log")
-#File.delete(logfile) if File.exists?(logfile)
+#File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
 $log.level = VMDBLogger.const_get("INFO")
 

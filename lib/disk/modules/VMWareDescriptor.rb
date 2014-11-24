@@ -203,7 +203,7 @@ module VMWareDescriptor
 	end
 	
 	# Descriptors that pass through FAT file systems may have 8.3 names.
-	# File.exists?("c:/window~1.vmd") will match "c:/window~1.vmdk", but
+	# File.exist?("c:/window~1.vmd") will match "c:/window~1.vmdk", but
 	# CreateFile will fail, so fix the extension.
 	def fixBrokenExtension(fn)
 		if fn[-4, 4] == ".vmd" then fn += "k" end

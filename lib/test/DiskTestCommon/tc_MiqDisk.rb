@@ -59,7 +59,7 @@ module DiskTestCommon
 		]
 			
       params.each_slice(2) do |filename, rawDisk|
-        next unless File.exists?(filename)
+        next unless File.exist?(filename)
 
         diskInfo = OpenStruct.new
 				diskInfo.rawDisk = true if rawDisk
@@ -84,7 +84,7 @@ module DiskTestCommon
       ]
 
       params.each_slice(3) do |filename, filesize, rawDisk|
-        next unless File.exists?(filename)
+        next unless File.exist?(filename)
 
         diskInfo = OpenStruct.new
         diskInfo.rawDisk = true if rawDisk
@@ -103,7 +103,7 @@ module DiskTestCommon
     def test_8gb_seek_and_read          
       params = [FILE_SPRS_8GB]
       params.each do |filename|
-        next unless File.exists?(filename)
+        next unless File.exist?(filename)
 
         diskInfo = OpenStruct.new
         diskInfo.fileName = filename
@@ -155,7 +155,7 @@ module DiskTestCommon
     # 
     def test_multi_8gb_seek_and_read
 			filename = FILE_MLTD_8GB
-	    return unless File.exists?(filename)
+	    return unless File.exist?(filename)
   
       # Disk format: 1st and 3rd disks have only the first and last blocks 
       # filled with 1 and 3, respectively; 2nd and 4th disks are completely 
@@ -200,7 +200,7 @@ module DiskTestCommon
     #
     def test_offset_256mb_cowd_seek_and_read
 			filename = FILE_COWD_256MB
-	    return unless File.exists?(filename)
+	    return unless File.exist?(filename)
   	
       # Disk format: each block has its corresponding number repeated over it
       diskInfo = OpenStruct.new
@@ -231,7 +231,7 @@ module DiskTestCommon
     #
     def test_offset_1gb_seek_and_read
 			filename = FILE_OFST_1GB
-	    return unless File.exists?(filename)
+	    return unless File.exist?(filename)
   	
       # Disk format: each block has its corresponding number repeated over it
       diskInfo = OpenStruct.new
@@ -313,7 +313,7 @@ module DiskTestCommon
 #     d.close
      
 			filename = FILE_PRTN1_256MB
-			return unless File.exists?(filename)
+			return unless File.exist?(filename)
 
  			diskInfo = OpenStruct.new
       diskInfo.fileName = filename	
@@ -389,7 +389,7 @@ module DiskTestCommon
     #
     def test_parent_child_256mb_seek_and_read
 			filename = FILE_PCHL_256MB
-			return unless File.exists?(filename)
+			return unless File.exist?(filename)
 
       diskInfo = OpenStruct.new
       diskInfo.fileName = filename		
@@ -424,7 +424,7 @@ module DiskTestCommon
     def test_5gb_seek_and_read
       params = [FILE_SPRS_5GB]
       params.each do |filename|
-        next unless File.exists?(filename)
+        next unless File.exist?(filename)
         
         diskInfo = OpenStruct.new
         diskInfo.fileName = filename			
@@ -465,7 +465,7 @@ module DiskTestCommon
     def test_flat4gb_seek_and_read
       params = [FILE_DESC_4GB]
       params.each do |filename|
-	      next unless File.exists?(filename)
+	      next unless File.exist?(filename)
   
         diskInfo = OpenStruct.new
         diskInfo.fileName = filename
@@ -502,7 +502,7 @@ module DiskTestCommon
     
     def test_Flat4GBRaw_seek_and_read
 			filename = FILE_FLAT_4GB
-			return unless File.exists?(filename)
+			return unless File.exist?(filename)
 
       diskInfo = OpenStruct.new
       diskInfo.rawDisk = true

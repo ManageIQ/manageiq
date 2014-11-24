@@ -33,9 +33,9 @@ module WindowsBundler
       puts "  Manually run the devkitvars.bat from the devkit directory first."
 
       devkit = File.expand_path(File.join(Gem.bindir, %w{.. .. devkit devkitvars.bat})).gsub('/', '\\')
-      devkit = File.expand_path(File.join("/", %w{pik devkit devkitvars.bat})).gsub('/', '\\') unless File.exists?(devkit)
-      devkit = File.expand_path(File.join("C:", %w{pik devkit devkitvars.bat})).gsub('/', '\\') unless File.exists?(devkit)
-      puts "  Your devkitvars.bat file is located here: #{devkit}" if File.exists?(devkit)
+      devkit = File.expand_path(File.join("/", %w{pik devkit devkitvars.bat})).gsub('/', '\\') unless File.exist?(devkit)
+      devkit = File.expand_path(File.join("C:", %w{pik devkit devkitvars.bat})).gsub('/', '\\') unless File.exist?(devkit)
+      puts "  Your devkitvars.bat file is located here: #{devkit}" if File.exist?(devkit)
 
       exit 1
     end
@@ -67,7 +67,7 @@ module WindowsBundler
   #
 
   def self.check_postgres
-    if File.exists?("X:")
+    if File.exist?("X:")
       puts "ERROR: X: drive is already mapped, please unmap it."
       exit 1
     end

@@ -4,7 +4,7 @@
 <% if @sb[:active_tab] == "settings_custom_logos" %>
   <%= render :partial => "layouts/flash_msg" %>
   <p class="legend">Custom Logo Image (Shown on top right of all screens)</p>
-  <% if File.exists?(@logo_file) %>
+  <% if File.exist?(@logo_file) %>
     <%= image_tag("/upload/custom_logo.png?#{rand(99999999).to_s}") %>
   <% else %>
     <%= render :partial => 'layouts/info_msg', :locals => {:message => "No custom logo image has been uploaded yet."}%>
@@ -17,7 +17,7 @@
     %>
     * Requirements: File-type - PNG; Dimensions - 350x70.
   <% end %>
-  <% if File.exists?(@logo_file) %>
+  <% if File.exist?(@logo_file) %>
     <br/>
     <table class="style1">
       <tr>
@@ -33,7 +33,7 @@
   <% end %>
   <hr>
   <p class="legend">Custom Login Background Image</p>
-  <% if File.exists?(@login_logo_file) %>
+  <% if File.exist?(@login_logo_file) %>
     <%= image_tag("/upload/custom_login_logo.png?#{rand(99999999).to_s}", 
                   :height => 400, 
                   :width  => 675)
@@ -51,7 +51,7 @@
     %>
     * Requirements: File-type - PNG; Dimensions - 1280x1000.
   <% end %>
-  <% if File.exists?(@login_logo_file) %>
+  <% if File.exist?(@login_logo_file) %>
     <br/>
     <table class="style1">
       <tr>

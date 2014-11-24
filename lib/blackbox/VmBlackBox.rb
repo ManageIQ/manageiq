@@ -299,7 +299,7 @@ module Manageiq
       begin
         getBlackboxNameArray().each do |d|
           tempBBName = d + RENAMED_EXT
-          File.delete(tempBBName) if File.exists?(tempBBName)
+          File.delete(tempBBName) if File.exist?(tempBBName)
         end
       rescue
         # Its ok if it fails
@@ -373,7 +373,7 @@ module Manageiq
 			rescue => e
 				@configPathWritable = false
 			ensure
-				File.delete(testFile) if File.exists?(testFile)
+				File.delete(testFile) if File.exist?(testFile)
 			end
 			return @configPathWritable
 		end
@@ -552,7 +552,7 @@ module Manageiq
 				closeFsHandle
 
         getBlackboxNameArray().each do |d|
-          File.delete(d) if File.exists?(d)
+          File.delete(d) if File.exist?(d)
         end
 
 				#clear all config settings
