@@ -1,0 +1,47 @@
+- content_for :trees do
+  - @built_trees.each do |tree|
+    %div{:style => "display:none;"}
+      = render(:partial  => "shared/tree",
+               :locals   => {:tree => tree,
+                             :name => tree.name.to_s})
+- content_for :accords do
+  = render(:partial => "layouts/dhtmlxlayout_explorer",
+           :locals  => {:accords                => @accords,
+                        :active_accord          => @sb[:active_accord],
+                        :accord_select_function => "miqAccordOpsSelect"})
+#main_div.main_div
+  - if role_allows(:feature => "ops_settings") || role_allows(:feature => "ops_rbac") || role_allows(:feature => "ops_diagnostics") || role_allows(:feature => "ops_db")
+    #tab_all_tabs_div= render :partial => "all_tabs"
+  %br/
+  %br/
+
+- if params[:action] == "explorer"
+  - url = url_for(:action => 'settings_form_field_changed',
+                  :id     => "#{@sb[:active_tab].split('_').last}")
+  - w = @winW - 450
+  = render :partial=>"/layouts/my_code_mirror",
+           :locals=>{:text_area_id => "file_data",
+                     :mode         => "yaml",
+                     :line_numbers => true,
+                     :url          => url,
+                     :height       => center_div_height(true, 550),
+                     :width        => w}
+
+%script{:type => "text/javascript"}
+  -# Create from/to date JS vars to limit calendar starting from
+  var miq_cal_dateFrom = miqCalendarDateConversion("#{@timezone_offset}");
+  var miq_cal_dateTo = null
+
+  function miqOpsAfterOnload() {
+  = javascript_dim("settings_tree_div", false) if role_allows(:feature=>"ops_settings")
+  = javascript_dim("diagnostics_tree_div", false) if role_allows(:feature=>"ops_diagnostics")
+  = javascript_dim("vmdb_tree_div", false) if role_allows(:feature=>"ops_db")
+  = javascript_dim("rbac_tree_div", false) if role_allows(:feature=>"ops_rbac")
+  = javascript_dim("analytics_tree_div", false) if get_vmdb_config[:product][:analytics]
+  - if @sb[:active_tab] == "db_utilization"
+    miqAsyncAjax('#{url_for(:action=>@ajax_action, :id=>@record)}');
+  - if @sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"
+    dhxLayoutB.cells('a').collapse();
+  };
+  var miq_after_onload = "miqOpsAfterOnload();"
+

@@ -1,0 +1,264 @@
+- url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
+- if @sb[:active_tab] == "settings_server"
+  = render :partial => "layouts/flash_msg"
+  %dl.col2
+    %dd
+      %fieldset
+        %p.legend Basic Information
+        %table.style1
+          %tr
+            %td.key Hostname
+            %td.wide= @temp[:selected_server].hostname
+          %tr
+            %td.key IP Address
+            %td.wide= @temp[:selected_server].ipaddress
+          %tr
+            %td.key Resides on VM
+            %td{:style => "padding: 0px"}
+              %table{:cellpadding => "0", :cellspacing => "0"}
+                %tr
+                  - vm = @temp[:selected_server].vm
+                  - if vm
+                    %td.image{:onclick => "DoNav('#{"/vm/show/" << vm.id.to_s}');", :onmouseover => "this.style.cursor='pointer'", :title => "Click to view this VM"}
+                      %img{:align => "left", :height => "20", :src => "/images/icons/new/vm.png", :width => "20"}/
+                    %td{:class => "#{cycle('row0','row1',:name=>'rel')} hover-text", :onclick => "DoNav('#{"/vm/show/" << vm.id.to_s}');", :onmouseover => "this.style.cursor='pointer'", :title => "Click to view this VM"}
+                      = h(vm.name)
+                  - else
+                    %td.wide Not Available
+          %tr
+            %td.key Company Name
+            %td.wide
+              = text_field_tag("server_company",
+                @edit[:new][:server][:company],
+                :maxlength=>20,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Appliance Name
+            %td.wide
+              = text_field_tag("server_name",
+                @edit[:new][:server][:name],
+                :maxlength=>20,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Zone*
+            %td.wide
+              - if session[:server_zones].length == 1
+                = text_field_tag("server_zone",
+                  @edit[:new][:server][:zone],
+                  :maxlength=>15,
+                  :disabled =>true,
+                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+              - else
+                = select_tag('server_zone',
+                  options_for_select(session[:server_zones].sort, @edit[:new][:server][:zone]),
+                  "data-miq_observe"=>{:url=>url}.to_json)
+          %tr
+            %td.key Appliance Time Zone
+            %td.wide
+              = select_tag('server_timezone',
+                options_for_select(ALL_TIMEZONES, @edit[:new][:server][:timezone]),
+                "data-miq_observe"=>{:url=>url}.to_json)
+          %tr
+            %td.key Default Locale
+            %td.wide
+              = select_tag('locale',
+                options_for_select([['Client Browser Setting', 'default']] + FastGettext.human_available_locales,
+                                   @edit[:new][:server][:locale]),
+                "data-miq_observe" => {:url => url}.to_json)
+        .note * Changing the Zone will reset all of this Server's priorities to secondary.
+      %fieldset
+        %p.legend Server Control
+        %table.style1
+          %tr
+            %td.key Server Roles
+            %td
+              - session[:server_roles].sort{|a,b| a[1]<=>b[1]}.each do |k,v|
+                - checked = !session[:selected_roles].nil? && session[:selected_roles].include?(k) ? true : false
+                = check_box_tag("server_roles_#{k}", value="1",
+                  checked=checked,
+                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                = h(v)
+                %br/
+          %tr
+            %td.key Default Repository SmartProxy
+            %td{:style => "width: 350px"}
+              - if @smartproxy_choices.empty?
+                None Available
+              - else
+                = select_tag('repository_scanning_defaultsmartproxy',
+                  options_for_select(@smartproxy_choices.sort, @edit[:new][:repository_scanning][:defaultsmartproxy].to_i),
+                  :include_blank=>true,
+                  "data-miq_observe"=>{:url=>url}.to_json)
+      %fieldset
+        %p.legend VMware Console Support
+        %table.style1
+          %tr
+            %td.key Use
+            %td.wide
+              = select_tag('console_type',
+                options_for_select([["VMware MKS Plugin","MKS"],["VNC","VNC"],["VMware VMRC Plugin","VMRC"]],
+                  @edit[:new][:server][:remote_console_type]),
+                "data-miq_observe"=>{:url=>url}.to_json)
+          - if @edit[:new][:server][:remote_console_type] == "MKS"
+            %tr
+              %td.key VMware MKS Plugin Version
+              %td.wide
+                = select_tag('server_mks_version',
+                  options_for_select(MKS_VERSIONS,
+                    @edit[:new][:server][:mks_version]),
+                  "data-miq_observe"=>{:url=>url}.to_json)
+          - elsif @edit[:new][:server][:remote_console_type] == "VNC"
+            %tr
+              %td.key VNC Proxy Address
+              %td.wide
+                = text_field_tag("server_vnc_proxy_address",
+                  @edit[:new][:server][:vnc_proxy_address],
+                  :maxlength=>MAX_NAME_LEN,
+                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+            %tr
+              %td.key VNC Proxy Port
+              %td
+                = text_field_tag("server_vnc_proxy_port",
+                  @edit[:new][:server][:vnc_proxy_port],
+                  :maxlength=>6, :size=>6,
+                  "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+    %dd
+      %fieldset
+        %p.legend NTP Servers
+        %table.style1
+          %tr
+            %td.key Servers
+            %td.wide
+              = text_field_tag("ntp_server_1",
+                @edit[:new][:ntp][:server][0],
+                :maxlength=>MAX_NAME_LEN,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+              %br/
+              = text_field_tag("ntp_server_2",
+                @edit[:new][:ntp][:server][1],
+                :maxlength=>MAX_NAME_LEN,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+              %br/
+              = text_field_tag("ntp_server_3",
+                @edit[:new][:ntp][:server][2],
+                :maxlength=>MAX_NAME_LEN,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+        .note Specified NTP settings applied here will override Zone NTP settings.
+      %fieldset
+        %p.legend Outgoing SMTP E-mail Server
+        %table.style1
+          %tr
+            %td.key Host
+            %td.wide
+              = text_field_tag("smtp_host",
+                @edit[:new][:smtp][:host],
+                :maxlength=>255,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Port
+            %td.wide{:colspan => "2"}
+              = text_field_tag("smtp_port",
+                @edit[:new][:smtp][:port],
+                :maxlength=>6,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Domain
+            %td.wide
+              = text_field_tag("smtp_domain",
+                @edit[:new][:smtp][:domain],
+                :maxlength=>30,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Start TLS Automatically
+            %td
+              = check_box_tag("smtp_enable_starttls_auto",
+                value = GenericMailer.default_for_enable_starttls_auto ? "1" : "0",
+                checked = @edit[:new][:smtp][:enable_starttls_auto],
+                "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+          %tr
+            %td.key SSL Verify Mode
+            %td.wide
+              = select_tag('smtp_openssl_verify_mode',
+                options_for_select(GenericMailer.openssl_verify_modes.collect{|m| [m.titleize, m]}, @edit[:new][:smtp][:openssl_verify_mode]),
+                "data-miq_observe"=>{:url=>url}.to_json)
+          %tr
+            %td.key Authentication
+            %td.wide
+              = select_tag('smtp_authentication',
+                options_for_select(GenericMailer.authentication_modes, @edit[:new][:smtp][:authentication]),
+                "data-miq_observe"=>{:url=>url}.to_json)
+          - chk = @edit[:new][:smtp][:authentication] == "none"
+          %tr
+            %td.key User Name
+            %td.wide
+              = text_field_tag("smtp_user_name",
+                @edit[:new][:smtp][:user_name],
+                :maxlength=>MAX_NAME_LEN,
+                :disabled=>chk,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Password
+            %td.wide
+              = password_field_tag("smtp_password", '',
+                :maxlength         => MAX_NAME_LEN,
+                :placeholder       => placeholder_if_present(@edit[:new][:smtp][:password]),
+                :disabled          => chk,
+                "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key From E-mail Address
+            %td.wide
+              = text_field_tag("smtp_from",
+                @edit[:new][:smtp][:from],
+                :maxlength=>MAX_DESC_LEN,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Test E-mail Address
+            %td.wide
+              = text_field_tag("smtp_test_to",
+                @sb[:new_to],
+                :maxlength=>MAX_DESC_LEN,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+            %td{:align => "right"}
+              = render :partial => 'email_verify_button', :locals=>{:id=>"#{@sb[:active_tab].split('_').last}"}
+      %fieldset
+        %p.legend Web Services
+        %table.style1
+          %tr
+            %td.key Mode
+            %td.wide
+              = select_tag('webservices_mode',
+                options_for_select(["invoke","disable"], @edit[:new][:webservices][:mode]),
+                "data-miq_observe"=>{:url=>url}.to_json)
+          %tr
+            %td.key Security
+            %td.wide
+              = select_tag('webservices_security',
+                options_for_select(["none","ws-security"], @edit[:new][:webservices][:security]),
+                "data-miq_observe"=>{:url=>url}.to_json)
+      %fieldset
+        %p.legend Logging
+        %table.style1
+          %tr
+            %td.key Log Level
+            %td.wide
+              = select_tag('log_level',
+                options_for_select(["fatal","error","warn","info","debug"], @edit[:new][:log][:level]),
+                "data-miq_observe"=>{:url=>url}.to_json)
+      %fieldset
+        %p.legend Custom Support URL
+        %table.style1
+          %tr
+            %td.key URL (i.e. www.mypage.com)
+            %td.wide
+              = text_field_tag("custom_support_url",
+                @edit[:new][:server][:custom_support_url],
+                :maxlength=>50,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key Description
+            %td.wide
+              = text_field_tag("custom_support_url_description",
+                @edit[:new][:server][:custom_support_url_description],
+                :maxlength=>50,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+  %div{:style => "padding-bottom:20px;"}

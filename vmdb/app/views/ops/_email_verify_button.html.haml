@@ -1,0 +1,12 @@
+#email_verify_button_on{:style => "#{hide_button(@test_email_button, "on")}"}
+  = link_to(button_tag('Verify', :class => "btn btn-primary btn-xs", :alt => "Send test email"),
+    {:action => "settings_update",
+    :button  => "email_verify",
+    :id      => id},
+    "data-miq_sparkle_on" => true,
+    "data-miq_sparkle_off" => true,
+    :remote                => true,
+    :title                 => "Send test email")
+#email_verify_button_off{:style => "#{hide_button(@test_email_button, "off")}"}
+  = button_tag("Verify", :class => "btn btn-primary btn-xs btn-disabled",
+    :title => "SMTP E-mail Server settings and Test E-mail Address are needed to send test email")
