@@ -292,9 +292,11 @@ module ReportController::Schedules
                   temp_arr = Array.new
                   rec = MiqReport.find_by_name(r.strip)
                   if rec
-                    temp_arr.push(r)
-                    temp_arr.push(rec.id)
-                    @reps.push(temp_arr) if !@reps.include?(temp_arr)
+                    unless x_active_tree == :widgets_tree && rec.db == "VimPerformanceTrend"
+                      temp_arr.push(r)
+                      temp_arr.push(rec.id)
+                      @reps.push(temp_arr) unless @reps.include?(temp_arr)
+                    end
                   end
                 end
               end

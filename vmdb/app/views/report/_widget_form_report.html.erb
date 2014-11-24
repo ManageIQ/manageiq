@@ -25,6 +25,8 @@
                             :disabled=>@edit[:read_only],
                             "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
                             "data-miq_observe"=>{:url=>url}.to_json) %>
+        <% elsif @edit[:new][:subfilter].present? %>
+          No Reports to select
         <% end %>
       </td>
     </tr>
