@@ -66,7 +66,7 @@ EOXML
     it "when a yaml file is deleted" do
       RssFeed.count.should > 0
 
-      File.stub(:exists?).and_return(false)
+      File.stub(:exist?).and_return(false)
       described_class.sync_from_yml_dir
       RssFeed.count.should == 0
     end

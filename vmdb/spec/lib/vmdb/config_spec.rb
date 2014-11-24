@@ -6,7 +6,7 @@ describe VMDB::Config do
 
   it ".load_config_file" do
     IO.stub(:read => "---\r\nsmtp:\r\n  password: #{enc_pass}\r\n")
-    File.stub(:exists?).with("test.yml").and_return(true)
+    File.stub(:exist?).with("test.yml").and_return(true)
     described_class.load_config_file("test.yml").should == {:smtp => {:password => password}}
   end
 

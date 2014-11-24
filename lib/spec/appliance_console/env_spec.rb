@@ -13,44 +13,44 @@ describe ApplianceConsole::Env do
 
   it "should call net_file if it exists (and upcase name)" do
     subject.should_receive(:`).with(/-GET IP/).and_return("10.10.10.10\n")
-    File.should_receive(:exists?).and_return(true)
+    File.should_receive(:exist?).and_return(true)
     expect(subject[:ip]).to eq("10.10.10.10")
   end
 
   it "should just return value if net_file doesn't exits" do
     subject.should_not_receive(:`)
-    File.should_receive(:exists?).and_return(false)
+    File.should_receive(:exist?).and_return(false)
     expect(subject["IP"]).to eq("IP")
   end
 
   it "should upcase set name" do
     subject.should_receive(:`).with(/-IP abc/).and_return("")
-    File.should_receive(:exists?).and_return(true)
+    File.should_receive(:exist?).and_return(true)
     subject[:ip] = "abc"
   end
 
   it "should know something changed if calling set" do
     subject.should_receive(:`).with(/-DHCP ABC +2>/).and_return("")
-    File.should_receive(:exists?).and_return(true)
+    File.should_receive(:exist?).and_return(true)
     subject["DHCP"] = "ABC"
     expect(subject).to be_changed
   end
 
   it "should not pass true values to command line" do
     subject.should_receive(:`).with(/-DHCP +2>/).and_return("")
-    File.should_receive(:exists?).and_return(true)
+    File.should_receive(:exist?).and_return(true)
     subject["DHCP"] = true
     expect(subject).to be_changed
   end
 
   it "should do nothing if setting a variable to false" do
-    File.should_not_receive(:exists?)
+    File.should_not_receive(:exist?)
     subject["DHCP"] = false
     expect(subject).not_to be_changed
   end
 
   it "should do nothing if setting a variable to nil" do
-    File.should_not_receive(:exists?)
+    File.should_not_receive(:exist?)
     subject["DHCP"] = nil
     expect(subject).not_to be_changed
   end

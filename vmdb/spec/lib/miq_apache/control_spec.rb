@@ -110,14 +110,14 @@ describe MiqApache::Control do
   end
 
   it "should make the apache control log's directory if missing when calling run_apache_cmd" do
-    File.stub(:exists?).and_return(false)
+    File.stub(:exist?).and_return(false)
     Dir.should_receive(:mkdir).with(File.dirname(MiqApache::Control::APACHE_CONTROL_LOG))
     MiqUtil.stub(:runcmd)
     MiqApache::Control.run_apache_cmd("start")
   end
 
   it "should not make the apache control log's directory if it exists when calling run_apache_cmd" do
-    File.stub(:exists?).and_return(true)
+    File.stub(:exist?).and_return(true)
     Dir.should_receive(:mkdir).with(File.dirname(MiqApache::Control::APACHE_CONTROL_LOG)).never
     MiqUtil.stub(:runcmd)
     MiqApache::Control.run_apache_cmd("start")
@@ -125,7 +125,7 @@ describe MiqApache::Control do
 
   it "should build cmdline when calling run_apache_cmd with start" do
     cmd = "start"
-    File.stub(:exists?).and_return(true)
+    File.stub(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     $log.stub(:debug?).and_return(false)
     MiqUtil.should_receive(:runcmd).with("apachectl -E #{MiqApache::Control::APACHE_CONTROL_LOG} -k #{cmd}")
@@ -134,7 +134,7 @@ describe MiqApache::Control do
 
   it "should build cmdline when calling run_apache_cmd with start in debug mode if $log is debug" do
     cmd = "start"
-    File.stub(:exists?).and_return(true)
+    File.stub(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     $log.stub(:debug?).and_return(true)
     MiqUtil.should_receive(:runcmd).with("apachectl -E #{MiqApache::Control::APACHE_CONTROL_LOG} -k #{cmd} -e debug")
@@ -143,7 +143,7 @@ describe MiqApache::Control do
 
   it "should log a warning when calling run_apache_cmd with start that raises an error" do
     cmd = "start"
-    File.stub(:exists?).and_return(true)
+    File.stub(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     $log.stub(:debug?).and_return(false)
     MiqUtil.stub(:runcmd).and_raise("warn")

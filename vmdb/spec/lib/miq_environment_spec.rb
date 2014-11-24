@@ -41,7 +41,7 @@ describe MiqEnvironment do
 
         it "will return true if linux and /var/www/miq/vmdb exists and cache the result" do
           MiqEnvironment::Command.should_receive(:is_linux?).once.and_return(true)
-          File.should_receive(:exists?).once.and_return(true)
+          File.should_receive(:exist?).once.and_return(true)
           assert_same_result_every_time(:is_appliance?, true)
         end
       end
