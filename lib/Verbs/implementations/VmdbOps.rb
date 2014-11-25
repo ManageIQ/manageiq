@@ -98,8 +98,7 @@ class VmdbOps
 	# context of this class.
 	
 	def getVmFile(ost)
-	    return VMWareOps.getVmFile(ost) #if VMWareOps.isVmwareFile?(ost)
-	    return ost.args[0]
+	    VMWareOps.getVmFile(ost)
 	end
 	
 	def getVmMdFile(vmName, sfx)
