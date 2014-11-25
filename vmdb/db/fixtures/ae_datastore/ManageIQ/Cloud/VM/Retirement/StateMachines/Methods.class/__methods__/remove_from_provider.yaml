@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: delete_from_provider
+    name: remove_from_provider
     display_name: 
     description: 
     scope: instance
@@ -12,12 +12,12 @@ object:
   inputs:
   - field:
       aetype: 
-      name: deletion_type
+      name: removal_type
       display_name: 
       datatype: 
       priority: 1
       owner: 
-      default_value: remove_from_disk
+      default_value: 
       substitute: true
       message: create
       visibility: 

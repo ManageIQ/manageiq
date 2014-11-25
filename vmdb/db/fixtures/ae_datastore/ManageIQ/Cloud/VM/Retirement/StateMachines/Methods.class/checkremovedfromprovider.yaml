@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: CheckDeletedFromProvider
+    name: CheckRemovedFromProvider
     inherits: 
     description: 
   fields:
   - execute:
-      value: check_deleted_from_provider
+      value: check_removed_from_provider

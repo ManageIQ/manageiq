@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: DeleteFromProvider
+    name: RemoveFromProvider
     inherits: 
     description: 
   fields:
   - execute:
-      value: delete_from_provider(deletion_type => 'remove_from_disk')
+      value: remove_from_provider(removal_type => 'remove_from_disk')

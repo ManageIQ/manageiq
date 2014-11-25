@@ -8,9 +8,9 @@ object:
     inherits: 
     description: 
   fields:
-  - DeleteFromProvider:
-      value: /Cloud/VM/Retirement/StateMachines/Methods/DeleteFromProvider
-  - CheckDeletedFromProvider:
-      value: /Cloud/VM/Retirement/StateMachines/Methods/CheckDeletedFromProvider
+  - RemoveFromProvider:
+      value: /Cloud/VM/Retirement/StateMachines/Methods/RemoveFromProvider
+  - CheckRemovedFromProvider:
+      value: /Cloud/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider
   - DeleteFromVMDB:
       value: "/Cloud/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"

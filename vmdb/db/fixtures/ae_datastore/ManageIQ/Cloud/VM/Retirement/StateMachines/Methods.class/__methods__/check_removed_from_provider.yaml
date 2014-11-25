@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: check_deleted_from_provider
+    name: check_removed_from_provider
     display_name: 
     description: 
     scope: instance
