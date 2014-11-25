@@ -33,7 +33,7 @@ class MiqAeInstance < ActiveRecord::Base
 
     val   = self.ae_values.detect { |v| v.field_id == field.id }
     val ||= self.ae_values.build(:field_id => field.id)
-    val.send("#{attribute.to_s}=", value)
+    val.send("#{attribute}=", value)
     val.save!
   end
 

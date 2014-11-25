@@ -62,12 +62,12 @@ class FleeceHives
 		  begin
 			  self.postProcessApps(xmlCol, fs)
 		  rescue Exception => err
-			  $log.warn "Exception during Post-process Applications: [#{err.to_s}]"
+			  $log.warn "Exception during Post-process Applications: [#{err}]"
 		  end
 			begin
 				self.collectProductKeys(xmlNode.root, xmlCol, regHnd)
 			rescue => err
-				$log.warn "Exception during Collect Product Keys: [#{err.to_s}]"
+				$log.warn "Exception during Collect Product Keys: [#{err}]"
 			end
 	  end
   end

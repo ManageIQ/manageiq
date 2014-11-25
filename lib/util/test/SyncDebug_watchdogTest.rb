@@ -17,7 +17,7 @@ def lock_timeout_test(lock, mode, sleep_secs)
     end
     my_puts "**** #{Thread.current.object_id}: Released lock."
   rescue => t1err
-    my_puts "**** (from rescue) #{Thread.current.object_id}: #{t1err.to_s}"
+    my_puts "**** (from rescue) #{Thread.current.object_id}: #{t1err}"
   end
 end
 
@@ -41,7 +41,7 @@ begin
     my_puts "Requesting lock: #{li[:lock].lock_name}, from_mode = #{li[:lock].sync_mode}, to_mode = #{li[:mode]} [#{li[:call_stack][0]}]"
   end
   sync_dbg.on_lock_acquire do |li|
-    my_puts "Acquired lock: #{li[:lock].lock_name}, acquired_mode = #{li[:lock].sync_mode}, requested_mode = #{li[:mode].to_s} [#{li[:call_stack][0]}]"
+    my_puts "Acquired lock: #{li[:lock].lock_name}, acquired_mode = #{li[:lock].sync_mode}, requested_mode = #{li[:mode]} [#{li[:call_stack][0]}]"
   end
 
   sync_dbg.on_unlock_request do |li|
@@ -79,7 +79,7 @@ begin
   sync_dbg.on_watchdog_stop do |lock, err|
     my_puts "Watchdog for #{lock.lock_name} stopping"
     if err
-      my_puts "Watchdog ERROR: #{err.to_s}"
+      my_puts "Watchdog ERROR: #{err}"
       my_puts "Watchdog: Start backtrace"
       my_puts err.backtrace.join("\n")
       my_puts "Watchdog: End backtrace"
@@ -141,7 +141,7 @@ begin
 
   mode = :SH
   my_puts
-  my_puts "TEST 5: mode = #{mode.to_s}, dead locker."
+  my_puts "TEST 5: mode = #{mode}, dead locker."
   my_puts
   my_puts "Creating test_thread..."
   begin
@@ -150,7 +150,7 @@ begin
     test_thread.join
     sleep sync_dbg.watchdog_poll_period * 3
   rescue => dlerr
-    my_puts "Dead locker rescue (#{mode.to_s}): #{dlerr.to_s}"
+    my_puts "Dead locker rescue (#{mode}): #{dlerr}"
   end
   my_puts "Done."
 

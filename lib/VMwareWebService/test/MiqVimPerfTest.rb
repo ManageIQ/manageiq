@@ -22,7 +22,7 @@ $vim_log.add 'err_console'
 
 begin
     vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
-    puts "vim.class: #{vim.class.to_s}"
+    puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
     puts
@@ -104,7 +104,7 @@ begin
     units = ci['unitInfo']['label']
 
     ma = miqPh.queryPerf(hostMor, :counterId => ci['key'], :intervalId => iid, :startTime => startTime, :endTime => endTime)
-    ma.each_slice(2) { |t, v| puts ":\tValue: #{v*0.01} (#{units})\t\tTIme: #{t.to_s}" }
+    ma.each_slice(2) { |t, v| puts ":\tValue: #{v*0.01} (#{units})\t\tTIme: #{t}" }
     puts
     
     puts "**** queryPerfComposite start"

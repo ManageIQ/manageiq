@@ -176,7 +176,7 @@ module S3FS
 	end
 	
 	def method_missing(methodId)
-	    raise "#{self.class.to_s}: #{methodId.id2name} is not supported"
+	    raise "#{self.class}: #{methodId.id2name} is not supported"
     end
     
     def getFileInfo(p)

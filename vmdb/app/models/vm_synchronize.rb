@@ -53,7 +53,7 @@ class VmSynchronize < Job
           request_docs = []
           all_docs = []
           s.each_element { |e|
-            $log.info("action-process_data: Summary XML [#{e.to_s}]")
+            $log.info("action-process_data: Summary XML [#{e}]")
             request_docs << e.attributes['original_filename'] if e.attributes['items_total'] && e.attributes['items_total'].to_i.zero?
             all_docs << e.attributes['original_filename']
           }

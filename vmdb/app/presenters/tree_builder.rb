@@ -140,7 +140,7 @@ class TreeBuilder
       :json_tree      => @tree_nodes,
       :select_node    => "#{x_node(@name)}",
       :onclick        => "cfmeOnClick_SelectTreeNode",
-      :id_prefix      => "#{@name.to_s}_",
+      :id_prefix      => "#{@name}_",
       :base_id        => "root",
       :no_base_exp    => true,
       :exp_tree       => false,

@@ -306,7 +306,7 @@ module ApplicationHelper
           bs_node = root.add_element("item", props)                 # Add buttonSelect node
           bgi[:items].each_with_index do |bsi, bsi_idx|             # Go thru all of the buttonSelect items
             if bsi.has_key?(:separator)                             # If separator found, add it
-              props = {"id"=>"sep_#{bg_idx.to_s}_#{bsi_idx.to_s}", "type"=>"separator"}
+              props = {"id"=>"sep_#{bg_idx}_#{bsi_idx}", "type"=>"separator"}
             else
               next if bsi[:image] == 'pdf' && !PdfGenerator.available?
               next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
@@ -422,7 +422,7 @@ module ApplicationHelper
     button[:title]     = CGI.escapeHTML(input[:description].to_s)
     button[:enabled]   = options[:enabled]
     button[:url]       = "button"
-    button[:url_parms] = "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class.to_s}&pressed=custom_button&desc=#{button_name}"
+    button[:url_parms] = "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
     button
   end
 

@@ -5,7 +5,7 @@ module ChartingHelper
                          :action => options[:action] || 'render_chart',
                          :width  => options[:width],
                          :height => options[:height],
-                         :rand   => "#{rand(999_999_999).to_s}"),
+                         :rand   => "#{rand(999_999_999)}"),
                  options.slice(:id, :bgcolor, :width, :height))
 
     elsif Charting.backend == :jqplot
@@ -13,7 +13,7 @@ module ChartingHelper
                             :action => options[:action] || 'render_chart',
                             :width  => options[:width],
                             :height => options[:height],
-                            :rand   => "#{rand(999_999_999).to_s}"),
+                            :rand   => "#{rand(999_999_999)}"),
                     options.slice(:id, :bgcolor, :width, :height))
     end
   end

@@ -46,11 +46,11 @@ module OpsController::Analytics
         I18n.t("cell_header.type_of_model_record_current)",
                                   :typ=>"Diagnostics",
                                   :model=>ui_lookup(:model=>svr.class.to_s),
-                                  :name=>"#{svr.name} [#{svr.id.to_s}]") :
+                                  :name=>"#{svr.name} [#{svr.id}]") :
         I18n.t("cell_header.type_of_model_record)",
                                   :typ=>"Diagnostics",
                                   :model=>ui_lookup(:model=>svr.class.to_s),
-                                  :name=>"#{svr.name} [#{svr.id.to_s}]")
+                                  :name=>"#{svr.name} [#{svr.id}]")
     else
       @right_cell_text = _("%{model} \"%{name}\"") % {:name=>"Enterprise", :model=>"Analytics"}
       @sb[:rpt_title] = "Analytics Report for Enterprise"

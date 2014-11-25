@@ -102,7 +102,7 @@ class NetappRemoteService < StorageManager
   def self.queue_metrics_refresh(statistic_time=nil, nrsIds=[])
     statistic_time ||= Time.now.utc
     agent_ids_by_zone(nrsIds).each do |z, ids|
-      $log.info "#{self.name}.queue_metrics_refresh: statistic_time = #{statistic_time.to_s}, zone = #{z}"
+      $log.info "#{self.name}.queue_metrics_refresh: statistic_time = #{statistic_time}, zone = #{z}"
       $log.info "#{self.name}.queue_metrics_refresh: queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
         :zone     => z,
@@ -113,7 +113,7 @@ class NetappRemoteService < StorageManager
         merged_ids = ids
         unless msg.nil?
           merged_ids = (merged_ids + msg[:args][1]).uniq
-          $log.info "#{self.name}.queue_metrics_refresh: merging requests from #{msg[:args][0]} with #{statistic_time.to_s}, zone = #{z}"
+          $log.info "#{self.name}.queue_metrics_refresh: merging requests from #{msg[:args][0]} with #{statistic_time}, zone = #{z}"
           $log.info "#{self.name}.queue_metrics_refresh: merging requests to zone #{z} for [ #{merged_ids.join(', ')} ]"
         end
         queue_options.merge(:args => [statistic_time, merged_ids])
@@ -123,7 +123,7 @@ class NetappRemoteService < StorageManager
 
   def self.queue_metrics_rollup_hourly(rollup_time, nrsIds=[])
     agent_ids_by_zone(nrsIds).each do |z, ids|
-      $log.info "#{self.name}.queue_metrics_rollup_hourly: rollup_time = #{rollup_time.to_s}, zone = #{z}"
+      $log.info "#{self.name}.queue_metrics_rollup_hourly: rollup_time = #{rollup_time}, zone = #{z}"
       $log.info "#{self.name}.queue_metrics_rollup_hourly: queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
         :zone     => z,
@@ -134,7 +134,7 @@ class NetappRemoteService < StorageManager
         merged_ids = ids
         unless msg.nil?
           merged_ids = (merged_ids + msg[:args][1]).uniq
-          $log.info "#{self.name}.queue_metrics_rollup_hourly: merging requests from #{msg[:args][0]} with #{rollup_time.to_s}, zone = #{z}"
+          $log.info "#{self.name}.queue_metrics_rollup_hourly: merging requests from #{msg[:args][0]} with #{rollup_time}, zone = #{z}"
           $log.info "#{self.name}.queue_metrics_rollup_hourly: merging requests to zone #{z} for [ #{merged_ids.join(', ')} ]"
         end
         queue_options.merge(:args => [rollup_time, merged_ids])
@@ -144,7 +144,7 @@ class NetappRemoteService < StorageManager
 
   def self.queue_metrics_rollup_daily(rollup_time, time_profile_id, nrsIds=[])
     agent_ids_by_zone(nrsIds).each do |z, ids|
-      $log.info "#{self.name}.queue_metrics_rollup_daily: rollup_time = #{rollup_time.to_s}, zone = #{z}, time_profile_id = #{time_profile_id}"
+      $log.info "#{self.name}.queue_metrics_rollup_daily: rollup_time = #{rollup_time}, zone = #{z}, time_profile_id = #{time_profile_id}"
       $log.info "#{self.name}.queue_metrics_rollup_daily: queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
         :zone         => z,
@@ -156,7 +156,7 @@ class NetappRemoteService < StorageManager
         merged_ids = ids
         unless msg.nil?
           merged_ids = (merged_ids + msg[:args][2]).uniq
-          $log.info "#{self.name}.queue_metrics_rollup_daily: merging requests from #{msg[:args][0]} with #{rollup_time.to_s}, zone = #{z}, time_profile_id = #{time_profile_id}"
+          $log.info "#{self.name}.queue_metrics_rollup_daily: merging requests from #{msg[:args][0]} with #{rollup_time}, zone = #{z}, time_profile_id = #{time_profile_id}"
           $log.info "#{self.name}.queue_metrics_rollup_daily: merging requests to zone #{z} for [ #{merged_ids.join(', ')} ]"
         end
         queue_options.merge(:args => [rollup_time, time_profile_id, merged_ids])
@@ -201,7 +201,7 @@ class NetappRemoteService < StorageManager
         $log.info "NetappRemoteService.update_ontap: agent: #{agent.ipaddress} STORAGE_UPDATE_OK"
         agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
       rescue Exception => err
-        $log.error "NetappRemoteService.update_ontap: agent: #{agent.ipaddress} - #{err.to_s}"
+        $log.error "NetappRemoteService.update_ontap: agent: #{agent.ipaddress} - #{err}"
         $log.error err.backtrace.join("\n")
         agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
       ensure
@@ -229,7 +229,7 @@ class NetappRemoteService < StorageManager
         agent.connect
         agent.update_metrics(statistic_time)
       rescue Exception => err
-        $log.warn "NetappRemoteService.update_metrics: #{err.to_s}"
+        $log.warn "NetappRemoteService.update_metrics: #{err}"
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -250,7 +250,7 @@ class NetappRemoteService < StorageManager
       begin
         agent.rollup_hourly_metrics(rollup_time)
       rescue Exception => err
-        $log.warn "NetappRemoteService.rollup_hourly_metrics: #{err.to_s}"
+        $log.warn "NetappRemoteService.rollup_hourly_metrics: #{err}"
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -286,7 +286,7 @@ class NetappRemoteService < StorageManager
       begin
         agent.rollup_daily_metrics(rollup_time, time_profile)
       rescue Exception => err
-        $log.warn "NetappRemoteService.rollup_daily_metrics: #{err.to_s}"
+        $log.warn "NetappRemoteService.rollup_daily_metrics: #{err}"
         $log.warn err.backtrace.join("\n")
         next
       ensure

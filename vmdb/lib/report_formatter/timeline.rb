@@ -89,7 +89,7 @@ module ReportFormatter
 #         e_title = "#{ui_lookup(:model=>rec[:resource_type])}: #{rec[:resource_name]}"
           e_title = rec[:resource_name]
           e_image = "/images/icons/new/#{bubble_icon(rec[:resource_type])}.png"
-          e_icon = "/images/icons/timeline/#{rec.event_type.downcase}_#{rec[:severity].to_s}.png"
+          e_icon = "/images/icons/timeline/#{rec.event_type.downcase}_#{rec[:severity]}.png"
 #         e_text = e_title # Commented out since name is showing in the columns anyway
         when "Vm"
           e_title = rec[:name]
@@ -234,21 +234,21 @@ module ReportFormatter
           end
           # Look for fields that have matching link fields and put in the link
           if co == "vm_name" && rec.vm_or_template_id != nil
-            e_text += "&lt;a href='/vm/show/#{to_cid(rec.vm_or_template_id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/vm/show/#{to_cid(rec.vm_or_template_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "src_vm_name" && rec.src_vm_id != nil
-            e_text += "&lt;a href='/vm/show/#{to_cid(rec.src_vm__id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/vm/show/#{to_cid(rec.src_vm__id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "dest_vm_name" && rec.dest_vm_or_template_id != nil
-            e_text += "&lt;a href='/vm/show/#{to_cid(rec.dest_vm_or_template_id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/vm/show/#{to_cid(rec.dest_vm_or_template_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "host_name" && rec.host_id != nil
-            e_text += "&lt;a href='/host/show/#{to_cid(rec.host_id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/host/show/#{to_cid(rec.host_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "dest_host_name" && rec.dest_host_id != nil
-            e_text += "&lt;a href='/host/show/#{to_cid(rec.dest_host_id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/host/show/#{to_cid(rec.dest_host_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "ems_cluster_name" && rec.ems_cluster_id != nil
-            e_text += "&lt;a href='/ems_cluster/show/#{to_cid(rec.ems_cluster_id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/ems_cluster/show/#{to_cid(rec.ems_cluster_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "ext_management_system.name" && rec.ext_management_system && rec.ext_management_system.id != nil
-            e_text += "&lt;a href='/#{ems_cloud ? "ems_cloud" : "ems_infra"}/show/#{to_cid(rec.ext_management_system.id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/#{ems_cloud ? "ems_cloud" : "ems_infra"}/show/#{to_cid(rec.ext_management_system.id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "availability_zone.name" && rec.availability_zone_id != nil
-            e_text += "&lt;a href='/availability_zone/show/#{to_cid(rec.availability_zone_id)}'&gt;#{row[co].to_s}&lt;/a&gt;"
+            e_text += "&lt;a href='/availability_zone/show/#{to_cid(rec.availability_zone_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif mri.db == "BottleneckEvent" && co == "resource_name"
             case rec.resource_type
             when "ExtManagementSystem"

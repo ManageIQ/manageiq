@@ -99,7 +99,7 @@ module LinuxMount
         @volMgr.allPhysicalVolumes.each do |v|
         	if $log.debug?
             	$log.debug "LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}"
-            	$log.debug "LinuxMount: v.partNum.to_s = #{v.partNum.to_s}"
+            	$log.debug "LinuxMount: v.partNum.to_s = #{v.partNum}"
             	$log.debug "LinuxMount: @devHash[v.dInfo.hardwareId] = #{@devHash[v.dInfo.hardwareId]}"
             end
             @osNames[v.dInfo.hardwareId + ':' + v.partNum.to_s] = @devHash[v.dInfo.hardwareId] + v.partNum.to_s

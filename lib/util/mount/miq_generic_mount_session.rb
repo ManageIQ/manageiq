@@ -229,7 +229,7 @@ class MiqGenericMountSession
       self.logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...complete")
 
     rescue => err
-      self.logger.error("#{log_header} Verify [#{current_test}] failed with error [#{err.class.name}] [#{err.to_s}], [#{err.backtrace[0]}]")
+      self.logger.error("#{log_header} Verify [#{current_test}] failed with error [#{err.class.name}] [#{err}], [#{err.backtrace[0]}]")
       res = false, err.to_s
     else
       res = true, ""

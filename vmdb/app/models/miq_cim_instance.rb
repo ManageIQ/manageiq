@@ -370,7 +370,7 @@ class MiqCimInstance < ActiveRecord::Base
   def dumpInstance(globalIndent="", level=0, io=$stdout)
     obj.properties.each do |k, v|
       unless v.value.kind_of?(Array)
-        indentedPrint("  #{k} => #{v.value} (#{v.value.class.to_s})", globalIndent, level, io)
+        indentedPrint("  #{k} => #{v.value} (#{v.value.class})", globalIndent, level, io)
       else
         indentedPrint("  #{k} =>", globalIndent, level, io)
         v.value.each { |val| indentedPrint("          #{val}", globalIndent, level, io) }

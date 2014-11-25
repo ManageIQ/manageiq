@@ -2956,7 +2956,7 @@ describe ApplicationHelper do
       desc = 'the description for the button'
       @item = { :button=>"custom_#{btn_num}",
                     :url=>"button",
-                    :url_parms=>"?id=#{@record.id}&button_id=#{btn_num}&cls=#{@record.class.to_s}&pressed=custom_button&desc=#{desc}"
+                    :url_parms=>"?id=#{@record.id}&button_id=#{btn_num}&cls=#{@record.class}&pressed=custom_button&desc=#{desc}"
       }
       @tb_buttons = Hash.new
       @parent = nil

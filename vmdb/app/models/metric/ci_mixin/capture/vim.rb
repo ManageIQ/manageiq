@@ -16,7 +16,7 @@ module Metric::CiMixin::Capture::Vim
       @perf_vim = self.ext_management_system.connect
       @perf_vim_hist = @perf_vim.getVimPerfHistory
     rescue => err
-      $log.error("#{log_header} Failed to initialize performance history from #{@perf_ems}: [#{err.to_s}]" )
+      $log.error("#{log_header} Failed to initialize performance history from #{@perf_ems}: [#{err}]" )
       self.perf_release_vim
       raise
     end
@@ -51,7 +51,7 @@ module Metric::CiMixin::Capture::Vim
       return counters_by_mor, counter_values_by_mor_and_ts
     rescue HTTPClient::ReceiveTimeoutError => err
       attempts ||= 0
-      msg = "#{log_header} Timeout Error during metrics data collection: [#{err.to_s}], class: [#{err.class.to_s}]"
+      msg = "#{log_header} Timeout Error during metrics data collection: [#{err}], class: [#{err.class}]"
       if attempts < 3
         attempts += 1
         $log.warn("#{msg}...Retry attempt [#{attempts}]")
@@ -68,11 +68,11 @@ module Metric::CiMixin::Capture::Vim
       $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       raise MiqException::MiqTimeoutError, err.message
     rescue Errno::ECONNREFUSED => err
-      $log.error("#{log_header} Communications Error during metrics data collection: [#{err.to_s}], class: [#{err.class.to_s}]")
+      $log.error("#{log_header} Communications Error during metrics data collection: [#{err}], class: [#{err.class}]")
       $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       raise MiqException::MiqConnectionRefusedError, err.message
     rescue Exception => err
-      $log.error("#{log_header} Unhandled exception during metrics data collection: [#{err.to_s}], class: [#{err.class.to_s}]")
+      $log.error("#{log_header} Unhandled exception during metrics data collection: [#{err}], class: [#{err.class}]")
       $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       $log.log_backtrace(err)
       raise

@@ -461,7 +461,7 @@ module VimPropMaps
 		raise "#{self.class.name}.dupProps: property map is not a Hash (#{pmap.class.name})" unless pmap.kind_of?(Hash)
 		npmap = pmap.dup
 		npmap.each do |k, v|
-			raise "#{self.class.name}.dupProps: #{k.to_s} map is not a Hash (#{v.class.name})" unless v.kind_of?(Hash)
+			raise "#{self.class.name}.dupProps: #{k} map is not a Hash (#{v.class.name})" unless v.kind_of?(Hash)
 			nv = v.dup
 			nv[:props] = nv[:props].dup unless nv[:props].nil?
 			npmap[k] = nv

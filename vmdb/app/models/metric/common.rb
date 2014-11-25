@@ -26,7 +26,7 @@ module Metric::Common
       :cpu_wait_delta_summation,
       :cpu_used_delta_summation
     ].each do |c|
-      vcol = "v_pct_#{c.to_s}".to_sym
+      vcol = "v_pct_#{c}".to_sym
       virtual_column vcol, :type => :float
       define_method(vcol) { v_calc_pct_of_cpu_time(vcol) }
     end

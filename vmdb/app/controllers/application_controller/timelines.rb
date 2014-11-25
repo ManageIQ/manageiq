@@ -275,7 +275,7 @@ module ApplicationController::Timelines
   end
 
   def tl_get_rpt(timeline)
-    return MiqReport.new(YAML::load(File.open("#{TIMELINES_FOLDER}/miq_reports/#{timeline.to_s}.yaml")))
+    return MiqReport.new(YAML::load(File.open("#{TIMELINES_FOLDER}/miq_reports/#{timeline}.yaml")))
   end
 
   def tl_build_filter(grp_name)             # hidden fields to highlight bands in timeline

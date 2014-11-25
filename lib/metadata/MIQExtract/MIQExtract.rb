@@ -160,7 +160,7 @@ class MIQExtract
         #File.open(File.join(@dataDir, "scan_#{c}.xml"),"w") {|f| xml.write(f,0)} if xml rescue nil
       end
 		rescue => err
-			$log.error "MIQExtract.extract #{err.to_s}"
+			$log.error "MIQExtract.extract #{err}"
       log_level = err.kind_of?(MiqException::Error) ? :debug : :error
       err.backtrace.each {|bt| $log.send(log_level, "MIQExtract.extract #{bt}")}
 			raise err
@@ -402,11 +402,11 @@ class MIQExtract
           #ost.snapId = opts.snapId if opts.snapId
           $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vmCfgFile}] in [#{Time.now-st}] seconds"
         rescue Timeout::Error => err
-          msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err.to_s}] after [#{Time.now-st}] seconds"
+          msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
           $log.error msg
           raise err, msg, err.backtrace
         rescue Exception => err
-          msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err.to_s}] after [#{Time.now-st}] seconds"
+          msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
           $log.error msg
           raise err, msg, err.backtrace
         end
@@ -453,11 +453,11 @@ class MIQExtract
         ost.miqRhevm = rhevm
         $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vmCfgFile}] in [#{Time.now-st}] seconds"
       rescue Timeout::Error => err
-        msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err.to_s}] after [#{Time.now-st}] seconds"
+        msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
         $log.error msg
         raise err, msg, err.backtrace
       rescue Exception => err
-        msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err.to_s}] after [#{Time.now-st}] seconds"
+        msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
         $log.error msg
         raise err, msg, err.backtrace
       end

@@ -103,7 +103,7 @@ begin
 	rv = rcu.createClones(cloneSpec)
 	
 	puts
-	puts "*** rv: #{rv} (#{rv.class.to_s})"
+	puts "*** rv: #{rv} (#{rv.class})"
 
 rescue Handsoap::Fault => hserr
 	$stderr.puts hserr.to_s

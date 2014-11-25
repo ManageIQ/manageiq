@@ -809,7 +809,7 @@ class User < ActiveRecord::Base
     auth[:mode]     ||= authentication[:mode]
     auth[:group_memberships_max_depth] ||= DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 
-    REQUIRED_LDAP_USER_PROXY_KEYS.each { |key| raise "Required key not specified: [#{key.to_s}]" unless auth.has_key?(key) }
+    REQUIRED_LDAP_USER_PROXY_KEYS.each { |key| raise "Required key not specified: [#{key}]" unless auth.has_key?(key) }
 
     fsp_dn  = "cn=#{sid},CN=ForeignSecurityPrincipals,#{auth[:basedn]}"
 

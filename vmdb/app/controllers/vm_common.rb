@@ -788,7 +788,7 @@ module VmCommon
         icon = "x.png"
       end
       profile_node = TreeNodeBuilder.generic_tree_node(
-          "policy_profile_#{profile['id'].to_s}",
+          "policy_profile_#{profile['id']}",
           profile['description'],
           icon,
           nil,
@@ -998,7 +998,7 @@ module VmCommon
   # Build the evm_relationship assignment screen
   def evm_relationship_build_screen
     @servers = Hash.new   # Users array for first chooser
-    MiqServer.all.each{|s| @servers["#{s.name.to_s} (#{s.id.to_s})"] = s.id.to_s}
+    MiqServer.all.each{|s| @servers["#{s.name} (#{s.id})"] = s.id.to_s}
     @edit[:new][:server] = @record.miq_server ? @record.miq_server.id.to_s : nil            # Set to first category, if not already set
   end
 

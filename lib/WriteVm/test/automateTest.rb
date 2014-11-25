@@ -42,7 +42,7 @@ begin
 	vim = MiqVim.new(SERVER,USERNAME,PASSWORD)
     
 	puts
-    puts "vim.class: #{vim.class.to_s}"
+    puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
     puts
@@ -73,7 +73,7 @@ begin
 	#
 	# Snapshot the VM before we change it.
 	#
-	miqVm.createSnapshot("MiqAutomateSnapshot", "Pre-automate snapshot of VM - #{Time.now.utc.to_s}", "false", "false")
+	miqVm.createSnapshot("MiqAutomateSnapshot", "Pre-automate snapshot of VM - #{Time.now.utc}", "false", "false")
 	
 	#
 	# Construct the path to the new payload vmdk file.

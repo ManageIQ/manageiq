@@ -759,7 +759,7 @@ module MiqReport::Generator
 
     # If a scheduler :at time was provided, convert that to a Time object, otherwise use the current time
     if res_opts[:at]
-      raise "Expected scheduled time 'at' to be 'numeric', received '#{res_opts[:at].class.to_s}'" unless res_opts[:at].is_a?(Numeric)
+      raise "Expected scheduled time 'at' to be 'numeric', received '#{res_opts[:at].class}'" unless res_opts[:at].is_a?(Numeric)
       at = Time.at(res_opts[:at]).utc
     else
       at = res_last_run_on

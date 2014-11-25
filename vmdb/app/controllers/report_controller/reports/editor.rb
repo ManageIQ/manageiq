@@ -1317,9 +1317,9 @@ module ReportController::Reports::Editor
       if @edit[:new][:pivotby1] != NOTHING_STRING &&    # If we are doing pivoting and
           @edit[:pivot_cols].has_key?(field)              # this is a pivot calc column
         @edit[:pivot_cols][field].each do |calc_typ|    # Add header/format/col_order for each calc type
-          rpt.headers.push(@edit[:new][:headers][field + "__#{calc_typ.to_s}"])
-          rpt.col_formats.push(@edit[:new][:col_formats][field + "__#{calc_typ.to_s}"])
-          add_field_to_col_order(rpt, field + "__#{calc_typ.to_s}")
+          rpt.headers.push(@edit[:new][:headers][field + "__#{calc_typ}"])
+          rpt.col_formats.push(@edit[:new][:col_formats][field + "__#{calc_typ}"])
+          add_field_to_col_order(rpt, field + "__#{calc_typ}")
         end
       else                                              # Normal field, set header/format/col_order
         rpt.headers.push(@edit[:new][:headers][field])
@@ -1730,7 +1730,7 @@ module ReportController::Reports::Editor
           # If first sortby field as a break suffix, set up sortby1 with a suffix
           if MiqReport.is_break_suffix?(rpt.sortby[0].split("__")[1])
             sort1, suffix1 = rpt.sortby[0].split("__")  # Get sort field and suffix, if present
-            @edit[:new][:sortby1] = field_key + (suffix1 ? "__#{suffix1.to_s}" : "") if col == sort1
+            @edit[:new][:sortby1] = field_key + (suffix1 ? "__#{suffix1}" : "") if col == sort1
           else  # Not a break suffix sort field, just copy the field name to sortby1
             @edit[:new][:sortby1] = field_key if col == rpt.sortby[0]
           end
@@ -1738,7 +1738,7 @@ module ReportController::Reports::Editor
         if rpt.sortby.length > 1
           if MiqReport.is_break_suffix?(rpt.sortby[1].split("__")[1])
             sort2, suffix2 = rpt.sortby[1].split("__")  # Get sort field and suffix, if present
-            @edit[:new][:sortby2] = field_key + (suffix2 ? "__#{suffix2.to_s}" : "") if col == sort2
+            @edit[:new][:sortby2] = field_key + (suffix2 ? "__#{suffix2}" : "") if col == sort2
           else  # Not a break suffix sort field, just copy the field name to sortby1
             @edit[:new][:sortby2] = field_key if col == rpt.sortby[1]
           end

@@ -35,7 +35,7 @@ class TestVmManageMethods < Test::Unit::TestCase
     len = vm.snapshotInfo.length
     assert_equal(0, len)
 
-    x = ["MIQ Test 1 - #{Time.now.to_s}", "MIQ Snapshot time #{Time.now.utc.iso8601}"]
+    x = ["MIQ Test 1 - #{Time.now}", "MIQ Snapshot time #{Time.now.utc.iso8601}"]
     vm.createSnapshot(x[0], x[1], nil, nil)
     rc = vm.removeSnapshotByDescription("Hello World")
     assert_equal(false, rc)
@@ -44,20 +44,20 @@ class TestVmManageMethods < Test::Unit::TestCase
     len = vm.snapshotInfo.length
     assert_equal(0, len)
 
-    assert_nothing_raised {vm.createEvmSnapshot("#{Time.now.to_s}")}
-    assert_raise(MiqException::MiqVmSnapshotError) { vm.createEvmSnapshot("#{Time.now.to_s}") }
+    assert_nothing_raised {vm.createEvmSnapshot("#{Time.now}")}
+    assert_raise(MiqException::MiqVmSnapshotError) { vm.createEvmSnapshot("#{Time.now}") }
     vm.removeAllSnapshots
     len = vm.snapshotInfo.length
     assert_equal(0, len)
 
-    vm.createSnapshot("MIQ Test 1 - #{Time.now.to_s}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
-    snMiq2 = vm.createSnapshot("MIQ Test 2 - #{Time.now.to_s}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
+    vm.createSnapshot("MIQ Test 1 - #{Time.now}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
+    snMiq2 = vm.createSnapshot("MIQ Test 2 - #{Time.now}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
     len = vm.snapshotInfo.length
     assert_equal(2, len)
 
     sn_root = vm.snapshotInfo.detect {|s| s.Parent.nil?}
     vm.revertToSnapshot(sn_root.InstanceID)
-    vm.createSnapshot("MIQ Test 3 - #{Time.now.to_s}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
+    vm.createSnapshot("MIQ Test 3 - #{Time.now}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
     len = vm.snapshotInfo.length
     assert_equal(3, len)
 
@@ -66,7 +66,7 @@ class TestVmManageMethods < Test::Unit::TestCase
     assert_equal(2, len)
 
     vm.revertToSnapshot(snMiq2.InstanceID)
-    vm.createSnapshot("MIQ Test 4 - #{Time.now.to_s}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
+    vm.createSnapshot("MIQ Test 4 - #{Time.now}", "MIQ Snapshot time #{Time.now.utc.iso8601}", nil, nil)
     len = vm.snapshotInfo.length
     assert_equal(3, len)
 

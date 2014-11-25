@@ -55,7 +55,7 @@ begin
 
     vim = broker.getMiqVim.new(SERVER, USERNAME, PASSWORD)
     
-    puts "vim.class: #{vim.class.to_s}"
+    puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
     puts

@@ -34,7 +34,7 @@ module MiqServer::ConfigurationManagement
   end
 
   def set_config(cfg)
-    raise "Assertion Failure (MiqServer.set_config) -- config expected to be <VMDB::Config> but actually is <#{cfg.class.to_s}>" unless cfg.kind_of?(VMDB::Config)
+    raise "Assertion Failure (MiqServer.set_config) -- config expected to be <VMDB::Config> but actually is <#{cfg.class}>" unless cfg.kind_of?(VMDB::Config)
     self.is_local? ? cfg.save : self.set_config_remote(cfg)
     self.reload
   end

@@ -398,7 +398,7 @@ module VimPerformanceAnalysis
       when :perf_trend
         VimPerformanceAnalysis.calc_trend_value_at_timestamp(perf, col, ts)
       else
-        raise "Unsupported Mode (#{mode}) for #{obj.class.to_s} #{type.to_s} options"
+        raise "Unsupported Mode (#{mode}) for #{obj.class} #{type} options"
       end
     end
 

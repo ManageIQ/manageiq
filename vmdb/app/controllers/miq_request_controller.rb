@@ -282,7 +282,7 @@ class MiqRequestController < ApplicationController
         @edit[:wf].get_all_fields(d).keys.each do |f|                 # Go thru all field
           field = @edit[:wf].get_field(f, d)
           if !field[:error].blank?
-            @error_div ||= "#{d.to_s}_div"
+            @error_div ||= "#{d}_div"
             add_flash(field[:error], :error)
           end
         end
@@ -291,7 +291,7 @@ class MiqRequestController < ApplicationController
       @edit[:wf].get_dialog_order.each do |d|
         if @edit[:wf].get_dialog(d)[:display] == :show
           @edit[:new][:current_tab_key] = d
-          @tabactive = "#{d.to_s}_div" # Use JS to update the display
+          @tabactive = "#{d}_div" # Use JS to update the display
           break
         end
       end
@@ -318,11 +318,11 @@ class MiqRequestController < ApplicationController
     build_host_grid(@options[:wf].allowed_hosts, @options[:host_sortdir], @options[:host_sortcol]) if !@options[:wf].get_field(:src_host_ids,:service).blank? || !@options[:wf].get_field(:placement_host_name,:environment).blank?
     render :update do |page|                    # Use JS to update the display
       if @options[:wf].kind_of?(MiqProvisionWorkflow)
-        page.replace_html("#{@options[:current_tab_key].to_s}_div", :partial=>"prov_dialog", :locals=>{:wf=>@options[:wf], :dialog=>@options[:current_tab_key]})
+        page.replace_html("#{@options[:current_tab_key]}_div", :partial=>"prov_dialog", :locals=>{:wf=>@options[:wf], :dialog=>@options[:current_tab_key]})
       elsif @options[:wf].class.to_s == "VmMigrateWorkflow"
-        page.replace_html("#{@options[:current_tab_key].to_s}_div", :partial=>"prov_vm_migrate_dialog", :locals=>{:wf=>@options[:wf], :dialog=>@options[:current_tab_key]})
+        page.replace_html("#{@options[:current_tab_key]}_div", :partial=>"prov_vm_migrate_dialog", :locals=>{:wf=>@options[:wf], :dialog=>@options[:current_tab_key]})
       else
-        page.replace_html("#{@options[:current_tab_key].to_s}_div", :partial=>"prov_host_dialog", :locals=>{:wf=>@options[:wf], :dialog=>@options[:current_tab_key]})
+        page.replace_html("#{@options[:current_tab_key]}_div", :partial=>"prov_host_dialog", :locals=>{:wf=>@options[:wf], :dialog=>@options[:current_tab_key]})
       end
       # page << javascript_show("hider_#{@options[:current_tab_key].to_s}_div")
       page << "miqSparkle(false);"

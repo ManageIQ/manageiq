@@ -97,7 +97,7 @@ class MiqSmisAgent < StorageManager
         agent.save
         updated = true
       rescue Exception => err
-        $log.error "MiqSmisAgent.update_smis: agent: #{agent.ipaddress} - #{err.to_s}"
+        $log.error "MiqSmisAgent.update_smis: agent: #{agent.ipaddress} - #{err}"
         $log.error err.backtrace.join("\n")
         agent.last_update_status = STORAGE_UPDATE_FAILED
         agent.save
@@ -155,7 +155,7 @@ class MiqSmisAgent < StorageManager
         agent.connect
         agent.update_stats
       rescue Exception => err
-        $log.warn "MiqSmisAgent.update_stats: #{err.to_s}"
+        $log.warn "MiqSmisAgent.update_stats: #{err}"
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -171,8 +171,8 @@ class MiqSmisAgent < StorageManager
       begin
         spRn = @conn.GetInstance(me.obj_name, :LocalNamespacePath => me.namespace, :PropertyList => ['HealthState', 'OperationalStatus'])
       rescue Exception => err
-        $log.error "update_status: #{err.to_s}"
-        $log.error "update_status obj_name: #{me.obj_name.to_s}"
+        $log.error "update_status: #{err}"
+        $log.error "update_status obj_name: #{me.obj_name}"
         next
       end
       if (hs = spRn['HealthState'])
@@ -201,7 +201,7 @@ class MiqSmisAgent < StorageManager
         agent.connect
         agent.update_status
       rescue Exception => err
-        $log.warn "MiqSmisAgent.update_status: #{err.to_s}"
+        $log.warn "MiqSmisAgent.update_status: #{err}"
         $log.warn err.backtrace.join("\n")
         next
       ensure

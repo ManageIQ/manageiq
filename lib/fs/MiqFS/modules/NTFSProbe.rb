@@ -2,7 +2,7 @@ module NTFSProbe
 	def NTFSProbe.probe(dobj)
 	  $log.debug("NTFSProbe >> dobj=#{dobj}") if $log
 		unless dobj.kind_of?(MiqDisk)
-			$log.debug "NTFSProbe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class.to_s}'" if $log
+			$log.debug "NTFSProbe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class}'" if $log
       return false
 		end
 		

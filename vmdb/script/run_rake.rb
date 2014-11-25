@@ -15,7 +15,7 @@ MiqStdIo.std_io_to_files do
   rescue Exception => err
     # Rake db tasks write to $stderr, rewind so we can write our own custom message
     $stderr.rewind
-    $stderr.write("'#{task}' failed due to error: #{err.to_s}", true)
+    $stderr.write("'#{task}' failed due to error: #{err}", true)
     exit 1
   end
   $stdout.write("'#{task}' successful\n")

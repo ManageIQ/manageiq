@@ -73,10 +73,10 @@ begin
 			reply_data[:categories].each do |cat, xml_str|
 				mxml = MiqXml.load(xml_str)
 				puts
-				puts "*** #{cat.to_s} START"
+				puts "*** #{cat} START"
 				mxml.to_xml.write($stdout, 4)
 				puts
-				puts "*** #{cat.to_s} END"
+				puts "*** #{cat} END"
 			end if verbose
 		when :exit, :reboot, :shutdown
 			puts "\treply_type:   #{reply_data[:reply_type]}"

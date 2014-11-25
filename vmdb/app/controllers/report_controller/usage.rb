@@ -114,7 +114,7 @@ module ReportController::Usage
 
   # Load a chart miq_report object from YML
   def usage_get_rpt(chart_rpt)
-    return MiqReport.new(YAML::load(File.open("#{USAGE_REPORTS_FOLDER}/#{chart_rpt.to_s}.yaml")))
+    return MiqReport.new(YAML::load(File.open("#{USAGE_REPORTS_FOLDER}/#{chart_rpt}.yaml")))
   end
 
   # Build the category pulldown for usage report

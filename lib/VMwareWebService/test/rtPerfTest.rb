@@ -35,7 +35,7 @@ $miq_wiredump = false
 begin
 	vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
     
-    puts "vim.class: #{vim.class.to_s}"
+    puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
     puts
@@ -96,7 +96,7 @@ begin
 	# cpurdyi = miqPh.getCounterInfo('cpu', 'used', 'summation', 'delta')
     puts "cpurdyi = #{cpurdyi['key']}"
     puts
-    puts "miqPh: #{miqPh.class.to_s}, ID = 0x#{miqPh.object_id.to_s(16)}"
+    puts "miqPh: #{miqPh.class}, ID = 0x#{miqPh.object_id.to_s(16)}"
     
     # ma = miqPh.queryPerf(vmMor, :counterId => cpurdyi['key'], :instance => "*", :intervalId => psum['refreshRate'], :maxSample => 1)
     # ma.each_slice(2) { |t, v| puts ":\tValue: #{v}\t\tTIme: #{t.to_s}" }

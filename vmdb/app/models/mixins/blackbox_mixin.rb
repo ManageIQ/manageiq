@@ -89,7 +89,7 @@ module BlackboxMixin
   end
 
   def process_blackbox_summary(xmlNode, jobid)
-    $log.debug("MIQ(vm-process_blackbox_summary): XML node received [#{xmlNode.to_s}]")
+    $log.debug("MIQ(vm-process_blackbox_summary): XML node received [#{xmlNode}]")
     returnHash = YAML.load(xmlNode.attributes["return"].to_s)
     configHash, resultsHash = returnHash[:config], returnHash[:results]
 

@@ -225,7 +225,7 @@ class MiqProxyController < ApplicationController
       end
       db_class.delete_older(job.updated_on, tasks_condition(@tasks_options[@tabform], false))
       AuditEvent.success(:userid=>session[:userid],:event=>"Delete older tasks",
-          :message=>"Delete started for records older than #{job.updated_on.to_s}, conditions: #{@tasks_options[@tabform].inspect}",
+          :message=>"Delete started for records older than #{job.updated_on}, conditions: #{@tasks_options[@tabform].inspect}",
           :target_class=>db_class.base_class.name)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete all older Tasks", :count_model=>pluralize(jobid.length,ui_lookup(:tables=>"miq_task"))})
     else

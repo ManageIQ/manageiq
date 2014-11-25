@@ -80,7 +80,7 @@ class MiqServer < ActiveRecord::Base
       RUN_AT_STARTUP.each do |klass|
         klass = Object.const_get(klass) if klass.class == String
         if klass.respond_to?("atStartup")
-          $log.info("#{log_prefix} Invoking startup method for #{klass.to_s}")
+          $log.info("#{log_prefix} Invoking startup method for #{klass}")
           begin
             klass.atStartup
           rescue => err

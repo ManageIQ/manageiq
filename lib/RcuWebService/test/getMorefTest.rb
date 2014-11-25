@@ -15,7 +15,7 @@ begin
 	puts "Calling getMoref..."
 	rv = rcu.getMoref(VM_NAME, "VirtualMachine")
 	puts
-	puts "*** RV: #{rv} (#{rv.class.to_s})"
+	puts "*** RV: #{rv} (#{rv.class})"
 	
 	vimMor = rcu.rcuMorToVim(rv)
 	puts "*** VIM MOR: vimType = #{vimMor.vimType}, val = #{vimMor}"

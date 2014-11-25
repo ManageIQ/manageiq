@@ -313,7 +313,7 @@ module MiqPolicyController::MiqActions
       if !c.read_only
         c_node = Hash.new                       # Build the category nodes
         c_node = TreeNodeBuilder.generic_tree_node(
-                   "c_#{c.id.to_s}",
+                   "c_#{c.id}",
                    c.description,
                    "",
                    c.description,

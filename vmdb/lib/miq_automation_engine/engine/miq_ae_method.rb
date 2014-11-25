@@ -108,7 +108,7 @@ module MiqAeEngine
         rc  = status.exitstatus
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
-        $miq_ae_logger.error("Method exec failed because (#{err.class.to_s}:#{err.message})")
+        $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
         rc = 16
         msg = "Method execution failed"
       end
@@ -231,7 +231,7 @@ RUBY
 
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
-        $miq_ae_logger.error("Method exec failed because (#{err.class.to_s}:#{err.message})")
+        $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
         rc = 16
         msg = "Method execution failed"
       end

@@ -38,13 +38,13 @@ module MiqServer::LogManagement
       cond[:logging_ended_on] = log_end unless log_end.nil?
       logfile = self.log_files.find(:first, :conditions => cond)
       if logfile && logfile.log_uri.nil?
-        $log.info("#{log_prefix} Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start.to_s}] to: [#{log_end.to_s}]")
+        $log.info("#{log_prefix} Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
       else
         logfile = LogFile.historical_logfile
       end
 
-      msg = "Creating historical Logfile for [#{resource}] dated: [#{date}] from: [#{log_start.to_s}] to [#{log_end.to_s}]"
+      msg = "Creating historical Logfile for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
       task.update_status("Active", "Ok", msg)
       $log.info("#{log_prefix} #{msg}")
 
@@ -74,7 +74,7 @@ module MiqServer::LogManagement
         logfile.upload
       rescue StandardError, TimeoutError => err
         logfile.update_attributes(:state => "error" )
-        $log.error("#{log_prefix} Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err.to_s}]")
+        $log.error("#{log_prefix} Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
         raise
       end
 
@@ -178,7 +178,7 @@ module MiqServer::LogManagement
 
       logfile.upload
     rescue StandardError, TimeoutError => err
-      $log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err.to_s}]")
+      $log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
       raise
     end

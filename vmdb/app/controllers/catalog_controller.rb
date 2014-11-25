@@ -117,7 +117,7 @@ class CatalogController < ApplicationController
       @edit[:rec_id] = @record ? @record.id : nil
       @edit[:current] = copy_hash(@edit[:new])
 
-      @tabactive = "#{@edit[:new][:current_tab_key].to_s}_div"
+      @tabactive = "#{@edit[:new][:current_tab_key]}_div"
       @in_a_form = true
       session[:changed] = false
       replace_right_cell("at_st_new")
@@ -139,7 +139,7 @@ class CatalogController < ApplicationController
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
       @edit[:new][:service_type] = "atomic"
       @edit[:rec_id] = @record ? @record.id : nil
-      @tabactive = "#{@edit[:new][:current_tab_key].to_s}_div"
+      @tabactive = "#{@edit[:new][:current_tab_key]}_div"
     end
     render :update do |page|                    # Use JS to update the display
       page.replace_html("form_div", :partial=>"st_form") if params[:st_prov_type]

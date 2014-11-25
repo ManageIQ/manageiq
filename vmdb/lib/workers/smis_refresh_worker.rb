@@ -57,7 +57,7 @@ class SmisRefreshWorker < WorkerBase
           $log.info "SmisRefreshWorker: update_smis start"
           updated = MiqSmisAgent.update_smis(MiqSmisProfiles.extractProfile)
         rescue => err
-          $log.error "SmisRefreshWorker: update_smis - #{err.to_s}"
+          $log.error "SmisRefreshWorker: update_smis - #{err}"
           $log.error err.backtrace.join("\n")
         ensure
           $log.info "SmisRefreshWorker: update_smis end"
@@ -84,7 +84,7 @@ class SmisRefreshWorker < WorkerBase
         begin
           MiqSmisAgent.cleanup
         rescue => err
-          $log.error "SmisRefreshWorker: cleanup - #{err.to_s}"
+          $log.error "SmisRefreshWorker: cleanup - #{err}"
           $log.error err.backtrace.join("\n")
         end
         $log.info "SmisRefreshWorker: cleanup end"
@@ -133,7 +133,7 @@ class SmisRefreshWorker < WorkerBase
             $log.info "SmisRefreshWorker: update_smis start"
             MiqSmisAgent.update_smis(MiqSmisProfiles.extractProfile)
           rescue => err
-            $log.error "SmisRefreshWorker: update_smis - #{err.to_s}"
+            $log.error "SmisRefreshWorker: update_smis - #{err}"
             $log.error err.backtrace.join("\n")
           ensure
             $log.info "SmisRefreshWorker: update_smis end"
@@ -156,7 +156,7 @@ class SmisRefreshWorker < WorkerBase
           begin
             MiqSmisAgent.cleanup
           rescue => err
-            $log.error "SmisRefreshWorker: cleanup - #{err.to_s}"
+            $log.error "SmisRefreshWorker: cleanup - #{err}"
             $log.error err.backtrace.join("\n")
           end
           $log.info "SmisRefreshWorker: cleanup end"
@@ -206,7 +206,7 @@ class SmisRefreshWorker < WorkerBase
           begin
             MiqSmisAgent.update_status
           rescue => err
-            $log.error "SmisRefreshWorker: STATUS - #{err.to_s}"
+            $log.error "SmisRefreshWorker: STATUS - #{err}"
             $log.error err.backtrace.join("\n")
           end
           $log.info "SmisRefreshWorker: STATUS update end"
@@ -232,7 +232,7 @@ class SmisRefreshWorker < WorkerBase
           begin
             MiqSmisAgent.update_stats
           rescue => err
-            $log.error "SmisRefreshWorker: STATS - #{err.to_s}"
+            $log.error "SmisRefreshWorker: STATS - #{err}"
             $log.error err.backtrace.join("\n")
           end
           $log.info "SmisRefreshWorker: STATS update end"

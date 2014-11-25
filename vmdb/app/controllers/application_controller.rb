@@ -710,7 +710,7 @@ class ApplicationController < ActionController::Base
       if (!(k.to_s.ends_with?("password2") || k.to_s.ends_with?("verify")) &&
           (current.nil? || (new[k] != current[k])))
         if password_field?(k) # Asterisk out password fields
-          msg_arr << "#{k.to_s}:[*]#{' to [*]' unless current.nil?}"
+          msg_arr << "#{k}:[*]#{' to [*]' unless current.nil?}"
         elsif new[k].is_a?(Hash)       # If the field is a hash,
           # Make current a blank hash for following comparisons
           current[k] = Hash.new if (!current.nil? && current[k].nil?)
@@ -718,9 +718,9 @@ class ApplicationController < ActionController::Base
           (new[k].keys | (current.nil? ? [] : current[k].keys)).each do |hk|
             if current.nil? || (new[k][hk] != current[k][hk])
               if password_field?(hk) # Asterisk out password fields
-                msg_arr << "#{hk.to_s}:[*]#{' to [*]' unless current.nil?}"
+                msg_arr << "#{hk}:[*]#{' to [*]' unless current.nil?}"
               else
-                msg_arr << "#{hk.to_s}:[" +
+                msg_arr << "#{hk}:[" +
                            (current.nil? ? "" :
                             "#{current[k][hk]}] to [") +
                             "#{new[k][hk]}]"
@@ -728,7 +728,7 @@ class ApplicationController < ActionController::Base
             end
           end
         else
-          msg_arr << "#{k.to_s}:[" +
+          msg_arr << "#{k}:[" +
                      (current.nil? ? "" :
                       "#{current[k]}] to [") +
                       "#{new[k]}]"
@@ -2045,21 +2045,21 @@ class ApplicationController < ActionController::Base
 
     # Build the view file name
     if association
-      viewfile = "#{VIEWS_FOLDER}/#{db.to_s}-#{association.to_s}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db.to_s}-#{association.to_s}-#{session[:userrole]}.yaml"
+      viewfile = "#{VIEWS_FOLDER}/#{db}-#{association}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{association}-#{session[:userrole]}.yaml"
     elsif view_suffix
-      viewfile = "#{VIEWS_FOLDER}/#{db.to_s}-#{view_suffix.to_s}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db.to_s}-#{view_suffix.to_s}-#{session[:userrole]}.yaml"
+      viewfile = "#{VIEWS_FOLDER}/#{db}-#{view_suffix}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{view_suffix}-#{session[:userrole]}.yaml"
     else
-      viewfile = "#{VIEWS_FOLDER}/#{db.to_s}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db.to_s}-#{session[:userrole]}.yaml"
+      viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{session[:userrole]}.yaml"
     end
 
     # Special code to build the view file name for users of VM restricted roles
     if db.to_s == "Vm"
       role = User.current_user.miq_user_role
       if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
-        viewfilerestricted = "#{VIEWS_FOLDER}/#{db.to_s}__restricted.yaml"
+        viewfilerestricted = "#{VIEWS_FOLDER}/#{db}__restricted.yaml"
       end
     end
 

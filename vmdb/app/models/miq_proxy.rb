@@ -373,8 +373,8 @@ class MiqProxy < ActiveRecord::Base
   def heartbeat(xmlDoc, type)
     xmlDoc = MIQEncode.decode(xmlDoc)
     xmlDoc = MiqXml.load(xmlDoc)
-    $log.debug "MIQ(proxy-heartbeat): queue count = [#{self.proxy_tasks.size.to_s}]"
-    $log.debug "MIQ(proxy-heartbeat): XML IN: [#{xmlDoc.to_s}]"
+    $log.debug "MIQ(proxy-heartbeat): queue count = [#{self.proxy_tasks.size}]"
+    $log.debug "MIQ(proxy-heartbeat): XML IN: [#{xmlDoc}]"
 
     # Extract the agent's time from the suppied xml
     is_exiting, current_tasks = false, nil

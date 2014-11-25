@@ -478,7 +478,7 @@ class ServiceController < ApplicationController
         page << "miq_record_id = undefined;"  # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
       end
 
-      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}','#{x_node}');" if params[:id]
+      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}','#{x_node}');" if params[:id]
       page << "$j('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
       dim_div = @in_a_form && @edit && @edit[:current] ? true : false
       page << javascript_dim("#{x_active_tree}_div", dim_div)

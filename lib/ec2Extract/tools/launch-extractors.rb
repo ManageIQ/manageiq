@@ -94,7 +94,7 @@ begin
 	puts
 	
 rescue => err
-	$stderr.puts "#{cmdName}: #{err.to_s}"
+	$stderr.puts "#{cmdName}: #{err}"
 	$stderr.puts err.backtrace.join("\n")
 	exit 1
 end

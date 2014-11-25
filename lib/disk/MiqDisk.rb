@@ -75,7 +75,7 @@ class MiqDisk
         @seekPos = @startByteAddr
 
         @dInfo.diskSig ||= getDiskSig if @partNum == 0 && !@dInfo.baseOnly
-        @hwId = "#{@dInfo.hardwareId}:#{@partNum.to_s}" if @dInfo.hardwareId
+        @hwId = "#{@dInfo.hardwareId}:#{@partNum}" if @dInfo.hardwareId
     end
 
     def pushFormatSupport

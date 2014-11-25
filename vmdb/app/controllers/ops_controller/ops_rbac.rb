@@ -486,7 +486,7 @@ module OpsController::OpsRbac
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
-    if @edit["#{key.to_s}_id".to_sym]
+    if @edit["#{key}_id".to_sym]
       caption = (key == :group) ? @record.description : @record.name
       @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>caption, :model=>what.titleize}
     else

@@ -15,7 +15,7 @@ begin
 	NmaCore_raw.server_adminuser(svr, USERNAME, PASSWORD)
 	rv = NmaCore_raw.server_invoke(svr, "volume-list-info", :volume => "vol1")
 	
-	puts "RV: #{rv.class.to_s}"
+	puts "RV: #{rv.class}"
 	dump.dumpObj(rv)
 	
 rescue => err

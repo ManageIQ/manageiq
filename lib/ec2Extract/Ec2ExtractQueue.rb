@@ -167,7 +167,7 @@ class Ec2ExtractQueue
 			body[:sqs_msg] = msg
 			return body
 		else
-			$log.warn "#{self.class.name}.#{__method__}: Unrecognized reply type #{body[:reply_type].to_s}"
+			$log.warn "#{self.class.name}.#{__method__}: Unrecognized reply type #{body[:reply_type]}"
 			return nil
 		end
 	end

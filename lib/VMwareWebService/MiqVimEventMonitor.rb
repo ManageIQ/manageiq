@@ -100,16 +100,16 @@ class MiqVimEventMonitor < MiqVimInventory
 
 	def fixupEvent(event)
 		unless event.kind_of?(Hash)
-			$vim_log.error "MiqVimEventMonitor.fixupEvent: Expecting Hash, got #{event.class.to_s}"
+			$vim_log.error "MiqVimEventMonitor.fixupEvent: Expecting Hash, got #{event.class}"
 			if event.kind_of?(Array)
 				event.each_index do |i|
-					$vim_log.error "MiqVimEventMonitor.fixupEvent: event[#{i}] is a #{event[i].class.to_s}"
+					$vim_log.error "MiqVimEventMonitor.fixupEvent: event[#{i}] is a #{event[i].class}"
 					$vim_log.error "\tMiqVimEventMonitor.fixupEvent: event[#{i}] = #{event[i].inspect}"
 				end
 			else
 				$vim_log.error "\tMiqVimEventMonitor.fixupEvent: event = #{event.inspect}"
 			end
-			raise "MiqVimEventMonitor.fixupEvent: Expecting Hash, got #{event.class.to_s}"
+			raise "MiqVimEventMonitor.fixupEvent: Expecting Hash, got #{event.class}"
 		end
 		
 		event['eventType'] = event.xsiType.split("::").last

@@ -375,7 +375,7 @@ class MiqVimInventory < MiqVimClientBase
 				@alive = false
 			end
         rescue Exception => err
-			$vim_log.info "MiqVimInventory.isAlive?: Could not access connection - #{err.to_s}"
+			$vim_log.info "MiqVimInventory.isAlive?: Could not access connection - #{err}"
             @alive = false
         end
 		return @alive
@@ -2072,9 +2072,9 @@ class MiqVimInventory < MiqVimClientBase
 	end
 	
 	def self.setSelector(selSpec)
-		raise "MiqVimBroker.setSelector: selSpec must be a hash, received #{selSpec.class.to_s}" unless selSpec.kind_of?(Hash)
+		raise "MiqVimBroker.setSelector: selSpec must be a hash, received #{selSpec.class}" unless selSpec.kind_of?(Hash)
 		selSpec.each_key do |k|
-			raise "MiqVimBroker.setSelector: selSpec keys must be symbols, received #{k.class.to_s}" unless k.kind_of?(Symbol)
+			raise "MiqVimBroker.setSelector: selSpec keys must be symbols, received #{k.class}" unless k.kind_of?(Symbol)
 		end
 		ov = nil
 		selSpec.each_value do |v|
@@ -2088,7 +2088,7 @@ class MiqVimInventory < MiqVimClientBase
 			else
 				ov = v unless v.kind_of?(String)
 			end
-			raise "MiqVimBroker.setSelector: selSpec values must be strings or arrays of strings, received #{ov.class.to_s}" unless ov.nil?
+			raise "MiqVimBroker.setSelector: selSpec values must be strings or arrays of strings, received #{ov.class}" unless ov.nil?
 		end
 		@@selectorHash.merge!(selSpec)
 	end
@@ -2102,10 +2102,10 @@ class MiqVimInventory < MiqVimClientBase
 		elsif selName.kind_of?(Array)
 			remKeys = selName
 		else
-			raise "MiqVimBroker.removeSelector: selName must be a symbol, hash or array, received #{selName.class.to_s}"
+			raise "MiqVimBroker.removeSelector: selName must be a symbol, hash or array, received #{selName.class}"
 		end
 		remKeys.each do |rk|
-			raise "MiqVimBroker.removeSelector: keys must be symbols, received #{rk.class.to_s}" unless rk.kind_of?(Symbol)
+			raise "MiqVimBroker.removeSelector: keys must be symbols, received #{rk.class}" unless rk.kind_of?(Symbol)
 		end
 		
 		remKeys.each do |rk|
@@ -2114,9 +2114,9 @@ class MiqVimInventory < MiqVimClientBase
 	end
 	
 	def setSelector(selSpec)
-		raise "setSelector: selSpec must be a hash, received #{selSpec.class.to_s}" unless selSpec.kind_of?(Hash)
+		raise "setSelector: selSpec must be a hash, received #{selSpec.class}" unless selSpec.kind_of?(Hash)
 		selSpec.each_key do |k|
-			raise "setSelector: selSpec keys must be symbols, received #{k.class.to_s}" unless k.kind_of?(Symbol)
+			raise "setSelector: selSpec keys must be symbols, received #{k.class}" unless k.kind_of?(Symbol)
 		end
 		ov = nil
 		selSpec.each_value do |v|
@@ -2130,7 +2130,7 @@ class MiqVimInventory < MiqVimClientBase
 			else
 				ov = v unless v.kind_of?(String)
 			end
-			raise "setSelector: selSpec values must be strings or arrays of strings, received #{ov.class.to_s}" unless ov.nil?
+			raise "setSelector: selSpec values must be strings or arrays of strings, received #{ov.class}" unless ov.nil?
 		end
 		
 		@configLock.synchronize(:EX) do
@@ -2139,7 +2139,7 @@ class MiqVimInventory < MiqVimClientBase
 	end
 	
 	def getSelector(selName)
-		raise "getSelector: selName must be a symbol, received #{selName.class.to_s}" unless selName.kind_of?(Symbol)
+		raise "getSelector: selName must be a symbol, received #{selName.class}" unless selName.kind_of?(Symbol)
 		
 		@configLock.synchronize(:SH) do
 			return @selectorHash[selName]
@@ -2155,10 +2155,10 @@ class MiqVimInventory < MiqVimClientBase
 		elsif selName.kind_of?(Array)
 			remKeys = selName
 		else
-			raise "removeSelector: selName must be a symbol, hash or array, received #{selName.class.to_s}"
+			raise "removeSelector: selName must be a symbol, hash or array, received #{selName.class}"
 		end
 		remKeys.each do |rk|
-			raise "removeSelector: keys must be symbols, received #{rk.class.to_s}" unless rk.kind_of?(Symbol)
+			raise "removeSelector: keys must be symbols, received #{rk.class}" unless rk.kind_of?(Symbol)
 		end
 		
 		@configLock.synchronize(:EX) do
@@ -2483,7 +2483,7 @@ class MiqVimInventory < MiqVimClientBase
 		elsif obj.kind_of?(String)
 			nObj.replace(obj)
 		else
-			raise "deepClone: unexpected object #{obj.class.to_s}"
+			raise "deepClone: unexpected object #{obj.class}"
 		end
 		
 		return(nObj)

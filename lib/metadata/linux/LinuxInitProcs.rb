@@ -139,7 +139,7 @@ module MiqLinux
                 fdata.each_line { |fl| return $1 if fl =~ /^\s*#\s+Short-Description:\s*(.*)$/ } unless fdata.nil?
                 return InitProcHash[n]
             rescue => err
-                $log.warn "getDesc: could not open #{f} - #{err.to_s}"
+                $log.warn "getDesc: could not open #{f} - #{err}"
                 return ""
             end
         end

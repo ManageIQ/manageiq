@@ -71,7 +71,7 @@ module MiqXmlPatch
 
           if ele.nil?
             stats[:errors] += 1
-            miq_patch_logging("Unable to find XML element to update during XML Patching.  Search Path:[#{path.to_s}]", :warn)
+            miq_patch_logging("Unable to find XML element to update during XML Patching.  Search Path:[#{path}]", :warn)
             next
           end
 
@@ -136,7 +136,7 @@ module MiqXmlPatch
       # We should not get to this point, since the element we want to
       # delete should always exists.  But if we do log a warning.
       stats[:errors] += 1
-      miq_patch_logging("Unable to find XML element to delete during XML Patching.  Search Path:[#{path.to_s}]", :warn)
+      miq_patch_logging("Unable to find XML element to delete during XML Patching.  Search Path:[#{path}]", :warn)
     else
       element.remove!
       stats[:deletes] += 1

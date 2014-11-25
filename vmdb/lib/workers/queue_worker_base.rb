@@ -135,7 +135,7 @@ class QueueWorkerBase < WorkerBase
     return deliver_queue_message(msg) if msg.kind_of?(MiqQueue)
     return process_message(msg)       if msg.kind_of?(String)
 
-    emsg = "#{self.log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class.to_s}>"
+    emsg = "#{self.log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>"
     $log.error(emsg) if $log
     raise emsg
   end

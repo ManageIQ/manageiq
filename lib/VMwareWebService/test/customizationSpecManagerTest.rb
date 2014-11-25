@@ -25,7 +25,7 @@ CSI_XML_FILE = File.join(File.dirname(__FILE__), "CustomizationSpec", "sles10-x6
 
 begin
 	
-	puts "vim.class: #{vim.class.to_s}"
+	puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
 

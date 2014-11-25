@@ -507,7 +507,7 @@ module MiqLibvirt
         xml_desc = domain.delete(:xml_desc)
         my_logger("MiqLibVirt error: VM <#{domain[:name]}>  info: <#{domain.inspect}>", :error)
         domain[:xml_desc] = xml_desc
-        my_logger("MiqLibVirt error: VM XML: <#{xml_desc.to_s}>", :error)
+        my_logger("MiqLibVirt error: VM XML: <#{xml_desc}>", :error)
         my_logger("MiqLibVirt error backtrace: ", :error, err)
       end
       return vm_storages

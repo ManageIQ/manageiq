@@ -107,7 +107,7 @@ module EmsRefresh::Parsers::Vc::Filter
     log_header = "MIQ(VcRefresher-filter_vc_data) EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
     # Find the target in the data
-    $log.info "#{log_header} Filtering inventory for #{target.class.to_s} [#{target.name}] id: [#{target.id}]..."
+    $log.info "#{log_header} Filtering inventory for #{target.class} [#{target.name}] id: [#{target.id}]..."
     case target
     when ExtManagementSystem
       filtered_data = @vc_data
@@ -144,7 +144,7 @@ module EmsRefresh::Parsers::Vc::Filter
     end
 
     filtered_counts = filtered_data.inject({}) {|h, (k, v)| h[k] = v.blank? ? 0 : v.length; h}
-    $log.info "#{log_header} Filtering inventory for #{target.class.to_s} [#{target.name}] id: [#{target.id}]...Complete - Counts: #{filtered_counts.inspect}"
+    $log.info "#{log_header} Filtering inventory for #{target.class} [#{target.name}] id: [#{target.id}]...Complete - Counts: #{filtered_counts.inspect}"
 
     EmsRefresh.log_inv_debug_trace(filtered_data, "#{log_header} filtered_data:", 2)
 

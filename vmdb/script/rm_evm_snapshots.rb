@@ -21,7 +21,7 @@ begin
   vim = MiqVim.new(ems.hostname, username, password)
   puts "Done."
 
-  puts "vim.class: #{vim.class.to_s}"
+  puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
     puts

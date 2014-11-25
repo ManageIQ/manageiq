@@ -126,7 +126,7 @@ vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 miqHost = nil
 
 begin
-    puts "vim.class: #{vim.class.to_s}"
+    puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
 
@@ -214,7 +214,7 @@ begin
 		vim.dumpObj(sd)
 		puts "*** storageDevice END"
 	rescue => err
-		puts "*** storageDevice expected error: #{err.to_s}"
+		puts "*** storageDevice expected error: #{err}"
 	end
 	
 	#
@@ -232,7 +232,7 @@ begin
 		vim.dumpObj(sd)
 		puts "*** storageDevice END"
 	rescue => err
-		puts "*** storageDevice unexpected error: #{err.to_s}"
+		puts "*** storageDevice unexpected error: #{err}"
 	end
 	
 rescue => err

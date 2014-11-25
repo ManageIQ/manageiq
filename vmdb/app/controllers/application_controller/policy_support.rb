@@ -218,7 +218,7 @@ module ApplicationController::PolicySupport
 
   # Create policy assignment audit record
   def protect_audit(pp, mode, db, recs)
-    msg = "[#{pp.name}] Policy Profile #{mode} (db:[#{db.to_s}]"
+    msg = "[#{pp.name}] Policy Profile #{mode} (db:[#{db}]"
     msg += ", ids:[#{recs.sort{|a,b|a.to_i<=>b.to_i}.join(',')}])"
     event = "policyset_" + mode
     audit = {:event=>event, :target_id=>pp.id, :target_class=>pp.class.base_class.name, :userid => session[:userid], :message=>msg}

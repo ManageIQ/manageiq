@@ -90,7 +90,7 @@ class Compliance < ActiveRecord::Base
   def self.set_compliancy(compliant, target, event, details)
     log_prefix = "MIQ(Compliance.set_compliancy)"
     name = target.respond_to?(:name) ? target.name : "NA"
-    $log.info("#{log_prefix} Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class.to_s}], Id: [#{target.id}], Name: [#{name}]")
+    $log.info("#{log_prefix} Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class}], Id: [#{target.id}], Name: [#{name}]")
 
     comp  = self.create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
 

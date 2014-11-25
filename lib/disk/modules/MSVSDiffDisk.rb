@@ -21,7 +21,7 @@ module MSVSDiffDisk
 		# Get parent locators.
 		@locators = []
 		1.upto(8) {|idx|
-			@locators << MSCommon::PARENT_LOCATOR.decode(MSCommon.header["parent_loc#{idx.to_s}"])
+			@locators << MSCommon::PARENT_LOCATOR.decode(MSCommon.header["parent_loc#{idx}"])
 			next if @locators[idx - 1]['platform_code'] == "\000\000\000\000"
 			locator = @locators[idx - 1]
 			case locator['platform_code']
