@@ -1,6 +1,6 @@
-if !MiqEnvironment::Process.is_web_server_worker?
-  Vmdb::Application.config.session_store :memory_store if Rails.env.test?
-else
+if Rails.env.test?
+  Vmdb::Application.config.session_store :memory_store
+elsif MiqEnvironment::Process.is_web_server_worker?
   session_options = {}
   if MiqEnvironment::Command.is_appliance?
     session_options[:secure]   = true
