@@ -160,7 +160,7 @@ class RequestRefererService
   end
 
   def ie8_referer_exception?(headers, controller_name, action_name)
-    return false unless headers['HTTP_USER_AGENT'].downcase.include?("msie 8")
+    return false unless headers['HTTP_USER_AGENT'].to_s.downcase.include?("msie 8")
     controller_sym = controller_name.to_sym
     true if IE8_EXCEPTIONS.key?(controller_sym) && IE8_EXCEPTIONS[controller_sym].include?(action_name)
   end

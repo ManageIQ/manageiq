@@ -39,13 +39,13 @@ describe "Login process" do
   context 'w/ a valid session' do
     it "allows access w/ a valid referer" do
       post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
-      get '/ems_cloud/show_list', nil, 'HTTP_USER_AGENT' => "chrome", 'HTTP_REFERER' => "http://www.example.com/"
+      get '/ems_cloud/show_list', nil, 'HTTP_REFERER' => "http://www.example.com/"
       expect(response.status).to eq(200)
     end
 
     it "does not allow access w/o a valid referer" do
       post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
-      get '/ems_cloud/show_list', nil, 'HTTP_USER_AGENT' => "chrome", 'HTTP_REFERER' => "http://foo.bar.com/"
+      get '/ems_cloud/show_list', nil, 'HTTP_REFERER' => "http://foo.bar.com"
       expect(response.status).to eq(403)
     end
 
