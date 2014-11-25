@@ -129,7 +129,7 @@ class StorageManager < ActiveRecord::Base
       $log.info "#{self.name}.refresh_vmdb_cim: zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.refresh_vmdb_cim: #{err.to_s}"
+      $log.error "#{self.name}.refresh_vmdb_cim: #{err}"
       $log.error err.backtrace.join("\n")
       $log.info "#{self.name}.refresh_vmdb_cim: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
@@ -166,7 +166,7 @@ class StorageManager < ActiveRecord::Base
       $log.info "#{self.name}.bridge_associations: zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.bridge_associations: #{err.to_s}"
+      $log.error "#{self.name}.bridge_associations: #{err}"
       $log.error err.backtrace.join("\n")
       $log.info "#{self.name}.bridge_associations: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
@@ -215,7 +215,7 @@ class StorageManager < ActiveRecord::Base
       $log.info "#{self.name}.update_association_shortcuts: zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.update_association_shortcuts: #{err.to_s}"
+      $log.error "#{self.name}.update_association_shortcuts: #{err}"
       $log.error err.backtrace.join("\n")
       $log.info "#{self.name}.update_association_shortcuts: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
@@ -247,7 +247,7 @@ class StorageManager < ActiveRecord::Base
       $log.info "#{self.name}.association_cleanup_by_zone: zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.association_cleanup_by_zone: #{err.to_s}"
+      $log.error "#{self.name}.association_cleanup_by_zone: #{err}"
       $log.error err.backtrace.join("\n")
       $log.info "#{self.name}.association_cleanup_by_zone: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)

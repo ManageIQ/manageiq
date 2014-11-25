@@ -134,7 +134,7 @@ module OntapMetricsRollupMixin
   end
 
   def hourly_rollup(rollup_time, metric_list)
-    $log.info "#{self.class.name}.hourly_rollup: #{rollup_time.to_s}"
+    $log.info "#{self.class.name}.hourly_rollup: #{rollup_time}"
     self.statistic_time = rollup_time
     self.rollup_type  = "hourly"
 
@@ -191,7 +191,7 @@ module OntapMetricsRollupMixin
   end
 
   def daily_rollup(rollup_time, time_profile, metric_list)
-    $log.info "#{self.class.name}.daily_rollup: #{rollup_time.to_s}"
+    $log.info "#{self.class.name}.daily_rollup: #{rollup_time}"
     self.statistic_time = rollup_time
     self.time_profile = time_profile
     self.rollup_type  = "daily"

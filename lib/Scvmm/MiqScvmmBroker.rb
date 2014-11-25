@@ -24,7 +24,7 @@ class MiqScvmmBroker
       DRb.start_service(nil, self)
       puts DRb.uri
     else
-      raise "MiqScvmmBroker: unrecognized mode #{mode.to_s}"
+      raise "MiqScvmmBroker: unrecognized mode #{mode}"
     end
   end
 

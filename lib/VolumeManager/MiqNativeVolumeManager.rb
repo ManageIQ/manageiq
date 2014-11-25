@@ -32,11 +32,11 @@ class MiqNativeVolumeManager
 		hiddenDevNames	= `pvdisplay -c 2> /dev/null`.split("\n").collect! { |p| p.lstrip.split(":", 2)[0] }
 		
 		if $log.debug?
-			$log.debug "\nVolume Groups: (#{vgNames.class.to_s}: #{vgNames.length})"
+			$log.debug "\nVolume Groups: (#{vgNames.class}: #{vgNames.length})"
 			vgNames.each { |dn| $log.debug "\t#{dn}"}
-			$log.debug "\nLogical Volumes: (#{lvNames.class.to_s}: #{lvNames.length})"
+			$log.debug "\nLogical Volumes: (#{lvNames.class}: #{lvNames.length})"
 			lvNames.each { |dn| $log.debug "\t#{dn}"}
-			$log.debug "\nHidden devs: (#{hiddenDevNames.class.to_s}: #{hiddenDevNames.length})"
+			$log.debug "\nHidden devs: (#{hiddenDevNames.class}: #{hiddenDevNames.length})"
 		end
         
         physVolumes = openPhysicalVolumes(@diskFileNames)

@@ -22,7 +22,7 @@ module MiqVimDump
 	    h.each do |k, v|
 			s = ""
 			s = " <#{v.xsiType}>" if v.respond_to?(:xsiType) && !v.xsiType.nil?
-	        indentedPrint("Level#{level} (#{v.class.to_s}), #{k}#{s}:", level)
+	        indentedPrint("Level#{level} (#{v.class}), #{k}#{s}:", level)
 	        dumpObj(v, level+1)
 	    end
 	end
@@ -32,7 +32,7 @@ module MiqVimDump
 	    a.each do |ae|
 			s = ""
 			s = " <#{ae.xsiType}>" if ae.respond_to?(:xsiType) && !ae.xsiType.nil?
-	        indentedPrint("Level#{level} (#{ae.class.to_s}), [#{i}]#{s}:", level)
+	        indentedPrint("Level#{level} (#{ae.class}), [#{i}]#{s}:", level)
 	        dumpObj(ae, level+1)
 	        i += 1
 	    end
@@ -42,7 +42,7 @@ module MiqVimDump
 	    indentedPrint("*** Object type: " + obj.class.to_s, level)
 		return if !obj
 		if obj.kind_of?(DateTime)
-			indentedPrint("Level#{level}, #{obj.to_s}:", level)
+			indentedPrint("Level#{level}, #{obj}:", level)
 			return
 		end
 	    obj.instance_variables.each do |ivn|

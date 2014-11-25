@@ -14,7 +14,7 @@ class MiqEc2EbsImage < MiqEc2EbsVmBase
 			$log.debug "    Attaching volume #{vol.id} to #{mapdev}"
 			attachment = vol.attach_to(@host_instance, mapdev)
 			sleep 1 until attachment.exists?
-			$log.debug "    attachment: #{attachment.class.name} (exists? #{attachment.exists?.to_s})"
+			$log.debug "    attachment: #{attachment.class.name} (exists? #{attachment.exists?})"
 			sleep 1 while attachment.status == :attaching
 			$log.debug "    Attaching volume #{vol.id} attachment status: #{attachment.status}"
 			mapdev.succ!

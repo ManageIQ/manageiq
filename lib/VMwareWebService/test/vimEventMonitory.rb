@@ -22,7 +22,7 @@ vimEm = MiqVimEventMonitor.new(SERVER, USERNAME, PASSWORD)
 
 Signal.trap("INT") { vimEm.stop }
 
-puts "vimEm.class: #{vimEm.class.to_s}"
+puts "vimEm.class: #{vimEm.class}"
 puts "#{vimEm.server} is #{(vimEm.isVirtualCenter? ? 'VC' : 'ESX')}"
 puts "API version: #{vimEm.apiVersion}"
 

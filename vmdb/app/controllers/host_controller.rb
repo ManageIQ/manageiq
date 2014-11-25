@@ -635,7 +635,7 @@ class HostController < ApplicationController
   def build_network_tree
     @tree_vms = []                   # Capture all VM ids in the tree
     host_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@host.id.to_s}|",
+      "h_#{@host.id}|",
       @host.name,
       "host.png",
       "Host: #{@host.name}",
@@ -649,7 +649,7 @@ class HostController < ApplicationController
   def add_host_branch
     @host.switches.collect do |s|
       switch_node = TreeNodeBuilder.generic_tree_node(
-        "s_#{s.id.to_s}|",
+        "s_#{s.id}|",
         s.name,
         "switch.png",
         "Switch: #{s.name}"
@@ -665,7 +665,7 @@ class HostController < ApplicationController
   def add_guest_devices(switch)
     switch.guest_devices.collect do |p|
       TreeNodeBuilder.generic_tree_node(
-        "n_#{p.id.to_s}|",
+        "n_#{p.id}|",
         p.device_name,
         "pnic.png",
         "Physical NIC: #{p.device_name}"
@@ -676,7 +676,7 @@ class HostController < ApplicationController
   def add_lans(switch)
     switch.lans.collect do |l|
       lan_node = TreeNodeBuilder.generic_tree_node(
-        "l_#{l.id.to_s}|",
+        "l_#{l.id}|",
         l.name,
         "lan.png",
         "Port Group: #{l.name}"
@@ -697,7 +697,7 @@ class HostController < ApplicationController
           image = "#{v.current_state.downcase}.png"
         end
         TreeNodeBuilder.generic_tree_node(
-          "v-#{v.id.to_s}|",
+          "v-#{v.id}|",
           v.name,
           image,
           "VM: #{v.name} (Click to view)"

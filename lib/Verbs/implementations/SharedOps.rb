@@ -126,11 +126,11 @@ module SharedOps
 					xml = vmCfg.extract(c) {|scan_data| UpdateAgentState(ost, "Scanning", scan_data[:msg])}
 					categoriesProcessed += 1
 				rescue NoMethodError => lastErr
-					ost.error = "#{lastErr.to_s} for VM:[#{vmName}]"
+					ost.error = "#{lastErr} for VM:[#{vmName}]"
 					$log.error "Scanmetadata extract error - [#{lastErr}]"
 					$log.error "Scanmetadata extract error - [#{lastErr.backtrace.join("\n")}]"
 				rescue => lastErr
-					ost.error = "#{lastErr.to_s} for VM:[#{vmName}]"
+					ost.error = "#{lastErr} for VM:[#{vmName}]"
 					#$log.error "Scanmetadata extract error - [#{lastErr}]"
 					#$log.error "Scanmetadata extract error - [#{lastErr.backtrace.join("\n")}]"
 				end
@@ -176,7 +176,7 @@ module SharedOps
 				statusCode = 8
 				statusCode = 16 if categoriesProcessed.zero?
 				scanMessage = lastErr.to_s
-        $log.error "ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr.to_s}]"
+        $log.error "ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr}]"
         lastErr.backtrace.each {|m| $log.debug m} if $log.debug?
 			end
 			xmlNodeScan.add_attributes("end_time"=>Time.now.utc.iso8601, "status"=>status, "status_code"=>statusCode.to_s, "message"=>scanMessage)
@@ -187,7 +187,7 @@ module SharedOps
       
 #      xml_summary = nil
 #      GC.start
-        ost.error = "#{lastErr.to_s} for VM:[#{vmName}]" if lastErr
+        ost.error = "#{lastErr} for VM:[#{vmName}]" if lastErr
 
         #$seek_file.close unless $seek_file.nil?
         #$seek_file = nil

@@ -885,8 +885,8 @@ module OpsController::Settings::Common
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
     else
       @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
-        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
-        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
     end
     case @sb[:active_tab]
     when "settings_server"                                  # Server Settings tab

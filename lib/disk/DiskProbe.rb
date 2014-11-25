@@ -31,7 +31,7 @@ module DiskProbe
           return Object.const_get(mod)
         end
 			rescue => err
-        $log.warn "MIQ(DiskProbe-getDiskMod) [#{pmod.chomp("Probe")}-#{mod}] for [#{fname}]: #{err.to_s}"
+        $log.warn "MIQ(DiskProbe-getDiskMod) [#{pmod.chomp("Probe")}-#{mod}] for [#{fname}]: #{err}"
 			end
 		end
 		return nil
@@ -60,7 +60,7 @@ module DiskProbe
           return Object.const_get(dmodstr)
         end
       rescue => err
-        $log.warn "MIQ(DiskProbe-getDiskModForDisk) [#{pmodstr.chomp("Probe")}-#{dmodstr}] for [#{fname}]: #{err.to_s}"
+        $log.warn "MIQ(DiskProbe-getDiskModForDisk) [#{pmodstr.chomp("Probe")}-#{dmodstr}] for [#{fname}]: #{err}"
       end
     end
     $log.info "MIQ(DiskProbe-getDiskModForDisk) No module detected for [#{fname}]"

@@ -33,7 +33,7 @@ module NTFS
 		def to_s
 		  return @data.hex_dump if @data.kind_of?(String)
 		  
-	    raise "MIQ(NTFS::AttribData.to_s) Unexpected data class: #{@data.class.to_s}" unless @data.kind_of?(NTFS::DataRun)
+	    raise "MIQ(NTFS::AttribData.to_s) Unexpected data class: #{@data.class}" unless @data.kind_of?(NTFS::DataRun)
 
 		  # Must be a Data Run
 		  savedPos = @pos

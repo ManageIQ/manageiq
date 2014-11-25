@@ -14,7 +14,7 @@ module Metric::CiMixin::Capture::Openstack
       @perf_ems = perf_init_openstack
       perf_capture_data_openstack(start_time, end_time)
     rescue Exception => err
-      $log.error("#{log_header} Unhandled exception during perf data collection: [#{err.to_s}], class: [#{err.class.to_s}]")
+      $log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       $log.log_backtrace(err)
       raise

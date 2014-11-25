@@ -25,7 +25,7 @@ module ApplicationController::MiqRequestMethods
       render :update do |page|                    # Use JS to update the display
         #Going thru all dialogs to see if model has set any of the dialog display to hide/ignore
         @edit[:wf].get_all_dialogs.keys.each do |d|
-          page << "li_id = '#{d.to_s}_li';"
+          page << "li_id = '#{d}_li';"
           if @edit[:wf].get_dialog(d)[:display] == :show
             page << "miq_jquery_show_hide_tab(li_id, 'show');"
           else
@@ -36,11 +36,11 @@ module ApplicationController::MiqRequestMethods
           @edit[:wf].get_all_dialogs.keys.each do |d|
             if @edit[:wf].get_dialog(d)[:display] == :show && d == @edit[:new][:current_tab_key]
               if @edit[:wf].kind_of?(MiqProvisionWorkflow)
-                page.replace_html("#{d.to_s}_div", :partial=>"/miq_request/prov_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
+                page.replace_html("#{d}_div", :partial=>"/miq_request/prov_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
               elsif @edit[:wf].class.to_s == "VmMigrateWorkflow"
-                page.replace_html("#{d.to_s}_div", :partial=>"prov_vm_migrate_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
+                page.replace_html("#{d}_div", :partial=>"prov_vm_migrate_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
               else
-                page.replace_html("#{d.to_s}_div", :partial=>"prov_host_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
+                page.replace_html("#{d}_div", :partial=>"prov_host_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
               end
             end
           end
@@ -214,7 +214,7 @@ module ApplicationController::MiqRequestMethods
           session[:changed] = true                                # Turn on the submit button
         end
         @edit[:explorer] = true if @explorer
-        @tabactive = "#{@edit[:new][:current_tab_key].to_s}_div"
+        @tabactive = "#{@edit[:new][:current_tab_key]}_div"
       end
       drop_breadcrumb( {:name=>"#{params[:req_id] ? "Edit" : "Add"} #{@edit[:prov_type]} Request", :url=>"/vm/provision"} )
       @in_a_form = true
@@ -502,7 +502,7 @@ module ApplicationController::MiqRequestMethods
       @edit[:wf].get_all_fields(d).keys.each do |f|                 # Go thru all field
         field = @edit[:wf].get_field(f, d)
         if !field[:error].blank?
-          @error_div ||= "#{d.to_s}"
+          @error_div ||= "#{d}"
           add_flash(field[:error], :error)
         end
       end

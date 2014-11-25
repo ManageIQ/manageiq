@@ -262,7 +262,7 @@ class MiqAction < ActiveRecord::Base
         # ${Object.method}
         if what == "object"
           if method == "type"
-            subst = "#{rec.class.to_s}"
+            subst = "#{rec.class}"
           elsif method == "ems" && rec.respond_to?(:ext_management_system)
             ems = rec.ext_management_system
             subst = "vCenter #{ems.hostname}/#{ems.ipaddress}" unless ems.nil?
@@ -405,13 +405,13 @@ class MiqAction < ActiveRecord::Base
 
   def action_tag(action, rec, inputs)
     get_policies_from = inputs[:get_policies_from]
-    MiqPolicy.logger.info("MIQ(action_tag): Applying tags [#{action.options[:tags].inspect}] to [(#{rec.class.to_s}) #{rec.name}]")
+    MiqPolicy.logger.info("MIQ(action_tag): Applying tags [#{action.options[:tags].inspect}] to [(#{rec.class}) #{rec.name}]")
     action.options[:tags].each {|t| Classification.classify_by_tag(rec, t)}
   end
 
   def action_tag_inherit(action, rec, inputs)
     get_policies_from = inputs[:get_policies_from]
-    MiqPolicy.logger.info("MIQ(action_tag_inherit): Applying tags from [(#{get_policies_from.class.to_s}) #{get_policies_from.name}] to [(#{rec.class.to_s}) #{rec.name}]")
+    MiqPolicy.logger.info("MIQ(action_tag_inherit): Applying tags from [(#{get_policies_from.class}) #{get_policies_from.name}] to [(#{rec.class}) #{rec.name}]")
     tags = get_policies_from.tag_list(:ns=>"/managed").split
     tags.delete_if {|t| t =~ /^power_state/} # omit power state since this is assigned by the system
 
@@ -425,12 +425,12 @@ class MiqAction < ActiveRecord::Base
     # }
     parent = rec.send(options[:parent_type]) if rec.respond_to?(options[:parent_type])
     if parent.nil?
-      MiqPolicy.logger.warn("MIQ(action_inherit_parent_tags): [(#{rec.class.to_s}) #{rec.name}] does not have a parent of type [#{options[:parent_type]}], no action will be taken")
+      MiqPolicy.logger.warn("MIQ(action_inherit_parent_tags): [(#{rec.class}) #{rec.name}] does not have a parent of type [#{options[:parent_type]}], no action will be taken")
       return
     end
 
     options[:cats].each do |cat|
-      MiqPolicy.logger.info("MIQ(action_inherit_parent_tags): Removing tags from category [(#{cat}) from [(#{rec.class.to_s}) #{rec.name}]")
+      MiqPolicy.logger.info("MIQ(action_inherit_parent_tags): Removing tags from category [(#{cat}) from [(#{rec.class}) #{rec.name}]")
       rec.tag_with("", :ns=>"/managed/#{cat}")
     end
     rec.reload
@@ -439,7 +439,7 @@ class MiqAction < ActiveRecord::Base
       cat, ent = t.split("/")
       next unless options[:cats].include?(cat)
 
-      MiqPolicy.logger.info("MIQ(action_inherit_parent_tags): Applying tag [#{t}] from [(#{parent.class}) #{parent.name}] to [(#{rec.class.to_s}) #{rec.name}]")
+      MiqPolicy.logger.info("MIQ(action_inherit_parent_tags): Applying tag [#{t}] from [(#{parent.class}) #{parent.name}] to [(#{rec.class}) #{rec.name}]")
       Classification.classify_by_tag(rec, "/managed/#{t}", false)
     end
   end
@@ -452,7 +452,7 @@ class MiqAction < ActiveRecord::Base
       cat, ent = t.split("/")
       next unless options[:cats].include?(cat)
 
-      MiqPolicy.logger.info("MIQ(action_remove_tags): Removing tag [#{t}] from [(#{rec.class.to_s}) #{rec.name}]")
+      MiqPolicy.logger.info("MIQ(action_remove_tags): Removing tag [#{t}] from [(#{rec.class}) #{rec.name}]")
       Classification.unclassify_by_tag(rec, "/managed/#{t}", false)
     end
   end

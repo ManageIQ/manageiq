@@ -142,7 +142,7 @@ module ApplicationController::TreeSupport
     profiles = []
     MiqPolicySet.all.sort_by{|profile| profile.description.downcase}.each do |profile|
       policy_profile_node = TreeNodeBuilder.generic_tree_node(
-          "policy_profile_#{profile.id.to_s}",
+          "policy_profile_#{profile.id}",
           profile.description,
           "policy_profile#{profile.active? ? "" : "_inactive"}.png",
           nil,
@@ -165,7 +165,7 @@ module ApplicationController::TreeSupport
     policy_profile_children = []
     profile.members.sort_by{|policy| [policy.towhat, policy.mode, policy.description.downcase]}.each do |policy|
       policy_node = TreeNodeBuilder.generic_tree_node(
-          "policy_#{policy.id.to_s}",
+          "policy_#{policy.id}",
           policy.description,
           "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}.png",
           nil,

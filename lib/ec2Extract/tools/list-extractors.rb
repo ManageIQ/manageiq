@@ -11,11 +11,11 @@ begin
 	
 	puts "EVM extractor instances:"
 	ec2.instances.tagged('evm-extractor').each do |ei|
-		puts "\t#{ei.id}\t#{ei.status}\t#{ei.launch_time.to_s}"
+		puts "\t#{ei.id}\t#{ei.status}\t#{ei.launch_time}"
 	end
 	
 rescue => err
-	$stderr.puts "#{cmdName}: #{err.to_s}"
+	$stderr.puts "#{cmdName}: #{err}"
 	$stderr.puts err.backtrace.join("\n")
 	exit 1
 end

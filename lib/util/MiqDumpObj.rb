@@ -19,7 +19,7 @@ module MiqDumpObj
 	
 	def dumpHash(h, level)
 	    h.each do |k, v|
-	        indentedPrint("Level#{level} (#{v.class.to_s}), #{k}:", level)
+	        indentedPrint("Level#{level} (#{v.class}), #{k}:", level)
 	        dumpObj(v, level+1)
 	    end
 	end
@@ -27,7 +27,7 @@ module MiqDumpObj
 	def dumpArray(a, level)
 	    i = 0
 	    a.each do |ae|
-	        indentedPrint("Level#{level} (#{ae.class.to_s}), [#{i}]:", level)
+	        indentedPrint("Level#{level} (#{ae.class}), [#{i}]:", level)
 	        dumpObj(ae, level+1)
 	        i += 1
 	    end
@@ -38,7 +38,7 @@ module MiqDumpObj
 	    indentedPrint("**** Object type: #{className}", level)
 		return if !obj
 		if obj.kind_of?(DateTime)
-			indentedPrint("Level#{level}, #{obj.to_s}:", level)
+			indentedPrint("Level#{level}, #{obj}:", level)
 			return
 		end
 		eiv = @excludeIv[className]

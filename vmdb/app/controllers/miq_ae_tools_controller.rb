@@ -327,7 +327,7 @@ Methods updated/added: %{method_stats}") % stat_options)
         a_node[:key] = "a_#{@idx}"
         @idx += 1
 #       a_node['text'] = "#{k} <b>=</b> #{v.inspect}"   # Used to use .inspect in case values had hashes/arrays/structures in them
-        a_node[:title] = "#{k} <b>=</b> #{v.to_s}"
+        a_node[:title] = "#{k} <b>=</b> #{v}"
         a_node[:icon] = "attribute.png"
         e_kids.push(a_node)
       end

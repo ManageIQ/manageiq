@@ -1055,8 +1055,8 @@ module OpsController::Diagnostics
         end
       end
       @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
-        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
-        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id.to_s}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
     end
   end
 

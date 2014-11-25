@@ -350,7 +350,7 @@ module ApplicationController::Compare
           end
 
           unless csv                              # Don't generate % lines for csv output
-            cols = ["#{section[:header].to_s} - % Match:","","", "Base"]    # Generate % line, first 3 cols
+            cols = ["#{section[:header]} - % Match:","","", "Base"]    # Generate % line, first 3 cols
             @compare.results.each do |r|          # Go thru each of the VMs
               next if r[0] == @compare.records[0]["id"] # Skip the base VM
               cols.push(r[1][section[:name]][:_match_].to_s + "%")  # Grab the % value for this attr for this VM
@@ -763,7 +763,7 @@ module ApplicationController::Compare
           end
         end
         unless csv                              # Don't generate % lines for csv output
-          cols = ["#{section[:header].to_s} - Changed:","",""]            # Generate % line, first 3 cols
+          cols = ["#{section[:header]} - Changed:","",""]            # Generate % line, first 3 cols
           @compare.ids.each do |r|            # Go thru each of the VMs
             if @compare.results[r][section[:name]][:_match_]  # Does it match?
               cols.push("")                     # Yes, push a blank string

@@ -70,7 +70,7 @@ class VmScan < Job
             begin
               sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
             rescue Exception => err
-              msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err.to_s}]"
+              msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
               $log.error("MIQ(scan-call_snapshot_create #{msg}")
               err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
               return
@@ -274,7 +274,7 @@ class VmScan < Job
           request_docs = []
           all_docs = []
           s.each_element { |e|
-            $log.info("action-process_data: Summary XML [#{e.to_s}]")
+            $log.info("action-process_data: Summary XML [#{e}]")
             request_docs << e.attributes['original_filename'] if e.attributes['items_total'] && e.attributes['items_total'].to_i.zero?
             all_docs << e.attributes['original_filename']
           }
@@ -507,7 +507,7 @@ class VmScan < Job
       begin
         vm.ext_management_system.vm_log_user_event(vm, user_event)
       rescue => err
-        $log.warn "Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err.to_s} Event message [#{user_event}]"
+        $log.warn "Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]"
       end
     end
   end

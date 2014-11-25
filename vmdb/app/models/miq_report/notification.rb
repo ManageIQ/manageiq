@@ -72,7 +72,7 @@ module MiqReport::Notification
         GenericMailer.deliver_queue(:generic_notification, options)
       end
     rescue => err
-      $log.error("MIQ(MiqReport-notify_users_of_report) Queuing email user: [#{user.name}] report results: [#{result.name}] failed with error: [#{err.class.name}] [#{err.to_s}]")
+      $log.error("MIQ(MiqReport-notify_users_of_report) Queuing email user: [#{user.name}] report results: [#{result.name}] failed with error: [#{err.class.name}] [#{err}]")
     end
     Time.zone = curr_tz # Restore original time zone setting
   end

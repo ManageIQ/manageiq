@@ -12,7 +12,7 @@ begin
 	evm = MiqEvmClientBase.new(server)
 	rv = evm.evmProvisionRequest(param0, param1)
 	
-	puts "rv = #{rv}, (#{rv.class.to_s})"
+	puts "rv = #{rv}, (#{rv.class})"
 
 rescue Handsoap::Fault => hserr
 	$stderr.puts hserr.to_s

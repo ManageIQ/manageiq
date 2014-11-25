@@ -535,15 +535,15 @@ module ApplicationController::Performance
 
   # Load a chart miq_report object from YML
   def perf_get_chart_rpt(chart_rpt)
-    return MiqReport.new(YAML::load(File.open("#{CHARTS_REPORTS_FOLDER}/#{chart_rpt.to_s}.yaml")))
+    return MiqReport.new(YAML::load(File.open("#{CHARTS_REPORTS_FOLDER}/#{chart_rpt}.yaml")))
   end
 
   # Load a chart layout from YML
   def perf_get_chart_layout(layout, fname = nil)
     if fname
-      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout.to_s}/#{fname.to_s}.yaml"))
+      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout}/#{fname}.yaml"))
     else
-      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout.to_s}.yaml"))
+      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout}.yaml"))
     end
     charts.delete_if do |c|
       c.is_a?(Hash) && c[:applies_to_method] && @perf_record &&
@@ -1310,8 +1310,8 @@ module ApplicationController::Performance
 
       # Remove columns not checked in options
       [:cpu,:vcpus,:memory,:storage].each do |k|
-        if @sb[:planning][:vm_opts][k].nil? || !@sb[:planning][:options]["trend_#{k.to_s}".to_sym]
-          i = rpt.col_order.index("#{k.to_s}_vm_count")
+        if @sb[:planning][:vm_opts][k].nil? || !@sb[:planning][:options]["trend_#{k}".to_sym]
+          i = rpt.col_order.index("#{k}_vm_count")
           rpt.col_order.delete_at(i)
           rpt.headers.delete_at(i)
         end
@@ -1331,7 +1331,7 @@ module ApplicationController::Performance
     # Remove columns not checked in options
     [:cpu,:vcpus,:memory,:storage].each do |k|
       if @sb[:planning][:vm_opts][k].nil? || !@sb[:planning][:options]["trend_#{k == :storage ? "disk" : k.to_s}".to_sym]
-        chart_layouts[:VimPerformancePlanning].first[:columns].delete_if{|col| col == "#{k.to_s}_vm_count"}
+        chart_layouts[:VimPerformancePlanning].first[:columns].delete_if{|col| col == "#{k}_vm_count"}
       end
     end
 

@@ -90,7 +90,7 @@ module MiqLinux
       				ra.push({:name => cfg.getHash["displayname"], :vendor => cfg.vendor, :location => dsPaths[i], :guid=>Manageiq::BlackBox.vmId(localPaths[i])})
       			rescue => err
       			    $log.warn "GetVMs: could not obtain configuration for VM: #{localPaths[i]}"
-      			    $log.warn "GetVMs: skipping VM, error: #{err.to_s}"
+      			    $log.warn "GetVMs: skipping VM, error: #{err}"
       			    $log.warn err.backtrace.join("\n")
       			end
   		    end

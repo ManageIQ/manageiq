@@ -123,9 +123,9 @@ module ApplicationController::Filter
         end
 
         if @edit[@expkey][:exp_key] && @edit[@expkey][:exp_field]
-          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type].to_s}';" if @edit[@expkey][:val1][:type]
+          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit[@expkey][:val1][:type]
           page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit[@expkey][:val1][:type]
-          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type].to_s}';" if @edit[@expkey][:val2][:type]
+          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit[@expkey][:val2][:type]
           page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit[@expkey][:val2][:type]
         end
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -427,9 +427,9 @@ module ApplicationController::Filter
             page << "miqBuildCalendar();"
           end
 
-          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type].to_s}';" if @edit.fetch_path(@expkey,:val1,:type)
+          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey,:val1,:type)
           page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey,:val1,:type)
-          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type].to_s}';" if @edit.fetch_path(@expkey,:val2,:type)
+          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey,:val2,:type)
           page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey,:val2,:type)
 
           page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -465,9 +465,9 @@ module ApplicationController::Filter
           page << "miqBuildCalendar();"
         end
 
-        page << "miq_val1_type = '#{@edit[@expkey][:val1][:type].to_s}';" if @edit.fetch_path(@expkey,:val1,:type)
+        page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey,:val1,:type)
         page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey,:val1,:type)
-        page << "miq_val2_type = '#{@edit[@expkey][:val2][:type].to_s}';" if @edit.fetch_path(@expkey,:val2,:type)
+        page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey,:val2,:type)
         page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey,:val2,:type)
       end
       # Rememeber this settting in the model settings
@@ -1377,7 +1377,7 @@ module ApplicationController::Filter
                                          @edit[@expkey][:exp_key],
                                          @edit[@expkey][:exp_value].kind_of?(Array) ?
                                            @edit[@expkey][:exp_value] :
-                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix].to_s}" : ""))
+                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
                                         )
         add_flash(_("%{field} Value Error: %{msg}") % {:field=>"Field", :msg=>e}, :error)
       else
@@ -1392,7 +1392,7 @@ module ApplicationController::Filter
         unless @edit[@expkey][:exp_key].include?("NULL") || @edit[@expkey][:exp_key].include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]   #   else set the value
           unless exp[@edit[@expkey][:exp_key]]["value"] == :user_input
-            exp[@edit[@expkey][:exp_key]]["value"] += ".#{@edit[:suffix].to_s}" if @edit[:suffix] # Append the suffix, if present
+            exp[@edit[@expkey][:exp_key]]["value"] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
           end
         end
         exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
@@ -1455,14 +1455,14 @@ module ApplicationController::Filter
                                         @edit[@expkey][:exp_skey],
                                         @edit[@expkey][:exp_value].kind_of?(Array) ?
                                           @edit[@expkey][:exp_value] :
-                                          (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix].to_s}" : ""))
+                                          (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
                                         )
         add_flash(_("%{field} Value Error: %{msg}") % {:field=>"Find", :msg=>e}, :error)
       elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_check] == "checkcount" ? :count : @edit[@expkey][:exp_cfield],
                                         @edit[@expkey][:exp_ckey],
                                         @edit[@expkey][:exp_cvalue].kind_of?(Array) ?
                                           @edit[@expkey][:exp_cvalue] :
-                                          (@edit[@expkey][:exp_cvalue].to_s + (@edit[:suffix2] ? ".#{@edit[:suffix2].to_s}" : ""))
+                                          (@edit[@expkey][:exp_cvalue].to_s + (@edit[:suffix2] ? ".#{@edit[:suffix2]}" : ""))
                                         )
         add_flash(_("%{field} Value Error: %{msg}") % {:field=>"Check", :msg=>e}, :error)
       else
@@ -1482,7 +1482,7 @@ module ApplicationController::Filter
         exp[@edit[@expkey][:exp_key]]["search"][skey]["field"] = @edit[@expkey][:exp_field] # Set the search field
         unless skey.include?("NULL") || skey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] = @edit[@expkey][:exp_value] #   else set the value
-          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] += ".#{@edit[:suffix].to_s}" if @edit[:suffix] # Append the suffix, if present
+          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
         end
         chk = @edit[@expkey][:exp_check]
         exp[@edit[@expkey][:exp_key]][chk] = Hash.new                 # Create the check hash
@@ -1495,7 +1495,7 @@ module ApplicationController::Filter
         end
         unless ckey.include?("NULL") || ckey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] = @edit[@expkey][:exp_cvalue] #   else set the value
-          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] += ".#{@edit[:suffix2].to_s}" if @edit[:suffix2]  # Append the suffix, if present
+          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] += ".#{@edit[:suffix2]}" if @edit[:suffix2]  # Append the suffix, if present
         end
         exp[@edit[@expkey][:exp_key]]["search"][skey]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
       end

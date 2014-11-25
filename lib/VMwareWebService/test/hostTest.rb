@@ -27,7 +27,7 @@ vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 miqHost = nil
 
 begin
-    puts "vim.class: #{vim.class.to_s}"
+    puts "vim.class: #{vim.class}"
     puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
     puts "API version: #{vim.apiVersion}"
 
@@ -43,7 +43,7 @@ begin
 	exit
 
 	vim.dumpObj(miqHost.hh['config']['dateTimeInfo'])
-	puts "miqHost: #{miqHost.class.to_s}"
+	puts "miqHost: #{miqHost.class}"
 	exit
 
 	puts "Host name: #{miqHost.name}"

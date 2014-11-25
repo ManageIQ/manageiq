@@ -108,7 +108,7 @@ module NTFS
         return self.[](what,1)
       end
       
-      raise "MIQ(NTFS::DataRun.[]) Invalid Class (#{what.class.to_s})"
+      raise "MIQ(NTFS::DataRun.[]) Invalid Class (#{what.class})"
     end
     
     def [](offset,len)

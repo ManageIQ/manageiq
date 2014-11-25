@@ -6,7 +6,7 @@ module Ext4Probe
   def Ext4Probe.probe(dobj)
     $log.debug("Ext4Probe >> dobj=#{dobj}") if $log
     unless dobj.kind_of?(MiqDisk)
-      $log.debug "Ext4Probe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class.to_s}'" if $log
+      $log.debug "Ext4Probe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class}'" if $log
       return false
     end
 

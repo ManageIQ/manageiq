@@ -23,7 +23,7 @@ class MiqStorageMetric < ActiveRecord::Base
     start_time = Time.at(rollup_time.to_i - SECONDS_PER_HOUR)
 
     if (metric_list = derived_metrics_in_range(start_time, rollup_time)).empty?
-      $log.info "#{self.class.name}.rollup_hourly: no metrics found for hourly rollup - #{rollup_time.to_s}"
+      $log.info "#{self.class.name}.rollup_hourly: no metrics found for hourly rollup - #{rollup_time}"
       return
     end
 
@@ -46,7 +46,7 @@ class MiqStorageMetric < ActiveRecord::Base
     rollup_obj = self.metrics_rollup_class.new
     cn = self.class.name
     $log.info "#{cn}.hourly_rollup_by_type: hourly rollup for subclass #{cn}"
-    $log.info "#{cn}.hourly_rollup_by_type: rollup_time = #{rollup_time.to_s}"
+    $log.info "#{cn}.hourly_rollup_by_type: rollup_time = #{rollup_time}"
     $log.info "#{cn}.hourly_rollup_by_type: number of metrics = #{metric_list.length}"
     rollup_obj.hourly_rollup(rollup_time, metric_list)
     addMetricsRollup(rollup_obj)
@@ -56,7 +56,7 @@ class MiqStorageMetric < ActiveRecord::Base
     start_time = Time.at(rollup_time.to_i - SECONDS_PER_DAY)
 
     if (metric_list = metrics_rollups_in_range(ROLLUP_TYPE_HOURLY, start_time, rollup_time)).empty?
-      $log.info "#{self.class.name}.rollup_daily: no metrics found for daily rollup - #{rollup_time.to_s}"
+      $log.info "#{self.class.name}.rollup_daily: no metrics found for daily rollup - #{rollup_time}"
       return
     end
 
@@ -79,7 +79,7 @@ class MiqStorageMetric < ActiveRecord::Base
     rollup_obj = self.metrics_rollup_class.new
     cn = self.class.name
     $log.info "#{cn}.daily_rollup_by_type: daily rollup for subclass #{cn}"
-    $log.info "#{cn}.daily_rollup_by_type: rollup_time = #{rollup_time.to_s}, TZ = #{time_profile.tz}"
+    $log.info "#{cn}.daily_rollup_by_type: rollup_time = #{rollup_time}, TZ = #{time_profile.tz}"
     $log.info "#{cn}.daily_rollup_by_type: number of metrics = #{metric_list.length}"
     rollup_obj.daily_rollup(rollup_time, time_profile, metric_list)
     addMetricsRollup(rollup_obj)

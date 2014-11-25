@@ -42,13 +42,13 @@ class MiqVm
         if (@vim = @ost.miqVim)
             $log.debug "MiqVm::initialize: accessing VM through server: #{@vim.server}" if $log.debug?
             @vimVm = @vim.getVimVm(vmCfg)
-            $log.debug "MiqVm::initialize: setting @ost.miqVimVm = #{@vimVm.class.to_s}" if $log.debug?
+            $log.debug "MiqVm::initialize: setting @ost.miqVimVm = #{@vimVm.class}" if $log.debug?
             @ost.miqVimVm = @vimVm
             @vmConfig = VmConfig.new(@vimVm.getCfg(@ost.snapId))
         elsif (@rhevm = @ost.miqRhevm)
             $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
             @rhevmVm = @rhevm.get_vm(vmCfg)
-            $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class.to_s}" if $log.debug?
+            $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
             @ost.miqRhevmVm = @rhevmVm
             @vmConfig = VmConfig.new(@rhevmVm.getCfg(@ost.snapId))
         else

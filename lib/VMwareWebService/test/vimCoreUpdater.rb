@@ -25,7 +25,7 @@ Signal.trap("INT") { vimEm.stop }
 begin
     thread = Thread.new do
 		vimEm.monitorUpdates do |mor, ph|
-			puts "Object: #{mor.to_s} (#{mor.vimType})"
+			puts "Object: #{mor} (#{mor.vimType})"
 			ph.each { |k, v| puts "\t#{k}:\t#{v}"} unless ph.nil?
 		end
 	end

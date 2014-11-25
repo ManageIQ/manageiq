@@ -112,9 +112,9 @@ class MiqThreadCtl
     def self.waitThreads
         $log.debug "In MiqThreadCtl.waitThreads" if $log
         threads.each do |t|
-            $log.info "waitThreads: #{t.to_s}" if $log
+            $log.info "waitThreads: #{t}" if $log
             t.join if t != Thread.current
-            $log.info "waitThreads: #{t.to_s} exited" if $log
+            $log.info "waitThreads: #{t} exited" if $log
         end
     end
     

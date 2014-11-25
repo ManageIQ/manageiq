@@ -14,7 +14,7 @@ sd = SyncDebug.new
 sd.lock_name = "TestLock"
 
 sd.on_lock_acquire do |li|
-  puts "Acquired lock: #{li[:lock].lock_name}, acquired_mode = #{li[:lock].sync_mode}, requested_mode = #{li[:mode].to_s} [#{li[:call_stack][0]}]"
+  puts "Acquired lock: #{li[:lock].lock_name}, acquired_mode = #{li[:lock].sync_mode}, requested_mode = #{li[:mode]} [#{li[:call_stack][0]}]"
 end
 
 sd.on_unlock_request do |li|
@@ -28,7 +28,7 @@ sd.on_try_lock_request do |li|
   puts "Requesting lock: #{li[:lock].lock_name}, from_mode = #{li[:lock].sync_mode}, to_mode = #{li[:mode]} [#{li[:call_stack][0]}]"
 end
 sd.on_try_lock_return do |li, rv|
-  puts "#{li[:lock].lock_name}, mode = #{li[:mode].to_s}: acquired = #{rv} [#{li[:call_stack][0]}]"
+  puts "#{li[:lock].lock_name}, mode = #{li[:mode]}: acquired = #{rv} [#{li[:call_stack][0]}]"
 end
 
 # exit

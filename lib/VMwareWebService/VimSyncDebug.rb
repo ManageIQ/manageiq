@@ -11,7 +11,7 @@ module VimSyncDebug
       $vim_log.info "VimSyncDebug - Requesting lock: #{li[:lock].lock_name}, from_mode = #{li[:lock].sync_mode}, to_mode = #{li[:mode]} [#{li[:call_stack][0]}]"
     end
     lock.on_lock_acquire do |li|
-      $vim_log.info "VimSyncDebug - Acquired lock: #{li[:lock].lock_name}, acquired_mode = #{li[:lock].sync_mode}, requested_mode = #{li[:mode].to_s} [#{li[:call_stack][0]}]"
+      $vim_log.info "VimSyncDebug - Acquired lock: #{li[:lock].lock_name}, acquired_mode = #{li[:lock].sync_mode}, requested_mode = #{li[:mode]} [#{li[:call_stack][0]}]"
     end
 
     lock.on_unlock_request do |li|
@@ -51,7 +51,7 @@ module VimSyncDebug
     lock.on_watchdog_stop do |lock, err|
       $vim_log.info "VimSyncDebug - Watchdog for #{lock.lock_name} stopping"
       if err
-        $vim_log.error "VimSyncDebug - Watchdog ERROR: #{err.to_s}"
+        $vim_log.error "VimSyncDebug - Watchdog ERROR: #{err}"
         $vim_log.error "VimSyncDebug - Watchdog: Start backtrace"
         $vim_log.error err.backtrace.join("\n")
         $vim_log.error "VimSyncDebug - Watchdog: End backtrace"

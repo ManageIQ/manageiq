@@ -56,7 +56,7 @@ module VmOrTemplate::Scanning
           # Reset the root of the xml document to match the expected starting point
           doc.root = doc.root.elements[1].elements[1]
         rescue => err
-          $log.error "MIQ(Vm-save_metadata) Invalid xml error [#{err.to_s}] for xml:[#{doc.to_s}]"
+          $log.error "MIQ(Vm-save_metadata) Invalid xml error [#{err}] for xml:[#{doc}]"
         end
         vm.add_elements(doc)
         vm.save!
@@ -316,7 +316,7 @@ module VmOrTemplate::Scanning
         statusCode = 8
         statusCode = 16 if categoriesProcessed.zero?
         scanMessage = lastErr.to_s
-        $log.error "#{log_pref} ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr.to_s}]"
+        $log.error "#{log_pref} ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr}]"
         lastErr.backtrace.each {|m| $log.debug m} if $log.debug?
       end
 
@@ -384,7 +384,7 @@ module VmOrTemplate::Scanning
         end
       end
     rescue => syncErr
-      $log.error "#{log_pref}: #{syncErr.to_s}"
+      $log.error "#{log_pref}: #{syncErr}"
       $log.debug syncErr.backtrace.join("\n")
     ensure
       if bb

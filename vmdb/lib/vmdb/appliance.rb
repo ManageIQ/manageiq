@@ -112,7 +112,7 @@ module Vmdb
             res = `#{diag[:cmd]}`
           end
         rescue => e
-          $log.warn("Diagnostics: [#{diag[:msg]}] command [#{diag[:cmd]}] failed with error [#{e.to_s}]")
+          $log.warn("Diagnostics: [#{diag[:msg]}] command [#{diag[:cmd]}] failed with error [#{e}]")
           next  # go to next diagnostic command if this one blew up
         end
         $log.info("Diagnostics: [#{diag[:msg]}]\n#{res}") unless res.blank?

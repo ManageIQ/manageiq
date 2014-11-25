@@ -93,7 +93,7 @@ class LogFile < ActiveRecord::Base
     # All server types who provide logs must implement the following instance methods:
     #   - my_zone:     which returns the zone in which they reside
     #   - who_am_i:    which returns a log friendly string of the server's class and id
-    [:my_zone, :who_am_i].each {|meth| raise "#{meth.to_s} not implemented for #{server.class.name}" unless server.respond_to?(meth) }
+    [:my_zone, :who_am_i].each {|meth| raise "#{meth} not implemented for #{server.class.name}" unless server.respond_to?(meth) }
     zone     = server.my_zone
     resource = server.who_am_i
 

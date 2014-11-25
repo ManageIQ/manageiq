@@ -19,7 +19,7 @@ class MiqAePassword < MiqPassword
   end
 
   def inspect
-    "\"#{self.to_s}\""
+    "\"#{self}\""
   end
 
   # Use the same keys for MiqPassword and MiqAePassword

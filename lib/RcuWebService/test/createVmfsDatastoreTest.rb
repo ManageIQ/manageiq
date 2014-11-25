@@ -40,7 +40,7 @@ begin
 	rv = rcu.createDatastore(datastoreSpec)
 	
 	puts
-	puts "*** RV: #{rv} (#{rv.class.to_s})"
+	puts "*** RV: #{rv} (#{rv.class})"
 
 rescue Handsoap::Fault => hserr
 	$stderr.puts hserr.to_s

@@ -198,7 +198,7 @@ class NetappRcu < StorageManager
       $log.error hserr.backtrace.join("\n")
       raise
     rescue => err
-      $log.error "#{log_header} #{err.to_s}"
+      $log.error "#{log_header} #{err}"
       $log.error err.backtrace.join("\n")
       raise
     end

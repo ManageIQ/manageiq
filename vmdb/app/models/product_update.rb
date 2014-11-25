@@ -88,7 +88,7 @@ class ProductUpdate < ActiveRecord::Base
     # Create a file miqserver_4 or miqhost_3
     # Added support for the UI downloading a file via nil deployment target
     basename = case deployment_target
-    when MiqServer then "#{deployment_target.class.to_s}_#{self.md5}"
+    when MiqServer then "#{deployment_target.class}_#{self.md5}"
     when MiqProxy  then "miqhost_#{self.md5}"
     when NilClass
       download = "#{self.component}_#{self.version}_#{self.build}".gsub(".", "_")

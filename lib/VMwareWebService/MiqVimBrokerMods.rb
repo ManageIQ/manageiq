@@ -34,7 +34,7 @@ $miqBrokerObjRegistryLock		= Sync.new
 
 module MiqBrokerObjRegistry
 	def holdBrokerObj
-		$vim_log.info "MiqBrokerObjRegistry.holdBrokerObj: #{self.class.to_s} object_id: #{self.object_id} TEMP HOLD"
+		$vim_log.info "MiqBrokerObjRegistry.holdBrokerObj: #{self.class} object_id: #{self.object_id} TEMP HOLD"
 		$miqBrokerObjRegistryLock.synchronize(:EX) do
 			$miqBrokerObjHold[self.object_id] = self
 		end
@@ -42,18 +42,18 @@ module MiqBrokerObjRegistry
 	end
 	
 	def registerBrokerObj(id)
-		$vim_log.info "MiqBrokerObjRegistry.registerBrokerObj: #{self.class.to_s} object_id: #{self.object_id} => SessionId: #{id}"
+		$vim_log.info "MiqBrokerObjRegistry.registerBrokerObj: #{self.class} object_id: #{self.object_id} => SessionId: #{id}"
 		$miqBrokerObjRegistryLock.synchronize(:EX) do
 			$miqBrokerObjRegistry[id] << self
 			
 			if $miqBrokerObjHold.has_key?(self.object_id)
-				$vim_log.info "MiqBrokerObjRegistry.registerBrokerObj: #{self.class.to_s} object_id: #{self.object_id} TEMP HOLD RELEASE"
+				$vim_log.info "MiqBrokerObjRegistry.registerBrokerObj: #{self.class} object_id: #{self.object_id} TEMP HOLD RELEASE"
 				$miqBrokerObjHold.delete(self.object_id)
 			end
 			
 			if defined? @invObj
 				connKey = "#{@invObj.server}_#{@invObj.username}"
-				$vim_log.info "MiqBrokerObjRegistry.registerBrokerObj: #{self.class.to_s} object_id: #{self.object_id} => Connection: #{connKey}"
+				$vim_log.info "MiqBrokerObjRegistry.registerBrokerObj: #{self.class} object_id: #{self.object_id} => Connection: #{connKey}"
 				$miqBrokerObjRegistryByConn[connKey] << self
 			end
 			
@@ -67,12 +67,12 @@ module MiqBrokerObjRegistry
 	def unregisterBrokerObj
 		$miqBrokerObjRegistryLock.synchronize(:EX) do
 			return if !(id = $miqBrokerObjIdMap[self.object_id])
-			$vim_log.info "MiqBrokerObjRegistry.unregisterBrokerObj: #{self.class.to_s} object_id: #{self.object_id} => SessionId: #{id}"
+			$vim_log.info "MiqBrokerObjRegistry.unregisterBrokerObj: #{self.class} object_id: #{self.object_id} => SessionId: #{id}"
 			$miqBrokerObjRegistry[id].delete(self)
 			$miqBrokerObjRegistry.delete(id) if $miqBrokerObjRegistry[id].empty?
 			if defined? @invObj
 				connKey = "#{@invObj.server}_#{@invObj.username}"
-				$vim_log.info "MiqBrokerObjRegistry.unregisterBrokerObj: #{self.class.to_s} object_id: #{self.object_id} => Connection: #{connKey}"
+				$vim_log.info "MiqBrokerObjRegistry.unregisterBrokerObj: #{self.class} object_id: #{self.object_id} => Connection: #{connKey}"
 				$miqBrokerObjRegistryByConn[connKey].delete(self)
 				$miqBrokerObjRegistryByConn.delete(connKey) if $miqBrokerObjRegistryByConn[connKey].empty?
 			end
@@ -83,7 +83,7 @@ module MiqBrokerObjRegistry
 	end
 	
 	def release
-		$vim_log.info "MiqBrokerObjRegistry.release: #{self.class.to_s} object_id: #{self.object_id}"
+		$vim_log.info "MiqBrokerObjRegistry.release: #{self.class} object_id: #{self.object_id}"
 		unregisterBrokerObj
 		release_orig
 	end

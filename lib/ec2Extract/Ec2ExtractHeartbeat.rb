@@ -33,7 +33,7 @@ class Ec2ExtractHeartbeat
 				begin
 					self.heartbeat
 				rescue Exception => err
-					$log.warn "#{self.class.name}.#{__method__}: #{err.to_s}"
+					$log.warn "#{self.class.name}.#{__method__}: #{err}"
 					$log.warn err.backtrace.join("\n")
 				end
 				sleep @heartbeat_interval
@@ -53,7 +53,7 @@ class Ec2ExtractHeartbeat
 	
 	def heartbeat
 		ts = Time.now.utc
-		$log.debug { "#{self.class.name}.#{__method__}: #{@extractor_id} --> #{ts.to_s}" }
+		$log.debug { "#{self.class.name}.#{__method__}: #{@extractor_id} --> #{ts}" }
 		@evm_bucket.objects[@heartbeat_obj_key].write(YAML.dump(ts))
 	end
 	

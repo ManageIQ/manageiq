@@ -55,7 +55,7 @@ class EmsEventMonitorOps
         sleep_wait()
       end
     rescue => err
-      $log.error "EventingOps: #{err.to_s}" if $log
+      $log.error "EventingOps: #{err}" if $log
       $log.error err.backtrace.join("\n") if $log
       sleep_wait(60)
       break if MiqThreadCtl.exiting?

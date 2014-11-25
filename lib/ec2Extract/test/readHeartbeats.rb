@@ -33,7 +33,7 @@ begin
 		puts Time.now.utc.to_s
 		ARGV.each do |eid|
 			if (hb = eeh.get_heartbeat(eid))
-				puts "\t#{eid}\t--> #{hb.to_s}"
+				puts "\t#{eid}\t--> #{hb}"
 			else
 				puts "\t#{eid}\t--> no heartbeat"
 			end

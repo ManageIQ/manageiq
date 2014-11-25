@@ -463,7 +463,7 @@ describe ScheduleWorker do
                 first_in_expectations.each do |tag, expected_minutes|
                   job = @system.find_by_tag(tag).first
                   expected = @start_time + expected_minutes.minutes
-                  job.next_time.should eq(expected), "Schedule tag: #{tag.to_s}"
+                  job.next_time.should eq(expected), "Schedule tag: #{tag}"
                   job.frequency.should == 5.minutes
                 end
               end

@@ -103,7 +103,7 @@ module MiqServer::ServerSmartProxy
 
           return
         rescue Exception => err
-          $log.error "MiqServer::ServerSmartProxy.scan_sync_vm: #{err.to_s}"
+          $log.error "MiqServer::ServerSmartProxy.scan_sync_vm: #{err}"
           $log.debug err.backtrace.join("\n")
           job.signal(:abort_retry, err.to_s, "error", true)
           return

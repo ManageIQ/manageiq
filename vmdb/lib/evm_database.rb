@@ -42,12 +42,12 @@ class EvmDatabase
       begin
         klass = klass.constantize if klass.kind_of?(String)
       rescue
-        $log.error("#{log_prefix} Class #{klass.to_s} does not exist") if $log
+        $log.error("#{log_prefix} Class #{klass} does not exist") if $log
         next
       end
 
       if klass.respond_to?(:seed)
-        $log.info("#{log_prefix} Seeding #{klass.to_s}") if $log
+        $log.info("#{log_prefix} Seeding #{klass}") if $log
         begin
           klass.seed
         rescue => err

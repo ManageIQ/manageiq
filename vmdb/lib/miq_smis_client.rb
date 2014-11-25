@@ -123,12 +123,12 @@ module MiqSmisClient
 
             skip = false
             unless mei
-              $log.info "MiqSmisClient: (nil) skipping #{me.to_s}"
+              $log.info "MiqSmisClient: (nil) skipping #{me}"
               skip = true
             else
               mei['OperationalStatus'].each do |os|
                 if os.value == OperationalStatusNoContact || os.value == OperationalStatusLostCommunication
-                  $log.info "MiqSmisClient: (OperationalStatus) skipping #{me.to_s}"
+                  $log.info "MiqSmisClient: (OperationalStatus) skipping #{me}"
                   skip = true
                   break
                 end
@@ -138,7 +138,7 @@ module MiqSmisClient
               self.default_namespace = dnss
               next
             end
-            $log.info "MiqSmisClient: saving #{me.to_s}"
+            $log.info "MiqSmisClient: saving #{me}"
 
             @meNameToProfile[me] = [ api['RegisteredName'] ]
             node, prior_status = newNode(nil, me, true)
@@ -225,7 +225,7 @@ module MiqSmisClient
         if (s = getAssociatedMetrics(objName))
           if s['StatisticTime'].to_i == 0
             nn = MiqCimInstance.find(node.id) # get the proper sub-class
-            $log.info "SmisClient.newNode: zero StatisticTime for (#{nn.class.to_s}, #{nn.id}, #{nn.evm_display_name})"
+            $log.info "SmisClient.newNode: zero StatisticTime for (#{nn.class}, #{nn.id}, #{nn.evm_display_name})"
           else
             metric = MiqCimMetric.new
             metric.metric_obj = s
@@ -273,10 +273,10 @@ module MiqSmisClient
 
     def method_missing(sym, *args)
       from = caller.first
-      $log.info "SmisClient.#{sym.to_s}: called from #{from}" if $log
+      $log.info "SmisClient.#{sym}: called from #{from}" if $log
       @@serverCalls[sym] += 1
       rv = @conn.send(sym, *args)
-      $log.info "SmisClient.#{sym.to_s}: returned from #{from}" if $log
+      $log.info "SmisClient.#{sym}: returned from #{from}" if $log
       return rv
     end
 
@@ -363,7 +363,7 @@ module MiqSmisClient
       indentedPrint(hier, level, io)
       instance.properties.each do |k, v|
         unless v.value.kind_of?(Array)
-          indentedPrint("  #{k} => #{v.value} (#{v.value.class.to_s})", level, io)
+          indentedPrint("  #{k} => #{v.value} (#{v.value.class})", level, io)
         else
           indentedPrint("  #{k} =>", level, io)
           v.value.each { |val| indentedPrint("          #{val}", level, io) }
@@ -477,7 +477,7 @@ module MiqSmisClient
         if deltaSecs <= 0.0
           name = metricInstance.evm_display_name
           zn = (deltaSecs == 0 ? "zero" : "negative")
-          $log.warn "SmisMetricManager.updateMetrics: #{zn} Delta Time for (#{metricInstance.class.to_s}, #{metricInstance.id}, #{name})"
+          $log.warn "SmisMetricManager.updateMetrics: #{zn} Delta Time for (#{metricInstance.class}, #{metricInstance.id}, #{name})"
           next
         end
 
@@ -712,7 +712,7 @@ module MiqSmisClient
     end
 
     def self.dotNodeName(node)
-      return "#{node.class_name}_#{node.id.to_s}"
+      return "#{node.class_name}_#{node.id}"
     end
 
   end # class SmisDot

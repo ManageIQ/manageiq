@@ -166,7 +166,7 @@ module MiqAeMethodService
         $log.error hserr.backtrace.join("\n")
         raise
       rescue => err
-        $log.error "#{log_header} #{err.to_s}"
+        $log.error "#{log_header} #{err}"
         $log.error err.backtrace.join("\n")
         raise
       end
@@ -209,7 +209,7 @@ module MiqAeMethodService
         $log.error hserr.backtrace.join("\n")
         raise
       rescue => err
-        $log.error "#{log_header} #{err.to_s}"
+        $log.error "#{log_header} #{err}"
         $log.error err.backtrace.join("\n")
         raise
       end
@@ -236,7 +236,7 @@ module MiqAeMethodService
         $log.error hserr.backtrace.join("\n")
         raise
       rescue => err
-        $log.error "#{log_header} #{err.to_s}"
+        $log.error "#{log_header} #{err}"
         $log.error err.backtrace.join("\n")
         raise
       end
@@ -304,7 +304,7 @@ module MiqAeMethodService
         $log.error hserr.backtrace.join("\n")
         raise
       rescue => err
-        $log.error "#{log_prefix} #{err.to_s}"
+        $log.error "#{log_prefix} #{err}"
         $log.error err.backtrace.join("\n")
         raise
       end

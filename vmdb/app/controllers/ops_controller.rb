@@ -466,7 +466,7 @@ class OpsController < ApplicationController
       existing_node = nil                     # Init var
 
       parent_rec = VmdbTableEvm.find_by_id(@record.vmdb_table_id)
-      parents = [parent_rec, {:id=>"#{@record.vmdb_table_id.to_s}"}]
+      parents = [parent_rec, {:id=>"#{@record.vmdb_table_id}"}]
       #parents = [parent_rec]
 
       # Go up thru the parents and find the highest level unopened, mark all as opened along the way
@@ -765,7 +765,7 @@ class OpsController < ApplicationController
         page << javascript_dim("analytics_tree_div", false)
       end
 
-      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '#{x_node}');"
+      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}', '#{x_node}');"
       page << "miqSparkle(false);"
       page << javascript_focus_if_exists('server_company')
       page << "if ($('flash_msg_div')) {"

@@ -6,7 +6,7 @@ module EmsRefresh::MetadataRelats
 
   def vmdb_relats(target, relats = nil)
     log_header = "MIQ(#{self.name}.vmdb_relats)"
-    $log.info "#{log_header} Getting VMDB relationships for #{target.class.to_s} [#{target.name}] id: [#{target.id}]..."
+    $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
 
     relats ||= self.default_relats_hash
     if target.kind_of?(ExtManagementSystem)
@@ -16,7 +16,7 @@ module EmsRefresh::MetadataRelats
       self.vmdb_relats_descendants(target, relats)
     end
 
-    $log.info "#{log_header} Getting VMDB relationships for #{target.class.to_s} [#{target.name}] id: [#{target.id}]...Complete"
+    $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete"
     return relats
   end
 

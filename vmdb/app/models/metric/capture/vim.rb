@@ -21,7 +21,7 @@ module Metric::Capture::Vim
     begin
       results = vim_hist.intervals
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err.to_s}]")
+      $log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 
@@ -39,7 +39,7 @@ module Metric::Capture::Vim
     begin
       summary = vim_hist.queryProviderSummary(mor)
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err.to_s}]")
+      $log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 
@@ -87,7 +87,7 @@ module Metric::Capture::Vim
     begin
       counter_info = vim_hist.id2Counter
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err.to_s}]")
+      $log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 
@@ -124,7 +124,7 @@ module Metric::Capture::Vim
     begin
       avail_metrics = vim_hist.availMetricsForEntity(mor, :intervalId => interval)
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err.to_s}]")
+      $log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 

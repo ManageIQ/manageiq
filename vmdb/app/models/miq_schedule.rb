@@ -187,7 +187,7 @@ class MiqSchedule < ActiveRecord::Base
   def action_scan(obj, at)
     self.sched_action[:options] ||= {}
     obj.scan
-    $log.info("MIQ(Schedule.action_scan) Action [#{self.name}] has been run for target type: [#{obj.class.to_s}] with name: [#{obj.name}]")
+    $log.info("MIQ(Schedule.action_scan) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
   def action_run_report(obj, at)
@@ -202,16 +202,16 @@ class MiqSchedule < ActiveRecord::Base
 
   def action_generate_widget(obj, at)
     obj.queue_generate_content
-    $log.info("MIQ(Schedule.action_generate_widget) Action [#{self.name}] has been run for target type: [#{obj.class.to_s}] with name: [#{obj.title}]")
+    $log.info("MIQ(Schedule.action_generate_widget) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.title}]")
   end
 
   def action_check_compliance(obj, at)
     unless obj.respond_to?(:check_compliance_queue)
-      $log.warn("MIQ(Schedule.action_check_compliance) Action [#{self.name}] is not supported for target type: [#{obj.class.to_s}] with name: [#{obj.name}], skipping")
+      $log.warn("MIQ(Schedule.action_check_compliance) Action [#{self.name}] is not supported for target type: [#{obj.class}] with name: [#{obj.name}], skipping")
       return
     end
     obj.check_compliance_queue
-    $log.info("MIQ(Schedule.action_check_compliance) Action [#{self.name}] has been run for target type: [#{obj.class.to_s}] with name: [#{obj.name}]")
+    $log.info("MIQ(Schedule.action_check_compliance) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
   def action_db_backup(klass, at)
@@ -255,7 +255,7 @@ class MiqSchedule < ActiveRecord::Base
 
   def action_evaluate_alert(obj, at)
     MiqAlert.evaluate_queue(obj)
-    $log.info("MIQ(Schedule.action_evaluate_alert) Action [#{self.name}] has been run for target type: [#{obj.class.to_s}] with name: [#{obj.name}]")
+    $log.info("MIQ(Schedule.action_evaluate_alert) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
   def rufus_schedule_opts

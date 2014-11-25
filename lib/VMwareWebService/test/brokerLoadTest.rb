@@ -93,7 +93,7 @@ begin
 
   while run
     ec = error_count
-    print "#{Time.now.to_s} - Clients: #{client_count} [ERRORS = #{ec}]"
+    print "#{Time.now} - Clients: #{client_count} [ERRORS = #{ec}]"
     if client_count < MAX_CLIENT
       cmd = TESTS[rand(TESTS.length)]
       puts "\t** Starting: #{cmd}"

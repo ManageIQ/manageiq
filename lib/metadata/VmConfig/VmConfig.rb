@@ -90,7 +90,7 @@ class VmConfig
             @cfgHash[dk + ".adapterType"] = adapterType if adapterType
           end
         rescue => err
-          $log.warn "VmConfig: Failed to convert path: #{@cfgHash[dk + ".filename"]}, #{err.to_s}"
+          $log.warn "VmConfig: Failed to convert path: #{@cfgHash[dk + ".filename"]}, #{err}"
         end
 			end
 		end
@@ -415,9 +415,9 @@ class VmConfig
       $log.info "#{conn_reason}: Connection to [#{ems_display_text}] completed for VM:[#{vmCfgFile}] in [#{Time.now-st}] seconds"
       return hostVim
     rescue Timeout::Error => err
-      $log.error "#{conn_reason}: Connection to [#{ems_display_text}] timed out for VM:[#{vmCfgFile}] with error [#{err.to_s}] after [#{Time.now-st}] seconds"
+      $log.error "#{conn_reason}: Connection to [#{ems_display_text}] timed out for VM:[#{vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
     rescue Exception => err
-      $log.error "#{conn_reason}: Connection to [#{ems_display_text}] failed for VM:[#{vmCfgFile}] with error [#{err.to_s}] after [#{Time.now-st}] seconds"
+      $log.error "#{conn_reason}: Connection to [#{ems_display_text}] failed for VM:[#{vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
     end
     return nil
   end

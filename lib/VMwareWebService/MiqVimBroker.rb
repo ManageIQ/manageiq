@@ -90,7 +90,7 @@ class MiqVimBroker
 			DRb.install_acl(acl)
 			DRb.start_service("druby://127.0.0.1:#{port}", self, { :idconv => VimBrokerIdConv.new })
         else
-            raise "MiqVimBroker: unrecognized mode #{mode.to_s}"
+            raise "MiqVimBroker: unrecognized mode #{mode}"
         end
     end
 
@@ -117,9 +117,9 @@ class MiqVimBroker
 	# Should only be called on the server-side.
 	#
 	def self.setSelector(selSpec)
-		raise "MiqVimBroker.setSelector: selSpec must be a hash, received #{selSpec.class.to_s}" unless selSpec.kind_of?(Hash)
+		raise "MiqVimBroker.setSelector: selSpec must be a hash, received #{selSpec.class}" unless selSpec.kind_of?(Hash)
 		selSpec.each_key do |k|
-			raise "MiqVimBroker.setSelector: selSpec keys must be symbols, received #{k.class.to_s}" unless k.kind_of?(Symbol)
+			raise "MiqVimBroker.setSelector: selSpec keys must be symbols, received #{k.class}" unless k.kind_of?(Symbol)
 		end
 		ov = nil
 		selSpec.each_value do |v|
@@ -133,7 +133,7 @@ class MiqVimBroker
 			else
 				ov = v unless v.kind_of?(String)
 			end
-			raise "MiqVimBroker.setSelector: selSpec values must be strings or arrays of strings, received #{ov.class.to_s}" unless ov.nil?
+			raise "MiqVimBroker.setSelector: selSpec values must be strings or arrays of strings, received #{ov.class}" unless ov.nil?
 		end
 		@@selectorHash.merge!(selSpec)
 	end
@@ -147,10 +147,10 @@ class MiqVimBroker
 		elsif selName.kind_of?(Array)
 			remKeys = selName
 		else
-			raise "MiqVimBroker.removeSelector: selName must be a symbol, hash or array, received #{selName.class.to_s}"
+			raise "MiqVimBroker.removeSelector: selName must be a symbol, hash or array, received #{selName.class}"
 		end
 		remKeys.each do |rk|
-			raise "MiqVimBroker.removeSelector: keys must be symbols, received #{rk.class.to_s}" unless rk.kind_of?(Symbol)
+			raise "MiqVimBroker.removeSelector: keys must be symbols, received #{rk.class}" unless rk.kind_of?(Symbol)
 		end
 		
 		remKeys.each do |rk|
@@ -167,9 +167,9 @@ class MiqVimBroker
             return @broker.setSelector(selSpec)
 		end
 		
-		raise "setSelector: selSpec must be a hash, received #{selSpec.class.to_s}" unless selSpec.kind_of?(Hash)
+		raise "setSelector: selSpec must be a hash, received #{selSpec.class}" unless selSpec.kind_of?(Hash)
 		selSpec.each_key do |k|
-			raise "setSelector: selSpec keys must be symbols, received #{k.class.to_s}" unless k.kind_of?(Symbol)
+			raise "setSelector: selSpec keys must be symbols, received #{k.class}" unless k.kind_of?(Symbol)
 		end
 		ov = nil
 		selSpec.each_value do |v|
@@ -183,7 +183,7 @@ class MiqVimBroker
 			else
 				ov = v unless v.kind_of?(String)
 			end
-			raise "setSelector: selSpec values must be strings or arrays of strings, received #{ov.class.to_s}" unless ov.nil?
+			raise "setSelector: selSpec values must be strings or arrays of strings, received #{ov.class}" unless ov.nil?
 		end
 		
 		@configLock.synchronize(:EX) do
@@ -204,10 +204,10 @@ class MiqVimBroker
 		elsif selName.kind_of?(Array)
 			remKeys = selName
 		else
-			raise "removeSelector: selName must be a symbol, hash or array, received #{selName.class.to_s}"
+			raise "removeSelector: selName must be a symbol, hash or array, received #{selName.class}"
 		end
 		remKeys.each do |rk|
-			raise "removeSelector: keys must be symbols, received #{rk.class.to_s}" unless rk.kind_of?(Symbol)
+			raise "removeSelector: keys must be symbols, received #{rk.class}" unless rk.kind_of?(Symbol)
 		end
 		
 		@configLock.synchronize(:EX) do
@@ -394,7 +394,7 @@ class MiqVimBroker
 					return(vim)
 				rescue Exception => err
 					$vim_log.error "MiqVimBroker.getMiqVim: failed to create new connection for #{key}"
-					$vim_log.error "#{err.class.to_s}: #{err.to_s}"
+					$vim_log.error "#{err.class}: #{err}"
 					if $vim_log.debug?
 						$vim_log.debug "Stack trace START"
 						$vim_log.debug err.backtrace.join("\n")

@@ -196,7 +196,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
 			if herr.respond_to?(:reason) && herr.reason == 'The task was canceled by a user.'
 				$vim_log.info "#{log_prefix}: waitForUpdates canceled"
 			else
-				$vim_log.error "******* #{herr.class.to_s}"
+				$vim_log.error "******* #{herr.class}"
 				$vim_log.error herr.to_s
 				$vim_log.error herr.backtrace.join("\n") unless herr.kind_of?(HTTPClient::ReceiveTimeoutError) # already logged in monitorUpdatesInitial or monitorUpdatesSince
 				raise herr
@@ -265,7 +265,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
             if @debugUpdates
                 $vim_log.debug "\tpropChange name (path): #{propChange.name}"
                 $vim_log.debug "\tpropChange op: #{propChange.op}"
-                $vim_log.debug "\tpropChange val (type): #{propChange.val.class.to_s}"
+                $vim_log.debug "\tpropChange val (type): #{propChange.val.class}"
             
                 $vim_log.debug "\t*** propChange val START:"
                 oGi = @globalIndent
@@ -301,7 +301,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
 				@alive = false
 			end
         rescue Exception => err
-			$vim_log.info "#{log_prefix}: Could not access connection - #{err.to_s}"
+			$vim_log.info "#{log_prefix}: Could not access connection - #{err}"
             @alive = false
         end
 		return @alive

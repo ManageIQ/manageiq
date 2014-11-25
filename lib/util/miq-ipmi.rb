@@ -184,7 +184,7 @@ class MiqIPMI
       return MiqUtil.runcmd(command_line)
     rescue => err
       return err.to_s if continue_on_error == true && $?.exitstatus == 1
-      raise "Command:<#{command_line}> exited with status:<#{$?.exitstatus}>\nCommand output:\n#{err.to_s}"
+      raise "Command:<#{command_line}> exited with status:<#{$?.exitstatus}>\nCommand output:\n#{err}"
     end
   end
 

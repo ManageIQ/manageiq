@@ -892,7 +892,7 @@ class ConfigurationController < ApplicationController
 
   def build_folder_node(title, id, expanded = false)
     TreeNodeBuilder.generic_tree_node(
-      "#{title}_#{id.to_s}",
+      "#{title}_#{id}",
       title,
       "folder.png",
       title,

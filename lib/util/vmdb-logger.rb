@@ -101,7 +101,7 @@ class VMDBLogger < Logger
     obj = eval('[Module,Class].include?(self.class) ? self.name : self.class.name', bind)
     meth = caller[0][/`([^']*)'/, 1]
     vars.each do |var|
-      debug("[#{obj}.#{meth}] #{var.to_s} => #{eval(var.to_s, bind).inspect}")
+      debug("[#{obj}.#{meth}] #{var} => #{eval(var.to_s, bind).inspect}")
     end
   end
 

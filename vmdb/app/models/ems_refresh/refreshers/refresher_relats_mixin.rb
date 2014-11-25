@@ -1,7 +1,7 @@
 module EmsRefresh::Refreshers::RefresherRelatsMixin
   def find_relats_vmdb(target)
     log_header = "MIQ(RefresherRelatsMixin.find_relats_vmdb) EMS: [#{@ems.name}], id: [#{@ems.id}]"
-    $log.info "#{log_header} Getting VMDB relationships for #{target.class.to_s} [#{target.name}] id: [#{target.id}]..."
+    $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
 
     vr = {
       :ems_id => @ems.id,
@@ -124,7 +124,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       find_relats_vmdb_host_ems_metadata(target.host, vr) unless target.host.nil?
 
     end
-    $log.info "#{log_header} Getting VMDB relationships for #{target.class.to_s} [#{target.name}] id: [#{target.id}]...Complete"
+    $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete"
 
     return vr
   end

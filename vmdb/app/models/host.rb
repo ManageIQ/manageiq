@@ -886,7 +886,7 @@ class Host < ActiveRecord::Base
   def self.self_register(xmlDoc)
     newHost = nil
     version = "0.0.0.NA"
-    $log.debug "MIQ(host-self_register): [#{xmlDoc.to_s}]"
+    $log.debug "MIQ(host-self_register): [#{xmlDoc}]"
     host_config = {:vmm_vendor=>"unknown", :hostname=>nil, :ipaddress=>nil, :name=>nil}
     xmlDoc.find_match("//host").each { |n| version = n.attributes["version"] }
 
@@ -1114,11 +1114,11 @@ class Host < ActiveRecord::Base
         host.update_authentication(creds)
         host.update_attributes!(attr_hash)
       rescue ActiveRecord::RecordNotFound => err
-        $log.warn("MIQ(host-set_creds_and_save): #{err.class.name}-#{err.to_s}")
+        $log.warn("MIQ(host-set_creds_and_save): #{err.class.name}-#{err}")
         next
       rescue => err
         errors << err.to_s
-        $log.error("MIQ(host-set_creds_and_save): #{err.class.name}-#{err.to_s}")
+        $log.error("MIQ(host-set_creds_and_save): #{err.class.name}-#{err}")
         next
       end
     end
@@ -1994,7 +1994,7 @@ class Host < ActiveRecord::Base
     if args.length == 0
       services = self.host_services
     elsif args.length == 1
-      services = self.host_services.find(:all, :conditions => ["enable_run_levels LIKE ?", "%#{args.first.to_s}%"])
+      services = self.host_services.find(:all, :conditions => ["enable_run_levels LIKE ?", "%#{args.first}%"])
     end
     services.collect {|s| s.name}.uniq.sort
   end

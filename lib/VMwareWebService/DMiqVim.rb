@@ -68,7 +68,7 @@ class DMiqVim < MiqVim
 			self.serverPrivateDisconnect
 			$vim_log.info  "#{log_prefix}: Disconnecting Session...Complete" if $vim_log
 		rescue => disconnect_err
-			$vim_log.error "#{log_prefix}: Disconnecting Session...Error #{disconnect_err.to_s}" if $vim_log
+			$vim_log.error "#{log_prefix}: Disconnecting Session...Error #{disconnect_err}" if $vim_log
 		end
 
 		begin
@@ -76,7 +76,7 @@ class DMiqVim < MiqVim
 			self.serverPrivateConnect
 			$vim_log.info  "#{log_prefix}: Connecting Session...Complete" if $vim_log
 		rescue => connect_err
-			$vim_log.error "#{log_prefix}: Connecting Session...Error #{connect_err.to_s}" if $vim_log
+			$vim_log.error "#{log_prefix}: Connecting Session...Error #{connect_err}" if $vim_log
 			@error = err
 		end
 
@@ -92,7 +92,7 @@ class DMiqVim < MiqVim
 			# 	$vim_log.info "#{log_prefix}: Restarting Update Monitor" if $vim_log
 			# 	retry
 			# end
-			$vim_log.info "#{log_prefix}: returned from monitorUpdates via #{err.class.to_s} exception" if $vim_log
+			$vim_log.info "#{log_prefix}: returned from monitorUpdates via #{err.class} exception" if $vim_log
 			@error = err
 		ensure
 			$vim_log.info "#{log_prefix}: returned from monitorUpdates" if $vim_log

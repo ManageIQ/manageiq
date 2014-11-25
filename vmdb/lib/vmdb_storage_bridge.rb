@@ -205,7 +205,7 @@ class VmdbStorageBridge
   end
 
   def rowToObjName(row, cimClassName)
-    MiqObjName.new("#{row.class.to_s}:#{row.id.to_s}", cimClassName)
+    MiqObjName.new("#{row.class}:#{row.id}", cimClassName)
   end
 
   def bridgeAssociations

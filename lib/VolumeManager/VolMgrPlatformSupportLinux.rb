@@ -114,7 +114,7 @@ module VolMgrPlatformSupportLinux
                     @vimVm.removeSnapshot(@snMor, "false", true, @ost.snapshot_remove_free_space)
                 rescue => err
                     $log.warn "VolMgrPlatformSupportLinux::postMount: failed to remove snapshot for VM: #{@cfgFile}"
-                    $log.warn "VolMgrPlatformSupportLinux::postMount: #{err.to_s}"
+                    $log.warn "VolMgrPlatformSupportLinux::postMount: #{err}"
                 end
             end
         end
