@@ -5,6 +5,10 @@ describe "routes for ReportController" do
     it "routes with GET" do
       expect(get("/report/db_widget_dd_done")).to route_to("report#db_widget_dd_done")
     end
+
+    it "routes with POST" do
+      expect(post("/report/db_widget_dd_done")).to route_to("report#db_widget_dd_done")
+    end
   end
 
   describe "#download_report" do
