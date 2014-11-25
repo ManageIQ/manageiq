@@ -2,20 +2,20 @@
   #amazon_verify_button_on
 - else
   #amazon_verify_button_on{:style => "display:none"}
-= link_to(button_tag('Validate',
+= link_to(button_tag(_("Validate"),
   :class => "btn btn-primary btn-xs",
-  :alt   => "Validate the Amazon Settings"),
+  :alt   => _("Validate the Amazon Settings")),
   {:action => "settings_update",
    :button => "amazon_verify",
    :id     => id},
   "data-miq_sparkle_on"  => true,
   "data-miq_sparkle_off" => true,
   :remote                => true,
-  :title                 => "Validate the Amazon Settings")
+  :title                 => _("Validate the Amazon Settings"))
 - if @edit[:new][:authentication][:amazon_key] != nil && @edit[:new][:authentication][:amazon_secret] != nil
   #amazon_verify_button_off{:style => "display:none"}
 - else
   #amazon_verify_button_off
-= button_tag("Validate",
+= button_tag(_("Validate"),
   :class => "btn btn-primary btn-xs btn-disabled",
-  :title => "Amazon access key and secret are needed to validate Amazon Settings")
+  :title => _("Amazon access key and secret are needed to validate Amazon Settings"))
