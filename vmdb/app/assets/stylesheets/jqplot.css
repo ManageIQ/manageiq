@@ -1,6 +1,8 @@
 .jqplot-target {
   font-family: $base-font-family;
   font-size: $base-font-size;
+  position: relative !important;
+  width: auto !important;
 }
 
 
@@ -35,10 +37,11 @@ div.jqplot-table-legend-swatch-outline {
   position: absolute;
   bottom: -8px;
   left: 50%;
-  margin-top: -15px;  /*adjust position, arrow has a height of 30px.*/ 
+  margin-top: -15px;  /*adjust position, arrow has a height of 30px.*/
   margin-left: -8px;
   border: solid 15px transparent;
   border-width: 10px 10px 0;
   border-top-color: #434343;
   z-index: 1;
 }
+

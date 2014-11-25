@@ -9,7 +9,8 @@ jQuery(document).ready(function($) {
       dataType: "json",
       complete: function(request) { miqSparkle(false); },
       success:  function(chart) {
-        $.jqplot('#{chart_id}', chart.data, jqplot_process_options(chart.options));
+        var a_chart = $.jqplot('#{chart_id}', chart.data, jqplot_process_options(chart.options));
+        jqplot_register_chart('#{chart_id}', a_chart);
       }
     });
 });
@@ -31,7 +32,8 @@ jQuery(document).ready(function($) {
   var data    = #{data};
   var options = #{options};
 
-  $.jqplot('#{chart_id}', data, jqplot_process_options(options));
+  var chart = $.jqplot('#{chart_id}', data, jqplot_process_options(options));
+  jqplot_register_chart('#{chart_id}', chart);
 });
 EOJ
     content_tag_for_jqplot(chart_id, opts[:width], opts[:height], javascript)

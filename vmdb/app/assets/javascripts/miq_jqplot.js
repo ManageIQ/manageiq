@@ -25,11 +25,9 @@ function jqplot_process_options(data) {
 }
 
 function load_jqplot_charts() {
-  for (var set in miq_chart_data) {
-    for (var i = 0; i < miq_chart_data[set].length; i = i + 1) {
+  for (var set in miq_chart_data)
+    for (var i = 0; i < miq_chart_data[set].length; i++)
       load_jqplot_chart(set, i);
-    }
-  }
 }
 
 function load_jqplot_chart(chart_set, index) {
@@ -49,4 +47,30 @@ function load_jqplot_chart(chart_set, index) {
     }
   }
 }
+
+function jqplot_register_chart(chart_id, chart) {
+  if (typeof(ManageIQ) === 'undefined') ManageIQ = {};
+  if (ManageIQ.charts === undefined) ManageIQ.charts = {};
+
+  ManageIQ.charts[chart_id] = chart;
+}
+
+function jqplot_redraw_charts() {
+  if (typeof(ManageIQ) === 'undefined') return;
+
+  for (var chart in ManageIQ.charts)
+    if (ManageIQ.charts.hasOwnProperty(chart)) {
+	    // We are passing in the foobar option to fool jqplot into doing full reInitialize()
+	    // instead of quickInit() to properly recalculate the bar charts.
+      try {
+        ManageIQ.charts[chart].replot({resetAxes: true, foobar: true});
+      } catch (e) {};
+    }
+}
+
+$(document).ready(function(){
+  $(window).resize(function() {
+    setTimeout(jqplot_redraw_charts, 500);
+  });
+});
 
