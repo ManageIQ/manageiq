@@ -3,9 +3,9 @@
     - if x_node.split("-")[0] == "z"
       %ul.tab
         %li
-          %a{:href => "#settings_evm_servers"} Zone
+          %a{:href => "#settings_evm_servers"}=_("Zone")
         %li
-          %a{:href => "#settings_smartproxy_affinity"} SmartProxy Affinity
+          %a{:href => "#settings_smartproxy_affinity"}=_("SmartProxy Affinity")
       #settings_evm_servers{:name => "settings_evm_servers", :width => "80px"}
         = render :partial => "settings_evm_servers_tab"
       #settings_smartproxy_affinity{:name => "settings_smartproxy_affinity", :width => "80px"}
@@ -14,23 +14,23 @@
       - cur_svr_id = from_cid(x_node.split("-").last).to_i
       %ul.tab
         %li
-          %a{:href => "#settings_server"} Server
+          %a{:href => "#settings_server"}=_("Server")
         %li
-          %a{:href => "#settings_authentication"} Authentication
+          %a{:href => "#settings_authentication"}=_("Authentication")
         %li
-          %a{:href => "#settings_workers"} Workers
+          %a{:href => "#settings_workers"}=_("Workers")
         - if cur_svr_id == @sb[:my_server_id]
           %li
-            %a{:href => "#settings_database"} Database
+            %a{:href => "#settings_database"}=_("Database")
           %li
-            %a{:href => "#settings_custom_logos"} Custom Logos
+            %a{:href => "#settings_custom_logos"}=_("Custom Logos")
         %li
-          %a{:href => "#settings_maintenance"} Maintenance
+          %a{:href => "#settings_maintenance"}=_("Maintenance")
         - if cur_svr_id == @sb[:my_server_id]
           %li
-            %a{:href => "#settings_smartproxy"} SmartProxy
+            %a{:href => "#settings_smartproxy"}=_("SmartProxy")
           %li
-            %a{:href => "#settings_advanced"} Advanced
+            %a{:href => "#settings_advanced"}=_("Advanced")
       #settings_server{:name => "settings_server", :width => "80px"}
         - if @sb[:active_tab] == "settings_server"
           = render :partial => "settings_server_tab"
@@ -88,23 +88,23 @@
       - else
         %ul.tab
           %li
-            %a{:href => "#settings_details"} Details
+            %a{:href => "#settings_details"}=_("Details")
           %li
-            %a{:href => "#settings_cu_collection"} C & U Collection
+            %a{:href => "#settings_cu_collection"}=_("C & U Collection")
           %li
             %a{:href => "#settings_co_categories"}
               = escape_javascript(session[:customer_name])
-              Categories
+              =_("Categories")
           %li
             %a{:href => "#settings_co_tags"}
               = escape_javascript(session[:customer_name])
-              Tags
+              =_("Tags")
           %li
-            %a{:href => "#settings_import_tags"} Import Tags
+            %a{:href => "#settings_import_tags"}=_("Import Tags")
           %li
-            %a{:href => "#settings_import"} Import
+            %a{:href => "#settings_import"}=_("Import")
           %li
-            %a{:href => "#settings_rhn"} Red Hat Updates
+            %a{:href => "#settings_rhn"}=_("Red Hat Updates")
         #settings_details{:name => "settings_details", :width => "80px"}
           - if @sb[:active_tab] == "settings_details"
             = render :partial => "settings_details_tab"
@@ -130,15 +130,15 @@
     - if x_node.split("__").last.split("-")[0] == "z"
       %ul.tab
         %li
-          %a{:href => "#diagnostics_roles_servers"} Roles by Servers
+          %a{:href => "#diagnostics_roles_servers"}=_("Roles by Servers")
         %li
-          %a{:href => "#diagnostics_servers_roles"} Servers by Roles
+          %a{:href => "#diagnostics_servers_roles"}=_("Servers by Roles")
         %li
-          %a{:href => "#diagnostics_server_list"} Servers
+          %a{:href => "#diagnostics_server_list"}=_("Servers")
         %li
-          %a{:href => "#diagnostics_collect_logs"} Collect Logs
+          %a{:href => "#diagnostics_collect_logs"}=_("Collect Logs")
         %li
-          %a{:href => "#diagnostics_cu_repair"} C & U Gap Collection
+          %a{:href => "#diagnostics_cu_repair"}=_("C & U Gap Collection")
       #diagnostics_roles_servers{:name => "diagnostics_roles_servers", :width => "80px"}
         - if @sb[:active_tab] == "diagnostics_roles_servers"
           = render :partial => "diagnostics_roles_servers_tab"
@@ -158,24 +158,24 @@
       %ul.tab
         - if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started?
           %li
-            %a{:href => "#diagnostics_summary"} Summary
+            %a{:href => "#diagnostics_summary"}=_("Summary")
           %li
-            %a{:href => "#diagnostics_workers"} Workers
+            %a{:href => "#diagnostics_workers"}=_("Workers")
         %li
-          %a{:href => "#diagnostics_collect_logs"} Collect Logs
+          %a{:href => "#diagnostics_collect_logs"}=_("Collect Logs")
         - if @sb[:selected_server_id] == @sb[:my_server_id]
           %li
-            %a{:href => "#diagnostics_evm_log"} CFME Log
+            %a{:href => "#diagnostics_evm_log"}=_("CFME Log")
           %li
-            %a{:href => "#diagnostics_audit_log"} Audit Log
+            %a{:href => "#diagnostics_audit_log"}=_("Audit Log")
           %li
             %a{:href => "#diagnostics_production_log"}
               = @sb[:rails_log]
-              Log
+              =_("Log")
         %li
-          %a{:href => "#diagnostics_utilization"} Utilization
+          %a{:href => "#diagnostics_utilization"}=_("Utilization")
         %li
-          %a{:href => "#diagnostics_timelines"} Timelines
+          %a{:href => "#diagnostics_timelines"}=_("Timelines")
       - if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started?
         #diagnostics_summary{:name => "diagnostics_summary", :width => "80px"}
           - if @sb[:active_tab] == "diagnostics_summary"
@@ -208,19 +208,19 @@
           %a{:href => "#diagnostics_zones"}= ui_lookup(:models=>'Zone')
         - if session[:userrole] == "super_administrator"
           %li
-            %a{:href => "#diagnostics_roles_servers"} Roles by Servers
+            %a{:href => "#diagnostics_roles_servers"}=_("Roles by Servers")
           %li
-            %a{:href => "#diagnostics_servers_roles"} Servers by Roles
+            %a{:href => "#diagnostics_servers_roles"}=_("Servers by Roles")
         %li
-          %a{:href => "#diagnostics_server_list"} Servers
+          %a{:href => "#diagnostics_server_list"}=_("Servers")
         - if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator"
           %li
-            %a{:href => "#diagnostics_replication"} Replication
+            %a{:href => "#diagnostics_replication"}=_("Replication")
         - if session[:userrole] == "super_administrator"
           %li
-            %a{:href => "#diagnostics_database"} Database
+            %a{:href => "#diagnostics_database"}=_("Database")
           %li
-            %a{:href => "#diagnostics_orphaned_data"} Orphaned Data
+            %a{:href => "#diagnostics_orphaned_data"}=_("Orphaned Data")
       #diagnostics_zones{:name => "diagnostics_zones", :width => "80px"}
         - if @sb[:active_tab] == "diagnostics_zones"
           = render :partial => "diagnostics_zones_tab"
@@ -257,20 +257,20 @@
       - tree_node = x_node
       - if tree_node == "root"
         %li
-          %a{:href => "#db_summary"} Summary
+          %a{:href => "#db_summary"}=_("Summary")
       %li
         %a{:href => "#db_details"}= @tab_text
       - if tree_node == "root"
         %li
-          %a{:href => "#db_indexes"} Indexes
+          %a{:href => "#db_indexes"}=_("Indexes")
         %li
-          %a{:href => "#db_settings"} Settings
+          %a{:href => "#db_settings"}=_("Settings")
         %li
-          %a{:href => "#db_connections"} Client Connections
+          %a{:href => "#db_connections"}=_("Client Connections")
       - if tree_node == "root" ||
       - tree_node.split("-").first == X_TREE_NODE_PREFIXES.invert["VmdbTable"]
         %li
-          %a{:href => "#db_utilization"} Utilization
+          %a{:href => "#db_utilization"}=_("Utilization")
     - if tree_node == "root"
       #db_summary{:name => "db_summary", :width => "80px"}
         - if @sb[:active_tab] == "db_summary"
@@ -296,7 +296,7 @@
   - elsif x_active_tree == :analytics_tree && get_vmdb_config[:product][:analytics]
     %ul.tab
       %li
-        %a{:href => "#analytics_details"} Analytics Report
+        %a{:href => "#analytics_details"}=_("Analytics Report")
     #analytics_details{:name => "analytics_details", :width => "80px"}
       - if @sb[:active_tab] == "analytics_details"
         = render :partial => "analytics_details_tab"
