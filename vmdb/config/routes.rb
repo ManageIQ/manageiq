@@ -237,6 +237,7 @@ Vmdb::Application.routes.draw do
         tree_autoload_dynatree
         tree_select
         x_button
+        x_show
       )
     },
 

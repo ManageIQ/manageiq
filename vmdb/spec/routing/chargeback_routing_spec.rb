@@ -94,4 +94,10 @@ describe 'routes for ChargebackController' do
       expect(get("/#{controller_name}/report_only")).to route_to("#{controller_name}#report_only")
     end
   end
+
+  describe '#x_show' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/x_show")).to route_to("#{controller_name}#x_show")
+    end
+  end
 end

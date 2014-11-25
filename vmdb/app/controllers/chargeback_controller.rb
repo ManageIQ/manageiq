@@ -18,6 +18,17 @@ class ChargebackController < ApplicationController
     cb_rates_delete if params[:pressed] == "chargeback_rates_delete"
   end
 
+  def x_show
+    @explorer = true
+    if x_active_tree == :cb_rates_tree
+      @record = identify_record(params[:id], ChargebackRate)
+      nodeid = x_build_node_id(@record)
+      params[:id] = "xx-#{@record.rate_type}_#{nodeid}"
+      params[:tree] = x_active_tree.to_s
+      tree_select
+    end
+  end
+
   def accordion_select
     self.x_active_accord = params[:id]
     self.x_active_tree   = "#{params[:id]}_tree"
@@ -73,16 +84,30 @@ class ChargebackController < ApplicationController
     when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
     end
     get_node_info(x_node)
+    set_form_locals
+    session[:changed] = false
 
-    render :layout => "explorer"
+    render :layout => "explorer" unless request.xml_http_request?
+  end
+
+  def set_form_locals
+    if x_active_tree == :cb_rates_tree
+      @temp[:x_edit_buttons_locals] = {:action_url => 'cb_rate_edit'}
+    elsif x_active_tree == :cb_assignments_tree
+      @temp[:x_edit_buttons_locals] = {
+        :action_url   => 'cb_assign_update',
+        :no_cancel    => true,
+        :multi_record => true
+      }
+    end
   end
 
     # Show the main Schedules list view
   def cb_rates_list
     @listicon = "chargeback_rates"
-    @force_no_grid_xml = true
     @gtl_type = "list"
     @ajax_paging_buttons = true
+    @explorer = true
     if params[:ppsetting]                                              # User selected new per page value
       @items_per_page = params[:ppsetting].to_i                        # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page          # Set the per page setting for this gtl type
@@ -96,9 +121,11 @@ class ChargebackController < ApplicationController
     session[:rates_sortcol] = @sortcol
     session[:rates_sortdir] = @sortdir
 
-    if !params[:action] && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|                    # Use RJS to update the display
-        page.replace("gtl_div", :partial=>"layouts/gtl", :locals=>{:action_url=>"cb_rates_list"})
+        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "cb_rates_list"})
+        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
+        page << "miqSparkle(false)"
       end
     end
   end
