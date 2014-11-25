@@ -2,20 +2,20 @@
   #verify_button_on
 - else
   #verify_button_on{:style => "display:none"}
-= link_to(button_tag('Validate',
+= link_to(button_tag(_("Validate"),
   :class => "btn btn-primary btn-xs",
-  :alt   => "Validate the LDAP Settings by binding with the Host"),
+  :alt   => _("Validate the LDAP Settings by binding with the Host")),
   {:action => "settings_update",
    :button => "verify",
    :id     => id},
   "data-miq_sparkle_on"  => true,
   "data-miq_sparkle_off" => true,
   :remote                => true,
-  :title                 => "Validate the LDAP Settings by binding with the Host")
+  :title                 => _("Validate the LDAP Settings by binding with the Host"))
 - if !@edit[:new][:authentication][:ldaphost].empty? && @edit[:new][:authentication][:ldapport] != nil
   #verify_button_off{:style => "display:none"}
 - else
   #verify_button_off
-= button_tag("Validate",
+= button_tag(_("Validate"),
   :class => "btn btn-primary btn-xs btn-disabled",
-  :title => "LDAP Host Name and Port fields are needed to perform verification of LDAP Settings")
+  :title => _("LDAP Host Name and Port fields are needed to perform verification of LDAP Settings"))
