@@ -51,11 +51,11 @@ module MiqAeCustomizationController::Dialogs
         #refresh fields div incase select type was DialogFieldDropDownList/DialogFieldRadionButton or
         page.replace("dialog_field_div", :partial=>"dialog_field_form") if params[:field_typ] ||
             params[:field_sort_by] || params[:field_protected] || params[:field_category] ||
-            params[:field_show_refresh_button] || params[:field_validator_type]
+            params[:field_show_refresh_button] || params[:field_validator_type] || params[:field_dynamic]
 
         unless @edit[:field_typ] && @edit[:field_typ].include?("TagControl")
           page.replace("field_values_div", :partial=>"field_values", :locals=>{ :entry=>nil}) if params[:field_data_typ] ||
-            params[:field_sort_by] || params[:field_sort_order] #need to refresh values table if sortby or data_type changed
+            params[:field_sort_by] || params[:field_sort_order] || params[:field_dynamic] #need to refresh values table if sortby or data_type changed
         end
         page << "miqInitDashboardCols();"
       end
@@ -874,6 +874,7 @@ module MiqAeCustomizationController::Dialogs
     copy_checkbox_field_param.call(:show_refresh_button)
     copy_checkbox_field_param.call(:past_dates)
     copy_checkbox_field_param.call(:reconfigurable)
+    copy_checkbox_field_param.call(:dynamic)
 
     [:data_typ, :required, :sort_by, :sort_by, :sort_order].each { |key| copy_field_param.call(key) }
 
@@ -1025,6 +1026,7 @@ module MiqAeCustomizationController::Dialogs
         :field_name           => field[:name],
         :field_description    => field[:description],
         :field_typ            => field[:typ],
+        :field_dynamic        => field[:dynamic],
         :field_default_value  => field[:default_value],
         :field_reconfigurable => field[:reconfigurable],
         :field_required       => field[:required]
@@ -1042,7 +1044,7 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_category]     = field[:category]
       end
 
-      if 'DialogFieldDynamicList' == field[:typ]
+      if 'DialogFieldDynamicList' == field[:typ] || field[:dynamic] == true
         @edit.update(
           :field_load_on_init        => field[:load_on_init],
           :field_show_refresh_button => field[:show_refresh_button],
@@ -1136,10 +1138,11 @@ module MiqAeCustomizationController::Dialogs
               :group_id       => g.id,
               :order          => field.order,
               :name           => f.name,
-              :reconfigurable => f.reconfigurable
+              :reconfigurable => f.reconfigurable,
+              :dynamic        => f.dynamic
             }
 
-            if f.type == 'DialogFieldDynamicList'
+            if f.type == 'DialogFieldDynamicList' || f.dynamic == true
               fld.update(
                 :load_on_init        => f.load_values_on_init,
                 :show_refresh_button => f.show_refresh_button,
@@ -1234,10 +1237,11 @@ module MiqAeCustomizationController::Dialogs
                     :description    => field[:description],
                     :name           => field[:name],
                     :reconfigurable => field[:reconfigurable],
+                    :dynamic        => field[:dynamic],
                     :display        => :edit
                   }
 
-                  if field[:typ] =~ /Drop|Radio/
+                  if field[:typ] =~ /Drop|Radio/ && field[:dynamic] != true
                     fld.update(
                       :required      => field[:required],
                       :sort_by       => field[:sort_by].to_sym,
@@ -1248,7 +1252,7 @@ module MiqAeCustomizationController::Dialogs
                     )
                   end
 
-                  if field[:typ] == 'DialogFieldDynamicList'
+                  if field[:typ] == 'DialogFieldDynamicList' || field[:dynamic] == true
                     fld[:load_values_on_init] = field[:load_on_init]
                     fld[:show_refresh_button] = field[:show_refresh_button]
 
@@ -1280,7 +1284,7 @@ module MiqAeCustomizationController::Dialogs
                   end
 
                   df = field[:typ].constantize.new(fld)
-                  df.resource_action.fqname = field[:entry_point] if field[:typ] == 'DialogFieldDynamicList'
+                  df.resource_action.fqname = field[:entry_point] if field[:typ] == 'DialogFieldDynamicList' || field[:dynamic] == true
                   dg.add_resource(df, {:order => k})
                 end
               end
