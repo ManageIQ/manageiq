@@ -214,7 +214,7 @@ class TreeBuilder
   end
 
   # Return a tree node for the passed in object
-  def x_build_node(object, pid, options, dynatree = false)    # Called with object, tree node parent id, tree options
+  def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
     @sb[:my_server_id] = MiqServer.my_server(true).id      if object.kind_of?(MiqServer)
     @sb[:my_zone]      = MiqServer.my_server(true).my_zone if object.kind_of?(Zone)
 
@@ -226,42 +226,32 @@ class TreeBuilder
     # open nodes to show selected automate entry point
     x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
 
-    node = x_build_single_node(object, pid, options, dynatree)
+    node = x_build_single_node(object, pid, options)
 
-    if dynatree
-      # FIXME: missing this for non-dynatree
-      x_tree(options[:tree])[:open_nodes].push(node[:key]) if [:policy_profile_tree, :policy_tree].include?(options[:tree])
-    else
-      # FIXME: missing this for dynatree
-      node['select'] = 1 if x_node(options[:tree]) == node['id']
+    if [:policy_profile_tree, :policy_tree].include?(options[:tree])
+      x_tree(options[:tree])[:open_nodes].push(node[:key])
     end
 
     # Process the node's children
-    key_name = dynatree ? :key : 'id'
-    if x_tree[:open_nodes].include?(node[key_name]) || options[:open_all] || object[:load_children] || node[:expand]
+    if x_tree[:open_nodes].include?(node[:key]) || options[:open_all] || object[:load_children] || node[:expand]
       kids = x_get_tree_objects(options.merge(:parent => object)).each_with_object([]) do |o, acc|
-        acc.concat(x_build_node(o, node[key_name], options, dynatree))
+        acc.concat(x_build_node(o, node[:key], options))
       end
-      node[dynatree ? :children : 'item'] = kids unless kids.empty?
+      node[:children] = kids unless kids.empty?
     else
       if x_get_tree_objects(options.merge({:parent => object, :count_only => true})) > 0
-        if dynatree
-          node[:isLazy] = true  # set child flag if children exist
-        else
-          node['child'] = '1' # set child flag if children exist
-        end
+        node[:isLazy] = true  # set child flag if children exist
       end
     end
     [node]
   end
 
-  def x_build_single_node(object, pid, options, dynatree = true)
-    builder_class = dynatree ? TreeNodeBuilderDynatree : TreeNodeBuilderDHTMLX
-    builder_class.build(object, pid, options)
+  def x_build_single_node(object, pid, options)
+    TreeNodeBuilderDynatree.build(object, pid, options)
   end
 
   def x_build_node_dynatree(object, pid, options)   # Called with object, tree node parent id, tree options
-    x_build_node(object, pid, options, true)
+    x_build_node(object, pid, options)
   end
 
   # Handle custom tree nodes (object is a Hash)

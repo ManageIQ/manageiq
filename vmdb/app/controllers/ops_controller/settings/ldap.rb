@@ -346,18 +346,6 @@ module OpsController::Settings::Ldap
 
   private
 
-  def add_ldap_domain_node(lr,region_kids,id)
-    lr.ldap_domains.sort{|a,b| a.name.to_s <=> b.name.to_s}.each do |ld|
-      d_node = Hash.new
-      d_node['id'] = id + "__ld-" + to_cid(ld.id)
-      d_node['text'] = "Domain: #{ld.name}"
-      d_node['tooltip'] =  "LDAP Domain: #{lr.name}"
-      d_node['im0'] = d_node['im1'] = d_node['im2'] = "ldap_domain.png"
-      d_node['style'] = "padding-bottom: 2px; padding-left: 0px;"     # No cursor pointer
-      region_kids.push(d_node) unless region_kids.include?(d_node)
-    end
-  end
-
   # Create the view and associated vars for the ldap_regions list
   def ldap_region_build_list
     @lastaction = "ldap_regions_list"

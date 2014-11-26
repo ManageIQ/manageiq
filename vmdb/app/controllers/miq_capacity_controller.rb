@@ -771,11 +771,6 @@ class MiqCapacityController < ApplicationController
     @temp[name] = utilization.tree_nodes
   end
 
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    return x_get_child_nodes(x_active_tree, id)
-  end
-
   # Create an array of hashes from the Utilization summary report tab information
   def util_summ_hashes
     a = Array.new

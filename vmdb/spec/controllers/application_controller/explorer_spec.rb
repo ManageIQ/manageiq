@@ -89,10 +89,10 @@ describe VmInfraController do
         node_array = controller.send(:x_build_node, cluster, pid, options)
         node = node_array.first
 
-        node['id'].should      == "c-#{MiqRegion.compress_id(cluster.id)}"
-        node['text'].should    == cluster.name
-        node['im0'].should     == "cluster.png"
-        node['tooltip'].should == "Cluster: #{cluster.name}"
+        node[:key].should eq("c-#{MiqRegion.compress_id(cluster.id)}")
+        node[:title].should eq(cluster.name)
+        node[:icon].should eq("cluster.png")
+        node[:tooltip].should eq("Cluster: #{cluster.name}")
       end
 
       it "valid Host node" do
@@ -106,10 +106,10 @@ describe VmInfraController do
         node_array = controller.send(:x_build_node, host, pid, options)
         node = node_array.first
 
-        node['id'].should      == "h-#{MiqRegion.compress_id(host.id)}"
-        node['text'].should    == host.name
-        node['im0'].should     == "host.png"
-        node['tooltip'].should == "Host: #{host.name}"
+        node[:key].should eq("h-#{MiqRegion.compress_id(host.id)}")
+        node[:title].should eq(host.name)
+        node[:icon].should eq("host.png")
+        node[:tooltip].should eq("Host: #{host.name}")
       end
     end
 

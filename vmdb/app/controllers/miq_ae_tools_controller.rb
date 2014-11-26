@@ -308,7 +308,6 @@ Methods updated/added: %{method_stats}") % stat_options)
 #   e_node['tooltip'] = "Host: #{@host.name}"
     e_node[:style] = "cursor:default"          # No cursor pointer
     e_node[:addClass] = "cfme-no-cursor-node"
-#   e_node['im0'] = e_node['im1'] = e_node['im2'] = "q.png"
     e_kids = Array.new
     if el.name == "MiqAeObject"
       e_node[:title] = "#{el.attributes["namespace"]} <b>/</b> #{el.attributes["class"]} <b>/</b> #{el.attributes["instance"]}"
@@ -326,7 +325,6 @@ Methods updated/added: %{method_stats}") % stat_options)
         a_node = Hash.new
         a_node[:key] = "a_#{@idx}"
         @idx += 1
-#       a_node['text'] = "#{k} <b>=</b> #{v.inspect}"   # Used to use .inspect in case values had hashes/arrays/structures in them
         a_node[:title] = "#{k} <b>=</b> #{v}"
         a_node[:icon] = "attribute.png"
         e_kids.push(a_node)

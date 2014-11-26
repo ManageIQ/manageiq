@@ -593,9 +593,6 @@ module MiqAeCustomizationController::Dialogs
   end
 
   private     ############
-  def tree_add_child_nodes(id)
-    x_get_child_nodes(x_active_tree, id)
-  end
 
   # A new classificiation field value was selected
   def field_value_new_cat
@@ -1351,31 +1348,8 @@ module MiqAeCustomizationController::Dialogs
         self.x_node = "root"
         dialog_get_node_info(x_node)
       else
-        build_sample_tree
         @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"Dialog"), :name=>@record.label}
       end
     end
-  end
-
-  def build_sample_tree
-    temp = {
-      'id'      => 'tag_1',
-      'tooltip' => 'Tag 1',
-      'style'   => 'cursor:default',
-      'text'    => 'Tag 1',
-    }
-    temp['im0'] = temp['im1'] = temp['im2'] = "tag.png"
-
-    parent_node = { # Build the ci node
-      'id'         => 'Tags',
-      'text'       => 'Tags',
-      'tooltip'    => 'Tags',
-      'style'      => 'cursor:default;font-weight:bold;', # Show node as different
-      'nocheckbox' => true,
-      'radio'      => '1',
-      'item'       => [temp],
-    }
-
-    @temp[:sample_tree] = {"id"=>0, "item"=>[parent_node]}.to_json
   end
 end
