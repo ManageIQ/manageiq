@@ -1,0 +1,31 @@
+- click_remove = true if click_remove == nil
+- div_num    ||= ""
+- top_pad    ||= false
+- bottom_pad ||= false
+
+%div{:id => "flash_msg_div#{div_num}", :style => ("display: none" unless @flash_array)}
+  - if top_pad
+    %div{:style => "padding-top: #{top_pad}px;"}
+  - if @flash_array
+    %div{:id      => "flash_text_div#{div_num}",
+         :onclick => (javascript_hide("flash_msg_div#{div_num}") if click_remove),
+         :title   => (_("Click to remove messages") if click_remove)}
+      - @flash_array.each do |fl|
+        - if fl[:level] == :error
+          .alert.alert-danger
+            %span.pficon-layered
+              %span.pficon.pficon-error-octagon
+              %span.pficon.pficon-error-exclamation
+            %strong= h(fl[:message])
+        - elsif fl[:level] == :warning
+          .alert.alert-warning
+            %span.pficon-layered
+              %span.pficon.pficon-warning-triangle
+              %span.pficon.pficon-warning-exclamation
+            %strong= h(fl[:message])
+        - else
+          .alert.alert-success
+            %span.pficon.pficon-ok
+            %strong= h(fl[:message])
+  - if bottom_pad
+    %div{:style => "padding-top: #{bottom_pad}px;"}

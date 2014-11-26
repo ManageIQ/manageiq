@@ -1,0 +1,69 @@
+- grid_id ||= "list_grid"
+- grid_name ||= "gtl_list_grid"
+- listicon_image ||= nil
+- button_div ||= "center_tb"
+- rec_display = ""
+- no_rec_display = "display:none"
+
+- @first_item ||= 0
+- @last_item  ||= -1
+
+#gtl_div
+  - view ||= @view
+  - table = view.sub_table ? view.sub_table : view.table
+  - if @lastaction == "scan_history"
+    - action_url = "scan_history"
+  - elsif %w(all_jobs jobs ui_jobs all_ui_jobs).include?(@lastaction)
+    - action_url = "jobs"
+  - elsif @lastaction != nil
+    - action_url = @lastaction unless @lastaction == "get_node_info"
+  - else
+    - action_url ||= "show_list"
+  - @gtl_type = "grid" if @gtl_type == nil
+  - if view == nil || table.data.length == 0
+    - rec_display = "display:none"
+    - no_rec_display = ""
+  #no_records_div{:style => no_rec_display}
+    - if (view == nil || table.data.length == 0) && render_flash_msg?
+      = render(:partial => "layouts/flash_msg")
+    = render(:partial => "layouts/info_msg",
+             :locals => {:message => _("No Records Found.")})
+  - if @bottom_msg
+    = h(@bottom_msg)
+  #record_div{:style => rec_display}
+    - unless @embedded
+      - if render_flash_msg? && table.data.length > 0
+        = render(:partial => "layouts/flash_msg")
+      - if @pages && @items_per_page != ONE_MILLION
+        = render(:partial => '/layouts/pagingcontrols',
+                 :locals  => { :pages      => @pages,
+                               :action_url => action_url,
+                               :db         => view.db,
+                               :headers    => view.headers,
+                               :button_div => button_div })
+    - if @gtl_type == nil || @gtl_type == "grid"
+      = render(:partial => "layouts/gtl/grid",
+               :locals  => { :table      => table,
+                             :button_div => button_div,
+                             :view       => view,
+                             :action_url => action_url })
+    - elsif @gtl_type == "title"
+      = render(:partial => "layouts/gtl/tile",
+               :locals  => { :table      => table,
+                             :button_div => button_div,
+                             :view       => view,
+                             :action_url => action_url })
+    - elsif @gtl_type == "list"
+      = render(:partial => "layouts/gtl/list",
+               :locals  => { :table          => table,
+                             :button_div     => button_div,
+                             :view           => view,
+                             :action_url     => action_url,
+                             :listicon_image => listicon_image })
+    - unless @embedded
+      - if @pages && @items_per_page != ONE_MILLION
+        = render(:partial => '/layouts/pagingcontrols',
+                 :locals  => { :pages      => @pages,
+                               :action_url => action_url,
+                               :db         => nil,
+                               :button_div => button_div })
