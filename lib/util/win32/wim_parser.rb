@@ -17,7 +17,7 @@ class WimParser
   autoload :Nokogiri, "nokogiri"
 
   HEADER_V1_STRUCT = BinaryStruct.new([
-    'a8',  'image_tag',          # Signature that identifies the file as a .wim file. Value is set to “MSWIM\0\0”.
+    'a8',  'image_tag',          # Signature that identifies the file as a .wim file. Value is set to "MSWIM\0\0".
     'L',   'size',               # Size of the WIM header in bytes.
     'L',   'version',            # The current version of the .wim file. This number will increase if the format of the .wim file changes.
     'L',   'flags',              # Defines the custom flags (listed below).
@@ -56,7 +56,7 @@ class WimParser
   FLAG_HEADER_SPANNED           = 0x00000008  # Resource data specified by the images within this WIM may be contained in another WIM.
   FLAG_HEADER_RESOURCE_ONLY     = 0x00000010  # This WIM contains file resources only.  It does not contain any file metadata.
   FLAG_HEADER_METADATA_ONLY     = 0x00000020  # This WIM contains file metadata only.
-  FLAG_HEADER_WRITE_IN_PROGRESS = 0x00000040  # Limits one writer to the WIM file when opened with the WIM_FLAG_SHARE_WRITE mode, This flag is primarily used in the Windows Deployment Services (WDS) scenario.
+  FLAG_HEADER_WRITE_IN_PROGRESS = 0x00000040  # Limits one writer to the WIM file when opened with the WIM_FLAG_SHARE_WRITE mode, This flag is primarily used in the Windows Deployment Services (WDS) scenario.
   FLAG_HEADER_RP_FIX            = 0x00000080  # Reparse point fixup
   # Additionally, if the FLAG_HEADER_COMPRESSION flag is set, the following flags are valid:
   FLAG_HEADER_COMPRESS_RESERVED = 0x00010000
