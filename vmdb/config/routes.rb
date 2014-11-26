@@ -1111,6 +1111,7 @@ Vmdb::Application.routes.draw do
         db_edit
         db_form_field_changed
         db_seq_edit
+        db_widget_dd_done
         db_widget_remove
         discard_changes
         explorer
