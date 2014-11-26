@@ -7,13 +7,33 @@ module MiqAutomateHelper
                                                   :parent_id => @aed.id)
     @aec1 = FactoryGirl.create(:miq_ae_class, :name         => identifiers[:class],
                                               :namespace_id => @aen1.id)
+    @aec1.ae_fields << build_fields(field_array)
     @aei1 = FactoryGirl.create(:miq_ae_instance, :name     => identifiers[:instance],
                                                  :class_id => @aec1.id)
     @aem1 = FactoryGirl.create(:miq_ae_method, :class_id => @aec1.id,
                                :name => identifiers[:method], :scope => "instance",
                                :language => "ruby", :data => "puts 1",
                                :location => "inline") if identifiers[:method].present?
-    field_array.each { |f| create_field(@aec1, @aei1, nil, f) }
+    @aei1.ae_values << build_values(field_array, @aec1.ae_fields)
+  end
+
+  def self.build_values(field_array, field_objects)
+    field_array.collect do |field|
+      field_obj = field_objects.detect { |f| f.name == field[:name] }
+      next unless field_obj
+      FactoryGirl.build(:miq_ae_value, :field_id => field_obj.id, :value => field[:value])
+    end.compact
+  end
+
+  def self.build_fields(field_array, aem_params = false)
+    field_array.collect do |field|
+      FactoryGirl.build(:miq_ae_field,
+                        :name          => field[:name],
+                        :aetype        => field[:type],
+                        :priority      => field[:priority],
+                        :default_value => aem_params ? field[:value] : field[:default_value],
+                        :substitute    => true)
+    end
   end
 
   def self.create_field(class_obj, instance_obj, method_obj, options)

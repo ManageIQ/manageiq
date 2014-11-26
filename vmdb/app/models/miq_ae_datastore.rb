@@ -159,10 +159,11 @@ module MiqAeDatastore
     object_class.ae_methods.create!(default_method_options.merge(:name => 'log_workspace'))
 
     email_method = object_class.ae_methods.create!(default_method_options.merge(:name => 'send_email'))
-    email_method.inputs.create!([{:name => 'to',      :priority => 1, :datatype => 'string'},
-                                 {:name => 'from',    :priority => 2, :datatype => 'string'},
-                                 {:name => 'subject', :priority => 3, :datatype => 'string'},
-                                 {:name => 'body',    :priority => 4, :datatype => 'string'}])
+    email_method.inputs.build([{:name => 'to',      :priority => 1, :datatype => 'string'},
+                               {:name => 'from',    :priority => 2, :datatype => 'string'},
+                               {:name => 'subject', :priority => 3, :datatype => 'string'},
+                               {:name => 'body',    :priority => 4, :datatype => 'string'}])
+    email_method.save!
   end
 
   def self.reset_to_defaults

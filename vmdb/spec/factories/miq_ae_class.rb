@@ -12,9 +12,8 @@ FactoryGirl.define do
 
       after :create do |aeclass, evaluator|
 
-        evaluator.ae_fields.each do |name, f|
-          FactoryGirl.create(:miq_ae_field, {:class_id => aeclass.id,
-                                             :name     => name}.merge(f))
+        aeclass.ae_fields << evaluator.ae_fields.collect do |name, f|
+          FactoryGirl.build(:miq_ae_field, {:name => name}.merge(f))
         end
 
         evaluator.ae_instances.each do |name, values|
