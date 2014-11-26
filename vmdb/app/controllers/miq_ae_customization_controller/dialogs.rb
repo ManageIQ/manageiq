@@ -55,7 +55,7 @@ module MiqAeCustomizationController::Dialogs
 
         unless @edit[:field_typ] && @edit[:field_typ].include?("TagControl")
           page.replace("field_values_div", :partial=>"field_values", :locals=>{ :entry=>nil}) if params[:field_data_typ] ||
-            params[:field_sort_by] || params[:field_sort_order] || params[:field_dynamic] #need to refresh values table if sortby or data_type changed
+            params[:field_sort_by] || params[:field_sort_order] || params[:field_dynamic]
         end
         page << "miqInitDashboardCols();"
       end
@@ -1044,7 +1044,7 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_category]     = field[:category]
       end
 
-      if 'DialogFieldDynamicList' == field[:typ] || field[:dynamic] == true
+      if dynamic_field?(field)
         @edit.update(
           :field_load_on_init        => field[:load_on_init],
           :field_show_refresh_button => field[:show_refresh_button],
@@ -1142,7 +1142,7 @@ module MiqAeCustomizationController::Dialogs
               :dynamic        => f.dynamic
             }
 
-            if f.type == 'DialogFieldDynamicList' || f.dynamic == true
+            if dynamic_field?(f)
               fld.update(
                 :load_on_init        => f.load_values_on_init,
                 :show_refresh_button => f.show_refresh_button,
@@ -1252,7 +1252,7 @@ module MiqAeCustomizationController::Dialogs
                     )
                   end
 
-                  if field[:typ] == 'DialogFieldDynamicList' || field[:dynamic] == true
+                  if dynamic_field?(field)
                     fld[:load_values_on_init] = field[:load_on_init]
                     fld[:show_refresh_button] = field[:show_refresh_button]
 
@@ -1284,7 +1284,7 @@ module MiqAeCustomizationController::Dialogs
                   end
 
                   df = field[:typ].constantize.new(fld)
-                  df.resource_action.fqname = field[:entry_point] if field[:typ] == 'DialogFieldDynamicList' || field[:dynamic] == true
+                  df.resource_action.fqname = field[:entry_point] if dynamic_field?(field)
                   dg.add_resource(df, {:order => k})
                 end
               end
@@ -1355,5 +1355,31 @@ module MiqAeCustomizationController::Dialogs
         @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"Dialog"), :name=>@record.label}
       end
     end
+  end
+
+  def build_sample_tree
+    temp = {
+      'id'      => 'tag_1',
+      'tooltip' => 'Tag 1',
+      'style'   => 'cursor:default',
+      'text'    => 'Tag 1',
+    }
+    temp['im0'] = temp['im1'] = temp['im2'] = "tag.png"
+
+    parent_node = { # Build the ci node
+      'id'         => 'Tags',
+      'text'       => 'Tags',
+      'tooltip'    => 'Tags',
+      'style'      => 'cursor:default;font-weight:bold;', # Show node as different
+      'nocheckbox' => true,
+      'radio'      => '1',
+      'item'       => [temp],
+    }
+
+    @temp[:sample_tree] = {"id"=>0, "item"=>[parent_node]}.to_json
+  end
+
+  def dynamic_field?(field)
+    field[:typ] == 'DialogFieldDynamicList' || field[:dynamic]
   end
 end

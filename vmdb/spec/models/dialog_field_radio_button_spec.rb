@@ -1,5 +1,4 @@
 require "spec_helper"
-require "debugger"
 
 describe DialogFieldRadioButton do
   let(:dialog_field_radio_button) do
@@ -16,20 +15,25 @@ describe DialogFieldRadioButton do
     let(:dialog_values) { {:dialog => "automate_values_hash"} }
     let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspaceRuntime") }
     let(:workspace_attributes) do
-      double(:attributes => {
-        "sort_by"       => "none",
-        "sort_order"    => "descending",
-        "data_type"     => "datatype",
-        "default_value" => "default",
-        "values"        => workspace_attribute_values
-      })
+      double(
+        :attributes => {
+          "sort_by"       => "none",
+          "sort_order"    => "descending",
+          "data_type"     => "datatype",
+          "default_value" => "default",
+          "values"        => workspace_attribute_values
+        }
+      )
     end
 
     before do
       dialog.stub(:automate_values_hash).and_return("automate_values_hash")
       dialog.stub(:target_resource).and_return("target_resource")
 
-      resource_action.stub(:deliver_to_automate_from_dialog_field).with(dialog_values, "target_resource").and_return(workspace)
+      resource_action.stub(:deliver_to_automate_from_dialog_field).with(
+        dialog_values,
+        "target_resource"
+      ).and_return(workspace)
 
       workspace.stub(:root).and_return(workspace_attributes)
     end
@@ -57,12 +61,12 @@ describe DialogFieldRadioButton do
     end
 
     context "when the workspace attribute values exist" do
-      let(:workspace_attribute_values) { [["123", "456"]] }
+      let(:workspace_attribute_values) { [[123, "456"]] }
 
       it_behaves_like "DialogFieldRadioButton#refresh_button_pressed"
 
       it "returns the dialog values" do
-        expect(dialog_field_radio_button.refresh_button_pressed).to eq([["123", "456"]])
+        expect(dialog_field_radio_button.refresh_button_pressed).to eq([[123, "456"]])
       end
     end
 
@@ -114,7 +118,6 @@ describe DialogFieldRadioButton do
         dialog_field_radio_button.show_refresh_button = false
         dialog_field_radio_button.initialize_with_values("lolvalues")
       end
-
 
       it "gets values from automate" do
         expect(dialog_field_radio_button.instance_variable_get(:@raw_values)).to eq([[nil, "<Script error>"]])

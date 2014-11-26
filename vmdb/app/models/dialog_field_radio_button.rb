@@ -18,19 +18,19 @@ class DialogFieldRadioButton < DialogFieldSortedItem
   end
 
   def show_refresh_button
-    self.options[:show_refresh_button] || false
+    options[:show_refresh_button] || false
   end
 
   def show_refresh_button=(value)
-    self.options[:show_refresh_button] = value
+    options[:show_refresh_button] = value
   end
 
   def load_values_on_init
-    self.options[:load_values_on_init] || false
+    options[:load_values_on_init] || false
   end
 
   def load_values_on_init=(value)
-    self.options[:load_values_on_init] = value
+    options[:load_values_on_init] = value
   end
 
   def show_refresh_button?
@@ -40,8 +40,8 @@ class DialogFieldRadioButton < DialogFieldSortedItem
   private
 
   def load_values_on_init?
-    return true if self.options[:show_refresh_button] == false
-    !!self.options[:load_values_on_init]
+    return true if options[:show_refresh_button] == false
+    !!options[:load_values_on_init]
   end
 
   def default_resource_action
@@ -66,10 +66,10 @@ class DialogFieldRadioButton < DialogFieldSortedItem
 
   def process_automate_values(workspace_attributes)
     %w(sort_by sort_order data_type default_value).each do |key|
-      self.send("#{key}=", workspace_attributes[key]) if workspace_attributes.has_key?(key)
+      send("#{key}=", workspace_attributes[key]) if workspace_attributes.key?(key)
     end
 
-    @required = (workspace_attributes["required"].to_s.downcase == "true") if workspace_attributes.has_key?("required")
+    @required = (workspace_attributes["required"].to_s.downcase == "true") if workspace_attributes.key?("required")
     normalize_automate_values(workspace_attributes["values"])
   end
 
