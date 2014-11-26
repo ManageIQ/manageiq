@@ -33,6 +33,7 @@ class ApiController < ApplicationController
   include_concern 'Entrypoint'
   include_concern 'Authentication'
   include_concern 'Generic'
+  include_concern 'Accounts'
   include_concern 'ServiceTemplates'
   include_concern 'Tags'
   include_concern 'ProvisionRequests'
