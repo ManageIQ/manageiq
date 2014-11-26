@@ -859,7 +859,7 @@ module MiqAeCustomizationController::Dialogs
 
     # new dropdown/radio is being added set default options OR if existing field type has been changed to dropdown/radio
     if params[:field_typ] =~ /Drop|Radio/ && (@sb[:edit_typ] == 'add' ||
-        !['DialogFieldDropDownList', 'DialogFieldRadionButton'].include?(@edit[:field_typ]))
+        !%w(DialogFieldDropDownList DialogFieldRadioButton).include?(@edit[:field_typ]))
 
       @edit[:field_required]      = key[:required]      = true
       @edit[:field_sort_by]       = key[:sort_by]       = "description"
@@ -867,6 +867,10 @@ module MiqAeCustomizationController::Dialogs
       @edit[:field_data_typ]      = key[:data_typ]      = "string"
       @edit[:field_values]        = key[:values]        = []
       @edit[:field_default_value] = key[:default_value] = nil
+    end
+
+    if @edit[:field_typ] == "DialogFieldRadioButton" && params[:field_dynamic] != true
+      @edit[:field_values] = key[:values] = []
     end
 
     copy_field_param.call(:entry_point)
@@ -1050,7 +1054,9 @@ module MiqAeCustomizationController::Dialogs
           :field_show_refresh_button => field[:show_refresh_button],
           :field_entry_point         => field[:entry_point],
         )
-      elsif ["DialogFieldTagControl", "DialogFieldDropDownList", "DialogFieldRadioButton"].include?(field[:typ])
+      end
+
+      if %w(DialogFieldTagControl DialogFieldDropDownList DialogFieldRadioButton).include?(field[:typ])
         @edit.update(
           :field_required   => field[:required],
           :field_sort_by    => field[:sort_by]    ? field[:sort_by].to_s    : "description",
@@ -1058,7 +1064,7 @@ module MiqAeCustomizationController::Dialogs
           :field_data_typ   => field[:data_typ],
           :field_values     => field[:values]     ? copy_array(field[:values]) : []
         )
-      elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field[:typ])
+      elsif %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field[:typ])
         @edit[:field_past_dates] = field[:past_dates]
       end
 
@@ -1116,6 +1122,7 @@ module MiqAeCustomizationController::Dialogs
 
     #setting tabs
     @edit[:new][:tabs] = []
+
     unless @record.ordered_dialog_resources.empty?
       @record.ordered_dialog_resources.each_with_index do |tab,i|
         t = tab.resource
@@ -1146,10 +1153,11 @@ module MiqAeCustomizationController::Dialogs
               fld.update(
                 :load_on_init        => f.load_values_on_init,
                 :show_refresh_button => f.show_refresh_button,
-                :entry_point         => f.resource_action.fqname,
+                :entry_point         => f.resource_action.fqname
               )
+            end
 
-            elsif ["DialogFieldDropDownList", "DialogFieldRadioButton"].include?(f.type)
+            if %w(DialogFieldDropDownList DialogFieldRadioButton).include?(f.type)
               fld.update(
                 :required      => f.required.nil? ? true : f.required,
                 :sort_by       => f.sort_by       ? f.sort_by.to_s    : "description",
@@ -1158,8 +1166,9 @@ module MiqAeCustomizationController::Dialogs
                 :values        => f.values        ? copy_array(f.values) : [],
                 :default_value => f.default_value
               )
+            end
 
-            elsif f.type == "DialogFieldCheckBox"
+            if f.type == "DialogFieldCheckBox"
               fld[:default_value] = f.default_value.to_s != "f"
               fld[:required] = !!f.required
 
@@ -1203,6 +1212,7 @@ module MiqAeCustomizationController::Dialogs
     @edit[:current] = copy_hash(@edit[:new])
     dialog_edit_build_tree
     x_node_set("root", :dialog_edit_tree)     #always set it to root for edit tree
+
     session[:edit] = @edit
   end
 
@@ -1253,6 +1263,7 @@ module MiqAeCustomizationController::Dialogs
                   end
 
                   if dynamic_field?(field)
+                    fld[:values]              = []
                     fld[:load_values_on_init] = field[:load_on_init]
                     fld[:show_refresh_button] = field[:show_refresh_button]
 
@@ -1355,28 +1366,6 @@ module MiqAeCustomizationController::Dialogs
         @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"Dialog"), :name=>@record.label}
       end
     end
-  end
-
-  def build_sample_tree
-    temp = {
-      'id'      => 'tag_1',
-      'tooltip' => 'Tag 1',
-      'style'   => 'cursor:default',
-      'text'    => 'Tag 1',
-    }
-    temp['im0'] = temp['im1'] = temp['im2'] = "tag.png"
-
-    parent_node = { # Build the ci node
-      'id'         => 'Tags',
-      'text'       => 'Tags',
-      'tooltip'    => 'Tags',
-      'style'      => 'cursor:default;font-weight:bold;', # Show node as different
-      'nocheckbox' => true,
-      'radio'      => '1',
-      'item'       => [temp],
-    }
-
-    @temp[:sample_tree] = {"id"=>0, "item"=>[parent_node]}.to_json
   end
 
   def dynamic_field?(field)
