@@ -461,6 +461,12 @@
         :identifier: service_tag
       - :name: unassign
         :identifier: service_tag
+  :software:
+    :description: Software
+    :options:
+    - :subcollection
+    :methods: *70174834086080
+    :klass: GuestApplication
   :tags:
     :description: Tags
     :options:
@@ -552,6 +558,7 @@
     - :tags
     - :policies
     - :accounts
+    - :software
     :collection_actions:
       :post:
       - :name: add

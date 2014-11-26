@@ -40,6 +40,7 @@ class ApiController < ApplicationController
   include_concern 'AutomationRequests'
   include_concern 'RequestTasks'
   include_concern 'ServiceRequests'
+  include_concern 'Software'
 
   #
   # Api Controller Hooks
