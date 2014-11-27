@@ -7,17 +7,19 @@
       %span.pficon-layered
         %span.pficon.pficon-error-octagon
         %span.pficon.pficon-error-exclamation
-      %strong Caution: Manual changes to configuration files can disable the Server!
-    %p.legend Configuration File to Edit
+      %strong=_("Caution: Manual changes to configuration files can disable the Server!")
+    %p.legend
+      =_("Configuration File to Edit")
     %table.style1
       %tr
-        %td.key File
+        %td.key
+          =_("File")
         %td
           - if @changed
             #message_on
           - else
             #message_on{:style => "display:none"}
-          Configuration File selection can not be changed until changes are saved or reset.
+          =_("Configuration File selection can not be changed until changes are saved or reset.")
   - if @changed
     #message_off{:style => "display:none"}
   - else
@@ -29,7 +31,7 @@
     "data-miq_observe"     => {:url => url}.to_json)
   %hr/
   %p.legend
-    Editing #{h(AVAILABLE_CONFIG_NAMES[session[:config_file_name]])} File
+    =_("Editing #{h(AVAILABLE_CONFIG_NAMES[session[:config_file_name]])} File")
     %font{:color => "red"} *
   = text_area_tag("file_data",
     @edit[:new][:file_data],
