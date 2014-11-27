@@ -1,0 +1,28 @@
+#rsop_options_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  = render :partial => "rsop_form"
+#left_cell_bottom{:align => "center"}
+  #form_buttons_on{:style => session[:changed] ? "" : "display: none;"}
+    - t = "Submit Policy Simulation for the selected VMs"
+    = link_to(button_tag("Submit", :class => "btn btn-primary", :alt => t),
+      {:action => "rsop", :button => "submit"},
+      "data-miq_sparkle_on" => true,
+      :remote               => true,
+      :title                => t)
+    - t = "Reset all Policy Simulation options"
+    = link_to(button_tag("Reset", :class => "btn btn-default", :alt => t),
+      {:action => "rsop", :button => "reset"},
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      :remote                => true,
+      :title                 => t)
+  #form_buttons_off{:style => session[:changed] ? "display: none;" : ""}
+    = button_tag(_("Submit"),
+      :class => "btn btn-primary btn-disabled",
+      :title => _("Select a VM to Submit the Simulation Options"))
+    - t = "Reset all Policy Simulation options"
+    = link_to(button_tag("Reset", :class => "btn btn-default", :alt => t),
+      {:action => "rsop", :button => "reset"},
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      :remote                => true,
+      :title                 => t)

@@ -1,0 +1,11 @@
+#policy_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - if x_active_tree == :policy_tree && @view
+    - if @view.table.data.empty?
+      .alert.alert-info
+        %span.pficon.pficon-info
+        %strong
+          - t = @search_text.blank? ? "" : _(" that match the entered search string")
+          = _("No %s %s Policies are defined %s.") % [ui_lookup(:model => @sb[:folder]), @mode, t]
+    - else
+      #main_div
+        = render :partial => 'layouts/gtl', :locals => {:action_url => "policy_get_all", :button_div => 'policy_bar'}

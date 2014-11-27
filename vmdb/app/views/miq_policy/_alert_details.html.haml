@@ -1,0 +1,285 @@
+- if @edit
+  - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
+  - observe = {:url => url}.to_json
+#alert_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - if @assign
+    = render :partial => 'alert_assign'
+  - elsif @alert
+    #alert_info_div
+      = render :partial => "layouts/flash_msg"
+      %p.legend=_('Info')
+      %table.style1
+        - # Description
+        - if @edit
+          %tr
+            %td.key=_("Description")
+            %td.wider
+              = text_field_tag("description",
+                @edit[:new][:description],
+                :maxlength         => MAX_DESC_LEN,
+                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+              = javascript_tag(javascript_focus('description'))
+        - # Enabled
+        %tr
+          %td.key=_("Active")
+          - if @edit
+            %td
+              = check_box_tag("enabled_cb", "1", @edit[:new][:enabled], "data-miq_observe_checkbox" => observe)
+          - else
+            %td
+              = @alert.enabled ? _("Yes") : _("No")
+        - # Based on (model)
+        %tr
+          %td.key=_("Based On")
+          - if @edit
+            %td
+              - if @alert.memberof.empty?
+                = select_tag('miq_alert_db',
+                  options_for_select(@edit[:dbs].invert.sort, @edit[:new][:db]),
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => observe)
+              - else
+                = ui_lookup(:model => @edit[:new][:db])
+                &nbsp;&nbsp;&nbsp;
+                =_('* Cannot be changed while this Alert belongs to an Alert Profile.')
+          - else
+            %td
+              = h(ui_lookup(:model => @alert.db))
+        - # Eval Method
+        %tr
+          %td.key=_("What to Evaluate")
+          - if @edit
+            %td
+              - if @edit[:expression_types].blank?
+                =_('Expression (Custom)')
+              - else
+                - opts = @edit[:expression_types].invert.sort + [[_("Expression (Custom)"), nil]]
+                = select_tag('exp_name',
+                  options_for_select(opts, @edit[:new][:expression][:eval_method].to_s),
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => observe)
+          - else
+            %td
+              - if @alert.expression.is_a?(MiqExpression)
+                - # Expression is an MiqExpression
+                =_('Expression')
+              - else
+                = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
+
+        - # Expression driving event
+        - if @edit
+          - unless @edit[:new][:expression][:eval_method] && @edit[:new][:expression][:eval_method] != "nothing"
+            %tr
+              %td.key
+                = _("Driving Event")
+              %td
+                - opts = [["<#{_('Choose')}>", nil], [_("Hourly Timer"), "_hourly_timer_"]] + @edit[:events].invert.sort
+                = select_tag('exp_event',
+                  options_for_select(opts, @edit[:new][:exp_event]),
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => observe)
+        - else
+          - if @alert.expression.is_a?(MiqExpression) || @alert.expression[:eval_method] == "nothing"
+            %tr
+              %td.key
+                = _("Driving Event")
+              %td
+                = h(@temp[:event])
+        - # Repeat Time
+        %tr
+          %td.key=_("Notification Frequency")
+          - if @edit
+            %td
+              - if @edit[:new][:expression][:eval_method] == "hourly_performance"
+                = select_tag('repeat_time',
+                  options_for_select(@sb[:alert][:hourly_repeat_times].invert.sort_by(&:last), @edit[:new][:repeat_time]),
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => observe)
+              - else
+                = select_tag('repeat_time',
+                  options_for_select(@sb[:alert][:repeat_times].invert.sort_by(&:last), @edit[:new][:repeat_time]),
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => observe)
+          - else
+            %td
+              - if @alert.options[:notifications][:delay_next_evaluation].blank?
+                =_('10 Minutes')
+              - else
+                = h(@sb[:alert][:repeat_times][@alert.options[:notifications][:delay_next_evaluation]])
+      %hr
+      - # Expression
+      - if @edit
+        - if !@edit[:new][:expression][:eval_method]
+          %p.legend=_('Expression (Choose an element of the expression to edit)')
+          = render(:partial => 'layouts/exp_editor')
+        - else
+          - if !@edit[:new][:expression][:eval_method] == "nothing"
+            %p.legend
+              = h(MiqAlert.expression_types(@edit[:new][:db])[@edit[:new][:expression][:eval_method]])
+              =_('Parameters')
+            %table.style1
+              - @edit[:expression_options].each do |eo|
+                = render :partial => "alert_builtin_exp", :locals  => {:option => eo}
+        %hr
+      - else
+        - if @alert.expression.is_a?(MiqExpression)
+          %p.legend=_('Expression')
+          - if !@expression_table.nil?
+            - @expression_table.each do |token|
+              - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+                = h([token].flatten.first)
+              - else
+                %font{:color => "black"}
+                  %b
+                    = h([token].flatten.first)
+          - else
+            =_('An alert must contain a valid expression.')
+          %hr
+        - else
+          - if @alert.expression[:eval_method] != "nothing"
+            %p.legend
+              = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
+              =_('Parameters')
+            %table.style1
+              - MiqAlert.expression_options(@alert.expression[:eval_method]).each do |eo|
+                = render :partial => "alert_builtin_exp", :locals  => {:option => eo}
+            %hr
+
+      - if @edit
+        - # E-mail, SNMP, Timeline Event, Mgmt Event edit
+        = render :partial => "layouts/edit_email", :locals  => {:action_url => "alert_field_changed", :record => @alert}
+        = render :partial => "alert_snmp"
+        = render :partial => "alert_evm_event"
+        = render :partial => "alert_mgmt_event"
+      - else
+        - # E-mail, SNMP, Timeline Event, Mgmt Event show
+        - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:email].blank?
+          %p.legend=_('Send E-mail')
+          %table.style1
+            %tr
+              %td.key=_("From")
+              %td
+                - if @alert.options[:notifications][:email][:from].blank?
+                  =_("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
+                - else
+                  = h(@alert.options[:notifications][:email][:from])
+            %tr
+              %td.key=_("To")
+              %td
+                - unless @temp[:email_to].blank?
+                  = h(@temp[:email_to].join(';'))
+          %hr
+        - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:snmp].blank?
+          %p.legend=_('Send SNMP Trap')
+          %table.style1
+            %tr
+              %td.key=_("Host")
+              %td
+                - @alert.options[:notifications][:snmp][:host].each do |host|
+                  = h(host)
+                  %br
+            %tr
+              %td.key=_("Version")
+              %td
+                = h(@alert.options[:notifications][:snmp][:snmp_version])
+            - opts = @alert.options[:notifications][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
+            - trap_text = @alert.options[:notifications][:snmp][:snmp_version] == "v1" || opts
+
+            %tr
+              %td.key
+                = trap_text
+              %td
+                = h(@alert.options[:notifications][:snmp][:trap_id])
+          - if @alert.options[:notifications][:snmp].key?(:variables)
+            %br
+            %table.style3
+              %thead
+                %tr
+                  %th=_('Variable Object ID')
+                  %th=_('Type')
+                  %th=_('Value')
+              - @alert.options[:notifications][:snmp][:variables].each do |var|
+                - unless var[:oid].blank?
+                  %tr
+                    %td
+                      = h(var[:oid])
+                    %td
+                      = h(var[:var_type])
+                    %td
+                      = h(var[:value])
+          %hr
+        - if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:evm_event]
+          %p.legend=('Timeline Event')
+          %table.style1
+            %tr
+              %td.key=_("Show on Timeline")
+              %td=_('True')
+          %hr
+        - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:automate].blank?
+          %p.legend=_('Send Management Event')
+          %table.style1
+            %tr
+              %td.key=_("Event Name")
+              %td
+                = h(@alert.options[:notifications][:automate][:event_name])
+          %hr
+      - # Alert Profiles alert is assigned to
+      - unless @edit
+        - if x_active_tree == :alert_tree
+          %tr
+            %td
+              %p.legend=_('Belongs to Alert Profiles')
+              - if @alert_profiles.empty?
+                = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not assigned to any Alert Profiles.")}
+              - else
+                %table.style3
+                  %thead
+                    %tr
+                      %th.icon
+                      %th
+                  %tbody
+                    - @alert_profiles.each do |ap|
+                      - id = "xx-#{@alert.db}_ap-#{to_cid(ap.id)}"
+                      %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert_profile",
+                        :onmouseover => "this.style.cursor='pointer'", :title => _("View this Alert Profile"))}
+                        %td
+                          %img{:src => "/images/icons/new/miq_alert_profile.png", :valign => "middle", :border => "0", :height => "20", :width => "20"}
+                        %td
+                          = ap.description
+      - # Show any owning actions
+      - unless @edit
+        - if x_active_tree == :alert_tree && !@alert.owning_miq_actions.empty?
+          %tr
+            %td
+              %p.legend=_('Referenced by Actions')
+              - if @alert.owning_miq_actions.empty?
+                = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not referenced by any Actions.")}
+              - else
+                %table.style3
+                  %thead
+                    %tr
+                      %th.icon
+                      %th
+                  %tbody
+                    - @alert.owning_miq_actions.each do |oa|
+                      - id = "a-#{to_cid(oa.id)}"
+                      %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=action"),
+                        :onmouseover => "this.style.cursor='pointer'", :title => _("View this Action")}
+                        %td
+                          - if oa.action_type == "default"
+                            %img{:src => "/images/icons/new/miq_action.png"}
+                          - else
+                            %img{:src => "/images/icons/new/miq_action_#{oa.action_type}.png"}
+                        %td
+                          = oa.description
+              %hr
+- if @edit
+  - # Need this to bind checkbox observers when under DHTMLX tabs
+  - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+  :javascript
+    miqObserveCheckboxes();

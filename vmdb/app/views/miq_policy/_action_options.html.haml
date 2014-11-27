@@ -1,0 +1,276 @@
+- url = url_for(:action => 'action_field_changed', :id => "#{@action.id || 'new'}")
+- observe_with_interval = {:interval => '.5', :url => url}.to_json
+- observe = {:url => url}.to_json
+
+#action_options_div
+  - case @edit[:new][:action_type]
+  - when "email"
+    %p.legend=_('E-mail Settings')
+    %table.style1
+      %tr
+        %td.key
+          =_('From E-mail Address')
+          %br
+          =_('(leave blank for default)')
+        %td
+          = text_field_tag("from",
+            @edit[:new][:options][:from],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+          =_("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
+      %tr
+        %td.key=_('To E-mail Address')
+        %td
+          = text_field_tag("to",
+            @edit[:new][:options][:to],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+  - when "set_custom_attribute"
+    %p.legend=_('Custom Attribute Settings')
+    %table.style1
+      %tr
+        %td.key=_('Attribute Name')
+        %td
+          = text_field_tag("attribute",
+            @edit[:new][:options][:attribute],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+      %tr
+        %td.key=_('Value to Set')
+        %td
+          = text_field_tag("value",
+            @edit[:new][:options][:value],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+  - when "tag"
+    %p.legend=_('Applied Tag')
+    %table.style1
+      %tr
+        %td.key=_('Tag to Apply:')
+        %td
+          %span#tag_selected
+            = h(@tag_selected)
+    %hr
+    %p.legend=_('Select a Tag to Apply')
+    %table.style1
+      %tr
+        %td
+          #action_tags_treebox
+          = render(:partial => "layouts/dynatree",
+            :locals         => {:tree_id   => "action_tags_treebox",
+              :tree_name                   => "action_tags_tree",
+              :json_tree                   => @temp[:cat_tree],
+              :click_url                   => "/miq_policy/action_tag_pressed/",
+              :onclick                     => "cfmeOnClick_TagCat",
+              :enable_tree_images          => false,
+              :exp_tree                    => false,
+              :cfme_changes_check          => true,
+              :open_close_all_on_dbl_click => true})
+  - when "create_snapshot"
+    %p.legend=_("Snapshot Settings")
+    %table.style1
+      %tr
+        %td.key=_("Snapshot Name")
+        %td
+          = text_field_tag("snapshot_name",
+            @edit[:new][:options][:name],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+  - when "delete_snapshots_by_age"
+    %p.legend=_("Snapshot Age Settings")
+    %table.style1
+      %tr
+        %td.key=_("Delete if Older than")
+        %td
+          = select_tag('snapshot_age',
+            options_for_select([["<#{_('Choose')}>", nil]] + SNAPSHOT_AGES.invert.to_a.sort_by(&:last),
+            @edit[:new][:options][:age]),
+            "data-miq_observe" => observe)
+  - when "reconfigure_memory"
+    %p.legend=_("Reconfigure Memory")
+    %table.style1
+      %tr
+        %td.key=_("Memory Size")
+        %td
+          = text_field_tag("memory_value",
+            @edit[:new][:options][:value],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+          =_('(Enter the value between 4 - 65636 MB)')
+  - when "reconfigure_cpus"
+    %p.legend=_("Reconfigure CPU")
+    %table.style1
+      %tr
+        %td.key=_("Number of CPU's")
+        %td
+          = select_tag('cpu_value',
+            options_for_select(%w(1 2 4),
+            @edit[:new][:options][:value]),
+            :style             => "width:50px",
+            "data-miq_observe" => observe)
+  - when "custom_automation"
+    %p.legend=_("Custom Automation")
+    %table.style1
+      %tr
+        %td
+          = render(:partial => "layouts/ae_resolve_options",
+            :locals         => {:resolve => @edit,
+            :form_action                 => "miq_action",
+            :field_changed_url           => "action_field_changed"})
+  - when "evaluate_alerts"
+
+    %p.legend=_("Select Alerts to be Evaluated")
+    %table.style1
+      %tbody
+        %tr
+          %td
+            %table#formtest.form{:width => "100%"}
+              %tr
+                %td{:align => "left"}=_('Available Alerts:')
+                %td
+                %td.widthed{:align => "left"}=_(' Selected Alerts:')
+              %tr
+                %td.widthed{:align => "left", :valign => "top"}
+                  %span#choices_chosen_div
+                    = select_tag('choices_chosen[]', options_for_select(@edit[:choices].sort),
+                      :multiple => true,
+                      :class    => "widthed",
+                      :size     => 8,
+                      :id       => "choices_chosen")
+                  %p
+                %td{:width => "20", :valign => "middle"}
+                  = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => (t = _("Move selected Alerts into this Action"))),
+                    {:action => 'action_edit', :button => 'move_right', :id => "#{@action.id || 'new'}"},
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-submit"          => 'choices_chosen_div',
+                    :remote                => true,
+                    :title                 => t)
+                  = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => (t = _("Remove selected Alerts from this Action"))),
+                    {:action => 'action_edit', :button => 'move_left', :id => "#{@action.id || 'new'}"},
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-submit"          => 'members_chosen_div',
+                    :remote                => true,
+                    :title                 => t)
+                %td{:align => "right", :valign => "top"}
+                  %span#members_chosen_div
+                    = select_tag('members_chosen[]',
+                      options_for_select(@edit[:new][:alerts].sort),
+                      :multiple => true,
+                      :class    => "widthed",
+                      :size     => 8,
+                      :id       => "members_chosen")
+  - when "snmp_trap"
+    %p.legend=_("SNMP Trap Settings")
+    %table.style1
+      %tr
+        %td.key=_("Host")
+        %td
+          = text_field_tag("host",
+            @edit[:new][:options][:host],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+      %tr
+        %td.key=_("Version")
+        %td
+          = select_tag('snmp_version',
+            options_for_select(%w(v1 v2),
+            @edit[:new][:options][:snmp_version]),
+            :style                 => "width:50px",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => observe)
+      - trap_text = @edit[:new][:options][:snmp_version] == "v1" || @edit[:new][:options][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
+      %tr
+        %td.key
+          = trap_text
+        %td
+          = text_field_tag("trap_id",
+            @edit[:new][:options][:trap_id],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+    %p.legend=_("Variables")
+    %table.style1
+      %thead
+        %tr
+          %th=_('Object ID')
+          %th=_('Type')
+          %th=_('Value')
+      - 10.times do |i|
+        - f = "oid__#{i + 1}"
+        - t = "var_type__#{i + 1}"
+        - v = "value__#{i + 1}"
+        %tr
+          %td.wide
+            = text_field_tag("#{f}",
+              @edit[:new][:options][:variables][i][:oid],
+              :maxlength         => MAX_NAME_LEN,
+              "data-miq_observe" => observe_with_interval)
+          %td.wide
+            = select_tag("#{t}",
+              options_for_select(["<#{_('None')}>"] + @edit[:snmp_var_types].sort,
+              @edit[:new][:options][:variables][i][:var_type]),
+              :style             => "width:100px",
+              "data-miq_observe" => observe)
+          - if @edit[:new][:options][:variables][i][:var_type] == "Null" || @edit[:new][:options][:variables][i][:var_type] == "<#{_('None')}>"
+            - val_disabled = true
+          - else
+            - val_disabled = false
+          %td.wide
+            = text_field_tag(v,
+              @edit[:new][:options][:variables][i][:value],
+              :maxlength         => MAX_NAME_LEN,
+              :disabled          => val_disabled,
+              "data-miq_observe" => observe_with_interval)
+  - when "assign_scan_profile"
+    %p.legend=_("Analysis Profiles")
+    %table.style1
+      %tr
+        %td.key=_("Analysis Profiles")
+        %td
+          = select_tag('analysis_profile',
+          options_for_select([["<#{_('Choose')}>", nil]] + @edit[:new][:scan_profiles],
+          @edit[:new][:options][:scan_item_set_name]),
+          :style             => "width:150px",
+          "data-miq_observe" => observe)
+  - when "inherit_parent_tags"
+    %p.legend=_("Inherit Tags Settings")
+    %table.style1
+      %tr
+        %td.key=_("Parent Type")
+        %td
+          = select_tag('parent_type',
+            options_for_select(@edit[:tag_parent_types],
+            @edit[:new][:options][:parent_type]),
+            "data-miq_observe" => observe)
+      %tr
+        %td.key=_("Categories")
+        %td
+          %table
+            - @edit[:cats].each_slice(3) do |cats|
+              %tr
+                - cats.each do |cat|
+                  - checked = !@edit[:new][:options][:cats].nil? && @edit[:new][:options][:cats].include?(cat.first)
+                  %td{:align => "left", :valign => "top", :nowrap => 1}
+                    = check_box_tag("cat_#{cat.first}", "1", checked, "data-miq_observe_checkbox" => observe)
+                    = h(cat.last)
+  - when "remove_tags"
+    %p.legend=_("Remove Tags Settings")
+    %table.style1
+      %tr
+        %td.key=_("Categories")
+        %td
+          %table
+            - @edit[:cats].each_slice(3) do |cats|
+              %tr
+                - cats.each do |cat|
+                  - checked = !@edit[:new][:options][:cats].nil? && @edit[:new][:options][:cats].include?(cat.first)
+                  %td{:align => "left", :valign => "top", :nowrap => 1}
+                    = check_box_tag("cat_#{cat.first}", "1", checked, "data-miq_observe_checkbox" => observe)
+                  = h(cat.last)
+
+- # Need this to bind checkbox observers when under DHTMLX tabs
+- # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+:javascript
+  miqObserveCheckboxes();

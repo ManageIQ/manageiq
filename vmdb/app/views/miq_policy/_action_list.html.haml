@@ -1,0 +1,10 @@
+#action_list_div.main_div
+  - if x_active_tree == :action_tree && @view
+    - if @view.table.data.empty?
+      .alert.alert-info
+        %span.pficon.pficon-info
+        %strong
+          =_('No Actions are defined %s.') % @search_text.blank? ? "" : _("that match the entered search string")
+    - else
+      #main_div
+        = render :partial => 'layouts/gtl', :locals  => {:action_url => "action_get_all", :button_div => 'policy_bar'}

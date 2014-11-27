@@ -1,0 +1,215 @@
+- if @edit
+  - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
+  - observe = {:url => url}.to_json
+  - observe_with_interval = {:interval => '.5', :url => url}.to_json
+%tr
+  - case option[:name]
+  - when :event_types
+    %td.key
+      = h(option[:description])
+    %td.wider
+      - if @edit
+        = select_tag('event_types',
+          options_for_select([["<#{_('Choose')}>", nil]] + @sb[:alert][:events].invert.sort,
+          @edit[:new][:expression][:options][:event_types]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+      - else
+        = h(@sb[:alert][:events][@alert.expression[:options][:event_types].first])
+  - when :time_threshold
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:time_thresholds].invert.sort_by(&:last)
+        = select_tag('time_threshold',
+          options_for_select(opts, @edit[:new][:expression][:options][:time_threshold]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+      - else
+        = h(@sb[:alert][:time_thresholds][@alert.expression[:options][:time_threshold]])
+  - when :hourly_time_threshold
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:hourly_time_thresholds].invert.sort_by(&:last)
+        = select_tag('hourly_time_threshold',
+          options_for_select(opts, @edit[:new][:expression][:options][:hourly_time_threshold]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+      - else
+        = h(@sb[:alert][:hourly_time_thresholds][@alert.expression[:options][:hourly_time_threshold]])
+  - when :rt_time_threshold
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:rt_time_thresholds].invert.sort_by(&:last)
+        = select_tag('rt_time_threshold',
+          options_for_select(opts, @edit[:new][:expression][:options][:rt_time_threshold]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+      - else
+        = h(@sb[:alert][:rt_time_thresholds][@alert.expression[:options][:rt_time_threshold]])
+  - when :operator, :value_threshold
+    - # Skip these, they are handled by perf_column
+  - when :perf_column
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        = select_tag('perf_column',
+          options_for_select(option[:values][@edit[:new][:db]].invert.sort, @edit[:new][:expression][:options][:perf_column]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+        = select_tag('select_operator',
+          options_for_select(@edit[:operators], @edit[:new][:expression][:options][:operator]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+        - if @edit[:new][:expression][:options].key?(:value_threshold)
+          = text_field_tag("value_threshold",
+            @edit[:new][:expression][:options][:value_threshold],
+            :maxlength         => MAX_NAME_LEN,
+            "data-miq_observe" => observe_with_interval)
+      - else
+        = h(option[:values][@alert.db][@alert.expression[:options][:perf_column]])
+        = h(@alert.expression[:options][:operator])
+        = h(@alert.expression[:options][:value_threshold])
+  - when :trend_steepness
+    - # Skip, handled by trend_direction
+  - when :trend_direction
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        = select_tag('trend_direction',
+          options_for_select(option[:values].invert.sort, @edit[:new][:expression][:options][:trend_direction]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+        - if @edit[:new][:expression][:options][:trend_direction].to_s.ends_with?("more_than")
+          = text_field_tag("trend_steepness",
+            @edit[:new][:expression][:options][:trend_steepness],
+            :maxlength         => MAX_DESC_LEN,
+            "data-miq_observe" => observe_with_interval)
+          = h(@edit[:perf_column_unit])
+          = _('Per Minute')
+      - else
+        = h(option[:values][@alert.expression[:options][:trend_direction] || "none"])
+        - if @alert.expression[:options][:trend_direction].to_s.ends_with?("more_than")
+          = h(@alert.expression[:options][:trend_steepness])
+          = h(@temp[:perf_column_unit])
+          = _('Per Minute')
+  - when :debug_trace
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        = select_tag('debug_trace',
+          options_for_select(option[:values], @edit[:new][:expression][:options][:debug_trace]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+        &nbsp;&nbsp;
+        %b
+          =_('Caution:')
+        =_('Setting tracing to true may cause excessive log lines to be written')
+      - else
+        = h(@alert.expression[:options][:debug_trace])
+  - when :event_log_message_filter_value
+    - # Skip this, handled by event_log_message_filter_type
+  - when :event_log_message_filter_type
+    %td.key=_('Message Filter')
+    %td
+      - if @edit
+        = select_tag('select_event_log_message_filter_type',
+          options_for_select(@edit[:event_log_message_filter_types], @edit[:new][:expression][:options][:event_log_message_filter_type]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+        = text_field_tag("event_log_message_filter_value",
+          @edit[:new][:expression][:options][:event_log_message_filter_value],
+          :maxlength         => MAX_DESC_LEN,
+          "data-miq_observe" => observe_with_interval)
+      - else
+        = h(@alert.expression[:options][:event_log_message_filter_type])
+        = h(@alert.expression[:options][:event_log_message_filter_value])
+  - when :hdw_attr
+    %td.key=_('Hardware Attribute')
+    %td
+      - if @edit
+        = select_tag('select_hdw_attr',
+          options_for_select(@edit[:hdw_attrs], @edit[:new][:expression][:options][:hdw_attr]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+        = select_tag('select_operator',
+          options_for_select(@edit[:operators], @edit[:new][:expression][:options][:operator]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+      - else
+        = h(Dictionary.gettext(@alert.expression[:options][:hdw_attr].to_s, :type => "column"))
+        = h(@alert.expression[:options][:operator])
+  - when :ems_id
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        - if @edit[:emss].length == 0
+          =_("No %s found") % ui_lookup(:tables => "ext_management_system")
+        - elsif @edit[:emss].length == 1
+          = h(@edit[:emss][@edit[:new][:expression][:options][:ems_id]])
+        - else
+          - opts = [["<#{_('Choose')}>", nil]] + @edit[:emss].invert.sort_by { |a| a.first.downcase }
+          = select_tag('select_ems_id',
+            options_for_select(opts, @edit[:new][:expression][:options][:ems_id]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => observe)
+      - else
+        - if @temp[:ems].blank?
+          %span{:style => "color: red;"}
+            = _("%s no longer exists, this alert must be reconfigured") % ui_lookup(:model => "ExtManagementSystem")
+        - else
+          = h(@temp[:ems].name)
+  - when :ems_alarm_mor
+    - if @edit || @temp[:ems]
+      - # Show if editing or a valid EMS is configured
+      %td.key
+        = h(option[:description])
+      %td
+        - if @edit
+          - if @edit[:new][:expression][:options][:ems_id]
+            - if @edit[:ems_alarms].length == 0
+              = _("No alarms found for the selected %s") % ui_lookup(:table => "ext_management_system")
+            - else
+              - opts [["<#{_('Choose')}>", nil]] + @edit[:ems_alarms].invert.sort_by { |a| a.first.downcase }
+              = select_tag('select_ems_alarm_mor',
+                options_for_select(opts, @edit[:new][:expression][:options][:ems_alarm_mor]),
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-miq_observe"     => observe)
+          - else
+            =_("Choose a %s first") % ui_lookup(:table => "ext_management_system")
+        - else
+          = h(@alert.expression[:options][:ems_alarm_name])
+  - else
+    - # Set up as a text input field
+    %td.key
+      = h(option[:description])
+    %td
+      - if @edit
+        = text_field_tag(option[:name],
+          @edit[:new][:expression][:options][option[:name]],
+          :maxlength         => MAX_DESC_LEN,
+          "data-miq_observe" => observe_with_interval)
+      - else
+        = h(@alert.expression[:options][option[:name]])
