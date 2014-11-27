@@ -6,11 +6,11 @@
     %span.pficon-layered
       %span.pficon.pficon-error-octagon
       %span.pficon.pficon-error-exclamation
-    %strong Caution: Changing the Database settings could make the Server unstartable!
-  %p.legend Database
+    %strong=_("Caution: Changing the Database settings could make the Server unstartable!")
+  %p.legend=_("Database")
   %table.style1
     %tr
-      %td.key Type
+      %td.key=_("Type")
       %td
         = select_tag('production_dbtype',
           options_for_select(MiqDbConfig.get_db_types.invert.sort, @edit[:new][:name]),
@@ -33,7 +33,7 @@
               :url      => url}.to_json)
       - if option[:name].to_s == "password"
         %tr
-          %td.key Verify Password
+          %td.key=_("Verify Password")
           %td
             = password_field_tag("production_verify", '',
               :maxlength         => 50,
@@ -44,16 +44,16 @@
       %td
       %td{:align => "left"}
         #validate_button_on{:style => "display:#{@edit[:new][:password] == @edit[:new][:verify] ? "display" : "none"};"}
-          = button_tag('Validate',
+          = button_tag(_("Validate"),
             :class   => "btn btn-primary",
-            :alt     => "Validate Database Configuration",
-            :title   => "Validate Database Configuration",
+            :alt     => _("Validate Database Configuration"),
+            :title   => _("Validate Database Configuration"),
             :onclick => "miqAjaxButton('#{url_for(:action => "settings_update",
             :id     => @sb[:active_tab].split('_').last,
             :button => "db_verify")}');")
         #validate_button_off{:style => "display:#{@edit[:new][:password] != @edit[:new][:verify] ? "display" : "none"};"}
-          = button_tag("Validate",
+          = button_tag(_("Validate"),
             :class => "btn btn-primary btn-disabled",
-            :alt   => "Password fields must match to Validate Database Configuration",
-            :title => "Password fields must match to Validate Database Configuration")
+            :alt   => _("Password fields must match to Validate Database Configuration"),
+            :title => _("Password fields must match to Validate Database Configuration"))
   %div{:style => "padding-bottom:20px;"}
