@@ -1,10 +1,10 @@
 - url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_smartproxy"
   = render :partial => "layouts/flash_msg"
-  %p.legend Host Based SmartProxy Settings
+  %p.legend=_("Host Based SmartProxy Settings")
   %table.style1
     %tr
-      %td.key Heartbeat Frequency
+      %td.key=_("Heartbeat Frequency")
       %td{:width => "70"}
         = select_tag('agent_heartbeat_frequency_mins',
           options_for_select(Array.new(61) {|i| i},
@@ -19,36 +19,36 @@
           "data-miq_observe"=>{:url=>url}.to_json)
         s
     %tr
-      %td.key Read Only Mode
+      %td.key=_("Read Only Mode")
       - checked = @edit[:new][:agent][:readonly].to_s == "1"
       %td{:colspan => "2"}
         = check_box_tag("agent_readonly", value="1",
           checked=checked,
           "data-miq_observe_checkbox"=>{:url=>url}.to_json)
     %tr
-      %td.key Web Services Listen Port
+      %td.key=_("Web Services Listen Port")
       %td.wide{:colspan => "2"}
         = text_field_tag("agent_wsListenPort",
           @edit[:new][:agent][:wsListenPort],
           :maxlength=>6,
           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
     %tr
-      %td.key Log Level
+      %td.key=_("Log Level")
       %td.wide{:colspan => "2"}
         = select_tag('agent_log_level',
           options_for_select(["fatal","error","warn","info","debug"],
             @edit[:new][:agent][:log][:level]),
           "data-miq_observe"=>{:url=>url}.to_json)
     %tr
-      %td.key Log Wrap Size
+      %td.key=_("Log Wrap Size")
       %td.wide{:colspan => "2"}
         = text_field_tag("agent_log_wrapsize",
           @edit[:new][:agent][:log][:wrap_size],
           :maxlength=>3,
           "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-        (1-999 MB)
+        =_("(1-999 MB)")
     %tr
-      %td.key Log Wrap Time
+      %td.key=_("Log Wrap Time")
       %td{:width => "70"}
         = select_tag('agent_log_wraptime_days',
           options_for_select(Array.new(31) {|i| i},
