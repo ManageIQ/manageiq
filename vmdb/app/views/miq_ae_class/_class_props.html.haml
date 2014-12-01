@@ -1,0 +1,39 @@
+#class_props_div{:style => "width:100%;height:100%;"}
+  - if x_node.split('-')[0] == "aec" || params[:pressed] ||
+    ["field_select","field_accept","field_delete"].include?(params[:action]) ||
+    (x_node.split('-')[0] == "aen" && params[:button] == "reset")
+    - if !@in_a_form_props
+      = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
+      %p.legend=_('Properties')
+      %table.style3
+        %thead
+          %tr
+            %th
+            %th
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label
+            = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+          %td.wide
+            = h(@sb[:namespace_path])
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label=_('Name')
+          %td
+            = @ae_class.name
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label=_('Display Name')
+          %td
+            = @ae_class.display_name
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label=_('Description')
+          %td
+            = @ae_class.description
+        %tr.no-hover{:class => cycle('row0', 'row1')}
+          %td.label=_('Instances')
+          %td
+            = h(@ae_class.ae_instances.length)
+      = render :partial => "domain_overrides", :locals  => {:node_prefix => "aec", :model => "Class"}
+    - else
+      #form_div
+        %div{:style => "padding-top: 10px;"}
+        = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
+        = render :partial => "class_form"
