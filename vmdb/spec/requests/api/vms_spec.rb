@@ -9,10 +9,23 @@ describe ApiController do
 
   before(:each) do
     init_api_spec_env
+
+    @zone       = FactoryGirl.create(:zone, :name => "api_zone")
+    @miq_server = FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => @zone)
+    @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    @host       = FactoryGirl.create(:host)
+
+    Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
   end
 
   def app
     Vmdb::Application
+  end
+
+  def poweron_request(*hrefs)
+    request = { "action" => "poweron" }
+    request["resources"] = hrefs.collect { |href| { "href" => href } } if hrefs.present?
+    request
   end
 
   context "Vm accounts subcollection" do
@@ -172,6 +185,98 @@ describe ApiController do
       expect(@result["software"].size).to eq(2)
       expect(resources_include_suffix?(@result["software"], "id", "#{vm_software_url}/#{sw1.id}")).to be_true
       expect(resources_include_suffix?(@result["software"], "id", "#{vm_software_url}/#{sw2.id}")).to be_true
+    end
+  end
+
+  context "Vm poweron action" do
+    it "powers on an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :poweron))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", poweron_request)
+
+      expect(@success).to be_false
+      expect(@code).to eq(404)
+    end
+
+    it "powers on an invalid vm without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", poweron_request)
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "powers on a powered on vm" do
+      update_user_role(@role, action_identifier(:vms, :poweron))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :power_state => "on")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, poweron_request)
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_false
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("is already powered on")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "powers on a rogue vm" do
+      update_user_role(@role, action_identifier(:vms, :poweron))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :power_state => "off")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, poweron_request)
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_false
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("vm does not belong to any host")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "powers on a vm" do
+      update_user_role(@role, action_identifier(:vms, :poweron))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, poweron_request)
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_true
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("starting")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "powers on multiple vms" do
+      update_user_role(@role, action_identifier(:vms, :poweron))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+
+      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
+      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+
+      @success = run_post(@cfme[:vms_url], poweron_request(vm1_url, vm2_url))
+
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(2)
+      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
+      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
+      expect(results.all? { |r| r["success"] }).to be_true
     end
   end
 end
