@@ -107,6 +107,7 @@ module ReportFormatter
                      plot.options.series[seriesIndex].label + ': ' +
                      str;
           }",
+          :tooltipLocation      => 'n'
         }
       )
     end
@@ -131,6 +132,7 @@ module ReportFormatter
               return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
                      plot.series[seriesIndex].data[pointIndex][1];
           }",
+          :tooltipLocation      => 'n'
         }
       ) if @is_pie
     end
