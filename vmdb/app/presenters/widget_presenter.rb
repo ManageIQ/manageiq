@@ -16,8 +16,8 @@ class WidgetPresenter
   attr_reader :widget
 
   def render_partial
-    @controller.render_to_string(:template => 'dashboard/_widget.html.haml',
-                                 :layout => false, :locals => {:presenter => self})
+    @controller.render_to_string(:template => 'dashboard/_widget', :handler => [:haml],
+                                 :layout => false, :locals => {:presenter => self}).html_safe
   end
 
   def button_fullscreen
@@ -29,8 +29,8 @@ class WidgetPresenter
                     :id                => "w_#{@widget.id}_fullscreen",
                     :class             => "fullscreenbox",
                     :title             => _("Open the chart and full report in a new window"),
-                    "data-miq_confirm" => _("This will show the chart and the entire report
-                                             (all rows) in your browser. Do you want to proceed?"),
+                    "data-miq_confirm" => _("This will show the chart and the entire report " \
+                                            "(all rows) in your browser. Do you want to proceed?"),
                     :onclick           => "return miqClickAndPop(this);")
     else
       @view.link_to("",
@@ -40,8 +40,8 @@ class WidgetPresenter
                     :id                => "w_#{@widget.id}_fullscreen",
                     :class             => "fullscreenbox",
                     :title             => _("Open the full report in a new window"),
-                    "data-miq_confirm" => _("his will show the entire report (all rows) in your browser.
-                                             Do you want to proceed?"),
+                    "data-miq_confirm" => _("This will show the entire report (all rows) in your browser. " \
+                                            "Do you want to proceed?"),
                     :onclick           => "return miqClickAndPop(this);")
     end
   end
@@ -55,8 +55,8 @@ class WidgetPresenter
                     :id                   => "w_#{@widget.id}_close",
                     :title                => _("Remove from Dashboard"),
                     :remote               => true,
-                    :confirm              => _("Are you sure you want to remove '#{@widget.title}'
-                                                from the Dashboard?"),
+                    :confirm              => _("Are you sure you want to remove '%s'" \
+                                               "from the Dashboard?") % @widget.title,
                     'data-miq_sparkle_on' => true,
                     :class                => "delbox")
     end
