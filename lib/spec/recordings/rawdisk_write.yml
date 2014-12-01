@@ -1,0 +1,20 @@
+---
+MiqLargeFile::MiqLargeFileStat-blockdev?-39814a5490aec9febb901a239371843b: !ruby/object:Camcorder::Recording
+  value: false
+  behavior: :return
+MiqLargeFile::MiqLargeFileOther-size-3a1dc36721169586f2a66a468a58adfe: !ruby/object:Camcorder::Recording
+  value: 512
+  behavior: :return
+MiqLargeFile::MiqLargeFileOther-seek-87f03e81624b080502b207e71d9b3981: !ruby/object:Camcorder::Recording
+  value: 0
+  behavior: :return
+MiqLargeFile::MiqLargeFileOther-read-307a8f0687b510efbcfc41b8b20bcd66: !ruby/object:Camcorder::Recording
+  value: !binary |-
+    AAAAAA==
+  behavior: :return
+MiqLargeFile::MiqLargeFileOther-seek-4559a9f8a86dcfbbb6e16ed88ab21837: !ruby/object:Camcorder::Recording
+  value: 0
+  behavior: :return
+MiqLargeFile::MiqLargeFileOther-write-b0e40dffadc97083c7422485acedd4f1: !ruby/object:Camcorder::Recording
+  value: 30
+  behavior: :return
