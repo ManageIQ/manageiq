@@ -9,4 +9,5 @@ object:
     description: 
   fields:
   - execute:
-      value: task_finished(object => 'service_template_provision_task', message => 'Service Provisioned Successfully')
+      value: task_finished(object => 'service_template_provision_task', message =>
+        'Service Provisioned Successfully')

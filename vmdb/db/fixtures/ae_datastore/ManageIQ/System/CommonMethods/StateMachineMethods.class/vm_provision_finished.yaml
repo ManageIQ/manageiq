@@ -9,4 +9,5 @@ object:
     description: 
   fields:
   - execute:
-      value: task_finished(object => 'miq_provision', message => 'Vm Provisioned Successfully' )  
+      value: task_finished(object => 'miq_provision', message => 'Vm Provisioned Successfully'
+        )
