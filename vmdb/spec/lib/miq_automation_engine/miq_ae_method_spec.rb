@@ -18,9 +18,11 @@ module MiqAeMethodSpec
       params = [{:name => 'num1', :priority => 1, :datatype => 'integer'},
                 {:name => 'num2', :priority => 2, :datatype => 'integer', :default_value => 0}]
       foo_c = FactoryGirl.create(:miq_ae_method, method_options.merge(:name => 'foo', :scope => 'class'))
-      foo_c.inputs.create!(params)
+      foo_c.inputs.build(params)
+      foo_c.save!
       foo_i = FactoryGirl.create(:miq_ae_method, method_options.merge(:name => 'foo', :scope => 'instance'))
-      foo_i.inputs.create!(params)
+      foo_i.inputs.build(params)
+      foo_i.save!
       method_options = {:language => 'ruby', :name => 'non_existent',
                         :scope => 'instance', :location => 'builtin',
                         :class_id => object_class.id}

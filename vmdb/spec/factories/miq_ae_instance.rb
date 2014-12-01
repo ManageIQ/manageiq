@@ -8,10 +8,9 @@ FactoryGirl.define do
       end
 
       after :create do |aeinstance, evaluator|
-        aeinstance.ae_class.ae_fields.each do |field|
+        aeinstance.ae_values << aeinstance.ae_class.ae_fields.collect do |field|
           next unless evaluator.values.key?(field.name)
-          FactoryGirl.create(:miq_ae_value, {:instance_id => aeinstance.id,
-                                             :field_id    => field.id}.merge(evaluator.values[field.name]))
+          FactoryGirl.build(:miq_ae_value, {:field_id => field.id}.merge(evaluator.values[field.name]))
         end
       end
 
