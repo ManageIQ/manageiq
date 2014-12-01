@@ -54,7 +54,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def find_master_server
-    self.active_miq_servers.select { |s| s.is_master? }.first
+    active_miq_servers.detect(&:is_master?)
   end
 
   def self.my_region

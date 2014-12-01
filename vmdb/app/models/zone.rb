@@ -36,7 +36,7 @@ class Zone < ActiveRecord::Base
   override_aggregation_mixin_virtual_columns_uses(:all_vms_and_templates, :vms_and_templates)
 
   def find_master_server
-    self.active_miq_servers.select { |s| s.is_master? }.first
+    active_miq_servers.detect(&:is_master?)
   end
 
   def self.seed
