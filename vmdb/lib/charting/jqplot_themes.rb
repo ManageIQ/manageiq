@@ -7,14 +7,18 @@ class JqplotThemes
     'MIQ' => {
       :seriesColors   => ['#0099d3', '#00618a', '#0b3a54', '#979a9c', '#686b6e', '#505459', '#393f44', '#bde0ed'],
       :seriesDefaults => {
-        :shadow => false
+        :shadow          => false,
+        :rendererOptions => {
+          :dataLabelPositionFactor => 0.7,
+          :sliceMargin             => 4
+        }
       },
       :grid           => {
         :drawGridlines => true,     # mind the lowecase 'l'
         :gridLineColor => '#e1e1e1',
         :borderWidth => 0,
         :background => 'transparent',
-        :shadow => false
+        :shadow => false,
       },
       # use EnhancedLegendRenderer by default
       # http://www.jqplot.com/docs/files/plugins/jqplot-enhancedLegendRenderer-js.html
