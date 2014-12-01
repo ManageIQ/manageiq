@@ -15,6 +15,7 @@ describe DialogFieldSerializer do
       "display"                 => "display",
       "display_method"          => "display method",
       "display_method_options"  => "display method options",
+      "dynamic"                 => false,
       "required"                => false,
       "required_method"         => "required method",
       "required_method_options" => "required method options",
