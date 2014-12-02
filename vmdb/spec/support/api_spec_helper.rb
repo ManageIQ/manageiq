@@ -39,6 +39,14 @@ module ApiSpecHelper
     parse_response
   end
 
+  def resources_include_suffix?(resources, key, suffix)
+    resources.any? { |r| r.key?(key) && r[key].match("#{suffix}$") }
+  end
+
+  def resources_include?(resources, key, value)
+    resources.any? { |r| r[key] == value }
+  end
+
   def init_api_spec_env
     MiqRegion.seed
     MiqDatabase.seed
@@ -51,7 +59,8 @@ module ApiSpecHelper
       :password   => "api_user_password",
       :auth_token => "",
       :entrypoint => "/api",
-      :auth_url   => "/api/auth"
+      :auth_url   => "/api/auth",
+      :vms_url    => "/api/vms"
     }
 
     @user = FactoryGirl.create(:user, :userid          => @cfme[:user],

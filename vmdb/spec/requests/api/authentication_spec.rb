@@ -1,7 +1,5 @@
 #
-# REST API Spec Requests Tests
-#
-# Test via rake spec:requests or rspec spec/requests/api
+# REST API Request Tests - /api authentication
 #
 require 'spec_helper'
 
