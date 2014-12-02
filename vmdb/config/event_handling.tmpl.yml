@@ -1294,6 +1294,36 @@ event_handling:
   network.floating_ip.disassociate:
   - refresh:
     - ems
+  ConfigurationItemChangeNotification:
+  - refresh:
+    - ems
+  AWS_EC2_Instance_CREATE:
+  - policy:
+    - src_vm
+    - vm_create
+  - refresh:
+    - ems
+  AWS_EC2_Instance_UPDATE:
+  - refresh:
+    - ems
+  AWS_EC2_Instance_running:
+  - policy:
+    - src_vm
+    - vm_start
+  - refresh:
+    - ems
+  AWS_EC2_Instance_stopped:
+  - policy:
+    - src_vm
+    - vm_power_off
+  - refresh:
+    - ems
+  AWS_EC2_Instance_shutting-down:
+  - policy:
+    - src_vm
+    - vm_power_off
+  - refresh:
+    - ems
 
 #
 # The filtered_events section defines which events should not be added to the
@@ -1303,7 +1333,7 @@ event_handling:
 #   table.
 #
 filtered_events:
-  AlarmActionTriggeredEvent:
+  AlarmActionTriggeredEvent:                # Vmware filtered events
   AlarmCreatedEvent:
   AlarmEmailCompletedEvent:
   AlarmEmailFailedEvent:
@@ -1315,16 +1345,19 @@ filtered_events:
   AlarmSnmpFailedEvent:
   AlarmStatusChangedEvent:
   AlreadyAuthenticatedSessionEvent:
-  UNASSIGNED:
+  UNASSIGNED:                               # RHEV filtered events
   USER_REMOVE_VG:
   USER_REMOVE_VG_FAILED:
   USER_VDC_LOGIN:
   USER_VDC_LOGOUT:
   UserLoginSessionEvent:
   UserLogoutSessionEvent:
-  scheduler.run_instance.start:
+  scheduler.run_instance.start:             # OpenStack filtered events
   scheduler.run_instance.scheduled:
   scheduler.run_instance.end:
+  ConfigurationSnapshotDeliveryCompleted:   # Amazon filtered events
+  ConfigurationSnapshotDeliveryStarted:
+  ConfigurationSnapshotDeliveryFailed:
 
 #
 # The task_final_events section defines which events could be the final event

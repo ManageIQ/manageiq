@@ -288,6 +288,8 @@ workers:
         :duration: 10.seconds
         :capacity: 50
         :amqp_port: 5672
+      :event_catcher_amazon:
+        :poll: 15.seconds
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
