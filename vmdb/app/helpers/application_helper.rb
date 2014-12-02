@@ -56,7 +56,7 @@ module ApplicationHelper
                              User.current_user.role_allows?(:identifier => options[:feature])
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
     elsif options[:main_tab]
-      tab = MAIN_TAB_FEATURES.select{|t| t.first == options[:main_tab]}.first
+      tab = MAIN_TAB_FEATURES.detect { |t| t.first == options[:main_tab] }
       auth = User.current_user.role_allows_any?(:identifiers => tab.last)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], main tab [#{options[:main_tab]}]")
     else

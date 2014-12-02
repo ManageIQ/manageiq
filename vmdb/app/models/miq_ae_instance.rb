@@ -102,7 +102,7 @@ class MiqAeInstance < ActiveRecord::Base
 
   def ae_values_sorted
     ae_class.ae_fields.sort_by(&:priority).collect { |field|
-      ae_values.select { |value| value.field_id == field.id }.first
+      ae_values.detect { |value| value.field_id == field.id }
     }.compact
   end
 
