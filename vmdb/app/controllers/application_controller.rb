@@ -2710,4 +2710,12 @@ class ApplicationController < ActionController::Base
     add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
     render_flash { |page| page << '$(\'main_div\').scrollTop = 0;' }
   end
+
+  def set_gettext_locale
+    user_locale = request.env['HTTP_ACCEPT_LANGUAGE'].to_s.split(',')
+      .collect { |l| l.sub(/;.*/, '') }
+      .detect { |locale| FastGettext.available_locales.include?(locale) }
+    session[:locale] = I18n.locale = FastGettext.set_locale(user_locale)
+    super
+  end
 end
