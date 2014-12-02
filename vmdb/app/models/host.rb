@@ -74,7 +74,7 @@ class Host < ActiveRecord::Base
   has_many                  :ems_events_src, :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_host_id
 
-  has_many                  :policy_events, :dependent => :nullify, :order => "timestamp"
+  has_many                  :policy_events, :order => "timestamp"
   has_many                  :guest_applications, :dependent => :destroy
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy

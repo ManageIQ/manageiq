@@ -87,7 +87,6 @@ class ScheduleWorker < WorkerBase
 
     def metric_capture_perf_capture_timer
       zone = MiqServer.my_server(true).zone
-
       if zone.role_active?("ems_metrics_coordinator")
         queue_work(
           :class_name  => "Metric::Capture",
@@ -101,23 +100,30 @@ class ScheduleWorker < WorkerBase
 
     def metric_purging_purge_realtime_timer
       zone = MiqServer.my_server(true).zone
-
       if zone.role_active?("ems_metrics_processor")
-        queue_work(:class_name  => "Metric::Purging", :method_name => "purge_realtime_timer")
+        queue_work(:class_name => "Metric::Purging", :method_name => "purge_realtime_timer")
       end
     end
 
     def metric_purging_purge_rollup_timer
       zone = MiqServer.my_server(true).zone
-
       if zone.role_active?("ems_metrics_processor")
-        queue_work(:class_name  => "Metric::Purging", :method_name => "purge_rollup_timer")
+        queue_work(:class_name => "Metric::Purging", :method_name => "purge_rollup_timer")
       end
     end
 
     def ems_event_purge_timer
       zone = MiqServer.my_server(true).zone
-      queue_work(:class_name  => "EmsEvent", :method_name => "purge_timer") if zone.role_active?("event")
+      if zone.role_active?("event")
+        queue_work(:class_name => "EmsEvent", :method_name => "purge_timer")
+      end
+    end
+
+    def policy_event_purge_timer
+      zone = MiqServer.my_server(true).zone
+      if zone.role_active?("event")
+        queue_work(:class_name => "PolicyEvent", :method_name => "purge_timer")
+      end
     end
 
     def storage_refresh_metrics
