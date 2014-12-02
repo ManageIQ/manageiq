@@ -1,7 +1,7 @@
 require 'drb/drb'
 require 'sync'
-require 'VixDiskLib_FFI/const'
-require 'VixDiskLib_FFI/enum'
+require 'ffi-vix_disk_lib/const'
+require 'ffi-vix_disk_lib/enum'
 #
 # The path to the VixDiskLib directory to be added to the process' LD_LIBRARY_PATH
 #

@@ -33,13 +33,13 @@ readRanges = [
     1280, 1024
 ]
 
-puts "VIXDISKLIB_FLAG_OPEN_UNBUFFERED  = #{VixDiskLib::VIXDISKLIB_FLAG_OPEN_UNBUFFERED}"
-puts "VIXDISKLIB_FLAG_OPEN_SINGLE_LINK = #{VixDiskLib::VIXDISKLIB_FLAG_OPEN_SINGLE_LINK}"
-puts "VIXDISKLIB_FLAG_OPEN_READ_ONLY   = #{VixDiskLib::VIXDISKLIB_FLAG_OPEN_READ_ONLY}"
-puts "VIXDISKLIB_CRED_UID              = #{VixDiskLib::VIXDISKLIB_CRED_UID}"
-puts "VIXDISKLIB_CRED_SESSIONID        = #{VixDiskLib::VIXDISKLIB_CRED_SESSIONID}"
-puts "VIXDISKLIB_CRED_UNKNOWN          = #{VixDiskLib::VIXDISKLIB_CRED_UNKNOWN}"
-puts "VIXDISKLIB_SECTOR_SIZE           = #{VixDiskLib::VIXDISKLIB_SECTOR_SIZE}"
+puts "VIXDISKLIB_FLAG_OPEN_UNBUFFERED  = #{VixDiskLib_raw::VIXDISKLIB_FLAG_OPEN_UNBUFFERED}"
+puts "VIXDISKLIB_FLAG_OPEN_SINGLE_LINK = #{VixDiskLib_raw::VIXDISKLIB_FLAG_OPEN_SINGLE_LINK}"
+puts "VIXDISKLIB_FLAG_OPEN_READ_ONLY   = #{VixDiskLib_raw::VIXDISKLIB_FLAG_OPEN_READ_ONLY}"
+puts "VIXDISKLIB_CRED_UID              = #{VixDiskLib_raw::VIXDISKLIB_CRED_UID}"
+puts "VIXDISKLIB_CRED_SESSIONID        = #{VixDiskLib_raw::VIXDISKLIB_CRED_SESSIONID}"
+puts "VIXDISKLIB_CRED_UNKNOWN          = #{VixDiskLib_raw::VIXDISKLIB_CRED_UNKNOWN}"
+puts "VIXDISKLIB_SECTOR_SIZE           = #{VixDiskLib_raw::VIXDISKLIB_SECTOR_SIZE}"
 puts
 
 VixDiskLib.init(lambda { |s| puts "INFO: #{s}" },
@@ -61,7 +61,7 @@ vDisks = Array.new
 n = 1
 diskFiles.each do |vmdk|
     puts "*** #{n} *** VMDK: #{vmdk}"                  
-    vDisk = connection.getDisk(vmdk, VixDiskLib::VIXDISKLIB_FLAG_OPEN_READ_ONLY)
+    vDisk = connection.getDisk(vmdk, VixDiskLib_raw::VIXDISKLIB_FLAG_OPEN_READ_ONLY)
     vDisks << vDisk
 
     dinfo = vDisk.info

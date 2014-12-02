@@ -6,7 +6,7 @@ require 'drb/drb'
 require 'log4r'
 require 'time'
 require 'vmdb-logger'
-require 'vixdisklib_server'
+require 'vdl_wrapper'
 
 class VixDiskLibError < RuntimeError
 end
@@ -20,7 +20,6 @@ $vim_log = VMDBLogger.new LOG_FILE
 class VDDKFactory
   include DRb::DRbUndumped
   attr_accessor :shutdown
-  attr_accessor :started
   attr_accessor :running
 
   def initialize
@@ -36,7 +35,7 @@ class VDDKFactory
   end
 
   def init
-    VixDiskLibServer.init
+    VdlWrapper.init
     @started = true
   end
 
@@ -47,7 +46,7 @@ class VDDKFactory
       raise VixDiskLibError, load_error
     end
     @running = true
-    VixDiskLibServer.connect(connect_parms)
+    VdlWrapper.connect(connect_parms)
   end
 
   def shut_down_drb
@@ -59,9 +58,9 @@ class VDDKFactory
 
   def shut_down_service(msg)
     $vim_log.info "#{msg}"
-    VixDiskLibServer.__exit__ if @started
+    VdlWrapper.__exit__ if @started
     @running = true
-    $vim_log.info "VixDiskLibServer.__exit__ finished"
+    $vim_log.info "VdlWrapper.__exit__ finished"
     shut_down_drb
   end
 
@@ -72,8 +71,7 @@ class VDDKFactory
   def wait_for_status(status, secs_to_wait)
     start_time = Time.now
     sleep_secs = 2
-    flag = (status == "started") ?  @started : @running
-    until flag
+    until (status == "started") ?  @started : @running
       sleep sleep_secs
       #
       # Specifically check the shutdown flag in case we've been asked
@@ -92,7 +90,6 @@ class VDDKFactory
         shut_down_service(msg)
         raise VixDiskLibError, msg
       end
-      flag = (status == "started") ?  @started : @running
     end
   end
 end # class VDDKFactory
@@ -102,7 +99,7 @@ begin
   # The object that handles requests on the server.
   #
   vddk = VDDKFactory.new
-  VixDiskLibServer.server(vddk)
+  VdlWrapper.server(vddk)
   STDOUT.sync = true
   STDERR.sync = true
 

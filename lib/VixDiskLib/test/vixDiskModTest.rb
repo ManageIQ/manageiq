@@ -28,7 +28,7 @@ VixDiskLib.init
 conParms = {
     :serverName => "",
     :port       => 902,
-    :credType   => VixDiskLib::VIXDISKLIB_CRED_UID,
+    :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
     :userName   => "",
     :password   => "",
 }
@@ -108,3 +108,4 @@ diskFiles.each do |df|
 end
 
 disks.each { |disk| disk.close }
+connection.disconnect
