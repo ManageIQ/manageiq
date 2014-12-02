@@ -263,4 +263,28 @@ describe MiqServer do
       expect(@server.cfme_available_update).to eq("major")
     end
   end
+
+  context "private" do
+    it "#assemble_registration_options" do
+      database.update_authentication(:registration => {:userid => "registration_user", :password => "registration_password"})
+      database.update_authentication(:registration_http_proxy => {:userid => "proxy_user", :password => "proxy_password"})
+      database.update_attributes(
+        :registration_organization      => "my_org",
+        :registration_http_proxy_server => "my_proxy:port",
+        :registration_server            => "subscription.example.com",
+      )
+
+      options = @server.send(:assemble_registration_options)
+
+      expect(options).to eq(
+        :username       => "registration_user",
+        :password       => "registration_password",
+        :proxy_address  => "my_proxy:port",
+        :proxy_password => "proxy_password",
+        :proxy_username => "proxy_user",
+        :org            => "my_org",
+        :server_url     => "subscription.example.com",
+      )
+    end
+  end
 end

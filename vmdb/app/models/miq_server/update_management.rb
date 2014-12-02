@@ -191,7 +191,7 @@ module MiqServer::UpdateManagement
     db = MiqDatabase.first
     options = {}
     options[:username], options[:password]             = db.auth_user_pwd(:registration)
-    options[:proxy_username], options[:proxy_password] = db.auth_user_pwd(:registration_http_proxy_password)
+    options[:proxy_username], options[:proxy_password] = db.auth_user_pwd(:registration_http_proxy)
     options[:org]             = db.registration_organization
     options[:proxy_address]   = db.registration_http_proxy_server
     options[:server_url]      = db.registration_server
