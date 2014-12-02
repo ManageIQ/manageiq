@@ -1,0 +1,18 @@
+- content_for :trees do
+  %div{:style => "display: none;"}
+    = render :partial => "resolve_form"
+
+- content_for :accords do
+  %div{:style => "display: none;"}
+    = render :partial => "resolve_form_buttons"
+
+  - # Create the explorer dhtmlx layout/accordion JS objects
+  = render(:partial => "layouts/dhtmlxlayout_explorer",
+    :locals         => {:accords => @accords,
+      :left_cell_bottom          => "left_cell_bottom",
+      :width_factor              => "4/5",
+      :lock_slider               => true,
+      :layout_pattern            => "3J"})
+
+#main_div.main_div
+  = render :partial => "results_tabs"
