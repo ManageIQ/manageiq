@@ -15,9 +15,8 @@ else
 end
 
 if vm && (vm_was_provisioned || vm.miq_provision || vm.tagged_with?(category, tag))
-  host = vm.host
-  $evm.log('info', "VM <#{vm.name}> parent Host ID is <#{host}>")
-  if host.nil?
+  $evm.log('info', "Checking if VM: <#{vm.name}> has been deleted from the provider. ")
+  if vm.archived || vm.orphaned
     # Bump State
     $evm.root['ae_result'] = 'ok'
   else

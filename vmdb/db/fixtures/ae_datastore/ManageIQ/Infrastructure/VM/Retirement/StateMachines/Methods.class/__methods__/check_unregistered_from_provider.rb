@@ -5,7 +5,7 @@
 vm = $evm.root['vm']
 
 unless vm.nil?
-  if !vm.registered?
+  if vm.archived || vm.orphaned
     # Bump State
     $evm.log('info', "VM:<#{vm.name}> has been unregistered from EMS")
     $evm.root['ae_result'] = 'ok'
