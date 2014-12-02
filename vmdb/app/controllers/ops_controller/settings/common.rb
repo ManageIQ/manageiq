@@ -625,7 +625,6 @@ module OpsController::Settings::Common
 
     params = self.params
     new = @edit[:new]
-    auth = new[:authentication]
 
     # WTF? here we can have a Zone or a MiqServer, what about Region? --> rescue from exception
     @temp[:selected_server] = (cls.find(from_cid(nodes.last)) rescue nil)
@@ -684,6 +683,7 @@ module OpsController::Settings::Common
       @sb[:newrole] = (params[:ldap_role].to_s == "1") if params[:ldap_role]
       @sb[:new_amazon_role] = (params[:amazon_role].to_s == "1") if params[:amazon_role]
       @sb[:new_httpd_role] = (params[:httpd_role].to_s == "1") if params[:httpd_role]
+      auth = new[:authentication]
       if params[:authentication_user_type] && params[:authentication_user_type] != auth[:user_type]
         @authusertype_changed = true
       end
