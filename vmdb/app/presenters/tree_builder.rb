@@ -247,7 +247,7 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
-    TreeNodeBuilderDynatree.build(object, pid, options)
+    TreeNodeBuilder.build(object, pid, options)
   end
 
   def x_build_node_dynatree(object, pid, options)   # Called with object, tree node parent id, tree options

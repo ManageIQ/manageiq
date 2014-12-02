@@ -126,9 +126,41 @@ class TreeNodeBuilder
   def tooltip(tip)
     unless tip.blank?
       tip = ERB::Util.html_escape(tip) unless tip.html_safe?
-      @node[tooltip_key] = tip
+      @node[:tooltip] = tip
     end
-    @node
+  end
+
+  def generic_node(text, image, tip = nil)
+    text = ERB::Util.html_escape(text) unless text.html_safe?
+    @node = {
+      :key   => build_object_id,
+      :title => text,
+      :icon  => image
+    }
+    @node[:expand] = true if options[:open_all]  # Start with all nodes open
+    tooltip(tip)
+  end
+
+  def normal_folder_node
+    icon = options[:type] == :vandt ? "blue_folder.png" : "folder.png"
+    generic_node(object.name, icon, "Folder: #{object.name}")
+  end
+
+  def hash_node
+    # FIXME: expansion
+    @node = {
+      :key   => build_hash_id,
+      :icon  => "#{object[:image] || object[:text]}.png",
+      :title => ERB::Util.html_escape(object[:text])
+    }
+    @node[:expand] = true if options[:open_all] # Start with all nodes open
+    @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
+
+    # FIXME: check the following
+    # TODO: With dynatree, unless folders are open, we can't jump to a child node until it has been visible once
+    # node[:expand] = false
+
+    tooltip(object[:tip])
   end
 
   def node_with_display_name(image)
@@ -201,7 +233,7 @@ class TreeNodeBuilder
 
   def miq_region_node
     generic_node(object.name, "miq_region.png", object[0])
-    open_node
+    @node[:expand] = true
     @node
   end
 

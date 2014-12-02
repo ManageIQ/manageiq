@@ -305,7 +305,7 @@ module ApplicationController::Explorer
     # open nodes to show selected automate entry point
     x_tree(options[:tree])[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
 
-    node = TreeNodeBuilderDynatree.build(object, pid, options)
+    node = TreeNodeBuilder.build(object, pid, options)
 
     case object
     when Service, ServiceTemplate
