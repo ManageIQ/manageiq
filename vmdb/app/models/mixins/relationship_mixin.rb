@@ -241,7 +241,7 @@ module RelationshipMixin
   # Returns a list of child relationships
   def child_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.collect { |r| r.children }.flatten.uniq
+    rels = self.relationships.flat_map { |r| r.children }.uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -274,7 +274,7 @@ module RelationshipMixin
   # Returns a list of sibling relationships
   def sibling_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.collect { |r| r.siblings }.flatten.uniq
+    rels = self.relationships.flat_map { |r| r.siblings }.uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -306,7 +306,7 @@ module RelationshipMixin
   # Returns a list of descendant relationships
   def descendant_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.collect { |r| r.descendants }.flatten.uniq
+    rels = self.relationships.flat_map { |r| r.descendants }.uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -347,7 +347,7 @@ module RelationshipMixin
   # Returns a list of all relationships in the record's subtree
   def subtree_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.collect { |r| r.subtree }.flatten.uniq
+    rels = self.relationships.flat_map { |r| r.subtree }.uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
