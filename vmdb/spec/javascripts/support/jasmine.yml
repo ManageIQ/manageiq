@@ -11,10 +11,14 @@
 #   - dist/**/*.js
 #
 src_files:
+  - javascripts/vendor/angular.js
+  - javascripts/vendor/angular-mocks.js
   - javascripts/jquery.js
   - javascripts/dollar_j.js
   - javascripts/prototype.js
   - javascripts/cfme_application.js
+  - javascripts/cfme_angular_application.js
+  - javascripts/controllers/schedule_form_controller.js
   - javascripts/import.js
 
 # stylesheets

@@ -1,3 +1,6 @@
+//= require vendor/angular
+//= require cfme_angular_application
+//= require controllers/schedule_form_controller
 //= require cfme_application
 //= require dialog_import_export
 //= require widget_import_export
