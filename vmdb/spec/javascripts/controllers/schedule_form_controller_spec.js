@@ -17,8 +17,8 @@ describe('scheduleFormController', function() {
     $httpBackend = _$httpBackend_;
     oneMonthAgo = {
       year: 2014,
-      month: 2,
-      date: 3
+      month: 5,
+      date: 7
     };
 
     // For the initialization scheduleDate test. This freezes time to 1/2/2014.
@@ -146,7 +146,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets the scheduleDate to today', function() {
-        expect($scope.scheduleDate).toEqual("1/2/2014");
+        expect($scope.scheduleDate).toEqual("1/3/2014");
       });
 
       it('sets the scheduleTimerType to once', function() {
@@ -272,7 +272,7 @@ describe('scheduleFormController', function() {
     });
 
     it('builds a calendar', function() {
-      expect(miqService.buildCalendar).toHaveBeenCalledWith(2014, 2, 3);
+      expect(miqService.buildCalendar).toHaveBeenCalledWith(2014, 6, 7);
     });
   });
 
@@ -645,7 +645,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets the scheduleTimerValue to 1', function() {
-        expect($scope.scheduleTimerValue).toEqual('1');
+        expect($scope.scheduleTimerValue).toEqual(1);
       });
 
       it('sets timerItems to the return value of the timerOptionService', function() {

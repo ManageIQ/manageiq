@@ -6,12 +6,30 @@
         %td.key(ng-hide="dbBackup()") Filter
         %td.key(ng-show="dbBackup()") Type
         %td
-          = select_tag('filter_typ', options_for_select(@vm_options_for_select), "ng-switch-when" => "vm", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@template_options_for_select), "ng-switch-when" => "miq_template", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@host_options_for_select), "ng-switch-when" => "host", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@cluster_options_for_select), "ng-switch-when" => "emscluster", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
-          = select_tag('filter_typ', options_for_select(@storage_options_for_select), "ng-switch-when" => "storage", "ng-model" => "$parent.filterType", "ng-change" => "filterTypeChanged()")
-          = select_tag('log_protocol', options_for_select(@database_backup_options_for_select), "ng-switch-when" => "db_backup", "ng-model" => "$parent.logProtocol", "ng-change" => "logProtocolChanged()")
+          = select_tag('filter_typ', options_for_select(@vm_options_for_select),
+            "ng-switch-when" => "vm",
+            "ng-model"       => "$parent.filterType",
+            "ng-change"      => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@template_options_for_select),
+            "ng-switch-when" => "miq_template",
+            "ng-model"       => "$parent.filterType",
+            "ng-change"      => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@host_options_for_select),
+            "ng-switch-when" => "host",
+            "ng-model"       => "$parent.filterType",
+            "ng-change"      => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@cluster_options_for_select),
+            "ng-switch-when" => "emscluster",
+            "ng-model"       => "$parent.filterType",
+            "ng-change"      => "filterTypeChanged()")
+          = select_tag('filter_typ', options_for_select(@storage_options_for_select),
+            "ng-switch-when" => "storage",
+            "ng-model"       => "$parent.filterType",
+            "ng-change"      => "filterTypeChanged()")
+          = select_tag('log_protocol', options_for_select(@database_backup_options_for_select),
+            "ng-switch-when" => "db_backup",
+            "ng-model"       => "$parent.logProtocol",
+            "ng-change"      => "logProtocolChanged()")
 
           %select#filter_value(ng-change="filterValueChanged()" ng-model="filterValue" ng-options="filteredItem.value as filteredItem.text for filteredItem in filterList" ng-hide="filterValuesEmpty" ng-required="!filterValuesEmpty")
             %option(value="") &lt;Choose&gt;
