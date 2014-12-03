@@ -1,0 +1,21 @@
+- # if dialogs is selected
+#info_div{:style => display}
+  %p.legend=_('Basic Information')
+  %table.style1
+    %tbody
+      %tr
+        %td.key=_('Label')
+        %td
+          = h(@record.label)
+      %tr
+        %td.key=_('Description')
+        %td
+          = h(@record.description)
+      %tr
+        %td.key=_('Created On')
+        %td
+          = h(format_timezone(@record.created_at, Time.zone, "gtl"))
+      %tr
+        %td.key=_('Updated On')
+        %td
+          = h(format_timezone(@record.updated_at, Time.zone, "gtl"))

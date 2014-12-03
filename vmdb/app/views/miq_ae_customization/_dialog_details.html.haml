@@ -1,0 +1,22 @@
+- # if dialogs is selected
+- # Need to include the tree JS files in case no tree is initially displayed
+- if @record
+  - if @edit
+    = render :partial => "dialog_form"
+  - else
+    = render :partial => "layouts/flash_msg"
+    #dialog_info_tabs{:style => "display:none; width:100%; height:100%; overflow:auto;"}
+      %ul.tab
+        %li
+          %a{:href => "#sample_tab"}=_('Sample')
+        %li
+          %a{:href => "#info_tab"}=_('Basic Info')
+      #sample_tab{:name => "sample_tab", :width => "80px"}
+        = render :partial => "dialog_sample"
+      #info_tab{:name => "info_tab", :width => "80px"}
+        = render :partial => "dialog_info"
+    - # Initialize jQuery UI tabs based on tabs ul
+    :javascript
+      //method takes hash that can have 4 keys: tabs div id, active tab label,
+      //url to go to when tab is changed, and whether to check for abandon changes or not
+      miq_jquery_tabs_init({tabs_div: "dialog_info_tabs", active_tab: "#{@sb[:active_tab]}", url: "/miq_ae_customization/change_tab/"})

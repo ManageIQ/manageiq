@@ -1,0 +1,17 @@
+- # Div to hold the actual tree
+#dialog_edit_tree_div.dhtmlx_no_accordion{:style => "width: 100%; height: 100%"}
+  #dialog_edit_treebox{:style => "width: 100%; height: 100%; color: #000; overflow: hidden;"}
+  = render(:partial => "layouts/dynatree",
+    :locals         => {:tree_id  =>  "dialog_edit_treebox",
+      :tree_name                  =>  "dialog_edit_tree",
+      :json_tree                  =>  @temp[:dialog_edit_tree],
+      :onclick                    =>  "cfmeOnClick_SelectDlgEditTreeNode",
+      :select_node                =>  "#{x_node(:dialog_edit_tree)}",
+      :base_id                    =>  "root",
+      :exp_tree                   =>  true,
+      :highlighting               =>  true,
+      :no_tree_lines              =>  false,
+      :tree_state                 =>  true,
+      :cookie_id_prefix           => "edit_treeOpenStatex",
+      :multi_lines                =>  true,
+      :cfme_changes_check         =>  true})

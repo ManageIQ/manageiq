@@ -1,0 +1,17 @@
+- url = url_for(:action => 'dialog_form_field_changed', :id => "#{@record.id || 'new'}")
+%fieldset
+  %p.legend=_('Tab Information')
+  %table.style1
+    %tr
+      %td.key=_('Label')
+      %td.wide
+        = text_field_tag("tab_label", @edit[:tab_label],
+          :maxlength         => MAX_NAME_LEN,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        = javascript_tag(javascript_focus('tab_label'))
+    %tr
+      %td.key=_('Description')
+      %td.wide
+        = text_field_tag("tab_description", @edit[:tab_description],
+          :maxlength         => 100,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
