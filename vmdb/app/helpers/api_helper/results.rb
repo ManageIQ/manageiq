@@ -1,7 +1,7 @@
 module ApiHelper
   module Results
     def action_result(success, message = nil)
-      res = { :success => success }
+      res = {:success => success}
       res[:message] = message if message.present?
       res
     end

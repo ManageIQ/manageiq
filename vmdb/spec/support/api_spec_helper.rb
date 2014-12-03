@@ -54,6 +54,22 @@ module ApiSpecHelper
     resources.any? { |r| r[key] == value }
   end
 
+  def define_user
+    @role  = FactoryGirl.create(:miq_user_role,
+                                :name => @cfme[:role_name])
+
+    @group = FactoryGirl.create(:miq_group,
+                                :description      => @cfme[:group_name],
+                                :miq_user_role_id => @role.id)
+
+    @user  = FactoryGirl.create(:user,
+                                :name             => @cfme[:user_name],
+                                :userid           => @cfme[:user],
+                                :password_digest  => BCrypt::Password.create(@cfme[:password]),
+                                :miq_groups       => [@group],
+                                :current_group_id => @group.id)
+  end
+
   def init_api_spec_env
     MiqRegion.seed
     MiqDatabase.seed
@@ -72,19 +88,7 @@ module ApiSpecHelper
       :vms_url    => "/api/vms"
     }
 
-    @role  = FactoryGirl.create(:miq_user_role,
-                                :name => @cfme[:role_name])
-
-    @group = FactoryGirl.create(:miq_group,
-                                :description      => @cfme[:group_name],
-                                :miq_user_role_id => @role.id)
-
-    @user  = FactoryGirl.create(:user,
-                                :name             => @cfme[:user_name],
-                                :userid           => @cfme[:user],
-                                :password_digest  => BCrypt::Password.create(@cfme[:password]),
-                                :miq_groups       => [@group],
-                                :current_group_id => @group.id)
+    define_user
   end
 
   def update_user_role(role, *identifiers)
@@ -109,7 +113,7 @@ module ApiSpecHelper
 
   def action_identifier(type, action)
     collection_config.fetch_path(type, :resource_actions, :post)
-                     .select { |spec| spec[:name] == action.to_s }
-                     .first[:identifier]
+      .select { |spec| spec[:name] == action.to_s }
+      .first[:identifier]
   end
 end

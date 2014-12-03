@@ -23,8 +23,8 @@ describe ApiController do
   end
 
   def poweron_request(*hrefs)
-    request = { "action" => "poweron" }
-    request["resources"] = hrefs.collect { |href| { "href" => href } } if hrefs.present?
+    request = {"action" => "poweron"}
+    request["resources"] = hrefs.collect { |href| {"href" => href} } if hrefs.present?
     request
   end
 
@@ -212,7 +212,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :poweron))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :power_state => "on")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, poweron_request)
@@ -220,7 +220,7 @@ describe ApiController do
       expect(@result).to have_key("success")
       expect(@result["success"]).to be_false
       expect(@result).to have_key("message")
-      expect(@result["message"]).to match("is already powered on")
+      expect(@result["message"]).to match("is powered on")
       expect(@result).to have_key("href")
       expect(@result["href"]).to match(vm_url)
     end
