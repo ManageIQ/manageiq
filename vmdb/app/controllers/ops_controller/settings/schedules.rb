@@ -340,7 +340,7 @@ module OpsController::Settings::Schedules
                "Host.ext_management_system-name",
                "EmsCluster.ext_management_system-name"
             filter_type = "ems"
-          when "Vm.host-name", "MiqTemplate.host-name", "Storage.host-name", "Host-name"
+          when "Vm.host-name", "MiqTemplate.host-name", "Storage.hosts-name", "Host-name"
             filter_type = "host"
           when "Vm-name"
             filter_type = "vm"
@@ -409,21 +409,11 @@ module OpsController::Settings::Schedules
   def schedule_build_edit_screen
     @in_a_form = true
 
-    build_listnav_search_list("Vm")
-    build_listnav_search_list("MiqTemplate")
-    build_listnav_search_list("Host")
-    build_listnav_search_list("EmsCluster")
-    build_listnav_search_list("Storage")
-    @vm_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
-    @vm_my_filters = @my_searches.collect { |s| [s.description, s.id] }
-    @miq_template_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
-    @miq_template_my_filters = @my_searches.collect { |s| [s.description, s.id] }
-    @host_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
-    @host_my_filters = @my_searches.collect { |s| [s.description, s.id] }
-    @cluster_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
-    @cluster_my_filters = @my_searches.collect { |s| [s.description, s.id] }
-    @storage_global_filters = @def_searches.delete_if { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
-    @storage_my_filters = @my_searches.collect { |s| [s.description, s.id] }
+    @vm_global_filters, @vm_my_filters                     = build_global_and_my_filters("Vm")
+    @miq_template_global_filters, @miq_template_my_filters = build_global_and_my_filters("MiqTemplate")
+    @host_global_filters, @host_my_filters                 = build_global_and_my_filters("Host")
+    @cluster_global_filters, @cluster_my_filters           = build_global_and_my_filters("EmsCluster")
+    @storage_global_filters, @storage_my_filters           = build_global_and_my_filters("Storage")
 
     build_schedule_options_for_select
 
@@ -433,6 +423,14 @@ module OpsController::Settings::Schedules
       :month => one_month_ago.month - 1, # Javascript counts months 0-11
       :date  => one_month_ago.day
     }
+  end
+
+  def build_global_and_my_filters(type)
+    build_listnav_search_list(type)
+    global_filters = @def_searches.reject { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
+    my_filters = @my_searches.collect { |s| [s.description, s.id] }
+
+    return global_filters, my_filters
   end
 
   def schedule_set_record_vars(schedule)

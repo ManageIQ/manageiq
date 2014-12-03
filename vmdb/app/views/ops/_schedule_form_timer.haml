@@ -5,7 +5,7 @@
       %tr
         %td.key Run
         %td
-          = select_tag("timer_typ", options_for_select(["Once","Hourly","Daily","Weekly","Monthly"]), "ng-model" => "scheduleTimerType", "ng-change" => "scheduleTimerTypeChanged()")
+          = select_tag("timer_typ", options_for_select(%w(Once Hourly Daily Weekly Monthly)), "ng-model" => "scheduleTimerType", "ng-change" => "scheduleTimerTypeChanged()")
 
           %span(ng-show="timerNotOnce()") every
           %select#timer_value(ng-model="scheduleTimerValue" ng-options="timerItem.value as timerItem.text for timerItem in timerItems" ng-show="timerNotOnce()")
