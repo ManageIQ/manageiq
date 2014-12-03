@@ -57,8 +57,7 @@ module MiqServer::UpdateManagement
   def attempt_registration
     return unless register
     attach_products
-    return if repos_enabled?
-    enable_repos
+    5.times { repos_enabled? ? break : enable_repos }
   end
 
   def register
