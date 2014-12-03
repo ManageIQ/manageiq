@@ -1,0 +1,16 @@
+#planning_report_div
+  = render :partial => "layouts/flash_msg", :locals => {:div_num => "3"}
+
+  - if @perf_record && @sb[:planning] && @sb[:planning][:rpt]
+
+    %p.legend=_("VM Counts per %s") % ui_lookup(:model => @sb[:planning][:options][:target_typ])
+    = @sb[:planning][:rpt].to_html.html_safe
+    - tvms = 0
+    - @sb[:planning][:rpt].table.data.each { |r| tvms += r["total_vm_count"].to_i }
+    = _('Total number of VMs that can fit on all of the above %s: %s') % [ui_lookup(:models => @sb[:planning][:options][:target_typ]), tvms]
+    - if @sb[:planning][:rpt].extras[:vm_profile]
+      = render :partial => "planning_vm_profile"
+  - if @perf_record
+    %p=_("* Information shown is based on available trend data going back %s.") % WEEK_CHOICES[@sb[:planning][:options][:days]].downcase
+  - else
+    = render :partial => "planning_instructions"

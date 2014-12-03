@@ -1,0 +1,19 @@
+#utilization_tabs{:style => "display: none;"}
+  %ul.tab
+    %li
+      %a{:href => "#summary"}=_('Summary')
+    %li
+      %a{:href => "#details"}=_('Details')
+    %li
+      %a{:href => "#report"}=_('Report')
+  #summary{:name => "Summary", :width => "80px"}
+    = render :partial => "utilization_summary"
+  #details{:name => "Details", :width => "80px"}
+    = render :partial => "utilization_details"
+  #report{:name => "Report", :width => "80px"}
+    = render :partial => "utilization_report"
+
+- # method takes hash that can have 4 keys: tabs div id, active_tab label,
+- # url to go to when tab is changed, and whether to check for abandon changes or not
+:javascript
+  miq_jquery_tabs_init({tabs_div: "utilization_tabs", active_tab: "#{@sb[:active_tab]}", url: "/miq_capacity/change_tab/"})

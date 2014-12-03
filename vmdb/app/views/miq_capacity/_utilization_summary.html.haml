@@ -1,0 +1,39 @@
+#utilization_summary_div
+  = render :partial => "layouts/flash_msg", :locals => {:div_num => "1"}
+  - if @sb[:util] && @sb[:util][:trend_rpt] && @sb[:util][:summary]
+    = render :partial => "utilization_options", :locals  => {:cap_type => "summ"}
+    = render(:partial => "layouts/perf_charts",
+      :locals         => {:charts => @sb[:util][:ts_charts],
+        :chart_set                => "utilts",
+        :chart_data               => @sb[:util][:chart_data]["utilts"],
+        :perf_options             => @sb[:util][:options]})
+    %br{:clear => "all"}
+    %hr
+    - {:cpu => _('CPU'), :memory => _('Memory'), :storage => _('Disk')}.each do |k, v|
+      - if k != :cpu
+        %hr
+      - if @sb[:util][:summary][k] && !@sb[:util][:summary][k].empty?
+        %table.style3
+          %thead
+            %th{:colspan => 2, :align => "left"}
+              = v
+          - @sb[:util][:summary][k].each do |c|
+            - if (c.first.include?("Trend:") && c.first.include?("Max")) || (c.first.include?("Available") && @sb[:util][:options][:model] != "Host") || c.first.include?("Total")
+              %tr{:class => cycle('row0', 'row1')}
+                %td{:style => "width: 50%;"}
+                  = c.first
+                %td
+                  = c.last
+  - else
+    .alert.alert-info
+      %span.pficon.pficon-info
+      %strong
+        - if x_node == ""
+          = _("Select a node on the left to view Utilization information.")
+        - else
+          = _("No performance data is available for the selected item.")
+  - if @sb[:util] && @sb[:util][:trend_rpt]
+    %hr
+    =_('* Information shown is based on available trend data from %s to %s in the %s time zone.') % [format_timezone(@sb[:util][:options][:trend_start], @sb[:util][:options][:tz], "date"), format_timezone(@sb[:util][:options][:trend_end], @sb[:util][:options][:tz], "date"), @sb[:util][:options][:time_profile_tz] || @sb[:util][:options][:tz]]
+    %p
+    %br
