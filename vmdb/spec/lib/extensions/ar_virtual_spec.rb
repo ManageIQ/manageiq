@@ -387,36 +387,35 @@ describe VirtualFields do
       TestClass.reflections_with_virtual.should == TestClass.reflections
     end
 
-    context ".virtual_reflection" do
+    context "add_virtual_reflection integration" do
       it "with invalid parameters" do
-        lambda { TestClass.virtual_reflection :has_one }.should raise_error(ArgumentError)
-        lambda { TestClass.virtual_reflection :vref1 }.should   raise_error(ArgumentError)
+        lambda { TestClass.virtual_has_one }.should raise_error(ArgumentError)
       end
 
       it "with symbol name" do
-        c = TestClass.virtual_reflection :has_one, :vref1
+        c = TestClass.virtual_has_one :vref1
         c.should be_kind_of(VirtualReflection)
         c.name.should == :vref1
       end
 
       it "with string name" do
-        c = TestClass.virtual_reflection :has_one, "vref1"
+        c = TestClass.virtual_has_one "vref1"
         c.should be_kind_of(VirtualReflection)
         c.name.should == :vref1
       end
 
-      it("with has_one macro")    { TestClass.virtual_reflection(:has_one, :vref1).macro.should    == :has_one }
-      it("with has_many macro")   { TestClass.virtual_reflection(:has_many, :vref1).macro.should   == :has_many }
-      it("with belongs_to macro") { TestClass.virtual_reflection(:belongs_to, :vref1).macro.should == :belongs_to }
+      it("with has_one macro")    { TestClass.virtual_has_one(:vref1).macro.should    == :has_one }
+      it("with has_many macro")   { TestClass.virtual_has_many(:vref1).macro.should   == :has_many }
+      it("with belongs_to macro") { TestClass.virtual_belongs_to(:vref1).macro.should == :belongs_to }
 
       it "without uses" do
-        c = TestClass.virtual_reflection :has_one, :vref1
+        c = TestClass.virtual_has_one :vref1
         c.uses.should           be_nil
         c.options[:uses].should be_nil
       end
 
       it "with uses" do
-        c = TestClass.virtual_reflection :has_one, :vref1, :uses => :ref1
+        c = TestClass.virtual_has_one :vref1, :uses => :ref1
         c.uses.should           == :ref1
         c.options[:uses].should == :ref1
       end
