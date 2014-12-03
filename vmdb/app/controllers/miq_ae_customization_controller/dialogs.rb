@@ -870,7 +870,7 @@ module MiqAeCustomizationController::Dialogs
     end
 
     if @edit[:field_typ] == "DialogFieldRadioButton" && params[:field_dynamic] != true
-      @edit[:field_values] = key[:values] = []
+      @edit[:field_values] ||= key[:values] = []
     end
 
     copy_field_param.call(:entry_point)

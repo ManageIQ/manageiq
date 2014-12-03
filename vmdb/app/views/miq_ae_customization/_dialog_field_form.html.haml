@@ -20,7 +20,7 @@
             :maxlength         => MAX_NAME_LEN,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
       %tr
-        %td.key_=('Description')
+        %td.key=_('Description')
         %td.wide
           = text_field_tag("field_description",
             @edit[:field_description],

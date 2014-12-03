@@ -102,7 +102,9 @@
                                   - unless field.required || i != 0
                                     %input{:type => "radio", :disabled => true, :checked => field.default_value.nil?,
                                       :id => "None", :value => "nil", :name => "None"}
-                                  %input{:type => "radio", :disabled => true, :checked => (field.default_vaule == rb[0]),
+                                    &nbsp; None &nbsp;
+
+                                  %input{:type => "radio", :disabled => true, :checked => (field.default_value == rb[0]),
                                     :id => rb[0], :value => rb[1], :name => rb[0]}
                                   &nbsp;
                                   = rb[1]
