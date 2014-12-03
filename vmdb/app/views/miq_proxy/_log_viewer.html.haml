@@ -1,0 +1,26 @@
+#log_div
+  = render :partial => "layouts/flash_msg"
+  %div{:style => "width: 100%; margin-bottom: -7px; padding-left: 0px; background-color: #fff; height:39px; border-left: 1px solid #e1e1e1; border-right: 1px solid #cccccc; border-top: 1px solid #cccccc; z-index:6; background-image: url(/images/layout/teaserbarlg.png);"}
+    - t = _("Retrieve the current SmartProxy log")
+    = link_to(image_tag("/images/toolbars/refresh.png", :id => "retrieve_img", :class => "rollover small", :alt => t),
+      {:action => 'get_log', :id => @miq_proxy},
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      :remote                => true,
+      :title                 => t)
+
+    - if @proxy_log.nil? || @proxy_log == ""
+      = image_tag("/images/toolbars/download.png",
+        :class => "dimmed small",
+        :type  => "application/txt",
+        :alt   => (t = _("The SmartProxy log must be retrieved before it can be downloaded")),
+        :title => t)
+    - else
+      - t = _("Download the SmartProxy log as a Zip File")
+      = link_to(image_tag("/images/toolbars/download.png", :class => "rollover small", :type  => "application/txt", :alt => t),
+        {:action => 'fetch_zip', :id => @miq_proxy},
+        :title => t)
+
+  = text_area_tag("logview", @proxy_log, :readonly => "readonly")
+
+= javascript_tag("$('logview').scrollTop = $('logview').scrollHeight - $('logview').clientHeight;")
