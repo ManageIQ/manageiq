@@ -229,7 +229,7 @@ class MD5deep
 
   def getFileContents(fh, xml_node)
     fh.seek(0, IO::SEEK_SET)
-    buf = fh.read(1024000)
+    buf = fh.read(1024000) || "" # read will return nil when at EOF.
     xml_node.add_element("contents", "compressed"=>"true", "encoded"=>"true").text = (MIQEncode.encode(buf))
   end
 
