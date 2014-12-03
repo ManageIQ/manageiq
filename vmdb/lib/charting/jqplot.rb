@@ -93,12 +93,23 @@ class Jqplot
           },
           :data    => []
         )
+      when 'Donut'
+        Jqplot.default_legend(
+          :options => {
+            :seriesDefaults => {
+              :renderer        => 'jQuery.jqplot.DonutRenderer',
+              :rendererOptions => {:showDataLabels => true}
+            },
+            :series         => []
+          },
+          :data    => []
+        )
       # when 'PieThreed'
       else
         {
           :data    => [[nil]],
           :options => {
-            :title  => "Invalid char type #{chart_type}",
+            :title  => "Invalid chart type #{chart_type}",
             :series => []
           }
         }
