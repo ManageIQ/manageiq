@@ -183,15 +183,13 @@ describe VirtualFields do
     end
 
     context ".virtual_columns=" do
-      it "with invalid parameters" do
-        lambda { TestClass.virtual_columns = {:vcol1 => {}} }.should raise_error(ArgumentError)
-      end
-
       it "" do
-        TestClass.virtual_columns = {
+        {
           :vcol1  => {:type => :string},
           "vcol2" => {:type => :string},
-        }
+        }.each do |name, options|
+          TestClass.virtual_column name, options
+        end
 
         TestClass.virtual_columns_hash.length.should == 2
         TestClass.virtual_columns_hash.keys.should match_array(["vcol1", "vcol2"])
@@ -201,10 +199,12 @@ describe VirtualFields do
       it "with existing virtual columns" do
         TestClass.virtual_column :existing_vcol, :type => :string
 
-        TestClass.virtual_columns = {
+        {
           :vcol1  => {:type => :string},
           "vcol2" => {:type => :string},
-        }
+        }.each do |name, options|
+          TestClass.virtual_column name, options
+        end
 
         TestClass.virtual_columns_hash.length.should == 3
         TestClass.virtual_columns_hash.keys.should match_array(["existing_vcol", "vcol1", "vcol2"])
