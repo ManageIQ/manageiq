@@ -1,15 +1,15 @@
 module MiqAeMethodService
   class MiqAeServiceSnapshot < MiqAeServiceModelBase
-    expose :vm, :association => true
+    expose :vm_or_template, :association => true
     expose :current?
     expose :get_current_snapshot
 
     def revert_to
-      self.vm.revert_to_snapshot(self.id)
+      vm_or_template.revert_to_snapshot(id)
     end
 
     def remove
-      self.vm.remove_snapshot(self.id)
+      vm_or_template.remove_snapshot(id)
     end
   end
 end
