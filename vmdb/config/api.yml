@@ -583,7 +583,6 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
-        :disabled: true
       - :name: reset
         :identifier: vm_reset
         :disabled: true
@@ -613,7 +612,6 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
-        :disabled: true
       - :name: reset
         :identifier: vm_reset
         :disabled: true

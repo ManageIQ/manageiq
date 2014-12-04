@@ -345,4 +345,100 @@ describe ApiController do
       expect(results.all? { |r| r.key?("task_href") }).to be_true
     end
   end
+
+  context "Vm suspend action" do
+    it "suspends an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :suspend))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:suspend))
+
+      expect(@success).to be_false
+      expect(@code).to eq(404)
+    end
+
+    it "suspends an invalid vm without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:suspend))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "suspends a powered off vm" do
+      update_user_role(@role, action_identifier(:vms, :suspend))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:suspend))
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_false
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("is not powered on")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "suspends a suspended vm" do
+      update_user_role(@role, action_identifier(:vms, :suspend))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "suspended")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:suspend))
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_false
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("is not powered on")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "suspends a vm" do
+      update_user_role(@role, action_identifier(:vms, :suspend))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:suspend))
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_true
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("suspending")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+      expect(@result).to have_key("task_id")
+      expect(@result).to have_key("task_href")
+    end
+
+    it "suspends multiple vms" do
+      update_user_role(@role, action_identifier(:vms, :suspend))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+
+      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
+      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+
+      @success = run_post(@cfme[:vms_url], gen_request(:suspend, vm1_url, vm2_url))
+
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(2)
+      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
+      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
+      expect(results.all? { |r| r["success"] }).to be_true
+      expect(results.all? { |r| r.key?("task_id") }).to be_true
+      expect(results.all? { |r| r.key?("task_href") }).to be_true
+    end
+  end
 end
