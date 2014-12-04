@@ -203,7 +203,7 @@ module VirtualFields
 
   def add_virtual_column(name, options)
     reset_virtual_column_information
-    _virtual_columns_hash[name.to_s] = options.kind_of?(VirtualColumn) ? options : VirtualColumn.new(name, options)
+    _virtual_columns_hash[name.to_s] = VirtualColumn.new(name, options)
   end
 
   def reset_virtual_column_information
@@ -213,7 +213,7 @@ module VirtualFields
   def add_virtual_reflection(macro, name, options)
     raise ArgumentError, "macro must be specified" if macro.nil?
     reset_virtual_reflection_information
-    _virtual_reflections[name.to_sym] = options.kind_of?(VirtualReflection) ? options : VirtualReflection.new(macro.to_sym, name.to_sym, options, self)
+    _virtual_reflections[name.to_sym] = VirtualReflection.new(macro.to_sym, name.to_sym, options, self)
   end
 
   def reset_virtual_reflection_information
