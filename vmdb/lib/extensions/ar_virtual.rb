@@ -129,12 +129,6 @@ module VirtualFields
     add_virtual_reflection(:belongs_to, name, options)
   end
 
-  def virtual_reflections=(reflection_hash)
-    reflection_hash.each do |name, options|
-      add_virtual_reflection(options.kind_of?(VirtualReflection) ? options.macro : options[:macro], name, options)
-    end
-  end
-
   def virtual_reflection?(name)
     virtual_reflections.has_key?(name.to_sym)
   end

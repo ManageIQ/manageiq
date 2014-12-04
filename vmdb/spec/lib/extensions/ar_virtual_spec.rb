@@ -440,16 +440,14 @@ describe VirtualFields do
       end
     end
 
-    context ".virtual_reflections=" do
-      it "with invalid parameters" do
-        lambda { TestClass.virtual_reflections = {:vref1 => {}} }.should raise_error(ArgumentError)
-      end
-
+    context "virtual_reflection assignment" do
       it "" do
-        TestClass.virtual_reflections = {
+        {
           :vref1  => {:macro => :has_one},
           "vref2" => {:macro => :has_many},
-        }
+        }.each do |name, options|
+          TestClass.send "virtual_#{options[:macro]}", name
+        end
 
         TestClass.virtual_reflections.length.should == 2
         TestClass.virtual_reflections.keys.should match_array([:vref1, :vref2])
@@ -459,10 +457,12 @@ describe VirtualFields do
       it "with existing virtual reflections" do
         TestClass.virtual_has_one :existing_vref
 
-        TestClass.virtual_reflections = {
+        {
           :vref1  => {:macro => :has_one},
           "vref2" => {:macro => :has_many},
-        }
+        }.each do |name, options|
+          TestClass.send "virtual_#{options[:macro]}", name
+        end
 
         TestClass.virtual_reflections.length.should == 3
         TestClass.virtual_reflections.keys.should match_array([:existing_vref, :vref1, :vref2])
