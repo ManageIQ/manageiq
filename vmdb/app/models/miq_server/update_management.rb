@@ -57,6 +57,7 @@ module MiqServer::UpdateManagement
   def attempt_registration
     return unless register
     attach_products
+    # HACK: #enable_repos is not always successful immediately after #attach_products, retry to ensure they are enabled.
     5.times { repos_enabled? ? break : enable_repos }
   end
 
@@ -77,7 +78,7 @@ module MiqServer::UpdateManagement
 
       registration_class.register(assemble_registration_options)
 
-      # Rhn is slow at writing the systemid file, wait up to 30 seconds for it to appear
+      # HACK: RHN is slow at writing the systemid file, wait up to 30 seconds for it to appear
       30.times { File.exist?("/etc/sysconfig/rhn/systemid") ? break : (sleep 1) }
 
       # Reload the registration_type
