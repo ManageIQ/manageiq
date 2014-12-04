@@ -9,9 +9,11 @@ module ArRegion
 
   module ClassMethods
     def inherited(other)
-      other.class_eval do
-        virtual_column :region_number,      :type => :integer
-        virtual_column :region_description, :type => :string
+      if other.superclass == ActiveRecord::Base
+        other.class_eval do
+          virtual_column :region_number,      :type => :integer
+          virtual_column :region_description, :type => :string
+        end
       end
       super
     end
