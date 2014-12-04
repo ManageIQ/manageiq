@@ -1,0 +1,58 @@
+- url = url_for(:action => 'credential_field_changed')
+= form_tag({:action => 'install_007',  :id => @miq_proxy}, {:id => "007_form"}) do
+  #form_div
+    = render :partial => "layouts/flash_msg"
+    %dl.col2
+      %dd
+        %fieldset
+          %p.legend=_("Version Info")
+          %table.style1
+            %tr
+              %td.key=_("Current Version")
+              %td
+                - if @miq_proxy.version.blank?
+                  = _("N/A")
+                - else
+                  = @miq_proxy.version
+            %tr
+              %td.key=_("Version to Deploy")
+              %td
+                = select_tag("install_build",
+                  options_for_select(["<#{_('choose')}>"] + @edit[:proxy_choices].sort_by(&:first),
+                  @edit[:install_build]),
+                  "data-miq_focus"   => true,
+                  "data-miq_observe" => {:url => url}.to_json)
+      %dd
+        - if @miq_proxy.state == "on"
+          %fieldset
+            %p.legend=_("Credentials")
+            %span{:style => "color:black;"}
+              = _("Credentials are not required because this SmartProxy is currently active.")
+        - else
+          = render(:partial => "/layouts/multi_auth_credentials",
+            :locals         => {:record => @miq_proxy,
+            :legendtext                 => _("Credentials for Host '%s'") % @miq_proxy.host.name,
+            :validate_url               => "install_007",
+            :change_url                 => "credential_field_changed"})
+
+    - if @miq_proxy.state == "on"
+      = _("Pressing 'Save' will deploy the selected SmartProxy build to the Host.")
+    - else
+      = _("Pressing 'Save' will save any Host credential changes and deploy the selected SmartProxy build to the Host.")
+
+  - if false
+    = button_tag(_("Save"),
+      :id    => "save",
+      :name  => "save",
+      :alt   => (t = _("Install Selected SmartProxy Build")),
+      :title => t,
+      :class => "button",
+      :type  => "submit")
+    = button_tag("Cancel",
+      :id    => "cancel",
+      :name  => "cancel",
+      :alt   => _("Cancel"),
+      :title => _("Cancel"),
+      :class => "button",
+      :type  => "submit")
+  = render :partial => '/layouts/edit_form_buttons', :locals => {:record_id => @miq_proxy.id, :action_url => "install_007", :align => "left"}

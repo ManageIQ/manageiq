@@ -1,0 +1,11 @@
+#main_div
+  - if @proxy_log
+    = render :partial => "log_viewer"
+  - elsif %w(hosts miq_templates vms storages).include?(@display)  && @showtype != "compare"
+    = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@miq_proxy.id}"}
+  - elsif @showtype == "compare"
+    = render :partial => "layouts/#{@showtype}"
+  - elsif @showtype == "download_pdf"
+    = render :partial => "layouts/show_pdf"
+  - else
+    = render :partial => @showtype
