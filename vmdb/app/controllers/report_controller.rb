@@ -337,6 +337,34 @@ class ReportController < ApplicationController
 
   private ###########################
 
+  def report_selection_menus
+    @folders = []
+    @menu.each do |r|
+      @folders.push(r[0])
+      next unless @edit[:new][:filter].present?
+      @sub_folders ||= []
+      next unless r[0] == @edit[:new][:filter]
+      r[1].each do |subfolder, reps|
+        subfolder.to_miq_a.each do |s|
+          @sub_folders.push(s)
+        end
+        @reps ||= [] if @edit[:new][:subfilter]
+        get_subfilter_reports(reps) if @edit[:new][:subfilter].present? && subfolder == @edit[:new][:subfilter]
+      end
+    end
+  end
+
+  def get_subfilter_reports(reps)
+    reports = MiqReport.where(:name => reps)
+    reports.each do |report|
+      next if x_active_tree == :widgets_tree && report.db == "VimPerformanceTrend"
+      temp_arr = []
+      temp_arr.push(report.name)
+      temp_arr.push(report.id)
+      @reps.push(temp_arr) unless @reps.include?(temp_arr)
+    end
+  end
+
   #Graph/Hybrid/Tabular toggle button was hit (ajax version)
   def switch_ght
     rr      = MiqReportResult.find(@sb[:pages][:rr_id])

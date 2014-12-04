@@ -1108,4 +1108,42 @@ describe ReportController do
       end
     end
   end
+
+  context "#report_selection_menus" do
+    before do
+      menu = [
+        ["Trending", ["Hosts", ["Report 1", "Report 2"]]]
+      ]
+      controller.instance_variable_set(:@menu, menu)
+      controller.instance_variable_set(:@edit,
+                                       :new => {
+                                         :filter    => "Trending",
+                                         :subfilter => "Hosts"
+                                       }
+                                      )
+      report1 = active_record_instance_double("MiqReport",
+                                              :name => 'Report 1',
+                                              :id   => 1,
+                                              :db   => 'VimPerformanceTrend')
+      report2 = active_record_instance_double("MiqReport",
+                                              :name => 'Report 2',
+                                              :id   => 2,
+                                              :db   => 'VimPerformanceTrend')
+
+      MiqReport.should_receive(:where).and_return([report1, report2])
+    end
+
+    it "Verify that Trending reports are excluded in widgets editor" do
+      controller.instance_variable_set(:@sb, :active_tree => :widgets_tree)
+      controller.send(:report_selection_menus)
+      assigns(:reps).should eq([])
+    end
+
+    it "Verify that Trending reports are included in schedule menus editor" do
+      controller.instance_variable_set(:@sb, :active_tree => :schedules_tree)
+      controller.send(:report_selection_menus)
+      assigns(:reps).count.should eq(2)
+      assigns(:reps).should eq([["Report 1", 1], ["Report 2", 2]])
+    end
+  end
 end

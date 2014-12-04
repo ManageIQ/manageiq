@@ -157,7 +157,7 @@ module ReportController::Schedules
     schedule_get_form_vars
     if @edit[:new][:filter]
       @folders ||= Array.new
-      schedule_menus
+      report_selection_menus
     end
     render :update do |page|                    # Use JS to update the display
       if params[:filter_typ]
@@ -274,37 +274,6 @@ module ReportController::Schedules
     process_elements(schedules, MiqSchedule, task)
   end
 
-  def schedule_menus
-    @folders = Array.new
-    @menu.each do |r|
-      @folders.push(r[0])
-      if @edit[:new][:filter] && @edit[:new][:filter] != ""
-        @sub_folders ||= Array.new
-        if r[0] == @edit[:new][:filter]
-          r[1].each do |subfolder,reps|
-            subfolder.to_miq_a.each do |s|
-              @sub_folders.push(s)
-            end
-            if @edit[:new][:subfilter] && @edit[:new][:subfilter] != ""
-              @reps ||= Array.new
-              if subfolder == @edit[:new][:subfilter]
-                reps.each do |r|
-                  temp_arr = Array.new
-                  rec = MiqReport.find_by_name(r.strip)
-                  if rec
-                    temp_arr.push(r)
-                    temp_arr.push(rec.id)
-                    @reps.push(temp_arr) if !@reps.include?(temp_arr)
-                  end
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-
   # Validate some of the schedule fields
   def schedule_valid?(sched)
     valid = true
@@ -384,7 +353,7 @@ module ReportController::Schedules
         end
       end
       @edit[:new][:repfilter] = record.id
-      schedule_menus
+      report_selection_menus
     end
     set_edit_timer_from_schedule(@schedule)
 

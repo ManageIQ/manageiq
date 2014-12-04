@@ -389,7 +389,7 @@ module ReportController::Widgets
             end
           end
         end
-        schedule_menus          #to build sub folders
+        report_selection_menus          # to build sub folders
       else
         widget_graph_menus      #to build report pulldown with only reports with grpahs
       end
@@ -399,7 +399,7 @@ module ReportController::Widgets
       if @sb[:nodes][1] == "c"
         widget_graph_menus      #to build report pulldown with only reports with grpahs
       else
-        schedule_menus          #to build sub folders
+        report_selection_menus          # to build sub folders
       end
     elsif ["m"].include?(@sb[:wtype])
       @edit[:new][:shortcuts] = Hash.new
@@ -639,7 +639,7 @@ module ReportController::Widgets
       end
       if @edit[:new][:filter]
         @folders ||= Array.new
-        schedule_menus          #to build sub folders
+        report_selection_menus          # to build sub folders
         rpt = @edit[:new][:repfilter] ? @edit[:new][:repfilter] : (@widget.resource_id && @widget.resource_type == "MiqReport" ? @widget.resource_id : nil)
         widget_set_column_vars(rpt)
       end
