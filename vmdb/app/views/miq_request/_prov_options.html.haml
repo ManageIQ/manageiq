@@ -1,0 +1,85 @@
+= render :partial => "layouts/flash_msg"
+- url = url_for(:action => 'prov_change_options')
+#prov_options_div
+  = form_tag({:action => 'prov_show_option'}, {:id => "prov_form"}) do
+    %p.legend=_("Filter By")
+    %table.style1
+      - res_type = @sb[:prov_options][@sb[:prov_options][:resource_type]]
+      %tr
+        %td.key
+          = _("Requester:")
+        %td
+          - if res_type[:users].length > 1
+            = select_tag("user_choice",
+              options_for_select([["#{_('All')}", "all"]] + res_type[:users].invert.sort, res_type[:user_choice].to_i),
+              "data-miq_observe" => {:url => url}.to_json)
+          - else
+            = res_type[:users] && !res_type[:users].empty? ? res_type[:users].first[1] : _("None Available")
+      %tr
+        %td.key
+          = _("Approval State:")
+        %td
+          - res_type[:states].sort.each do |(state, display_name)|
+            %div{:style => "padding: 0px 5px 0px 0px; float:left;"}
+              = check_box_tag("state_choice__#{state}", "1", @sb[:def_prov_options][@sb[:prov_options][:resource_type]][:applied_states].include?(state),
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
+              = h(display_name)
+      %tr
+        %td.key
+          = _("Type:")
+        %td
+          - if res_type[:types].length > 1
+            = select_tag("type_choice",
+              options_for_select([["#{_('All')}", "all"]] + res_type[:types].invert.sort, res_type[:type_choice].to_sym),
+              "data-miq_observe" => {:url => url}.to_json)
+          - else
+            = h(Array(res_type[:types])[0].last)
+      %tr
+        %td.key
+          = _("Request Date:")
+        %td
+          = select_tag("time_period",
+            options_for_select(Array(PROV_TIME_PERIODS.invert).sort_by(&:last), res_type[:time_period]),
+            "data-miq_observe" => {:url => url}.to_json)
+      %tr
+        %td.key
+          = _("Reason:")
+        %td
+          = text_field_tag("reason_text", res_type[:reason_text],
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td
+        %td{:align => "left"}
+          #buttons_off
+            = button_tag(_("Apply"), :id => "apply", :class => "btn btn-primary btn-disabled")
+            = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+            = link_to(button_tag(_("Default"), :class => "btn btn-default", :id => "apply", :alt => (t = _("Set filters to default"))),
+              {:action => "prov_button", :button => "default"},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true,
+              :title                 => t)
+          #buttons_on{:style => "display: none;"}
+            = link_to(button_tag(_("Apply"), :class => "btn btn-primary", :alt => (t = _("Apply the selected filters"))),
+              {:action => "prov_button", :button => "apply"},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true,
+              :title                 => t)
+            = link_to(button_tag(_("Reset"), :class => "btn btn-default", :alt => (t = _("Reset filter changes"))),
+              {:action => "prov_button", :button => "reset"},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true,
+              :title                 => t)
+            = link_to(button_tag(_("Default"), :class => "btn btn-default", :alt => (t = _("Set filters to default"))),
+              {:action => "prov_button", :button => "default"},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true,
+              :title                 => t)
+    %hr
+    - # Need this to bind checkbox observers when under DHTMLX tabs
+    - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+    :javascript
+      miqObserveCheckboxes();

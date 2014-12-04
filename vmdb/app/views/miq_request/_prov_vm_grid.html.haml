@@ -1,0 +1,88 @@
+#prov_vm_div
+  - if @temp[:vms]
+    %table.style3
+      %thead
+        %tr
+          - id = @edit[:req_id] || "new"
+          - @edit[:vm_columns].each_with_index do |h, i|
+            %th{:nowrap => 1}
+              - if [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
+                = h(@edit[:vm_headers][h])
+              - else
+                - #  Replaced to exclude non-view table fields from sorting
+                = link_to(h(@edit[:vm_headers][h]),
+                  {:action => "sort_vm_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true)
+                - if @edit[:vm_columns][i] == @edit[:vm_sortcol]
+                  %img{:src => "/images/icons/16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+      %tbody
+        - unless [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
+          - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0].nil? ? "row3" : cycle('row0', 'row1')
+          %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VM__NONE__&id=#{@id}');", :nowrap => 1}
+            %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = "<#{_('None')}>"
+            %td
+            %td
+            %td
+            %td
+            %td
+            %td
+            %td
+        - @temp[:vms].each do |row|
+          - @id = row.id
+          - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0] == @id ? "#{cycle('row0', 'row1')} row3" : cycle('row0', 'row1')
+          - clk = "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"
+          %tr{:class => cls, :onclick => [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type) ? "" : clk, :nowrap => 1}
+            %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = h(row.name)
+            %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = h(row.operating_system.try(:product_name))
+            %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = h(row.platform)
+            %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = h(row.num_cpu)
+            %td{:align => "right", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = h(number_to_human_size(row.mem_cpu.to_i * 1024 * 1024))
+            %td{:align => "right", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = h(number_to_human_size(row.allocated_disk_storage))
+            %td{:align => "right", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              - if row.ext_management_system
+                = h(row.ext_management_system.name)
+            %td{:align => "right", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              = h(row.v_total_snapshots)
+      %tfoot
+        %tr
+          %td{:colspan => "40"}
+  - elsif @temp[:vm]
+    - # grid with only one record for Redhat provisioning
+    %table.style3
+      %thead
+        %tr
+          - id = @edit[:req_id] || "new"
+          - @edit[:vm_columns].each do |h|
+            %th{:nowrap => 1}
+              = h(@edit[:vm_headers][h])
+      %tbody
+        %tr.row3{:nowrap => 1}
+          %td
+            = h(@temp[:vm].name)
+          %td
+            = h(@temp[:vm].operating_system.try(:product_name))
+          %td
+            = h(@temp[:vm].platform)
+          %td
+            = h(@temp[:vm].num_cpu)
+          %td{:align => "right"}
+            = h(number_to_human_size(@temp[:vm].mem_cpu.to_i * 1024 * 1024))
+          %td{:align => "right"}
+            = h(number_to_human_size(@temp[:vm].allocated_disk_storage))
+          %td{:align => "right"}
+            - if @temp[:vm].ext_management_system
+              = h(@temp[:vm].ext_management_system.name)
+          %td{:align => "right"}
+            = h(@temp[:vm].v_total_snapshots)
+      %tfoot
+        %tr
+          %td{:colspan => "40"}

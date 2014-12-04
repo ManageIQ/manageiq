@@ -1,0 +1,52 @@
+- if @edit && @edit[:stamp_typ]
+  - url = url_for(:action => 'stamp_field_changed')
+
+%fieldset
+  %p.legend
+    = _("Request Details")
+  %table.style1
+    %tbody
+      %tr
+        %td.key
+          = _("Requested by")
+        %td
+          - if @miq_request.requester
+            = h(@miq_request.requester + (@temp[:user].nil? ? nil : " (#{@temp[:user].name})"))
+      %tr
+        %td.key
+          = _("Last Update")
+        %td
+          = h(format_timezone(@miq_request.updated_on))
+      %tr
+        %td.key
+          = _("Status")
+        %td
+          = h(@miq_request.state.titleize)
+      %tr
+        %td.key
+          = _("Approved/Denied by")
+        %td
+          - if @miq_request.stamped_by
+            = h(@miq_request.stamped_by + (@temp[:user].nil? ? nil : " (#{@temp[:user].name})"))
+      %tr
+        %td.key
+          = _("Date Approved/Denied")
+        %td
+          = h(format_timezone(@miq_request.stamped_on))
+      %tr
+        %td.key=_("Reason")
+        - if @edit && @edit[:stamp_typ]
+          %td.wide
+            = text_field_tag("reason", @edit[:reason],
+              :maxlength         => MAX_NAME_LEN,
+              "data-miq_focus"   => true,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        - else
+          %td
+            = h(@miq_request.reason)
+      %tr
+        %td.key
+          = _("Last Message")
+        %td
+          = h(@miq_request.message)
+

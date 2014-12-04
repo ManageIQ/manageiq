@@ -1,0 +1,385 @@
+- # wf          The workflow object currently in use
+- # dialog      The name (symbol) of the selected dialog
+
+- current_tab = @edit && @edit[:new] ? @edit[:new][:current_tab_key] : @options[:current_tab_key]
+- prefix = "/miq_request/"
+%br
+
+- if dialog == current_tab
+  - case current_tab
+  - when :requester
+    - keys = [:owner_email, :owner_first_name, :owner_last_name, :owner_address, :owner_city, :owner_state, :owner_zip, :owner_country, :owner_title, :owner_company, :owner_department, :owner_office, :owner_phone, :owner_phone_mobile, :request_notes]
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Request Information"),
+        :prefix                     => prefix,
+        :keys                       => keys})
+
+    - keys = [:owner_manager, :owner_manager_mail, :owner_manager_mail]
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Manager"),
+        :prefix                     => prefix,
+        :keys                       => keys})
+  - when :purpose
+    - keys = [:vm_tags]
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Select Tags to apply"),
+        :prefix                     => prefix,
+        :keys                       => keys,
+        :table_class                => "tagstable",
+        :extra_table_attributes     => "cellspacing=1"})
+  - when :service
+    - keys = wf.is_a?(MiqProvisionRedhatWorkflow) ? [:src_vm_id, :provision_type, :linked_clone] : [:vm_filter, :src_vm_id, :provision_type, :linked_clone, :snapshot]
+    - label = wf.is_a?(MiqProvisionRedhatWorkflow) ? _("Selected VM") : _("Select")
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => label,
+        :prefix                     => prefix,
+        :keys                       => keys,
+        :extra_table_attributes     => "width=100%"})
+    - if wf.supports_pxe?
+      - keys = [:pxe_server_id, :pxe_image_id, :windows_image_id]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("PXE"),
+          :prefix                     => prefix,
+          :keys                       => keys,
+          :extra_table_attributes     => "width=100%"})
+    - if wf.supports_iso?
+      - keys = [:iso_image_id]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("ISO"),
+          :prefix                     => prefix,
+          :keys                       => keys,
+          :extra_table_attributes     => "width=100%"})
+    - keys = [:number_of_vms]
+    - label = wf.is_a?(MiqProvisionCloudWorkflow) ? _("Number of Instances") : _("Number of VMs")
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => label,
+        :prefix                     => prefix,
+        :keys                       => keys})
+    - keys = [:vm_name, :vm_description, :vm_prefix]
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Naming"),
+        :prefix                     => prefix,
+        :keys                       => keys})
+  - when :environment
+    - keys = [:placement_auto]
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Placement"),
+        :prefix                     => prefix,
+        :keys                       => keys})
+    - if (@edit && @edit[:new] && @edit[:new][:placement_auto] && !@edit[:new][:placement_auto][0]) || (@options && !@options[:placement_auto][0])
+      - unless wf.is_a?(MiqProvisionCloudWorkflow)
+        - keys = [:placement_dc_name]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Datacenter"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+        - keys = [:cluster_filter, :placement_cluster_name]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Cluster"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+      - if wf.is_a?(MiqProvisionVmwareWorkflow)
+        - keys = [:rp_filter, :placement_rp_name]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Resource Pool"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+        - keys = [:placement_folder_name]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Folder"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+      - keys = [:host_filter, :placement_host_name]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("Host"),
+          :prefix                     => prefix,
+          :keys                       => keys,
+          :extra_table_attributes     => "width=100%"})
+      - if wf.is_a?(MiqProvisionVmwareWorkflow)
+        - keys = [:new_datastore_create, :new_datastore_storage_controller, :new_datastore_fs_type, :new_datastore_size, :new_datastore_name, :new_datastore_aggregate, :new_datastore_volume, :new_datastore_thin_provision, :new_datastore_autogrow, :new_datastore_grow_increment, :new_datastore_max_size]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Datastore"),
+            :prefix                     => prefix,
+            :keys                       => keys,
+            :extra_table_attributes     => "width=100%"})
+      - unless wf.is_a?(MiqProvisionCloudWorkflow)
+        - keys = [:ds_filter, :placement_ds_name]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Datastore"),
+            :prefix                     => prefix,
+            :keys                       => keys,
+            :extra_table_attributes     => "width=100%"})
+      - if wf.is_a?(MiqProvisionCloudWorkflow)
+        - keys = [:cloud_tenant, :availability_zone_filter, :placement_availability_zone, :cloud_network, :cloud_subnet, :security_groups, :floating_ip_address]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Placement - Options"),
+            :prefix                     => prefix,
+            :keys                       => keys,
+            :extra_table_attributes     => "width=100%"})
+  - when :hardware
+    - keys = [:instance_type, :number_of_cpus, :number_of_sockets, :cores_per_socket, :vm_memory, :network_adapters, :disk_format, :guest_access_key_pair, :monitoring]
+    - label = wf.is_a?(MiqProvisionCloudWorkflow) ? "Properties" : "Hardware"
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => label,
+        :prefix                     => prefix,
+        :keys                       => keys})
+    - unless wf.is_a?(MiqProvisionCloudWorkflow)
+      - keys = [:cpu_limit, :memory_limit]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog       => dialog,
+          :label        => _("VM Limits"),
+          :prefix       => prefix,
+          :keys         => keys})
+      - keys = [:cpu_reserve, :memory_reserve]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog       => dialog,
+          :label        => _("VM Reservations"),
+          :prefix       => prefix,
+          :keys         => keys})
+    - if wf.is_a?(MiqProvisionOpenstackWorkflow)
+      = render(:partial => "#{prefix}prov_dialog_cloud_quota",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :prefix                     => prefix,
+          :keys                       => keys})
+  - when :network
+    - keys = [:vlan, :mac_address]
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Network Adapter Information"),
+        :prefix                     => prefix,
+        :keys                       => keys})
+  - when :customize
+    - if wf.is_a?(MiqProvisionVmwareWorkflow) && !wf.supports_pxe? && !wf.supports_iso?
+      - keys = [:sysprep_enabled]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("Basic Options"),
+          :prefix                     => prefix,
+          :keys                       => keys})
+      - if (@edit && @edit[:new] && @edit[:new][:sysprep_enabled] && @edit[:new][:sysprep_enabled][0] == "fields") || (@options && @options[:sysprep_enabled] && @options[:sysprep_enabled][0] == "fields")
+        - keys = [:sysprep_custom_spec, :sysprep_spec_override]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Custom Specification"),
+            :prefix                     => prefix,
+            :keys                       => keys,
+            :extra_table_attributes     => "width=100%"})
+        - if @sb[:vm_os] == "windows"
+          - keys = [:sysprep_timezone, :sysprep_auto_logon, :sysprep_auto_logon_count, :sysprep_password]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("Unattended GUI"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+          - keys = [:sysprep_identification]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("Identification"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+          - if (@edit && @edit[:new] && @edit[:new][:sysprep_identification][0] == "domain") || (@options && @options[:sysprep_identification][0] == "domain")
+            - keys = [:sysprep_domain_name, @temp[:ldap_ous_tree] ? :ldap_ous : nil, :sysprep_domain_admin, :sysprep_domain_password].compact
+            = render(:partial => "#{prefix}prov_dialog_fieldset",
+              :locals         => {:workflow => wf,
+                :dialog                     => dialog,
+                :label                      => _("Domain Information"),
+                :prefix                     => prefix,
+                :keys                       => keys})
+          - else
+            - keys = [:sysprep_workgroup_name]
+            = render(:partial => "#{prefix}prov_dialog_fieldset",
+              :locals         => {:workflow => wf,
+                :dialog                     => dialog,
+                :label                      => _("Workgroup Information"),
+                :prefix                     => prefix,
+                :keys                       => keys})
+          - keys = [:sysprep_full_name, :sysprep_organization, :sysprep_product_id, :sysprep_computer_name]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("User Data"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+          - keys = [:sysprep_change_sid, :sysprep_delete_accounts]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("Windows Options"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+          - keys = [:sysprep_server_license_mode, :sysprep_per_server_max_connections]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("Server License"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+        - elsif @sb[:vm_os] == "linux"
+          - keys = [:linux_host_name, :linux_domain_name]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("Naming"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+      - elsif (@edit && @edit[:new] && @edit[:new][:sysprep_enabled] && @edit[:new][:sysprep_enabled][0] == "file") || (@options && @options[:sysprep_enabled] && @options[:sysprep_enabled][0] == "file")
+        - keys = [:sysprep_custom_spec, :sysprep_spec_override]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Custom Specification"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+        - keys = [:sysprep_change_sid, :sysprep_delete_accounts]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Windows Options"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+        - if @edit && @edit[:new]
+          - keys = [:sysprep_upload_file]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("Upload File"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+        - if (@edit && @edit[:new] && @edit[:new][:sysprep_upload_text]) || (@options && @options[:sysprep_upload_text])
+          - file_name = (@edit && @edit[:new]) ? @edit[:new][:sysprep_upload_file] : @options[:sysprep_upload_file]
+          - label = _("Uploaded File '%s'") % file_name
+          - keys = [:sysprep_upload_text]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => label,
+              :prefix                     => prefix,
+              :keys                       => keys})
+      - elsif (@edit && @edit[:new] && @edit[:new][:sysprep_enabled] && @edit[:new][:sysprep_enabled][0] == "customspec") || (@options && @options[:sysprep_enabled] && @options[:sysprep_enabled][0] == "customspec")
+        - keys = [:sysprep_custom_spec]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("Custom Specification"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+      - if (!@options && @edit && @edit[:new] && @edit[:new][:sysprep_enabled] && @edit[:new][:sysprep_enabled][0] && @edit[:new][:sysprep_enabled][0] != "disabled") || (!@edit && @options && @options[:sysprep_enabled] && @options[:sysprep_enabled][0] && @options[:sysprep_enabled][0] != "disabled")
+        - keys = [:addr_mode, :ip_addr, :subnet_mask, :gateway]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("IP Address Information"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+        - keys = [:dns_servers, :dns_suffixes]
+        = render(:partial => "#{prefix}prov_dialog_fieldset",
+          :locals         => {:workflow => wf,
+            :dialog                     => dialog,
+            :label                      => _("DNS"),
+            :prefix                     => prefix,
+            :keys                       => keys})
+        - if @sb[:vm_os] == "windows"
+          - keys = [:wins_servers]
+          = render(:partial => "#{prefix}prov_dialog_fieldset",
+            :locals         => {:workflow => wf,
+              :dialog                     => dialog,
+              :label                      => _("WINS Server"),
+              :prefix                     => prefix,
+              :keys                       => keys})
+    - else
+      - keys = [:root_password]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("Credentials"),
+          :prefix                     => prefix,
+          :keys                       => keys})
+      - keys = [:addr_mode, :hostname, :ip_addr, :subnet_mask, :gateway]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("IP Address Information"),
+          :prefix                     => prefix,
+          :keys                       => keys})
+      - keys = [:dns_servers, :dns_suffixes]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("DNS"),
+          :prefix                     => prefix,
+          :keys                       => keys})
+      - keys = [:customization_template_id]
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("Customize Template"),
+          :prefix                     => prefix,
+          :keys                       => keys})
+      - show_customization_template_script = (@edit && @edit[:new] && @edit[:new][:customization_template_script]) || (@options && @options[:customization_template_script])
+      - keys = [show_customization_template_script ? :customization_template_script : nil].compact
+      = render(:partial => "#{prefix}prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("Selected Template Contents"),
+          :prefix                     => prefix,
+          :keys                       => keys})
+  - when :schedule
+    - has_schedule_time = (@edit && @edit[:new] && @edit[:new][:schedule_type] && @edit[:new][:schedule_type][0] == "schedule") || (@options && @options[:schedule_type] && @options[:schedule_type][0] == "schedule")
+    - keys = [:schedule_type, has_schedule_time ? :schedule_time : nil, :stateless].compact
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Schedule Info"),
+        :prefix                     => prefix,
+        :keys                       => keys})
+    - keys = [:vm_auto_start, :retirement, :retirement_warn]
+    = render(:partial => "#{prefix}prov_dialog_fieldset",
+      :locals         => {:workflow => wf,
+        :dialog                     => dialog,
+        :label                      => _("Lifespan"),
+        :prefix                     => prefix,
+        :keys                       => keys})

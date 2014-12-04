@@ -1,0 +1,6 @@
+#main_div
+  = render :partial => "layouts/flash_msg"
+  - if @showtype == "main"
+    = render :partial => "request"
+  - elsif @showtype == "miq_provisions"
+    = render :partial => "provisions"
