@@ -123,10 +123,6 @@ module VirtualFields
   # Virtual Reflections
   #
 
-  def virtual_reflection(macro, name, options = {})
-    add_virtual_reflection(macro, name, options)
-  end
-
   def virtual_has_one(name, options = {})
     add_virtual_reflection(:has_one, name, options)
   end
