@@ -16,8 +16,7 @@ module Ext3
 		end
 		
 		def globNames
-      return @ent_names unless @ent_names.nil?
-			@ent_names = globEntries.collect {|k, v| v.length == 1 ? k : [k] * v.length }.flatten.sort
+      @ent_names ||= globEntries.keys.compact.sort
 		end
 		
 		def findEntry(name, type = nil)
