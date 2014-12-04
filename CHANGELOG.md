@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 16 end 2014-12-02
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3Aenhancement)
+
+- Rest API
+  - Added support for accounts sub-collection /api/vms/#/accounts
+  - Added support for software sub-collection /api/vms/#/software
+- Providers: Amazon Events
+  - Enables event-based policies for AWS
+- UI: Continued work on supporting I18N
+- IPv6 support
+  - VMware communication (complete)
+  - RHEVM/oVirt communication (in progress)
+  
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3Aenhancement)
+
+- UI: jqPlot, default charts, chart styling
+- Cloud Orchestration: Modeling complete
+- Services
+  - Dialog seeding for imports
+  - Service provisioning request overrides
+- Automate Enhancements
+  - Specify zone for web service automation request
+  - Request message override
+- LDAP
+  - Allow undefined users to log in when “Get User Groups from LDAP” is disabled
+  - Ability to set default group for LDAP Authentication
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3A%22technical+debt%22)
+
+- SmartProxy (host) directory
+- Rails Fork removal
+  - Backport disable_ddl_transaction! from Rails master to our fork
+  - Update the main app to use disable_ddl_transaction!
+  - Add bigserial support for primary keys to Rails (including table creation and FK column creation)
+  - Backport bigserial API to our fork
+  - Update application to use new API
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3Abug)
+
+- 44 issues fixed. 
+- Notable fixes include:
+  - Fixed issue where deleting a cluster or host tries to delete all policy_events, thus never completing when there are millions of events.
+  - Fixed inheriting tags from resource pool.
+  - Fixed openstack provisioning to deal with multiple security groups with the same name.
+  - Fixed seeding of VmdbDatabase timing out with millions of vmdb_metrics rows
 
 ## Unreleased - as of Sprint 15 end 2014-11-10
 
