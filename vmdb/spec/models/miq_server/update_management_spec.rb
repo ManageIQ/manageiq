@@ -87,12 +87,12 @@ describe MiqServer do
     end
 
     it "should enable the repo if not enabled" do
-      reg_system.should_receive(:enabled_repos).and_return([])
-      reg_system.should_receive(:enable_repo).twice
       @server.should_receive(:register).and_return(true)
       @server.should_receive(:attach_products)
+      reg_system.should_receive(:enabled_repos).and_return([], [], database.update_repo_name.split)
+      @server.should_receive(:enable_repos).twice
 
-      expect(@server.attempt_registration).to be_true
+      @server.attempt_registration
     end
   end
 
