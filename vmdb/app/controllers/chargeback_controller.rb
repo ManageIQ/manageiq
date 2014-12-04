@@ -165,10 +165,10 @@ class ChargebackController < ApplicationController
           replace_right_cell([:cb_rates])
         else
           @sb[:rate].errors.each do |field,msg|
-            add_flash("#{field.to_s.capitlize} #{msg}", :error)
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @sb[:rate_details].each do |detail|
-            detail.errors.each {|field,msg| add_flash("'#{detail.description}' #{field.to_s.capitlize} #{msg}", :error)}
+            detail.errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error) }
           end
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
           render :update do |page|

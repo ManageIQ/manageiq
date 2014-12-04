@@ -1,4 +1,5 @@
 - url = url_for(:action=>'cb_rate_form_field_changed', :id=>"#{@sb[:rate].id || "new"}")
+= render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
 #form_div
   %fieldset
     %p.legend=_('Basic Info')
