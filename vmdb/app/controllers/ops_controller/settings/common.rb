@@ -625,7 +625,7 @@ module OpsController::Settings::Common
 
     params = self.params
     new = @edit[:new]
-    auth = new[:authentication]
+    auth = new[:authentication] unless @sb[:active_tab] == "settings_workers"
 
     # WTF? here we can have a Zone or a MiqServer, what about Region? --> rescue from exception
     @temp[:selected_server] = (cls.find(from_cid(nodes.last)) rescue nil)
