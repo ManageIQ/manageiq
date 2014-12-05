@@ -849,6 +849,8 @@ en:
       guest_os: Guest OS
       guid: EVM Unique ID (Guid)
       has_rdm_disk: Has an RDM Disk?
+      health_state: Health State Code
+      health_state_str: Health State
       homedir: Home Directory
       host_name: Parent Host
       hostnames: Host Names
@@ -862,6 +864,7 @@ en:
       last_scan_attempt_on: Last Analysis Attempt On
       last_scan_on: Last Analysis Time
       last_sync_on: Last Sync Time
+      last_update_status: Last Update Status Code
       last_update_status_str: Last Update Status
       ldap_group: LDAP Group
       logical_cpus: Number of CPU Cores
@@ -975,6 +978,8 @@ en:
       num_disks: Number of Disks
       num_hard_disks: Number of Hard Disks
       numvcpus: Number of CPUs
+      operational_status: Operational Status Code
+      operational_status_str: Operational Status
       os_image_name: OS Name
       other_latency: Usage (Other) - Time for Other Operations Avg
       other_latency_max: Usage (Other) - Time for Other Operations Avg Max
