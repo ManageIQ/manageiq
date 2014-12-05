@@ -9,7 +9,6 @@ class EmsEventHelper
     before_handle
 
     handle_event
-    #record_blackbox_event
     handle_alert_event
     handle_alarm_event
     handle_automation_event
@@ -166,46 +165,4 @@ class EmsEventHelper
     alarm_event = "#{@event.event_type}_#{ems_id}_#{alarm_mor}"
     MiqEvent.raise_evm_alert_event_queue(target, alarm_event)
   end
-
-  # def record_blackbox_event(recordSrc=true, recordDest=true)
-  #   if recordSrc or recordDest
-  #     if @srcVm.nil?
-  #       @srcVm = Vm.find_by_id(self.src_vm_id) if self.src_vm_id
-  #       @srcVm = Vm.find_by_path(self.src_vm_location) if @srcVm.nil? and self.src_vm_location
-  #     end
-  #
-  #     if @destVm.nil?
-  #       @destVm = Vm.find_by_id(self.dest_vm_id) if self.dest_vm_id
-  #       @destVm = Vm.find_by_path(self.dest_vm_location) if @destVm.nil? and self.dest_vm_location
-  #     end
-  #
-  #     if recordSrc and @srcVm
-  #       # Using strings as keys here as self.attributes returns a hash keyed on strings
-  #       eventData = {
-  #         "table_name"  => VmCfgmgtEvent.table_name,
-  #         "status"      => "ok",
-  #         "src_vm_guid" => @srcVm.guid
-  #       }
-  #       eventData["dest_vm_guid"] = @destVm.guid if @destVm
-  #       eventData.merge!(self.attributes)
-  #
-  #       @srcVm.record_blackbox_event(eventData)
-  #     end
-  #
-  #     if recordDest and @destVm
-  #       # Using strings as keys here as self.attributes returns a hash keyed on strings
-  #       eventData = {
-  #         "table_name"   => VmCfgmgtEvent.table_name,
-  #         "status"       => "ok",
-  #         "dest_vm_guid" => @destVm.guid
-  #       }
-  #       eventData["src_vm_guid"] = @srcVm.guid if @srcVm
-  #       eventData.merge!(self.attributes)
-  #
-  #       @destVm.record_blackbox_event(eventData)
-  #     end
-  #   end
-  #
-  #   @srcVm = @destVm = nil
-  # end
 end
