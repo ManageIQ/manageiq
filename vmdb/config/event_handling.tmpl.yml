@@ -1350,6 +1350,7 @@ filtered_events:
   USER_REMOVE_VG_FAILED:
   USER_VDC_LOGIN:
   USER_VDC_LOGOUT:
+  USER_VDC_LOGIN_FAILED:
   UserLoginSessionEvent:
   UserLogoutSessionEvent:
   scheduler.run_instance.start:             # OpenStack filtered events
