@@ -20,7 +20,7 @@ class ApiController
       }
 
       queue_options = {
-        :class_name  => options[:class_name],
+        :class_name  => options[:class_name] || object.class.name,
         :method_name => options[:method_name],
         :instance_id => object.id,
         :args        => options[:args] || [],

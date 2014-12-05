@@ -26,7 +26,7 @@ class ApiController
       if @req[:subcollection]
         delete_subcollection_resource @req[:subcollection].to_sym, @req[:s_id]
       else
-        delete_resource type, @req[:c_id]
+        send(target_resource_method(false, type, :delete), type, @req[:c_id])
       end
       render_normal_destroy
     end
@@ -73,13 +73,10 @@ class ApiController
       cspec = collection_config[type]
       klass = cspec[:klass].constantize
       id  ||= @req[:c_id]
-      if id
-        api_log_info("Destroying #{type} id #{id}")
-        resource_search(id, type, klass)
-        klass.destroy(id)
-      else
-        raise BadRequestError, "Must specify and id for destroying a #{type} resource"
-      end
+      raise BadRequestError, "Must specify and id for deleting a #{type} resource" unless id
+      api_log_info("Deleting #{type} id #{id}")
+      resource_search(id, type, klass)
+      delete_resource_action(klass, type, id)
     end
 
     def retire_resource(type, id, data = nil)
@@ -123,6 +120,18 @@ class ApiController
           end
         end
       end
+    end
+
+    def delete_resource_action(klass, type, id)
+      result = begin
+          klass.destroy(id)
+          action_result(true, "#{type} id: #{id} deleting")
+        rescue => err
+          action_result(false, err.to_s)
+        end
+      add_href_to_result(result, type, id)
+      log_result(result)
+      result
     end
   end
 end

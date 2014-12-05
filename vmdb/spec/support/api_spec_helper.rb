@@ -19,7 +19,7 @@ module ApiSpecHelper
 
   def parse_response
     @code    = last_response.status
-    @result  = JSON.parse(last_response.body)
+    @result  = (@code != 204) ? JSON.parse(last_response.body) : {}
     @success = @code < 400
     @status  = API_STATUS[@code] || (@success ? 200 : 400)
     @message = @result.fetch_path("error", "message").to_s
@@ -43,6 +43,11 @@ module ApiSpecHelper
 
   def run_post(url, body = {}, headers = {})
     post url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    parse_response
+  end
+
+  def run_delete(url, headers = {})
+    delete url, {}, update_headers(headers)
     parse_response
   end
 

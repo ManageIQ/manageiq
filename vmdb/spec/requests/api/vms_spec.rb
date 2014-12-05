@@ -441,4 +441,90 @@ describe ApiController do
       expect(results.all? { |r| r.key?("task_href") }).to be_true
     end
   end
+
+  context "Vm delete action" do
+    it "deletes an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :delete))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:delete))
+
+      expect(@success).to be_false
+      expect(@code).to eq(404)
+    end
+
+    it "deletes a vm via a resource POST without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:delete))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "deletes a vm via a resource DELETE without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_delete("#{@cfme[:vms_url]}/999999")
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "deletes a vm via a resource POST" do
+      update_user_role(@role, action_identifier(:vms, :delete))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:delete))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_true
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("deleting")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+      expect(@result).to have_key("task_id")
+      expect(@result).to have_key("task_href")
+    end
+
+    it "deletes a vm via a resource DELETE" do
+      update_user_role(@role, action_identifier(:vms, :delete))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_delete(vm_url)
+
+      expect(@success).to be_true
+      expect(@code).to eq(204)
+    end
+
+    it "deletes multiple vms" do
+      update_user_role(@role, action_identifier(:vms, :delete))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryGirl.create(:vm_vmware)
+
+      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
+      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+
+      @success = run_post(@cfme[:vms_url], gen_request(:delete, vm1_url, vm2_url))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(2)
+      expect(results.all? { |r| r["success"] }).to be_true
+      expect(results.all? { |r| r.key?("task_id") }).to be_true
+      expect(results.all? { |r| r.key?("task_href") }).to be_true
+    end
+  end
 end
