@@ -82,8 +82,12 @@ describe Authentication do
 
     context "with a host and ems" do
       before(:each) do
-        @host = FactoryGirl.create(:host_with_authentication)
-        @ems  = FactoryGirl.create(:ems_vmware_with_authentication)
+        @host                 = FactoryGirl.create(:host_with_authentication)
+        @ems                  = FactoryGirl.create(:ems_vmware_with_authentication)
+        @provider_conn        = FactoryGirl.create(:provider_connection_with_authentication)
+        @provider_conn.ems_id = @ems.id
+        @ems.stub(:provider_connection).and_return(@provider_conn)
+
         MiqQueue.destroy_all
         @auth = @ems.authentication_best_fit(:default)
         @orig_ems_user, @orig_ems_pwd = @ems.auth_user_pwd(:default)
@@ -167,7 +171,7 @@ describe Authentication do
       end
 
       it "should have invalid authentication ems's authentication is nil" do
-        @ems.authentications = []
+        @provider_conn.authentications = []
         @ems.authentication_invalid?.should be_true
       end
 
@@ -201,6 +205,7 @@ describe Authentication do
 
       it "should have default authentication_type?" do
         @host.has_authentication_type?(:default).should be_true
+        @ems.stub(:provider_connection).and_return(@provider_conn)
         @ems.has_authentication_type?(:default).should be_true
       end
 
@@ -267,7 +272,7 @@ describe Authentication do
         it "should queue a raise authentication incomplete event when doing authentication_check" do
           @ems.authentication_check
           events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
-          args = [ [@ems.class.name, @ems.id], 'ems_auth_incomplete', {}]
+          args = [ [@provider_conn.class.name, @provider_conn.id], 'provider connection_auth_incomplete', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
       end
@@ -311,7 +316,7 @@ describe Authentication do
         it "should queue a raise authentication invalid event when doing authentication_check" do
           @ems.authentication_check
           events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
-          args = [ [@ems.class.name, @ems.id], 'ems_auth_invalid', {}]
+          args = [ [@provider_conn.class.name, @provider_conn.id], 'provider connection_auth_invalid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
       end
@@ -355,7 +360,7 @@ describe Authentication do
         it "should queue a raise authentication valid event when doing authentication_check" do
           @ems.authentication_check
           events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
-          args = [ [@ems.class.name, @ems.id], 'ems_auth_valid', {}]
+          args = [ [@provider_conn.class.name, @provider_conn.id], 'provider connection_auth_valid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
       end
@@ -399,7 +404,7 @@ describe Authentication do
         it "should queue a raise ems authentication unreachable event when doing authentication_check" do
           @ems.authentication_check
           events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
-          args = [ [@ems.class.name, @ems.id], 'ems_auth_unreachable', {}]
+          args = [ [@provider_conn.class.name, @provider_conn.id], 'provider connection_auth_unreachable', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
       end
@@ -443,7 +448,7 @@ describe Authentication do
         it "should queue a raise ems authentication error event when doing authentication_check" do
           @ems.authentication_check
           events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
-          args = [ [@ems.class.name, @ems.id], 'ems_auth_invalid', {}]
+          args = [ [@provider_conn.class.name, @provider_conn.id], 'provider connection_auth_invalid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
       end
@@ -487,7 +492,7 @@ describe Authentication do
         it "should queue a raise ems authentication error event when doing authentication_check" do
           @ems.authentication_check
           events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
-          args = [ [@ems.class.name, @ems.id], 'ems_auth_error', {}]
+          args = [ [@provider_conn.class.name, @provider_conn.id], 'provider connection_auth_error', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
       end
@@ -507,7 +512,9 @@ describe Authentication do
 
       it "should NOT change credentials if save false" do
         @ems.update_authentication(@data, :save => false)
+        @provider_conn.reload
         @ems.reload.auth_user_pwd(:default).should == [@orig_ems_user, @orig_ems_pwd]
+
       end
 
       it "should change credentials if save nil" do
@@ -538,7 +545,7 @@ describe Authentication do
       it "should queue a raise authentication change event when calling update_authentication" do
         @ems.update_authentication(@data, :save => true)
         events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
-        args = [ [@ems.class.name, @ems.id], 'ems_auth_changed', {}]
+        args = [ [@provider_conn.class.name, @provider_conn.id], 'provider connection_auth_changed', {}]
         events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
       end
 
@@ -569,7 +576,7 @@ describe Authentication do
       context "with saved authentications" do
         before(:each) do
           @ems.update_authentication(@data, :save => true)
-          @conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
+          @conditions = {:class_name => @provider_conn.class.name, :instance_id => @provider_conn.id, :method_name => 'authentication_check_types', :role => @provider_conn.authentication_check_role}
           @queued_auth_checks = MiqQueue.find(:all, :conditions => @conditions)
         end
 
@@ -584,7 +591,7 @@ describe Authentication do
         end
 
         it "should call authentication_check when processing the validation check" do
-          EmsVmware.any_instance.should_receive(:authentication_check)
+          ProviderConnection.any_instance.should_receive(:authentication_check)
           @queued_auth_checks.first.deliver
         end
       end

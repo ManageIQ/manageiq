@@ -451,8 +451,18 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def authentications_by_class(class_name)
-    return provider_connection.authentications if class_name.nil? || class_name == AUTH_BASE_CLASS
+    return authentications if class_name.nil? || class_name == AUTH_BASE_CLASS
     klass = class_name.constantize
-    provider_connection.authentications.select { |a| a.kind_of?(klass) }
+    authentications.select { |a| a.kind_of?(klass) }
   end
+
+  def authentications
+    provider_connection.authentications <<
+      Authentication.where(resource_id: self.id, resource_type: self.class.base_class.name)
+  end
+
+  def authentications=(auths)
+    provider_connection.authentications = auths
+  end
+
 end

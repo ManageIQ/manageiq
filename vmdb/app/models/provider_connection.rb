@@ -33,4 +33,8 @@ class ProviderConnection < ActiveRecord::Base
   def hostname_ipaddress_required?
     true
   end
+
+  def authentication_check_role
+    'ems_operations'
+  end
 end
