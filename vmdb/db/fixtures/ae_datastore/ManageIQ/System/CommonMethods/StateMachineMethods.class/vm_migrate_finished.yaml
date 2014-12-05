@@ -9,4 +9,5 @@ object:
     description: 
   fields:
   - execute:
-      value: task_finished(object => 'vm_migrate_task', message => 'VM Migrated Successfully' )  
+      value: task_finished(object => 'vm_migrate_task', message => 'VM Migrated Successfully'
+        )

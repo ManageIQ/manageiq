@@ -29,7 +29,7 @@ object:
       on_exit: 
       on_error: 
       max_retries: 
-      max_time:   
+      max_time: 
   - field:
       aetype: 
       name: message
@@ -49,4 +49,4 @@ object:
       on_exit: 
       on_error: 
       max_retries: 
-      max_time:   
+      max_time: 
