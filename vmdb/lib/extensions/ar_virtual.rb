@@ -152,7 +152,7 @@ module VirtualFields
   %w{columns_hash columns column_names column_names_symbols reflections}.each do |m|
     define_method("virtual_#{m}") do
       inherited = self.send("inherited_virtual_#{m}")
-      op = inherited.kind_of?(Hash) ? :merge : :"+"
+      op = inherited.kind_of?(Hash) ? :merge : :"|"
       inherited.send(op, self.send("_virtual_#{m}"))
     end
   end
@@ -160,7 +160,7 @@ module VirtualFields
   %w{columns_hash columns column_names column_names_symbols}.each do |m|
     define_method("#{m}_with_virtual") do
       inherited = self.send("inherited_#{m}_with_virtual")
-      op = inherited.kind_of?(Hash) ? :merge : :"+"
+      op = inherited.kind_of?(Hash) ? :merge : :"|"
       inherited.send(op, self.send("_virtual_#{m}"))
     end
   end

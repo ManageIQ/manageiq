@@ -692,3 +692,29 @@ describe VirtualFields do
     end
   end
 end
+
+describe "ActiveRecord::Base class" do
+  context "class immediately under ActiveRecord::Base" do
+    it ".virtual_column_names" do
+      result = Host.virtual_column_names
+      expect(result.count("region_number")).to eq(1)
+    end
+
+    it ".column_names_with_virtual" do
+      result = ExtManagementSystem.column_names_with_virtual
+      expect(result.count("region_number")).to eq(1)
+    end
+  end
+
+  context "class not immediately under ActiveRecord::Base" do
+    it ".virtual_column_names" do
+      result = MiqTemplate.virtual_column_names
+      expect(result.count("region_number")).to eq(1)
+    end
+
+    it ".column_names_with_virtual" do
+      result = EmsCloud.column_names_with_virtual
+      expect(result.count("region_number")).to eq(1)
+    end
+  end
+end
