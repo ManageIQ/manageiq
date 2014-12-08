@@ -31,10 +31,6 @@ class StorageManager < ActiveRecord::Base
     :MiqCimVirtualMachine
   ]
 
-  def initialize(options={})
-    super()
-  end
-
   def self.new_of_type(typ, options={})
     klass = typ.constantize
     options.symbolize_keys!
