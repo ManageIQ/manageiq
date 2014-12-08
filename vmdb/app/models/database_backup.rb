@@ -1,6 +1,4 @@
 class DatabaseBackup < ActiveRecord::Base
-  belongs_to :miq_region
-
   SUPPORTED_DEPOTS = {
     'smb' => 'Samba',
     'nfs' => 'Network File System'

@@ -10,7 +10,7 @@ class MiqRegion < ActiveRecord::Base
   has_many :miq_servers,            :finder_sql => lambda { |_| MiqServer.in_region(region_number).to_sql }
   has_many :active_miq_servers,     :finder_sql => lambda { |_| MiqServer.in_region(region_number).where(:status => ['started', 'starting']).to_sql }, :class_name => "MiqServer"
 
-  has_many :database_backups, :dependent => :destroy
+  has_many :database_backups, :dependent => :destroy, :finder_sql => lambda { |_| DatabaseBackup.in_region(region_number).to_sql }
 
   has_many :metrics,        :as => :resource # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger

@@ -39,13 +39,6 @@ describe DatabaseBackup do
       DatabaseBackup.region_name
     end
 
-    it "should set region_name to region if database backup has a region" do
-      backup = FactoryGirl.create(:database_backup, :miq_region_id => @region.id)
-      backup.should_receive(:miq_region).once.and_return(@region)
-      backup.region_name.should == "region_#{@region.region}"
-      backup.region_name.should == "region_#{@region.region}"
-    end
-
     it "should set region_name to region_unknown if database backup has no region" do
       backup = FactoryGirl.create(:database_backup)
       backup.region_name.should == "region_unknown"
