@@ -26,6 +26,11 @@ module Amazon
           :hostname    => "ec2.eu-west-1.amazonaws.com",
           :description => "EU (Ireland)",
         },
+        "eu-central-1" => {
+          :name        => "eu-central-1",
+          :hostname    => "ec2.eu-central-1.amazonaws.com",
+          :description => "EU (Frankfurt)",
+        },
         "ap-southeast-1" => {
           :name        => "ap-southeast-1",
           :hostname    => "ec2.ap-southeast-1.amazonaws.com",
