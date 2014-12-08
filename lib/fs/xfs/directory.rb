@@ -29,7 +29,7 @@ module XFS
     end
 
     def glob_names
-      @ent_names ||= glob_entries.collect { |k, v| v.length == 1 ? k : [k] * v.length }.flatten.sort
+      @ent_names ||= glob_entries.keys.compact.sort
     end
 
     def find_entry(name, type = nil)

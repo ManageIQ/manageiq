@@ -22,7 +22,7 @@ module Ext4
     end
 
     def globNames
-      @ent_names ||= globEntries.collect {|k, v| v.length == 1 ? k : [k] * v.length }.flatten.sort
+      @ent_names ||= globEntries.keys.compact.sort
     end
 
     def findEntry(name, type = nil)
