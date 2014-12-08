@@ -54,7 +54,7 @@ class DialogFieldRadioButton < DialogFieldSortedItem
 
   def raw_values
     if dynamic
-      @raw_values ||= values_from_automate
+      @raw_values = values_from_automate
     else
       @raw_values = super
     end

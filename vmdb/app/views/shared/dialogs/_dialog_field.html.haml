@@ -100,12 +100,12 @@
             - else
               - values = field.values
               - values = [['', '<None>']] + values if !field.required
-              - field.values.each_with_index do |rb, i|
+              - values.each_with_index do |rb, i|
                 %input{:type     => 'radio',
                        :id       => field.id,
                        :value    => rb[0],
                        :name     => field.name,
-                       :checked  => wf.value(field.name) == rb[0] ? '' : nil,
+                       :checked  => field.default_value == rb[0].to_s ? '' : nil,
                        :onclick  => remote_function(:with     => 'Form.Element.serialize(this)',
                                                     :url      => { :action => 'dialog_field_changed',
                                                                    :id     => "#{(@edit && @edit[:rec_id]) || "new"}"},
@@ -114,19 +114,18 @@
                   &nbsp;
                   = rb[1]
                   &nbsp;
-
-              - if field.dynamic && field.show_refresh_button?
-                = button_tag('Refresh',
-                             :onclick  => remote_function(:url      => { :action => 'dynamic_list_refresh',
-                                                                         :id     => field.name },
-                                                          :loading  => "miqSparkle(true);",
-                                                          :complete => "miqSparkle(false);"))
-
           - else
             = h(field.values[0].last) if !field.values.empty?
+
         - else
           = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
 
+        - if field.dynamic && field.show_refresh_button?
+          = button_tag('Refresh',
+                       :onclick  => remote_function(:url      => { :action => 'dynamic_list_refresh',
+                                                                   :id     => field.name },
+                                                    :loading  => "miqSparkle(true);",
+                                                    :complete => "miqSparkle(false);"))
 
       - when 'DialogFieldButton'
         = button_tag("Save",
