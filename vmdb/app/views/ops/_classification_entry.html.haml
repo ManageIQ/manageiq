@@ -1,0 +1,46 @@
+- if edit
+  - if entry == "new"
+    %tr#new_tr{:class => cycle('row0', 'row1')}
+      %td
+        = image_submit_tag("/images/toolbars/import.png",
+          :class=>"rollover small",
+          :id=>"accept", :name=>"accept", :alt=>"Add this entry", :title=>"Add this entry")
+      %td.all
+        = text_field("entry", "name", :maxlength=>MAX_NAME_LEN)
+      %td.all
+        = text_field("entry", "description", :maxlength=>MAX_DESC_LEN)
+  - else
+    %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
+      %td
+        = image_submit_tag("/images/toolbars/import.png",
+          :class=>"rollover small",
+          :id=>"accept", :name=>"accept", :alt=>"Update this entry", :title=>"Update this entry")
+      %td.all
+        = text_field("entry", "name", :maxlength=>MAX_NAME_LEN, "value"=>entry.name)
+      %td.all
+        = text_field("entry", "description", :maxlength=>MAX_DESC_LEN, "value"=>entry.description)
+      /
+        <td>
+        <haml:silent>
+        </haml:silent>			</td>
+        <td></td>
+- else
+  - if entry == "new"
+    %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ce_select', :id=>'new'}), :title => "Click to add a new entry"}
+      %td.icon
+        %ul.icons
+          %li
+            %span.glyphicon.glyphicon-plus
+      %td
+        = h("<New Entry>")
+      %td= h("<Click on this row to create a new entry>")
+  - else
+    %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
+      %td.icon{:onclick => remote_function(:url=>{:action=>'ce_delete', :id=>entry.id}, :confirm=>"Deleting the '#{entry.name}' entry will also unassign it from all items, are you sure?"), :title => "Click to delete this entry"}
+        %ul.icons
+          %li
+            %span.pficon.pficon-delete
+      %td{:onclick => remote_function(:url=>{:action=>'ce_select', :id=>entry.id, :field=>"name"}), :title => "Click to update this entry"}
+        = entry.name
+      %td{:onclick => remote_function(:url=>{:action=>'ce_select', :id=>entry.id, :field=>"description"}), :title => "Click to update this entry"}
+        = entry.description
