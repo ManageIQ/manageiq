@@ -1,5 +1,5 @@
 class MiqAeDomain < MiqAeNamespace
-  default_scope where(:parent_id => nil).where(arel_table[:name].not_eq("$"))
+  default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
   validates_inclusion_of :parent_id, :in => [nil], :message => 'should be nil for Domain'
   after_destroy :squeeze_priorities
   default_value_for(:priority) { MiqAeDomain.highest_priority + 1 }

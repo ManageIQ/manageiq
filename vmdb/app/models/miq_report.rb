@@ -11,7 +11,7 @@ class MiqReport < ActiveRecord::Base
   include_concern 'Search'
   include YAMLImportExportMixin
 
-  default_scope :conditions => self.conditions_for_my_region_default_scope
+  default_scope { where self.conditions_for_my_region_default_scope }
 
   serialize :cols
   serialize :conditions

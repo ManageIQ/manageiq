@@ -4,7 +4,7 @@ class Vm < VmOrTemplate
     VmCloud
   }
 
-  default_scope where(:template => false)
+  default_scope { where(:template => false) }
 
   include_concern 'Operations'
 

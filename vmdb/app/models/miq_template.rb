@@ -4,7 +4,7 @@ class MiqTemplate < VmOrTemplate
     TemplateCloud
   }
 
-  default_scope where(:template => true)
+  default_scope { where(:template => true) }
 
   include_concern 'Operations'
 

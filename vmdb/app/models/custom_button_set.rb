@@ -1,7 +1,7 @@
 class CustomButtonSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope :conditions => self.conditions_for_my_region_default_scope
+  default_scope  { where self.conditions_for_my_region_default_scope }
 
   def self.find_all_by_class_name(class_name, class_id=nil)
     if class_name == "ServiceTemplate"

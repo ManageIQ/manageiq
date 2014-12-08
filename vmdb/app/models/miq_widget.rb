@@ -3,7 +3,7 @@
 require 'simple-rss'
 
 class MiqWidget < ActiveRecord::Base
-  default_scope :conditions => self.conditions_for_my_region_default_scope
+  default_scope { where self.conditions_for_my_region_default_scope }
 
   default_value_for :enabled, true
   default_value_for :read_only, false
