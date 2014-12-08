@@ -198,17 +198,6 @@ describe VirtualFields do
         TestClass.virtual_columns_hash.values.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
       end
 
-      it "with a VirtualColumn" do
-        TestClass.virtual_columns = {
-          :vcol1  => VirtualColumn.new(:vcol1,  :type => :string),
-          "vcol2" => VirtualColumn.new("vcol2", :type => :string)
-        }
-
-        TestClass.virtual_columns_hash.length.should == 2
-        TestClass.virtual_columns_hash.keys.should match_array(["vcol1", "vcol2"])
-        TestClass.virtual_columns_hash.values.all? { |c| c.kind_of?(VirtualColumn) }.should be_true
-      end
-
       it "with existing virtual columns" do
         TestClass.virtual_column :existing_vcol, :type => :string
 
@@ -460,17 +449,6 @@ describe VirtualFields do
         TestClass.virtual_reflections = {
           :vref1  => {:macro => :has_one},
           "vref2" => {:macro => :has_many},
-        }
-
-        TestClass.virtual_reflections.length.should == 2
-        TestClass.virtual_reflections.keys.should match_array([:vref1, :vref2])
-        TestClass.virtual_reflections.values.all? { |c| c.kind_of?(VirtualReflection) }.should be_true
-      end
-
-      it "with a VirtualReflection" do
-        TestClass.virtual_reflections = {
-          :vref1  => VirtualReflection.new(:has_one, :vref1, {}, TestClass),
-          "vref2" => VirtualReflection.new(:has_one, "vref2", {}, TestClass)
         }
 
         TestClass.virtual_reflections.length.should == 2
