@@ -16,7 +16,7 @@
     :url: 'explorer'
     :url_parms: '?type=hybrid'
   - :buttonTwoState: view_tabular
-    :image: view_textual
+    :image: view_list
     :title: "Tabular View"
     :url: 'explorer'
     :url_parms: '?type=tabular'
