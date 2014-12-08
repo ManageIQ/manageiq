@@ -44,6 +44,10 @@ class OrchestrationTemplate < ActiveRecord::Base
     includes(:stacks).where(OrchestrationStack.arel_table[:orchestration_template_id].eq(nil))
   end
 
+  def parameter_groups
+    raise NotImplementedError, "parameter_groups must be implemented in subclass"
+  end
+
   private
 
   def ems_ref=(_md5)

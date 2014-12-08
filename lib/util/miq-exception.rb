@@ -100,4 +100,6 @@ module MiqException
 
   class MiqGitEntryMissing < Error; end
   class MiqGitRepositoryMissing < Error; end
+
+  class MiqParsingError < Error; end
 end
