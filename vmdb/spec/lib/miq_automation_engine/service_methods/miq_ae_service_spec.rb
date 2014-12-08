@@ -110,7 +110,8 @@ module MiqAeServiceSpec
             result_hash.should be_kind_of(Hash)
             result_hash.length.should == 1
             key = "/#{@domain}/EVM/AUTOMATE/test1"
-            result_hash.keys.should == [key]
+            [key].should match_string_array_ignorecase(result_hash.keys)
+            key = result_hash.keys.first
             result_hash[key].should be_kind_of(Hash)
             result_hash[key].length.should == 3
           end
