@@ -1,4 +1,4 @@
-if Rails.env.test?
+if !Rails.env.development? && !Rails.env.production?
   Vmdb::Application.config.session_store :memory_store
 elsif MiqEnvironment::Process.is_web_server_worker?
   session_options = {}
