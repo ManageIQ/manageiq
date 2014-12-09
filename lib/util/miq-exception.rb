@@ -89,4 +89,15 @@ module MiqException
   class MiqDatabaseBackupInsufficientSpace < Error; end
 
   class RbacPrivilegeException < Error; end
+
+  class MiqGitConflicts < Error
+    attr_reader :conflicts
+    def initialize(conflicts)
+      @conflicts = conflicts
+      super
+    end
+  end
+
+  class MiqGitEntryMissing < Error; end
+  class MiqGitRepositoryMissing < Error; end
 end
