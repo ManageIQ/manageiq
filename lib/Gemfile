@@ -35,7 +35,7 @@ gem "Platform",             "=0.4.0",    :require => false
 gem "rubyzip",              "=0.9.5",    :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
 gem "rufus-lru",            "~>1.0.3",   :require => false
 gem "uuidtools",            "~>2.1.3",   :require => false
-gem "sass",                 "3.4.9",     :require => false
+gem "sass",                 "3.1.20",    :require => false
 gem "trollop",              "~>1.16.2",  :require => false
 
 # qpid group is needed to gate the inclusion of qpid_messaging gem on platforms
