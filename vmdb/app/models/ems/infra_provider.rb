@@ -1,5 +1,5 @@
 module Ems
-class InfraProvider < ExtManagementSystem
+class InfraProvider < BaseProvider
   ::EmsInfra = self # XXX
 
   SUBCLASSES = %w{

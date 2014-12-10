@@ -1,5 +1,5 @@
 module Ems
-class CloudProvider < ExtManagementSystem
+class CloudProvider < BaseProvider
   ::EmsCloud = self # XXX
 
   SUBCLASSES = %w{
