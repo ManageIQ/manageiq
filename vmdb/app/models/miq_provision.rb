@@ -40,7 +40,7 @@ class MiqProvision < MiqRequestTask
 
   DEFAULT_IMPORT = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
   PROVISION_AE_CLASSES = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
-  SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
+  SUPPORTED_EMS_CLASSES = %w{Ems::VmwareProvider EmsRedhat EmsAmazon EmsOpenstack}
 
   virtual_belongs_to :miq_provision_request
   virtual_belongs_to :vm

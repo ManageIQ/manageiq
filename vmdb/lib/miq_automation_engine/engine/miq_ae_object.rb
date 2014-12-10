@@ -603,10 +603,12 @@ module MiqAeEngine
       return value.gsub(/[\[\]]/,'').strip.split(/\s*,\s*/)  if datatype == 'array' && value.class == String
       return MiqAePassword.new(MiqAePassword.decrypt(value)) if datatype == 'password'
 
-      begin
-        service_model = MiqAeMethodService.const_get("MiqAeService#{SM_LOOKUP[datatype]}")
-        return service_model.find(value)
-      rescue NameError
+      if (const_name = datatype && "MiqAeService#{SM_LOOKUP[datatype]}")
+        begin
+          service_model = MiqAeMethodService.const_get(const_name)
+          return service_model.find(value)
+        rescue NameError
+        end
       end
 
       # default datatype => 'string'

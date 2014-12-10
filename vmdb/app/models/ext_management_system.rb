@@ -1,18 +1,18 @@
 class ExtManagementSystem < ActiveRecord::Base
   def self.types
-    [EmsInfra, EmsCloud].collect { |c| c.types }.flatten
+    [Ems::InfraProvider, Ems::CloudProvider].collect { |c| c.types }.flatten
   end
 
   def self.supported_types
-    [EmsInfra, EmsCloud].collect { |c| c.supported_types }.flatten
+    [Ems::InfraProvider, Ems::CloudProvider].collect { |c| c.supported_types }.flatten
   end
 
   def self.leaf_subclasses
-    [EmsInfra, EmsCloud].collect { |c| c.subclasses }.flatten
+    [Ems::InfraProvider, Ems::CloudProvider].collect { |c| c.subclasses }.flatten
   end
 
   def self.supported_subclasses
-    [EmsInfra, EmsCloud].collect { |c| c.supported_subclasses }.flatten
+    [Ems::InfraProvider, Ems::CloudProvider].collect { |c| c.supported_subclasses }.flatten
   end
 
   def self.supported_types_and_descriptions_hash
@@ -122,7 +122,7 @@ class ExtManagementSystem < ActiveRecord::Base
       elsif ost.hypervisor.include?(:rhevm)
         [EmsRedhat, 'RHEV-M']
       else
-        [EmsVmware, 'Virtual Center']
+        [Ems::VmwareProvider, 'Virtual Center']
       end
 
       ems = ems_klass.create(

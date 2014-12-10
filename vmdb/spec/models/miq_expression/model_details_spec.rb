@@ -87,7 +87,7 @@ describe MiqExpression do
   context ".build_relats" do
     it "AvailabilityZone" do
       result = described_class.build_relats("AvailabilityZone")
-      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :path).split(".").last).to eq("ems_cloud")
+      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :path).split(".").last).to eq("ems/cloud_provider")
     end
 
     it "VmInfra" do
