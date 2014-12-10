@@ -1,5 +1,4 @@
 class DialogFieldDynamicList < DialogFieldDropDownList
-
   has_one       :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
