@@ -11,18 +11,21 @@ describe EmsRefresh::Refreshers::VcRefresher do
     EmsVmware.any_instance.stub(:authentication_valid?).and_return(true)
   end
 
-  it "will perform a full refresh" do
+  500.times do |i|
+
+  it "will perform a full refresh #{i}" do
     EmsRefresh.refresh(@ems)
     @ems.reload
 
-    assert_table_counts
-    assert_ems
+    # assert_table_counts
+    # assert_ems
     assert_specific_cluster
-    assert_specific_storage
-    assert_specific_host
-    assert_specific_vm
-    assert_relationship_tree
+    # assert_specific_storage
+    # assert_specific_host
+    # assert_specific_vm
+    # assert_relationship_tree
   end
+end
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
@@ -82,6 +85,8 @@ describe EmsRefresh::Refreshers::VcRefresher do
 
   def assert_specific_cluster
     @cluster = EmsCluster.find_by_name("Testing-Production Cluster")
+    des = @cluster.descendants(:of_type => 'ResourcePool')
+    des[0].name.should == "Default for Cluster Testing-Production Cluster"
     @cluster.should have_attributes(
       :ems_ref                 => "domain-c871",
       :ems_ref_obj             => VimString.new("domain-c871", :ClusterComputeResource, :ManagedObjectReference),
@@ -139,6 +144,17 @@ describe EmsRefresh::Refreshers::VcRefresher do
     @cluster.all_resource_pools_with_default.should include(@rp)
     @cluster.all_resource_pools_with_default.should include(@default_rp)
     @cluster.all_resource_pools.should              include(@rp)
+    #   @cluster.all_resource_pools.should_not          include(@default_rp)
+
+    Rails.logger.level = 0
+    puts
+    @cluster.all_resource_pools_with_default.each do |rp|
+      print "rp: #{rp.id}, #{rp.name}, depth: #{rp.depth}\n"
+    end
+
+    Rails.logger.level = 1
+    print j
+    print @cluster.all_resource_pools.include?(@default_rp)
     @cluster.all_resource_pools.should_not          include(@default_rp)
   end
 
