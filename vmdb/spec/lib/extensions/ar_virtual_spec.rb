@@ -183,15 +183,13 @@ describe VirtualFields do
     end
 
     context ".virtual_columns=" do
-      it "with invalid parameters" do
-        lambda { TestClass.virtual_columns = {:vcol1 => {}} }.should raise_error(ArgumentError)
-      end
-
       it "" do
-        TestClass.virtual_columns = {
+        {
           :vcol1  => {:type => :string},
           "vcol2" => {:type => :string},
-        }
+        }.each do |name, options|
+          TestClass.virtual_column name, options
+        end
 
         TestClass.virtual_columns_hash.length.should == 2
         TestClass.virtual_columns_hash.keys.should match_array(["vcol1", "vcol2"])
@@ -201,10 +199,12 @@ describe VirtualFields do
       it "with existing virtual columns" do
         TestClass.virtual_column :existing_vcol, :type => :string
 
-        TestClass.virtual_columns = {
+        {
           :vcol1  => {:type => :string},
           "vcol2" => {:type => :string},
-        }
+        }.each do |name, options|
+          TestClass.virtual_column name, options
+        end
 
         TestClass.virtual_columns_hash.length.should == 3
         TestClass.virtual_columns_hash.keys.should match_array(["existing_vcol", "vcol1", "vcol2"])
@@ -440,16 +440,14 @@ describe VirtualFields do
       end
     end
 
-    context ".virtual_reflections=" do
-      it "with invalid parameters" do
-        lambda { TestClass.virtual_reflections = {:vref1 => {}} }.should raise_error(ArgumentError)
-      end
-
+    context "virtual_reflection assignment" do
       it "" do
-        TestClass.virtual_reflections = {
+        {
           :vref1  => {:macro => :has_one},
           "vref2" => {:macro => :has_many},
-        }
+        }.each do |name, options|
+          TestClass.send "virtual_#{options[:macro]}", name
+        end
 
         TestClass.virtual_reflections.length.should == 2
         TestClass.virtual_reflections.keys.should match_array([:vref1, :vref2])
@@ -459,10 +457,12 @@ describe VirtualFields do
       it "with existing virtual reflections" do
         TestClass.virtual_has_one :existing_vref
 
-        TestClass.virtual_reflections = {
+        {
           :vref1  => {:macro => :has_one},
           "vref2" => {:macro => :has_many},
-        }
+        }.each do |name, options|
+          TestClass.send "virtual_#{options[:macro]}", name
+        end
 
         TestClass.virtual_reflections.length.should == 3
         TestClass.virtual_reflections.keys.should match_array([:existing_vref, :vref1, :vref2])

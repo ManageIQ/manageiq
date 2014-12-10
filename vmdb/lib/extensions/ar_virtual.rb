@@ -109,12 +109,6 @@ module VirtualFields
     add_virtual_column(name, options)
   end
 
-  def virtual_columns=(column_hash)
-    column_hash.each do |name, options|
-      add_virtual_column(name, options)
-    end
-  end
-
   def virtual_column?(name)
     virtual_columns_hash.has_key?(name.to_s)
   end
@@ -133,12 +127,6 @@ module VirtualFields
 
   def virtual_belongs_to(name, options = {})
     add_virtual_reflection(:belongs_to, name, options)
-  end
-
-  def virtual_reflections=(reflection_hash)
-    reflection_hash.each do |name, options|
-      add_virtual_reflection(options.kind_of?(VirtualReflection) ? options.macro : options[:macro], name, options)
-    end
   end
 
   def virtual_reflection?(name)
