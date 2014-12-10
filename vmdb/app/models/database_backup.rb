@@ -1,6 +1,4 @@
 class DatabaseBackup < ActiveRecord::Base
-  belongs_to :miq_region
-
   SUPPORTED_DEPOTS = {
     'smb' => 'Samba',
     'nfs' => 'Network File System'
@@ -88,19 +86,11 @@ class DatabaseBackup < ActiveRecord::Base
   end
 
   def self.region_name
-    @region_name ||= begin
-      region = MiqRegion.my_region
-      region = region.nil? ? "unknown" : region.region
-      "region_#{region}"
-    end
+    "region_#{my_region_number}"
   end
 
   def region_name
-    @region_name ||= begin
-      region = self.miq_region
-      region = region.nil? ? "unknown" : region.region
-      "region_#{region}"
-    end
+    self.class.region_name
   end
 
   def schedule_name
