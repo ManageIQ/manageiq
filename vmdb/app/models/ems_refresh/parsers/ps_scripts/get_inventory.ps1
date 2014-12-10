@@ -31,6 +31,8 @@ function get_images{
   $i_hash = @{}
   $id = $_.ID
   $i_hash["Properties"] = $_
+  $dvds = Get-SCVirtualDVDDrive -VMTemplate $_ | Select-Object -ExpandProperty "ISO"
+  $i_hash["DVDs"] = $dvds
   $results[$id]= $i_hash
  }
  return $results
