@@ -341,7 +341,10 @@ module EmsRefresh::Parsers
     end
 
     def process_vm_guest_devices(vm)
-      dvdprops   = vm[:Properties][:Props][:VirtualDVDDrives][0][:Props]
+      dvds = vm[:Properties][:Props][:VirtualDVDDrives]
+      return [] if dvds.empty?
+
+      dvdprops   = dvds[0][:Props]
       connection = dvdprops[:Connection]
       devices    = []
 
