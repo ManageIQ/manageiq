@@ -7,7 +7,7 @@ class AvailabilityZone < ActiveRecord::Base
 
   acts_as_miq_taggable
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "EmsCloud"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "Ems::CloudProvider"
   has_many   :vms
   has_many   :vms_and_templates
   has_many   :cloud_volumes

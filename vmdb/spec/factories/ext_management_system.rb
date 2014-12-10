@@ -6,7 +6,7 @@ FactoryGirl.define do
     guid                 { MiqUUID.new_guid }
   end
 
-  factory :ems_vmware, :class => "EmsVmware", :parent => :ext_management_system do
+  factory :ems_vmware, :aliases => ["ems/vmware_provider"], :class => "Ems::VmwareProvider", :parent => :ext_management_system do
   end
 
   factory :ems_vmware_with_authentication, :parent => :ems_vmware do

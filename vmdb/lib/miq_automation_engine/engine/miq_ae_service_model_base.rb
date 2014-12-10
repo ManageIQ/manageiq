@@ -272,3 +272,8 @@ Dir.glob("#{File.dirname(__FILE__)}/../service_models/miq_ae_service_*.rb").each
   f = File.basename(f, '.*')
   MiqAeMethodService.autoload(f.camelize.to_sym, "service_models/#{f}")
 end
+Dir.glob("#{File.dirname(__FILE__)}/../service_models/miq_ae_service_*/*.rb").each do |f|
+  p = File.basename(File.dirname(f))
+  f = File.basename(f, '.*')
+  MiqAeMethodService.const_get(p.camelize.to_sym).autoload(f.camelize.to_sym, "service_models/#{p}/#{f}")
+end

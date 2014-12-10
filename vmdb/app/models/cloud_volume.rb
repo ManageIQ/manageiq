@@ -1,7 +1,7 @@
 class CloudVolume < ActiveRecord::Base
   include NewWithTypeStiMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "EmsCloud"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "Ems::CloudProvider"
   belongs_to :availability_zone
   belongs_to :cloud_tenant
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot'

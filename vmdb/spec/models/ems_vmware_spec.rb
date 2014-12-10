@@ -114,7 +114,7 @@ describe EmsVmware do
   def assert_event_catcher_restart_queued
     q = MiqQueue.all(:conditions => {:method_name => "stop_event_monitor"})
     q.length.should == 1
-    q[0].class_name.should  == "EmsVmware"
+    q[0].class_name.should  == "Ems::VmwareProvider"
     q[0].instance_id.should == @ems.id
     q[0].role.should        == "event"
   end
