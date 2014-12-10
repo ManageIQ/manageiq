@@ -4,6 +4,8 @@
 AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
+ClassCheck:
+  EnforcedStyle: kind_of?
 CollectionMethods:
   PreferredMethods:
     find: detect
@@ -47,10 +49,11 @@ Encoding:
   Enabled: false
 SingleLineBlockParams:
   Enabled: false
+SingleSpaceBeforeFirstArg:
+  Enabled: false
 StringLiterals:
+  Enabled: false
+StringLiteralsInInterpolation:
   Enabled: false
 TrailingComma:
   Enabled: false
-SingleSpaceBeforeFirstArg:
-  Enabled: false
-
