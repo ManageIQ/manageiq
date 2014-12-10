@@ -1,4 +1,5 @@
 class DialogField < ActiveRecord::Base
+  include NewWithTypeStiMixin
   attr_accessor :value
   attr_accessor :dialog
 
