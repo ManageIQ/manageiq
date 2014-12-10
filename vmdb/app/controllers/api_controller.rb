@@ -37,6 +37,7 @@ class ApiController < ApplicationController
   include_concern 'Accounts'
   include_concern 'Authentication'
   include_concern 'AutomationRequests'
+  include_concern 'CustomAttributes'
   include_concern 'ProvisionRequests'
   include_concern 'RequestTasks'
   include_concern 'ServiceRequests'
