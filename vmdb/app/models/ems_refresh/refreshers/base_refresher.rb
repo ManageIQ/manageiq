@@ -46,5 +46,10 @@ module EmsRefresh::Refreshers
         self.targets_by_ems_id[ems.id] << t
       end
     end
+
+    def refresher_type
+      # "EmsRefresh::Refreshers::Ec2Refresher" => "Ec2Refresher" => "Ec2"
+      self.class.name.demodulize.sub(/Refresher$/, '')
+    end
   end
 end
