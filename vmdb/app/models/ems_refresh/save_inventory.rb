@@ -26,7 +26,16 @@ module EmsRefresh::SaveInventory
 
     child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots]
     extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :raw_power_state, :parent_vm]
-    extra_cloud_keys = [:flavor, :availability_zone, :cloud_tenant, :cloud_network, :cloud_subnet, :security_groups, :key_pairs]
+    extra_cloud_keys = [
+      :flavor,
+      :availability_zone,
+      :cloud_tenant,
+      :cloud_network,
+      :cloud_subnet,
+      :security_groups,
+      :key_pairs,
+      :orchestration_stack,
+    ]
     remove_keys = child_keys + extra_infra_keys + extra_cloud_keys
 
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
@@ -40,16 +49,16 @@ module EmsRefresh::SaveInventory
       # Backup keys that cannot be written directly to the database
       key_backup = backup_keys(h, remove_keys)
 
-      h[:ems_id]               = ems.id
-      h[:host_id]              = key_backup.fetch_path(:host, :id)
-      h[:ems_cluster_id]       = key_backup.fetch_path(:ems_cluster, :id)
-      h[:storage_id]           = key_backup.fetch_path(:storage, :id)
-
-      h[:flavor_id]            = key_backup.fetch_path(:flavor, :id)
-      h[:availability_zone_id] = key_backup.fetch_path(:availability_zone, :id)
-      h[:cloud_network_id]     = key_backup.fetch_path(:cloud_network, :id)
-      h[:cloud_subnet_id]      = key_backup.fetch_path(:cloud_subnet, :id)
-      h[:cloud_tenant_id]      = key_backup.fetch_path(:cloud_tenant, :id)
+      h[:ems_id]                 = ems.id
+      h[:host_id]                = key_backup.fetch_path(:host, :id)
+      h[:ems_cluster_id]         = key_backup.fetch_path(:ems_cluster, :id)
+      h[:storage_id]             = key_backup.fetch_path(:storage, :id)
+      h[:flavor_id]              = key_backup.fetch_path(:flavor, :id)
+      h[:availability_zone_id]   = key_backup.fetch_path(:availability_zone, :id)
+      h[:cloud_network_id]       = key_backup.fetch_path(:cloud_network, :id)
+      h[:cloud_subnet_id]        = key_backup.fetch_path(:cloud_subnet, :id)
+      h[:cloud_tenant_id]        = key_backup.fetch_path(:cloud_tenant, :id)
+      h[:orchestration_stack_id] = key_backup.fetch_path(:orchestration_stack, :id)
 
       begin
         raise MiqException::MiqIncompleteData if h[:invalid]

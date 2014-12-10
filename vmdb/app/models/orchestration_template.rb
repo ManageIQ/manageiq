@@ -1,5 +1,7 @@
 require 'digest/md5'
 class OrchestrationTemplate < ActiveRecord::Base
+  include NewWithTypeStiMixin
+
   has_many :stacks, :class_name => "OrchestrationStack"
 
   # Find only by template content. Here we only compare md5 considering the table is expected
@@ -7,15 +9,15 @@ class OrchestrationTemplate < ActiveRecord::Base
   #
   def self.find_or_create_by_contents(hashes)
     hashes = [hashes] unless hashes.kind_of?(Array)
-    md5s = hashes.collect { |hash| Digest::MD5.hexdigest(hash[:content]) }
-    existing_templates = find_all_by_ems_ref(md5s).index_by(&:ems_ref)
+    ems_refs = hashes.collect { |hash| Digest::MD5.hexdigest(hash[:content]) }
+    existing_templates = find_all_by_ems_ref(ems_refs).index_by(&:ems_ref)
 
-    hashes.collect do |hash|
-      template = existing_templates[hash[:ems_ref]]
+    hashes.zip(ems_refs).collect do |hash, ems_ref|
+      template = existing_templates[ems_ref]
       unless template
-        hash.delete(:ems_ref)     # field :ems_ref is read only from outside
+        hash.delete(:ems_ref)     # remove the field if exists, :ems_ref is read only from outside
         template = create(hash)
-        existing_templates[hash[:ems_ref]] = template
+        existing_templates[ems_ref] = template
       end
       template
     end
