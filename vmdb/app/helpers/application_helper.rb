@@ -2579,13 +2579,16 @@ module ApplicationHelper
     Rack::Utils.parse_query URI("?#{encoded_url}").query
   end
 
-  def update_paging_url_parms(parameter_to_update = {})
-    updated_query_string = update_query_string_params(parameter_to_update)
-    "#{request.path_info}?#{updated_query_string.to_query}"
+  def update_paging_url_parms(action_url, parameter_to_update = {})
+    url = update_query_string_params(parameter_to_update)
+    action, an_id = action_url.split("/", 2)
+    url[:action] = action
+    url[:id] = an_id unless an_id.nil?
+    url_for(url)
   end
 
   def update_query_string_params(update_this_param)
-    exclude_params = %w(flash_msg page sortby sort_choice type)
+    exclude_params = %w(button flash_msg page pressed sortby sort_choice type)
     query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
     updated_query_string = query_string.symbolize_keys
     updated_query_string.delete_if { | k, _v | exclude_params.include? k.to_s }
