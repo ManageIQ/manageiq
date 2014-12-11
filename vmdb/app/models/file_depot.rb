@@ -35,17 +35,6 @@ class FileDepot < ActiveRecord::Base
      :name     => name}
   end
 
-  def self.verify_depot_hash(hsh)
-    return true unless MiqEnvironment::Command.is_appliance?
-
-    # TODO: Move the logfile "depot" logic into remaining subclasses
-    LogFile.verify_log_depot_settings(hsh)
-  end
-
-  def verify_credentials(_auth_type = nil)
-    self.class.verify_depot_hash(self.depot_hash)
-  end
-
   def upload_file(file)
     @file = file
   end
