@@ -107,7 +107,7 @@ describe MiqAeDatastore do
     def assert_existing_exported_model(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
+      check_counts('dom'  => 1,  'ns'   => 3, 'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
     end
 
@@ -185,7 +185,7 @@ describe MiqAeDatastore do
       def assert_all_domains_imported(export_options, import_options)
         export_model(ALL_DOMAINS, export_options)
         reset_and_import(@export_dir, ALL_DOMAINS, import_options)
-        check_counts('ns'   => 8, 'class' => 8, 'inst'  => 20,
+        check_counts('dom'  => 2, 'ns'    => 6,  'class' => 8, 'inst'  => 20,
                      'meth' => 6, 'field' => 24, 'value' => 16)
       end
 
@@ -206,7 +206,7 @@ describe MiqAeDatastore do
       def assert_single_domain_import(export_options, import_options)
         export_model(ALL_DOMAINS, export_options)
         reset_and_import(@export_dir, @customer_domain.name, import_options)
-        check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
+        check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
                      'meth' => 3, 'field' => 12, 'value' => 8)
       end
     end
@@ -243,7 +243,7 @@ describe MiqAeDatastore do
     def assert_export_import_roundtrip(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
+      check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
       dom = MiqAeDomain.find_by_fqname(@manageiq_domain.name, false)
       dom.should be_system
@@ -254,7 +254,7 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name)
       @manageiq_domain.priority.should equal(0)
       reset_and_import(@export_dir, @manageiq_domain.name)
-      check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
+      check_counts('dom'  => 1,  'ns'   => 3,  'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
 
       ns = MiqAeNamespace.find_by_fqname(@manageiq_domain.name, false)
@@ -281,7 +281,7 @@ describe MiqAeDatastore do
     def assert_import_as(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 8, 'class' => 8,  'inst'  => 20,
+      check_counts('dom'  => 2, 'ns'    => 6,  'class' => 8,  'inst'  => 20,
                    'meth' => 6, 'field' => 24, 'value' => 16)
       MiqAeDomain.all.include?(import_options['import_as'])
     end
@@ -306,7 +306,7 @@ describe MiqAeDatastore do
     def assert_export_as(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @export_as, import_options)
-      check_counts('ns'   => 4, 'class' => 4, 'inst'  => 10,
+      check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
       MiqAeDomain.all.include?(@export_as)
     end
@@ -331,7 +331,7 @@ describe MiqAeDatastore do
     def assert_import_namespace_only(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 3, 'class' => 3, 'inst'  => 6,
+      check_counts('dom'  => 1, 'ns'    => 2, 'class' => 3, 'inst'  => 6,
                    'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
@@ -355,7 +355,7 @@ describe MiqAeDatastore do
     def assert_import_multipart_namespace_only(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 3, 'class' => 1, 'inst'  => 1,
+      check_counts('dom'  => 1, 'ns'    => 2, 'class' => 1, 'inst'  => 1,
                    'meth' => 0, 'field' => 0, 'value' => 0)
     end
 
@@ -382,7 +382,7 @@ describe MiqAeDatastore do
     def assert_import_class_only(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
+      check_counts('dom'  => 1,  'ns'    => 1, 'class' => 1, 'inst'  => 2,
                    'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
@@ -407,7 +407,7 @@ describe MiqAeDatastore do
     def assert_single_namespace_export(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 3, 'class' => 3, 'inst'  => 6,
+      check_counts('dom'  => 1, 'ns'    => 2, 'class' => 3, 'inst'  => 6,
                    'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
@@ -431,7 +431,7 @@ describe MiqAeDatastore do
     def assert_multi_namespace_export(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 3, 'class' => 1, 'inst'  => 1,
+      check_counts('dom'  => 1, 'ns'    => 2, 'class' => 1, 'inst'  => 1,
                    'meth' => 0, 'field' => 0, 'value' => 0)
     end
 
@@ -440,7 +440,7 @@ describe MiqAeDatastore do
       options['export_dir'] = @export_dir
       export_model(@manageiq_domain.name, options)
       reset_and_import(@export_dir, @manageiq_domain.name)
-      check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
+      check_counts('dom'  => 1, 'ns'    => 1, 'class' => 1, 'inst'  => 2,
                    'meth' => 2, 'field' => 6, 'value' => 4)
       @manageiq_domain = MiqAeNamespace.find_by_fqname('manageiq', false)
       @aen1_aec1       = MiqAeClass.find_by_name('manageiq_test_class_1')
@@ -450,7 +450,7 @@ describe MiqAeDatastore do
       setup_export_dir
       export_model(@manageiq_domain.name, options)
       MiqAeImport.new(@manageiq_domain.name, 'preview' => false, 'import_dir' => @export_dir).import
-      check_counts('ns'   => 2, 'class' => 1, 'inst'  => 3,
+      check_counts('dom'  => 1, 'ns'    => 1, 'class' => 1, 'inst'  => 3,
                    'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
@@ -477,7 +477,7 @@ describe MiqAeDatastore do
     def assert_class_with_methods_export(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
+      check_counts('dom'  => 1, 'ns'    => 1, 'class' => 1, 'inst'  => 2,
                    'meth' => 2, 'field' => 6, 'value' => 4)
     end
 
@@ -504,7 +504,7 @@ describe MiqAeDatastore do
     def assert_class_with_builtin_methods_export(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 2, 'class' => 1, 'inst'  => 2,
+      check_counts('dom'  => 1, 'ns'    => 1, 'class' => 1, 'inst'  => 2,
                    'meth' => 2, 'field' => 6, 'value' => 4)
       aen1_aec1  = MiqAeClass.find_by_name('manageiq_test_class_1')
       builtin_method = MiqAeMethod.find_by_class_id_and_name(aen1_aec1.id, 'test2')
@@ -535,7 +535,7 @@ describe MiqAeDatastore do
     def assert_class_without_methods(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('ns'   => 2, 'class' => 1, 'inst'  => 3,
+      check_counts('dom'  => 1, 'ns'    => 1, 'class' => 1, 'inst'  => 3,
                    'meth' => 0, 'field' => 0, 'value' => 0)
     end
   end
@@ -696,7 +696,7 @@ describe MiqAeDatastore do
   end
 
   def set_manageiq_values
-    @manageiq_domain = MiqAeNamespace.find_by_name("manageiq")
+    @manageiq_domain = MiqAeDomain.find_by_name("manageiq")
     @aen1            = MiqAeNamespace.find_by_name('manageiq_namespace_1')
     @aen1_1          = MiqAeNamespace.find_by_name('manageiq_namespace_1_1')
     @aen1_aec1       = MiqAeClass.find_by_name('manageiq_test_class_1')
@@ -708,7 +708,7 @@ describe MiqAeDatastore do
   end
 
   def set_customer_values
-    @customer_domain    = MiqAeNamespace.find_by_name("customer")
+    @customer_domain    = MiqAeDomain.find_by_name("customer")
     @customer_aen1      = MiqAeNamespace.find_by_name('customer_namespace_1')
     @customer_aen1_1    = MiqAeNamespace.find_by_name('customer_namespace_1_1')
     @customer_aen1_aec1 = MiqAeClass.find_by_name('customer_test_class_1')
@@ -727,10 +727,21 @@ describe MiqAeDatastore do
   end
 
   def check_counts(counts)
-    MiqAeNamespace.count.should eql(counts['ns'])    if counts.key?('ns')
+    MiqAeDomain.count.should eql(counts['dom'])    if counts.key?('dom')
+    ns_count = 0
+    MiqAeDomain.all.each do |d|
+      d.ae_namespaces.each { |ns| ns_count += child_namespace_count(ns) }
+    end
+    ns_count.should eql(counts['ns'])    if counts.key?('ns')
     MiqAeClass.count.should eql(counts['class']) if counts.key?('class')
     check_class_component_counts counts
     validate_additional_columns
+  end
+
+  def child_namespace_count(ns)
+    count = 1
+    ns.ae_namespaces.each { |n| count += child_namespace_count(n) }
+    count
   end
 
   def validate_additional_columns
