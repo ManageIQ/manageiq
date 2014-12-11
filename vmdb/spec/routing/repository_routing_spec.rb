@@ -40,6 +40,13 @@ describe "routes for AvailabilityZoneController" do
     end
   end
 
+  describe "#repository_form_fields" do
+    it "routes with GET" do
+      expect(get("/repository/repository_form_fields"))
+        .to route_to("repository#repository_form_fields")
+    end
+  end
+
   describe "#show" do
     it "routes with GET" do
       expect(get("/repository/show")).to route_to("repository#show")

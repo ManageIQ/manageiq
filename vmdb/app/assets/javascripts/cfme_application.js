@@ -239,11 +239,15 @@ function miqDimDiv(divname, status) {
 
 // Check for changes and prompt
 function miqCheckForChanges() {
-  if ((($('buttons_on') && $('buttons_on').visible()) || typeof miq_changes != "undefined") &&
-      $j('#ignore_form_changes').length == 0)
-    return confirm("Abandon changes?");
-  else
-    return true;
+  if(cfmeAngularApplication.$scope) {
+    if (cfmeAngularApplication.$scope.form.$dirty)
+      return confirm("Abandon changes?");
+    } else {
+        if ((($('buttons_on') && $('buttons_on').visible()) || typeof miq_changes != "undefined") &&
+          $j('#ignore_form_changes').length == 0)
+            return confirm("Abandon changes?");
+    }
+  return true;
 }
 
 // go to the specified URL when a download all log files button is pressed

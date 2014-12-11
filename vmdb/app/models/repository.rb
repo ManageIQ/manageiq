@@ -85,7 +85,7 @@ class Repository < ActiveRecord::Base
   def self.parse_path(path)
     path.gsub!(/\\/, "/")
     if path.starts_with? "//"
-      raise "path, '#{path}', is malformed" unless path =~ %r{^//[^/].+/.+$}
+      raise "path, '#{path}', is malformed" unless path =~ %r{^//[^/].*/.+$}
       type = "NAS"
     else
       if path.starts_with? "["
