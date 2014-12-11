@@ -82,8 +82,12 @@ module OpsController::Settings::Schedules
                             :name     => @edit[:current][:depot_name]}
 
         # only verify_depot_hash if anything has changed in depot settings
-        if settings_new != settings_current && MiqSchedule.verify_depot_hash(settings_new)
-          @schedule.depot_hash = settings_new
+        if settings_new != settings_current
+          if MiqSchedule.verify_depot_hash(settings_new)
+            @schedule.depot_hash = settings_new
+          else
+            add_flash(_("Failed to add depot. See logs for detail."), :error)
+          end
         end
       end
       schedule_set_record_vars(@schedule)
