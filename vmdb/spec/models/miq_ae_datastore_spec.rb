@@ -89,8 +89,8 @@ describe MiqAeDatastore do
 
   it ".reset_default_namespace" do
     MiqAeDatastore.reset_default_namespace
-
-    MiqAeNamespace.first.name.should eq("$")
+    default_ns = MiqAeDomain.first || MiqAeNamespace.first
+    default_ns.name.should eq("$")
     MiqAeClass.first.name.should     eq("Object")
     MiqAeMethod.count.should         eq(3)
   end
