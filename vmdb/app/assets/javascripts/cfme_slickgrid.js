@@ -39,9 +39,7 @@ function cfmeInitSlickGrid(grid_name, dataJson, columnsJson, options) {
     }
     e.stopImmediatePropagation();
 
-    new Ajax.Request(encodeURI("/" + miq_controller + "/compare_set_state" + "?rowId=" + item.exp_id + "&state=" + state),
-      {asynchronous:true, evalScripts:true}
-    );
+    miqJqueryRequest('/' + miq_controller + '/compare_set_state?rowId=' + item.exp_id + '&state=' + state);
   }
   });
 

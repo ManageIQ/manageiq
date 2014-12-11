@@ -2,13 +2,7 @@
 
 // Handle combo changed
 function miqComboChanged(key) {
-	new Ajax.Request(encodeURI(combo_url + "?" + this.name + "=" + this._selOption.value),
-                  {
-                   asynchronous:true, evalScripts:true,
-                   onComplete:function(request){miqSparkle(false);},
-                   onLoading:function(request){miqSparkle(true);}
-                  }
-			);
+  miqJqueryRequest(combo_url + '?' + this.name + '=' + this._selOption.value, {beforeSend: true, complete: true});
 	return true;
 }
 
@@ -19,9 +13,6 @@ function miqSelectionIgnore() {
 
 // Handle checkboxes
 function miqComboOnCheck(value, state) {
-//	alert("Name: " + this.name + "Value: " + value + " State: " + state);
-	new Ajax.Request(encodeURI(combo_url + "?" + this.name + "=" + value + "_" + state),
-			{asynchronous:true, evalScripts:true}
-			);
+  miqJqueryRequest(combo_url + '?' + this.name + '=' + value + '_' + state);
 	return true;
 }

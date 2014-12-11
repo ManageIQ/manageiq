@@ -5,12 +5,7 @@ function miqAjaxRequest(itemId,path){
 	if (miqCheckForChanges() == false) {
 		return false;
 	} else {
-		new Ajax.Request(encodeURI(path + "?id=" + itemId),
-									{asynchronous:true, evalScripts:true,
-									onComplete:function(request){miqSparkle(false);},
-									onLoading:function(request){miqSparkle(true);}
-									}
-		);
+    miqJqueryRequest(path + '?id=' + itemId, {beforeSend: true, complete: true});
 		return true;
 	}
 }

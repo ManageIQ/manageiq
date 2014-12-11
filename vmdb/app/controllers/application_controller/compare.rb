@@ -1584,10 +1584,11 @@ module ApplicationController::Compare
     if i == 0
       html_text << "<a title='#{h[:name]} is the base'> #{txt.truncate(16)}</a>"
     else
+      url = "/#{controller_name}/compare_choose_base/#{view.ids[i]}"
       html_text <<
-        "<a title='Make #{h[:name]} the base' onclick=\"new Ajax.Request('/#{controller_name}/compare_choose_base/#{view.ids[i]}',
-        {asynchronous:true, evalScripts:true, onComplete:function(request){miqSparkle(false);},
-        onLoading:function(request){miqSparkle(true);}})\" href='#'>"
+        "<a title = 'Make #{h[:name]} the base'
+            onclick = \"miqJqueryRequest('#{url}',
+                      {beforeSend: true, complete: true});\" href='#'>"
       html_text << "  #{txt.truncate(16)}"
       html_text << "</a>"
     end
@@ -1608,10 +1609,10 @@ module ApplicationController::Compare
     if i == 0
       html_text = "<b title='#{h[:name]} is the base'>#{txt}  (base)</b>"
     else
+      url = "/#{controller_name}/compare_choose_base/#{h["id"]}"
       html_text = "<a title='Make #{h[:name]} the base'
-            onclick=\"new Ajax.Request('/#{controller_name}/compare_choose_base/#{h["id"]}',
-            {asynchronous:true, evalScripts:true, onComplete:function(request){miqSparkle(false);},
-            onLoading:function(request){miqSparkle(true);}})\" href='#'>#{txt}</a>"
+                      onclick = \"miqJqueryRequest('#{url}',
+                                {beforeSend: true, complete: true});\" href='#'>#{txt}</a>"
     end
     html_text = "<div class='cell-text-wrap'>#{html_text}</div>"
     html_text << "<br/><br/>" << quad_html
@@ -1627,10 +1628,9 @@ module ApplicationController::Compare
     if view.ids.length > 2
       view.ids.each_with_index do |id, idx|
         if idx != 0
+          url = "/#{controller_name}/compare_remove/#{view.records[idx].id}"
           html_text = "<a title='Remove this #{session[:db_title].singularize} from the comparison'
-            onclick=\"new Ajax.Request('/#{controller_name}/compare_remove/#{view.records[idx].id}',
-            {asynchronous:true, evalScripts:true, onComplete:function(request){miqSparkle(false);},
-            onLoading:function(request){miqSparkle(true);}});
+            onclick=\"miqJqueryRequest('#{url}', {beforeSend: true, complete: true});
             return false;\" href='#'><img src='/images/toolbars/delete.png' width='24'
             alt='Remove this #{session[:db_title].singularize} from the comparison'
             title='Remove this #{session[:db_title].singularize} from the comparison' align='middle' border='0' /></a>"

@@ -4,9 +4,7 @@
 function miqOnPanelResize(){
 //	alert("Resized to " + this.cells("a").getWidth());
 	var url = "/" + miq_controller + "/x_settings_changed/?width=" + this.cells("a").getWidth();
-	new Ajax.Request(encodeURI(url),
-									{asynchronous:true, evalScripts:true}
-	);
+  miqJqueryRequest(url);
 }
 
 // When right explorer cell is resized, make dhxLayoutB cell "a" taller or shorter if divs have moved up/down

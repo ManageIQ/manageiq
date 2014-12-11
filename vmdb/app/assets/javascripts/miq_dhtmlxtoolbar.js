@@ -179,7 +179,7 @@ function miqToolbarOnClick(id){
 			else
 				params = Form.serialize(button.url_parms);
 		} else {
-			params = button.url_parms;
+			params = button.url_parms.split("?")[1];
 	}	}
 
 	// TODO:
@@ -189,29 +189,15 @@ function miqToolbarOnClick(id){
 		  (button.name == "vm_perf_reload") ||
       (button.name.endsWith("_console"))) {
 		if (typeof params == "undefined") {
-			new Ajax.Request(encodeURI(tb_url),
-											{asynchronous:true, evalScripts:true,
-											onLoading:function(request){miqSparkle(true);}
-											}	);
+      miqJqueryRequest(tb_url, {beforeSend: true,});
 		} else {
-			new Ajax.Request(encodeURI(tb_url),
-											{asynchronous:true, evalScripts:true, parameters:params,
-											onLoading:function(request){miqSparkle(true);}
-											}	);
+      miqJqueryRequest(tb_url, {beforeSend: true, data: params});
 	}	}
 	else {
 		if (typeof params == "undefined") {
-			new Ajax.Request(encodeURI(tb_url),
-											{asynchronous:true, evalScripts:true,
-											onComplete:function(request){miqSparkle(false);},
-											onLoading:function(request){miqSparkle(true);}
-											}	);
+      miqJqueryRequest(tb_url, {beforeSend: true, complete: true});
 		} else {
-			new Ajax.Request(encodeURI(tb_url),
-											{asynchronous:true, evalScripts:true, parameters:params,
-											onComplete:function(request){miqSparkle(false);},
-											onLoading:function(request){miqSparkle(true);}
-											}	);
+      miqJqueryRequest(tb_url, {beforeSend: true, complete: true, data: params});
 	}	}
 	return false;
 }
