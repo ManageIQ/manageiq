@@ -5,7 +5,7 @@ class FileDepotFtp < FileDepot
     "ftp"
   end
 
-  def self.validate(settings)
+  def self.validate_settings(settings)
     depot = new(:uri => settings[:uri])
     depot.with_connection(:username => settings[:username], :password => settings[:password]) { |c| c.last_response }
   end
