@@ -162,6 +162,21 @@ module ApplicationController::DialogRunner
     end
   end
 
+  def dynamic_radio_button_refresh
+    field = DialogField.find(params[:id])
+    field.refresh_button_pressed
+
+    json = {
+      :default_value => field.default_value,
+      :field_name    => field.name,
+      :values        => field.values
+    }
+
+    respond_to do |format|
+      format.json { render :json => json, :status => 200 }
+    end
+  end
+
   private     #######################
 
   def dialog_reset_form

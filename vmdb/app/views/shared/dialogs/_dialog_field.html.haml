@@ -98,22 +98,22 @@
                            "data-miq_sparkle_off" => true,
                            "data-miq_observe"     => {:url => url}.to_json)
             - else
-              - values = field.values
-              - values = [['', '<None>']] + values if !field.required
-              - values.each_with_index do |rb, i|
-                %input{:type     => 'radio',
-                       :id       => field.id,
-                       :value    => rb[0],
-                       :name     => field.name,
-                       :checked  => field.default_value == rb[0].to_s ? '' : nil,
-                       :onclick  => remote_function(:with     => 'Form.Element.serialize(this)',
-                                                    :url      => { :action => 'dialog_field_changed',
-                                                                   :id     => "#{(@edit && @edit[:rec_id]) || "new"}"},
-                                                    :loading  => "miqSparkle(true);",
-                                                    :complete => "miqSparkle(false);")}
-                  &nbsp;
-                  = rb[1]
-                  &nbsp;
+              %span(class="dynamic-radio-#{field.id}")
+                - values = field.values
+                - values = [['', '<None>']] + values if !field.required && !field.dynamic
+                - values.each_with_index do |rb, i|
+                  %input{:type     => 'radio',
+                         :id       => field.id,
+                         :value    => rb[0],
+                         :name     => field.name,
+                         :checked  => field.default_value == rb[0].to_s ? '' : nil,
+                         :onclick  => remote_function(:with     => 'Form.Element.serialize(this)',
+                                                      :url      => { :action => 'dialog_field_changed',
+                                                                     :id     => "#{(@edit && @edit[:rec_id]) || "new"}"},
+                                                      :loading  => "miqSparkle(true);",
+                                                      :complete => "miqSparkle(false);")}
+                  %label.dynamic-radio-label= rb[1]
+
           - else
             = h(field.values[0].last) if !field.values.empty?
 
@@ -121,11 +121,35 @@
           = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
 
         - if field.dynamic && field.show_refresh_button?
-          = button_tag('Refresh',
-                       :onclick  => remote_function(:url      => { :action => 'dynamic_list_refresh',
-                                                                   :id     => field.name },
-                                                    :loading  => "miqSparkle(true);",
-                                                    :complete => "miqSparkle(false);"))
+          = button_tag('Refresh', :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
+
+          :javascript
+            $j('#refresh-dynamic-field-#{field.id}').click(function() {
+              miqSparkleOn();
+
+              var fieldId = "#{field.id}";
+
+              $j.post('dynamic_radio_button_refresh', {id: fieldId}, function(data) {
+                var radioButtons = [];
+
+                $j.each(data.values, function(index, value) {
+                  var radio = '<input type="radio" ';
+                  radio += 'id="' + fieldId + '" ';
+                  radio += 'value="' + value[0] + '" ';
+                  radio += 'name="' + data.field_name + '" ';
+                  if (data.default_value === value[0]) {
+                    radio += 'checked="" ';
+                  }
+                  radio += '/>';
+                  radio += '<label class="dynamic-radio-label"> ' + value[1] + ' </label>';
+                  radioButtons.push(radio);
+                });
+
+                $j('.dynamic-radio-' + fieldId).html(radioButtons);
+
+                miqSparkleOff();
+              });
+            });
 
       - when 'DialogFieldButton'
         = button_tag("Save",
