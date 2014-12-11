@@ -2,10 +2,6 @@ require "spec_helper"
 
 describe MiqAeNamespace do
 
-  it { should belong_to(:parent)        }
-  it { should have_many(:ae_namespaces) }
-  it { should have_many(:ae_classes)    }
-
   it { should validate_presence_of(:name) }
 
   it { should allow_value("name.space1").for(:name) }

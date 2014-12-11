@@ -2,11 +2,6 @@ require "spec_helper"
 
 describe MiqAeClass do
 
-  it { should belong_to(:ae_namespace) }
-  it { should have_many(:ae_fields) }
-  it { should have_many(:ae_instances) }
-  it { should have_many(:ae_methods) }
-
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:namespace_id) }
 
@@ -104,19 +99,19 @@ describe MiqAeClass do
     it 'get sorted list of instances across domains with partial namespace' do
       non_fq_klass = 'SYSTEM/PROCESS'
       x = MiqAeClass.find_distinct_instances_across_domains(non_fq_klass).collect(&:fqname)
-      @sorted_inst_list.should match_array(x)
+      @sorted_inst_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of instances across domains with FQ namespace' do
       fq_klass = 'DOMAIN1/SYSTEM/PROCESS'
       x = MiqAeClass.find_distinct_instances_across_domains(fq_klass).collect(&:fqname)
-      @sorted_inst_list.should match_array(x)
+      @sorted_inst_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of instances across domains with /FQ namespace' do
       fq_klass = '/DOMAIN1/SYSTEM/PROCESS'
       x = MiqAeClass.find_distinct_instances_across_domains(fq_klass).collect(&:fqname)
-      @sorted_inst_list.should match_array(x)
+      @sorted_inst_list.should match_string_array_ignorecase(x)
     end
 
     it 'invalid path for similar named instance should return an empty array' do
@@ -144,19 +139,19 @@ describe MiqAeClass do
     it 'get sorted list of same named instances across domains with partial namespace' do
       non_fq_inst = 'SYSTEM/PROCESS/Inst4'
       x = MiqAeClass.find_homonymic_instances_across_domains(non_fq_inst).collect(&:fqname)
-      @inst4_list.should match_array(x)
+      @inst4_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of same named instances across domains with FQ namespace' do
       fq_inst = 'DOMAIN1/SYSTEM/PROCESS/Inst4'
       x = MiqAeClass.find_homonymic_instances_across_domains(fq_inst).collect(&:fqname)
-      @inst4_list.should match_array(x)
+      @inst4_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of same named instances across domains with /FQ namespace' do
       fq_inst = '/DOMAIN1/SYSTEM/PROCESS/Inst4'
       x = MiqAeClass.find_homonymic_instances_across_domains(fq_inst).collect(&:fqname)
-      @inst4_list.should match_array(x)
+      @inst4_list.should match_string_array_ignorecase(x)
     end
   end
 
@@ -205,7 +200,6 @@ describe MiqAeClass do
         :overwrite_location => true,
         :ids                => [@cls1.id, @cls2.id]
       }
-
 
       res = MiqAeClass.copy(options)
       res.count.should eq(2)
