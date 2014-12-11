@@ -308,7 +308,16 @@ class MiqSchedule < ActiveRecord::Base
   end
 
   def self.verify_depot_hash(hsh)
-    FileDepot.verify_depot_hash(hsh)
+    verification_required_map = {"FileDepotSmb" => "smb"}
+    type = verification_required_map.key(hsh[:uri].split("://").first)
+    return true if type.nil?
+
+    begin
+      Object.const_get(type).validate_settings(hsh)
+    rescue => err
+      $log.error("Miq(Schedule.verify_depot_hash) #{err.message}.")
+      false
+    end
   end
 
   def depot_hash=(hsh = {})
