@@ -35,6 +35,13 @@ describe 'routes for VmInfra' do
     end
   end
 
+  describe "#dynamic_radio_button_refresh" do
+    it "routes with POST" do
+      expect(post("/#{controller_name}/dynamic_radio_button_refresh"))
+        .to route_to("#{controller_name}#dynamic_radio_button_refresh")
+    end
+  end
+
   describe '#launch_vmware_console' do
     it 'routes with GET' do
       expect(get("/#{controller_name}/launch_vmware_console")).to route_to("#{controller_name}#launch_vmware_console")

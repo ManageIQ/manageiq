@@ -34,6 +34,12 @@ describe 'routes for ServiceController' do
     end
   end
 
+  describe "#dynamic_radio_button_refresh" do
+    it "routes with POST" do
+      expect(post("/service/dynamic_radio_button_refresh")).to route_to("service#dynamic_radio_button_refresh")
+    end
+  end
+
   describe '#explorer' do
     it 'routes with GET' do
       expect(get("/service/explorer")).to route_to("service#explorer")

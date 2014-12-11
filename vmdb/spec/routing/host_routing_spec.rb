@@ -115,6 +115,12 @@ describe "routes for HostController" do
     end
   end
 
+  describe "#dynamic_radio_button_refresh" do
+    it "routes with POST" do
+      expect(post("/host/dynamic_radio_button_refresh")).to route_to("host#dynamic_radio_button_refresh")
+    end
+  end
+
   describe "#filesystems" do
     it "routes with GET" do
       expect(get("/host/filesystems")).to route_to("host#filesystems")

@@ -346,6 +346,7 @@ Vmdb::Application.routes.draw do
         button
         create
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         form_field_changed
         listnav_search_selected
         panel_control
@@ -385,6 +386,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         listnav_search_selected
         panel_control
         protect
@@ -514,6 +516,7 @@ Vmdb::Application.routes.draw do
         drift_mode
         drift_same
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         filesystems
         firewall_rules
         firewallrules
@@ -793,6 +796,7 @@ Vmdb::Application.routes.draw do
         button
         dialog_field_changed
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         post_install_callback
         pre_prov
         prov_button
@@ -1250,6 +1254,7 @@ Vmdb::Application.routes.draw do
         dialog_field_changed
         dialog_form_button_pressed
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         explorer
         ownership_field_changed
         ownership_update
@@ -1295,6 +1300,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         files
         listnav_search_selected
         panel_control
@@ -1396,6 +1402,7 @@ Vmdb::Application.routes.draw do
         dialog_form_button_pressed
         dialog_field_changed
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         edit_vm
         event_logs
         explorer
@@ -1468,6 +1475,7 @@ Vmdb::Application.routes.draw do
         dialog_field_changed
         dialog_form_button_pressed
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         edit_vm
         event_logs
         explorer
@@ -1560,6 +1568,7 @@ Vmdb::Application.routes.draw do
         drift_mode
         drift_same
         dynamic_list_refresh
+        dynamic_radio_button_refresh
         edit_vm
         event_logs
         explorer

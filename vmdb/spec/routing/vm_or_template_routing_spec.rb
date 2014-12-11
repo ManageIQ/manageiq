@@ -19,6 +19,13 @@ describe VmOrTemplateController do
     end
   end
 
+  describe "#dynamic_radio_button_refresh" do
+    it "routes with POST" do
+      expect(post("/vm_or_template/dynamic_radio_button_refresh"))
+        .to route_to("vm_or_template#dynamic_radio_button_refresh")
+    end
+  end
+
   describe "#explorer" do
     it "routes with GET" do
       expect(get("/vm_or_template/explorer")).to route_to("vm_or_template#explorer")
