@@ -1,0 +1,55 @@
+#main_div
+  = render(:partial=>"layouts/flash_msg")
+  %p.legend Schedule Info
+  %table.style1
+    %tr
+      %td.key Description
+      %td= h(@selected_schedule.description)
+    %tr
+      %td.key Active
+      %td= h(@selected_schedule.enabled)
+    %tr
+      %td.key Action
+      %td
+        - if @selected_schedule.sched_action[:method] && @selected_schedule.sched_action[:method] == "check_compliance"
+          = h(ui_lookup(:model=>@selected_schedule.towhat))
+          Compliance Check
+        - elsif @selected_schedule.sched_action[:method] && @selected_schedule.sched_action[:method] == "db_backup"
+          Database Backup
+        - else
+          = h(ui_lookup(:model=>@selected_schedule.towhat))
+          Analysis
+    - if @selected_schedule.sched_action[:method] != "db_backup"
+      %tr
+        %td.key Filter
+        - unless @selected_schedule.miq_search
+          - if @selected_schedule.filter.is_a?(MiqExpression)
+            %td
+              - @exp_table.each do |token|
+                - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+                  = h([token].flatten.first)
+                - else
+                  %font{:color => "black"}
+                    %b= h([token].flatten.first)
+          - else
+            %td= h(MiqExpression.to_human(@selected_schedule.expression))
+        - else
+          %td
+            = "#{@selected_schedule.miq_search.search_type == "user" ? "My" : "Global"} Filter: #{@selected_schedule.miq_search.description}"
+    %tr
+      %td.key Run At
+      %td= h(@selected_schedule.run_at_to_human(@timezone).to_s)
+    %tr
+      %td.key Last Run Time
+      %td
+        - if !@selected_schedule.last_run_on.blank?
+          = h(format_timezone(@selected_schedule.last_run_on, @timezone,"view"))
+    %tr
+      %td.key Next Run Time
+      %td
+        - if !@selected_schedule.next_run_on.blank?
+          = h(format_timezone(@selected_schedule.next_run_on, @timezone, "view"))
+    %tr
+      %td.key Zone
+      %td
+        = h(@selected_schedule.v_zone_name)
