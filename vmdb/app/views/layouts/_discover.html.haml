@@ -1,7 +1,7 @@
 - url = url_for :action => 'discover_field_changed'
 = render :partial => 'layouts/flash_msg'
-= form_tag ({:action => 'discover'}, {:id => 'discover_form'}) do
-  %p.legend _("Discover")
+= form_tag({:action => 'discover'}, {:id => 'discover_form'}) do
+  %p.legend= _("Discover")
   %table.style1
     - i = 0
     - while i < @discover_type.length
@@ -9,16 +9,15 @@
         - if @discover_type.length == 1
           %td.key
             = check_box_tag("discover_type_#{@discover_type[i]}",
-                            value="1",
-                            checked=true,
+                            "1",
+                            true,
                             :id       => "discover_type_#{@discover_type[i]}",
                             :disabled => "disabled")
         - else
-          - check = @discover_type_checker.include?(@discover_type[i])
           %td.key
             = check_box_tag("discover_type_#{@discover_type[i]}",
-                            value="1",
-                            checked=check,
+                            "1",
+                            @discover_type_checked.include?(@discover_type[i]),
                             "data-miq_observe_checkbox" => {:url => url}.to_json)
         %td= h(Dictionary::gettext(@discover_type[i], :type     => :discover_types,
                                                       :notfound => :titleize))
@@ -27,13 +26,13 @@
   %div#discover_credentials{:style => ("display:none" unless display = @discover_type_checked.include?("ipmi"))}
     = render :partial => "layouts/discover_credentials",
              :locals  => {:label => "IPMI Credentials"}
-  %p.legend _("Subnet Range")
+  %p.legend= _("Subnet Range")
   %table.style1
     %tr
-      %td.key _("From Address")
+      %td.key= _("From Address")
       %td
         - %w(first second third fourth).each_with_index do |order, index|
-          = text_field_tag("from_first",
+          = text_field_tag("from_#{order}",
                            @from[order.to_sym],
                            :size              => "3",
                            :maxlength         => 3,
@@ -41,15 +40,15 @@
                            "data-miq_observe" => {:interval => '.5',
                                                   :url      => url}.to_json)
     %tr
-      %td.key _("To Address")
+      %td.key= _("To Address")
       %td
         - %w(first second third).each do |order|
-          = text_field 'to', order,
-                       :readonly => "readonly",
-                       :size     => "3",
-                       :maxlength=>"3",
-                       :value=>@to[order.to_sym],
-                       :disabled=>"disabled"
+          = text_field('to', order,
+                       :readonly  => "readonly",
+                       :size      => "3",
+                       :maxlength => 3,
+                       :value     => @to[order.to_sym],
+                       :disabled  => "disabled")
         = text_field_tag("to_fourth",
                          @to[:fourth],
                          :size              => "3",
@@ -60,13 +59,14 @@
     = button_tag(_("Start"),
                  :class => "btn btn-primary",
                  :name  => "start",
-                 :alt   => _("Start the Host Discovery"),
-                 :title => _("Start the Host Discovery"),
+                 :alt   => t = _("Start the Host Discovery"),
+                 :title => t,
                  :type  => "submit")
-    = button_tag(_("Cancel",
+    = button_tag(_("Cancel"),
                  :class => "btn btn-default",
                  :name  => "cancel",
-                 :alt   => _("Cancel"),
-                 :title => _("Cancel"),
+                 :alt   => t = _("Cancel"),
+                 :title => t,
                  :type  => "submit")
+
 %script miqObserveCheckboxes();

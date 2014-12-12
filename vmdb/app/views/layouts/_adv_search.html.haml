@@ -1,0 +1,200 @@
+- url = url_for(:action =>'adv_search_load_choice')
+- url2 = url_for(:action =>'adv_search_name_typed')
+- mode ||= "search"
+- report_expressions = MiqReport.get_expressions_by_model(@edit[@expkey][:exp_model])
+
+#advsearchbox
+  - if mode == "search"
+    %strong
+      &nbsp;&nbsp;&nbsp;
+      = _("Advanced Search")
+    - if @edit && @edit[@expkey] && @edit[@expkey][:selected]
+      = " (#{h(@edit[@expkey][:selected][:description])})"
+    - elsif @edit && @edit[:adv_search_report]
+      = " (from report #{h(@edit[:adv_search_report])})"
+    = render(:partial => 'layouts/flash_msg',
+             :locals  => {:div_num => "2"})
+
+    %br
+    - if @edit && @edit[@expkey][:expression]
+      = render(:partial => 'layouts/exp_editor')
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "left"}
+          #buttons
+            - if @edit[@expkey][:exp_search_expressions].blank? && report_expressions.blank?
+              = button_tag(_("Load..."),
+                           :class => "btn btn-primary button-disabled",
+                           :alt   => t = _("No saved filters or report filters are available to load"),
+                           :title => t)
+
+            - else
+              = link_to(button_tag(_("Load..."),
+                                   :class   => "btn btn-primary",
+                                   :alt     => t = _("Load a filter")),
+                        {:action => "adv_search_button",
+                         :button => 'load'},
+                         :remote => true,
+                         :title  => t)
+        %td{:align => "right"}
+          #buttons
+            - if @edit[@expkey][:exp_table].flatten.first == "???"
+              = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
+            - else
+              = link_to(button_tag(_("Apply"),
+                                   :class => "btn btn-primary",
+                                   :alt   => t = _("Apply the current filter")),
+                        {:action => "adv_search_button",
+                         :button => "apply"},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        :title                 => t)
+            - if @edit[@expkey][:selected] && @edit[@expkey][:selected][:typ] != "default" &&
+            -    @edit[@expkey][:selected][:id] != 0
+              - if (session[:userrole] == "super_administrator" || session[:userrole] == "administrator") ||
+              -    (session[:userrole] != "super_administrator" && session[:userrole] != "administrator" &&
+              -    @edit[@expkey][:selected][:typ] == "user")
+                = link_to(button_tag(_("Delete"),
+                                     :class => "btn btn-danger",
+                                     :alt   => _("Delete the filter named %s") % @edit[@expkey][:selected][:description]),
+                          {:action => "adv_search_button",
+                           :button => "delete" },
+                          :confirm => _("Delete the %{model} filter named %{filter}?") % {:model  => ui_lookup(:model => @edit[@expkey][:exp_mode]),
+                                                                                          :filter => @edit[:adv_search_name]},
+                          :remote  => true,
+                          :title   => _("Delete the filter named %s" % @edit[@expkey][:selected][:description]))
+            - if @edit[@expkey][:exp_table].flatten.first == "???"
+              = button_tag(_("Save..."), :class => "btn btn-primary btn-disabled")
+            - else
+              = link_to(button_tag(_("Save..."),
+                                   :class => "btn btn-primary",
+                                   :alt   => t = _("Save the current filter")),
+                        {:action => "adv_search_button",
+                         :button => "save"},
+                        :remote => true,
+                        :title  => t)
+            - if @edit[@expkey][:exp_table].flatten.first == "???"
+              = button_tag("Reset", :class => "btn btn-default btn-disabled")
+            - else
+              = link_to(button_tag(_("Reset"),
+                                   :class => "btn btn-default",
+                                   :alt   => t = _("Reset the filter")),
+                        {:action => "adv_search_button",
+                         :button => "reset"},
+                        :remote => true,
+                        :title  => t)
+  - elsif mode == "load"
+    %p
+      %strong
+        &nbsp;&nbsp;&nbsp;
+        = _("Advanced Search (Load)")
+    %br
+    - if @exp_to_load
+      %fieldset
+        %p.legend
+          = _("Search Expression Preview")
+        - @exp_to_load.each do |token|
+          - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+            = h([token].flatten.first)
+          - else
+            %font{:color => "black"}
+              %b= h([token].flatten.first)
+    %fieldset
+      %table.style1
+        %tbody
+          - unless @edit[@expkey][:exp_search_expressions].blank?
+            %tr
+              %td.key
+                %font{:color => "black"}
+                  = _("Choose a saved %s filter:") % ui_lookup(:model => @edit[@expkey][:exp_model])
+              %td= select_tag("chosen_search",
+                              options_for_select([[_("<Choose>"), "0"]] + @edit[@expkey][:exp_search_expressions],
+                                                     @edit[@expkey][:exp_chosen_search]),
+                              :multiple          => false,
+                              :class             => "widthed",
+                              "data-miq_observe" => {:url => url}.to_json)
+          - unless @edit[@expkey][:exp_search_expressions].blank? || report_expressions.blank?
+            %tr
+              %td.key -- OR --
+          - unless report_expressions.blank?
+            %tr
+              %td.key
+                %font{:color => "black"}
+                  = _("Choose a %s report filter") % ui_lookup(:model => @edit[@expkey][:exp_model])
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "left"}
+          #buttons
+            - if @edit[@expkey][:exp_chosen_report].nil? && @edit[@expkey][:exp_chosen_search].nil?
+              = button_tag(_("Load"),
+                           :class => "btn btn-primary btn-disabled",
+                           :alt   => t = _("Choose a saved filter or report filter to load"),
+                           :title => t)
+            - else
+              = link_to(button_tag(_("Load"),
+                                   :class => "btn btn-primary",
+                                   :alt   => t = _("Load the filter shown above")),
+                        { :action => "adv_search_button",
+                          :button => "loadit" },
+                        :remote => true,
+                        :title  => t)
+          = link_to(button_tag(_("Cancel"),
+                               :class => "btn btn-primary",
+                               :alt   => t = _("Cancel the load")),
+                    { :action => "adv_search_button",
+                      :button => "cancel" },
+                    :remote => true,
+                    :title  => t)
+  - elsif mode == "save"
+    %fieldset
+      %p.legend
+        = _("Advanced Search (Save)")
+      %br
+      = render(:partial => "layouts/flash_msg",
+               :locals  => { :div_num => "2"})
+      %fieldset
+        %p.legend
+          = _("Search Expression")
+        - @edit[@expkey][:exp_table].each do |token|
+          - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+            = h([token].flatten.first)
+          - else
+            %font{:color => "black"}
+              %b= h([token].flatten.first)
+      %fieldset
+        %table.style1
+          %tbody
+            %tr
+              %td.key
+                = _("Save this %s search as:") % @edit[@expkey][:exp_model]
+              %td.notwide
+                %span#search_name_span
+                  = text_field_tag("search_name",
+                                   h(@edit[:adv_search_name]),
+                                   :maxlength         => 30,
+                                   :style             => "width: 250px",
+                                   "data-miq_focus"   => true,
+                                   "data-miq_observe" => { :interval => ".5",
+                                                           :url      => url2}.to_json)
+            - checked = (session[:userrole] == "super_administrator" || session[:userrole] == "administrator")
+            = check_box_tag("search_type", "1", checked, :style                      => "width: 20px",
+                                                         "data-miq_observe_checkbox" => {:url => url2}.to_json)
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "right"}
+          #buttons
+            = link_to(button_tag(_("Save"),
+                                 :class => "btn btn-primary",
+                                 :alt   => t = _("Save the current search")),
+                      {:action => "adv_search_button",
+                       :button => "saveit"},
+                      :remote => true,
+                      :title  => t)
+            = link_to(button_tag(_("Cancel"),
+                                 :class => "btn btn-default",
+                                 :alt   => t = _("Cancel the save")),
+                      {:action => "adv_search_button",
+                       :button => "cancel"},
+                      :remote => true,
+                      :title  => t)

@@ -19,12 +19,12 @@
     - action_url = @lastaction unless @lastaction == "get_node_info"
   - else
     - action_url ||= "show_list"
-  - @gtl_type = "grid" if @gtl_type == nil
-  - if view == nil || table.data.length == 0
+  - @gtl_type = "grid" if @gtl_type.nil?
+  - if view.nil? || table.data.length == 0
     - rec_display = "display:none"
     - no_rec_display = ""
   #no_records_div{:style => no_rec_display}
-    - if (view == nil || table.data.length == 0) && render_flash_msg?
+    - if (view.nil? || table.data.length == 0) && render_flash_msg?
       = render(:partial => "layouts/flash_msg")
     = render(:partial => "layouts/info_msg",
              :locals => {:message => _("No Records Found.")})
@@ -41,7 +41,7 @@
                                :db         => view.db,
                                :headers    => view.headers,
                                :button_div => button_div })
-    - if @gtl_type == nil || @gtl_type == "grid"
+    - if @gtl_type.nil? || @gtl_type == "grid"
       = render(:partial => "layouts/gtl/grid",
                :locals  => { :table      => table,
                              :button_div => button_div,
