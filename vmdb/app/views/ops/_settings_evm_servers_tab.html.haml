@@ -1,0 +1,41 @@
+- if @sb[:active_tab] == "settings_evm_servers"
+  - if @servers
+    = render(:partial=>"layouts/flash_msg")
+    %p.legend Relationships
+    %table.style1
+      %tr
+        %td.key Servers
+        %td.wide= @selected_zone.miq_servers.count
+      %tr
+        %td.key= ui_lookup(:tables => "ext_management_system")
+        %td.wide= @selected_zone.ext_management_systems.count
+      %tr
+        %td.key Storage Managers
+        %td.wide= @selected_zone.storage_managers.count
+      %tr
+        %td.key Schedules
+        %td.wide= @selected_zone.miq_schedules.count
+    %hr/
+    %p.legend Servers
+    - if @servers.empty?
+      = render :partial => 'layouts/info_msg', :locals => {:message => "No Servers Found."}
+    - else
+      %table.style3
+        %thead
+          %th.icon
+          %th
+        %tbody
+          - @servers.sort{|a,b| a.id <=> b.id}.each do |s|
+            %tr{:class => cycle('row0', 'row1'),
+            :onclick => "cfmeDynatree_activateNode('settings_tree', 'svr-#{to_cid(s.id)}');",
+            :onmouseover => "this.style.cursor='pointer'", :title => "View this MiqServer"}
+              %td{:nowrap => ""}
+                %img{:border => "0", :height => "20", :src => "/images/icons/new/miq_server.png", :valign => "middle", :width => "20"}/
+              %td
+                - if @sb[:my_server_id] == s.id
+                  %b
+                    = h(ui_lookup(:model=>s.class.to_s))
+                    \: #{h(s.name)} [#{h(s.id)}] (current)
+                - else
+                  = h(ui_lookup(:model=>s.class.to_s))
+                  \: #{h(s.name)} [#{h(s.id)}]

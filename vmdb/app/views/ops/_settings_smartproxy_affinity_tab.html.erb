@@ -1,8 +1,0 @@
-<% url = url_for(:action =>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}") %>
-<% if @sb[:active_tab] == "settings_smartproxy_affinity" %>
-	<%= render :partial => "layouts/flash_msg" %>
-	<%#  SmartProxy Affinity Tab %>
-	<%= render :partial => "smartproxy_affinity" %>
-<% end %>
-
-
