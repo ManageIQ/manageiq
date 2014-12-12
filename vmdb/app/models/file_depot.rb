@@ -12,6 +12,10 @@ class FileDepot < ActiveRecord::Base
     @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) }.freeze
   end
 
+  def self.supported_protocols
+    @supported_depots ||= subclasses.each_with_object({}) { |klass, hash| hash[klass.uri_prefix] = klass.name }.freeze
+  end
+
   def self.requires_credentials?
     true
   end
