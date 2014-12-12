@@ -625,7 +625,6 @@ module OpsController::Settings::Common
 
     params = self.params
     new = @edit[:new]
-    auth = new[:authentication] unless @sb[:active_tab] == "settings_workers"
 
     # WTF? here we can have a Zone or a MiqServer, what about Region? --> rescue from exception
     @temp[:selected_server] = (cls.find(from_cid(nodes.last)) rescue nil)
@@ -678,6 +677,7 @@ module OpsController::Settings::Common
       new[:server][:custom_support_url] = params[:custom_support_url].strip if params[:custom_support_url]
       new[:server][:custom_support_url_description] = params[:custom_support_url_description] if params[:custom_support_url_description]
     when "settings_authentication"                                        # Authentication/SmartProxy Affinity tab
+      auth = new[:authentication]
       @sb[:form_vars][:session_timeout_mins] = params[:session_timeout_mins] if params[:session_timeout_mins]
       @sb[:form_vars][:session_timeout_hours] = params[:session_timeout_hours] if params[:session_timeout_hours]
       new[:session][:timeout] = @sb[:form_vars][:session_timeout_hours].to_i * 3600 + @sb[:form_vars][:session_timeout_mins].to_i * 60 if params[:session_timeout_hours] || params[:session_timeout_mins]
