@@ -44,8 +44,8 @@ class JqplotCharting < Charting
     ["Bars, Stacked (2D)",    "StackedBar"],
     ["Columns (2D)",          "Column"],
     ["Columns, Stacked (2D)", "StackedColumn"],
-    ["Pie (2D)",              "Pie"],
     ["Donut (2D)",            "Donut"],
+    ["Pie (2D)",              "Pie"],
   ]
 
   def chart_themes_for_select
