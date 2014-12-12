@@ -1,7 +1,0 @@
-<% if @report.nil? %>
-  <%= render :partial => 'layouts/info_msg', :locals => {:message => "Choose a Report to view from the menus on the left."}%>
-<% else  %>
-  <p class="legend"><%= @title %></p>
-  <%= render :partial => "layouts/flash_msg" %>
-  <%= render :partial => "shared/report_chart_and_html", :locals => { :html => @html, :chart => @zgraph, :report => @report } %>
-<% end  %>

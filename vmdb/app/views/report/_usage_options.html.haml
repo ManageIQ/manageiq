@@ -1,0 +1,71 @@
+- url = url_for(:action => 'usage_option_chooser')
+#usage_options_div
+  %fieldset
+    %p.legend
+      = _('Options')
+    %table.style1
+      %tr
+        %td.key{:style => "width: 90px;"}
+          = _("Date")
+        - if @usage_options[:date]
+          %td.wide{:style => "padding-right: 5px;"}
+            = text_field_tag("miq_date_1", @usage_options[:date],
+              :readonly               => "true",
+              "data-miq_sparkle_on"   => true,
+              "data-miq_sparkle_off"  => true,
+              "data-miq_observe_date" => {:url => url}.to_json)
+          %td.key{:style => "width: 90px;"}
+            = _("Period")
+          %td.wide{:style => "padding-right: 5px;"}
+            = select_tag("usage_typ",
+              options_for_select([[_("Day"), "daily"], [_("Hour"), "hourly"]], @usage_options[:typ]),
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+          - unless @usage_options[:typ] == "daily"
+            %span#day_span
+              %td.key{:style => "width:90px"}
+                = _('Hour')
+              %td.wide{:style => "padding-right: 5px;"}
+                = select_tag("usage_hour",
+                  options_for_select(@usage_options[:hours], @usage_options[:hour]),
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => {:url => url}.to_json)
+        - else
+          %td.wide{:style => "padding-right: 5px;"}
+            = text_field_tag("miq_date_1", @usage_options[:date],
+              :readonly               => "true",
+              "data-miq_sparkle_on"   => true,
+              "data-miq_sparkle_off"  => true,
+              "data-miq_observe_date" => {:url => url}.to_json)
+          - unless @usage_options[:typ] == "daily"
+            %span#day_span
+              %td.key{:style => "width:90px"}
+                = _('Hour')
+              %td.wide{:style => "padding-right: 5px;"}
+                = select_tag("usage_hour",
+                  options_for_select(@usage_options[:hours], @usage_options[:hour]),
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => {:url => url}.to_json)
+
+    - if @usage_options[:date]
+      %tr
+        %td.key{:style => "width:90px"}
+          = _('Category')
+        %td.wide{:style => "padding-right: 5px;"}
+          = select_tag("usage_cat",
+            options_for_select(Array(@usage_options[:cats].invert).sort_by(&:first), @usage_options[:cat]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      - if @usage_options[:cat]
+        %td.key{:style => "width:90px"}
+        %td.wide{:style => "padding-right: 5px;"}
+          = select_tag("usage_tag",
+            options_for_select(Array(@usage_options[:tags].invert).sort_by(&:first), @usage_options[:tag]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+    = _("* Dates/Times on this page are based on UTC Time.")

@@ -1,0 +1,17 @@
+- # Parameters:
+- #   widget      MiqWidget object
+- if @edit && @edit[:current]
+  - params = {:id => "w_#{widget.id}", :title => _("Drag/drop Widget \"%s\"") % widget.title}
+- else
+  - url = "/report/x_show/xx-#{WIDGET_CONTENT_TYPE.invert[widget.content_type]}_-#{to_cid(widget.id)}?accord=widgets"
+  - params = {:onclick => remote_function(:url => url), :id => widget.id,
+    :onmouseover => "this.style.cursor='pointer'", :title => _("View this Widget")}
+%div{params}
+  #test.modbox
+    %h2.modtitle{:style => @edit && @edit[:current] ? "cursor: move;" : ""}
+      %a{:class => "#{widget.content_type}box"}
+      - if role_allows(:feature => "dashboard_add") && @edit && @edit[:current]
+        = render :partial => 'db_widget_remove', :locals => {:widget => widget}
+      %div{:style => "overflow: hidden;"}
+        %span.modtitle_text{:style => "white-space: nowrap; overflow: hidden;"}
+          = widget.title

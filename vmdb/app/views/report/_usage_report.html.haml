@@ -1,0 +1,6 @@
+#usage_report_div
+  - if @html
+    %fieldset
+      %p.legend
+        = @usage_options[:report].title
+      = @html.html_safe

@@ -1,0 +1,49 @@
+#main_div
+  = render :partial => "layouts/flash_msg"
+
+  %fieldset
+    %p.legend
+      = _('Schedule Info')
+    %table.style1
+      %tr
+        %td.key
+          = _('Description')
+        %td
+          = h(@schedule.description)
+      %tr
+        %td.key
+          = _('Active')
+        %td
+          = h(@schedule.enabled)
+      %tr
+        %td.key
+          = _('E-Mail after Running')
+        %td
+          = h(@schedule.sched_action[:options] && @schedule.sched_action[:options][:send_email] ? "true" : "false")
+      %tr
+        %td.key
+          = _('Report Filter')
+        %td
+          = h(@rep_filter)
+      %tr
+        %td.key
+          = _('Run At')
+        %td
+          = h(@schedule.run_at_to_human(@timezone).to_s)
+      %tr
+        %td.key
+          = _('Last Run Time')
+        %td
+          - unless @schedule.last_run_on.blank?
+            = h(format_timezone(@schedule.last_run_on, @timezone, "view"))
+      %tr
+        %td.key
+          = _('Next Run Time')
+        %td
+          - unless @schedule.next_run_on.blank?
+            = h(format_timezone(@schedule.next_run_on, @timezone, "view"))
+      %tr
+        %td.key
+          = _('Zone')
+        %td
+          = h(@schedule.v_zone_name)

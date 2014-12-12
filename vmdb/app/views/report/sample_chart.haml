@@ -1,0 +1,102 @@
+%chart
+  %license
+    = ZiyaCharting.xmlswf_license
+  %chart_type
+    = @chart_name
+  %axis_category{:color => "0", :alpha => "100", :bold => "true", :orientation => "diagonal_up"}
+  %axis_ticks{:value_ticks => "true", :minor_count => "0", :major_color => "54544c", :minor_color => "a19d91"}
+  %axis_value{:alpha => "50", :color => "0", :size => "10"}
+  %chart_rect{:positive_color => "ffffff", :negative_color => "ffff66", :positive_alpha => "50", :negative_alpha => "50"}
+  %chart_border
+  %chart_grid_h{:alpha => "20", :color => "0", :thickness => "1"}
+  %chart_grid_v{:alpha => "20", :color => "0", :thickness => "3"}
+  %chart_transition{:type => "dissolve", :order => "category", :duration => "0.1"}
+  %chart_value{:color => "0", :position => "over"}
+  %legend_rect{:x => "5", :fill_alpha => "0", :y => "5", :fill_color => "ffffff", :height => "20"}
+  %legend_transition
+  %legend_label{:layout => "vertical", :color => "0"}
+  %draw2
+    %text{:x => "0", :y => "250", :duration => "0.1", :rotation => "270", :text => @chart_title, :alpha => "60", :color => "7e7e7e", :bold => "true", :size => "17", :transition => "slide_up"}
+  %series_color
+    %color
+      595959
+    %color
+      0038a7
+    %color
+      971a1d
+    %color
+      AD8342
+    %color
+      739CA5
+    %color
+      63639C
+  %series_gap
+  %series_switch
+  %chart_pref
+  %live_update
+  %link_data
+  %chart_data
+    - if @edit[:new][:graph_type][0..2] == "Pie"
+      %row
+        %null
+        - for i in 1..@edit[:new][:graph_count].to_i
+          %string
+            = _("OS %s") % i
+        - if @edit[:new][:graph_other]
+          %string
+            = _("Other")
+      %row
+        %null
+        - for i in 1..@edit[:new][:graph_count].to_i
+          %number
+            = @edit[:new][:graph_count].to_i + 2 - i
+        - if @edit[:new][:graph_other]
+          %number
+            = (rand(@edit[:new][:graph_count].to_i) + 1).to_s
+    - else
+      %row
+        %null
+        %string
+          = _("Vendor A")
+        %string
+          = _("Vendor B")
+        %string
+          = _("Vendor C")
+        %string
+          = _("Vendor D")
+      - for i in 1..@edit[:new][:graph_count].to_i
+        %row
+          %string
+            = _("OS %s") % i
+          %number
+            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+          %number
+            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+          %number
+            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+          %number
+            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+    - if @edit[:new][:graph_other]
+      %row
+        %string
+          = _("Other")
+        %number
+          = rand(10).to_s
+        %number
+          = rand(10).to_s
+        %number
+          = rand(10).to_s
+        %number
+          = rand(10).to_s
+  %chart_value_text
+    %row
+      %null
+      %null
+    %row
+      %null
+      %null
+      %null
+    %row
+      %null
+      %null
+      %null

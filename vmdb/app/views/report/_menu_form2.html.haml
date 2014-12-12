@@ -1,0 +1,102 @@
+#menu_div2
+  - if @selected && @selected[1] && (!@edit[:selected_reports].blank? || !@edit[:available_reports].blank?)
+    = form_tag(:action => 'menu_update', :id => "report_menu_form2") do
+      %fieldset{:style => "height: 450px;"}
+        %p.legend
+          = _('Manage Reports')
+        #column_lists
+          %table.admintable
+            %tr
+              %td{:align => "left"}
+                = _('Selected Reports:')
+              %td
+              %td{:align => "left"}
+                = _('Available Reports:')
+              %td
+            %tr
+              %td{:align => "right"}
+                = select_tag('selected_reports[]',
+                  options_for_select(@edit[:selected_reports], @selected_reps),
+                  :multiple => true,
+                  :style    => "width: 280px; height: 310px;",
+                  :id       => "selected_reports")
+              %td{:width => "20", :valign => "middle"}
+                - if @edit[:available_reports].length == 0
+                  = image_tag("/images/toolbars/left.png", :class => "rollover small", :border => "0")
+                - else
+                  - t = _("Move selected reports left")
+                  = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class => "rollover small", :alt => t),
+                    {:action => 'menu_field_changed', :button => 'left'},
+                    "data-submit" => "column_lists",
+                    :remote       => true,
+                    :title        => t)
+                - if @edit[:selected_reports].length == 0
+                  = image_tag("/images/toolbars/right.png", :class => "rollover small", :border => "0")
+                - else
+                  - t = _("Move selected reports right")
+                  = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class => "rollover small", :alt => t),
+                    {:action => 'menu_field_changed', :button => 'right'},
+                    "data-submit" => "column_lists",
+                    :remote       => true,
+                    :title        => t)
+                - if @edit[:selected_reports].length < 2
+                  = image_tag("/images/toolbars/top.png", :class => "rollover small", :border => "0")
+                - else
+                  - t = _("Move selected reports to top")
+                  = link_to(image_tag("/images/toolbars/top.png", :border => "0", :class => "rollover small", :alt => t),
+                    {:action => 'menu_field_changed', :button => 'top'},
+                    "data-submit" => "column_lists",
+                    :remote       => true,
+                    :title        => t)
+                - if @edit[:selected_reports].length < 2
+                  = image_tag("/images/toolbars/up.png", :class => "rollover small", :border => "0")
+                - else
+                  - t = _("Move selected reports up")
+                  = link_to(image_tag("/images/toolbars/up.png", :border => "0", :class => "rollover small", :alt => t),
+                    {:action => 'menu_field_changed', :button => 'up'},
+                    "data-submit" => "column_lists",
+                    :remote       => true,
+                    :title        => t)
+                - if @edit[:selected_reports].length < 2
+                  = image_tag("/images/toolbars/down.png", :class => "rollover small", :border => "0")
+                - else
+                  - t = _("Move selected reports down")
+                  = link_to(image_tag("/images/toolbars/down.png", :border => "0", :class => "rollover small", :alt => t),
+                    {:action => 'menu_field_changed', :button => 'down'},
+                    "data-submit" => "column_lists",
+                    :remote       => true,
+                    :title        => t)
+                - if @edit[:selected_reports].length < 2
+                  = image_tag("/images/toolbars/bottom.png", :class => "rollover small", :border => "0")
+                - else
+                  - t = _("Move selected reports to bottom")
+                  = link_to(image_tag("/images/toolbars/bottom.png", :border => "0", :class => "rollover small", :alt => t),
+                    {:action => 'menu_field_changed', :button => 'bottom'},
+                    "data-submit" => "column_lists",
+                    :remote       => true,
+                    :title        => 'Move selected reports to bottom')
+              %td{:align => "left"}
+                = select_tag('available_reports[]',
+                  options_for_select(@edit[:available_reports].sort),
+                  :multiple => true,
+                  :style    => "width: 280px; height: 310px;",
+                  :id       => "available_reports")
+            %tr
+              %td{:colspan => "3", :align => "right"}
+                %div{:style => "width: 67px; float: right; margin-bottom: 2px;"}
+                  - t = _('Commit report management changes')
+                  = link_to(image_tag('/images/toolbars/commit.png', :class => "rollover small", :alt => t),
+                    {:action => 'menu_field_changed', :pressed => 'commit'},
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote                => true,
+                    :title                 => t)
+                  - t = _("Discard report management changes")
+                  = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => t),
+                    {:action => 'discard_changes', :pressed => 'discard_reports'},
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote                => true,
+                    :title                 => t)
+      - unless @edit[:user_typ]
+        = _('* Report is not owned by your group so it cannot be removed')
