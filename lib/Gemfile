@@ -21,7 +21,7 @@ gem "ezcrypto",             "=0.7",      :require => false
 gem "facade",               "~>1.0.5",   :require => false  # Used by util/pathname2.rb
 gem "ffi",                  "~>1.9.3",   :require => false
 gem "ffi-vix_disk_lib",     "~>1.0.1",   :require => false  # used by lib/VixDiskLib
-gem "fog",                  "~>1.24.0",  :require => false
+gem "fog",                  "~>1.26.0",  :require => false
 gem "httpclient",           "~>2.5.3",   :require => false
 gem "io-extra",             "=1.2.6",    :require => false
 gem "linux_admin",          "~>0.9",     :require => false
