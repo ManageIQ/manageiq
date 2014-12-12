@@ -299,13 +299,13 @@ module ActiveRecord
 
   module FinderMethods
     def find_with_associations_with_virtual
-      original, @includes_values = @includes_values, klass.remove_virtual_fields(@includes_values) if @includes_values
+      original, self.includes_values = includes_values, klass.remove_virtual_fields(includes_values) if includes_values
 
       recs = find_with_associations_without_virtual
 
       if original
-        @includes_values = original
-        ActiveRecord::Associations::Preloader.new(recs, @preload_values + @includes_values).run
+        self.includes_values = original
+        ActiveRecord::Associations::Preloader.new(recs, preload_values + includes_values).run
       end
       return recs
     end
@@ -314,9 +314,9 @@ module ActiveRecord
 
   module Calculations
     def calculate_with_virtual(operation, column_name, options = {})
-      original, @includes_values = @includes_values, klass.remove_virtual_fields(@includes_values) if @includes_values
+      original, self.includes_values = includes_values, klass.remove_virtual_fields(includes_values) if includes_values
       result = calculate_without_virtual(operation, column_name, options)
-      @includes_values = original if original
+      self.includes_values = original if original
       return result
     end
     alias_method_chain :calculate, :virtual
