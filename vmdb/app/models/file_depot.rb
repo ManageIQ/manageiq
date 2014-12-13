@@ -12,6 +12,10 @@ class FileDepot < ActiveRecord::Base
     @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) }.freeze
   end
 
+  def self.supported_protocols
+    @supported_depots ||= subclasses.each_with_object({}) { |klass, hash| hash[klass.uri_prefix] = klass.name }.freeze
+  end
+
   def self.requires_credentials?
     true
   end
@@ -33,17 +37,6 @@ class FileDepot < ActiveRecord::Base
      :uri      => uri,
      :password => authentication_password,
      :name     => name}
-  end
-
-  def self.verify_depot_hash(hsh)
-    return true unless MiqEnvironment::Command.is_appliance?
-
-    # TODO: Move the logfile "depot" logic into remaining subclasses
-    LogFile.verify_log_depot_settings(hsh)
-  end
-
-  def verify_credentials(_auth_type = nil)
-    self.class.verify_depot_hash(self.depot_hash)
   end
 
   def upload_file(file)

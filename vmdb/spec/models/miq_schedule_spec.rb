@@ -485,13 +485,13 @@ describe MiqSchedule do
 
     it "should verify_depot_hash with good hash and FileDepot.verify_depot_hash good" do
       @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-      FileDepot.stub(:verify_depot_hash).and_return(true)
+      FileDepotSmb.stub(:validate_settings).and_return(true)
       MiqSchedule.verify_depot_hash(@depot_hash).should be_true
     end
 
     it "should verify_depot_hash with good hash and FileDepot.verify_depot_hash bad" do
       @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-      FileDepot.stub(:verify_depot_hash).and_return(false)
+      FileDepotSmb.stub(:validate_settings).and_return(false)
       MiqSchedule.verify_depot_hash(@depot_hash).should_not be_true
     end
 
