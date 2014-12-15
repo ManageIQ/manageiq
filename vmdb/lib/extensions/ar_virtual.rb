@@ -279,18 +279,18 @@ module ActiveRecord
           }
           Preloader.new(records, virtual_columns).run
 
-          virtual_association, association = association.partition do |parent, child|
+          virtual_reflections, association = association.partition do |parent, child|
             raise "parent must be an association name" unless parent.is_a?(String) || parent.is_a?(Symbol)
             records_model.virtual_reflection?(parent)
           end
           association = Hash[association]
 
-          virtual_association.each do |parent, child|
+          virtual_reflections.each do |parent, child|
             field = records_model.virtual_field(parent)
-            Array.wrap(field.uses).each { |f| preload(f) }
 
+            Preloader.new(records, Array.wrap(field.uses), options).run
             parents = records.map {|record| record.send(field.name)}.flatten.compact
-            Preloader.new(parents, child).run unless parents.empty?
+            Preloader.new(parents, child, options).run
           end
         when String, Symbol
           field = records_model.virtual_field(association)
