@@ -124,6 +124,7 @@ module EmsCloudHelper::TextualSummary
     return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
 
     authentications.collect do |auth|
+      next if auth.kind_of?(AuthPrivateKey)
       label =
         case auth.authtype
         when "default"; "Default"
