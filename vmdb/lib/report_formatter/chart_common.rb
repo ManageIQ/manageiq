@@ -352,7 +352,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_other
-      @is_pie = mri.graph[:type] =~ /^Pie/
+      @is_pie_type = mri.graph[:type] =~ /^(Pie|Donut)/
       save_key   = nil
       counter    = 0
       categories = []                      # Store categories and series counts in an array of arrays
@@ -378,12 +378,12 @@ module ReportFormatter
       end
 
       series = categories.each_with_object(
-        series_class.new(@is_pie ? :pie : :flat)) do |cat, a|
+        series_class.new(@is_pie_type ? :pie : :flat)) do |cat, a|
         a.push(:value => cat.last, :tooltip => "#{cat.first}: #{cat.last}")
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = @is_pie ? LEGEND_LENGTH : LABEL_LENGTH
+      limit = @is_pie_type ? LEGEND_LENGTH : LABEL_LENGTH
       categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
       add_series(mri.headers[0], series)

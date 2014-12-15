@@ -134,7 +134,7 @@ module ReportFormatter
           }",
           :tooltipLocation      => 'n'
         }
-      ) if @is_pie
+      ) if @is_pie_type
     end
 
     def finalize_document
