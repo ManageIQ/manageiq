@@ -1176,7 +1176,7 @@ module ReportController::Reports::Editor
       rpt.dims  = nil
       rpt.graph = nil
     else
-      if @edit[:new][:graph_type][0..2] == "Pie"  # Pie charts must be set to 1 dimension
+      if @edit[:new][:graph_type] =~ /^(Pie|Donut)/ # Pie and Donut charts must be set to 1 dimension
         rpt.dims = 1
       else
         rpt.dims = @edit[:new][:sortby2] == NOTHING_STRING ? 1 : 2  # Set dims to 1 or 2 based on presence of sortby2

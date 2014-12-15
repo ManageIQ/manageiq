@@ -44,6 +44,7 @@ class JqplotCharting < Charting
     ["Bars, Stacked (2D)",    "StackedBar"],
     ["Columns (2D)",          "Column"],
     ["Columns, Stacked (2D)", "StackedColumn"],
+    ["Donut (2D)",            "Donut"],
     ["Pie (2D)",              "Pie"],
   ]
 
@@ -57,7 +58,7 @@ class JqplotCharting < Charting
     graph_count = options[:graph_count].to_i
 
     case options[:graph_type]
-    when 'Pie'
+    when 'Pie', 'Donut'
       series = graph_count.times.each_with_object([]) do |i, acc|
         acc.push([i.ordinalize + " Operating System", graph_count + 2 - i])
       end
@@ -79,9 +80,8 @@ class JqplotCharting < Charting
   def sample_chart_options(options, report_theme)
     chart = Jqplot.basic_chart(options[:graph_type])
     chart = Jqplot.horizontal_legend(
-      Jqplot.horizontal_line_cursor(chart)) unless options[:graph_type] == 'Pie'
-    chart = Jqplot.apply_theme(chart, report_theme)
-    chart
+      Jqplot.horizontal_line_cursor(chart)) unless %w(Pie Donut).include?(options[:graph_type])
+    Jqplot.apply_theme(chart, report_theme)
   end
 
   def self.available?

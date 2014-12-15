@@ -7,6 +7,7 @@
 //= require excanvas
 //= require jquery.jqplot
 //= require jqplot-plugins/jqplot.pieRenderer
+//= require jqplot-plugins/jqplot.donutRenderer
 //= require jqplot-plugins/jqplot.barRenderer
 //= require jqplot-plugins/jqplot.categoryAxisRenderer
 //= require jqplot-plugins/jqplot.highlighter
