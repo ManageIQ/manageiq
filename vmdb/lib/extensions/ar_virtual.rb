@@ -270,18 +270,24 @@ module ActiveRecord
 
         case association
         when Hash
+          virtual_columns = []
+          association.delete_if { |parent, child|
+            if records_model.virtual_column? parent
+              raise "child must be blank if parent is a virtual column" unless child.blank?
+              virtual_columns << parent
+            end
+          }
+          Preloader.new(records, virtual_columns).run
+
           virtual_association, association = association.partition do |parent, child|
             raise "parent must be an association name" unless parent.is_a?(String) || parent.is_a?(Symbol)
-            records_model.virtual_field?(parent)
+            records_model.virtual_reflection?(parent)
           end
           association = Hash[association]
 
           virtual_association.each do |parent, child|
             field = records_model.virtual_field(parent)
             Array.wrap(field.uses).each { |f| preload(f) }
-
-            raise "child must be blank if parent is a virtual column" if field.kind_of?(VirtualColumn) && !child.blank?
-            next unless field.kind_of?(VirtualReflection)
 
             parents = records.map {|record| record.send(field.name)}.flatten.compact
             Preloader.new(parents, child).run unless parents.empty?
