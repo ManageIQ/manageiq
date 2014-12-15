@@ -120,7 +120,7 @@ module ActsAsTaggable
       Tag.parse(list).each do |name|
         next if self.is_tagged_with?(name, options)
         name = File.join(ns, name)
-        tag = Tag.find_or_create_by_name(name)
+        tag = Tag.find_or_create_by(:name => name)
         tag.taggings.create(:taggable => self)
       end
     end
