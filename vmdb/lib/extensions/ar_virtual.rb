@@ -270,6 +270,7 @@ module ActiveRecord
 
         case association
         when Hash
+          association = association.dup # do not mutate arguments
           virtual_columns = []
           association.delete_if { |parent, child|
             if records_model.virtual_column? parent
