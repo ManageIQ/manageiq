@@ -260,64 +260,80 @@ module EmsCommon
     assert_privileges("#{@model.to_s.underscore}_edit")
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
-    changed = (@edit[:new] != @edit[:current])
     case params[:button]
-    when "cancel"
-      session[:edit] = nil  # clean out the saved info
-      render :update do |page|
-        page.redirect_to :action=>@lastaction, :id=>@ems.id, :display=>session[:ems_display], :flash_msg=>_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>@model.to_s), :name=>@ems.name}
-      end
-    when "save"
-      update_ems = find_by_id_filtered(@model, params[:id])
-      set_record_vars(update_ems)
-      if valid_record?(update_ems) && update_ems.save
-        update_ems.reload
-        flash = _("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>@model.to_s), :name=>update_ems.name}
-        AuditEvent.success(build_saved_audit(update_ems, @edit))
-        session[:edit] = nil  # clean out the saved info
-        render :update do |page|
-          page.redirect_to :action=>'show', :id=>@ems.id.to_s, :flash_msg=>flash
-        end
-        return
-      else
-        @edit[:errors].each { |msg| add_flash(msg, :error) }
-        update_ems.errors.each do |field,msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
-        drop_breadcrumb( {:name=>"Edit #{ui_lookup(:table=>@table_name)} '#{@ems.name}'", :url=>"/#{@table_name}/edit/#{@ems.id}"} )
-        @in_a_form = true
-        session[:changed] = changed
-        @changed = true
-        render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
-      end
-    when "reset"
-      params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(_("All changes have been reset"), :warning)
-      @in_a_form = true
-      set_verify_status
-      session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page.redirect_to :action=>'edit', :id=>@ems.id.to_s
-      end
-    when "validate"
-      verify_ems = find_by_id_filtered(@model, params[:id])
-            set_record_vars(verify_ems, :validate)
-            @in_a_form = true
-            @changed = session[:changed]
-            begin
-              verify_ems.verify_credentials(params[:type])
-            rescue StandardError=>bang
-              add_flash("#{bang}", :error)
-            else
-              add_flash(_("Credential validation was successful"))
-            end
-      render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-      end
+    when "cancel"   then update_button_cancel
+    when "save"     then update_button_save
+    when "reset"    then update_button_reset
+    when "validate" then update_button_validate
     end
   end
+
+  def update_button_cancel
+    session[:edit] = nil  # clean out the saved info
+    render :update do |page|
+      page.redirect_to(:action => @lastaction, :id => @ems.id, :display => session[:ems_display],
+                       :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
+                       {:model => ui_lookup(:model => @model.to_s), :name => @ems.name})
+    end
+  end
+  private :update_button_cancel
+
+  def update_button_save
+    changed = (@edit[:new] != @edit[:current])
+    update_ems = find_by_id_filtered(@model, params[:id])
+    set_record_vars(update_ems)
+    if valid_record?(update_ems) && update_ems.save
+      update_ems.reload
+      flash = _("%{model} \"%{name}\" was saved") %
+              {:model => ui_lookup(:model => @model.to_s), :name => update_ems.name}
+      AuditEvent.success(build_saved_audit(update_ems, @edit))
+      session[:edit] = nil  # clean out the saved info
+      render :update do |page|
+        page.redirect_to :action => 'show', :id => @ems.id.to_s, :flash_msg => flash
+      end
+      return
+    else
+      @edit[:errors].each { |msg| add_flash(msg, :error) }
+      update_ems.errors.each do |field, msg|
+        add_flash("#{field.to_s.capitalize} #{msg}", :error)
+      end
+      drop_breadcrumb(:name => "Edit #{ui_lookup(:table => @table_name)} '#{@ems.name}'",
+                      :url  => "/#{@table_name}/edit/#{@ems.id}")
+      @in_a_form = true
+      session[:changed] = changed
+      @changed = true
+      render_flash
+    end
+  end
+  private :update_button_save
+
+  def update_button_reset
+    params[:edittype] = @edit[:edittype]    # remember the edit type
+    add_flash(_("All changes have been reset"), :warning)
+    @in_a_form = true
+    set_verify_status
+    session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
+    render :update do |page|
+      page.redirect_to :action => 'edit', :id => @ems.id.to_s
+    end
+  end
+  private :update_button_reset
+
+  def update_button_validate
+    verify_ems = find_by_id_filtered(@model, params[:id])
+    set_record_vars(verify_ems, :validate)
+    @in_a_form = true
+    @changed = session[:changed]
+    begin
+      verify_ems.verify_credentials(params[:type])
+    rescue StandardError=>bang
+      add_flash("#{bang}", :error)
+    else
+      add_flash(_("Credential validation was successful"))
+    end
+    render_flash
+  end
+  private :update_button_validate
 
   # handle buttons pressed on the button bar
   def button
