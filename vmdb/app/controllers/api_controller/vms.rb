@@ -101,6 +101,23 @@ class ApiController
       end
     end
 
+    def rsop_resource_vms(type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for running a policy simulation for a #{type} resource" unless id
+
+      policy = data.blank? ? "" : data["policy"].to_s
+      raise BadRequestError, "Must specify a Policy name" if policy.blank?
+
+      pol = MiqPolicy.find_by_name(policy)
+      raise BadRequestError, "Unable to find policy #{policy}" if pol.nil?
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Running a simulation for #{vm_ident(vm)} with policy '#{policy}'")
+
+        rsop_vm(vm, policy, pol)
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -184,6 +201,14 @@ class ApiController
 
       vm.add_ems_event(event_type, event_message, event_timestamp)
       action_result(true, desc)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def rsop_vm(vm, policy, pol)
+      desc = "#{vm_ident(vm)} resolution for policy '#{pol.description}'"
+      rsop = vm.passes_policy?([policy])
+      action_result(true, desc, :result => rsop)
     rescue => err
       action_result(false, err.to_s)
     end

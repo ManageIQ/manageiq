@@ -760,6 +760,8 @@
         :identifier: vm_edit
       - :name: scan
         :identifier: vm_scan
+      - :name: rsop
+        :identifier: vm_policy_sim
       - :name: delete
         :identifier: vm_delete
     :resource_actions:
@@ -798,6 +800,8 @@
         :identifier: vm_edit
       - :name: scan
         :identifier: vm_scan
+      - :name: rsop
+        :identifier: vm_policy_sim
       :delete:
       - :name: delete
         :identifier: vm_delete

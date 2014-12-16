@@ -1027,4 +1027,97 @@ describe ApiController do
       expect(results.second["href"]).to match(vm2_url)
     end
   end
+
+  context "Vm rsop action" do
+    it "Vm rsop action without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:rsop))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "Vm rsop action with no policy" do
+      update_user_role(@role, action_identifier(:vms, :rsop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:rsop))
+
+      expect(@success).to be_false
+      expect(@code).to eq(400)
+      expect(@result).to have_key("error")
+      expect(@result["error"]["message"]).to match(/must specify a policy name/i)
+    end
+
+    it "Vm rsop action with invalid policy" do
+      update_user_role(@role, action_identifier(:vms, :rsop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request_data(:rsop, :policy => "bad policy"))
+
+      expect(@success).to be_false
+      expect(@code).to eq(400)
+      expect(@result).to have_key("error")
+      expect(@result["error"]["message"]).to match(/unable to find policy/i)
+    end
+
+    it "Vm rsop action with a valid policy" do
+      update_user_role(@role, action_identifier(:vms, :rsop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      policy = MiqPolicy.new(:name => "test policy", :description => "test_policy", :mode => "compliance")
+      policy.save!
+
+      @success = run_post(vm_url, gen_request_data(:rsop, :policy => policy.name))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result["success"]).to be_true
+      expect(@result).to have_key("result")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "Multiple Vm rsop actions" do
+      update_user_role(@role, action_identifier(:vms, :rsop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryGirl.create(:vm_vmware)
+      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
+      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+
+      policy = MiqPolicy.new(:name => "test policy", :description => "test_policy", :mode => "compliance")
+      policy.save!
+
+      @success = run_post(@cfme[:vms_url], gen_requests(:rsop, [{"href" => vm1_url, "policy" => policy.name},
+                                                                {"href" => vm1_url, "policy" => policy.name},
+                                                                {"href" => vm2_url, "policy" => policy.name}]))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(3)
+      expect(results.first["href"]).to match(vm1_url)
+      expect(results.first).to have_key("result")
+      expect(results.second["href"]).to match(vm1_url)
+      expect(results.second).to have_key("result")
+      expect(results.third["href"]).to match(vm2_url)
+      expect(results.third).to have_key("result")
+    end
+  end
 end
