@@ -289,7 +289,7 @@ module MiqPreloader
       end
     when String, Symbol
       field = records_model.virtual_field(association)
-      return Array.wrap(field.uses).each { |f| preload(f) } if field
+      return run_preloader(records, Array.wrap(field.uses), options) if field
     end
 
     super(association)
