@@ -17,4 +17,7 @@ rescue LoadError
 end
 
 RSpec.configure do |config|
+  config.backtrace_exclusion_patterns -= [%r{/lib\d*/ruby/}, %r{/gems/}]
+  config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
+  config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
 end
