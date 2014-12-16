@@ -242,7 +242,7 @@ function miqOnMouseIn_HostNet(id) {
   if (nid)  {                                         // and div id exists
     var node = $(id);                                  // Get html node
     var top = getAbsoluteTop(node);
-    $(nid).setStyle("top:" + (top-220) + "px");       // Set quad top location
+    $j("#" + nid).css({top: (top-220) + "px"});       // Set quad top location
     $j("#" + nid).show();                                    // Show the quad div
     last_id = nid;                                    // Save current node id
   }

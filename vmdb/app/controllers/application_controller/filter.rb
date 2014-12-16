@@ -107,7 +107,7 @@ module ApplicationController::Filter
       render :update do |page|
         page.replace("flash_msg_div#{div_num}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>div_num})
         page.replace("exp_editor_div", :partial=>"layouts/exp_editor")
-        page << "$('exp_#{token}').setStyle('background-color: yellow')"
+        page << "$j('#exp_#{token}').css({'background-color': 'yellow'})"
         page << javascript_hide("exp_buttons_off")
         if exp.has_key?("not") or @parent_is_not
           page << javascript_hide("exp_buttons_on")

@@ -461,16 +461,16 @@ function miqResetSizeTimer() {
 
   if (typeof xml != "undefined") {  // If grid xml is available for reload
     // Adjust certain elements, if present
-    if ($('list_grid')) {
+    if ($j('#list_grid').length) {
       h = theArray[1] - offset;
       if (h < 200) h = 200;
-      $('list_grid').setStyle({height: h + 'px' });
+      $j('#list_grid').css({height: h + 'px' });
       gtl_list_grid.clearAll();
       gtl_list_grid.parse(xml);
-    } else if ($('logview')) {
+    } else if ($j('#logview').length) {
       h = theArray[1] - offset;
       if (h < 200) h = 200;
-      $('logview').setStyle({height: h + 'px' });
+      $j('#logview').css({height: h + 'px' });
     }
   }
 
