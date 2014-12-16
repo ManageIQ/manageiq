@@ -258,6 +258,48 @@ end
 # Class extensions
 #
 
+module MiqPreloader
+  def preload(association)
+    records_model = records.first.class
+
+    case association
+    when Hash
+      association = association.dup # do not mutate arguments
+      virtual_columns = []
+      association.delete_if { |parent, child|
+        if records_model.virtual_column? parent
+          raise "child must be blank if parent is a virtual column" unless child.blank?
+          virtual_columns << parent
+        end
+      }
+      run_preloader(records, virtual_columns, options)
+
+      virtual_reflections, association = association.partition do |parent, child|
+        raise "parent must be an association name" unless parent.is_a?(String) || parent.is_a?(Symbol)
+        records_model.virtual_reflection?(parent)
+      end
+      association = Hash[association]
+
+      virtual_reflections.each do |parent, child|
+        field = records_model.virtual_field(parent)
+
+        run_preloader(records, Array.wrap(field.uses), options)
+        parents = records.map {|record| record.send(field.name)}.flatten.compact
+        run_preloader(parents, child, options)
+      end
+    when String, Symbol
+      field = records_model.virtual_field(association)
+      return Array.wrap(field.uses).each { |f| preload(f) } if field
+    end
+
+    super(association)
+  end
+
+  def run_preloader(records, associations, options)
+    ActiveRecord::Associations::Preloader.new(records, associations, options).run
+  end
+end
+
 module ActiveRecord
   class Base
     extend VirtualFields
@@ -265,46 +307,7 @@ module ActiveRecord
 
   module Associations
     class Preloader
-      def preload_with_virtual(association)
-        records_model = records.first.class
-
-        case association
-        when Hash
-          association = association.dup # do not mutate arguments
-          virtual_columns = []
-          association.delete_if { |parent, child|
-            if records_model.virtual_column? parent
-              raise "child must be blank if parent is a virtual column" unless child.blank?
-              virtual_columns << parent
-            end
-          }
-          run_preloader(records, virtual_columns, options)
-
-          virtual_reflections, association = association.partition do |parent, child|
-            raise "parent must be an association name" unless parent.is_a?(String) || parent.is_a?(Symbol)
-            records_model.virtual_reflection?(parent)
-          end
-          association = Hash[association]
-
-          virtual_reflections.each do |parent, child|
-            field = records_model.virtual_field(parent)
-
-            run_preloader(records, Array.wrap(field.uses), options)
-            parents = records.map {|record| record.send(field.name)}.flatten.compact
-            run_preloader(parents, child, options)
-          end
-        when String, Symbol
-          field = records_model.virtual_field(association)
-          return Array.wrap(field.uses).each { |f| preload(f) } if field
-        end
-
-        preload_without_virtual(association)
-      end
-      alias_method_chain :preload, :virtual
-
-      def run_preloader(records, associations, options)
-        ActiveRecord::Associations::Preloader.new(records, associations, options).run
-      end
+      prepend MiqPreloader
     end
   end
 
