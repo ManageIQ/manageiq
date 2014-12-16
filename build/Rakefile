@@ -5,7 +5,6 @@ namespace :build do
   module FilePaths
     BUILD        = Pathname.new(File.dirname(__FILE__)).join("../vmdb/BUILD")
     VERSION      = Pathname.new(File.dirname(__FILE__)).join("../vmdb/VERSION")
-    HOST_VERSION = Pathname.new(File.dirname(__FILE__)).join("../host/miqhost/VERSION")
   end
 
   class ConfigOptions
@@ -33,7 +32,6 @@ namespace :build do
 
   task :version_files do
     File.write(FilePaths::VERSION, "#{ConfigOptions.version}\n")
-    File.write(FilePaths::HOST_VERSION, "#{ConfigOptions.version}\n")
   end
 
   task :precompile_assets do
