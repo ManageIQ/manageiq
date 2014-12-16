@@ -278,7 +278,7 @@ module ActiveRecord
               virtual_columns << parent
             end
           }
-          Preloader.new(records, virtual_columns).run
+          run_preloader(records, virtual_columns, options)
 
           virtual_reflections, association = association.partition do |parent, child|
             raise "parent must be an association name" unless parent.is_a?(String) || parent.is_a?(Symbol)
@@ -289,9 +289,9 @@ module ActiveRecord
           virtual_reflections.each do |parent, child|
             field = records_model.virtual_field(parent)
 
-            Preloader.new(records, Array.wrap(field.uses), options).run
+            run_preloader(records, Array.wrap(field.uses), options)
             parents = records.map {|record| record.send(field.name)}.flatten.compact
-            Preloader.new(parents, child, options).run
+            run_preloader(parents, child, options)
           end
         when String, Symbol
           field = records_model.virtual_field(association)
@@ -301,6 +301,10 @@ module ActiveRecord
         preload_without_virtual(association)
       end
       alias_method_chain :preload, :virtual
+
+      def run_preloader(records, associations, options)
+        ActiveRecord::Associations::Preloader.new(records, associations, options).run
+      end
     end
   end
 
