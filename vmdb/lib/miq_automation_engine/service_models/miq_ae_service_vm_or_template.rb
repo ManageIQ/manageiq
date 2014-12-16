@@ -26,6 +26,12 @@ module MiqAeMethodService
     expose :retire_now
     expose :files,                 :association => true
     expose :directories,           :association => true
+    expose :start_retirement
+    expose :finish_retirement
+    expose :is_or_being_retired?
+    expose :retired?
+    expose :files
+    expose :directories
     expose :refresh, :method => :refresh_ems
 
     METHODS_WITH_NO_ARGS = %w{start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest}
@@ -136,6 +142,13 @@ module MiqAeMethodService
         @object.save
       end
       value
+    end
+
+    def retirement_state=(state)
+      ar_method do
+        @object.retirement_state = state
+        @object.save
+      end
     end
 
     def retires_on=(date)

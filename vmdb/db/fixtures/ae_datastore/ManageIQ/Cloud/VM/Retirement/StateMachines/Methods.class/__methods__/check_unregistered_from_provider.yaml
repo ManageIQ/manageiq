@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     name: check_unregistered_from_provider
-    display_name: CheckUnregisteredFromProvider
+    display_name: 
     description: 
     scope: instance
     language: ruby
