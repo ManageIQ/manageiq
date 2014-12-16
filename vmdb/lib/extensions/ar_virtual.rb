@@ -178,7 +178,7 @@ module VirtualFields
   end
 
   def reflections_with_virtual
-    reflections.merge(virtual_reflections)
+    reflections.symbolize_keys.merge(virtual_reflections)
   end
 
 
