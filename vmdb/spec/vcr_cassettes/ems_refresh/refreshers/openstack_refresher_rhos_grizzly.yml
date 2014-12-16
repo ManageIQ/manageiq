@@ -4,11 +4,11 @@ http_interactions:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":""}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":""}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -23,16 +23,15 @@ http_interactions:
       Content-Length:
       - '329'
       Date:
-      - Fri, 19 Sep 2014 22:09:48 GMT
+      - Tue, 16 Dec 2014 00:05:34 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:48.969337",
-        "expires": "2014-09-20T22:09:48Z", "id": "07dc3c6a778943668a1939f25901055b"},
-        "serviceCatalog": [], "user": {"username": "admin", "roles_links": [], "id":
-        "9cc646d22e2d43d1bc2b0362e2b00481", "roles": [], "name": "admin"}, "metadata":
-        {"is_admin": 0, "roles": []}}}'
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:34.043538", "expires":
+        "2014-12-17T00:05:34Z", "id": "54b2fd00aa1148698917ca3139551d1d"}, "serviceCatalog":
+        [], "user": {"username": "admin", "roles_links": [], "id": "9cc646d22e2d43d1bc2b0362e2b00481",
+        "roles": [], "name": "admin"}, "metadata": {"is_admin": 0, "roles": []}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:30 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:37 GMT
 - request:
     method: get
     uri: http://1.2.3.4:5000/v2.0/tenants
@@ -41,13 +40,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 07dc3c6a778943668a1939f25901055b
+      - 54b2fd00aa1148698917ca3139551d1d
   response:
     status:
       code: 200
@@ -60,25 +59,25 @@ http_interactions:
       Content-Length:
       - '361'
       Date:
-      - Fri, 19 Sep 2014 22:09:49 GMT
+      - Tue, 16 Dec 2014 00:05:34 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"tenants_links": [], "tenants": [{"description": "test1 tenant",
-        "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5", "name": "test1"},
-        {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"tenants_links": [], "tenants": [{"description": "test1 tenant", "enabled":
+        true, "id": "ac0a6059e6d545cf98b9b5e9913936e5", "name": "test1"}, {"description":
+        "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}, {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:30 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:37 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"token":{"id":"07dc3c6a778943668a1939f25901055b"},"tenantName":"test1"}}'
+      encoding: UTF-8
+      string: '{"auth":{"token":{"id":"54b2fd00aa1148698917ca3139551d1d"},"tenantName":"test1"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -93,12 +92,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:49 GMT
+      - Tue, 16 Dec 2014 00:05:34 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:49.216855",
-        "expires": "2014-09-20T22:09:48Z", "id": "90ff36f37cbe4f799d7d9351f7a76fab",
-        "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:34.275425", "expires":
+        "2014-12-17T00:05:34Z", "id": "40f809cf30394c3d9e276fbcde0aaeee", "tenant":
+        {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5"}],
@@ -128,7 +127,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:30 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:37 GMT
 - request:
     method: get
     uri: http://1.2.3.4:5000/v2.0/tenants
@@ -137,13 +136,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 07dc3c6a778943668a1939f25901055b
+      - 54b2fd00aa1148698917ca3139551d1d
   response:
     status:
       code: 200
@@ -156,25 +155,25 @@ http_interactions:
       Content-Length:
       - '361'
       Date:
-      - Fri, 19 Sep 2014 22:09:49 GMT
+      - Tue, 16 Dec 2014 00:05:34 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"tenants_links": [], "tenants": [{"description": "test1 tenant",
-        "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5", "name": "test1"},
-        {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"tenants_links": [], "tenants": [{"description": "test1 tenant", "enabled":
+        true, "id": "ac0a6059e6d545cf98b9b5e9913936e5", "name": "test1"}, {"description":
+        "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}, {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:31 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:37 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -189,12 +188,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:51 GMT
+      - Tue, 16 Dec 2014 00:05:34 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:51.371382",
-        "expires": "2014-09-20T22:09:51Z", "id": "ff6acdf0d66a450283d7d1fdb3f3ed70",
-        "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:34.838819", "expires":
+        "2014-12-17T00:05:34Z", "id": "e4e850b6445949ae8ae785c502c3655c", "tenant":
+        {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5"}],
@@ -224,16 +223,16 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:33 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:37 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -248,12 +247,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:51 GMT
+      - Tue, 16 Dec 2014 00:05:35 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:51.583977",
-        "expires": "2014-09-20T22:09:51Z", "id": "3adf71c7a93e43ba85434b0bae37287a",
-        "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:35.069908", "expires":
+        "2014-12-17T00:05:35Z", "id": "f53e30c5e618483aae5bfa2c4ec94252", "tenant":
+        {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754"}],
@@ -283,16 +282,16 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:33 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:38 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -307,12 +306,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:51 GMT
+      - Tue, 16 Dec 2014 00:05:35 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:51.860907",
-        "expires": "2014-09-20T22:09:51Z", "id": "38798c0b1d44402ab28305ec20f69e94",
-        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:35.533698", "expires":
+        "2014-12-17T00:05:35Z", "id": "0027b3e049524b018f0944e34f22b65a", "tenant":
+        {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
@@ -342,16 +341,16 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:33 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:38 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -366,12 +365,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:53 GMT
+      - Tue, 16 Dec 2014 00:05:36 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:53.432475",
-        "expires": "2014-09-20T22:09:53Z", "id": "5fe97d47baff4a6d95f678b65e45054d",
-        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:36.242455", "expires":
+        "2014-12-17T00:05:36Z", "id": "02f7f386c3b843fc93afe5008258eeeb", "tenant":
+        {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
@@ -401,16 +400,16 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:35 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:39 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"token":{"id":"5fe97d47baff4a6d95f678b65e45054d"},"tenantName":"admin"}}'
+      encoding: UTF-8
+      string: '{"auth":{"token":{"id":"02f7f386c3b843fc93afe5008258eeeb"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -425,12 +424,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:53 GMT
+      - Tue, 16 Dec 2014 00:05:36 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:53.624279",
-        "expires": "2014-09-20T22:09:53Z", "id": "64125facd88a4a7aab8f0d81a438d013",
-        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:36.416199", "expires":
+        "2014-12-17T00:05:36Z", "id": "8bcb77b3ca344f9c9623a9b954dce5f1", "tenant":
+        {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
@@ -460,16 +459,16 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:35 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:39 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -484,12 +483,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:54 GMT
+      - Tue, 16 Dec 2014 00:05:36 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:54.072176",
-        "expires": "2014-09-20T22:09:54Z", "id": "8280df9d0c9b472abca0882b17f5f9a8",
-        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:36.719031", "expires":
+        "2014-12-17T00:05:36Z", "id": "8fbf268792b44f0082dd8a6b2c75a53f", "tenant":
+        {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
@@ -519,7 +518,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:35 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:39 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -528,13 +527,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 8280df9d0c9b472abca0882b17f5f9a8
+      - 8fbf268792b44f0082dd8a6b2c75a53f
   response:
     status:
       code: 300
@@ -545,26 +544,26 @@ http_interactions:
       Content-Length:
       - '446'
       Date:
-      - Fri, 19 Sep 2014 22:09:54 GMT
+      - Tue, 16 Dec 2014 00:05:36 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
+      encoding: UTF-8
+      string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
         "http://1.2.3.4:9292/v2/", "rel": "self"}]}, {"status": "SUPPORTED",
         "id": "v2.0", "links": [{"href": "http://1.2.3.4:9292/v2/", "rel":
         "self"}]}, {"status": "CURRENT", "id": "v1.1", "links": [{"href": "http://1.2.3.4:9292/v1/",
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:35 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:39 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -579,12 +578,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:54 GMT
+      - Tue, 16 Dec 2014 00:05:37 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:54.751687",
-        "expires": "2014-09-20T22:09:54Z", "id": "b99feaf3a87d44da8529de3ca2fd981b",
-        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:37.203194", "expires":
+        "2014-12-17T00:05:37Z", "id": "42da26d0bffd4be2811ce5ed3bdb6db1", "tenant":
+        {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
@@ -614,16 +613,16 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:36 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:40 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -638,12 +637,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:55 GMT
+      - Tue, 16 Dec 2014 00:05:37 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:55.351648",
-        "expires": "2014-09-20T22:09:55Z", "id": "cfb2b25f7f2e458ab3d41a1dd4ef247e",
-        "tenant": {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:37.511287", "expires":
+        "2014-12-17T00:05:37Z", "id": "f8eb89b958de49e1819e0612b208ede9", "tenant":
+        {"description": "admin tenant", "enabled": true, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2"}],
@@ -673,7 +672,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:37 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:40 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2/?format=json
@@ -682,13 +681,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - cfb2b25f7f2e458ab3d41a1dd4ef247e
+      - f8eb89b958de49e1819e0612b208ede9
   response:
     status:
       code: 200
@@ -709,12 +708,12 @@ http_interactions:
       X-Account-Object-Count:
       - '2'
       Date:
-      - Fri, 19 Sep 2014 22:09:55 GMT
+      - Tue, 16 Dec 2014 00:05:37 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"count": 2, "bytes": 263633, "name": "bd-container"}]'
+      encoding: UTF-8
+      string: '[{"count": 2, "bytes": 263633, "name": "bd-container"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:37 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:40 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/detail.json
@@ -723,29 +722,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-e04efc27-108d-40a9-b8cb-3e3db047a496
+      - req-d3a9b0f1-9cfc-494f-900f-c681e008ffc8
       Content-Type:
       - application/json
       Content-Length:
       - '5125'
       Date:
-      - Fri, 19 Sep 2014 22:09:55 GMT
+      - Tue, 16 Dec 2014 00:05:38 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
+      encoding: UTF-8
+      string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
         "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
         "rel": "bookmark"}], "ram": 512, "OS-FLV-DISABLED:disabled": false, "vcpus":
         1, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
@@ -795,7 +794,7 @@ http_interactions:
         1, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "feb39543-3a95-4144-8e6d-c56021967619"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:37 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:41 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/servers/detail.json
@@ -804,46 +803,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ff6acdf0d66a450283d7d1fdb3f3ed70
+      - e4e850b6445949ae8ae785c502c3655c
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c111837b-eb54-42f5-b7d3-184ab8bf5f7c
+      - req-84e20411-fa55-43fe-8c1c-b45249fdef77
       Content-Type:
       - application/json
       Content-Length:
-      - '1537'
+      - '15'
       Date:
-      - Fri, 19 Sep 2014 22:09:55 GMT
+      - Tue, 16 Dec 2014 00:05:38 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"servers": [{"status": "ACTIVE", "updated": "2014-06-26T18:38:13Z",
-        "hostId": "00804709ccb893e8da5c729dd7fc1f5957c2f31b71df1e89c49288a3", "OS-EXT-SRV-ATTR:host":
-        "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
-        "192.168.32.4", "OS-EXT-IPS:type": "fixed"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/servers/b6b0783e-3388-4a2b-92b9-3c667db84e7c",
-        "rel": "self"}, {"href": "http://1.2.3.4:8774/ac0a6059e6d545cf98b9b5e9913936e5/servers/b6b0783e-3388-4a2b-92b9-3c667db84e7c",
-        "rel": "bookmark"}], "key_name": null, "image": {"id": "d3a7f7fd-4642-405a-983c-d84008cf3e8b",
-        "links": [{"href": "http://1.2.3.4:8774/ac0a6059e6d545cf98b9b5e9913936e5/images/d3a7f7fd-4642-405a-983c-d84008cf3e8b",
-        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
-        "active", "OS-EXT-SRV-ATTR:instance_name": "instance-0000005f", "OS-EXT-SRV-ATTR:hypervisor_hostname":
-        "rdo1.manageiq.com", "flavor": {"id": "1", "links": [{"href": "http://1.2.3.4:8774/ac0a6059e6d545cf98b9b5e9913936e5/flavors/1",
-        "rel": "bookmark"}]}, "id": "b6b0783e-3388-4a2b-92b9-3c667db84e7c", "security_groups":
-        [{"name": "default"}], "OS-EXT-AZ:availability_zone": "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481",
-        "name": "tina_cloud_test", "created": "2014-06-26T18:38:05Z", "tenant_id":
-        "ac0a6059e6d545cf98b9b5e9913936e5", "OS-DCF:diskConfig": "MANUAL", "accessIPv4":
-        "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state": 1, "config_drive":
-        "", "metadata": {}}]}'
+      encoding: UTF-8
+      string: '{"servers": []}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:37 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:41 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754/servers/detail.json
@@ -852,31 +836,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3adf71c7a93e43ba85434b0bae37287a
+      - f53e30c5e618483aae5bfa2c4ec94252
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-af3ce360-e263-4749-b642-1e237b1efe91
+      - req-68e95662-131f-48cc-940e-802baa06fce0
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Fri, 19 Sep 2014 22:09:56 GMT
+      - Tue, 16 Dec 2014 00:05:38 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"servers": []}'
+      encoding: UTF-8
+      string: '{"servers": []}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:37 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:42 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/detail.json
@@ -885,29 +869,44 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-f188f722-1fd9-4d81-b284-bb31084dc38f
+      - req-3a157dd1-770b-49ac-8bee-06a30d8ff002
       Content-Type:
       - application/json
       Content-Length:
-      - '12513'
+      - '14043'
       Date:
-      - Fri, 19 Sep 2014 22:09:56 GMT
+      - Tue, 16 Dec 2014 00:05:39 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"servers": [{"status": "PAUSED", "updated": "2014-07-18T01:37:31Z",
+      encoding: UTF-8
+      string: '{"servers": [{"status": "ACTIVE", "updated": "2014-12-04T20:59:04Z",
+        "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978", "OS-EXT-SRV-ATTR:host":
+        "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
+        "192.168.32.4", "OS-EXT-IPS:type": "fixed"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/2baa0c95-fb98-4a7b-bbf2-f0048620f537",
+        "rel": "self"}, {"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/servers/2baa0c95-fb98-4a7b-bbf2-f0048620f537",
+        "rel": "bookmark"}], "key_name": null, "image": {"id": "d3a7f7fd-4642-405a-983c-d84008cf3e8b",
+        "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/images/d3a7f7fd-4642-405a-983c-d84008cf3e8b",
+        "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
+        "active", "OS-EXT-SRV-ATTR:instance_name": "instance-0000006c", "OS-EXT-SRV-ATTR:hypervisor_hostname":
+        "rdo1.manageiq.com", "flavor": {"id": "1", "links": [{"href": "http://1.2.3.4:8774/cd29f03e4667409fb59d2d93cc527ca2/flavors/1",
+        "rel": "bookmark"}]}, "id": "2baa0c95-fb98-4a7b-bbf2-f0048620f537", "security_groups":
+        [{"name": "default"}], "OS-EXT-AZ:availability_zone": "nova", "user_id": "9cc646d22e2d43d1bc2b0362e2b00481",
+        "name": "tina_monday_openstack", "created": "2014-12-02T20:57:13Z", "tenant_id":
+        "cd29f03e4667409fb59d2d93cc527ca2", "OS-DCF:diskConfig": "MANUAL", "accessIPv4":
+        "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state": 1, "config_drive":
+        "", "metadata": {}}, {"status": "PAUSED", "updated": "2014-07-18T01:37:31Z",
         "hostId": "69fe836d9b349bccfda7f18aa11864db4c7a6d0fc2c222a71ebc1978", "OS-EXT-SRV-ATTR:host":
         "rdo1.manageiq.com", "addresses": {"novanetwork": [{"version": 4, "addr":
         "192.168.32.2", "OS-EXT-IPS:type": "fixed"}]}, "links": [{"href": "http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/83de8005-7138-4005-b4a9-980d0df622ff",
@@ -1030,16 +1029,16 @@ http_interactions:
         "OS-DCF:diskConfig": "MANUAL", "accessIPv4": "", "accessIPv6": "", "OS-EXT-STS:power_state":
         4, "config_drive": "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:38 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:42 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -1054,12 +1053,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:56 GMT
+      - Tue, 16 Dec 2014 00:05:39 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:56.669341",
-        "expires": "2014-09-20T22:09:56Z", "id": "4c2c1f63cd304268886c20c651932c5b",
-        "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:39.886732", "expires":
+        "2014-12-17T00:05:39Z", "id": "220c94bb15364410b35d87b8d698adf0", "tenant":
+        {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5"}],
@@ -1089,7 +1088,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:38 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:43 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5/volumes/detail
@@ -1098,29 +1097,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 4c2c1f63cd304268886c20c651932c5b
+      - 220c94bb15364410b35d87b8d698adf0
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a4d1f596-96eb-45a6-8673-3765cad42207
+      - req-97e565ca-3234-4a91-8fe3-775378d9dd4e
       Content-Type:
       - application/json
       Content-Length:
       - '1970'
       Date:
-      - Fri, 19 Sep 2014 22:09:57 GMT
+      - Tue, 16 Dec 2014 00:05:40 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"volumes": [{"status": "available", "display_name": "test1-volume2-snap1-volume2",
+      encoding: UTF-8
+      string: '{"volumes": [{"status": "available", "display_name": "test1-volume2-snap1-volume2",
         "attachments": [], "availability_zone": "nova", "bootable": "false", "created_at":
         "2014-05-07T21:21:10.000000", "os-vol-tenant-attr:tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "display_description": "", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type":
@@ -1144,16 +1143,16 @@ http_interactions:
         "test", "snapshot_id": null, "source_volid": null, "metadata": {}, "id": "ea6db204-6262-4f2a-be6e-8c33431a3380",
         "size": 1}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:38 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:43 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -1168,12 +1167,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:09:57 GMT
+      - Tue, 16 Dec 2014 00:05:40 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:09:57.399527",
-        "expires": "2014-09-20T22:09:57Z", "id": "b9e664af283c4a78a0b88b29dabf8057",
-        "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:40.653871", "expires":
+        "2014-12-17T00:05:40Z", "id": "61d45b46b8d548c6aa6f67cc9ef73591", "tenant":
+        {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754"}],
@@ -1203,7 +1202,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:39 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:43 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754/volumes/detail
@@ -1212,29 +1211,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - b9e664af283c4a78a0b88b29dabf8057
+      - 61d45b46b8d548c6aa6f67cc9ef73591
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-69101beb-1785-4b49-98f1-3be44ab9ece7
+      - req-a4128bba-f7b3-48be-b4b7-2aa7bd34c2d2
       Content-Type:
       - application/json
       Content-Length:
       - '937'
       Date:
-      - Fri, 19 Sep 2014 22:09:57 GMT
+      - Tue, 16 Dec 2014 00:05:41 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"volumes": [{"status": "available", "display_name": "test2-volume2",
+      encoding: UTF-8
+      string: '{"volumes": [{"status": "available", "display_name": "test2-volume2",
         "attachments": [], "availability_zone": "nova", "bootable": "false", "created_at":
         "2014-05-01T20:03:29.000000", "os-vol-tenant-attr:tenant_id": "af041f5a5e214930980603e26a63f754",
         "display_description": "test volume", "os-vol-host-attr:host": "rdo1.manageiq.com",
@@ -1247,7 +1246,7 @@ http_interactions:
         null, "source_volid": null, "metadata": {}, "id": "c16086aa-3fea-4cf7-b892-e0cdc77a9b5e",
         "size": 1}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:39 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2/volumes/detail
@@ -1256,29 +1255,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - b99feaf3a87d44da8529de3ca2fd981b
+      - 42da26d0bffd4be2811ce5ed3bdb6db1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3483e85f-296a-4181-b2da-b1dd36e8c680
+      - req-465f742d-1599-4688-b0ac-804c6c03f386
       Content-Type:
       - application/json
       Content-Length:
       - '4698'
       Date:
-      - Fri, 19 Sep 2014 22:09:58 GMT
+      - Tue, 16 Dec 2014 00:05:41 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"volumes": [{"status": "available", "display_name": "", "attachments":
+      encoding: UTF-8
+      string: '{"volumes": [{"status": "available", "display_name": "", "attachments":
         [], "availability_zone": "nova", "bootable": "false", "created_at": "2014-07-07T21:05:34.000000",
         "os-vol-tenant-attr:tenant_id": "cd29f03e4667409fb59d2d93cc527ca2", "display_description":
         "", "os-vol-host-attr:host": "rdo1.manageiq.com", "volume_type": "None", "snapshot_id":
@@ -1333,7 +1332,7 @@ http_interactions:
         null, "source_volid": null, "metadata": {}, "id": "57f66bda-9241-46ed-b66b-d718f9b60f12",
         "size": 1}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:40 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:45 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5//os-quota-sets/ac0a6059e6d545cf98b9b5e9913936e5
@@ -1342,34 +1341,34 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ff6acdf0d66a450283d7d1fdb3f3ed70
+      - e4e850b6445949ae8ae785c502c3655c
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d20471f5-d654-4e29-91da-f63114bee44b
+      - req-b04390e4-eb3b-4f38-b2f8-9f0ba29a529c
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:42 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
+      encoding: UTF-8
+      string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
         128, "ram": 51200, "floating_ips": 10, "key_pairs": 100, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:40 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:45 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754//os-quota-sets/af041f5a5e214930980603e26a63f754
@@ -1378,34 +1377,34 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3adf71c7a93e43ba85434b0bae37287a
+      - f53e30c5e618483aae5bfa2c4ec94252
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-f888e83f-eac6-482d-a72b-14c1d2e7e11a
+      - req-6472f8c0-734a-4e91-95f5-f4f8113e20bd
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:42 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
+      encoding: UTF-8
+      string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
         128, "ram": 51200, "floating_ips": 10, "key_pairs": 100, "id": "af041f5a5e214930980603e26a63f754",
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:40 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:45 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2//os-quota-sets/cd29f03e4667409fb59d2d93cc527ca2
@@ -1414,34 +1413,34 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a59aa1b0-f770-485c-9a41-054e2bb9e707
+      - req-033c593b-9460-4bd1-8224-019a4b890508
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:42 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
+      encoding: UTF-8
+      string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
         128, "ram": 51200, "floating_ips": 10, "key_pairs": 100, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "instances": 50, "security_group_rules": 20, "injected_files": 5, "cores":
         50, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:41 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5//os-quota-sets/ac0a6059e6d545cf98b9b5e9913936e5
@@ -1450,32 +1449,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 4c2c1f63cd304268886c20c651932c5b
+      - 220c94bb15364410b35d87b8d698adf0
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-365c96ff-0edb-47ee-8691-0859b8223eab
+      - req-45d331be-3652-4630-af97-803906e3a186
       Content-Type:
       - application/json
       Content-Length:
       - '109'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:43 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"quota_set": {"gigabytes": 1000, "volumes": 100, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+      encoding: UTF-8
+      string: '{"quota_set": {"gigabytes": 1000, "volumes": 100, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:41 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754//os-quota-sets/af041f5a5e214930980603e26a63f754
@@ -1484,32 +1483,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - b9e664af283c4a78a0b88b29dabf8057
+      - 61d45b46b8d548c6aa6f67cc9ef73591
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7e1fd4b5-575e-4589-b8a6-69105fec6d33
+      - req-cd8886f7-94ed-4da3-9dbc-891c2ee56bc3
       Content-Type:
       - application/json
       Content-Length:
       - '109'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:43 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"quota_set": {"gigabytes": 1000, "volumes": 100, "id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"quota_set": {"gigabytes": 1000, "volumes": 100, "id": "af041f5a5e214930980603e26a63f754",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:41 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2//os-quota-sets/cd29f03e4667409fb59d2d93cc527ca2
@@ -1518,32 +1517,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - b99feaf3a87d44da8529de3ca2fd981b
+      - 42da26d0bffd4be2811ce5ed3bdb6db1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-ae2d681c-2353-4111-af80-be0979419396
+      - req-8eabbb21-2a42-4153-8b53-ac68c5cdec79
       Content-Type:
       - application/json
       Content-Length:
       - '111'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:43 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"quota_set": {"gigabytes": 100000, "volumes": 100, "id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"quota_set": {"gigabytes": 100000, "volumes": 100, "id": "cd29f03e4667409fb59d2d93cc527ca2",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:41 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-keypairs.json
@@ -1552,32 +1551,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3a37240e-0fe1-488a-b901-443abdf1242c
+      - req-eacc012a-860e-4218-813c-1241bdffa47f
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:43 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA190WUrN+04ktr3bwWBq5y2jRRYa1BYMlepBCad1meBPGZxfiR4AFAnKrKYEDN8GlhRouzNifzK99Q3DWAzJm06baR+1pd0r7zWqYW1GK6+epNiuhVzxIxKMbsZcUd4L8nS8/P5MNhlR3JVHz5RPKAKHGk1X4p19a2gyqIdZWwoW1UV+V4gfpoJs4sYtLfiZyiS4s1F0YPVSvonqp1qBiT9GVh7iQUuMVWy7AoMmotfPqLLBYX6JbLZn6oyyJpHZ+rVXkWxR7DT98R5Xxo7AOd52BeLhvUbTX49nqBFCM7CBAG3F2b/rV0mExRoGcmMx/+ujr7LQfmNeaZmsqdPq+Dw==
+      encoding: UTF-8
+      string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA190WUrN+04ktr3bwWBq5y2jRRYa1BYMlepBCad1meBPGZxfiR4AFAnKrKYEDN8GlhRouzNifzK99Q3DWAzJm06baR+1pd0r7zWqYW1GK6+epNiuhVzxIxKMbsZcUd4L8nS8/P5MNhlR3JVHz5RPKAKHGk1X4p19a2gyqIdZWwoW1UV+V4gfpoJs4sYtLfiZyiS4s1F0YPVSvonqp1qBiT9GVh7iQUuMVWy7AoMmotfPqLLBYX6JbLZn6oyyJpHZ+rVXkWxR7DT98R5Xxo7AOd52BeLhvUbTX49nqBFCM7CBAG3F2b/rV0mExRoGcmMx/+ujr7LQfmNeaZmsqdPq+Dw==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "5e:51:73:2d:71:14:94:34:97:4c:e8:e5:92:49:9e:9e"}}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:41 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/os-security-groups.json
@@ -1586,35 +1585,35 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ff6acdf0d66a450283d7d1fdb3f3ed70
+      - e4e850b6445949ae8ae785c502c3655c
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d09bded7-2812-4cc6-b8ab-fa4d44ae809c
+      - req-c1e89267-9ff7-45d8-a799-8e9489cb9f65
       Content-Type:
       - application/json
       Content-Length:
       - '405'
       Date:
-      - Fri, 19 Sep 2014 22:09:59 GMT
+      - Tue, 16 Dec 2014 00:05:43 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [], "tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [], "tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "id": 7, "name": "default", "description": "default"}, {"rules": [{"from_port":
         22, "group": {}, "ip_protocol": "tcp", "to_port": 22, "parent_group_id": 11,
         "ip_range": {"cidr": "0.0.0.0/0"}, "id": 14}], "tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "id": 11, "name": "test_sg", "description": "test security group"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:41 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754/os-security-groups.json
@@ -1623,35 +1622,35 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3adf71c7a93e43ba85434b0bae37287a
+      - f53e30c5e618483aae5bfa2c4ec94252
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-31f6e1ae-6733-4c1c-be4c-271fde2ebaa4
+      - req-a40b30e4-deeb-4426-896d-ee152f05d13d
       Content-Type:
       - application/json
       Content-Length:
       - '398'
       Date:
-      - Fri, 19 Sep 2014 22:10:00 GMT
+      - Tue, 16 Dec 2014 00:05:43 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [], "tenant_id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [], "tenant_id": "af041f5a5e214930980603e26a63f754",
         "id": 8, "name": "default", "description": "default"}, {"rules": [{"from_port":
         44, "group": {}, "ip_protocol": "tcp", "to_port": 44, "parent_group_id": 12,
         "ip_range": {"cidr": "0.0.0.0/0"}, "id": 15}], "tenant_id": "af041f5a5e214930980603e26a63f754",
         "id": 12, "name": "test_sg", "description": "SG for test2"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:41 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-security-groups.json
@@ -1660,29 +1659,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-76750ddc-bb43-4d8a-b347-2445d6b067a7
+      - req-d0039c29-e162-43fb-85e7-69678a9d8da9
       Content-Type:
       - application/json
       Content-Length:
       - '2584'
       Date:
-      - Fri, 19 Sep 2014 22:10:00 GMT
+      - Tue, 16 Dec 2014 00:05:44 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
         "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
         "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
         "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
@@ -1716,16 +1715,16 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 3, "name": "test_2", "description":
         "test_2"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:42 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:47 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -1740,12 +1739,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:10:00 GMT
+      - Tue, 16 Dec 2014 00:05:44 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:10:00.925750",
-        "expires": "2014-09-20T22:10:00Z", "id": "2f598df0a96a44a5a60519879697bb61",
-        "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:44.515391", "expires":
+        "2014-12-17T00:05:44Z", "id": "64980e97fafa432096dec039e1afca67", "tenant":
+        {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5"}],
@@ -1775,7 +1774,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:42 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -1784,13 +1783,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 2f598df0a96a44a5a60519879697bb61
+      - 64980e97fafa432096dec039e1afca67
   response:
     status:
       code: 300
@@ -1801,17 +1800,17 @@ http_interactions:
       Content-Length:
       - '446'
       Date:
-      - Fri, 19 Sep 2014 22:10:00 GMT
+      - Tue, 16 Dec 2014 00:05:44 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
+      encoding: UTF-8
+      string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
         "http://1.2.3.4:9292/v2/", "rel": "self"}]}, {"status": "SUPPORTED",
         "id": "v2.0", "links": [{"href": "http://1.2.3.4:9292/v2/", "rel":
         "self"}]}, {"status": "CURRENT", "id": "v1.1", "links": [{"href": "http://1.2.3.4:9292/v1/",
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:42 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail
@@ -1820,11 +1819,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 2f598df0a96a44a5a60519879697bb61
+      - 64980e97fafa432096dec039e1afca67
   response:
     status:
       code: 200
@@ -1835,14 +1834,14 @@ http_interactions:
       Content-Length:
       - '2870'
       X-Openstack-Request-Id:
-      - req-a2fd83d4-7b63-4922-a330-1baa998bbf6f
+      - req-d59e50c4-b8ae-4180-9e97-2d006469038a
       Date:
-      - Fri, 19 Sep 2014 22:10:01 GMT
+      - Tue, 16 Dec 2014 00:05:45 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"images": [{"status": "active", "name": "rpo-vol-instance-snap",
-        "deleted": false, "container_format": "bare", "created_at": "2014-07-07T20:49:45",
-        "disk_format": "qcow2", "updated_at": "2014-07-07T20:49:45", "id": "9a8eb34b-fb7e-4204-8b41-1a8049407b97",
+      encoding: UTF-8
+      string: '{"images": [{"status": "active", "name": "rpo-vol-instance-snap", "deleted":
+        false, "container_format": "bare", "created_at": "2014-07-07T20:49:45", "disk_format":
+        "qcow2", "updated_at": "2014-07-07T20:49:45", "id": "9a8eb34b-fb7e-4204-8b41-1a8049407b97",
         "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "50bdc35edb03a38d91b1b071afb20a3c",
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {"root_device_name": "/dev/vda", "block_device_mapping":
@@ -1874,16 +1873,47 @@ http_interactions:
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {}, "size": 9761280}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:43 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:48 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:9292/v1.1/images/detail?marker=d3a7f7fd-4642-405a-983c-d84008cf3e8b
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.1
+      Content-Type:
+      - application/json
+      X-Auth-Token:
+      - 64980e97fafa432096dec039e1afca67
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '14'
+      X-Openstack-Request-Id:
+      - req-3d8189d2-8920-4f11-90f7-5d6a7b09a561
+      Date:
+      - Tue, 16 Dec 2014 00:05:45 GMT
+    body:
+      encoding: UTF-8
+      string: '{"images": []}'
+    http_version: 
+  recorded_at: Tue, 16 Dec 2014 00:15:49 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -1898,12 +1928,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:10:01 GMT
+      - Tue, 16 Dec 2014 00:05:46 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:10:01.652244",
-        "expires": "2014-09-20T22:10:01Z", "id": "7c346f6242e545549824a17618fcb54e",
-        "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:46.208346", "expires":
+        "2014-12-17T00:05:46Z", "id": "e2a9265c350540f6a3ca2a0204d4a6a0", "tenant":
+        {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754"}],
@@ -1933,7 +1963,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:43 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -1942,13 +1972,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 7c346f6242e545549824a17618fcb54e
+      - e2a9265c350540f6a3ca2a0204d4a6a0
   response:
     status:
       code: 300
@@ -1959,17 +1989,17 @@ http_interactions:
       Content-Length:
       - '446'
       Date:
-      - Fri, 19 Sep 2014 22:10:01 GMT
+      - Tue, 16 Dec 2014 00:05:46 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
+      encoding: UTF-8
+      string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
         "http://1.2.3.4:9292/v2/", "rel": "self"}]}, {"status": "SUPPORTED",
         "id": "v2.0", "links": [{"href": "http://1.2.3.4:9292/v2/", "rel":
         "self"}]}, {"status": "CURRENT", "id": "v1.1", "links": [{"href": "http://1.2.3.4:9292/v1/",
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:43 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail
@@ -1978,11 +2008,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 7c346f6242e545549824a17618fcb54e
+      - e2a9265c350540f6a3ca2a0204d4a6a0
   response:
     status:
       code: 200
@@ -1993,14 +2023,14 @@ http_interactions:
       Content-Length:
       - '2870'
       X-Openstack-Request-Id:
-      - req-a4953a35-2833-486d-97f8-ebe8e53a8ffa
+      - req-ecca6691-3ae9-4a68-9b34-98af28bf839b
       Date:
-      - Fri, 19 Sep 2014 22:10:02 GMT
+      - Tue, 16 Dec 2014 00:05:46 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"images": [{"status": "active", "name": "rpo-vol-instance-snap",
-        "deleted": false, "container_format": "bare", "created_at": "2014-07-07T20:49:45",
-        "disk_format": "qcow2", "updated_at": "2014-07-07T20:49:45", "id": "9a8eb34b-fb7e-4204-8b41-1a8049407b97",
+      encoding: UTF-8
+      string: '{"images": [{"status": "active", "name": "rpo-vol-instance-snap", "deleted":
+        false, "container_format": "bare", "created_at": "2014-07-07T20:49:45", "disk_format":
+        "qcow2", "updated_at": "2014-07-07T20:49:45", "id": "9a8eb34b-fb7e-4204-8b41-1a8049407b97",
         "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "50bdc35edb03a38d91b1b071afb20a3c",
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {"root_device_name": "/dev/vda", "block_device_mapping":
@@ -2032,7 +2062,38 @@ http_interactions:
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {}, "size": 9761280}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:43 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:49 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:9292/v1.1/images/detail?marker=d3a7f7fd-4642-405a-983c-d84008cf3e8b
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.1
+      Content-Type:
+      - application/json
+      X-Auth-Token:
+      - e2a9265c350540f6a3ca2a0204d4a6a0
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '14'
+      X-Openstack-Request-Id:
+      - req-c49f2092-b69c-4cfe-93a4-07679f54ccb4
+      Date:
+      - Tue, 16 Dec 2014 00:05:47 GMT
+    body:
+      encoding: UTF-8
+      string: '{"images": []}'
+    http_version: 
+  recorded_at: Tue, 16 Dec 2014 00:15:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail
@@ -2041,11 +2102,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 8280df9d0c9b472abca0882b17f5f9a8
+      - 8fbf268792b44f0082dd8a6b2c75a53f
   response:
     status:
       code: 200
@@ -2056,12 +2117,12 @@ http_interactions:
       Content-Length:
       - '7030'
       X-Openstack-Request-Id:
-      - req-2b05311e-9a16-4dc5-808d-0b51c5945d0e
+      - req-e03754d6-3c25-4f5f-a5bb-3a2cf2c1ff7b
       Date:
-      - Fri, 19 Sep 2014 22:10:02 GMT
+      - Tue, 16 Dec 2014 00:05:47 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"images": [{"status": "active", "name": "rpo-test-snap", "deleted":
+      encoding: UTF-8
+      string: '{"images": [{"status": "active", "name": "rpo-test-snap", "deleted":
         false, "container_format": "bare", "created_at": "2014-07-07T21:02:44", "disk_format":
         "qcow2", "updated_at": "2014-07-07T21:03:17", "id": "e929e04c-cbdd-4b15-be1f-aaaa89d1b544",
         "min_disk": 0, "protected": false, "min_ram": 0, "checksum": "260fe68c7aac4932948362789282a1ad",
@@ -2145,74 +2206,38 @@ http_interactions:
         "owner": "cd29f03e4667409fb59d2d93cc527ca2", "is_public": true, "deleted_at":
         null, "properties": {}, "size": 9761280}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:44 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:50 GMT
 - request:
     method: get
-    uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/os-floating-ips.json
+    uri: http://1.2.3.4:9292/v1.1/images/detail?marker=d3a7f7fd-4642-405a-983c-d84008cf3e8b
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
-      Accept:
-      - application/json
       X-Auth-Token:
-      - ff6acdf0d66a450283d7d1fdb3f3ed70
+      - 8fbf268792b44f0082dd8a6b2c75a53f
   response:
     status:
       code: 200
       message: ''
     headers:
-      X-Compute-Request-Id:
-      - req-7d060415-10b8-4c8a-ae19-854c5fe5b258
       Content-Type:
-      - application/json
+      - application/json; charset=UTF-8
       Content-Length:
-      - '20'
+      - '14'
+      X-Openstack-Request-Id:
+      - req-f340a9a6-3253-4b2c-8b5d-6927ebd17eb1
       Date:
-      - Fri, 19 Sep 2014 22:10:02 GMT
+      - Tue, 16 Dec 2014 00:05:47 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": []}'
+      encoding: UTF-8
+      string: '{"images": []}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:44 GMT
-- request:
-    method: get
-    uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/servers/b6b0783e-3388-4a2b-92b9-3c667db84e7c/os-security-groups.json
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - fog/1.19.0
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      X-Auth-Token:
-      - ff6acdf0d66a450283d7d1fdb3f3ed70
-  response:
-    status:
-      code: 200
-      message: ''
-    headers:
-      X-Compute-Request-Id:
-      - req-c678db93-49b4-4094-a9c2-b399acb6628a
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '139'
-      Date:
-      - Fri, 19 Sep 2014 22:10:02 GMT
-    body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [], "tenant_id": "ac0a6059e6d545cf98b9b5e9913936e5",
-        "id": 7, "name": "default", "description": "default"}]}'
-    http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:44 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2221,29 +2246,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-fd0dd34e-ae2f-4603-87af-46e20f913d58
+      - req-13f3bd7d-66d6-41f5-aa46-d98afaf84515
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:03 GMT
+      - Tue, 16 Dec 2014 00:05:48 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2255,7 +2280,84 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:44 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:51 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/2baa0c95-fb98-4a7b-bbf2-f0048620f537/os-security-groups.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.1
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 0027b3e049524b018f0944e34f22b65a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-14f5d47d-fdcc-4dbd-b80a-51739930b69d
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '139'
+      Date:
+      - Tue, 16 Dec 2014 00:05:48 GMT
+    body:
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+        "id": 1, "name": "default", "description": "default"}]}'
+    http_version: 
+  recorded_at: Tue, 16 Dec 2014 00:15:51 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.1
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 0027b3e049524b018f0944e34f22b65a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-a195a8d9-c506-4d9e-87a6-525414a96d50
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '914'
+      Date:
+      - Tue, 16 Dec 2014 00:05:48 GMT
+    body:
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+        "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.4", "fixed_ip": null, "id": 4, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.5", "fixed_ip": null, "id": 5, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.6", "fixed_ip": null, "id": 6, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.7", "fixed_ip": null, "id": 7, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.8", "fixed_ip": null, "id": 8, "pool": "nova"}, {"instance_id":
+        null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
+        null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
+    http_version: 
+  recorded_at: Tue, 16 Dec 2014 00:15:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/83de8005-7138-4005-b4a9-980d0df622ff/os-security-groups.json
@@ -2264,29 +2366,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-1ccbea40-8079-42a4-96c3-5e0eb7e3b75a
+      - req-fcd989ec-d06d-4848-89a4-2edbde7d25e7
       Content-Type:
       - application/json
       Content-Length:
       - '2076'
       Date:
-      - Fri, 19 Sep 2014 22:10:03 GMT
+      - Tue, 16 Dec 2014 00:05:49 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
         "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
         "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
         "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
@@ -2313,7 +2415,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
         "description": "EmsRefreshSpec-SecurityGroup"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:45 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2322,29 +2424,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-490cae59-d7b0-4ae8-a077-185470f2340d
+      - req-afcfbd01-80ad-4624-9bb6-3b1761c7b895
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:04 GMT
+      - Tue, 16 Dec 2014 00:05:49 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2356,7 +2458,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:45 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/084c8010-4a0d-4fa7-aae9-a632a8b6fed5/os-security-groups.json
@@ -2365,32 +2467,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-e5a10404-3269-49c7-a7bf-2ed35d343bdd
+      - req-974c1718-c25c-4c84-8ba0-2ae4e5a7137b
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Fri, 19 Sep 2014 22:10:04 GMT
+      - Tue, 16 Dec 2014 00:05:49 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:46 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:53 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2399,29 +2501,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-79811c1b-0691-41f6-9909-1d709f6d21a9
+      - req-1c82eacc-0547-436d-a329-f6c083b3d039
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:04 GMT
+      - Tue, 16 Dec 2014 00:05:50 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2433,7 +2535,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:46 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:53 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/3579c238-0495-4273-8c88-cdc4b2951f38/os-security-groups.json
@@ -2442,32 +2544,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-169fa3c8-71f6-4020-857e-3e396ea4a3e9
+      - req-00ad3723-8fa7-4eae-90b8-02ac32ca5fe7
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Fri, 19 Sep 2014 22:10:04 GMT
+      - Tue, 16 Dec 2014 00:05:50 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:46 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:53 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2476,29 +2578,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-ffcbbc3b-6c94-4929-9dac-d270d744647c
+      - req-b5f92ce8-2f0b-4891-8bee-10abca1cd4ae
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:04 GMT
+      - Tue, 16 Dec 2014 00:05:50 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2510,7 +2612,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:46 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:54 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/365f07e9-a834-447d-9446-cdbe4bb62734/os-security-groups.json
@@ -2519,32 +2621,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7d996b2f-de50-4e30-a3c0-b77262066e3c
+      - req-07d6c04f-9838-43ae-997a-38a072ac19c0
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Fri, 19 Sep 2014 22:10:05 GMT
+      - Tue, 16 Dec 2014 00:05:51 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:46 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:54 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2553,29 +2655,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3aa70c99-cb73-44ad-9461-80f1008e0d7c
+      - req-4e5e68cb-42a0-4831-9f84-d735ea653218
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:05 GMT
+      - Tue, 16 Dec 2014 00:05:51 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2587,7 +2689,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:46 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:54 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/ed1056c3-53b1-4cec-af88-a6e6a6be1d44/os-security-groups.json
@@ -2596,29 +2698,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8a5e7221-5e27-4469-a86d-8f8917661def
+      - req-93bf6a0d-05a9-42f1-a455-e475b112396e
       Content-Type:
       - application/json
       Content-Length:
       - '2076'
       Date:
-      - Fri, 19 Sep 2014 22:10:05 GMT
+      - Tue, 16 Dec 2014 00:05:52 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
         "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
         "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
         "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
@@ -2645,7 +2747,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
         "description": "EmsRefreshSpec-SecurityGroup"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:47 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:55 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2654,29 +2756,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-54d0d669-12f8-48da-94b7-89746e9c1590
+      - req-ccbac68d-3e83-4347-b804-903af72ecbe5
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:06 GMT
+      - Tue, 16 Dec 2014 00:05:52 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2688,7 +2790,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:47 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:55 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/b111e7d6-a2c5-485d-9a27-2ce1bb83c2a7/os-security-groups.json
@@ -2697,29 +2799,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-98851c23-e68a-4051-82fd-c403d903927b
+      - req-83b46a9c-2fa4-4725-a083-10f2f2708449
       Content-Type:
       - application/json
       Content-Length:
       - '2076'
       Date:
-      - Fri, 19 Sep 2014 22:10:06 GMT
+      - Tue, 16 Dec 2014 00:05:52 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
         "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
         "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
         "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
@@ -2746,7 +2848,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 4, "name": "EmsRefreshSpec-SecurityGroup",
         "description": "EmsRefreshSpec-SecurityGroup"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:48 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:55 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2755,29 +2857,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-98835dc5-252f-4768-a624-fd37dee0f072
+      - req-6a87fe28-7e9c-4755-9ba2-8959cd26f725
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:06 GMT
+      - Tue, 16 Dec 2014 00:05:53 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2789,7 +2891,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:48 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:57 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/4bb8d624-a3a5-421c-9e14-8a6eaa16aed8/os-security-groups.json
@@ -2798,29 +2900,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-b5977c36-e3d1-4d5a-86c8-0eda45ae2b12
+      - req-0dfc0bb2-b987-48f0-b94f-170685e5fe06
       Content-Type:
       - application/json
       Content-Length:
       - '2238'
       Date:
-      - Fri, 19 Sep 2014 22:10:07 GMT
+      - Tue, 16 Dec 2014 00:05:54 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
         "tcp", "to_port": 2, "parent_group_id": 4, "ip_range": {"cidr": "1.2.3.4/30"},
         "id": 1}, {"from_port": 1, "group": {}, "ip_protocol": "tcp", "to_port": 65535,
         "parent_group_id": 4, "ip_range": {"cidr": "0.0.0.0/0"}, "id": 2}, {"from_port":
@@ -2849,7 +2951,7 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "id": 5, "name": "EmsRefreshSpec-SecurityGroup2",
         "description": "EmsRefreshSpec-SecurityGroup2"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:49 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:57 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -2858,29 +2960,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-32747fb8-9bd6-4fd3-9fc5-586755803962
+      - req-ca693f44-3198-4c69-b2ad-5b3cd382a362
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:07 GMT
+      - Tue, 16 Dec 2014 00:05:54 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -2892,7 +2994,7 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:49 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:57 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/bd356ece-8cdb-4580-952a-362c5844fa07/os-security-groups.json
@@ -2901,32 +3003,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-87fca9dc-fbc5-4679-b989-192ae34a45ae
+      - req-da7def46-24a0-4f34-86b4-e20a5c91eeaf
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Fri, 19 Sep 2014 22:10:07 GMT
+      - Tue, 16 Dec 2014 00:05:55 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
+      encoding: UTF-8
+      string: '{"security_groups": [{"rules": [], "tenant_id": "cd29f03e4667409fb59d2d93cc527ca2",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:49 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:58 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/ac0a6059e6d545cf98b9b5e9913936e5/snapshots/detail
@@ -2935,29 +3037,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 4c2c1f63cd304268886c20c651932c5b
+      - 220c94bb15364410b35d87b8d698adf0
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-4a3bd6c0-7f9b-428d-b6a4-bb4414d03ccf
+      - req-b4917bcd-373e-4a97-b26d-c27b7a8b1db1
       Content-Type:
       - application/json
       Content-Length:
       - '1662'
       Date:
-      - Fri, 19 Sep 2014 22:10:07 GMT
+      - Tue, 16 Dec 2014 00:05:55 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"snapshots": [{"status": "available", "display_name": "test1-volume1-snap2",
+      encoding: UTF-8
+      string: '{"snapshots": [{"status": "available", "display_name": "test1-volume1-snap2",
         "created_at": "2014-05-07T21:18:53.000000", "display_description": "Snapshot
         2 of test1-volume1", "os-extended-snapshot-attributes:progress": "100%", "volume_id":
         "ea6db204-6262-4f2a-be6e-8c33431a3380", "os-extended-snapshot-attributes:project_id":
@@ -2977,7 +3079,7 @@ http_interactions:
         "os-extended-snapshot-attributes:project_id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "metadata": {}, "id": "e6a69ec8-aafc-4249-a108-ce4d650b3b1f", "size": 1}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:49 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:58 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/af041f5a5e214930980603e26a63f754/snapshots/detail
@@ -2986,31 +3088,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - b9e664af283c4a78a0b88b29dabf8057
+      - 61d45b46b8d548c6aa6f67cc9ef73591
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-de51f244-ebd8-4f3f-ba62-ec8806093b03
+      - req-924ad4fc-b0d1-476b-b923-3e9fc1e64ce0
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Fri, 19 Sep 2014 22:10:08 GMT
+      - Tue, 16 Dec 2014 00:05:55 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"snapshots": []}'
+      encoding: UTF-8
+      string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:49 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:58 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/cd29f03e4667409fb59d2d93cc527ca2/snapshots/detail
@@ -3019,32 +3121,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - b99feaf3a87d44da8529de3ca2fd981b
+      - 42da26d0bffd4be2811ce5ed3bdb6db1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8432235c-46ec-43f0-a318-5945a1774ba0
+      - req-bdd5dc13-7819-4dbb-bfbc-f8ebd58f06fb
       Content-Type:
       - application/json
       Content-Length:
       - '2125'
       Date:
-      - Fri, 19 Sep 2014 22:10:08 GMT
+      - Tue, 16 Dec 2014 00:05:55 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"snapshots": [{"status": "available", "display_name": "snapshot
-        for EmsRefreshSpec-Snapshot", "created_at": "2013-09-11T06:56:05.000000",
-        "display_description": "EmsRefreshSpec-Volume", "os-extended-snapshot-attributes:progress":
-        "100%", "volume_id": "6b01f23f-6840-44d2-b697-20b5287e567a", "os-extended-snapshot-attributes:project_id":
+      encoding: UTF-8
+      string: '{"snapshots": [{"status": "available", "display_name": "snapshot for
+        EmsRefreshSpec-Snapshot", "created_at": "2013-09-11T06:56:05.000000", "display_description":
+        "EmsRefreshSpec-Volume", "os-extended-snapshot-attributes:progress": "100%",
+        "volume_id": "6b01f23f-6840-44d2-b697-20b5287e567a", "os-extended-snapshot-attributes:project_id":
         "cd29f03e4667409fb59d2d93cc527ca2", "metadata": {}, "id": "4dac9c48-db35-4a34-b1b5-a18fdce72965",
         "size": 1}, {"status": "available", "display_name": "snapshot for rpo-vol-instance-snap",
         "created_at": "2014-07-07T20:49:45.000000", "display_description": "Bootable
@@ -3067,16 +3169,16 @@ http_interactions:
         "cd29f03e4667409fb59d2d93cc527ca2", "metadata": {}, "id": "f14fcaa5-e416-4b6f-8854-79824d83a894",
         "size": 1}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:49 GMT
+  recorded_at: Tue, 16 Dec 2014 00:15:58 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test1"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -3091,12 +3193,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:10:08 GMT
+      - Tue, 16 Dec 2014 00:05:55 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:10:08.425042",
-        "expires": "2014-09-20T22:10:08Z", "id": "5d6153703bfb4b35bcbeac87a90a1874",
-        "tenant": {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:55.549112", "expires":
+        "2014-12-17T00:05:55Z", "id": "dde50bb679154325a23e4a45bf04ce02", "tenant":
+        {"description": "test1 tenant", "enabled": true, "id": "ac0a6059e6d545cf98b9b5e9913936e5",
         "name": "test1"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5"}],
@@ -3126,7 +3228,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:50 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:00 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5/?format=json
@@ -3135,13 +3237,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 5d6153703bfb4b35bcbeac87a90a1874
+      - dde50bb679154325a23e4a45bf04ce02
   response:
     status:
       code: 200
@@ -3162,13 +3264,13 @@ http_interactions:
       X-Account-Object-Count:
       - '0'
       Date:
-      - Fri, 19 Sep 2014 22:10:08 GMT
+      - Tue, 16 Dec 2014 00:05:57 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"count": 0, "bytes": 0, "name": "test1-container1"}, {"count":
-        0, "bytes": 0, "name": "test1-container2"}]'
+      encoding: UTF-8
+      string: '[{"count": 0, "bytes": 0, "name": "test1-container1"}, {"count": 0,
+        "bytes": 0, "name": "test1-container2"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:50 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:00 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5/?format=json
@@ -3177,13 +3279,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 5d6153703bfb4b35bcbeac87a90a1874
+      - dde50bb679154325a23e4a45bf04ce02
   response:
     status:
       code: 200
@@ -3204,13 +3306,13 @@ http_interactions:
       X-Account-Object-Count:
       - '0'
       Date:
-      - Fri, 19 Sep 2014 22:10:08 GMT
+      - Tue, 16 Dec 2014 00:05:57 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"count": 0, "bytes": 0, "name": "test1-container1"}, {"count":
-        0, "bytes": 0, "name": "test1-container2"}]'
+      encoding: UTF-8
+      string: '[{"count": 0, "bytes": 0, "name": "test1-container1"}, {"count": 0,
+        "bytes": 0, "name": "test1-container2"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:50 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:01 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5/test1-container1?format=json
@@ -3219,13 +3321,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 5d6153703bfb4b35bcbeac87a90a1874
+      - dde50bb679154325a23e4a45bf04ce02
   response:
     status:
       code: 200
@@ -3244,12 +3346,12 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 19 Sep 2014 22:10:08 GMT
+      - Tue, 16 Dec 2014 00:05:58 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[]'
+      encoding: UTF-8
+      string: '[]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:50 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:01 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_ac0a6059e6d545cf98b9b5e9913936e5/test1-container2?format=json
@@ -3258,13 +3360,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 5d6153703bfb4b35bcbeac87a90a1874
+      - dde50bb679154325a23e4a45bf04ce02
   response:
     status:
       code: 200
@@ -3283,21 +3385,21 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 19 Sep 2014 22:10:09 GMT
+      - Tue, 16 Dec 2014 00:05:58 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[]'
+      encoding: UTF-8
+      string: '[]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:50 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:01 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
-      encoding: US-ASCII
-      string: ! '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password"},"tenantName":"test2"}}'
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
   response:
@@ -3312,12 +3414,12 @@ http_interactions:
       Content-Length:
       - '2830'
       Date:
-      - Fri, 19 Sep 2014 22:10:09 GMT
+      - Tue, 16 Dec 2014 00:05:59 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"access": {"token": {"issued_at": "2014-09-19T22:10:09.282032",
-        "expires": "2014-09-20T22:10:09Z", "id": "ae0bc01517b14d978a370771298335cd",
-        "tenant": {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2014-12-16T00:05:59.030180", "expires":
+        "2014-12-17T00:05:58Z", "id": "61ee125beaf042dc88880f3276851f97", "tenant":
+        {"description": "test2 tenant", "enabled": true, "id": "af041f5a5e214930980603e26a63f754",
         "name": "test2"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754",
         "id": "8d15e9f9c0ae4beda09c28e8dd0dd621", "publicURL": "http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754"}],
@@ -3347,7 +3449,7 @@ http_interactions:
         {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["9fe2ff9ee4384b1894a90878d3e92bab", "8dc30157ae05438caf2cfbb75fb95a8f"]}}}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:50 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:02 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754/?format=json
@@ -3356,13 +3458,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae0bc01517b14d978a370771298335cd
+      - 61ee125beaf042dc88880f3276851f97
   response:
     status:
       code: 200
@@ -3383,13 +3485,13 @@ http_interactions:
       X-Account-Object-Count:
       - '0'
       Date:
-      - Fri, 19 Sep 2014 22:10:09 GMT
+      - Tue, 16 Dec 2014 00:05:59 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"count": 0, "bytes": 0, "name": "test2-container1"}, {"count":
-        0, "bytes": 0, "name": "test2-container2"}]'
+      encoding: UTF-8
+      string: '[{"count": 0, "bytes": 0, "name": "test2-container1"}, {"count": 0,
+        "bytes": 0, "name": "test2-container2"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:51 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:02 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754/?format=json
@@ -3398,13 +3500,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae0bc01517b14d978a370771298335cd
+      - 61ee125beaf042dc88880f3276851f97
   response:
     status:
       code: 200
@@ -3425,13 +3527,13 @@ http_interactions:
       X-Account-Object-Count:
       - '0'
       Date:
-      - Fri, 19 Sep 2014 22:10:09 GMT
+      - Tue, 16 Dec 2014 00:05:59 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"count": 0, "bytes": 0, "name": "test2-container1"}, {"count":
-        0, "bytes": 0, "name": "test2-container2"}]'
+      encoding: UTF-8
+      string: '[{"count": 0, "bytes": 0, "name": "test2-container1"}, {"count": 0,
+        "bytes": 0, "name": "test2-container2"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:51 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:02 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754/test2-container1?format=json
@@ -3440,13 +3542,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae0bc01517b14d978a370771298335cd
+      - 61ee125beaf042dc88880f3276851f97
   response:
     status:
       code: 200
@@ -3465,12 +3567,12 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 19 Sep 2014 22:10:09 GMT
+      - Tue, 16 Dec 2014 00:05:59 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[]'
+      encoding: UTF-8
+      string: '[]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:51 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:02 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_af041f5a5e214930980603e26a63f754/test2-container2?format=json
@@ -3479,13 +3581,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae0bc01517b14d978a370771298335cd
+      - 61ee125beaf042dc88880f3276851f97
   response:
     status:
       code: 200
@@ -3504,12 +3606,12 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 19 Sep 2014 22:10:09 GMT
+      - Tue, 16 Dec 2014 00:05:59 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[]'
+      encoding: UTF-8
+      string: '[]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:51 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:02 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2/?format=json
@@ -3518,13 +3620,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - cfb2b25f7f2e458ab3d41a1dd4ef247e
+      - f8eb89b958de49e1819e0612b208ede9
   response:
     status:
       code: 200
@@ -3545,12 +3647,12 @@ http_interactions:
       X-Account-Object-Count:
       - '2'
       Date:
-      - Fri, 19 Sep 2014 22:10:09 GMT
+      - Tue, 16 Dec 2014 00:06:00 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"count": 2, "bytes": 263633, "name": "bd-container"}]'
+      encoding: UTF-8
+      string: '[{"count": 2, "bytes": 263633, "name": "bd-container"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:51 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:03 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2/?format=json
@@ -3559,13 +3661,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - cfb2b25f7f2e458ab3d41a1dd4ef247e
+      - f8eb89b958de49e1819e0612b208ede9
   response:
     status:
       code: 200
@@ -3586,12 +3688,12 @@ http_interactions:
       X-Account-Object-Count:
       - '2'
       Date:
-      - Fri, 19 Sep 2014 22:10:10 GMT
+      - Tue, 16 Dec 2014 00:06:00 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"count": 2, "bytes": 263633, "name": "bd-container"}]'
+      encoding: UTF-8
+      string: '[{"count": 2, "bytes": 263633, "name": "bd-container"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:51 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:03 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8080/v1/AUTH_cd29f03e4667409fb59d2d93cc527ca2/bd-container?format=json
@@ -3600,13 +3702,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - cfb2b25f7f2e458ab3d41a1dd4ef247e
+      - f8eb89b958de49e1819e0612b208ede9
   response:
     status:
       code: 200
@@ -3625,15 +3727,15 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 19 Sep 2014 22:10:10 GMT
+      - Tue, 16 Dec 2014 00:06:00 GMT
     body:
-      encoding: US-ASCII
-      string: ! '[{"hash": "69c8c4275fc8a06771ee8309ae3b8f2f", "last_modified": "2013-08-20T15:23:25.392790",
+      encoding: UTF-8
+      string: '[{"hash": "69c8c4275fc8a06771ee8309ae3b8f2f", "last_modified": "2013-08-20T15:23:25.392790",
         "bytes": 146977, "name": "Bandwidth report", "content_type": "application/octet-stream"},
         {"hash": "87d0052378cc6d28e703229b427f83f6", "last_modified": "2013-08-20T15:24:00.913070",
         "bytes": 116656, "name": "Bandwidth report 2", "content_type": "application/octet-stream"}]'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:52 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:03 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/os-floating-ips.json
@@ -3642,31 +3744,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ff6acdf0d66a450283d7d1fdb3f3ed70
+      - e4e850b6445949ae8ae785c502c3655c
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-818106b4-4cbb-4759-bc97-9a3cecdcaac6
+      - req-1ea45487-9395-4797-b57e-13863a2ba103
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Fri, 19 Sep 2014 22:10:10 GMT
+      - Tue, 16 Dec 2014 00:06:00 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": []}'
+      encoding: UTF-8
+      string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:52 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:04 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754/os-floating-ips.json
@@ -3675,31 +3777,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3adf71c7a93e43ba85434b0bae37287a
+      - f53e30c5e618483aae5bfa2c4ec94252
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-f0644be9-fb1b-4556-80fd-32176b8efab5
+      - req-5e7c43eb-811c-4396-aa74-62a7bb6fb5d4
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Fri, 19 Sep 2014 22:10:10 GMT
+      - Tue, 16 Dec 2014 00:06:01 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": []}'
+      encoding: UTF-8
+      string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:52 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:04 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/os-floating-ips.json
@@ -3708,29 +3810,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.19.0
+      - fog/1.26.0 fog-core/1.27.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 38798c0b1d44402ab28305ec20f69e94
+      - 0027b3e049524b018f0944e34f22b65a
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-0da8e771-1cba-4a67-a59e-ff4495effb20
+      - req-6876cc06-693e-4287-aaeb-c926a2f93b0d
       Content-Type:
       - application/json
       Content-Length:
       - '914'
       Date:
-      - Fri, 19 Sep 2014 22:10:10 GMT
+      - Tue, 16 Dec 2014 00:06:01 GMT
     body:
-      encoding: US-ASCII
-      string: ! '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
+      encoding: UTF-8
+      string: '{"floating_ips": [{"instance_id": "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
         "ip": "10.3.4.1", "fixed_ip": "192.168.32.6", "id": 1, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.2", "fixed_ip": null, "id": 2, "pool": "nova"}, {"instance_id":
         null, "ip": "10.3.4.3", "fixed_ip": null, "id": 3, "pool": "nova"}, {"instance_id":
@@ -3742,5 +3844,5 @@ http_interactions:
         null, "ip": "10.3.4.9", "fixed_ip": null, "id": 9, "pool": "nova"}, {"instance_id":
         null, "ip": "192.168.253.100", "fixed_ip": null, "id": 1023, "pool": "Mahwah"}]}'
     http_version: 
-  recorded_at: Fri, 19 Sep 2014 22:17:52 GMT
+  recorded_at: Tue, 16 Dec 2014 00:16:04 GMT
 recorded_with: VCR 2.9.2
