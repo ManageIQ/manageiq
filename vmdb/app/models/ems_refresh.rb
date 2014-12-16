@@ -58,18 +58,12 @@ module EmsRefresh
       # Determine the group
       if t.kind_of?(ExtManagementSystem) || t.respond_to?(:ext_management_system)
         ems = t.kind_of?(ExtManagementSystem) ? t : t.ext_management_system
-        unless ems.nil?
-          ems.kind_of?(EmsVmware) ? :vc : ems.emstype.to_sym
-        else
-          # Differentiate non-ems from a disconnected host or vm
-          vendor = t.kind_of?(Host) ? t.vmm_vendor : t.vendor
-          vendor == "amazon" ? :ec2 : :non_ems
-        end
+        ems.kind_of?(EmsVmware) ? :vc : ems.emstype.to_sym unless ems.nil?
       end
     end
 
     # Do the refreshes
-    [:non_ems, :vc, :ec2, :rhevm, :scvmm, :kvm, :openstack].each do |g|
+    [:vc, :ec2, :rhevm, :scvmm, :kvm, :openstack].each do |g|
       self::Refreshers.const_get("#{g.to_s.camelize}Refresher").refresh(groups[g]) if groups.has_key?(g)
     end
   end
