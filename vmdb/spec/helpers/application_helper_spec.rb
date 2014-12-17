@@ -3907,12 +3907,11 @@ describe ApplicationHelper do
         get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
            "&page=2&sb_controller=host")
         Object.any_instance.stub(:query_string).and_return(@request.query_string)
-        Object.any_instance.stub(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil
       end
 
       it "updates the query string with the given hash value and returns the full url path" do
-        update_paging_url_parms(:page => 1).should eq("/vm/show_list/100?bc=VMs+running+on+2014-08-25"\
+        update_paging_url_parms("show_list", :page => 1).should eq("/vm/show_list/100?bc=VMs+running+on+2014-08-25"\
           "&menu_click=Display-VMs-on_2-6-5&page=1&sb_controller=host")
       end
     end
