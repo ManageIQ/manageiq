@@ -55,8 +55,10 @@ describe MiqEvent do
       end
 
       it "will raise the event to automate" do
+        event = 'evm_server_start'
+        FactoryGirl.create(:miq_event_definition, :name => event)
         MiqAeEvent.should_receive(:raise_evm_event)
-        MiqEvent.raise_evm_event(@miq_server, "evm_server_start")
+        MiqEvent.raise_evm_event(@miq_server, event)
       end
     end
 
@@ -69,31 +71,35 @@ describe MiqEvent do
 
       it "will do policy, alerts, and children events for supported policy target" do
         event = 'vm_start'
-        FactoryGirl.create(:miq_event, :name => event)
+        FactoryGirl.create(:miq_event_definition, :name => event)
+        FactoryGirl.create(:miq_event, :event_type => event, :target => @cluster)
         target_class = @cluster.class.name
 
         MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, {:type => target_class } )
         MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, {:type => target_class } )
         MiqEvent.should_receive(:raise_event_for_children).with(@cluster, event, {:type => target_class } )
 
-        results = MiqEvent.where(:name => event).first.process_evm_event(target_class, @cluster.id)
+        results = MiqEvent.first.process_evm_event
         results.keys.should match_array([:policy, :alert, :children_events])
       end
 
       it "will not raise to automate for supported policy target" do
         raw_event = "evm_server_start"
-        FactoryGirl.create(:miq_event, :name => raw_event)
+        FactoryGirl.create(:miq_event_definition, :name => raw_event)
+        FactoryGirl.create(:miq_event, :event_type => raw_event, :target => @miq_server)
 
         MiqAeEvent.should_receive(:raise_evm_event).never
-        MiqEvent.where(:name => raw_event).first.process_evm_event(@miq_server.class.name, @miq_server.id)
+        MiqEvent.first.process_evm_event
       end
 
       it "will do nothing for unsupported policy target" do
-        FactoryGirl.create(:miq_event, :name => "some_event")
+        FactoryGirl.create(:miq_event_definition, :name => "some_event")
+        FactoryGirl.create(:miq_event, :event_type => "some_event", :target => @zone)
+
         MiqPolicy.should_receive(:enforce_policy).never
         MiqAlert.should_receive(:evaluate_alerts).never
         MiqEvent.should_receive(:raise_event_for_children).never
-        MiqEvent.where(:name => "some_event").first.process_evm_event(@zone.class.name, @zone.id)
+        MiqEvent.first.process_evm_event
       end
     end
 
