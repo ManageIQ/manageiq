@@ -97,6 +97,7 @@ describe MiqServer do
   end
 
   context "#register" do
+    let(:default_params) { {:server_url => "subscription.rhn.redhat.com"} }
     it "already registered" do
       reg_system.stub(:registered?).and_return(true)
 
@@ -108,7 +109,7 @@ describe MiqServer do
 
     it "unregistered should use subscription-manager" do
       reg_system.stub(:registered?).once.and_return(false, true)
-      LinuxAdmin::SubscriptionManager.should_receive(:register).once.and_return(true)
+      LinuxAdmin::SubscriptionManager.should_receive(:register).once.with(default_params).and_return(true)
       File.should_receive(:exist?).once.and_return(true)
       reg_system.should_receive(:registration_type).once
 
@@ -119,11 +120,13 @@ describe MiqServer do
     end
 
     it "unregistered should use satellite6" do
+      expected_params = {:server_url => "https://my-sat6-server.mydomain", :environment => "Library"}
+
       database.update_attribute(:registration_type, "rhn_satellite6")
-      database.update_attribute(:registration_server, "https://my-sat6-server.mydomain/katello")
+      database.update_attribute(:registration_server, expected_params[:server_url])
 
       reg_system.stub(:registered?).once.and_return(false, true)
-      LinuxAdmin::SubscriptionManager.should_receive(:register).once.and_return(true)
+      LinuxAdmin::SubscriptionManager.should_receive(:register).once.with(expected_params).and_return(true)
       File.should_receive(:exist?).once.and_return(true)
       reg_system.should_receive(:registration_type).once
 
@@ -137,7 +140,7 @@ describe MiqServer do
       database.update_attribute(:registration_type, "rhn_satellite")
 
       reg_system.stub(:registered?).once.and_return(false, true)
-      LinuxAdmin::Rhn.should_receive(:register).once.and_return(true)
+      LinuxAdmin::Rhn.should_receive(:register).once.with(default_params).and_return(true)
       File.should_receive(:exist?).twice.and_return(false, true)
       reg_system.should_receive(:registration_type).once
 

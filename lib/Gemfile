@@ -14,29 +14,29 @@ gem "activesupport", "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :
 gem "activerecord",  "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-13"
 
 # Not locally modified and not required
-gem "awesome_spawn",        "~> 1.2",    :require => false
-gem "binary_struct",        "~> 2.0",    :require => false
-gem "excon",                "~>0.40",    :require => false
-gem "ezcrypto",             "=0.7",      :require => false
-gem "facade",               "~>1.0.5",   :require => false  # Used by util/pathname2.rb
-gem "ffi",                  "~>1.9.3",   :require => false
-gem "ffi-vix_disk_lib",     "~>1.0.1",   :require => false  # used by lib/VixDiskLib
-gem "fog",                  "~>1.26.0",  :require => false
-gem "httpclient",           "~>2.5.3",   :require => false
-gem "io-extra",             "=1.2.6",    :require => false
-gem "linux_admin",          "~>0.9",     :require => false
-gem "log4r",                "=1.1.8",    :require => false
-gem "memoist",              "~>0.11.0",  :require => false
-gem "more_core_extensions", "~>1.2.0",   :require => false
-gem "nokogiri",             "~>1.5.0",   :require => false
-gem "ovirt",                "~>0.2.2",   :require => false
-gem "parallel",             "~>0.5.21",  :require => false
-gem "Platform",             "=0.4.0",    :require => false
-gem "rubyzip",              "=0.9.5",    :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
-gem "rufus-lru",            "~>1.0.3",   :require => false
-gem "uuidtools",            "~>2.1.3",   :require => false
-gem "sass",                 "3.1.20",    :require => false
-gem "trollop",              "~>1.16.2",  :require => false
+gem "awesome_spawn",        "~> 1.2",        :require => false
+gem "binary_struct",        "~> 2.0",        :require => false
+gem "excon",                "~>0.40",        :require => false
+gem "ezcrypto",             "=0.7",          :require => false
+gem "facade",               "~>1.0.5",       :require => false  # Used by util/pathname2.rb
+gem "ffi",                  "~>1.9.3",       :require => false
+gem "ffi-vix_disk_lib",     "~>1.0.1",       :require => false  # used by lib/VixDiskLib
+gem "fog",                  "~>1.26.0",      :require => false
+gem "httpclient",           "~>2.5.3",       :require => false
+gem "io-extra",             "=1.2.6",        :require => false
+gem "linux_admin",          ">=0.9.4", "<1", :require => false
+gem "log4r",                "=1.1.8",        :require => false
+gem "memoist",              "~>0.11.0",      :require => false
+gem "more_core_extensions", "~>1.2.0",       :require => false
+gem "nokogiri",             "~>1.5.0",       :require => false
+gem "ovirt",                "~>0.2.2",       :require => false
+gem "parallel",             "~>0.5.21",      :require => false
+gem "Platform",             "=0.4.0",        :require => false
+gem "rubyzip",              "=0.9.5",        :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
+gem "rufus-lru",            "~>1.0.3",       :require => false
+gem "uuidtools",            "~>2.1.3",       :require => false
+gem "sass",                 "3.1.20",        :require => false
+gem "trollop",              "~>1.16.2",      :require => false
 
 # qpid group is needed to gate the inclusion of qpid_messaging gem on platforms
 # where the qpid-cpp-client-devel package is not available.  This includes

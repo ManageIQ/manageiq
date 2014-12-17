@@ -76,7 +76,11 @@ module MiqServer::UpdateManagement
         else                      LinuxAdmin::SubscriptionManager
         end
 
-      registration_class.register(assemble_registration_options)
+      # TODO: Prompt user for environment in UI for Satellite 6 registration, use default environment for now.
+      registration_options = assemble_registration_options
+      registration_options[:environment] = "Library" if registration_type == "rhn_satellite6"
+
+      registration_class.register(registration_options)
 
       # HACK: RHN is slow at writing the systemid file, wait up to 30 seconds for it to appear
       30.times { File.exist?("/etc/sysconfig/rhn/systemid") ? break : (sleep 1) }
