@@ -3,9 +3,10 @@ rvm:
 - "2.0"
 - "2.1"
 sudo: false
+cache: bundler
+bundler_args: --without development:metric_fu:qpid
 env:
   global:
-  - BUNDLE_WITHOUT=development:metric_fu:qpid
   - RUBY_GC_MALLOC_LIMIT=90000000
   matrix:
   - "TEST_SUITE=lib         TEST_ROOT=lib"
