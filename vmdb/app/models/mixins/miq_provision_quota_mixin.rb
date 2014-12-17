@@ -106,7 +106,7 @@ module MiqProvisionQuotaMixin
     prov_owner = self.get_owner
     unless prov_owner.nil?
       vms = Vm.user_or_group_owned(prov_owner)
-      ActiveRecord::Associations::Preloader.new(vms, :hardware => :disks).run
+      MiqPreloader.preload(vms, :hardware => :disks)
       vms.reject! do |vm|
         result = vm.template? || vm.host_id.nil?
         # if result is already true we can skip the following checks

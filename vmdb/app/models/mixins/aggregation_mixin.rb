@@ -84,7 +84,7 @@ module AggregationMixin
 
   def all_storages
     hosts = self.all_hosts
-    ActiveRecord::Associations::Preloader.new(hosts, :storages).run
+    MiqPreloader.preload(hosts, :storages)
     hosts.collect { |h| h.storages }.flatten.compact.uniq
   end
 

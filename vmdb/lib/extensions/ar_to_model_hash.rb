@@ -44,7 +44,7 @@ module ToModelHash
 
   def to_model_hash(options = nil)
     options ||= self.class.to_model_hash_options
-    ActiveRecord::Associations::Preloader.new(self, to_model_hash_build_preload(options)).run
+    MiqPreloader.preload(self, to_model_hash_build_preload(options))
     to_model_hash_recursive(options)
   end
 

@@ -32,7 +32,7 @@ class Relationship < ActiveRecord::Base
   end
 
   def self.resources(relationships)
-    ActiveRecord::Associations::Preloader.new(relationships, :resource).run
+    MiqPreloader.preload(relationships, :resource)
     relationships.collect { |r| r.resource }
   end
 
@@ -72,7 +72,7 @@ class Relationship < ActiveRecord::Base
   end
 
   def self.arranged_rels_to_resources(relationships, initial = true)
-    ActiveRecord::Associations::Preloader.new(self.flatten_arranged_rels(relationships), :resource).run if initial
+    MiqPreloader.preload(self.flatten_arranged_rels(relationships), :resource) if initial
 
     relationships.each_with_object({}) do |(rel, children), h|
       h[rel.resource] = self.arranged_rels_to_resources(children, false)

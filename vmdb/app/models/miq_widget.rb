@@ -250,7 +250,7 @@ class MiqWidget < ActiveRecord::Base
       return
     end
 
-    ActiveRecord::Associations::Preloader.new(group_hash_visibility_agnostic.keys, [:miq_user_role]).run
+    MiqPreloader.preload(group_hash_visibility_agnostic.keys, [:miq_user_role])
 
     group_hash = group_hash_visibility_agnostic.select { |k, v| available_for_group?(k) }      # Process users grouped by LDAP group membership of whether they have RBAC
 
