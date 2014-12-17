@@ -454,10 +454,10 @@ describe MiqExpression do
       relats  = MiqExpression.get_relats(Vm)
       details = MiqExpression._model_details(relats, {})
       cluster_sorted = details.select { |d| d.first.starts_with?("Cluster") }.sort
-      cluster_sorted.select { |d| d.first == "Cluster : Total Number of Physical CPUs" }.should_not be_empty
-      cluster_sorted.select { |d| d.first == "Cluster : Total Number of Logical CPUs" }.should_not be_empty
+      cluster_sorted.map(&:first).should include("Cluster : Total Number of Physical CPUs")
+      cluster_sorted.map(&:first).should include("Cluster : Total Number of Logical CPUs")
       hardware_sorted = details.select { |d| d.first.starts_with?("Hardware") }.sort
-      hardware_sorted.select { |d| d.first == "Hardware : Logical Cpus" }.should be_empty
+      hardware_sorted.map(&:first).should_not include("Hardware : Logical Cpus")
     end
   end
 

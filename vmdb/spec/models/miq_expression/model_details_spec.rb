@@ -23,13 +23,13 @@ describe MiqExpression do
     context "with :typ=>tag" do
       it "VmInfra" do
         result = described_class.model_details("VmInfra", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "Virtual Machine.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("Virtual Machine.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "VmCloud" do
         result = described_class.model_details("VmCloud", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "Instance.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
-        result.select { |r| r.first == "Instance.VM and Instance.My Company Tags : Auto Approve - Max CPU" }.should be_empty
+        result.map(&:first).should include("Instance.My Company Tags : Auto Approve - Max CPU")
+        result.map(&:first).should_not include("Instance.VM and Instance.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "VmOrTemplate" do
@@ -39,32 +39,32 @@ describe MiqExpression do
                                                :include_my_tags => true,
                                                :userid          => "admin"
         )
-        result.select { |r| r.first == "VM or Template.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("VM or Template.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "TemplateInfra" do
         result = described_class.model_details("TemplateInfra", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "Template.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("Template.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "TemplateCloud" do
         result = described_class.model_details("TemplateCloud", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "Image.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("Image.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "MiqTemplate" do
         result = described_class.model_details("MiqTemplate", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "VM Template and Image.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("VM Template and Image.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "EmsInfra" do
         result = described_class.model_details("EmsInfra", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "Infrastructure Provider.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("Infrastructure Provider.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "EmsCloud" do
         result = described_class.model_details("EmsCloud", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.select { |r| r.first == "Cloud Provider.My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("Cloud Provider.My Company Tags : Auto Approve - Max CPU")
       end
     end
 
@@ -74,12 +74,12 @@ describe MiqExpression do
                                                :typ           => "all",
                                                :include_model => false,
                                                :include_tags  => true)
-        result.select { |r| r.first == "My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("My Company Tags : Auto Approve - Max CPU")
       end
 
       it "Service" do
         result = described_class.model_details("Service", :typ => "all", :include_model => false, :include_tags => true)
-        result.select { |r| r.first == "My Company Tags : Auto Approve - Max CPU" }.should_not be_empty
+        result.map(&:first).should include("My Company Tags : Auto Approve - Max CPU")
       end
     end
   end
