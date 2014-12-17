@@ -395,7 +395,7 @@ module EmsRefresh::Parsers
     def process_vm_storages(properties)
       properties[:VirtualHardDisks].collect do |vhd|
         @data_index.fetch_path(:storages, vhd[:Props][:HostVolumeId])
-      end.compact
+      end.compact.uniq
     end
 
     def process_vm_storage(vmcpath, host)
