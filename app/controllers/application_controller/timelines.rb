@@ -256,7 +256,7 @@ module ApplicationController::Timelines
   def tl_build_policy_filter(grp_name)      # hidden fields to highlight bands in timeline
     arr = Array.new
     @tl_options[:events][grp_name].each do |a|
-      e = PolicyEvent.find_by_miq_event_id(a.to_i)
+      e = PolicyEvent.find_by_miq_event_definition_id(a.to_i)
       if !e.nil?
         arr.push(e.event_type)
       end
@@ -304,7 +304,7 @@ module ApplicationController::Timelines
 
       @tl_options[:events] = Hash.new
       @tl_options[:etypes] = Array.new
-      MiqEventSet.all.each do |e|
+      MiqEventDefinitionSet.all.each do |e|
         @tl_options[:etypes].push(e.description)  unless @tl_options[:etypes].include?(e.description)
         @tl_options[:events][e.description] ||= Array.new
         e.members.each do |mem|
@@ -427,14 +427,14 @@ module ApplicationController::Timelines
 
       if !event_set.empty?
         if @tl_options[:tl_show] == "policy_timeline" && @tl_options[:tl_result] != "both"
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_id"
+          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?)) and (result = ?)",
                           from_dt,
                           to_dt,
                           event_set.flatten,
                           @tl_options[:tl_result]]
         else
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_id"
+          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?))",
                           from_dt,
                           to_dt,

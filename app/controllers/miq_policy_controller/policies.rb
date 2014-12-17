@@ -52,12 +52,12 @@ module MiqPolicyController::Policies
       end
       if policy.valid? && !@flash_array && policy.save
         if @policy.id.blank? && policy.mode == "compliance"   # New compliance policy
-          event = MiqEvent.find_by_name("#{policy.towhat.downcase}_compliance_check") # Get the compliance event record
+          event = MiqEventDefinition.find_by_name("#{policy.towhat.downcase}_compliance_check") # Get the compliance event record
           policy.sync_events([event])                           # Set the default compliance event in the policy
           action_list = [[MiqAction.find_by_name("compliance_failed"), {:qualifier=>:failure, :synchronous=>true}]]
           policy.replace_actions_for_event(event, action_list)  # Add in the default action for the compliance event
         end
-        policy.sync_events(@edit[:new][:events].collect{|e| MiqEvent.find(e)}) if @edit[:typ] == "events"
+        policy.sync_events(@edit[:new][:events].collect{|e| MiqEventDefinition.find(e)}) if @edit[:typ] == "events"
         AuditEvent.success(build_saved_audit(policy, params[:button] == "add"))
         flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
                                                 _("%{model} \"%{name}\" was added")
@@ -197,7 +197,7 @@ module MiqPolicyController::Policies
 
       @edit[:new][:conditions].each_key{|key| @edit[:choices].delete(key)}  # Remove any choices that are in the members list box
     when "events" # Editing event assignments
-      @edit[:new][:events] = @policy.miq_events.collect{|e| e.id.to_s}.uniq.sort
+      @edit[:new][:events] = @policy.miq_event_definitions.collect{|e| e.id.to_s}.uniq.sort
 
       @edit[:allevents] = {}
       MiqPolicy.all_policy_events.each do |e|
@@ -243,7 +243,7 @@ module MiqPolicyController::Policies
     }
     @right_cell_div = "policy_details"
     @policy_conditions = @policy.conditions
-    @policy_events = @policy.miq_events
+    @policy_events = @policy.miq_event_definitions
     @expression_table = @policy.expression.is_a?(MiqExpression) ? exp_build_table(@policy.expression.exp) : nil
 
     if x_active_tree == :policy_tree

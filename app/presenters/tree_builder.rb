@@ -405,7 +405,7 @@ class TreeBuilder
     "dg"  => "Dialog",
     "ds"  => "Storage",
     "e"   => "ExtManagementSystem",
-    "ev"  => "MiqEvent",
+    "ev"  => "MiqEventDefinition",
     "c"   => "EmsCluster",
     "f"   => "EmsFolder",
     "g"   => "MiqGroup",

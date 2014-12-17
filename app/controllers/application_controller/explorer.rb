@@ -272,7 +272,7 @@ module ApplicationController::Explorer
     when Host		             then x_get_tree_host_kids(object, options)
     when LdapRegion		       then x_get_tree_lr_kids(object, options)
     when MiqAlertSet		     then x_get_tree_ap_kids(object, options)
-    when MiqEvent            then options[:tree] != :event_tree ?
+    when MiqEventDefinition  then options[:tree] != :event_tree ?
                                   x_get_tree_ev_kids(object, options) : nil
     when MiqGroup            then options[:tree] == :db_tree ?
                                   x_get_tree_g_kids(object, options) : nil
@@ -300,7 +300,7 @@ module ApplicationController::Explorer
        (object.kind_of?(Zone)      && @sb[:my_zone]      == object.name))
 
     options.merge!(:active_tree => x_active_tree)
-    options.merge!({:parent_id => pid}) if object.kind_of?(MiqEvent) || object.kind_of?(MiqAction)
+    options.merge!({:parent_id => pid}) if object.kind_of?(MiqEventDefinition) || object.kind_of?(MiqAction)
 
     # open nodes to show selected automate entry point
     x_tree(options[:tree])[:open_nodes] = @open_nodes.dup if @open_nodes
@@ -708,10 +708,10 @@ module ApplicationController::Explorer
 
   def x_get_tree_p_kids(object, options)
     if options[:count_only]
-      return object.conditions.count + object.miq_events.count
+      return object.conditions.count + object.miq_event_definitions.count
     else
       return object.conditions.sort_by { |a| a.description.downcase } +
-              object.miq_events.sort_by { |a| a.description.downcase }
+              object.miq_event_definitions.sort_by { |a| a.description.downcase }
     end
   end
 

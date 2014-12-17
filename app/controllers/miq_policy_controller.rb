@@ -263,7 +263,7 @@ class MiqPolicyController < ApplicationController
 
     event_build_tree
     @trees.push("event_tree")
-    @accords.push(:name => "event", :title => "Events", :container => "event_tree_div", :image => "miq_event")
+    @accords.push(:name => "event", :title => "Events", :container => "event_tree_div", :image => "miq_event_definition")
 
     condition_build_tree
     @trees.push("condition_tree")
@@ -488,7 +488,7 @@ class MiqPolicyController < ApplicationController
     when "co" # Condition
       condition_get_info(Condition.find(from_cid(nodeid)))
     when "ev" # Event
-      event_get_info(MiqEvent.find(from_cid(nodeid)))
+      event_get_info(MiqEventDefinition.find(from_cid(nodeid)))
     when "a","ta","fa"  # Action or True/False Action
       action_get_info(MiqAction.find(from_cid(nodeid)))
     when "ap" # Alert Profile
@@ -623,7 +623,7 @@ class MiqPolicyController < ApplicationController
       case x_active_tree
       when :policy_profile_tree then ['profile_list',          ui_lookup(:models=>'MiqPolicySet')]
       when :policy_tree         then ['policy_folders',        ui_lookup(:models=>'MiqPolicy')]
-      when :event_tree          then ['event_list',            ui_lookup(:tables=>'miq_event')]
+      when :event_tree          then ['event_list',            ui_lookup(:tables=>'miq_event_definition')]
       when :condition_tree      then ['condition_folders',     ui_lookup(:models=>'Condition')]
       when :action_tree         then ['action_list',           ui_lookup(:models=>'MiqAction')]
       when :alert_profile_tree  then ['alert_profile_folders', ui_lookup(:models=>'MiqAlertSet')]
@@ -691,7 +691,7 @@ class MiqPolicyController < ApplicationController
       end
     when 'ev'
       presenter[:update_partials][:main_div] = r[:partial => 'event_details', :locals=>{:read_only=>true}]
-      options = {:name => @event.description.gsub(/'/, "\\\\'"), :model => ui_lookup(:table => 'miq_event')}
+      options = {:name => @event.description.gsub(/'/, "\\\\'"), :model => ui_lookup(:table => 'miq_event_definition')}
       right_cell_text = @edit ? _("Editing %{model} \"%{name}\"") % options : _("%{model} \"%{name}\"") % options
     when 'a', 'ta', 'fa'
       presenter[:update_partials][:main_div] = r[:partial => 'action_details', :locals=>{:read_only=>true}]
