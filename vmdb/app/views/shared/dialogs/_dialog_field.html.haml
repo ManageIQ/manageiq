@@ -128,8 +128,9 @@
               miqSparkleOn();
 
               var fieldId = "#{field.id}";
+              var fieldName = "#{field.name}";
 
-              $j.post('dynamic_radio_button_refresh', {id: fieldId}, function(data) {
+              $j.post('dynamic_radio_button_refresh', {name: fieldName}, function(data) {
                 var radioButtons = [];
 
                 $j.each(data.values, function(index, value) {

@@ -163,13 +163,17 @@ module ApplicationController::DialogRunner
   end
 
   def dynamic_radio_button_refresh
-    field = DialogField.find(params[:id])
-    field.refresh_button_pressed
+    @edit = session[:edit]
+
+    dialog = @edit[:wf].dialog
+
+    field = dialog.field(params[:name])
+    values = field.refresh_button_pressed
 
     json = {
       :default_value => field.default_value,
       :field_name    => field.name,
-      :values        => field.values
+      :values        => values
     }
 
     respond_to do |format|

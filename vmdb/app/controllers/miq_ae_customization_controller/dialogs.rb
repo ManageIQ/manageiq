@@ -1149,7 +1149,7 @@ module MiqAeCustomizationController::Dialogs
               :dynamic        => f.dynamic
             }
 
-            if dynamic_field?(f)
+            if dynamic_field?(fld)
               fld.update(
                 :load_on_init        => f.load_values_on_init,
                 :show_refresh_button => f.show_refresh_button,
