@@ -302,6 +302,7 @@ module ReportFormatter
           if save2 != r[sort2].to_s # only the second sort field changed, save the count
             counts[save1_nonblank][save2_nonblank] = counter
             save2 = r[sort2].to_s
+            save2_nonblank = nonblank_or_default(save2)
             counter = 0
           end
         end
