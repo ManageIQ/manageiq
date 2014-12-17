@@ -2,6 +2,7 @@ language: ruby
 rvm:
 - "2.0"
 - "2.1"
+sudo: false
 env:
   global:
   - BUNDLE_WITHOUT=development:metric_fu:qpid
