@@ -1,0 +1,2 @@
+class CustomizationScriptPartial < CustomizationScript
+end
