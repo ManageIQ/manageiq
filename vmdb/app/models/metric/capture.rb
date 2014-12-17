@@ -37,7 +37,7 @@ module Metric::Capture
   def self.perf_capture_health_check(zone = nil)
     log_header = "MIQ(#{self.name}.perf_capture_health_check)"
     zone ||= MiqServer.my_server.zone(true)
-    q_items = MiqQueue.all(:select => "created_on, args", :conditions => {:state => "ready", :role => "ems_metrics_collector", :method_name => "perf_capture", :zone => zone.name}, :order => "created_on ASC")
+    q_items = MiqQueue.select("created_on, args").where(:state => "ready", :role => "ems_metrics_collector", :method_name => "perf_capture", :zone => zone.name).order("created_on ASC")
 
     items_by_interval = q_items.group_by { |i| i.args.first }
     items_by_interval.reverse_merge!("realtime" => [], "hourly" => [], "historical" => [])
