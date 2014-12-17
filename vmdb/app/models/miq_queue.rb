@@ -293,7 +293,7 @@ class MiqQueue < ActiveRecord::Base
       rescue ActiveRecord::StaleObjectError
         $log.debug("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
       rescue => err
-        raise "#{log_prefix} \"#{err}\" attempting merge next message"
+        raise RuntimeError, "#{log_prefix} \"#{err}\" attempting merge next message", err.backtrace
       end
     end
     return msg
