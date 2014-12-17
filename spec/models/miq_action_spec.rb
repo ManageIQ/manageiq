@@ -56,12 +56,12 @@ describe MiqAction do
   context "#raise_automation_event" do
     before(:each) do
       @vm   = FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:miq_event, :name => "raise_automation_event")
-      FactoryGirl.create(:miq_event, :name => "vm_start")
+      FactoryGirl.create(:miq_event_definition, :name => "raise_automation_event")
+      FactoryGirl.create(:miq_event_definition, :name => "vm_start")
       FactoryGirl.create(:miq_action, :name => "raise_automation_event")
       @action = MiqAction.find_by_name("raise_automation_event")
       @action.should_not be_nil
-      @event = MiqEvent.find_by_name("vm_start")
+      @event = MiqEventDefinition.find_by_name("vm_start")
       @event.should_not be_nil
       @aevent = {
         :vm     => @vm,
@@ -125,7 +125,7 @@ describe MiqAction do
   context "#action_vm_retire" do
     before do
       @vm     = FactoryGirl.create(:vm_vmware)
-      @event  = FactoryGirl.create(:miq_event, :name => "assigned_company_tag")
+      @event  = FactoryGirl.create(:miq_event_definition, :name => "assigned_company_tag")
       @action = FactoryGirl.create(:miq_action, :name => "vm_retire") 
     end
 

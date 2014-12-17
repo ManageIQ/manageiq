@@ -21,10 +21,10 @@ describe MiqEvent do
     end
 
     it "will recognize known events" do
-      FactoryGirl.create(:miq_event, :name => "host_connect")
+      FactoryGirl.create(:miq_event_definition, :name => "host_connect")
       MiqEvent.normalize_event("host_connect").should_not == "unknown"
 
-      FactoryGirl.create(:miq_event, :name => "evm_server_start")
+      FactoryGirl.create(:miq_event_definition, :name => "evm_server_start")
       MiqEvent.normalize_event("evm_server_start").should_not == "unknown"
     end
 
@@ -64,7 +64,7 @@ describe MiqEvent do
       it "will do policy, alerts, and children events for known event on supported policy target" do
         MiqAeEvent.should_receive(:raise_evm_event).never
         raw_event = 'vm_start'
-        FactoryGirl.create(:miq_event, :name => raw_event)
+        FactoryGirl.create(:miq_event_definition, :name => raw_event)
         event = MiqEvent.normalize_event(raw_event)
         MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, {:type => @cluster.class.name } )
         MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, {:type => @cluster.class.name } )
@@ -95,7 +95,7 @@ describe MiqEvent do
 
       it "will alert, enforce policy and not raise to automate for known alertable event on supported policy target" do
         raw_event = "evm_server_start"
-        FactoryGirl.create(:miq_event, :name => raw_event)
+        FactoryGirl.create(:miq_event_definition, :name => raw_event)
         event = MiqEvent.normalize_event(raw_event)
         MiqAlert.stub(:event_alertable?).with(raw_event).and_return true
         MiqAeEvent.should_receive(:raise_evm_event).never
@@ -107,7 +107,7 @@ describe MiqEvent do
 
       it "will not raise to automate for known non-alertable event on supported policy target" do
         raw_event = "evm_server_start"
-        FactoryGirl.create(:miq_event, :name => raw_event)
+        FactoryGirl.create(:miq_event_definition, :name => raw_event)
         event = MiqEvent.normalize_event(raw_event)
         MiqAlert.stub(:event_alertable?).with(raw_event).and_return false
         MiqAeEvent.should_receive(:raise_evm_event).never
@@ -119,7 +119,7 @@ describe MiqEvent do
 
       it "will not raise to automate for known non-alertable event on supported policy target without raising any errors" do
         raw_event = "evm_worker_start"
-        FactoryGirl.create(:miq_event, :name => raw_event)
+        FactoryGirl.create(:miq_event_definition, :name => raw_event)
         MiqAlert.stub(:event_alertable?).with(raw_event).and_return false
         MiqPolicy.should_receive(:enforce_policy).once
         MiqAlert.should_receive(:evaluate_alerts).once
