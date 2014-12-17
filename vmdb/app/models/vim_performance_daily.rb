@@ -40,7 +40,7 @@ class VimPerformanceDaily < MetricRollup
       end
     end
 
-    tp && tp.rollup_daily_metrics ? self.send(:find_by_time_profile, *args) : []
+    tp && tp.rollup_daily_metrics ? find_by_time_profile(*args) : []
   end
 
   def self.find_by_time_profile(*args)
