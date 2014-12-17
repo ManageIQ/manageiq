@@ -55,9 +55,9 @@ module ApplicationHelper
       auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :
                              User.current_user.role_allows?(:identifier => options[:feature])
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
-    elsif options[:main_tab]
-      tab = MAIN_TAB_FEATURES.detect { |t| t.first == options[:main_tab] }
-      auth = User.current_user.role_allows_any?(:identifiers => tab.last)
+    elsif options[:main_tab_id] # FIXME: used only in tab definition
+      tab = NavbarGenerator.tab_features_by_id(options[:main_tab_id])
+      auth = User.current_user.role_allows_any?(:identifiers => tab)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], main tab [#{options[:main_tab]}]")
     else
       auth = false
@@ -2509,6 +2509,9 @@ module ApplicationHelper
   end
 
   def secondary_nav_class(nav_layout)
+    if nav_layout == 'my_tasks' # exceptional behavior
+      nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
+    end
     nav_layout == @layout ? "active" : "inactive"
   end
 
