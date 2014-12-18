@@ -239,27 +239,24 @@ class MiqQueue < ActiveRecord::Base
 
     find_options  = default_get_options(find_options)
     args_selector = find_options.delete(:args_selector)
+    conds = find_options.dup
 
     # Since args are a serializable field, remove them and manually dump them
     #   for proper comparison.  NOTE: hashes may not compare correctly due to
     #   it's unordered nature.
-    has_args = find_options.has_key?(:args)
-    args = find_options.delete(:args) if has_args
-
-    conds = [self.sanitize_sql_for_conditions(find_options)]
-    if has_args
-      conds[0] << " AND args = ?"
-      conds << YAML.dump(args)
-    end
-
-    find_options[:args] = args if has_args
+    where_scope = if conds.key?(:args)
+                    args = YAML.dump conds.delete(:args)
+                    MiqQueue.where(conds).where(['args = ?', args])
+                  else
+                    MiqQueue.where(conds)
+                  end
 
     msg = nil
     loop do
       msg = if args_selector
-        MiqQueue.all(:conditions => conds, :order => "priority, id").detect { |m| args_selector.call(m.args) }
+        where_scope.order("priority, id").detect { |m| args_selector.call(m.args) }
       else
-        MiqQueue.first(:conditions => conds, :order => "priority, id")
+        where_scope.order("priority, id").first
       end
 
       save_options = block_given? ? yield(msg, find_options) : nil
