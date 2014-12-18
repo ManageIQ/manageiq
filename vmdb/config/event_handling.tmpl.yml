@@ -752,9 +752,6 @@ event_handling:
   HOST_ACTIVATE_FAILED:
   - refresh:
     - src_host
-  HOST_DETECTED:
-  - refresh:
-    - ems
   HOST_FAILURE:
   - refresh:
     - src_host
@@ -789,7 +786,7 @@ event_handling:
     - save!
   - refresh:
     - src_host
-  HOST_REGISTER_SUCCEEDED:
+  HOST_DETECTED:
   - policy:
     - src_host
     - host_connect
@@ -802,6 +799,17 @@ event_handling:
     - save!
   - refresh:
     - src_host
+  USER_REMOVE_HOST:
+  - policy:
+    - src_host
+    - host_disconnect
+  - call:
+    - src_host
+    - state=
+    - 'off'
+  - call:
+    - src_host
+    - save!
   HostConnectionLostEvent:
   - policy:
     - src_host
