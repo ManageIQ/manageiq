@@ -18,8 +18,8 @@ class CreateProvider < ActiveRecord::Migration
     add_index :configuration_profiles, :provider_ref
 
     create_table :configuration_profile_scripts do |t|
-      t.belongs_to :configuration_profile_id,   :type => :bigint
-      t.belongs_to :operating_system_flavor_id, :type => :bigint
+      t.belongs_to :configuration_profile,   :type => :bigint
+      t.belongs_to :operating_system_flavor, :type => :bigint
     end
     add_index :configuration_profile_scripts, [:configuration_profile_id, :operating_system_flavor_id],
               :name => :configuration_profile_scripts_i1
