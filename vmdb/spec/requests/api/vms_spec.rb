@@ -959,4 +959,72 @@ describe ApiController do
       expect(results.all? { |r| r.key?("task_href") }).to be_true
     end
   end
+
+  context "Vm add_event action" do
+    it "to an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :add_event))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:add_event))
+
+      expect(@success).to be_false
+      expect(@code).to eq(404)
+    end
+
+    it "to an invalid vm without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:add_event))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "to a single Vm" do
+      update_user_role(@role, collection_action_identifier(:vms, :add_event))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request_data(:add_event, :event_type => "special", :event_message => "message"))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_true
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match(/adding event/i)
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "to multiple Vms" do
+      update_user_role(@role, collection_action_identifier(:vms, :add_event))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+
+      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
+      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+
+      @success = run_post(@cfme[:vms_url],
+                          gen_requests(:add_event,
+                                       [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
+                                        {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(2)
+      expect(results.first["success"]).to be_true
+      expect(results.first["message"]).to match(/adding event.*etype1/i)
+      expect(results.first["href"]).to match(vm1_url)
+      expect(results.second["success"]).to be_true
+      expect(results.second["message"]).to match(/adding event.*etype2/i)
+      expect(results.second["href"]).to match(vm2_url)
+    end
+  end
 end
