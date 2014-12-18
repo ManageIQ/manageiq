@@ -25,7 +25,8 @@ var Automate = {
   getAndRenderAutomateJson: function(importFileUploadId, message) {
     $j('.hidden-import-file-upload-id').val(importFileUploadId);
 
-    $j.getJSON("automate_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
+    $j.getJSON("automate_json?import_file_upload_id=" + importFileUploadId)
+      .done(function(rows_json) {
       Automate.addDomainOptions(rows_json.children);
       Automate.setupInitialDynatree(rows_json.children);
 
@@ -36,9 +37,18 @@ var Automate = {
       $j('#import_file_upload_id').val(importFileUploadId);
       $j('.import-data').show();
       $j('.import-or-export').hide();
+      showSuccessMessage(JSON.parse(message).message);
+    })
+    .fail(function(failedMessage) {
+      var messageData = JSON.parse(failedMessage.responseText);
+      
+      if (messageData.level == 'warning') {
+        showWarningMessage(messageData.message);
+      } else {
+        showErrorMessage(messageData.message);
+      }
     });
 
-    showSuccessMessage(JSON.parse(message).message);
   },
 
   addDomainOptions: function(domains) {

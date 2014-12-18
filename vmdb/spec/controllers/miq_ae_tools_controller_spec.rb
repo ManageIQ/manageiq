@@ -66,6 +66,12 @@ describe MiqAeToolsController do
       xhr :get, :automate_json, params
       expect(response.body).to eq("the json")
     end
+
+    it "returns a 500 error code for invalid file" do
+      automate_import_json_serializer.stub(:serialize).with(import_file_upload).and_raise(StandardError)
+      xhr :get, :automate_json, params
+      expect(response.status).to eq(500)
+    end
   end
 
   describe "#import_automate_datastore" do

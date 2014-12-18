@@ -96,10 +96,18 @@ class MiqAeToolsController < ApplicationController
   end
 
   def automate_json
-    automate_json = automate_import_json_serializer.serialize(ImportFileUpload.find(params[:import_file_upload_id]))
+    begin
+      automate_json = automate_import_json_serializer.serialize(ImportFileUpload.find(params[:import_file_upload_id]))
+    rescue StandardError => e
+      add_flash("Error: import processing failed: #{e.message}", :error)
+    end
 
     respond_to do |format|
-      format.json { render :json => automate_json }
+      if @flash_array && @flash_array.count
+        format.json { render :json => @flash_array.first.to_json, :status => 500 }
+      else
+        format.json { render :json => automate_json }
+      end
     end
   end
 
