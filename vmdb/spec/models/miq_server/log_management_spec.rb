@@ -2,6 +2,25 @@ require "spec_helper"
 
 describe MiqServer do
   context "LogManagement" do
+    before do
+      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server2          = FactoryGirl.create(:miq_server, :zone => @zone)
+    end
+
+    context "#synchronize_logs" do
+      it "passes along server override" do
+        @miq_server.synchronize_logs("system", @miq_server2)
+        expect(MiqTask.first.miq_server_id).to eql @miq_server2.id
+        expect(MiqQueue.first.args.first[:id]).to eql @miq_server2.id
+      end
+
+      it "passes 'self' server if no server arg" do
+        @miq_server2.synchronize_logs("system")
+        expect(MiqTask.first.miq_server_id).to eql @miq_server2.id
+        expect(MiqQueue.first.args.first[:id]).to eql @miq_server2.id
+      end
+    end
+
     context "#get_log_depot_settings" do
       let(:depot_hash) do
         {:uri      => uri,
@@ -15,7 +34,6 @@ describe MiqServer do
       let(:uri)            { "smb://server/share" }
 
       before do
-        _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
         depot.update_authentication(:default => {:userid => "user", :password => "pass"})
       end
 
