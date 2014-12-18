@@ -2182,16 +2182,15 @@ class Host < ActiveRecord::Base
     else             HostPerformance
     end
 
-    perfs = klass.all(
-      :conditions => [
+    perfs = klass.where(
+      [
         "resource_id = ? AND capture_interval_name = ? AND timestamp >= ? AND timestamp <= ?",
         self.id,
         capture_interval.to_s,
         time_range[0],
         time_range[1]
-      ],
-      :order => "timestamp"
-    )
+      ]
+    ).order "timestamp"
 
     if capture_interval.to_sym == :realtime && metric.to_s.starts_with?("v_pct_cpu_")
       vm_vals_by_ts = self.get_pct_cpu_metric_from_child_vm_performances(metric, capture_interval, time_range)

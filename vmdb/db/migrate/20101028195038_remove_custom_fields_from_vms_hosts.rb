@@ -29,7 +29,7 @@ class RemoveCustomFieldsFromVmsHosts < ActiveRecord::Migration
     end
 
     say_with_time("Remove non-VC CustomAttributes") do
-      deletes = CustomAttribute.find(:all, :select=>'id',:conditions=>"source != 'VC'")
+      deletes = CustomAttribute.select('id').where("source != 'VC'")
       CustomAttribute.delete(deletes.collect{|ca| ca.id})
     end
     remove_column :custom_attributes, :source

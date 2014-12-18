@@ -78,7 +78,7 @@ module Metric::Capture
     # Create a new task for each rollup parent
     tasks_by_rollup_parent = targets_by_rollup_parent.keys.inject({}) do |h, pkey|
       name = "Performance rollup for #{pkey}"
-      prev_task = MiqTask.first(:conditions => {:identifier => pkey}, :order => "id DESC")
+      prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
 
       task = MiqTask.create(

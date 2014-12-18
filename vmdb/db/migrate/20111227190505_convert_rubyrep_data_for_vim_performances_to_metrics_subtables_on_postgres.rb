@@ -61,12 +61,12 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
       rrpc_table  = connection.quote_table_name(RrPendingChange.table_name)
 
       loop do
-        batch = RrPendingChange.all(:conditions => {:change_table => "vim_performances"}, :limit => 10000)
+        batch = RrPendingChange.where(:change_table => "vim_performances").limit(10000)
         break if batch.empty?
 
         vp_ids_to_rrpcs = batch.group_by { |rrpc| rrpc.change_key.split("|").last.to_i }
         vp_ids = vp_ids_to_rrpcs.keys
-        vps    = VimPerformance.find_all_by_id(vp_ids)
+        vps    = VimPerformance.where(:id => vp_ids)
 
         # For any pending changes that have deleted vim_performances, delete
         # the remote vim_performances, then delete the local pending changes

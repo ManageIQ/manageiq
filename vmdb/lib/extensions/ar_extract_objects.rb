@@ -3,7 +3,7 @@ module ActiveRecord
     def self.extract_objects(*objects)
       is_array = objects.length > 1 || objects.first.kind_of?(Array)
       objects = objects.flatten
-      ret = objects.first.kind_of?(Integer) ? self.find_all_by_id(objects) : objects
+      ret = objects.first.kind_of?(Integer) ? where(:id => objects) : objects
       return is_array ? ret : ret.first
     end
 

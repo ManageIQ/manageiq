@@ -305,8 +305,8 @@ module Metric::Rollup
   end
 
   def self.find_distinct_resources
-    metrics = Metric.in_my_region.all(:select => "DISTINCT resource_type, resource_id")
-    metric_rollups = MetricRollup.in_my_region.all(:select => "DISTINCT resource_type, resource_id")
+    metrics = Metric.in_my_region.select("DISTINCT resource_type, resource_id")
+    metric_rollups = MetricRollup.in_my_region.select("DISTINCT resource_type, resource_id")
 
     recs = (metrics + metric_rollups).group_by { |m| m.resource_type }
     recs.keys.each { |k| recs[k] = recs[k].collect { |r| r.resource_id }.uniq }
