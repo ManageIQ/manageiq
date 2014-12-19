@@ -207,11 +207,11 @@ function miqHighlight(elem, status) {
 // Turn on activity indicator
 function miqSparkle(status) {
   if (status) {
-    if (Ajax.activeRequestCount>0) {  // Make sure an ajax request is active before sparkling
+    if ($j.active > 0) {  // Make sure an ajax request is active before sparkling
       miqSparkleOn();
     }
   } else {
-    if (Ajax.activeRequestCount<2) {  // Make sure all but 1 ajax request is done
+    if ($j.active < 2) {  // Make sure all but 1 ajax request is done
       miqSparkleOff();
     }
   }
@@ -329,9 +329,7 @@ function miqUpdateAllCheckboxes(button_div,override) {
         cbs.each(function(cb) {
           cb.checked=state;
         })
-      new Ajax.Request(encodeURI("/configuration/form_field_changed?storage_cb_all=" + state),
-                  {asynchronous:true, evalScripts:true}
-        );
+      miqJqueryRequest("/configuration/form_field_changed?storage_cb_all=" + state);
     return true;
     } else {                                                // Set checkboxes in dhtmlx grid
       gtl_list_grid.forEachRow(function(id) {
@@ -496,11 +494,11 @@ function miqGetSize() {
 }
 // Pass fields to server given a URL and fields in name/value pairs
 function miqPassFields(url,args) {
-  url += "?";
+  url += '?';
   for(var i=0; i<args.length; i=i+2) {
-  url += args[i] + "=" + args[i+1] + "&";
+    url += args[i] + '=' + args[i+1] + '&';
   }
-  new Ajax.Request(encodeURI(url), {asynchronous:true, evalScripts:false});
+  miqJqueryRequest(url);
 }
 
 // Create a new div to put the notification area at the bottom of the screen whenever the page loads
@@ -640,7 +638,7 @@ function miqAjaxButton(url, serialize_fields){
 
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields){
-  if (Ajax.activeRequestCount>0) {
+  if ($j.active > 0) {
     miqAjaxTimers++;
     self.setTimeout("miqAjaxButtonSend('" + url + "')",700);
   }
@@ -651,27 +649,15 @@ function miqAjaxButtonSend(url, serialize_fields){
 // Function to generate an Ajax request
 function miqAjax(url, serialize_fields) {
   if (serialize_fields) {
-    new Ajax.Request(encodeURI(url),
-                    {asynchronous:true, evalScripts:true,
-                    onComplete:function(request){miqSparkle(false);},
-                    onLoading:function(request){miqSparkle(true);},
-                    parameters:Form.serialize('form_div')}
-    );
+    miqJqueryRequest(url, {beforeSend: true, complete: true, data:Form.serialize('form_div')});
   } else {
-    new Ajax.Request(encodeURI(url),
-                    {asynchronous:true, evalScripts:true,
-                    onLoading:function(request){miqSparkle(true);},
-                    onComplete:function(request){miqSparkle(false);}}
-    );
+    miqJqueryRequest(url, {beforeSend: true, complete: true});
   }
 }
 
 // Function to generate an Ajax request for EVM async processing
 function miqAsyncAjax(url) {
-  new Ajax.Request(encodeURI(url),
-                  {asynchronous:true, evalScripts:true,
-                  onLoading:function(request){miqSparkle(true);}}
-  );
+  miqJqueryRequest(url, {beforeSend: true});
 }
 
 // Function to generate an Ajax request, but only once for a drawn screen
@@ -684,9 +670,7 @@ function miqSendOneTrans(url) {
   }
   if (miqOneTrans == 1) return;
   miqOneTrans = 1;
-  new Ajax.Request(encodeURI(url),
-                  {asynchronous:true, evalScripts:true}
-  );
+  miqJqueryRequest(url);
 }
 
 // Anytime Anywhere Web Page Clock Generator
@@ -749,18 +733,12 @@ return (keycode == 13);
 function miqAjaxAuth(button){
   if (button == null) {
     miqEnableLoginFields(false);
-    new Ajax.Request('/dashboard/authenticate',
-                    {asynchronous:true, evalScripts:true,
-                    onLoading:function(request){miqSparkle(true);},
-                    parameters:Form.serialize('login_div')} // put serialized form elements into the request data
-    );
+    miqJqueryRequest('/dashboard/authenticate', {beforeSend: true, data: Form.serialize('login_div')});
   } else if (button == 'more' || button == 'back') {
-    new Ajax.Request(encodeURI('/dashboard/authenticate?' + Form.serialize($('login_div')) + "&button=" + button),
-                    {asynchronous:true, evalScripts:true}
-    );
+    miqJqueryRequest('/dashboard/authenticate?' + Form.serialize($('login_div')) + '&button=' + button);
   } else {
     miqEnableLoginFields(false);
-    miqAsyncAjax('/dashboard/authenticate?' + Form.serialize($('login_div')) + "&button=" + button);
+    miqAsyncAjax('/dashboard/authenticate?' + Form.serialize($('login_div')) + '&button=' + button);
   }
 }
 
@@ -814,12 +792,10 @@ function miqInitDashboardCols() {
 
 // Send the updated sortable order after jQuery drag/drop
 function miqDropComplete(event, ui) {
-  url = "/" + miq_widget_dd_url + "?" + $j(this).sortable('serialize', {key:this.id + "[]"}).toString();
+  var url = "/" + miq_widget_dd_url + "?" + $j(this).sortable('serialize', {key:this.id + "[]"}).toString();
   //Adding id of record being edited to be used by load_edit call
   if(typeof miq_record_id != "undefined") url += "&id=" + miq_record_id
-//  new Ajax.Request(encodeURI(url),
-//                  {asynchronous:true, evalScripts:true}
-  $j.ajax({url:encodeURI(url), asynchronous:true, type:'POST'});
+  miqJqueryRequest(url, {beforeSend: true, complete: true});
 }
 
 // Attach a calendar control to all text boxes that start with miq_date_
@@ -853,20 +829,11 @@ function miqBuildCalendar(){
                                 function(el, value){
                                   var parms = $j.parseJSON(el.getAttribute('data-miq_observe_date'));
                                   var url = parms.url;
-                                  urlstring = url + "?" + el.id + "=" + el.value; //  tack on the id and value to the URL
+                                  var urlstring = url + '?' + el.id + '=' + el.value; //  tack on the id and value to the URL
                                   if (el.getAttribute('data-miq_sparkle_on')) {
-                                    new Ajax.Request(encodeURI(urlstring),
-                                                    {
-                                                      asynchronous:true, evalScripts:true,
-                                                      onLoading:function(request){miqSparkle(true);}
-                                                    }
-                                    );
+                                    miqJqueryRequest(urlstring, {beforeSend: true});
                                   } else {
-                                    new Ajax.Request(encodeURI(urlstring),
-                                                    {
-                                                      asynchronous:true, evalScripts:true
-                                                    }
-                                    );
+                                    miqJqueryRequest(urlstring);
                                   }
                                 } );
     }
@@ -1022,12 +989,7 @@ function miqAjaxRequest(itemId,path){
   if (miqCheckForChanges() == false) {
     return false;
   } else {
-    new Ajax.Request(encodeURI(path + "?id=" + itemId),
-                  {asynchronous:true, evalScripts:true,
-                  onComplete:function(request){miqSparkle(false);},
-                  onLoading:function(request){miqSparkle(true);}
-                  }
-    );
+    miqJqueryRequest(path + '?id=' + itemId, {beforeSend: true, complete: true});
     return true;
   }
 }
@@ -1049,14 +1011,7 @@ function miqObserveCheckboxes() {
     new Form.Element.EventObserver(this.id, function(element, value) {
       var sparkleOn = this.element.getAttribute('data-miq_sparkle_on'); // Grab miq_sparkle settings
       var sparkleOff = this.element.getAttribute('data-miq_sparkle_off');
-      new Ajax.Request(url,
-                      {
-                        asynchronous:true, evalScripts:true,
-                        onLoading: function() {if (sparkleOn) miqSparkle(true);},
-                        onComplete: function() {if (sparkleOff) miqSparkle(false);},
-                        parameters:element.id + '=' + encodeURIComponent(value)
-                      }
-      );
+      miqJqueryRequest(url, {beforeSend: true, complete: true, data:element.id + '=' + encodeURIComponent(value)});
     })
   })
 }
@@ -1119,10 +1074,7 @@ function miq_jquery_tab_select(ui,url,checkChanges) {
   if (checkChanges && miqCheckForChanges() == false) {
     return false;
   } else {
-    new Ajax.Request(encodeURI(url + "?tab_id=" + ui.panel.id),
-                {asynchronous:true, evalScripts:true,
-                onLoading:function(request){miqSparkle(true);}}
-    );
+    miqJqueryRequest(url + '?tab_id=' + ui.panel.id, {beforeSend: true});
     return true;
   }
 }
@@ -1165,29 +1117,19 @@ function miq_jquery_disable_all_tabs(tabs_div){
 // Send explorer search by name via ajax
 function miqSearchByName(button){
   if (button == null)
-    new Ajax.Request('x_search_by_name',
-                    {asynchronous:true, evalScripts:true,
-                    onLoading:function(request){miqSparkle(true);},
-                    parameters:Form.serialize('searchbox')} // put serialized form elements into the request data
-    );
+    miqJqueryRequest('x_search_by_name', {beforeSend: true, data: Form.serialize('searchbox')});
 }
 
 // Send search by filter via ajax
 function miqSearchByFilter(button){
   if (button == null)
-    new Ajax.Request('list_view_filter',
-      {asynchronous:true, evalScripts:true,
-        onLoading:function(request){miqSparkle(true);},
-        parameters:Form.serialize('filterbox')} // put serialized form elements into the request data
-    );
+    miqJqueryRequest('list_view_filter', {beforeSend: true, data:Form.serialize('filterbox')});
 }
 
 // Send transaction to server so automate tree selection box can be made active and rest of the screen can be blocked
 function miqShowAE_Tree(typ){
-    new Ajax.Request(encodeURI ("ae_tree_select_toggle" + "?typ=" + typ),
-        {asynchronous:true, evalScripts:true}
-    );
-    return true;
+  miqJqueryRequest('ae_tree_select_toggle?typ=' + typ);
+  return true;
 }
 
 // Use the jQuery.form plugin for ajax file upload
@@ -1288,3 +1230,18 @@ Ajax.Responders.register({
     }
   }
 });
+
+function miqJqueryRequest(url, options) {
+  options = options || {};
+  ajax_options = {};
+
+  if (options['dataType']) ajax_options['dataType'] = options['dataType'] || 'script';
+
+  if (options['data']) ajax_options['data'] = options['data'];
+
+  if (options['beforeSend']) ajax_options['beforeSend'] = function(request) { miqSparkle(true); };
+
+  if (options['complete']) ajax_options['complete'] = function(request) { miqSparkle(false); };
+
+  new $j.ajax(encodeURI(url), ajax_options);
+}

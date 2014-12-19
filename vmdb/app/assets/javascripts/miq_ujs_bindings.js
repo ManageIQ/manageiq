@@ -37,14 +37,7 @@ $j(document).ready(function(){
 			new Form.Element.EventObserver(this.id, function(element, value) {
 				var sparkleOn = this.element.getAttribute('data-miq_sparkle_on');	// Grab miq_sparkle settings
 				var sparkleOff = this.element.getAttribute('data-miq_sparkle_off');
-				new Ajax.Request(url,
-												{
-													asynchronous:true, evalScripts:true,
-													onLoading: function() {if (sparkleOn) miqSparkle(true);},
-													onComplete: function() {if (sparkleOff) miqSparkle(false);},
-													parameters:element.id + '=' + encodeURIComponent(value)
-												}
-				);
+        miqJqueryRequest(url, {beforeSend: true, complete: true, data: element.id + '=' + encodeURIComponent(value)});
 			})
 		} else {
       $j(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
@@ -52,21 +45,12 @@ $j(document).ready(function(){
       $j(this).observe_field(interval, function(){
 				var oneTrans = this.getAttribute('data-miq_send_one_trans');	// Grab one trans URL, if present
 				if (typeof submit != "undefined"){										// If submit element passed in
-					new Ajax.Request(encodeURI(url),										//  serialize the element
-													{
-														asynchronous:true, evalScripts:true,
-														parameters:Form.serialize(submit)	// Using prototype to serialize any container element
-													}
-					);
+          miqJqueryRequest(url, {beforeSend: true, complete: true, data: Form.serialize(submit)});
 				} else if (oneTrans) {
 					miqSendOneTrans(url);
 				} else {
-          urlstring = url + "?" + this.id + "=" + encodeURIComponent(this.value);	//  tack on the id and value to the URL
-          new Ajax.Request(urlstring,
-                          {
-                            asynchronous:true, evalScripts:true
-                          }
-          );
+          var urlstring = url + "?" + this.id + "=" + encodeURIComponent(this.value);	//  tack on the id and value to the URL
+          miqJqueryRequest(urlstring);
         }
 			});
 		}
@@ -79,11 +63,11 @@ $j(document).ready(function(){
 //		var url = parms.url;
 //		var sparkleOn = this.getAttribute('data-miq_sparkle_on');	// Grab miq_sparkle settings
 //		var sparkleOff = this.getAttribute('data-miq_sparkle_off');
-//		new Ajax.Request(url,
+//		new $j.ajax(url,
 //										{
-//											asynchronous:true, evalScripts:true,
-//											onLoading: function() {if (sparkleOn) miqSparkle(true);},
-//											onComplete: function() {if (sparkleOff) miqSparkle(false);},
+//											dataType: 'script',
+//											beforeSend: function() {if (sparkleOn) miqSparkle(true);},
+//											complete: function() {if (sparkleOff) miqSparkle(false);},
 //											parameters:this.id + '=' + encodeURIComponent(this.checked ? this.value : 'null')
 //										}
 //		);

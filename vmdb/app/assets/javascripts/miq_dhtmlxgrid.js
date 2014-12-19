@@ -2,9 +2,7 @@
 
 //function to pass ajax request to server, to remember tree states
 function miqTreeState(rowId,state){
-  new Ajax.Request(encodeURI("/vm/compare_set_state" + "?rowId=" + rowId + "&state=" + state),
-                {asynchronous:true, evalScripts:true}
-  );
+  miqJqueryRequest('/vm/compare_set_state?rowId=' + rowId + '&state=' + state);
   return true;
 }
 
@@ -13,11 +11,7 @@ function miqRowClick(row_id, cell_idx) {
   cell = this.cells(row_id, cell_idx);
   if (cell_idx != 0 && cell.getAttribute('is_button') != 1)
     if (typeof row_url_ajax != "undefined" && row_url_ajax == true)
-      new Ajax.Request(encodeURI(row_url + row_id),
-          {asynchronous:true, evalScripts:true,
-            onLoading:function(request){miqSparkle(true);},
-            onComplete:function(request){miqSparkle(false);}}
-          );
+      miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
     else
       DoNav(row_url + row_id);
 }
@@ -45,11 +39,7 @@ function miqMenuRowSelected(row_id,cell_idx) {
 // Handle row click
 function miqRequestRowSelected(row_id) {
   if (row_id != null){
-    new Ajax.Request(encodeURI(request_url + "?" + field_name + "=" + row_id),
-        {asynchronous:true, evalScripts:true,
-          onLoading:function(request){miqSparkle(true);},
-          onComplete:function(request){miqSparkle(false);}}
-        );    
+    miqJqueryRequest(request_url + '?' + field_name + '=' + row_id, {beforeSend: true, complete: true});
   }
   return true;
 }
@@ -214,24 +204,16 @@ function miqOnAECheck(row_id, cell_idx, state) {
 // Handle sort
 function miqGridSort(col_id, grid_obj, dir) {
   if (miq_action_url == "sort_ds_grid") {
-    url = "/miq_request/sort_ds_grid" + "?sortby=" + col_id;
-    new Ajax.Request(encodeURI(url),
-                      {asynchronous:true, evalScripts:true,
-                      onLoading:function(request){miqSparkle(true);},
-                      onComplete:function(request){miqSparkle(false);}}
-      );
+    var url = '/miq_request/sort_ds_grid?sortby=' + col_id;
+    miqJqueryRequest(url, {beforeSend: true, complete: true});
   } else {
     if (grid_obj && col_id > 1) {
-      url = miq_action_url;
+      var url = miq_action_url;
       if (typeof miq_parent_id != "undefined") {
         url = "/" + miq_parent_class + "/" + url + "/" + miq_parent_id;
       }
       url = url + "?sortby=" + (col_id - 1) + "&" + window.location.search.substring(1);
-      new Ajax.Request(encodeURI(url),
-                      {asynchronous:true, evalScripts:true,
-                      onLoading:function(request){miqSparkle(true);},
-                      onComplete:function(request){miqSparkle(false);}}
-      );
+      miqJqueryRequest(url, {beforeSend: true, complete: true});
     } else
       return false;
   }
@@ -250,19 +232,14 @@ function miqResizeColEnd(grid_obj) {
   if (typeof miq_grid_col_widths != "undefined") {
     if (miq_grid_col_widths != grid_obj.cellWidthPX.join(",")) {
       miq_grid_col_widths = grid_obj.cellWidthPX.join(",");
-      new Ajax.Request(encodeURI("/" + miq_controller + "/save_col_widths/?col_widths=" + miq_grid_col_widths),
-                      {asynchronous:true, evalScripts:true}
-      );
-//      alert("Cell widths" + miq_grid_col_widths);
+      var url = '/' + miq_controller + '/save_col_widths/?col_widths=' + miq_grid_col_widths
+      miqJqueryRequest(url, {beforeSend: true, complete: true});
 } } }
 
 // Order a service from the catalog list view
 function miqOrderService(id){
-  new Ajax.Request(encodeURI("/" + miq_controller + "/x_button/" + id + "?pressed=svc_catalog_provision"),
-                  {asynchronous:true, evalScripts:true,
-                  onLoading:function(request){miqSparkle(true);},
-                  onComplete:function(request){miqSparkle(false);}}
-  );
+  var url = '/' + miq_controller + '/x_button/' + id + '?pressed=svc_catalog_provision'
+  miqJqueryRequest(url, {beforeSend: true, complete: true});
 }
 
 function miqDhtmlxgridSerialize(gridObj) {
