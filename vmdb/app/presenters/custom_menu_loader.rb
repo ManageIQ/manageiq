@@ -39,6 +39,6 @@ class CustomMenuLoader
   end
 
   def create_custom_menu_section(properties)
-    MenuSection.new(properties['id'].to_sym, properties['name'])
+    MenuSection.new(properties['id'].to_sym, properties['name'], [])
   end
 end

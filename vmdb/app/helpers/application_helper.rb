@@ -2491,25 +2491,16 @@ module ApplicationHelper
     return height
   end
 
-  # Hash to map primary nav ids to the @layout setting for each secondary nav
-  NAV_LAYOUT_MAP = {
-    :vi  => %w{dashboard report chargeback timeline rss},
-    :svc => %w{services catalogs vm_or_template miq_request_vm},
-    :clo => %w{ems_cloud availability_zone cloud_tenant flavor security_group vm_cloud},
-    :inf => %w{ems_infra ems_cluster host vm_infra resource_pool storage repository pxe miq_request_host},
-    :sto => %w{ontap_storage_system ontap_logical_disk ontap_storage_volume ontap_file_share storage_manager},
-    :con => %w{miq_policy miq_policy_rsop miq_policy_export miq_policy_logs},
-    :aut => %w{miq_ae_class miq_ae_tools miq_ae_customization miq_ae_export miq_ae_logs miq_request_ae},
-    :opt => %w{miq_capacity_utilization miq_capacity_planning miq_capacity_bottlenecks},
-    :set => %w{configuration my_tasks my_ui_tasks all_tasks all_ui_tasks ops miq_proxy about},
-  }
-
   def primary_nav_class(nav_id)
-    NAV_LAYOUT_MAP[nav_id].include?(@layout) ? "active" : "inactive"
+    test_layout = @layout
+    # FIXME: exception behavior to remove
+    test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
+
+    NavbarGenerator::item_in_section?(test_layout, nav_id) ? "active" : "inactive"
   end
 
   def secondary_nav_class(nav_layout)
-    if nav_layout == 'my_tasks' # exceptional behavior
+    if nav_layout == 'my_tasks' # FIXME: exceptional behavior to remove
       nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
     end
     nav_layout == @layout ? "active" : "inactive"

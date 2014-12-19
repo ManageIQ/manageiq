@@ -5,7 +5,7 @@ class NavbarGenerator
     extend Forwardable
 
     delegate [:menu, :tab_features_by_id, :tab_features_by_name, :tab_name,
-              :each_feature_title_with_subitems] => :instance
+              :each_feature_title_with_subitems, :item_in_section?] => :instance
   end
 
   attr_reader :menu
@@ -13,6 +13,10 @@ class NavbarGenerator
   private
 
   class InvalidMenuDefinition < Exception
+  end
+
+  def item_in_section?(item_id, section_id)
+    @id_to_section[section_id].items.collect(&:id).include?(item_id)
   end
 
   def tab_features_by_id(tab_id)
