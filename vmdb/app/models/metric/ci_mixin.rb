@@ -112,9 +112,10 @@ module Metric::CiMixin
       scope = scope.select "capture_interval_name, capture_interval, timestamp, #{column}"
     end
 
-    total_records = scope.
-      where(["capture_interval_name = ? and timestamp >= ? and timestamp < ?", interval_name, window_starting_on, now]).
-      order("timestamp DESC").to_a
+    total_records = scope
+                    .where(:capture_interval_name => interval_name)
+                    .where(["timestamp >= ? and timestamp < ?", window_starting_on, now])
+                    .order("timestamp DESC")
 
     return false if total_records.empty?
 

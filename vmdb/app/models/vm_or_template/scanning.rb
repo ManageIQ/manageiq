@@ -117,7 +117,9 @@ module VmOrTemplate::Scanning
   # Call the VmScan Job and raise a "request" event
   def scan(userid = "system", options={})
     # Check if there are any current scan jobs already waiting to run
-    j = VmScan.find(:all, :conditions => ["state = 'waiting_to_start' AND sync_key = ?", self.guid], :select => "id").collect {|ji| ji.id}.compact.uniq
+    j = VmScan.where(:state => 'waiting_to_start')
+          .where(:sync_key => guid)
+          .pluck(:id)
     unless j.blank?
       $log.info "(Vm-scan) VM scan job will not be added due to existing scan job waiting to be processed.  VM ID:[#{self.id}] Name:[#{self.name}] Guid:[#{self.guid}]  Existing Job IDs [#{j.join(", ")}]"
       return nil

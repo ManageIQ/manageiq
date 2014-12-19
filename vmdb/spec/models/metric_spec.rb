@@ -99,7 +99,7 @@ describe Metric do
               task.context_data[:targets].sort.should == cluster.hosts.collect {|h| "Host:#{h.id}"}.sort
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).to_a.select {|m| m.args.first == "realtime"}
+                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select {|m| m.args.first == "realtime"}
                 messages.each do |m|
                   m.miq_callback.should_not be_nil
                   m.miq_callback[:method_name].should == :perf_capture_callback
@@ -133,7 +133,7 @@ describe Metric do
               task_ids = tasks.collect(&:id)
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).to_a.select {|m| m.args.first == "realtime"}
+                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select {|m| m.args.first == "realtime"}
                 host.update_attribute(:last_perf_capture_on, 1.minute.from_now.utc)
                 messages.each do |m|
                   next if m.miq_callback[:args].blank?
@@ -155,12 +155,12 @@ describe Metric do
           end
 
           it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-            messages = MiqQueue.where(:class_name => "Host").to_a.select {|m| m.args.first == "realtime"}
+            messages = MiqQueue.where(:class_name => "Host").select {|m| m.args.first == "realtime"}
             messages.each {|m| m.update_attribute(:state, "dequeue")}
 
             Metric::Capture.perf_capture_timer
 
-            messages = MiqQueue.where(:class_name => "Host").to_a.select {|m| m.args.first == "realtime"}
+            messages = MiqQueue.where(:class_name => "Host").select {|m| m.args.first == "realtime"}
             messages.each {|m| m.lock_version.should == 1}
           end
 

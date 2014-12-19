@@ -28,7 +28,7 @@ class MiqAeClass < ActiveRecord::Base
   end
 
   def self.find_by_namespace_id_and_name(ns_id, name)
-    self.where(["namespace_id = ? AND lower(name) = ?", ns_id, name.downcase]).first
+    self.where(:namespace_id => ns_id).where(["lower(name) = ?", name.downcase]).first
   end
 
   def self.find_by_name(name)

@@ -1102,7 +1102,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   # Cache the servers because the JobProxyDispatch calls this for each Vm scan job in a loop
   cache_with_timeout(:miq_servers_for_scan, 30.seconds) do
-    MiqServer.find(:all, :conditions => {:status => "started"}, :include => [:zone, :server_roles])
+    MiqServer.where(:status => "started").includes([:zone, :server_roles]).to_a
   end
 
   def miq_server_proxies
