@@ -46,9 +46,9 @@
     </div>
   </div>
 <%# Set the JS miq_chart_data var to hold any chart XML that was saved %>
-<% if @chart_data %>
+<% if WidgetPresenter.chart_data.present? %>
   <script type="text/javascript">
-    miq_chart_data = <%= {"widgetchart"=>@chart_data}.to_json %>;
+    miq_chart_data = <%= {"widgetchart"=> WidgetPresenter.chart_data}.to_json %>;
   </script>
 <% end %>
 </div>

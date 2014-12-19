@@ -7,6 +7,7 @@ class WidgetPresenter
     @controller = controller
     @widget = widget
     @sb = controller.instance_eval { @sb }
+    @@chart_data ||= []
   end
 
   extend Forwardable
@@ -96,4 +97,9 @@ class WidgetPresenter
                   :remote               => true,
                   :class                => "zoombox")
   end
+
+  def self.chart_data
+    @@chart_data
+  end
+
 end

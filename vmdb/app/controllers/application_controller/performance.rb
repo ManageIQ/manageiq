@@ -125,8 +125,10 @@ module ApplicationController::Performance
       perf_gen_top_data                   # Generate top data
       return unless @charts               # Return if no charts got created (first time thru async rpt gen)
       render :update do |page|
-        page << 'miq_chart_data = ' + {"candu"=>@chart_data}.to_json + ';'
-        page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@chart_data, :chart_set=>"candu"})
+        page << 'miq_chart_data = ' + {"candu" => @chart_data}.to_json + ';'
+        page.replace("candu_charts_div",
+                     :partial => "layouts/perf_charts",
+                     :locals  => {:chart_data => @chart_data, :chart_set => "candu"})
         page << Charting.js_load_statement
         page << 'miqSparkle(false);'
       end
@@ -774,8 +776,8 @@ module ApplicationController::Performance
     @sb[:chart_reports] = rpt           # Hang on to the report data for these charts
 
     ### TODO: Get rid of all references to @charts/@chart_data, change to use @temp hash
-#   @charts = @temp[:charts]
-#   @chart_data = @temp[:chart_data]
+    # @charts = @temp[:charts]
+    # @chart_data = @temp[:chart_data]
 
     @html = perf_report_to_html
     @p_html = perf_report_to_html(p_rpt, @temp[:parent_charts][0]) if perf_parent?
@@ -861,7 +863,7 @@ module ApplicationController::Performance
     miq_task.destroy                              # Get rid of the task and results
 
     @charts = Array.new
-    @chart_data = Array.new
+    @chart_data = []
     cat_desc = Classification.find_by_name(@perf_options[:cat]).description
     case @perf_options[:typ]
     when "Hourly"
@@ -876,7 +878,7 @@ module ApplicationController::Performance
                                 :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                 :axis_skip=>3
                                 })
-          @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
           chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           @charts.push(chart)
         end
@@ -891,7 +893,7 @@ module ApplicationController::Performance
                               :axis_skip=>3,
                               :width=>1000, :height=>700
                               })
-        @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
         chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         @charts.push(chart)
       end
@@ -912,7 +914,7 @@ module ApplicationController::Performance
             options[:trendtip] = chart[:trends].collect{|t| t.split(":").last + ": " +
                                   rpt.extras[:trend][trendcol + "|" + t.split(":").first]}.join("\r") unless trendcol.nil?
           end
-          @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
           chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           @charts.push(chart)
         end
@@ -932,7 +934,7 @@ module ApplicationController::Performance
           options[:trendtip] = chart[:trends].collect{|t| t.split(":").last + ": " +
                                 rpt.extras[:trend][trendcol + "|" + t.split(":").first]}.join("\r") unless trendcol.nil?
         end
-        @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
         chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         @charts.push(chart)
       end
@@ -1039,7 +1041,7 @@ module ApplicationController::Performance
 
     @chart_reports = Array.new
     @charts = Array.new
-    @chart_data = Array.new
+    @chart_data = []
 
     @perf_options[:ght_type] ||= "hybrid"
     @perf_options[:chart_type] = :performance
@@ -1054,7 +1056,7 @@ module ApplicationController::Performance
                                 :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )"
                                 })
           rpt = rpts.pop                      # Get the next report object from the array
-          @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
           chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           @chart_reports.push(rpt)
           @charts.push(chart)
@@ -1065,7 +1067,7 @@ module ApplicationController::Performance
                               :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                               :width=>1000, :height=>700
                               })
-        @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
         chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         @chart_reports.push(rpt)
         @charts.push(chart)
@@ -1079,7 +1081,7 @@ module ApplicationController::Performance
                                 :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )"
                                 })
           rpt = rpts.pop                      # Get the next report object from the array
-          @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
           chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           @chart_reports.push(rpt)
           @charts.push(chart)
@@ -1090,7 +1092,7 @@ module ApplicationController::Performance
                               :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                               :width=>1000, :height=>700
                               })
-        @chart_data.push(perf_gen_chart(rpt, options).merge({:menu=>chart[:menu]}))
+        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
         chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         @chart_reports.push(rpt)
         @charts.push(chart)

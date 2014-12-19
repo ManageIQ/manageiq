@@ -16,6 +16,6 @@
           - widget = MiqWidget.find_by_id(w)
           - if widget && widget.enabled && @temp[:available_widgets].include?(widget.id)
             = WidgetPresenter.new(self, controller, widget).render_partial
-- if @chart_data
+- if WidgetPresenter.chart_data.present?
   :javascript
-    miq_chart_data = #{{"widgetchart" => @chart_data}.to_json.html_safe};
+    miq_chart_data = #{{"widgetchart" => WidgetPresenter.chart_data}.to_json.html_safe};

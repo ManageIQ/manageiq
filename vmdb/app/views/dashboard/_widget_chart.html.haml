@@ -15,9 +15,8 @@
       -# charts on a dashboard screen
 
       - datum = widget.contents_for_user(session[:userid]).contents
-      - @chart_data ||= []
-      - @chart_data.push(:xml => datum)
-      - chart_index = @chart_data.length - 1
+      - WidgetPresenter.chart_data.push(:xml => datum)
+      - chart_index = WidgetPresenter.chart_data.length - 1
       - chart_data = YAML.load(datum) if Charting::backend == :jqplot
 
       = chart_local(chart_data,

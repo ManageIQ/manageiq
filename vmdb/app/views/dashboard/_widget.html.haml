@@ -7,13 +7,12 @@
       - if role_allows(:feature => "dashboard_add")
         = presenter.button_close
       = presenter.button_minmax
-      - if %(report chart).include?(presenter.widget.content_type) &&
-      - presenter.widget.contents_for_user(session[:userid]).present?
-        = presenter.button_fullscreen
-        = presenter.button_pdf
-      - if %(chart).include?(presenter.widget.content_type) &&
-      - presenter.widget.contents_for_user(session[:userid]).present?
-        = presenter.button_zoom
+      - if presenter.widget.contents_for_user(session[:userid]).present?
+        - if %(report chart).include?(presenter.widget.content_type)
+          = presenter.button_fullscreen
+          = presenter.button_pdf
+        - if %(chart).include?(presenter.widget.content_type) &&
+          = presenter.button_zoom
       %div
         %span.modtitle_text= h(presenter.widget.title)
     - if presenter.widget.content_type == "menu"
