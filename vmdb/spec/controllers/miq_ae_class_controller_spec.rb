@@ -376,7 +376,7 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.send(:delete_domain)
       flash_messages = assigns(:flash_array)
-      flash_messages.first[:message].should include("can not be deleted")
+      flash_messages.first[:message].should include("cannot be deleted")
       flash_messages.first[:level].should == :error
       flash_messages.last[:message].should include("Delete successful")
       flash_messages.last[:level].should == :info
