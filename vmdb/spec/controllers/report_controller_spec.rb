@@ -867,7 +867,8 @@ describe ReportController do
       let(:widgets) { [active_record_instance_double("MiqWidget")] }
 
       before do
-        MiqWidget.stub(:where).with(:id => widget_list).and_return(widgets)
+        records = widgets
+        MiqWidget.stub(:where).with(:id => widget_list).and_return(records)
         MiqWidget.stub(:export_to_yaml).with(widgets, MiqWidget).and_return(widget_yaml)
       end
 
