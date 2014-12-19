@@ -82,27 +82,27 @@ class VimPerformanceState < ActiveRecord::Base
 
   def storages
     ids = get_assoc(:storages, :on)
-    return ids.empty? ? [] : Storage.where(:id => ids).order(:id).to_a
+    return ids.empty? ? [] : Storage.where(:id => ids).order(:id)
   end
 
   def ext_management_systems
     ids = get_assoc(:ext_management_systems, :on)
-    return ids.empty? ? [] : ExtManagementSystem.where(:id => ids).order(:id).to_a
+    return ids.empty? ? [] : ExtManagementSystem.where(:id => ids).order(:id)
   end
 
   def ems_clusters
     ids = get_assoc(:ems_clusters, :on)
-    return ids.empty? ? [] : EmsCluster.where(:id => ids).order(:id).to_a
+    return ids.empty? ? [] : EmsCluster.where(:id => ids).order(:id)
   end
 
   def hosts
     ids = get_assoc(:hosts)
-    return ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
+    return ids.empty? ? [] : Host.where(:id => ids).order(:id)
   end
 
   def vms
     ids = get_assoc(:vms)
-    return ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id).to_a
+    return ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id)
   end
 
   def get_assoc(relat, mode = nil)
