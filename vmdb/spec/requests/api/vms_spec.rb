@@ -22,28 +22,6 @@ describe ApiController do
     Vmdb::Application
   end
 
-  def gen_request(action, *hrefs)
-    request = {"action" => action.to_s}
-    request["resources"] = hrefs.collect { |href| {"href" => href} } if hrefs.present?
-    request
-  end
-
-  def gen_requests(action, data)
-    request = {"action" => action.to_s}
-    request["resources"] = data
-    request
-  end
-
-  def gen_request_data(action, data, *hrefs)
-    request = {"action" => action.to_s}
-    if hrefs.present?
-      request["resources"] = hrefs.collect { |href| data.dup.merge("href" => href) }
-    else
-      request["resource"] = data
-    end
-    request
-  end
-
   context "Vm accounts subcollection" do
     it "query VM accounts subcollection with no related accounts" do
       basic_authorize @cfme[:user], @cfme[:password]
@@ -913,6 +891,72 @@ describe ApiController do
       expect(results.all? { |r| r["success"] }).to be_true
       expect(@vm.lifecycle_events.size).to eq(@events.size)
       expect(@vm.lifecycle_events.collect(&:event)).to match_array(@events.collect { |e| e[:event] })
+    end
+  end
+
+  context "Vm scan action" do
+    it "scans an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :scan))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:scan))
+
+      expect(@success).to be_false
+      expect(@code).to eq(404)
+    end
+
+    it "scans an invalid Vm without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:scan))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "scan a Vm" do
+      update_user_role(@role, action_identifier(:vms, :scan))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:scan))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_true
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("scanning")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+      expect(@result).to have_key("task_id")
+      expect(@result).to have_key("task_href")
+    end
+
+    it "scan multiple Vms" do
+      update_user_role(@role, action_identifier(:vms, :scan))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+
+      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
+      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+
+      @success = run_post(@cfme[:vms_url], gen_request(:scan, vm1_url, vm2_url))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(2)
+      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
+      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
+      expect(results.all? { |r| r["success"] }).to be_true
+      expect(results.all? { |r| r.key?("task_id") }).to be_true
+      expect(results.all? { |r| r.key?("task_href") }).to be_true
     end
   end
 end
