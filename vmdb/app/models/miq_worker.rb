@@ -241,21 +241,6 @@ class MiqWorker < ActiveRecord::Base
     end
   end
 
-  # Provides a generic way to instantiate existing miq_workers rows created
-  # using a subclass of MiqWorker which no longer exists (such as MiqWorkerMonitor).
-  class << self
-    def instantiate_with_retry_failed_subclass(record)
-      instantiate_without_retry_failed_subclass(record)
-    rescue ActiveRecord::SubclassNotFound => err
-      raise if record[inheritance_column] == self.base_class.name
-      $log.warn("MIQ(#{self.name}.instantiate_with_retry_failed_subclass) Retrying missing subclass: [#{record[inheritance_column]}] with base class: [#{self.base_class}]")
-      record[inheritance_column] = self.base_class.name
-      retry
-    end
-
-    alias_method_chain :instantiate, :retry_failed_subclass
-  end
-
   def self.status_update
     self.find_current.each { |w| w.status_update }
   end
