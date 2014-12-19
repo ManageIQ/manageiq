@@ -1,8 +1,8 @@
 class ProviderForeman < Provider
-  has_one :configuration_service, :class_name => :ConfigurationServiceForeman
+  has_one :configuration_manager, :class_name => :ConfigurationManagerForeman
+  has_one :provisioning_manager, :class_name => :ProvisionManagerForeman
   has_many :operating_system_flavors
   has_many :configuration_profiles
-  has_many :configured_systems, :class_name => :ConfiguredSystemForemans
 
   def connection_attrs
     {
