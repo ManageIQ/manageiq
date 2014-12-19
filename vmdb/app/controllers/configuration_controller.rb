@@ -832,6 +832,7 @@ class ConfigurationController < ApplicationController
       @edit[:new][:display][:timezone] = params[:display_timezone] if params[:display_timezone] != nil
       @edit[:new][:display][:startpage] = params[:start_page] if params[:start_page] != nil
       @edit[:new][:display][:quad_truncate] = params[:quad_truncate] if params[:quad_truncate] != nil
+      @edit[:new][:display][:locale] = params[:display_locale] if params[:display_locale]
     when "ui_2"                                               # Visual Settings tab
       @edit[:new][:display][:compare] = params[:display][:compare] if params[:display] != nil && params[:display][:compare] != nil
       @edit[:new][:display][:drift] = params[:display][:drift] if params[:display] != nil && params[:display][:drift] != nil
