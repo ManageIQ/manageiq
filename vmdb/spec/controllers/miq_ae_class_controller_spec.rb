@@ -363,4 +363,23 @@ describe MiqAeClassController do
       end
     end
   end
+
+  context "#delete_domain" do
+    it "Should only delete editable domains" do
+      set_user_privileges
+      domain1 = FactoryGirl.create(:miq_ae_domain_enabled, :system => true)
+
+      domain2 = FactoryGirl.create(:miq_ae_domain_enabled, :system => false)
+      controller.instance_variable_set(:@_params,
+                                       :miq_grid_checks => "aen-#{domain1.id}, aen-#{domain2.id}, aen-someid"
+      )
+      controller.stub(:replace_right_cell)
+      controller.send(:delete_domain)
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include("can not be deleted")
+      flash_messages.first[:level].should == :error
+      flash_messages.last[:message].should include("Delete successful")
+      flash_messages.last[:level].should == :info
+    end
+  end
 end

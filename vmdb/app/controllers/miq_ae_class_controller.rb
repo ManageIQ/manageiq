@@ -2179,7 +2179,15 @@ private
       selected = find_checked_items
       selected.each do |items|
         item = items.split('-')
-        aedomains.push(from_cid(item[1]))
+        domain = MiqAeDomain.find_by_id(from_cid(item[1]))
+        next unless domain
+        if domain.editable?
+          aedomains.push(domain.id)
+        else
+          add_flash(_("Read Only %{model} \"%{name}\" can not be deleted") %
+                      {:model => ui_lookup(:model => "MiqAeDomain"), :name  => domain.name},
+                    :error)
+        end
       end
     end
     process_elements(aedomains, MiqAeDomain, 'destroy') unless aedomains.empty?
