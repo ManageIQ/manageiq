@@ -1160,6 +1160,7 @@ Vmdb::Application.routes.draw do
         index
         new
         protect
+        repository_form_fields
         show
         show_list
         tagging_edit

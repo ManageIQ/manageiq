@@ -52,25 +52,22 @@ class RepositoryController < ApplicationController
   def new
     assert_privileges("repository_new")
     @repo = Repository.new
-    set_form_vars
     @in_a_form = true
     drop_breadcrumb( {:name=>"Add New Repository", :url=>"/repository/new"} )
   end
 
   def create
     assert_privileges("repository_new")
-    return unless load_edit("repo_edit__new")
-    get_form_vars
     case params[:button]
     when "cancel"
       render :update do |page|
         page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"Repository")
       end
     when "add"
-      valid, type = Repository.valid_path?(@edit[:new][:path])
-      if valid && ["NAS","VMFS"].include?(type)
-        @repo = Repository.new(@edit[:new])
+      if %w(NAS VMFS).include?(params[:path_type])
+        @repo = Repository.new(:name => params[:repo_name], :path => params[:repo_path])
         if @repo.save
+          construct_edit
           AuditEvent.success(build_created_audit(@repo, @edit))
           render :update do |page|
             page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"Repository"), :name=>@repo.name}
@@ -93,33 +90,25 @@ class RepositoryController < ApplicationController
     end
   end
 
+  def repository_form_fields
+    assert_privileges("repository_edit")
+    repository = find_by_id_filtered(Repository, params[:id])
+    render :json => {
+      :repo_name => repository.name,
+      :repo_path => repository.path
+    }
+  end
+
   def edit
     assert_privileges("repository_edit")
     @repo = find_by_id_filtered(Repository, params[:id])
-    set_form_vars
     session[:changed] = false
     @in_a_form = true
     drop_breadcrumb( {:name=>"Edit Repository '#{@repo.name}'", :url=>"/repository/edit/#{@repo.id}"} )
   end
 
-  # AJAX driven routine to check for changes in ANY field on the form
-  def form_field_changed
-    return unless load_edit("repo_edit__#{params[:id]}")
-    get_form_vars
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
-      if changed != session[:changed]
-        session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
-      end
-    end
-  end
-
   def update
     assert_privileges("repository_edit")
-    return unless load_edit("repo_edit__#{params[:id]}")
-    get_form_vars
-    changed = (@edit[:new] != @edit[:current])
     @repo = find_by_id_filtered(Repository, params[:id])
     case params[:button]
     when "cancel"
@@ -129,18 +118,16 @@ class RepositoryController < ApplicationController
           :flash_msg=>_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Repository"), :name=>@repo.name}
       end
     when "save"
-      valid, type = Repository.valid_path?(@edit[:new][:path])
-      if valid && ["NAS","VMFS"].include?(type)
-        if @repo.update_attributes(@edit[:new][:repo])
+      if %w(NAS VMFS).include?(params[:path_type])
+        construct_edit
+        if @repo.update_attributes(:name => params[:repo_name], :path => params[:repo_path])
           AuditEvent.success(build_saved_audit(@repo, @edit))
           session[:edit] = nil  # clean out the saved info
           flash = _("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"Repository"), :name=>@repo.name}
           render :update do |page|
           page.redirect_to :action=>'show', :id=>@repo.id.to_s, :flash_msg=>flash
-        end
+          end
         else
-        session[:changed] = changed
-        @changed = true
           @repo.errors.each do |field,msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
@@ -151,8 +138,6 @@ class RepositoryController < ApplicationController
           end
         end
       else
-        session[:changed] = changed
-        @changed = true
         add_flash(_("Path must be a valid reference to a UNC location"), :error)
         drop_breadcrumb( {:name=>"Edit Repository '#{@repo.name}'", :url=>"/repository/edit/#{@repo.id}"} )
         @in_a_form = true
@@ -258,24 +243,10 @@ class RepositoryController < ApplicationController
 
   private ############################
 
-  # Set form variables for edit
-  def set_form_vars
-    @edit = Hash.new
-    @edit[:repo_id] = @repo.id
-    @edit[:key] = "repo_edit__#{@repo.id || "new"}"
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
-    @edit[:new][:name] = @repo.name
-    @edit[:new][:path] = @repo.path
-    @edit[:current] = @edit[:new].dup
-    session[:edit] = @edit
-  end
-
-  # Get variables from edit form
-  def get_form_vars
-    @edit[:new][:name] = params[:repo_name] if params[:repo_name]
-    @edit[:new][:path] = params[:repo_path] if params[:repo_path]
-    @repo = @edit[:repo_id] ? @edit[:repo_id] : Repository.new
+  def construct_edit
+    @edit ||= {}
+    @edit[:current] = {:name => @repo.name, :path => @repo.path}
+    @edit[:new] = {:name => params[:repo_name], :path => params[:repo_path]}
   end
 
   def process_repos(repos, task)

@@ -1,5 +1,10 @@
 //= require vendor/angular
 //= require cfme_angular_application
+//= require services/miq_service
+//= require directives/miqrequired
+//= require directives/checkchange
+//= require directives/repository/valid_unc_path
+//= require controllers/repository/repository_form_controller
 //= require cfme_application
 //= require dialog_import_export
 //= require widget_import_export
