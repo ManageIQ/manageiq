@@ -37,8 +37,8 @@ class AddMiqProvisionsToMiqRequests < ActiveRecord::Migration
       t.string      :status
       t.text        :options
       t.string      :userid
-      t.belongs_to  :source,         :polymorphic => true
-      t.belongs_to  :destination,    :polymorphic => true
+      t.belongs_to  :source,         :polymorphic => true, :type => :bigint
+      t.belongs_to  :destination,    :polymorphic => true, :type => :bigint
       t.rename      :state,          :approval_state
     end
 
@@ -77,7 +77,7 @@ class AddMiqProvisionsToMiqRequests < ActiveRecord::Migration
       t.datetime      :created_on
       t.datetime      :updated_on
       t.string        :message
-      t.belongs_to    :src_vm
+      t.belongs_to    :src_vm, :type => :bigint
       t.string        :status
     end
 

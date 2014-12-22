@@ -1,7 +1,7 @@
 class CreateAvailabilityZones < ActiveRecord::Migration
   def up
     create_table :availability_zones do |t|
-      t.belongs_to :ems
+      t.belongs_to :ems, :type => :bigint
       t.string     :name
     end
 

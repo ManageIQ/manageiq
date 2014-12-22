@@ -43,8 +43,8 @@ class CreateDialogs < ActiveRecord::Migration
     end
 
     create_table :dialog_resources do |t|
-      t.belongs_to  :parent,      :polymorphic => true
-      t.belongs_to  :resource,    :polymorphic => true
+      t.belongs_to  :parent,      :polymorphic => true, :type => :bigint
+      t.belongs_to  :resource,    :polymorphic => true, :type => :bigint
       t.integer     :order
     end
   end

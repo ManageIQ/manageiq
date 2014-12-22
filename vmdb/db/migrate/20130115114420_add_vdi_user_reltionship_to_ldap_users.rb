@@ -1,7 +1,7 @@
 class AddVdiUserReltionshipToLdapUsers < ActiveRecord::Migration
   def up
     change_table :ldap_users do |t|
-       t.belongs_to   :vdi_user
+       t.belongs_to   :vdi_user, :type => :bigint
        t.string       :sam_account_name
        t.string       :upn
      end

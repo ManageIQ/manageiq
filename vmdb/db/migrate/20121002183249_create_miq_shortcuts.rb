@@ -10,8 +10,8 @@ class CreateMiqShortcuts < ActiveRecord::Migration
 
     create_table :miq_widget_shortcuts do |t|
       t.string     :description
-      t.belongs_to :miq_shortcut
-      t.belongs_to :miq_widget
+      t.belongs_to :miq_shortcut, :type => :bigint
+      t.belongs_to :miq_widget,   :type => :bigint
     end
   end
 end

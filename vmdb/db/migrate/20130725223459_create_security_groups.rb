@@ -4,7 +4,7 @@ class CreateSecurityGroups < ActiveRecord::Migration
       t.string     :name
       t.string     :description
       t.string     :type
-      t.belongs_to :ems
+      t.belongs_to :ems, :type => :bigint
       t.string     :ems_ref
     end
   end

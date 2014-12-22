@@ -3,16 +3,16 @@ class CreateCloudNetworksAndSubnets < ActiveRecord::Migration
     create_table :cloud_networks do |t|
       t.string     :name
       t.string     :ems_ref
-      t.belongs_to :ems
+      t.belongs_to :ems,               :type => :bigint
       t.string     :cidr
     end
 
     create_table :cloud_subnets do |t|
       t.string     :name
       t.string     :ems_ref
-      t.belongs_to :ems
-      t.belongs_to :availability_zone
-      t.belongs_to :cloud_network
+      t.belongs_to :ems,               :type => :bigint
+      t.belongs_to :availability_zone, :type => :bigint
+      t.belongs_to :cloud_network,     :type => :bigint
       t.string     :cidr
       t.string     :status
     end

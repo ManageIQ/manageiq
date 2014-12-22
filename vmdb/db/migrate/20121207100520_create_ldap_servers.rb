@@ -15,7 +15,7 @@ class CreateLdapServers < ActiveRecord::Migration
       t.integer    :group_membership_max_depth
       t.boolean    :get_direct_groups
       t.boolean    :follow_referrals
-      t.belongs_to :ldap_server
+      t.belongs_to :ldap_server, :type => :bigint
       t.timestamps
     end
   end

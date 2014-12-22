@@ -33,8 +33,8 @@ class AddSettingsToMiqGroup < ActiveRecord::Migration
     end
 
     change_table :miq_reports do |t|
-      t.belongs_to  :miq_group
-      t.belongs_to  :user
+      t.belongs_to  :miq_group, :type => :bigint
+      t.belongs_to  :user,      :type => :bigint
     end
   end
 

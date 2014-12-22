@@ -4,7 +4,7 @@ class AddMiqReportResultsToMiqGroup < ActiveRecord::Migration
 
   def self.up
     change_table :miq_report_results do |t|
-      t.belongs_to  :miq_group
+      t.belongs_to  :miq_group, :type => :bigint
     end
 
     say_with_time("Setting MiqReportResult miq_group_id to User's group") do

@@ -5,7 +5,7 @@ class CreateWindowsImages < ActiveRecord::Migration
       t.string     :description
       t.string     :path
       t.integer    :index
-      t.belongs_to :pxe_server
+      t.belongs_to :pxe_server, :type => :bigint
     end
 
     add_column :pxe_servers, :windows_images_directory, :string

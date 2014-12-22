@@ -10,7 +10,7 @@ class UpdateCloudVolumeAndCloudVolumeSnapshot < ActiveRecord::Migration
       t.boolean    :bootable
       t.datetime   :creation_time
 
-      t.belongs_to :cloud_tenant
+      t.belongs_to :cloud_tenant, :type => :bigint
     end
 
     change_table :cloud_volume_snapshots do |t|
@@ -18,13 +18,13 @@ class UpdateCloudVolumeAndCloudVolumeSnapshot < ActiveRecord::Migration
       t.datetime :creation_time
       t.integer  :size, :limit => 8
 
-      t.belongs_to :cloud_tenant
+      t.belongs_to :cloud_tenant, :type => :bigint
     end
   end
 
   def down
     change_table :cloud_volumes do |t|
-      t.belongs_to :vm
+      t.belongs_to :vm,           :type => :bigint
       t.string     :device_name
 
       t.remove     :status

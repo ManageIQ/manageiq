@@ -1,7 +1,7 @@
 class RenameVimPerformanceIdToMetric < ActiveRecord::Migration
   def up
     change_table :vim_performance_tag_values do |t|
-      t.belongs_to :metric, :polymorphic => true
+      t.belongs_to :metric, :polymorphic => true, :type => :bigint
     end
 
     say_with_time("Migrating data from vim_performance_id column to metric_* columns for realtime") do
@@ -22,7 +22,7 @@ class RenameVimPerformanceIdToMetric < ActiveRecord::Migration
 
   def down
     change_table :vim_performance_tag_values do |t|
-      t.belongs_to :vim_performance
+      t.belongs_to :vim_performance,              :type => :bigint
     end
 
     say_with_time("Migrating data from metric_* columns to vim_performance_id column") do

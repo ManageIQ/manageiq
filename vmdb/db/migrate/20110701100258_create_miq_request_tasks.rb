@@ -35,9 +35,9 @@ class CreateMiqRequestTasks < ActiveRecord::Migration
     change_table :miq_provisions do |t|
       t.string      :type
       t.rename      :provision_type, :request_type
-      t.belongs_to  :miq_request
-      t.belongs_to  :source,         :polymorphic => true
-      t.belongs_to  :destination,    :polymorphic => true
+      t.belongs_to  :miq_request,                          :type => :bigint
+      t.belongs_to  :source,         :polymorphic => true, :type => :bigint
+      t.belongs_to  :destination,    :polymorphic => true, :type => :bigint
     end
 
     # Adjust data in columns to match the new model
@@ -57,8 +57,8 @@ class CreateMiqRequestTasks < ActiveRecord::Migration
     change_table :miq_request_tasks do |t|
       t.rename             :request_type,   :provision_type
       t.integer            :src_vm_id,      :limit => 8
-      t.belongs_to         :vm
-      t.belongs_to         :miq_provision_request
+      t.belongs_to         :vm,                            :type => :bigint
+      t.belongs_to         :miq_provision_request,         :type => :bigint
       t.remove             :type
       t.remove_belongs_to  :miq_request
       t.remove_belongs_to  :source,         :polymorphic => true
