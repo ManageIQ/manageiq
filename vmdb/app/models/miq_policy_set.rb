@@ -1,7 +1,7 @@
 class MiqPolicySet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope :conditions => self.conditions_for_my_region_default_scope
+  default_scope { where self.conditions_for_my_region_default_scope }
 
   before_validation :default_name_to_guid, :on => :create
   before_destroy    :destroy_policy_tags

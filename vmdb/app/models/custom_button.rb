@@ -1,5 +1,5 @@
 class CustomButton < ActiveRecord::Base
-  default_scope :conditions => self.conditions_for_my_region_default_scope
+  default_scope { where self.conditions_for_my_region_default_scope }
   has_one       :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :options
