@@ -7,8 +7,8 @@ class AddEmsClusterIdToHostsAndVms < ActiveRecord::Migration
   end
 
   def up
-    change_table(:vms)   { |t| t.belongs_to :ems_cluster }
-    change_table(:hosts) { |t| t.belongs_to :ems_cluster }
+    change_table(:vms)   { |t| t.belongs_to :ems_cluster, :type => :bigint }
+    change_table(:hosts) { |t| t.belongs_to :ems_cluster, :type => :bigint }
 
     say_with_time("Migrate Host-Cluster relationships to new column") do
       cluster_rels    = Relationship.where(:resource_type => "EmsCluster").index_by(&:id)

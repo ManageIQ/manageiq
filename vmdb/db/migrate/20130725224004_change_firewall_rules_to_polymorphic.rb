@@ -5,7 +5,7 @@ class ChangeFirewallRulesToPolymorphic < ActiveRecord::Migration
 
   def up
     change_table :firewall_rules do |t|
-      t.belongs_to :resource, :polymorphic => true
+      t.belongs_to :resource, :polymorphic => true, :type => :bigint
       t.index      [:resource_id, :resource_type]
     end
 
@@ -21,7 +21,7 @@ class ChangeFirewallRulesToPolymorphic < ActiveRecord::Migration
 
   def down
     change_table :firewall_rules do |t|
-      t.belongs_to :operating_system
+      t.belongs_to :operating_system,               :type => :bigint
       t.index      :operating_system_id
     end
 

@@ -8,14 +8,14 @@ class CreateServicesAndTemplates < ActiveRecord::Migration
       t.string     :description
       t.string     :guid
       t.string     :type
-      t.belongs_to :service_or_template
+      t.belongs_to :service_or_template,               :type => :bigint
       t.text       :options
       t.timestamps
     end
 
     create_table :service_resources do |t|
-      t.belongs_to :service_or_template
-      t.belongs_to :resource,    :polymorphic => true
+      t.belongs_to :service_or_template,               :type => :bigint
+      t.belongs_to :resource,    :polymorphic => true, :type => :bigint
       t.integer    :group_idx,   :default => 0
       t.integer    :scaling_min, :default => 1
       t.integer    :scaling_max, :default => -1

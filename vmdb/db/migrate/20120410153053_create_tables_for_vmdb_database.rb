@@ -10,7 +10,7 @@ class CreateTablesForVmdbDatabase < ActiveRecord::Migration
     end
 
     create_table :vmdb_database_metrics do |t|
-      t.belongs_to :vmdb_database
+      t.belongs_to :vmdb_database,                  :type => :bigint
       t.float      :disk_size
       t.float      :allocated_size
       t.float      :used_size
@@ -20,19 +20,19 @@ class CreateTablesForVmdbDatabase < ActiveRecord::Migration
     end
 
     create_table :vmdb_tables do |t|
-      t.belongs_to :vmdb_database
+      t.belongs_to :vmdb_database,                  :type => :bigint
       t.string     :name
       t.string     :table_type
       t.bigint     :parent_id
     end
 
     create_table :vmdb_indexes do |t|
-      t.belongs_to :vmdb_table
+      t.belongs_to :vmdb_table,                     :type => :bigint
       t.string     :name
     end
 
     create_table :vmdb_metrics do |t|
-      t.belongs_to :resource, :polymorphic => true
+      t.belongs_to :resource, :polymorphic => true, :type => :bigint
       t.float      :size
       t.bigint     :rows
       t.bigint     :pages

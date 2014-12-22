@@ -1,7 +1,7 @@
 class AddCloudTenantRefToVms < ActiveRecord::Migration
   def self.up
     change_table :vms do |t|
-      t.belongs_to  :cloud_tenant
+      t.belongs_to  :cloud_tenant, :type => :bigint
     end
   end
 

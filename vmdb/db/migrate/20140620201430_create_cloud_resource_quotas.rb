@@ -7,8 +7,8 @@ class CreateCloudResourceQuotas < ActiveRecord::Migration
       t.integer :value
       t.string  :type
 
-      t.belongs_to :ems
-      t.belongs_to :cloud_tenant
+      t.belongs_to :ems,          :type => :bigint
+      t.belongs_to :cloud_tenant, :type => :bigint
 
       t.timestamps
     end

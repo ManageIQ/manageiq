@@ -6,7 +6,7 @@ class CreateCloudTenants < ActiveRecord::Migration
       t.boolean :enabled
       t.string  :ems_ref
 
-      t.belongs_to :ems
+      t.belongs_to :ems, :type => :bigint
 
       t.timestamps
     end

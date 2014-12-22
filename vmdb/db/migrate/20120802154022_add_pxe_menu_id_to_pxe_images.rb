@@ -1,7 +1,7 @@
 class AddPxeMenuIdToPxeImages < ActiveRecord::Migration
   def up
     change_table :pxe_images do |t|
-      t.belongs_to :pxe_menu
+      t.belongs_to :pxe_menu, :type => :bigint
     end
   end
 

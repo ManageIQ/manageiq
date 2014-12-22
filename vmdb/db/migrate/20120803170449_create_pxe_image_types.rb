@@ -6,12 +6,12 @@ class CreatePxeImageTypes < ActiveRecord::Migration
     end
 
     change_table :pxe_images do |t|
-      t.belongs_to :pxe_image_type
+      t.belongs_to :pxe_image_type, :type => :bigint
       t.remove     :image_type
     end
 
     change_table :customization_templates do |t|
-      t.belongs_to :pxe_image_type
+      t.belongs_to :pxe_image_type, :type => :bigint
       t.remove     :image_type
     end
 

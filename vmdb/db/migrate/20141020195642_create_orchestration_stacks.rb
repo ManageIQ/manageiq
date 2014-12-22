@@ -20,8 +20,8 @@ class CreateOrchestrationStacks < ActiveRecord::Migration
       t.string  :ems_ref
       t.string  :ancestry
 
-      t.belongs_to :ems
-      t.belongs_to :orchestration_template
+      t.belongs_to :ems,                    :type => :bigint
+      t.belongs_to :orchestration_template, :type => :bigint
 
       t.timestamps
     end
@@ -37,7 +37,7 @@ class CreateOrchestrationStacks < ActiveRecord::Migration
       t.string :name
       t.text   :value
 
-      t.belongs_to :stack
+      t.belongs_to :stack,                  :type => :bigint
     end
 
     add_index :orchestration_stack_parameters, :stack_id
@@ -47,7 +47,7 @@ class CreateOrchestrationStacks < ActiveRecord::Migration
       t.text   :value
       t.text   :description
 
-      t.belongs_to :stack
+      t.belongs_to :stack,                  :type => :bigint
     end
 
     add_index :orchestration_stack_outputs, :stack_id
@@ -62,7 +62,7 @@ class CreateOrchestrationStacks < ActiveRecord::Migration
       t.text   :resource_status_reason
       t.timestamp :last_updated
 
-      t.belongs_to :stack
+      t.belongs_to :stack,                  :type => :bigint
     end
 
     add_index :orchestration_stack_resources, :stack_id

@@ -4,8 +4,8 @@ class CreateServices < ActiveRecord::Migration
 
     change_table :service_resources do |t|
       t.string      :name
-      t.belongs_to  :service
-      t.belongs_to  :source,  :polymorphic => true
+      t.belongs_to  :service,                       :type => :bigint
+      t.belongs_to  :source,  :polymorphic => true, :type => :bigint
       t.rename      :service_or_template_id, :service_template_id
     end
 
@@ -21,7 +21,7 @@ class CreateServices < ActiveRecord::Migration
       t.string      :description
       t.string      :guid
       t.string      :type
-      t.belongs_to  :service_template
+      t.belongs_to  :service_template,              :type => :bigint
       t.text        :options
       t.boolean     :display
       t.timestamps

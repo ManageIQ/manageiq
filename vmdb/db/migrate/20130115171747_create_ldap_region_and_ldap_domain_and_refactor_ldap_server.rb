@@ -23,7 +23,7 @@ class CreateLdapRegionAndLdapDomainAndRefactorLdapServer < ActiveRecord::Migrati
       t.string    :mode
       t.integer   :port
 
-      t.belongs_to :ldap_domain
+      t.belongs_to :ldap_domain, :type => :bigint
       t.timestamps
     end
     add_index     :ldap_servers, :ldap_domain_id
@@ -32,7 +32,7 @@ class CreateLdapRegionAndLdapDomainAndRefactorLdapServer < ActiveRecord::Migrati
       t.string    :name
       t.string    :description
 
-      t.belongs_to :zone
+      t.belongs_to :zone,        :type => :bigint
       t.timestamps
     end
     add_index     :ldap_regions, :zone_id

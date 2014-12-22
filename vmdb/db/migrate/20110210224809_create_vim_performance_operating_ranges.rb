@@ -1,7 +1,7 @@
 class CreateVimPerformanceOperatingRanges < ActiveRecord::Migration
   def self.up
     create_table :vim_performance_operating_ranges do |t|
-      t.belongs_to  :resource, :polymorphic => true
+      t.belongs_to  :resource, :polymorphic => true, :type => :bigint
       t.bigint      :time_profile_id
       t.float       :cpu_usagemhz_rate_average_avg_over_time_period
       t.float       :cpu_usagemhz_rate_average_high_over_time_period

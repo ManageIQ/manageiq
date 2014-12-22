@@ -6,7 +6,7 @@ class CreateServiceTemplateCatalog < ActiveRecord::Migration
     end
 
     change_table :service_templates do |t|
-      t.belongs_to :service_template_catalog
+      t.belongs_to :service_template_catalog, :type => :bigint
     end
 
     remove_column :custom_buttons, :button_id
