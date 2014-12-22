@@ -106,7 +106,7 @@
                          :id       => field.id,
                          :value    => rb[0],
                          :name     => field.name,
-                         :checked  => field.default_value == rb[0].to_s ? '' : nil,
+                         :checked  => field.default_value.to_s == rb[0].to_s ? '' : nil,
                          :onclick  => remote_function(:with     => 'Form.Element.serialize(this)',
                                                       :url      => { :action => 'dialog_field_changed',
                                                                      :id     => "#{(@edit && @edit[:rec_id]) || "new"}"},
@@ -139,7 +139,7 @@
                   radio += 'id="' + fieldId + '" ';
                   radio += 'value="' + value[0] + '" ';
                   radio += 'name="' + data.field_name + '" ';
-                  if (data.checked_value === value[0]) {
+                  if (data.checked_value === value[0].toString()) {
                     radio += 'checked="" ';
                   }
                   radio += 'onclick="' + "#{remote_function(
@@ -148,8 +148,9 @@
                     :loading  => 'miqSparkle(true);',
                     :complete => 'miqSparkle(false);'
                   )}" + '"';
-                  radio += '/>';
-                  radio += '<label class="dynamic-radio-label"> ' + value[1] + ' </label>';
+                  radio += '/> ';
+                  radio += $j('<label></label>').addClass('dynamic-radio-label').text(value[1]).prop('outerHTML');
+                  radio += ' ';
                   radioButtons.push(radio);
                 });
 
