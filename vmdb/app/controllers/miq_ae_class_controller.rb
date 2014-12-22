@@ -2179,7 +2179,15 @@ private
       selected = find_checked_items
       selected.each do |items|
         item = items.split('-')
-        aedomains.push(from_cid(item[1]))
+        domain = MiqAeDomain.find_by_id(from_cid(item[1]))
+        next unless domain
+        if domain.editable?
+          aedomains.push(domain.id)
+        else
+          add_flash(_("Read Only %{model} \"%{name}\" cannot be deleted") %
+                      {:model => ui_lookup(:model => "MiqAeDomain"), :name  => domain.name},
+                    :error)
+        end
       end
     end
     process_elements(aedomains, MiqAeDomain, 'destroy') unless aedomains.empty?
@@ -2223,7 +2231,8 @@ private
         if record.editable?
           ns_list.push(from_cid(item[1]))
         else
-          add_flash(_("\"%{field}\" %{model} can not be deleted") % {:model => ui_lookup(:model => "MiqAeDomain"), :field => record.name},
+          add_flash(_("\"%{field}\" %{model} cannot be deleted") %
+                      {:model => ui_lookup(:model => "MiqAeDomain"), :field => record.name},
                     :error)
         end
       else
@@ -2649,7 +2658,8 @@ private
     typ = params[:pressed] == "miq_ae_domain_edit" ? MiqAeDomain : MiqAeNamespace
     @ae_ns = typ.find(from_cid(obj[0].split('-')[1]))
     if @ae_ns.domain? && !@ae_ns.editable?
-      add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => ui_lookup(:model => "MiqAeDomain"), :name  => @ae_ns.name},
+      add_flash(_("Read Only %{model} \"%{name}\" cannot be edited") %
+                  {:model => ui_lookup(:model => "MiqAeDomain"), :name  => @ae_ns.name},
                 :error)
     else
       ns_set_form_vars
