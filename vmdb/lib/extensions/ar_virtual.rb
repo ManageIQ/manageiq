@@ -284,7 +284,7 @@ module ActiveRecord
             next unless field.kind_of?(VirtualReflection)
 
             parents = records.map {|record| record.send(field.name)}.flatten.compact
-            Preloader.new(parents, child).run unless parents.empty?
+            MiqPreloader.preload(parents, child) unless parents.empty?
           end
         when String, Symbol
           field = records_model.virtual_field(association)
@@ -305,7 +305,7 @@ module ActiveRecord
 
       if original
         self.includes_values = original
-        ActiveRecord::Associations::Preloader.new(recs, preload_values + includes_values).run
+        MiqPreloader.preload(recs, preload_values + includes_values)
       end
       return recs
     end

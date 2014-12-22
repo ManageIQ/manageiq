@@ -1083,7 +1083,7 @@ class MiqRequestWorkflow
 
     rails_logger('allowed_storages', 0)
     st = Time.now
-    ActiveRecord::Associations::Preloader.new(hosts, :storages).run
+    MiqPreloader.preload(hosts, :storages)
 
     storage_ids = []
     storages = hosts.inject([]) do |a, h|

@@ -477,7 +477,7 @@ module Rbac
     clusters = subtree.select { |obj| obj.kind_of?(EmsCluster)}
     hosts    = subtree.select { |obj| obj.kind_of?(Host) }
 
-    ActiveRecord::Associations::Preloader.new(clusters, :hosts).run
+    MiqPreloader.preload(clusters, :hosts)
     clusters.collect(&:hosts).flatten + hosts
   end
 

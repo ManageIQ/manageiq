@@ -103,6 +103,6 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
 
   def preload_ems_for_vms(tree)
     vms = extract_vms(tree)
-    ActiveRecord::Associations::Preloader.new(vms, :ext_management_system).run
+    MiqPreloader.preload(vms, :ext_management_system)
   end
 end

@@ -1694,7 +1694,7 @@ class Host < ActiveRecord::Base
     $log.debug "Checking for VMs that are scheduled to be scanned"
 
     hosts = MiqServer.my_server.zone.hosts
-    ActiveRecord::Associations::Preloader.new(hosts, :vms).run
+    MiqPreloader.preload(hosts, :vms)
     hosts.each do |h|
       next if h.scan_frequency.to_i == 0
 

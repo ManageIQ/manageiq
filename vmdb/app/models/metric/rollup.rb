@@ -204,7 +204,7 @@ module Metric::Rollup
     #   the current hour too because the capture in vim_performance_state_for_ts,
     #   if not found for the perf timestamp, will return a state for the current
     #   hour only.
-    ActiveRecord::Associations::Preloader.new(recs, :vim_performance_states, :conditions => {'vim_performance_states.timestamp' => [ts, Metric::Helper.nearest_hourly_timestamp(Time.now.utc)]}).run unless recs.empty?
+    MiqPreloader.preload(recs, :vim_performance_states, :conditions => {'vim_performance_states.timestamp' => [ts, Metric::Helper.nearest_hourly_timestamp(Time.now.utc)]}) unless recs.empty?
 
     recs.each do |rec|
       perf = perf_recs.fetch_path(rec.class.base_class.name, rec.id, interval_name, ts)

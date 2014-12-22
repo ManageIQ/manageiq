@@ -13,7 +13,7 @@ module Metric::Targets
     # TODO: Include hosts under clusters
     includes = {:ext_management_systems => {:hosts => {:tags => {}}, :ems_clusters => :tags}}
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
-    ActiveRecord::Associations::Preloader.new(zone, includes).run
+    MiqPreloader.preload(zone, includes)
 
     targets = zone.ems_clusters + zone.non_clustered_hosts
     targets += zone.storages.select { |s| Storage::SUPPORTED_STORAGE_TYPES.include?(s.store_type) } unless options[:exclude_storages]
@@ -34,7 +34,7 @@ module Metric::Targets
     targets = []
 
     includes = {:availability_zones => {:tags => {}}}
-    ActiveRecord::Associations::Preloader.new(zone.ems_clouds, includes).run
+    MiqPreloader.preload(zone.ems_clouds, includes)
 
     targets += capture_vm_targets(zone.availability_zones, AvailabilityZone, options)
 
@@ -56,7 +56,7 @@ module Metric::Targets
           t.perf_capture_enabled? &&
           t.respond_to?(:vms)
       end
-      ActiveRecord::Associations::Preloader.new(enabled_parents, :vms).run
+      MiqPreloader.preload(enabled_parents, :vms)
       vms = targets.collect { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }.flatten.compact
     end
     vms

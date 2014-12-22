@@ -27,7 +27,7 @@ class AddPerfByTagToClassifications < ActiveRecord::Migration
 
     say_with_time("Migrate data from reserved table") do
       cats = Classification.categories
-      ActiveRecord::Associations::Preloader.new(cats, :reserved_rec).run
+      MiqPreloader.preload(cats, :reserved_rec)
       cats.each do |cat|
         cat.reserved_hash_migrate(:perf_by_tag)
       end

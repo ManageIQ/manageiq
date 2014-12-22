@@ -71,7 +71,7 @@ module VimPerformanceAnalysis
           @compute, attrs = Rbac.search(:class => topts[:compute_type].to_s ,:results_format => :objects, :include_for_find => includes, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
         end
 
-        ActiveRecord::Associations::Preloader.new(@compute, :storages).run
+        MiqPreloader.preload(@compute, :storages)
         stores = @compute.collect {|c| storages_for_compute_target(c)}.flatten.uniq
 
         if topts[:storage_filter]
@@ -108,13 +108,13 @@ module VimPerformanceAnalysis
         # For clusters, to allow for fragmentation in calculations, calculate using child hosts and aggregate at the end.
         @hosts_to_cluster = {}
 
-        ActiveRecord::Associations::Preloader.new(@compute, :hosts => [:hardware, {:vms => :hardware}]).run
+        MiqPreloader.preload(@compute, :hosts => [:hardware, {:vms => :hardware}])
         compute_hosts = @compute.collect do |c|
           c.hosts.each {|h| @hosts_to_cluster[h.id] = c}
           c.hosts
         end.flatten
       else
-        ActiveRecord::Associations::Preloader.new(@compute, [:hardware, {:vms => :hardware}]).run
+        MiqPreloader.preload(@compute, [:hardware, {:vms => :hardware}])
         compute_hosts = @compute
       end
 

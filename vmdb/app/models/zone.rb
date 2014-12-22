@@ -129,22 +129,22 @@ class Zone < ActiveRecord::Base
   end
 
   def hosts
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :hosts).run
+    MiqPreloader.preload(self, :ext_management_systems => :hosts)
     self.ext_management_systems.collect { |e| e.hosts }.flatten
   end
 
   def non_clustered_hosts
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :hosts).run
+    MiqPreloader.preload(self, :ext_management_systems => :hosts)
     self.ext_management_systems.collect { |e| e.non_clustered_hosts }.flatten
   end
 
   def clustered_hosts
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :hosts).run
+    MiqPreloader.preload(self, :ext_management_systems => :hosts)
     self.ext_management_systems.collect { |e| e.clustered_hosts }.flatten
   end
 
   def ems_clusters
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :ems_clusters).run
+    MiqPreloader.preload(self, :ext_management_systems => :ems_clusters)
     self.ext_management_systems.collect { |e| e.ems_clusters }.flatten
   end
 
@@ -157,29 +157,29 @@ class Zone < ActiveRecord::Base
   end
 
   def availability_zones
-    ActiveRecord::Associations::Preloader.new(self.ems_clouds, :availability_zones).run
+    MiqPreloader.preload(self.ems_clouds, :availability_zones)
     self.ems_clouds.collect { |e| e.availability_zones }.flatten
   end
 
   def vms_without_availability_zone
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :vms).run
+    MiqPreloader.preload(self, :ext_management_systems => :vms)
     self.ext_management_systems.collect do |e|
       e.kind_of?(EmsCloud) ? e.vms.select { |vm| vm.availability_zone.nil? } : []
     end.flatten
   end
 
   def vms_and_templates
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :vms_and_templates).run
+    MiqPreloader.preload(self, :ext_management_systems => :vms_and_templates)
     self.ext_management_systems.collect { |e| e.vms_and_templates }.flatten
   end
 
   def vms
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :vms).run
+    MiqPreloader.preload(self, :ext_management_systems => :vms)
     self.ext_management_systems.collect { |e| e.vms }.flatten
   end
 
   def miq_templates
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => :miq_templates).run
+    MiqPreloader.preload(self, :ext_management_systems => :miq_templates)
     self.ext_management_systems.collect { |e| e.miq_templates }.flatten
   end
 
@@ -196,7 +196,7 @@ class Zone < ActiveRecord::Base
   end
 
   def storages
-    ActiveRecord::Associations::Preloader.new(self, :ext_management_systems => {:hosts => :storages}).run
+    MiqPreloader.preload(self, :ext_management_systems => {:hosts => :storages})
     self.ext_management_systems.collect { |e| e.storages }.flatten.uniq
   end
 

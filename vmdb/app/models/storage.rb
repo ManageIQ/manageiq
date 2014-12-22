@@ -744,7 +744,7 @@ class Storage < ActiveRecord::Base
       end
 
       Benchmark.realtime_block(:db_find_storage_files) do
-        ActiveRecord::Associations::Preloader.new(self, :vms => :storage_files_files).run
+        MiqPreloader.preload(self, :vms => :storage_files_files)
       end
 
       state, = Benchmark.realtime_block(:capture_state) { self.perf_capture_state }

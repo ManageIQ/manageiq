@@ -1066,7 +1066,7 @@ class VmOrTemplate < ActiveRecord::Base
   def storage2proxies
     return @storage_proxies unless @storage_proxies.nil?
 
-    ActiveRecord::Associations::Preloader.new(self, :storage => {:hosts => :miq_proxy}).run
+    MiqPreloader.preload(self, :storage => {:hosts => :miq_proxy})
     proxies = self.storage2hosts.select { |h| h && h.is_a_proxy? }
 
     # Support vixDisk scanning of VMware VMs from the vmdb server
@@ -1223,7 +1223,7 @@ class VmOrTemplate < ActiveRecord::Base
 
     # Collect the updated folder relationships to determine which vms need updated path information
     ems_folders = ems.ems_folders
-    ActiveRecord::Associations::Preloader.new(ems_folders, :all_relationships).run
+    MiqPreloader.preload(ems_folders, :all_relationships)
 
     updated_folders = ems_folders.select do |f|
       f.created_on >= update_start_time || f.updated_on >= update_start_time ||      # Has the folder itself changed (e.g. renamed)?

@@ -526,7 +526,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       unless @vlan_options[:vlans] == false
         rails_logger('allowed_vlans', 0)
         hosts = get_selected_hosts(src)
-        ActiveRecord::Associations::Preloader.new(hosts, :switches => :lans).run
+        MiqPreloader.preload(hosts, :switches => :lans)
         hosts.each {|h| h.lans.each {|l| vlans[l.name] = l.name}}
 
         # Remove certain networks
@@ -718,7 +718,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       allowed_templates_list.each { |vm| $log.info "#{log_header} Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>"}
     end
 
-    ActiveRecord::Associations::Preloader.new(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}]).run
+    MiqPreloader.preload(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}])
     @allowed_templates_cache = allowed_templates_list.collect do |v|
       nh = MiqHashStruct.new(
         :id       => v.id,

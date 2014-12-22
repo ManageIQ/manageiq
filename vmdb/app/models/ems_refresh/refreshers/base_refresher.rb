@@ -30,7 +30,7 @@ module EmsRefresh::Refreshers
 
     def group_targets_by_ems(targets)
       non_ems_targets = targets.select { |t| !t.kind_of?(ExtManagementSystem) }
-      ActiveRecord::Associations::Preloader.new(non_ems_targets, :ext_management_system).run
+      MiqPreloader.preload(non_ems_targets, :ext_management_system)
 
       self.ems_by_ems_id     = {}
       self.targets_by_ems_id = Hash.new { |h, k| h[k] = Array.new }

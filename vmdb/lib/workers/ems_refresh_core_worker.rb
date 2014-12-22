@@ -149,7 +149,7 @@ class EmsRefreshCoreWorker < WorkerBase
     inv = inv.to_miq_a
     return if inv.none? { |i| i['connected'] }
 
-    ActiveRecord::Associations::Preloader.new(vm, :hardware => {:nics => :network}).run
+    MiqPreloader.preload(vm, :hardware => {:nics => :network})
 
     nics = vm.try(:hardware).try(:nics).to_miq_a.select(&:network)
     return if nics.blank?
