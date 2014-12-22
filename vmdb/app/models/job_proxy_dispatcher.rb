@@ -188,7 +188,7 @@ class JobProxyDispatcher
     @busy_proxies_hash ||= begin
       Job.where(:dispatch_status => "active")
         .where("state != ?", "finished")
-        .select(:agent_id, :agent_class)
+        .select([:agent_id, :agent_class])
         .each_with_object({}) do |j, busy_hsh|
           busy_hsh["#{j.agent_class}_#{j.agent_id}"] ||= 0
           busy_hsh["#{j.agent_class}_#{j.agent_id}"] += 1
