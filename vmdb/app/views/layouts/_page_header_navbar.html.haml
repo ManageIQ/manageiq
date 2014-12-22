@@ -2,245 +2,303 @@
   %ul#maintab
     -if role_allows(:main_tab => MAIN_TABS[:vi])
       %li(class="#{primary_nav_class(:vi)}")
-        %a{:href => '/dashboard/maintab/?tab=vi'}= h(MAIN_TABS[:vi])
+        %a{:href => '/dashboard/maintab/?tab=vi',
+           :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:vi])
         %ul(class="#{primary_nav_class(:vi)}")
 
           -if role_allows(:feature => 'dashboard_view')
             %li(class="#{secondary_nav_class('dashboard')}")
-              %a{:href=>'/dashboard/'} Dashboard
+              %a{:href=>'/dashboard/',
+                 :onclick=>'return miqCheckForChanges()'} Dashboard
 
           -if role_allows(:feature => 'miq_report',:any => true)
             %li(class="#{secondary_nav_class('report')}")
-              %a{:href=>'/report/explorer'}Reports
+              %a{:href=>'/report/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Reports
 
           / Hiding usage for now - release 5.2
           -if false
             -if role_allows(:feature => 'usage')
               %li(class="#{secondary_nav_class('usage')}")
-                %a{:href=>'/report/usage/'}Usage
+                %a{:href=>'/report/usage/',
+                   :onclick=>'return miqCheckForChanges()'}Usage
 
           -if role_allows(:feature => 'chargeback',:any => true)
             %li(class="#{secondary_nav_class('chargeback')}")
-              %a{:href=>'/chargeback/explorer'}Chargeback
+              %a{:href=>'/chargeback/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Chargeback
 
           -if role_allows(:feature => 'timeline')
             %li(class="#{secondary_nav_class('timeline')}")
-              %a{:href=>'/dashboard/timeline/'}Timelines
+              %a{:href=>'/dashboard/timeline/',
+                 :onclick=>'return miqCheckForChanges()'}Timelines
 
           -if role_allows(:feature => 'rss')
             %li(class="#{secondary_nav_class('rss')}")
-              %a{:href=>'/alert/'}RSS
+              %a{:href=>'/alert/',
+                 :onclick=>'return miqCheckForChanges()'}RSS
 
     -if role_allows(:main_tab => MAIN_TABS[:svc])
       %li(class="#{primary_nav_class(:svc)}")
-        %a{:href=>'/dashboard/maintab/?tab=svc'}= h(MAIN_TABS[:svc])
+        %a{:href=>'/dashboard/maintab/?tab=svc',
+           :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:svc])
         %ul(class="#{primary_nav_class(:svc)}")
 
           -if role_allows(:feature => 'service', :any => true)
             %li(class="#{secondary_nav_class('services')}")
-              %a{:href=>'/service/explorer'}My Services
+              %a{:href=>'/service/explorer',
+                 :onclick=>'return miqCheckForChanges()'}My Services
 
           -if role_allows(:feature => 'catalog',:any => true)
             %li(class="#{secondary_nav_class('catalogs')}")
-              %a{:href=>'/catalog/explorer'}Catalogs
+              %a{:href=>'/catalog/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Catalogs
 
           -if role_allows(:feature => 'vm_explorer_accords',:any => true)
             %li(class="#{secondary_nav_class('vm_or_template')}")
-              %a{:href=>'/vm_or_template/explorer'}Workloads
+              %a{:href=>'/vm_or_template/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Workloads
 
           -if role_allows(:feature => 'miq_request_show_list')
             %li(class="#{secondary_nav_class('miq_request_vm')}")
-              %a{:href=>'/miq_request?typ=vm'}Requests
+              %a{:href=>'/miq_request?typ=vm',
+                 :onclick=>'return miqCheckForChanges()'}Requests
 
     -if role_allows(:main_tab => MAIN_TABS[:clo])
       %li(class="#{primary_nav_class(:clo)}")
-        %a{:href=>'/dashboard/maintab/?tab=clo'}= h(MAIN_TABS[:clo])
+        %a{:href=>'/dashboard/maintab/?tab=clo',
+           :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:clo])
         %ul(class="#{primary_nav_class(:clo)}")
 
           -if role_allows(:feature => 'ems_cloud_show_list')
             %li(class="#{secondary_nav_class('ems_cloud')}")
-              %a{:href=>'/ems_cloud'}Providers
+              %a{:href=>'/ems_cloud',
+                 :onclick=>'return miqCheckForChanges()'}Providers
 
           -if role_allows(:feature => 'availability_zone_show_list')
             %li(class="#{secondary_nav_class('availability_zone')}")
-              %a{:href=>'/availability_zone'}Availability Zones
+              %a{:href=>'/availability_zone',
+                 :onclick=>'return miqCheckForChanges()'}Availability Zones
 
           -if role_allows(:feature => 'cloud_tenant_show_list')
             %li(class="#{secondary_nav_class('cloud_tenant')}")
-              %a{:href=>'/cloud_tenant'}Tenants
+              %a{:href=>'/cloud_tenant',
+                 :onclick=>'return miqCheckForChanges()'}Tenants
 
           -if role_allows(:feature => 'flavor_show_list')
             %li(class="#{secondary_nav_class('flavor')}")
-              %a{:href=>'/flavor'}Flavors
+              %a{:href=>'/flavor',
+                 :onclick=>'return miqCheckForChanges()'}Flavors
 
           -if role_allows(:feature => 'security_group_show_list')
             %li(class="#{secondary_nav_class('security_group')}")
-              %a{:href=>'/security_group'}Security Groups
+              %a{:href=>'/security_group',
+                 :onclick=>'return miqCheckForChanges()'}Security Groups
 
           -if role_allows(:feature => 'vm_cloud_explorer_accords',:any => true)
             %li(class="#{secondary_nav_class('vm_cloud')}")
-              %a{:href=>'/vm_cloud/explorer'}Instances
+              %a{:href=>'/vm_cloud/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Instances
 
     -if role_allows(:main_tab => MAIN_TABS[:inf])
       %li(class="#{primary_nav_class(:inf)}")
-        %a{:href=>'/dashboard/maintab/?tab=inf'}= h(MAIN_TABS[:inf])
+        %a{:href=>'/dashboard/maintab/?tab=inf',
+           :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:inf])
         %ul(class="#{primary_nav_class(:inf)}")
 
           -if role_allows(:feature => 'ems_infra_show_list')
             %li(class="#{secondary_nav_class('ems_infra')}")
-              %a{:href=>'/ems_infra'}Providers
+              %a{:href=>'/ems_infra',
+                 :onclick=>'return miqCheckForChanges()'}Providers
 
           -if role_allows(:feature => 'ems_cluster_show_list')
             %li(class="#{secondary_nav_class('ems_cluster')}")
-              %a{:href=>'/ems_cluster'}Clusters
+              %a{:href=>'/ems_cluster',
+                 :onclick=>'return miqCheckForChanges()'}Clusters
 
           -if role_allows(:feature => 'host_show_list')
             %li(class="#{secondary_nav_class('host')}")
-              %a{:href=>'/host'}Hosts
+              %a{:href=>'/host',
+                 :onclick=>'return miqCheckForChanges()'}Hosts
 
           -if role_allows(:feature => 'vm_infra_explorer_accords',:any => true)
             %li(class="#{secondary_nav_class('vm_infra')}")
-              %a{:href=>'/vm_infra/explorer'}Virtual Machines
+              %a{:href=>'/vm_infra/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Virtual Machines
 
           -if role_allows(:feature => 'resource_pool_show_list')
             %li(class="#{secondary_nav_class('resource_pool')}")
-              %a{:href=>'/resource_pool'}Resource Pools
+              %a{:href=>'/resource_pool',
+                 :onclick=>'return miqCheckForChanges()'}Resource Pools
 
           -if role_allows(:feature => 'storage_show_list')
             %li(class="#{secondary_nav_class('storage')}")
-              %a{:href=>'/storage'}= ui_lookup(:tables => 'storages')
+              %a{:href=>'/storage',
+                 :onclick=>'return miqCheckForChanges()'}= ui_lookup(:tables => 'storages')
 
           -if role_allows(:feature => 'repository_show_list')
             %li(class="#{secondary_nav_class('repository')}")
-              %a{:href=>'/repository'}Repositories
+              %a{:href=>'/repository',
+                 :onclick=>'return miqCheckForChanges()'}Repositories
 
           -if role_allows(:feature => 'pxe', :any => true)
             %li(class="#{secondary_nav_class('pxe')}")
-              %a{:href=>'/pxe/explorer'}PXE
+              %a{:href=>'/pxe/explorer',
+                 :onclick=>'return miqCheckForChanges()'}PXE
 
           -if role_allows(:feature => 'miq_request_show_list')
             %li(class="#{secondary_nav_class('miq_request_host')}")
-              %a{:href=>"/miq_request?typ=host"}Requests
+              %a{:href=>'/miq_request?typ=host',
+                 :onclick=>'return miqCheckForChanges()'}Requests
 
     -if get_vmdb_config[:product][:storage]
       -if role_allows(:main_tab => MAIN_TABS[:sto]) 
         %li(class="#{primary_nav_class(:sto)}")
-          %a{:href=>'/dashboard/maintab/?tab=sto'}= h(MAIN_TABS[:sto])
+          %a{:href=>'/dashboard/maintab/?tab=sto',
+             :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:sto])
           %ul(class="#{primary_nav_class(:sto)}")
 
             -if role_allows(:feature => 'ontap_storage_system_show_list')
               %li(class="#{secondary_nav_class('ontap_storage_system')}")
-                %a{:href=>'/ontap_storage_system'}= ui_lookup(:tables => 'ontap_storage_system')
+                %a{:href=>'/ontap_storage_system',
+                   :onclick=>'return miqCheckForChanges()'}= ui_lookup(:tables => 'ontap_storage_system')
             
             -if role_allows(:feature => 'ontap_logical_disk_show_list') 
               %li(class="#{secondary_nav_class('ontap_logical_disk')}")
-                %a{:href=>'/ontap_logical_disk'}= ui_lookup(:tables => 'ontap_logical_disk')
+                %a{:href=>'/ontap_logical_disk',
+                   :onclick=>'return miqCheckForChanges()'}= ui_lookup(:tables => 'ontap_logical_disk')
 
             -if role_allows(:feature => 'ontap_storage_volume_show_list') 
               %li(class="#{secondary_nav_class('ontap_storage_volume')}")
-                %a{:href=>'/ontap_storage_volume'}= ui_lookup(:tables => 'ontap_storage_volume')
+                %a{:href=>'/ontap_storage_volume',
+                   :onclick=>'return miqCheckForChanges()'}= ui_lookup(:tables => 'ontap_storage_volume')
             
             -if role_allows(:feature => 'ontap_file_share_show_list') 
               %li(class="#{secondary_nav_class('ontap_file_share')}")
-                %a{:href=>'/ontap_file_share'}= ui_lookup(:tables => 'ontap_file_share')
+                %a{:href=>'/ontap_file_share',
+                   :onclick=>'return miqCheckForChanges()'}= ui_lookup(:tables => 'ontap_file_share')
 
             -if false
               -if role_allows(:feature => 'cim_base_storage_extent_show_list') 
                 %li(class="#{secondary_nav_class('cim_base_storage_extent')}")
-                  %a{:href=>'/cim_base_storage_extent'}Base Extents
+                  %a{:href=>'/cim_base_storage_extent',
+                     :onclick=>'return miqCheckForChanges()'}Base Extents
 
             -if role_allows(:feature => 'storage_manager_show_list')
               %li(class="#{secondary_nav_class('storage_manager')}")
-                %a{:href=>'/storage_manager'}Storage Managers
+                %a{:href=>'/storage_manager',
+                   :onclick=>'return miqCheckForChanges()'}Storage Managers
 
     -if role_allows(:main_tab => MAIN_TABS[:con])
       %li(class="#{primary_nav_class(:con)}")
-        %a{:href=>'/dashboard/maintab/?tab=con'}= h(MAIN_TABS[:con])
+        %a{:href=>'/dashboard/maintab/?tab=con',
+           :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:con])
         %ul(class="#{primary_nav_class(:con)}")
 
           -if role_allows(:feature => 'control_explorer_view')
             %li(class="#{secondary_nav_class('miq_policy')}")
-              %a{:href=>'/miq_policy/explorer'}Explorer
+              %a{:href=>'/miq_policy/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Explorer
 
           -if role_allows(:feature => 'policy_simulation')
             %li(class="#{secondary_nav_class('miq_policy_rsop')}")
-              %a{:href=>'/miq_policy/rsop'}Simulation
+              %a{:href=>'/miq_policy/rsop',
+                 :onclick=>'return miqCheckForChanges()'}Simulation
 
           -if role_allows(:feature => 'policy_import_export')
             %li(class="#{secondary_nav_class('miq_policy_export')}")
-              %a{:href=>'/miq_policy/export'}Import / Export
+              %a{:href=>'/miq_policy/export',
+                 :onclick=>'return miqCheckForChanges()'}Import / Export
 
           -if role_allows(:feature => 'policy_log')
             %li(class="#{secondary_nav_class('miq_policy_logs')}")
-              %a{:href=>"/miq_policy/log"}Log
+              %a{:href=>'/miq_policy/log',
+                 :onclick=>'return miqCheckForChanges()'}Log
 
     -if role_allows(:main_tab => MAIN_TABS[:aut])
       %li(class="#{primary_nav_class(:aut)}")
-        %a{:href=>'/dashboard/maintab/?tab=aut'}= h(MAIN_TABS[:aut])
+        %a{:href=>'/dashboard/maintab/?tab=aut',
+           :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:aut])
         %ul(class="#{primary_nav_class(:aut)}")
 
           -if role_allows(:feature => 'miq_ae_domain_view')
             %li(class="#{secondary_nav_class('miq_ae_class')}")
-              %a{:href=>'/miq_ae_class/explorer'}Explorer
+              %a{:href=>'/miq_ae_class/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Explorer
 
           -if role_allows(:feature => 'miq_ae_class_simulation')
             %li(class="#{secondary_nav_class('miq_ae_tools')}")
-              %a{:href=>'/miq_ae_tools/resolve'}Simulation
+              %a{:href=>'/miq_ae_tools/resolve',
+                 :onclick=>'return miqCheckForChanges()'}Simulation
 
           -if role_allows(:feature => 'miq_ae_customization_explorer')
             %li(class="#{secondary_nav_class('miq_ae_customization')}")
-              %a{:href=>'/miq_ae_customization/explorer'}Customization
+              %a{:href=>'/miq_ae_customization/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Customization
 
           -if role_allows(:feature => 'miq_ae_class_import_export')
             %li(class="#{secondary_nav_class('miq_ae_export')}")
-              %a{:href=>'/miq_ae_tools/import_export'}Import / Export
+              %a{:href=>'/miq_ae_tools/import_export',
+                 :onclick=>'return miqCheckForChanges()'}Import / Export
 
           -if role_allows(:feature => 'miq_ae_class_log')
             %li(class="#{secondary_nav_class('miq_ae_logs')}")
-              %a{:href=>'/miq_ae_tools/log'}Log
+              %a{:href=>'/miq_ae_tools/log',
+                 :onclick=>'return miqCheckForChanges()'}Log
 
           -if role_allows(:feature => 'miq_request_show_list')
             %li(class="#{secondary_nav_class('miq_request_ae')}")
-              %a{:href=>"/miq_request?typ=ae"}Requests
+              %a{:href=>'/miq_request?typ=ae',
+                 :onclick=>'return miqCheckForChanges()'}Requests
 
     -if role_allows(:main_tab => MAIN_TABS[:opt])
       %li(class="#{primary_nav_class(:opt)}")
-        %a{:href=>'/dashboard/maintab/?tab=opt'}= h(MAIN_TABS[:opt])
+        %a{:href=>'/dashboard/maintab/?tab=opt',
+           :onclick=>'return miqCheckForChanges()'}= h(MAIN_TABS[:opt])
         %ul(class="#{primary_nav_class(:opt)}")
 
           -if role_allows(:feature => 'utilization')
             %li(class="#{secondary_nav_class('miq_capacity_utilization')}")
-              %a{:href=>'/miq_capacity'}Utilization
+              %a{:href=>'/miq_capacity',
+                 :onclick=>'return miqCheckForChanges()'}Utilization
 
           -if role_allows(:feature => 'planning')
             %li(class="#{secondary_nav_class('miq_capacity_planning')}")
-              %a{:href=>'/miq_capacity/planning'}Planning
+              %a{:href=>'/miq_capacity/planning',
+                 :onclick=>'return miqCheckForChanges()'}Planning
 
           -if role_allows(:feature => 'bottlenecks')
             %li(class="#{secondary_nav_class('miq_capacity_bottlenecks')}")
-              %a{:href=>'/miq_capacity/bottlenecks'}Bottlenecks
+              %a{:href=>'/miq_capacity/bottlenecks',
+                 :onclick=>'return miqCheckForChanges()'}Bottlenecks
 
     -if role_allows(:main_tab => MAIN_TABS[:set])
       %li(class="#{primary_nav_class(:set)}")
-        %a{:href=>"/dashboard/maintab/?tab=set"}Configure
+        %a{:href=>'/dashboard/maintab/?tab=set',
+           :onclick=>'return miqCheckForChanges()'}Configure
         %ul(class="#{primary_nav_class(:set)}")
 
           -if role_allows(:feature => 'my_settings',:any => true)
             %li(class="#{secondary_nav_class('configuration')}")
-              %a{:href=>'/configuration/index?config_tab=ui'}My Settings
+              %a{:href=>'/configuration/index?config_tab=ui',
+                 :onclick=>'return miqCheckForChanges()'}My Settings
 
           -if role_allows(:feature => 'tasks',:any => true)
             %li(class="#{secondary_nav_class(["my_tasks","my_ui_tasks","all_tasks","all_ui_tasks"].include?(@layout) ? @layout : "my_tasks")}")
-              %a{:href=>'/miq_proxy/index?jobs_tab=tasks'}Tasks
+              %a{:href=>'/miq_proxy/index?jobs_tab=tasks',
+                 :onclick=>'return miqCheckForChanges()'}Tasks
 
           -if role_allows(:feature => 'ops_explorer',:any => "true")
             %li(class="#{secondary_nav_class('ops')}")
-              %a{:href=>'/ops/explorer'}Configuration
+              %a{:href=>'/ops/explorer',
+                 :onclick=>'return miqCheckForChanges()'}Configuration
 
           -if role_allows(:feature => 'miq_proxy_show_list')
             %li(class="#{secondary_nav_class('miq_proxy')}")
-              %a{:href=>'/miq_proxy'}SmartProxies
+              %a{:href=>'/miq_proxy',
+                 :onclick=>'return miqCheckForChanges()'}SmartProxies
 
           -if role_allows(:feature => 'about')
             %li(class="#{secondary_nav_class('about')}")
-              %a{:href=>'/support/index?support_tab=about'}About
+              %a{:href=>'/support/index?support_tab=about',
+                 :onclick=>'return miqCheckForChanges()'}About
