@@ -170,8 +170,13 @@ module ApplicationController::DialogRunner
     field = dialog.field(params[:name])
     values = field.refresh_button_pressed
 
+    checked_value = values.collect { |value_pair| value_pair[0] }.include?(params[:checked_value]) ?
+      params[:checked_value] : field.default_value
+
+    field.value = checked_value
+
     json = {
-      :default_value => field.default_value,
+      :checked_value => checked_value,
       :field_name    => field.name,
       :values        => values
     }
