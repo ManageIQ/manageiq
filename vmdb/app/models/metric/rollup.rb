@@ -312,7 +312,7 @@ module Metric::Rollup
     recs.keys.each { |k| recs[k] = recs[k].collect { |r| r.resource_id }.uniq }
 
     recs.each_with_object([]) do |(klass, ids), ret|
-      ret.concat(klass.constantize.find_all_by_id(ids))
+      ret.concat(klass.constantize.where(:id => ids))
     end
   end
 end
