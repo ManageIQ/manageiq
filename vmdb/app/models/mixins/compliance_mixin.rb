@@ -15,7 +15,7 @@ module ComplianceMixin
     @last_compliance = if association_cache.include?(:compliances)
       self.compliances.sort_by { |c| c.timestamp }.last
     else
-      self.compliances.first(:order => "timestamp DESC")
+      self.compliances.order("timestamp DESC").first
     end
   end
 
