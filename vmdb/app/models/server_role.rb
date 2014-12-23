@@ -52,23 +52,23 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.all_names
-    self.find(:all, :order => :name, :select => "id, name").collect { |r| r.name }
+    self.order(:name).pluck(:name)
   end
 
   def self.database_scoped_role_names
-    self.find_all_by_role_scope('database', :select => "id, name", :order => :name).collect { |r| r.name }
+    self.where(:role_scope => 'database').order(:name).pluck(:name)
   end
 
   def self.database_scoped_roles
-    @database_scoped_roles ||= self.find_all_by_role_scope('database').sort { |a,b| a.name <=> b.name }
+    @database_scoped_roles ||= self.where(:role_scope =>('database').order(:name))
   end
 
   def self.region_scoped_roles
-    @region_scoped_roles ||= self.where(:role_scope => 'region').sort { |a,b| a.name <=> b.name }
+    @region_scoped_roles ||= self.where(:role_scope => 'region').order(:name)
   end
 
   def self.zone_scoped_roles
-    @zone_scoped_roles ||= self.find_all_by_role_scope('zone').sort { |a,b| a.name <=> b.name }
+    @zone_scoped_roles ||= self.where(:role_scope => 'zone').order(:name)
   end
 
   def self.database_role?(role)

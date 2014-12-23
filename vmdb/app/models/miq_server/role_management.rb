@@ -67,7 +67,7 @@ module MiqServer::RoleManagement
     roles = roles.first if roles.length == 1 && roles[0].kind_of?(Array)
     return if roles.empty?
 
-    roles = (roles.length == 1 && roles[0] == "*") ? self.server_roles : ServerRole.find_all_by_name(roles)
+    roles = (roles.length == 1 && roles[0] == "*") ? self.server_roles : ServerRole.where(:name => roles)
     ids   = roles.collect { |r| r.id }
     self.assigned_server_roles.where(:server_role_id => (ids)).each do |a|
       next if a.database_owner?
@@ -137,10 +137,10 @@ module MiqServer::RoleManagement
         current -= ServerRole.database_scoped_role_names
 
         #TODO: Change this to use replace method under Rails 2.x
-        removes = ServerRole.find_all_by_name(current - desired)
+        removes = ServerRole.where(:name => (current - desired))
         self.server_roles.delete(removes) unless removes.empty?
 
-        adds    = ServerRole.find_all_by_name(desired - current)
+        adds    = ServerRole.where(:name => (desired - current))
         adds.each { |r|
           self.assign_role(r)
           self.deactivate_roles(r.name)
