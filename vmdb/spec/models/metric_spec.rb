@@ -794,8 +794,8 @@ describe Metric do
             end
 
             it "should rollup Host realtime Cluster realtime rows correctly" do
-              Metric.count(:conditions => {:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id}).should == 5
-              perfs = Metric.all(:conditions => {:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id}, :order => "timestamp")
+              Metric.where(:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id).count.should == 5
+              perfs = Metric.where(:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id).order("timestamp")
 
               perfs[0].resource_type.should         == 'EmsCluster'
               perfs[0].resource_id.should           == @ems_cluster.id
