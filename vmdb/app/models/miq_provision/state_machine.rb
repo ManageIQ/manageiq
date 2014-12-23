@@ -12,7 +12,7 @@ module MiqProvision::StateMachine
     update_and_notify_parent(:message => "Preparing to Clone #{clone_direction}")
     phase_context[:clone_options] = prepare_for_clone_task
     dumpObj(phase_context[:clone_options], "MIQ(#{self.class.name}##{__method__}) Default Clone Options: ", $log, :info)
-    phase_context[:clone_options].merge!(get_option(:clone_options) || {})
+    phase_context[:clone_options].merge!(get_option(:clone_options) || {}).delete_nils
 
     signal :start_clone_task
   end

@@ -47,6 +47,23 @@ describe MiqProvision do
           :test_key        => "test_value"
         )
       end
+
+      it "handles deleting nils when merging :clone_options from automate" do
+        options[:clone_options] = {:image_ref => nil, :test_key => "test_value"}
+        task.update_attributes(:options => options)
+
+        task.should_receive(:signal).with(:prepare_provision).and_call_original
+        task.should_receive(:signal).with(:start_clone_task)
+
+        task.signal(:prepare_provision)
+
+        expect(task.phase_context[:clone_options]).to eq(
+          :flavor_ref      => flavor.ems_ref,
+          :name            => options[:vm_target_name],
+          :security_groups => [],
+          :test_key        => "test_value"
+        )
+      end
     end
 
     context "#post_create_destination" do
