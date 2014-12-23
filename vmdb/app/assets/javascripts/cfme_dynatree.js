@@ -55,7 +55,10 @@ function miqMenuEditor(id) {
     nid = id.split('__');
     if(nid[0]!='r') {
       var url = click_url + '?node_id=' + encodeURIComponent(id) + '&node_clicked=1'
-      miqJqueryRequest(url, {beforeSend: true, complete: true});
+      miqJqueryRequest(url, {beforeSend: true,
+        complete: true,
+        no_encoding: true
+      });
     }
 }
 
@@ -442,7 +445,7 @@ function miqMenuChangeRow(grid,action,click_url) {
     case "add":
       folder_list_grid.addRow("folder" + count,"New Folder",count+1)
       folder_list_grid.selectRowById("folder" + count,true,true,true);
-      miqJqueryRequest('/report/menu_folder_message_display?typ=add');
+      miqJqueryRequest('/report/menu_folder_message_display?typ=add', {no_encoding: true});
       break;
     case "delete":
       var selected_id = id.split('|-|')
@@ -454,7 +457,7 @@ function miqMenuChangeRow(grid,action,click_url) {
       break;
     case "serialize":
       var url = click_url + '?tree=' + encodeURIComponent(miqDhtmlxgridSerialize(folder_list_grid));
-      miqJqueryRequest(url, {beforeSend: true, complete: true});
+      miqJqueryRequest(url, {beforeSend: true, complete: true, no_encoding: true});
       ret = true;
       break;
     default:
