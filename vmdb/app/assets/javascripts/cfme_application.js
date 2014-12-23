@@ -1015,7 +1015,11 @@ function miqObserveCheckboxes() {
     new Form.Element.EventObserver(this.id, function(element, value) {
       var sparkleOn = this.element.getAttribute('data-miq_sparkle_on'); // Grab miq_sparkle settings
       var sparkleOff = this.element.getAttribute('data-miq_sparkle_off');
-      miqJqueryRequest(url, {beforeSend: true, complete: true, data:element.id + '=' + encodeURIComponent(value)});
+      miqJqueryRequest(url, {beforeSend: true,
+        complete: true,
+        data:element.id + '=' + encodeURIComponent(value),
+        no_encoding: true
+      });
     })
   })
 }
@@ -1247,5 +1251,5 @@ function miqJqueryRequest(url, options) {
 
   if (options['complete']) ajax_options['complete'] = function(request) { miqSparkle(false); };
 
-  new $j.ajax(encodeURI(url), ajax_options);
+  new $j.ajax(options['no_encoding'] ? url : encodeURI(url), ajax_options);
 }

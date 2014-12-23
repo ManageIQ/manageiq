@@ -37,7 +37,11 @@ $j(document).ready(function(){
 			new Form.Element.EventObserver(this.id, function(element, value) {
 				var sparkleOn = this.element.getAttribute('data-miq_sparkle_on');	// Grab miq_sparkle settings
 				var sparkleOff = this.element.getAttribute('data-miq_sparkle_off');
-        miqJqueryRequest(url, {beforeSend: true, complete: true, data: element.id + '=' + encodeURIComponent(value)});
+        miqJqueryRequest(url, {beforeSend: true,
+          complete: true,
+          data: element.id + '=' + encodeURIComponent(value),
+          no_encoding: true
+        });
 			})
 		} else {
       $j(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
@@ -50,7 +54,7 @@ $j(document).ready(function(){
 					miqSendOneTrans(url);
 				} else {
           var urlstring = url + "?" + this.id + "=" + encodeURIComponent(this.value);	//  tack on the id and value to the URL
-          miqJqueryRequest(urlstring);
+          miqJqueryRequest(urlstring, {no_encoding: true});
         }
 			});
 		}
