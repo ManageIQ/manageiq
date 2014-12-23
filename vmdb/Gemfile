@@ -11,6 +11,9 @@ gem "prototype-rails", "~>3.2.1"
 # gem 'jquery-rails'
 
 gem "sprockets-sass",  "~>1.2.0"
+gem "sprockets-less",  "~>0.6.1"
+gem 'therubyracer'
+gem 'less-rails'
 
 # Vendored and required
 # TODO: Fix AWS tests now that our api specs and the soap4r 1.6.0 specs pass on 1.8.7/1.9.3
