@@ -1,0 +1,45 @@
+- url = url_for(:action => 'settings_form_field_changed',
+  :id => "#{@sb[:active_tab].split('_').last}")
+- if @sb[:active_tab] == "settings_advanced"
+  = render :partial => "layouts/flash_msg"
+  #form_div
+    .alert.alert-danger
+      %span.pficon-layered
+        %span.pficon.pficon-error-octagon
+        %span.pficon.pficon-error-exclamation
+      %strong=_("Caution: Manual changes to configuration files can disable the Server!")
+    %p.legend
+      =_("Configuration File to Edit")
+    %table.style1
+      %tr
+        %td.key
+          =_("File")
+        %td
+          - if @changed
+            #message_on
+          - else
+            #message_on{:style => "display:none"}
+          =_("Configuration File selection can not be changed until changes are saved or reset.")
+  - if @changed
+    #message_off{:style => "display:none"}
+  - else
+    #message_off
+  = select_tag('file_name',
+    options_for_select(AVAILABLE_CONFIG_NAMES_FOR_SELECT, session[:config_file_name]),
+    "data-miq_sparkle_on"  => true,
+    "data-miq_sparkle_off" => true,
+    "data-miq_observe"     => {:url => url}.to_json)
+  %hr/
+  %p.legend
+    =_("Editing #{h(AVAILABLE_CONFIG_NAMES[session[:config_file_name]])} File")
+    %font{:color => "red"} *
+  = text_area_tag("file_data",
+    @edit[:new][:file_data],
+    :style => "display:none;")
+- if params[:action] != "explorer"
+  - w = @winW - 450
+  = render :partial => "/layouts/my_code_mirror",
+    :locals  => {:text_area_id => "file_data",
+    :mode         => "yaml",
+    :line_numbers => true,
+    :url          => url}

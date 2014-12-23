@@ -1,0 +1,78 @@
+- url = url_for(:action => 'settings_form_field_changed',
+  :id => "#{@sb[:active_tab].split('_')[1]}_#{@sb[:active_tab].split('_').last}")
+- if @sb[:active_tab] == "settings_custom_logos"
+  = render :partial => "layouts/flash_msg"
+  %p.legend=_("Custom Logo Image (Shown on top right of all screens)")
+  - if File.exist?(@logo_file)
+    = image_tag("/upload/custom_logo.png?#{rand(99999999).to_s}")
+  - else
+    = render :partial => 'layouts/info_msg', :locals => {:message => "No custom logo image has been uploaded yet."}
+  = form_tag({:action=>"upload_logo"}, :multipart => true) do
+    = file_field("upload", "logo")
+    = submit_tag("Upload",
+      :id    => "upload",
+      :class => "upload")
+    =_("* Requirements: File-type - PNG; Dimensions - 350x70.")
+  - if File.exist?(@logo_file)
+    %br/
+    %table.style1
+      %tr
+        %td.key=_("Use Custom Logo Image")
+        %td
+          = check_box_tag("server_uselogo", value="1",
+            checked=@edit[:new][:server][:custom_logo],
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+  %hr/
+  %p.legend=_("Custom Login Background Image")
+  - if File.exist?(@login_logo_file)
+    = image_tag("/upload/custom_login_logo.png?#{rand(99999999).to_s}",
+      :height => 400,
+      :width  => 675)
+    %br/
+    = succeed "*" do
+      %br/
+    =_("Image shown at 25% of actual size")
+    %br/
+    %br/
+  - else
+    = render :partial => 'layouts/info_msg', :locals => {:message => "No custom login image has been uploaded yet."}
+  = form_tag({:action    => "upload_login_logo"},
+    :multipart => true) do
+    = file_field("login", "logo")
+    = submit_tag("Upload",
+      :id    => "login_logo",
+      :class => "upload")
+    =_("* Requirements: File-type - PNG; Dimensions - 1280x1000.")
+  - if File.exist?(@login_logo_file)
+    %br/
+    %table.style1
+      %tr
+        %td.key=_("Use Custom Login Background Image")
+        %td
+          = check_box_tag("server_useloginlogo",
+            value="1",
+            checked=@edit[:new][:server][:custom_login_logo],
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+  %hr/
+  %p.legend
+    =_("Custom Login Panel Text (")
+    %span#text_count= @edit[:new][:notes] ? @edit[:new][:notes].length : 0
+    \/ 500)
+  = text_area_tag("login_text",
+    @edit[:new][:server][:custom_login_text],
+    :rows                       => 5,
+    :maxlength                  => "500",
+    :counter                    => "text_count",
+    "data-miq_check_max_length" => true,
+    "data-miq_observe"          => {:interval => '.5', :url => url}.to_json)
+  %br/
+  %table.style1
+    %tr
+      %td.key=_("Use Custom Login Text")
+      %td
+        = check_box_tag("server_uselogintext",
+          value="1",
+          checked=@edit[:new][:server][:use_custom_login_text],
+          "data-miq_observe_checkbox" => {:url => url}.to_json)
+  :javascript
+    miqObserveCheckboxes();
