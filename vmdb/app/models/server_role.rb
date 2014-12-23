@@ -108,7 +108,7 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.database_owner
-    @database_owner ||= self.find_by_name('database_owner')
+    @database_owner ||= self.where(:name => 'database_owner').first
   end
 
 end

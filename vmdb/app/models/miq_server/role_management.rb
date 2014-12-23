@@ -78,7 +78,7 @@ module MiqServer::RoleManagement
 
   def set_database_owner_role(active)
     dbowner    = ServerRole.database_owner
-    assigned   = self.assigned_server_roles.find_by_server_role_id(dbowner.id)
+    assigned   = self.assigned_server_roles.where(:server_role_id => dbowner.id).first
     assigned ||= self.assigned_server_roles.create(:server_role => dbowner, :priority => AssignedServerRole::DEFAULT_PRIORITY, :active => active)
 
     active ? assigned.activate : assigned.deactivate
@@ -86,7 +86,7 @@ module MiqServer::RoleManagement
 
   def is_master_for_role?(server_role)
     server_role = ServerRole.to_role(server_role)
-    assigned    = self.assigned_server_roles.find_by_server_role_id(server_role.id)
+    assigned    = self.assigned_server_roles.where(:server_role_id => server_role.id).first
     returned false if assigned.nil?
     assigned.priority == 1
   end
@@ -95,7 +95,7 @@ module MiqServer::RoleManagement
     server_role = ServerRole.to_role(server_role)
     if server_role.master_supported?
       self.zone.miq_servers.delete_if { |s| s.id == self.id }.each do |server|
-        assigned = server.assigned_server_roles.find_by_server_role_id(server_role.id)
+        assigned = server.assigned_server_roles.where(:server_role_id =>  server_role.id).first
         next if assigned.nil?
         server.assign_role(server_role, 2)  if assigned.priority == 1
       end
@@ -127,7 +127,7 @@ module MiqServer::RoleManagement
     self.zone.lock do
       val = val.to_s.strip.downcase
       if val.blank?
-        self.server_roles.delete(ServerRole.find(:all))
+        self.server_roles.delete(ServerRole.all)
       else
         desired = (val == "*" ? ServerRole.all_names : val.split(",").collect { |v| v.strip.downcase }.sort)
         current = self.server_role_names
@@ -259,9 +259,9 @@ module MiqServer::RoleManagement
   def monitor_server_roles
     MiqRegion.my_region.lock do |region|
       region.zones.each do |zone|
-        synchronize_active_roles(zone.active_miq_servers(:include => [:active_roles, :inactive_roles]), ServerRole.zone_scoped_roles)
+        synchronize_active_roles(zone.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.zone_scoped_roles)
       end
-      synchronize_active_roles(region.active_miq_servers(:include => [:active_roles, :inactive_roles]), ServerRole.region_scoped_roles)
+      synchronize_active_roles(region.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.region_scoped_roles)
     end
   end
 

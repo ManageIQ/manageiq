@@ -610,7 +610,7 @@ class MiqServer < ActiveRecord::Base
     end
 
     unless data.zone.nil?
-      self.zone = Zone.find_by_name(data.zone)
+      self.zone = Zone.where(:name => data.zone).first
       self.save
     end
     self.update_capabilities
@@ -632,7 +632,7 @@ class MiqServer < ActiveRecord::Base
     end
   end
 
-  cache_with_timeout(:my_server) { self.find_by_guid(self.my_guid) }
+  cache_with_timeout(:my_server) { self.where(:guid => self.my_guid).first }
 
   def self.my_zone(force_reload = false)
     self.my_server(force_reload).my_zone

@@ -56,7 +56,7 @@ class AssignedServerRole < ActiveRecord::Base
         method = "find_other_servers_in_#{self.server_role.role_scope}"
         other_servers = self.miq_server.send(method)
         other_servers.each do |server|
-          assigned = server.assigned_server_roles.find_by_server_role_id(self.server_role_id)
+          assigned = server.assigned_server_roles.where(:server_role_id => self.server_role_id).first
           next if assigned.nil?
           assigned.update_attribute(:priority, DEFAULT_PRIORITY)  if assigned.priority == HIGH_PRIORITY
         end
@@ -73,7 +73,7 @@ class AssignedServerRole < ActiveRecord::Base
       MiqRegion.my_region.lock do
         if self.server_role.master_supported?
           servers = MiqRegion.my_region.active_miq_servers
-          self.class.find(:all, :conditions => { :server_role_id => self.server_role.id } ).each do |asr|
+          self.class.where(:server_role_id => self.server_role.id).each do |asr|
             asr.deactivate if servers.include?(asr.miq_server)
           end
         end
@@ -100,7 +100,7 @@ class AssignedServerRole < ActiveRecord::Base
       self.miq_server.zone.lock do |zone|
         if self.server_role.master_supported?
           servers = self.miq_server.zone.active_miq_servers
-          self.class.find(:all, :conditions => { :server_role_id => self.server_role.id } ).each do |asr|
+          self.class.where(:server_role_id => self.server_role.id).each do |asr|
             asr.deactivate if servers.include?(asr.miq_server)
           end
         end
