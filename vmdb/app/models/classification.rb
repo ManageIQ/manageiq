@@ -185,8 +185,11 @@ class Classification < ActiveRecord::Base
   end
 
   def self.category_names_for_perf_by_tag(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
-    find_opts = {:conditions => {:parent_id => 0, :perf_by_tag => true}, :include => [:tag]}
-    self.in_region(region_id).all(find_opts).collect { |c| c.name if c.tag2ns(c.tag.name) == ns }.compact
+    self.in_region(region_id)
+      .where(:parent_id => 0, :perf_by_tag => true)
+      .includes(:tag)
+      .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
+      .compact
   end
 
   def self.find_assigned_entries(obj, ns=DEFAULT_NAMESPACE)
