@@ -1,6 +1,6 @@
 class MiqPolicyContent < ActiveRecord::Base
   belongs_to :miq_policy
-  belongs_to :miq_event
+  belongs_to :miq_event_definition
   belongs_to :miq_action
 
   def get_action(qualifier = nil)
@@ -24,9 +24,9 @@ class MiqPolicyContent < ActiveRecord::Base
 
   def export_to_array
     h = self.attributes
-    ["id", "created_on", "updated_on", "miq_policy_id", "miq_event_id", "miq_action_id"].each { |k| h.delete(k) }
+    ["id", "created_on", "updated_on", "miq_policy_id", "miq_event_definition_id", "miq_action_id"].each { |k| h.delete(k) }
     h.delete_if { |k,v| v.nil? }
-    h["MiqEvent"]  = self.miq_event.export_to_array.first["MiqEvent"]
+    h["MiqEventDefinition"]  = self.miq_event_definition.export_to_array.first["MiqEventDefinition"]
     h["MiqAction"] = self.miq_action.export_to_array.first["MiqAction"] if self.miq_action
     return [ self.class.to_s => h ]
   end
