@@ -58,7 +58,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def self.my_region
-    self.find_by_region(self.my_region_number)
+    self.where(:region => self.my_region_number).first
   end
 
   def self.seed

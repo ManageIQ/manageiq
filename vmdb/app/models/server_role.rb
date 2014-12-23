@@ -24,7 +24,7 @@ class ServerRole < ActiveRecord::Base
         action = {}
         cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
 
-        rec = self.find_by_name(action[:name])
+        rec = self.where(:name => (action[:name])).first
         if rec.nil?
           $log.info("MIQ(ServerRole.seed) Creating Server Role [#{action[:name]}]")
           rec = self.create(action)
@@ -44,7 +44,7 @@ class ServerRole < ActiveRecord::Base
     # server_role can either be a Role Name (string or symbol) or an instance of a ServerRole
     unless server_role.kind_of?(ServerRole)
       role_name   = server_role.to_s.strip.downcase
-      server_role = ServerRole.find_by_name(role_name)
+      server_role = ServerRole.where(:name => role_name).first
       raise "Role <#{role_name}> not defined in server_roles table" if server_role.nil?
     end
 

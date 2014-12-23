@@ -69,7 +69,7 @@ module MiqServer::RoleManagement
 
     roles = (roles.length == 1 && roles[0] == "*") ? self.server_roles : ServerRole.find_all_by_name(roles)
     ids   = roles.collect { |r| r.id }
-    self.assigned_server_roles.find_all_by_server_role_id(ids).each do |a|
+    self.assigned_server_roles.where(:server_role_id => (ids)).each do |a|
       next if a.database_owner?
       next if a.active == active
       active ? a.activate : a.deactivate
