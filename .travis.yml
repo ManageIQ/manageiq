@@ -2,6 +2,7 @@ language: ruby
 rvm:
 - "2.0"
 - "2.1"
+- "2.2"
 sudo: false
 cache: bundler
 bundler_args: --without development:metric_fu:qpid
@@ -18,6 +19,8 @@ env:
 matrix:
   allow_failures:
   - rvm: "2.1"
+    env: "TEST_SUITE=vmdb        TEST_ROOT=vmdb"
+  - rvm: "2.2"
     env: "TEST_SUITE=vmdb        TEST_ROOT=vmdb"
   fast_finish: true
 addons:
