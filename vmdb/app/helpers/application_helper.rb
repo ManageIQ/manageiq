@@ -56,7 +56,7 @@ module ApplicationHelper
                              User.current_user.role_allows?(:identifier => options[:feature])
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
     elsif options[:main_tab_id] # FIXME: used only in tab definition
-      tab = NavbarGenerator.tab_features_by_id(options[:main_tab_id])
+      tab = Menu::Manager.tab_features_by_id(options[:main_tab_id])
       auth = User.current_user.role_allows_any?(:identifiers => tab)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], main tab [#{options[:main_tab]}]")
     else
@@ -2496,7 +2496,7 @@ module ApplicationHelper
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
 
-    NavbarGenerator::item_in_section?(test_layout, nav_id) ? "active" : "inactive"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "inactive"
   end
 
   def secondary_nav_class(nav_layout)

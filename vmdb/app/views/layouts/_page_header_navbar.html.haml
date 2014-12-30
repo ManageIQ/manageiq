@@ -1,6 +1,6 @@
 .navbar
   %ul#maintab
-    -NavbarGenerator.menu.each do |menu_section|
+    -Menu::Manager.menu.each do |menu_section|
       -if role_allows(:main_tab_id => menu_section.id)
         %li(class="#{primary_nav_class(menu_section.id)}")
           %a{:href    => "/dashboard/maintab/?tab=#{menu_section.id}",

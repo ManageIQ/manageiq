@@ -101,7 +101,7 @@ describe DashboardController do
         seed_specific_product_features(feature)
         session[:tab_url] = {}
         post :maintab, :tab => tab
-        url_controller = NavbarGenerator.tab_features_by_id(tab).find { |f| f.ends_with?("_accords") }
+        url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_accords") }
         response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
     end
