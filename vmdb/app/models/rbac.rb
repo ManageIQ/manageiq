@@ -442,10 +442,17 @@ module Rbac
   end
 
   def self.method_with_scope(klass, scope, *meth)
+    apply_scope(klass, scope).send(*meth)
+  end
+
+  def self.apply_scope(klass, scope)
     scope_name = scope.to_miq_a.first
-    return klass.send(*meth)  if scope_name == NO_SCOPE
-    raise "Named scope '#{scope_name}' is not defined for class '#{klass.name}'" unless klass.respond_to?(scope_name)
-    return klass.send(*scope).send(*meth)
+    if scope_name == NO_SCOPE
+      klass
+    else
+      raise "Named scope '#{scope_name}' is not defined for class '#{klass.name}'" unless klass.respond_to?(scope_name)
+      klass.send(*scope)
+    end
   end
 
   def self.get_belongsto_matches(blist, klass)
