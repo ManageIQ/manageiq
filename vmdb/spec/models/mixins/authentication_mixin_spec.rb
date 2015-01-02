@@ -129,25 +129,25 @@ describe AuthenticationMixin do
       it "Host.authentication_check_schedule will enqueue for current zone" do
         Host.authentication_check_schedule
         MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host1.id, :zone => @host1.my_zone).should be_true
-        MiqQueue.count(:conditions => {:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id}).should == 0
+        MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id).count.should == 0
       end
 
       it "Ems.authentication_check_schedule will enqueue for current zone" do
         ExtManagementSystem.authentication_check_schedule
         MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :zone => @ems1.my_zone ).should be_true
-        MiqQueue.count(:conditions => {:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id} ).should == 0
+        MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count.should == 0
       end
 
       it "Host.authentication_check_schedule will enqueue for role 'smartstate' for current zone" do
         Host.authentication_check_schedule
         MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host1.id, :zone => @host1.my_zone, :role => @host1.authentication_check_role).should be_true
-        MiqQueue.count(:conditions => {:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id }).should ==0
+        MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id).count.should ==0
       end
 
       it "Ems.authentication_check_schedule will enqueue for role 'ems_operations' for current zone" do
         ExtManagementSystem.authentication_check_schedule
         MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :role => @ems1.authentication_check_role).should be_true
-        MiqQueue.count(:conditions => {:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id } ).should == 0
+        MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count.should == 0
       end
     end
 
@@ -283,7 +283,7 @@ describe AuthenticationMixin do
       it "Host#authentication_check_types_queue with [:ssh, :default], :remember_host => true is passed down to verify_credentials" do
         @host.authentication_check_types_queue([:ssh, :default], :remember_host => true)
         conditions = {:class_name => @host.class.name, :instance_id => @host.id, :method_name => 'authentication_check_types', :role => @host.authentication_check_role}
-        queued_auth_checks = MiqQueue.find(:all, :conditions => conditions)
+        queued_auth_checks = MiqQueue.where(conditions)
         queued_auth_checks.length.should == 1
         Host.any_instance.should_receive(:verify_credentials).with(:default, :remember_host => true)
         Host.any_instance.should_receive(:verify_credentials).with(:ssh, :remember_host => true)
@@ -293,7 +293,7 @@ describe AuthenticationMixin do
       it "Ems#authentication_check_types_queue with :default, :test => true will not pass :remember_host => true to verify_credentials call" do
         @ems.authentication_check_types_queue(:default, :remember_host => true)
         conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
-        queued_auth_checks = MiqQueue.find(:all, :conditions => conditions)
+        queued_auth_checks = MiqQueue.where(conditions)
         queued_auth_checks.length.should == 1
         EmsVmware.any_instance.should_receive(:verify_credentials).with(:default)
         queued_auth_checks.first.deliver
@@ -359,7 +359,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise authentication invalid event when doing authentication_check" do
           @host.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@host.class.name, @host.id], 'host_auth_invalid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -381,7 +381,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise authentication invalid event when doing authentication_check" do
           @ems.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@ems.class.name, @ems.id], 'ems_auth_invalid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -403,7 +403,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise authentication valid event when doing authentication_check" do
           @host.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@host.class.name, @host.id], 'host_auth_valid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -425,7 +425,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise authentication valid event when doing authentication_check" do
           @ems.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@ems.class.name, @ems.id], 'ems_auth_valid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -447,7 +447,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise host authentication unreachable event when doing authentication_check" do
           @host.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@host.class.name, @host.id], 'host_auth_unreachable', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -469,7 +469,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise ems authentication unreachable event when doing authentication_check" do
           @ems.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@ems.class.name, @ems.id], 'ems_auth_unreachable', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -491,7 +491,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise host authentication error event when doing authentication_check" do
           @host.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@host.class.name, @host.id], 'host_auth_invalid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -513,7 +513,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise ems authentication error event when doing authentication_check" do
           @ems.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@ems.class.name, @ems.id], 'ems_auth_invalid', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -535,7 +535,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise host authentication error event when doing authentication_check" do
           @host.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@host.class.name, @host.id], 'host_auth_error', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -557,7 +557,7 @@ describe AuthenticationMixin do
 
         it "should queue a raise ems authentication error event when doing authentication_check" do
           @ems.authentication_check
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
           args = [ [@ems.class.name, @ems.id], 'ems_auth_error', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
@@ -608,7 +608,7 @@ describe AuthenticationMixin do
 
       it "should queue a raise authentication change event when calling update_authentication" do
         @ems.update_authentication(@data, :save => true)
-        events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+        events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
         args = [ [@ems.class.name, @ems.id], 'ems_auth_changed', {}]
         events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
       end
@@ -641,7 +641,7 @@ describe AuthenticationMixin do
         before(:each) do
           @ems.update_authentication(@data, :save => true)
           @conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
-          @queued_auth_checks = MiqQueue.find(:all, :conditions => @conditions)
+          @queued_auth_checks = MiqQueue.where(@conditions)
         end
 
         it "should queue validation of authentication" do
@@ -651,7 +651,7 @@ describe AuthenticationMixin do
         it "should queue only 1 auth validation per ci" do
           @ems.authentication_check_types_queue(:default)
           @ems.authentication_check_types_queue(:default)
-          MiqQueue.count(:conditions => @conditions).should == 1
+          MiqQueue.where(@conditions).count.should == 1
         end
 
         it "should call authentication_check when processing the validation check" do

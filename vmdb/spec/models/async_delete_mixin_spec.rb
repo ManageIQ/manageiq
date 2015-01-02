@@ -40,10 +40,10 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "destroy" ]
 
       lambda { @obj.destroy_queue }.should_not raise_error
-      MiqQueue.count(:conditions => cond ).should == 1
+      MiqQueue.where(cond).count.should == 1
       @obj.class.any_instance.should_receive(:destroy).once
 
-      queue_message = MiqQueue.find(:first, :conditions => cond )
+      queue_message = MiqQueue.where(cond).first
       status, message, result = queue_message.deliver
       queue_message.delivered(status, message, result)
       queue_message.state.should == "ok"
@@ -56,10 +56,10 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "destroy" ]
 
       lambda {@obj.class.destroy_queue(ids) }.should_not raise_error
-      MiqQueue.count(:conditions => cond ).should == ids.length
+      MiqQueue.where(cond).count.should == ids.length
       count = @obj.class.count
 
-      queue_messages = MiqQueue.find(:all, :conditions => cond )
+      queue_messages = MiqQueue.where(cond)
       queue_messages.each do |queue_message|
         status, message, result = queue_message.deliver
         queue_message.delivered(status, message, result)
@@ -74,10 +74,10 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "delete" ]
 
       lambda {@obj.delete_queue }.should_not raise_error
-      MiqQueue.count(:conditions => cond ).should == 1
+      MiqQueue.where(cond).count.should == 1
       @obj.class.any_instance.should_receive(:delete).once
 
-      queue_message = MiqQueue.find(:first, :conditions => cond )
+      queue_message = MiqQueue.where(cond).first
       status, message, result = queue_message.deliver
       queue_message.delivered(status, message, result)
       queue_message.state.should == "ok"
@@ -90,10 +90,10 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "delete" ]
 
       lambda {@obj.class.delete_queue(ids) }.should_not raise_error
-      MiqQueue.count(:conditions => cond ).should == ids.length
+      MiqQueue.where(cond).count.should == ids.length
       count = @obj.class.count
 
-      queue_messages = MiqQueue.find(:all, :conditions => cond )
+      queue_messages = MiqQueue.where(cond)
       queue_messages.each do |queue_message|
         status, message, result = queue_message.deliver
         queue_message.delivered(status, message, result)
