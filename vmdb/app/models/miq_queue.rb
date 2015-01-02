@@ -165,7 +165,7 @@ class MiqQueue < ActiveRecord::Base
     msgs.each do |msg|
       begin
         $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        w = MiqWorker.server_scope.find_by_pid(Process.pid)
+        w = MiqWorker.server_scope.where(:pid => Process.pid).first
         if w.nil?
           msg.update_attributes!(:state => STATE_DEQUEUE, :handler => MiqServer.my_server)
         else
@@ -522,7 +522,7 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def self.get_worker(task_id)
-    msg = self.find_by_task_id(task_id)
+    msg = self.where(:task_id => task_id).first
     return nil if msg.nil?
     msg.get_worker
   end
