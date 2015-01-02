@@ -25,7 +25,7 @@ module ActiveRecord
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
         end
 
-        data
+        data.to_a
       end
 
       def raw_activity_stats
@@ -96,7 +96,7 @@ module ActiveRecord
 
         end
 
-        data
+        data.to_a
       end
 
       def cooked_activity_stats
@@ -191,7 +191,7 @@ module ActiveRecord
           datum.keys.each { |key| datum[key] ||= "" }
         end
 
-        data
+        data.to_a
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -289,7 +289,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -384,7 +384,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -543,7 +543,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       def table_statistics
@@ -593,7 +593,7 @@ module ActiveRecord
           timestamp_columns.each { |c| datum[c] = ActiveRecord::Type::Time.new.type_cast_from_user(datum[c]) }
         end
 
-        data
+        data.to_a
       end
 
       # Provide the database statistics for all tables and indexes
@@ -613,7 +613,7 @@ module ActiveRecord
           s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
         end
 
-        stats
+        stats.to_a
       end
 
       def table_size
@@ -635,7 +635,7 @@ module ActiveRecord
           s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
         end
 
-        stats
+        stats.to_a
       end
 
       def table_total_size(table)
@@ -809,7 +809,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       def table_metrics_analysis(table_name)
@@ -859,7 +859,7 @@ module ActiveRecord
           timestamp_columns.each { |c| datum[c] = ActiveRecord::Type::Time.new.type_cast_from_user(datum[c]) }
         end
 
-        data
+        data.to_a
       end
 
       def table_metrics_total_size(table_name)
@@ -960,7 +960,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       def index_metrics_analysis(index_name)
@@ -990,7 +990,7 @@ module ActiveRecord
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
         end
 
-        data
+        data.to_a
       end
 
       def index_metrics_total_size(index_name)
