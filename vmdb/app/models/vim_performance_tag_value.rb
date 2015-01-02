@@ -101,7 +101,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
               result[c] ||= 0
               counts[c] ||= 0
               value = value * 1.0 unless value.nil?
-              Metric::Aggregation.aggregate_average(c, nil, result, counts, value)
+              Metric::Aggregation::Aggregate.average(c, nil, result, counts, value)
             else
               assoc = perf.resource.class.table_name.to_sym
               result[c] ||= {assoc => {:on => []}}
@@ -121,7 +121,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
       col, tag = key.to_s.split(TAG_SEP)
       category = tag.split("/").first
       tag_name = tag.split("/").last
-      Metric::Aggregation.process_average(key, nil, result, counts) unless col.to_s.starts_with?("assoc_ids") || col.to_s.starts_with?("derived_storage_vm_count")
+      Metric::Aggregation::Process.average(key, nil, result, counts) unless col.to_s.starts_with?("assoc_ids") || col.to_s.starts_with?("derived_storage_vm_count")
       new_rec = {
         :association_type => association_type,
         :category         => category,
