@@ -77,7 +77,7 @@ class Zone < ActiveRecord::Base
   end
 
   def self.default_zone
-    self.find_by_name("default")
+    self.where(:name => "default").first
   end
 
   # The zone to use when inserting a record into MiqQueue
