@@ -6,7 +6,7 @@ describe ProviderForeman do
   end
 
   let(:provider) do
-    described_class.new(:name => "x", :hostname => "example.com").tap do |csf|
+    described_class.new(:name => "x", :url => "example.com").tap do |csf|
       csf.authentications << authentication
     end
   end
@@ -24,7 +24,7 @@ describe ProviderForeman do
     end
 
     context "with a port" do
-      before { provider.port = 555 }
+      before { provider.url = "example.com:555" }
 
       it "has all authentication attributes" do
         expect(provider.connection_attrs).to eq(

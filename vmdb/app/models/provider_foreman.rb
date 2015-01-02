@@ -6,7 +6,7 @@ class ProviderForeman < Provider
 
   def connection_attrs
     {
-      :base_url   => port ? "#{hostname}:#{port}" : hostname,
+      :base_url   => url,
       :username   => authentication_userid,
       :password   => authentication_password,
       :verify_ssl => verify_ssl

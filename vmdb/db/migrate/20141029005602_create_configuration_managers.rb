@@ -9,6 +9,7 @@ class CreateConfigurationManagers < ActiveRecord::Migration
 
     create_table :configuration_profiles do |t|
       t.string     :name
+      t.string     :description
       t.belongs_to :operating_system_flavor, :type => :bigint
       t.belongs_to :provider,                :type => :bigint
       t.belongs_to :configuration_manager,   :type => :bigint
@@ -22,6 +23,7 @@ class CreateConfigurationManagers < ActiveRecord::Migration
     create_table :configured_systems do |t|
       t.string     :hostname
       t.belongs_to :operating_system_flavor, :type => :bigint
+      t.belongs_to :configuration_profile,    :type => :bigint
       t.belongs_to :provider,                :type => :bigint
       t.belongs_to :configuration_manager,   :type => :bigint
       t.string     :provider_ref
@@ -34,8 +36,7 @@ class CreateConfigurationManagers < ActiveRecord::Migration
 
     create_table :providers do |t|
       t.string  :name
-      t.string  :hostname
-      t.integer :port
+      t.string  :url
       t.integer :verify_ssl
       t.string  :type
       t.string  :guid, :limit => 36
