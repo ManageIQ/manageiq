@@ -590,7 +590,7 @@ module ActiveRecord
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
-          timestamp_columns.each { |c| datum[c] = ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_time(datum[c]) }
+          timestamp_columns.each { |c| datum[c] = ActiveRecord::Type::Time.new.type_cast_from_user(datum[c]) }
         end
 
         data
@@ -856,7 +856,7 @@ module ActiveRecord
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
-          timestamp_columns.each { |c| datum[c] = ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_time(datum[c]) }
+          timestamp_columns.each { |c| datum[c] = ActiveRecord::Type::Time.new.type_cast_from_user(datum[c]) }
         end
 
         data
@@ -1017,7 +1017,7 @@ module ActiveRecord
         start_time = select_value(<<-SQL, "Select last start date/time")
                                      SELECT pg_postmaster_start_time()
                                   SQL
-        last_start_time = ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_time(start_time)
+        ActiveRecord::Type::Time.new.type_cast_from_user(start_time)
       end
 
       def analyze_table(table)
