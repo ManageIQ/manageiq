@@ -158,7 +158,7 @@ class MiqQueue < ActiveRecord::Base
     ]
 
     prefetch_max_per_worker = self.vmdb_config.config[:server][:prefetch_max_per_worker] || 10
-    msgs = MiqQueue.find(:all, :conditions => cond, :order => "priority, id", :limit => prefetch_max_per_worker)
+    msgs = MiqQueue.where(cond).order("priority, id").limit(prefetch_max_per_worker)
     return nil if msgs.empty? # Nothing available in the queue
 
     result = nil

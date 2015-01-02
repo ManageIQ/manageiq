@@ -128,7 +128,7 @@ describe MiqServer do
         MiqQueue.destroy_all
         @cond = {:method_name => 'ntp_reload', :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name }
         @miq_server.ntp_reload_queue
-        @message = MiqQueue.find(:first, :conditions => @cond)
+        @message = MiqQueue.where(@cond).first
       end
 
       it "will queue up a message" do
