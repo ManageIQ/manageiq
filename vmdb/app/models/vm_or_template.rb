@@ -508,7 +508,7 @@ class VmOrTemplate < ActiveRecord::Base
   def self.validate_tasks(options)
     tasks = []
 
-    vms = self.base_class.find_all_by_id(options[:ids], :order => "lower(name)")
+    vms = base_class.where(:id => options[:ids]).order("lower(name)")
     return vms, tasks unless options[:invoke_by] == :task # jobs will be used instead of tasks for feedback
 
     vms.each do |vm|
@@ -1828,7 +1828,7 @@ class VmOrTemplate < ActiveRecord::Base
   # Called from integrate ws to kick off scan for vdi VMs
   def self.vms_by_ipaddress(ipaddress)
     ipaddresses = ipaddress.split(',')
-    Network.find(:all, :conditions => ["ipaddress in (?)", ipaddresses]).each do |network|
+    Network.where(["ipaddress in (?)", ipaddresses]).each do |network|
       begin
         vm = network.hardware.vm
         yield(vm)
