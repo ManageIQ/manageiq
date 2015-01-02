@@ -1,6 +1,8 @@
 class Provider < ActiveRecord::Base
   include AuthenticationMixin
 
+  belongs_to :zone
+
   def verify_ssl=(val)
     val = case val
           when true then OpenSSL::SSL::VERIFY_PEER

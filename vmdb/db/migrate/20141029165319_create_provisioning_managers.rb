@@ -11,15 +11,6 @@ class CreateProvisioningManagers < ActiveRecord::Migration
     add_index :customization_scripts, :provider_id
     add_index :customization_scripts, :provider_ref
 
-    create_table :customization_script_refs do |t|
-      t.belongs_to :customization_script,    :type => :bigint
-      t.belongs_to :ref, :type => :bigint, :polymorphic => true
-    end
-    add_index :customization_script_refs, [:customization_script_id, :ref_id],
-              :name => :customization_script_refs_i1
-    add_index :customization_script_refs, [:ref_id, :ref_type, :customization_script_id],
-              :name => :customization_script_refs_i2
-
     create_table :operating_system_flavors do |t|
       t.string     :name
       t.string     :description
@@ -31,6 +22,15 @@ class CreateProvisioningManagers < ActiveRecord::Migration
     add_index :operating_system_flavors, :provider_id
     add_index :operating_system_flavors, :provider_ref
 
+    create_table :customization_scripts_operating_systems, :id => false do |t|
+      t.belongs_to :customization_script,    :type => :bigint
+      t.belongs_to :operating_system_flavor,   :type => :bigint
+    end
+    add_index :customization_scripts_operating_systems, [:operating_system_flavor_id, :customization_script_id],
+              :name => :customization_scripts_operating_systems_i1
+    add_index :customization_scripts_operating_systems, [:customization_script_id, :operating_system_flavor_id],
+              :name => :customization_scripts_operating_systems_i2
+
     create_table :provision_managers do |t|
       t.belongs_to :provider, :type => :bigint
       t.string     :type
@@ -41,8 +41,8 @@ class CreateProvisioningManagers < ActiveRecord::Migration
 
   def down
     drop_table :provision_managers
+    drop_table :customization_scripts_operating_systems
     drop_table :operating_system_flavors
-    drop_table :customization_script_refs
     drop_table :customization_scripts
   end
 end
