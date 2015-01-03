@@ -441,8 +441,20 @@ module Rbac
     return targets, attrs
   end
 
+  def self.apply_options(ar_scope, options)
+    [
+      [:conditions, :where],
+      [:include, :includes],
+      [:limit, :limit],
+      [:order, :order],
+      [:offset, :offset],
+    ].inject(ar_scope) { |scope, (key, method)|
+      scope.send(method, options[key])
+    }
+  end
+
   def self.method_with_scope(ar_scope, options)
-    ar_scope.find(:all, options)
+    apply_options(ar_scope, options).all
   end
 
   def self.apply_scope(klass, scope)
