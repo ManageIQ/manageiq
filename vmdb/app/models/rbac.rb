@@ -176,7 +176,7 @@ module Rbac
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
       $log.debug("MIQ(RBAC.find_targets_filtered_by_parent_ids): New Find options: #{find_options.inspect}")
     end
-    targets     = self.method_with_scope(apply_scope(klass, scope), :find, :all, find_options)
+    targets     = self.method_with_scope(apply_scope(klass, scope), find_options)
     auth_count  = apply_scope(klass, scope).where(find_options[:conditions]).includes(find_options[:include]).count
 
     return targets, total_count, auth_count
@@ -190,7 +190,7 @@ module Rbac
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
       $log.debug("MIQ(RBAC.find_targets_filtered_by_ids): New Find options: #{find_options.inspect}")
     end
-    targets     = self.method_with_scope(apply_scope(klass, scope), :find, :all, find_options)
+    targets     = self.method_with_scope(apply_scope(klass, scope), find_options)
     auth_count  = klass.count(:conditions => find_options[:conditions], :include => find_options[:include])
 
     return targets, total_count, auth_count
@@ -246,7 +246,7 @@ module Rbac
   end
 
   def self.find_targets_without_rbac(klass, scope, find_options = {})
-    targets     = self.method_with_scope(apply_scope(klass, scope), :find, :all, find_options)
+    targets     = self.method_with_scope(apply_scope(klass, scope), find_options)
     total_count = find_options[:limit] ? apply_scope(klass, scope).where(find_options[:conditions]).includes(find_options[:include]).count : targets.length
 
     return targets, total_count, total_count
@@ -441,8 +441,8 @@ module Rbac
     return targets, attrs
   end
 
-  def self.method_with_scope(ar_scope, *meth)
-    ar_scope.send(*meth)
+  def self.method_with_scope(ar_scope, options)
+    ar_scope.find(:all, options)
   end
 
   def self.apply_scope(klass, scope)
