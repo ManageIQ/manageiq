@@ -205,7 +205,7 @@ module Rbac
   def self.get_managed_filter_object_ids(klass, scope, filter)
     return nil if filter.nil? || filter.empty?
     return nil unless TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name)
-    self.method_with_scope(apply_scope(klass, scope), :find_tags_by_grouping, filter, :ns=>'*', :select => self.minimum_columns_for(klass)).collect(&:id)
+    apply_scope(klass, scope).find_tags_by_grouping(filter, :ns=>'*', :select => self.minimum_columns_for(klass)).collect(&:id)
   end
 
   def self.find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
