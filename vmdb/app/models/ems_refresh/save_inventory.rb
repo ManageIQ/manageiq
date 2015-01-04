@@ -2,8 +2,9 @@ module EmsRefresh::SaveInventory
 
   def save_ems_inventory(ems, hashes, target = nil)
     case ems
-    when EmsCloud; save_ems_cloud_inventory(ems, hashes, target)
-    when EmsInfra; save_ems_infra_inventory(ems, hashes, target)
+    when EmsCloud;     save_ems_cloud_inventory(ems, hashes, target)
+    when EmsInfra;     save_ems_infra_inventory(ems, hashes, target)
+    when EmsContainer; save_ems_container_inventory(ems, hashes, target)
     end
   end
 
