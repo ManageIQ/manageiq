@@ -9,7 +9,7 @@ module Menu
     def load_custom_items
       @sections = []
       @items    = []
-      Dir.glob(File.join(File.dirname(__FILE__), "../../product/menubar/*.yml")).each do |f|
+      Dir.glob(File.join(File.dirname(__FILE__), "../../../product/menubar/*.yml")).each do |f|
         load_custom_item(f)
       end
       [@sections, @items]
@@ -40,7 +40,11 @@ module Menu
     end
 
     def create_custom_menu_section(properties)
-      Section.new(properties['id'].to_sym, properties['name'], [])
+      if properties.key?('section_type')
+        Section.new(properties['id'].to_sym, properties['name'], [], properties['section_type'].to_sym)
+      else
+        Section.new(properties['id'].to_sym, properties['name'])
+      end
     end
   end
 end

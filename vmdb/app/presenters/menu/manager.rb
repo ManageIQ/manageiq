@@ -9,11 +9,15 @@ module Menu
                 :each_feature_title_with_subitems, :item_in_section?] => :instance
     end
 
-    attr_reader :menu
-
     private
 
     class InvalidMenuDefinition < Exception
+    end
+
+    def menu(type = :default, &block)
+      @menu.each do |menu_section|
+        yield menu_section if menu_section.type == type
+      end
     end
 
     def item_in_section?(item_id, section_id)
