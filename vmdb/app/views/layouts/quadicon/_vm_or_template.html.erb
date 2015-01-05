@@ -45,21 +45,6 @@
 	<% end %>
 <% end %>
 
-<% if false %>
-<%# unless vm.last_sync_on == nil %>
-	<% if item.last_scan_on == nil || item.last_scan_on > item.last_sync_on %>
-		<div class="flobj" ><img src="/images/icons/<%= size %>/blackboxed-unsynced.png"></div>
-	<% else %>
-		<div class="flobj" ><img src="/images/icons/<%= size %>/blackboxed.png"></div>
-	<% end %>
-<% end %>
-
-<% if get_vmdb_config[:product][:proto] %><%# Hide behind proto setting - Sprint 34 %>
-	<% if item.has_blackbox? %>
-		<div class="flobj" ><img src="/images/icons/<%= size %>/blackboxed.png"></div>
-	<% end %>
-<% end %>
-
 <% if typ == :listnav %><%# Listnav, no href needed %>
 	<!-- <div class="flobj" ><img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/></div> -->
 <% else %>
