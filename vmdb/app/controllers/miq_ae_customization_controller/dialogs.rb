@@ -897,6 +897,8 @@ module MiqAeCustomizationController::Dialogs
       end
 
       if @edit[:field_typ] != params[:field_typ]
+        @edit[:field_dynamic] = key[:dynamic] = false
+
         if params[:field_typ].include?("TextBox")
           @edit[:field_protected]      = key[:protected] = false
           @edit[:field_validator_type] = key[:validator_type] = nil
