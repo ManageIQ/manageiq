@@ -43,7 +43,7 @@
             <div id="automate_buttons_off" style="display:<%= @changed ? "none" : "display" %>;">
               <%= button_tag("Apply",	:class => "btn btn-primary btn-disabled") %>
               <%= link_to(button_tag('Cancel',
-                                     :class => "btn btn-disabled",
+                                     :class => "btn btn-default",
                                      :alt   => 'Cancel'),
                           {:action => "ae_tree_select_toggle",
                            :button => "cancel"},
