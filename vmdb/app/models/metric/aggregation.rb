@@ -1,22 +1,17 @@
 module Metric::Aggregation
   module Aggregate
-    def self.average(col, obj, result, counts, value)
-      return if value.nil?
-      result[col] += value
-      counts[col] += 1
-    end
-
-    def self.summation(col, obj, result, counts, value)
+    def self.summation(col, _obj, result, counts, value)
       return if value.nil?
       result[col] += value
       counts[col] += 1
     end
 
     class << self
-      alias derived_vm_numvcpus summation
+      alias_method :derived_vm_numvcpus, :summation
+      alias_method :average, :summation
     end
 
-    def self.latest(col, obj, result, counts, value)
+    def self.latest(col, _obj, result, _counts, value)
       return if value.nil?
       result[col] = value
     end
@@ -24,53 +19,49 @@ module Metric::Aggregation
     def self.cpu_usage_rate_average(col, state, result, counts, value)
       return if value.nil?
       if state && state.total_cpu
-        pct = ( value / 100 )
+        pct = value / 100
         total = state.total_cpu
-        value = ( total * pct )
+        value = total * pct
         result[col] += value
       else
-        self.average(col, state, result, counts, value)
+        average(col, state, result, counts, value)
       end
     end
 
     def self.mem_usage_absolute_average(col, state, result, counts, value)
       return if value.nil?
       if state && state.total_mem
-        pct = ( value / 100 )
+        pct = value / 100
         total = state.total_mem
-        value = ( total * pct )
+        value = total * pct
         result[col] += value
       else
-        self.average(col, state, result, counts, value)
+        average(col, state, result, counts, value)
       end
     end
   end
 
   module Process
-    def self.average(col, dummy, result, counts, aggregate_only = false)
+    def self.average(col, _dummy, result, counts, aggregate_only = false)
       return if aggregate_only || result[col].nil?
-      result[col] = ( result[col] / counts[col] ) unless counts[col] == 0
+      result[col] = result[col] / counts[col] unless counts[col] == 0
     end
 
-    def self.summation(*args)
+    def self.summation(*)
       # noop
     end
 
     class << self
-      alias derived_vm_numvcpus   summation
-    end
-
-    def self.latest(*args)
-      # noop
+      alias_method :latest, :summation
     end
 
     def self.cpu_usage_rate_average(col, state, result, counts, aggregate_only = false)
       return if result[col].nil?
       if state && state.total_cpu
         total = state.total_cpu
-        result[col] = ( result[col] / total * 100 ) unless total == 0
+        result[col] = result[col] / total * 100 unless total == 0
       else
-        self.average(col, state, result, counts) unless aggregate_only
+        average(col, state, result, counts) unless aggregate_only
       end
     end
 
@@ -78,19 +69,19 @@ module Metric::Aggregation
       return if result[col].nil?
       if state && state.total_mem
         total = state.total_mem
-        result[col] = ( result[col] / total * 100 ) unless total == 0
+        result[col] = result[col] / total * 100 unless total == 0
       else
-        self.average(col, state, result, counts) unless aggregate_only
+        average(col, state, result, counts) unless aggregate_only
       end
     end
   end
 
   def self.aggregate_for_column(*args)
-    self.execute_for_column(Aggregate, *args)
+    execute_for_column(Aggregate, *args)
   end
 
   def self.process_for_column(*args)
-    self.execute_for_column(Process, *args)
+    execute_for_column(Process, *args)
   end
 
   def self.execute_for_column(mode, col, *args) # args => obj, result, counts, value, default_operation = nil
