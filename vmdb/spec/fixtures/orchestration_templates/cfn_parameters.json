@@ -1,0 +1,54 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Incomplete sample template for testing parsing of various parameters",
+
+  "Parameters" : {
+
+    "KeyName" : {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+      "Type" : "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
+    },
+
+    "WebServerInstanceType" : {
+      "Description" : "WebServer Server EC2 instance type",
+      "Type" : "String",
+      "Default" : "m1.small",
+      "AllowedValues" : [ "t2.small", "t2.medium", "m1.small" ]
+,
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "SecondaryIPAddressCount" : {
+      "Type" : "Number",
+      "Default" : "1",
+      "MinValue" : "1",
+      "MaxValue" : "5",
+      "Description" : "Number of secondary IP addresses to assign to the network interface (1-5)",
+      "ConstraintDescription": "must be a number from 1 to 5."
+    },
+
+    "MasterUserPassword": {
+      "Description": "The password associated with the aster user account for the redshift cluster that is being created. ",
+      "Type": "String",
+      "NoEcho": "true",
+      "MinLength": "1",
+      "MaxLength": "41",
+      "AllowedPattern" : "[a-zA-Z0-9]*",
+      "ConstraintDescription" : "must contain only alphanumeric characters."
+    },
+
+    "Subnets" : {
+      "Type" : "List<AWS::EC2::Subnet::Id>",
+      "Description" : "The list of SubnetIds in your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be a list of an existing subnets in the selected Virtual Private Cloud."
+    },
+
+    "AZs" : {
+      "Type" : "List<String>",
+      "Description" : "The list of AvailabilityZones for your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be a list if valid EC2 availability zones for the selected Virtual Private Cloud"
+    }
+  }
+}
