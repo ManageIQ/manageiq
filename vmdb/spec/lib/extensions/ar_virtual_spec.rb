@@ -104,6 +104,7 @@ describe VirtualFields do
       class TestClass < TestClassBase
         def self.columns_hash;         {"col1" => OpenStruct.new(:name => "col1")}; end
         def self.reflections;          {:ref1  => OpenStruct.new(:name => :ref1, :options => {}, :klass => TestClass)};  end
+        def self.reflect_on_association(name); reflections[name]; end
 
         def self.columns;              columns_hash.values; end
         def self.column_names;         ["col1"]; end

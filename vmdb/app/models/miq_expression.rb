@@ -667,7 +667,7 @@ class MiqExpression
         db, field = exp[operator]["field"].split(".")
         model = db.constantize
         assoc, field = field.split("-")
-        ref = model.reflections[assoc.to_sym]
+        ref = model.reflect_on_association(assoc.to_sym)
         inner_where = "#{field} = '#{exp[operator]["value"]}'"
         if cond = ref.options.fetch(:conditions, nil)          # Include ref.options[:conditions] in inner select if exists
           cond = ref.options[:class_name].constantize.send(:sanitize_sql_for_assignment, cond)
@@ -782,7 +782,7 @@ class MiqExpression
       elsif exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 2
         db, field = exp[operator]["field"].split(".")
         assoc, field = field.split("-")
-        ref = db.constantize.reflections[assoc.to_sym]
+        ref = db.constantize.reflect_on_association(assoc.to_sym)
         return false unless ref
         return false unless ref.macro == :has_many || ref.macro == :has_one
         return false if ref.options && ref.options.has_key?(:as)
@@ -1340,7 +1340,7 @@ class MiqExpression
     name  = parts.last
     klass = parts.shift.constantize
     parts.reverse.each do |assoc|
-      ref = klass.reflections[assoc.to_sym]
+      ref = klass.reflect_on_association(assoc.to_sym)
       if ref.nil?
         klass = nil
         break

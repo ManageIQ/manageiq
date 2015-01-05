@@ -174,7 +174,7 @@ module ActsAsTaggable
         relationship = "self"
         macro = :has_one
       else
-        macro = subject.class.reflections[relationship.to_sym].macro
+        macro = subject.class.reflect_on_association(relationship.to_sym).macro
       end
       if macro == :has_one || macro == :belongs_to
         value = subject.instance_eval([relationship, attr].join("."))
