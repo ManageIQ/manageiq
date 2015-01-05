@@ -2,7 +2,7 @@ class CloudTenant < ActiveRecord::Base
   include ReportableMixin
   include NewWithTypeStiMixin
 
-  attr_accessible :description, :ems_ref, :enabled, :name
+  #attr_accessible :description, :ems_ref, :enabled, :name
 
   belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "EmsCloud"
   has_many   :security_groups
