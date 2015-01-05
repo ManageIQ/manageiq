@@ -1,6 +1,18 @@
 class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
   attr_reader :options
 
+  TYPE_MAP = {
+    :boolean     => ActiveRecord::Type::Boolean.new,
+    :datetime    => ActiveRecord::Type::Time.new,
+    :float       => ActiveRecord::Type::Float.new,
+    :integer     => ActiveRecord::Type::Integer.new, # TODO: does a virtual_column :integer care if it's a Integer or BigInteger
+    :numeric_set => ActiveRecord::Type::Value.new,   # TODO: is this correct?
+    :string      => ActiveRecord::Type::String.new,
+    :string_set  => ActiveRecord::Type::Value.new,   # TODO: is this correct?
+    :symbol      => ActiveRecord::Type::String.new,  # TODO: is this correct?
+    :time        => ActiveRecord::Type::Time.new,
+  }
+
   def initialize(name, options)
     @options = options
 
@@ -192,21 +204,9 @@ module VirtualFields
 
   private
 
-  TYPE_MAP = {
-    :boolean     => ActiveRecord::Type::Boolean.new,
-    :datetime    => ActiveRecord::Type::Time.new,
-    :float       => ActiveRecord::Type::Float.new,
-    :integer     => ActiveRecord::Type::Integer.new, # TODO: does a virtual_column :integer care if it's a Integer or BigInteger
-    :numeric_set => ActiveRecord::Type::Value.new,   # TODO: is this correct?
-    :string      => ActiveRecord::Type::String.new,
-    :string_set  => ActiveRecord::Type::Value.new,   # TODO: is this correct?
-    :symbol      => ActiveRecord::Type::String.new,  # TODO: is this correct?
-    :time        => ActiveRecord::Type::Time.new,
-  }
-
   def add_virtual_column(name, options)
     reset_virtual_column_information
-    options[:type] = TYPE_MAP.fetch(options[:type])
+    options[:type] = VirtualColumn::TYPE_MAP.fetch(options[:type])
     _virtual_columns_hash[name.to_s] = VirtualColumn.new(name, options)
   end
 
