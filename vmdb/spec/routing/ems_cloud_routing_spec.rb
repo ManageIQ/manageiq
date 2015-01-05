@@ -32,6 +32,7 @@ describe EmsCloudController do
     button
     create
     dynamic_list_refresh
+    dynamic_radio_button_refresh
     form_field_changed
     listnav_search_selected
     save_default_search

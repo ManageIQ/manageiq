@@ -33,6 +33,7 @@ describe 'routes for CatalogController' do
     dialog_field_changed
     dialog_form_button_pressed
     dynamic_list_refresh
+    dynamic_radio_button_refresh
     explorer
     get_ae_tree_edit_key
     group_create

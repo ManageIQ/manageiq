@@ -62,43 +62,56 @@
                           - if field.show_refresh_button?
                             = button_tag('Refresh', :disabled => true)
                         - when "DialogFieldDropDownList", "DialogFieldRadioButton"
-                          - if field.values.length > 1
-                            - if field.sort_by.to_s != "none"
-                              - if field.data_type == "integer"
-                                - val = field.values.sort_by { |d| field.sort_by == :value ? d.first.to_i : d.last.to_i }
-                                - val = val.reverse if field.sort_order == :descending
-                              - else
-                                - val = field.values.sort_by { |d| field.sort_by == :value ? d.first : d.last }
-                                - val = val.reverse if field.sort_order == :descending
-                            - else
-                              - val = copy_array(field.values)
+                          - if field.dynamic
+                            %input#dialog_field_radio_sample_1(type="radio" name="dialog_field_radio")
+                            %label(for="dialog_field_radio_sample_1") Option 1
+                            %input#dialog_field_radio_sample_2(type="radio" name="dialog_field_radio")
+                            %label(for="dialog_field_radio_sample_2") Option 2
 
-                            - if field.type == "DialogFieldDropDownList"
-                              - if field.required
-                                - if field.default_value.nil?
-                                  = select_tag('field.id',
-                                    options_for_select(val.collect(&:reverse), field.default_value))
-                                - else
-                                  = select_tag('field.id',
-                                    options_for_select([["<#{_('Choose')}>", nil]] + val.collect(&:reverse), field.default_value))
+                            - if field.show_refresh_button?
+                              = button_tag('Refresh', :disabled => true)
 
-                              - else
-                                - # NOT REQUIRED
-                                = select_tag('field.id',
-                                  options_for_select([["#{_('None')}", nil]] + val.collect(&:reverse), field.default_value))
-
-                            - else
-                              - val.each_with_index do |rb, i|
-                                - unless field.required || i != 0
-                                  %input{:type => "radio", :disabled => true, :checked => field.default_value.nil?,
-                                    :id => "None", :value => "nil", :name => "None"}
-                                %input{:type => "radio", :disabled => true, :checked => (field.default_vaule == rb[0]),
-                                  :id => rb[0], :value => rb[1], :name => rb[0]}
-                                &nbsp;
-                                = rb[1]
-                                &nbsp;
                           - else
-                            = h(field.values[0].last) unless field.values.empty?
+                            - if field.values.length > 1
+                              - if field.sort_by.to_s != "none"
+                                - if field.data_type == "integer"
+                                  - val = field.values.sort_by { |d| field.sort_by == :value ? d.first.to_i : d.last.to_i }
+                                  - val = val.reverse if field.sort_order == :descending
+                                - else
+                                  - val = field.values.sort_by { |d| field.sort_by == :value ? d.first : d.last }
+                                  - val = val.reverse if field.sort_order == :descending
+                              - else
+                                - val = copy_array(field.values)
+
+                              - if field.type == "DialogFieldDropDownList"
+                                - if field.required
+                                  - if field.default_value.nil?
+                                    = select_tag('field.id',
+                                      options_for_select(val.collect(&:reverse), field.default_value))
+                                  - else
+                                    = select_tag('field.id',
+                                      options_for_select([["<#{_('Choose')}>", nil]] + val.collect(&:reverse), field.default_value))
+
+                                - else
+                                  - # NOT REQUIRED
+                                  = select_tag('field.id',
+                                    options_for_select([["#{_('None')}", nil]] + val.collect(&:reverse), field.default_value))
+
+                              - else
+                                - val.each_with_index do |rb, i|
+                                  - unless field.required || i != 0
+                                    %input{:type => "radio", :disabled => true, :checked => field.default_value.nil?,
+                                      :id => "None", :value => "nil", :name => "None"}
+                                    &nbsp; None &nbsp;
+
+                                  %input{:type => "radio", :disabled => true, :checked => (field.default_value == rb[0]),
+                                    :id => rb[0], :value => rb[1], :name => rb[0]}
+                                  &nbsp;
+                                  = rb[1]
+                                  &nbsp;
+                            - else
+                              = h(field.values[0].last) unless field.values.empty?
+
                         - when "DialogFieldButton"
                           = button_tag(_('Save'), :disabled => true)
                         - when "DialogFieldTagControl"

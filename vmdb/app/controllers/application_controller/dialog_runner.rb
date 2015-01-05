@@ -162,6 +162,30 @@ module ApplicationController::DialogRunner
     end
   end
 
+  def dynamic_radio_button_refresh
+    @edit = session[:edit]
+
+    dialog = @edit[:wf].dialog
+
+    field = dialog.field(params[:name])
+    values = field.refresh_button_pressed
+
+    checked_value = values.collect { |value_pair| value_pair[0].to_s }.include?(params[:checked_value]) ?
+      params[:checked_value] : field.default_value
+
+    field.value = checked_value
+
+    json = {
+      :checked_value => checked_value,
+      :field_name    => field.name,
+      :values        => values
+    }
+
+    respond_to do |format|
+      format.json { render :json => json, :status => 200 }
+    end
+  end
+
   private     #######################
 
   def dialog_reset_form
