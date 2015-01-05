@@ -647,6 +647,7 @@ module OpsController::Settings::Common
         @sb[:new_to] = nil
       end
       new[:smtp][:authentication] = params[:smtp_authentication] if params[:smtp_authentication]
+      new[:server][:locale] = params[:locale] if params[:locale]
       @smtp_auth_none = (new[:smtp][:authentication] == "none")
       if !new[:smtp][:host].blank? && !new[:smtp][:port].blank? && !new[:smtp][:domain].blank? &&
           (!new[:smtp][:user_name].blank? || new[:smtp][:authentication] == "none") &&
@@ -904,6 +905,7 @@ module OpsController::Settings::Common
       end
       @edit[:current].config[:server][:role] = @edit[:current].config[:server][:role] ? @edit[:current].config[:server][:role].split(",").sort.join(",") : ""
       @edit[:current].config[:server][:timezone] = "UTC" if @edit[:current].config[:server][:timezone].blank?
+      @edit[:current].config[:server][:locale] = "default" if @edit[:current].config[:server][:locale].blank?
       @edit[:current].config[:server][:remote_console_type] ||= "MKS"
       @edit[:current].config[:server][:vnc_proxy_address] ||= nil
       @edit[:current].config[:server][:vnc_proxy_port] ||= nil

@@ -75,6 +75,15 @@
                                   "data-miq_observe"=>{:url=>url}.to_json) %>
               </td>
             </tr>
+            <tr>
+              <td class="key">Default Locale</td>
+              <td class="wide">
+                <%= select_tag('locale',
+                               options_for_select([['Client Browser Setting', 'default']] + FastGettext.human_available_locales,
+                                                  @edit[:new][:server][:locale]),
+                               "data-miq_observe" => {:url => url}.to_json) %>
+              </td>
+            </tr>
         </table>
         <div class="note">* Changing the Zone will reset all of this Server's priorities to secondary.</div>
       </fieldset>

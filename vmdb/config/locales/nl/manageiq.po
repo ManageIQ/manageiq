@@ -1307,3 +1307,7 @@ msgstr ""
 
 msgid "write_ios_per_sec"
 msgstr ""
+
+#. Provide locale name in native language (e.g. English, Deutsch or Português)
+msgid "locale_name"
+msgstr "Nederlands"

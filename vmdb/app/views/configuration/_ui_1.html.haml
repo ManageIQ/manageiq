@@ -84,7 +84,9 @@
                                      "height: 32px;" +                                                     |
                                      "float: left;"}                                                       |
             - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
-               [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,         :timezone]].each do |display_settings|
+               [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,                    :timezone],
+               [_("Locale"), "display_locale",      [[_("Global Default"), "default"]] + FastGettext.human_available_locales,
+                :locale]].each do |display_settings|
               %tr
                 %td.key
                   = display_settings[0]
