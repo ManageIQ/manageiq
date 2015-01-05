@@ -154,7 +154,8 @@
           <% @id = to_cid(row['id']) %>
           <% cls = view.db == "MiqWorker" && @sb[:selected_worker_id].to_i == row['id'].to_i ? "row3" : cycle('row0', 'row1') %>
           <tr class="<%= cls %>">
-            <% cursor = ["MiqEvent", "MiqTask", "VmdbDatabaseConnection", "VmdbDatabaseSetting"].include?(view.db) ? "default" : "pointer" %>
+            <% cursor = %w(MiqEvent MiqTask VmdbDatabaseConnection VmdbDatabaseSetting).include?(view.db) ||
+                        @embedded ? "default" : "pointer" %>
             <% unless @embedded || @no_checkboxes %>
               <td class="checkbox" style="cursor:<%=cursor%>;">
                 <%= check_box_tag("check_#{@id}", 
