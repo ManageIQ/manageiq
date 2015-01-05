@@ -1,4 +1,4 @@
-- url = {:url => url_for(:action=>'reconfigure_field_changed', :id=>"new")}.to_json
+- url = url_for(:action=>'reconfigure_field_changed', :id=>"new")
 #form_div
   = render :partial => "layouts/flash_msg"
   %p.legend=_('Options')
@@ -10,11 +10,11 @@
           %tr
             %td
               = check_box_tag("cb_memory",
-                :value => "1",
-                :checked => @edit[:new][:cb_memory],
+                value = "1",
+                checked = @edit[:new][:cb_memory],
                 "data-miq_sparkle_on" => true,
                 "data-miq_sparkle_off" => true,
-                "data-miq_observe_checkbox" => url)
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
             %td
               - display = @edit[:new][:cb_memory] ? "" : "display:none"
               #memory_div{:style => display}
@@ -28,7 +28,7 @@
                   @edit[:new][:mem_typ]),
                   "data-miq_sparkle_on" => true,
                   "data-miq_sparkle_off" => true,
-                  "data-miq_observe" => url)
+                  "data-miq_observe" => {:url => url}.to_json)
                 (#{@edit[:memory_note]})
 
     %tr
@@ -38,11 +38,11 @@
           %tr
             %td
               = check_box_tag("cb_cpu",
-                :value => "1",
-                :checked => @edit[:new][:cb_cpu],
+                value = "1",
+                checked = @edit[:new][:cb_cpu],
                 "data-miq_sparkle_on" => true,
                 "data-miq_sparkle_off" => true,
-                "data-miq_observe_checkbox" => url)
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
             %td
               - display = @edit[:new][:cb_cpu] ? "" : "display:none"
               #cpu_div{:style => display}
@@ -51,7 +51,7 @@
                      options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
-                    "data-miq_observe"     => url)
+                    "data-miq_observe" => {:url => url}.to_json)
                 - else
                   = @edit[:cpu_options][0]
 
