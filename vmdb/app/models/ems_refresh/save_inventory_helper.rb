@@ -51,27 +51,6 @@ module EmsRefresh::SaveInventoryHelper
     restore_keys(hash, remove_keys, key_backup)
   end
 
-  def save_inventory_root_multi(type, klass, hashes, deletes, find_key, child_keys = [], extra_keys = [])
-    parent = nil
-    find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(find_key, child_keys, extra_keys)
-    record_index, record_index_columns = self.save_inventory_prep_record_index(klass.all.to_a, find_key)
-
-    new_records = []
-    hashes.each do |h|
-      self.save_inventory(type, klass, parent, h, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
-    end
-
-    # Delete the items no longer found
-    #unless deletes.blank?
-    #  $log.info("MIQ(#{self.name}.save_#{type}_inventory) Deleting #{self.log_format_deletes(deletes)}")
-    #  parent.send(type).delete(deletes)
-    #end
-
-    # Add the new items
-    #parent.send(type).push(new_records)
-    new_records.each {|nr| nr.save!}
-  end
-
   def save_inventory_prep_record_index(records, find_key)
     # Save the columns associated with the find keys, so we can coerce the
     #   hash values during save_inventory_record_index_fetch
