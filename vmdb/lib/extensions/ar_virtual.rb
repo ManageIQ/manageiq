@@ -29,6 +29,8 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
       options[:type] = type
     end
 
+    type = TYPE_MAP.fetch(type) unless type.kind_of?(ActiveRecord::Type::Value)
+
     raise ArgumentError, "type must be specified" if type.nil?
 
     super(name.to_s, options[:default], type)
