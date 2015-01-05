@@ -608,46 +608,6 @@ class MiqProxy < ActiveRecord::Base
     @who_am_i ||= "#{self.name} #{self.class.name} #{self.id}"
   end
 
-  def _post_my_logs(options)
-    # Set the queue callback to only update status if not "ok" (error/warn/timeout)
-    # since post_my_logs does not complete the log posting... we need to wait until the Proxy has uploaded all his logs
-    options[:callback][:method_name] = :queue_callback_on_exceptions
-
-    # Make the request to the proxy from a MiqServer in the Proxy's zone
-    MiqQueue.put({
-        :class_name => self.class.name,
-        :instance_id => self.id,
-        :method_name => "post_my_logs",
-        :args => [options[:taskid]],
-        :priority => MiqQueue::HIGH_PRIORITY,
-        :zone => self.my_zone,
-        :miq_callback => options[:callback],
-        :msg_timeout => options[:timeout]
-      })
-  end
-
-  def post_my_logs(taskid)
-    resource = who_am_i
-    task = MiqTask.find(taskid)
-    log_header = "MIQ(#{self.class.name}-post_my_logs) Task: [#{taskid}]"
-    msg = "Requesting logs for: #{resource}"
-    $log.info("#{log_header} #{msg}")
-    task.update_status("Active", "Ok", msg)
-
-    # Remove the most recent log so we can fetch any updates in the file
-    flist = sorted_log_list()
-    File.delete(flist.last[0]) if !flist.empty? && File.exist?(flist.last[0])
-
-    # Make the request to the proxy for the logs and go away.  Upon final log upload, post_zip_to_db will be called
-    ret = get_agent_logs("taskid" => task.id)
-
-    if ret
-      msg = "Finished requesting logs from: #{resource}"
-      $log.info("#{log_header} #{msg}")
-      task.update_status("Active", "Ok", msg)
-    end
-  end
-
   def post_zip_to_db(taskid)
     # will be called from the agent controller when the final logfile has been saved locally
     task = MiqTask.find(taskid)
