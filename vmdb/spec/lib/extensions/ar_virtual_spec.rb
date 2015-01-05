@@ -97,6 +97,12 @@ describe VirtualFields do
     before(:each) do
       class TestClassBase
         def self.pluralize_table_names; false; end
+
+        # HACK: Simulate a real model by defining some methods expected by
+        # ActiveRecord::Associations::Builder::Association.build
+        def self.dangerous_attribute_method?(_); false; end
+        def self.generated_association_methods(*args); []; end
+        def self.add_autosave_association_callbacks(*args); end
         extend VirtualFields
       end
 
