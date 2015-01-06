@@ -13,7 +13,7 @@ class HostMicrosoft < Host
   end
 
   def verify_credentials_task(*authentication)
-    svr_list = MiqServer.find(:all).collect {|s| s.has_role?(authentication_check_role) ? s : nil}.compact
+    svr_list = MiqServer.all.select { |s| s.has_role?(authentication_check_role) }
     raise "No #{Dictionary::gettext("miq_servers", :type => :table)} were found to verify Windows credentials." if svr_list.blank?
     svr_list.delete_if {|s| s.status != 'started'}
     raise "No active #{Dictionary::gettext("miq_servers", :type => :table)} were found to verify Windows credentials." if svr_list.blank?

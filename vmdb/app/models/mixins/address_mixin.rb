@@ -38,12 +38,12 @@ module AddressMixin
     end
 
     def find_first_by_address(addr, type=:ems)
-      self.find(:first, :conditions => {self.column_for_find_by_address(type) => addr})
+      self.where(self.column_for_find_by_address(type) => addr).first
     end
     alias find_by_address find_first_by_address
 
     def find_all_by_address(addr, type=:ems)
-      self.find(:all, :conditions => {self.column_for_find_by_address(type) => addr})
+      self.where(self.column_for_find_by_address(type) => addr).to_a
     end
   end
 end

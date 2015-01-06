@@ -14,7 +14,7 @@ class MiqAeInstance < ActiveRecord::Base
   include ReportableMixin
 
   def self.find_by_name(name)
-    self.find(:first, :conditions => ["lower(name) = ?", name.downcase])
+    self.where("lower(name) = ?", name.downcase).first
   end
 
   def get_field_attribute(field, validate, attribute)
@@ -76,7 +76,7 @@ class MiqAeInstance < ActiveRecord::Base
   # TODO: Limit search to within the context of a class id?
   def self.search(str)
     str[-1,1] = "%" if str[-1,1] == "*"
-    self.find(:all, :conditions => ["lower(name) LIKE ?", str.downcase]).collect { |i| i.name }
+    where("lower(name) LIKE ?", str.downcase).pluck(:name)
   end
 
   def to_export_xml(options = {})

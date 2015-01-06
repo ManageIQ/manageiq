@@ -18,7 +18,7 @@ class Account < ActiveRecord::Base
 
     new_accts = []
     member_map = {}
-    deletes = parent.accounts.find(:all, :conditions => ["accttype=?", typeName], :select => "id, name").collect {|rec| [rec.id, rec.name]}
+    deletes = parent.accounts.where("accttype=?", typeName).pluck("id, name")
 
     hashes.each do |nh|
       member_map[nh[:name]] = nh.delete(:members)

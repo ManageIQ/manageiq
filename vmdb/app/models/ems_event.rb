@@ -215,7 +215,7 @@ class EmsEvent < ActiveRecord::Base
 
   def self.first_chained_event(ems_id, chain_id)
     return nil if chain_id.nil?
-    EmsEvent.find(:first, :conditions => {:ems_id => ems_id, :chain_id => chain_id}, :order => :id)
+    EmsEvent.where(:ems_id => ems_id, :chain_id => chain_id).order(:id).first
   end
 
   def first_chained_event
@@ -389,7 +389,7 @@ class EmsEvent < ActiveRecord::Base
 
     window ||= purge_window_size
 
-    oldest = self.first(:select => :timestamp, :order => :timestamp)
+    oldest = self.select(:timestamp).order(:timestamp).first
     oldest = oldest.nil? ? older_than : oldest.timestamp
 
     total = 0

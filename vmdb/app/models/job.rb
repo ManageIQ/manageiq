@@ -55,7 +55,7 @@ class Job < ActiveRecord::Base
 
   def self.agent_state_update_queue(jobid, state, message=nil)
     begin
-      job = Job.find(:first, :conditions => ["guid = ?", jobid], :select => "id, state, guid")
+      job = Job.where("guid = ?", jobid).select("id, state, guid").first
       unless job.nil?
         job.agent_state_update(state, message)
       else
@@ -224,7 +224,7 @@ class Job < ActiveRecord::Base
     cond[1] << ts.utc
 
     $log.info("MIQ(job-delete_older) cond.flatten: #{cond.flatten.inspect}")
-    ids = self.find(:all, :conditions => cond.flatten, :select => "id").collect {|j| j.id}
+    ids = self.where(cond.flatten).pluck(:id)
 
     self.delete_by_id(ids)
   end

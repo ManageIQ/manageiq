@@ -722,7 +722,7 @@ class Host < ActiveRecord::Base
   def available_builds
     data = self.platform_arch
     return [] if data.blank?
-    ProductUpdate.all(:conditions => {:component => 'smartproxy', :platform => data[0], :arch => data[1]})
+    ProductUpdate.where(:component => "smartproxy", :platform => data[0], :arch => data[1]).to_a
   end
 
   def arch
@@ -761,7 +761,7 @@ class Host < ActiveRecord::Base
   end
 
   def miq_proxies
-    MiqProxy.find(:all).collect {|p| p if p.hosts.include?(self)}.compact
+    MiqProxy.all.select { |p| p.hosts.include?(self) }
   end
 
   def acts_as_ems?
@@ -1979,9 +1979,9 @@ class Host < ActiveRecord::Base
     if args.length == 0
       services = self.host_services
     elsif args.length == 1
-      services = self.host_services.find(:all, :conditions => ["enable_run_levels LIKE ?", "%#{args.first}%"])
+      services = self.host_services.where("enable_run_levels LIKE ?", "%#{args.first}%")
     end
-    services.collect {|s| s.name}.uniq.sort
+    services.order(:name).uniq.pluck(:name)
   end
 
   def control_supported?

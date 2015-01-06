@@ -176,9 +176,9 @@ class Classification < ActiveRecord::Base
   def self.categories(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
     result = []
     if region_id
-      cats = Classification.in_region(region_id).find(:all, :conditions => "classifications.parent_id = 0", :include => [:tag, :children])
+      cats = Classification.in_region(region_id).where("classifications.parent_id = 0").includes(:tag, :children)
     else
-      cats = Classification.find(:all, :conditions => "classifications.parent_id = 0", :include => [:tag, :children])
+      cats = Classification.where("classifications.parent_id = 0").includes(:tag, :children)
     end
     cats.each { |c| result.push(c) if c.tag2ns(c.tag.name) == ns }
     result

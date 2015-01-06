@@ -271,7 +271,7 @@ class EmsCluster < ActiveRecord::Base
   def ems_events
     ewc = self.event_where_clause
     return [] if ewc.blank?
-    EmsEvent.find(:all, :conditions => ewc, :order => "timestamp")
+    EmsEvent.where(ewc).order("timestamp").to_a
   end
 
   def scan

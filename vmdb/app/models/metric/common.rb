@@ -51,7 +51,7 @@ module Metric::Common
     cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
       self.resource_type, self.resource_id, self.timestamp.to_date.to_s,  (self.timestamp + 1.day).to_date.to_s]
     direction = mode == "min" ? "ASC" : "DESC"
-    rec = MetricRollup.first(:conditions => cond, :order => "#{col} #{direction}")
+    rec = MetricRollup.where(cond).order("#{col} #{direction}").first
     return rec.nil? ? nil : rec.send(col)
   end
 
@@ -64,8 +64,8 @@ module Metric::Common
     cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
       self.resource_type, self.resource_id, self.timestamp.to_date.to_s, (self.timestamp + 1.day).to_date.to_s]
     meth = mode == :min ? :first : :last
-    recs = MetricRollup.all(:conditions => cond)
-    rec = recs.sort{|a,b| ( a.v_derived_storage_used && b.v_derived_storage_used ) ? ( a.v_derived_storage_used <=> b.v_derived_storage_used ) : ( a.v_derived_storage_used ? 1 : -1 ) }.send(meth)
+    recs = MetricRollup.where(cond)
+    rec = recs.sort {|a,b| ( a.v_derived_storage_used && b.v_derived_storage_used ) ? ( a.v_derived_storage_used <=> b.v_derived_storage_used ) : ( a.v_derived_storage_used ? 1 : -1 ) }.send(meth)
     return rec.nil? ? nil : rec.v_derived_storage_used
   end
 

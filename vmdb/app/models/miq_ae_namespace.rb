@@ -46,7 +46,7 @@ class MiqAeNamespace < ActiveRecord::Base
   end
 
   def self.find_tree(find_options = {})
-    namespaces = self.all(find_options)
+    namespaces = self.where(find_options)
     ns_lookup = namespaces.inject({}) { |h, ns| h[ns.id] = ns; h }
 
     roots = []

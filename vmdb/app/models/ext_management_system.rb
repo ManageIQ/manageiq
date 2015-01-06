@@ -225,7 +225,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def miq_proxies
-    MiqProxy.find(:all).collect {|p| p if p.ext_management_system == self}.compact
+    MiqProxy.all.select { |p| p.ext_management_system == self }
   end
 
   def clear_association_cache_with_storages
@@ -281,7 +281,7 @@ class ExtManagementSystem < ActiveRecord::Base
     if association_cache.include?(:resource_pools)
       self.resource_pools.select { |r| !r.is_default }
     else
-      self.resource_pools.all(:conditions => ["is_default != ?", true])
+      self.resource_pools.where("is_default != ?", true).to_a
     end
   end
 
