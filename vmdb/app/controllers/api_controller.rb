@@ -26,6 +26,7 @@ class ApiController < ApplicationController
   #
   include_concern 'Parser'
   include_concern 'Manager'
+  include_concern 'Action'
 
   #
   # Support for API Collections

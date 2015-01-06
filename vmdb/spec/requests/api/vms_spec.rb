@@ -22,8 +22,8 @@ describe ApiController do
     Vmdb::Application
   end
 
-  def poweron_request(*hrefs)
-    request = {"action" => "poweron"}
+  def start_request(*hrefs)
+    request = {"action" => "start"}
     request["resources"] = hrefs.collect { |href| {"href" => href} } if hrefs.present?
     request
   end
@@ -188,34 +188,34 @@ describe ApiController do
     end
   end
 
-  context "Vm poweron action" do
-    it "powers on an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :poweron))
+  context "Vm start action" do
+    it "starts an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", poweron_request)
+      @success = run_post("#{@cfme[:vms_url]}/999999", start_request)
 
       expect(@success).to be_false
       expect(@code).to eq(404)
     end
 
-    it "powers on an invalid vm without appropriate role" do
+    it "starts an invalid vm without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", poweron_request)
+      @success = run_post("#{@cfme[:vms_url]}/999999", start_request)
 
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
 
-    it "powers on a powered on vm" do
-      update_user_role(@role, action_identifier(:vms, :poweron))
+    it "starts a powered on vm" do
+      update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
       vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, poweron_request)
+      @success = run_post(vm_url, start_request)
 
       expect(@result).to have_key("success")
       expect(@result["success"]).to be_false
@@ -225,31 +225,14 @@ describe ApiController do
       expect(@result["href"]).to match(vm_url)
     end
 
-    it "powers on a rogue vm" do
-      update_user_role(@role, action_identifier(:vms, :poweron))
-      basic_authorize @cfme[:user], @cfme[:password]
-
-      vm = FactoryGirl.create(:vm_vmware, :power_state => "off")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-
-      @success = run_post(vm_url, poweron_request)
-
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_false
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("vm does not belong to any host")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
-    end
-
-    it "powers on a vm" do
-      update_user_role(@role, action_identifier(:vms, :poweron))
+    it "starts a vm" do
+      update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
       vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, poweron_request)
+      @success = run_post(vm_url, start_request)
 
       expect(@result).to have_key("success")
       expect(@result["success"]).to be_true
@@ -257,10 +240,12 @@ describe ApiController do
       expect(@result["message"]).to match("starting")
       expect(@result).to have_key("href")
       expect(@result["href"]).to match(vm_url)
+      expect(@result).to have_key("task_id")
+      expect(@result).to have_key("task_href")
     end
 
-    it "powers on multiple vms" do
-      update_user_role(@role, action_identifier(:vms, :poweron))
+    it "starts multiple vms" do
+      update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
       vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
@@ -269,7 +254,7 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], poweron_request(vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], start_request(vm1_url, vm2_url))
 
       expect(@result).to have_key("results")
       results = @result["results"]
@@ -277,6 +262,8 @@ describe ApiController do
       expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
       expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
       expect(results.all? { |r| r["success"] }).to be_true
+      expect(results.all? { |r| r.key?("task_id") }).to be_true
+      expect(results.all? { |r| r.key?("task_href") }).to be_true
     end
   end
 end

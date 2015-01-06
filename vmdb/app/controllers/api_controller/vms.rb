@@ -1,37 +1,39 @@
 class ApiController
   module Vms
-    def vm_ident(vm)
-      "VM id:#{vm.id} name:'#{vm.name}'"
-    end
+    def start_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for starting a #{type} resource" unless id
 
-    def poweron_resource_vms(type, id = nil, _data = nil)
-      cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Starting #{vm_ident(vm)}")
 
-      raise BadRequestError, "Must specify an id for powering on a #{type} resource" unless id
-      vm = resource_search(id, type, klass)
-      api_log_info("Powering on #{vm_ident(vm)}")
-
-      result = validate_vm_for_action(vm, "start")
-      result = poweron_vm(vm) if result[:success]
-
-      result_href(result, type, id)
-      log_result(result)
-      result
+        result = validate_vm_for_action(vm, "start")
+        result = start_vm(vm, klass) if result[:success]
+        result
+      end
     end
 
     private
+
+    def vm_ident(vm)
+      "VM id:#{vm.id} name:'#{vm.name}'"
+    end
 
     def validate_vm_for_action(vm, action)
       validation = vm.send("validate_#{action}")
       action_result(validation[:available], validation[:message].to_s)
     end
 
-    def poweron_vm(vm)
-      vm.start
-      action_result(true, "#{vm_ident(vm)} starting")
-      rescue => err
-        action_result(false, err.to_s)
+    def start_vm(vm, klass)
+      desc = "#{vm_ident(vm)} starting"
+      task_id = queue_object_action(vm,
+                                    desc,
+                                    :class_name  => klass.name,
+                                    :method_name => "start",
+                                    :role        => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
     end
   end
 end

@@ -484,9 +484,10 @@
   :tasks:
     :description: Request Tasks
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834086080
-    :klass: MiqRequestTask
+    :klass: MiqTask
   :templates:
     :description: Templates
     :options:
@@ -576,7 +577,7 @@
       - :name: restart
         :identifier: vm_guest_restart
         :disabled: true
-      - :name: poweron
+      - :name: start
         :identifier: vm_start
       - :name: poweroff
         :identifier: vm_stop
@@ -607,7 +608,7 @@
       - :name: restart
         :identifier: vm_guest_restart
         :disabled: true
-      - :name: poweron
+      - :name: start
         :identifier: vm_start
       - :name: poweroff
         :identifier: vm_stop
