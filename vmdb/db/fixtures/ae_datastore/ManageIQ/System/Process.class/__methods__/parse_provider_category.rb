@@ -1,5 +1,5 @@
 #
-# Description: Sets root object ae_providwer_category to cloud/infra
+# Description: Sets root object ae_provider_category to cloud/infra
 #
 
 INFRASTRUCTURE = 'infrastructure'
@@ -19,6 +19,10 @@ def miq_provision_detect_category(miq_provision)
   vm_detect_category(miq_provision.source)
 end
 
+def vm_migrate_task_detect_category(miq_provision)
+  vm_detect_category(miq_provision.source)
+end
+
 def miq_host_provision_detect_category(_)
   INFRASTRUCTURE
 end
@@ -33,7 +37,7 @@ def category_for_key(key)
 end
 
 provider_category = nil
-key_found = %w(vm miq_request miq_provision miq_host_provision platform_category).detect do |key|
+key_found = %w(vm miq_request miq_provision miq_host_provision vm_migrate_task platform_category).detect do |key|
   provider_category = category_for_key(key)
 end
 
