@@ -1,4 +1,5 @@
 require "spec_helper"
+include JsHelper
 
 describe ApplicationHelper do
 
