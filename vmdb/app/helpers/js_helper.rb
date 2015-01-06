@@ -96,4 +96,8 @@ module JsHelper
   def js_for_page_replace(div, partial_name, locals = {})
     "$('##{div}').replaceWith('#{escape_javascript(render :partial => partial_name, :locals => locals).html_safe}');"
   end
+
+  def partial_replace(from, partial, locals)
+    "$(\"##{h(from)}\").replaceWith(\"#{escape_javascript(render_to_string(:partial => partial, :locals => locals))}\");".html_safe
+  end
 end
