@@ -18,7 +18,7 @@ class Repository < ActiveRecord::Base
     storage_name, relative_path, type = parse_path(path)
 
     #Allow to fail and raise exception to caller if an entry already exists for name
-    repository = self.new(:name=>name, :relative_path=>relative_path)
+    repository = self.new(:name => name, :relative_path => relative_path)
     repository.path = path
     repository.save!
     repository
@@ -32,7 +32,7 @@ class Repository < ActiveRecord::Base
 
   def scan
     #For now we'll use the first host (lowest id)
-    host = Host.find(:first, :order=>:id)
+    host = Host.find(:first, :order => :id)
     host.scan_repository(self)
   end
 
@@ -59,17 +59,17 @@ class Repository < ActiveRecord::Base
 
   def vms
     if relative_path != "/"
-      Vm.all(:conditions=>["storage_id=? and location like ?", storage_id, relative_path+"%"])
+      Vm.all(:conditions => ["storage_id=? and location like ?", storage_id, relative_path + "%"])
     else
-      Vm.all(:conditions=>["storage_id=?", storage_id])
+      Vm.all(:conditions => ["storage_id=?", storage_id])
     end
   end
 
   def miq_templates
     if relative_path != "/"
-      MiqTemplate.all(:conditions=>["storage_id=? and location like ?", storage_id, relative_path+"%"])
+      MiqTemplate.all(:conditions => ["storage_id=? and location like ?", storage_id, relative_path + "%"])
     else
-      MiqTemplate.all(:conditions=>["storage_id=?", storage_id])
+      MiqTemplate.all(:conditions => ["storage_id=?", storage_id])
     end
   end
 
@@ -128,7 +128,7 @@ class Repository < ActiveRecord::Base
   def save_storage
     storage_name, self.relative_path, type = Repository.parse_path(path)
     storage = Storage.find_by_name(storage_name)
-    storage = Storage.create(:name=>storage_name, :store_type=>type) if storage == nil
+    storage = Storage.create(:name => storage_name, :store_type => type) if storage == nil
 
     self.storage_id = storage.id
   end

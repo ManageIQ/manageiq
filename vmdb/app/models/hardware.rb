@@ -40,10 +40,10 @@ class Hardware < ActiveRecord::Base
     @mac_addresses ||= self.nics.collect { |n| n.address }.compact.uniq
   end
 
-  @@dh = {"type"=>"device_name", "devicetype"=>"device_type", "id"=>"location", "present"=>"present",
-    "filename"=>"filename", "startconnected"=>"start_connected", "autodetect"=>"auto_detect", "mode"=>"mode",
-    "connectiontype"=>"mode", "size"=>"size","free_space"=>"free_space","size_on_disk"=>"size_on_disk",
-    "generatedaddress"=>"address", "disk_type"=>"disk_type"}
+  @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
+    "filename" => "filename", "startconnected" => "start_connected", "autodetect" => "auto_detect", "mode" => "mode",
+    "connectiontype" => "mode", "size" => "size","free_space" => "free_space","size_on_disk" => "size_on_disk",
+    "generatedaddress" => "address", "disk_type" => "disk_type"}
 
   def self.add_elements(parent, xmlNode)
     $log.info("MIQ(hardware-add_elements) Adding Hardware XML elements for VM[id]=[#{parent.id}] from XML doc [#{xmlNode.root.name}]")
@@ -54,11 +54,11 @@ class Hardware < ActiveRecord::Base
     # Excluding ethernet devices from deletes because the refresh is the master of the data and it will handle the deletes.
     deletes[:gd] = parent.hardware.guest_devices.find(:all,
       :conditions => ["device_type != ?", "ethernet"],
-      :select=>"id, device_type, location, address"
+      :select => "id, device_type, location, address"
     ).collect {|rec| [rec.id, [rec.device_type, rec.location, rec.address]]}
 
     deletes[:disk] = parent.hardware.disks.find(:all,
-      :select=>"id, device_type, location"
+      :select => "id, device_type, location"
     ).collect {|rec| [rec.id, [rec.device_type, rec.location]]}
 
     xmlNode.root.each_recursive { |e|
@@ -87,7 +87,7 @@ class Hardware < ActiveRecord::Base
     #$log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
     xmlNode.each_element { |e|
       next if e.attributes['present'].to_s.downcase == "false"
-      da = {"device_type" => xmlNode.attributes["type"].to_s.downcase, "controller_type"=> xmlNode.attributes["type"]}
+      da = {"device_type" => xmlNode.attributes["type"].to_s.downcase, "controller_type" => xmlNode.attributes["type"]}
       # Loop over the device mapping table and add attributes
       @@dh.each_pair { |k, v|  da.merge!({v => e.attributes[k]}) if e.attributes[k] }
 

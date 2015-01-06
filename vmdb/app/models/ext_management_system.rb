@@ -132,8 +132,8 @@ class ExtManagementSystem < ActiveRecord::Base
         :zone_id   => MiqServer.my_server.zone.id
       )
 
-      $log.info "MIQ(#{self.name}.create_discovered): #{ui_lookup(:table=>"ext_management_systems")} #{ems.name} created"
-      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem", :message => "#{ui_lookup(:table=>"ext_management_systems")} #{ems.name} created")
+      $log.info "MIQ(#{self.name}.create_discovered): #{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
+      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem", :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
     end
   end
 
@@ -191,7 +191,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "no #{ui_lookup(:table=>"ext_management_systems")} credentials defined" if self.authentication_invalid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} credentials defined" if self.authentication_invalid?
     raise "refresh requires a valid user id and password" if self.authentication_invalid?
     EmsRefresh.queue_refresh(self)
   end

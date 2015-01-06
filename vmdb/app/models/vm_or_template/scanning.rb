@@ -255,8 +255,8 @@ module VmOrTemplate::Scanning
     vmName, bb, vmId, lastErr, vmCfg = nil
     xml_summary = ost.xml_class.createDoc(:summary)
     xmlNode = xmlNodeScan = xml_summary.root.add_element("scanmetadata")
-    xmlNodeScan.add_attributes("start_time"=>ost.scanTime.iso8601)
-    xml_summary.root.add_attributes("taskid"=>ost.taskid)
+    xmlNodeScan.add_attributes("start_time" => ost.scanTime.iso8601)
+    xml_summary.root.add_attributes("taskid" => ost.taskid)
 
     data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
     begin
@@ -283,7 +283,7 @@ module VmOrTemplate::Scanning
         st = Time.now
         xml = miqVm.extract(c)
         categoriesProcessed += 1
-        $log.info "#{log_pref}: Scanning [#{c}] information ran for [#{Time.now-st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+        $log.info "#{log_pref}: Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
         if xml
           xml.root.add_attributes({"created_on" => ost.scanTime.to_i, "display_time" => ost.scanTime.iso8601})
           $log.debug "#{log_pref}: Writing scanned data to XML for [#{c}] to blackbox."
@@ -291,7 +291,7 @@ module VmOrTemplate::Scanning
           $log.debug "#{log_pref}: writing xml complete."
 
           categoryNode = xml_summary.class.load(xml.root.shallow_copy.to_xml.to_s).root
-          categoryNode.add_attributes("start_time"=>st.utc.iso8601, "end_time"=>Time.now.utc.iso8601)
+          categoryNode.add_attributes("start_time" => st.utc.iso8601, "end_time" => Time.now.utc.iso8601)
           xmlNode << categoryNode
         else
           # Handle categories that we do not expect to return data.
@@ -322,7 +322,7 @@ module VmOrTemplate::Scanning
         lastErr.backtrace.each {|m| $log.debug m} if $log.debug?
       end
 
-      xmlNodeScan.add_attributes("end_time"=>Time.now.utc.iso8601, "status"=>status, "status_code"=>statusCode.to_s, "message"=>scanMessage)
+      xmlNodeScan.add_attributes("end_time" => Time.now.utc.iso8601, "status" => status, "status_code" => statusCode.to_s, "message" => scanMessage)
       driver.SaveVmmetadata(vmId, xml_summary.to_xml.miqEncode, "b64,zlib,xml", ost.taskid)
       $log.info "#{log_pref} Completed: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
     end
@@ -348,7 +348,7 @@ module VmOrTemplate::Scanning
       xml_summary = ost.xml_class.createDoc("<summary/>")
       $log.debug "#{log_pref}: xml_summary1 = #{xml_summary.class.name}"
       xmlNode = xml_summary.root.add_element("syncmetadata")
-      xml_summary.root.add_attributes({"scan_time"=>ost.scanTime, "taskid"=>ost.taskid})
+      xml_summary.root.add_attributes({"scan_time" => ost.scanTime, "taskid" => ost.taskid})
       ost.skipConfig = true
       data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
       ost.config = OpenStruct.new(

@@ -94,7 +94,7 @@ class MiqQueue < ActiveRecord::Base
     data_size = data ? data.length : 0
 
     if (args_size + data_size) > 512
-      log_prefix=LOG_PREFIX[:put]
+      log_prefix = LOG_PREFIX[:put]
       culprit = caller.detect {|r| ! (r =~ /miq_queue.rb/) } || ""
       $log.warn("#{log_prefix} #{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
     end
@@ -510,10 +510,10 @@ class MiqQueue < ActiveRecord::Base
     dates = where(:state => STATE_READY)
            .select("created_on, role")
            .order("priority, id").to_a
-           .each.with_object({}) { |c, h| (h[c.role] ||=[]) << c.created_on }
+           .each.with_object({}) { |c, h| (h[c.role] ||= []) << c.created_on }
 
     dates.each.with_object({}) { |(role, created_ons), h|
-      h[role]= { :next => (now - created_ons.last), :last => (now - created_ons.first) }
+      h[role] = { :next => (now - created_ons.last), :last => (now - created_ons.first) }
     }
   end
 

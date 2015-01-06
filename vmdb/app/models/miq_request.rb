@@ -344,8 +344,8 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def update_request_status
-    states = Hash.new {|h,k| h[k]=0}
-    status = Hash.new {|h,k| h[k]=0}
+    states = Hash.new {|h,k| h[k] = 0}
+    status = Hash.new {|h,k| h[k] = 0}
 
     task_count = self.miq_request_tasks.count
     self.miq_request_tasks.each do |p|
@@ -483,7 +483,7 @@ class MiqRequest < ActiveRecord::Base
     request.create_request
 
     event_name    = "#{self.name.underscore}_created"
-    AuditEvent.success(:event => event_name, :target_class => target_class, :userid => requester_id, :message=> event_message)
+    AuditEvent.success(:event => event_name, :target_class => target_class, :userid => requester_id, :message => event_message)
 
     request.call_automate_event_queue("request_created")
     request.approve(requester_id, "Auto-Approved") if auto_approve == true
@@ -496,7 +496,7 @@ class MiqRequest < ActiveRecord::Base
     request.update_attribute(:options, request.options.merge(values))
 
     event_name    = "#{self.name.underscore}_updated"
-    AuditEvent.success(:event => event_name, :target_class => target_class, :userid => requester_id, :message=>event_message)
+    AuditEvent.success(:event => event_name, :target_class => target_class, :userid => requester_id, :message => event_message)
 
     request.call_automate_event_queue("request_updated")
     return request

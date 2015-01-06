@@ -86,7 +86,7 @@ module Metric::Processing
       new_perf.capture_interval = 0
       Metric::Rollup::ROLLUP_COLS.each do |c|
         next if new_perf.send(c).nil? || perf.send(c).nil?
-        new_perf.send(c.to_s + "=", (new_perf.send(c) + perf.send(c))/2)
+        new_perf.send(c.to_s + "=", (new_perf.send(c) + perf.send(c)) / 2)
       end
 
       unless perf.assoc_ids.nil?

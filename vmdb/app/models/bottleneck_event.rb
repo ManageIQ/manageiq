@@ -62,7 +62,7 @@ class BottleneckEvent < ActiveRecord::Base
   end
 
   def dictionary(col)
-    Dictionary.gettext(col.to_s, :type=>"column")
+    Dictionary.gettext(col.to_s, :type => "column")
   end
 
   def format(value, method, options={})

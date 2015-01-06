@@ -267,7 +267,7 @@ class MiqServer < ActiveRecord::Base
 
     svr.ntp_reload(svr.server_ntp_settings)
     # Update the config settings in the db table for MiqServer
-    svr.config_updated(OpenStruct.new({:name=>cfg.get(:server, :name)}))
+    svr.config_updated(OpenStruct.new({:name => cfg.get(:server, :name)}))
 
     EvmDatabase.seed_last
 
@@ -514,7 +514,7 @@ class MiqServer < ActiveRecord::Base
     File.chmod(0755, restart_script)
 
     cmd = "#{restart_script} 2>&1 >> #{logfile}"
-    pid = spawn("nohup", restart_script, [:out, :err]=> [logfile, "a"])
+    pid = spawn("nohup", restart_script, [:out, :err] => [logfile, "a"])
     Process.detach(pid)
   end
 

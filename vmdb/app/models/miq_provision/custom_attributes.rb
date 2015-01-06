@@ -7,7 +7,7 @@ module MiqProvision::CustomAttributes
       attrs = []
       custom_attrs.each do |k,v|
         $log.info("#{log_header} Setting EVM Custom Attribute key=#{k.to_s.inspect}, value=#{v.inspect}")
-        attrs << {:name=>k.to_s, :value=>v, :source=>"EVM"}
+        attrs << {:name => k.to_s, :value => v, :source => "EVM"}
       end
       vm.custom_attributes.create(attrs)
     rescue => err

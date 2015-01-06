@@ -14,9 +14,9 @@ class HostMicrosoft < Host
 
   def verify_credentials_task(*authentication)
     svr_list = MiqServer.find(:all).collect {|s| s.has_role?(authentication_check_role) ? s : nil}.compact
-    raise "No #{Dictionary::gettext("miq_servers", :type=>:table)} were found to verify Windows credentials." if svr_list.blank?
+    raise "No #{Dictionary::gettext("miq_servers", :type => :table)} were found to verify Windows credentials." if svr_list.blank?
     svr_list.delete_if {|s| s.status != 'started'}
-    raise "No active #{Dictionary::gettext("miq_servers", :type=>:table)} were found to verify Windows credentials." if svr_list.blank?
+    raise "No active #{Dictionary::gettext("miq_servers", :type => :table)} were found to verify Windows credentials." if svr_list.blank?
 
     options = { :action => "Host(Windows) - Validate credentials", :userid => 'system'}
     queue_options = {:class_name => self.class.name,
@@ -40,7 +40,7 @@ class HostMicrosoft < Host
       WMIHelper.verify_credentials(*authentication)
     rescue Exception
       $log.warn("MIQ(Host-Microsoft-verify_credentials): #{$!.inspect}")
-      raise "Unexpected response returned from #{ui_lookup(:table=>"ext_management_systems")}, see log for details"
+      raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
     else
       true
     end

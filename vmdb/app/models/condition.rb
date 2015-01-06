@@ -209,7 +209,7 @@ class Condition < ActiveRecord::Base
       opts, ref, object = self.options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
-      e =check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
+      e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
 
       result = self.do_eval(e)

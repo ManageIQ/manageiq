@@ -23,22 +23,22 @@ module MiqReport::ImportExport
           if user.admin_user? || user.current_group_id == rep.miq_group_id
             msg = "Overwriting Report: [#{report["name"]}]"
             rep.attributes = report
-            result = {:message=>"Replaced Report: [#{report["name"]}]", :level=>:info, :status=>:update}
+            result = {:message => "Replaced Report: [#{report["name"]}]", :level => :info, :status => :update}
           else
             # if report exists dont overwrite
             msg = "Skipping Report (already in DB under a different group): [#{report["name"]}]"
-            result = {:message=>msg, :level=>:error, :status=>:skip}
+            result = {:message => msg, :level => :error, :status => :skip}
           end
         else
           # if report exists dont overwrite
           msg = "Skipping Report (already in DB): [#{report["name"]}]"
-          result = {:message=>msg, :level=>:info, :status=>:keep}
+          result = {:message => msg, :level => :info, :status => :keep}
         end
       else
         # create new report
         msg = "Importing Report: [#{report["name"]}]"
         rep = MiqReport.new(report)
-        result = {:message=>"Imported Report: [#{report["name"]}]", :level=>:info, :status=>:add}
+        result = {:message => "Imported Report: [#{report["name"]}]", :level => :info, :status => :add}
       end
       $log.info("#{log_header} #{msg}")
 

@@ -25,7 +25,7 @@ class MiqQueueAnalytic < ActsAsArModel
         scope_conditions = ["server_guid is NULL OR server_guid = :server_guid", {:server_guid => resource.guid}]
         roles = resource.active_role_names
       when Zone
-        scope_conditions = ["zone is NULL OR zone = :zone", {:zone=> resource.name}]
+        scope_conditions = ["zone is NULL OR zone = :zone", {:zone => resource.name}]
         roles = resource.active_role_names
       else
         roles = ServerRole.all_names

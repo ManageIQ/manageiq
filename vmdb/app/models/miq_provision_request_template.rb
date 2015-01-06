@@ -6,7 +6,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
     scaling_min = template_service_resource.nil? ? 1 : template_service_resource.scaling_min
 
     tasks = []
-    0.upto(scaling_min-1).each do |idx|
+    0.upto(scaling_min - 1).each do |idx|
 
       task = self.create_request_task(idx)
       task.options[:miq_force_unique_name] = [true, 1]

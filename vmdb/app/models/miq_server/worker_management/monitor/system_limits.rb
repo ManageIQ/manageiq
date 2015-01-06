@@ -9,7 +9,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
   }
 
   def kill_workers_due_to_resources_exhausted?
-    options = self.worker_monitor_settings[:kill_algorithm].merge(:type=> :kill)
+    options = self.worker_monitor_settings[:kill_algorithm].merge(:type => :kill)
     self.invoke_algorithm(options)
   end
 

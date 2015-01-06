@@ -161,7 +161,7 @@ class Snapshot < ActiveRecord::Base
 
   def self.add_snapshot_size_for_ems(parentObj, hashes)
     ss_props = {}
-    hashes.each {|h| ss_props[normalize_ss_uid(h[:uid])]={:total_size=>h[:total_size]}}
+    hashes.each {|h| ss_props[normalize_ss_uid(h[:uid])] = {:total_size => h[:total_size]}}
     parentObj.snapshots.each {|s| s.update_attributes(ss_props[normalize_ss_uid(s[:uid])]) unless ss_props[normalize_ss_uid(s[:uid])].nil?}
   end
 

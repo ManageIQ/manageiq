@@ -465,7 +465,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
         unless rp.parent.nil?
           # Mark RPs default that are only immediately under a Host or Cluster
           rp.is_default = [EmsCluster, Host].include?(rp.parent.class)
-          rp.name = "Default for #{Dictionary.gettext(rp.parent.class.to_s, :type=>:model, :notfound=>:titleize)} #{rp.parent.name}" if rp.is_default
+          rp.name = "Default for #{Dictionary.gettext(rp.parent.class.to_s, :type => :model, :notfound => :titleize)} #{rp.parent.name}" if rp.is_default
           rp.save
         end
       end

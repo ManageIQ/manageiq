@@ -65,16 +65,16 @@ module MiqProvisionQuotaMixin
 
   # Collect stats based on currently active provision requests for users in the same LDAP group as the owner.
   def quota_active_provisions_by_group(options)
-    return quota_provision_stats(:quota_find_active_prov_request_by_group, options.merge(:nil_vm_id_only=>true))
+    return quota_provision_stats(:quota_find_active_prov_request_by_group, options.merge(:nil_vm_id_only => true))
   end
 
   # Collect stats based on currently active provision requesets for the same owner.
   def quota_active_provisions_by_owner(options)
-    return quota_provision_stats(:quota_find_active_prov_request_by_owner, options.merge(:nil_vm_id_only=>true))
+    return quota_provision_stats(:quota_find_active_prov_request_by_owner, options.merge(:nil_vm_id_only => true))
   end
 
   def quota_active_provisions(options)
-    return quota_provision_stats(:quota_find_active_prov_request, options.merge(:nil_vm_id_only=>true))
+    return quota_provision_stats(:quota_find_active_prov_request, options.merge(:nil_vm_id_only => true))
   end
 
   def quota_find_vms_by_group(options)
@@ -142,7 +142,7 @@ module MiqProvisionQuotaMixin
          cond_args << false
       end
 
-      vms = Vm.find(:all, :conditions=>[cond_str, *cond_args], :include => {:hardware => :disks})
+      vms = Vm.find(:all, :conditions => [cond_str, *cond_args], :include => {:hardware => :disks})
     end
     return vms
   end
@@ -160,7 +160,7 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_vm_stats(vms_method, options)
-    result = {:count=>0, :memory=>0, :cpu=>0, :snapshot_storage=>0, :used_storage=>0, :allocated_storage=>0, :ids=>[], :class_name=>Vm.name}
+    result = {:count => 0, :memory => 0, :cpu => 0, :snapshot_storage => 0, :used_storage => 0, :allocated_storage => 0, :ids => [], :class_name => Vm.name}
     vms = self.send(vms_method, options)
     result[:count] = vms.length
     vms.each do |vm|
@@ -184,7 +184,7 @@ module MiqProvisionQuotaMixin
     scheduled_range = self.quota_get_time_range(options[:scheduled_time])
     scheduled_today = scheduled_range.first == self.quota_get_time_range().first
 
-    queued_requests = MiqQueue.find(:all, :conditions=>["class_name = 'MiqProvisionRequest' and method_name = 'create_provision_instances' and state = 'ready' and (deliver_on >= ? and deliver_on < ?)",
+    queued_requests = MiqQueue.find(:all, :conditions => ["class_name = 'MiqProvisionRequest' and method_name = 'create_provision_instances' and state = 'ready' and (deliver_on >= ? and deliver_on < ?)",
                                 *scheduled_range])
     # Make sure we skip the current MiqProvisionRequest in the calculation.
     skip_id = self.class.name == "MiqProvisionRequest" ? self.id : self.miq_provision_request.id
@@ -195,7 +195,7 @@ module MiqProvisionQuotaMixin
     # If the schedule is for today we need to add in provisions that ran today (scheduled or immediate)
     if scheduled_today
       today_range = (scheduled_range.first..scheduled_range.last)
-      MiqProvisionRequest.find(:all, :conditions=>["request_state != 'pending' and (updated_on >= ? and updated_on < ?)", *scheduled_range]).each do |prov_req|
+      MiqProvisionRequest.find(:all, :conditions => ["request_state != 'pending' and (updated_on >= ? and updated_on < ?)", *scheduled_range]).each do |prov_req|
         next if prov_req.id == skip_id
         provisions << prov_req if today_range.include?(prov_req.options[:delivered_on])
       end
@@ -228,7 +228,7 @@ module MiqProvisionQuotaMixin
 
   def quota_find_prov_requests(options)
     today_time_range = self.quota_get_time_range()
-    requests = MiqRequest.find(:all, :conditions=>["type = ? and approval_state != ? and (created_on >= ? and created_on < ?)",
+    requests = MiqRequest.find(:all, :conditions => ["type = ? and approval_state != ? and (created_on >= ? and created_on < ?)",
                                 MiqProvisionRequest.name, 'denied', *today_time_range])
     # Make sure we skip the current MiqProvisionRequest in the calculation.
     skip_id = self.class.name == "MiqProvisionRequest" ? self.id : self.miq_provision_request.id
@@ -273,12 +273,12 @@ module MiqProvisionQuotaMixin
 
   def quota_find_active_prov_request(options)
     prov_req_ids = []
-    MiqQueue.find(:all, :conditions=>{:method_name=>'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest'}).each do |q|
+    MiqQueue.find(:all, :conditions => {:method_name => 'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest'}).each do |q|
       prov_req_ids << q.instance_id
     end
 
     prov_ids = []
-    MiqQueue.find(:all, :conditions=>["method_name = ? AND state in (?) AND class_name = ? AND task_id like ?", 'deliver', ['ready','dequeue'], 'MiqAeEngine', '%miq_provision_%']).each do |q|
+    MiqQueue.find(:all, :conditions => ["method_name = ? AND state in (?) AND class_name = ? AND task_id like ?", 'deliver', ['ready','dequeue'], 'MiqAeEngine', '%miq_provision_%']).each do |q|
       if !q.args.nil?
         args = q.args.first
         prov_ids << args[:object_id] if args[:object_type] == 'MiqProvision' && !args[:object_id].blank?
@@ -292,11 +292,11 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_provision_stats(prov_method, options)
-    result = {:count=>0, :memory=>0, :cpu=>0, :storage=>0, :ids=>[], :class_name => MiqProvisionRequest.name,
+    result = {:count => 0, :memory => 0, :cpu => 0, :storage => 0, :ids => [], :class_name => MiqProvisionRequest.name,
               :active => {
-                :class_name => MiqProvision.name, :ids=>[], :storage_by_id => Hash.new {|k,v| k[v]=0},
-                :memory_by_host_id => Hash.new {|k,v| k[v]=0},  :cpu_by_host_id => Hash.new {|k,v| k[v]=0},
-                :vms_by_storage_id => Hash.new {|k,v| k[v]=[]}
+                :class_name => MiqProvision.name, :ids => [], :storage_by_id => Hash.new {|k,v| k[v] = 0},
+                :memory_by_host_id => Hash.new {|k,v| k[v] = 0},  :cpu_by_host_id => Hash.new {|k,v| k[v] = 0},
+                :vms_by_storage_id => Hash.new {|k,v| k[v] = []}
               }
              }
 
@@ -308,7 +308,7 @@ module MiqProvisionQuotaMixin
       end
 
       unless num_vms_for_request.zero?
-        new_disk_storage_size = pr.get_new_disks.inject(0){|s,d| s+=d[:sizeInMB].to_i} * 1.megabyte
+        new_disk_storage_size = pr.get_new_disks.inject(0){|s,d| s += d[:sizeInMB].to_i} * 1.megabyte
         result[:count]   += num_vms_for_request
         result[:memory]  += pr.get_option(:vm_memory).to_i      * num_vms_for_request
         result[:cpu]     += pr.get_option(:number_of_cpus).to_i * num_vms_for_request

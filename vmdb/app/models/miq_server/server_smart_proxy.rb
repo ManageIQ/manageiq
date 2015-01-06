@@ -150,14 +150,14 @@ module MiqServer::ServerSmartProxy
       ret = miqp.miqRet
 
       if ret.error
-        $log.error "#{log_prefix} Command [#{args[0]}] failed after [#{Time.now-startTime}] seconds.  TaskId:[#{ost.taskid}]"
+        $log.error "#{log_prefix} Command [#{args[0]}] failed after [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
         print_backtrace(ret.error)
         if ost.taskid
           job = Job.find_by_guid(ost.taskid)
           job.signal(:abort_retry, ret.error.strip.split("\n")[0], "error", true)
         end
       else
-        $log.info "#{log_prefix} Command [#{args[0]}] completed successfully in [#{Time.now-startTime}] seconds.  TaskId:[#{ost.taskid}]"
+        $log.info "#{log_prefix} Command [#{args[0]}] completed successfully in [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
       end
     end
   end

@@ -75,7 +75,7 @@ module Metric::CiMixin::Capture::Openstack
           # try to capture for every 20s over the timeframe ... however, the
           # server can be configured for any arbitrary capture interval
           # we'll deal with that below
-          @perf_ems.get_statistics(c["name"], options={'period'=>20, 'q'=>filter}).body
+          @perf_ems.get_statistics(c["name"], options = {'period' => 20, 'q' => filter}).body
         end
 
         # This is a pretty bad hack to work around a problem with the timestamp

@@ -263,7 +263,7 @@ class MiqAlert < ActiveRecord::Base
       :args        => [event, [target.class.name, target.id], inputs],
       :role        => 'automate',
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :zone        => target.respond_to?(:my_zone)? target.my_zone : MiqServer.my_zone
+      :zone        => target.respond_to?(:my_zone) ? target.my_zone : MiqServer.my_zone
     )
   end
 
@@ -344,7 +344,7 @@ class MiqAlert < ActiveRecord::Base
   def self.hourly_perf_model_details(dbs)
     dbs.inject({}) do |h,db|
       perf_model = "#{db}Performance"
-      h[db] = MiqExpression.model_details(perf_model, :include_model=>false, :interval=>"hourly").inject({}) do |hh,a|
+      h[db] = MiqExpression.model_details(perf_model, :include_model => false, :interval => "hourly").inject({}) do |hh,a|
         d,c = a
         model, col = c.split("-")
         next(hh) unless model == perf_model
@@ -391,40 +391,40 @@ class MiqAlert < ActiveRecord::Base
           {:name => :time_threshold, :description => "How Far Back to Check", :required => true},
           {:name => :freq_threshold, :description => "Event Count Threshold", :required => true, :numeric => true}
         ]},
-      {:name => "realtime_performance", :description => "Real Time Performance", :db => (dbs=["Vm", "Host", "EmsCluster"]), :responds_to_events => '#{db.underscore}_perf_complete',
+      {:name => "realtime_performance", :description => "Real Time Performance", :db => (dbs = ["Vm", "Host", "EmsCluster"]), :responds_to_events => '#{db.underscore}_perf_complete',
         :options => [
           {:name => :perf_column, :description => "Performance Field", :values => self.rt_perf_model_details(dbs)},
           {:name => :operator, :description => "Operator", :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_threshold, :description => "Value Threshold", :required => true},
-          {:name => :trend_direction, :description => "And is Trending", :required => true, :values => {"none"=>" Don't Care","up"=>"Up","up_more_than"=>"Up More Than","down"=>"Down","down_more_than"=>"Down More Than","not_up"=>"Not Up","not_down"=>"Not Down"}},
+          {:name => :trend_direction, :description => "And is Trending", :required => true, :values => {"none" => " Don't Care","up" => "Up","up_more_than" => "Up More Than","down" => "Down","down_more_than" => "Down More Than","not_up" => "Not Up","not_down" => "Not Down"}},
           {:name => :trend_steepness, :description => "Per Minute", :required => false},
           {:name => :rt_time_threshold, :description => "Field Meets Criteria for", :required => true},
           {:name => :debug_trace, :description => "Debug Tracing", :required => true, :values => ["false", "true"]},
         ]},
-      {:name => "operating_range_exceptions", :description => "Normal Operating Range", :db => (dbs=["Vm"]), :responds_to_events => "vm_perf_complete",
+      {:name => "operating_range_exceptions", :description => "Normal Operating Range", :db => (dbs = ["Vm"]), :responds_to_events => "vm_perf_complete",
         :options => [
           {:name => :perf_column, :description => "Performance Field", :values => self.operating_range_perf_model_details(dbs)},
           {:name => :operator, :description => "Operator", :values => ["Exceeded", "Fell Below"]},
           {:name => :rt_time_threshold, :description => "Field Meets Criteria for", :required => true}
         ]},
-      {:name => "hourly_performance", :description => "Hourly Performance", :db => (dbs=["EmsCluster"]), :responds_to_events => "_hourly_timer_",
+      {:name => "hourly_performance", :description => "Hourly Performance", :db => (dbs = ["EmsCluster"]), :responds_to_events => "_hourly_timer_",
         :options => [
           {:name => :perf_column, :description => "Performance Field", :values => self.hourly_perf_model_details(dbs)},
           {:name => :operator, :description => "Operator", :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_threshold, :description => "Value Threshold", :required => true},
-          {:name => :trend_direction, :description => "And is Trending", :required => true, :values => {"none"=>" Don't Care","up"=>"Up","down"=>"Down","not_up"=>"Not Up","not_down"=>"Not Down"}},
+          {:name => :trend_direction, :description => "And is Trending", :required => true, :values => {"none" => " Don't Care","up" => "Up","down" => "Down","not_up" => "Not Up","not_down" => "Not Down"}},
           {:name => :hourly_time_threshold, :description => "Field Meets Criteria for", :required => true},
           {:name => :debug_trace, :description => "Debug Tracing", :required => true, :values => ["false", "true"]},
         ]},
       {:name => "reconfigured_hardware_value", :description => "Hardware Reconfigured", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
         :options => [
-          {:name => :hdw_attr, :description => "Hardware Attribute", :values => {:memory_cpu => Dictionary.gettext("memory_cpu", :type=>"column"), :numvcpus => Dictionary.gettext("numvcpus", :type=>"column")}},
+          {:name => :hdw_attr, :description => "Hardware Attribute", :values => {:memory_cpu => Dictionary.gettext("memory_cpu", :type => "column"), :numvcpus => Dictionary.gettext("numvcpus", :type => "column")}},
           {:name => :operator, :description => "Operator", :values => ["Increased", "Decreased"]}
         ]},
       {:name => "changed_vm_value", :description => "VM Value changed", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
         :options => [
           {:name => :hdw_attr, :description => "VM Attribute", :values => {
-              :cpu_affinity => Dictionary.gettext("cpu_affinity", :type=>"column")
+              :cpu_affinity => Dictionary.gettext("cpu_affinity", :type => "column")
             }},
           {:name => :operator, :description => "Operator", :values => ["Changed"]}
         ]}
@@ -448,7 +448,7 @@ class MiqAlert < ActiveRecord::Base
     begin
       Timeout::timeout(to) { alarms = ems.get_alarms if ems.respond_to?(:get_alarms) }
     rescue TimeoutError
-      msg ="Request to retrieve alarms timed out after #{to} seconds"
+      msg = "Request to retrieve alarms timed out after #{to} seconds"
       $log.warn(msg)
       raise msg
     rescue MiqException::MiqVimBrokerUnavailable => err
@@ -666,7 +666,7 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def validate
-    if self.options.kind_of?(Hash)&& self.options.fetch_path(:notifications, :automate)
+    if self.options.kind_of?(Hash) && self.options.fetch_path(:notifications, :automate)
       event_name = self.options.fetch_path(:notifications, :automate, :event_name)
       unless (event_name =~ /[^a-z0-9_]/i).nil?
         errors.add("Event Name", "must be alphanumeric characters and underscores without spaces")

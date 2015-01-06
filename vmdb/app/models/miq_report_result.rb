@@ -92,7 +92,7 @@ class MiqReportResult < ActiveRecord::Base
     per_page = options.delete(:per_page)
     page     = options.delete(:page) || 1
     unless per_page.nil?
-      options[:offset] = ((page -1) * per_page)
+      options[:offset] = ((page - 1) * per_page)
       options[:limit]  = per_page
     end
     self.update_attribute(:last_accessed_on, Time.now.utc)

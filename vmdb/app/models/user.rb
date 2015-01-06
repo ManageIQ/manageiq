@@ -338,7 +338,7 @@ class User < ActiveRecord::Base
       auth = VMDB::Config.new("vmdb").config[:authentication]
       # Amazon IAM will be used for authentication and role assignment
       $log.info("#{log_prefix} AWS key: [#{auth[:amazon_key]}]")
-      amazon_auth = AmazonAuth.new(:auth=>auth)
+      amazon_auth = AmazonAuth.new(:auth => auth)
       $log.info("#{log_prefix}  User: [#{username}]")
       amazon_user = amazon_auth.iam_user(username)
       $log.debug("#{log_prefix} User obj from Amazon: #{amazon_user.inspect}")
@@ -358,7 +358,7 @@ class User < ActiveRecord::Base
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
-      AuditEvent.failure(audit.merge(:message=> err.message))
+      AuditEvent.failure(audit.merge(:message => err.message))
       task.state_finished
       raise
     end
@@ -467,7 +467,7 @@ class User < ActiveRecord::Base
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
-      AuditEvent.failure(audit.merge(:message=> err.message))
+      AuditEvent.failure(audit.merge(:message => err.message))
       task.state_finished
       raise
     end

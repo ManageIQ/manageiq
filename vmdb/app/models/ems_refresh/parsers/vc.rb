@@ -1217,7 +1217,7 @@ module EmsRefresh::Parsers::Vc
 
         rps.each do |rp|
           rp[:is_default] = true
-          rp[:name] = "Default for #{Dictionary.gettext(parent_classes[parent_type], :type=>:model, :notfound=>:titleize)} #{parent[:name]}"
+          rp[:name] = "Default for #{Dictionary.gettext(parent_classes[parent_type], :type => :model, :notfound => :titleize)} #{parent[:name]}"
         end
       end
     end

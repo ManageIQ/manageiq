@@ -64,7 +64,7 @@ module MiqProvision::Naming
           end
         end
       end
-      start_idx+=1
+      start_idx += 1
 
       start_idx.upto(9999) do |x|
         idx_str  = format("%0#{name[:index_length]}d", x)

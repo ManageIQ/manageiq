@@ -14,7 +14,7 @@ module AlertMixin
     $log.info("#{log_header} options: #{options.inspect}")
 
     cond, sel = build_conditions_and_selects(options)
-    logs = self.operating_system.nil? ? [] : self.operating_system.event_logs.find(:all, :conditions=> cond, :select => sel)
+    logs = self.operating_system.nil? ? [] : self.operating_system.event_logs.find(:all, :conditions => cond, :select => sel)
 
     $log.info("#{log_header} Found [#{logs.length}], conditions: #{cond.inspect}")
 

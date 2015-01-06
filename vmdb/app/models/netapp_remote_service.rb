@@ -533,7 +533,7 @@ class NetappRemoteService < StorageManager
       raise $!.message
     rescue Exception
       $log.warn("MIQ(NetappRemoteService-verify_credentials): #{$!.inspect}")
-      raise "Unexpected response returned from #{ui_lookup(:table=>"storage_managers")}, see log for details"
+      raise "Unexpected response returned from #{ui_lookup(:table => "storage_managers")}, see log for details"
     else
       true
     end

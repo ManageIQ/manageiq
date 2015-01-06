@@ -342,9 +342,9 @@ class MiqCimInstance < ActiveRecord::Base
         node.getAssociators(a).each do |an|
           children = true
           if p[:flags][:recurse]
-            getLeafNodes(p, an, retHash, level+1, visited)
+            getLeafNodes(p, an, retHash, level + 1, visited)
           end
-          getLeafNodes(p[:next], an, retHash, level+1, visited)
+          getLeafNodes(p[:next], an, retHash, level + 1, visited)
         end
       end
     end

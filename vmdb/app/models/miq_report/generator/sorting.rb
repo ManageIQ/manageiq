@@ -35,7 +35,7 @@ module MiqReport::Generator::Sorting
     end
 
     order = self.order.blank? ? "Ascending" : self.order                        # Default to Ascending sort
-    @table = sort_table(@table, new_sortby, :order=>order.downcase.to_sym)      # Sort the table
+    @table = sort_table(@table, new_sortby, :order => order.downcase.to_sym)      # Sort the table
 
     # Remove any subtituted values we put in the table earlier
     new_sortby.each_with_index do |sb,idx|

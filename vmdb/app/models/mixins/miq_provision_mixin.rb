@@ -132,7 +132,7 @@ module MiqProvisionMixin
 
     result = nil
     begin
-      if folder.kind_of?(Array) && folder.length==2 && folder.first.kind_of?(Integer)
+      if folder.kind_of?(Array) && folder.length == 2 && folder.first.kind_of?(Integer)
         result = EmsFolder.find_by_id(folder.first)
         result = [result.id, result.name] unless result.nil?
       else

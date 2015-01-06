@@ -60,7 +60,7 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.database_scoped_roles
-    @database_scoped_roles ||= self.where(:role_scope =>('database').order(:name))
+    @database_scoped_roles ||= self.where(:role_scope => ('database').order(:name))
   end
 
   def self.region_scoped_roles

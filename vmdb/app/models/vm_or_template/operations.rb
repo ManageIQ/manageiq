@@ -40,7 +40,7 @@ module VmOrTemplate::Operations
   end
 
   def raw_unregister
-    raise "VM has no #{ui_lookup(:table=>"ext_management_systems")}, unable to unregister VM" unless self.ext_management_system
+    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to unregister VM" unless self.ext_management_system
     run_command_via_parent(:vm_unregister)
   end
 
@@ -49,7 +49,7 @@ module VmOrTemplate::Operations
   end
 
   def raw_destroy
-    raise "VM has no #{ui_lookup(:table=>"ext_management_systems")}, unable to destroy VM" unless self.ext_management_system
+    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to destroy VM" unless self.ext_management_system
     run_command_via_parent(:vm_destroy)
   end
 
@@ -69,7 +69,7 @@ module VmOrTemplate::Operations
     return [false, 'The VM is a template'] if self.template?
     return [true,  'The VM is not connected to a Host'] unless self.has_required_host?
     return [true,  'The VM does not have a valid connection state'] if !self.connection_state.nil? && !self.connected_to_ems?
-    return [true,  "The VM is not connected to an active #{ui_lookup(:table=>"ext_management_systems")}"] unless self.has_active_ems?
+    return [true,  "The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"] unless self.has_active_ems?
     return nil
   end
 

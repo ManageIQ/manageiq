@@ -22,12 +22,12 @@ class VmMigrateWorkflow < MiqRequestWorkflow
   end
 
   def get_source_and_targets(refresh=false)
-    return @target_resource if @target_resource && refresh==false
+    return @target_resource if @target_resource && refresh == false
 
     ems = @values[:src_ids].to_miq_a.collect {|v_id| v = Vm.find_by_id(v_id); v.ext_management_system}.uniq.compact
 
     # If all the selected VMs share the same EMS we can present a list of CIs.
-    return @target_resource={} if ems.length != 1
+    return @target_resource = {} if ems.length != 1
 
     result = {:ems => ci_to_hash_struct(ems.first)}
     add_target(:placement_host_name,    :host,    Host,         result)
@@ -43,7 +43,7 @@ class VmMigrateWorkflow < MiqRequestWorkflow
       add_target(:placement_dc_name, :datacenter, EmsFolder, result)
     end
     rails_logger('get_source_and_targets', 1)
-    return @target_resource=result
+    return @target_resource = result
   end
 
   def validate_placement(field, values, dlg, fld, value)

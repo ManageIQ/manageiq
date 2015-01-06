@@ -200,7 +200,7 @@ class AssetTagImport
               $log.info "#{log_prefix} #{@klass.name}: #{obj.name}, Skipping tag <#{key}> due to blank value"
             else
               $log.info "#{log_prefix} #{@klass.name}: #{obj.name}, Adding tag <#{key}>, value <#{value}>"
-              new_attrs << {:name=>key, :value=>value, :source=>'EVM'}
+              new_attrs << {:name => key, :value => value, :source => 'EVM'}
             end
           else
             if value.blank?
@@ -296,7 +296,7 @@ class ClassificationImport
         if cat.single_value && entries.length > 1
           vm = VmOrTemplate.find_by_id(id)
           while entries.length > 1
-            e=entries.shift
+            e = entries.shift
             $log.warn "#{log_prefix} Vm: #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored"
             @errors.add(:singlevaluedcategory, "Vm #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored")
           end

@@ -218,7 +218,7 @@ class JobProxyDispatcher
         .select("target_id").collect { |ji| ji.target_id }.compact.uniq
     return @busy_resources_for_embedded_scanning_hash if vms_in_embedded_scanning.blank?
 
-    embedded_scans_by_resource = Hash.new {|h,k| h[k]=0}
+    embedded_scans_by_resource = Hash.new {|h,k| h[k] = 0}
     VmOrTemplate.where(:id => vms_in_embedded_scanning).each do |v|
       key = self.embedded_scan_resource(v)
       embedded_scans_by_resource[key] += 1 if key

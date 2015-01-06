@@ -1078,9 +1078,9 @@ class MiqExpression
           if first
             first = nil
             next unless options[:include_model] == true
-            Dictionary.gettext(t, :type=>:model, :notfound=>:titleize)
+            Dictionary.gettext(t, :type => :model, :notfound => :titleize)
           else
-            Dictionary.gettext(t, :type=>:table, :notfound=>:titleize)
+            Dictionary.gettext(t, :type => :table, :notfound => :titleize)
           end
         end
       }.compact
@@ -1095,7 +1095,7 @@ class MiqExpression
     else
       model = tables.blank? ? nil : tables.split(".").last.singularize.camelize
       dict_col = model.nil? ? col : [model, col].join(".")
-      ret << Dictionary.gettext(dict_col, :type=>:column, :notfound=>:titleize) if col
+      ret << Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize) if col
     end
     ret = " #{ret}" unless ret.include?(":")
     ret
@@ -1355,11 +1355,11 @@ class MiqExpression
     @@base_tables
   end
 
-  def self.model_details(model, opts = {:typ=>"all", :include_model=>true, :include_tags=>false, :include_my_tags=>false})
+  def self.model_details(model, opts = {:typ => "all", :include_model => true, :include_tags => false, :include_my_tags => false})
     @classifications = nil
     model = model.to_s
 
-    opts = {:typ=>"all", :include_model=>true}.merge(opts)
+    opts = {:typ => "all", :include_model => true}.merge(opts)
     if opts[:typ] == "tag"
       tags_for_model = self.tag_details(model, model, opts)
       result = []
@@ -1369,17 +1369,17 @@ class MiqExpression
         result.concat(self.tag_details(tc, path, opts))
       end
       @classifications = nil
-      return tags_for_model.concat(result.sort!{|a,b|a.to_s<=>b.to_s})
+      return tags_for_model.concat(result.sort!{|a,b|a.to_s <=> b.to_s})
     end
 
     relats = self.get_relats(model)
 
     result = []
     unless opts[:typ] == "count" || opts[:typ] == "find"
-      result = self.get_column_details(relats[:columns], model, opts).sort!{|a,b|a.to_s<=>b.to_s}
+      result = self.get_column_details(relats[:columns], model, opts).sort!{|a,b|a.to_s <=> b.to_s}
       result.concat(self.tag_details(model, model, opts)) if opts[:include_tags] == true
     end
-    result.concat(self._model_details(relats, opts).sort!{|a,b|a.to_s<=>b.to_s})
+    result.concat(self._model_details(relats, opts).sort!{|a,b|a.to_s <=> b.to_s})
     @classifications = nil
     return result
   end
@@ -1416,7 +1416,7 @@ class MiqExpression
       field = prefix + "-" + opts[:userid]
       result.push([self.value2human(field, opts), field])
     end
-    result.sort!{|a,b|a.to_s<=>b.to_s}
+    result.sort!{|a,b|a.to_s <=> b.to_s}
   end
 
   def self.get_relats(model)
@@ -1439,9 +1439,9 @@ class MiqExpression
     @miq_adv_search_lists[model.to_s] ||= {}
 
     case what.to_sym
-    when :exp_available_fields then @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, :typ=>"field", :include_model=>true)
-    when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, :typ=>"count", :include_model=>true)
-    when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, :typ=>"find",  :include_model=>true)
+    when :exp_available_fields then @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, :typ => "field", :include_model => true)
+    when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, :typ => "count", :include_model => true)
+    when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, :typ => "find",  :include_model => true)
     end
   end
 
@@ -1452,11 +1452,11 @@ class MiqExpression
       @reporting_available_fields[model.to_s][interval.to_s] ||= VimPerformanceTrend.trend_model_details(interval.to_s)
     elsif model.ends_with?("Performance")
       @reporting_available_fields[model.to_s] ||= {}
-      @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval =>interval)
+      @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif model.to_s == "Chargeback"
-      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model=>false, :include_tags=>true).select {|c| c.last.ends_with?("_cost") || c.last.ends_with?("_metric") || c.last.ends_with?("-owner_name")}
+      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true).select {|c| c.last.ends_with?("_cost") || c.last.ends_with?("_metric") || c.last.ends_with?("-owner_name")}
     else
-      @reporting_available_fields[model.to_s] ||=  MiqExpression.model_details(model, :include_model=>false, :include_tags=>true)
+      @reporting_available_fields[model.to_s] ||=  MiqExpression.model_details(model, :include_model => false, :include_tags => true)
     end
   end
 
@@ -1752,7 +1752,7 @@ class MiqExpression
 
   def self.model_class(model)
     # TODO: the temporary cache should be removed after widget refactoring
-    @@model_class ||= Hash.new { |h, m| h[m] = m.is_a?(Class) ? m: m.to_s.singularize.camelize.constantize rescue nil }
+    @@model_class ||= Hash.new { |h, m| h[m] = m.is_a?(Class) ? m : m.to_s.singularize.camelize.constantize rescue nil }
     @@model_class[model]
   end
 

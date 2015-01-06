@@ -118,7 +118,7 @@ class VimPerformancePlanning < ActsAsArModel
     options[:ext_options] = {:tz => options[:tz], :time_profile => TimeProfile.find_by_id(options[:time_profile_id])}
 
     anal = VimPerformanceAnalysis::Planning.new(vm, options)
-    vm_needs =anal.get_vm_needs
+    vm_needs = anal.get_vm_needs
 
     # add value key to each of the passed in options
     vm_needs.each do |k,v|

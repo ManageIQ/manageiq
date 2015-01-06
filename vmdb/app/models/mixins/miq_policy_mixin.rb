@@ -128,7 +128,7 @@ module MiqPolicyMixin
         :action       => "#{self.name} - Resultant Set of Policy, Event: [#{eventobj.description}]",
         :userid       => userid
       }
-      qopts ={
+      qopts = {
         :class_name   => self.name,
         :method_name  => "rsop",
         :args         => [eventobj.name, targets],

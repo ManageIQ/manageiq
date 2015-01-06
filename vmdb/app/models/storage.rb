@@ -360,10 +360,10 @@ class Storage < ActiveRecord::Base
 
   def scan(userid = "system", role = "ems_operations")
     log_header = "MIQ(Storage.scan)"
-    raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table=>"storages")} type [#{self.store_type}], [#{self.name}] with id: [#{self.id}]") unless SUPPORTED_STORAGE_TYPES.include?(self.store_type)
+    raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table => "storages")} type [#{self.store_type}], [#{self.name}] with id: [#{self.id}]") unless SUPPORTED_STORAGE_TYPES.include?(self.store_type)
 
     hosts = self.active_hosts_with_credentials
-    raise(MiqException::MiqStorageError,       "Check that a Host is running and has valid credentials for #{ui_lookup(:table=>"storages")} [#{self.name}] with id: [#{self.id}]") if hosts.empty?
+    raise(MiqException::MiqStorageError,       "Check that a Host is running and has valid credentials for #{ui_lookup(:table => "storages")} [#{self.name}] with id: [#{self.id}]") if hosts.empty?
 
     task_name = "SmartState Analysis for [#{self.name}]"
     self.class.create_scan_task(task_name, userid, [self])

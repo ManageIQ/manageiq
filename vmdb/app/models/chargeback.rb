@@ -82,7 +82,7 @@ class Chargeback < ActsAsArModel
 
     perf_cols = MetricRollup.column_names
     options[:ext_options][:only_cols] = Metric::BASE_COLS
-    rates = ChargebackRate.find(:all, :conditions=>{:default=>true})
+    rates = ChargebackRate.find(:all, :conditions => {:default => true})
     rates.each do |rate|
       options[:ext_options][:only_cols] += rate.chargeback_rate_details.collect do |r|
         r.metric if perf_cols.include?(r.metric.to_s)
@@ -235,7 +235,7 @@ class Chargeback < ActsAsArModel
 
   def self.default_rates()
     rates = []
-    ChargebackRate.find(:all, :conditions=>{:default=>true}).each do |rate|
+    ChargebackRate.find(:all, :conditions => {:default => true}).each do |rate|
       rates += rate.chargeback_rate_details
     end
     return rates

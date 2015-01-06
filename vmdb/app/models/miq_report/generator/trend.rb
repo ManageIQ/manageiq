@@ -164,7 +164,7 @@ module MiqReport::Generator::Trend
           if Time.at(result).utc <= Time.now.utc
             return Time.at(result).utc.strftime("%m/%d/%Y")
           else
-            return "#{((Time.at(result).utc - Time.now.utc)/1.day).round} days, on #{Time.at(result).utc.strftime("%m/%d/%Y")} (#{self.get_time_zone("UTC")})"
+            return "#{((Time.at(result).utc - Time.now.utc) / 1.day).round} days, on #{Time.at(result).utc.strftime("%m/%d/%Y")} (#{self.get_time_zone("UTC")})"
           end
         else
           return "after 1 year"

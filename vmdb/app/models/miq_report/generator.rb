@@ -385,7 +385,7 @@ module MiqReport::Generator
     if options[:limit]
       options[:offset] ||= 0
       self.extras[:target_ids_for_paging] = @table.data.collect {|d| d["id"]} # Save ids of targets, since we have then all, to avoid going back to SQL for the next page
-      @table = @table.sub_table(@table.column_names, options[:offset]..options[:offset]+options[:limit]-1)
+      @table = @table.sub_table(@table.column_names, options[:offset]..options[:offset] + options[:limit] - 1)
     end
 
     self.build_subtotals
@@ -472,11 +472,11 @@ module MiqReport::Generator
       }
       a
     }
-    arr.sort!{|a,b| a[1]<=>b[1]}
+    arr.sort!{|a,b| a[1] <=> b[1]}
     while arr.first[1] == "[None]"; arr.push(arr.shift); end unless arr.blank? || (arr.first[1] == "[None]" && arr.last[1] == "[None]")
     arr.each {|c, h| self.cols.push(c); self.col_order.push(c); self.headers.push(h)}
 
-    tarr = Array(tags2desc).sort{|a,b| a[1]<=>b[1]}
+    tarr = Array(tags2desc).sort{|a,b| a[1] <=> b[1]}
     while tarr.first[1] == "[None]"; tarr.push(tarr.shift); end unless tarr.blank? || (tarr.first[1] == "[None]" && tarr.last[1] == "[None]")
     self.extras[:group_by_tags] = tarr.collect {|a| a[0]}
     self.extras[:group_by_tag_descriptions] = tarr.collect {|a| a[1]}
@@ -730,7 +730,7 @@ module MiqReport::Generator
       :msg_timeout => self.queue_timeout,
       :args        => [task.id, options, res_opts]
     )
-    AuditEvent.success(:event=>"generate_table", :target_class=>self.class.base_class.name, :target_id=>self.id, :userid => options[:userid], :message=> "#{task.name}, successfully initiated")
+    AuditEvent.success(:event => "generate_table", :target_class => self.class.base_class.name, :target_id => self.id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
     task.update_status("Queued", "Ok", "Task has been queued")
 
     $log.info("MIQ(MiqReport-queue_report_result) Finished adding generate report task with id [#{task.id}] to the message queue")

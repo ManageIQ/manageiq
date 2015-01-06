@@ -25,7 +25,7 @@ class MiqPolicySet < ActiveRecord::Base
   def destroy_policy_tags
     # handle policy assignment removal for deleted policy profile
     tag = "/miq_policy/assignment/#{self.class.to_s.underscore}/#{self.id}"
-    Tag.remove(tag, :ns=>"*")
+    Tag.remove(tag, :ns => "*")
   end
 
   def add_to(ids, db)

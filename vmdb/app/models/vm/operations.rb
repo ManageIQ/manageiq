@@ -3,7 +3,7 @@ module Vm::Operations
   include_concern 'Power'
 
   def validate_collect_running_processes
-    s = {:available=>false, :message=> nil}
+    s = {:available => false, :message => nil}
 
     # Report reasons why collection is not available for this VM
     unless ['windows'].include?(self.platform)

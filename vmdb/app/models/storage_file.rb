@@ -17,7 +17,7 @@ class StorageFile < ActiveRecord::Base
   end
 
   def self.split_file_types(files)
-    ret = {:disk=>[], :snapshot=>[], :vm_ram=>[], :vm_misc=>[], :debris=>[]}
+    ret = {:disk => [], :snapshot => [], :vm_ram => [], :vm_misc => [], :debris => []}
 
     files.each do |f|
       case f.ext_name

@@ -76,7 +76,7 @@ module OntapDerivedMetricMixin
       counters1 = vinst1.counters
 
       interval = @storageMetricsCollectionInterval.to_f
-      nInterval = (deltaSecs/interval + 0.5).to_i
+      nInterval = (deltaSecs / interval + 0.5).to_i
       $log.info "#{self.name}.derive_metrics_common: nIntrval = #{nInterval}"
       deltaSecs /= nInterval
 

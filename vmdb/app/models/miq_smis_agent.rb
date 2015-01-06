@@ -128,7 +128,7 @@ class MiqSmisAgent < StorageManager
     rescue Exception
       $log.warn("MIQ(MiqSmisAgent-verify_credentials): #{$!.inspect}")
       # $log.info $!.backtrace.join("\n")
-      raise "Unexpected response returned from #{ui_lookup(:table=>"ext_management_systems")}, see log for details"
+      raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
     else
       true
     end

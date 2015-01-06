@@ -45,7 +45,7 @@ module MiqProvisionVmware::Configuration::Network
     else
       # When using advanced network settings update the options hash to reflect the selected vlan
       net = self.options[:networks].first
-      self.options[:vlan] = [net[:is_dvs] == true ? "dvs_#{net[:network]}": net[:network], net[:network]]
+      self.options[:vlan] = [net[:is_dvs] == true ? "dvs_#{net[:network]}" : net[:network], net[:network]]
     end
     self.options[:networks]
   end

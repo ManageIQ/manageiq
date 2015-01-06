@@ -190,7 +190,7 @@ module MiqServer::LogManagement
   end
 
   def delete_old_requested_logs
-    LogFile.destroy_all(:historical => false, :resource_id => self.id, :resource_type=> self.class.name)
+    LogFile.destroy_all(:historical => false, :resource_id => self.id, :resource_type => self.class.name)
   end
 
   def delete_active_log_collections_queue

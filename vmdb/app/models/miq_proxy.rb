@@ -245,7 +245,7 @@ class MiqProxy < ActiveRecord::Base
       # We need to have userid and password configured for the host for this to work.
       if self.host.authentication_valid?(:ws)
         if agentCfg[:emsLocal].blank?
-          self.settings[:emsLocal]=default_key
+          self.settings[:emsLocal] = default_key
           updated = true
         end
         updated = true if self.update_ems_local_settings(agentCfg, default_key, :ws, 'vmwarewws') == true
@@ -275,7 +275,7 @@ class MiqProxy < ActiveRecord::Base
       self.settings[:ems] = agentCfg[:ems]
 
       # Send down the required emslocal setting.
-      self.settings[:ems][key_name] = {"type"=>type, "host"=>"127.0.0.1", "user"=>host.authentication_userid(auth_type), "password"=>host.authentication_password_encrypted(auth_type)}
+      self.settings[:ems][key_name] = {"type" => type, "host" => "127.0.0.1", "user" => host.authentication_userid(auth_type), "password" => host.authentication_password_encrypted(auth_type)}
       return true
     else
       autoLocal = agentCfg[:ems][key_name]
@@ -332,8 +332,8 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def clear_queue_items(options={})
-    options.reverse_merge!({:task_id=>nil, :queue_name=>nil})
-    call_ws(OpenStruct.new("method_name"=>"ClearQueueItems", "options"=>YAML.dump(options)))
+    options.reverse_merge!({:task_id => nil, :queue_name => nil})
+    call_ws(OpenStruct.new("method_name" => "ClearQueueItems", "options" => YAML.dump(options)))
   end
 
   def restart
@@ -341,7 +341,7 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def shutdown(restart=false)
-    call_ws(OpenStruct.new("method_name"=>"Shutdown", "options"=>YAML.dump({:restart=>restart})))
+    call_ws(OpenStruct.new("method_name" => "Shutdown", "options" => YAML.dump({:restart => restart})))
   end
 
   def change_agent_config(opts=nil)
@@ -354,7 +354,7 @@ class MiqProxy < ActiveRecord::Base
     # Only the most recent Config settings need to be on the queue so
     # remove any pending calls from the proxies heartbeat queue.
     removePendingTasks("ChangeAgentConfig")
-    call_ws(OpenStruct.new("method_name"=>"ChangeAgentConfig", "config"=>YAML.dump(config), "useHostQueue"=>useHostQueue))
+    call_ws(OpenStruct.new("method_name" => "ChangeAgentConfig", "config" => YAML.dump(config), "useHostQueue" => useHostQueue))
   end
 
   def update_power_state_proxy(new_state)
@@ -426,7 +426,7 @@ class MiqProxy < ActiveRecord::Base
       end
     end
 
-    return {:server_message=>"OK", :hostId=>self.host.guid, :tasks=>tasks}
+    return {:server_message => "OK", :hostId => self.host.guid, :tasks => tasks}
   end
 
   def scan(scanLoc=nil)
@@ -439,24 +439,24 @@ class MiqProxy < ActiveRecord::Base
 
   def refresh_host_commands
     if self.host.acts_as_ems?
-      return [{"method_name"=>"GetEmsInventory"}]
+      return [{"method_name" => "GetEmsInventory"}]
     else
-      return [{"method_name"=>"GetHostConfig"}, {"fmt"=>true, "method_name"=>"GetVMs"}]
+      return [{"method_name" => "GetHostConfig"}, {"fmt" => true, "method_name" => "GetVMs"}]
     end
   end
 
   def scan_repository(repository)
-    call_ws(OpenStruct.new("method_name"=>"ScanRepository", "repository_id"=>repository.id, "path"=>repository.path, "fmt"=>true))
+    call_ws(OpenStruct.new("method_name" => "ScanRepository", "repository_id" => repository.id, "path" => repository.path, "fmt" => true))
   end
 
   def delete_blackbox
-    call_ws(OpenStruct.new("args"=>[], "deleteall"=>true, "method_name"=>"DeleteBlackBox"))
+    call_ws(OpenStruct.new("args" => [], "deleteall" => true, "method_name" => "DeleteBlackBox"))
   end
 
   # Ask host to update all locally registered vm state data
   def refresh_vm_state
     begin
-      ost = OpenStruct.new("method_name"=>"SendVMState")
+      ost = OpenStruct.new("method_name" => "SendVMState")
       call_ws(ost)
     rescue Exception => err
       $log.log_backtrace(err)
@@ -471,7 +471,7 @@ class MiqProxy < ActiveRecord::Base
         $log.debug "MIQ(proxy-miqcmd_formatter): #{cmd_hash.inspect}"
         # Remove items before queuing task
         cmd_hash.delete(:host);cmd_hash.delete(:port)
-        x = self.proxy_tasks.create({:command=>cmd_hash, :state=>"pending"})
+        x = self.proxy_tasks.create({:command => cmd_hash, :state => "pending"})
         x.save!
       end
     rescue => err
@@ -482,7 +482,7 @@ class MiqProxy < ActiveRecord::Base
   def WakeupHost(ost=nil)
     require 'WebSvcOps'
     begin
-      ost = OpenStruct.new("host"=>self.address, "port"=>self.myport, "hostId"=>self.host.guid) if ost.nil?
+      ost = OpenStruct.new("host" => self.address, "port" => self.myport, "hostId" => self.host.guid) if ost.nil?
       ost.method_name = "WakeupHeartbeat"
       #WebSvcOps.new(ost).method(ost.method_name).call(ost)
       ws = WebSvcOps.new(ost)
@@ -519,7 +519,7 @@ class MiqProxy < ActiveRecord::Base
     flist = sorted_log_list()
     options[:lastUploadTime] = flist.last[1].to_i unless flist.empty?
 
-    call_ws(OpenStruct.new("method_name"=>"GetAgentLogs", "url"=>url, "options"=>options.inspect))
+    call_ws(OpenStruct.new("method_name" => "GetAgentLogs", "url" => url, "options" => options.inspect))
   end
 
   def local_log_files
@@ -529,7 +529,7 @@ class MiqProxy < ActiveRecord::Base
   def sorted_log_list
     files = {}
     self.local_log_files.each {|name| files[name] = File.mtime(name)}
-    files.sort {|a,b| a[1]<=>b[1]}
+    files.sort {|a,b| a[1] <=> b[1]}
   end
 
   def log_contents(width=nil, last=1000)
@@ -559,7 +559,7 @@ class MiqProxy < ActiveRecord::Base
     results = []
     contents.each {|line|
       while !width.nil? && line.length > width
-        results.push(line[0..width-1])
+        results.push(line[0..width - 1])
         line = line[width..line.length]
       end
       results.push(line) if line.length
@@ -812,15 +812,15 @@ class MiqProxy < ActiveRecord::Base
     task = MiqTask.find_by_id(taskid)  unless taskid.nil?
     url, meta = self.get_version_metadata(update, taskid)
     task.update_status("Active", "Ok", "Initiating SmartProxy download of version #{meta[:version]}") if task
-    call_ws(OpenStruct.new("method_name"=>"GetAgent", "url"=>url, "metadata"=>meta.inspect, "taskid"=>taskid))
+    call_ws(OpenStruct.new("method_name" => "GetAgent", "url" => url, "metadata" => meta.inspect, "taskid" => taskid))
   end
 
   def activate_agent_version(update, taskid=nil)
     task = MiqTask.find_by_id(taskid)  unless taskid.nil?
     url, meta = self.get_version_metadata(update, taskid)
-    self.update_attribute(:upgrade_settings, {:taskid=>taskid, :build=>meta[:build], :version => meta[:version]})
+    self.update_attribute(:upgrade_settings, {:taskid => taskid, :build => meta[:build], :version => meta[:version]})
     task.update_status("Active", "Ok", "Sending request to activate SmartProxy version #{meta[:version]}") if task
-    call_ws(OpenStruct.new("method_name"=>"ActivateAgent", "url"=>url, "metadata"=>meta.inspect, "taskid"=>taskid))
+    call_ws(OpenStruct.new("method_name" => "ActivateAgent", "url" => url, "metadata" => meta.inspect, "taskid" => taskid))
     task.update_status("Active", "Ok", "Sent request to activate SmartProxy version #{meta[:version]}") if task
   end
 
@@ -904,7 +904,7 @@ class MiqProxy < ActiveRecord::Base
       if !(avail = dsh['/var/tmp'] || dsh['/var'] || dsh['/'])
         $log.info "deploy_agent_to_linux: Could not determine available disk space on host"
       else
-        raise MiqException::MiqDeploymentError, "Not enough disk space to install smarthost: #{avail.to_f/1024.0} MB available, #{MIN_LINUX_MB} MB required" if avail.to_i < MIN_LINUX_MB * 1024
+        raise MiqException::MiqDeploymentError, "Not enough disk space to install smarthost: #{avail.to_f / 1024.0} MB available, #{MIN_LINUX_MB} MB required" if avail.to_i < MIN_LINUX_MB * 1024
       end
 
       #
@@ -976,13 +976,13 @@ class MiqProxy < ActiveRecord::Base
 
     # Required Free space 300 MB
     requireFreeSpace = 1.megabyte * 300
-    proxyHost.call_ws(OpenStruct.new("method_name"=>"ReplicateHost",
-        "args"=>[{:hostname=>self.host.hostname,
-            :ip=>address,
-            :username=>self.host.authentication_userid,
-            :password=>self.host.authentication_password_encrypted,
-            :version=>build,
-            :requiredFreeSpace=>requireFreeSpace}.inspect]))
+    proxyHost.call_ws(OpenStruct.new("method_name" => "ReplicateHost",
+        "args" => [{:hostname => self.host.hostname,
+            :ip => address,
+            :username => self.host.authentication_userid,
+            :password => self.host.authentication_password_encrypted,
+            :version => build,
+            :requiredFreeSpace => requireFreeSpace}.inspect]))
     $log.debug "deploy_agent_to_windows: Install on #{address} complete."
   end
 
@@ -1015,7 +1015,7 @@ class MiqProxy < ActiveRecord::Base
 
     job = Job.create_job("HostRemoteDeploy", options)
     timeout = (VMDB::Config.new("vmdb").config.fetch_path(:smartproxy_deploy, :queue_timeout) || 30.minutes).to_i_with_method
-    MiqQueue.put(:class_name=>"Job", :method_name=>"signal", :instance_id=>job.id, :args=>[:start], :zone => self.host.my_zone, :role => "smartstate", :msg_timeout => timeout)
+    MiqQueue.put(:class_name => "Job", :method_name => "signal", :instance_id => job.id, :args => [:start], :zone => self.host.my_zone, :role => "smartstate", :msg_timeout => timeout)
   end
 
   alias :deploy_agent_version :deploy_proxy_version
@@ -1037,7 +1037,7 @@ class MiqProxy < ActiveRecord::Base
       end
     end
 
-    jobs = Job.find(:all, :conditions=>["type = ? and agent_class = ? and agent_id = ? and state != 'finished'",'HostRemoteDeploy', self.class.name, self.id])
+    jobs = Job.find(:all, :conditions => ["type = ? and agent_class = ? and agent_id = ? and state != 'finished'",'HostRemoteDeploy', self.class.name, self.id])
     job = jobs.detect {|j| Time.now - j.updated_on < 5.minutes}
     return {:type => :deploy, :object => job} unless job.nil?
 
@@ -1045,7 +1045,7 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def powershell_command(ps_script, return_type='object')
-    options = {"args"=>[ps_script, return_type], 'method_name'=>'powershell_command'}
+    options = {"args" => [ps_script, return_type], 'method_name' => 'powershell_command'}
     ost = OpenStruct.new(options)
     return self.class.process_powershell_object(self.call_ws(ost))
   end
@@ -1053,7 +1053,7 @@ class MiqProxy < ActiveRecord::Base
   def powershell_command_async(ps_script, return_type='object', ps_options = {}, queue_parms = {})
     cmd_options = {:ps_options => ps_options, :queue_parms => queue_parms}
     options = YAML.dump(cmd_options).miqEncode
-    self.call_ws(OpenStruct.new({"args"=>[ps_script, return_type, options], 'method_name'=>'powershell_command_async'}))
+    self.call_ws(OpenStruct.new({"args" => [ps_script, return_type, options], 'method_name' => 'powershell_command_async'}))
   end
 
   def self.process_powershell_object(result)

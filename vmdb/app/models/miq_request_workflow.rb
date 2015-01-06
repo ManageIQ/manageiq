@@ -324,8 +324,8 @@ class MiqRequestWorkflow
       next if value.blank?
       idx = value.index('=')
       next if idx.nil?
-      key = options[:modify_key_name]==false ? value[0,idx].strip :  value[0,idx].strip.downcase.to_sym
-      result[key] = value[idx+1..-1].strip
+      key = options[:modify_key_name] == false ? value[0,idx].strip :  value[0,idx].strip.downcase.to_sym
+      result[key] = value[idx + 1..-1].strip
     end
     return result
   end
@@ -451,7 +451,7 @@ class MiqRequestWorkflow
   def validate_tags(field, values, dlg, fld, value)
     selected_tags_categories = values[field].to_miq_a.collect {|tag_id| Classification.find_by_id(tag_id).parent.name.to_sym}
     required_tags = fld[:required_tags].to_miq_a.collect {|t| t.to_sym}
-    missing_tags = required_tags-selected_tags_categories
+    missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect {|category| Classification.find_by_name(category.to_s).description rescue nil}.compact
     return nil if missing_categories_names.blank?
     return "Required tag(s): #{missing_categories_names.join(', ')}"
@@ -540,7 +540,7 @@ class MiqRequestWorkflow
     field, include_equals = options[:field], options[:include_equals]
     max_value = field.nil? ? options[:value].to_i_with_method : get_value(@values[field]).to_i_with_method
     return results if max_value <= 0
-    results.reject {|k,v| include_equals==true ? max_value < k : max_value <= k}
+    results.reject {|k,v| include_equals == true ? max_value < k : max_value <= k}
   end
 
   def tags
@@ -616,7 +616,7 @@ class MiqRequestWorkflow
     end
 
     rails_logger('allowed_tags', 1)
-    $log.info "MIQ(#{self.class.name}.allowed_tags) allowed_tags returned [#{@tags.length}] objects in [#{Time.now-st}] seconds"
+    $log.info "MIQ(#{self.class.name}.allowed_tags) allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
     return @tags
   end
 
@@ -799,7 +799,7 @@ class MiqRequestWorkflow
       # Update the display flag for fields based on current settings
       update_field_visibility()
 
-      $log.info "MIQ(#{self.class.name}.refresh_field_values) refresh completed in [#{Time.now-st}] seconds"
+      $log.info "MIQ(#{self.class.name}.refresh_field_values) refresh completed in [#{Time.now - st}] seconds"
     rescue => err
       $log.error "#{log_header} [#{err}]"
       $log.error err.backtrace.join("\n")
@@ -934,7 +934,7 @@ class MiqRequestWorkflow
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element) do
       ci = node.attributes[:object]
-      if node.name == klass_name && (datacenter==false || datacenter==true && ci.is_datacenter?)
+      if node.name == klass_name && (datacenter == false || datacenter == true && ci.is_datacenter?)
         result = ci
         break
       end
@@ -966,12 +966,12 @@ class MiqRequestWorkflow
       rails_logger('get_ems_metadata_tree', 0)
       result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
       ems_metadata_tree_add_hosts_under_clusters!(result)
-      rails_logger("get_ems_metadata_tree completed in [#{Time.now-st}] seconds.  ", 1)
+      rails_logger("get_ems_metadata_tree completed in [#{Time.now - st}] seconds.  ", 1)
       @ems_xml_nodes = {}
       xml = MiqXml.newDoc(:xmlhash)
       convert_to_xml(xml, result)
       $log.info "#{log_header} Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
-      $log.info "#{log_header} EMS metadata collection completed in [#{Time.now-st}] seconds"
+      $log.info "#{log_header} EMS metadata collection completed in [#{Time.now - st}] seconds"
       xml
     end
   end
@@ -1070,7 +1070,7 @@ class MiqRequestWorkflow
     # Remove any hosts that are no longer in the list
     all_hosts = load_ar_obj(src[:ems]).hosts.find_all {|h| hosts_ids.include?(h.id)}
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
-    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now-st}] seconds"
+    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_hosts_obj', 1)
     return allowed_hosts_obj_cache
   end
@@ -1100,7 +1100,7 @@ class MiqRequestWorkflow
       ci_to_hash_struct(s)
     end
 
-    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now-st}] seconds"
+    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_storages', 1)
     return allowed_storages_cache
   end

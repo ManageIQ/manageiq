@@ -15,7 +15,7 @@ module MiqReport::Generator::Async
         :priority    => MiqQueue::HIGH_PRIORITY,
         :msg_timeout => self.default_queue_timeout.to_i_with_method
       ) unless sync # Only queued if sync reporting disabled (default)
-      AuditEvent.success(:event=>"generate_tables", :target_class=>self.base_class.name, :userid => options[:userid], :message=> "#{task.name}, successfully initiated")
+      AuditEvent.success(:event => "generate_tables", :target_class => self.base_class.name, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
       task.update_status("Queued", "Ok", "Task has been queued")
       self._async_generate_tables(task.id, options) if sync # Only runs if sync reporting enabled
       return task.id
@@ -75,7 +75,7 @@ module MiqReport::Generator::Async
         )
       end
     end
-    AuditEvent.success(:event=>"generate_table", :target_class=>self.class.base_class.name, :target_id=>self.id, :userid => options[:userid], :message=> "#{task.name}, successfully initiated")
+    AuditEvent.success(:event => "generate_table", :target_class => self.class.base_class.name, :target_id => self.id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
     task.update_status("Queued", "Ok", "Task has been queued")
     self._async_generate_table(task.id, options) if sync # Only runs if sync reporting enabled
     return task.id
@@ -88,7 +88,7 @@ module MiqReport::Generator::Async
     # }
     task = MiqTask.find_by_id(taskid)
     task.update_status("Active", "Ok", "Generating report") if task
-    audit = {:event=>"generate_table", :target_class=>self.class.base_class.name, :userid => options[:userid], :target_id=>self.id}
+    audit = {:event => "generate_table", :target_class => self.class.base_class.name, :userid => options[:userid], :target_id => self.id}
     begin
       self.generate_table(options)
       options[:mode] ||= "adhoc"
@@ -105,7 +105,7 @@ module MiqReport::Generator::Async
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
-      AuditEvent.failure(audit.merge(:message=> err.message))
+      AuditEvent.failure(audit.merge(:message => err.message))
       task.state_finished
       raise
     end
