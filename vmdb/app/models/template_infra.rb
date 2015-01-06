@@ -9,7 +9,7 @@ class TemplateInfra < MiqTemplate
   default_value_for :cloud, false
 
   def self.eligible_for_provisioning
-    super.where(:type => %w(TemplateRedhat TemplateVmware))
+    super.where(:type => %w(TemplateRedhat TemplateVmware TemplateMicrosoft))
   end
 
   private

@@ -141,7 +141,9 @@
             :keys                       => keys,
             :extra_table_attributes     => "width=100%"})
   - when :hardware
-    - keys = [:instance_type, :number_of_cpus, :number_of_sockets, :cores_per_socket, :vm_memory, :network_adapters, :disk_format, :guest_access_key_pair, :monitoring]
+    - keys = [:instance_type, :number_of_cpus, :number_of_sockets, :cores_per_socket,
+              :vm_memory, :network_adapters, :disk_format, :guest_access_key_pair, :monitoring,
+              :vm_dynamic_memory, :vm_minimum_memory, :vm_maximum_memory]
     - label = wf.is_a?(MiqProvisionCloudWorkflow) ? "Properties" : "Hardware"
     = render(:partial => "#{prefix}prov_dialog_fieldset",
       :locals         => {:workflow => wf,

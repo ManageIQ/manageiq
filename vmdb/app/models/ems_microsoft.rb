@@ -22,7 +22,9 @@ class EmsMicrosoft < EmsInfra
     # above warning when rspec tests are run.
     silence_warnings { require 'winrm' }
 
-    WinRM::WinRMWebService.new(auth_url, :ssl, :user => username, :pass => password, :disable_sspi => true)
+    winrm = WinRM::WinRMWebService.new(auth_url, :ssl, :user => username, :pass => password, :disable_sspi => true)
+    winrm.set_timeout(1800)
+    winrm
   end
 
   def self.auth_url(hostname, port = nil)

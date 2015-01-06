@@ -31,8 +31,8 @@ class MiqProvision < MiqProvisionTask
 
   CLONE_SYNCHRONOUS     = false
   CLONE_TIME_LIMIT      = 4.hours
-  SUBCLASSES            = %w(MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware)
-  SUPPORTED_EMS_CLASSES = %w(EmsVmware EmsRedhat EmsAmazon EmsOpenstack)
+  SUBCLASSES            = %w(MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware MiqProvisionMicrosoft)
+  SUPPORTED_EMS_CLASSES = %w(EmsVmware EmsRedhat EmsAmazon EmsOpenstack EmsMicrosoft)
 
   def self.base_model
     MiqProvision

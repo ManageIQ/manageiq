@@ -92,11 +92,13 @@ module EmsRefresh::Parsers
       p     = cluster[:Properties][:Props]
       uid   = p[:ID]
       nodes = p[:Nodes]
+      name  = p[:ClusterName]
 
       new_result = {
-        :ems_ref => uid,
-        :uid_ems => uid,
-        :name    => p[:ClusterName],
+        :ems_ref      => uid,
+        :uid_ems      => uid,
+        :name         => name,
+        :ems_children => {:resource_pools => [default_resource_pool(name, uid)]}
       }
       set_relationship_on_hosts(new_result, nodes)
 
@@ -123,12 +125,39 @@ module EmsRefresh::Parsers
 
         :operating_system => process_os(p),
         :hardware         => process_host_hardware(host),
-        :storages         => process_host_storages(p)
+        :storages         => process_host_storages(p),
+        :switches         => process_virtual_switches(host)
       }
+
       @data_index.store_path(:hosts_by_host_name, host_name, new_result)
       @data_index.store_path(:host_uid_to_datastore_mount_point_mapping, uid, map_mount_point_to_datastore(p))
 
       return uid, new_result
+    end
+
+    def process_virtual_switches(host)
+      result = []
+
+      virtual_switches = host[:VirtualSwitch]
+      return result if virtual_switches.nil?
+
+      virtual_switches.each do |vs_hash|
+        v_switch = vs_hash[:Props]
+
+        switch = {
+          :uid_ems => v_switch[:ID],
+          :name    => v_switch[:Name],
+          :lans    => []
+        }
+        result << switch
+        v_switch[:VMHostNetworkAdapters].collect { |adapter| set_switch_on_pnic(adapter[:Props], switch) }
+      end
+      result
+    end
+
+    def set_switch_on_pnic(pnic, switch)
+      pnic_obj = @data_index.fetch_path(:physical_nic, pnic[:ID])
+      pnic_obj[:switch] = switch
     end
 
     def parse_vm(vm)
@@ -226,7 +255,7 @@ module EmsRefresh::Parsers
       network_adapters = host[:NetworkAdapters]
       network_adapters.each do |pnic|
         pnic_p = pnic[:Props]
-        new_result = build_network_hash(pnic_p)
+        new_result = build_network_adapter_hash(pnic_p)
         result << new_result
       end
 
@@ -238,8 +267,8 @@ module EmsRefresh::Parsers
       result
     end
 
-    def build_network_hash(pnic_p)
-      {
+    def build_network_adapter_hash(pnic_p)
+      p_nic_obj = {
         :uid_ems         => pnic_p[:ID],
         :device_name     => pnic_p[:ConnectionName],
         :device_type     => 'ethernet',
@@ -250,6 +279,7 @@ module EmsRefresh::Parsers
         :controller_type => 'ethernet',
         :address         => pnic_p[:MacAddress],
       }
+      @data_index.store_path(:physical_nic, pnic_p[:ID], p_nic_obj)
     end
 
     def build_dvd_hash(dvd)
@@ -490,6 +520,19 @@ module EmsRefresh::Parsers
 
     def unclustered_hosts
       @data[:hosts].select { |h| h[:ems_cluster].nil? }
+    end
+
+    def default_resource_pool(name, uid)
+      default_res_pool = {
+        :name         => "Default for Cluster #{name}",
+        :uid_ems      => "#{uid}_respool",
+        :is_default   => true,
+        :ems_children => {:vms => []}
+      }
+      @data[:resource_pools] = [default_res_pool]
+      @data_index.store_path(:resource_pools, "#{uid}_respool", [default_res_pool])
+
+      default_res_pool
     end
 
     def identify_primary_ip(nics, host)
