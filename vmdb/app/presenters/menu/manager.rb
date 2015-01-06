@@ -14,7 +14,7 @@ module Menu
     class InvalidMenuDefinition < Exception
     end
 
-    def menu(type = :default, &block)
+    def menu(type = :default)
       @menu.each do |menu_section|
         yield menu_section if menu_section.type == type
       end
@@ -50,7 +50,7 @@ module Menu
       sections.each { |section| @menu << section }
       preprocess_items
       items.each do |item|
-        raise InvalidMenuDefinition.new('Invalid parent') unless @id_to_section.key?(item.parent)
+        raise InvalidMenuDefinition, 'Invalid parent' unless @id_to_section.key?(item.parent)
         @id_to_section[item.parent].items << item
       end
     end

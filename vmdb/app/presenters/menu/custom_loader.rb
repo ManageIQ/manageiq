@@ -18,7 +18,7 @@ module Menu
     private
 
     def load_custom_item(file_name)
-      properties = YAML::load(File.open(file_name))
+      properties = YAML.load(File.open(file_name))
 
       if properties['type'] == 'section'
         @sections << create_custom_menu_section(properties)
@@ -33,7 +33,7 @@ module Menu
     end
 
     def create_custom_menu_item(properties)
-      rbac = properties['rbac'].each_with_object({}) { |(k,v),h| h[k.to_sym] = v }
+      rbac = properties['rbac'].each_with_object({}) { |(k, v), h| h[k.to_sym] = v }
       item = CustomItem.new(properties['id'], properties['name'], properties['feature'], rbac, properties['url'])
       item.parent = properties['parent'].to_sym
       item
