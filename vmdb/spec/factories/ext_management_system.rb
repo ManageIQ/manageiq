@@ -61,4 +61,7 @@ FactoryGirl.define do
       x.authentications << FactoryGirl.create(:authentication, :userid => "qpid_user", :password => "qpid_password", :authtype => "amqp")
     end
   end
+
+  factory :ems_openstack_infra, :class => "EmsOpenstackInfra", :parent => :ext_management_system do
+  end
 end

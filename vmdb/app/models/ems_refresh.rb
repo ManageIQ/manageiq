@@ -63,7 +63,7 @@ module EmsRefresh
     end
 
     # Do the refreshes
-    [:vc, :ec2, :rhevm, :scvmm, :kvm, :openstack].each do |g|
+    [:vc, :ec2, :rhevm, :scvmm, :kvm, :openstack, :openstack_infra].each do |g|
       self::Refreshers.const_get("#{g.to_s.camelize}Refresher").refresh(groups[g]) if groups.has_key?(g)
     end
   end

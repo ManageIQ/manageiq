@@ -2,6 +2,7 @@ class EmsInfra < ExtManagementSystem
   SUBCLASSES = %w{
     EmsKvm
     EmsMicrosoft
+    EmsOpenstackInfra
     EmsRedhat
     EmsVmware
   }

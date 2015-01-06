@@ -15,7 +15,8 @@ describe ExtManagementSystem do
       "scvmm",
       "kvm",
       "rhevm",
-      "openstack"
+      "openstack",
+      "openstack_infra"
     ]
 
     described_class.types.should match_array(expected_types)
@@ -27,7 +28,8 @@ describe ExtManagementSystem do
       "ec2",
       "rhevm",
       "scvmm",
-      "openstack"
+      "openstack",
+      "openstack_infra"
     ]
 
     described_class.supported_types.should match_array(expected_types)

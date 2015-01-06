@@ -36,7 +36,7 @@
       <%= render(:partial => "form_fields", 
                  :locals  => {:url => url}) 
       %>
-      <tr id="port_tr" style="display:<%= ["openstack", "rhevm"].include?(@edit[:new][:emstype]) ? "display" : "none" %>;">
+      <tr id="port_tr" style="display:<%= ["openstack", "openstack_infra", "rhevm"].include?(@edit[:new][:emstype]) ? "display" : "none" %>;">
         <td class="key">API Port</td>
         <td class="wide">
           <%= text_field_tag("port",
