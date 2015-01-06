@@ -26,7 +26,6 @@ en:
       at_least_2_selected: "At least 2 %{model} must be selected for %{action}"
       more_than_max_selected: "No more than %{max} %{model} can be selected for %{action}"
       no_records_selected: "No %{model} were selected to %{button}"
-      not_implemented: "Button not yet implemented"
       typ_not_implemented: "%{typ} Button not yet implemented"
       one_or_more_selected_for_task: "One or more %{model} must be selected to %{task}"
       record_gone: "%{model} no longer exists"
