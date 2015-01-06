@@ -78,8 +78,6 @@ module EmsRefresh::Parsers::Rhevm
     inv.each do |host_inv|
       mor = host_inv[:id]
 
-#      config = host_inv["config"]
-#      dns_config = config.fetch_path('network', 'dnsConfig') unless config.nil?
       hostname = host_inv[:address]
 #      domain_name = dns_config["domainName"] unless dns_config.nil?
 
@@ -97,36 +95,6 @@ module EmsRefresh::Parsers::Rhevm
         else [power_state, 'disconnected']
       end
 
-      # Determine if the data from VC is valid.
-#      invalid, err = if config.nil? || product.nil? || summary.nil?
-#        type = ['config', 'product', 'summary'].find_all { |t| eval(t).nil? }.join(", ")
-#        [true, "Missing configuration for Host [#{mor}]: [#{type}]."]
-#      elsif hostname.blank?
-#        [true, "Missing hostname information for Host [#{mor}]: dnsConfig: #{dns_config.inspect}."]
-#      elsif domain_name.blank?
-#        # Use the name or the summary-config-name as the hostname if either appears to be a FQDN
-#        fqdn = host_inv["name"]
-#        fqdn = summary.fetch_path('config', 'name') unless fqdn =~ /^#{hostname}\./
-#        hostname = fqdn if fqdn =~ /^#{hostname}\./
-#        false
-#      else
-#        hostname = "#{hostname}.#{domain_name}"
-#        false
-#      end
-
-#      if invalid
-#        $log.warn "#{log_header} #{err} Skipping."
-#
-#        new_result = {
-#          :invalid => true,
-#          :ems_ref => mor,
-#          :ems_ref_obj => mor
-#        }
-#        result << new_result
-#        result_uids[mor] = new_result
-#        next
-#      end
-
       # Remove the domain suffix if it is included in the hostname
       hostname = hostname.split(',').first
       # Get the IP address
@@ -139,28 +107,6 @@ module EmsRefresh::Parsers::Rhevm
       hardware = self.host_inv_to_hardware_hash(host_inv)
       hardware[:guest_devices], guest_device_uids[mor] = self.host_inv_to_guest_device_hashes(host_inv, switch_uids[mor], ems_inv)
       hardware[:networks] = self.host_inv_to_network_hashes(host_inv, guest_device_uids[mor])
-
-#      scsi_luns, scsi_lun_uids[mor] = self.host_inv_to_scsi_lun_hashes(host_inv)
-#      scsi_targets = self.host_inv_to_scsi_target_hashes(host_inv, guest_device_uids[mor][:storage], scsi_lun_uids[mor])
-
-      # Collect the resource pools inventory
-#      parent_type, parent_mor, parent_data = self.host_parent_resource(mor, ems_inv)
-#      rp_uids = parent_type == :host_res ? self.get_mors(parent_data, "resourcePool") : []
-
-
-#      # Get other information
-#      asset_tag = service_tag = nil
-#      host_inv.fetch_path("hardware", "systemInfo", "otherIdentifyingInfo").to_miq_a.each do |info|
-#        next unless info.kind_of?(Hash)
-#
-#        value = info["identifierValue"].to_s.strip
-#        value = nil if value.blank?
-#
-#        case info.fetch_path("identifierType", "key")
-#        when "AssetTag"   then asset_tag   = value
-#        when "ServiceTag" then service_tag = value
-#        end
-#      end
 
       ipmi_address = nil
       if host_inv.attributes.fetch_path(:power_management, :type).to_s.include?('ipmi')
@@ -176,14 +122,9 @@ module EmsRefresh::Parsers::Rhevm
         :ipaddress => ipaddress,
         :uid_ems => host_inv[:id],
         :vmm_vendor => 'redhat',
-#        :vmm_version => product["version"],
         :vmm_product => host_inv[:type],
-#        :vmm_buildnumber => product["build"],
         :connection_state => connection_state,
         :power_state => power_state,
-#        :admin_disabled => config["adminDisabled"].to_s.downcase == "true",
-#        :asset_tag => asset_tag,
-#        :service_tag => service_tag,
 
         :operating_system => self.host_inv_to_os_hash(host_inv, hostname),
 
@@ -191,7 +132,6 @@ module EmsRefresh::Parsers::Rhevm
         :hardware => hardware,
         :switches => switches,
 
-#        :child_uids => rp_uids,
       }
       new_result[:ipmi_address] = ipmi_address unless ipmi_address.blank?
 
@@ -247,38 +187,15 @@ module EmsRefresh::Parsers::Rhevm
     unless hdw.blank?
       result[:cpu_speed] = hdw[:speed] unless hdw[:speed].blank?
       result[:cpu_type] = hdw[:name] unless hdw[:name].blank?
-#      result[:manufacturer] = hdw["vendor"] unless hdw["vendor"].blank?
-#      result[:model] = hdw["model"] unless hdw["model"].blank?
-#      result[:number_of_nics] = hdw["numNics"] unless hdw["numNics"].blank?
 
       # Value provided by VC is in bytes, need to convert to MB
       memory_total = inv[:statistics].to_miq_a.detect {|stat| stat[:name] == 'memory.total'}
       result[:memory_cpu] = memory_total.nil? ? 0 : memory_total[:values].first.to_i / 1048576  # in MB
-#      unless console.nil?
-#        result[:memory_console] = is_numeric?(console["serviceConsoleReserved"]) ? (console["serviceConsoleReserved"].to_f / 1048576).round : nil
-#      end
 
       result[:cores_per_socket] = hdw.fetch_path(:topology, :cores) || 1        # Number of cores per socket
       result[:numvcpus]         = hdw.fetch_path(:topology, :sockets) || 1      # Number of physical sockets
       result[:logical_cpus]     = result[:numvcpus] * result[:cores_per_socket] # Number of cores multiplied by sockets
     end
-
-#    config = inv["config"]
-#    unless config.blank?
-#      value = config.fetch_path("product", "name")
-#      unless value.blank?
-#        result[:guest_os] = value
-#        result[:guest_os_full_name] = value
-#      end
-#
-#      result[:vmotion_enabled] = config["vmotionEnabled"].to_s.downcase == "true" unless config["vmotionEnabled"].blank?
-#    end
-
-#    quickStats = inv["quickStats"]
-#    unless quickStats.blank?
-#      result[:cpu_usage] = quickStats["overallCpuUsage"] unless quickStats["overallCpuUsage"].blank?
-#      result[:memory_usage] = quickStats["overallMemoryUsage"] unless quickStats["overallMemoryUsage"].blank?
-#    end
 
     return result
   end
@@ -319,10 +236,6 @@ module EmsRefresh::Parsers::Rhevm
       new_result = {
         :uid_ems => uid,
         :name => name,
-#        :ports => data['numPorts'],
-#        :allow_promiscuous => security_policy['allowPromiscuous'].nil? ? nil : security_policy['allowPromiscuous'].to_s.downcase == 'true',
-#        :forged_transmits => security_policy['forgedTransmits'].nil? ? nil : security_policy['forgedTransmits'].to_s.downcase == 'true',
-#        :mac_changes => security_policy['macChanges'].nil? ? nil : security_policy['macChanges'].to_s.downcase == 'true',
 
         :lans => [{:name => name, :uid_ems => uid, :tag => tag_value}]
       }
@@ -402,7 +315,6 @@ module EmsRefresh::Parsers::Rhevm
 
       new_result = {
         :description => vnic[:name],
-        #:dhcp_enabled => ip['dhcp'].to_s.downcase == 'true',
         :ipaddress => ip[:address],
         :subnet_mask => ip[:netmask],
       }
@@ -418,9 +330,6 @@ module EmsRefresh::Parsers::Rhevm
 
     result = {:name => hostname}
     result[:product_name] = 'linux'
-    #result[:version] = inv["version"] unless inv["version"].blank?
-    #result[:build_number] = inv["build"] unless inv["build"].blank?
-    #result[:product_type] = inv["osType"] unless inv["osType"].blank?
     return result
   end
 
@@ -436,78 +345,11 @@ module EmsRefresh::Parsers::Rhevm
       # Skip the place holder template since it does not really exist and does not have a unique ID accross multiple Management Systems
       next if mor == '00000000-0000-0000-0000-000000000000'
 
-#      summary = vm_inv["summary"]
-#      summary_config = summary["config"] unless summary.nil?
-#      pathname = summary_config["vmPathName"] unless summary_config.nil?
-#
-#      config = vm_inv["config"]
-
-      # Determine if the data from VC is valid.
-#      invalid, err = if summary_config.nil? || config.nil?
-#        type = ['summary_config', 'config'].find_all { |t| eval(t).nil? }.join(", ")
-#        [true, "Missing configuration for VM [#{mor}]: #{type}."]
-#      elsif summary_config["uuid"].blank?
-#        [true, "Missing UUID for VM [#{mor}]."]
-#      elsif pathname.blank?
-#        $log.debug "#{log_header} vmPathname class: [#{pathname.class}] inspect: [#{pathname.inspect}]"
-#        [true, "Missing pathname location for VM [#{mor}]."]
-#      else
-#        false
-#      end
-#
-#      if invalid
-#        $log.warn "#{log_header} #{err} Skipping."
-#
-#        new_result = {
-#          :invalid => true,
-#          :ems_ref => mor,
-#          :ems_ref_obj => mor
-#        }
-#        result << new_result
-#        result_uids[mor] = new_result
-#        next
-#      end
-
-#      runtime = summary['runtime']
-#      guest = summary['guest']
-
       template        = vm_inv[:href].include?('/templates/')
       raw_power_state = template ? "never" : vm_inv.attributes.fetch_path(:status, :state)
 
-#      affinity_set = config.fetch_path('cpuAffinity', 'affinitySet')
-#      # The affinity_set will be an array of integers if set
-#      cpu_affinity = nil
-#      cpu_affinity = affinity_set.kind_of?(Array) ? affinity_set.join(",") : affinity_set.to_s if affinity_set
-
-#      tools_status = guest['toolsStatus'].blank? ? nil : guest['toolsStatus']
-      # tools_installed = case tools_status
-      # when 'toolsNotRunning', 'toolsOk', 'toolsOld' then true
-      # when 'toolsNotInstalled' then false
-      # when nil then nil
-      # else false
-      # end
-
       boot_time = vm_inv[:start_time].blank? ? nil : vm_inv[:start_time]
 
-#      standby_act = nil
-#      power_options = config["defaultPowerOps"]
-#      unless power_options.blank?
-#        standby_act = power_options["standbyAction"] if power_options["standbyAction"]
-#        # Other possible keys to look at:
-#        #   defaultPowerOffType, defaultResetType, defaultSuspendType
-#        #   powerOffType, resetType, suspendType
-#      end
-
-      # Other items to possibly include:
-      #   boot_delay = config.fetch_path("bootOptions", "bootDelay")
-      #   virtual_mmu_usage = config.fetch_path("flags", "virtualMmuUsage")
-
-      # Collect the reservation information
-#      memory = resource_config["memoryAllocation"]
-#      cpu = resource_config["cpuAllocation"]
-
-      # Collect the storages and hardware inventory
-      #storages = self.get_mors(vm_inv, 'datastore').collect { |s| storage_uids[s] }.compact
       storages = []
       vm_inv[:disks].to_miq_a.each do |disk|
         disk[:storage_domains].to_miq_a.each do |sd|
@@ -532,7 +374,6 @@ module EmsRefresh::Parsers::Rhevm
       hardware[:disks] = self.vm_inv_to_disk_hashes(vm_inv, storage_uids)
       hardware[:guest_devices], guest_device_uids[mor] = self.vm_inv_to_guest_device_hashes(vm_inv, lan_uids[host_mor])
       hardware[:networks] = self.vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
-#      uid = hardware[:bios]
 
       new_result = {
         :type              => template ? "TemplateRedhat" : "VmRedhat",
@@ -602,8 +443,6 @@ module EmsRefresh::Parsers::Rhevm
         :device_name => name,
         :device_type => 'ethernet',
         :controller_type => 'ethernet',
-        #:present => data.fetch_path('connectable', 'connected').to_s.downcase == 'true',
-        #:start_connected => data.fetch_path('connectable', 'startConnected').to_s.downcase == 'true',
         :address => address,
       }
       new_result[:lan] = lan unless lan.nil?
@@ -768,16 +607,6 @@ module EmsRefresh::Parsers::Rhevm
         :ems_ref_obj => data[:href],
         :uid_ems => data[:id],
         :name => data[:name],
-
-#        :ha_enabled => das_config["enabled"].to_s.downcase == "true",
-#        :ha_admit_control => das_config["admissionControlEnabled"].to_s.downcase == "true",
-#        :ha_max_failures => das_config["failoverLevel"],
-#
-#        :drs_enabled => drs_config["enabled"].to_s.downcase == "true",
-#        :drs_automation_level => drs_config["defaultVmBehavior"],
-#        :drs_migration_threshold => drs_config["vmotionRate"],
-#
-#        :child_uids => self.get_mors(data, 'host') + self.get_mors(data, 'resourcePool')
 
         # Capture datacenter id so we can link up to it's sub-folders later
         :datacenter_id => data.attributes.fetch_path(:data_center, :id),
