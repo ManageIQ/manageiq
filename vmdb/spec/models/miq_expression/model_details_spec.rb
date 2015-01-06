@@ -106,17 +106,17 @@ describe MiqExpression do
     subject { described_class.determine_relat_path(@ref) }
 
     it "when association name is same as class name" do
-      @ref = Vm.reflections[:miq_group]
+      @ref = Vm.reflect_on_association(:miq_group)
       expect(subject).to eq(@ref.name.to_s)
     end
 
     it "when association name is different from class name" do
-      @ref = Vm.reflections[:evm_owner]
+      @ref = Vm.reflect_on_association(:evm_owner)
       expect(subject).to eq(@ref.name.to_s)
     end
 
     it "when class name is a subclass of association name" do
-      @ref = AvailabilityZone.reflections[:ext_management_system]
+      @ref = AvailabilityZone.reflect_on_association(:ext_management_system)
       expect(subject).to eq(@ref.klass.to_s.underscore)
     end
   end

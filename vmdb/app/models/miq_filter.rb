@@ -90,7 +90,7 @@ module MiqFilter
   end
 
   def self.find_children_of(obj, assoc, options = {})
-    reflection = obj.class.reflections[assoc.to_sym]
+    reflection = obj.class.reflect_on_association(assoc.to_sym)
     mode       = determine_mode_for_find_children_of(reflection, obj, assoc)
 
     case mode

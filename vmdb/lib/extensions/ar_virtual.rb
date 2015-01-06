@@ -179,7 +179,7 @@ module VirtualFields
     when Hash
       associations.each_with_object({}) do |(parent, child), h|
         next if virtual_field?(parent)
-        reflection = reflections[parent.to_sym]
+        reflection = reflect_on_association(parent.to_sym)
         h[parent] = reflection.options[:polymorphic] ? nil : reflection.klass.remove_virtual_fields(child) if reflection
       end
     else

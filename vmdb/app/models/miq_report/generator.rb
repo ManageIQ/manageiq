@@ -100,7 +100,7 @@ module MiqReport::Generator
         if k == :managed
           result.merge!(:tags => {})
         else
-          assoc_reflection = klass.reflections[k]
+          assoc_reflection = klass.reflect_on_association(k)
           assoc_klass = assoc_reflection.nil? ? nil : (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass)
 
           if v.nil? || v["include"].blank?
