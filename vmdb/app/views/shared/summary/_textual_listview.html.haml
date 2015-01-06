@@ -1,0 +1,20 @@
+#fieldset
+  %p.legend
+    = title
+  %table.style3
+    - items.each do |item|
+      - item[:headers].each do |h|
+        %th{:nowrap => 1}
+          = h(h)
+      - item[:value].each do |row|
+        - if row[:link]
+          - if row[:explorer]
+            - click = row[:link]
+          - else
+            - click = "DoNav('#{row[:link]}');"
+        - else
+          - click = ""
+        %tr{:class => cycle('row0', 'row1'), :onclick => click}
+          - item[:col_order].each do |col|
+            %td{:width => "50%"}
+              = row[col.to_sym]
