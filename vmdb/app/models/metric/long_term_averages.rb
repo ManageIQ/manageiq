@@ -53,12 +53,12 @@ module Metric::LongTermAverages
 
         val =  p.send(c) || 0
         vals[c] << val
-        Metric::Aggregation.aggregate_average(c, self, results[:avg], counts, val)
+        Metric::Aggregation::Aggregate.average(c, self, results[:avg], counts, val)
       end
     end
 
     results[:avg].each_key do |c|
-      Metric::Aggregation.process_average(c, nil, results[:avg], counts)
+      Metric::Aggregation::Process.average(c, nil, results[:avg], counts)
 
       begin
         results[:dev][c]  = vals[c].deviation

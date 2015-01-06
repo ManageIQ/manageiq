@@ -153,7 +153,7 @@ class VimPerformanceDaily < MetricRollup
         # Average all values, regardless of rollup type, when going from hourly
         # to daily, since these are already rolled up and this is an average
         # over the day.
-        Metric::Aggregation.aggregate_average(c, nil, result[key], counts[key], value)
+        Metric::Aggregation::Aggregate.average(c, nil, result[key], counts[key], value)
 
         Metric::Rollup.rollup_min(c, result[key], perf.send(c))
         Metric::Rollup.rollup_max(c, result[key], perf.send(c))
@@ -194,7 +194,7 @@ class VimPerformanceDaily < MetricRollup
 
       if rollup_day
         (Metric::Rollup::ROLLUP_COLS & (options[:only_cols] || Metric::Rollup::ROLLUP_COLS)).each { |c|
-          Metric::Aggregation.process_average(c, nil, result[key], counts[key])
+          Metric::Aggregation::Process.average(c, nil, result[key], counts[key])
           result[key][c] = result[key][c].round if self.columns_hash[c.to_s].type == :integer && !result[key][c].nil?
         }
       else
