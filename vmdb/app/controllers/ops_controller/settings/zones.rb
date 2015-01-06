@@ -21,8 +21,10 @@ module OpsController::Settings::Zones
       if @edit[:new][:description] == ""
         add_flash(_("%s is required") % "Description", :error)
       end
-      if @flash_array != nil
-        replace_right_cell("ze")
+      if @flash_array
+        render :update do |page|
+          page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
+        end
         return
       end
       #zone = @zone.id.blank? ? Zone.new : Zone.find(@zone.id)  # Get new or existing record
