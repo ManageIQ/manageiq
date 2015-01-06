@@ -2040,40 +2040,42 @@ class ApplicationController < ActionController::Base
   end
 
   def get_db_view(db, options={})
+    view_yaml = view_yaml_filename(db, options)
+    view      = MiqReport.new(get_db_view_yaml(view_yaml))
+    view.db   = db if view_yaml.ends_with?("Vm__restricted.yaml")
+    view.extras ||= {}                        # Always add in the extras hash
+    view
+  end
+
+  def view_yaml_filename(db, options)
     association = options[:association] || nil
     view_suffix = options[:view_suffix] || nil
 
     # Build the view file name
-    if association
-      viewfile = "#{VIEWS_FOLDER}/#{db}-#{association}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{association}-#{session[:userrole]}.yaml"
-    elsif view_suffix
-      viewfile = "#{VIEWS_FOLDER}/#{db}-#{view_suffix}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{view_suffix}-#{session[:userrole]}.yaml"
+    if association || view_suffix
+      suffix = association ? association : view_suffix
+      viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{session[:userrole]}.yaml"
     else
       viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
       viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{session[:userrole]}.yaml"
     end
 
     # Special code to build the view file name for users of VM restricted roles
-    if db.to_s == "Vm"
+    if %w(TemplateCloud TemplateInfra VmCloud VmInfra VmOrTemplate).include?(db)
       role = User.current_user.miq_user_role
       if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
-        viewfilerestricted = "#{VIEWS_FOLDER}/#{db}__restricted.yaml"
+        viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
       end
     end
 
-    view_yaml = if viewfilerestricted && File.exist?(viewfilerestricted)
+    if viewfilerestricted && File.exist?(viewfilerestricted)
       viewfilerestricted
     elsif File.exist?(viewfilebyrole)
       viewfilebyrole
     else
       viewfile
     end
-    view = MiqReport.new(get_db_view_yaml(view_yaml))
-
-    view.extras ||= Hash.new                        # Always add in the extras hash
-    return view
   end
 
   def get_db_view_yaml(filename)
