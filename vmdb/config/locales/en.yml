@@ -7,85 +7,33 @@ en:
   # Flash messages shown in the UI
   flash:
     add:
-      cancelled: "Add of new %{model} was cancelled by the user"
       added: '%{model} "%{name}" was added'
 
     authentication:
       error: "Sorry, the username or password you entered is incorrect."
       missing_role_or_group: "Login not allowed, User's %{model} is missing. Please contact the administrator"
 
-    automate:
-      button_cleared: "Automate button %{btn_num} has been cleared"
-      button_set: "Automate button %{btn_num} has been set to %{btn_txt}"
-      custom_button_error: 'Error executing: "%{name}" '
-      custom_button_executed: '"%{name}" was executed'
-      datastore_import_success: "Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}\nClasses updated/added: %{class_stats}\nInstances updated/added: %{instance_stats}\nMethods updated/added: %{method_stats}"
-
-    button:
-      at_least_selected: "At least %{num} %{model} must be selected for %{action}"
-      at_least_2_selected: "At least 2 %{model} must be selected for %{action}"
-      more_than_max_selected: "No more than %{max} %{model} can be selected for %{action}"
-      no_records_selected: "No %{model} were selected to %{button}"
-      typ_not_implemented: "%{typ} Button not yet implemented"
-      one_or_more_selected_for_task: "One or more %{model} must be selected to %{task}"
-      record_gone: "%{model} no longer exists"
-      task_does_not_apply_to_one_of_selected: "%{task} does not apply because you selected at least one %{model}"
-      task_does_not_apply_to_model: "%{task} does not apply to selected %{model}"
-
     copy:
       cancelled: 'Copy %{model} was cancelled by the user'
       copied: 'Copy selected %{model} was saved'
     edit:
-      at_least_1:
-        configured: "At least one %{field} must be configured"
-        selected: "At least one %{field} must be selected"
-        contain: "%{model} must contain at least one %{field}"
-      cancelled: 'Edit of %{model} "%{name}" was cancelled by the user'
-      cancelled_model: "Edit of %{model} was cancelled by the user"
       cancelled_for_class: 'Edit of schema for %{model} "%{name}" was cancelled by the user'
-      cancelled_for_role: 'Edit of %{model} for role "%{role}" was cancelled by the user'
-      error_details: "Error details: %{error}"
-      field_character_not_allowed: '%{field} cannot contain "%{character}"'
       field_in_display_filter: "%{field} is currently being used in the Display Filter"
-      field_required: "%{field} is required"
-      field_requires_entry_point: 'Entry Point must be given for field "%{field}".'
-      field_unique: "%{field} should be unique"
-      field_unique_within_group: "%{field} must be unique for this group"
-      field_value_and_description_reuired: "%{field1} and %{field2} fields can't be blank"
-      field_value_in_use: "%{field} '%{value}' is already in use"
-      field_must_be_changed: "Change %{field} value to submit reconfigure request"
       field_must_be:
-        configured: "%{field} must be configured"
-        numeric: "%{field} must be numeric"
         numeric_greater_than_0: "%{field} must be numeric and greater than zero"
-        integer: "%{field} must be an integer"
-        alphanumeric_and_underscore: "%{field} must be alphanumeric characters and underscores without spaces"
-      field_must_not_be:
-        action_or_controller: "%{field} must not be 'action' or 'controller'"
       field_styling_error:
         first: "Styling for '%{field}', first value is in error: "
         second: "Styling for '%{field}', second value is in error: "
         third: "Styling for '%{field}', third value is in error: "
       filter:
-        field_value_error: "%{field} Value Error: %{msg}"
-        must_be_chosen: "A %{field} must be chosen to commit this expression element"
-        must_be_entered: "A %{field} must be entered to commit this expression element"
         search_reset: "The current search details have been reset"
-      group_reorder: '%{model} Group Reorder'
-      group_reorder_cancelled: '%{model} Group Reorder cancelled'
-      group_reorder_saved: '%{model} Group Reorder saved'
       manage_desktops_cancelled: 'Manage Desktops was cancelled by the user'
       manage_desktops_saved: 'Manage Desktops was saved'
       saved: '%{model} "%{name}" was saved'
       saved_for_class: 'Schema for %{model} "%{name}" was saved'
-      saved_for_role: '%{model} for role "%{role}" was saved'
-      select_required: "%{selection} must be selected"
-      set_to_default: "%{model} set to default"
       user_assignment_cancelled: "Assignment was cancelled by the user"
       user_assignment_initiated: "Assignment changes initiated"
       user_unassignment_initiated: "User Un-Assignment initiated"
-      task_cancelled: "%{task} was cancelled by the user"
-      task_saved: "%{task} saved"
 
       # flash.edit side by side selection box messages
       no_fields_to_move:
@@ -102,53 +50,17 @@ en:
       no_fields_moved:
         left: "No %{field} were moved to the left"
         up: "No %{field} were moved up"
-      select_fields_to_move:
-        up: "Select only one or consecutive %{field} to move up"
-        down: "Select only one or consecutive %{field} to move down"
-        to_the_top: "Select only one or consecutive %{field} to move to the top"
-        to_the_bottom: "Select only one or consecutive %{field} to move to the bottom"
-      adding_fields_exceeds_max: "Fields not added: Adding the selected %{count} fields will exceed the maximum of %{max} fields"
-      email:
-        not_valid: E-mail address '%{type}' is not valid
-
-      # flash.edit tab messages
-      tab_needs:
-        1_field: "%{tab} tab is not available until at least 1 field has been selected"
-        field_configured: "%{tab} tab is not available until %{field} has been configured"
-        field_selected: "%{tab} tab is not available until %{field} field has been selected"
-        sort_field: "%{tab} tab is not available unless a sort field has been selected"
-        time_field: "%{tab} tab is not available unless at least 1 time field has been selected"
-
-    configuration:
-      global_time_profile_cannot_delete: '"%{name}": Global %{model} cannot be deleted'
-      time_profile_in_use: '"%{name}": In use by %{rep_count}, cannot be deleted'
-      ui_settings_saved_for_user: "User Interface settings saved for User %{user}"
 
     image:
       type: "Custom Image must be a %{typ} file"
-      locate_file: "Use the Browse button to locate a %{typ} image file"
       uploaded: 'Custom Image file "%{filename}" successfully uploaded'
-
-    datastore:
-      cannot_be_removed: '"%{name}": cannot be removed, has vms or hosts'
 
     host:
       no_host_selected: "No Hosts were selected to analyze and check compliance"
       analysis_started: "Analyze and Check compliance for this Host has been started"
 
     ops:
-      diagnostics:
-        error_during_orphaned_record_delete: "Error during Orphaned Records delete for user %{userid}: "
-        error_during_worker_restart: "Error during %{wtype} workers restart: "
-        log_collection_initiated: "Log collection for CFME %{object_type} %{name} has been initiated"
-        orphaned_records_deleted: "Orphaned Records for userid %{userid} were successfully deleted"
-        priority_set_for_server: 'CFME Server "%{name}" set as %{priority} for Role "%{role_description}"'
-        task_initiated: "%{task} successfully initiated"
-        task_not_allowed: "%{task} is not allowed for the selected item"
-        workers_restarted: "%{wtype} workers restart initiated successfully"
-        worker_1_restarted: "'%{wtype}' Worker restart initiated successfully"
       rbac:
-        error_during_task: "Error during '%{task}': "
         read_only_role_cannot_delete: "Read only Role can not be deleted"
         read_only_role_cannot_edit: "This Role is Read Only and can not be edited"
         selected_roles_deleted: "All selected Roles were deleted (unless Read Only or in use by one or more Groups)"
@@ -156,126 +68,48 @@ en:
         selected_group_deleted: "All selected Groups were deleted"
         selected_user_deleted: "All selected Users were deleted"
       settings:
-        advanced_settings_saved: "%{filename} file saved"
         custom_logo_type: "Custom logo image must be a .png file"
         custom_login_type: "Custom login image must be a .png file"
         custom_logo_uploaded: 'Custom Logo file "%{filename}" uploaded'
         custom_login_uploaded: 'Custom login file "%{filename}" uploaded'
-        error_during_task: "Error during %{task}: "
-        import_validation_complete: "Import validation complete: %{good_record}, %{bad_record}"
-        locate_file: "Use the Browse button to locate %{typ} file"
-        ldap_group_lookup: "%{field} must be entered to perform LDAP Group Look Up"
-        worker_credentials_validated: "%{wtype} Credentials validated successfully"
-        settings_saved: '%{typ} settings saved for CFME Server "%{name} [%{server_id}]" in Zone "%{zone}"'
-        test_email_sent: 'The test email is being delivered, check "%{email}" to verify it was successful'
-        action_has_been_queued: "%{action} has been initiated for the selected Servers"
-        error_when_queuing_action: "Error occured when queuing action: %{error}"
         rhn:
           missing_information: "Please, fill in the form before saving."
-      export_generation_error: "Export generation returned: Status [%{status}] Message [%{message}]"
 
     provision: 
       cancelled: "Provision %{model} was cancelled by the user"
 
     policy:
-      alert_profile_assignments_saved: 'Alert Profile "%{name}" assignments succesfully saved'
-      task_cancelled_by_user: "%{task} cancelled by user"
       cancelled_import: "Import was cancelled by the user"
-      condition_removed_from_policy: 'Condition "%{cond_name}" has been removed from Policy "%{pol_name}"'
-      policy_event_actions_saved: 'Actions for Policy Event "%{name}" were saved'
-      value_missing_for_field: "%{val} missing for %{field}"
 
     report:
-      generation_error: "Report generation returned: Status [%{status}] Message [%{message}]"
-      not_found_schedule_failed: 'Saved Report "%{name}" not found, Schedule may have failed'
-      preview_error: "Report preview generation returned: Status [%{status}] Message [%{message}]"
       saved_report_doesnt_exist: "Saved Report no longer exists"
-      selected_no_longer_exists: "Selected %{typ} Report no longer exists"
 
     request:
       error_during_sysprep_upload: 'Error during Sysprep "%{name}" file upload: '
-      request_approved_denied: 'Request "%{name}" was %{task}'
       request_resubmitted: "%{typ} Request was re-submitted, you will be notified when your %{title} are ready"
-      request_submitted: "%{typ} Request was Submitted, you will be notified when your %{title} are ready"
-      st_request_submitted: "%{typ} Request was Submitted"
-      sysprep_file_upload: 'Sysprep "%{filename}" upload was successful'
       task_cancelled: "Request %{task} was cancelled by the user"
 
     service_dialog:
       cannot_import_duplicate: "Dialog '%{label}' already exists and was not imported"
 
-    smartproxy:
-      deploy_smaprtproxy_cancelled: 'Deploy of SmartProxy to Host "%{name}" was cancelled'
-      deploy_smaprtproxy_initiated: 'Deploy of SmartProxy to Host "%{name}" was initiated'
-      no_smartproxy_available: 'There are no available SmartProxies to deploy on Host "%{name}"'
-      retrieve_log_started: 'SmartProxy "%{name}" log retrieval has been started . . . refresh page to view the log'
-
-    vm:
-      add_vm_to_service_cancelled: 'Add VM "%{name}" to a Service was cancelled by the user'
-      added_to: '%{model} "%{name}" successfully added to Service "%{to_name}"'
-      create_snapshot_started: 'Create Snapshot for %{model} "%{name}" was started'
-      no_blackbox: '"%{name}": VM does not have BlackBox.'
-      ownership_saved: "Ownership saved for selected %{object_types}"
-      power_off_to_delete_blackbox: '"%{name}": VM needs to be in a Powered Off state to delete the BlackBox.'
-      retirement_removed: "Retirement %{date_text} removed"
-      retirement_set: "Retirement %{date_text} set to %{rdate}"
-      vm_removed_from_service: 'VM successfully removed from service "%{name}"'
-
-    already_exists: '%{model} "%{name}" already exists'
     already_taken: "%{field} has already been taken"
-    cant_delete_current: "Current %{model} \"%{name}\" cannot be deleted"
-    cant_delete_default: "Default %{model} \"%{name}\" cannot be deleted"
     cant_delete_read_only: "Read Only or %{model} in use by one or more %{in_use_by} can not be deleted"
     cant_delete_unassigned: "'%{model}' can not be deleted"
-    cant_edit_read_only: "Read Only %{model} \"%{name}\" can not be edited"
-    cant_delete_sample: "Default %{model} \"%{name}\" can not be deleted"
-    cant_edit_default: "Default %{model} \"%{name}\" can not be edited"
-    cant_edit_unassigned: "'%{model}' can not be edited"
-    cant_edit_sample: "Sample %{model} \"%{name}\" can not be edited"
-    cannot_delete: '"%{field}" %{model} can not be deleted'
     credentials:
       error: "Credential validation returned: %{message}"
-      cancelled: "Edit of credentials for selected %{model} was cancelled by the user"
-    console_access_failed: "Console access failed: %{reason}"
-    discovery_returned_error: "%{model} Discovery returned: "
-    error_during: "Error during '%{task}': "
-    error_with_stat_message: "Error during %{task}: Status [%{status}] Message [%{message}]"
-    error_on_line: "Error on line %{line_num}: %{err_txt}"
     license_invalid: "The CFME license is invalid, please upload a valid license file"
     no_host_defined: "No Host instances have been defined, press a button to Add or Discover one"
-    no_model_found_for_nodetype: "No Class found for explorer tree node type '%{nodetype}'"
-    no_nodetype_found_for_model: "No explorer tree node type found for '%{model}'"
-    no_records_selected_for_delete: 'No %{model} were selected for deletion'
-    no_records_selected_for_task: 'No %{model} were selected for %{task}'
     no_records_selected_to_be_disabled: 'No %{model} were selected to be disabled'
     no_records_selected_to_be_enabled: 'No %{model} were selected to be enabled'
-    no_records_selected_to_be_marked: 'No %{model} were selected to be marked as %{action}'
     non_admin_cannot_access: "Non-admin users can not access the system until at least 1 VM/Instance has been discovered"
     priority_order_saved: "Priority Order was saved"
-    record_no_longer_exists: "%{record_name} no longer exists in the database"
-    record_not_authorized_for_user: "You are not authorized to view %{record_name}"
     server_still_starting: "The CFME Server is still starting.  If this message persists, please contact your CFME administrator."
     server_still_starting_admin: "The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"
 
     record:
-      deleted: '%{model} "%{name}": Delete successful'
-      error_during_task: "%{model} \"%{name}\": Error during '%{task}': "
       delete_for_1_record_initiated: "The delete for selected %{model} was initiated"
       delete_for_records_initiated: "The delete for selected %{model} initiated"
-      deleted_for_1_record: "The selected %{model} was deleted"
-      deleted_for_records: "The selected %{model} were deleted"
-      item_no_longer_exists: "Last selected %{model} no longer exists"
-      no_longer_exists: "%{model} no longer exists"
-      selected_item_no_longer_exists: "Selected %{model} no longer exists"
-      task_initiated: "%{model}: %{task} successfully initiated"
-      task_initiated_for_model: "%{task} initiated for %{count_model} from the CFME Database"
-      task_initiated_for_record: '"%{record}": %{task} successfully initiated'
-      task_started: "%{model} \"%{name}\": %{task} successfully initiated"
       task_started_for_model: "%{task} for this %{model} has been started"
-      was_loaded: "%{model} \"%{name}\" was successfully loaded"
-
-    repository:
-      default_repository_not_running: 'The Default Repository SmartProxy, "%{name}", is not running, contact your CFME Administrator'
 
     service:
       no_service_selected_to_task: "No Services were selected to %{task}"
@@ -283,70 +117,28 @@ en:
       service_1_task: "This Service has been %{task}"
       service_task: "Selected Services have been %{task}"
 
-    1_not_in_current_region: "%{label} is not in the current region and will be skipped"
-    all_not_in_current_region: "All selected %{label} are not in the current region"
-    count_not_in_current_region: "%{label} are not in the current region and will be skipped"
-    error_during_delete_with_count: "Error during %{count_model} delete from the CFME Database"
-    not_in_current_region: "The selected %{label} is not in the current region"
     schedule_queued_to_run: "The selected Schedule has been queued to run"
     schedules_queued_to_run: "The selected Schedules have been queued to run"
     selected_record_deleted: 'The selected %{model} was deleted'
     selected_records_deleted: 'The selected %{model} were deleted'
-    selected_records_deleted_with_count: "Successfully deleted %{count_model} from the CFME Database"
     selected_records_were_disabled: 'The selected %{model} were disabled'
     selected_records_were_enabled: 'The selected %{model} were enabled'
-    selected_records_were_marked: 'The selected %{model} were marked as %{action}'
-    task_cancelled: "%{task} was cancelled by the user"
 
   # Header text
   cell_header:
     adding_model_record: "Adding a new %{model}"
-    all_model_indexes: "All %{model} Indexes"
-    all_model_records: "All %{model}"
-    all_model_records_for_group: "All %{model} - %{group}"
-    all_type_model_records: "All %{typ} %{model}"
-    best_fit_model: "Best Fit %{model}"
-    buttons_for_model_record: '%{model} for "%{record}"'
-    compare: 'Compare %{model}'
-    dialog_runner_for_record: '%{record} - "%{button_text}"'
-    drift: 'Drift for %{model} "%{name}"'
     editing_model_record: 'Editing %{model} "%{name}"'
-    editing_model_for_record: 'Editing %{model} for "%{name}"'
-    editing_model_record_sequence: 'Editing %{model} sequence for "%{name}"'
-    edit_tags: 'Edit Tags for %{model}'
     evm_relationship: 'Edit CFME Server Relationship for %{model} "%{name}"'
     filtered_model_records: '%{model} - Filtered by "%{filter}"'
-    miq_request_new: 'Provision %{model}'
     model: "%{model}"
-    model_assignments: ' %{model} Assignments'
-    model_client_connections: "%{model} Client Connections"
     model_for_record: '%{model} for "%{name}"'
     model_record: '%{model} "%{name}"'
     model_record_for_group: '%{model} for %{group} "%{name}"'
-    model_record_typ: '%{model} "%{name}" %{typ}'
-    model_record_indexes: 'Indexes for %{model} "%{name}"'
-    model_typ_name: '%{typ} in %{model} "%{name}"'
-    model_settings: "%{model} Settings"
     name: '"%{name}"'
-    name_filter_suffix: ' (Names with "%{name_filter}")'
-    policy_assignment: '%{model} Policy Assignment'
-    policy_sim: '%{model} Policy Simulation'
-    pre_provision: 'Provision %{model} - Select %{typ}'
-    reconfigure: 'Reconfigure %{model}'
-    retire: 'Set/Remove retirement date for %{model}'
-    request_task: '%{task} %{model}'
-    right_size: 'Right Size Recommendation for %{model} "%{name}"'
-    summary: '%{model} Summary'
-    set_ownership: 'Set Ownership for %{model}'
-    show_timelines: 'Timelines for %{model} "%{name}"'
-    utilization: '%{model} Utilization'
-    utilization_summary: 'Capacity & Utilization data for %{model} "%{name}"'
     task_model_record: '%{task} %{model} "%{name}"'
     type_of_model_record: '%{typ} %{model} "%{name}"'
-    type_of_model_records: "%{typ} %{model}"
     type_of_model_record_current: '%{typ} %{model} "%{name}" (current)'
     ui_action_for_model_record: '"%{action}" for %{model} "%{name}"'
-    ui_action_for_item_model_record: '%{action} "%{item_name}" for %{model} "%{name}"'
 
   number:
     # Used in number_with_delimiter()
