@@ -6,9 +6,6 @@ en:
     name: ManageIQ
   # Flash messages shown in the UI
   flash:
-    add:
-      added: '%{model} "%{name}" was added'
-
     authentication:
       error: "Sorry, the username or password you entered is incorrect."
       missing_role_or_group: "Login not allowed, User's %{model} is missing. Please contact the administrator"
@@ -29,7 +26,6 @@ en:
         search_reset: "The current search details have been reset"
       manage_desktops_cancelled: 'Manage Desktops was cancelled by the user'
       manage_desktops_saved: 'Manage Desktops was saved'
-      saved: '%{model} "%{name}" was saved'
       saved_for_class: 'Schema for %{model} "%{name}" was saved'
       user_assignment_cancelled: "Assignment was cancelled by the user"
       user_assignment_initiated: "Assignment changes initiated"

@@ -65,9 +65,8 @@ module PxeController::PxeServers
         pxe_server_set_record_vars(pxe)
       end
 
-      add_flash(I18n.t(pxe.id ? "flash.edit.saved" : "flash.add.added",
-                         :model=>ui_lookup(:model=>"PxeServer"),
-                         :name=>@edit[:new][:name]))
+      flash_key = pxe.id ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+      add_flash(flash_key % {:model => ui_lookup(:model => "PxeServer"), :name => @edit[:new][:name]})
 
       if pxe.valid? && !flash_errors? && pxe_server_set_record_vars(pxe) && pxe.save!
         AuditEvent.success(build_created_audit(pxe, @edit))
