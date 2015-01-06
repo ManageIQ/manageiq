@@ -95,6 +95,7 @@ class Authentication < ActiveRecord::Base
     return  case self.resource_type
     when "Host"                then "host"
     when "ExtManagementSystem" then "ems"
+    when "ProviderConnection"  then "provider connection"
     end
   end
 end

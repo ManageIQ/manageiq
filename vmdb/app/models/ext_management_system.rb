@@ -40,6 +40,8 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy
+  has_many :provider_connections, :foreign_key => "ems_id", :dependent => :destroy
+
 
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy
 
@@ -52,7 +54,6 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   validates :name,                 :presence => true, :uniqueness => true
-  validates :hostname, :ipaddress, :presence => true, :uniqueness => {:case_sensitive => false}, :if => :hostname_ipaddress_required?
 
   include NewWithTypeStiMixin
   include UuidMixin
@@ -413,4 +414,55 @@ class ExtManagementSystem < ActiveRecord::Base
       self.stop_event_monitor_queue
     end
   end
+
+  def ipaddress=(ip)
+    provider_connection.ipaddress = ip
+  end
+
+  def ipaddress
+    provider_connection.ipaddress
+  end
+
+  def hostname=(hostname)
+    provider_connection.hostname = hostname
+  end
+
+  def hostname
+    provider_connection.hostname
+  end
+
+  def port=(port)
+    provider_connection.port = port
+  end
+
+  def port
+    provider_connection.port
+  end
+
+  def update_authentication(data, options = {})
+    connection = provider_connection
+    connection.save if options[:save]
+    connection.update_authentication(data, options)
+  end
+
+  def provider_connection
+    provider_connections.build if provider_connections.empty?
+    provider_connections.first
+  end
+
+  def authentications_by_class(class_name)
+    return authentications if class_name.nil? || class_name == AUTH_BASE_CLASS
+    klass = class_name.constantize
+    authentications.select { |a| a.kind_of?(klass) }
+  end
+
+  def authentications
+    provider_connection.authentications <<
+      Authentication.where(resource_id: self.id, resource_type: self.class.base_class.name)
+  end
+
+  def authentications=(auths)
+    provider_connection.authentications = auths
+  end
+
 end
