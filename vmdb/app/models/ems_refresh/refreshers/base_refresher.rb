@@ -29,14 +29,14 @@ module EmsRefresh::Refreshers
     end
 
     def group_targets_by_ems(targets)
-      non_ems_targets = targets.select { |t| !t.kind_of?(ExtManagementSystem) }
+      non_ems_targets = targets.select { |t| t.respond_to?(:ext_management_system) }
       MiqPreloader.preload(non_ems_targets, :ext_management_system)
 
       self.ems_by_ems_id     = {}
       self.targets_by_ems_id = Hash.new { |h, k| h[k] = Array.new }
 
       targets.each do |t|
-        ems = t.kind_of?(ExtManagementSystem) ? t : t.ext_management_system
+        ems = t.respond_to?(:ext_management_system) ? t.ext_management_system : t
         if ems.nil?
           $log.warn "MIQ(#{self.class.name}.group_targets_by_ems) Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS."
           next

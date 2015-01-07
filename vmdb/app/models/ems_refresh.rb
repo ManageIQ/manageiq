@@ -56,9 +56,9 @@ module EmsRefresh
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
       # Determine the group
-      if t.kind_of?(ExtManagementSystem) || t.respond_to?(:ext_management_system)
-        ems = t.kind_of?(ExtManagementSystem) ? t : t.ext_management_system
-        ems.kind_of?(EmsVmware) ? :vc : ems.emstype.to_sym unless ems.nil?
+      ems = t.respond_to?(:ext_management_system) ? t.ext_management_system : t
+      if t.respond_to?(:emstype)
+        ems.kind_of?(EmsVmware) ? :vc : ems.emstype.to_sym
       end
     end
 

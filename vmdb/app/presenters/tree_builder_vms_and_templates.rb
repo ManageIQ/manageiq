@@ -2,7 +2,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
   attr_accessor :root_ems
 
   def initialize(root, *args)
-    @root_ems = root.kind_of?(ExtManagementSystem) ? root : root.ext_management_system
+    @root_ems = root.respond_to?(:ext_management_system) ? root.ext_management_system : root
     super
   end
 
