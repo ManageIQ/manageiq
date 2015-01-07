@@ -2133,7 +2133,7 @@ private
     end
 
     process_aeinstances(aeinstances, "destroy") unless aeinstances.empty?
-    add_flash(I18n.t(flash.selected_records_deleted,:model=>ui_lookup(:models=>"MiqAeInstances"))) if @flash_array == nil
+    add_flash(_("The selected %s were deleted") % ui_lookup(:models => "MiqAeInstances")) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 
@@ -2160,7 +2160,7 @@ private
     end
 
     process_aemethods(aemethods, "destroy") unless aemethods.empty?
-    add_flash(I18n.t(flash.selected_records_deleted,:model=>ui_lookup(:models=>"MiqAeMethod"))) if @flash_array == nil
+    add_flash(_("The selected %s were deleted") % ui_lookup(:models => "MiqAeMethod")) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 
