@@ -16,15 +16,6 @@ class Authentication < ActiveRecord::Base
   BASE_CLASS    = 'Authentication'
   DEFAULT_CLASS = 'AuthUseridPassword'
 
-  module StatusSeverity
-    VALID         = 0
-    NONE          = 1
-    INCOMPLETE    = 1
-    ERROR         = 2
-    UNREACHABLE   = 2
-    INVALID       = 3
-  end
-
   def self.new(*args, &block)
     if self == BASE_CLASS.constantize
       klass = DEFAULT_CLASS.constantize
@@ -35,11 +26,18 @@ class Authentication < ActiveRecord::Base
     end
   end
 
-  def status_worse_than(other_status)
-    return false if other_status.to_s.capitalize == self.status
-    current =  StatusSeverity.const_get(self.status.to_s.upcase)
-    proposed = StatusSeverity.const_get(other_status.to_s.upcase)
-    return current >= proposed
+  STATUS_SEVERITY = Hash.new(-1).merge(
+    ""            => -1,
+    "valid"       => 0,
+    "none"        => 1,
+    "incomplete"  => 1,
+    "error"       => 2,
+    "unreachable" => 2,
+    "invalid"     => 3,
+  ).freeze
+
+  def status_severity
+    STATUS_SEVERITY[status.to_s.downcase]
   end
 
   def authentication_type

@@ -42,16 +42,8 @@ module AuthenticationMixin
   alias :has_credentials? :authentication_valid?
 
   def authentication_status(class_name=AUTH_DEFAULT_CLASS)
-    worst = nil
-    authentications_by_class(class_name).each do |a|
-      next unless a.status
-      worst ||= a.status
-      worst = a.status if a.status_worse_than(worst)
-    end
-
-    # If we have no authentications, or all of them have no status (ie, never validated), return "None"
-    worst ||= "None"
-    return worst
+    ordered_auths = authentications_by_class(class_name).sort_by(&:status_severity)
+    ordered_auths.last.try(:status) || "None"
   end
 
   def auth_user_pwd(type=nil, class_name=AUTH_DEFAULT_CLASS)
