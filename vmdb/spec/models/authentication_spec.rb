@@ -92,63 +92,63 @@ describe Authentication do
       it "should return 'Invalid' authentication_status with one valid, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'Invalid' authentication_status with one error, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Error")
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'Invalid' authentication_status with one unreachable, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Unreachable")
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'Invalid' authentication_status with one incomplete, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Incomplete")
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'Error' authentication_status with one incomplete, one error" do
         highest = "Error"
         @auth.update_attribute(:status, "Incomplete")
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'Error' authentication_status with one valid, one error" do
         highest = "Error"
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'Valid' authentication_status with both valid" do
         highest = "Valid"
         @auth.update_attribute(:status, highest)
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'Incomplete' authentication_status with one valid, one incomplete" do
         highest = "Incomplete"
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == highest
       end
 
       it "should return 'None' authentication_status with one nil, one nil" do
         highest = nil
         @auth.update_attribute(:status, nil)
-        @ems.authentications << Authentication.create(:authtype => "type2", :status => highest)
+        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
         @ems.authentication_status.should == 'None'
       end
 
@@ -196,7 +196,7 @@ describe Authentication do
       it "should not raise :changed event or queue authentication_check if creds unchanged" do
         @auth.should_receive(:raise_event).with(:changed).never
         EmsVmware.any_instance.should_receive(:authentication_check_types_queue).never
-        @auth.after_authentication_changed
+        @auth.send(:after_authentication_changed)
       end
 
       it "should have default authentication_type?" do
