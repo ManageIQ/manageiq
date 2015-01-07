@@ -303,13 +303,13 @@ class DashboardController < ApplicationController
         page << javascript_add_class("w_#{w}_minmax", "minbox")
         page << javascript_del_class("w_#{w}_minmax", "maxbox")
         page << javascript_show("dd_w#{w}_box")
-        page << "$('w_#{w}_minmax').title = 'Minimize';"
+        page << "$j('#w_#{w}_minmax').prop('title', 'Minimize');"
         @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
       else
         page << javascript_add_class("w_#{w}_minmax", "maxbox")
         page << javascript_del_class("w_#{w}_minmax", "minbox")
         page << javascript_hide("dd_w#{w}_box")
-        page << "$('w_#{w}_minmax').title = 'Restore';"
+        page << "$j('#w_#{w}_minmax').prop('title', 'Restore');"
         @sb[:dashboards][@sb[:active_db]][:minimized].push(w)
       end
     end

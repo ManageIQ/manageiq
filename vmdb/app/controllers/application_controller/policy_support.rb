@@ -142,11 +142,11 @@ module ApplicationController::PolicySupport
         if @catinfo[cat]
           @catinfo[cat] = false
           page << javascript_show("cat_#{policy_escaped}_div")
-          page << "$('cat_#{policy_escaped}_icon').src='/images/tree/compress.png';"
+          page << "$j('#cat_#{policy_escaped}_icon').prop('src', '/images/tree/compress.png');"
         else
           @catinfo[cat] = true # Set squashed = true
           page << javascript_hide("cat_#{policy_escaped}_div")
-          page << "$('cat_#{policy_escaped}_icon').src='/images/tree/expand.png';"
+          page << "$j('#cat_#{policy_escaped}_icon').prop('src', '/images/tree/expand.png');"
         end
       end
     else

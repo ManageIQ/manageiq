@@ -448,14 +448,14 @@ module ApplicationController::Filter
     render :update do |page|
       if @edit[:adv_search_open] == true
         @edit[:adv_search_open] = false
-        page << "$('adv_search_img').src='/images/toolbars/squashed-true.png'"
+        page << "$j('#adv_search_img').prop('src', '/images/toolbars/squashed-true.png')"
         page << javascript_hide("adv_search_div")
         page << javascript_hide("blocker_div")
 #       page << "$('adv_search_div').visualEffect('blind_up', {duration:1.5});"
       else
         @edit[:adv_search_open] = true
         page.replace_html("adv_search_div", :partial=>"layouts/adv_search")
-        page << "$('adv_search_img').src='/images/toolbars/squashed-false.png'"
+        page << "$j('#adv_search_img').prop('src', '/images/toolbars/squashed-false.png')"
         page << javascript_show("adv_search_div")
         page << javascript_show("blocker_div")
 #       page << "$('adv_search_div').visualEffect('blind_down', {duration:1.5});"

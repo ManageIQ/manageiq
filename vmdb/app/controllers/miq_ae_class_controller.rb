@@ -141,15 +141,15 @@ class MiqAeClassController < ApplicationController
       if @sb[:squash_state]
         @sb[:squash_state] = false
         page << javascript_show("inputs_div")
-        page << "$('exp_collapse_img').src='/images/toolbars/squashed-false.png';"
-        page << "$('exp_collapse_img').title='Hide Input Parameters';"
-        page << "$('exp_collapse_img').alt='Hide Input Parameters';"
+        page << "$j('#exp_collapse_img').prop('src' ,'/images/toolbars/squashed-false.png');"
+        page << "$j('#exp_collapse_img').prop('title', 'Hide Input Parameters');"
+        page << "$j('#exp_collapse_img').prop('alt', 'Hide Input Parameters');"
       else
         @sb[:squash_state] = true
         page << javascript_hide("inputs_div")
-        page << "$('exp_collapse_img').src='/images/toolbars/squashed-true.png';"
-        page << "$('exp_collapse_img').title='Show Input Parameters';"
-        page << "$('exp_collapse_img').alt='Show Input Parameters';"
+        page << "$j('#exp_collapse_img').prop('src', '/images/toolbars/squashed-true.png');"
+        page << "$j('#exp_collapse_img').prop('title', 'Show Input Parameters');"
+        page << "$j('#exp_collapse_img').prop('alt', 'Show Input Parameters');"
       end
     end
   end
