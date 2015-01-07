@@ -15,6 +15,7 @@ module AutomateTreeHelper
 
       case params[:button]
       when 'submit'
+        @edit[:new][@edit[:ae_field_typ]] = @edit[:active_id]
         page << set_element_visible("#{edit_key}_div", true)
         @edit[:new][edit_key] = @edit[:automate_tree_selected_path]
         if @edit[:new][edit_key]
@@ -35,8 +36,18 @@ module AutomateTreeHelper
         page << javascript_show("ae_tree_select_div")
         page << javascript_show("blocker_div")
         @edit[:ae_tree_select] = true
+        type =  @edit[:ae_field_typ] || params[:typ]
+        validnode = true
+        @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
+        if @edit[:new][type].nil?
+          @edit[:new][:selected] = "root"
+          validnode = false
+        else
+          @edit[:new][:selected] = @edit[:new][type]
+        end
         if x_node(:automate_tree)
-          page << "cfmeDynatree_activateNodeSilently('#{x_node(:automate_tree)}', '#{x_node}');"
+          page << javascript_for_ae_node_selection(@edit[:new][:selected], @edit[:current][:selected], validnode)
+          page << "cfmeDynatree_activateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
         end
       end
     end
@@ -50,7 +61,14 @@ module AutomateTreeHelper
       record = MiqAeNamespace.find_by_id(id)
       record = nil if record.domain?
     end
+
+    @edit[:new][edit_key] = @edit[edit_key] if @edit[:new][edit_key].nil?
+    validnode = false
+    @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
+    @edit[:new][:selected] = params[:id]
+
     if record
+      validnode = true
       @edit[:automate_tree_selected_path] =
           controller_name == "miq_ae_class" ? record.fqname_sans_domain : record.fqname
       # save selected id in edit until save button is pressed
@@ -59,6 +77,7 @@ module AutomateTreeHelper
     end
     render :update do |page|
       page << javascript_for_miq_button_visibility(@changed, 'automate')
+      page << javascript_for_ae_node_selection(@edit[:new][:selected], @edit[:current][:selected], validnode)
     end
   end
 end

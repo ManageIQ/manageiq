@@ -128,6 +128,12 @@ function cfme_dynatree_node_add_class(treename, key, klass){
   node.render();
 }
 
+function cfme_dynatree_node_remove_class(treename, key){
+  node = $j("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+  node.data.addClass = "";
+  node.render();
+}
+
 function cfme_dynatree_redraw(treename){
   $j("#" + treename + "box").dynatree('getTree').redraw();
 }
@@ -464,4 +470,12 @@ function miqMenuChangeRow(grid,action,click_url) {
       break;
   }
   return ret;
+}
+
+function cfmeSetAETreeNodeSelectionClass(id, prevId, bValidNode) {
+  if(prevId != "")
+    cfme_dynatree_node_remove_class("automate_tree", prevId);
+
+  if(bValidNode == "true")
+    cfme_dynatree_node_add_class("automate_tree", id, "ae-valid-node");
 }

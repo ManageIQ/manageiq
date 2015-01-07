@@ -4,9 +4,9 @@
   <%= hidden_field_tag(:ignore_form_changes) %>
 
     <p class="legend">Select Entry Point <%=entry_point%></p>
-    <div id="automate_tree_box"></div>
+    <div id="automate_treebox"></div>
     <%= render(:partial => "layouts/dynatree",
-               :locals => {:tree_id             => "automate_tree_box",
+               :locals => {:tree_id             => "automate_treebox",
                            :tree_name           => "automate_tree",
                            :json_tree           => @temp[:automate_tree],
                            :onclick             => "cfmeOnClick_SelectAETreeNode",
