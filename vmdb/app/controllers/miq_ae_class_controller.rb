@@ -2709,9 +2709,9 @@ private
 
   def ns_right_cell_text
     model = ui_lookup(:model => @edit[:typ])
-    name_for_msg = @edit[:rec_id].nil? ? "cell_header.adding_model_record" : "cell_header.editing_model_record"
+    name_for_msg = @edit[:rec_id].nil? ? _("Adding a new %s") : _("Editing %{model} \"%{name}\"")
     options = @edit[:rec_id].nil? ? {:model => model} : {:model => model, :name => @ae_ns.name}
-    I18n.t(name_for_msg, options)
+    name_for_msg % options
   end
 
   def priority_edit_screen

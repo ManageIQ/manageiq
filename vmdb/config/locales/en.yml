@@ -110,19 +110,10 @@ en:
 
   # Header text
   cell_header:
-    adding_model_record: "Adding a new %{model}"
-    editing_model_record: 'Editing %{model} "%{name}"'
     evm_relationship: 'Edit CFME Server Relationship for %{model} "%{name}"'
-    filtered_model_records: '%{model} - Filtered by "%{filter}"'
     model: "%{model}"
     model_for_record: '%{model} for "%{name}"'
-    model_record: '%{model} "%{name}"'
-    model_record_for_group: '%{model} for %{group} "%{name}"'
     name: '"%{name}"'
-    task_model_record: '%{task} %{model} "%{name}"'
-    type_of_model_record: '%{typ} %{model} "%{name}"'
-    type_of_model_record_current: '%{typ} %{model} "%{name}" (current)'
-    ui_action_for_model_record: '"%{action}" for %{model} "%{name}"'
 
   number:
     # Used in number_with_delimiter()
