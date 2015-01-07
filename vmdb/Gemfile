@@ -91,6 +91,10 @@ unless ENV['APPLIANCE']
     gem "win32console",                 :require => false if RUBY_PLATFORM =~ /mingw/
 
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
+    # used for finding translations
+    gem "gettext",                      :require => false
+    # used for finding translations inside HAML
+    gem 'ruby_parser',                  :require => false
   end
 
   group :test do
