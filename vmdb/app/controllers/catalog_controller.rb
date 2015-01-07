@@ -351,7 +351,8 @@ class CatalogController < ApplicationController
       st_set_record_vars(@st)
       if @add_rsc
         if @st.save
-          flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+          flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
+                                                  _("%{model} \"%{name}\" was added")
           add_flash(flash_key % {:model => "Catalog Bundle", :name => @edit[:new][:name]})
           @changed = session[:changed] = false
           @in_a_form = false

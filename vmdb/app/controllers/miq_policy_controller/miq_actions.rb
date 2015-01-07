@@ -41,7 +41,8 @@ module MiqPolicyController::MiqActions
       action_set_record_vars(action)
       if action_valid_record?(action) && !@flash_array && action.save
         AuditEvent.success(build_saved_audit(action, params[:button] == "add"))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
+                                                _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "MiqAction"), :name => @edit[:new][:description]})
         action_get_info(MiqAction.find(action.id))
         @edit = nil

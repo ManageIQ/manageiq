@@ -31,7 +31,8 @@ module OpsController::Settings::Zones
       zone_set_record_vars(@zone)
       if valid_record?(@zone) && @zone.save
         AuditEvent.success(build_created_audit(@zone, @edit))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
+                                                _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "Zone"), :name => @edit[:new][:name]})
         @edit = nil
         self.x_node = params[:button] == "save" ?

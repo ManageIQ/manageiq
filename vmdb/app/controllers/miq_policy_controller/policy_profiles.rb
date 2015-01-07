@@ -48,7 +48,8 @@ module MiqPolicyController::PolicyProfiles
           add_flash(_("Error during '%s': ") % "Policy Profile #{params[:button]}" << bang.message, :error)
         end
         AuditEvent.success(build_saved_audit(profile, params[:button] == "add"))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
+                                                _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @edit[:new][:description]})
         profile_get_info(MiqPolicySet.find(profile.id))
         @edit = nil

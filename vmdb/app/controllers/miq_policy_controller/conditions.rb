@@ -55,7 +55,8 @@ module MiqPolicyController::Conditions
           policy.save
         end
         AuditEvent.success(build_saved_audit(condition, params[:button] == "add"))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
+                                                _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "Condition"), :name => @edit[:new][:description]})
         @edit = nil
         @nodetype = "co"
