@@ -4,7 +4,7 @@ require 'MiqKvmInventory'
 module EmsRefresh::Refreshers
   class KvmRefresher < BaseRefresher
     include RefresherRelatsMixin
-    include EmsRefrehserMixin
+    include EmsRefresherMixin
 
     def parse_inventory(ems, _targets)
       @kvm = MiqKvmInventory.new(ems.ipaddress, *ems.auth_user_pwd)
