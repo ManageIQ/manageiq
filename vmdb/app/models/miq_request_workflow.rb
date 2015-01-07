@@ -570,7 +570,7 @@ class MiqRequestWorkflow
     rails_logger('allowed_tags', 0)
     st = Time.now
     @tags = {}
-    class_tags = Classification.find(:all, :conditions => {:show => true}, :include => :tag)
+    class_tags = Classification.where(:show => true).includes(:tag)
     class_tags.reject! {|t| t.read_only?} # Can't do in query because column is a string.
 
     exclude_list  = options[:exclude].blank?       ? [] : options[:exclude].collect{|t| t.to_s}
@@ -652,7 +652,7 @@ class MiqRequestWorkflow
     @values[:miq_request_dialog_name] ||= @values[:provision_dialog_name] || dialog_name_from_automate || self.class.default_dialog_file
     dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], ".rb")
     $log.info "#{log_header} Loading dialogs <#{dp}> for user <#{@owner_id}>"
-    d = MiqDialog.find(:first, :conditions => ["lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name])
+    d = MiqDialog.where("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name).first
     raise MiqException::Error, "Dialog cannot be found.  Name:[#{@values[:miq_request_dialog_name]}]  Type:[#{self.class.base_model.name}]" if d.nil?
     prov_dialogs = d.content
 

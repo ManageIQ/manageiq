@@ -79,7 +79,7 @@ module MiqProvision::Naming
       return nil if prov_obj.vm_template.nil?
       ems = prov_obj.vm_template.ext_management_system
       return nil if ems.nil?
-      VmOrTemplate.find(:first, :conditions => ["ems_id = ? and lower(name) = ?", ems.id, fullname.downcase])
+      VmOrTemplate.where("ems_id = ? and lower(name) = ?", ems.id, fullname.downcase).first
     end
   end
 

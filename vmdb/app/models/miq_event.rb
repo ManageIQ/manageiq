@@ -192,8 +192,8 @@ class MiqEvent < ActiveRecord::Base
   end
 
   def miq_policies
-    p_ids = MiqPolicyContent.find_all_by_miq_event_id(self.id).collect {|pc| pc.miq_policy_id}.uniq
-    MiqPolicy.find(:all, :conditions => {:id => p_ids})
+    p_ids = MiqPolicyContent.where(:miq_event_id => self.id).uniq.pluck(:miq_policy_id)
+    MiqPolicy.where(:id => p_ids).to_a
   end
 
   def export_to_array

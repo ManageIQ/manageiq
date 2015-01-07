@@ -272,7 +272,7 @@ class MiqPolicy < ActiveRecord::Base
 
   def self.resolve(rec, list=nil, event=nil)
     # list is expected to be a list of policies, not profiles.
-    policies = list.nil? ? self.find(:all) : self.find_all_by_name(list)
+    policies = list.nil? ? self.all : self.where(:name => list)
     result = []
     policies.each {|p|
       next if event && !p.events.include?(event)

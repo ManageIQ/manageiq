@@ -36,7 +36,7 @@ module MiqServer::LogManagement
       cond = {:historical => true, :name => name, :state => 'available'}
       cond[:logging_started_on] = log_start unless log_start.nil?
       cond[:logging_ended_on] = log_end unless log_end.nil?
-      logfile = self.log_files.find(:first, :conditions => cond)
+      logfile = self.log_files.where(cond).first
       if logfile && logfile.log_uri.nil?
         $log.info("#{log_prefix} Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
@@ -111,12 +111,12 @@ module MiqServer::LogManagement
   end
 
   def last_log_sync_on
-    rec = LogFile.find(:first, :conditions => {:resource_type => self.class.name, :resource_id => self.id}, :order => "updated_on DESC", :select => "updated_on")
+    rec = LogFile.where(:resource_type => self.class.name, :resource_id => self.id).order("updated_on DESC").select("updated_on").first
     return rec.nil? ? nil : rec.updated_on
   end
 
   def last_log_sync_message
-    last_log = LogFile.find(:first, :conditions => {:resource_type => self.class.name, :resource_id => self.id}, :order => "updated_on DESC")
+    last_log = LogFile.where(:resource_type => self.class.name, :resource_id => self.id).order("updated_on DESC").first
     return nil if last_log.nil? || last_log.miq_task.nil?
     return last_log.miq_task.message
   end

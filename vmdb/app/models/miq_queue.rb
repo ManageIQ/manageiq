@@ -220,10 +220,10 @@ class MiqQueue < ActiveRecord::Base
       conditions[:priority] || MIN_PRIORITY,
     ]
 
-    args = { :conditions => cond, :order => "priority, id" }
-    args[:select] = select unless select.nil?
-    args[:limit]  = limit || 1
-    MiqQueue.all(args)
+    result = MiqQueue.where(cond).order(:priority, :id)
+    result.select(select) unless select.nil?
+    result.limit(limit || 1)
+    result.to_a
   end
 
   # Find the MiqQueue item with the specified find options, and yields that

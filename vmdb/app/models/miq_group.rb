@@ -64,9 +64,9 @@ class MiqGroup < ActiveRecord::Base
   def self.add(attrs)
     group = self.new(attrs)
     if group.resource.nil?
-      groups = self.find(:all, :conditions => {:resource_id => nil, :resource_type => nil}, :order => "sequence DESC")
+      groups = self.where(:resource_id => nil, :resource_type => nil).order("sequence DESC")
     else
-      groups = group.resource.miq_groups.find(:all, :order => "sequence DESC")
+      groups = group.resource.miq_groups.order("sequence DESC")
     end
     group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
     group.save!

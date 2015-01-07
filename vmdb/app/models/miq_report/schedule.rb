@@ -6,7 +6,7 @@ module MiqReport::Schedule
 
   def remove_associated_schedules
     $log.info("MIQ(MiqReport.remove_associated_schedules) Removing any schedules associated with report: #{self.id}")
-    report_schedules = MiqSchedule.find(:all, :conditions => {:towhat => self.class.name})
+    report_schedules = MiqSchedule.where(:towhat => self.class.name)
     report_schedules.each do |sch|
       ids = sch.target_ids
       $log.info("MIQ(MiqReport.remove_associated_schedules) Schedule id: #{sch.id}, targets: #{ids.inspect}")

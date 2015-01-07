@@ -105,11 +105,11 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.find_current_in_zone(zone_id)
-    self.all(:conditions => CONDITION_CURRENT.merge(:miq_server_id => Zone.find(zone_id).miq_servers))
+    self.where(CONDITION_CURRENT.merge(:miq_server_id => Zone.find(zone_id).miq_servers)).to_a
   end
 
   def self.find_current_in_my_zone
-    self.all(:conditions => CONDITION_CURRENT.merge(:miq_server_id => MiqServer.my_server.zone.miq_servers))
+    self.where(CONDITION_CURRENT.merge(:miq_server_id => MiqServer.my_server.zone.miq_servers)).to_a
   end
 
   def self.find_starting(server_id = nil)

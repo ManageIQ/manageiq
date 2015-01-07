@@ -135,7 +135,7 @@ class MiqProxy < ActiveRecord::Base
 
   def self.proxies_by_zone(zone = 'default')
     # find the proxies with that zone, return array of proxies
-    self.find(:all, :include => :host).map {|p| p if p.host.my_zone.to_s.downcase == zone.downcase}.compact
+    self.includes(:host).select {|p| p.host.my_zone.to_s.downcase == zone.downcase }
   end
 
   def agent_config(agentCfg)
@@ -328,7 +328,7 @@ class MiqProxy < ActiveRecord::Base
 
   def self.notify_server_ip_change(new_ip)
     new_opts = { :vmdbHost => new_ip, :useHostQueue => false }
-    MiqProxy.find(:all).each { |p| p.change_agent_config(new_opts) }
+    MiqProxy.all.each { |p| p.change_agent_config(new_opts) }
   end
 
   def clear_queue_items(options={})
@@ -1037,7 +1037,7 @@ class MiqProxy < ActiveRecord::Base
       end
     end
 
-    jobs = Job.find(:all, :conditions => ["type = ? and agent_class = ? and agent_id = ? and state != 'finished'",'HostRemoteDeploy', self.class.name, self.id])
+    jobs = Job.where("type = ? and agent_class = ? and agent_id = ? and state != 'finished'", "HostRemoteDeploy", self.class.name, self.id)
     job = jobs.detect {|j| Time.now - j.updated_on < 5.minutes}
     return {:type => :deploy, :object => job} unless job.nil?
 

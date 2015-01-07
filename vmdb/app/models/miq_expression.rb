@@ -1652,7 +1652,10 @@ class MiqExpression
       return catobj ? catobj.entries.collect {|e| [e.description, e.name]} : []
     elsif ns == "user_tag" || ns == "user"
       cat = field.split("-").last
-      return Tag.find(:all, :conditions => ["name like ?", "/user/#{cat}%"]).collect {|t| [t.name.split("/").last, t.name.split("/").last]}
+      return Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
+        tag_name = t.name.split("/").last
+        [tag_name, tag_name]
+      end
     else
       return field
     end

@@ -776,7 +776,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
 
   def allowed_datastore_storage_controller(options={})
     result = {}
-    NetAppFiler.find(:all).each {|f| result[f.name] = f.name}
+    NetAppFiler.select(:name).each { |f| result[f.name] = f.name }
     return result
   end
 
@@ -1260,7 +1260,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     unless placement_cluster_name.blank?
       data[:placement_cluster_name] = placement_cluster_name.to_s.downcase
       $log.info "#{log_header} placement_cluster_name:<#{data[:placement_cluster_name].inspect}>"
-      data[:data_centers] = EmsCluster.find(:all, :conditions => ["lower(name) = ?", data[:placement_cluster_name]]).collect {|c| c.v_parent_datacenter}
+      data[:data_centers] = EmsCluster.where("lower(name) = ?", data[:placement_cluster_name]).collect { |c| c.v_parent_datacenter }
     end
     $log.info "#{log_header} data:<#{data.inspect}>"
 
@@ -1305,7 +1305,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     end
 
     conditions = [conditions.join(" AND "), *args]
-    vms = VmOrTemplate.find(:all, :conditions => conditions)
+    vms = VmOrTemplate.where(conditions)
     vms = source_vm_rbac_filter(vms) unless vms.blank?
     return vms.first
   end

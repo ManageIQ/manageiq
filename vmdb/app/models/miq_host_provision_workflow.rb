@@ -75,12 +75,15 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_ws_hosts(options={})
-    Host.find(:all, :conditions => ["mac_address is not NULL"]).find_all {|h| h.ipmi_enabled}
+    Host.where("mac_address is not NULL").select { |h| h.ipmi_enabled }
   end
 
   def allowed_ems(options={})
     result = {}
-    ExtManagementSystem.find(:all).each { |e| result[e.id] = e.name if e.kind_of?(EmsVmware) }
+
+    ExtManagementSystem.select("id, name").each do |e|
+      result[e.id] = e.name if e.kind_of?(EmsVmware)
+    end
     return result
   end
 

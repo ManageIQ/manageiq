@@ -670,7 +670,10 @@ module MiqReport::Generator
       if association == "categories" || association == "managed"
         association_objects = []
         assochash = {}
-        @descriptions_by_tag_id ||= Classification.all(:conditions => "parent_id != 0").inject({}) {|h,c| h[c.tag_id] = c.description; h}
+        @descriptions_by_tag_id ||= Classification.where("parent_id != 0").inject({}) do |h, c|
+          h[c.tag_id] = c.description
+          h
+        end
 
         assoc_options[:only].each {|c|
           entarr = []

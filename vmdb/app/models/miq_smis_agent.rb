@@ -38,7 +38,7 @@ class MiqSmisAgent < StorageManager
 
   def self.update_smis(extProf)
     zoneId = MiqServer.my_server.zone.id
-    agents = self.find(:all, :conditions => {:agent_type => 'SMIS', :zone_id => zoneId})
+    agents = self.where(:agent_type => "SMIS", :zone_id => zoneId)
 
     agents.each do |agent|
       agent.last_update_status = STORAGE_UPDATE_PENDING

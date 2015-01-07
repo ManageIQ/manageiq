@@ -94,7 +94,7 @@ class MiqAlert < ActiveRecord::Base
       else
         cond += " AND id IN (?)"
         args << alert_ids
-        self.find(:all, :conditions => [cond, *args])
+        self.where(cond, *args).to_a
       end
     end
   end
@@ -152,7 +152,7 @@ class MiqAlert < ActiveRecord::Base
 
         model = a.db.constantize
         unless model.name == "Storage" # No clean way to get zone from storage
-          targets += model.all(:include => [:ext_management_system]).select {|i| i.my_zone == zone}
+          targets += model.includes(:ext_management_system).select { |i| i.my_zone == zone }
         else
           targets += model.all
         end
@@ -217,7 +217,7 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def add_status_post_evaluate(target, result)
-    existing = self.miq_alert_statuses.find(:first, :conditions => {:resource_type => target.class.base_class.name, :resource_id => target.id})
+    existing = self.miq_alert_statuses.where(:resource_type => target.class.base_class.name, :resource_id => target.id).first
     status = existing.nil? ? MiqAlertStatus.new : existing
     status.result = result
     status.evaluated_on = Time.now.utc
@@ -645,7 +645,7 @@ class MiqAlert < ActiveRecord::Base
       return false
     end
 
-    status = self.miq_alert_statuses.find(:first, :conditions => {:resource_type => target.class.base_class.name, :resource_id => target.id})
+    status = self.miq_alert_statuses.where(:resource_type => target.class.base_class.name, :resource_id => target.id).first
     if status
       since_last_eval = (Time.now.utc - status.evaluated_on)
       eval_options[:starting_on] = if (since_last_eval >= eval_options[:duration])
