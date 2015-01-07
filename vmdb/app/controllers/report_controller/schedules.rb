@@ -85,9 +85,8 @@ module ReportController::Schedules
     end
     process_schedules(scheds, "destroy")  unless scheds.empty?
     unless flash_errors?
-      msg_str = scheds.length > 1 ? "selected_records_deleted" : "selected_record_deleted"
-      add_flash(I18n.t("flash.#{msg_str}",
-                       :model => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"),
+      msg_str = scheds.length > 1 ? _("The selected %s were deleted") : _("The selected %s was deleted")
+      add_flash(msg_str % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
                 :info, true)
     end
     self.x_node = "root"

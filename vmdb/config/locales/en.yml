@@ -103,8 +103,6 @@ en:
 
     schedule_queued_to_run: "The selected Schedule has been queued to run"
     schedules_queued_to_run: "The selected Schedules have been queued to run"
-    selected_record_deleted: 'The selected %{model} was deleted'
-    selected_records_deleted: 'The selected %{model} were deleted'
     selected_records_were_disabled: 'The selected %{model} were disabled'
     selected_records_were_enabled: 'The selected %{model} were enabled'
 
