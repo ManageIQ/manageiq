@@ -81,7 +81,7 @@ module MiqProvisionQuotaMixin
     vms = []
     prov_owner = self.get_owner
     unless prov_owner.nil?
-      vms = Vm.all(:conditions => ["miq_group_id = ?", prov_owner.current_group_id], :include => {:hardware => :disks})
+      vms = Vm.where("miq_group_id = ?", prov_owner.current_group_id).includes(:hardware => :disks)
       vms.reject! do |vm|
         result = vm.template? || vm.host_id.nil?
         # if result is already true we can skip the following checks
@@ -142,7 +142,7 @@ module MiqProvisionQuotaMixin
          cond_args << false
       end
 
-      vms = Vm.find(:all, :conditions => [cond_str, *cond_args], :include => {:hardware => :disks})
+      vms = Vm.where(cond_str, *cond_args).includes(:hardware => :disks).to_a
     end
     return vms
   end

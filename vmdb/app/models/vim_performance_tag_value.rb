@@ -73,7 +73,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
       }
     end
     perf_data = {}
-    perf_data[:perf_recs] = klass.all(:conditions => conditions)
+    perf_data[:perf_recs] = klass.where(conditions)
     perf_data[:categories] = perf_data[:perf_recs].collect do |perf|
       perf.tag_names.split(TAG_SEP).collect {|t| t.split("/").first} unless perf.tag_names.nil?
     end.flatten.compact.uniq

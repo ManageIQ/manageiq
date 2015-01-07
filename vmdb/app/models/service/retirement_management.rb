@@ -4,7 +4,7 @@ module Service::RetirementManagement
 
   module ClassMethods
     def retirement_check
-      services = Service.all(:conditions => ["(retires_on IS NOT NULL OR retired = ?)", true])
+      services = Service.where("(retires_on IS NOT NULL OR retired = ?)", true)
       services.each { |service| service.retirement_check }
     end
   end

@@ -67,7 +67,7 @@ class Storage < ActiveRecord::Base
   SUPPORTED_STORAGE_TYPES = ["VMFS", "NFS"]
 
   def miq_proxies
-    MiqProxy.find(:all).select { |p| p.storages.include?(self) }
+    MiqProxy.all.select { |p| p.storages.include?(self) }
   end
 
   def to_s
@@ -370,14 +370,14 @@ class Storage < ActiveRecord::Base
   end
 
   def self.unregistered_vm_config_files
-    Storage.find(:all).inject([]) {|list, s| list + s.unregistered_vm_config_files}
+    Storage.all.inject([]) { |list, s| list + s.unregistered_vm_config_files }
   end
 
   def unmanaged_vm_config_files
     files = if association_cache.include?(:storage_files)
       self.storage_files.select { |f| f.ext_name == "vmx" && f.vm_or_template_id.nil? }
     else
-      self.storage_files.all(:conditions => {:ext_name => "vmx", :vm_or_template_id => nil})
+      self.storage_files.where(:ext_name => "vmx", :vm_or_template_id => nil)
     end
     return files.collect {|f| f.name}
   end
@@ -581,7 +581,7 @@ class Storage < ActiveRecord::Base
   def vm_ids_by_path
     host_ids = self.hosts.collect { |h| h.id }
     return nil if host_ids.empty?
-    Vm.find(:all, :conditions => ["host_id IN (?)", host_ids], :include => :storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
+    Vm.where("host_id IN (?)", host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
   end
 
   # TODO: Is this still needed?
@@ -592,8 +592,8 @@ class Storage < ActiveRecord::Base
 
     objs = storages.collect do |s|
       # Get the first VM or Host that's available since we can't refresh a storage directly
-      obj = s.vms.find(:first, :order => :id)
-      obj = s.hosts.find(:first, :order => :id) if obj.nil?
+      obj = s.vms.order(:id).first
+      obj = s.hosts.order(:id).first if obj.nil?
       obj
     end
     return objs.compact.uniq

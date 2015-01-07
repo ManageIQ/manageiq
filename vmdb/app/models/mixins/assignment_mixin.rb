@@ -85,11 +85,11 @@ module AssignmentMixin
   module ClassMethods
     def assignments(find_options = {})
       # Get all assigned, enabled instances for type klass
-      ass_hash = self.all(find_options).inject({}) {|h,a| h[a.id] = a; h}
-      tags = Tag.all(:conditions => ["taggings.taggable_type = ? and tags.name like ?", self.name, "#{self.namespace}/%"], :include => "taggings")
+      assignment_map = self.all(find_options).inject({}) { |h, a| h[a.id] = a; h }
+      tags = Tag.where("taggings.taggable_type = ? and tags.name like ?", self.name, "#{self.namespace}/%").includes("taggings")
       results = tags.inject([]) do |arr,tag|
         tag.taggings.each do |tagging|
-          arr << {:assigned => ass_hash[tagging.taggable_id], :assigned_to => Tag.filter_ns([tag], self.namespace).first} unless ass_hash[tagging.taggable_id].nil?
+          arr << {:assigned => assignment_map[tagging.taggable_id], :assigned_to => Tag.filter_ns([tag], self.namespace).first} unless assignment_map[tagging.taggable_id].nil?
         end
         arr
       end
@@ -130,7 +130,7 @@ module AssignmentMixin
           targs << p.class.base_class.name << p.id
         end
         cond = ["(#{tcond.join(" OR ")}) AND (name like '/managed/%')", *targs]
-        tags = Tag.find(:all, :conditions => cond, :include => :taggings)
+        tags = Tag.where(cond).includes(:taggings)
       end
                                                                                 # Assigned to parent tags
       # TODO: we may need to change taggings-related code to use base_model too

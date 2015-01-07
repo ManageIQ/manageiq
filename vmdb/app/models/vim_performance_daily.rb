@@ -89,8 +89,8 @@ class VimPerformanceDaily < MetricRollup
 
     klass = ext_options[:class] || MetricRollup
 
-    start_time =   klass.hourly.first(options.merge(:order => "timestamp ASC"))
-    end_time   =   klass.hourly.first(options.merge(:order => "timestamp DESC"))
+    start_time =   klass.hourly.where(options).order("timestamp ASC").first
+    end_time   =   klass.hourly.where(options).order("timestamp DESC").first
     return cnt == :first ? nil : [] if start_time.nil? || end_time.nil?
 
     tz = Metric::Helper.get_time_zone(ext_options)

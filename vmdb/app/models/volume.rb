@@ -38,8 +38,8 @@ class Volume < ActiveRecord::Base
     return if hashes.nil?
 
     deletes = {}
-    deletes[:partitions] = parent.hardware.partitions.find(:all, :select => "id, name", :order => :id).collect {|rec| [rec.id, rec.name]}
-    deletes[:volumes] = parent.hardware.volumes.find(:all, :select => "id, name", :order => :id).collect {|rec| [rec.id, rec.name]}
+    deletes[:partitions] = parent.hardware.partitions.order(:id).pluck("id, name")
+    deletes[:volumes] = parent.hardware.volumes.order(:id).pluck("id, name")
 
     new_partitions = []
     new_volumes = []

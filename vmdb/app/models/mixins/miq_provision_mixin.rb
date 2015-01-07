@@ -64,7 +64,7 @@ module MiqProvisionMixin
   def get_owner
     @owner ||= begin
       email = get_option(:owner_email)
-      User.find(:first, :conditions => ["lower(email) = ?", email.downcase]) unless email.blank?
+      User.where("lower(email) = ?", email.downcase).first unless email.blank?
     end
   end
 

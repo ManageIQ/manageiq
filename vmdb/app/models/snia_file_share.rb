@@ -260,7 +260,7 @@ class SniaFileShare < MiqCimInstance
   end
 
   def applicable_hosts
-    Host.all(:select   => "name, id").inject({}) {|h, host| h[host.id] = host.name; h}
+    Host.select("name, id").inject({}) { |h, host| h[host.id] = host.name; h }
   end
 
   def queue_create_datastore(ds_name, hosts)

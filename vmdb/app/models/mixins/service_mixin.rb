@@ -48,7 +48,7 @@ module ServiceMixin
   end
 
   def remove_resource(rsc)
-    sr = self.service_resources.find(:first, :conditions => {:resource_type => rsc.class.base_class.name, :resource_id => rsc.id})
+    sr = self.service_resources.where(:resource_type => rsc.class.base_class.name, :resource_id => rsc.id).first
     sr.try(:destroy)
   end
 

@@ -19,7 +19,7 @@ module EventMixin
     return @has_events[assoc] if @has_events.has_key?(assoc)
 
     klass = assoc.to_s.singularize.camelize.constantize
-    @has_events[assoc] = !klass.find(:first, :conditions => self.event_where_clause(assoc), :select => "id").nil?
+    @has_events[assoc] = klass.where(event_where_clause(assoc)).exists?
   end
 
   private
@@ -35,7 +35,7 @@ module EventMixin
     end
     return nil if klass.blank?
 
-    event = klass.find(:first, :conditions => ewc, :order => order)
+    event = klass.where(ewc).order(order).first
   end
 
 end

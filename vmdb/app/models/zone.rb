@@ -50,7 +50,7 @@ class Zone < ActiveRecord::Base
   end
 
   def miq_region
-    MiqRegion.first(:conditions => {:region => self.region_id})
+    MiqRegion.where(:region => self.region_id).first
   end
 
   def ntp_settings
@@ -202,7 +202,7 @@ class Zone < ActiveRecord::Base
 
   def miq_proxies
     ems_ids = self.ext_management_systems.collect {|e| e.id }
-    MiqProxy.all(:include => :host, :conditions => ["hosts.ems_id in (?)", ems_ids])
+    MiqProxy.includes(:host).where("hosts.ems_id in (?)", ems_ids).to_a
   end
 
   # Used by AggregationMixin

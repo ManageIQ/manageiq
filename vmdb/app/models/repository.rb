@@ -32,7 +32,7 @@ class Repository < ActiveRecord::Base
 
   def scan
     #For now we'll use the first host (lowest id)
-    host = Host.find(:first, :order => :id)
+    host = Host.order(:id).first
     host.scan_repository(self)
   end
 
@@ -59,17 +59,17 @@ class Repository < ActiveRecord::Base
 
   def vms
     if relative_path != "/"
-      Vm.all(:conditions => ["storage_id=? and location like ?", storage_id, relative_path + "%"])
+      Vm.where("storage_id=? and location like ?", storage_id, (relative_path + "%")).to_a
     else
-      Vm.all(:conditions => ["storage_id=?", storage_id])
+      Vm.where("storage_id=?", storage_id).to_a
     end
   end
 
   def miq_templates
     if relative_path != "/"
-      MiqTemplate.all(:conditions => ["storage_id=? and location like ?", storage_id, relative_path + "%"])
+      MiqTemplate.where("storage_id=? and location like ?", storage_id, (relative_path + "%")).to_a
     else
-      MiqTemplate.all(:conditions => ["storage_id=?", storage_id])
+      MiqTemplate.where("storage_id=?", storage_id).to_a
     end
   end
 

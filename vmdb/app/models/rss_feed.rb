@@ -82,7 +82,7 @@ class RssFeed < ActiveRecord::Base
     # Tag.tags(:ns=>"managed", :cat=>"roles").each {|t|
     #   roles.push(t.name.split("/").last)
     # }
-    Tag.find(:all, :conditions => "name like '/managed/roles/%'").each {|t| roles.push(t.name.split("/").last)}
+    Tag.where("name like '/managed/roles/%'").each { |t| roles.push(t.name.split("/").last) }
     roles
   end
 

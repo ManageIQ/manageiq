@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    self.in_region.find(:first, :conditions => {:email  => email})
+    self.in_region.where(:email => email).first
   end
 
   virtual_column :ldap_group, :type => :string, :uses => :current_group
@@ -860,7 +860,7 @@ class User < ActiveRecord::Base
 
     miq_groups  = MiqServer.my_server.miq_groups
     miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
-    miq_groups  = MiqGroup.find(:all, :conditions => {:resource_id => nil, :resource_type => nil}) if miq_groups.empty?
+    miq_groups  = MiqGroup.where(:resource_id => nil, :resource_type => nil) if miq_groups.empty?
     miq_groups.sort!  { |a, b| a.sequence <=> b.sequence }
     groups.each       { |g| $log.debug("#{log_prefix} External Group: #{g}") }
     miq_groups.each   { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }

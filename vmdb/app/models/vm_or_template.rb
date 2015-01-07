@@ -508,7 +508,7 @@ class VmOrTemplate < ActiveRecord::Base
   def self.validate_tasks(options)
     tasks = []
 
-    vms = base_class.where(:id => options[:ids]).order("lower(name)")
+    vms = base_class.where(:id => options[:ids]).order("lower(name)").to_a
     return vms, tasks unless options[:invoke_by] == :task # jobs will be used instead of tasks for feedback
 
     vms.each do |vm|
@@ -885,7 +885,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def reconnect_events
-    events = EmsEvent.find(:all, :conditions => ["(vm_location = ? AND vm_or_template_id IS NULL) OR (dest_vm_location = ? AND dest_vm_or_template_id IS NULL)", self.path, self.path])
+    events = EmsEvent.where("(vm_location = ? AND vm_or_template_id IS NULL) OR (dest_vm_location = ? AND dest_vm_or_template_id IS NULL)", self.path, self.path)
     events.each do |e|
       do_save = false
 
@@ -1205,7 +1205,7 @@ class VmOrTemplate < ActiveRecord::Base
     ems = ExtManagementSystem.find(ems_id)
 
     # Collect the newly added VMs
-    added_vms = ems.vms_and_templates.all(:conditions => ["created_on >= ?", update_start_time])
+    added_vms = ems.vms_and_templates.where("created_on >= ?", update_start_time)
 
     # Create queue items to do additional process like apply tags and link events
     unless added_vms.empty?
@@ -1901,13 +1901,13 @@ class VmOrTemplate < ActiveRecord::Base
   # Return all archived VMs
   ARCHIVED_CONDITIONS = "ems_id IS NULL AND storage_id IS NULL"
   def self.all_archived
-    self.find(:all, :conditions => ARCHIVED_CONDITIONS)
+    self.where(ARCHIVED_CONDITIONS).to_a
   end
 
   # Return all orphaned VMs
   ORPHANED_CONDITIONS = "ems_id IS NULL AND storage_id IS NOT NULL"
   def self.all_orphaned
-    self.find(:all, :conditions => ORPHANED_CONDITIONS)
+    self.where(ORPHANED_CONDITIONS).to_a
   end
 
   # Stop certain charts from showing unless the subclass allows

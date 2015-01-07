@@ -69,7 +69,7 @@ class NetappRemoteService < StorageManager
 
   def self.agent_ids_by_zone(ids)
     if ids.empty?
-      agents = self.all(:conditions => {:agent_type => DEFAULT_AGENT_TYPE})
+      agents = self.where(:agent_type => DEFAULT_AGENT_TYPE)
     else
       agents = self.find(ids)
     end
@@ -315,7 +315,7 @@ class NetappRemoteService < StorageManager
   #
 
   def self.find_controllers
-    return CimComputerSystem.find(:all,  :conditions => { :class_name => "ONTAP_StorageSystem" })
+    CimComputerSystem.where(:class_name => "ONTAP_StorageSystem").to_a
   end
 
   def self.aggregate_names(oss)
@@ -415,7 +415,7 @@ class NetappRemoteService < StorageManager
   end
 
   def queue_volume_create_callback(*args)
-    smis_agent = MiqSmisAgent.first(:conditions => {:zone_id => self.zone_id})
+    smis_agent = MiqSmisAgent.where(:zone_id => self.zone_id).first
     if smis_agent.nil?
       $log.error("MIQ(#{self.class.name}.queue_volume_create_callback) Unable to find an SMIS agant for zone: #{self.zone}, skipping SMIS refresh")
       return
