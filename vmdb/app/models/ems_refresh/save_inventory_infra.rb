@@ -104,7 +104,7 @@ module EmsRefresh::SaveInventoryInfra
     target = ems if target.nil?
     log_header = "MIQ(#{self.name}.save_hosts_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    disconnects = if target.kind_of?(ExtManagementSystem)
+    disconnects = if (target == ems)
       target.hosts(true).dup
     elsif target.kind_of?(Host)
       [target.clone]
@@ -219,7 +219,7 @@ module EmsRefresh::SaveInventoryInfra
     target = ems if target.nil?
 
     ems.ems_folders(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.ems_folders.dup
     else
       []
@@ -234,7 +234,7 @@ module EmsRefresh::SaveInventoryInfra
     target = ems if target.nil?
 
     ems.ems_clusters(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.ems_clusters.dup
     else
       []
@@ -249,7 +249,7 @@ module EmsRefresh::SaveInventoryInfra
     target = ems if target.nil?
 
     ems.resource_pools(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.resource_pools.dup
     elsif target.kind_of?(Host)
       target.all_resource_pools_with_default.dup
