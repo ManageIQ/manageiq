@@ -1,0 +1,17 @@
+- # Div to hold the actual tree
+
+%div{:style => "display: none;"}
+  #svcs_tree_div{:style => "width: 100%; height: 100%;"}
+    #svcs_treebox{:style => "width: 100%; height: 100%; color: #000; overflow: scroll;"}
+      = render(:partial => "layouts/dynatree",
+        :locals         => {:tree_id => "svcs_treebox",
+          :tree_name                 => "svcs_tree",
+          :json_tree                 => @temp[:svcs_tree],
+          :onclick                   => "cfmeOnClick_SelectTreeNode",
+          :select_node               => "#{x_node(:svcs_tree)}",
+          :base_id                   => "root",
+          :no_base_exp               => true,
+          :exp_tree                  => false,
+          :tree_state                => true,
+          :highlighting              => true,
+          :autoload                  => true})

@@ -1,0 +1,96 @@
+- act = @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed"
+- url = url_for(:action => act, :id => "#{@edit[:rec_id] || 'new'}")
+#form_div
+  = render :partial => "layouts/flash_msg"
+  %dl.col1
+    %dd
+      %fieldset
+        %table.style1
+          %tr
+            %td.key
+              = _('Name')
+            %td.wider
+              #name_div
+                = text_field_tag("name", @edit[:new][:name].to_s,
+                  :maxlength         => 40,
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          = javascript_tag(javascript_focus('name'))
+          %tr
+            %td.key
+              = _('Description')
+            %td.wider
+              #title_div
+                = text_field_tag("description", @edit[:new][:description],
+                  :maxlength         => 60,
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %tr
+            %td.key
+              = _('Display in Catalog')
+            %t
+              = check_box_tag("display", "1", @edit[:new][:display],
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
+          - if @edit[:new][:service_type] == "composite"
+            %tr
+              %td.key
+                = _('Add a Resource')
+              %td.notwide
+                = select_tag('resource_id',
+                  options_for_select(([["<#{_('Choose')}>", nil]]) + Array(@edit[:new][:available_resources].invert).sort_by { |a| a.first.downcase }, nil),
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_observe"    => {:url => url}.to_json)
+  - if @edit[:new][:service_type] == "composite" && !@edit[:new][:selected_resources].empty?
+    %dl.col1
+      %dd
+        %fieldset
+          %p.legend
+            = _('Selected Resources')
+          %table.style3
+            %thead
+              %tr
+                %th.icon
+                - titles = [_('Name'), _("Group Order")]
+                - colspan = []
+                - titles.each do |title|
+                  %th{:colspan => colspan.include?(title) ? 2 : 1}
+                    = title
+            %tbody
+              - @edit[:new][:rsc_groups].each_with_index do |groups, i|
+                - # add blank tr after each group
+                - col_span = 3
+                - if i != 0 && !groups.empty? && i < @edit[:new][:rsc_groups].length - 1
+                  %tr#new_tr.seperator
+                    %td{:colspan => col_span}
+                - groups.sort_by { | g | g[:name].downcase }.each do |sr|
+                  %tr.no-hover{:class => cycle('row0', 'row1')}
+                    %td
+                      - t = _("Click to remove this Resource from the Catalog Item")
+                      = link_to(image_tag("/images/icons/16/notequal-red.png", :border => "0", :alt => t),
+                        {:action => "resource_delete", :rec_id => sr[:id], :id => "#{@edit[:rec_id] || 'new'}", :grp_id => i},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        :title                 => t)
+                    %td
+                      = h(sr[:name])
+                    %td.select
+                      - # if @edit[:new][:rsc_groups].length == 1 && @edit[:new][:selected_resources].length <= 1
+                      - if @edit[:new][:selected_resources].length <= 1
+                        = h(@edit[:new][:selected_resources].length)
+                      - else
+                        = select_tag("gidx_#{to_cid(sr[:id])}",
+                          options_for_select(Array.new(@edit[:new][:rsc_groups].length) { |j| j + 1 }, (i + 1).to_s),
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_observe"    => {:url => url}.to_json)
+    - # Need this to bind checkbox observers when under DHTMLX tabs
+    - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+    :javascript
+      miqObserveCheckboxes();
+  - elsif @edit[:new][:service_type] == "atomic"
+    %dl.col1
+      %dd
+        %fieldset
+          %p.legend
+            = _('Request Info')
+          = render :partial => "miq_request/prov_wf", :locals => {:wf => @edit[:wf]}
+    %br
+    = _("Note: Fields marked with * are required.")

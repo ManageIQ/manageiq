@@ -1,0 +1,20 @@
+- content_for :trees do
+  - @built_trees.each do |tree|
+    %div{:style => "display: none;"}
+      = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
+
+- content_for :accords do
+  - # Create the explorer dhtmlx layout/accordion JS objects
+  = render(:partial => "layouts/dhtmlxlayout_explorer",
+    :locals         => {:accords => @accords,
+      :active_accord             => @sb[:active_accord],
+      :accord_select_function    => "miqAccordSvcSelect"})
+
+- if X_TREE_NODE_PREFIXES[@nodetype] == "Service"
+  - # Showing a specific Service
+  #main_div.main_div
+    = render :partial => "svcs_show", :locals => {:controller => "service"}
+- else
+  - # Showing a list of VMs
+  #main_div.main_div
+    = render :partial => 'layouts/x_gtl'
