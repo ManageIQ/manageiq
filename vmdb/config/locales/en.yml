@@ -31,18 +31,6 @@ en:
       user_assignment_initiated: "Assignment changes initiated"
       user_unassignment_initiated: "User Un-Assignment initiated"
 
-      # flash.edit side by side selection box messages
-      no_fields_to_move:
-        bottom: "No %{field} were selected to move bottom"
-        left: "No %{field} were selected to move left"
-        right: "No %{field} were selected to move right"
-        up: "No %{field} were selected to move up"
-        down: "No %{field} were selected to move down"
-        to_the_top: "No %{field} were selected to move to the top"
-        to_the_bottom: "No %{field} were selected to move to the bottom"
-        top: "No %{field} were selected to move top"
-        sync: "No %{field} selected to set to Synchronous"
-        async: "No %{field} selected to set to Asynchronous"
       no_fields_moved:
         left: "No %{field} were moved to the left"
         up: "No %{field} were moved up"
