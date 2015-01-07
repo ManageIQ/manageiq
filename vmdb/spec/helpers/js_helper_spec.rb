@@ -78,7 +78,7 @@ describe JsHelper do
 
   context '#javascript_disable_field' do
     it 'returns js to enable/disable the provided element' do
-      javascript_disable_field('foo', 'bar').should eq("$j('#foo').prop('disabled', bar);")
+      javascript_disable_field('foo', false).should eq("$j('#foo').prop('disabled', false);")
     end
   end
 

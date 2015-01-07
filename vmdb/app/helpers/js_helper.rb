@@ -62,7 +62,7 @@ module JsHelper
   end
 
   def javascript_disable_field(element, status)
-    "$j('##{j_str(element)}').prop('disabled', #{j_str(status)});".html_safe
+    "$j('##{j_str(element)}').prop('disabled', #{status});".html_safe
   end
 
   def javascript_show(element)
