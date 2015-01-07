@@ -41,7 +41,7 @@ gem 'outfielding-jqplot-rails',       "= 1.0.8"
 gem 'secure_headers'
 # Needed by the REST API
 gem "jbuilder",                       "~>2.0.7"
-gem "gettext_i18n_rails"
+gem "gettext_i18n_rails",             "~>1.2.0"
 gem "rails-i18n",                     "~> 3.0.0"
 
 # Not vendored and not required
