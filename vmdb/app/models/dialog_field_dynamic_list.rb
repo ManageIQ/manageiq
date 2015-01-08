@@ -54,24 +54,8 @@ class DialogFieldDynamicList < DialogFieldDropDownList
   end
 
   def load_values_on_init?
-    return true if self.options[:show_refresh_button] == false
-    !!self.options[:load_values_on_init]
-  end
-
-  def show_refresh_button
-    self.options[:show_refresh_button] || false
-  end
-
-  def show_refresh_button=(value)
-    self.options[:show_refresh_button] = value
-  end
-
-  def load_values_on_init
-    self.options[:load_values_on_init] || false
-  end
-
-  def load_values_on_init=(value)
-    self.options[:load_values_on_init] = value
+    return true if show_refresh_button == false
+    load_values_on_init
   end
 
   # Determines whether we have to show the refresh button in the UI

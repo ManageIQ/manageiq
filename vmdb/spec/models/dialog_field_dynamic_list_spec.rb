@@ -3,7 +3,7 @@ require "spec_helper"
 describe DialogFieldDynamicList do
   context "dialog_field_dynamic_list" do
     before(:each) do
-      @df = FactoryGirl.create(:dialog_field_dynamic_list, :label => 'dynamic_list', :name => 'dynamic_list')
+      @df = FactoryGirl.build(:dialog_field_dynamic_list, :label => 'dynamic_list', :name => 'dynamic_list')
     end
 
     it "#resource_action" do
@@ -47,19 +47,19 @@ describe DialogFieldDynamicList do
       end
 
       it "with load init true" do
-        @df.options[:load_values_on_init] = true
+        @df.load_values_on_init = true
         @df.load_values_on_init?.should be_true
       end
 
       it "with load init false and show button false" do
-        @df.options[:load_values_on_init] = false
-        @df.options[:show_refresh_button] = false
+        @df.load_values_on_init = false
+        @df.show_refresh_button = false
         @df.load_values_on_init?.should be_true
       end
 
       it "with load init false and show button true" do
-        @df.options[:load_values_on_init] = false
-        @df.options[:show_refresh_button] = true
+        @df.load_values_on_init = false
+        @df.show_refresh_button = true
         @df.load_values_on_init?.should be_false
       end
     end
