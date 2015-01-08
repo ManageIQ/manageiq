@@ -3,12 +3,13 @@ require 'MiqDisk'
 class MiqPartition < MiqDisk
     def initialize(baseDisk, pType, lbaStart, lbaEnd, partNum)
         @baseDisk = baseDisk
-        $log.debug "MiqPartition<#{self.object_id}> initialize partition for: #{@baseDisk.dInfo.fileName}" if $log
+        debug "MiqPartition<#{self.object_id}> initialize partition for: " \
+              "#{@baseDisk.dInfo.fileName}"
         super(nil, baseDisk.dInfo.clone, pType, lbaStart, lbaEnd, partNum)
     end
 
     def d_init
-        $log.debug "MiqPartition<#{self.object_id}> d_init called"
+        debug "MiqPartition<#{self.object_id}> d_init called"
         @blockSize = @baseDisk.blockSize
     end
 
@@ -26,5 +27,4 @@ class MiqPartition < MiqDisk
 
     def d_close
     end
-
 end

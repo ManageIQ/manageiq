@@ -3,38 +3,51 @@ $:.push("#{File.dirname(__FILE__)}/../util")
 
 require 'binary_struct'
 require 'DiskProbe'
+require 'disk_log'
 
 class MiqDisk
+    include DiskLog
+
     attr_accessor :diskType, :dInfo, :blockSize, :pvObj, :fs
     attr_reader   :lbaStart, :lbaEnd, :startByteAddr, :endByteAddr,
                   :partType, :partNum, :size, :hwId, :logName
     
     def self.getDisk(dInfo, probes = nil)
-        $log.debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}" if $log
+        debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}"
+
         if (dm = DiskProbe.getDiskMod(dInfo, probes))
             d = self.new(dm, dInfo.clone, 0)
+
             if dInfo.baseOnly
-                $log.debug "MiqDisk::getDisk: baseOnly = true, returning parent: #{d.getBase.dInfo.fileName}" if $log
-                $log.debug "MiqDisk::getDisk: child (current) disk file: #{dInfo.fileName}" if $log
+                debug "MiqDisk::getDisk: baseOnly = true, returning parent: " \
+                      "#{d.getBase.dInfo.fileName}"
+                debug "MiqDisk::getDisk: child (current) disk file: " \
+                      "#{dInfo.fileName}"
                 return d.getBase
-            else
-                $log.debug "MiqDisk::getDisk: baseOnly = false, returning: #{dInfo.fileName}" if $log
             end
+
+            debug "MiqDisk::getDisk: baseOnly = false, returning: " \
+                  "#{dInfo.fileName}"
             return d
         end
+
         return nil
     end
 
     def self.pushFormatSupportForDisk(disk, probes = nil)
         if ((dm = DiskProbe.getDiskModForDisk(disk, probes)))
-          $log.debug "#{self.name}.pushFormatSupportForDisk: pushing #{dm.name} onto #{disk.logName}"
-            di = disk.dInfo.clone
-            di.downstreamDisk = disk
-            d = self.new(dm, di, 0)
-            disk.dInfo.upstreamDisk = d
-            return d
+          debug "#{self.name}.pushFormatSupportForDisk: pushing " \
+                "#{dm.name} onto #{disk.logName}"
+          di = disk.dInfo.clone
+          di.downstreamDisk = disk
+          d = self.new(dm, di, 0)
+          disk.dInfo.upstreamDisk = d
+          return d
         end
-        $log.debug "#{self.name}.pushFormatSupportForDisk: no module to push for #{disk.logName}"
+
+        debug "#{self.name}.pushFormatSupportForDisk: " \
+              "no module to push for #{disk.logName}"
+
         return disk
     end
     
@@ -121,7 +134,7 @@ class MiqDisk
     end
     
     def close
-        $log.debug "MiqDisk<#{self.object_id}> close, #{@logName}" if $log
+        debug "MiqDisk<#{self.object_id}> close, #{@logName}"
         @partitions.each { |p| p.close } if @partitions
         @partitions = nil
         d_close
@@ -145,12 +158,14 @@ class MiqDisk
     def discoverPartitions
         return @partitions unless @partitions.nil?
 
-        $log.debug "MiqDisk<#{self.object_id}> discoverPartitions, disk file: #{@dInfo.fileName}" if $log
+        debug "MiqDisk<#{self.object_id}> discoverPartitions, " \
+              "disk file: #{@dInfo.fileName}"
         seek(0, IO::SEEK_SET)
         mbr = read(MBR_SIZE)
         
         if mbr.length < MBR_SIZE
-            $log.info "MiqDisk<#{self.object_id}> discoverPartitions, disk file: #{@dInfo.fileName} does not contain a master boot record"
+            info "MiqDisk<#{self.object_id}> discoverPartitions, " \
+                 "disk file: #{@dInfo.fileName} does not contain a master boot record"
             return @partitions = Array.new
         end
         
@@ -172,13 +187,13 @@ class MiqDisk
         'L', :startLBA,
         'L', :partSize
     ])
-    PTE_LEN = DOS_PARTITION_ENTRY.size
-    
-    DOS_PT_START = 446
-    DOS_NPTE = 4
+
+    PTE_LEN       = DOS_PARTITION_ENTRY.size
+    DOS_PT_START  = 446
+    DOS_NPTE      = 4
     PTYPE_EXT_CHS = 0x05
     PTYPE_EXT_LBA = 0x0f
-    PTYPE_LDM   = 0x42
+    PTYPE_LDM     = 0x42
     
     def discoverDosPriPartitions(mbr)
         require 'MiqPartition'
@@ -194,7 +209,7 @@ class MiqDisk
             # If this os an LDM (dynamic) disk, then ignore any partitions.
             #
             if ptype == PTYPE_LDM
-              $log.debug "MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk"
+              debug "MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk"
               @partType = PTYPE_LDM
               return([])
       
