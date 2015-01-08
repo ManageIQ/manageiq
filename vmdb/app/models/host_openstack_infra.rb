@@ -1,0 +1,2 @@
+class HostOpenstackInfra < Host
+end
