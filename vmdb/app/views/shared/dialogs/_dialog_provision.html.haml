@@ -16,7 +16,7 @@
         = render :partial => "shared/dialogs/dialog_tab", 
                  :locals => {:wf => wf, :tab => tab}
 -# Initialize jQuery UI tabs based on tabs ul
-%script
-  /method takes hash that can have 4 keys: tabs div id, active tab label,
-  /url to go to when tab is changed, and whether to check for abandon changes or not
+:javascript
+  //method takes hash that can have 4 keys: tabs div id, active tab label,
+  //url to go to when tab is changed, and whether to check for abandon changes or not
   miq_jquery_tabs_init({tabs_div: "dialog_tabs"})
