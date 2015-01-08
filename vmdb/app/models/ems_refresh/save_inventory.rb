@@ -190,8 +190,7 @@ module EmsRefresh::SaveInventory
       h[:backing_id] = h.fetch_path(:backing, :id)
     end
 
-    deletes = hardware.disks(true).dup
-    self.save_inventory_multi(:disks, Disk, hardware, hashes, deletes, [:controller_type, :location], nil, [:storage, :backing])
+    save_inventory_multi(:disks, Disk, hardware, hashes, true, [:controller_type, :location], nil, [:storage, :backing])
   end
 
   def save_network_inventory(guest_device, hash)
@@ -206,49 +205,38 @@ module EmsRefresh::SaveInventory
   def save_networks_inventory(hardware, hashes, mode = :refresh)
     return if hashes.nil?
 
-    deletes = hardware.networks(true).dup
-
     case mode
     when :refresh
+      deletes = hardware.networks(true).dup
       # Remove networks that were already saved via guest devices
       saved_hashes, new_hashes = hashes.partition { |h| h[:id] }
       saved_hashes.each { |h| deletes.delete_if { |d| d.id == h[:id] } } unless deletes.empty? || saved_hashes.empty?
 
       self.save_inventory_multi(:networks, Network, hardware, new_hashes, deletes, :ipaddress, nil, :guest_device)
     when :scan
-      self.save_inventory_multi(:networks, Network, hardware, hashes, deletes, [:description, :guid])
+      save_inventory_multi(:networks, Network, hardware, hashes, true, [:description, :guid])
     end
   end
 
   def save_system_services_inventory(parent, hashes, mode = :refresh)
-    return if hashes.nil?
-
-    deletes = case mode
-    when :refresh then nil
-    when :scan    then parent.system_services(true).dup
-    end
-
+    deletes = mode == :scan ? true : nil
     self.save_inventory_multi(:system_services, SystemService, parent, hashes, deletes, [:typename, :name])
   end
 
   def save_guest_applications_inventory(parent, hashes)
-    deletes = parent.guest_applications(true).dup
-    self.save_inventory_multi(:guest_applications, GuestApplication, parent, hashes, deletes, [:arch, :typename, :name, :version])
+    save_inventory_multi(:guest_applications, GuestApplication, parent, hashes, true, [:arch, :typename, :name, :version])
   end
 
   def save_advanced_settings_inventory(parent, hashes)
-    deletes = parent.advanced_settings(true).dup
-    self.save_inventory_multi(:advanced_settings, AdvancedSetting, parent, hashes, deletes, :name)
+    save_inventory_multi(:advanced_settings, AdvancedSetting, parent, hashes, true, :name)
   end
 
   def save_patches_inventory(parent, hashes)
-    deletes = parent.patches(true).dup
-    self.save_inventory_multi(:patches, Patch, parent, hashes, deletes, :name)
+    save_inventory_multi(:patches, Patch, parent, hashes, true, :name)
   end
 
   def save_os_processes_inventory(os, hashes)
-    deletes = os.processes(true).dup
-    self.save_inventory_multi(:processes, OsProcess, os, hashes, deletes, :pid)
+    save_inventory_multi(:processes, OsProcess, os, hashes, true, :pid)
   end
 
   def save_firewall_rules_inventory(parent, hashes, mode = :refresh)
@@ -268,22 +256,18 @@ module EmsRefresh::SaveInventory
         :name
       end
 
-    deletes = parent.firewall_rules(true).dup
-    self.save_inventory_multi(:firewall_rules, FirewallRule, parent, hashes, deletes, find_key, nil, [:source_security_group])
+    save_inventory_multi(:firewall_rules, FirewallRule, parent, hashes, true, find_key, nil, [:source_security_group])
 
     parent.save!
     self.store_ids_for_new_records(parent.firewall_rules, hashes, find_key)
   end
 
   def save_custom_attributes_inventory(parent, hashes)
-    return if hashes.nil?
-    deletes = parent.ems_custom_attributes(true).dup
-    self.save_inventory_multi(:ems_custom_attributes, CustomAttribute, parent, hashes, deletes, [:section, :name])
+    save_inventory_multi(:ems_custom_attributes, CustomAttribute, parent, hashes, true, [:section, :name])
   end
 
   def save_filesystems_inventory(parent, hashes)
-    deletes = parent.filesystems(true).dup
-    self.save_inventory_multi(:filesystems, Filesystem, parent, hashes, deletes, :name)
+    save_inventory_multi(:filesystems, Filesystem, parent, hashes, true, :name)
   end
 
   def save_snapshots_inventory(vm, hashes)
@@ -291,8 +275,7 @@ module EmsRefresh::SaveInventory
 
     hashes.each { |h| h[:parent_id] = nil } # Delink all snapshots
 
-    deletes = vm.snapshots(true).dup
-    self.save_inventory_multi(:snapshots, Snapshot, vm, hashes, deletes, :uid)
+    save_inventory_multi(:snapshots, Snapshot, vm, hashes, true, :uid)
 
     # Reset the relationship tree for the snapshots
     vm.snapshots.each do |s|
@@ -304,7 +287,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_event_logs_inventory(os, hashes)
-    deletes = os.event_logs(true).dup
-    self.save_inventory_multi(:event_logs, EventLog, os, hashes, deletes, :uid)
+    save_inventory_multi(:event_logs, EventLog, os, hashes, true, :uid)
   end
 end

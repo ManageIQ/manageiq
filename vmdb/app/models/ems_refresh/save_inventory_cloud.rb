@@ -78,90 +78,36 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_flavors_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.flavors(true)
-    deletes = if (target == ems)
-      ems.flavors.dup
-    else
-      []
-    end
-
-    self.save_inventory_multi(:flavors, Flavor, ems, hashes, deletes, :ems_ref)
-    self.store_ids_for_new_records(ems.flavors, hashes, :ems_ref)
+    save_inventory_multi(:flavors, Flavor, ems, hashes, (target.nil? || target == ems), :ems_ref)
+    store_ids_for_new_records(ems.flavors, hashes, :ems_ref)
   end
 
   def save_availability_zones_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.availability_zones(true)
-    deletes = if (target == ems)
-      ems.availability_zones.dup
-    else
-      []
-    end
-
-    self.save_inventory_multi(:availability_zones, AvailabilityZone, ems, hashes, deletes, :ems_ref)
-    self.store_ids_for_new_records(ems.availability_zones, hashes, :ems_ref)
+    save_inventory_multi(:availability_zones, AvailabilityZone, ems, hashes, (target.nil? || target == ems), :ems_ref)
+    store_ids_for_new_records(ems.availability_zones, hashes, :ems_ref)
   end
 
   def save_cloud_tenants_inventory(ems, hashes, target = nil)
-    target ||= ems
-
-    ems.cloud_tenants(true)
-    deletes = if (target == ems)
-      ems.cloud_tenants.dup
-    else
-      []
-    end
-
-    self.save_inventory_multi(:cloud_tenants, CloudTenant, ems, hashes, deletes, :ems_ref)
-    self.store_ids_for_new_records(ems.cloud_tenants, hashes, :ems_ref)
+    save_inventory_multi(:cloud_tenants, CloudTenant, ems, hashes, (target.nil? || target == ems), :ems_ref)
+    store_ids_for_new_records(ems.cloud_tenants, hashes, :ems_ref)
   end
 
   def save_cloud_resource_quotas_inventory(ems, hashes, target = nil)
-    target ||= ems
-
-    ems.cloud_resource_quotas(true)
-    deletes = if (target == ems)
-      ems.cloud_resource_quotas.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id)
     end
 
-    self.save_inventory_multi(:cloud_resource_quotas, CloudResourceQuota, ems, hashes, deletes, [:ems_ref, :name], nil, :cloud_tenant)
-    self.store_ids_for_new_records(ems.cloud_resource_quotas, hashes, [:ems_ref, :name])
+    save_inventory_multi(:cloud_resource_quotas, CloudResourceQuota, ems, hashes, (target.nil? || target == ems),
+                         [:ems_ref, :name], nil, :cloud_tenant)
+    store_ids_for_new_records(ems.cloud_resource_quotas, hashes, [:ems_ref, :name])
   end
 
   def save_key_pairs_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.key_pairs(true)
-    deletes = if (target == ems)
-      ems.key_pairs.dup
-    else
-      []
-    end
-
-    self.save_inventory_multi(:key_pairs, AuthPrivateKey, ems, hashes, deletes, :name)
-    self.store_ids_for_new_records(ems.key_pairs, hashes, :name)
+    save_inventory_multi(:key_pairs, AuthPrivateKey, ems, hashes, (target.nil? || target == ems), :name)
+    store_ids_for_new_records(ems.key_pairs, hashes, :name)
   end
 
-
   def save_cloud_networks_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.cloud_networks(true)
-    deletes = if (target == ems)
-      ems.cloud_networks.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:cloud_tenant_id]        = h.fetch_path(:cloud_tenant, :id)
       h[:orchestration_stack_id] = h.fetch_path(:orchestration_stack, :id)
@@ -171,7 +117,7 @@ module EmsRefresh::SaveInventoryCloud
                          CloudNetwork,
                          ems,
                          hashes,
-                         deletes,
+                         (target.nil? || target == ems),
                          :ems_ref,
                          :cloud_subnets,
                          [:cloud_tenant, :orchestration_stack])
@@ -179,28 +125,17 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_subnets_inventory(cloud_network, hashes)
-    deletes = cloud_network.cloud_subnets(true).dup
-
     hashes.each do |h|
       h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
     end
 
-    self.save_inventory_multi(:cloud_subnets, CloudSubnet, cloud_network, hashes, deletes, :ems_ref, nil, :availability_zone)
+    save_inventory_multi(:cloud_subnets, CloudSubnet, cloud_network, hashes, true, :ems_ref, nil, :availability_zone)
 
     cloud_network.save!
-    self.store_ids_for_new_records(cloud_network.cloud_subnets, hashes, :ems_ref)
+    store_ids_for_new_records(cloud_network.cloud_subnets, hashes, :ems_ref)
   end
 
   def save_security_groups_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.security_groups(true)
-    deletes = if (target == ems)
-      ems.security_groups.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:cloud_network_id]       = h.fetch_path(:cloud_network, :id)
       h[:cloud_tenant_id]        = h.fetch_path(:cloud_tenant, :id)
@@ -210,7 +145,7 @@ module EmsRefresh::SaveInventoryCloud
     save_inventory_multi(:security_groups,
                          SecurityGroup,
                          ems, hashes,
-                         deletes,
+                         (target.nil? || target == ems),
                          :ems_ref,
                          :firewall_rules,
                          [:cloud_network, :cloud_tenant, :orchestration_stack])
@@ -228,22 +163,14 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_floating_ips_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.floating_ips(true)
-    deletes = if (target == ems)
-      ems.floating_ips.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:vm_id] = h.fetch_path(:vm, :id)
       # floating ip tenants are not supported with nova network
       h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id) if h.key?(:cloud_tenant)
     end
 
-    self.save_inventory_multi(:floating_ips, FloatingIp, ems, hashes, deletes, :ems_ref, nil, [:vm, :cloud_tenant])
+    save_inventory_multi(:floating_ips, FloatingIp, ems, hashes, (target.nil? || target == ems),
+                         :ems_ref, nil, [:vm, :cloud_tenant])
     self.store_ids_for_new_records(ems.floating_ips, hashes, :ems_ref)
   end
 
@@ -255,15 +182,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_orchestration_stacks_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.orchestration_stacks(true)
-    deletes = if (target == ems)
-      ems.orchestration_stacks.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:orchestration_template_id] = h.fetch_path(:orchestration_template, :id)
     end
@@ -272,7 +190,7 @@ module EmsRefresh::SaveInventoryCloud
                                   OrchestrationStack,
                                   ems,
                                   hashes,
-                                  deletes,
+                                  (target.nil? || target == ems),
                                   :ems_ref,
                                   [:parameters, :outputs, :resources],
                                   [:parent, :orchestration_template])
@@ -289,48 +207,33 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_parameters_inventory(orchestration_stack, hashes)
-    deletes = orchestration_stack.parameters(true).dup
-
     save_inventory_multi(:parameters,
                          OrchestrationStackParameter,
                          orchestration_stack,
                          hashes,
-                         deletes,
+                         true,
                          :ems_ref)
   end
 
   def save_outputs_inventory(orchestration_stack, hashes)
-    deletes = orchestration_stack.outputs(true).dup
-
     save_inventory_multi(:outputs,
                          OrchestrationStackOutput,
                          orchestration_stack,
                          hashes,
-                         deletes,
+                         true,
                          :ems_ref)
   end
 
   def save_resources_inventory(orchestration_stack, hashes)
-    deletes = orchestration_stack.resources(true).dup
-
     save_inventory_multi(:resources,
                          OrchestrationStackResource,
                          orchestration_stack,
                          hashes,
-                         deletes,
+                         true,
                          :ems_ref)
   end
 
   def save_cloud_volumes_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.cloud_volumes(true)
-    deletes = if (target == ems)
-      ems.cloud_volumes.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:ems_id]               = ems.id
       h[:cloud_tenant_id]      = h.fetch_path(:tenant, :id)
@@ -338,28 +241,21 @@ module EmsRefresh::SaveInventoryCloud
       # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
     end
 
-    self.save_inventory_multi(:cloud_volumes, CloudVolume, ems, hashes, deletes, :ems_ref, nil, [:tenant, :availability_zone, :base_snapshot])
-    self.store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
+    save_inventory_multi(:cloud_volumes, CloudVolume, ems, hashes, (target.nil? || target == ems),
+                         :ems_ref, nil, [:tenant, :availability_zone, :base_snapshot])
+    store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
   end
 
   def save_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.cloud_volume_snapshots(true)
-    deletes = if (target == ems)
-      ems.cloud_volume_snapshots.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:ems_id]          = ems.id
       h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
     end
 
-    self.save_inventory_multi(:cloud_volume_snapshots, CloudVolumeSnapshot, ems, hashes, deletes, :ems_ref, nil, [:tenant, :volume])
-    self.store_ids_for_new_records(ems.cloud_volume_snapshots, hashes, :ems_ref)
+    save_inventory_multi(:cloud_volume_snapshots, CloudVolumeSnapshot, ems, hashes, (target.nil? || target == ems),
+                         :ems_ref, nil, [:tenant, :volume])
+    store_ids_for_new_records(ems.cloud_volume_snapshots, hashes, :ems_ref)
   end
 
   def link_volumes_to_base_snapshots(hashes)
@@ -374,41 +270,25 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_object_store_containers_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.cloud_object_store_containers(true)
-    deletes = if (target == ems)
-      ems.cloud_object_store_containers.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:ems_id]          = ems.id
       h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
     end
 
-    self.save_inventory_multi(:cloud_object_store_containers, CloudObjectStoreContainer, ems, hashes, deletes, :ems_ref, nil, :tenant)
+    save_inventory_multi(:cloud_object_store_containers, CloudObjectStoreContainer, ems, hashes, (target.nil? || target == ems),
+                         :ems_ref, nil, :tenant)
     self.store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
   end
 
   def save_cloud_object_store_objects_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.cloud_object_store_objects(true)
-    deletes = if (target == ems)
-      ems.cloud_object_store_objects.dup
-    else
-      []
-    end
-
     hashes.each do |h|
       h[:ems_id]                          = ems.id
       h[:cloud_tenant_id]                 = h.fetch_path(:tenant, :id)
       h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
     end
 
-    self.save_inventory_multi(:cloud_object_store_objects, CloudObjectStoreObject, ems, hashes, deletes, :ems_ref, nil, [:tenant, :container])
-    self.store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
+    save_inventory_multi(:cloud_object_store_objects, CloudObjectStoreObject, ems, hashes, (target.nil? || target == ems),
+                         :ems_ref, nil, [:tenant, :container])
+    store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
   end
 end
