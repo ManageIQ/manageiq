@@ -219,11 +219,11 @@ module EmsCommon
           # Hide/show C&U credentials tab
           page << "$('metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
         end
-        if ["openstack"].include?(params[:server_emstype])
+        if ["openstack", "openstack_infra"].include?(params[:server_emstype])
           page << "$('port').value = #{j_str(@edit[:new][:port].to_s)};"
         end
         # Hide/show port field
-        page << "$('port_tr').#{["openstack", "rhevm"].include?(params[:server_emstype]) ? "show" : "hide"}();"
+        page << "$('port_tr').#{["openstack", "openstack_infra", "rhevm"].include?(params[:server_emstype]) ? "show" : "hide"}();"
       end
       if changed != session[:changed]
         session[:changed] = changed
@@ -637,7 +637,7 @@ module EmsCommon
     @edit[:new][:ipaddress] = params[:ipaddress] if params[:ipaddress]
     if params[:server_emstype]
       @edit[:new][:emstype] = params[:server_emstype]
-      if ["openstack"].include?(params[:server_emstype])
+      if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
       else
         @edit[:new][:port] = nil
@@ -670,7 +670,7 @@ module EmsCommon
     ems.provider_region = @edit[:new][:provider_region]
     ems.hostname = @edit[:new][:hostname]
     ems.ipaddress = @edit[:new][:ipaddress]
-    ems.port = @edit[:new][:port] if ["openstack", "rhevm"].include?(ems.emstype)
+    ems.port = @edit[:new][:port] if ["openstack", "openstack_infra", "rhevm"].include?(ems.emstype)
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
     if ems.is_a?(EmsVmware)
@@ -683,7 +683,7 @@ module EmsCommon
     if ems.emstype == "rhevm" && !@edit[:new][:metrics_userid].blank?
       creds[:metrics] = {:userid=>@edit[:new][:metrics_userid], :password=>@edit[:new][:metrics_password]}
     end
-    if ems.emstype == "openstack" && !@edit[:new][:amqp_userid].blank?
+    if ["openstack", "openstack_infra"].include?(ems.emstype) && !@edit[:new][:amqp_userid].blank?
       creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})

@@ -3,10 +3,14 @@ require "spec_helper"
 describe EmsCloudController do
   context "::EmsCommon" do
     context "#get_form_vars" do
-      it "check if the default port for openstack/rhevm is set" do
+      it "check if the default port for openstack/openstack_infra/rhevm is set" do
         controller.instance_variable_set(:@model, EmsCloud)
         controller.instance_variable_set(:@edit, {:new => {}})
         controller.instance_variable_set(:@_params, {:server_emstype => "openstack"})
+        controller.send(:get_form_vars)
+        assigns(:edit)[:new][:port].should == 5000
+
+        controller.instance_variable_set(:@_params, {:server_emstype => "openstack_infra"})
         controller.send(:get_form_vars)
         assigns(:edit)[:new][:port].should == 5000
 
