@@ -610,7 +610,6 @@ class VmOrTemplate < ActiveRecord::Base
       end
       rec.vm_id = vm.id
       rec.reason = []
-      plist = MiqPolicySet.find(:all).collect {|p| p.name}
       presult = vm.enforce_policy("rsop")
       if presult[:result] == false
         presult[:details].each {|p|
@@ -1124,8 +1123,6 @@ class VmOrTemplate < ActiveRecord::Base
       (svr.vm_scan_host_affinity? ? host_server_ids.detect { |id| id == svr.id } : host_server_ids.empty?) &&
       (svr.vm_scan_storage_affinity? ? all_storage_server_ids.detect { |id| id == svr.id } : storage_server_ids.empty?)
     end
-
-    storage_type = self.storage.store_type
 
     miq_servers.select do |svr|
       result = svr.status == "started" && svr.has_zone?(self.my_zone)
