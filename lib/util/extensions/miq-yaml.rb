@@ -5,28 +5,6 @@ require 'yaml'
 
 module Psych
   module Visitors
-    class YAMLTree
-      def visit_Hash o
-        tag      = o.class == ::Hash ? nil : "!ruby/hash:#{o.class}"
-        implicit = !tag
-
-        register(o, @emitter.start_mapping(nil, tag, implicit, Psych::Nodes::Mapping::BLOCK))
-
-        o.each do |k,v|
-          accept k
-          accept v
-        end
-
-        #### Add in the instance variables, see https://github.com/tenderlove/psych/issues/43
-        o.instance_variables.each do |m|
-          accept "__iv__#{m}"
-          accept o.instance_variable_get(m)
-        end
-
-        @emitter.end_mapping
-      end
-    end
-
     class ToRuby
       def revive_hash hash, o
         @st[o.anchor] = hash if o.anchor
@@ -46,6 +24,7 @@ module Psych
               hash[key] = accept(v)
             end
 
+          # We need to migrate all old YAML before we can remove this
           #### Reapply the instance variables, see https://github.com/tenderlove/psych/issues/43
           elsif key.to_s[0..5] == "__iv__"
             hash.instance_variable_set(key.to_s[6..-1], accept(v))
