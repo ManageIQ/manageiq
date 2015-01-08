@@ -1449,8 +1449,6 @@ class CatalogController < ApplicationController
 
     presenter[:osf_node] = x_node
 
-    presenter[:extra_js] << "if (typeof gtl_list_grid != 'undefined') gtl_list_grid.setSortImgState(true, 3, 'asc');"
-
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
     presenter[:extra_js] << "miq_changes = undefined;"
     presenter[:extra_js] << "miqOneTrans = 0;"                  #resetting miqOneTrans when tab loads
