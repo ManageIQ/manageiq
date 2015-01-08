@@ -405,7 +405,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def self.powerops_expiration
-    (VMDB::Config.new('vmdb').config.fetch_path(:management_system, :power_operation_expiration) || 10.minutes).to_i_with_method.seconds.from_now.utc
+    (VMDB::Config.new('vmdb').config.fetch_path(:management_system, :power_operation_expiration) || 10.minutes).seconds.from_now.utc
   end
 
   def self.invoke_tasks_local(options)

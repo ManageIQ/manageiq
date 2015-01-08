@@ -6,7 +6,7 @@ describe MiqReportResult do
       @vmdb_config = {
         :reporting => {
           :history => {
-            :keep_reports      => "6.months",
+            :keep_reports      => 6.months,
             :purge_window_size => 100
           }
         }
@@ -14,16 +14,16 @@ describe MiqReportResult do
       VMDB::Config.any_instance.stub(:config).and_return(@vmdb_config)
 
       @rr1 = [
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months + 1.days).to_i.ago.utc),
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months - 1.days).to_i.ago.utc)
+        FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months + 1.days).ago.utc),
+        FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months - 1.days).ago.utc)
       ]
       @rr2 = [
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 2.days).to_i.ago.utc),
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 1.days).to_i.ago.utc),
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months - 1.days).to_i.ago.utc)
+        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 2.days).ago.utc),
+        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 1.days).ago.utc),
+        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months - 1.days).ago.utc)
       ]
       @rr_orphaned = [
-        FactoryGirl.create(:miq_report_result, :miq_report_id => nil, :created_on => (6.months - 1.days).to_i.ago.utc)
+        FactoryGirl.create(:miq_report_result, :miq_report_id => nil, :created_on => (6.months - 1.days).ago.utc)
       ]
     end
 
@@ -31,14 +31,14 @@ describe MiqReportResult do
       it "with missing config value" do
         @vmdb_config.delete_path(:reporting, :history, :keep_reports)
         Timecop.freeze(Time.now) do
-          described_class.purge_mode_and_value.should == [:date, 6.months.to_i.ago.utc]
+          described_class.purge_mode_and_value.should == [:date, 6.months.ago.utc]
         end
       end
 
       it "with date" do
-        @vmdb_config.store_path(:reporting, :history, :keep_reports, "1.day")
+        @vmdb_config.store_path(:reporting, :history, :keep_reports, 1.day)
         Timecop.freeze(Time.now) do
-          described_class.purge_mode_and_value.should == [:date, 1.day.to_i.ago.utc]
+          described_class.purge_mode_and_value.should == [:date, 1.day.ago.utc]
         end
       end
 
@@ -78,7 +78,7 @@ describe MiqReportResult do
         )
 
         q.first.args[0].should == :date
-        q.first.args[1].should be_same_time_as 6.months.to_i.ago.utc
+        q.first.args[1].should be_same_time_as 6.months.ago.utc
       end
     end
 
@@ -125,7 +125,7 @@ describe MiqReportResult do
       end
 
       it "by date" do
-        described_class.purge_count(:date, 6.months.to_i.ago.utc).should == 3
+        described_class.purge_count(:date, 6.months.ago.utc).should == 3
       end
     end
 
@@ -138,7 +138,7 @@ describe MiqReportResult do
       end
 
       it "by date" do
-        described_class.purge(:date, 6.months.to_i.ago.utc)
+        described_class.purge(:date, 6.months.ago.utc)
         described_class.where(:miq_report_id => 1).all.should   == [@rr1.last]
         described_class.where(:miq_report_id => 2).all.should   == [@rr2.last]
         described_class.where(:miq_report_id => nil).all.should == @rr_orphaned

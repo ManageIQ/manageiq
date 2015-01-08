@@ -41,7 +41,7 @@ module MiqServer::ServerMonitor
   end
 
   def miq_server_time_threshold
-    ((@vmdb_config && @vmdb_config.config[:server][:heartbeat_timeout]) || 2.minutes).to_i_with_method
+    (@vmdb_config && @vmdb_config.config[:server][:heartbeat_timeout]) || 2.minutes
   end
 
   def monitor_servers_as_master

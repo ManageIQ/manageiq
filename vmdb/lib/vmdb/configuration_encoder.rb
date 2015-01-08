@@ -19,6 +19,23 @@ module Vmdb
       h.each_key { |k| h[k].symbolize_keys! }.symbolize_keys!
     end
 
+    class YamlLoader < Psych::Visitors::ToRuby
+      NUMBER_WITH_METHOD_REGEX = /^([0-9\.,]+)\.([a-z]+)$/
+
+      def visit_Psych_Nodes_Scalar(node)
+        if node.value =~ NUMBER_WITH_METHOD_REGEX
+          if $2 == 'percent'
+            super
+          else
+            n = $1.include?('.') ? $1.to_f : $1.to_i
+            n.send($2)
+          end
+        else
+          super
+        end
+      end
+    end
+
     def self.load(data, symbolize_keys = true, &block)
       return {} if data.blank?
 
@@ -27,7 +44,9 @@ module Vmdb
         data = ERB.new(data).result
       end
 
-      hash = YAML.load(data)
+      require 'psych'
+      tree = Psych.parse(data)
+      hash = YamlLoader.create.accept(tree)
       symbolize!(stringify!(hash)) if symbolize_keys
 
       if block_given?

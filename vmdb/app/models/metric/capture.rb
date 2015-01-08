@@ -26,7 +26,7 @@ module Metric::Capture
 
     value = VMDB::Config.new("vmdb").config.fetch_path(:performance, key, target.class.base_model.to_s.underscore.to_sym) || default
     value = value.to_i.send(:minutes) if value.kind_of?(Fixnum) # Default unit is minutes
-    value = value.to_i_with_method.ago.utc unless value.nil?
+    value = value.ago.utc unless value.nil?
     return value
   end
 

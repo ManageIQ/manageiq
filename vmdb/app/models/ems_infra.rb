@@ -45,8 +45,6 @@ class EmsInfra < ExtManagementSystem
       read_timeout = ems_config[type][:read_timeout] if read_timeout.nil?
       open_timeout = ems_config[type][:open_timeout] if open_timeout.nil?
     end
-    read_timeout = read_timeout.to_i_with_method if read_timeout
-    open_timeout = open_timeout.to_i_with_method if open_timeout
     [read_timeout, open_timeout]
   end
 
