@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 17 end 2015-01-05
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3Aenhancement)
+
+- UI  
+  - Can now set the locale for both server and user
+  - Repository Editor using AngularJS
+  - Donut chart support
+- IPv6: Underlying libraries for VMware and RHEVM/oVirt have been completed to support IPv6 literals. RHEVM/oVirt requires new releases from RESTClient and Ruby 2.0.
+- SCVMM: Virtual DVD drives for templates
+- Amazon
+  - AWS Region EU Frankfurt
+  - Inventory collection for AWS CloudFormatio.
+  - Parsing of parameters from orchestration templates.
+- Provisioning: 
+  - Allow removing keys from :clone_options by setting value to nil
+  - Dynamic radio button support in dialogs
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3Aenhancement)
+
+- Rails 4 Upgrades
+  - Updated  preloader patches against Rails
+  - Updated virtual column / reflection code to integrate with Rails
+  - Started moving ActiveRecord 2.3 hash based finders to Relation based finders
+  - Backports and refactorings on master for Rails 4 support
+- Changed classification seeding to only add classification if missing.
+
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3A%22technical+debt%22)
+
+- Support for repository refreshes, since they are not used.
+- Support for Host-only refreshes.  Instead, an ESX/ESXi server should be added as an EMS, if that.
+
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3Abug)
+
+- 38 issues fixed. 
+- Notable fixes include:
+  - UI: Fixed code to not allow deletion of locked domains.
+  - OpenStack: Fixed image pagination issue where all of the images would not be collected.
+  - RHEVM/oVirt: Ignore user login failed events to prevent event flooding.
+  - SCVMM: Fixed refresh when Virtual DVD drives are not present.
+  - Fleecing: Fixed handling of nil directory entries and empty files
+  - Fixed virtual column inheritance creating duplicate entries.
+
+
 ## Unreleased - as of Sprint 16 end 2014-12-02
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3Aenhancement)
