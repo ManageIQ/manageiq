@@ -6,7 +6,8 @@ require 'DiskProbe'
 
 class MiqDisk
     attr_accessor :diskType, :dInfo, :blockSize, :pvObj, :fs
-    attr_reader   :lbaStart, :lbaEnd, :startByteAddr, :endByteAddr, :partType, :partNum, :size, :hwId, :logName
+    attr_reader   :lbaStart, :lbaEnd, :startByteAddr, :endByteAddr,
+                  :partType, :partNum, :size, :hwId, :logName
     
     def self.getDisk(dInfo, probes = nil)
         $log.debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}" if $log
@@ -21,12 +22,12 @@ class MiqDisk
             end
             return d
         end
-        return(nil)
+        return nil
     end
 
     def self.pushFormatSupportForDisk(disk, probes = nil)
         if ((dm = DiskProbe.getDiskModForDisk(disk, probes)))
-        	$log.debug "#{self.name}.pushFormatSupportForDisk: pushing #{dm.name} onto #{disk.logName}"
+          $log.debug "#{self.name}.pushFormatSupportForDisk: pushing #{dm.name} onto #{disk.logName}"
             di = disk.dInfo.clone
             di.downstreamDisk = disk
             d = self.new(dm, di, 0)
@@ -39,40 +40,40 @@ class MiqDisk
     
     def initialize(dm, dInfo, pType, *lbaSE)
         extend(dm) unless dm.nil?
-        @dModule	= dm
-        @dInfo		= dInfo
-        @partType	= pType
-        @partNum	= lbaSE.length == 3 ? lbaSE[2] : 0
-        @partitions	= nil
-        @pvObj		= nil
-        @fs			= nil		# the filesystem that resides on this disk
+        @dModule  = dm
+        @dInfo    = dInfo
+        @partType = pType
+        @partNum  = lbaSE.length == 3 ? lbaSE[2] : 0
+        @partitions = nil
+        @pvObj    = nil
+        @fs     = nil   # the filesystem that resides on this disk
 
         if dInfo.lvObj
-        	@logName = "logical volume: #{dInfo.lvObj.vgObj.vgName}/#{dInfo.lvObj.lvName}"
+          @logName = "logical volume: #{dInfo.lvObj.vgObj.vgName}/#{dInfo.lvObj.lvName}"
         else
-        	@logName = "disk file: #{dInfo.fileName}"
+          @logName = "disk file: #{dInfo.fileName}"
         end
         @logName << " (partition: #{@partNum})"
-		$log.debug "MiqDisk<#{self.object_id}> initialize, #{@logName}"
+        $log.debug "MiqDisk<#{self.object_id}> initialize, #{@logName}"
 
         d_init()
         
         case lbaSE.length
             when 0
                 @lbaStart = 0
-                @lbaEnd = d_size
+                @lbaEnd   = d_size
             when 1
                 @lbaStart = lbaSE[0]
-                @lbaEnd = d_size
+                @lbaEnd   = d_size
             else
                 @lbaStart = lbaSE[0]
-                @lbaEnd = lbaSE[1] + @lbaStart # lbaSE[1] is the partiton size in sectors
+                @lbaEnd   = lbaSE[1] + @lbaStart # lbaSE[1] is the partiton size in sectors
         end
         
         @startByteAddr = @lbaStart * @blockSize
-        @endByteAddr = @lbaEnd * @blockSize
-        @size = @endByteAddr - @startByteAddr
-        @seekPos = @startByteAddr
+        @endByteAddr   = @lbaEnd * @blockSize
+        @size          = @endByteAddr - @startByteAddr
+        @seekPos       = @startByteAddr
 
         @dInfo.diskSig ||= getDiskSig if @partNum == 0 && !@dInfo.baseOnly
         @hwId = "#{@dInfo.hardwareId}:#{@partNum}" if @dInfo.hardwareId
@@ -110,13 +111,13 @@ class MiqDisk
     def read(len)
         rb = d_read(@seekPos, len)
         @seekPos += rb.length unless rb.nil?
-        return(rb)
+        return rb
     end
     
     def write(buf, len)
         nbytes = d_write(@seekPos, buf, len)
         @seekPos += nbytes
-        return(nbytes)
+        return nbytes
     end
     
     def close
@@ -175,9 +176,9 @@ class MiqDisk
     
     DOS_PT_START = 446
     DOS_NPTE = 4
-    PTYPE_EXT_CHS	= 0x05
-    PTYPE_EXT_LBA	= 0x0f
-	PTYPE_LDM		= 0x42
+    PTYPE_EXT_CHS = 0x05
+    PTYPE_EXT_LBA = 0x0f
+    PTYPE_LDM   = 0x42
     
     def discoverDosPriPartitions(mbr)
         pte = DOS_PT_START
@@ -187,25 +188,23 @@ class MiqDisk
             pte += PTE_LEN
             ptype = ptEntry[:ptype]
 
-			#
-			# If this os an LDM (dynamic) disk, then ignore any partitions.
-			#
-			if ptype == PTYPE_LDM
-				$log.debug "MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk"
-				@partType = PTYPE_LDM
-				return([])
-			end
-			
-            if ptype == PTYPE_EXT_CHS || ptype == PTYPE_EXT_LBA
+            #
+            # If this os an LDM (dynamic) disk, then ignore any partitions.
+            #
+            if ptype == PTYPE_LDM
+              $log.debug "MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk"
+              @partType = PTYPE_LDM
+              return([])
+      
+            elsif ptype == PTYPE_EXT_CHS || ptype == PTYPE_EXT_LBA
                 @partitions.concat(discoverDosExtPartitions(ptEntry[:startLBA], ptEntry[:startLBA], DOS_NPTE+1))
                 next
             end
             @partitions.push(MiqPartition.new(self, ptype, ptEntry[:startLBA], ptEntry[:partSize], n)) if ptype != 0
         end
-        return(@partitions)
+        return @partitions
     end
     
-    #
     # Discover secondary file system partitions within a primary extended partition.
     #
     # priBaseLBA is the LBA of the primary extended partition.
@@ -213,24 +212,19 @@ class MiqDisk
     #
     # ptBaseLBA is the LBA of the partition table within the current extended partition.
     #     All pointers to secondary file system partitions are relative to this base.
-    #
     def discoverDosExtPartitions(priBaseLBA, ptBaseLBA, pNum)
         ra = Array.new
         seek(ptBaseLBA * @blockSize, IO::SEEK_SET)
         mbr = read(MBR_SIZE)
         
-        #
         # Create and add disk object for secondary file system partition.
         # NOTE: the start of the partition is relative to ptBaseLBA.
-        #
         pte = DOS_PT_START
         ptEntry = DOS_PARTITION_ENTRY.decode(mbr[pte, PTE_LEN])
         ra << MiqPartition.new(self, ptEntry[:ptype], ptEntry[:startLBA] + ptBaseLBA, ptEntry[:partSize], pNum) if ptEntry[:ptype] != 0
         
-        #
         # Follow the chain to the next secondary extended partition.
         # NOTE: the start of the partition is relative to priBaseLBA.
-        #
         pte += PTE_LEN
         ptEntry = DOS_PARTITION_ENTRY.decode(mbr[pte, PTE_LEN])
         ra.concat(discoverDosExtPartitions(priBaseLBA, ptEntry[:startLBA] + priBaseLBA, pNum+1)) if ptEntry[:startLBA] != 0
