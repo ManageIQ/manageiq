@@ -1,8 +1,9 @@
 module MiqAeEvent
   def self.raise_ems_event(event)
     aevent = {
-      :event_id   => event.id,
-      :event_type => event.event_type,
+      :event_id        => event.id,
+      :event_stream_id => event.id,
+      :event_type      => event.event_type,
     }
 
     if event.source == 'VC'
