@@ -9,8 +9,8 @@ class EmsEventHelper
   def handle
     before_handle
 
-    handle_alert_event
     handle_automation_event
+    handle_alert_event
 
     after_handle
   end
