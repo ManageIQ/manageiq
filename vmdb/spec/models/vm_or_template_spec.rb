@@ -395,21 +395,21 @@ describe VmOrTemplate do
     end
   end
 
-  context "Status Methods #active?, #archived?, #orphaned?" do
-    let(:vm)      {FactoryGirl.create(:vm)}
+  context "Status Methods" do
+    let(:vm)      {FactoryGirl.create(:vm_or_template)}
     let(:ems)     {FactoryGirl.create(:ext_management_system)}
     let(:storage) {FactoryGirl.create(:storage)}
 
     context "with EMS" do
       before { vm.ext_management_system = ems }
-      it { vm.should be_active }
+      it { expect(vm).to be_active }
     end
 
     context "without EMS" do
-      it { vm.should be_archived }
+      it { expect(vm).to be_archived }
       context "with storage" do
         before { vm.storage = storage }
-        it { vm.should be_orphaned }
+        it { expect(vm).to be_orphaned }
       end
     end
   end
