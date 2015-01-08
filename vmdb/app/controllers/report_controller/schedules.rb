@@ -114,7 +114,12 @@ module ReportController::Schedules
       AuditEvent.success(audit)
     end
     unless flash_errors?
-      add_flash(I18n.t("flash.schedule#{params[:id] ? "" : "s"}_queued_to_run"), :info, true)
+      msg = if params[:id]
+              _("The selected Schedule has been queued to run")
+            else
+              _("The selected Schedules have been queued to run")
+            end
+      add_flash(msg, :info, true)
     end
     get_node_info
     replace_right_cell
@@ -122,22 +127,26 @@ module ReportController::Schedules
 
   def schedule_toggle(enable)
     assert_privileges("miq_report_schedule_#{enable ? 'enable' : 'disable'}")
-    present_action = enable ? 'enable' : 'disable'
-    past_action = present_action + 'd'
-
+    present_action, msg1, msg2 = if enable
+                                   ['enable',
+                                    _("No %s were selected to be enabled"),
+                                    _("The selected %s were enabled")]
+                                 else
+                                   ['disable',
+                                    _("No %s were selected to be disabled"),
+                                    _("The selected %s were disabled")]
+                                 end
     scheds = find_checked_items
     if scheds.empty?
-        add_flash(I18n.t("flash.no_records_selected_to_be_#{past_action}",
-                            :model=>"#{ui_lookup(:model=>"MiqReport")} #{ui_lookup(:models=>"MiqSchedule")}"),
-                            :error)
-        render :update do |page|
-            page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        end
+      add_flash(msg1 % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
+                :error)
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
     end
     schedule_enable_disable(scheds, present_action) unless scheds.empty?
-    add_flash(I18n.t("flash.selected_records_were_#{past_action}",
-                            :model=>"#{ui_lookup(:model=>"MiqReport")} #{ui_lookup(:models=>"MiqSchedule")}"),
-                            :info, true) unless flash_errors?
+    add_flash(msg2 % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
+              :info, true) unless flash_errors?
     schedule_get_all
     replace_right_cell
   end

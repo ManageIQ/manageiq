@@ -6,10 +6,6 @@ en:
     name: ManageIQ
   # Flash messages shown in the UI
   flash:
-    authentication:
-      error: "Sorry, the username or password you entered is incorrect."
-      missing_role_or_group: "Login not allowed, User's %{model} is missing. Please contact the administrator"
-
     copy:
       cancelled: 'Copy %{model} was cancelled by the user'
       copied: 'Copy selected %{model} was saved'
@@ -18,10 +14,6 @@ en:
       field_in_display_filter: "%{field} is currently being used in the Display Filter"
       field_must_be:
         numeric_greater_than_0: "%{field} must be numeric and greater than zero"
-      field_styling_error:
-        first: "Styling for '%{field}', first value is in error: "
-        second: "Styling for '%{field}', second value is in error: "
-        third: "Styling for '%{field}', third value is in error: "
       filter:
         search_reset: "The current search details have been reset"
       manage_desktops_cancelled: 'Manage Desktops was cancelled by the user'
@@ -52,10 +44,6 @@ en:
         selected_group_deleted: "All selected Groups were deleted"
         selected_user_deleted: "All selected Users were deleted"
       settings:
-        custom_logo_type: "Custom logo image must be a .png file"
-        custom_login_type: "Custom login image must be a .png file"
-        custom_logo_uploaded: 'Custom Logo file "%{filename}" uploaded'
-        custom_login_uploaded: 'Custom login file "%{filename}" uploaded'
         rhn:
           missing_information: "Please, fill in the form before saving."
 
@@ -83,12 +71,7 @@ en:
       error: "Credential validation returned: %{message}"
     license_invalid: "The CFME license is invalid, please upload a valid license file"
     no_host_defined: "No Host instances have been defined, press a button to Add or Discover one"
-    no_records_selected_to_be_disabled: 'No %{model} were selected to be disabled'
-    no_records_selected_to_be_enabled: 'No %{model} were selected to be enabled'
-    non_admin_cannot_access: "Non-admin users can not access the system until at least 1 VM/Instance has been discovered"
     priority_order_saved: "Priority Order was saved"
-    server_still_starting: "The CFME Server is still starting.  If this message persists, please contact your CFME administrator."
-    server_still_starting_admin: "The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"
 
     record:
       delete_for_1_record_initiated: "The delete for selected %{model} was initiated"
@@ -100,11 +83,6 @@ en:
       no_vms_for_record: '"%{name}": does not have any VMs'
       service_1_task: "This Service has been %{task}"
       service_task: "Selected Services have been %{task}"
-
-    schedule_queued_to_run: "The selected Schedule has been queued to run"
-    schedules_queued_to_run: "The selected Schedules have been queued to run"
-    selected_records_were_disabled: 'The selected %{model} were disabled'
-    selected_records_were_enabled: 'The selected %{model} were enabled'
 
   # Header text
   cell_header:
