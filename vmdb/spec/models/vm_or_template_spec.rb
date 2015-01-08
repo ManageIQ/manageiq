@@ -395,62 +395,21 @@ describe VmOrTemplate do
     end
   end
 
-  let(:vm)      {FactoryGirl.create(:vm_vmware)}
-  let(:ems)     {FactoryGirl.create(:ems_vmware)}
-  let(:storage) {FactoryGirl.create(:storage)}
+  context "Status Methods #active?, #archived?, #orphaned?" do
+    let(:vm)      {FactoryGirl.create(:vm)}
+    let(:ems)     {FactoryGirl.create(:ext_management_system)}
+    let(:storage) {FactoryGirl.create(:storage)}
 
-  context "#orphaned?" do
-    context "without storage" do
-      context "without an ems" do
-        it { expect(vm).not_to be_orphaned }
-      end
-
-      context "with an ems" do
-        before { vm.ext_management_system = ems }
-
-        it { expect(vm).not_to be_orphaned }
-      end
+    context "with EMS" do
+      before { vm.ext_management_system = ems }
+      it { vm.should be_active }
     end
 
-    context "with storage"  do
-      before { vm.storage = storage }
-
-      context "without an ems" do
-        it { expect(vm).to be_orphaned }
-      end
-
-      context "with an ems" do
-        before { vm.ext_management_system = ems }
-
-        it { expect(vm).not_to be_orphaned }
-      end
-    end
-  end
-
-  context "#archived?" do
-    context "without storage" do
-      context "without an ems" do
-        it { expect(vm).to be_archived }
-      end
-
-      context "with an ems" do
-        before { vm.ext_management_system = ems }
-
-        it { expect(vm).not_to be_archived }
-      end
-    end
-
-    context "with storage"  do
-      before { vm.storage = storage }
-
-      context "without an ems" do
-        it { expect(vm).not_to be_archived }
-      end
-
-      context "with an ems" do
-        before { vm.ext_management_system = ems }
-
-        it { expect(vm).not_to be_archived }
+    context "without EMS" do
+      it { vm.should be_archived }
+      context "with storage" do
+        before { vm.storage = storage }
+        it { vm.should be_orphaned }
       end
     end
   end
