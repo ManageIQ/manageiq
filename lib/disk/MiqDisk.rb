@@ -50,44 +50,63 @@ class MiqDisk
 
         return disk
     end
+
+    private
+
+    def lba2PartNum(lbaSE)
+      lbaSE.length == 3 ? lbaSE[2] : 0
+    end
+
+    def init_name
+      if dInfo.lvObj
+        @logName = "logical volume: #{dInfo.lvObj.vgObj.vgName}/#{dInfo.lvObj.lvName}"
+      else
+        @logName = "disk file: #{dInfo.fileName}"
+      end
+      @logName << " (partition: #{@partNum})"
+    end
+
+    def extract_lba(lbaSE)
+      case lbaSE.length
+          when 0
+              @lbaStart = 0
+              @lbaEnd   = d_size
+          when 1
+              @lbaStart = lbaSE[0]
+              @lbaEnd   = d_size
+          else
+              @lbaStart = lbaSE[0]
+              @lbaEnd   = lbaSE[1] + @lbaStart # lbaSE[1] is the partiton size in sectors
+      end
+    end
+
+    def calc_boundries
+      @startByteAddr = @lbaStart * @blockSize
+      @endByteAddr   = @lbaEnd * @blockSize
+      @size          = @endByteAddr - @startByteAddr
+      @seekPos       = @startByteAddr
+    end
+
+
+    public
     
     def initialize(dm, dInfo, pType, *lbaSE)
         extend(dm) unless dm.nil?
-        @dModule  = dm
-        @dInfo    = dInfo
-        @partType = pType
-        @partNum  = lbaSE.length == 3 ? lbaSE[2] : 0
+        @dModule    = dm
+        @dInfo      = dInfo
+        @partType   = pType
+        @partNum    = lba2PartNum(lbaSE)
         @partitions = nil
-        @pvObj    = nil
-        @fs     = nil   # the filesystem that resides on this disk
+        @pvObj      = nil
+        @fs         = nil   # the filesystem that resides on this disk
+        init_name
 
-        if dInfo.lvObj
-          @logName = "logical volume: #{dInfo.lvObj.vgObj.vgName}/#{dInfo.lvObj.lvName}"
-        else
-          @logName = "disk file: #{dInfo.fileName}"
-        end
-        @logName << " (partition: #{@partNum})"
         $log.debug "MiqDisk<#{self.object_id}> initialize, #{@logName}"
 
         d_init()
+        extract_lba(lbaSE)
+        calc_boundries
         
-        case lbaSE.length
-            when 0
-                @lbaStart = 0
-                @lbaEnd   = d_size
-            when 1
-                @lbaStart = lbaSE[0]
-                @lbaEnd   = d_size
-            else
-                @lbaStart = lbaSE[0]
-                @lbaEnd   = lbaSE[1] + @lbaStart # lbaSE[1] is the partiton size in sectors
-        end
-        
-        @startByteAddr = @lbaStart * @blockSize
-        @endByteAddr   = @lbaEnd * @blockSize
-        @size          = @endByteAddr - @startByteAddr
-        @seekPos       = @startByteAddr
-
         @dInfo.diskSig ||= getDiskSig if @partNum == 0 && !@dInfo.baseOnly
         @hwId = "#{@dInfo.hardwareId}:#{@partNum}" if @dInfo.hardwareId
     end
@@ -142,10 +161,10 @@ class MiqDisk
     
     private
     
-    MBR_SIZE = 512
-    DOS_SIG  = "55aa"
+    MBR_SIZE        = 512
+    DOS_SIG         = "55aa"
     DISK_SIG_OFFSET = 0x1B8
-    DISK_SIG_SIZE = 4
+    DISK_SIG_SIZE   = 4
     
     def getDiskSig
         sp = seekPos
@@ -214,10 +233,14 @@ class MiqDisk
               return([])
       
             elsif ptype == PTYPE_EXT_CHS || ptype == PTYPE_EXT_LBA
-                @partitions.concat(discoverDosExtPartitions(ptEntry[:startLBA], ptEntry[:startLBA], DOS_NPTE+1))
+                @partitions.concat(discoverDosExtPartitions(ptEntry[:startLBA],
+                                                            ptEntry[:startLBA],
+                                                            DOS_NPTE+1))
                 next
             end
-            @partitions.push(MiqPartition.new(self, ptype, ptEntry[:startLBA], ptEntry[:partSize], n)) if ptype != 0
+            @partitions.push(MiqPartition.new(self, ptype,
+                                              ptEntry[:startLBA],
+                                              ptEntry[:partSize], n)) if ptype != 0
         end
         return @partitions
     end
@@ -238,13 +261,17 @@ class MiqDisk
         # NOTE: the start of the partition is relative to ptBaseLBA.
         pte = DOS_PT_START
         ptEntry = DOS_PARTITION_ENTRY.decode(mbr[pte, PTE_LEN])
-        ra << MiqPartition.new(self, ptEntry[:ptype], ptEntry[:startLBA] + ptBaseLBA, ptEntry[:partSize], pNum) if ptEntry[:ptype] != 0
+        ra << MiqPartition.new(self, ptEntry[:ptype],
+                                     ptEntry[:startLBA] + ptBaseLBA,
+                                     ptEntry[:partSize], pNum) if ptEntry[:ptype] != 0
         
         # Follow the chain to the next secondary extended partition.
         # NOTE: the start of the partition is relative to priBaseLBA.
         pte += PTE_LEN
         ptEntry = DOS_PARTITION_ENTRY.decode(mbr[pte, PTE_LEN])
-        ra.concat(discoverDosExtPartitions(priBaseLBA, ptEntry[:startLBA] + priBaseLBA, pNum+1)) if ptEntry[:startLBA] != 0
+        ra.concat(discoverDosExtPartitions(priBaseLBA,
+                                           ptEntry[:startLBA] + priBaseLBA,
+                                           pNum+1)) if ptEntry[:startLBA] != 0
         
         return ra
     end
