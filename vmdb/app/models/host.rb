@@ -27,15 +27,16 @@ class Host < ActiveRecord::Base
 
   VENDOR_TYPES = {
     # DB            Displayed
-    "kvm"       => "KVM",
-    "microsoft" => "Microsoft",
-    "redhat"    => "RedHat",
-    "vmware"    => "VMware",
-    "unknown"   => "Unknown",
-    nil         => "Unknown",
+    "kvm"             => "KVM",
+    "microsoft"       => "Microsoft",
+    "redhat"          => "RedHat",
+    "vmware"          => "VMware",
+    "openstack_infra" => "OpenStack Infrastructure",
+    "unknown"         => "Unknown",
+    nil               => "Unknown",
   }
 
-  DEFAULT_PLATFORMS    = ["redhat", "vmware", "amazon", "openstack", "ipmi"]
+  DEFAULT_PLATFORMS    = %w(redhat vmware amazon openstack_infra ipmi)
 
   HOST_DISCOVERY_TYPES = {
     'vmware'    => 'esx',
