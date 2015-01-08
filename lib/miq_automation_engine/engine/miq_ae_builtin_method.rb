@@ -99,8 +99,12 @@ module MiqAeEngine
       event_object_from_workspace(obj).src_vm_refresh_on_reconfig
     end
 
-    def self.event_object_from_workspace(obj)
-      event = obj.workspace.get_obj_from_path("/")['ems_event']
+    def self.miq_event_enforce_policy(obj, inputs)
+      event_object_from_workspace(obj, 'miq_event').process_evm_event(inputs['target'], inputs['param'])
+    end
+
+    def self.event_object_from_workspace(obj, event_type = 'ems_event')
+      event = obj.workspace.get_obj_from_path("/")[event_type]
       raise MiqAeException::MethodParmMissing, "Event not specified" if event.nil?
       event
     end
