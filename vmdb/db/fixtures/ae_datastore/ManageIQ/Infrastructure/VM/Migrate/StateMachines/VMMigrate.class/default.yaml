@@ -7,6 +7,4 @@ object:
     name: default
     inherits: 
     description: 
-  fields:
-  - EmailOwner:
-      value: /Infrastructure/VM/Migrate/Email/VmMigrateTask_Complete
+  fields: []
