@@ -1,0 +1,53 @@
+- url = url_for(:action => 'exp_changed')
+
+- # Parameters:
+- #     exp_model       Model in use for this expression
+
+- if exp_model == "_display_filter_"
+  - # Use list in @edit for reporting display filter
+  = select_tag('chosen_tag',
+    options_for_select(["<#{_('Choose')}>"] + @edit[@expkey][:exp_available_tags], @edit[@expkey][:exp_tag]),
+    :multiple              => false,
+    :class                 => "widthed",
+    "data-miq_sparkle_on"  => true,
+    "data-miq_sparkle_off" => true,
+    "data-miq_observe"     => {:url => url}.to_json)
+- else
+  = select_tag('chosen_tag',
+    options_for_select(["<#{_('Choose')}>"] + exp_available_tags(exp_model, @edit[@expkey][:use_mytags]), @edit[@expkey][:exp_tag]),
+    :multiple              => false,
+    :class                 => "widthed",
+    "data-miq_sparkle_on"  => true,
+    "data-miq_sparkle_off" => true,
+    "data-miq_observe"     => {:url => url}.to_json)
+
+- if adv_search_show_alias_checkbox? && !@edit[@expkey][:exp_tag].blank?
+  %br
+  = check_box_tag("use_alias", "1", !@edit[@expkey][:alias].blank?,
+    :style                      => "width: 20px",
+    "data-miq_sparkle_on"       => true,
+    "data-miq_sparkle_off"      => true,
+    "data-miq_observe_checkbox" => {:url => url}.to_json)
+  = _('Use Alias')
+  - unless @edit[@expkey][:alias].blank?
+    = text_field_tag("alias",
+      @edit[@expkey][:alias],
+      :maxlength         => 50,
+      "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+
+- if @edit[@expkey][:exp_tag]
+  %br
+  %font{:color => "black"}
+    = h(@edit[@expkey][:exp_key])
+  %br
+  - if @edit[@expkey][:exp_value] == :user_input
+    = "<#{_('user input')}>"
+  - else
+    - opts = ["<#{_('Choose')}>"] + MiqExpression.get_entry_details(@edit[@expkey][:exp_tag]).sort_by { |a| a.first.downcase }
+    = select_tag('chosen_value',
+      options_for_select(opts, @edit[@expkey][:exp_value]),
+      :multiple              => false,
+      :class                 => "widthed",
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      "data-miq_observe"     => {:url => url}.to_json)
