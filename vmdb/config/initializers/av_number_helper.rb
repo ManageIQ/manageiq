@@ -9,7 +9,7 @@ module ActionView
       alias_method_chain :number_to_human_size, :negatives
 
       def number_to_human_size_with_significant_override(number, *args)
-        options = args.extract_options!.reverse_merge(:significant => false)
+        options = args.extract_options!.reverse_merge(:significant => false, :precision => 1)
         number_to_human_size_without_significant_override(number, options)
       end
       alias_method_chain :number_to_human_size, :significant_override
@@ -38,7 +38,7 @@ module ActionView
 
       # Converts 1048576 (bytes) to "1.megabytes"
       def number_to_rails_method(size)
-        return human_size_to_rails_method(number_to_human_size(size))
+        return human_size_to_rails_method(number_to_human_size(size, :precision => 1))
       rescue
         nil
       end
