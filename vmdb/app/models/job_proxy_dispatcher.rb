@@ -215,8 +215,7 @@ class JobProxyDispatcher
         .where(:agent_class      => "MiqServer")
         .where(:target_class     => "VmOrTemplate")
         .where("state != ?", "finished")
-        .uniq
-        .pluck("DISTINCT target_id")
+        .select("target_id").collect { |ji| ji.target_id }.compact.uniq
     return @busy_resources_for_embedded_scanning_hash if vms_in_embedded_scanning.blank?
 
     embedded_scans_by_resource = Hash.new {|h,k| h[k]=0}
