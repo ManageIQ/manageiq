@@ -94,45 +94,45 @@ function miqLoginPrefill() {
 function miqExpressionPrefill(count) {
   if ($('chosen_value') && $('chosen_value').type.startsWith('text')) {
     miqPrefill($('chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('chosen_value').title = miq_val1_title;
-    $('chosen_value').alt = miq_val1_title;
+    $j('#chosen_value').prop('title', miq_val1_title);
+    $j('#chosen_value').prop('alt', miq_val1_title);
   }
   if ($('chosen_cvalue') && $('chosen_cvalue').type.startsWith('text')) {
     miqPrefill($('chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('chosen_cvalue').title = miq_val2_title;
-    $('chosen_cvalue').alt = miq_val2_title;
+    $j('#chosen_cvalue').prop('title', miq_val2_title);
+    $j('#chosen_cvalue').prop('alt', miq_val2_title);
   }
   if ($('chosen_regkey') && $('chosen_regkey').type.startsWith('text')) {
     miqPrefill($('chosen_regkey'), '/images/layout/expression/string.png');
     var title = "Registry Key";
-    $('chosen_regkey').title = title;
-    $('chosen_regkey').alt = title;
+    $j('#chosen_regkey').prop('title', title);
+    $j('#chosen_regkey').prop('alt', title);
   }
   if ($('chosen_regval') && $('chosen_regval').type.startsWith('text')) {
     miqPrefill($('chosen_regval'), '/images/layout/expression/string.png');
     var title = "Registry Key Value";
-    $('chosen_regval').title = title;
-    $('chosen_regval').alt = title;
+    $j('#chosen_regval').prop('title', title);
+    $j('#chosen_regval').prop('alt', title);
   }
   if ($('miq_date_1_0') && $('miq_date_1_0').type.startsWith('text')) {
     miqPrefill($('miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('miq_date_1_0').title = miq_val1_title;
-    $('miq_date_1_0').alt = miq_val1_title;
+    $j('#miq_date_1_0').prop('title', miq_val1_title);
+    $j('#miq_date_1_0').prop('alt', miq_val1_title);
   }
   if ($('miq_date_1_1') && $('miq_date_1_1').type.startsWith('text')) {
     miqPrefill($('miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('miq_date_1_1').title = miq_val1_title;
-    $('miq_date_1_1').alt = miq_val1_title;
+    $j('#miq_date_1_1').prop('title', miq_val1_title);
+    $j('#miq_date_1_1').prop('alt', miq_val1_title);
   }
   if ($('miq_date_2_0') && $('miq_date_2_0').type.startsWith('text')) {
     miqPrefill($('miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('miq_date_2_0').title = miq_val2_title;
-    $('miq_date_2_0').alt = miq_val2_title;
+    $j('#miq_date_2_0').prop('title', miq_val2_title);
+    $j('#miq_date_2_0').prop('alt', miq_val2_title);
   }
   if ($('miq_date_2_1') && $('miq_date_2_1').type.startsWith('text')) {
     miqPrefill($('miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('miq_date_2_1').title = miq_val2_title;
-    $('miq_date_2_1').alt = miq_val2_title;
+    $j('#miq_date_2_1').prop('title', miq_val2_title);
+    $j('#miq_date_2_1').prop('alt', miq_val2_title);
   }
   if (typeof count == 'undefined') {
     miq_exp_prefill_count = 0;
