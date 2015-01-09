@@ -1,12 +1,12 @@
 class ProviderForeman < Provider
   has_one :configuration_manager,
-          :foreign_key => 'provider_id',
-          :class_name => "ConfigurationManagerForeman",
-          :dependent => :destroy
+          :foreign_key => "provider_id",
+          :class_name  => "ConfigurationManagerForeman",
+          :dependent   => :destroy
   has_one :provisioning_manager,
-          :foreign_key => 'provider_id',
-          :class_name => "ProvisioningManagerForeman",
-          :dependent => :destroy
+          :foreign_key => "provider_id",
+          :class_name  => "ProvisioningManagerForeman",
+          :dependent   => :destroy
 
   before_create :build_managers
 
