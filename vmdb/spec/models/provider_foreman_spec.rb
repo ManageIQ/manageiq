@@ -10,8 +10,8 @@ describe ProviderForeman do
       it "has all authentication attributes" do
         expect(provider.connection_attrs).to eq(
           :base_url   => "example.com",
-          :username   => "testuser",
-          :password   => "secret",
+          :username   => "admin",
+          :password   => "smartvm",
           :verify_ssl => nil
         )
       end
@@ -23,8 +23,8 @@ describe ProviderForeman do
       it "has all authentication attributes" do
         expect(provider.connection_attrs).to eq(
           :base_url   => "example.com:555",
-          :username   => "testuser",
-          :password   => "secret",
+          :username   => "admin",
+          :password   => "smartvm",
           :verify_ssl => nil
         )
       end
