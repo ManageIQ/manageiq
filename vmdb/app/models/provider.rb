@@ -9,7 +9,7 @@ class Provider < ActiveRecord::Base
           when false then OpenSSL::SSL::VERIFY_NONE
           else val
           end
-    write_attribute(:verify_ssl, val)
+    syper(val)
   end
 
   def verify_ssl?

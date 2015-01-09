@@ -2,10 +2,7 @@ require "spec_helper"
 
 describe ProviderForeman do
   let(:provider) do
-    FactoryGirl.build(:foreman_provider,
-                      :url      => "example.com",
-                      :userid   => "testuser",
-                      :password => "secret")
+    FactoryGirl.build(:foreman_provider)
   end
 
   describe "#connection_attrs" do

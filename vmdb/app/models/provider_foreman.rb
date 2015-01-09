@@ -8,13 +8,13 @@ class ProviderForeman < Provider
           :class_name => "ProvisioningManagerForeman",
           :dependent => :destroy
 
-  before_save :build_managers
+  before_create :build_managers
 
-  def connection_attrs
+  def connection_attrs(auth_type = nil)
     {
       :base_url   => url,
-      :username   => authentication_userid,
-      :password   => authentication_password,
+      :username   => authentication_userid(auth_type),
+      :password   => authentication_password(auth_type),
       :verify_ssl => verify_ssl
     }
   end

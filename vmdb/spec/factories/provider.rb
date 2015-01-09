@@ -1,13 +1,10 @@
 FactoryGirl.define do
   factory :foreman_provider, :class => 'ProviderForeman' do
-    ignore do
-      userid   "admin"
-      password "smartvm"
-    end
+    url "example.com"
     after(:build) do |provider, evaluator|
       provider.authentications << FactoryGirl.build(:authentication,
-                                                    :userid   => evaluator.userid,
-                                                    :password => evaluator.password)
+                                                    :userid   => "admin",
+                                                    :password => "smartvm")
     end
   end
 end

@@ -27,7 +27,7 @@ class CreateProvisioningManagers < ActiveRecord::Migration
     end
     add_index :customization_scripts_operating_system_flavors, [:operating_system_flavor_id, :customization_script_id],
               :name => :index_on_customization_scripts_operating_system_flavors_i1
-    add_index :customization_scripts_operating_system_flavors, [:customization_script_id, :operating_system_flavor_id],
+    add_index :customization_scripts_operating_system_flavors, :customization_script_id,
               :name => :index_on_customization_scripts_operating_system_flavors_i2
 
     create_table :provisioning_managers do |t|
