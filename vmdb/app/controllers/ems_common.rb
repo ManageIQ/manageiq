@@ -325,11 +325,15 @@ module EmsCommon
     @in_a_form = true
     @changed = session[:changed]
     begin
-      verify_ems.verify_credentials(params[:type])
-    rescue StandardError=>bang
+      result = verify_ems.verify_credentials(params[:type])
+    rescue StandardError => bang
       add_flash("#{bang}", :error)
     else
-      add_flash(_("Credential validation was successful"))
+      if result
+        add_flash(_("Credential validation was successful"))
+      else
+        add_flash(_("Credential validation was not successful"))
+      end
     end
     render_flash
   end
