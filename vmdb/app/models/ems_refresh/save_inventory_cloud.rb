@@ -82,7 +82,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.flavors(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.flavors.dup
     else
       []
@@ -97,7 +97,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.availability_zones(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.availability_zones.dup
     else
       []
@@ -112,7 +112,7 @@ module EmsRefresh::SaveInventoryCloud
     target ||= ems
 
     ems.cloud_tenants(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.cloud_tenants.dup
     else
       []
@@ -127,7 +127,7 @@ module EmsRefresh::SaveInventoryCloud
     target ||= ems
 
     ems.cloud_resource_quotas(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.cloud_resource_quotas.dup
     else
       []
@@ -146,7 +146,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.key_pairs(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.key_pairs.dup
     else
       []
@@ -162,7 +162,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_networks(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.cloud_networks.dup
     else
       []
@@ -203,7 +203,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.security_groups(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.security_groups.dup
     else
       []
@@ -240,7 +240,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.floating_ips(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.floating_ips.dup
     else
       []
@@ -270,7 +270,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.orchestration_stacks(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.orchestration_stacks.dup
     else
       []
@@ -341,7 +341,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_volumes(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.cloud_volumes.dup
     else
       []
@@ -363,7 +363,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_volume_snapshots(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.cloud_volume_snapshots.dup
     else
       []
@@ -396,7 +396,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_object_store_containers(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.cloud_object_store_containers.dup
     else
       []
@@ -416,7 +416,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_object_store_objects(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
+    deletes = if (target == ems)
       ems.cloud_object_store_objects.dup
     else
       []
