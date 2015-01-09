@@ -1,11 +1,14 @@
 class ProviderForeman < Provider
-  has_one :configuration_manager, :class_name => "ConfigurationManagerForeman", :dependent => :destroy
-  has_one :provisioning_manager,  :class_name => "ProvisioningManagerForeman",     :dependent => :destroy
+  has_one :configuration_manager,
+          :foreign_key => 'provider_id',
+          :class_name => "ConfigurationManagerForeman",
+          :dependent => :destroy
+  has_one :provisioning_manager,
+          :foreign_key => 'provider_id',
+          :class_name => "ProvisioningManagerForeman",
+          :dependent => :destroy
 
-  def before_save
-    build_provisioning_manager unless provisioning_manager
-    build_configuration_manager unless configuration_manager
-  end
+  before_save :build_managers
 
   def connection_attrs
     {
@@ -14,5 +17,12 @@ class ProviderForeman < Provider
       :password   => authentication_password,
       :verify_ssl => verify_ssl
     }
+  end
+
+  private
+
+  def build_managers
+    build_provisioning_manager unless provisioning_manager
+    build_configuration_manager unless configuration_manager
   end
 end
