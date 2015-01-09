@@ -1,0 +1,96 @@
+- if @edit
+  - url = url_for(:action => 'condition_field_changed', :id => "#{@condition.id || 'new'}")
+  - observe_with_interval = {:interval => '.5', :url => url}.to_json
+#condition_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - if @condition
+    #condition_info_div
+      = render :partial => "layouts/flash_msg"
+      - if @edit
+        - # Don't show basic info box with description only unless in edit mode
+        %p.legend=_("Basic Information")
+        %table.style1
+          %tr
+            %td.key=_("Description")
+            - if @edit
+              %td.wider
+                = text_field_tag("description", @edit[:new][:description],
+                  :maxlength         => MAX_DESC_LEN,
+                  "data-miq_observe" => observe_with_interval)
+              = javascript_tag(javascript_focus('description'))
+            - else
+              %td
+                = h(@condition.description)
+        %hr
+
+      - if @edit
+        = render :partial => "form_scope"
+      - else
+        %p.legend=_("Scope")
+        - if !@applies_to_exp_table.nil?
+          - @applies_to_exp_table.each do |token|
+            - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+              = h([token].flatten.first)
+            - else
+              %font{:color => "black"}
+                %b
+                  = h([token].flatten.first)
+        - else
+          = render :partial => 'layouts/info_msg', :locals => {:message => _("No scope defined, the scope of this condition includes all elements.")}
+        %hr
+
+      - if @edit
+        = render :partial => "form_expression"
+      - else
+        %p.legend=_("Expression")
+        - if !@expression_table.nil?
+          - @expression_table.each do |token|
+            - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+              = h([token].flatten.first)
+            - else
+              %font{:color => "black"}
+                %b
+                  = h([token].flatten.first)
+        - else
+          = render :partial => 'layouts/info_msg', :locals => {:message => _("A condition must contain a valid expression.")}
+        %hr
+
+      - # Notes field
+      - if @edit
+        %p.legend
+          =_("Notes")
+          (
+          %span#notes_count=@edit[:new][:notes] ? @edit[:new][:notes].length : 0
+          \/ 512)
+          = text_area_tag("notes", @edit[:new][:notes],
+            :rows                       => 4,
+            :maxlength                  => "512",
+            :counter                    => "notes_count",
+            "data-miq_check_max_length" => true,
+            "data-miq_observe"          => observe_with_interval)
+      - else
+        %p.legend=_("Notes")
+        - if @condition.notes.blank?
+          = render :partial => 'layouts/info_msg', :locals => {:message => _("No notes have been entered.")}
+        - else
+          = text_area_tag("notes", @condition.notes, :readonly => true, :rows => 5)
+        %hr
+
+      - if x_active_tree == :condition_tree && !@edit
+        %p.legend=_("Assigned to Policies")
+        - if @condition_policies.empty?
+          = render :partial => 'layouts/info_msg', :locals => {:message => _("This Condition is not assigned to any Policies.")}
+        - else
+          %table.style3
+            %thead
+              %tr
+                %th.icon
+                %th
+            %tbody
+              - @condition_policies.each do |p|
+                - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
+                %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
+                  :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view Policy")}
+                  %td.icon
+                    %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png"}
+                  %td
+                    = p.description

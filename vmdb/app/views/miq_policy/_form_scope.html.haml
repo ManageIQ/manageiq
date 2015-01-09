@@ -1,0 +1,25 @@
+#form_scope_div
+  - if @expkey == :applies_to_exp
+    %p.legend=_("Scope (Choose an element of the scope to edit)")
+    = render :partial => 'layouts/exp_editor'
+    %hr
+  - else
+    %p.legend=_('Scope (Press the "Edit" button to edit the scope)')
+    = link_to(image_tag("/images/toolbars/edit.png", :border => "0", :alt => (t = _("Edit this Scope"))),
+      {:action => 'condition_edit', :button => "applies_to_exp", :id => "#{@condition.id || 'new'}"},
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      :remote                => true,
+      :title                 => t)
+    %br
+    - if @edit[:scope_table].nil?
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No scope defined, the scope of this condition includes all elements.")}
+    - else
+      - @edit[:scope_table].each do |token|
+        - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+          = h([token].flatten.first)
+        - else
+          %font{:color => "black"}
+            %b
+              = h([token].flatten.first)
+    %hr

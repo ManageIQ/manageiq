@@ -1,0 +1,22 @@
+#alert_profile_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - if @alert_profiles
+    = render :partial => "layouts/flash_msg"
+    - if @alert_profiles.empty?
+      .alert.alert-info
+        %span.pficon.pficon-info
+        %strong
+          =_("No %s Alert Profiles are defined%s.") % [ui_lookup(:model => @sb[:folder]), @search_text.blank? ? "" : _(" that match the entered search string")]
+    - else
+      %table.style3
+        %thead
+          %th.icon
+          %th
+        %tbody
+          - @alert_profiles.each do |ap|
+            %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');",
+              :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Alert Profile")}
+              %td.icon{:nowrap => 1}
+                %img{:src => "/images/icons/new/miq_alert_profile.png", :valign => "middle", :border => "0"}
+              %td
+                = ap.description
+  %hr

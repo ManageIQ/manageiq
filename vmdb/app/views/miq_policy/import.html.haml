@@ -15,16 +15,16 @@
           %td{align: "right"}
             #buttons
               - if @sb[:conflict]
-                = button_tag("Commit", 
+                = button_tag("Commit",
                              :class => "btn btn-primary btn-disabled",
-                             :title => "Resolve conflicts to import the file", 
+                             :title => "Resolve conflicts to import the file",
                              :alt   => "Resolve conflicts to import the file")
               - else
                 = link_to(button_tag('Commit',
                                      :class => "btn btn-primary",
                                      :alt   => "Commit Import"),
-                         {:action => "import", 
-                          :commit => "import", 
+                         {:action => "import",
+                          :commit => "import",
                           :import_file_upload_id => @import_file_upload_id},
                          "data-miq_sparkle_on"   => true,
                          "data-miq_sparkle_off"  => true,
@@ -34,8 +34,8 @@
               = link_to(button_tag('Cancel',
                                    :class => "btn btn-default",
                                    :alt   => "Cancel Changes"),
-                        {:action                => "import", 
-                         :commit                => "cancel", 
+                        {:action                => "import",
+                         :commit                => "cancel",
                          :import_file_upload_id => @import_file_upload_id},
                         :remote => true,
                         :title  => "Cancel Import")

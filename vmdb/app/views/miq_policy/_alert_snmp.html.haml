@@ -1,0 +1,80 @@
+- if @edit
+  - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
+  - observe_with_interval = {:interval => '.5', :url => url}.to_json
+  - observe = {:url => url}.to_json
+#alert_snmp_div
+  %p.legend=_('SNMP Trap')
+  %table.style1
+    - if @edit
+      %tr
+        %td.key=_('Send an SNMP Trap')
+        %td
+          = check_box_tag("send_snmp_cb", "1", @edit[:new][:send_snmp],
+            "data-miq_observe_checkbox" => observe)
+      - if @edit[:new][:send_snmp]
+        %tr
+          %td.key=_('Host')
+          %td
+            = text_field_tag("host_1", @edit[:new][:snmp][:host][0],
+              :maxlength         => MAX_DESC_LEN,
+              "data-miq_observe" => observe_with_interval)
+            %br
+            = text_field_tag("host_2", @edit[:new][:snmp][:host][1],
+              :maxlength => MAX_DESC_LEN,
+              "data-miq_observe" => observe_with_interval)
+            %br
+            = text_field_tag("host_3", @edit[:new][:snmp][:host][2],
+              :maxlength => MAX_DESC_LEN,
+              "data-miq_observe" => {:interval => '.5',  :url => url}.to_json)
+        %tr
+          %td.key=_("Version")
+          %td
+            = select_tag('snmp_version', options_for_select(%w(v1 v2), @edit[:new][:snmp][:snmp_version]),
+              :style                 => "width:50px",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => observe)
+        - trap_text = @edit[:new][:snmp][:snmp_version] == "v1" || @edit[:new][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
+        %tr
+          %td.key
+            = trap_text
+          %td
+            = text_field_tag("trap_id", @edit[:new][:snmp][:trap_id],
+              :maxlength         => MAX_DESC_LEN,
+              "data-miq_observe" => observe_with_interval)
+  - if @edit[:new][:send_snmp]
+    %br
+    %table.style3
+      %thead
+        %tr
+          %th=_('Variable Object ID')
+          %th=_('Type')
+          %th=_('Value')
+      - 10.times do |i|
+        %tr
+          %td.wide
+            = text_field_tag("oid__#{i + 1}", @edit[:new][:snmp][:variables][i][:oid],
+              :maxlength         => MAX_DESC_LEN,
+              "data-miq_observe" => observe_with_interval)
+          %td.wide
+            = select_tag("var_type__#{i + 1}",
+              options_for_select(["<#{_('None')}>"] + @edit[:snmp_var_types].sort, @edit[:new][:snmp][:variables][i][:var_type]),
+              :style                 => "width:100px",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => observe)
+          - if @edit[:new][:snmp][:variables][i][:var_type] == "Null" || @edit[:new][:snmp][:variables][i][:var_type] == "<None>"
+            - val_disabled = true
+          - else
+            - val_disabled = false
+          %td.wider
+            = text_field_tag("value__#{i + 1}", @edit[:new][:snmp][:variables][i][:value],
+              :disabled  => val_disabled,
+              :maxlength => MAX_DESC_LEN,
+              "data-miq_observe" => observe_with_interval)
+  %hr
+- if @edit
+  - # Need this to bind checkbox observers when under DHTMLX tabs
+  - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+  :javascript
+    miqObserveCheckboxes();

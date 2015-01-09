@@ -1,0 +1,23 @@
+- if x_node == "root"
+  - if @profiles
+    = render :partial => "layouts/flash_msg"
+    - if @profiles.empty?
+      .alert.alert-info
+        %span.pficon.pficon-info
+        %strong
+          = _("No %s Policy Profiles are defined%s.") % [@mode, @search_text.blank? ? "" : _(" that match the entered search string")]
+    - else
+      %table.style3
+        %thead
+          %th.icon
+          %th
+        %tbody
+          - @profiles.each do |pp|
+            %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('policy_profile_tree', 'pp-#{to_cid(pp.id)}');",
+              :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Profile")}
+              %td.icon{:nowrap => 1}
+                %img{:src => "/images/icons/new/policy_profile#{pp.active? ? '' : '_inactive'}.png", :valign => "middle", :border => "0"}
+              %td
+                = pp.description
+- else
+  = render :partial => "profile_details"

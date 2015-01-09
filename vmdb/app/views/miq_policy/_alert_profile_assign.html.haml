@@ -1,0 +1,40 @@
+- url = url_for(:action => 'alert_profile_assign_changed')
+- observe = {:url => url}.to_json
+#alert_profile_assign_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend=_('Assignments')
+  %table.style1
+    %tr
+      %td.key=_('Based On')
+      %td
+        = h(ui_lookup(:model => @alert_profile.mode))
+    %tr
+      %td.key=_('Assign To')
+      %td.wider
+        = select_tag('chosen_assign_to',
+          options_for_select([["<#{_('Nothing')}>", nil]] + ASSIGN_TOS[@alert_profile.mode].invert.sort, @assign[:new][:assign_to]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => observe)
+    - if @assign[:new][:assign_to].to_s.ends_with?("-tags")
+      %tr
+        %td.key=_('Tag Category')
+        %td.wider
+          = select_tag('chosen_cat',
+            options_for_select([["<Choose>", nil]] + @assign[:cats].invert.sort, @assign[:new][:cat]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe" => observe)
+  - if @assign[:obj_tree]
+    %hr
+    %p.legend=_('Selections')
+    - if @assign[:obj_tree]
+      #obj_treebox{:style => "width: 100%; height: #{@winH - 500}px; color: #000; overflow: hidden;"}
+      = render(:partial => "layouts/dynatree",
+        :locals         => {:tree_id    => "obj_treebox",
+          :tree_name                    => "obj_tree",
+          :json_tree                    => @assign[:obj_tree],
+          :oncheck                      => "cfmeOnClick_SmartProxyAffinityCheck",
+          :check_url                    => "alert_profile_assign_changed/",
+          :exp_tree                     => false,
+          :checkboxes                   => true})

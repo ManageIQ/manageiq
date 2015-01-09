@@ -1,0 +1,15 @@
+#control_searchbar{:style => "display: none;"}
+  #control_searchbox
+    - # Name based search box
+    = form_tag(:update => "search", :url => {:action => "search"}, :remote => true) do
+      #searchtextbox
+        = text_field("search", "text",
+          :style => "width: 255px; height: 16px; position: absolute; top: 0px; right: 14px; z-index:50",
+          :value => @search_text,
+          :alt   => (t = _("Search by Name within results")),
+          :title => t)
+      #control_searchicon
+        = image_submit_tag("/images/layout/search.gif",
+          :name  => "search_button",
+          :alt   => (t = _("Search by Name within results")),
+          :title => t)

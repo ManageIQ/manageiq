@@ -1,0 +1,18 @@
+#alert_evm_event_div
+  %p.legend=_('Timeline Event')
+  %table.style1
+    - if @edit
+      - url = url_for(:action => 'alert_field_changed',  :id => "#{@alert.id || 'new'}")
+      %tr
+        %td.key=_('Show on Timeline')
+        %td
+          = check_box_tag("send_evm_event_cb", "1", @edit[:new][:send_evm_event],
+            "data-miq_sparkle_on"       => true,
+            "data-miq_sparkle_off"      => true,
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+  %hr
+- if @edit
+  - # Need this to bind checkbox observers when under DHTMLX tabs
+  - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
+  :javascript
+    miqObserveCheckboxes();

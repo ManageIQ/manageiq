@@ -1,0 +1,155 @@
+- if @edit
+  - url = url_for(:action => 'alert_profile_field_changed', :id => "#{@alert_profile.id || 'new'}")
+  - observe_with_interval = {:interval => '.5', :url => url}.to_json
+#alert_profile_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - if @assign
+    = render :partial => 'alert_profile_assign'
+  - elsif @alert_profile
+    #alert_profile_info_div
+      = render :partial => "layouts/flash_msg"
+      - if @edit
+        - # Show basic info box with description only in edit mode
+        %p.legend=_('Basic Information')
+        %table.style1
+          %tr
+            %td.key=_('Description')
+            - if @edit
+              %td.wider
+                = text_field_tag("description", @edit[:new][:description],
+                  :maxlength         => MAX_DESC_LEN,
+                  "data-miq_observe" => observe_with_interval)
+              = javascript_tag(javascript_focus('description'))
+            - else
+              %td
+                = h(@alert_profile.description)
+        %hr
+
+      - if !(@edit || @assign)
+        %p.legend=_('Alerts')
+        - if @alert_profile_alerts.empty?
+          = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts are defined.")}
+        - else
+          %table.style3
+            %thead
+              %th.icon
+              %th
+            %tbody
+              - @alert_profile_alerts.each do |a|
+                %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');",
+                  :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Alert")}
+                  %td.icon
+                    %img{:src => "/images/icons/new/miq_alert.png"}
+                  %td
+                    = h(a.description)
+        %hr
+      - elsif @edit
+        %p.legend=_('Alert Selection')
+        %table#formtest.form
+          %tr
+            %td{:align => "left"}=_("Available %s Alerts:") % ui_lookup(:model => @edit[:new][:mode])
+            %td
+            %td.widthed{:align => "left"}=_("Profile Alerts:")
+          %tr
+            %td.widthed{:align => "left", :valign => "top"}
+              %span#choices_chosen_div
+                = select_tag('choices_chosen[]', options_for_select(@edit[:choices].sort),
+                  :multiple => true,
+                  :class    => "widthed",
+                  :size     => 8,
+                  :id       => "choices_chosen")
+            %td{:width => "20", :valign => "middle"}
+              = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class  => "rollover small", :alt => (t = _("Move selected Alerts into this Profile"))),
+                {:action => 'alert_profile_edit', :button => 'move_right', :id => @alert_profile},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-submit"          => 'choices_chosen_div',
+                :remote => true, :title  => t)
+              = link_to(image_tag("/images/toolbars/allleft.png", :border => "0", :class  => "rollover small", :alt => (t = _("Remove all Alerts from this Profile"))),
+                {:action => 'alert_profile_edit', :button => 'move_allleft', :id => @alert_profile},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :remote => true,
+                :title  => t)
+              = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class  => "rollover small", :alt => (t = _("Remove selected Alerts from this Profile"))),
+                {:action => 'alert_profile_edit', :button => 'move_left', :id => @alert_profile},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-submit"          => 'members_chosen_div',
+                :remote => true,
+                :title  => t)
+            %td{:align => "right", :valign => "top"}
+              %span#members_chosen_div
+                = select_tag('members_chosen[]', options_for_select(@edit[:new][:alerts].sort),
+                  :multiple => true,
+                  :class    => "widthed",
+                  :size     => 8,
+                  :id       => "members_chosen")
+        %hr
+
+      - # Notes field
+      - if @edit
+        %p.legend
+          =_("Notes")
+          (
+          %span#notes_count
+            = @edit[:new][:notes] ? @edit[:new][:notes].length : 0
+          \/ 512)
+        = text_area_tag("notes", @edit[:new][:notes],
+          :rows => 4,
+          :maxlength                  => "512",
+          :counter                    => "notes_count",
+          "data-miq_check_max_length" => true,
+          "data-miq_observe"          => observe_with_interval)
+        %hr
+      - else
+        %p.legend
+          = _('Notes')
+        - if @alert_profile.notes.blank?
+          = render :partial => 'layouts/info_msg', :locals => {:message => _(">No notes have been entered.")}
+        - else
+          = text_area_tag("notes", @alert_profile.notes, :readonly => true, :rows => 4)
+        %hr
+
+      - unless @edit
+        - # Show assignments
+        %p.legend=_('Assigned To')
+        - aa = @alert_profile.get_assigned_tos
+        - if !aa[:objects].empty?
+          - # Objects are assigned
+          - if aa[:objects].first.class.to_s == "MiqEnterprise"
+            - # Assigned to Enterprise object
+            =_('The Enterprise')
+          - else
+            -# Assigned to CIs
+            %table.style1
+              %tr
+                %td.key
+                  = ui_lookup(:models => aa[:objects].first.class.to_s)
+                %td
+                  %table.style3{:style => "border-spacing: 0px;"}
+                    - reset_cycle("default")
+                    - objs = []
+                    - aa[:objects].each do |o|
+                      - if o.is_a?(EmsFolder)
+                        - objs.push("#{o.ext_management_system.name}/#{o.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)}")
+                      - elsif o.is_a?(ResourcePool)
+                        objs.push(o.absolute_path(:exclude_hidden => true))
+                      - else
+                        objs.push(o.name)
+                    - objs.sort(&:downcase).each do |obj|
+                      %tr{:class => cycle('row0', 'row1')}
+                        %td
+                          = h(obj)
+        - elsif !aa[:tags].empty?
+          - # Tags are assigned
+          %table.style1
+            %tr
+              %td.key
+                = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @temp[:alert_profile_tag].description]
+              %td
+                - aa[:tags].sort_by { |a| a.first.description.downcase }.each do |tag|
+                  = h(tag.first.description)
+                  %br
+        - else
+          =_('Nothing')
+        %hr

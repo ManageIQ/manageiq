@@ -1,0 +1,234 @@
+#action_details_div
+  - if @action
+    #action_info_div
+      = render :partial => "layouts/flash_msg"
+      %p.legend=_('Basic Information')
+      %table.style1
+        - if @edit
+          - # Don't show description unless in edit mode
+          - url = url_for(:action => 'action_field_changed', :id => "#{@action.id || 'new'}")
+          %tr
+            %td.key=_('Description')
+            %td
+              - if @edit
+                = text_field_tag("description",
+                  @edit[:new][:description],
+                  :maxlength         => MAX_DESC_LEN,
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                = javascript_tag(javascript_focus('description'))
+              - else
+                = h(@action.description)
+        %tr
+          %td.key=_('Action Type')
+          %td
+            - if @edit
+              = select_tag('miq_action_type',
+                options_for_select([["<#{_('Choose')}>", nil]] + MiqAction::TYPES.invert.sort, @edit[:new][:action_type]),
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-miq_observe"     => {:url => url}.to_json)
+            - else
+              = h(@action.action_type == "default" ? "Default" : MiqAction::TYPES[@action.action_type])
+      %hr
+      - if @edit
+        = render :partial => "action_options"
+      - else
+        - case @action.action_type
+        - when "create_snapshot"
+          %p.legend=_('Snapshot Settings')
+          %table.style1
+            %tr
+              %td.key=_('Name')
+              %td
+                = h(@action.options[:name])
+          %hr
+        - when "delete_snapshots_by_age"
+          %p.legend=_('Snapshot Age Settings')
+          %table.style1
+            %tr
+              %td.key=_('Delete if older than')
+              %td
+                = h(SNAPSHOT_AGES[@action.options[:age]])
+          %hr
+        - when "custom_automation"
+          %p.legend=_('Custom Automation')
+          %table.style1
+            %tr
+              %td{:width => '50%'}
+                %fieldset
+                  %p.legend=_('Object Details')
+                  %table.style1
+                    %tr
+                      %td.key=_('Starting Message')
+                      %td
+                        = h(@action.options[:ae_message])
+                    %tr
+                      %td.key=_('Request')
+                      %td
+                        = h(@action.options[:ae_request])
+                %fieldset
+                  %p.legend=_('Attribute/Value Pairs')
+                  %table.style1
+                    - if !@action.options[:ae_hash].blank?
+                      - @action.options[:ae_hash].each do |k, v|
+                        %tr
+                          %td.key
+                            = h(k)
+                          %td
+                            = h(v)
+                    - else
+                      =_('No Attribute/Value Pairs found')
+          %hr
+        - when "email"
+          %p.legend=_('E-mail Settings')
+          %table.style1
+            %tr
+              %td.key=_('From E-mail Address')
+              %td
+                = h(@action.options[:from])
+            %tr
+              %td.key=_('To E-mail Address')
+              %td
+                = h(@action.options[:to])
+          %hr
+        - when "set_custom_attribute"
+          %p.legend=_('Set Custom Attribute Settings')
+          %table.style1
+            %tr
+              %td.key=_('Attribute Name')
+              %td
+                = h(@action.options[:attribute])
+            %tr
+              %td.key=_("Value to Set")
+              %td
+                = h(@action.options[:value])
+          %hr
+        - when "reconfigure_cpus"
+          %p.legend=_("Reconfigure CPU")
+          %table.style1
+            %tr
+              %td.key=_("Number of CPU's")
+              %td
+                = h(@action.options[:value])
+          %hr
+        - when "reconfigure_memory"
+          %p.legend=_("Reconfigure Memory")
+          %table.style1
+            %tr
+              %td.key=_("Memory Size")
+              %td
+                = "#{h(@action.options[:value])} MB"
+          %hr
+        - when "tag"
+          %p.legend=_("Applied Tag")
+          %table.style1
+            %tr
+              %td.key=_("Tag")
+              %td
+                = h(Classification.tag2human(@action.options[:tags].first))
+          %hr
+        - when "snmp_trap"
+          %p.legend=_("SNMP Trap")
+          %table.style1
+            %tr
+              %td.key=_("Host")
+              %td
+                = h(@action.options[:host])
+            %tr
+              %td.key=_("Version")
+              %td
+                = h(@action.options[:snmp_version])
+            - trap_text = @action.options[:snmp_version] == "v1" || @action.options[:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
+            %tr
+              %td.key
+                = trap_text
+              %td
+                = h(@action.options[:trap_id])
+          %hr
+          %p.legend=_("Variables")
+          %table.style3
+            %thead
+              %tr
+                %th=_('Object ID')
+                %th=_('Type')
+                %th=_('Value')
+            - if @action.options.key?(:variables)
+              - @action.options[:variables].each do |var|
+                - unless var[:oid].blank?
+                  %tr
+                    %td
+                      = h(var[:oid])
+                    %td
+                      = h(var[:var_type])
+                    %td
+                      = h(var[:value])
+            - else
+              =_('No variables configured.')
+          %hr
+        - when "assign_scan_profile"
+          %p.legend=_("Analysis Profile")
+          %table.style1
+            %tr
+              %td.key=_("Assigned Analysis Profile")
+              %td
+                = h(@action.options[:scan_item_set_name])
+          %hr
+        - when "evaluate_alerts"
+          %p.legend=_("Alerts to Evaluate")
+          - if @temp[:alert_guids].empty?
+            = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts have been selected.")}
+          - else
+            %table.style3
+              %thead
+                %th.icon
+                %th
+              %tbody
+                - @temp[:alert_guids].sort_by(&:description).each do |alert|
+                  - id = "al-#{to_cid(alert.id)}"
+                  %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert"),
+                    :onmouseover => "this.style.cursor='pointer'", :title => _('View This Alert')}
+                    %td.icon
+                      %img{:src => "/images/icons/new/miq_alert.png"}
+                    %td
+                      = alert.description
+          %hr
+        - when "inherit_parent_tags"
+          %p.legend=_("Inherit Tags")
+          %table.style1
+            %tr
+              %td.key=_("Parent Type")
+              %td
+                = h(ui_lookup(:table => @action.options[:parent_type]))
+            %tr
+              %td.key=_("Categories")
+              %td= h(@temp[:cats])
+          %hr
+        - when "remove_tags"
+          %p.legend=_("Inherit Tags")
+          %table.style1
+            %tr
+              %td.key=_("Categories")
+              %td
+                = h(@temp[:cats])
+          %hr
+
+        - if x_active_tree == :action_tree
+          %p.legend=_("Assigned to Policies")
+          - if @action_policies.empty?
+            = render :partial => 'layouts/info_msg', :locals => {:message => _("This Action is not assigned to any Policies.")}
+          - else
+            %table.style3
+              %thead
+                %th.icon
+                %th
+              %tbody
+                - @action_policies.each do |p|
+                  - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
+                  %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
+                    :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view Policy")}
+                    %td.icon
+                      - src = "#{p.towhat.downcase}#{p.active ? '' : '_inactive'}"
+                      %img{:src => "/images/icons/new/miq_policy_#{src}.png"}
+                    %td
+                      = p.description
+          %hr
