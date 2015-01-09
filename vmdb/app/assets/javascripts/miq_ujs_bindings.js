@@ -34,12 +34,12 @@ $j(document).ready(function(){
 		var submit = parms.submit;
 		if (typeof interval == "undefined") {	// No interval passed, use event observer
       this.stopObserving(); // Use prototype to stop observing this element, prevents multi ajax transactions
-			new Form.Element.EventObserver(this.id, function(element, value) {
-				var sparkleOn = this.element.getAttribute('data-miq_sparkle_on');	// Grab miq_sparkle settings
-				var sparkleOff = this.element.getAttribute('data-miq_sparkle_off');
+      var el = $j(this);
+      el.unbind('change')
+      el.change(function() {
         miqJqueryRequest(url, {beforeSend: true,
           complete: true,
-          data: element.id + '=' + encodeURIComponent(value),
+          data: this.id + '=' + encodeURIComponent(el.prop('value')),
           no_encoding: true
         });
 			})
