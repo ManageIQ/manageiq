@@ -5,6 +5,7 @@ module JqplotHelper
 jQuery(document).ready(function($) {
     $j.ajax({
       url:      "#{url}",
+      type:     "get",
       dataType: "json",
       success:  function(chart) {
         $j.jqplot('#{chart_id}', chart.data, jqplot_process_options(chart.options));
