@@ -176,7 +176,7 @@ class VMDBLogger < Logger
   end
 
   class Formatter < Logger::Formatter
-    Format = "%s, [%s#%d:%x] %5s -- %s: %s\n"
+    Format = "[----] %s, [%s#%d:%x] %5s -- %s: %s\n"
 
     def call(severity, time, progname, msg)
       msg = msg2str(msg)
