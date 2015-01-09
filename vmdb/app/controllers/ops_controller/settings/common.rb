@@ -419,6 +419,7 @@ module OpsController::Settings::Common
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
       end
+      @update.config[:ntp] = @edit[:new][:ntp].dup if @edit[:new][:ntp]
       @update.config[:ntp][:server].reject!(&:blank?) if @update.config[:ntp]
       if @update.validate                                           # Have VMDB class validate the settings
         if ["settings_server","settings_authentication"].include?(@sb[:active_tab])
