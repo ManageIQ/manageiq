@@ -8,50 +8,50 @@ class CreateConfigurationManagers < ActiveRecord::Migration
     add_index :configuration_managers, :provider_id
 
     create_table :configuration_profiles do |t|
+      t.string     :type
       t.string     :name
       t.string     :description
       t.belongs_to :operating_system_flavor, :type => :bigint
-      t.belongs_to :provider,                :type => :bigint
       t.belongs_to :configuration_manager,   :type => :bigint
-      t.string     :provider_ref
+      t.string     :manager_ref
       t.timestamps
     end
 
     add_index :configuration_profiles, :operating_system_flavor_id
-    add_index :configuration_profiles, :provider_id
-    add_index :configuration_profiles, :provider_ref
+    add_index :configuration_profiles, :configuration_manager_id
+
+    add_index :configuration_profiles, :manager_ref
 
     create_table :configuration_profiles_customization_scripts, :id => false do |t|
       t.belongs_to :configuration_profile,   :type => :bigint
       t.belongs_to :customization_script,    :type => :bigint
     end
     add_index :configuration_profiles_customization_scripts, [:configuration_profile_id, :customization_script_id],
-              :name => :configuration_profiles_customization_scripts_i1
+              :name => :index_on_configuration_profiles_customization_scripts_i1
     add_index :configuration_profiles_customization_scripts, [:customization_script_id, :configuration_profile_id],
-              :name => :configuration_profiles_customization_scripts_i2
+              :name => :index_on_configuration_profiles_customization_scripts_i2
 
     create_table :configured_systems do |t|
       t.string     :hostname
       t.belongs_to :operating_system_flavor, :type => :bigint
       t.belongs_to :configuration_profile,   :type => :bigint
-      t.belongs_to :provider,                :type => :bigint
       t.belongs_to :configuration_manager,   :type => :bigint
-      t.string     :provider_ref
+      t.string     :manager_ref
       t.string     :type
       t.timestamps
     end
     add_index :configured_systems, :operating_system_flavor_id
-    add_index :configured_systems, :provider_id
-    add_index :configured_systems, :provider_ref
+    add_index :configured_systems, [:configuration_manager_id, :type]
+    add_index :configured_systems, :manager_ref
 
     create_table :configured_systems_customization_scripts, :id => false do |t|
       t.belongs_to :configured_system,   :type => :bigint
       t.belongs_to :customization_script,    :type => :bigint
     end
     add_index :configured_systems_customization_scripts, [:configured_system_id, :customization_script_id],
-              :name => :configured_systems_customization_scripts_i1
+              :name => :index_on_configured_systems_customization_scripts_i1
     add_index :configured_systems_customization_scripts, [:customization_script_id, :configured_system_id],
-              :name => :configured_systems_customization_scripts_i2
+              :name => :index_on_configured_systems_customization_scripts_i2
 
     create_table :providers do |t|
       t.string  :name

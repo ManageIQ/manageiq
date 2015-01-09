@@ -1,3 +1,4 @@
 class CustomizationScript < ActiveRecord::Base
-  belongs_to :provider
+  include NewWithTypeStiMixin
+  belongs_to :provisioning_manager
 end
