@@ -1,0 +1,40 @@
+- url = url_for(:action => 'prov_continue', :id => "#{@edit[:req_id] || 'new'}", :button => "continue")
+#buttons_div
+  %table{:width => "100%"}
+    %tr
+      %td{:align => "right"}
+        #buttons_on{:style => session[:changed] ? "" : "display: none;"}
+          - @edit[:buttons].each do |button|
+            - case button
+            - when :continue
+              = button_tag(_('Continue'),
+                :class   => "btn btn-primary",
+                :alt     => (t = _("Continue this provisioning request")),
+                :title   => t,
+                :onclick => "miqAjaxButton(#{url});")
+            - when :submit
+              = button_tag(_('Submit'),
+                :class   => "btn btn-primary",
+                :alt     => (t = _("Submit this provisioning request")),
+                :title   => t,
+                :onclick => "miqAjaxButton('#{url}');")
+            - when :cancel
+              = button_tag(_('Cancel'),
+                :class   => "btn btn-default",
+                :alt     => (t = _("Cancel this provisioning request")),
+                :title   => t,
+                :onclick => "miqAjaxButton('#{url}');")
+
+        #buttons_off{:style => session[:changed] ? "display: none;" : ""}
+          - @edit[:buttons].each do |button|
+            - case button
+            - when :continue
+              = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
+            - when :submit
+              = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
+            - when :cancel
+              = button_tag('Cancel',
+                :class   => "btn btn-default",
+                :alt     => (t = _("Cancel this provisioning request")),
+                :title   => t,
+                :onclick => "miqAjaxButton('#{url}');")

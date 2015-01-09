@@ -1,0 +1,35 @@
+#prov_template_div{:style => "height: 150px; overflow: auto;"}
+  %table{:class => "style3"}
+    %thead
+      %tr
+        - id = @edit[:req_id] || "new"
+        - @edit[:template_columns].each_with_index do |h, i|
+          %th{:nowrap => 1}
+            -# Replaced to exclude non-view table fields from sorting
+            = link_to(h(@edit[:template_headers][h]),
+              {:action => "sort_template_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true)
+            - if @edit[:template_columns][i] == @edit[:template_sortcol]
+              %img{:src => "/images/icons/16/sort_#{@edit[:template_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+    %tbody
+      - cls = @edit[:new][:customization_template_id] && @edit[:new][:customization_template_id][0].nil? ? "row3" : cycle('row0', 'row1')
+      %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__TEMPLATE__NONE__&id=#{id}');", :nowrap => 1}
+        %td{onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+          = "<#{_('None')}>"
+        %td
+        %td
+      - @temp[:templates].each do |row|
+        - row_id = row.id
+        - cls = @edit[:new][:customization_template_id] && @edit[:new][:customization_template_id][0] == row_id ? "row3" : cycle('row0', 'row1')
+        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{row_id}&id=#{id}');", :nowrap => 1}
+          %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+            = h(row.name)
+          %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+            = h(row.description)
+          %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+            = h(row.updated_at)
+    %tfoot
+      %tr
+        %td{:colspan => "40"}

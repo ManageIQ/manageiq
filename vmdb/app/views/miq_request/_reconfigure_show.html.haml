@@ -1,0 +1,29 @@
+#main_div
+  %fieldset
+    %p.legend=_("Options")
+    %table.style1
+      - if @options[:vm_memory]
+        %tr
+          %td.key
+            = _("Memory")
+          %td
+            = h(@options[:memory])
+            &nbsp;
+            = @options[:mem_typ]
+      - if @options[:number_of_cpus]
+        %tr
+          %td.key
+            = _("Processors")
+          %td
+            = h(@options[:number_of_cpus])
+
+  %fieldset
+    %p.legend
+      = _("Affected VMs")
+    %table.style1{:height => "75"}
+      %tr
+        %td
+          - if @view
+            - @embedded = true
+            - @gtl_type = "list"
+            = render :partial => "layouts/gtl"

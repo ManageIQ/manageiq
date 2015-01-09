@@ -1,0 +1,29 @@
+- # wf					The workflow object currently in use
+- # dialog			The name (symbol) of the selected dialog
+- if (@options && @options[:wf]) || (@edit && @edit[:wf])
+  #prov_wf_div
+    - options = @options     || @edit[:new]
+    - wf      = options[:wf] || @edit[:wf]
+    - tabname = @tabactive   || "#{options[:current_tab_key]}_div"
+    #prov_tabs{:style => "display:none;"}
+      %ul.tab
+        - wf.get_dialog_order.each do |d|
+          - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
+            - # hide the tab by setting li id to display none
+            %li{:id => "#{d}_li", :style => wf.get_dialog(d)[:display] == :hide ? "display: none;" : ""}
+              %a{:href => "#{d}_div"}
+                = wf.get_dialog(d)[:description]
+      - wf.get_dialog_order.each do |d|
+        - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
+          %div{:id => "#{d}_div", :width => "150px", :name => wf.get_dialog(d)[:description]}
+            - if wf.is_a?(MiqProvisionWorkflow)
+              = render :partial => "/miq_request/prov_dialog", :locals => {:wf => wf, :dialog => d}
+            - elsif wf.class.to_s == "VmMigrateWorkflow"
+              = render :partial => "/miq_request/prov_vm_migrate_dialog", :locals => {:wf => wf, :dialog => d}
+            - else
+              = render :partial => "/miq_request/prov_host_dialog", :locals => {:wf => wf, :dialog => d}
+  :javascript
+    - # method takes hash that can have 4 keys: tabs div id, active_tab label,
+    - # url to go to when tab is changed, and whether to check for abandon changes or not
+    miq_jquery_tabs_init({tabs_div: "prov_tabs", url: "/miq_request/prov_field_changed/", active_tab: "#{tabname}"});
+    $j("#hardware").css("display","none")
