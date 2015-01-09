@@ -1,15 +1,5 @@
 class CreateConfigurationManagers < ActiveRecord::Migration
   def up
-    create_table :providers do |t|
-      t.string  :type
-      t.string  :name
-      t.string  :url
-      t.integer :verify_ssl
-      t.string  :guid, :limit => 36
-      t.belongs_to :zone, :type => :bigint
-      t.timestamps
-    end
-
     create_table :configuration_managers do |t|
       t.string     :type
       t.belongs_to :provider, :type => :bigint
@@ -69,6 +59,5 @@ class CreateConfigurationManagers < ActiveRecord::Migration
     drop_table :configuration_profiles_customization_scripts
     drop_table :configuration_profiles
     drop_table :configuration_managers
-    drop_table :providers
   end
 end
