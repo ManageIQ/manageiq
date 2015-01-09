@@ -5,6 +5,10 @@ module ActiveRecord
         select_value("SELECT version()")
       end
 
+      def spid
+        select_value("SELECT pg_backend_pid()").to_i
+      end
+
       def client_connections
         data = select(<<-SQL, "Client Connections")
                       SELECT client_addr   AS client_address
