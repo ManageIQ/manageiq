@@ -394,4 +394,23 @@ describe VmOrTemplate do
       categories.should match_array ["test", "profiles"]
     end
   end
+
+  context "Status Methods" do
+    let(:vm)      {FactoryGirl.create(:vm_or_template)}
+    let(:ems)     {FactoryGirl.create(:ext_management_system)}
+    let(:storage) {FactoryGirl.create(:storage)}
+
+    context "with EMS" do
+      before { vm.ext_management_system = ems }
+      it { expect(vm).to be_active }
+    end
+
+    context "without EMS" do
+      it { expect(vm).to be_archived }
+      context "with storage" do
+        before { vm.storage = storage }
+        it { expect(vm).to be_orphaned }
+      end
+    end
+  end
 end

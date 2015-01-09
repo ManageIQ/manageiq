@@ -637,25 +637,9 @@ class Host < ActiveRecord::Base
   # Scan for VMs in a path defined in a repository
   def add_elements(data)
     begin
-      case data
-      when Hash
+      if data.is_a?(Hash) && data[:type] == :ems_events
         $log.info("MIQ(host-add_elements): Adding HASH elements for Host id:[#{self.id}]-[#{self.name}] from [#{data[:type]}]")
-        case data[:type]
-        when :ems_events then self.add_ems_events(data)
-        when :ems_refresh
-          data.delete(:type)
-          EmsRefresh.save_ems_inventory(self, data, self)
-        end
-      else
-        $log.info("MIQ(host-add_elements): Adding XML elements for Host id:[#{self.id}]-[#{self.name}] from [#{data.root.name}]")
-
-        # Find out what XML file document we are being passed.
-        case data.root.name
-        when "host_configuration"
-          get_config_data(data)
-        when "host_getvms"
-          self.add_vms(data.root.attributes["vmlist"])
-        end
+        add_ems_events(data) 
       end
     rescue => err
       $log.log_backtrace(err)
