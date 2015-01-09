@@ -132,7 +132,7 @@ module Rbac
     parent_class   = rbac_class(klass)
     u_filtered_ids = self.get_self_service_object_ids(user_or_group, parent_class)
     b_filtered_ids = self.get_belongsto_filter_object_ids(parent_class, rbac_filters['belongsto'])
-    m_filtered_ids = self.get_managed_filter_object_ids(parent_class, NO_SCOPE, rbac_filters['managed'])
+    m_filtered_ids = self.get_managed_filter_object_ids(parent_class, parent_class, rbac_filters['managed'])
     d_filtered_ids = rbac_filters['ids_via_descendants']
     filtered_ids   = self.combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
 
@@ -152,7 +152,7 @@ module Rbac
           "(#{original_conditions}) OR (#{ids_clause})"
         end
       end
-    self.method_with_scope(klass, scope, :count, :conditions => cond_for_count, :include => includes)
+    scope.where(cond_for_count).includes(includes).count
   end
 
   def self.find_reflection(klass, association_to_match)
@@ -164,7 +164,7 @@ module Rbac
   end
 
   def self.find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
-    total_count = self.method_with_scope(klass, scope, :count, :conditions => find_options[:conditions], :include => find_options[:include])
+    total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).count
     if filtered_ids.kind_of?(Array)
       reflection = find_reflection(klass, parent_class.name.underscore.to_sym)
       if reflection
@@ -176,8 +176,8 @@ module Rbac
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
       $log.debug("MIQ(RBAC.find_targets_filtered_by_parent_ids): New Find options: #{find_options.inspect}")
     end
-    targets     = self.method_with_scope(klass, scope, :find, :all, find_options)
-    auth_count  = self.method_with_scope(klass, scope, :count, :conditions => find_options[:conditions], :include => find_options[:include])
+    targets     = self.method_with_scope(scope, find_options)
+    auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).count
 
     return targets, total_count, auth_count
   end
@@ -190,7 +190,7 @@ module Rbac
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
       $log.debug("MIQ(RBAC.find_targets_filtered_by_ids): New Find options: #{find_options.inspect}")
     end
-    targets     = self.method_with_scope(klass, scope, :find, :all, find_options)
+    targets     = self.method_with_scope(scope, find_options)
     auth_count  = klass.count(:conditions => find_options[:conditions], :include => find_options[:include])
 
     return targets, total_count, auth_count
@@ -205,7 +205,7 @@ module Rbac
   def self.get_managed_filter_object_ids(klass, scope, filter)
     return nil if filter.nil? || filter.empty?
     return nil unless TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name)
-    self.method_with_scope(klass, scope, :find_tags_by_grouping, filter, :ns=>'*', :select => self.minimum_columns_for(klass)).collect(&:id)
+    scope.find_tags_by_grouping(filter, :ns=>'*', :select => self.minimum_columns_for(klass)).collect(&:id)
   end
 
   def self.find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
@@ -246,8 +246,8 @@ module Rbac
   end
 
   def self.find_targets_without_rbac(klass, scope, find_options = {})
-    targets     = self.method_with_scope(klass, scope, :find, :all, find_options)
-    total_count = find_options[:limit] ? self.method_with_scope(klass, scope, :count, :conditions => find_options[:conditions], :include => find_options[:include]) : targets.length
+    targets     = self.method_with_scope(scope, find_options)
+    total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).count : targets.length
 
     return targets, total_count, total_count
   end
@@ -404,6 +404,7 @@ module Rbac
     $log.debug("MIQ(RBAC.search): Find options: #{find_options.inspect}")
 
     if klass.respond_to?(:find)
+      scope = apply_scope(klass, scope)
       targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user || miq_group)
     else
       total_count = targets.length
@@ -441,11 +442,30 @@ module Rbac
     return targets, attrs
   end
 
-  def self.method_with_scope(klass, scope, *meth)
+  def self.apply_options(ar_scope, options)
+    [
+      [:conditions, :where],
+      [:include, :includes],
+      [:limit, :limit],
+      [:order, :order],
+      [:offset, :offset],
+    ].inject(ar_scope) { |scope, (key, method)|
+      scope.send(method, options[key])
+    }
+  end
+
+  def self.method_with_scope(ar_scope, options)
+    apply_options(ar_scope, options).all
+  end
+
+  def self.apply_scope(klass, scope)
     scope_name = scope.to_miq_a.first
-    return klass.send(*meth)  if scope_name == NO_SCOPE
-    raise "Named scope '#{scope_name}' is not defined for class '#{klass.name}'" unless klass.respond_to?(scope_name)
-    return klass.send(*scope).send(*meth)
+    if scope_name == NO_SCOPE
+      klass
+    else
+      raise "Named scope '#{scope_name}' is not defined for class '#{klass.name}'" unless klass.respond_to?(scope_name)
+      klass.send(*scope)
+    end
   end
 
   def self.get_belongsto_matches(blist, klass)
