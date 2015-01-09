@@ -1,14 +1,11 @@
 require "spec_helper"
 
 describe ProviderForeman do
-  let(:authentication) do
-    FactoryGirl.create(:authentication, :userid => "testuser", :password => "secret")
-  end
-
   let(:provider) do
-    described_class.new(:name => "x", :url => "example.com").tap do |csf|
-      csf.authentications << authentication
-    end
+    FactoryGirl.build(:foreman_provider,
+                      :url      => "example.com",
+                      :userid   => "testuser",
+                      :password => "secret")
   end
 
   describe "#connection_attrs" do
