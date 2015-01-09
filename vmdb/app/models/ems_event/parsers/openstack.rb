@@ -5,8 +5,6 @@ module EmsEvent::Parsers::Openstack
 
     $log.debug("#{log_header} event: [#{event[:content]["event_type"]}]") if $log && $log.debug?
 
-    ems = EmsOpenstack.find_by_id(ems_id)
-
     # attributes that are common to all notifications
     event_hash = {
       :event_type     => event[:content]["event_type"],
