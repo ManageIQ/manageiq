@@ -1,32 +1,22 @@
 require "spec_helper"
 
 describe ProviderForeman do
-  let(:provider) do
-    FactoryGirl.build(:foreman_provider)
-  end
+  let(:provider) { FactoryGirl.build(:foreman_provider) }
+  let(:attrs)    { {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil} }
 
   describe "#connection_attrs" do
     context "with no port" do
-      it "has all authentication attributes" do
-        expect(provider.connection_attrs).to eq(
-          :base_url   => "example.com",
-          :username   => "testuser",
-          :password   => "secret",
-          :verify_ssl => nil
-        )
+      it "has correct connection attributes" do
+        expect(provider.connection_attrs).to eq(attrs)
       end
     end
 
     context "with a port" do
       before { provider.url = "example.com:555" }
 
-      it "has all authentication attributes" do
-        expect(provider.connection_attrs).to eq(
-          :base_url   => "example.com:555",
-          :username   => "testuser",
-          :password   => "secret",
-          :verify_ssl => nil
-        )
+      it "has correct connection attributes" do
+        attrs[:base_url] = "example.com:555"
+        expect(provider.connection_attrs).to eq(attrs)
       end
     end
   end
