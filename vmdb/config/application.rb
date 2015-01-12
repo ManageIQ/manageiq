@@ -86,9 +86,6 @@ module Vmdb
 
     require_relative 'environments/patches/database_configuration'
 
-    # Rails3 TODO: check if anything in lib cannot be autoloaded
-    $:.push Rails.root.join("lib")
-
     console do
       Rails::ConsoleMethods.class_eval do
         include Vmdb::ConsoleMethods
