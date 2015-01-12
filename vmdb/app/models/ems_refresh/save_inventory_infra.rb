@@ -67,8 +67,7 @@ module EmsRefresh::SaveInventoryInfra
     return ems
   end
 
-  def save_storages_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
+  def save_storages_inventory(ems, hashes, target)
     log_header = "MIQ(#{self.name}.save_storages_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Query for all of the storages ahead of time
@@ -97,8 +96,7 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
-  def save_hosts_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
+  def save_hosts_inventory(ems, hashes, target)
     log_header = "MIQ(#{self.name}.save_hosts_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if (target == ems)
@@ -211,27 +209,24 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
-  def save_folders_inventory(ems, hashes, target = nil)
-    save_inventory_multi(:ems_folders, EmsFolder, ems, hashes, (target.nil? || target == ems),
-                         :uid_ems, nil, :ems_children)
+  def save_folders_inventory(ems, hashes, target)
+    save_inventory_multi(:ems_folders, EmsFolder, ems, hashes, target == ems, :uid_ems, nil, :ems_children)
     store_ids_for_new_records(ems.ems_folders, hashes, :uid_ems)
   end
   alias_method :save_ems_folders_inventory, :save_folders_inventory
 
-  def save_clusters_inventory(ems, hashes, target = nil)
-    save_inventory_multi(:ems_clusters, EmsCluster, ems, hashes, (target.nil? || target == ems),
-                         :uid_ems, nil, :ems_children)
+  def save_clusters_inventory(ems, hashes, target)
+    save_inventory_multi(:ems_clusters, EmsCluster, ems, hashes, target == ems, :uid_ems, nil, :ems_children)
     store_ids_for_new_records(ems.ems_clusters, hashes, :uid_ems)
   end
   alias_method :save_ems_clusters_inventory, :save_clusters_inventory
 
-  def save_resource_pools_inventory(ems, hashes, target = nil)
-    save_inventory_multi(:resource_pools, ResourcePool, ems, hashes, (target.nil? || target == ems),
-                         :uid_ems, nil, :ems_children)
+  def save_resource_pools_inventory(ems, hashes, target)
+    save_inventory_multi(:resource_pools, ResourcePool, ems, hashes, target == ems, :uid_ems, nil, :ems_children)
     store_ids_for_new_records(ems.resource_pools, hashes, :uid_ems)
   end
 
-  def save_customization_specs_inventory(ems, hashes, target = nil)
+  def save_customization_specs_inventory(ems, hashes, target)
     save_inventory_multi(:customization_specs, CustomizationSpec, ems, hashes, true, :name)
   end
 
