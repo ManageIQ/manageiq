@@ -1,5 +1,13 @@
 class Authentication < ActiveRecord::Base
   include NewWithTypeStiMixin
+  def self.new(*args, &block)
+    if self == Authentication
+      AuthUseridPassword.new(*args, &block)
+    else
+      super
+    end
+  end
+
   include PasswordMixin
   encrypt_column :auth_key
 
@@ -12,19 +20,6 @@ class Authentication < ActiveRecord::Base
     :incomplete => "Incomplete credentials",
     :invalid => "Invalid credentials",
   }
-
-  BASE_CLASS    = 'Authentication'
-  DEFAULT_CLASS = 'AuthUseridPassword'
-
-  def self.new(*args, &block)
-    if self == BASE_CLASS.constantize
-      klass = DEFAULT_CLASS.constantize
-      raise "#{klass.name} is not a subclass of #{self.name}" unless klass <= self
-      klass.new(*args, &block)
-    else
-      super
-    end
-  end
 
   STATUS_SEVERITY = Hash.new(-1).merge(
     ""            => -1,
