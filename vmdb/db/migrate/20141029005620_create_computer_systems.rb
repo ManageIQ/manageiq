@@ -5,7 +5,7 @@ class CreateComputerSystems < ActiveRecord::Migration
       t.timestamps
     end
     add_index :computer_systems,  [:managed_entity_id, :managed_entity_type],
-              :name => :computer_systems_managed_entity_i1
+              :name => :index_computer_systems_managed_entity
 
     add_column :hardwares,         :computer_system_id, :bigint
     add_index  :hardwares,         :computer_system_id

@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :foreman_provider, :class => 'ProviderForeman' do
+  factory :provider_foreman do
     url "example.com"
     after(:build) do |provider|
       provider.authentications << FactoryGirl.build(:authentication,

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ProviderForeman do
-  let(:provider) { FactoryGirl.build(:foreman_provider) }
+  let(:provider) { FactoryGirl.build(:provider_foreman) }
   let(:attrs)    { {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil} }
 
   describe "#connection_attrs" do
