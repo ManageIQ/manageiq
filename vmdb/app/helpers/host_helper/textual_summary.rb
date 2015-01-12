@@ -477,7 +477,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_authentications
-    authentications = @record.authentications
+    authentications = @record.authentication_userid_passwords
     return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
 
     authentications.collect do |auth|
