@@ -39,21 +39,21 @@ $j(document).ready(function(){
       el.change(function() {
         miqJqueryRequest(url, {beforeSend: true,
           complete: true,
-          data: this.id + '=' + encodeURIComponent(el.prop('value')),
+          data: el.attr('id') + '=' + encodeURIComponent(el.prop('value')),
           no_encoding: true
         });
 			})
 		} else {
       $j(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
-
-      $j(this).observe_field(interval, function(){
+      var el = $j(this);
+      el.observe_field(interval, function(){
 				var oneTrans = this.getAttribute('data-miq_send_one_trans');	// Grab one trans URL, if present
 				if (typeof submit != "undefined"){										// If submit element passed in
           miqJqueryRequest(url, {beforeSend: true, complete: true, data: Form.serialize(submit)});
 				} else if (oneTrans) {
 					miqSendOneTrans(url);
 				} else {
-          var urlstring = url + "?" + this.id + "=" + encodeURIComponent(this.value);	//  tack on the id and value to the URL
+          var urlstring = url + "?" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));	//  tack on the id and value to the URL
           miqJqueryRequest(urlstring, {no_encoding: true});
         }
 			});
