@@ -17,22 +17,6 @@ class DialogFieldRadioButton < DialogFieldSortedItem
     end
   end
 
-  def show_refresh_button
-    options[:show_refresh_button] || false
-  end
-
-  def show_refresh_button=(value)
-    options[:show_refresh_button] = value
-  end
-
-  def load_values_on_init
-    options[:load_values_on_init] || false
-  end
-
-  def load_values_on_init=(value)
-    options[:load_values_on_init] = value
-  end
-
   def show_refresh_button?
     !!show_refresh_button
   end
@@ -40,8 +24,8 @@ class DialogFieldRadioButton < DialogFieldSortedItem
   private
 
   def load_values_on_init?
-    return true if options[:show_refresh_button] == false
-    !!options[:load_values_on_init]
+    return true unless show_refresh_button
+    load_values_on_init
   end
 
   def default_resource_action
