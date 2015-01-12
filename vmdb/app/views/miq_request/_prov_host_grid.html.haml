@@ -29,7 +29,7 @@
           %td
           %td
           %td
-      - @temp[:hosts].each_with do |row|
+      - @temp[:hosts].each do |row|
         - @id = row.id
         - if options[:wf].class.to_s == "MiqHostProvisionWorkflow"
           %tr{:class => cycle('row0', 'row1'), :nowrap => 1}

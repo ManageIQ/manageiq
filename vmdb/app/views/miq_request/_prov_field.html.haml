@@ -13,7 +13,7 @@
   = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
 
   :javascript
-    - # Create from/to date JS vars to limit calendar starting from
+    // Create from/to date JS vars to limit calendar starting from
     var miq_cal_dateFrom = miqCalendarDateConversion("#{@timezone_offset}");
   - if [:cluster_filter, :ds_filter, :host_filter, :rp_filter, :vm_filter].include?(field)
     - # ### Filter Pull Down fields, show them only if there are any values
@@ -203,7 +203,7 @@
               - else
                 - opts = [["<#{_('None')}>", nil]]
             = select_tag(field_id,
-              options_for_select(opts options[field].is_a?(Array) ? options[field].first : options[field]),
+              options_for_select(opts, options[field].is_a?(Array) ? options[field].first : options[field]),
               :disabled              => disabled,
               :style                 => "width:auto;",
               "data-miq_sparkle_on"  => true,
@@ -240,7 +240,7 @@
                 - opts = [["<#{_('None')}>", nil]]
             
             = select_tag(field_id,
-              options_for_select(opts (options[field].is_a?(Array) && !multiple) ? options[field].first : options[field]),
+              options_for_select(opts, (options[field].is_a?(Array) && !multiple) ? options[field].first : options[field]),
               :multiple              => multiple,
               :disabled              => disabled,
               "data-miq_sparkle_on"  => true,
