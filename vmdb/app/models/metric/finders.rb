@@ -31,7 +31,7 @@ module Metric::Finders
 
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    return resource.send(meth).all(:conditions => cond) unless resource.kind_of?(Array)
+    return resource.send(meth).where(cond) unless resource.kind_of?(Array)
 
     # Group the resources by type to find the ids on which to query
     res_cond = []
@@ -47,7 +47,7 @@ module Metric::Finders
     cond.nil? ? cond = [res_cond] : cond[0] << " AND #{res_cond}"
     cond += res_params
 
-    return klass.all(:conditions => cond)
+    return klass.where(cond)
   end
 
   #

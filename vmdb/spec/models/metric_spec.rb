@@ -77,7 +77,7 @@ describe Metric do
             t.is_a?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
           end.flatten
 
-          selected = MiqQueue.all(:conditions => {:method_name => "perf_capture"}, :order => :id).collect do |q|
+          selected = MiqQueue.where(:method_name => "perf_capture").order(:id).collect do |q|
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
           end.flatten
 
@@ -99,7 +99,7 @@ describe Metric do
               task.context_data[:targets].sort.should == cluster.hosts.collect {|h| "Host:#{h.id}"}.sort
 
               expected_hosts.each do |host|
-                messages = MiqQueue.all(:conditions => {:class_name => "Host", :instance_id => host.id}).select {|m| m.args.first == "realtime"}
+                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select {|m| m.args.first == "realtime"}
                 messages.each do |m|
                   m.miq_callback.should_not be_nil
                   m.miq_callback[:method_name].should == :perf_capture_callback
@@ -124,7 +124,7 @@ describe Metric do
               expected_hosts = cluster.hosts.select {|h| @expected_targets.include?(h)}
               next if expected_hosts.empty?
 
-              tasks = MiqTask.all(:conditions => {:name => "Performance rollup for EmsCluster:#{cluster.id}"}, :order => "id DESC")
+              tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
               tasks.length.should == 2
               tasks.each do |task|
                 task.context_data[:targets].sort.should == cluster.hosts.collect {|h| "Host:#{h.id}"}.sort
@@ -133,7 +133,7 @@ describe Metric do
               task_ids = tasks.collect(&:id)
 
               expected_hosts.each do |host|
-                messages = MiqQueue.all(:conditions => {:class_name => "Host", :instance_id => host.id}).select {|m| m.args.first == "realtime"}
+                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select {|m| m.args.first == "realtime"}
                 host.update_attribute(:last_perf_capture_on, 1.minute.from_now.utc)
                 messages.each do |m|
                   next if m.miq_callback[:args].blank?
@@ -155,12 +155,12 @@ describe Metric do
           end
 
           it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-            messages = MiqQueue.all(:conditions => {:class_name => "Host"}).select {|m| m.args.first == "realtime"}
+            messages = MiqQueue.where(:class_name => "Host").select {|m| m.args.first == "realtime"}
             messages.each {|m| m.update_attribute(:state, "dequeue")}
 
             Metric::Capture.perf_capture_timer
 
-            messages = MiqQueue.all(:conditions => {:class_name => "Host"}).select {|m| m.args.first == "realtime"}
+            messages = MiqQueue.where(:class_name => "Host").select {|m| m.args.first == "realtime"}
             messages.each {|m| m.lock_version.should == 1}
           end
 
@@ -171,7 +171,7 @@ describe Metric do
               expected_hosts = cluster.hosts.select {|h| @expected_targets.include?(h)}
               next if expected_hosts.empty?
 
-              tasks = MiqTask.all(:conditions => {:name => "Performance rollup for EmsCluster:#{cluster.id}"}, :order => "id")
+              tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id")
               tasks.length.should == 2
 
               t1, t2 = tasks
@@ -193,7 +193,7 @@ describe Metric do
           expected_targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
           expected = expected_targets.collect { |t| [t, "historical"] * 2 }.flatten # Vm, Host, Host, Vm, Host
 
-          selected = MiqQueue.all(:order => :id).collect do |q|
+          selected = MiqQueue.order(:id).collect do |q|
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
           end.flatten
 
@@ -343,7 +343,7 @@ describe Metric do
             # Check every timestamp is present; performance realtime timestamps
             #   are to the nearest 20 second interval
             ts = "2011-08-12T20:33:20Z"
-            Metric.all(:order => :timestamp).each do |p|
+            Metric.order(:timestamp).each do |p|
               p_ts = p.timestamp.utc
               p_ts.iso8601.should == ts
               ts = (p_ts + 20.seconds).iso8601
@@ -458,7 +458,7 @@ describe Metric do
         end
 
         it "should have queued rollups for vm hourly" do
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 2
           assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmVmware")
         end
@@ -469,7 +469,7 @@ describe Metric do
           end
 
           it "should have one set of queued rollups" do
-            q_all = MiqQueue.all(:order => :id)
+            q_all = MiqQueue.order(:id)
             q_all.length.should == 2
             assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmVmware")
           end
@@ -826,7 +826,7 @@ describe Metric do
             end
 
             it "should queue up perf_rollup_gap" do
-              q_all = MiqQueue.all(:order => :class_name)
+              q_all = MiqQueue.order(:class_name)
               q_all.length.should == 1
 
               expected = {
@@ -888,14 +888,14 @@ describe Metric do
       context "calling perf_rollup_to_parent" do
         it "should queue up from Vm realtime to Vm hourly" do
           @vm.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from Host realtime to Host hourly" do
           @host.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           # assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'realtime')
           # assert_queue_item_rollup_chain(q_all[1], @host, 'hourly')
@@ -904,7 +904,7 @@ describe Metric do
 
         it "should queue up from Vm hourly to Host hourly and Vm daily" do
           @vm.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @vm,   'daily', @time_profile)
@@ -912,7 +912,7 @@ describe Metric do
 
         it "should queue up from Host hourly to EmsCluster hourly and Host daily" do
           @host.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @host,        'daily', @time_profile)
@@ -920,7 +920,7 @@ describe Metric do
 
         it "should queue up from EmsCluster hourly to EMS hourly and EmsCluster daily" do
           @ems_cluster.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_vmware,         'hourly')
           assert_queue_item_rollup_chain(q_all[1], @ems_cluster, 'daily', @time_profile)
@@ -1222,7 +1222,7 @@ describe Metric do
             t.is_a?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
           end.flatten
 
-          selected = MiqQueue.all(:conditions => {:method_name => "perf_capture"}, :order => :id).collect do |q|
+          selected = MiqQueue.where(:method_name => "perf_capture").order(:id).collect do |q|
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
           end.flatten
 
@@ -1243,7 +1243,7 @@ describe Metric do
         end
 
         it "should have queued rollups for vm hourly" do
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmOpenstack")
         end
@@ -1254,7 +1254,7 @@ describe Metric do
           end
 
           it "should have one set of queued rollups" do
-            q_all = MiqQueue.all(:order => :id)
+            q_all = MiqQueue.order(:id).all
             q_all.length.should == 2
             assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmOpenstack")
           end
@@ -1275,21 +1275,21 @@ describe Metric do
       context "calling perf_rollup_to_parent" do
         it "should queue up from Vm realtime to Vm hourly" do
           @vm.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from AvailabilityZone realtime to AvailabilityZone hourly" do
           @availability_zone.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
         end
 
         it "should queue up from Vm hourly to AvailabilityZone hourly and Vm daily" do
           @vm.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @vm,   'daily', @time_profile)
@@ -1297,7 +1297,7 @@ describe Metric do
 
         it "should queue up from AvailabilityZone hourly to EMS hourly and AvailabilityZone daily" do
           @availability_zone.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.all(:order => :id)
+          q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_openstack,  'hourly')
           assert_queue_item_rollup_chain(q_all[1], @availability_zone, 'daily', @time_profile)

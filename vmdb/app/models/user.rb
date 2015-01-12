@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_userid(userid)
-    self.in_region.find(:first, :conditions => {:userid => userid})
+    self.in_region.where(:userid => userid).first
   end
 
   def self.find_by_email(email)

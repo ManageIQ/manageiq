@@ -75,7 +75,7 @@ class Storage < ActiveRecord::Base
   end
 
   def ext_management_systems
-    @ext_management_systems ||= Host.find(:all, :include => :storages).select { |h| h.storages.include?(self) }.collect { |h| h.ext_management_system }.compact.uniq
+    @ext_management_systems ||= Host.includes(:storages).select { |h| h.storages.include?(self) }.collect { |h| h.ext_management_system }.compact.uniq
   end
 
   def ext_management_systems_in_zone(zone_name)

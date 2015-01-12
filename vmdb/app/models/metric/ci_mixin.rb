@@ -92,7 +92,7 @@ module Metric::CiMixin
     #
 
     pkey = "#{self.class}:#{self.id}"
-    last_task = MiqTask.first(:conditions => {:identifier => pkey}, :order => "id DESC")
+    last_task = MiqTask.where(:identifier => pkey).order("id DESC").first
 
     default_how_long = (interval_name == "realtime" ? 70.minutes : 28.hours)
     starting_on ||= if last_task
@@ -107,12 +107,15 @@ module Metric::CiMixin
     window_starting_on = starting_on - duration
     $log.info("#{log_header} Reading performance records from: #{window_starting_on} to: #{now}")
 
-    select = "capture_interval_name, capture_interval, timestamp, #{column}" if Metric.column_names.include?(column.to_s)
-    total_records = self.send(meth).all(
-      :select     => select,
-      :conditions => ["capture_interval_name = ? and timestamp >= ? and timestamp < ?", interval_name, window_starting_on, now],
-      :order      => "timestamp DESC"
-    )
+    scope = send(meth)
+    if Metric.column_names.include?(column.to_s)
+      scope = scope.select "capture_interval_name, capture_interval, timestamp, #{column}"
+    end
+
+    total_records = scope
+                    .where(:capture_interval_name => interval_name)
+                    .where(["timestamp >= ? and timestamp < ?", window_starting_on, now])
+                    .order("timestamp DESC")
 
     return false if total_records.empty?
 

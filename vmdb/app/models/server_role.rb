@@ -64,7 +64,7 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.region_scoped_roles
-    @region_scoped_roles ||= self.find_all_by_role_scope('region').sort { |a,b| a.name <=> b.name }
+    @region_scoped_roles ||= self.where(:role_scope => 'region').sort { |a,b| a.name <=> b.name }
   end
 
   def self.zone_scoped_roles

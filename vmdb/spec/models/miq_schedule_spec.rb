@@ -498,14 +498,14 @@ describe MiqSchedule do
     context "valid db_gc unsaved schedule, run_adhoc_db_gc" do
       before(:each) do
         @task_id = MiqSchedule.run_adhoc_db_gc(:userid => "admin", :aggressive => true)
-        @gc_message = MiqQueue.find(:first, :conditions => {:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations"} )
+        @gc_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").first
 
         @region = FactoryGirl.create(:miq_region)
         MiqRegion.stub(:my_region).and_return(@region)
       end
 
       it "should create 1 miq task" do
-        tasks = MiqTask.find(:all, :conditions => {:name => "Database GC", :userid => "admin" } )
+        tasks = MiqTask.where(:name => "Database GC", :userid => "admin").all
         tasks.length.should == 1
         tasks.first.id.should == @task_id
       end
@@ -597,7 +597,7 @@ describe MiqSchedule do
       context "calling run adhoc_db_backup" do
         before(:each) do
           @task_id = @schedule.run_adhoc_db_backup
-          @backup_message = MiqQueue.find(:first, :conditions => {:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} )
+          @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
 
           @region = FactoryGirl.create(:miq_region)
           MiqRegion.stub(:my_region).and_return(@region)
@@ -609,13 +609,13 @@ describe MiqSchedule do
         end
 
         it "should create 1 miq task" do
-          tasks = MiqTask.find(:all, :conditions => {:name => "Database backup", :userid => @schedule.userid } )
+          tasks = MiqTask.where({:name => "Database backup", :userid => @schedule.userid })
           tasks.length.should == 1
           tasks.first.id.should == @task_id
         end
 
         it "should create one backup queue message for our db backup instance for the database role" do
-          MiqQueue.count(:conditions => {:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} ).should == 1
+          MiqQueue.where({:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} ).count.should == 1
         end
       end
 
@@ -623,7 +623,7 @@ describe MiqSchedule do
         before(:each) do
 
           MiqSchedule.queue_scheduled_work(@schedule.id, nil, Time.now.utc.to_i, nil)
-          @invoke_actions_message = MiqQueue.find(:first, :conditions => {:class_name => "MiqSchedule", :instance_id => @schedule.id, :method_name => "invoke_actions" } )
+          @invoke_actions_message = MiqQueue.where({:class_name => "MiqSchedule", :instance_id => @schedule.id, :method_name => "invoke_actions" }).first
         end
 
         it "should create an invoke_actions queue message" do
@@ -638,7 +638,7 @@ describe MiqSchedule do
           before(:each) do
             status, message, result = @invoke_actions_message.deliver
             @invoke_actions_message.delivered(status, message, result)
-            @backup_message = MiqQueue.find(:first, :conditions => {:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} )
+            @backup_message = MiqQueue.where({:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} ).first
 
             @region = FactoryGirl.create(:miq_region)
             MiqRegion.stub(:my_region).and_return(@region)

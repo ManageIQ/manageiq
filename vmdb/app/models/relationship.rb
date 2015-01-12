@@ -5,7 +5,7 @@ class Relationship < ActiveRecord::Base
 
   belongs_to :resource, :polymorphic => true
 
-  scope :in_relationship, lambda { |rel| {:conditions => {:relationship => rel}} }
+  scope :in_relationship, lambda { |rel| where({:relationship => rel}) }
 
   #
   # Filtering methods

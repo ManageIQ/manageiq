@@ -25,8 +25,11 @@ class JobProxyDispatcher
         Benchmark.realtime_block(:busy_resources_for_embedded_scanning) { self.busy_resources_for_embedded_scanning }
 
         vms_for_jobs = jobs_to_dispatch.collect {|j| j.target_id}
-        @vms_for_dispatch_jobs, = Benchmark.realtime_block(:vm_find) { VmOrTemplate.find_all_by_id(vms_for_jobs, :include => {:ext_management_system => :zone, :storage => {:hosts => :miq_proxy} }, :order => :id) }
-
+        @vms_for_dispatch_jobs, = Benchmark.realtime_block(:vm_find) do
+          VmOrTemplate.where(:id => vms_for_jobs)
+            .includes(:ext_management_system => :zone, :storage => {:hosts => :miq_proxy})
+            .order(:id)
+        end
         zone = Zone.find_by_name(@zone)
         concurrent_vm_scans_limit = zone.settings.blank? ? 0 : zone.settings[:concurrent_vm_scans].to_i
 
@@ -142,20 +145,17 @@ class JobProxyDispatcher
 
   def pending_jobs
     @zone = MiqServer.my_zone
-    Job.find(:all, :order => "id" ,:conditions => [
-        "state = ? and dispatch_status = ? and
-     (zone is null or zone = ?) and
-     (sync_key is NULL or
-       sync_key not in (
-         select sync_key from jobs where
-           dispatch_status = 'active' and
-           state != 'finished' and
-           (zone is null or zone = ?) and
-           sync_key is not NULL
-       )
-    )",
-        "waiting_to_start", "pending", @zone, @zone
-      ])
+    Job.order(:id)
+      .where(:state           => "waiting_to_start")
+      .where(:dispatch_status => "pending")
+      .where("zone is null or zone = ?", @zone)
+      .where("sync_key is NULL or
+        sync_key not in (
+           select sync_key from jobs where
+             dispatch_status = 'active' and
+             state != 'finished' and
+             (zone is null or zone = ?) and
+             sync_key is not NULL)", @zone)
   end
 
   def busy_proxy?(proxy, job)
@@ -186,11 +186,13 @@ class JobProxyDispatcher
 
   def busy_proxies
     @busy_proxies_hash ||= begin
-      Job.find(:all, :conditions => ["dispatch_status = ? AND state != ?", "active", "finished"], :select => "agent_id, agent_class").inject({}) do |busy_hsh, j|
-        busy_hsh["#{j.agent_class}_#{j.agent_id}"] ||= 0
-        busy_hsh["#{j.agent_class}_#{j.agent_id}"] += 1
-        busy_hsh
-      end
+      Job.where(:dispatch_status => "active")
+        .where("state != ?", "finished")
+        .select([:agent_id, :agent_class])
+        .each_with_object({}) do |j, busy_hsh|
+          busy_hsh["#{j.agent_class}_#{j.agent_id}"] ||= 0
+          busy_hsh["#{j.agent_class}_#{j.agent_id}"] += 1
+        end
     end
   end
 
@@ -208,11 +210,16 @@ class JobProxyDispatcher
     $log.debug("MIQ(JobProxyDispatcher.busy_resources_for_embedded_scanning) Initializing busy_resources_for_embedding_scanning hash")
     @busy_resources_for_embedded_scanning_hash ||= {}
 
-    vms_in_embedded_scanning = Job.find(:all, :conditions => ["dispatch_status = ? AND state != ? AND agent_class = ? AND target_class = ?", "active", "finished", "MiqServer", "VmOrTemplate"], :select => "target_id").collect {|ji| ji.target_id}.compact.uniq
+    vms_in_embedded_scanning =
+      Job.where(:dispatch_status => "active")
+        .where(:agent_class      => "MiqServer")
+        .where(:target_class     => "VmOrTemplate")
+        .where("state != ?", "finished")
+        .select("target_id").collect { |ji| ji.target_id }.compact.uniq
     return @busy_resources_for_embedded_scanning_hash if vms_in_embedded_scanning.blank?
 
     embedded_scans_by_resource = Hash.new {|h,k| h[k]=0}
-    VmOrTemplate.find_all_by_id(vms_in_embedded_scanning).each do |v|
+    VmOrTemplate.where(:id => vms_in_embedded_scanning).each do |v|
       key = self.embedded_scan_resource(v)
       embedded_scans_by_resource[key] += 1 if key
     end

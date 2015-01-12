@@ -55,7 +55,7 @@ class AddResourceToMiqWidgetContents < ActiveRecord::Migration
     add_column :miq_widget_contents, :owner_type, :string
     add_column :miq_widget_contents, :timezone,   :string
 
-    contents = MiqWidgetContent.all(:select => [:id, :owner_type, :owner_id, :user_id], :include => :user)
+    contents = MiqWidgetContent.select([:id, :owner_type, :owner_id, :user_id]).includes(:user)
 
     contents.each do |c|
       user = c.user
@@ -79,7 +79,7 @@ class AddResourceToMiqWidgetContents < ActiveRecord::Migration
   def down
     add_column :miq_widget_contents, :user_id, :bigint
 
-    contents = MiqWidgetContent.all(:select => [:id, :owner_type, :owner_id, :user_id])
+    contents = MiqWidgetContent.select([:id, :owner_type, :owner_id, :user_id])
     contents.each do |content|
       if content.owner_type == 'User'
         content.update_attributes(:owner_id => nil, :owner_type => nil, :user_id => content.owner_id)

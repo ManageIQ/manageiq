@@ -80,7 +80,7 @@ module Metric::CiMixin::Rollup
 
       perf = nil
       Benchmark.realtime_block(:db_find_prev_perf) do
-        perf = self.send(meth).first(:conditions => new_perf)
+        perf = self.send(meth).where(new_perf).first
         perf ||= self.send(meth).build(:resource_name => self.name)
       end
 
