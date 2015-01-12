@@ -1,26 +1,25 @@
 - # Parameters:
 - # widget MiqWidget object
-%div{:id => "w_#{widget.id}"}
+%div{:id => "w_#{presenter.widget.id}"}
   #test.modbox
     %h2.modtitle{:style => "cursor:move"}
-      %a{:class => "#{widget.content_type}box"}
+      %a{:class => "#{presenter.widget.content_type}box"}
       - if role_allows(:feature => "dashboard_add")
-        = render(:partial => 'button_close', :locals => {:widget => widget})
-      = render(:partial => 'button_minmax', :locals => {:widget => widget})
-      - if ["report","chart"].include?(widget.content_type) &&
-      - !widget.contents_for_user(session[:userid]).blank?
-        = render(:partial => 'button_fullscreen', :locals => {:widget => widget})
-        = render(:partial => 'button_pdf', :locals => {:widget => widget})
-      - if ["chart"].include?(widget.content_type) &&
-      - !widget.contents_for_user(session[:userid]).blank?
-        = render(:partial => 'button_zoom', :locals => {:widget => widget})
+        = presenter.button_close
+      = presenter.button_minmax
+      - if presenter.widget.contents_for_user(session[:userid]).present?
+        - if %(report chart).include?(presenter.widget.content_type)
+          = presenter.button_fullscreen
+          = presenter.button_pdf
+        - if %(chart).include?(presenter.widget.content_type) &&
+          = presenter.button_zoom
       %div
-        %span.modtitle_text= h(widget.title)
-    - if widget.content_type == "menu"
-      = render :partial => 'widget_menu', :locals => {:widget => widget}
-    - elsif widget.contents_for_user(session[:userid]).blank?
-      = render(:partial => 'widget_blank', :locals => {:widget => widget})
-    - elsif ["report", "chart", "rss"].include?(widget.content_type)
-      = render :partial => "widget_#{widget.content_type}", :locals => {:widget => widget}
-    - unless widget.content_type == "menu"
-      = render(:partial => 'widget_footer', :locals => {:widget => widget})
+        %span.modtitle_text= h(presenter.widget.title)
+    - if presenter.widget.content_type == "menu"
+      = render :partial => 'widget_menu', :locals => {:widget => presenter.widget}
+    - elsif presenter.widget.contents_for_user(session[:userid]).blank?
+      = render :partial => 'widget_blank', :locals => {:widget => presenter.widget}
+    - elsif %(report chart rss).include?(presenter.widget.content_type)
+      = render :partial => "widget_#{presenter.widget.content_type}", :locals => {:widget => presenter.widget}
+    - unless presenter.widget.content_type == "menu"
+      = render :partial => 'widget_footer', :locals => {:widget => presenter.widget}

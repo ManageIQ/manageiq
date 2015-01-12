@@ -1,8 +1,0 @@
--# Parameters:
--#   widget -- MiqWidget object
-- if PdfGenerator.available? && %w(report chart).include?(widget.content_type)
-  = link_to('',
-    {:action => 'widget_to_pdf', :rr_id => widget.contents_for_user(session[:userid]).miq_report_result_id},
-    :id => "w_#{widget.id}_pdf",
-    :class => "pdfbox",
-    :title => _("Download the full report (all rows) as a PDF file"))

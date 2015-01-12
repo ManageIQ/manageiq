@@ -5,17 +5,17 @@
         - @sb[:dashboards][@sb[:active_db]][:col1].each do |w|
           - widget = MiqWidget.find_by_id(w)
           - if widget && widget.enabled && @temp[:available_widgets].include?(widget.id)
-            = render(:partial => 'widget', :locals => {:widget => widget})
+            = WidgetPresenter.new(self, controller, widget).render_partial
       #col2.yui-u{:style => "position:relative;min-height:500px;"}
         - @sb[:dashboards][@sb[:active_db]][:col2].each do |w|
           - widget = MiqWidget.find_by_id(w)
           - if widget && widget.enabled && @temp[:available_widgets].include?(widget.id)
-            = render(:partial => 'widget', :locals => {:widget => widget})
+            = WidgetPresenter.new(self, controller, widget).render_partial
       #col3.yui-u{:style => "position:relative;min-height:500px;"}
         - @sb[:dashboards][@sb[:active_db]][:col3].each do |w|
           - widget = MiqWidget.find_by_id(w)
           - if widget && widget.enabled && @temp[:available_widgets].include?(widget.id)
-            = render(:partial => 'widget', :locals => {:widget => widget})
-- if @chart_data
+            = WidgetPresenter.new(self, controller, widget).render_partial
+- if WidgetPresenter.chart_data.present?
   :javascript
-    miq_chart_data = #{{"widgetchart" => @chart_data}.to_json.html_safe};
+    miq_chart_data = #{{"widgetchart" => WidgetPresenter.chart_data}.to_json.html_safe};

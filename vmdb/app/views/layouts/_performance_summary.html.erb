@@ -9,8 +9,8 @@
 	var miq_cal_dateTo = new Date(<%= @perf_options[:edate] %>);
 
 	<%# Populate miq_chart_data with XML %>
-	<% if @chart_data %>
-		miq_chart_data = <%= @chart_data.to_json %>;
+	<% if WidgetPresenter.chart_data.present? %>
+		miq_chart_data = <%= WidgetPresenter.chart_data.to_json %>;
 	<% end %>
 
 </script>
