@@ -156,7 +156,7 @@ describe AuthenticationMixin do
         @host = FactoryGirl.create(:host_with_authentication)
         @ems  = FactoryGirl.create(:ems_vmware_with_authentication)
         MiqQueue.destroy_all
-        @auth = @ems.authentication_best_fit(:default)
+        @auth = @ems.authentication_type(:default)
         @orig_ems_user, @orig_ems_pwd = @ems.auth_user_pwd(:default)
       end
 
@@ -310,7 +310,7 @@ describe AuthenticationMixin do
 
         it "should set the host's authentication as 'Incomplete' when doing authentication_check" do
           @host.authentication_check
-          @host.authentication_best_fit.status.should == 'Incomplete'
+          @host.authentication_type(:default).status.should == 'Incomplete'
         end
 
         it "should queue a raise authentication incomplete event when doing authentication_check" do
@@ -332,7 +332,7 @@ describe AuthenticationMixin do
 
         it "should set the ems's authentication as 'Incomplete' when doing authentication_check" do
           @ems.authentication_check
-          @ems.authentication_best_fit.status.should == 'Incomplete'
+          @ems.authentication_type(:default).status.should == 'Incomplete'
         end
 
         it "should queue a raise authentication incomplete event when doing authentication_check" do
@@ -354,7 +354,7 @@ describe AuthenticationMixin do
 
         it "should set the host's authentication as 'Invalid' when doing authentication_check" do
           @host.authentication_check
-          @host.authentication_best_fit.status.should == 'Invalid'
+          @host.authentication_type(:default).status.should == 'Invalid'
         end
 
         it "should queue a raise authentication invalid event when doing authentication_check" do
@@ -376,7 +376,7 @@ describe AuthenticationMixin do
 
         it "should set the ems's authentication as 'Invalid' when doing authentication_check" do
           @ems.authentication_check
-          @ems.authentication_best_fit.status.should == 'Invalid'
+          @ems.authentication_type(:default).status.should == 'Invalid'
         end
 
         it "should queue a raise authentication invalid event when doing authentication_check" do
@@ -398,7 +398,7 @@ describe AuthenticationMixin do
 
         it "should set the host's authentication as 'Valid' when doing authentication_check" do
           @host.authentication_check
-          @host.authentication_best_fit.status.should == 'Valid'
+          @host.authentication_type(:default).status.should == 'Valid'
         end
 
         it "should queue a raise authentication valid event when doing authentication_check" do
@@ -420,7 +420,7 @@ describe AuthenticationMixin do
 
         it "should set the ems's authentication as 'Valid' when doing authentication_check" do
           @ems.authentication_check
-          @ems.authentication_best_fit.status.should == 'Valid'
+          @ems.authentication_type(:default).status.should == 'Valid'
         end
 
         it "should queue a raise authentication valid event when doing authentication_check" do
@@ -442,7 +442,7 @@ describe AuthenticationMixin do
 
         it "should set the host's authentication as 'Unreachable' when doing authentication_check" do
           @host.authentication_check
-          @host.authentication_best_fit.status.should == 'Unreachable'
+          @host.authentication_type(:default).status.should == 'Unreachable'
         end
 
         it "should queue a raise host authentication unreachable event when doing authentication_check" do
@@ -464,7 +464,7 @@ describe AuthenticationMixin do
 
         it "should set the ems's authentication as 'Unreachable' when doing authentication_check" do
           @ems.authentication_check
-          @ems.authentication_best_fit.status.should == 'Unreachable'
+          @ems.authentication_type(:default).status.should == 'Unreachable'
         end
 
         it "should queue a raise ems authentication unreachable event when doing authentication_check" do
@@ -486,7 +486,7 @@ describe AuthenticationMixin do
 
         it "should set the host's authentication as :error when doing authentication_check" do
           @host.authentication_check
-          @host.authentication_best_fit.status.should == 'Invalid'
+          @host.authentication_type(:default).status.should == 'Invalid'
         end
 
         it "should queue a raise host authentication error event when doing authentication_check" do
@@ -508,7 +508,7 @@ describe AuthenticationMixin do
 
         it "should set the ems's authentication as :error when doing authentication_check" do
           @ems.authentication_check
-          @ems.authentication_best_fit.status.should == 'Invalid'
+          @ems.authentication_type(:default).status.should == 'Invalid'
         end
 
         it "should queue a raise ems authentication error event when doing authentication_check" do
@@ -530,7 +530,7 @@ describe AuthenticationMixin do
 
         it "should set the host's authentication as :error when doing authentication_check" do
           @host.authentication_check
-          @host.authentication_best_fit.status.should == 'Error'
+          @host.authentication_type(:default).status.should == 'Error'
         end
 
         it "should queue a raise host authentication error event when doing authentication_check" do
@@ -552,7 +552,7 @@ describe AuthenticationMixin do
 
         it "should set the ems's authentication as :error when doing authentication_check" do
           @ems.authentication_check
-          @ems.authentication_best_fit.status.should == 'Error'
+          @ems.authentication_type(:default).status.should == 'Error'
         end
 
         it "should queue a raise ems authentication error event when doing authentication_check" do

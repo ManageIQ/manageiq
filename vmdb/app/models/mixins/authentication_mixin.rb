@@ -37,11 +37,11 @@ module AuthenticationMixin
   def authentication_valid?(type = nil)
     !!authentication_component(type, :userid)
   end
+  alias :has_credentials? :authentication_valid?
 
   def authentication_invalid?(type = nil)
-    !authentication_component(type, :userid)
+    !authentication_valid?(type)
   end
-  alias :has_credentials? :authentication_valid?
 
   def authentication_status
     ordered_auths = authentication_userid_passwords.sort_by(&:status_severity)
@@ -80,7 +80,7 @@ module AuthenticationMixin
       if value[:userid].blank?
         current[:new] = nil
         next if options[:save] == false
-        self.authentication_delete(type)
+        authentication_delete(type)
         next
       end
 
@@ -102,26 +102,11 @@ module AuthenticationMixin
     @orig_credentials != new_credentials
   end
 
-  def authentication_best_fit(type = nil)
-    # Look for the supplied type and if that is not found return the default credentials
-    authentication_type(type) || authentication_default
-  end
-
-  def authentication_default
-    authentication_type(:default)
-  end
-
   def authentication_type(type)
     return nil if type.nil?
     authentication_userid_passwords.detect do |a|
       a.authentication_type.to_s == type.to_s
     end
-  end
-
-  def authentication_delete(type)
-    a = authentication_type(type)
-    self.authentications.destroy(a) unless a.nil?
-    return a
   end
 
   def authentication_check_types_queue(*args)
@@ -167,7 +152,7 @@ module AuthenticationMixin
     types = args.first
 
     header = "MIQ(#{self.class.name}.authentication_check) type: [#{types.inspect}] for [#{self.id}] [#{self.name}]"
-    auth = self.authentication_best_fit(types)
+    auth = authentication_best_fit(types)
 
     unless self.authentication_valid?(types)
       $log.warn("#{header} Validation failed due to error: [#{Authentication::ERRORS[:incomplete]}]")
@@ -202,6 +187,11 @@ module AuthenticationMixin
 
   private
 
+  def authentication_best_fit(type = nil)
+    # Look for the supplied type and if that is not found return the default credentials
+    authentication_type(type) || authentication_type(:default)
+  end
+
   def authentication_component(type, method)
     cred = authentication_best_fit(type)
     return nil if cred.nil?
@@ -212,5 +202,11 @@ module AuthenticationMixin
 
   def authentication_types
     authentication_userid_passwords.collect(&:authentication_type).uniq
+  end
+
+  def authentication_delete(type)
+    a = authentication_type(type)
+    self.authentications.destroy(a) unless a.nil?
+    return a
   end
 end
