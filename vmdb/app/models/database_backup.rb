@@ -19,9 +19,7 @@ class DatabaseBackup < ActiveRecord::Base
   end
 
   def self.backup(options)
-    bup = self.new
-    MiqRegion.my_region.database_backups << bup
-    bup.backup(options)
+    self.create.backup(options)
   end
 
   def backup(options)
