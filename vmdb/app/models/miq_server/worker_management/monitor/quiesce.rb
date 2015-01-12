@@ -33,6 +33,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     $log.info("#{log_prefix} Stopping all active workers")
 
     @quiesce_started_on = Time.now.utc
+    @worker_monitor_settings ||= {}
     @quiesce_loop_timeout = @worker_monitor_settings[:quiesce_loop_timeout] || 5.minutes
     worker_monitor_poll = (@worker_monitor_settings[:poll] || 1.seconds).to_i_with_method
 
