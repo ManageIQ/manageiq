@@ -828,18 +828,17 @@ function miqBuildCalendar(){
 
     // Create an observer for the date field if the html5 attr is specified
     if (this.getAttribute('data-miq_observe_date')) {
-      new Form.Element.Observer(this.id,
-                                0.5,
-                                function(el, value){
-                                  var parms = $j.parseJSON(el.getAttribute('data-miq_observe_date'));
-                                  var url = parms.url;
-                                  var urlstring = url + '?' + el.id + '=' + el.value; //  tack on the id and value to the URL
-                                  if (el.getAttribute('data-miq_sparkle_on')) {
-                                    miqJqueryRequest(urlstring, {beforeSend: true});
-                                  } else {
-                                    miqJqueryRequest(urlstring);
-                                  }
-                                } );
+      var el = $j(this);
+      cal.attachEvent("onClick", function(){
+        var parms = $j.parseJSON(el.attr('data-miq_observe_date'));
+        var url = parms.url;
+        var urlstring = url + '?' + el.prop('id') + '=' + el.val(); //  tack on the id and value to the URL
+        if (el.attr('data-miq_sparkle_on')) {
+          miqJqueryRequest(urlstring, {beforeSend: true});
+        } else {
+          miqJqueryRequest(urlstring);
+        }
+      });
     }
 
   });
@@ -1010,14 +1009,12 @@ function miqObserveCheckboxes() {
   $j('[data-miq_observe_checkbox]').each(function(index) {
     var parms = $j.parseJSON(this.getAttribute('data-miq_observe_checkbox'));
     var url = parms.url;
-    el = $(this.id);  // Get the prototype object for this element (IE7 workaround)
-    el.stopObserving();
-    new Form.Element.EventObserver(this.id, function(element, value) {
-      var sparkleOn = this.element.getAttribute('data-miq_sparkle_on'); // Grab miq_sparkle settings
-      var sparkleOff = this.element.getAttribute('data-miq_sparkle_off');
+    var el = $j(this);
+    el.unbind('change')
+    el.change(function() {
       miqJqueryRequest(url, {beforeSend: true,
         complete: true,
-        data:element.id + '=' + encodeURIComponent(value),
+        data:this.id + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
         no_encoding: true
       });
     })
