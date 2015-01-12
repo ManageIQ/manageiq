@@ -75,14 +75,14 @@
                   :onFocus => 'miqShowAE_Tree("reconfigure")',
                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
               %td
-              #reconfigure_fqname_div{:style => @edit[:new][:reconfigure_fqname] != "" ? "" : "display:none"}
-                = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Reconfigure Entry Point"),
-                  {:action => 'ae_tree_select_discard', :typ => "reconfigure"},
-                  "data-miq_sparkle_on" => true,
-                  "data-miq_sparkle_off" => true,
-                  "data-confirm" => _("Are you sure you want to remove this Reconfigure Entry Point?"),
-                  :remote => true,
-                  :title => _("Remove this Reconfigure Entry Point"))
+                #reconfigure_fqname_div{:style => @edit[:new][:reconfigure_fqname] != "" ? "" : "display:none"}
+                  = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Reconfigure Entry Point"),
+                    {:action => 'ae_tree_select_discard', :typ => "reconfigure"},
+                    "data-miq_sparkle_on" => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-confirm" => _("Are you sure you want to remove this Reconfigure Entry Point?"),
+                    :remote => true,
+                    :title => _("Remove this Reconfigure Entry Point"))
       %tr
         %td.key{:title => "Retirement Entry Point (NameSpace/Class/Instance)"}
           =_('Retirement Entry Point')
