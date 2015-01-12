@@ -1,13 +1,11 @@
 module AuthenticationMixin
   extend ActiveSupport::Concern
 
-  AUTH_BASE_CLASS    = 'Authentication'
-  AUTH_DEFAULT_CLASS = 'AuthUseridPassword'
-
   included do
     has_many  :authentications, :as => :resource, :dependent => :destroy
 
     virtual_column :authentication_status,  :type => :string
+
     def self.authentication_check_schedule
       zone = MiqServer.my_server.zone
       assoc = self.name.tableize
@@ -16,57 +14,58 @@ module AuthenticationMixin
     end
   end
 
-  def has_authentication_type?(type, class_name=AUTH_DEFAULT_CLASS)
-    authentication_types(class_name).include?(type)
+  def authentication_userid_passwords
+    authentications.select { |a| a.kind_of?(AuthUseridPassword) }
   end
 
-  def authentication_userid(type=nil, class_name=AUTH_DEFAULT_CLASS)
-    authentication_component_or_nil(type, class_name, :userid)
+  def has_authentication_type?(type)
+    authentication_types.include?(type)
   end
 
-  def authentication_password(type=nil, class_name=AUTH_DEFAULT_CLASS)
-    authentication_component_or_nil(type, class_name, :password)
+  def authentication_userid(type = nil)
+    authentication_component(type, :userid)
   end
 
-  def authentication_password_encrypted(type=nil, class_name=AUTH_DEFAULT_CLASS)
-    authentication_component_or_nil(type, class_name, :password_encrypted)
+  def authentication_password(type = nil)
+    authentication_component(type, :password)
   end
 
-  def authentication_valid?(type=nil, class_name=AUTH_DEFAULT_CLASS)
-    !!authentication_component_or_nil(type, class_name, :userid)
+  def authentication_password_encrypted(type = nil)
+    authentication_component(type, :password_encrypted)
   end
 
-  def authentication_invalid?(type=nil, class_name=AUTH_DEFAULT_CLASS)
-    !self.authentication_valid?(type, class_name)
+  def authentication_valid?(type = nil)
+    !!authentication_component(type, :userid)
+  end
+
+  def authentication_invalid?(type = nil)
+    !authentication_component(type, :userid)
   end
   alias :has_credentials? :authentication_valid?
 
-  def authentication_status(class_name=AUTH_DEFAULT_CLASS)
-    ordered_auths = authentications_by_class(class_name).sort_by(&:status_severity)
+  def authentication_status
+    ordered_auths = authentication_userid_passwords.sort_by(&:status_severity)
     ordered_auths.last.try(:status) || "None"
   end
 
-  def auth_user_pwd(type=nil, class_name=AUTH_DEFAULT_CLASS)
-    cred = authentication_best_fit(type, class_name)
-    return nil if cred.blank? || cred.userid.blank?
+  def auth_user_pwd(type = nil)
+    cred = authentication_best_fit(type)
+    return nil if cred.nil? || cred.userid.blank?
     [cred.userid, cred.password]
   end
 
-  #
-  # Only for AuthUseridPassword class authentications.
-  #
   def update_authentication(data, options = {})
     return if data.blank?
 
     options.reverse_merge!({:save => true})
 
-    @orig_credentials ||= self.auth_user_pwd(AUTH_DEFAULT_CLASS) || "none"
+    @orig_credentials ||= self.auth_user_pwd || "none"
 
     # Invoke before callback
     self.before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
 
     data.each_pair do |type, value|
-      cred = self.authentication_type(type, AUTH_DEFAULT_CLASS)
+      cred = self.authentication_type(type)
       current = {:new=>nil, :old => nil}
       current[:new] = {:user=>value[:userid], :password=>value[:password]} unless value[:userid].blank?
       current[:old] = {:user=>cred.userid, :password=>cred.password} if cred
@@ -81,12 +80,12 @@ module AuthenticationMixin
       if value[:userid].blank?
         current[:new] = nil
         next if options[:save] == false
-        self.authentication_delete(type, AUTH_DEFAULT_CLASS)
+        self.authentication_delete(type)
         next
       end
 
       # Update or create
-      cred = self.authentications.build(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s, :type => AUTH_DEFAULT_CLASS) if cred.nil?
+      cred = self.authentications.build(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s, :type => "AuthUseridPassword") if cred.nil?
       cred.userid, cred.password = value[:userid], value[:password]
 
       cred.save if options[:save] && id
@@ -97,50 +96,34 @@ module AuthenticationMixin
     @orig_credentials = nil if options[:save]
   end
 
-  #
-  # Only for AUTH_DEFAULT_CLASS class authentications.
-  #
   def credentials_changed?
-    @orig_credentials ||= self.auth_user_pwd() || "none"
-    new_credentials = self.auth_user_pwd() || "none"
+    @orig_credentials ||= self.auth_user_pwd || "none"
+    new_credentials = self.auth_user_pwd || "none"
     @orig_credentials != new_credentials
   end
 
-  def authentication_best_fit(type=nil, class_name=AUTH_DEFAULT_CLASS)
+  def authentication_best_fit(type = nil)
     # Look for the supplied type and if that is not found return the default credentials
-    cred = authentication_type(type, class_name)
-    cred = authentication_default(class_name) if cred.blank?
-    return nil if cred.blank?
-    return cred
+    authentication_type(type) || authentication_default
   end
-  # protected :authentication_best_fit
 
-  def authentication_default(class_name)
-    cred = self.authentication_type(:default, class_name)
-    return nil if cred.blank?
-    return cred
+  def authentication_default
+    authentication_type(:default)
   end
-  # protected :authentication_default
 
-  def authentication_type(type, class_name=AUTH_DEFAULT_CLASS)
+  def authentication_type(type)
     return nil if type.nil?
-    cred = authentications_by_class(class_name).detect do |a|
+    authentication_userid_passwords.detect do |a|
       a.authentication_type.to_s == type.to_s
     end
-    return nil if cred.blank?
-    return cred
   end
 
-  def authentication_delete(type, class_name)
-    a = authentication_type(type, class_name)
+  def authentication_delete(type)
+    a = authentication_type(type)
     self.authentications.destroy(a) unless a.nil?
     return a
   end
-  # protected :authentication_delete
 
-  #
-  # Only for AUTH_DEFAULT_CLASS class authentications.
-  #
   def authentication_check_types_queue(*args)
     options = args.extract_options!
     types = args.first
@@ -169,9 +152,6 @@ module AuthenticationMixin
     end
   end
 
-  #
-  # Only for AUTH_DEFAULT_CLASS class authentications.
-  #
   def authentication_check_types(*args)
     options = args.extract_options!
     types = args.first
@@ -182,17 +162,14 @@ module AuthenticationMixin
     types.to_miq_a.each { |t| self.authentication_check(t, options)}
   end
 
-  #
-  # Only for AUTH_DEFAULT_CLASS class authentications.
-  #
   def authentication_check(*args)
     options = args.extract_options!
     types = args.first
 
     header = "MIQ(#{self.class.name}.authentication_check) type: [#{types.inspect}] for [#{self.id}] [#{self.name}]"
-    auth = self.authentication_best_fit(types, AUTH_DEFAULT_CLASS)
+    auth = self.authentication_best_fit(types)
 
-    unless self.authentication_valid?(types, AUTH_DEFAULT_CLASS)
+    unless self.authentication_valid?(types)
       $log.warn("#{header} Validation failed due to error: [#{Authentication::ERRORS[:incomplete]}]")
       auth.validation_failed(:incomplete) if auth
       return false
@@ -225,21 +202,15 @@ module AuthenticationMixin
 
   private
 
-  def authentication_component_or_nil(type, class_name, method)
-    cred = authentication_best_fit(type, class_name)
-    return nil if cred.blank?
+  def authentication_component(type, method)
+    cred = authentication_best_fit(type)
+    return nil if cred.nil?
 
     value = cred.public_send(method)
     return value.blank? ? nil : value
   end
 
-  def authentications_by_class(class_name)
-    return authentications if class_name.nil? || class_name == AUTH_BASE_CLASS
-    klass = class_name.constantize
-    authentications.select { |a| a.kind_of?(klass) }
-  end
-
-  def authentication_types(class_name)
-    authentications_by_class(class_name).collect {|a| a.authentication_type}.uniq
+  def authentication_types
+    authentication_userid_passwords.collect(&:authentication_type).uniq
   end
 end
