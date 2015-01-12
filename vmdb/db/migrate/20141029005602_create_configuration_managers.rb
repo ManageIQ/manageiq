@@ -42,19 +42,9 @@ class CreateConfigurationManagers < ActiveRecord::Migration
     add_index :configured_systems, :operating_system_flavor_id
     add_index :configured_systems, [:configuration_manager_id, :type]
     add_index :configured_systems, :manager_ref
-
-    create_table :configured_systems_customization_scripts, :id => false do |t|
-      t.belongs_to :configured_system,    :type => :bigint
-      t.belongs_to :customization_script, :type => :bigint
-    end
-    add_index :configured_systems_customization_scripts, [:configured_system_id, :customization_script_id],
-              :name => :index_on_configured_systems_customization_scripts_i1
-    add_index :configured_systems_customization_scripts, :customization_script_id,
-              :name => :index_on_configured_systems_customization_scripts_i2
   end
 
   def down
-    drop_table :configured_systems_customization_scripts
     drop_table :configured_systems
     drop_table :configuration_profiles_customization_scripts
     drop_table :configuration_profiles
