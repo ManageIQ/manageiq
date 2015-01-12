@@ -1,0 +1,49 @@
+%table{:style => @embedded ? "height: 0px;" : ""}
+  %tr
+    %td{:width => "55%", :valign => "top"}
+      - table.data[@first_item..@last_item].each do |row|
+        - @id = row['id']
+        - if @targets_hash
+          - # Get the record
+          - item = @targets_hash[@id]
+        %table{:style => @temp[:gtl_small_tiles] ? "height: 130px; float:left; padding: 0 0 20px 0;" : ""}
+          %tr
+            %td{:width => "100", :align => "left"}
+              - if @temp[:gtl_small_tiles]
+                - st = "width: 130px; height: 120px; float:left; padding: 0 20px 0 20px;"
+              - else
+                - st = "width: 90px; float: left; padding: 0 5px 0 0;"
+              %div{:style => st}
+                %table
+                  %tr
+                    %td{:valign => "bottom", :width => "5", :style => "padding-top: #{@temp[:gtl_small_tiles] ? 80 : 0}px;"}
+                      - unless @embedded || @no_checkboxes
+                        = check_box_tag("check_#{to_cid(@id)}", 1, false,
+                          :id      => "listcheckbox",
+                          :onclick => "miqUpdateButtons(this, '#{button_div}');")
+                    %td
+                      = render :partial => "layouts/quadicon", :locals  => {:mode => :icon, :item => item}
+                  %tr
+                    %td{:colspan => "2", :style => "padding-top: 0px; margin-top: 0px;"}
+                      = render :partial => "layouts/quadicon", :locals  => {:mode => :text, :row => row, :item => item}
+            %td{:valign => "top"}
+              %table.style3
+                - reset_cycle
+                - (1..4).each do |i|
+                  - if view.headers.length > i
+                    %tr{:class => cycle('row0', 'row1')}
+                      %td{:width => "800", :style => "padding: 2px;"}
+                        %strong
+                          = "#{h(view.headers[i])}: "
+                        - col = view.col_order[i]
+                        - if row[col].kind_of?(Time) && !row[col].nil? && row[col] != ""
+                          = h(format_timezone(row[col], Time.zone, "gtl"))
+                        - else
+                          = h(format_col_for_display(view, row, col))
+                - if @row_button && @temp[:gtl_small_tiles]
+                  %div{:align => "right", :style => "width: inherit;"}
+                    = button_tag("#{@row_button[:image]}",
+                      :class   => "btn btn-primary",
+                      :alt     => @row_button[:title],
+                      :title   => @row_button[:title],
+                      :onclick => "#{@row_button[:function]}('#{@id}');")
