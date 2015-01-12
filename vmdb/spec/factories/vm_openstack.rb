@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :vm_openstack, :class => "VmOpenstack", :parent => :vm_cloud do
-    location        { |x| "[storage] #{x.name}/#{x.name}.vmx" }
     vendor          "openstack"
     raw_power_state "RUNNING"
   end
