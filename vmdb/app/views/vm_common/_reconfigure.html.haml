@@ -10,8 +10,8 @@
           %tr
             %td
               = check_box_tag("cb_memory",
-                value = "1",
-                checked = @edit[:new][:cb_memory],
+                1,
+                @edit[:new][:cb_memory],
                 "data-miq_sparkle_on" => true,
                 "data-miq_sparkle_off" => true,
                 "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -38,8 +38,8 @@
           %tr
             %td
               = check_box_tag("cb_cpu",
-                value = "1",
-                checked = @edit[:new][:cb_cpu],
+                1,
+                @edit[:new][:cb_cpu],
                 "data-miq_sparkle_on" => true,
                 "data-miq_sparkle_off" => true,
                 "data-miq_observe_checkbox" => {:url => url}.to_json)
