@@ -233,7 +233,7 @@ function miqResizeColEnd(grid_obj) {
     if (miq_grid_col_widths != grid_obj.cellWidthPX.join(",")) {
       miq_grid_col_widths = grid_obj.cellWidthPX.join(",");
       var url = '/' + miq_controller + '/save_col_widths/?col_widths=' + miq_grid_col_widths
-      miqJqueryRequest(url, {beforeSend: true, complete: true});
+      miqJqueryRequest(url);
 } } }
 
 // Order a service from the catalog list view

@@ -7,7 +7,7 @@ function cfmeOnClick_RoleFeatureCheck(node) {
   else
     var checked = '1';
   var url = check_url + node.data.key + '?check=' + checked
-  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  miqJqueryRequest(url);
 }
 
 // Expand/collapse all children on double click
@@ -45,7 +45,7 @@ function cfmeOnLazyRead_GetNodeChildren(node, tree, controller) {
         //need to bind hover event to lazy loaded nodes
         cfme_bind_hover_event(tree)
         var url = '/' + controller + '/tree_autoload_quads?id=' + node.data.key
-        miqJqueryRequest(url, {beforeSend: true, complete: true});
+        miqJqueryRequest(url, {beforeSend: true});
       }
     }
   });
@@ -77,7 +77,7 @@ function cfme_bind_hover_event(tree_name) {
 function cfmeOnClick_SelectTreeNode(id) {
   rec_id = id.split('__')
   var url = '/' + miq_controller + '/tree_select/?id=' + rec_id[0];
-  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  miqJqueryRequest(url, {beforeSend: true});
 }
 
 function cfmeOnClick_SelectDlgEditTreeNode(id) {
@@ -111,7 +111,7 @@ function miqOnClick_ProvLdapOus(id) {
   node.expand();
   node._activate(false, true);
   if (id.split('_-_').length > 1) {
-    miqJqueryRequest(click_url + '?ou_id=' + id, {beforeSend: true, complete: true});
+    miqJqueryRequest(click_url + '?ou_id=' + id);
     return true;
   }
 }
@@ -184,7 +184,7 @@ function cfmeOnClick_SelectOptimizeTreeNode(id) {
       rep_id = id.split('__')
       cfmeDynatree_activateNodeSilently(tree, rep_id)
       var url = "/miq_capacity/optimize_tree_select/?id=" + rep_id[0]
-      miqJqueryRequest(url, {beforeSend: true, complete: true});
+      miqJqueryRequest(url, {beforeSend: true});
     }
 }
 
@@ -204,7 +204,7 @@ function cfme_dynatree_toggle_expand(treename, expand_mode){
 function miqOnCheck_Protect(node, treename) {
   ppid = node.data.key.split('_').pop();
   var url = check_url + ppid + '?check=' + (node.isSelected() ? '0' : '1')
-  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  miqJqueryRequest(url);
   return true;
 }
 
@@ -275,7 +275,7 @@ function cfmeOnClick_TimelineSelection(id) {
 // OnCheck handler for the belongs to drift/compare sections tree
 function miqOnCheck_Sections(tree_name, key, checked, all_checked) {
   var url = check_url + '?id=' + key + '&check=' + checked + '&all_checked=' + all_checked
-  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  miqJqueryRequest(url);
   return true;
 }
 
@@ -292,7 +292,7 @@ function cfmeOnClick_SmartProxyAffinityCheck(node) {
     var checked = '0';  // If node was selected, now unchecking
   else
     var checked = '1';
-  miqJqueryRequest(check_url + node.data.key + '?check=' + checked, {beforeSend: true, complete: true});
+  miqJqueryRequest(check_url + node.data.key + '?check=' + checked);
 }
 
 // OnClick handler for Genealogy Tree
@@ -349,7 +349,7 @@ function cfmeCheckAll(cb, treename) {
 
   if (count > 0) {
     var url = check_url + '?check_all=' + cb.checked + '&all_checked=' + selectedKeys
-    miqJqueryRequest(url, {beforeSend: true, complete: true});
+    miqJqueryRequest(url);
   }
   return true;
 }
@@ -411,7 +411,7 @@ function miqCheck_CU_All(cb, treename) {
 // OnCheck handler for the C&U collection trees
 function miqOnCheck_CU_Filters(tree_name, key, checked) {
   var url = check_url + '?id=' + key +'&check=' + checked + '&tree_name=' + tree_name;
-  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  miqJqueryRequest(url);
   return true;
 }
 

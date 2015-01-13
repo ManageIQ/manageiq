@@ -49,7 +49,7 @@ $j(document).ready(function(){
       el.observe_field(interval, function(){
 				var oneTrans = this.getAttribute('data-miq_send_one_trans');	// Grab one trans URL, if present
 				if (typeof submit != "undefined"){										// If submit element passed in
-          miqJqueryRequest(url, {beforeSend: true, complete: true, data: Form.serialize(submit)});
+          miqJqueryRequest(url, {data: Form.serialize(submit)});
 				} else if (oneTrans) {
 					miqSendOneTrans(url);
 				} else {
