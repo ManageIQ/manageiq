@@ -3,77 +3,110 @@ $:.push("#{File.dirname(__FILE__)}/../util")
 
 require 'binary_struct'
 require 'DiskProbe'
+require 'disk_log'
 
 class MiqDisk
+    include DiskLog
+
     attr_accessor :diskType, :dInfo, :blockSize, :pvObj, :fs
-    attr_reader   :lbaStart, :lbaEnd, :startByteAddr, :endByteAddr, :partType, :partNum, :size, :hwId, :logName
+    attr_reader   :lbaStart, :lbaEnd, :startByteAddr, :endByteAddr,
+                  :partType, :partNum, :size, :hwId, :logName
     
     def self.getDisk(dInfo, probes = nil)
-        $log.debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}" if $log
+        debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}"
+
         if (dm = DiskProbe.getDiskMod(dInfo, probes))
             d = self.new(dm, dInfo.clone, 0)
+
             if dInfo.baseOnly
-                $log.debug "MiqDisk::getDisk: baseOnly = true, returning parent: #{d.getBase.dInfo.fileName}" if $log
-                $log.debug "MiqDisk::getDisk: child (current) disk file: #{dInfo.fileName}" if $log
+                debug "MiqDisk::getDisk: baseOnly = true, returning parent: " \
+                      "#{d.getBase.dInfo.fileName}"
+                debug "MiqDisk::getDisk: child (current) disk file: " \
+                      "#{dInfo.fileName}"
                 return d.getBase
-            else
-                $log.debug "MiqDisk::getDisk: baseOnly = false, returning: #{dInfo.fileName}" if $log
             end
+
+            debug "MiqDisk::getDisk: baseOnly = false, returning: " \
+                  "#{dInfo.fileName}"
             return d
         end
-        return(nil)
+
+        return nil
     end
 
     def self.pushFormatSupportForDisk(disk, probes = nil)
         if ((dm = DiskProbe.getDiskModForDisk(disk, probes)))
-        	$log.debug "#{self.name}.pushFormatSupportForDisk: pushing #{dm.name} onto #{disk.logName}"
-            di = disk.dInfo.clone
-            di.downstreamDisk = disk
-            d = self.new(dm, di, 0)
-            disk.dInfo.upstreamDisk = d
-            return d
+          debug "#{self.name}.pushFormatSupportForDisk: pushing " \
+                "#{dm.name} onto #{disk.logName}"
+          di = disk.dInfo.clone
+          di.downstreamDisk = disk
+          d = self.new(dm, di, 0)
+          disk.dInfo.upstreamDisk = d
+          return d
         end
-        $log.debug "#{self.name}.pushFormatSupportForDisk: no module to push for #{disk.logName}"
+
+        debug "#{self.name}.pushFormatSupportForDisk: " \
+              "no module to push for #{disk.logName}"
+
         return disk
     end
+
+    private
+
+    def lba2PartNum(lbaSE)
+      lbaSE.length == 3 ? lbaSE[2] : 0
+    end
+
+    def init_name
+      if dInfo.lvObj
+        @logName = "logical volume: #{dInfo.lvObj.vgObj.vgName}/#{dInfo.lvObj.lvName}"
+      else
+        @logName = "disk file: #{dInfo.fileName}"
+      end
+      @logName << " (partition: #{@partNum})"
+    end
+
+    def extract_lba(lbaSE)
+      case lbaSE.length
+          when 0
+              @lbaStart = 0
+              @lbaEnd   = d_size
+          when 1
+              @lbaStart = lbaSE[0]
+              @lbaEnd   = d_size
+          else
+              @lbaStart = lbaSE[0]
+              @lbaEnd   = lbaSE[1] + @lbaStart # lbaSE[1] is the partiton size in sectors
+      end
+    end
+
+    def calc_boundries
+      @startByteAddr = @lbaStart * @blockSize
+      @endByteAddr   = @lbaEnd * @blockSize
+      @size          = @endByteAddr - @startByteAddr
+      @seekPos       = @startByteAddr
+    end
+
+
+    public
     
     def initialize(dm, dInfo, pType, *lbaSE)
         extend(dm) unless dm.nil?
-        @dModule	= dm
-        @dInfo		= dInfo
-        @partType	= pType
-        @partNum	= lbaSE.length == 3 ? lbaSE[2] : 0
-        @partitions	= nil
-        @pvObj		= nil
-        @fs			= nil		# the filesystem that resides on this disk
+        @dModule    = dm
+        @dInfo      = dInfo
+        @partType   = pType
+        @partNum    = lba2PartNum(lbaSE)
+        @partitions = nil
+        @pvObj      = nil
+        @fs         = nil   # the filesystem that resides on this disk
+        init_name
 
-        if dInfo.lvObj
-        	@logName = "logical volume: #{dInfo.lvObj.vgObj.vgName}/#{dInfo.lvObj.lvName}"
-        else
-        	@logName = "disk file: #{dInfo.fileName}"
-        end
-        @logName << " (partition: #{@partNum})"
-		$log.debug "MiqDisk<#{self.object_id}> initialize, #{@logName}"
+        $log.debug "MiqDisk<#{self.object_id}> initialize, #{@logName}"
 
         d_init()
+        extract_lba(lbaSE)
+        calc_boundries
         
-        case lbaSE.length
-            when 0
-                @lbaStart = 0
-                @lbaEnd = d_size
-            when 1
-                @lbaStart = lbaSE[0]
-                @lbaEnd = d_size
-            else
-                @lbaStart = lbaSE[0]
-                @lbaEnd = lbaSE[1] + @lbaStart # lbaSE[1] is the partiton size in sectors
-        end
-        
-        @startByteAddr = @lbaStart * @blockSize
-        @endByteAddr = @lbaEnd * @blockSize
-        @size = @endByteAddr - @startByteAddr
-        @seekPos = @startByteAddr
-
         @dInfo.diskSig ||= getDiskSig if @partNum == 0 && !@dInfo.baseOnly
         @hwId = "#{@dInfo.hardwareId}:#{@partNum}" if @dInfo.hardwareId
     end
@@ -110,17 +143,17 @@ class MiqDisk
     def read(len)
         rb = d_read(@seekPos, len)
         @seekPos += rb.length unless rb.nil?
-        return(rb)
+        return rb
     end
     
     def write(buf, len)
         nbytes = d_write(@seekPos, buf, len)
         @seekPos += nbytes
-        return(nbytes)
+        return nbytes
     end
     
     def close
-        $log.debug "MiqDisk<#{self.object_id}> close, #{@logName}" if $log
+        debug "MiqDisk<#{self.object_id}> close, #{@logName}"
         @partitions.each { |p| p.close } if @partitions
         @partitions = nil
         d_close
@@ -128,10 +161,10 @@ class MiqDisk
     
     private
     
-    MBR_SIZE = 512
-    DOS_SIG  = "55aa"
+    MBR_SIZE        = 512
+    DOS_SIG         = "55aa"
     DISK_SIG_OFFSET = 0x1B8
-    DISK_SIG_SIZE = 4
+    DISK_SIG_SIZE   = 4
     
     def getDiskSig
         sp = seekPos
@@ -144,12 +177,14 @@ class MiqDisk
     def discoverPartitions
         return @partitions unless @partitions.nil?
 
-        $log.debug "MiqDisk<#{self.object_id}> discoverPartitions, disk file: #{@dInfo.fileName}" if $log
+        debug "MiqDisk<#{self.object_id}> discoverPartitions, " \
+              "disk file: #{@dInfo.fileName}"
         seek(0, IO::SEEK_SET)
         mbr = read(MBR_SIZE)
         
         if mbr.length < MBR_SIZE
-            $log.info "MiqDisk<#{self.object_id}> discoverPartitions, disk file: #{@dInfo.fileName} does not contain a master boot record"
+            info "MiqDisk<#{self.object_id}> discoverPartitions, " \
+                 "disk file: #{@dInfo.fileName} does not contain a master boot record"
             return @partitions = Array.new
         end
         
@@ -171,15 +206,17 @@ class MiqDisk
         'L', :startLBA,
         'L', :partSize
     ])
-    PTE_LEN = DOS_PARTITION_ENTRY.size
-    
-    DOS_PT_START = 446
-    DOS_NPTE = 4
-    PTYPE_EXT_CHS	= 0x05
-    PTYPE_EXT_LBA	= 0x0f
-	PTYPE_LDM		= 0x42
+
+    PTE_LEN       = DOS_PARTITION_ENTRY.size
+    DOS_PT_START  = 446
+    DOS_NPTE      = 4
+    PTYPE_EXT_CHS = 0x05
+    PTYPE_EXT_LBA = 0x0f
+    PTYPE_LDM     = 0x42
     
     def discoverDosPriPartitions(mbr)
+        require 'MiqPartition'
+
         pte = DOS_PT_START
         @partitions = Array.new
         (1..DOS_NPTE).each do |n|
@@ -187,25 +224,27 @@ class MiqDisk
             pte += PTE_LEN
             ptype = ptEntry[:ptype]
 
-			#
-			# If this os an LDM (dynamic) disk, then ignore any partitions.
-			#
-			if ptype == PTYPE_LDM
-				$log.debug "MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk"
-				@partType = PTYPE_LDM
-				return([])
-			end
-			
-            if ptype == PTYPE_EXT_CHS || ptype == PTYPE_EXT_LBA
-                @partitions.concat(discoverDosExtPartitions(ptEntry[:startLBA], ptEntry[:startLBA], DOS_NPTE+1))
+            #
+            # If this os an LDM (dynamic) disk, then ignore any partitions.
+            #
+            if ptype == PTYPE_LDM
+              debug "MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk"
+              @partType = PTYPE_LDM
+              return([])
+      
+            elsif ptype == PTYPE_EXT_CHS || ptype == PTYPE_EXT_LBA
+                @partitions.concat(discoverDosExtPartitions(ptEntry[:startLBA],
+                                                            ptEntry[:startLBA],
+                                                            DOS_NPTE+1))
                 next
             end
-            @partitions.push(MiqPartition.new(self, ptype, ptEntry[:startLBA], ptEntry[:partSize], n)) if ptype != 0
+            @partitions.push(MiqPartition.new(self, ptype,
+                                              ptEntry[:startLBA],
+                                              ptEntry[:partSize], n)) if ptype != 0
         end
-        return(@partitions)
+        return @partitions
     end
     
-    #
     # Discover secondary file system partitions within a primary extended partition.
     #
     # priBaseLBA is the LBA of the primary extended partition.
@@ -213,58 +252,27 @@ class MiqDisk
     #
     # ptBaseLBA is the LBA of the partition table within the current extended partition.
     #     All pointers to secondary file system partitions are relative to this base.
-    #
     def discoverDosExtPartitions(priBaseLBA, ptBaseLBA, pNum)
         ra = Array.new
         seek(ptBaseLBA * @blockSize, IO::SEEK_SET)
         mbr = read(MBR_SIZE)
         
-        #
         # Create and add disk object for secondary file system partition.
         # NOTE: the start of the partition is relative to ptBaseLBA.
-        #
         pte = DOS_PT_START
         ptEntry = DOS_PARTITION_ENTRY.decode(mbr[pte, PTE_LEN])
-        ra << MiqPartition.new(self, ptEntry[:ptype], ptEntry[:startLBA] + ptBaseLBA, ptEntry[:partSize], pNum) if ptEntry[:ptype] != 0
+        ra << MiqPartition.new(self, ptEntry[:ptype],
+                                     ptEntry[:startLBA] + ptBaseLBA,
+                                     ptEntry[:partSize], pNum) if ptEntry[:ptype] != 0
         
-        #
         # Follow the chain to the next secondary extended partition.
         # NOTE: the start of the partition is relative to priBaseLBA.
-        #
         pte += PTE_LEN
         ptEntry = DOS_PARTITION_ENTRY.decode(mbr[pte, PTE_LEN])
-        ra.concat(discoverDosExtPartitions(priBaseLBA, ptEntry[:startLBA] + priBaseLBA, pNum+1)) if ptEntry[:startLBA] != 0
+        ra.concat(discoverDosExtPartitions(priBaseLBA,
+                                           ptEntry[:startLBA] + priBaseLBA,
+                                           pNum+1)) if ptEntry[:startLBA] != 0
         
         return ra
     end
-end
-
-class MiqPartition < MiqDisk
-
-    def initialize(baseDisk, pType, lbaStart, lbaEnd, partNum)
-        @baseDisk = baseDisk
-        $log.debug "MiqPartition<#{self.object_id}> initialize partition for: #{@baseDisk.dInfo.fileName}" if $log
-        super(nil, baseDisk.dInfo.clone, pType, lbaStart, lbaEnd, partNum)
-    end
-
-    def d_init
-        $log.debug "MiqPartition<#{self.object_id}> d_init called"
-        @blockSize = @baseDisk.blockSize
-    end
-
-    def d_read(pos, len)
-        @baseDisk.d_read(pos, len)
-    end
-
-    def d_write(pos, buf, len)
-        @baseDisk.d_write(pos, buf, len)
-    end
-
-    def d_size
-        raise "MiqPartition: d_size should not be called for partition"
-    end
-
-    def d_close
-    end
-
 end
