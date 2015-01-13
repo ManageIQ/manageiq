@@ -484,9 +484,10 @@
   :tasks:
     :description: Request Tasks
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834086080
-    :klass: MiqRequestTask
+    :klass: MiqTask
   :templates:
     :description: Templates
     :options:
@@ -552,7 +553,7 @@
     :description: Virtual Machines
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: Vm
     :subcollections:
     - :tags
@@ -563,46 +564,64 @@
       :post:
       - :name: add
         :identifier: vm_miq_request_new
+        :disabled: true
       - :name: edit
         :identifier: vm_edit
+        :disabled: true
       - :name: refresh
         :identifier: vm_refresh
+        :disabled: true
       - :name: shutdown
         :identifier: vm_guest_shutdown
+        :disabled: true
       - :name: restart
         :identifier: vm_guest_restart
-      - :name: poweron
+        :disabled: true
+      - :name: start
         :identifier: vm_start
       - :name: poweroff
         :identifier: vm_stop
+        :disabled: true
       - :name: suspend
         :identifier: vm_suspend
+        :disabled: true
       - :name: reset
         :identifier: vm_reset
+        :disabled: true
       - :name: retire
         :identifier: vm_retire
+        :disabled: true
       - :name: delete
         :identifier: vm_delete
+        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
         :identifier: vm_edit
+        :disabled: true
       - :name: refresh
         :identifier: vm_refresh
+        :disabled: true
       - :name: shutdown
         :identifier: vm_guest_shutdown
+        :disabled: true
       - :name: restart
         :identifier: vm_guest_restart
-      - :name: poweron
+        :disabled: true
+      - :name: start
         :identifier: vm_start
       - :name: poweroff
         :identifier: vm_stop
+        :disabled: true
       - :name: suspend
         :identifier: vm_suspend
+        :disabled: true
       - :name: reset
         :identifier: vm_reset
+        :disabled: true
       - :name: retire
         :identifier: vm_retire
+        :disabled: true
       :delete:
       - :name: delete
         :identifier: vm_delete

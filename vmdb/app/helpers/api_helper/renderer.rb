@@ -265,7 +265,7 @@ module ApiHelper
       cspec[target].each.collect do |method, action_definitions|
         if cspec[:methods].include?(method)
           action_definitions.each.collect do |action|
-            if api_user_role_allows?(action[:identifier])
+            if !action[:disabled] && api_user_role_allows?(action[:identifier])
               {"name" => action[:name], "method" => method, "href" => (href ? href : collection)}
             end
           end
@@ -279,7 +279,7 @@ module ApiHelper
       cspec[target].each.collect do |method, action_definitions|
         if cspec[:methods].include?(method)
           action_definitions.each.collect do |action|
-            if api_user_role_allows?(action[:identifier])
+            if !action[:disabled] && api_user_role_allows?(action[:identifier])
               {"name" => action[:name], "method" => method, "href" => href}
             end
           end

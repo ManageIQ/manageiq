@@ -90,7 +90,7 @@ class ApiController
 
     def get_and_update_one_collection(is_subcollection, target, type, id)
       resource = json_body_resource
-      update_one_collection(is_subcollection, target, type, id, resource) unless resource.blank?
+      update_one_collection(is_subcollection, target, type, id, resource)
     end
 
     def get_and_update_multiple_collections(is_subcollection, target, type)

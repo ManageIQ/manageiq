@@ -26,21 +26,24 @@ class ApiController < ApplicationController
   #
   include_concern 'Parser'
   include_concern 'Manager'
+  include_concern 'Action'
 
   #
   # Support for API Collections
   #
   include_concern 'Entrypoint'
-  include_concern 'Authentication'
   include_concern 'Generic'
+
   include_concern 'Accounts'
-  include_concern 'ServiceTemplates'
-  include_concern 'Tags'
-  include_concern 'ProvisionRequests'
+  include_concern 'Authentication'
   include_concern 'AutomationRequests'
+  include_concern 'ProvisionRequests'
   include_concern 'RequestTasks'
   include_concern 'ServiceRequests'
   include_concern 'Software'
+  include_concern 'ServiceTemplates'
+  include_concern 'Tags'
+  include_concern 'Vms'
 
   #
   # Api Controller Hooks

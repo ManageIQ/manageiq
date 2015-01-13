@@ -6,6 +6,7 @@ module ApiHelper
   include_concern 'ErrorHandler'
   include_concern 'Normalizer'
   include_concern 'Renderer'
+  include_concern 'Results'
 
   def paginate_params?
     params['offset'] || params['limit']
