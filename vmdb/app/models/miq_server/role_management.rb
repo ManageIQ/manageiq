@@ -259,9 +259,9 @@ module MiqServer::RoleManagement
   def monitor_server_roles
     MiqRegion.my_region.lock do |region|
       region.zones.each do |zone|
-        synchronize_active_roles(zone.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.zone_scoped_roles)
+        synchronize_active_roles(zone.active_miq_servers(:include => [:active_roles, :inactive_roles]), ServerRole.zone_scoped_roles)
       end
-      synchronize_active_roles(region.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.region_scoped_roles)
+      synchronize_active_roles(region.active_miq_servers(:include => [:active_roles, :inactive_roles]), ServerRole.region_scoped_roles)
     end
   end
 
