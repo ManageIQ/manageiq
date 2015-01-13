@@ -110,7 +110,7 @@ describe DialogFieldRadioButton do
         context "when the dialog field is dynamic" do
           before do
             dialog_field_radio_button.dynamic = true
-            dialog_field_radio_button.default_value = [["test", 321]]
+            dialog_field_radio_button.default_value = "test"
             dialog_field_radio_button.initialize_with_values("lolvalues")
           end
 
@@ -122,7 +122,7 @@ describe DialogFieldRadioButton do
           end
 
           it "sets value from default value attribute" do
-            expect(dialog_field_radio_button.instance_variable_get(:@value)).to eq([["test", 321]])
+            expect(dialog_field_radio_button.instance_variable_get(:@value)).to eq("test")
           end
         end
 
