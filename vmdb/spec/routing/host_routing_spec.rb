@@ -7,6 +7,7 @@ describe "routes for HostController" do
   it_behaves_like "A controller that has advanced search routes"
   it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
+  it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like "A controller that has download_data routes"
   it_behaves_like "A controller that has show list routes"
   it_behaves_like "A controller that has tagging routes"
@@ -106,18 +107,6 @@ describe "routes for HostController" do
   describe "#drift_to_txt" do
     it "routes with GET" do
       expect(get("/host/drift_to_txt")).to route_to("host#drift_to_txt")
-    end
-  end
-
-  describe "#dynamic_list_refresh" do
-    it "routes with POST" do
-      expect(post("/host/dynamic_list_refresh")).to route_to("host#dynamic_list_refresh")
-    end
-  end
-
-  describe "#dynamic_radio_button_refresh" do
-    it "routes with POST" do
-      expect(post("/host/dynamic_radio_button_refresh")).to route_to("host#dynamic_radio_button_refresh")
     end
   end
 

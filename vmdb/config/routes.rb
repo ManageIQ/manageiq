@@ -178,6 +178,7 @@ Vmdb::Application.routes.draw do
         dialog_form_button_pressed
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         explorer
         get_ae_tree_edit_key
         group_create
@@ -347,6 +348,7 @@ Vmdb::Application.routes.draw do
         create
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         form_field_changed
         listnav_search_selected
         panel_control
@@ -387,6 +389,7 @@ Vmdb::Application.routes.draw do
         button
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         listnav_search_selected
         panel_control
         protect
@@ -517,6 +520,7 @@ Vmdb::Application.routes.draw do
         drift_same
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         filesystems
         firewall_rules
         firewallrules
@@ -797,6 +801,7 @@ Vmdb::Application.routes.draw do
         dialog_field_changed
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         post_install_callback
         pre_prov
         prov_button
@@ -1255,6 +1260,7 @@ Vmdb::Application.routes.draw do
         dialog_form_button_pressed
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         explorer
         ownership_field_changed
         ownership_update
@@ -1301,6 +1307,7 @@ Vmdb::Application.routes.draw do
         button
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         files
         listnav_search_selected
         panel_control
@@ -1403,6 +1410,7 @@ Vmdb::Application.routes.draw do
         dialog_field_changed
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         edit_vm
         event_logs
         explorer
@@ -1476,6 +1484,7 @@ Vmdb::Application.routes.draw do
         dialog_form_button_pressed
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         edit_vm
         event_logs
         explorer
@@ -1569,6 +1578,7 @@ Vmdb::Application.routes.draw do
         drift_same
         dynamic_list_refresh
         dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         edit_vm
         event_logs
         explorer

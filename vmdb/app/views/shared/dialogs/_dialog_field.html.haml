@@ -12,18 +12,37 @@
       - when 'DialogFieldTextBox'
         - if edit
           - if field.protected?
-            = password_field_tag(field.name + "__protected", wf.value(field.name),
+            = password_field_tag(field.name + "__protected", field.values,
                                  :maxlength         => 50,
+                                 :class             => "dynamic-text-box-#{field.id}",
                                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - else
-            = text_field_tag(field.name, wf.value(field.name),
+            = text_field_tag(field.name, field.values,
                              :maxlength         => 50,
+                             :class             => "dynamic-text-box-#{field.id}",
                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+
+          - if field.dynamic && field.show_refresh_button?
+            = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
+
+            :javascript
+              $j('#refresh-dynamic-text-field-#{field.id}').click(function() {
+                miqSparkleOn();
+
+                var fieldId = "#{field.id}";
+                var fieldName = "#{field.name}";
+
+                $j.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
+                  $j('.dynamic-text-box-' + fieldId).val(data.values);
+                  miqSparkleOff();
+                });
+              });
+
         - else
           - if field.protected?
             ********
           - else
-            = h(wf.value(field.name))
+            = h(field.values)
 
       - when 'DialogFieldTextAreaBox'
         - if edit
