@@ -11,7 +11,7 @@ class DynamicDialogFieldValueProcessor
     )
     process_automate_values(dialog_field, workspace.root.attributes)
   rescue
-    [[nil, "<Script error>"]]
+    dialog_field.script_error_values
   end
 
   private
@@ -21,11 +21,6 @@ class DynamicDialogFieldValueProcessor
       dialog_field.send("#{key}=", workspace_attributes[key]) if workspace_attributes.key?(key)
     end
 
-    normalize_automate_values(dialog_field, workspace_attributes["values"])
-  end
-
-  def normalize_automate_values(dialog_field, ae_values)
-    result = ae_values.to_a
-    result.blank? ? dialog_field.initial_values : result
+    dialog_field.normalize_automate_values(workspace_attributes["values"])
   end
 end
