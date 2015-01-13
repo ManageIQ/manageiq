@@ -4,6 +4,7 @@ class OperatingSystem < ActiveRecord::Base
   belongs_to :vm_or_template
   belongs_to :vm,           :foreign_key => :vm_or_template_id
   belongs_to :miq_template, :foreign_key => :vm_or_template_id
+  belongs_to :computer_system
   has_many   :processes, :class_name => 'OsProcess', :dependent => :destroy
   has_many   :event_logs, :dependent => :destroy
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy

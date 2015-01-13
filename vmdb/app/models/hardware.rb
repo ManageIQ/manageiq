@@ -3,6 +3,7 @@ class Hardware < ActiveRecord::Base
   belongs_to  :vm,            :foreign_key => :vm_or_template_id
   belongs_to  :miq_template,  :foreign_key => :vm_or_template_id
   belongs_to  :host
+  belongs_to  :computer_system
 
   has_many    :networks, :dependent => :destroy
 
