@@ -69,7 +69,6 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_storages_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
     log_header = "MIQ(#{self.name}.save_storages_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -100,7 +99,6 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_hosts_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
     log_header = "MIQ(#{self.name}.save_hosts_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -215,7 +213,6 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_ems_folders_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.ems_folders(true)
@@ -230,7 +227,6 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_ems_clusters_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.ems_clusters(true)
@@ -245,7 +241,6 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_resource_pools_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.resource_pools(true)
@@ -262,25 +257,21 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_customization_specs_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     deletes = ems.customization_specs(true).dup
     self.save_inventory_multi(:customization_specs, CustomizationSpec, ems, hashes, deletes, :name)
   end
 
   def save_miq_scsi_targets_inventory(guest_device, hashes)
-    return if hashes.nil?
     deletes = guest_device.miq_scsi_targets(true).dup
     self.save_inventory_multi(:miq_scsi_targets, MiqScsiTarget, guest_device, hashes, deletes, :uid_ems, :miq_scsi_luns)
   end
 
   def save_miq_scsi_luns_inventory(miq_scsi_target, hashes)
-    return if hashes.nil?
     deletes = miq_scsi_target.miq_scsi_luns(true).dup
     self.save_inventory_multi(:miq_scsi_luns, MiqScsiLun, miq_scsi_target, hashes, deletes, :uid_ems)
   end
 
   def save_switches_inventory(host, hashes)
-    return if hashes.nil?
     deletes = host.switches(true).dup
     self.save_inventory_multi(:switches, Switch, host, hashes, deletes, :uid_ems, :lans)
 
@@ -300,13 +291,11 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_lans_inventory(switch, hashes)
-    return if hashes.nil?
     deletes = switch.lans(true).dup
     self.save_inventory_multi(:lans, Lan, switch, hashes, deletes, :uid_ems)
   end
 
   def save_storage_files_inventory(storage, hashes)
-    return if hashes.nil?
     deletes = storage.storage_files(true).dup
     self.save_inventory_multi(:storage_files, StorageFile, storage, hashes, deletes, :name)
   end

@@ -64,7 +64,7 @@ module EmsRefresh::SaveInventoryCloud
 
     # Save and link other subsections
     child_keys.each do |k|
-      self.send("save_#{k}_inventory", ems, hashes[k], target)
+      self.send("save_#{k}_inventory", ems, hashes[k], target) if hashes.key?(k)
     end
 
     link_volumes_to_base_snapshots(hashes[:cloud_volumes])
@@ -78,7 +78,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_flavors_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.flavors(true)
@@ -93,7 +92,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_availability_zones_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.availability_zones(true)
@@ -108,7 +106,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_tenants_inventory(ems, hashes, target = nil)
-    return unless hashes
     target ||= ems
 
     ems.cloud_tenants(true)
@@ -123,7 +120,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_resource_quotas_inventory(ems, hashes, target = nil)
-    return unless hashes
     target ||= ems
 
     ems.cloud_resource_quotas(true)
@@ -142,7 +138,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_key_pairs_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.key_pairs(true)
@@ -158,7 +153,6 @@ module EmsRefresh::SaveInventoryCloud
 
 
   def save_cloud_networks_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.cloud_networks(true)
@@ -185,7 +179,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_subnets_inventory(cloud_network, hashes)
-    return if hashes.nil?
     deletes = cloud_network.cloud_subnets(true).dup
 
     hashes.each do |h|
@@ -199,7 +192,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_security_groups_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.security_groups(true)
@@ -236,7 +228,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_floating_ips_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.floating_ips(true)
@@ -257,8 +248,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_orchestration_templates_inventory(_ems, hashes, _target = nil)
-    return if hashes.nil?
-
     # cloud_stack_template does not belong to an ems;
     # only to create new if necessary, but not to update existing template
     templates = OrchestrationTemplate.find_or_create_by_contents(hashes)
@@ -266,7 +255,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_orchestration_stacks_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.orchestration_stacks(true)
@@ -301,7 +289,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_parameters_inventory(orchestration_stack, hashes)
-    return if hashes.nil?
     deletes = orchestration_stack.parameters(true).dup
 
     save_inventory_multi(:parameters,
@@ -313,7 +300,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_outputs_inventory(orchestration_stack, hashes)
-    return if hashes.nil?
     deletes = orchestration_stack.outputs(true).dup
 
     save_inventory_multi(:outputs,
@@ -325,7 +311,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_resources_inventory(orchestration_stack, hashes)
-    return if hashes.nil?
     deletes = orchestration_stack.resources(true).dup
 
     save_inventory_multi(:resources,
@@ -337,7 +322,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_volumes_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.cloud_volumes(true)
@@ -359,7 +343,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.cloud_volume_snapshots(true)
@@ -392,7 +375,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_object_store_containers_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.cloud_object_store_containers(true)
@@ -412,7 +394,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def save_cloud_object_store_objects_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?
 
     ems.cloud_object_store_objects(true)
