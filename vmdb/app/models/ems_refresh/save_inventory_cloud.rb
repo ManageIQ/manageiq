@@ -67,7 +67,7 @@ module EmsRefresh::SaveInventoryCloud
       self.send("save_#{k}_inventory", ems, hashes[k], target)
     end
 
-    link_volumes_to_base_snapshots(hashes[:cloud_volumes])
+    link_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
 
     ems.save!
     hashes[:id] = ems.id
@@ -380,7 +380,6 @@ module EmsRefresh::SaveInventoryCloud
   end
 
   def link_volumes_to_base_snapshots(hashes)
-    return if hashes.nil?
     base_snapshot_to_volume = hashes.each_with_object({}) do |h, bsh|
       next unless (base_snapshot = h[:base_snapshot])
       (bsh[base_snapshot[:id]] ||= []) << h[:id]
