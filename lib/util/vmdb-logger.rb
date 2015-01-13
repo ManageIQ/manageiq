@@ -14,9 +14,7 @@ class VMDBLogger < Logger
     @formatter = Formatter.new
   end
 
-  # Override various Logger methods with support for msgnum
-
-  def add(severity, message = nil, progname = nil, msgnum = nil)
+  def add(severity, message = nil, progname = nil)
     severity ||= UNKNOWN
     if @logdev.nil? or severity < @level
       return true
@@ -30,33 +28,33 @@ class VMDBLogger < Logger
         progname = @progname
       end
     end
-    @logdev.write(format_message(format_severity(severity), Time.now.utc, progname, message, msgnum))
+    @logdev.write(format_message(format_severity(severity), Time.now.utc, progname, message))
     true
   end
   alias log add
 
-  def debug(progname = nil, msgnum = nil, &block)
-    add(DEBUG, nil, progname, msgnum, &block)
+  def debug(progname = nil, &block)
+    add(DEBUG, nil, progname, &block)
   end
 
-  def info(progname = nil, msgnum = nil, &block)
-    add(INFO, nil, progname, msgnum, &block)
+  def info(progname = nil, &block)
+    add(INFO, nil, progname, &block)
   end
 
-  def warn(progname = nil, msgnum = nil, &block)
-    add(WARN, nil, progname, msgnum, &block)
+  def warn(progname = nil, &block)
+    add(WARN, nil, progname, &block)
   end
 
-  def error(progname = nil, msgnum = nil, &block)
-    add(ERROR, nil, progname, msgnum, &block)
+  def error(progname = nil, &block)
+    add(ERROR, nil, progname, &block)
   end
 
-  def fatal(progname = nil, msgnum = nil, &block)
-    add(FATAL, nil, progname, msgnum, &block)
+  def fatal(progname = nil, &block)
+    add(FATAL, nil, progname, &block)
   end
 
-  def unknown(progname = nil, msgnum = nil, &block)
-    add(UNKNOWN, nil, progname, msgnum, &block)
+  def unknown(progname = nil, &block)
+    add(UNKNOWN, nil, progname, &block)
   end
 
   def logdev
@@ -173,14 +171,14 @@ class VMDBLogger < Logger
 
   private
 
-  def format_message(severity, datetime, progname, msg, msgnum)
-    @formatter.call(severity, datetime, progname, msg, msgnum)
+  def format_message(severity, datetime, progname, msg)
+    @formatter.call(severity, datetime, progname, msg)
   end
 
   class Formatter < Logger::Formatter
-    Format = "[%s] %s, [%s#%d:%x] %5s -- %s: %s\n"
+    Format = "[----] %s, [%s#%d:%x] %5s -- %s: %s\n"
 
-    def call(severity, time, progname, msg, msgnum)
+    def call(severity, time, progname, msg)
       msg = msg2str(msg)
 
       # Add task id to the message if a task is currently being worked on.
@@ -189,7 +187,7 @@ class VMDBLogger < Logger
         msg = "#{prefix} #{msg}" unless msg.include?(prefix)
       end
 
-      Format % [msgnum || "----", severity[0..0], format_datetime(time), $$, Thread.current.object_id, severity, progname, msg]
+      Format % [severity[0..0], format_datetime(time), $$, Thread.current.object_id, severity, progname, msg]
     end
   end
 end
