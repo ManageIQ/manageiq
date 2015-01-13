@@ -53,8 +53,7 @@ module EmsRefresh::SaveInventoryInfra
 
     # Save and link other subsections
     child_keys.each do |k|
-      meth = [:folders, :clusters].include?(k) ? "ems_#{k}" : k
-      self.send("save_#{meth}_inventory", ems, hashes[k], target)
+      send("save_#{k}_inventory", ems, hashes[k], target) if hashes.key?(k)
     end
 
     ems.save!
@@ -214,7 +213,7 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
-  def save_ems_folders_inventory(ems, hashes, target = nil)
+  def save_folders_inventory(ems, hashes, target = nil)
     return if hashes.nil?
     target = ems if target.nil?
 
@@ -228,8 +227,9 @@ module EmsRefresh::SaveInventoryInfra
     self.save_inventory_multi(:ems_folders, EmsFolder, ems, hashes, deletes, :uid_ems, nil, :ems_children)
     self.store_ids_for_new_records(ems.ems_folders, hashes, :uid_ems)
   end
+  alias_method :save_ems_folders_inventory, :save_folders_inventory
 
-  def save_ems_clusters_inventory(ems, hashes, target = nil)
+  def save_clusters_inventory(ems, hashes, target = nil)
     return if hashes.nil?
     target = ems if target.nil?
 
@@ -243,6 +243,7 @@ module EmsRefresh::SaveInventoryInfra
     self.save_inventory_multi(:ems_clusters, EmsCluster, ems, hashes, deletes, :uid_ems, nil, :ems_children)
     self.store_ids_for_new_records(ems.ems_clusters, hashes, :uid_ems)
   end
+  alias_method :save_ems_clusters_inventory, :save_clusters_inventory
 
   def save_resource_pools_inventory(ems, hashes, target = nil)
     return if hashes.nil?
