@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe DialogFieldTextBox do
-
   context "dialog field text box without options hash" do
     before(:each) do
       @df = FactoryGirl.create(:dialog_field_text_box, :label => 'test field', :name => 'test field')
@@ -100,4 +99,76 @@ describe DialogFieldTextBox do
     end
   end
 
+  describe "#refresh_button_pressed" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+
+    context "when the dialog field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+
+        dialog_field.default_value = "some value"
+      end
+
+      it "resets default value to nil" do
+        dialog_field.refresh_button_pressed
+        expect(dialog_field.default_value).to be_nil
+      end
+
+      it "returns the values from the value processor" do
+        expect(dialog_field.refresh_button_pressed).to eq("processor")
+      end
+    end
+
+    context "when the dialog field is not dynamic" do
+      let(:dynamic) { false }
+
+      before do
+        dialog_field.default_value = "some value"
+        dialog_field.update_values("test")
+      end
+
+      it "resets default value to nil" do
+        dialog_field.refresh_button_pressed
+        expect(dialog_field.default_value).to be_nil
+      end
+
+      it "returns the current values" do
+        expect(dialog_field.refresh_button_pressed).to eq("test")
+      end
+    end
+  end
+
+  describe "#value" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => "test") }
+
+    context "when the dialog field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+      end
+
+      it "returns the values from the value processor" do
+        expect(dialog_field.value).to eq("processor")
+      end
+    end
+
+    context "when the dialog field is not dynamic" do
+      let(:dynamic) { false }
+
+      it "returns the current value" do
+        expect(dialog_field.value).to eq("test")
+      end
+    end
+  end
+
+  describe "#script_error_values" do
+    let(:dialog_field) { described_class.new }
+
+    it "returns the script error values" do
+      expect(dialog_field.script_error_values).to eq("<Script error>")
+    end
+  end
 end

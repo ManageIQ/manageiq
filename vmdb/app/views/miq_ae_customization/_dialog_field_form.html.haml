@@ -36,7 +36,7 @@
             &nbsp;
             =_('Only 1 Date or Date/Time element can be present in a Dialog')
 
-      - if @edit[:field_typ] == "DialogFieldRadioButton"
+      - if %w(DialogFieldRadioButton DialogFieldTextBox).include?(@edit[:field_typ])
         %tr
           %td.key=_('Dynamic')
           %td
@@ -46,7 +46,28 @@
     %fieldset
       %p.legend=_('Options')
       %table.style1
-        - if @edit[:field_typ] =~ /Text|Check/
+        - if 'DialogFieldDynamicList' == @edit[:field_typ] || @edit[:field_dynamic] == true
+          %tr
+            %td.key=_('Entry Point (NS/Cls/Inst)')
+            %td.wide
+              = text_field_tag('field_entry_point',
+                @edit[:field_entry_point],
+                :onFocus => 'miqShowAE_Tree("field_entry_point");')
+          %tr
+            %td.key=_('Show Refresh Button')
+            %td
+              = check_box_tag('field_show_refresh_button', '1',
+                @edit[:field_show_refresh_button],
+                'data-miq_observe_checkbox' => {:url => url}.to_json)
+          - if @edit[:field_show_refresh_button] # show only if field_show_refresh_button is on
+            %tr
+              %td.key=_('Load Values on Init')
+              %td
+                = check_box_tag('field_load_on_init', '1',
+                  @edit[:field_load_on_init],
+                  'data-miq_observe_checkbox' => {:url => url}.to_json)
+
+        - elsif @edit[:field_typ] =~ /Text|Check/
           %tr
             %td.key=_('Default Value')
             %td

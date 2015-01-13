@@ -869,9 +869,7 @@ module MiqAeCustomizationController::Dialogs
       @edit[:field_default_value] = key[:default_value] = nil
     end
 
-    if @edit[:field_typ] == "DialogFieldRadioButton" && params[:field_dynamic] != true
       @edit[:field_values] ||= key[:values] = []
-    end
 
     copy_field_param.call(:entry_point)
     copy_checkbox_field_param.call(:load_on_init)
