@@ -18,12 +18,19 @@ module OpsController::Settings::Upload
     if params["#{fld}".to_sym] && params["#{fld}".to_sym][:logo] &&
         params["#{fld}".to_sym][:logo].respond_to?(:read)
       if params["#{fld}".to_sym][:logo].original_filename.split(".").last.downcase != "png"
-        msg = I18n.t(typ == "custom" ? "flash.ops.settings.custom_logo_type" : "flash.ops.settings.custom_login_type")
+        msg = if typ == "custom"
+                _("Custom logo image must be a .png file")
+              else
+                _("Custom login image must be a .png file")
+              end
         err = true
       else
         File.open(typ == "custom" ? @@logo_file : @@login_logo_file, "wb") { |f| f.write(params["#{fld}".to_sym][:logo].read) }
-        msg = I18n.t(typ == "custom" ? "flash.ops.settings.custom_logo_uploaded" : "flash.ops.settings.custom_login_uploaded",
-          :filename=>params["#{fld}".to_sym][:logo].original_filename)
+        msg = if typ == "custom"
+                _('Custom Logo file "%s" uploaded') % params[fld.to_sym][:logo].original_filename
+              else
+                _('Custom login file "%s" uploaded') % params[fld.to_sym][:logo].original_filename
+              end
         err = false
       end
     else

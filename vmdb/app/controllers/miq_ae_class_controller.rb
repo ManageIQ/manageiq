@@ -2133,7 +2133,7 @@ private
     end
 
     process_aeinstances(aeinstances, "destroy") unless aeinstances.empty?
-    add_flash(I18n.t(flash.selected_records_deleted,:model=>ui_lookup(:models=>"MiqAeInstances"))) if @flash_array == nil
+    add_flash(_("The selected %s were deleted") % ui_lookup(:models => "MiqAeInstances")) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 
@@ -2160,7 +2160,7 @@ private
     end
 
     process_aemethods(aemethods, "destroy") unless aemethods.empty?
-    add_flash(I18n.t(flash.selected_records_deleted,:model=>ui_lookup(:models=>"MiqAeMethod"))) if @flash_array == nil
+    add_flash(_("The selected %s were deleted") % ui_lookup(:models => "MiqAeMethod")) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 
@@ -2709,9 +2709,9 @@ private
 
   def ns_right_cell_text
     model = ui_lookup(:model => @edit[:typ])
-    name_for_msg = @edit[:rec_id].nil? ? "cell_header.adding_model_record" : "cell_header.editing_model_record"
+    name_for_msg = @edit[:rec_id].nil? ? _("Adding a new %s") : _("Editing %{model} \"%{name}\"")
     options = @edit[:rec_id].nil? ? {:model => model} : {:model => model, :name => @ae_ns.name}
-    I18n.t(name_for_msg, options)
+    name_for_msg % options
   end
 
   def priority_edit_screen

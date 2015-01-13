@@ -37,7 +37,8 @@ class UserValidationService
     db_user = User.find_by_userid(user[:name])
     return ValidateResult.new(
       :fail,
-      I18n.t("flash.authentication.missing_role_or_group", :model => session[:group] ? "Role" : "Group")
+      _("Login not allowed, User's %s is missing. Please contact the administrator") %
+      (session[:group] ? "Role" : "Group")
     ) unless session_reset(db_user) # Reset/recreate the session hash
 
     start_url = session[:start_url] # Hang on to the initial start URL
@@ -67,7 +68,7 @@ class UserValidationService
       :controller    => "ems_infra",
       :action        => 'show_list',
       :flash_warning => true,
-      :flash_msg     => I18n.t("flash.non_admin_cannot_access"))
+      :flash_msg     => _("Non-admin users can not access the system until at least 1 VM/Instance has been discovered"))
     )
   end
 
@@ -82,11 +83,11 @@ class UserValidationService
         :action        => 'explorer',
         :flash_warning => true,
         :no_refresh    => true,
-        :flash_msg     => I18n.t("flash.server_still_starting_admin"),
+        :flash_msg     => _("The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"),
         :escape        => false)
       )
     else
-      ValidateResult.new(:fail, I18n.t("flash.server_still_starting"))
+      ValidateResult.new(:fail, _("The CFME Server is still starting. If this message persists, please contact your CFME administrator."))
     end
   end
 
@@ -98,7 +99,7 @@ class UserValidationService
       user_or_taskid = User.authenticate(user[:name], user[:password], request)
     rescue MiqException::MiqEVMLoginError
       user[:name] = nil
-      return ValidateResult.new(:fail, I18n.t("flash.authentication.error"))
+      return ValidateResult.new(:fail, _("Sorry, the username or password you entered is incorrect."))
     end
 
     if user_or_taskid.kind_of?(User)

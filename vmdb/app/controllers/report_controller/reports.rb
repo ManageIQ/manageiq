@@ -346,8 +346,15 @@ module ReportController::Reports
               if e = MiqExpression.atom_error(rpt.col_to_expression_col(col.split("__").first), # See if the value is in error
                                               s[:operator],
                                               s[:value])
-                order = case s_idx + 1 when 1;"first" when 2;"second" when 3;"third" end
-                add_flash(I18n.t("flash.edit.field_styling_error.#{order}", :field=>f.first) + e.message, :error)
+                msg = case s_idx + 1
+                      when 1
+                        _("Styling for '%s', first value is in error: ")
+                      when 2
+                        _("Styling for '%s', second value is in error: ")
+                      when 3
+                        _("Styling for '%s', third value is in error: ")
+                      end
+                add_flash((msg % f.first) + e.message, :error)
                 @sb[:miq_tab] = "new_9"
               end
             end

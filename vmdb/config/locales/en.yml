@@ -6,420 +6,77 @@ en:
     name: ManageIQ
   # Flash messages shown in the UI
   flash:
-    add:
-      cancelled: "Add of new %{model} was cancelled by the user"
-      added: '%{model} "%{name}" was added'
-
-    authentication:
-      error: "Sorry, the username or password you entered is incorrect."
-      missing_role_or_group: "Login not allowed, User's %{model} is missing. Please contact the administrator"
-      session_timed_out: "Session was timed out due to inactivity. Please log in again."
-
-    automate:
-      automate_error: "Automation Error: "
-      button_cleared: "Automate button %{btn_num} has been cleared"
-      button_set: "Automate button %{btn_num} has been set to %{btn_txt}"
-      custom_button_error: 'Error executing: "%{name}" '
-      custom_button_executed: '"%{name}" was executed'
-      datastore_import_at_least_one: "You must select at least one namespace to import"
-      datastore_import_cancelled: "Datastore import was cancelled"
-      datastore_import_expired: "Error: Datastore import file upload expired"
-      datastore_import_success: "Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}\nClasses updated/added: %{class_stats}\nInstances updated/added: %{instance_stats}\nMethods updated/added: %{method_stats}"
-      reset_to_default: "All custom classes and instances have been reset to default"
-      simulation_started: "Automation Simulation has been run"
-      simulation_unavailable: 'Simulation unavailable: Required Class "System/Process" is missing'
-
-    button:
-      at_least_selected: "At least %{num} %{model} must be selected for %{action}"
-      at_least_2_selected: "At least 2 %{model} must be selected for %{action}"
-      more_than_max_selected: "No more than %{max} %{model} can be selected for %{action}"
-      no_records_selected: "No %{model} were selected to %{button}"
-      not_implemented: "Button not yet implemented"
-      typ_not_implemented: "%{typ} Button not yet implemented"
-      one_or_more_selected_for_task: "One or more %{model} must be selected to %{task}"
-      record_gone: "%{model} no longer exists"
-      task_does_not_apply_to_one_of_selected: "%{task} does not apply because you selected at least one %{model}"
-      task_does_not_apply_to_model: "%{task} does not apply to selected %{model}"
-
-    capacity:
-      planning_reset: "Planning options have been reset by the user"
-      utilization_data_not_available: "No Utilization data available to generate planning results"
     copy:
       cancelled: 'Copy %{model} was cancelled by the user'
       copied: 'Copy selected %{model} was saved'
     edit:
-      at_least_1:
-        configured: "At least one %{field} must be configured"
-        selected: "At least one %{field} must be selected"
-        contain: "%{model} must contain at least one %{field}"
-      aborted: "Edit aborted!  CFME does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
-      cancelled: 'Edit of %{model} "%{name}" was cancelled by the user'
-      cancelled_model: "Edit of %{model} was cancelled by the user"
       cancelled_for_class: 'Edit of schema for %{model} "%{name}" was cancelled by the user'
-      cancelled_for_role: 'Edit of %{model} for role "%{role}" was cancelled by the user'
-      check_required: "At least one Selection must be checked"
-      error_details: "Error details: %{error}"
-      exp_atom_error_1: "There is an error in the selected expression element, perhaps it was imported or edited manually."
-      exp_atom_error_2: "This element should be removed and recreated or you can report the error to your CFME administrator."
-      field_character_not_allowed: '%{field} cannot contain "%{character}"'
       field_in_display_filter: "%{field} is currently being used in the Display Filter"
-      field_required: "%{field} is required"
-      field_requires_entry_point: 'Entry Point must be given for field "%{field}".'
-      field_unique: "%{field} should be unique"
-      field_unique_within_group: "%{field} must be unique for this group"
-      field_value_and_description_reuired: "%{field1} and %{field2} fields can't be blank"
-      field_value_in_use: "%{field} '%{value}' is already in use"
-      field_must_be_changed: "Change %{field} value to submit reconfigure request"
       field_must_be:
-        configured: "%{field} must be configured"
-        numeric: "%{field} must be numeric"
         numeric_greater_than_0: "%{field} must be numeric and greater than zero"
-        integer: "%{field} must be an integer"
-        alphanumeric_and_underscore: "%{field} must be alphanumeric characters and underscores without spaces"
-      field_must_not_be:
-        action_or_controller: "%{field} must not be 'action' or 'controller'"
-      field_styling_error:
-        first: "Styling for '%{field}', first value is in error: "
-        second: "Styling for '%{field}', second value is in error: "
-        third: "Styling for '%{field}', third value is in error: "
-      field_syntax_error:
-        yaml: "Syntax error in YAML file: "
       filter:
-        current_search_reset: "The current search details have been reset"
-        field_value_error: "%{field} Value Error: %{msg}"
-        must_be_chosen: "A %{field} must be chosen to commit this expression element"
-        must_be_entered: "A %{field} must be entered to commit this expression element"
-        must_be_integer: "The check count value must be an integer to commit this expression element"
         search_reset: "The current search details have been reset"
-        select_expression_element_type: "Select an expression element type"
-      group_reorder: '%{model} Group Reorder'
-      group_reorder_cancelled: '%{model} Group Reorder cancelled'
-      group_reorder_saved: '%{model} Group Reorder saved'
-      host_vnc_range_required: "To configure the Host Default VNC Port Range, both start and end ports are required"
-      host_vnc_range_invalid: "The Host Default VNC Port Range ending port must be equal to or higher than the starting point"
       manage_desktops_cancelled: 'Manage Desktops was cancelled by the user'
       manage_desktops_saved: 'Manage Desktops was saved'
-      passwords_mismatch: "Password/Verify Password do not match"
-      reset: "All changes have been reset"
-      saved: '%{model} "%{name}" was saved'
       saved_for_class: 'Schema for %{model} "%{name}" was saved'
-      saved_for_role: '%{model} for role "%{role}" was saved'
-      select_required: "%{selection} must be selected"
-      set_to_default: "%{model} set to default"
       user_assignment_cancelled: "Assignment was cancelled by the user"
       user_assignment_initiated: "Assignment changes initiated"
       user_unassignment_initiated: "User Un-Assignment initiated"
-      userid_pwd_required: "User ID must be entered if Password is entered"
-      task_cancelled: "%{task} was cancelled by the user"
-      task_saved: "%{task} saved"
-      timer_in_the_past: "Warning: This 'Run Once' timer is in the past and will never run as currently configured"
-      vnc_proxy_fields_required: "When configuring a VNC Proxy, both Address and Port are required"
 
-      # flash.edit side by side selection box messages
-      only_some_fields_moved:
-        right: "One or more selected reports are not owned by your group, they cannot be moved"
-      no_fields_to_move:
-        bottom: "No %{field} were selected to move bottom"
-        left: "No %{field} were selected to move left"
-        right: "No %{field} were selected to move right"
-        up: "No %{field} were selected to move up"
-        down: "No %{field} were selected to move down"
-        to_the_top: "No %{field} were selected to move to the top"
-        to_the_bottom: "No %{field} were selected to move to the bottom"
-        top: "No %{field} were selected to move top"
-        sync: "No %{field} selected to set to Synchronous"
-        async: "No %{field} selected to set to Asynchronous"
       no_fields_moved:
         left: "No %{field} were moved to the left"
         up: "No %{field} were moved up"
-      select_fields_to_move:
-        up: "Select only one or consecutive %{field} to move up"
-        down: "Select only one or consecutive %{field} to move down"
-        to_the_top: "Select only one or consecutive %{field} to move to the top"
-        to_the_bottom: "Select only one or consecutive %{field} to move to the bottom"
-      adding_fields_exceeds_max: "Fields not added: Adding the selected %{count} fields will exceed the maximum of %{max} fields"
-      email:
-        not_valid: E-mail address '%{type}' is not valid
-
-      # flash.edit tab messages
-      tab_needs:
-        1_field: "%{tab} tab is not available until at least 1 field has been selected"
-        field_configured: "%{tab} tab is not available until %{field} has been configured"
-        field_selected: "%{tab} tab is not available until %{field} field has been selected"
-        sort_field: "%{tab} tab is not available unless a sort field has been selected"
-        time_field: "%{tab} tab is not available unless at least 1 time field has been selected"
-
-    configuration:
-      config_settings_saved: "Configuration settings saved"
-      default_filter_saved: "Default Filters saved successfully"
-      global_time_profile_cannot_edit: "Global Time Profile cannot be edited"
-      global_time_profile_cannot_delete: '"%{name}": Global %{model} cannot be deleted'
-      time_profile_in_use: '"%{name}": In use by %{rep_count}, cannot be deleted'
-      ui_settings_saved_for_user: "User Interface settings saved for User %{user}"
-      ui_settings_saved_for_session: "User Interface settings saved for this session"
 
     image:
       type: "Custom Image must be a %{typ} file"
-      locate_file: "Use the Browse button to locate a %{typ} image file"
-      removed: 'Custom Image successfully removed'
       uploaded: 'Custom Image file "%{filename}" successfully uploaded'
-
-    datastore:
-      cannot_be_removed: '"%{name}": cannot be removed, has vms or hosts'
 
     host:
       no_host_selected: "No Hosts were selected to analyze and check compliance"
       analysis_started: "Analyze and Check compliance for this Host has been started"
 
     ops:
-      diagnostics:
-        appliance_restarted: "CFME Appliance restart initiated successfully"
-        connection_broker_cache_cleared: "Connection Broker cache cleared successfully"
-        edit_log_depot_cancelled: "Edit Log Depot settings was cancelled by the user"
-        end_date_error: "End Date cannot be greater than Start Date"
-        error_during_orphaned_record_delete: "Error during Orphaned Records delete for user %{userid}: "
-        error_during_worker_restart: "Error during %{wtype} workers restart: "
-        log_collection_error: "Log collection error returned: "
-        log_collection_error_already_in_progress: "Cannot start log collection, a log collection is already in progress within this scope"
-        log_collection_error_no_server_started: "Cannot start log collection, requires a started server"
-        log_collection_initiated: "Log collection for CFME %{object_type} %{name} has been initiated"
-        log_depot_saved: "Log Depot Settings were saved"
-        log_depot_validated: "Log Depot Settings were validated"
-        orphaned_records_deleted: "Orphaned Records for userid %{userid} were successfully deleted"
-        priority_set_for_server: 'CFME Server "%{name}" set as %{priority} for Role "%{role_description}"'
-        setting_priority_not_allowed: "Setting priority is not allowed for the selected item"
-        task_initiated: "%{task} successfully initiated"
-        task_not_allowed: "%{task} is not allowed for the selected item"
-        workers_restarted: "%{wtype} workers restart initiated successfully"
-        worker_1_restarted: "'%{wtype}' Worker restart initiated successfully"
       rbac:
-        error_during_task: "Error during '%{task}': "
         read_only_role_cannot_delete: "Read only Role can not be deleted"
         read_only_role_cannot_edit: "This Role is Read Only and can not be edited"
         selected_roles_deleted: "All selected Roles were deleted (unless Read Only or in use by one or more Groups)"
         selected_roles_not_deleted: "All selected Roles were either Read Only or in use by one or more Groups, none deleted"
         selected_group_deleted: "All selected Groups were deleted"
         selected_user_deleted: "All selected Users were deleted"
-        user_assigned_to_group: "A User must be assigned to a Group"
-        user_group_sequence_cancelled: "Edit Sequence of User Groups was cancelled by the user"
-        user_group_sequence_saved: "User Group Sequence was saved"
       settings:
-        advanced_settings_saved: "%{filename} file saved"
-        apply_to_import: "Press the Apply button to import the good records into the CFME database"
-        analysis_affinity_saved: "Analysis Affinity was saved"
-        cu_saved: "Capacity and Utilization Collection settings saved"
-        changing_ui_worker_count: "Changing the UI Workers Count will immediately restart the webserver"
-        config_settings_saved: "Configuration settings saved"
-        custom_logo_type: "Custom logo image must be a .png file"
-        custom_login_type: "Custom login image must be a .png file"
-        custom_logo_uploaded: 'Custom Logo file "%{filename}" uploaded'
-        custom_login_uploaded: 'Custom login file "%{filename}" uploaded'
-        custom_url_and_description_required: "Custom Support URL and Description both must be entered."
-        custom_variable_type_to_import: "Choose the type of custom variables to be imported"
-        error_during_email: "Error during sending test email: "
-        error_during_task: "Error during %{task}: "
-        db_settings_saved: "Database settings successfully saved, they will take effect upon CFME Server restart"
-        db_settings_validated: "CFME Database settings validation was successful"
-        import_validation_complete: "Import validation complete: %{good_record}, %{bad_record}"
-        import_successful: "Records were successfully imported"
-        invalid_import: "No valid import records were found, please upload another file"
-        at_least_1_item_required: "At least one item must be entered to create Analysis Profile"
-        locate_file: "Use the Browse button to locate %{typ} file"
-        ldap_group_lookup: "%{field} must be entered to perform LDAP Group Look Up"
-        ldap_settings_validated: "LDAP Settings validation was successful"
-        amazon_settings_validated: "Amazon Settings validation was successful"
-        worker_credentials_validated: "%{wtype} Credentials validated successfully"
-        settings_saved: '%{typ} settings saved for CFME Server "%{name} [%{server_id}]" in Zone "%{zone}"'
-        smartproxy_settings_saved: "SmartProxy default settings saved"
-        test_email_sent: 'The test email is being delivered, check "%{email}" to verify it was successful'
-        user_group_assign_role: "A User Group must be assigned a Role"
-        customer_info_saved: "Customer Information successfully saved"
-        customer_info_edit_cancelled: "Edit of Customer Information was cancelled"
-        no_server_selected: "No Server was selected"
-        action_has_been_queued: "%{action} has been initiated for the selected Servers"
-        error_when_queuing_action: "Error occured when queuing action: %{error}"
         rhn:
-          registration: "Registration"
-          check_for_updates: "Check for updates"
-          update: "Update"
           missing_information: "Please, fill in the form before saving."
-      export_generation_error: "Export generation returned: Status [%{status}] Message [%{message}]"
-      tags_saved: "Tag edits were successfully saved"
 
     provision: 
       cancelled: "Provision %{model} was cancelled by the user"
 
     policy:
-      alert_profile_assignments_saved: 'Alert Profile "%{name}" assignments succesfully saved'
-      task_cancelled_by_user: "%{task} cancelled by user"
-      import_not_available: "Import not available due to conflicts"
-      commit_import: "Press commit to Import"
       cancelled_import: "Import was cancelled by the user"
-      condition_removed_from_policy: 'Condition "%{cond_name}" has been removed from Policy "%{pol_name}"'
-      policy_assignment_cancelled: "Edit policy assignments was cancelled by the user"
-      policy_assignment_saved: "Policy assignments successfully changed"
-      policy_event_actions_saved: 'Actions for Policy Event "%{name}" were saved'
-      no_vm_match : "No VMs match the selection criteria"
-      simulation_generation_error: "Policy Simulation generation returned: "
-      value_missing_for_field: "%{val} missing for %{field}"
-      valid_expression: "A valid expression must be present"
 
     report:
-      double_click_folder_name: "Double Click on 'New Folder' to edit"
-      folder_contains_other_reports: "Can not delete folder, one or more reports in the selected folder are not owned by your group"
-      generation_error: "Report generation returned: Status [%{status}] Message [%{message}]"
-      has_widgets_cant_delete: "Report cannot be deleted if it's being used by one or more Widgets"
-      no_records_found: "No records found for this report"
-      no_schedules_selected_to_run: 'No Report Schedules were selected to be Run now'
-      not_authorized_for_user: "Report is not authorized for the logged in user"
-      not_found_schedule_failed: 'Saved Report "%{name}" not found, Schedule may have failed'
-      preview_error: "Report preview generation returned: Status [%{status}] Message [%{message}]"
-      queued: "Report has been successfully queued to run"
       saved_report_doesnt_exist: "Saved Report no longer exists"
-      selected_no_longer_exists: "Selected %{typ} Report no longer exists"
-      sort_required_for_chart: "Report can not be saved unless sort field has been configured for Charts"
-      widget_generation_error: "Widget content generation error: "
-      widget_generation_started: "Content generation for this Widget has been initiated"
-      import_file_empty_error: "Import file cannot be empty"
-      widget_import_cancelled: "Widget import cancelled"
-      widget_import_successful: "Widgets imported successfully"
-      widget_import_file_upload_expired: "Error: Widget import file upload expired"
 
     request:
-      cannot_create_workflow: 'Cannot create Request Info, error: '
       error_during_sysprep_upload: 'Error during Sysprep "%{name}" file upload: '
-      locate_upload_file: "Use the Browse button to locate an Upload file"
-      request_approved_denied: 'Request "%{name}" was %{task}'
       request_resubmitted: "%{typ} Request was re-submitted, you will be notified when your %{title} are ready"
-      request_submitted: "%{typ} Request was Submitted, you will be notified when your %{title} are ready"
-      st_no_dialog_available: "No Ordering Dialog is available"
-      st_request_submitted: "%{typ} Request was Submitted"
-      sysprep_file_upload: 'Sysprep "%{filename}" upload was successful'
       task_cancelled: "Request %{task} was cancelled by the user"
 
     service_dialog:
       cannot_import_duplicate: "Dialog '%{label}' already exists and was not imported"
-      import_cancelled: "Service dialog import cancelled"
-      import_file_upload_expired: "Error: ImportFileUpload expired"
-      import_successful: "Service dialogs imported successfully"
-      invalid_dialog_field_type: "Error during upload: one of the DialogField types is not supported"
-      non_dialog_yaml: "Error during upload: incorrect Dialog format, only service dialogs can be imported"
-      unsupported_import_format: "Error: the file uploaded is not of the supported format"
-      upload_successful: "Import file was uploaded successfully"
 
-    smartproxy:
-      delete_older_not_completed: "The selected job no longer exists, Delete all older Tasks was not completed"
-      deploy_smaprtproxy_cancelled: 'Deploy of SmartProxy to Host "%{name}" was cancelled'
-      deploy_smaprtproxy_initiated: 'Deploy of SmartProxy to Host "%{name}" was initiated'
-      host_not_powered_on: "The selected SmartProxy can not be managed because the Host is not powered on"
-      host_os_unknown: "Host OS is unknown or there are no available SmartProxy builds for the Host's OS"
-      finish_task_cancel: "Finished Task cannot be cancelled"
-      ldap_info_retrieval_error: "Error retrieving LDAP info: "
-      log_unavailable: "No log available, press Retrieve to get the SmartProxy log"
-      only_1_selected_for_deployment: "Only 1 SmartProxy can be selected for build deployment"
-      no_smartproxy_available: 'There are no available SmartProxies to deploy on Host "%{name}"'
-      new_settings_activated: "New settings have been activated"
-      retrieve_log_error: "Retrieve log returned: "
-      retrieve_log_started: 'SmartProxy "%{name}" log retrieval has been started . . . refresh page to view the log'
-      selected_task_cancelled: "The selected Task was cancelled"
-      settings_activation_error: "Settings activation returned: "
-
-    vm:
-      add_vm_to_service_cancelled: 'Add VM "%{name}" to a Service was cancelled by the user'
-      added_to: '%{model} "%{name}" successfully added to Service "%{to_name}"'
-      create_snapshot_started: 'Create Snapshot for %{model} "%{name}" was started'
-      no_vm_selected_to_delete_blackbox: "No virtual machines were selected to delete Virtual BlackBoxes on"
-      no_blackbox: '"%{name}": VM does not have BlackBox.'
-      no_child_vm_to_move_right: "No child VMs to move right, no action taken"
-      ownership_saved: "Ownership saved for selected %{object_types}"
-      parent_child_cannot_be_same: "Parent VM can not be one of the child VMs"
-      power_off_to_delete_blackbox: '"%{name}": VM needs to be in a Powered Off state to delete the BlackBox.'
-      reconfigure_atleast_1_option: "At least one option must be selected to reconfigure"
-      reconfigure_cancel: "VM Reconfigure Request was cancelled by the user"
-      retirement_removed: "Retirement %{date_text} removed"
-      retirement_set: "Retirement %{date_text} set to %{rdate}"
-      reconfigure_saved: "VM Reconfigure Request was saved"
-      vm_removed_from_service: 'VM successfully removed from service "%{name}"'
-
-    already_exists: '%{model} "%{name}" already exists'
     already_taken: "%{field} has already been taken"
-    browse_to_upload_import: "Locate and upload a file to start the import process"
-    cant_delete_current: "Current %{model} \"%{name}\" cannot be deleted"
-    cant_delete_default: "Default %{model} \"%{name}\" cannot be deleted"
     cant_delete_read_only: "Read Only or %{model} in use by one or more %{in_use_by} can not be deleted"
     cant_delete_unassigned: "'%{model}' can not be deleted"
-    cant_edit_read_only: "Read Only %{model} \"%{name}\" can not be edited"
-    cant_delete_sample: "Default %{model} \"%{name}\" can not be deleted"
-    cant_edit_default: "Default %{model} \"%{name}\" can not be edited"
-    cant_edit_unassigned: "'%{model}' can not be edited"
-    cant_edit_sample: "Sample %{model} \"%{name}\" can not be edited"
-    cannot_delete: '"%{field}" %{model} can not be deleted'
     credentials:
       error: "Credential validation returned: %{message}"
-      validated: "Credential validation was successful"
-      cancelled: "Edit of credentials for selected %{model} was cancelled by the user"
-      saved: "Credentials/Settings saved successfully"
-    class_schema_sequence_cancelled: "Edit of Class Schema Sequence was cancelled by the user"
-    class_schema_sequence_saved: "Class Schema Sequence was saved"
-    console_access_failed: "Console access failed: %{reason}"
-    data_validation_success: "Data validated successfully"
-    db_sequence_cancelled: "Edit of Dashboard Sequence was cancelled by the user"
-    db_sequence_saved: "Dashboard Sequence was saved"
-    discovery_returned_error: "%{model} Discovery returned: "
-    error_during: "Error during '%{task}': "
-    error_with_stat_message: "Error during %{task}: Status [%{status}] Message [%{message}]"
-    error_on_line: "Error on line %{line_num}: %{err_txt}"
-    error_building_timeline: "Error building timeline "
-    evm_log_unavailable: "Logs for this CFME Server are not available for viewing"
-    import_success: "Import file was uploaded successfully"
     license_invalid: "The CFME license is invalid, please upload a valid license file"
-    locate_import_file: "Use the Browse button to locate an Import file"
     no_host_defined: "No Host instances have been defined, press a button to Add or Discover one"
-    no_model_found_for_nodetype: "No Class found for explorer tree node type '%{nodetype}'"
-    no_nodetype_found_for_model: "No explorer tree node type found for '%{model}'"
-    no_usage_data_found: "No usage data found for specified options"
-    no_timeline_events_found: "No events available for this timeline"
-    no_timeline_records_found: "No records found for this timeline"
-    no_records_selected_for_delete: 'No %{model} were selected for deletion'
-    no_records_selected_for_task: 'No %{model} were selected for %{task}'
-    no_records_selected_to_be_disabled: 'No %{model} were selected to be disabled'
-    no_records_selected_to_be_enabled: 'No %{model} were selected to be enabled'
-    no_records_selected_to_be_marked: 'No %{model} were selected to be marked as %{action}'
-    no_utilization_data_available: "No Utilization data available"
-    non_admin_cannot_access: "Non-admin users can not access the system until at least 1 VM/Instance has been discovered"
-    press_back_button: "Press your browser's Back button or click a tab to continue"
-    priority_order_cancelled: "Edit of Priority Order was cancelled by the user"
     priority_order_saved: "Priority Order was saved"
-    record_no_longer_exists: "%{record_name} no longer exists in the database"
-    record_not_authorized_for_user: "You are not authorized to view %{record_name}"
-    search_not_found: "The selected Filter record was not found"
-    search_requires_input: "The selected Filter can not be set as Default because it requires user input"
-    server_still_starting: "The CFME Server is still starting.  If this message persists, please contact your CFME administrator."
-    server_still_starting_admin: "The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"
 
     record:
-      deleted: '%{model} "%{name}": Delete successful'
-      error_during_task: "%{model} \"%{name}\": Error during '%{task}': "
       delete_for_1_record_initiated: "The delete for selected %{model} was initiated"
       delete_for_records_initiated: "The delete for selected %{model} initiated"
-      deleted_for_1_record: "The selected %{model} was deleted"
-      deleted_for_records: "The selected %{model} were deleted"
-      item_no_longer_exists: "Last selected %{model} no longer exists"
-      no_longer_exists: "%{model} no longer exists"
-      selected_item_no_longer_exists: "Selected %{model} no longer exists"
-      task_initiated: "%{model}: %{task} successfully initiated"
-      task_initiated_for_model: "%{task} initiated for %{count_model} from the CFME Database"
-      task_initiated_for_record: '"%{record}": %{task} successfully initiated'
-      task_started: "%{model} \"%{name}\": %{task} successfully initiated"
       task_started_for_model: "%{task} for this %{model} has been started"
-      was_loaded: "%{model} \"%{name}\" was successfully loaded"
-
-    repository:
-      default_repository_doesnt_exist: "The Default Repository SmartProxy no longer exists, contact your CFME Administrator"
-      default_repository_invalid: "The Default Repository SmartProxy is not valid, contact your CFME Administrator"
-      default_repository_not_running: 'The Default Repository SmartProxy, "%{name}", is not running, contact your CFME Administrator'
-      no_default_configured: "No Default Repository SmartProxy is configured, contact your CFME Administrator"
-      path_invalid: "Path must be a valid reference to a UNC location"
 
     service:
       no_service_selected_to_task: "No Services were selected to %{task}"
@@ -427,76 +84,12 @@ en:
       service_1_task: "This Service has been %{task}"
       service_task: "Selected Services have been %{task}"
 
-    1_not_in_current_region: "%{label} is not in the current region and will be skipped"
-    all_not_in_current_region: "All selected %{label} are not in the current region"
-    count_not_in_current_region: "%{label} are not in the current region and will be skipped"
-    error_during_delete_with_count: "Error during %{count_model} delete from the CFME Database"
-    error_no_longer_exists: "Error: Record no longer exists in the database"
-    invalid_button_action: "Invalid button action."
-    not_in_current_region: "The selected %{label} is not in the current region"
-    refresh_cu_data: "Refresh of recent C&U data has been initiated"
-    schedule_queued_to_run: "The selected Schedule has been queued to run"
-    schedules_queued_to_run: "The selected Schedules have been queued to run"
-    selected_record_deleted: 'The selected %{model} was deleted'
-    selected_records_deleted: 'The selected %{model} were deleted'
-    selected_records_deleted_with_count: "Successfully deleted %{count_model} from the CFME Database"
-    selected_records_were_disabled: 'The selected %{model} were disabled'
-    selected_records_were_enabled: 'The selected %{model} were enabled'
-    selected_records_were_marked: 'The selected %{model} were marked as %{action}'
-    task_cancelled: "%{task} was cancelled by the user"
-    unknown_error: "Unknown error has occurred"
-    user_not_authorized: "The user is not authorized for this task or item."
-
   # Header text
   cell_header:
-    adding_model_record: "Adding a new %{model}"
-    all_model_indexes: "All %{model} Indexes"
-    all_model_records: "All %{model}"
-    all_model_records_for_group: "All %{model} - %{group}"
-    all_type_model_records: "All %{typ} %{model}"
-    best_fit_model: "Best Fit %{model}"
-    buttons_for_model_record: '%{model} for "%{record}"'
-    compare: 'Compare %{model}'
-    dialog_runner_for_record: '%{record} - "%{button_text}"'
-    drift: 'Drift for %{model} "%{name}"'
-    editing_model_record: 'Editing %{model} "%{name}"'
-    editing_model_for_record: 'Editing %{model} for "%{name}"'
-    editing_model_record_sequence: 'Editing %{model} sequence for "%{name}"'
-    edit_tags: 'Edit Tags for %{model}'
     evm_relationship: 'Edit CFME Server Relationship for %{model} "%{name}"'
-    filtered_model_records: '%{model} - Filtered by "%{filter}"'
-    import_export_reports: "Import / Export"
-    miq_request_new: 'Provision %{model}'
     model: "%{model}"
-    model_assignments: ' %{model} Assignments'
-    model_client_connections: "%{model} Client Connections"
     model_for_record: '%{model} for "%{name}"'
-    model_record: '%{model} "%{name}"'
-    model_record_for_group: '%{model} for %{group} "%{name}"'
-    model_record_typ: '%{model} "%{name}" %{typ}'
-    model_record_indexes: 'Indexes for %{model} "%{name}"'
-    model_typ_name: '%{typ} in %{model} "%{name}"'
-    model_settings: "%{model} Settings"
     name: '"%{name}"'
-    name_filter_suffix: ' (Names with "%{name_filter}")'
-    policy_assignment: '%{model} Policy Assignment'
-    policy_sim: '%{model} Policy Simulation'
-    pre_provision: 'Provision %{model} - Select %{typ}'
-    reconfigure: 'Reconfigure %{model}'
-    retire: 'Set/Remove retirement date for %{model}'
-    request_task: '%{task} %{model}'
-    right_size: 'Right Size Recommendation for %{model} "%{name}"'
-    summary: '%{model} Summary'
-    set_ownership: 'Set Ownership for %{model}'
-    show_timelines: 'Timelines for %{model} "%{name}"'
-    utilization: '%{model} Utilization'
-    utilization_summary: 'Capacity & Utilization data for %{model} "%{name}"'
-    task_model_record: '%{task} %{model} "%{name}"'
-    type_of_model_record: '%{typ} %{model} "%{name}"'
-    type_of_model_records: "%{typ} %{model}"
-    type_of_model_record_current: '%{typ} %{model} "%{name}" (current)'
-    ui_action_for_model_record: '"%{action}" for %{model} "%{name}"'
-    ui_action_for_item_model_record: '%{action} "%{item_name}" for %{model} "%{name}"'
 
   number:
     # Used in number_with_delimiter()

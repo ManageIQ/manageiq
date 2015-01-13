@@ -200,22 +200,21 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_toggle(enable)
-    present_action = enable ? 'enable' : 'disable'
-    past_action = present_action + 'd'
+    present_action, msg = if enable
+                            ['enable', _("No %s were selected to be enabled")]
+                          else
+                            ['disable', _("No %s were selected to be disabled")]
+                          end
 
     schedules = find_checked_items
     if schedules.empty?
-      add_flash(I18n.t("flash.no_records_selected_to_be_#{past_action}",
-                    :model=>ui_lookup(:models=>"MiqSchedule")),
-              :error)
+      add_flash(msg % ui_lookup(:models => "MiqSchedule"), :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
     end
     schedule_enable_disable(schedules, present_action)  unless schedules.empty?
-    add_flash(I18n.t("flash.selected_records_were_#{past_action}",
-                    :model=>ui_lookup(:models=>"MiqSchedule")),
-              :info, true) if ! flash_errors?
+    add_flash(msg % ui_lookup(:models => "MiqSchedule"), :info, true) unless flash_errors?
     schedule_build_list
     settings_get_info("st")
     replace_right_cell("root")

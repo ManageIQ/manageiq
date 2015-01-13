@@ -89,7 +89,7 @@ class MiqPolicyController < ApplicationController
     end
 
     if ! @refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(I18n.t("flash.button.not_implemented)"), :error)
+      add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
@@ -694,12 +694,23 @@ class MiqPolicyController < ApplicationController
       end
     when 'ev'
       presenter[:update_partials][:main_div] = r[:partial => 'event_details', :locals=>{:read_only=>true}]
-      right_cell_text = I18n.t("cell_header.#{edit_str}model_record", :name=>@event.description.gsub(/'/,"\\\\'"), :model=>ui_lookup(:table=>'miq_event'))
+      options = {:name => @event.description.gsub(/'/, "\\\\'"), :model => ui_lookup(:table => 'miq_event')}
+      right_cell_text = @edit ? _("Editing %{model} \"%{name}\"") % options : _("%{model} \"%{name}\"") % options
     when 'a', 'ta', 'fa'
       presenter[:update_partials][:main_div] = r[:partial => 'action_details', :locals=>{:read_only=>true}]
-      right_cell_text = @action.id.blank? ?
-        _("Adding a new %s") % ui_lookup(:model=>'MiqAction') :
-        I18n.t("cell_header.#{edit_str}model_record", :name=>@action.description.gsub(/'/,"\\\\'"), :model=>ui_lookup(:model=>'MiqAction'))
+      right_cell_text = if @action.id.blank?
+                          _("Adding a new %s") % ui_lookup(:model => 'MiqAction')
+                        else
+                          if @edit
+                            _("Editing %{model} \"%{name}\"") %
+                              {:name  => @action.description.gsub(/'/, "\\\\'"),
+                               :model => ui_lookup(:model => 'MiqAction')}
+                          else
+                            _("%{model} \"%{name}\"") %
+                              {:name  => @action.description.gsub(/'/, "\\\\'"),
+                               :model => ui_lookup(:model => 'MiqAction')}
+                          end
+                        end
     when 'ap'
       presenter[:update_partials][:main_div] = r[:partial => 'alert_profile_details', :locals=>{:read_only=>true}]
       right_cell_text = if @alert_profile.id.blank?
@@ -714,7 +725,8 @@ class MiqPolicyController < ApplicationController
         _("Adding a new %s") % ui_lookup(:model=>'MiqAlert')
       else
         pfx = @assign ? ' assignments for ' : ''
-        I18n.t("#{@edit ? 'cell_header.editing_model_record' : 'cell_header.model_record'}", :name=>@alert.description.gsub(/'/,"\\\\'"), :model=>"#{pfx} #{ui_lookup(:model=>"MiqAlert")}")
+        msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
+        msg % {:name => @alert.description.gsub(/'/, "\\\\'"), :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
       end
     end
     presenter[:right_cell_text] = right_cell_text

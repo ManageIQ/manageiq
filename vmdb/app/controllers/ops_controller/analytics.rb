@@ -30,27 +30,15 @@ module OpsController::Analytics
     if x_node.split('-').first == "z"
       zone = Zone.find_by_id(from_cid(x_node.split('-').last))
       @sb[:rpt_title] = "Analytics Report for '#{zone.description}'"
-      @right_cell_text = @sb[:my_zone] == zone.name ?
-        I18n.t("cell_header.type_of_model_record_current)",
-                                  :typ=>"Diagnostics",
-                                  :model=>ui_lookup(:model=>zone.class.to_s),
-                                  :name=>zone.description) :
-        I18n.t("cell_header.type_of_model_record)",
-                                  :typ=>"Diagnostics",
-                                  :model=>ui_lookup(:model=>zone.class.to_s),
-                                  :name=>zone.description)
+      msg = zone.name ? _("%{typ} %{model} \"%{name}\" (current)") : _("%{typ} %{model} \"%{name}\"")
+      @right_cell_text = @sb[:my_zone] == msg %
+        {:typ => "Diagnostics", :model => ui_lookup(:model => zone.class.to_s), :name => zone.description}
     elsif x_node.split('-').first == "svr"
       svr = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
       @sb[:rpt_title] = "Analytics Report for '#{svr.name} [#{svr.id}]'"
-      @right_cell_text = @sb[:my_server_id] == svr.id ?
-        I18n.t("cell_header.type_of_model_record_current)",
-                                  :typ=>"Diagnostics",
-                                  :model=>ui_lookup(:model=>svr.class.to_s),
-                                  :name=>"#{svr.name} [#{svr.id}]") :
-        I18n.t("cell_header.type_of_model_record)",
-                                  :typ=>"Diagnostics",
-                                  :model=>ui_lookup(:model=>svr.class.to_s),
-                                  :name=>"#{svr.name} [#{svr.id}]")
+      msg = svr.id ? _("%{typ} %{model} \"%{name}\" (current)") : _("%{typ} %{model} \"%{name}\"")
+      @right_cell_text = @sb[:my_server_id] == msg %
+        {:typ => "Diagnostics", :model => ui_lookup(:model => svr.class.to_s), :name => "#{svr.name} [#{svr.id}]"}
     else
       @right_cell_text = _("%{model} \"%{name}\"") % {:name=>"Enterprise", :model=>"Analytics"}
       @sb[:rpt_title] = "Analytics Report for Enterprise"

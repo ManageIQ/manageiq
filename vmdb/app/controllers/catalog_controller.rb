@@ -351,9 +351,9 @@ class CatalogController < ApplicationController
       st_set_record_vars(@st)
       if @add_rsc
         if @st.save
-          add_flash(I18n.t("#{params[:button] == "save" ? "flash.edit.saved" : "flash.add.added"}",
-                          :model=>"Catalog Bundle",
-                          :name=>@edit[:new][:name]))
+          flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
+                                                  _("%{model} \"%{name}\" was added")
+          add_flash(flash_key % {:model => "Catalog Bundle", :name => @edit[:new][:name]})
           @changed = session[:changed] = false
           @in_a_form = false
           @edit = session[:edit] = @record = nil
@@ -702,9 +702,8 @@ class CatalogController < ApplicationController
       st.add_resource(request) if @edit[:new][:st_prov_type] != "generic"
     end
     if st.save
-      add_flash(I18n.t("#{params[:button] == "save" ? "flash.edit.saved" : "flash.add.added"}",
-                       :model=>"#{ui_lookup(:model=>"ServiceTemplate")}",
-                       :name=>@edit[:new][:name]))
+      flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+      add_flash(flash_key % {:model => ui_lookup(:model => "ServiceTemplate"), :name => @edit[:new][:name]})
       @changed = session[:changed] = false
       @in_a_form = false
       @edit = session[:edit] = @record = nil

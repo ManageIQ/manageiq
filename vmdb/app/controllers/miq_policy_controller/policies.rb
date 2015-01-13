@@ -59,9 +59,9 @@ module MiqPolicyController::Policies
         end
         policy.sync_events(@edit[:new][:events].collect{|e| MiqEvent.find(e)}) if @edit[:typ] == "events"
         AuditEvent.success(build_saved_audit(policy, params[:button] == "add"))
-        add_flash(I18n.t("#{params[:button] == "save" ? "flash.edit.saved" : "flash.add.added"}",
-                        :model=>ui_lookup(:model=>"MiqPolicy"),
-                        :name=>@edit[:new][:description]))
+        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
+                                                _("%{model} \"%{name}\" was added")
+        add_flash(flash_key % {:model => ui_lookup(:model => "MiqPolicy"), :name => @edit[:new][:description]})
         policy_get_info(MiqPolicy.find(policy.id))
         @edit = nil
         @nodetype = "p"

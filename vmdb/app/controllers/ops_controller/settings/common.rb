@@ -1254,25 +1254,6 @@ module OpsController::Settings::Common
     @edit[:default_verify_status] = (w[:password] == w[:verify])
   end
 
-  def move_cols_left_right(direction)
-    flds = direction == "right" ? "available_fields" : "selected_fields"
-    hosts = direction == "right" ? "available_hosts" : "selected_hosts"
-    sort_hosts = direction == "right" ? "selected_hosts" : "available_hosts"
-    if !params["#{flds}".to_sym] || params["#{flds}".to_sym].length == 0 || params["#{flds}".to_sym][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.#{direction}", :field=>"fields"), :error)
-    else
-      @edit[:new][@edit[:new][:selected_server][0]]["#{hosts}".to_sym].each do |af|                 # Go thru all available columns
-        if params["#{flds}".to_sym].include?(af)        # See if this column was selected to move
-          @edit[:new][@edit[:new][:selected_server][0]]["#{sort_hosts}".to_sym].push(af)                      # Add it to the new fields list
-        end
-      end
-      @edit[:new][@edit[:new][:selected_server][0]]["#{hosts}".to_sym].delete_if{|af| params["#{flds}".to_sym].include?(af)} # Remove selected fields
-      @edit[:new][@edit[:new][:selected_server][0]]["#{sort_hosts}".to_sym].sort!                 # Sort the selected fields array
-      @refresh_div = "hosts_lists"
-      @refresh_partial = "hosts_lists"
-    end
-  end
-
   def build_smartproxy_affinity_node(zone, server, node_type)
     affinities = server.send("vm_scan_#{node_type}_affinity").collect(&:id)
     {

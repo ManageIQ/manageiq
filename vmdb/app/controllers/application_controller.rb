@@ -580,18 +580,23 @@ class ApplicationController < ActionController::Base
     flds = direction == "right" ? "available_fields" : "selected_fields"
     edit_fields = direction == "right" ? "available_fields" : "fields"
     sort_fields = direction == "right" ? "fields" : "available_fields"
-    if !params["#{flds}".to_sym] || params["#{flds}".to_sym].length == 0 || params["#{flds}".to_sym][0] == ""
-      add_flash(I18n.t("flash.edit.no_fields_to_move.#{direction}", :field=>"fields"), :error)
+    if !params[flds.to_sym] || params[flds.to_sym].length == 0 || params[flds.to_sym][0] == ""
+      lr_messages = {
+        "left"  => _("No %s were selected to move left"),
+        "right" => _("No %s were selected to move right")
+      }
+      add_flash(lr_messages[direction] % "fields", :error)
     else
-      @edit[:new]["#{edit_fields}".to_sym].each do |af|                 # Go thru all available columns
-        if params["#{flds}".to_sym].include?(af[1].to_s)        # See if this column was selected to move
-          unless @edit[:new]["#{sort_fields}".to_sym].include?(af)                # Only move if it's not there already
-            @edit[:new]["#{sort_fields}".to_sym].push(af)                     # Add it to the new fields list
+      @edit[:new][edit_fields.to_sym].each do |af|                 # Go thru all available columns
+        if params[flds.to_sym].include?(af[1].to_s)        # See if this column was selected to move
+          unless @edit[:new][sort_fields.to_sym].include?(af)                # Only move if it's not there already
+            @edit[:new][sort_fields.to_sym].push(af)                     # Add it to the new fields list
           end
         end
       end
-      @edit[:new]["#{edit_fields}".to_sym].delete_if{|af| params["#{flds}".to_sym].include?(af[1].to_s)} # Remove selected fields
-      @edit[:new]["#{sort_fields}".to_sym].sort!                  # Sort the selected fields array
+      # Remove selected fields
+      @edit[:new][edit_fields.to_sym].delete_if { |af| params[flds.to_sym].include?(af[1].to_s) }
+      @edit[:new][sort_fields.to_sym].sort!                  # Sort the selected fields array
       @refresh_div = "column_lists"
       @refresh_partial = "column_lists"
     end

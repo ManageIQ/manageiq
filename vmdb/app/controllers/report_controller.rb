@@ -455,11 +455,10 @@ class ReportController < ApplicationController
     nodes = x_node.split('-')
     show_saved_report
     @record = MiqReportResult.find_by_id(from_cid(nodes.last))
-    @right_cell_text = I18n.t(
-      "cell_header.model_record",
+    @right_cell_text = _("%{model} \"%{name}\"") % {
       :name  => "#{@record.name} - #{format_timezone(@record.created_on, Time.zone, "gt")}",
       :model => "Saved Report"
-    )
+    }
     @right_cell_div  = "savedreports_list"
   end
 
