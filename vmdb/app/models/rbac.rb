@@ -91,7 +91,7 @@ module Rbac
     # Get the list of objects that are owned by him or his LDAP group and include any filters that were passed into search
     cond = user_or_group.limited_self_service? ? klass.conditions_for_owned(user_or_group) : klass.conditions_for_owned_or_group_owned(user_or_group)
     cond, incl = MiqExpression.merge_where_clauses_and_includes([where_clause, cond].compact, [include_for_find].compact)
-    klass.all(find_options.merge(:conditions => cond)).includes(incl)
+    klass.find(:all, find_options.merge(:conditions => cond, :include => incl))
   end
 
   def self.get_self_service_object_ids(user_or_group, klass)
@@ -230,7 +230,7 @@ module Rbac
       end
 
       cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
-      targets = klass.all(find_options.merge(:conditions => cond)).includes(incl)
+      targets = klass.all(find_options.merge(:conditions => cond, :include => incl))
 
       [targets, targets.length, targets.length]
     else
