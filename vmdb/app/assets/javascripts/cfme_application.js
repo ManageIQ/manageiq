@@ -796,7 +796,8 @@ function miqInitDashboardCols() {
 
 // Send the updated sortable order after jQuery drag/drop
 function miqDropComplete(event, ui) {
-  var url = "/" + miq_widget_dd_url + "?" + $j(this).sortable('serialize', {key:this.id + "[]"}).toString();
+  var el = $j(this);
+  var url = "/" + miq_widget_dd_url + "?" + el.sortable('serialize', {key:el.attr('id') + "[]"}).toString();
   //Adding id of record being edited to be used by load_edit call
   if(typeof miq_record_id != "undefined") url += "&id=" + miq_record_id
   miqJqueryRequest(url, {beforeSend: true, complete: true});
@@ -806,7 +807,8 @@ function miqDropComplete(event, ui) {
 function miqBuildCalendar(){
   var all = $j('input[id^=miq_date_]');   // Get all of the input boxes with ids starting with "miq_date_"
   all.each(function() {                   // Attach dhtmlxcalendars to each one
-    var cal = new dhtmlxCalendarObject(this.id);
+    var el = $j(this);
+    var cal = new dhtmlxCalendarObject(el.attr('id'));
     cal.setDateFormat("%m/%d/%Y");
     if (this.value == "" && typeof miq_cal_dateTo != "undefined"){
       cal.setDate(miq_cal_dateTo);
@@ -828,7 +830,6 @@ function miqBuildCalendar(){
 
     // Create an observer for the date field if the html5 attr is specified
     if (this.getAttribute('data-miq_observe_date')) {
-      var el = $j(this);
       cal.attachEvent("onClick", function(){
         var parms = $j.parseJSON(el.attr('data-miq_observe_date'));
         var url = parms.url;
@@ -1014,7 +1015,7 @@ function miqObserveCheckboxes() {
     el.change(function() {
       miqJqueryRequest(url, {beforeSend: true,
         complete: true,
-        data:this.id + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
+        data:el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
         no_encoding: true
       });
     })
