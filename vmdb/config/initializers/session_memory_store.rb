@@ -14,7 +14,6 @@ module ActionDispatch
       def get_session(env, session_id)
         session_id ||= generate_sid
         session = GLOBAL_HASH_TABLE[session_id] || {}
-        session = Rack::Session::Abstract::SessionHash.new(self, env).merge(session)
         [session_id, session]
       end
 
