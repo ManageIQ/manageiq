@@ -61,8 +61,12 @@ module JsHelper
     "$j('##{j_str(element)}').removeClass('#{j_str(cls)}');".html_safe
   end
 
-  def javascript_disable_field(element, status)
-    "$j('##{j_str(element)}').prop('disabled', #{status});".html_safe
+  def javascript_disable_field(element)
+    "$j('##{j_str(element)}').prop('disabled', true);".html_safe
+  end
+
+  def javascript_enable_field(element)
+    "$j('##{j_str(element)}').prop('disabled', false);".html_safe
   end
 
   def javascript_show(element)
