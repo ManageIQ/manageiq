@@ -2,19 +2,19 @@ shared_examples_for "Log Collection #synchronize_logs" do |type|
   let(:instance) { instance_variable_get("@#{type}") }
 
   it "#{type.camelize} no args" do
-    LogFile.should_receive(:logs_from_server).with()
+    LogFile.should_receive(:logs_from_server).with(MiqServer.my_server, {})
 
     instance.synchronize_logs
   end
 
   it "#{type.camelize} with options" do
-    LogFile.should_receive(:logs_from_server).with(:only_current => true)
+    LogFile.should_receive(:logs_from_server).with(MiqServer.my_server, :only_current => true)
 
     instance.synchronize_logs(:only_current => true)
   end
 
   it "#{type.camelize} user with options" do
-    LogFile.should_receive(:logs_from_server).with("test", :only_current => false)
+    LogFile.should_receive(:logs_from_server).with("test", MiqServer.my_server, :only_current => false)
 
     instance.synchronize_logs("test", :only_current => false)
   end

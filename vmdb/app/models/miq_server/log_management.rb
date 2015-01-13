@@ -105,7 +105,9 @@ module MiqServer::LogManagement
   end
 
   def synchronize_logs(*args)
-    LogFile.logs_from_server(*args)
+    options = args.extract_options!
+    args << self unless args.last.kind_of?(self.class)
+    LogFile.logs_from_server(*args, options)
   end
 
   def last_log_sync_on
