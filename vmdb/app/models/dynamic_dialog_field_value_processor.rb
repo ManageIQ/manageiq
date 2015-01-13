@@ -1,6 +1,6 @@
 class DynamicDialogFieldValueProcessor
   def self.values_from_automate(dialog_field)
-    self.new.values_from_automate(dialog_field)
+    new.values_from_automate(dialog_field)
   end
 
   def values_from_automate(dialog_field)

@@ -36,7 +36,7 @@ describe DialogFieldSortedItem do
       let(:passed_in_values) { {"lol" => "123"} }
 
       it "normalizes the values to an array" do
-        expect(dialog_field.normalize_automate_values(passed_in_values)).to eq([["lol", "123"]])
+        expect(dialog_field.normalize_automate_values(passed_in_values)).to eq([%w(lol 123)])
       end
     end
   end

@@ -70,7 +70,7 @@ class DialogField < ActiveRecord::Base
     nil
   end
 
-  def normalize_automate_values(passed_in_values)
+  def normalize_automate_values(_passed_in_values)
     # override in subclasses
     nil
   end

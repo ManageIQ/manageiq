@@ -66,7 +66,7 @@ describe DialogFieldDynamicList do
 
       it "load_values_on_init is true with default value" do
         dialog_field.stub(:load_values_on_init?).and_return(true)
-        @ws_attributes.merge!({"values" => [[1, "one"]], "default_value" => 1})
+        @ws_attributes.merge!("values" => [[1, "one"]], "default_value" => 1)
         dialog_field.resource_action.stub(:deliver_to_automate_from_dialog_field).and_return(@ws)
         dialog_field.initialize_with_values({}).should == 1
       end
@@ -79,7 +79,7 @@ describe DialogFieldDynamicList do
       end
 
       it "automate returning array" do
-        @ws_attributes.merge!({"values" => [[1, "one"]]})
+        @ws_attributes.merge!("values" => [[1, "one"]])
         dialog_field.resource_action.stub(:deliver_to_automate_from_dialog_field).and_return(@ws)
         dialog_field.values_from_automate.should == [[1, "one"]]
       end

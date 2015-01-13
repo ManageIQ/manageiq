@@ -50,6 +50,6 @@ class DialogFieldSortedItem < DialogField
 
   def normalize_automate_values(passed_in_values)
     result = passed_in_values.to_a
-    result.blank? ? self.initial_values : result
+    result.blank? ? initial_values : result
   end
 end
