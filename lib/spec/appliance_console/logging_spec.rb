@@ -12,6 +12,9 @@ describe ApplianceConsole::Logging do
 
   before do
     subject.logger = nil
+    # ApplianceConsole::Logging's interactive flag uses a shared module instance variable
+    # It probably shouldn't be shared.  Hacky fix is to reset the flag back to true.
+    subject.interactive = true
   end
 
   it "should not have default logger when setting" do
