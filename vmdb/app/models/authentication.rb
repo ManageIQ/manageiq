@@ -1,5 +1,13 @@
 class Authentication < ActiveRecord::Base
   include NewWithTypeStiMixin
+  def self.new(*args, &block)
+    if self == Authentication
+      AuthUseridPassword.new(*args, &block)
+    else
+      super
+    end
+  end
+
   include PasswordMixin
   encrypt_column :auth_key
 
@@ -12,19 +20,6 @@ class Authentication < ActiveRecord::Base
     :incomplete => "Incomplete credentials",
     :invalid => "Invalid credentials",
   }
-
-  BASE_CLASS    = 'Authentication'
-  DEFAULT_CLASS = 'AuthUseridPassword'
-
-  def self.new(*args, &block)
-    if self == BASE_CLASS.constantize
-      klass = DEFAULT_CLASS.constantize
-      raise "#{klass.name} is not a subclass of #{self.name}" unless klass <= self
-      klass.new(*args, &block)
-    else
-      super
-    end
-  end
 
   STATUS_SEVERITY = Hash.new(-1).merge(
     ""            => -1,
@@ -42,22 +37,6 @@ class Authentication < ActiveRecord::Base
 
   def authentication_type
     self.authtype.nil? ? :default : self.authtype.to_sym
-  end
-
-  def set_credentials_changed_on
-    return unless @auth_changed
-    self.credentials_changed_on = Time.now.utc
-  end
-
-  def after_authentication_changed
-    return unless @auth_changed
-    $log.info("MIQ(Authentication.after_authentication_changed) [#{self.resource_type}] [#{self.resource_id}], previously valid on: [#{self.last_valid_on}]")
-
-    self.raise_event(:changed)
-
-    # Async validate the credentials
-    self.resource.authentication_check_types_queue(self.authentication_type) if self.resource
-    @auth_changed = false
   end
 
   # The various status types:
@@ -83,10 +62,28 @@ class Authentication < ActiveRecord::Base
     ci = self.resource
     return unless ci
 
-    prefix = self.event_prefix
+    prefix = event_prefix
     return if prefix.blank?
 
     MiqEvent.raise_evm_event_queue(ci, "#{prefix}_auth_#{status}")
+  end
+
+  private
+
+  def set_credentials_changed_on
+    return unless @auth_changed
+    self.credentials_changed_on = Time.now.utc
+  end
+
+  def after_authentication_changed
+    return unless @auth_changed
+    $log.info("MIQ(Authentication.after_authentication_changed) [#{self.resource_type}] [#{self.resource_id}], previously valid on: [#{self.last_valid_on}]")
+
+    self.raise_event(:changed)
+
+    # Async validate the credentials
+    self.resource.authentication_check_types_queue(self.authentication_type) if self.resource
+    @auth_changed = false
   end
 
   def event_prefix
