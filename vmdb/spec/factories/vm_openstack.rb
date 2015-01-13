@@ -1,12 +1,7 @@
 FactoryGirl.define do
-  factory :vm_openstack do
-    sequence(:name) { |n| "vm_#{seq_padded_for_sorting(n)}" }
-    location        { |x| "[storage] #{x.name}/#{x.name}.vmx" }
-    uid_ems         { MiqUUID.new_guid }
+  factory :vm_openstack, :class => "VmOpenstack", :parent => :vm_cloud do
     vendor          "openstack"
-    template        false
     raw_power_state "RUNNING"
-    cloud           true
   end
 
   factory :vm_perf_openstack, :parent => :vm_openstack do
@@ -14,8 +9,6 @@ FactoryGirl.define do
   end
 
   factory :vm_target_openstack, :parent => :vm_openstack do
-    after(:create) do |x|
-      x.raw_power_state = (toggle_on_name_seq(x) ? "RUNNING" : "STOPPED")
-    end
+    after(:create) { |x| x.raw_power_state = (toggle_on_name_seq(x) ? "RUNNING" : "STOPPED") }
   end
 end

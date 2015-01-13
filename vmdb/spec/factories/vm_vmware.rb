@@ -1,10 +1,7 @@
 FactoryGirl.define do
-  factory :vm_vmware do
-    sequence(:name) { |n| "vm_#{seq_padded_for_sorting(n)}" }
+  factory :vm_vmware, :class => "VmVmware", :parent => :vm_infra do
     location        { |x| "[storage] #{x.name}/#{x.name}.vmx" }
-    uid_ems         { MiqUUID.new_guid }
     vendor          "vmware"
-    template        false
     raw_power_state "poweredOn"
   end
 
@@ -23,8 +20,6 @@ FactoryGirl.define do
 
   # Factories for perf_capture_timer and perf_capture_gap testing
   factory :vm_target_vmware, :parent => :vm_vmware do
-    after(:create) do |x|
-      x.raw_power_state = (toggle_on_name_seq(x) ? "poweredOn" : "poweredOff")
-    end
+    after(:create) { |x| x.raw_power_state = (toggle_on_name_seq(x) ? "poweredOn" : "poweredOff") }
   end
 end
