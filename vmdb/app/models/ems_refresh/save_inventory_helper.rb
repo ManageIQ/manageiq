@@ -88,8 +88,8 @@ module EmsRefresh::SaveInventoryHelper
     keys.each { |k| hash[k] = backup.delete(k) if backup.has_key?(k) }
   end
 
-  def save_child_inventory(obj, hashes, child_keys)
-    child_keys.each { |k| send("save_#{k}_inventory", obj, hashes[k]) if hashes.key?(k) }
+  def save_child_inventory(obj, hashes, child_keys, *args)
+    child_keys.each { |k| send("save_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
   end
 
   def store_ids_for_new_records(records, hashes, keys)
