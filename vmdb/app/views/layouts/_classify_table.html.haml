@@ -1,0 +1,43 @@
+#table_div
+  %table.style3
+    %thead
+      %tr
+        %th.icon &nbsp;
+        %th= _("Category")
+        %th= _("Assigned Value")
+    %tbody
+      - if session[:assignments].length == 0
+        %tr{:class => cycle('row0', 'row1')}
+          %td
+          %td
+            - if @tagitems.length == 1
+              - _("No %s Tags are assigned") % session[:customer_name]
+            - else
+              - _("No %s Tags are common to all of the items below") % session[:customer_name]
+          %td
+      - else
+        - session[:assignments].sort_by{|a| [a.parent.description, a.description]}.each do | a |
+          %tr{:id => "#{a.id}_tr" class => cycle('row0', 'row1')}
+            - if ! session[:assigned_filters].include?(a.parent.description.downcase)
+                          %td{:onclick => remote_function(:url      => {:action => 'classify_remove',
+                                                                        :id     => a.id},
+                                                          :loading  => "miqSparkle(true);",
+                                                          :complete => "miqSparkle(false);",
+                                                          :confirm  => _("Are you sure you want to remove the '%{a_parent}[%{a}]' assignment from all of the items below?") % {:a_parent => a.parent.description,
+                                                                                                                                                                               :a        => a.description})
+                              :title => "Click to remove this assignment"}
+                            = image_tag("/images/toolbars/delete.png",
+                                        :class => "rollover small",
+                                        :alt   => "Click to remove this assignment")
+            - else
+              %td
+                %ul.list
+                  %li
+            %td
+              = h(a.parent.description)
+              = "*" if a.parent.single_value
+            %td
+              = h(a.description)
+    %tfoot
+      %tr
+        %td{:colspan => "40"}

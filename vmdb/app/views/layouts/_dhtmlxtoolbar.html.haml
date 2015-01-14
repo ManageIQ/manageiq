@@ -1,0 +1,19 @@
+- tb ||= "center_tb"
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control=>"toolbar"}
+
+%div{:id => tb}
+
+%script{:type => "text/javascript"}
+
+  - unless request.xml_http_request?
+    - tb_buttons, tb_xml = build_toolbar_buttons_and_xml(tb_yaml)
+
+    var #{tb} = new dhtmlXToolbarObject("#{tb}", "miq_blue");
+
+    if (typeof miq_toolbars == "undefined") var miq_toolbars = {};
+    miq_toolbars['#{tb}'] = {obj:#{tb}, buttons:#{tb_buttons}, xml:"#{tb_xml}"};
+
+  - if @record
+    var miq_record_id = '#{@record.id}';
+  - else
+    var miq_record_id = null;
