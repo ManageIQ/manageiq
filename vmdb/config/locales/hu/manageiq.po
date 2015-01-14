@@ -23,6 +23,15 @@ msgstr ""
 msgid " (Names with \"%s\")"
 msgstr ""
 
+msgid " Selected Actions:"
+msgstr ""
+
+msgid " Selected Alerts:"
+msgstr ""
+
+msgid " that match the entered search string"
+msgstr ""
+
 msgid "\"#{db}Performance.#{c}\""
 msgstr ""
 
@@ -41,7 +50,7 @@ msgstr ""
 msgid "\"%{action}\" for %{model} \"%{name}\""
 msgstr ""
 
-msgid "\"%{field}\" %{model} can not be deleted"
+msgid "\"%{field}\" %{model} cannot be deleted"
 msgstr ""
 
 msgid "\"%{name}\": Global %{model} cannot be deleted"
@@ -53,6 +62,9 @@ msgstr ""
 msgid "\"%{record}\": %{task} successfully initiated"
 msgstr ""
 
+msgid "% Savings"
+msgstr ""
+
 msgid "%s"
 msgstr ""
 
@@ -62,10 +74,16 @@ msgstr ""
 msgid "%s Client Connections"
 msgstr ""
 
+msgid "%s Conditions"
+msgstr ""
+
 msgid "%s Credentials validated successfully"
 msgstr ""
 
 msgid "%s Discovery returned: "
+msgstr ""
+
+msgid "%s Entry Point (NameSpace/Class/Instance)"
 msgstr ""
 
 msgid "%s Group Reorder"
@@ -77,7 +95,16 @@ msgstr ""
 msgid "%s Group Reorder saved"
 msgstr ""
 
+msgid "%s Guide"
+msgstr ""
+
+msgid "%s Policies"
+msgstr ""
+
 msgid "%s Policy Assignment"
+msgstr ""
+
+msgid "%s Policy Profiles"
 msgstr ""
 
 msgid "%s Policy Simulation"
@@ -105,6 +132,12 @@ msgid "%s file saved"
 msgstr ""
 
 msgid "%s has been initiated for the selected Servers"
+msgstr ""
+
+msgid "%s has no network adapters"
+msgstr ""
+
+msgid "%s has no snapshots."
 msgstr ""
 
 msgid "%s is currently being used in the Display Filter"
@@ -152,6 +185,9 @@ msgstr ""
 msgid "%s no longer exists in the database"
 msgstr ""
 
+msgid "%s no longer exists, this alert must be reconfigured"
+msgstr ""
+
 msgid "%s saved"
 msgstr ""
 
@@ -174,6 +210,9 @@ msgid "%s tab is not available until at least 1 field has been selected"
 msgstr ""
 
 msgid "%s was cancelled by the user"
+msgstr ""
+
+msgid "%s with %s Tags"
 msgstr ""
 
 msgid "%{action} \"%{item_name}\" for %{model} \"%{name}\""
@@ -302,6 +341,139 @@ msgstr ""
 msgid "'%s' can not be edited"
 msgstr ""
 
+msgid "(%s bytes)"
+msgstr ""
+
+msgid "(All)"
+msgstr ""
+
+msgid "(Check All)"
+msgstr ""
+
+msgid "(Default: %s)"
+msgstr ""
+
+msgid "(Enter the value between 4 - 65636 MB)"
+msgstr ""
+
+msgid "(MB) memory"
+msgstr ""
+
+msgid "(NS/Cls/Inst)"
+msgstr ""
+
+msgid "(leave blank for default)"
+msgstr ""
+
+msgid "(max 6 digits)"
+msgstr ""
+
+msgid "* Cannot be changed while this Alert belongs to an Alert Profile."
+msgstr ""
+
+msgid ""
+"* Checking this box will remove this setting from all other PXE Images on this"
+" PXE Server"
+msgstr ""
+
+msgid "* Click on any MyTag to permanently delete and unassign it."
+msgstr ""
+
+msgid "* Enter Policy Simulation options on the left and press Submit"
+msgstr ""
+
+msgid "* Enter a reason for this approval and press Submit"
+msgstr ""
+
+msgid "* Enter a reason for this denial and press Submit"
+msgstr ""
+
+msgid ""
+"* If all Conditions are removed from a Policy, it will be unconditional and al"
+"ways evaluate to true."
+msgstr ""
+
+msgid ""
+"* Information shown is based on available trend data from %s to %s in the %s t"
+"ime zone."
+msgstr ""
+
+msgid "* Information shown is based on available trend data going back %s."
+msgstr ""
+
+msgid "* Items in"
+msgstr ""
+
+msgid ""
+"* Items in <font color=\"red\"><i>red italics</i></font> do not change the outco"
+"me of the scope or expression."
+msgstr ""
+
+msgid "* No Actions are configured for this Event."
+msgstr ""
+
+msgid "* No Events are defined%s."
+msgstr ""
+
+msgid "* Only a single value can be assigned from these Tag Categories"
+msgstr ""
+
+msgid "* Recommendations are subject to minimum of CPU: %s and Memory: %s."
+msgstr ""
+
+msgid "* Requirements - Type: jpg/png  Size: 100x100"
+msgstr ""
+
+msgid "* Requirements: File-type - PNG; Dimensions - 350x70."
+msgstr ""
+
+msgid "* Saving a blank date will remove all retirement dates"
+msgstr ""
+
+msgid "* Select one or more consecutive fields to move up or down."
+msgstr ""
+
+msgid "* Select one or more consecutive groups to move up or down."
+msgstr ""
+
+msgid "* Set in Time Profile"
+msgstr ""
+
+msgid "1 - Select a Reference VM."
+msgstr ""
+
+msgid "1 Week before retirement"
+msgstr ""
+
+msgid "10 Minutes"
+msgstr ""
+
+msgid ""
+"2 - Specify the VM Options to define the source of the values used for the pla"
+"n calculations."
+msgstr ""
+
+msgid "2 Weeks before retirement"
+msgstr ""
+
+msgid "24 Hour Time Period:"
+msgstr ""
+
+msgid "3 - Specify Target Options to qualify target Clusters or Hosts."
+msgstr ""
+
+msgid "30 Days before retirement"
+msgstr ""
+
+msgid "4 - Change the Trend Options used to calculate the daily trends, if desired."
+msgstr ""
+
+msgid "5 - Press the Submit button."
+msgstr ""
+
+msgid ">No notes have been entered."
+msgstr ""
+
 msgid "A %s must be chosen to commit this expression element"
 msgstr ""
 
@@ -314,22 +486,175 @@ msgstr ""
 msgid "A User must be assigned to a Group"
 msgstr ""
 
+msgid "A condition must contain a valid expression."
+msgstr ""
+
 msgid "A valid expression must be present"
+msgstr ""
+
+msgid "ALL"
+msgstr ""
+
+msgid "AM:"
+msgstr ""
+
+msgid "Access URL"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
+msgid "Account Policies"
+msgstr ""
+
+msgid "Account|Acctid"
+msgstr ""
+
+msgid "Account|Accttype"
+msgstr ""
+
+msgid "Account|Comment"
+msgstr ""
+
+msgid "Account|Display name"
+msgstr ""
+
+msgid "Account|Domain"
+msgstr ""
+
+msgid "Account|Enabled"
+msgstr ""
+
+msgid "Account|Expires"
+msgstr ""
+
+msgid "Account|Homedir"
+msgstr ""
+
+msgid "Account|Last logon"
+msgstr ""
+
+msgid "Account|Local"
+msgstr ""
+
+msgid "Account|Name"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Action Order"
+msgstr ""
+
+msgid "Action Type"
+msgstr ""
+
+msgid "Actions"
 msgstr ""
 
 msgid "Actions for Policy Event \"%s\" were saved"
 msgstr ""
 
+msgid "Active"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
 msgid "Add VM \"%s\" to a Service was cancelled by the user"
+msgstr ""
+
+msgid "Add VM to the selected Service"
+msgstr ""
+
+msgid "Add a Resource"
 msgstr ""
 
 msgid "Add of new %s was cancelled by the user"
 msgstr ""
 
+msgid "Add this Host"
+msgstr ""
+
+msgid "Add this SmartProxy"
+msgstr ""
+
+msgid "Add this Storage Manager"
+msgstr ""
+
+msgid "Add this Time Profile"
+msgstr ""
+
+msgid "Add this entry"
+msgstr ""
+
 msgid "Adding a new %s"
 msgstr ""
 
+msgid "Admin Role Filter:"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Advanced setting"
+msgstr ""
+
+msgid "AdvancedSetting|Created on"
+msgstr ""
+
+msgid "AdvancedSetting|Default value"
+msgstr ""
+
+msgid "AdvancedSetting|Description"
+msgstr ""
+
+msgid "AdvancedSetting|Display name"
+msgstr ""
+
+msgid "AdvancedSetting|Max"
+msgstr ""
+
+msgid "AdvancedSetting|Min"
+msgstr ""
+
+msgid "AdvancedSetting|Name"
+msgstr ""
+
+msgid "AdvancedSetting|Read only"
+msgstr ""
+
+msgid "AdvancedSetting|Resource type"
+msgstr ""
+
+msgid "AdvancedSetting|Updated on"
+msgstr ""
+
+msgid "AdvancedSetting|Value"
+msgstr ""
+
+msgid "Affected VMs"
+msgstr ""
+
+msgid "Aggregate (free space)"
+msgstr ""
+
 msgid "Alert Profile \"%s\" assignments succesfully saved"
+msgstr ""
+
+msgid "Alert Profiles"
+msgstr ""
+
+msgid "Alert Selection"
+msgstr ""
+
+msgid "Alerts"
+msgstr ""
+
+msgid "Alerts to Evaluate"
+msgstr ""
+
+msgid "All"
 msgstr ""
 
 msgid "All %s"
@@ -344,6 +669,20 @@ msgstr ""
 msgid "All %{typ} %{model}"
 msgstr ""
 
+msgid ""
+"All Datastore customizations will be lost. Are you sure you want to reset all "
+"classes and instances to default?"
+msgstr ""
+
+msgid "All Users"
+msgstr ""
+
+msgid "All VMs"
+msgstr ""
+
+msgid "All Zones"
+msgstr ""
+
 msgid "All changes have been reset"
 msgstr ""
 
@@ -356,16 +695,94 @@ msgstr ""
 msgid "Amazon Settings validation was successful"
 msgstr ""
 
+msgid "An alert must contain a valid expression."
+msgstr ""
+
 msgid "Analysis Affinity was saved"
+msgstr ""
+
+msgid "Analysis Profile"
+msgstr ""
+
+msgid "Analysis Profiles"
+msgstr ""
+
+msgid "Any"
 msgstr ""
 
 msgid "Appliance:"
 msgstr "Készülék:"
 
-msgid "Assignment changes initiated"
+msgid "Applied Tag"
 msgstr ""
 
-msgid "Assignment was cancelled by the user"
+msgid "Apply"
+msgstr ""
+
+msgid "Apply the selected filters"
+msgstr ""
+
+msgid "Approval State"
+msgstr ""
+
+msgid "Approval State:"
+msgstr ""
+
+msgid "Approved/Denied by"
+msgstr ""
+
+msgid "Approved/Denied on"
+msgstr ""
+
+msgid "Are you sure you want to delete field from schema?"
+msgstr ""
+
+msgid "Are you sure you want to delete input field from method?"
+msgstr ""
+
+msgid "Are you sure you want to remove '%s'from the Dashboard?"
+msgstr ""
+
+msgid "Are you sure you want to remove this Custom Image?"
+msgstr ""
+
+msgid "Are you sure you want to remove this Provisioning Entry Point?"
+msgstr ""
+
+msgid "Are you sure you want to remove this Reconfigure Entry Point?"
+msgstr ""
+
+msgid "Are you sure you want to remove this Retirement Entry Point?"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Assign Catalog Items"
+msgstr ""
+
+msgid "Assign To"
+msgstr ""
+
+msgid "Assigned Analysis Profile"
+msgstr ""
+
+msgid "Assigned To"
+msgstr ""
+
+msgid "Assigned server role"
+msgstr ""
+
+msgid "Assigned to Policies"
+msgstr ""
+
+msgid "AssignedServerRole|Active"
+msgstr ""
+
+msgid "AssignedServerRole|Priority"
+msgstr ""
+
+msgid "Assignments"
 msgstr ""
 
 msgid "At least %{num} %{model} must be selected for %{action}"
@@ -389,6 +806,93 @@ msgstr ""
 msgid "At least one option must be selected to reconfigure"
 msgstr ""
 
+msgid "Attached to Policy"
+msgstr ""
+
+msgid "Attribute Name"
+msgstr ""
+
+msgid "Attribute/Value Pairs"
+msgstr ""
+
+msgid "Audit event"
+msgstr ""
+
+msgid "AuditEvent|Created on"
+msgstr ""
+
+msgid "AuditEvent|Event"
+msgstr ""
+
+msgid "AuditEvent|Message"
+msgstr ""
+
+msgid "AuditEvent|Severity"
+msgstr ""
+
+msgid "AuditEvent|Source"
+msgstr ""
+
+msgid "AuditEvent|Status"
+msgstr ""
+
+msgid "AuditEvent|Target class"
+msgstr ""
+
+msgid "AuditEvent|Userid"
+msgstr ""
+
+msgid "Authentication"
+msgstr ""
+
+msgid "Authentication Status"
+msgstr ""
+
+msgid "Authentication|Auth key"
+msgstr ""
+
+msgid "Authentication|Authtype"
+msgstr ""
+
+msgid "Authentication|Created on"
+msgstr ""
+
+msgid "Authentication|Credentials changed on"
+msgstr ""
+
+msgid "Authentication|Fingerprint"
+msgstr ""
+
+msgid "Authentication|Last invalid on"
+msgstr ""
+
+msgid "Authentication|Last valid on"
+msgstr ""
+
+msgid "Authentication|Name"
+msgstr ""
+
+msgid "Authentication|Password"
+msgstr ""
+
+msgid "Authentication|Resource type"
+msgstr ""
+
+msgid "Authentication|Status"
+msgstr ""
+
+msgid "Authentication|Status details"
+msgstr ""
+
+msgid "Authentication|Updated on"
+msgstr ""
+
+msgid "Authentication|Userid"
+msgstr ""
+
+msgid "Authorization Error"
+msgstr ""
+
 msgid "Automate button %s has been cleared"
 msgstr ""
 
@@ -401,13 +905,169 @@ msgstr ""
 msgid "Automation Simulation has been run"
 msgstr ""
 
+msgid "Automations Tasks"
+msgstr ""
+
+msgid "Availability Zones"
+msgstr ""
+
+msgid "Availability zone"
+msgstr ""
+
+msgid "AvailabilityZone|Ems ref"
+msgstr ""
+
+msgid "AvailabilityZone|Name"
+msgstr ""
+
+msgid "Available % Conditions:"
+msgstr ""
+
+msgid "Available %s Alerts:"
+msgstr ""
+
+msgid "Available %s:"
+msgstr ""
+
+msgid "Available Actions:"
+msgstr ""
+
+msgid "Available Alerts:"
+msgstr ""
+
+msgid "Available Policies:"
+msgstr ""
+
+msgid "Available Snapshots"
+msgstr ""
+
+msgid "Available VMs:"
+msgstr ""
+
+msgid "Average"
+msgstr ""
+
 msgid "Back"
 msgstr "Vissza"
+
+msgid "Back (ABCD...)"
+msgstr ""
+
+msgid "Based On"
+msgstr ""
+
+msgid "Basic Info"
+msgstr ""
+
+msgid "Basic Information"
+msgstr ""
+
+msgid "Basic Options"
+msgstr ""
+
+msgid "Belongs to Alert Profiles"
+msgstr ""
+
+msgid "Belongs to Profiles"
+msgstr ""
 
 msgid "Best Fit %s"
 msgstr ""
 
+msgid "Binary blob"
+msgstr ""
+
+msgid "Binary blob part"
+msgstr ""
+
+msgid "BinaryBlobPart|Data"
+msgstr ""
+
+msgid "BinaryBlobPart|Md5"
+msgstr ""
+
+msgid "BinaryBlobPart|Size"
+msgstr ""
+
+msgid "BinaryBlob|Data type"
+msgstr ""
+
+msgid "BinaryBlob|Md5"
+msgstr ""
+
+msgid "BinaryBlob|Name"
+msgstr ""
+
+msgid "BinaryBlob|Part size"
+msgstr ""
+
+msgid "BinaryBlob|Resource type"
+msgstr ""
+
+msgid "BinaryBlob|Size"
+msgstr ""
+
+msgid "Bottleneck Event Details"
+msgstr ""
+
+msgid "Bottleneck event"
+msgstr ""
+
+msgid "BottleneckEvent|Context data"
+msgstr ""
+
+msgid "BottleneckEvent|Created on"
+msgstr ""
+
+msgid "BottleneckEvent|Event type"
+msgstr ""
+
+msgid "BottleneckEvent|Future"
+msgstr ""
+
+msgid "BottleneckEvent|Message"
+msgstr ""
+
+msgid "BottleneckEvent|Resource name"
+msgstr ""
+
+msgid "BottleneckEvent|Resource type"
+msgstr ""
+
+msgid "BottleneckEvent|Severity"
+msgstr ""
+
+msgid "BottleneckEvent|Timestamp"
+msgstr ""
+
+msgid "Box Information"
+msgstr ""
+
+msgid "Browser"
+msgstr ""
+
+msgid "Browser OS"
+msgstr ""
+
+msgid "Browser Version"
+msgstr ""
+
 msgid "Button not yet implemented"
+msgstr ""
+
+msgid "Buttons"
+msgstr ""
+
+msgid "By %s"
+msgstr ""
+
+msgid "By Filter"
+msgstr ""
+
+msgid "By Host"
+msgstr ""
+
+msgid "By User ID %s %s"
 msgstr ""
 
 msgid "CFME Appliance restart initiated successfully"
@@ -419,9 +1079,48 @@ msgstr ""
 msgid "CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
 msgstr ""
 
+msgid "CPU"
+msgstr ""
+
+msgid "CPU Limit"
+msgstr ""
+
+msgid "CPU Reserve"
+msgstr ""
+
+msgid "CPU Reserve Expand"
+msgstr ""
+
+msgid "CPU Shares"
+msgstr ""
+
+msgid "CPU Shares Level"
+msgstr ""
+
+msgid "CPU Speed"
+msgstr ""
+
+msgid "CPU Usage"
+msgstr ""
+
 msgid ""
-"Can not delete folder, One or more reports in the selected folder are not owne"
+"Can not delete folder, one or more reports in the selected folder are not owne"
 "d by your group"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Cancel Changes"
+msgstr ""
+
+msgid "Cancel Import"
+msgstr ""
+
+msgid "Cancel Simulation to go back to Button details"
+msgstr ""
+
+msgid "Cancel this provisioning request"
 msgstr ""
 
 msgid "Cannot create Request Info, error: "
@@ -438,7 +1137,31 @@ msgstr ""
 msgid "Capacity & Utilization data for %{model} \"%{name}\""
 msgstr ""
 
+msgid "Capacity Data"
+msgstr ""
+
 msgid "Capacity and Utilization Collection settings saved"
+msgstr ""
+
+msgid "Catalog"
+msgstr ""
+
+msgid "Catalog Item Type"
+msgstr ""
+
+msgid "Catalog Items"
+msgstr ""
+
+msgid "Categories"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Category Tag Entries"
+msgstr ""
+
+msgid "Caution:"
 msgstr ""
 
 msgid "Change %s value to submit reconfigure request"
@@ -447,7 +1170,103 @@ msgstr ""
 msgid "Changing the UI Workers Count will immediately restart the webserver"
 msgstr ""
 
+msgid "Chargeback rate"
+msgstr ""
+
+msgid "Chargeback rate detail"
+msgstr ""
+
+msgid "ChargebackRateDetail|Created on"
+msgstr ""
+
+msgid "ChargebackRateDetail|Description"
+msgstr ""
+
+msgid "ChargebackRateDetail|Enabled"
+msgstr ""
+
+msgid "ChargebackRateDetail|Friendly rate"
+msgstr ""
+
+msgid "ChargebackRateDetail|Group"
+msgstr ""
+
+msgid "ChargebackRateDetail|Metric"
+msgstr ""
+
+msgid "ChargebackRateDetail|Per time"
+msgstr ""
+
+msgid "ChargebackRateDetail|Per unit"
+msgstr ""
+
+msgid "ChargebackRateDetail|Rate"
+msgstr ""
+
+msgid "ChargebackRateDetail|Source"
+msgstr ""
+
+msgid "ChargebackRateDetail|Updated on"
+msgstr ""
+
+msgid "ChargebackRate|Created on"
+msgstr ""
+
+msgid "ChargebackRate|Default"
+msgstr ""
+
+msgid "ChargebackRate|Description"
+msgstr ""
+
+msgid "ChargebackRate|Guid"
+msgstr ""
+
+msgid "ChargebackRate|Rate type"
+msgstr ""
+
+msgid "ChargebackRate|Updated on"
+msgstr ""
+
+msgid "Chart Theme"
+msgstr ""
+
+msgid "Check All"
+msgstr ""
+
 msgid "Check for updates"
+msgstr ""
+
+msgid "Checked default filters will be visible."
+msgstr ""
+
+msgid "Child VM Selection"
+msgstr ""
+
+msgid "Child VMs:"
+msgstr ""
+
+msgid "Choose"
+msgstr ""
+
+msgid "Choose a %s"
+msgstr ""
+
+msgid "Choose a %s first"
+msgstr ""
+
+msgid "Choose a Category"
+msgstr ""
+
+msgid "Choose a Filter"
+msgstr ""
+
+msgid "Choose a Host"
+msgstr ""
+
+msgid "Choose a Timeline from the menus on the left."
+msgstr ""
+
+msgid "Choose a VM"
 msgstr ""
 
 msgid "Choose the type of custom variables to be imported"
@@ -456,22 +1275,461 @@ msgstr ""
 msgid "Class Schema Sequence was saved"
 msgstr ""
 
+msgid "Class Schema Sequencing:"
+msgstr ""
+
+msgid "Classification"
+msgstr ""
+
+msgid "Classification|Default"
+msgstr ""
+
+msgid "Classification|Description"
+msgstr ""
+
+msgid "Classification|Example text"
+msgstr ""
+
+msgid "Classification|Icon"
+msgstr ""
+
+msgid "Classification|Perf by tag"
+msgstr ""
+
+msgid "Classification|Read only"
+msgstr ""
+
+msgid "Classification|Show"
+msgstr ""
+
+msgid "Classification|Single value"
+msgstr ""
+
+msgid "Classification|Syntax"
+msgstr ""
+
+msgid "Click on a Host to fetch its settings"
+msgstr ""
+
+msgid "Click on this row to create a new entry"
+msgstr ""
+
+msgid "Click to add a new entry"
+msgstr ""
+
+msgid "Click to add a new parameter"
+msgstr ""
+
+msgid "Click to delete this entry"
+msgstr ""
+
+msgid "Click to delete this field from schema"
+msgstr ""
+
+msgid "Click to delete this input field from method"
+msgstr ""
+
+msgid "Click to go to this location"
+msgstr ""
+
+msgid "Click to remove this Resource from the Catalog Item"
+msgstr ""
+
+msgid "Click to select the %s theme"
+msgstr ""
+
+msgid "Click to this Catalog Item"
+msgstr ""
+
+msgid "Click to update this entry"
+msgstr ""
+
+msgid "Click to view Policy"
+msgstr ""
+
+msgid "Click to view Time Profile"
+msgstr ""
+
+msgid "Click to view details"
+msgstr ""
+
+msgid "Click to view saved report"
+msgstr ""
+
+msgid "Click to view this %s in the \"%s\" Domain"
+msgstr ""
+
+msgid "Click to view/edit Time Profile"
+msgstr ""
+
+msgid "Cloud Quota"
+msgstr ""
+
+msgid "Cloud Tenant:"
+msgstr ""
+
+msgid "Cloud network"
+msgstr ""
+
+msgid "Cloud object store container"
+msgstr ""
+
+msgid "Cloud object store object"
+msgstr ""
+
+msgid "Cloud resource quota"
+msgstr ""
+
+msgid "Cloud subnet"
+msgstr ""
+
+msgid "Cloud tenant"
+msgstr ""
+
+msgid "Cloud volume"
+msgstr ""
+
+msgid "Cloud volume snapshot"
+msgstr ""
+
+msgid "CloudNetwork|Cidr"
+msgstr ""
+
+msgid "CloudNetwork|Ems ref"
+msgstr ""
+
+msgid "CloudNetwork|Enabled"
+msgstr ""
+
+msgid "CloudNetwork|External facing"
+msgstr ""
+
+msgid "CloudNetwork|Name"
+msgstr ""
+
+msgid "CloudNetwork|Status"
+msgstr ""
+
+msgid "CloudObjectStoreContainer|Bytes"
+msgstr ""
+
+msgid "CloudObjectStoreContainer|Ems ref"
+msgstr ""
+
+msgid "CloudObjectStoreContainer|Key"
+msgstr ""
+
+msgid "CloudObjectStoreContainer|Object count"
+msgstr ""
+
+msgid "CloudObjectStoreObject|Content length"
+msgstr ""
+
+msgid "CloudObjectStoreObject|Content type"
+msgstr ""
+
+msgid "CloudObjectStoreObject|Ems ref"
+msgstr ""
+
+msgid "CloudObjectStoreObject|Etag"
+msgstr ""
+
+msgid "CloudObjectStoreObject|Key"
+msgstr ""
+
+msgid "CloudObjectStoreObject|Last modified"
+msgstr ""
+
+msgid "CloudResourceQuota|Ems ref"
+msgstr ""
+
+msgid "CloudResourceQuota|Name"
+msgstr ""
+
+msgid "CloudResourceQuota|Service name"
+msgstr ""
+
+msgid "CloudResourceQuota|Value"
+msgstr ""
+
+msgid "CloudSubnet|Cidr"
+msgstr ""
+
+msgid "CloudSubnet|Dhcp enabled"
+msgstr ""
+
+msgid "CloudSubnet|Ems ref"
+msgstr ""
+
+msgid "CloudSubnet|Gateway"
+msgstr ""
+
+msgid "CloudSubnet|Name"
+msgstr ""
+
+msgid "CloudSubnet|Network protocol"
+msgstr ""
+
+msgid "CloudSubnet|Status"
+msgstr ""
+
+msgid "CloudTenant|Description"
+msgstr ""
+
+msgid "CloudTenant|Ems ref"
+msgstr ""
+
+msgid "CloudTenant|Enabled"
+msgstr ""
+
+msgid "CloudTenant|Name"
+msgstr ""
+
+msgid "CloudVolumeSnapshot|Creation time"
+msgstr ""
+
+msgid "CloudVolumeSnapshot|Description"
+msgstr ""
+
+msgid "CloudVolumeSnapshot|Ems ref"
+msgstr ""
+
+msgid "CloudVolumeSnapshot|Name"
+msgstr ""
+
+msgid "CloudVolumeSnapshot|Size"
+msgstr ""
+
+msgid "CloudVolumeSnapshot|Status"
+msgstr ""
+
+msgid "CloudVolume|Bootable"
+msgstr ""
+
+msgid "CloudVolume|Creation time"
+msgstr ""
+
+msgid "CloudVolume|Description"
+msgstr ""
+
+msgid "CloudVolume|Ems ref"
+msgstr ""
+
+msgid "CloudVolume|Name"
+msgstr ""
+
+msgid "CloudVolume|Size"
+msgstr ""
+
+msgid "CloudVolume|Status"
+msgstr ""
+
+msgid "CloudVolume|Volume type"
+msgstr ""
+
+msgid "Clouds"
+msgstr ""
+
+msgid "Cluster"
+msgstr ""
+
+msgid "Clusters"
+msgstr ""
+
+msgid "Collapse All"
+msgstr ""
+
+msgid "Collect"
+msgstr ""
+
+msgid "Commit"
+msgstr ""
+
+msgid "Commit Import"
+msgstr ""
+
+msgid "Compare"
+msgstr ""
+
 msgid "Compare %s"
+msgstr ""
+
+msgid "Compare Mode"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+#, fuzzy
+msgid "Compliance"
+msgstr "Készülék:"
+
+msgid "Compliance detail"
+msgstr ""
+
+msgid "ComplianceDetail|Condition desc"
+msgstr ""
+
+msgid "ComplianceDetail|Condition result"
+msgstr ""
+
+msgid "ComplianceDetail|Created on"
+msgstr ""
+
+msgid "ComplianceDetail|Miq policy desc"
+msgstr ""
+
+msgid "ComplianceDetail|Miq policy result"
+msgstr ""
+
+msgid "ComplianceDetail|Updated on"
+msgstr ""
+
+msgid "Compliance|Compliant"
+msgstr ""
+
+msgid "Compliance|Event type"
+msgstr ""
+
+msgid "Compliance|Resource type"
+msgstr ""
+
+msgid "Compliance|Timestamp"
+msgstr ""
+
+msgid "Compliance|Updated on"
+msgstr ""
+
+msgid "Compressed View"
+msgstr ""
+
+msgid "Compute"
+msgstr ""
+
+msgid "Condition"
 msgstr ""
 
 msgid "Condition \"%{cond_name}\" has been removed from Policy \"%{pol_name}\""
 msgstr ""
 
+msgid "Condition Selection"
+msgstr ""
+
+msgid "Condition set"
+msgstr ""
+
+msgid "ConditionSet|Created on"
+msgstr ""
+
+msgid "ConditionSet|Description"
+msgstr ""
+
+msgid "ConditionSet|Guid"
+msgstr ""
+
+msgid "ConditionSet|Mode"
+msgstr ""
+
+msgid "ConditionSet|Name"
+msgstr ""
+
+msgid "ConditionSet|Owner type"
+msgstr ""
+
+msgid "ConditionSet|Read only"
+msgstr ""
+
+msgid "ConditionSet|Set data"
+msgstr ""
+
+msgid "ConditionSet|Set type"
+msgstr ""
+
+msgid "ConditionSet|Updated on"
+msgstr ""
+
+msgid "ConditionSet|Userid"
+msgstr ""
+
+msgid "Conditions"
+msgstr ""
+
+msgid "Condition|Applies to exp"
+msgstr ""
+
+msgid "Condition|Created on"
+msgstr ""
+
+msgid "Condition|Description"
+msgstr ""
+
+msgid "Condition|Expression"
+msgstr ""
+
+msgid "Condition|File mtime"
+msgstr ""
+
+msgid "Condition|Filename"
+msgstr ""
+
+msgid "Condition|Guid"
+msgstr ""
+
+msgid "Condition|Modifier"
+msgstr ""
+
+msgid "Condition|Name"
+msgstr ""
+
+msgid "Condition|Notes"
+msgstr ""
+
+msgid "Condition|Towhat"
+msgstr ""
+
+msgid "Condition|Updated on"
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
+
 msgid "Configuration settings saved"
+msgstr ""
+
+msgid "Configuration|Created on"
+msgstr ""
+
+msgid "Configuration|Settings"
+msgstr ""
+
+msgid "Configuration|Typ"
+msgstr ""
+
+msgid "Configuration|Updated on"
 msgstr ""
 
 msgid "Connection Broker cache cleared successfully"
 msgstr ""
 
+msgid "Connection failed."
+msgstr ""
+
 msgid "Console access failed: %s"
 msgstr ""
 
+msgid "Content"
+msgstr ""
+
 msgid "Content generation for this Widget has been initiated"
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+msgid "Continue this provisioning request"
+msgstr ""
+
+msgid "Control"
 msgstr ""
 
 msgid "Copy %s was cancelled by the user"
@@ -480,19 +1738,73 @@ msgstr ""
 msgid "Copy selected %s was saved"
 msgstr ""
 
+msgid "Copy to same path"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
 msgid "Create Snapshot for %{model} \"%{name}\" was started"
+msgstr ""
+
+msgid "Create snapshot"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Created On"
 msgstr ""
 
 msgid "Credential validation returned: %s"
 msgstr ""
 
+msgid "Credential validation was not successful"
+msgstr ""
+
 msgid "Credential validation was successful"
+msgstr ""
+
+msgid "Credentials"
+msgstr ""
+
+msgid "Credentials are not required because this SmartProxy is currently active."
+msgstr ""
+
+msgid "Credentials for Host '%s'"
 msgstr ""
 
 msgid "Credentials/Settings saved successfully"
 msgstr ""
 
+msgid "Current"
+msgstr ""
+
 msgid "Current %{model} \"%{name}\" cannot be deleted"
+msgstr ""
+
+msgid "Current Rates"
+msgstr ""
+
+msgid "Current User"
+msgstr ""
+
+msgid "Current Version"
+msgstr ""
+
+msgid "Custom Attribute Settings"
+msgstr ""
+
+msgid "Custom Attributes"
+msgstr ""
+
+msgid "Custom Automation"
+msgstr ""
+
+msgid "Custom Identifier"
+msgstr ""
+
+msgid "Custom Image"
 msgstr ""
 
 msgid "Custom Image file \"%s\" successfully uploaded"
@@ -504,16 +1816,184 @@ msgstr ""
 msgid "Custom Image successfully removed"
 msgstr ""
 
+msgid "Custom Logo file \"%s\" uploaded"
+msgstr ""
+
+msgid "Custom Specification"
+msgstr ""
+
 msgid "Custom Support URL and Description both must be entered."
+msgstr ""
+
+msgid "Custom attribute"
+msgstr ""
+
+msgid "Custom button"
+msgstr ""
+
+msgid "Custom button set"
+msgstr ""
+
+msgid "Custom login file \"%s\" uploaded"
+msgstr ""
+
+msgid "Custom login image must be a .png file"
+msgstr ""
+
+msgid "Custom logo image must be a .png file"
+msgstr ""
+
+msgid "CustomAttribute|Name"
+msgstr ""
+
+msgid "CustomAttribute|Resource type"
+msgstr ""
+
+msgid "CustomAttribute|Section"
+msgstr ""
+
+msgid "CustomAttribute|Source"
+msgstr ""
+
+msgid "CustomAttribute|Value"
+msgstr ""
+
+msgid "CustomButtonSet|Created on"
+msgstr ""
+
+msgid "CustomButtonSet|Description"
+msgstr ""
+
+msgid "CustomButtonSet|Guid"
+msgstr ""
+
+msgid "CustomButtonSet|Mode"
+msgstr ""
+
+msgid "CustomButtonSet|Name"
+msgstr ""
+
+msgid "CustomButtonSet|Owner type"
+msgstr ""
+
+msgid "CustomButtonSet|Read only"
+msgstr ""
+
+msgid "CustomButtonSet|Set data"
+msgstr ""
+
+msgid "CustomButtonSet|Set type"
+msgstr ""
+
+msgid "CustomButtonSet|Updated on"
+msgstr ""
+
+msgid "CustomButtonSet|Userid"
+msgstr ""
+
+msgid "CustomButton|Applies to class"
+msgstr ""
+
+msgid "CustomButton|Applies to exp"
+msgstr ""
+
+msgid "CustomButton|Created on"
+msgstr ""
+
+msgid "CustomButton|Description"
+msgstr ""
+
+msgid "CustomButton|Guid"
+msgstr ""
+
+msgid "CustomButton|Name"
+msgstr ""
+
+msgid "CustomButton|Options"
+msgstr ""
+
+msgid "CustomButton|Updated on"
+msgstr ""
+
+msgid "CustomButton|Userid"
+msgstr ""
+
+msgid "CustomButton|Visibility"
+msgstr ""
+
+msgid "CustomButton|Wait for complete"
 msgstr ""
 
 msgid "Customer Information successfully saved"
 msgstr ""
 
+msgid "Customization Directory"
+msgstr ""
+
+msgid "Customization spec"
+msgstr ""
+
+msgid "Customization template"
+msgstr ""
+
+msgid "CustomizationSpec|Description"
+msgstr ""
+
+msgid "CustomizationSpec|Last update time"
+msgstr ""
+
+msgid "CustomizationSpec|Name"
+msgstr ""
+
+msgid "CustomizationSpec|Spec"
+msgstr ""
+
+msgid "CustomizationSpec|Typ"
+msgstr ""
+
+msgid "CustomizationTemplate|Description"
+msgstr ""
+
+msgid "CustomizationTemplate|Name"
+msgstr ""
+
+msgid "CustomizationTemplate|Script"
+msgstr ""
+
+msgid "CustomizationTemplate|System"
+msgstr ""
+
+msgid "Customize Template"
+msgstr ""
+
+msgid "DHCP Enabled"
+msgstr ""
+
+msgid "DHCP Server"
+msgstr ""
+
+msgid "DNS"
+msgstr ""
+
+msgid "DNS Server"
+msgstr ""
+
 msgid "Dashboard Sequence was saved"
 msgstr ""
 
+msgid "Data"
+msgstr ""
+
+msgid "Data Type"
+msgstr ""
+
+msgid "Data Type:"
+msgstr ""
+
 msgid "Data validated successfully"
+msgstr ""
+
+msgid "Database backup"
 msgstr ""
 
 msgid ""
@@ -521,7 +2001,42 @@ msgid ""
 "estart"
 msgstr ""
 
-msgid "Datastore import was successful"
+msgid "DatabaseBackup|Name"
+msgstr ""
+
+msgid "Datacenter"
+msgstr ""
+
+msgid "Datastore"
+msgstr ""
+
+msgid "Datastore Actual Usage Summary"
+msgstr ""
+
+msgid "Datastore Allocation Summary"
+msgstr ""
+
+msgid "Datastore Space"
+msgstr ""
+
+msgid "Datastore import was cancelled"
+msgstr ""
+
+msgid ""
+"Datastore import was successful.\n"
+"Namespaces updated/added: %{namespace_stats}\n"
+"Classes updated/added: %{class_stats}\n"
+"Instances updated/added: %{instance_stats}\n"
+"Methods updated/added: %{method_stats}"
+msgstr ""
+
+msgid "Date Approved/Denied"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Default"
 msgstr ""
 
 msgid "Default %{model} \"%{name}\" can not be deleted"
@@ -536,22 +2051,325 @@ msgstr ""
 msgid "Default Filters saved successfully"
 msgstr ""
 
+msgid "Default Gateway"
+msgstr ""
+
+msgid "Default Items Per Page"
+msgstr ""
+
+msgid "Default Value"
+msgstr ""
+
+msgid "Delay (mins)"
+msgstr ""
+
+msgid "Delete and unassign MyTag '%s'"
+msgstr ""
+
+msgid "Delete if Older than"
+msgstr ""
+
+msgid "Delete if older than"
+msgstr ""
+
+msgid "Deleting the MyTag '%s' will also unassign it from all items, are you sure?"
+msgstr ""
+
 msgid "Deploy of SmartProxy to Host \"%s\" was cancelled"
 msgstr ""
 
 msgid "Deploy of SmartProxy to Host \"%s\" was initiated"
 msgstr ""
 
+msgid "Depot Type"
+msgstr ""
+
+msgid "Descending"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Details Mode"
+msgstr ""
+
+msgid "Details View"
+msgstr ""
+
+msgid "Determine at Run Time"
+msgstr ""
+
+msgid "Devices"
+msgstr ""
+
+msgid "Diagnostics"
+msgstr ""
+
+msgid "Dialog"
+msgstr ""
+
+msgid "Dialog Information"
+msgstr ""
+
+msgid "Dialog Options"
+msgstr ""
+
+msgid "Dialog field"
+msgstr ""
+
+msgid "Dialog group"
+msgstr ""
+
+msgid "Dialog tab"
+msgstr ""
+
+msgid "DialogField|Data type"
+msgstr ""
+
+msgid "DialogField|Default value"
+msgstr ""
+
+msgid "DialogField|Description"
+msgstr ""
+
+msgid "DialogField|Display"
+msgstr ""
+
+msgid "DialogField|Display method"
+msgstr ""
+
+msgid "DialogField|Display method options"
+msgstr ""
+
+msgid "DialogField|Dynamic"
+msgstr ""
+
+msgid "DialogField|Label"
+msgstr ""
+
+msgid "DialogField|Name"
+msgstr ""
+
+msgid "DialogField|Notes"
+msgstr ""
+
+msgid "DialogField|Notes display"
+msgstr ""
+
+msgid "DialogField|Options"
+msgstr ""
+
+msgid "DialogField|Position"
+msgstr ""
+
+msgid "DialogField|Reconfigurable"
+msgstr ""
+
+msgid "DialogField|Required"
+msgstr ""
+
+msgid "DialogField|Required method"
+msgstr ""
+
+msgid "DialogField|Required method options"
+msgstr ""
+
+msgid "DialogField|Validator rule"
+msgstr ""
+
+msgid "DialogField|Validator type"
+msgstr ""
+
+msgid "DialogField|Values"
+msgstr ""
+
+msgid "DialogField|Values method"
+msgstr ""
+
+msgid "DialogField|Values method options"
+msgstr ""
+
+msgid "DialogGroup|Description"
+msgstr ""
+
+msgid "DialogGroup|Display"
+msgstr ""
+
+msgid "DialogGroup|Display method"
+msgstr ""
+
+msgid "DialogGroup|Display method options"
+msgstr ""
+
+msgid "DialogGroup|Label"
+msgstr ""
+
+msgid "DialogGroup|Position"
+msgstr ""
+
+msgid "DialogTab|Description"
+msgstr ""
+
+msgid "DialogTab|Display"
+msgstr ""
+
+msgid "DialogTab|Display method"
+msgstr ""
+
+msgid "DialogTab|Display method options"
+msgstr ""
+
+msgid "DialogTab|Label"
+msgstr ""
+
+msgid "DialogTab|Position"
+msgstr ""
+
+msgid "Dialog|Buttons"
+msgstr ""
+
+msgid "Dialog|Description"
+msgstr ""
+
+msgid "Dialog|Label"
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "Disk"
+msgstr ""
+
+msgid "Disk Space"
+msgstr ""
+
+msgid "Disk|Auto detect"
+msgstr ""
+
+msgid "Disk|Backing type"
+msgstr ""
+
+msgid "Disk|Controller type"
+msgstr ""
+
+msgid "Disk|Created on"
+msgstr ""
+
+msgid "Disk|Device name"
+msgstr ""
+
+msgid "Disk|Device type"
+msgstr ""
+
+msgid "Disk|Disk type"
+msgstr ""
+
+msgid "Disk|Filename"
+msgstr ""
+
+msgid "Disk|Free space"
+msgstr ""
+
+msgid "Disk|Location"
+msgstr ""
+
+msgid "Disk|Mode"
+msgstr ""
+
+msgid "Disk|Present"
+msgstr ""
+
+msgid "Disk|Size"
+msgstr ""
+
+msgid "Disk|Size on disk"
+msgstr ""
+
+msgid "Disk|Start connected"
+msgstr ""
+
+msgid "Disk|Updated on"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Display Name"
+msgstr ""
+
+msgid "Display Options"
+msgstr ""
+
+msgid "Display Settings"
+msgstr ""
+
+msgid "Display in Catalog"
+msgstr ""
+
+msgid "Do Nothing"
+msgstr ""
+
+msgid "Domain Information"
+msgstr ""
+
+msgid "Domain Overrides (by priority)"
+msgstr ""
+
+msgid "Domains:"
+msgstr ""
+
 msgid "Double Click on 'New Folder' to edit"
 msgstr ""
 
+msgid "Download the SmartProxy log as a Zip File"
+msgstr ""
+
+msgid "Download the full report (all rows) as a PDF file"
+msgstr ""
+
+msgid "Drag this Tab to a new location"
+msgstr ""
+
+msgid "Drift"
+msgstr ""
+
+msgid "Drift Mode"
+msgstr ""
+
 msgid "Drift for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Drift state"
+msgstr ""
+
+msgid "DriftState|Data"
+msgstr ""
+
+msgid "DriftState|Resource type"
+msgstr ""
+
+msgid "DriftState|Timestamp"
+msgstr ""
+
+msgid "Driving Event"
+msgstr ""
+
+msgid "Dynamic"
+msgstr ""
+
+msgid "E-mail Settings"
 msgstr ""
 
 msgid "E-mail address '%s' is not valid"
 msgstr ""
 
 msgid "Edit CFME Server Relationship for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Edit Compute Rate Assignments"
 msgstr ""
 
 msgid "Edit Log Depot settings was cancelled by the user"
@@ -599,6 +2417,12 @@ msgstr ""
 msgid "Edit policy assignments was cancelled by the user"
 msgstr ""
 
+msgid "Edit this Expression"
+msgstr ""
+
+msgid "Edit this Scope"
+msgstr ""
+
 msgid "Editing %{model} \"%{name}\""
 msgstr ""
 
@@ -608,10 +2432,172 @@ msgstr ""
 msgid "Editing %{model} sequence for \"%{name}\""
 msgstr ""
 
+msgid "Editing MyTags"
+msgstr ""
+
+msgid "Element Information"
+msgstr ""
+
+msgid "Eligible %s "
+msgstr ""
+
+msgid "Ems cluster"
+msgstr ""
+
+msgid "Ems event"
+msgstr ""
+
+msgid "Ems folder"
+msgstr ""
+
+msgid "EmsCluster|Created on"
+msgstr ""
+
+msgid "EmsCluster|Drs automation level"
+msgstr ""
+
+msgid "EmsCluster|Drs enabled"
+msgstr ""
+
+msgid "EmsCluster|Drs migration threshold"
+msgstr ""
+
+msgid "EmsCluster|Effective cpu"
+msgstr ""
+
+msgid "EmsCluster|Effective memory"
+msgstr ""
+
+msgid "EmsCluster|Ems ref"
+msgstr ""
+
+msgid "EmsCluster|Ems ref obj"
+msgstr ""
+
+msgid "EmsCluster|Ha admit control"
+msgstr ""
+
+msgid "EmsCluster|Ha enabled"
+msgstr ""
+
+msgid "EmsCluster|Ha max failures"
+msgstr ""
+
+msgid "EmsCluster|Last perf capture on"
+msgstr ""
+
+msgid "EmsCluster|Name"
+msgstr ""
+
+msgid "EmsCluster|Uid ems"
+msgstr ""
+
+msgid "EmsCluster|Updated on"
+msgstr ""
+
+msgid "EmsEvent|Created on"
+msgstr ""
+
+msgid "EmsEvent|Dest ems cluster name"
+msgstr ""
+
+msgid "EmsEvent|Dest ems cluster uid"
+msgstr ""
+
+msgid "EmsEvent|Dest host name"
+msgstr ""
+
+msgid "EmsEvent|Dest vm location"
+msgstr ""
+
+msgid "EmsEvent|Dest vm name"
+msgstr ""
+
+msgid "EmsEvent|Ems cluster name"
+msgstr ""
+
+msgid "EmsEvent|Ems cluster uid"
+msgstr ""
+
+msgid "EmsEvent|Event type"
+msgstr ""
+
+msgid "EmsEvent|Full data"
+msgstr ""
+
+msgid "EmsEvent|Host name"
+msgstr ""
+
+msgid "EmsEvent|Is task"
+msgstr ""
+
+msgid "EmsEvent|Message"
+msgstr ""
+
+msgid "EmsEvent|Source"
+msgstr ""
+
+msgid "EmsEvent|Timestamp"
+msgstr ""
+
+msgid "EmsEvent|Username"
+msgstr ""
+
+msgid "EmsEvent|Vm location"
+msgstr ""
+
+msgid "EmsEvent|Vm name"
+msgstr ""
+
+msgid "EmsFolder|Created on"
+msgstr ""
+
+msgid "EmsFolder|Ems ref"
+msgstr ""
+
+msgid "EmsFolder|Ems ref obj"
+msgstr ""
+
+msgid "EmsFolder|Is datacenter"
+msgstr ""
+
+msgid "EmsFolder|Name"
+msgstr ""
+
+msgid "EmsFolder|Uid ems"
+msgstr ""
+
+msgid "EmsFolder|Updated on"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
 msgid "End Date cannot be greater than Start Date"
 msgstr ""
 
+msgid "End Port"
+msgstr ""
+
+msgid "Enter Automation Simulation options on the left and press Submit."
+msgstr ""
+
+msgid "Entity:"
+msgstr ""
+
+msgid "Entries"
+msgstr ""
+
+msgid "Entry Point"
+msgstr ""
+
+msgid "Entry Point (NS/Cls/Inst)"
+msgstr ""
+
 msgid "Entry Point must be given for field \"%s\"."
+msgstr ""
+
+msgid "Error"
 msgstr ""
 
 msgid "Error building timeline "
@@ -661,6 +2647,9 @@ msgstr ""
 msgid "Error retrieving LDAP info: "
 msgstr ""
 
+msgid "Error: Datastore import file upload expired"
+msgstr ""
+
 msgid "Error: ImportFileUpload expired"
 msgstr ""
 
@@ -673,7 +2662,142 @@ msgstr ""
 msgid "Error: the file uploaded is not of the supported format"
 msgstr ""
 
+msgid "Event Group"
+msgstr ""
+
+msgid "Event Groups"
+msgstr ""
+
+msgid "Event Name"
+msgstr ""
+
+msgid "Event Selection"
+msgstr ""
+
+msgid "Event log"
+msgstr ""
+
+msgid "Event:"
+msgstr ""
+
+msgid "EventLog|Category"
+msgstr ""
+
+msgid "EventLog|Computer name"
+msgstr ""
+
+msgid "EventLog|Generated"
+msgstr ""
+
+msgid "EventLog|Level"
+msgstr ""
+
+msgid "EventLog|Message"
+msgstr ""
+
+msgid "EventLog|Name"
+msgstr ""
+
+msgid "EventLog|Source"
+msgstr ""
+
+msgid "EventLog|Uid"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
+msgid "Exist Mode"
+msgstr ""
+
+msgid "Exists Mode"
+msgstr ""
+
+msgid "Expand All"
+msgstr ""
+
+msgid "Expanded View"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Export Selected %s"
+msgstr ""
+
+msgid "Export all classes and instances"
+msgstr ""
+
 msgid "Export generation returned: Status [%{status}] Message [%{message}]"
+msgstr ""
+
+msgid "Export:"
+msgstr ""
+
+msgid "Expression"
+msgstr ""
+
+msgid "Expression (Choose an element of the expression to edit)"
+msgstr ""
+
+msgid "Expression (Custom)"
+msgstr ""
+
+msgid "Expression (Press the \"Edit\" button to edit the expression)"
+msgstr ""
+
+msgid "Ext management system"
+msgstr ""
+
+msgid "ExtManagementSystem|Api version"
+msgstr ""
+
+msgid "ExtManagementSystem|Created on"
+msgstr ""
+
+msgid "ExtManagementSystem|Guid"
+msgstr ""
+
+msgid "ExtManagementSystem|Host default vnc port end"
+msgstr ""
+
+msgid "ExtManagementSystem|Host default vnc port start"
+msgstr ""
+
+msgid "ExtManagementSystem|Hostname"
+msgstr ""
+
+msgid "ExtManagementSystem|Ipaddress"
+msgstr ""
+
+msgid "ExtManagementSystem|Name"
+msgstr ""
+
+msgid "ExtManagementSystem|Port"
+msgstr ""
+
+msgid "ExtManagementSystem|Provider region"
+msgstr ""
+
+msgid "ExtManagementSystem|Uid ems"
+msgstr ""
+
+msgid "ExtManagementSystem|Updated on"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Failed to add depot. See logs for detail."
+msgstr ""
+
+msgid "False"
+msgstr ""
+
+msgid "Feed URL"
+msgstr ""
+
+msgid "Fields"
 msgstr ""
 
 msgid ""
@@ -681,10 +2805,458 @@ msgid ""
 "of %{max} fields"
 msgstr ""
 
+msgid "File depot"
+msgstr ""
+
+msgid "FileDepot|Name"
+msgstr ""
+
+msgid "FileDepot|Resource type"
+msgstr ""
+
+msgid "FileDepot|Support case"
+msgstr ""
+
+msgid "FileDepot|Uri"
+msgstr ""
+
+#, fuzzy
+msgid "Filename"
+msgstr "Magyar"
+
+msgid "Filesystem"
+msgstr ""
+
+msgid "Filesystem|Atime"
+msgstr ""
+
+msgid "Filesystem|Base name"
+msgstr ""
+
+msgid "Filesystem|Created on"
+msgstr ""
+
+msgid "Filesystem|Ctime"
+msgstr ""
+
+msgid "Filesystem|File version"
+msgstr ""
+
+msgid "Filesystem|File version header"
+msgstr ""
+
+msgid "Filesystem|Group"
+msgstr ""
+
+msgid "Filesystem|Md5"
+msgstr ""
+
+msgid "Filesystem|Mtime"
+msgstr ""
+
+msgid "Filesystem|Name"
+msgstr ""
+
+msgid "Filesystem|Owner"
+msgstr ""
+
+msgid "Filesystem|Permissions"
+msgstr ""
+
+msgid "Filesystem|Product version"
+msgstr ""
+
+msgid "Filesystem|Product version header"
+msgstr ""
+
+msgid "Filesystem|Resource type"
+msgstr ""
+
+msgid "Filesystem|Rsc type"
+msgstr ""
+
+msgid "Filesystem|Size"
+msgstr ""
+
+msgid "Filesystem|Updated on"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Filter By"
+msgstr ""
+
+msgid "Filters"
+msgstr ""
+
 msgid "Finished Task cannot be cancelled"
 msgstr ""
 
+msgid "Firewall Rules"
+msgstr ""
+
+msgid "Firewall rule"
+msgstr ""
+
+msgid "FirewallRule|Created on"
+msgstr ""
+
+msgid "FirewallRule|Direction"
+msgstr ""
+
+msgid "FirewallRule|Display name"
+msgstr ""
+
+msgid "FirewallRule|Ems ref"
+msgstr ""
+
+msgid "FirewallRule|Enabled"
+msgstr ""
+
+msgid "FirewallRule|End port"
+msgstr ""
+
+msgid "FirewallRule|Group"
+msgstr ""
+
+msgid "FirewallRule|Host protocol"
+msgstr ""
+
+msgid "FirewallRule|Name"
+msgstr ""
+
+msgid "FirewallRule|Network protocol"
+msgstr ""
+
+msgid "FirewallRule|Port"
+msgstr ""
+
+msgid "FirewallRule|Required"
+msgstr ""
+
+msgid "FirewallRule|Resource type"
+msgstr ""
+
+msgid "FirewallRule|Source ip range"
+msgstr ""
+
+msgid "FirewallRule|Updated on"
+msgstr ""
+
+msgid "Flavor"
+msgstr ""
+
+msgid "Flavors"
+msgstr ""
+
+msgid "Flavor|Block storage based only"
+msgstr ""
+
+msgid "Flavor|Cpu cores"
+msgstr ""
+
+msgid "Flavor|Cpus"
+msgstr ""
+
+msgid "Flavor|Description"
+msgstr ""
+
+msgid "Flavor|Ems ref"
+msgstr ""
+
+msgid "Flavor|Enabled"
+msgstr ""
+
+msgid "Flavor|Memory"
+msgstr ""
+
+msgid "Flavor|Name"
+msgstr ""
+
+msgid "Flavor|Supports 32 bit"
+msgstr ""
+
+msgid "Flavor|Supports 64 bit"
+msgstr ""
+
+msgid "Flavor|Supports hvm"
+msgstr ""
+
+msgid "Flavor|Supports paravirtual"
+msgstr ""
+
+msgid "Floating ip"
+msgstr ""
+
+msgid "FloatingIp|Address"
+msgstr ""
+
+msgid "FloatingIp|Cloud network only"
+msgstr ""
+
+msgid "FloatingIp|Ems ref"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "For questions or problem reporting, go to the %s"
+msgstr ""
+
+msgid "Friday"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "From Domain"
+msgstr ""
+
+msgid "From E-mail Address"
+msgstr ""
+
+msgid "Front (...1234)"
+msgstr ""
+
+msgid "Full&#160;Screen"
+msgstr ""
+
+msgid "GB"
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Global Default"
+msgstr ""
+
 msgid "Global Time Profile cannot be edited"
+msgstr ""
+
+msgid "Grid View"
+msgstr ""
+
+msgid "Grid/Tile Icons"
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid "Group Order"
+msgstr ""
+
+msgid "Guest application"
+msgstr ""
+
+msgid "Guest device"
+msgstr ""
+
+msgid "GuestApplication|Arch"
+msgstr ""
+
+msgid "GuestApplication|Description"
+msgstr ""
+
+msgid "GuestApplication|Language"
+msgstr ""
+
+msgid "GuestApplication|Name"
+msgstr ""
+
+msgid "GuestApplication|Package name"
+msgstr ""
+
+msgid "GuestApplication|Path"
+msgstr ""
+
+msgid "GuestApplication|Product icon"
+msgstr ""
+
+msgid "GuestApplication|Product key"
+msgstr ""
+
+msgid "GuestApplication|Release"
+msgstr ""
+
+msgid "GuestApplication|Transform"
+msgstr ""
+
+msgid "GuestApplication|Typename"
+msgstr ""
+
+msgid "GuestApplication|Vendor"
+msgstr ""
+
+msgid "GuestApplication|Version"
+msgstr ""
+
+msgid "GuestDevice|Address"
+msgstr ""
+
+msgid "GuestDevice|Auto detect"
+msgstr ""
+
+msgid "GuestDevice|Chap auth enabled"
+msgstr ""
+
+msgid "GuestDevice|Controller type"
+msgstr ""
+
+msgid "GuestDevice|Device name"
+msgstr ""
+
+msgid "GuestDevice|Device type"
+msgstr ""
+
+msgid "GuestDevice|Filename"
+msgstr ""
+
+msgid "GuestDevice|Free space"
+msgstr ""
+
+msgid "GuestDevice|Iscsi alias"
+msgstr ""
+
+msgid "GuestDevice|Iscsi name"
+msgstr ""
+
+msgid "GuestDevice|Location"
+msgstr ""
+
+msgid "GuestDevice|Mode"
+msgstr ""
+
+msgid "GuestDevice|Model"
+msgstr ""
+
+msgid "GuestDevice|Present"
+msgstr ""
+
+msgid "GuestDevice|Size"
+msgstr ""
+
+msgid "GuestDevice|Size on disk"
+msgstr ""
+
+msgid "GuestDevice|Start connected"
+msgstr ""
+
+msgid "GuestDevice|Uid ems"
+msgstr ""
+
+msgid "Hardware"
+msgstr ""
+
+msgid "Hardware Attribute"
+msgstr ""
+
+msgid "Hardware|Annotation"
+msgstr ""
+
+msgid "Hardware|Bios"
+msgstr ""
+
+msgid "Hardware|Bios location"
+msgstr ""
+
+msgid "Hardware|Bitness"
+msgstr ""
+
+msgid "Hardware|Config version"
+msgstr ""
+
+msgid "Hardware|Cores per socket"
+msgstr ""
+
+msgid "Hardware|Cpu speed"
+msgstr ""
+
+msgid "Hardware|Cpu type"
+msgstr ""
+
+msgid "Hardware|Cpu usage"
+msgstr ""
+
+msgid "Hardware|Disk capacity"
+msgstr ""
+
+msgid "Hardware|Disk free space"
+msgstr ""
+
+msgid "Hardware|Guest os"
+msgstr ""
+
+msgid "Hardware|Guest os full name"
+msgstr ""
+
+msgid "Hardware|Logical cpus"
+msgstr ""
+
+msgid "Hardware|Manufacturer"
+msgstr ""
+
+msgid "Hardware|Memory console"
+msgstr ""
+
+msgid "Hardware|Memory cpu"
+msgstr ""
+
+msgid "Hardware|Memory usage"
+msgstr ""
+
+msgid "Hardware|Model"
+msgstr ""
+
+msgid "Hardware|Number of nics"
+msgstr ""
+
+msgid "Hardware|Numvcpus"
+msgstr ""
+
+msgid "Hardware|Root device type"
+msgstr ""
+
+msgid "Hardware|Size on disk"
+msgstr ""
+
+msgid "Hardware|Time sync"
+msgstr ""
+
+msgid "Hardware|Virtual hw version"
+msgstr ""
+
+msgid "Hardware|Virtualization type"
+msgstr ""
+
+msgid "Hardware|Vmotion enabled"
+msgstr ""
+
+msgid "Header Accent Color"
+msgstr ""
+
+msgid "Heartbeat Frequency"
+msgstr ""
+
+msgid "Hide Input Parameters"
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "Hint: Press Ctrl-Alt to release the cursor from the guest"
+msgstr ""
+
+msgid "Host"
+msgstr ""
+
+msgid "Host Item"
+msgstr ""
+
+msgid "Host Items"
+msgstr ""
+
+msgid "Host Name"
 msgstr ""
 
 msgid ""
@@ -692,7 +3264,153 @@ msgid ""
 "OS"
 msgstr ""
 
+msgid "Host Protocol"
+msgstr ""
+
+msgid "Host platform"
+msgstr ""
+
+msgid "Hostname"
+msgstr ""
+
+msgid "Hosts"
+msgstr ""
+
+msgid "Host|Admin disabled"
+msgstr ""
+
+msgid "Host|Asset tag"
+msgstr ""
+
+msgid "Host|Connection state"
+msgstr ""
+
+msgid "Host|Created on"
+msgstr ""
+
+msgid "Host|Ems ref"
+msgstr ""
+
+msgid "Host|Ems ref obj"
+msgstr ""
+
+msgid "Host|Failover"
+msgstr ""
+
+msgid "Host|Guid"
+msgstr ""
+
+msgid "Host|Hostname"
+msgstr ""
+
+msgid "Host|Hyperthreading"
+msgstr ""
+
+msgid "Host|Ipaddress"
+msgstr ""
+
+msgid "Host|Ipmi address"
+msgstr ""
+
+msgid "Host|Last perf capture on"
+msgstr ""
+
+msgid "Host|Mac address"
+msgstr ""
+
+msgid "Host|Name"
+msgstr ""
+
+msgid "Host|Next available vnc port"
+msgstr ""
+
+msgid "Host|Power state"
+msgstr ""
+
+msgid "Host|Service tag"
+msgstr ""
+
+msgid "Host|Settings"
+msgstr ""
+
+msgid "Host|Smart"
+msgstr ""
+
+msgid "Host|Ssh permit root login"
+msgstr ""
+
+msgid "Host|Uid ems"
+msgstr ""
+
+msgid "Host|Updated on"
+msgstr ""
+
+msgid "Host|User assigned os"
+msgstr ""
+
+msgid "Host|Vmm buildnumber"
+msgstr ""
+
+msgid "Host|Vmm product"
+msgstr ""
+
+msgid "Host|Vmm vendor"
+msgstr ""
+
+msgid "Host|Vmm version"
+msgstr ""
+
+msgid "Hourly Timer"
+msgstr ""
+
+msgid "Hours"
+msgstr ""
+
+msgid "IP Address"
+msgstr ""
+
+msgid "IP Address Information"
+msgstr ""
+
+msgid "IPAddress"
+msgstr ""
+
+msgid "IPMI IP Address"
+msgstr ""
+
+msgid "ISO"
+msgstr ""
+
+msgid "ISO Images"
+msgstr ""
+
+msgid "Identification"
+msgstr ""
+
+msgid ""
+"If this widget is new or has just been added to your dashboard, the data is be"
+"ing generated and should be available soon."
+msgstr ""
+
+msgid "Image Type"
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
 msgid "Import / Export"
+msgstr ""
+
+msgid "Import Datastore classes"
+msgstr ""
+
+msgid "Import Datastore classes (*.zip)"
+msgstr ""
+
+msgid "Import Service Dialogs"
 msgstr ""
 
 msgid "Import file cannot be empty"
@@ -707,19 +3425,411 @@ msgstr ""
 msgid "Import validation complete: %{good_record}, %{bad_record}"
 msgstr ""
 
+msgid "In use by %s reports, cannot be disabled"
+msgstr ""
+
+msgid "Index"
+msgstr ""
+
 msgid "Indexes for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Information for Registered VMs"
+msgstr ""
+
+msgid "Infrastructure"
+msgstr ""
+
+msgid "Infrastructure Relationships"
+msgstr ""
+
+msgid "Inherit Tags"
+msgstr ""
+
+msgid "Inherit Tags Settings"
+msgstr ""
+
+msgid "Input Parameters"
+msgstr ""
+
+msgid "Insight"
+msgstr ""
+
+msgid "Install Selected SmartProxy Build"
+msgstr ""
+
+msgid "Instance Type:"
+msgstr ""
+
+msgid "Instances"
+msgstr ""
+
+msgid "Integer"
+msgstr ""
+
+msgid "Integration Services"
 msgstr ""
 
 msgid "Invalid button action."
 msgstr ""
 
+msgid "Invalid chart data. Try regenerating the widgets."
+msgstr ""
+
+msgid "Iso datastore"
+msgstr ""
+
+msgid "Iso image"
+msgstr ""
+
+msgid "IsoDatastore|Last refresh on"
+msgstr ""
+
+msgid "IsoImage|Name"
+msgstr ""
+
+msgid "Item"
+msgid_plural "Items"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Job"
+msgstr ""
+
+msgid "Job|Agent class"
+msgstr ""
+
+msgid "Job|Agent message"
+msgstr ""
+
+msgid "Job|Agent name"
+msgstr ""
+
+msgid "Job|Agent state"
+msgstr ""
+
+msgid "Job|Archive"
+msgstr ""
+
+msgid "Job|Code"
+msgstr ""
+
+msgid "Job|Context"
+msgstr ""
+
+msgid "Job|Created on"
+msgstr ""
+
+msgid "Job|Dispatch status"
+msgstr ""
+
+msgid "Job|Guid"
+msgstr ""
+
+msgid "Job|Message"
+msgstr ""
+
+msgid "Job|Name"
+msgstr ""
+
+msgid "Job|Options"
+msgstr ""
+
+msgid "Job|Process"
+msgstr ""
+
+msgid "Job|Started on"
+msgstr ""
+
+msgid "Job|State"
+msgstr ""
+
+msgid "Job|Status"
+msgstr ""
+
+msgid "Job|Sync key"
+msgstr ""
+
+msgid "Job|Target class"
+msgstr ""
+
+msgid "Job|Updated on"
+msgstr ""
+
+msgid "Job|Userid"
+msgstr ""
+
+msgid "Job|Zone"
+msgstr ""
+
+msgid "Kernel"
+msgstr ""
+
 msgid "LDAP Settings validation was successful"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Lan"
+msgstr ""
+
+msgid "Lan|Allow promiscuous"
+msgstr ""
+
+msgid "Lan|Computed allow promiscuous"
+msgstr ""
+
+msgid "Lan|Computed forged transmits"
+msgstr ""
+
+msgid "Lan|Computed mac changes"
+msgstr ""
+
+msgid "Lan|Created on"
+msgstr ""
+
+msgid "Lan|Forged transmits"
+msgstr ""
+
+msgid "Lan|Mac changes"
+msgstr ""
+
+msgid "Lan|Name"
+msgstr ""
+
+msgid "Lan|Tag"
+msgstr ""
+
+msgid "Lan|Uid ems"
+msgstr ""
+
+msgid "Lan|Updated on"
+msgstr ""
+
+msgid "Large Trees"
+msgstr ""
+
+msgid "Last 1000 lines from the Automation log"
+msgstr ""
+
+msgid "Last Message"
+msgstr ""
+
+msgid "Last Update"
+msgstr ""
+
+msgid "Last Updated"
 msgstr ""
 
 msgid "Last selected %s no longer exists"
 msgstr ""
 
+msgid "Ldap domain"
+msgstr ""
+
+msgid "Ldap group"
+msgstr ""
+
+msgid "Ldap region"
+msgstr ""
+
+msgid "Ldap server"
+msgstr ""
+
+msgid "Ldap user"
+msgstr ""
+
+msgid "LdapDomain|Base dn"
+msgstr ""
+
+msgid "LdapDomain|Bind timeout"
+msgstr ""
+
+msgid "LdapDomain|Follow referrals"
+msgstr ""
+
+msgid "LdapDomain|Get direct groups"
+msgstr ""
+
+msgid "LdapDomain|Get roles from home forest"
+msgstr ""
+
+msgid "LdapDomain|Get user groups"
+msgstr ""
+
+msgid "LdapDomain|Group membership max depth"
+msgstr ""
+
+msgid "LdapDomain|Last group sync"
+msgstr ""
+
+msgid "LdapDomain|Last user sync"
+msgstr ""
+
+msgid "LdapDomain|Name"
+msgstr ""
+
+msgid "LdapDomain|Search timeout"
+msgstr ""
+
+msgid "LdapDomain|User suffix"
+msgstr ""
+
+msgid "LdapDomain|User type"
+msgstr ""
+
+msgid "LdapGroup|Display name"
+msgstr ""
+
+msgid "LdapGroup|Dn"
+msgstr ""
+
+msgid "LdapGroup|Mail"
+msgstr ""
+
+msgid "LdapGroup|Whenchanged"
+msgstr ""
+
+msgid "LdapGroup|Whencreated"
+msgstr ""
+
+msgid "LdapRegion|Description"
+msgstr ""
+
+msgid "LdapRegion|Name"
+msgstr ""
+
+msgid "LdapServer|Hostname"
+msgstr ""
+
+msgid "LdapServer|Mode"
+msgstr ""
+
+msgid "LdapServer|Port"
+msgstr ""
+
+msgid "LdapUser|Address"
+msgstr ""
+
+msgid "LdapUser|City"
+msgstr ""
+
+msgid "LdapUser|Company"
+msgstr ""
+
+msgid "LdapUser|Country"
+msgstr ""
+
+msgid "LdapUser|Department"
+msgstr ""
+
+msgid "LdapUser|Display name"
+msgstr ""
+
+msgid "LdapUser|Dn"
+msgstr ""
+
+msgid "LdapUser|Fax"
+msgstr ""
+
+msgid "LdapUser|First name"
+msgstr ""
+
+msgid "LdapUser|Last name"
+msgstr ""
+
+msgid "LdapUser|Mail"
+msgstr ""
+
+msgid "LdapUser|Office"
+msgstr ""
+
+msgid "LdapUser|Phone"
+msgstr ""
+
+msgid "LdapUser|Phone home"
+msgstr ""
+
+msgid "LdapUser|Phone mobile"
+msgstr ""
+
+msgid "LdapUser|Sam account name"
+msgstr ""
+
+msgid "LdapUser|Sid"
+msgstr ""
+
+msgid "LdapUser|State"
+msgstr ""
+
+msgid "LdapUser|Title"
+msgstr ""
+
+msgid "LdapUser|Upn"
+msgstr ""
+
+msgid "LdapUser|Whenchanged"
+msgstr ""
+
+msgid "LdapUser|Whencreated"
+msgstr ""
+
+msgid "LdapUser|Zip"
+msgstr ""
+
+msgid "Lifecycle"
+msgstr ""
+
+msgid "Lifecycle and Automation"
+msgstr ""
+
+msgid "Lifecycle event"
+msgstr ""
+
+msgid "LifecycleEvent|Created by"
+msgstr ""
+
+msgid "LifecycleEvent|Created on"
+msgstr ""
+
+msgid "LifecycleEvent|Event"
+msgstr ""
+
+msgid "LifecycleEvent|Guid"
+msgstr ""
+
+msgid "LifecycleEvent|Location"
+msgstr ""
+
+msgid "LifecycleEvent|Message"
+msgstr ""
+
+msgid "LifecycleEvent|Status"
+msgstr ""
+
+msgid "Lifespan"
+msgstr ""
+
+msgid "Limit Chart to"
+msgstr ""
+
+msgid "List View"
+msgstr ""
+
+msgid "Load Values on Init"
+msgstr ""
+
+msgid "Locale"
+msgstr ""
+
 msgid "Locate and upload a file to start the import process"
+msgstr ""
+
+msgid "Location"
 msgstr ""
 
 msgid "Log Depot Settings were saved"
@@ -731,11 +3841,60 @@ msgstr ""
 msgid "Log In"
 msgstr "Bejelentkezés"
 
+msgid "Log Level"
+msgstr ""
+
+msgid "Log Wrap Size"
+msgstr ""
+
+msgid "Log Wrap Time"
+msgstr ""
+
 msgid "Log collection error returned: "
 msgstr ""
 
 msgid "Log collection for CFME %{object_type} %{name} has been initiated"
 msgstr ""
+
+msgid "Log file"
+msgstr ""
+
+msgid "LogFile|Created on"
+msgstr ""
+
+msgid "LogFile|Description"
+msgstr ""
+
+msgid "LogFile|Historical"
+msgstr ""
+
+msgid "LogFile|Local file"
+msgstr ""
+
+msgid "LogFile|Log uri"
+msgstr ""
+
+msgid "LogFile|Logging ended on"
+msgstr ""
+
+msgid "LogFile|Logging started on"
+msgstr ""
+
+msgid "LogFile|Name"
+msgstr ""
+
+msgid "LogFile|Resource type"
+msgstr ""
+
+msgid "LogFile|State"
+msgstr ""
+
+msgid "LogFile|Updated on"
+msgstr ""
+
+#, fuzzy
+msgid "Login"
+msgstr "Bejelentkezés"
 
 msgid "Login not allowed, User's %s is missing. Please contact the administrator"
 msgstr ""
@@ -743,25 +3902,2260 @@ msgstr ""
 msgid "Logs for this CFME Server are not available for viewing"
 msgstr ""
 
-msgid "Maintenance file uploaded successfully, post processing has been initiated."
+msgid "Long Description"
 msgstr ""
 
-msgid "Manage Desktops was cancelled by the user"
+msgid "Lookup"
 msgstr ""
 
-msgid "Manage Desktops was saved"
+msgid "MAC Address"
+msgstr ""
+
+msgid "MB"
+msgstr ""
+
+msgid "MHz"
+msgstr ""
+
+msgid "Main Info"
 msgstr ""
 
 msgid "ManageIQ"
 msgstr ""
 
+msgid "Management Engine"
+msgstr ""
+
+msgid "Management Event"
+msgstr ""
+
+msgid "Manager"
+msgstr ""
+
+msgid "Max"
+msgstr ""
+
+msgid "Max Retries"
+msgstr ""
+
+msgid "Max Time"
+msgstr ""
+
+msgid "Max VMs"
+msgstr ""
+
+msgid "Memory"
+msgstr ""
+
+msgid "Memory Limit"
+msgstr ""
+
+msgid "Memory Reserve"
+msgstr ""
+
+msgid "Memory Reserve Expand"
+msgstr ""
+
+msgid "Memory Shares"
+msgstr ""
+
+msgid "Memory Shares Level"
+msgstr ""
+
+msgid "Memory Size"
+msgstr ""
+
+msgid "Memory Usage"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Message Filter"
+msgstr ""
+
+msgid "Method Inputs"
+msgstr ""
+
+msgid "Methods"
+msgstr ""
+
+msgid "Metric"
+msgstr ""
+
+msgid "Metric rollup"
+msgstr ""
+
+msgid "MetricRollup|Assoc ids"
+msgstr ""
+
+msgid "MetricRollup|Capture interval"
+msgstr ""
+
+msgid "MetricRollup|Capture interval name"
+msgstr ""
+
+msgid "MetricRollup|Cpu ready delta summation"
+msgstr ""
+
+msgid "MetricRollup|Cpu system delta summation"
+msgstr ""
+
+msgid "MetricRollup|Cpu usage rate average"
+msgstr ""
+
+msgid "MetricRollup|Cpu usagemhz rate average"
+msgstr ""
+
+msgid "MetricRollup|Cpu used delta summation"
+msgstr ""
+
+msgid "MetricRollup|Cpu wait delta summation"
+msgstr ""
+
+msgid "MetricRollup|Created on"
+msgstr ""
+
+msgid "MetricRollup|Derived cpu available"
+msgstr ""
+
+msgid "MetricRollup|Derived cpu reserved"
+msgstr ""
+
+msgid "MetricRollup|Derived host count off"
+msgstr ""
+
+msgid "MetricRollup|Derived host count on"
+msgstr ""
+
+msgid "MetricRollup|Derived memory available"
+msgstr ""
+
+msgid "MetricRollup|Derived memory reserved"
+msgstr ""
+
+msgid "MetricRollup|Derived memory used"
+msgstr ""
+
+msgid "MetricRollup|Derived storage disk managed"
+msgstr ""
+
+msgid "MetricRollup|Derived storage disk registered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage disk unmanaged"
+msgstr ""
+
+msgid "MetricRollup|Derived storage disk unregistered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage free"
+msgstr ""
+
+msgid "MetricRollup|Derived storage mem managed"
+msgstr ""
+
+msgid "MetricRollup|Derived storage mem registered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage mem unmanaged"
+msgstr ""
+
+msgid "MetricRollup|Derived storage mem unregistered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage snapshot managed"
+msgstr ""
+
+msgid "MetricRollup|Derived storage snapshot registered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage snapshot unmanaged"
+msgstr ""
+
+msgid "MetricRollup|Derived storage snapshot unregistered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage total"
+msgstr ""
+
+msgid "MetricRollup|Derived storage used managed"
+msgstr ""
+
+msgid "MetricRollup|Derived storage used registered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage used unmanaged"
+msgstr ""
+
+msgid "MetricRollup|Derived storage used unregistered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage vm count managed"
+msgstr ""
+
+msgid "MetricRollup|Derived storage vm count registered"
+msgstr ""
+
+msgid "MetricRollup|Derived storage vm count unmanaged"
+msgstr ""
+
+msgid "MetricRollup|Derived storage vm count unregistered"
+msgstr ""
+
+msgid "MetricRollup|Derived vm allocated disk storage"
+msgstr ""
+
+msgid "MetricRollup|Derived vm count off"
+msgstr ""
+
+msgid "MetricRollup|Derived vm count on"
+msgstr ""
+
+msgid "MetricRollup|Derived vm numvcpus"
+msgstr ""
+
+msgid "MetricRollup|Derived vm used disk storage"
+msgstr ""
+
+msgid "MetricRollup|Disk devicelatency absolute average"
+msgstr ""
+
+msgid "MetricRollup|Disk kernellatency absolute average"
+msgstr ""
+
+msgid "MetricRollup|Disk queuelatency absolute average"
+msgstr ""
+
+msgid "MetricRollup|Disk usage rate average"
+msgstr ""
+
+msgid "MetricRollup|Intervals in rollup"
+msgstr ""
+
+msgid "MetricRollup|Mem swapin absolute average"
+msgstr ""
+
+msgid "MetricRollup|Mem swapout absolute average"
+msgstr ""
+
+msgid "MetricRollup|Mem swapped absolute average"
+msgstr ""
+
+msgid "MetricRollup|Mem swaptarget absolute average"
+msgstr ""
+
+msgid "MetricRollup|Mem usage absolute average"
+msgstr ""
+
+msgid "MetricRollup|Mem vmmemctl absolute average"
+msgstr ""
+
+msgid "MetricRollup|Mem vmmemctltarget absolute average"
+msgstr ""
+
+msgid "MetricRollup|Min max"
+msgstr ""
+
+msgid "MetricRollup|Net usage rate average"
+msgstr ""
+
+msgid "MetricRollup|Resource name"
+msgstr ""
+
+msgid "MetricRollup|Resource type"
+msgstr ""
+
+msgid "MetricRollup|Sys uptime absolute latest"
+msgstr ""
+
+msgid "MetricRollup|Tag names"
+msgstr ""
+
+msgid "MetricRollup|Timestamp"
+msgstr ""
+
+msgid "Metric|Assoc ids"
+msgstr ""
+
+msgid "Metric|Capture interval"
+msgstr ""
+
+msgid "Metric|Capture interval name"
+msgstr ""
+
+msgid "Metric|Cpu ready delta summation"
+msgstr ""
+
+msgid "Metric|Cpu system delta summation"
+msgstr ""
+
+msgid "Metric|Cpu usage rate average"
+msgstr ""
+
+msgid "Metric|Cpu usagemhz rate average"
+msgstr ""
+
+msgid "Metric|Cpu used delta summation"
+msgstr ""
+
+msgid "Metric|Cpu wait delta summation"
+msgstr ""
+
+msgid "Metric|Created on"
+msgstr ""
+
+msgid "Metric|Derived cpu available"
+msgstr ""
+
+msgid "Metric|Derived cpu reserved"
+msgstr ""
+
+msgid "Metric|Derived host count off"
+msgstr ""
+
+msgid "Metric|Derived host count on"
+msgstr ""
+
+msgid "Metric|Derived memory available"
+msgstr ""
+
+msgid "Metric|Derived memory reserved"
+msgstr ""
+
+msgid "Metric|Derived memory used"
+msgstr ""
+
+msgid "Metric|Derived storage disk managed"
+msgstr ""
+
+msgid "Metric|Derived storage disk registered"
+msgstr ""
+
+msgid "Metric|Derived storage disk unmanaged"
+msgstr ""
+
+msgid "Metric|Derived storage disk unregistered"
+msgstr ""
+
+msgid "Metric|Derived storage free"
+msgstr ""
+
+msgid "Metric|Derived storage mem managed"
+msgstr ""
+
+msgid "Metric|Derived storage mem registered"
+msgstr ""
+
+msgid "Metric|Derived storage mem unmanaged"
+msgstr ""
+
+msgid "Metric|Derived storage mem unregistered"
+msgstr ""
+
+msgid "Metric|Derived storage snapshot managed"
+msgstr ""
+
+msgid "Metric|Derived storage snapshot registered"
+msgstr ""
+
+msgid "Metric|Derived storage snapshot unmanaged"
+msgstr ""
+
+msgid "Metric|Derived storage snapshot unregistered"
+msgstr ""
+
+msgid "Metric|Derived storage total"
+msgstr ""
+
+msgid "Metric|Derived storage used managed"
+msgstr ""
+
+msgid "Metric|Derived storage used registered"
+msgstr ""
+
+msgid "Metric|Derived storage used unmanaged"
+msgstr ""
+
+msgid "Metric|Derived storage used unregistered"
+msgstr ""
+
+msgid "Metric|Derived storage vm count managed"
+msgstr ""
+
+msgid "Metric|Derived storage vm count registered"
+msgstr ""
+
+msgid "Metric|Derived storage vm count unmanaged"
+msgstr ""
+
+msgid "Metric|Derived storage vm count unregistered"
+msgstr ""
+
+msgid "Metric|Derived vm allocated disk storage"
+msgstr ""
+
+msgid "Metric|Derived vm count off"
+msgstr ""
+
+msgid "Metric|Derived vm count on"
+msgstr ""
+
+msgid "Metric|Derived vm numvcpus"
+msgstr ""
+
+msgid "Metric|Derived vm used disk storage"
+msgstr ""
+
+msgid "Metric|Disk devicelatency absolute average"
+msgstr ""
+
+msgid "Metric|Disk kernellatency absolute average"
+msgstr ""
+
+msgid "Metric|Disk queuelatency absolute average"
+msgstr ""
+
+msgid "Metric|Disk usage rate average"
+msgstr ""
+
+msgid "Metric|Intervals in rollup"
+msgstr ""
+
+msgid "Metric|Mem swapin absolute average"
+msgstr ""
+
+msgid "Metric|Mem swapout absolute average"
+msgstr ""
+
+msgid "Metric|Mem swapped absolute average"
+msgstr ""
+
+msgid "Metric|Mem swaptarget absolute average"
+msgstr ""
+
+msgid "Metric|Mem usage absolute average"
+msgstr ""
+
+msgid "Metric|Mem vmmemctl absolute average"
+msgstr ""
+
+msgid "Metric|Mem vmmemctltarget absolute average"
+msgstr ""
+
+msgid "Metric|Min max"
+msgstr ""
+
+msgid "Metric|Net usage rate average"
+msgstr ""
+
+msgid "Metric|Resource name"
+msgstr ""
+
+msgid "Metric|Resource type"
+msgstr ""
+
+msgid "Metric|Sys uptime absolute latest"
+msgstr ""
+
+msgid "Metric|Tag names"
+msgstr ""
+
+msgid "Metric|Timestamp"
+msgstr ""
+
+msgid "Middle (AB...34)"
+msgstr ""
+
+msgid "Minimize"
+msgstr ""
+
+msgid "Miq action"
+msgstr ""
+
+msgid "Miq action set"
+msgstr ""
+
+msgid "Miq ae class"
+msgstr ""
+
+msgid "Miq ae engine/miq ae workspace"
+msgstr ""
+
+msgid "Miq ae field"
+msgstr ""
+
+msgid "Miq ae instance"
+msgstr ""
+
+msgid "Miq ae method"
+msgstr ""
+
+msgid "Miq ae namespace"
+msgstr ""
+
+msgid "Miq ae value"
+msgstr ""
+
+msgid "Miq alert"
+msgstr ""
+
+msgid "Miq alert set"
+msgstr ""
+
+msgid "Miq alert status"
+msgstr ""
+
+msgid "Miq approval"
+msgstr ""
+
+msgid "Miq cim association"
+msgstr ""
+
+msgid "Miq cim derived metric"
+msgstr ""
+
+msgid "Miq cim instance"
+msgstr ""
+
+msgid "Miq database"
+msgstr ""
+
+msgid "Miq dialog"
+msgstr ""
+
+msgid "Miq enterprise"
+msgstr ""
+
+msgid "Miq event"
+msgstr ""
+
+msgid "Miq event set"
+msgstr ""
+
+msgid "Miq group"
+msgstr ""
+
+msgid "Miq policy"
+msgstr ""
+
+msgid "Miq policy content"
+msgstr ""
+
+msgid "Miq policy set"
+msgstr ""
+
+msgid "Miq product feature"
+msgstr ""
+
+msgid "Miq proxy"
+msgstr ""
+
+msgid "Miq queue"
+msgstr ""
+
+msgid "Miq region"
+msgstr ""
+
+msgid "Miq report"
+msgstr ""
+
+msgid "Miq report result"
+msgstr ""
+
+msgid "Miq report result detail"
+msgstr ""
+
+msgid "Miq request"
+msgstr ""
+
+msgid "Miq request task"
+msgstr ""
+
+msgid "Miq schedule"
+msgstr ""
+
+msgid "Miq scsi lun"
+msgstr ""
+
+msgid "Miq scsi target"
+msgstr ""
+
+msgid "Miq search"
+msgstr ""
+
+msgid "Miq server"
+msgstr ""
+
+msgid "Miq shortcut"
+msgstr ""
+
+msgid "Miq storage metric"
+msgstr ""
+
+msgid "Miq task"
+msgstr ""
+
+msgid "Miq user role"
+msgstr ""
+
+msgid "Miq widget"
+msgstr ""
+
+msgid "Miq widget content"
+msgstr ""
+
+msgid "Miq widget set"
+msgstr ""
+
+msgid "Miq widget shortcut"
+msgstr ""
+
+msgid "Miq worker"
+msgstr ""
+
+msgid "MiqActionSet|Created on"
+msgstr ""
+
+msgid "MiqActionSet|Description"
+msgstr ""
+
+msgid "MiqActionSet|Guid"
+msgstr ""
+
+msgid "MiqActionSet|Mode"
+msgstr ""
+
+msgid "MiqActionSet|Name"
+msgstr ""
+
+msgid "MiqActionSet|Owner type"
+msgstr ""
+
+msgid "MiqActionSet|Read only"
+msgstr ""
+
+msgid "MiqActionSet|Set data"
+msgstr ""
+
+msgid "MiqActionSet|Set type"
+msgstr ""
+
+msgid "MiqActionSet|Updated on"
+msgstr ""
+
+msgid "MiqActionSet|Userid"
+msgstr ""
+
+msgid "MiqAction|Action type"
+msgstr ""
+
+msgid "MiqAction|Created on"
+msgstr ""
+
+msgid "MiqAction|Description"
+msgstr ""
+
+msgid "MiqAction|Guid"
+msgstr ""
+
+msgid "MiqAction|Name"
+msgstr ""
+
+msgid "MiqAction|Options"
+msgstr ""
+
+msgid "MiqAction|Updated on"
+msgstr ""
+
+msgid "MiqAeClass|Created on"
+msgstr ""
+
+msgid "MiqAeClass|Description"
+msgstr ""
+
+msgid "MiqAeClass|Display name"
+msgstr ""
+
+msgid "MiqAeClass|Inherits"
+msgstr ""
+
+msgid "MiqAeClass|Name"
+msgstr ""
+
+msgid "MiqAeClass|Owner"
+msgstr ""
+
+msgid "MiqAeClass|Updated by"
+msgstr ""
+
+msgid "MiqAeClass|Updated on"
+msgstr ""
+
+msgid "MiqAeClass|Visibility"
+msgstr ""
+
+msgid "MiqAeEngine::MiqAeWorkspace|Created on"
+msgstr ""
+
+msgid "MiqAeEngine::MiqAeWorkspace|Guid"
+msgstr ""
+
+msgid "MiqAeEngine::MiqAeWorkspace|Setters"
+msgstr ""
+
+msgid "MiqAeEngine::MiqAeWorkspace|Updated on"
+msgstr ""
+
+msgid "MiqAeEngine::MiqAeWorkspace|Uri"
+msgstr ""
+
+msgid "MiqAeEngine::MiqAeWorkspace|Workspace"
+msgstr ""
+
+msgid "MiqAeField|Aetype"
+msgstr ""
+
+msgid "MiqAeField|Collect"
+msgstr ""
+
+msgid "MiqAeField|Condition"
+msgstr ""
+
+msgid "MiqAeField|Created on"
+msgstr ""
+
+msgid "MiqAeField|Datatype"
+msgstr ""
+
+msgid "MiqAeField|Default value"
+msgstr ""
+
+msgid "MiqAeField|Description"
+msgstr ""
+
+msgid "MiqAeField|Display name"
+msgstr ""
+
+msgid "MiqAeField|Max retries"
+msgstr ""
+
+msgid "MiqAeField|Max time"
+msgstr ""
+
+msgid "MiqAeField|Message"
+msgstr ""
+
+msgid "MiqAeField|Name"
+msgstr ""
+
+msgid "MiqAeField|On entry"
+msgstr ""
+
+msgid "MiqAeField|On error"
+msgstr ""
+
+msgid "MiqAeField|On exit"
+msgstr ""
+
+msgid "MiqAeField|Owner"
+msgstr ""
+
+msgid "MiqAeField|Priority"
+msgstr ""
+
+msgid "MiqAeField|Scope"
+msgstr ""
+
+msgid "MiqAeField|Substitute"
+msgstr ""
+
+msgid "MiqAeField|Updated by"
+msgstr ""
+
+msgid "MiqAeField|Updated on"
+msgstr ""
+
+msgid "MiqAeField|Visibility"
+msgstr ""
+
+msgid "MiqAeInstance|Created on"
+msgstr ""
+
+msgid "MiqAeInstance|Description"
+msgstr ""
+
+msgid "MiqAeInstance|Display name"
+msgstr ""
+
+msgid "MiqAeInstance|Inherits"
+msgstr ""
+
+msgid "MiqAeInstance|Name"
+msgstr ""
+
+msgid "MiqAeInstance|Updated by"
+msgstr ""
+
+msgid "MiqAeInstance|Updated on"
+msgstr ""
+
+msgid "MiqAeMethod|Created on"
+msgstr ""
+
+msgid "MiqAeMethod|Data"
+msgstr ""
+
+msgid "MiqAeMethod|Description"
+msgstr ""
+
+msgid "MiqAeMethod|Display name"
+msgstr ""
+
+msgid "MiqAeMethod|Language"
+msgstr ""
+
+msgid "MiqAeMethod|Location"
+msgstr ""
+
+msgid "MiqAeMethod|Name"
+msgstr ""
+
+msgid "MiqAeMethod|Scope"
+msgstr ""
+
+msgid "MiqAeMethod|Updated by"
+msgstr ""
+
+msgid "MiqAeMethod|Updated on"
+msgstr ""
+
+msgid "MiqAeNamespace|Created on"
+msgstr ""
+
+msgid "MiqAeNamespace|Description"
+msgstr ""
+
+msgid "MiqAeNamespace|Display name"
+msgstr ""
+
+msgid "MiqAeNamespace|Enabled"
+msgstr ""
+
+msgid "MiqAeNamespace|Name"
+msgstr ""
+
+msgid "MiqAeNamespace|Priority"
+msgstr ""
+
+msgid "MiqAeNamespace|System"
+msgstr ""
+
+msgid "MiqAeNamespace|Updated by"
+msgstr ""
+
+msgid "MiqAeNamespace|Updated on"
+msgstr ""
+
+msgid "MiqAeValue|Collect"
+msgstr ""
+
+msgid "MiqAeValue|Condition"
+msgstr ""
+
+msgid "MiqAeValue|Created on"
+msgstr ""
+
+msgid "MiqAeValue|Display name"
+msgstr ""
+
+msgid "MiqAeValue|Max retries"
+msgstr ""
+
+msgid "MiqAeValue|Max time"
+msgstr ""
+
+msgid "MiqAeValue|On entry"
+msgstr ""
+
+msgid "MiqAeValue|On error"
+msgstr ""
+
+msgid "MiqAeValue|On exit"
+msgstr ""
+
+msgid "MiqAeValue|Updated by"
+msgstr ""
+
+msgid "MiqAeValue|Updated on"
+msgstr ""
+
+msgid "MiqAeValue|Value"
+msgstr ""
+
+msgid "MiqAlertSet|Created on"
+msgstr ""
+
+msgid "MiqAlertSet|Description"
+msgstr ""
+
+msgid "MiqAlertSet|Guid"
+msgstr ""
+
+msgid "MiqAlertSet|Mode"
+msgstr ""
+
+msgid "MiqAlertSet|Name"
+msgstr ""
+
+msgid "MiqAlertSet|Owner type"
+msgstr ""
+
+msgid "MiqAlertSet|Read only"
+msgstr ""
+
+msgid "MiqAlertSet|Set data"
+msgstr ""
+
+msgid "MiqAlertSet|Set type"
+msgstr ""
+
+msgid "MiqAlertSet|Updated on"
+msgstr ""
+
+msgid "MiqAlertSet|Userid"
+msgstr ""
+
+msgid "MiqAlertStatus|Evaluated on"
+msgstr ""
+
+msgid "MiqAlertStatus|Resource type"
+msgstr ""
+
+msgid "MiqAlertStatus|Result"
+msgstr ""
+
+msgid "MiqAlert|Created on"
+msgstr ""
+
+msgid "MiqAlert|Db"
+msgstr ""
+
+msgid "MiqAlert|Description"
+msgstr ""
+
+msgid "MiqAlert|Enabled"
+msgstr ""
+
+msgid "MiqAlert|Expression"
+msgstr ""
+
+msgid "MiqAlert|Guid"
+msgstr ""
+
+msgid "MiqAlert|Options"
+msgstr ""
+
+msgid "MiqAlert|Responds to events"
+msgstr ""
+
+msgid "MiqAlert|Updated on"
+msgstr ""
+
+msgid "MiqApproval|Approver name"
+msgstr ""
+
+msgid "MiqApproval|Approver type"
+msgstr ""
+
+msgid "MiqApproval|Created on"
+msgstr ""
+
+msgid "MiqApproval|Description"
+msgstr ""
+
+msgid "MiqApproval|Reason"
+msgstr ""
+
+msgid "MiqApproval|Stamped on"
+msgstr ""
+
+msgid "MiqApproval|Stamper name"
+msgstr ""
+
+msgid "MiqApproval|State"
+msgstr ""
+
+msgid "MiqApproval|Updated on"
+msgstr ""
+
+msgid "MiqCimAssociation|Assoc class"
+msgstr ""
+
+msgid "MiqCimAssociation|Obj name"
+msgstr ""
+
+msgid "MiqCimAssociation|Result class"
+msgstr ""
+
+msgid "MiqCimAssociation|Result obj name"
+msgstr ""
+
+msgid "MiqCimAssociation|Result role"
+msgstr ""
+
+msgid "MiqCimAssociation|Role"
+msgstr ""
+
+msgid "MiqCimAssociation|Status"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Avg read size"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Avg write size"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Interval"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|K bytes read per sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|K bytes transferred per sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|K bytes written per sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Pct hit"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Pct read"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Pct write"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Queue depth"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Read hit ios per sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Read ios per sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Response time sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Service time sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Statistic time"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Total ios per sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Utilization"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Wait time sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Write hit ios per sec"
+msgstr ""
+
+msgid "MiqCimDerivedMetric|Write ios per sec"
+msgstr ""
+
+msgid "MiqCimInstance|Class hier"
+msgstr ""
+
+msgid "MiqCimInstance|Class name"
+msgstr ""
+
+msgid "MiqCimInstance|Is top managed element"
+msgstr ""
+
+msgid "MiqCimInstance|Last update status"
+msgstr ""
+
+msgid "MiqCimInstance|Namespace"
+msgstr ""
+
+msgid "MiqCimInstance|Obj"
+msgstr ""
+
+msgid "MiqCimInstance|Obj name"
+msgstr ""
+
+msgid "MiqCimInstance|Obj name str"
+msgstr ""
+
+msgid "MiqCimInstance|Source"
+msgstr ""
+
+msgid "MiqCimInstance|Type spec obj"
+msgstr ""
+
+msgid "MiqCimInstance|Vmdb obj type"
+msgstr ""
+
+msgid "MiqDatabase|Cfme version available"
+msgstr ""
+
+msgid "MiqDatabase|Csrf secret token"
+msgstr ""
+
+msgid "MiqDatabase|Last replication count"
+msgstr ""
+
+msgid "MiqDatabase|Postgres update available"
+msgstr ""
+
+msgid "MiqDatabase|Registration http proxy server"
+msgstr ""
+
+msgid "MiqDatabase|Registration organization"
+msgstr ""
+
+msgid "MiqDatabase|Registration server"
+msgstr ""
+
+msgid "MiqDatabase|Registration type"
+msgstr ""
+
+msgid "MiqDatabase|Session secret token"
+msgstr ""
+
+msgid "MiqDatabase|Update repo name"
+msgstr ""
+
+msgid "MiqDialog|Content"
+msgstr ""
+
+msgid "MiqDialog|Default"
+msgstr ""
+
+msgid "MiqDialog|Description"
+msgstr ""
+
+msgid "MiqDialog|Dialog type"
+msgstr ""
+
+msgid "MiqDialog|File mtime"
+msgstr ""
+
+msgid "MiqDialog|Filename"
+msgstr ""
+
+msgid "MiqDialog|Name"
+msgstr ""
+
+msgid "MiqEnterprise|Created on"
+msgstr ""
+
+msgid "MiqEnterprise|Description"
+msgstr ""
+
+msgid "MiqEnterprise|Name"
+msgstr ""
+
+msgid "MiqEnterprise|Settings"
+msgstr ""
+
+msgid "MiqEnterprise|Updated on"
+msgstr ""
+
+msgid "MiqEventSet|Created on"
+msgstr ""
+
+msgid "MiqEventSet|Description"
+msgstr ""
+
+msgid "MiqEventSet|Guid"
+msgstr ""
+
+msgid "MiqEventSet|Mode"
+msgstr ""
+
+msgid "MiqEventSet|Name"
+msgstr ""
+
+msgid "MiqEventSet|Owner type"
+msgstr ""
+
+msgid "MiqEventSet|Read only"
+msgstr ""
+
+msgid "MiqEventSet|Set data"
+msgstr ""
+
+msgid "MiqEventSet|Set type"
+msgstr ""
+
+msgid "MiqEventSet|Updated on"
+msgstr ""
+
+msgid "MiqEventSet|Userid"
+msgstr ""
+
+msgid "MiqEvent|Created on"
+msgstr ""
+
+msgid "MiqEvent|Default"
+msgstr ""
+
+msgid "MiqEvent|Definition"
+msgstr ""
+
+msgid "MiqEvent|Description"
+msgstr ""
+
+msgid "MiqEvent|Enabled"
+msgstr ""
+
+msgid "MiqEvent|Event type"
+msgstr ""
+
+msgid "MiqEvent|Guid"
+msgstr ""
+
+msgid "MiqEvent|Name"
+msgstr ""
+
+msgid "MiqEvent|Updated on"
+msgstr ""
+
 msgid "MiqGroup"
+msgstr ""
+
+msgid "MiqGroup|Created on"
+msgstr ""
+
+msgid "MiqGroup|Description"
+msgstr ""
+
+msgid "MiqGroup|Filters"
+msgstr ""
+
+msgid "MiqGroup|Group type"
+msgstr ""
+
+msgid "MiqGroup|Guid"
+msgstr ""
+
+msgid "MiqGroup|Resource type"
+msgstr ""
+
+msgid "MiqGroup|Sequence"
+msgstr ""
+
+msgid "MiqGroup|Settings"
+msgstr ""
+
+msgid "MiqGroup|Updated on"
+msgstr ""
+
+msgid "MiqPolicyContent|Created on"
+msgstr ""
+
+msgid "MiqPolicyContent|Failure sequence"
+msgstr ""
+
+msgid "MiqPolicyContent|Failure synchronous"
+msgstr ""
+
+msgid "MiqPolicyContent|Qualifier"
+msgstr ""
+
+msgid "MiqPolicyContent|Success sequence"
+msgstr ""
+
+msgid "MiqPolicyContent|Success synchronous"
+msgstr ""
+
+msgid "MiqPolicyContent|Updated on"
+msgstr ""
+
+msgid "MiqPolicySet|Created on"
+msgstr ""
+
+msgid "MiqPolicySet|Description"
+msgstr ""
+
+msgid "MiqPolicySet|Guid"
+msgstr ""
+
+msgid "MiqPolicySet|Mode"
+msgstr ""
+
+msgid "MiqPolicySet|Name"
+msgstr ""
+
+msgid "MiqPolicySet|Owner type"
+msgstr ""
+
+msgid "MiqPolicySet|Read only"
+msgstr ""
+
+msgid "MiqPolicySet|Set data"
+msgstr ""
+
+msgid "MiqPolicySet|Set type"
+msgstr ""
+
+msgid "MiqPolicySet|Updated on"
+msgstr ""
+
+msgid "MiqPolicySet|Userid"
+msgstr ""
+
+msgid "MiqPolicy|Active"
+msgstr ""
+
+msgid "MiqPolicy|Created by"
+msgstr ""
+
+msgid "MiqPolicy|Created on"
+msgstr ""
+
+msgid "MiqPolicy|Description"
+msgstr ""
+
+msgid "MiqPolicy|Expression"
+msgstr ""
+
+msgid "MiqPolicy|Guid"
+msgstr ""
+
+msgid "MiqPolicy|Mode"
+msgstr ""
+
+msgid "MiqPolicy|Name"
+msgstr ""
+
+msgid "MiqPolicy|Notes"
+msgstr ""
+
+msgid "MiqPolicy|Towhat"
+msgstr ""
+
+msgid "MiqPolicy|Updated by"
+msgstr ""
+
+msgid "MiqPolicy|Updated on"
+msgstr ""
+
+msgid "MiqProductFeature|Description"
+msgstr ""
+
+msgid "MiqProductFeature|Feature type"
+msgstr ""
+
+msgid "MiqProductFeature|Hidden"
+msgstr ""
+
+msgid "MiqProductFeature|Identifier"
+msgstr ""
+
+msgid "MiqProductFeature|Name"
+msgstr ""
+
+msgid "MiqProductFeature|Protected"
+msgstr ""
+
+msgid "MiqProxy|Capabilities"
+msgstr ""
+
+msgid "MiqProxy|Created on"
+msgstr ""
+
+msgid "MiqProxy|Guid"
+msgstr ""
+
+msgid "MiqProxy|Last heartbeat"
+msgstr ""
+
+msgid "MiqProxy|Name"
+msgstr ""
+
+msgid "MiqProxy|Power state"
+msgstr ""
+
+msgid "MiqProxy|Remote config"
+msgstr ""
+
+msgid "MiqProxy|Settings"
+msgstr ""
+
+msgid "MiqProxy|Updated on"
+msgstr ""
+
+msgid "MiqProxy|Upgrade message"
+msgstr ""
+
+msgid "MiqProxy|Upgrade settings"
+msgstr ""
+
+msgid "MiqProxy|Upgrade status"
+msgstr ""
+
+msgid "MiqProxy|Version"
+msgstr ""
+
+msgid "MiqProxy|Ws port"
+msgstr ""
+
+msgid "MiqQueue|Args"
+msgstr ""
+
+msgid "MiqQueue|Class name"
+msgstr ""
+
+msgid "MiqQueue|Created on"
+msgstr ""
+
+msgid "MiqQueue|Deliver on"
+msgstr ""
+
+msgid "MiqQueue|Expires on"
+msgstr ""
+
+msgid "MiqQueue|For user"
+msgstr ""
+
+msgid "MiqQueue|Handler type"
+msgstr ""
+
+msgid "MiqQueue|Lock version"
+msgstr ""
+
+msgid "MiqQueue|Method name"
+msgstr ""
+
+msgid "MiqQueue|Miq callback"
+msgstr ""
+
+msgid "MiqQueue|Msg data"
+msgstr ""
+
+msgid "MiqQueue|Msg timeout"
+msgstr ""
+
+msgid "MiqQueue|Priority"
+msgstr ""
+
+msgid "MiqQueue|Queue name"
+msgstr ""
+
+msgid "MiqQueue|Role"
+msgstr ""
+
+msgid "MiqQueue|Server guid"
+msgstr ""
+
+msgid "MiqQueue|State"
+msgstr ""
+
+msgid "MiqQueue|Updated on"
+msgstr ""
+
+msgid "MiqQueue|Zone"
+msgstr ""
+
+msgid "MiqRegion|Description"
+msgstr ""
+
+msgid "MiqRegion|Guid"
+msgstr ""
+
+msgid "MiqRegion|Region"
+msgstr ""
+
+msgid "MiqReportResultDetail|Data"
+msgstr ""
+
+msgid "MiqReportResultDetail|Data type"
+msgstr ""
+
+msgid "MiqReportResult|Created on"
+msgstr ""
+
+msgid "MiqReportResult|Db"
+msgstr ""
+
+msgid "MiqReportResult|Last accessed on"
+msgstr ""
+
+msgid "MiqReportResult|Last run on"
+msgstr ""
+
+msgid "MiqReportResult|Name"
+msgstr ""
+
+msgid "MiqReportResult|Report"
+msgstr ""
+
+msgid "MiqReportResult|Report rows per detail row"
+msgstr ""
+
+msgid "MiqReportResult|Report source"
+msgstr ""
+
+msgid "MiqReportResult|Scheduled on"
+msgstr ""
+
+msgid "MiqReportResult|Userid"
+msgstr ""
+
+msgid "MiqReport|Categories"
+msgstr ""
+
+msgid "MiqReport|Col formats"
+msgstr ""
+
+msgid "MiqReport|Col options"
+msgstr ""
+
+msgid "MiqReport|Col order"
+msgstr ""
+
+msgid "MiqReport|Cols"
+msgstr ""
+
+msgid "MiqReport|Conditions"
+msgstr ""
+
+msgid "MiqReport|Created on"
+msgstr ""
+
+msgid "MiqReport|Db"
+msgstr ""
+
+msgid "MiqReport|Db options"
+msgstr ""
+
+msgid "MiqReport|Dims"
+msgstr ""
+
+msgid "MiqReport|Display filter"
+msgstr ""
+
+msgid "MiqReport|File mtime"
+msgstr ""
+
+msgid "MiqReport|Filename"
+msgstr ""
+
+msgid "MiqReport|Generate cols"
+msgstr ""
+
+msgid "MiqReport|Generate rows"
+msgstr ""
+
+msgid "MiqReport|Graph"
+msgstr ""
+
+msgid "MiqReport|Group"
+msgstr ""
+
+msgid "MiqReport|Headers"
+msgstr ""
+
+msgid "MiqReport|Include"
+msgstr ""
+
+msgid "MiqReport|Name"
+msgstr ""
+
+msgid "MiqReport|Order"
+msgstr ""
+
+msgid "MiqReport|Priority"
+msgstr ""
+
+msgid "MiqReport|Rpt group"
+msgstr ""
+
+msgid "MiqReport|Rpt options"
+msgstr ""
+
+msgid "MiqReport|Rpt type"
+msgstr ""
+
+msgid "MiqReport|Sortby"
+msgstr ""
+
+msgid "MiqReport|Template type"
+msgstr ""
+
+msgid "MiqReport|Timeline"
+msgstr ""
+
+msgid "MiqReport|Title"
+msgstr ""
+
+msgid "MiqReport|Tz"
+msgstr ""
+
+msgid "MiqReport|Updated on"
+msgstr ""
+
+msgid "MiqReport|Where clause"
+msgstr ""
+
+msgid "MiqRequestTask|Created on"
+msgstr ""
+
+msgid "MiqRequestTask|Description"
+msgstr ""
+
+msgid "MiqRequestTask|Destination type"
+msgstr ""
+
+msgid "MiqRequestTask|Message"
+msgstr ""
+
+msgid "MiqRequestTask|Options"
+msgstr ""
+
+msgid "MiqRequestTask|Phase"
+msgstr ""
+
+msgid "MiqRequestTask|Phase context"
+msgstr ""
+
+msgid "MiqRequestTask|Request type"
+msgstr ""
+
+msgid "MiqRequestTask|Source type"
+msgstr ""
+
+msgid "MiqRequestTask|State"
+msgstr ""
+
+msgid "MiqRequestTask|Status"
+msgstr ""
+
+msgid "MiqRequestTask|Updated on"
+msgstr ""
+
+msgid "MiqRequestTask|Userid"
+msgstr ""
+
+msgid "MiqRequest|Approval state"
+msgstr ""
+
+msgid "MiqRequest|Created on"
+msgstr ""
+
+msgid "MiqRequest|Description"
+msgstr ""
+
+msgid "MiqRequest|Destination type"
+msgstr ""
+
+msgid "MiqRequest|Fulfilled on"
+msgstr ""
+
+msgid "MiqRequest|Message"
+msgstr ""
+
+msgid "MiqRequest|Options"
+msgstr ""
+
+msgid "MiqRequest|Request state"
+msgstr ""
+
+msgid "MiqRequest|Request type"
+msgstr ""
+
+msgid "MiqRequest|Requester name"
+msgstr ""
+
+msgid "MiqRequest|Source type"
+msgstr ""
+
+msgid "MiqRequest|Status"
+msgstr ""
+
+msgid "MiqRequest|Updated on"
+msgstr ""
+
+msgid "MiqRequest|Userid"
+msgstr ""
+
+msgid "MiqSchedule|Adhoc"
+msgstr ""
+
+msgid "MiqSchedule|Created on"
+msgstr ""
+
+msgid "MiqSchedule|Description"
+msgstr ""
+
+msgid "MiqSchedule|Enabled"
+msgstr ""
+
+msgid "MiqSchedule|Filter"
+msgstr ""
+
+msgid "MiqSchedule|Last run on"
+msgstr ""
+
+msgid "MiqSchedule|Name"
+msgstr ""
+
+msgid "MiqSchedule|Prod default"
+msgstr ""
+
+msgid "MiqSchedule|Run at"
+msgstr ""
+
+msgid "MiqSchedule|Sched action"
+msgstr ""
+
+msgid "MiqSchedule|Towhat"
+msgstr ""
+
+msgid "MiqSchedule|Userid"
+msgstr ""
+
+msgid "MiqScsiLun|Block"
+msgstr ""
+
+msgid "MiqScsiLun|Block size"
+msgstr ""
+
+msgid "MiqScsiLun|Canonical name"
+msgstr ""
+
+msgid "MiqScsiLun|Capacity"
+msgstr ""
+
+msgid "MiqScsiLun|Device name"
+msgstr ""
+
+msgid "MiqScsiLun|Device type"
+msgstr ""
+
+msgid "MiqScsiLun|Lun"
+msgstr ""
+
+msgid "MiqScsiLun|Lun type"
+msgstr ""
+
+msgid "MiqScsiLun|Uid ems"
+msgstr ""
+
+msgid "MiqScsiTarget|Address"
+msgstr ""
+
+msgid "MiqScsiTarget|Iscsi alias"
+msgstr ""
+
+msgid "MiqScsiTarget|Iscsi name"
+msgstr ""
+
+msgid "MiqScsiTarget|Target"
+msgstr ""
+
+msgid "MiqScsiTarget|Uid ems"
+msgstr ""
+
+msgid "MiqSearch|Db"
+msgstr ""
+
+msgid "MiqSearch|Description"
+msgstr ""
+
+msgid "MiqSearch|Filter"
+msgstr ""
+
+msgid "MiqSearch|Name"
+msgstr ""
+
+msgid "MiqSearch|Options"
+msgstr ""
+
+msgid "MiqSearch|Search key"
+msgstr ""
+
+msgid "MiqSearch|Search type"
+msgstr ""
+
+msgid "MiqServer|Build"
+msgstr ""
+
+msgid "MiqServer|Capabilities"
+msgstr ""
+
+msgid "MiqServer|Cpu time"
+msgstr ""
+
+msgid "MiqServer|Drb uri"
+msgstr ""
+
+msgid "MiqServer|Guid"
+msgstr ""
+
+msgid "MiqServer|Has active userinterface"
+msgstr ""
+
+msgid "MiqServer|Has active webservices"
+msgstr ""
+
+msgid "MiqServer|Hostname"
+msgstr ""
+
+msgid "MiqServer|Ipaddress"
+msgstr ""
+
+msgid "MiqServer|Is master"
+msgstr ""
+
+msgid "MiqServer|Last heartbeat"
+msgstr ""
+
+msgid "MiqServer|Last update check"
+msgstr ""
+
+msgid "MiqServer|Logo"
+msgstr ""
+
+msgid "MiqServer|Mac address"
+msgstr ""
+
+msgid "MiqServer|Memory size"
+msgstr ""
+
+msgid "MiqServer|Memory usage"
+msgstr ""
+
+msgid "MiqServer|Name"
+msgstr ""
+
+msgid "MiqServer|Os priority"
+msgstr ""
+
+msgid "MiqServer|Percent cpu"
+msgstr ""
+
+msgid "MiqServer|Percent memory"
+msgstr ""
+
+msgid "MiqServer|Pid"
+msgstr ""
+
+msgid "MiqServer|Rh registered"
+msgstr ""
+
+msgid "MiqServer|Rh subscribed"
+msgstr ""
+
+msgid "MiqServer|Rhn mirror"
+msgstr ""
+
+msgid "MiqServer|Sql spid"
+msgstr ""
+
+msgid "MiqServer|Started on"
+msgstr ""
+
+msgid "MiqServer|Status"
+msgstr ""
+
+msgid "MiqServer|Stopped on"
+msgstr ""
+
+msgid "MiqServer|Updates available"
+msgstr ""
+
+msgid "MiqServer|Upgrade message"
+msgstr ""
+
+msgid "MiqServer|Upgrade status"
+msgstr ""
+
+msgid "MiqServer|Version"
+msgstr ""
+
+msgid "MiqShortcut|Description"
+msgstr ""
+
+msgid "MiqShortcut|Name"
+msgstr ""
+
+msgid "MiqShortcut|Rbac feature name"
+msgstr ""
+
+msgid "MiqShortcut|Sequence"
+msgstr ""
+
+msgid "MiqShortcut|Startup"
+msgstr ""
+
+msgid "MiqShortcut|Url"
+msgstr ""
+
+msgid "MiqStorageMetric|Metric obj"
+msgstr ""
+
+msgid "MiqTask|Context data"
+msgstr ""
+
+msgid "MiqTask|Created on"
+msgstr ""
+
+msgid "MiqTask|Identifier"
+msgstr ""
+
+msgid "MiqTask|Message"
+msgstr ""
+
+msgid "MiqTask|Name"
+msgstr ""
+
+msgid "MiqTask|Pct complete"
+msgstr ""
+
+msgid "MiqTask|Results"
+msgstr ""
+
+msgid "MiqTask|State"
+msgstr ""
+
+msgid "MiqTask|Status"
+msgstr ""
+
+msgid "MiqTask|Updated on"
+msgstr ""
+
+msgid "MiqTask|Userid"
+msgstr ""
+
+msgid "MiqUserRole|Name"
+msgstr ""
+
+msgid "MiqUserRole|Read only"
+msgstr ""
+
+msgid "MiqUserRole|Settings"
+msgstr ""
+
+msgid "MiqWidgetContent|Contents"
+msgstr ""
+
+msgid "MiqWidgetContent|Timezone"
+msgstr ""
+
+msgid "MiqWidgetSet|Created on"
+msgstr ""
+
+msgid "MiqWidgetSet|Description"
+msgstr ""
+
+msgid "MiqWidgetSet|Guid"
+msgstr ""
+
+msgid "MiqWidgetSet|Mode"
+msgstr ""
+
+msgid "MiqWidgetSet|Name"
+msgstr ""
+
+msgid "MiqWidgetSet|Owner type"
+msgstr ""
+
+msgid "MiqWidgetSet|Read only"
+msgstr ""
+
+msgid "MiqWidgetSet|Set data"
+msgstr ""
+
+msgid "MiqWidgetSet|Set type"
+msgstr ""
+
+msgid "MiqWidgetSet|Updated on"
+msgstr ""
+
+msgid "MiqWidgetSet|Userid"
+msgstr ""
+
+msgid "MiqWidgetShortcut|Description"
+msgstr ""
+
+msgid "MiqWidgetShortcut|Sequence"
+msgstr ""
+
+msgid "MiqWidget|Content type"
+msgstr ""
+
+msgid "MiqWidget|Description"
+msgstr ""
+
+msgid "MiqWidget|Enabled"
+msgstr ""
+
+msgid "MiqWidget|Guid"
+msgstr ""
+
+msgid "MiqWidget|Last generated content on"
+msgstr ""
+
+msgid "MiqWidget|Options"
+msgstr ""
+
+msgid "MiqWidget|Read only"
+msgstr ""
+
+msgid "MiqWidget|Resource type"
+msgstr ""
+
+msgid "MiqWidget|Title"
+msgstr ""
+
+msgid "MiqWidget|Visibility"
+msgstr ""
+
+msgid "MiqWorker|Command line"
+msgstr ""
+
+msgid "MiqWorker|Cpu time"
+msgstr ""
+
+msgid "MiqWorker|Guid"
+msgstr ""
+
+msgid "MiqWorker|Last heartbeat"
+msgstr ""
+
+msgid "MiqWorker|Memory size"
+msgstr ""
+
+msgid "MiqWorker|Memory usage"
+msgstr ""
+
+msgid "MiqWorker|Os priority"
+msgstr ""
+
+msgid "MiqWorker|Percent cpu"
+msgstr ""
+
+msgid "MiqWorker|Percent memory"
+msgstr ""
+
+msgid "MiqWorker|Pid"
+msgstr ""
+
+msgid "MiqWorker|Queue name"
+msgstr ""
+
+msgid "MiqWorker|Sql spid"
+msgstr ""
+
+msgid "MiqWorker|Started on"
+msgstr ""
+
+msgid "MiqWorker|Status"
+msgstr ""
+
+msgid "MiqWorker|Stopped on"
+msgstr ""
+
+msgid "MiqWorker|Uri"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Move Selected buttons left"
+msgstr ""
+
+msgid "Move Selected buttons right"
+msgstr ""
+
+msgid "Move Selected fields left"
+msgstr ""
+
+msgid "Move Selected fields right"
+msgstr ""
+
+msgid "Move all VMs to right"
+msgstr ""
+
+msgid "Move selected Action down"
+msgstr ""
+
+msgid "Move selected Action up"
+msgstr ""
+
+msgid "Move selected Actions into this Event"
+msgstr ""
+
+msgid "Move selected Alerts into this Action"
+msgstr ""
+
+msgid "Move selected Alerts into this Profile"
+msgstr ""
+
+msgid "Move selected Conditions into this Policy"
+msgstr ""
+
+msgid "Move selected Policies into this Profile"
+msgstr ""
+
+msgid "Move selected VMs to left"
+msgstr ""
+
+msgid "Move selected VMs to right"
+msgstr ""
+
+msgid "Move selected field down"
+msgstr ""
+
+msgid "Move selected field up"
+msgstr ""
+
+msgid "Move selected fields down"
+msgstr ""
+
+msgid "Move selected fields up"
+msgstr ""
+
+msgid "My Services"
+msgstr ""
+
+msgid "N/A"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Name (from chosen Host)"
+msgstr ""
+
+msgid "Name / Description"
+msgstr ""
+
+msgid "Namespace"
+msgstr ""
+
+msgid "Namespace Details"
+msgstr ""
+
+msgid "Namespaces"
+msgstr ""
+
+msgid "Naming"
+msgstr ""
+
+msgid "Network"
+msgstr ""
+
+msgid "Network Adapter Information"
+msgstr ""
+
+msgid "Network Adapters"
+msgstr ""
+
+msgid "Network Protocol"
+msgstr ""
+
+msgid "Network Type"
+msgstr ""
+
+msgid "Network|Default gateway"
+msgstr ""
+
+msgid "Network|Description"
+msgstr ""
+
+msgid "Network|Dhcp enabled"
+msgstr ""
+
+msgid "Network|Dhcp server"
+msgstr ""
+
+msgid "Network|Dns server"
+msgstr ""
+
+msgid "Network|Domain"
+msgstr ""
+
+msgid "Network|Guid"
+msgstr ""
+
+msgid "Network|Hostname"
+msgstr ""
+
+msgid "Network|Ipaddress"
+msgstr ""
+
+msgid "Network|Ipv6address"
+msgstr ""
+
+msgid "Network|Lease expires"
+msgstr ""
+
+msgid "Network|Lease obtained"
+msgstr ""
+
+msgid "Network|Subnet mask"
+msgstr ""
+
+msgid "Never"
+msgstr ""
+
+msgid "New Catalog Item"
+msgstr ""
+
+msgid "New Entry"
+msgstr ""
+
+msgid "New Field"
+msgstr ""
+
+msgid "New Name"
+msgstr ""
+
+msgid "New Parameter"
 msgstr ""
 
 msgid "New Password"
 msgstr "Új jelszó"
 
+msgid "New setting will affect %s"
+msgstr ""
+
 msgid "New settings have been activated"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "No %s %s Policies are defined %s."
+msgstr ""
+
+msgid "No %s Alert Profiles are defined%s."
+msgstr ""
+
+msgid "No %s Conditions are defined%s."
+msgstr ""
+
+msgid "No %s Policy Profiles are defined%s."
+msgstr ""
+
+msgid "No %s found"
+msgstr ""
+
+msgid "No %s found."
 msgstr ""
 
 msgid "No %s selected to set to Asynchronous"
@@ -774,6 +6168,12 @@ msgid "No %s were moved up"
 msgstr ""
 
 msgid "No %s were selected for deletion"
+msgstr ""
+
+msgid "No %s were selected to be disabled"
+msgstr ""
+
+msgid "No %s were selected to be enabled"
 msgstr ""
 
 msgid "No %s were selected to move bottom"
@@ -809,6 +6209,27 @@ msgstr ""
 msgid "No %{model} were selected to be marked as %{action}"
 msgstr ""
 
+msgid "No Actions are defined %s."
+msgstr ""
+
+msgid "No Alerts are defined %s."
+msgstr ""
+
+msgid "No Alerts are defined."
+msgstr ""
+
+msgid "No Alerts have been selected."
+msgstr ""
+
+msgid "No Attribute/Value Pairs found"
+msgstr ""
+
+msgid "No Catalog Items found."
+msgstr ""
+
+msgid "No Choices Available"
+msgstr ""
+
 msgid "No Class found for explorer tree node type '%s'"
 msgstr ""
 
@@ -817,16 +6238,55 @@ msgid ""
 "r"
 msgstr ""
 
-msgid "No Host instances have been defined, press a button to Add or Discover one"
+msgid "No Dialog"
+msgstr ""
+
+msgid "No MyTags have been created"
 msgstr ""
 
 msgid "No Ordering Dialog is available"
 msgstr ""
 
+msgid "No Policies are defined."
+msgstr ""
+
+msgid "No Policy scope defined, the scope of this policy includes all elements."
+msgstr ""
+
+msgid "No RSS Feed data found"
+msgstr ""
+
+msgid "No RSS Feeds Found"
+msgstr ""
+
+msgid "No Records Found"
+msgstr ""
+
+msgid "No Records found"
+msgstr ""
+
 msgid "No Report Schedules were selected to be Run now"
 msgstr ""
 
+msgid "No Report data found"
+msgstr ""
+
+msgid "No Reports available."
+msgstr ""
+
+msgid "No Resources found."
+msgstr ""
+
 msgid "No Server was selected"
+msgstr ""
+
+msgid "No Time Profile Selected"
+msgstr ""
+
+msgid "No Time Profiles found"
+msgstr ""
+
+msgid "No Timeline data available."
 msgstr ""
 
 msgid "No Utilization data available"
@@ -835,21 +6295,45 @@ msgstr ""
 msgid "No Utilization data available to generate planning results"
 msgstr ""
 
+msgid "No VMs found"
+msgstr ""
+
 msgid "No VMs match the selection criteria"
 msgstr ""
 
-msgid ""
-"No Virtual Center instances have been defined, press a button to Add or Discov"
-"er one"
+msgid "No Widget compatible Reports found"
+msgstr ""
+
+msgid "No alarms found for the selected %s"
+msgstr ""
+
+msgid "No chart data found"
 msgstr ""
 
 msgid "No child VMs to move right, no action taken"
 msgstr ""
 
+msgid ""
+"No conditions defined. This policy is unconditional and will ALWAYS return tru"
+"e."
+msgstr ""
+
+msgid "No custom image has been uploaded"
+msgstr ""
+
+msgid "No data found."
+msgstr ""
+
 msgid "No events available for this timeline"
 msgstr ""
 
+msgid "No events available for this timeline."
+msgstr ""
+
 msgid "No explorer tree node type found for '%s'"
+msgstr ""
+
+msgid "No expression defined, a condition must contain a valid expression."
 msgstr ""
 
 msgid "No log available, press Retrieve to get the SmartProxy log"
@@ -858,10 +6342,25 @@ msgstr ""
 msgid "No more than %{max} %{model} can be selected for %{action}"
 msgstr ""
 
+msgid "No notes have been entered."
+msgstr ""
+
+msgid "No performance data is available for the selected item."
+msgstr ""
+
+msgid "No planning data is available for the selected item."
+msgstr ""
+
 msgid "No records found for this report"
 msgstr ""
 
 msgid "No records found for this timeline"
+msgstr ""
+
+msgid "No scope defined, the scope of this condition includes all elements."
+msgstr ""
+
+msgid "No shortcuts are authorized for this user, contact your Administrator"
 msgstr ""
 
 msgid "No usage data found for specified options"
@@ -870,7 +6369,87 @@ msgstr ""
 msgid "No valid import records were found, please upload another file"
 msgstr ""
 
+msgid "No variables configured."
+msgstr ""
+
 msgid "No virtual machines were selected to delete Virtual BlackBoxes on"
+msgstr ""
+
+msgid ""
+"Non-admin users can not access the system until at least 1 VM/Instance has bee"
+"n discovered"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "None Available"
+msgstr ""
+
+msgid "Normal Operating Ranges (over 30 days)"
+msgstr ""
+
+msgid "Normal Operating Ranges (up to 30 days' data)"
+msgstr ""
+
+msgid "Not Available"
+msgstr ""
+
+msgid "Not a Server"
+msgstr ""
+
+msgid "Note: Fields marked with * are required."
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Nothing"
+msgstr ""
+
+msgid "Notification Frequency"
+msgstr ""
+
+msgid "Number of CPU's"
+msgstr ""
+
+msgid "Number of Instances"
+msgstr ""
+
+msgid "Number of VMs"
+msgstr ""
+
+msgid "OS Information"
+msgstr ""
+
+msgid "Object"
+msgstr ""
+
+msgid "Object Attribute Name"
+msgstr ""
+
+msgid "Object Attribute Type"
+msgstr ""
+
+msgid "Object Details"
+msgstr ""
+
+msgid "Object ID"
+msgstr ""
+
+msgid "Object Info"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "On Entry"
+msgstr ""
+
+msgid "On Error"
+msgstr ""
+
+msgid "On Exit"
 msgstr ""
 
 msgid "One or more %{model} must be selected to %{task}"
@@ -879,16 +6458,1576 @@ msgstr ""
 msgid "One or more selected reports are not owned by your group, they cannot be moved"
 msgstr ""
 
+msgid "Only 1 Date or Date/Time element can be present in a Dialog"
+msgstr ""
+
 msgid "Only 1 SmartProxy can be selected for build deployment"
+msgstr ""
+
+msgid "Ontap aggregate derived metric"
+msgstr ""
+
+msgid "Ontap aggregate metrics rollup"
+msgstr ""
+
+msgid "Ontap disk derived metric"
+msgstr ""
+
+msgid "Ontap disk metrics rollup"
+msgstr ""
+
+msgid "Ontap lun derived metric"
+msgstr ""
+
+msgid "Ontap lun metrics rollup"
+msgstr ""
+
+msgid "Ontap system derived metric"
+msgstr ""
+
+msgid "Ontap system metrics rollup"
+msgstr ""
+
+msgid "Ontap volume derived metric"
+msgstr ""
+
+msgid "Ontap volume metrics rollup"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|Base counters"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|Cp read blocks"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|Cp reads"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|Interval"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|Statistic time"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|Total transfers"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|User read blocks"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|User reads"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|User write blocks"
+msgstr ""
+
+msgid "OntapAggregateDerivedMetric|User writes"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Base counters"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Cp read blocks"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Cp read blocks max"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Cp read blocks min"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Cp reads"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Cp reads max"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Cp reads min"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Interval"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Rollup type"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Statistic time"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Total transfers"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Total transfers max"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|Total transfers min"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User read blocks"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User read blocks max"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User read blocks min"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User reads"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User reads max"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User reads min"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User write blocks"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User write blocks max"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User write blocks min"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User writes"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User writes max"
+msgstr ""
+
+msgid "OntapAggregateMetricsRollup|User writes min"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Base counters"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Cp read blocks"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Cp read chain"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Cp read latency"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Cp reads"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Disk busy"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed read blocks"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed read chain"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed read latency"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed reads"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed write blocks"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed write chain"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed write latency"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Guarenteed writes"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Interval"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Io pending"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Io queued"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Skip blocks"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Statistic time"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|Total transfers"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User read blocks"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User read chain"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User read latency"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User reads"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User skip write ios"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User write blocks"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User write chain"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User write latency"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User writes"
+msgstr ""
+
+msgid "OntapDiskDerivedMetric|User writes in skip mask"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Base counters"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read blocks"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read blocks max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read blocks min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read chain"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read chain max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read chain min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read latency"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read latency max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp read latency min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp reads"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp reads max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Cp reads min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Disk busy"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Disk busy max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Disk busy min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read blocks"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read blocks max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read blocks min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read chain"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read chain max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read chain min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read latency"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read latency max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed read latency min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed reads"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed reads max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed reads min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write blocks"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write blocks max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write blocks min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write chain"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write chain max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write chain min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write latency"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write latency max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed write latency min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed writes"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed writes max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Guarenteed writes min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Interval"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Io pending"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Io pending max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Io pending min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Io queued"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Io queued max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Io queued min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Rollup type"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Skip blocks"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Skip blocks max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Skip blocks min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Statistic time"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Total transfers"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Total transfers max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|Total transfers min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read blocks"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read blocks max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read blocks min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read chain"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read chain max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read chain min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read latency"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read latency max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User read latency min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User reads"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User reads max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User reads min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User skip write ios"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User skip write ios max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User skip write ios min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write blocks"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write blocks max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write blocks min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write chain"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write chain max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write chain min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write latency"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write latency max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User write latency min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User writes"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User writes in skip mask"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User writes in skip mask max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User writes in skip mask min"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User writes max"
+msgstr ""
+
+msgid "OntapDiskMetricsRollup|User writes min"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Avg latency"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Base counters"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Interval"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Other ops"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Queue full"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Read data"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Read ops"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Statistic time"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Total ops"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Write data"
+msgstr ""
+
+msgid "OntapLunDerivedMetric|Write ops"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Avg latency"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Avg latency max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Avg latency min"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Base counters"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Interval"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Other ops"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Other ops max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Other ops min"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Queue full"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Queue full max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Queue full min"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Read data"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Read data max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Read data min"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Read ops"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Read ops max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Read ops min"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Rollup type"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Statistic time"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Total ops"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Total ops max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Total ops min"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Write data"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Write data max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Write data min"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Write ops"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Write ops max"
+msgstr ""
+
+msgid "OntapLunMetricsRollup|Write ops min"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Avg processor busy"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Base counters"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Cifs ops"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Cpu busy"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Disk data read"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Disk data written"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Fcp ops"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Http ops"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Interval"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Iscsi ops"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Net data recv"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Net data sent"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Nfs ops"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Read ops"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Statistic time"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Sys avg latency"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Sys read latency"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Sys write latency"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Total ops"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Total processor busy"
+msgstr ""
+
+msgid "OntapSystemDerivedMetric|Write ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Avg processor busy"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Avg processor busy max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Avg processor busy min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Base counters"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Cifs ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Cifs ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Cifs ops min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Cpu busy"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Cpu busy max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Cpu busy min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Disk data read"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Disk data read max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Disk data read min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Disk data written"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Disk data written max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Disk data written min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Fcp ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Fcp ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Fcp ops min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Http ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Http ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Http ops min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Interval"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Iscsi ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Iscsi ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Iscsi ops min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Net data recv"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Net data recv max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Net data recv min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Net data sent"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Net data sent max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Net data sent min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Nfs ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Nfs ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Nfs ops min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Read ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Read ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Read ops min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Rollup type"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Statistic time"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys avg latency"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys avg latency max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys avg latency min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys read latency"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys read latency max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys read latency min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys write latency"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys write latency max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Sys write latency min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Total ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Total ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Total ops min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Total processor busy"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Total processor busy max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Total processor busy min"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Write ops"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Write ops max"
+msgstr ""
+
+msgid "OntapSystemMetricsRollup|Write ops min"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Avg latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Base counters"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs other latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs other ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs read data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs read latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs read ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs write data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs write latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Cifs write ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Interval"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs other latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs other ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs read data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs read latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs read ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs write data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs write latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Nfs write ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Other latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Other ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Queue depth"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Read data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Read latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Read ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San other latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San other ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San read data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San read latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San read ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San write data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San write latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|San write ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Statistic time"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Total ops"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Write data"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Write latency"
+msgstr ""
+
+msgid "OntapVolumeDerivedMetric|Write ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Avg latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Avg latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Avg latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Base counters"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs other latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs other latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs other latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs other ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs other ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs other ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs read ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Cifs write ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Interval"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs other latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs other latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs other latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs other ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs other ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs other ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs read ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Nfs write ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Other latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Other latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Other latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Other ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Other ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Other ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Read ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Rollup type"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San other latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San other latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San other latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San other ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San other ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San other ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San read ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|San write ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Statistic time"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Total ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Total ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Total ops min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write data"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write data max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write data min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write latency"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write latency max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write latency min"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write ops"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write ops max"
+msgstr ""
+
+msgid "OntapVolumeMetricsRollup|Write ops min"
+msgstr ""
+
+msgid "Open Folder"
+msgstr ""
+
+msgid "Open the chart and full report in a new window"
+msgstr ""
+
+msgid "Open the full report in a new window"
+msgstr ""
+
+msgid "Operating system"
+msgstr ""
+
+msgid "OperatingSystem|Bitness"
+msgstr ""
+
+msgid "OperatingSystem|Build number"
+msgstr ""
+
+msgid "OperatingSystem|Distribution"
+msgstr ""
+
+msgid "OperatingSystem|Lockout duration"
+msgstr ""
+
+msgid "OperatingSystem|Lockout threshold"
+msgstr ""
+
+msgid "OperatingSystem|Max pw age"
+msgstr ""
+
+msgid "OperatingSystem|Min pw age"
+msgstr ""
+
+msgid "OperatingSystem|Min pw len"
+msgstr ""
+
+msgid "OperatingSystem|Name"
+msgstr ""
+
+msgid "OperatingSystem|Product key"
+msgstr ""
+
+msgid "OperatingSystem|Product name"
+msgstr ""
+
+msgid "OperatingSystem|Product type"
+msgstr ""
+
+msgid "OperatingSystem|Productid"
+msgstr ""
+
+msgid "OperatingSystem|Pw complex"
+msgstr ""
+
+msgid "OperatingSystem|Pw encrypt"
+msgstr ""
+
+msgid "OperatingSystem|Pw hist"
+msgstr ""
+
+msgid "OperatingSystem|Reset lockout counter"
+msgstr ""
+
+msgid "OperatingSystem|Service pack"
+msgstr ""
+
+msgid "OperatingSystem|System root"
+msgstr ""
+
+msgid "OperatingSystem|System type"
+msgstr ""
+
+msgid "OperatingSystem|Version"
+msgstr ""
+
+msgid "Option 1"
+msgstr ""
+
+msgid "Option 2"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Orchestration stack"
+msgstr ""
+
+msgid "Orchestration stack output"
+msgstr ""
+
+msgid "Orchestration stack parameter"
+msgstr ""
+
+msgid "Orchestration stack resource"
+msgstr ""
+
+msgid "Orchestration template"
+msgstr ""
+
+msgid "OrchestrationStackOutput|Description"
+msgstr ""
+
+msgid "OrchestrationStackOutput|Ems ref"
+msgstr ""
+
+msgid "OrchestrationStackOutput|Key"
+msgstr ""
+
+msgid "OrchestrationStackOutput|Value"
+msgstr ""
+
+msgid "OrchestrationStackParameter|Ems ref"
+msgstr ""
+
+msgid "OrchestrationStackParameter|Name"
+msgstr ""
+
+msgid "OrchestrationStackParameter|Value"
+msgstr ""
+
+msgid "OrchestrationStackResource|Description"
+msgstr ""
+
+msgid "OrchestrationStackResource|Ems ref"
+msgstr ""
+
+msgid "OrchestrationStackResource|Last updated"
+msgstr ""
+
+msgid "OrchestrationStackResource|Logical resource"
+msgstr ""
+
+msgid "OrchestrationStackResource|Name"
+msgstr ""
+
+msgid "OrchestrationStackResource|Physical resource"
+msgstr ""
+
+msgid "OrchestrationStackResource|Resource category"
+msgstr ""
+
+msgid "OrchestrationStackResource|Resource status"
+msgstr ""
+
+msgid "OrchestrationStackResource|Resource status reason"
+msgstr ""
+
+msgid "OrchestrationStack|Ancestry"
+msgstr ""
+
+msgid "OrchestrationStack|Description"
+msgstr ""
+
+msgid "OrchestrationStack|Ems ref"
+msgstr ""
+
+msgid "OrchestrationStack|Name"
+msgstr ""
+
+msgid "OrchestrationStack|Status"
+msgstr ""
+
+msgid "OrchestrationTemplate|Content"
+msgstr ""
+
+msgid "OrchestrationTemplate|Description"
+msgstr ""
+
+msgid "OrchestrationTemplate|Ems ref"
+msgstr ""
+
+msgid "OrchestrationTemplate|Name"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Order of Actions if ALL Conditions are True"
+msgstr ""
+
+msgid "Order of Actions if ANY Conditions are False"
+msgstr ""
+
+msgid "Order this Service"
 msgstr ""
 
 msgid "Orphaned Records for userid %s were successfully deleted"
 msgstr ""
 
+msgid "Os process"
+msgstr ""
+
+msgid "OsProcess|Cpu time"
+msgstr ""
+
+msgid "OsProcess|Created on"
+msgstr ""
+
+msgid "OsProcess|Memory size"
+msgstr ""
+
+msgid "OsProcess|Memory usage"
+msgstr ""
+
+msgid "OsProcess|Name"
+msgstr ""
+
+msgid "OsProcess|Percent cpu"
+msgstr ""
+
+msgid "OsProcess|Percent memory"
+msgstr ""
+
+msgid "OsProcess|Pid"
+msgstr ""
+
+msgid "OsProcess|Priority"
+msgstr ""
+
+msgid "OsProcess|Updated on"
+msgstr ""
+
 msgid "Ownership saved for selected %s"
 msgstr ""
 
+msgid "PM:"
+msgstr ""
+
+msgid "PXE"
+msgstr ""
+
+msgid "PXE Directory"
+msgstr ""
+
+msgid "PXE Image Menus"
+msgstr ""
+
+msgid "PXE Images"
+msgstr ""
+
+msgid "Parameters"
+msgstr ""
+
+msgid "Parent Type"
+msgstr ""
+
+msgid "Parent VM"
+msgstr ""
+
+msgid "Parent VM Selection"
+msgstr ""
+
 msgid "Parent VM can not be one of the child VMs"
+msgstr ""
+
+msgid "Partition"
+msgstr ""
+
+msgid "Partition|Controller"
+msgstr ""
+
+msgid "Partition|Created on"
+msgstr ""
+
+msgid "Partition|Free space"
+msgstr ""
+
+msgid "Partition|Location"
+msgstr ""
+
+msgid "Partition|Name"
+msgstr ""
+
+msgid "Partition|Partition type"
+msgstr ""
+
+msgid "Partition|Size"
+msgstr ""
+
+msgid "Partition|Start address"
+msgstr ""
+
+msgid "Partition|Uid"
+msgstr ""
+
+msgid "Partition|Updated on"
+msgstr ""
+
+msgid "Partition|Used space"
+msgstr ""
+
+msgid "Partition|Virtual disk file"
+msgstr ""
+
+msgid "Partition|Volume group"
+msgstr ""
+
+msgid "Passed"
 msgstr ""
 
 msgid "Password"
@@ -897,16 +8036,151 @@ msgstr "Jelszó"
 msgid "Password/Verify Password do not match"
 msgstr ""
 
+msgid "Patch"
+msgstr ""
+
+msgid "Patch|Created on"
+msgstr ""
+
+msgid "Patch|Description"
+msgstr ""
+
+msgid "Patch|Installed"
+msgstr ""
+
+msgid "Patch|Installed on"
+msgstr ""
+
+msgid "Patch|Is valid"
+msgstr ""
+
+msgid "Patch|Name"
+msgstr ""
+
+msgid "Patch|Service pack"
+msgstr ""
+
+msgid "Patch|Updated on"
+msgstr ""
+
+msgid "Patch|Vendor"
+msgstr ""
+
+msgid "Path"
+msgstr ""
+
 msgid "Path must be a valid reference to a UNC location"
 msgstr ""
 
+msgid "Per Minute"
+msgstr ""
+
+msgid "Per Time"
+msgstr ""
+
+msgid "Per Unit"
+msgstr ""
+
+msgid "Picture"
+msgstr ""
+
+msgid "Picture|Resource type"
+msgstr ""
+
+msgid "Placement"
+msgstr ""
+
+msgid "Placement - Options"
+msgstr ""
+
+msgid "Plan for VM placement on Clusters or Hosts"
+msgstr ""
+
 msgid "Planning options have been reset by the user"
+msgstr ""
+
+msgid "Please select a Cloud Tenant from the Environment Tab"
+msgstr ""
+
+msgid "Please select an Instance Type from above"
+msgstr ""
+
+msgid "Policies"
+msgstr ""
+
+msgid "Policy Conditions:"
+msgstr ""
+
+msgid "Policy Profiles"
+msgstr ""
+
+msgid "Policy Selection"
+msgstr ""
+
+msgid "Policy Simulation Details"
+msgstr ""
+
+msgid "Policy Simulation Results"
 msgstr ""
 
 msgid "Policy Simulation generation returned: "
 msgstr ""
 
 msgid "Policy assignments successfully changed"
+msgstr ""
+
+msgid "Policy event"
+msgstr ""
+
+msgid "Policy event content"
+msgstr ""
+
+msgid "PolicyEventContent|Resource description"
+msgstr ""
+
+msgid "PolicyEventContent|Resource type"
+msgstr ""
+
+msgid "PolicyEvent|Event type"
+msgstr ""
+
+msgid "PolicyEvent|Miq event description"
+msgstr ""
+
+msgid "PolicyEvent|Miq policy description"
+msgstr ""
+
+msgid "PolicyEvent|Result"
+msgstr ""
+
+msgid "PolicyEvent|Target class"
+msgstr ""
+
+msgid "PolicyEvent|Target name"
+msgstr ""
+
+msgid "PolicyEvent|Timestamp"
+msgstr ""
+
+msgid "PolicyEvent|Username"
+msgstr ""
+
+msgid "Port"
+msgstr ""
+
+msgid "Power Management"
+msgstr ""
+
+msgid "Power Off"
+msgstr ""
+
+msgid "Power On"
+msgstr ""
+
+msgid "Press Ctl+Alt to release cursor."
+msgstr ""
+
+msgid "Press Ctrl+Alt to release cursor."
 msgstr ""
 
 msgid "Press commit to Import"
@@ -918,10 +8192,78 @@ msgstr ""
 msgid "Press your browser's Back button or click a tab to continue"
 msgstr ""
 
+msgid "Pressing 'Save' will deploy the selected SmartProxy build to the Host."
+msgstr ""
+
+msgid ""
+"Pressing 'Save' will save any Host credential changes and deploy the selected "
+"SmartProxy build to the Host."
+msgstr ""
+
 msgid "Priority Order was saved"
 msgstr ""
 
+msgid "Processors"
+msgstr ""
+
+msgid "Product Assistance"
+msgstr ""
+
+msgid "Product update"
+msgstr ""
+
+msgid "ProductUpdate|Arch"
+msgstr ""
+
+msgid "ProductUpdate|Build"
+msgstr ""
+
+msgid "ProductUpdate|Component"
+msgstr ""
+
+msgid "ProductUpdate|Created on"
+msgstr ""
+
+msgid "ProductUpdate|Description"
+msgstr ""
+
+msgid "ProductUpdate|Md5"
+msgstr ""
+
+msgid "ProductUpdate|Name"
+msgstr ""
+
+msgid "ProductUpdate|Platform"
+msgstr ""
+
+msgid "ProductUpdate|Update type"
+msgstr ""
+
+msgid "ProductUpdate|Updated on"
+msgstr ""
+
+msgid "ProductUpdate|Version"
+msgstr ""
+
+msgid "ProductUpdate|Vmdb schema version"
+msgstr ""
+
+msgid "Profile Alerts:"
+msgstr ""
+
+msgid "Profile Policies:"
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+msgid "Protected"
+msgstr ""
+
 msgid "Provision %s"
+msgstr ""
+
+msgid "Provision %s based on the selected %s"
 msgstr ""
 
 msgid "Provision %s was cancelled by the user"
@@ -930,28 +8272,298 @@ msgstr ""
 msgid "Provision %{model} - Select %{typ}"
 msgstr ""
 
+msgid "Provision Order"
+msgstr ""
+
+msgid "Provisioned Hosts"
+msgstr ""
+
+msgid "Provisioned VMs"
+msgstr ""
+
+msgid "Provisioning"
+msgstr ""
+
+msgid "Provisioning Entry Point"
+msgstr ""
+
+msgid "Provisioning Entry Point (NameSpace/Class/Instance)"
+msgstr ""
+
+msgid "Proxy task"
+msgstr ""
+
+msgid "ProxyTask|Command"
+msgstr ""
+
+msgid "ProxyTask|Created on"
+msgstr ""
+
+msgid "ProxyTask|Priority"
+msgstr ""
+
+msgid "ProxyTask|State"
+msgstr ""
+
+msgid "ProxyTask|Updated on"
+msgstr ""
+
+msgid "Pxe image"
+msgstr ""
+
+msgid "Pxe image type"
+msgstr ""
+
+msgid "Pxe menu"
+msgstr ""
+
+msgid "Pxe server"
+msgstr ""
+
+msgid "PxeImageType|Name"
+msgstr ""
+
+msgid "PxeImageType|Provision type"
+msgstr ""
+
+msgid "PxeImage|Default for windows"
+msgstr ""
+
+msgid "PxeImage|Description"
+msgstr ""
+
+msgid "PxeImage|Initrd"
+msgstr ""
+
+msgid "PxeImage|Kernel"
+msgstr ""
+
+msgid "PxeImage|Kernel options"
+msgstr ""
+
+msgid "PxeImage|Name"
+msgstr ""
+
+msgid "PxeImage|Path"
+msgstr ""
+
+msgid "PxeMenu|Contents"
+msgstr ""
+
+msgid "PxeMenu|File name"
+msgstr ""
+
+msgid "PxeServer|Access url"
+msgstr ""
+
+msgid "PxeServer|Customization directory"
+msgstr ""
+
+msgid "PxeServer|Last refresh on"
+msgstr ""
+
+msgid "PxeServer|Name"
+msgstr ""
+
+msgid "PxeServer|Pxe directory"
+msgstr ""
+
+msgid "PxeServer|Uri"
+msgstr ""
+
+msgid "PxeServer|Uri prefix"
+msgstr ""
+
+msgid "PxeServer|Visibility"
+msgstr ""
+
+msgid "PxeServer|Windows images directory"
+msgstr ""
+
+msgid "Queued"
+msgstr ""
+
+msgid "Quick Start"
+msgstr ""
+
+msgid "Quotas"
+msgstr ""
+
+msgid "Rank"
+msgstr ""
+
+msgid "Rate"
+msgstr ""
+
+msgid "Rate Details"
+msgstr ""
+
 msgid "Read Only %{model} \"%{name}\" can not be edited"
 msgstr ""
 
-msgid "Read Only or %{model} in use by one or more %{in_use_by} can not be deleted"
+msgid "Read Only %{model} \"%{name}\" cannot be deleted"
 msgstr ""
 
-msgid "Read only Role can not be deleted"
+msgid "Read Only %{model} \"%{name}\" cannot be edited"
+msgstr ""
+
+msgid "Read Only Mode"
+msgstr ""
+
+msgid "Reason"
+msgstr ""
+
+msgid "Reason:"
+msgstr ""
+
+msgid "Recommended"
+msgstr ""
+
+msgid "Reconfigurable"
+msgstr ""
+
+msgid "Reconfigure"
 msgstr ""
 
 msgid "Reconfigure %s"
 msgstr ""
 
+msgid "Reconfigure CPU"
+msgstr ""
+
+msgid "Reconfigure Entry Point"
+msgstr ""
+
+msgid "Reconfigure Entry Point (NameSpace/Class/Instance)"
+msgstr ""
+
+msgid "Reconfigure Memory"
+msgstr ""
+
 msgid "Records were successfully imported"
+msgstr ""
+
+msgid "Red Hat Customer Portal"
+msgstr ""
+
+msgid "Reference VM Profile"
+msgstr ""
+
+msgid "Reference VM Selection"
+msgstr ""
+
+msgid "Referenced by Actions"
 msgstr ""
 
 msgid "Refresh of recent C&U data has been initiated"
 msgstr ""
 
+msgid "Region"
+msgstr "Régió"
+
 msgid "Region:"
 msgstr "Régió:"
 
 msgid "Registration"
+msgstr ""
+
+msgid "Registry item"
+msgstr ""
+
+msgid "RegistryItem|Created on"
+msgstr ""
+
+msgid "RegistryItem|Data"
+msgstr ""
+
+msgid "RegistryItem|Format"
+msgstr ""
+
+msgid "RegistryItem|Name"
+msgstr ""
+
+msgid "RegistryItem|Updated on"
+msgstr ""
+
+msgid "RegistryItem|Value name"
+msgstr ""
+
+msgid "Regular Expression"
+msgstr ""
+
+msgid "Relationship"
+msgstr ""
+
+msgid "Relationships"
+msgstr ""
+
+msgid "Relationship|Ancestry"
+msgstr ""
+
+msgid "Relationship|Relationship"
+msgstr ""
+
+msgid "Relationship|Resource type"
+msgstr ""
+
+msgid "Remote Console plugin is not properly installed."
+msgstr ""
+
+msgid "Remove Tags Settings"
+msgstr ""
+
+msgid "Remove all Actions from this Event"
+msgstr ""
+
+msgid "Remove all Alerts from this Profile"
+msgstr ""
+
+msgid "Remove all Conditions from this Policy"
+msgstr ""
+
+msgid "Remove all Policies from this Profile"
+msgstr ""
+
+msgid "Remove from Dashboard"
+msgstr ""
+
+msgid "Remove selected Actions from this Event"
+msgstr ""
+
+msgid "Remove selected Alerts from this Action"
+msgstr ""
+
+msgid "Remove selected Alerts from this Profile"
+msgstr ""
+
+msgid "Remove selected Conditions from this Policy"
+msgstr ""
+
+msgid "Remove selected Policies from this Profile"
+msgstr ""
+
+msgid "Remove this %s"
+msgstr ""
+
+msgid "Remove this Custom Image"
+msgstr ""
+
+msgid "Remove this Provisioning Entry Point"
+msgstr ""
+
+msgid "Remove this Reconfigure Entry Point"
+msgstr ""
+
+msgid "Remove this Retirement Entry Point"
+msgstr ""
+
+msgid "Replace items if they already exist?"
+msgstr ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Report Options"
 msgstr ""
 
 msgid "Report can not be saved unless sort field has been configured for Charts"
@@ -972,10 +8584,193 @@ msgstr ""
 msgid "Report preview generation returned: Status [%{status}] Message [%{message}]"
 msgstr ""
 
+msgid "Reports"
+msgstr ""
+
+msgid "Reports Currently Using This Time Profile"
+msgstr ""
+
+msgid "Repositories"
+msgstr ""
+
+msgid "Repository"
+msgstr ""
+
+msgid "Repository|Created on"
+msgstr ""
+
+msgid "Repository|Name"
+msgstr ""
+
+msgid "Repository|Relative path"
+msgstr ""
+
+msgid "Repository|Updated on"
+msgstr ""
+
+msgid "Request"
+msgstr ""
+
 msgid "Request \"%{name}\" was %{task}"
 msgstr ""
 
 msgid "Request %s was cancelled by the user"
+msgstr ""
+
+msgid "Request Date:"
+msgstr ""
+
+msgid "Request Details"
+msgstr ""
+
+msgid "Request ID"
+msgstr ""
+
+msgid "Request Info"
+msgstr ""
+
+msgid "Request Information"
+msgstr ""
+
+msgid "Request State"
+msgstr ""
+
+msgid "Request Type"
+msgstr ""
+
+msgid "Requested by"
+msgstr ""
+
+msgid "Requester"
+msgstr ""
+
+msgid "Requester:"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Reserve"
+msgstr ""
+
+msgid "Reserve|Reserved"
+msgstr ""
+
+msgid "Reserve|Resource type"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Reset all Datastore custom classes and instances to default"
+msgstr ""
+
+msgid "Reset all Planning options"
+msgstr ""
+
+msgid "Reset all options"
+msgstr ""
+
+msgid "Reset filter changes"
+msgstr ""
+
+msgid "Resolve conflicts to import the file"
+msgstr ""
+
+msgid "Resource Pool"
+msgstr ""
+
+msgid "Resource Pools"
+msgstr ""
+
+msgid "Resource action"
+msgstr ""
+
+msgid "Resource pool"
+msgstr ""
+
+msgid "ResourceAction|Action"
+msgstr ""
+
+msgid "ResourceAction|Ae attributes"
+msgstr ""
+
+msgid "ResourceAction|Ae class"
+msgstr ""
+
+msgid "ResourceAction|Ae instance"
+msgstr ""
+
+msgid "ResourceAction|Ae message"
+msgstr ""
+
+msgid "ResourceAction|Ae namespace"
+msgstr ""
+
+msgid "ResourceAction|Resource type"
+msgstr ""
+
+msgid "ResourcePool|Cpu limit"
+msgstr ""
+
+msgid "ResourcePool|Cpu reserve"
+msgstr ""
+
+msgid "ResourcePool|Cpu reserve expand"
+msgstr ""
+
+msgid "ResourcePool|Cpu shares"
+msgstr ""
+
+msgid "ResourcePool|Cpu shares level"
+msgstr ""
+
+msgid "ResourcePool|Created on"
+msgstr ""
+
+msgid "ResourcePool|Ems ref"
+msgstr ""
+
+msgid "ResourcePool|Ems ref obj"
+msgstr ""
+
+msgid "ResourcePool|Is default"
+msgstr ""
+
+msgid "ResourcePool|Memory limit"
+msgstr ""
+
+msgid "ResourcePool|Memory reserve"
+msgstr ""
+
+msgid "ResourcePool|Memory reserve expand"
+msgstr ""
+
+msgid "ResourcePool|Memory shares"
+msgstr ""
+
+msgid "ResourcePool|Memory shares level"
+msgstr ""
+
+msgid "ResourcePool|Name"
+msgstr ""
+
+msgid "ResourcePool|Uid ems"
+msgstr ""
+
+msgid "ResourcePool|Updated on"
+msgstr ""
+
+msgid "ResourcePool|Vapp"
+msgstr ""
+
+msgid "Resources"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "Retirement"
 msgstr ""
 
 msgid "Retirement %s removed"
@@ -984,22 +8779,316 @@ msgstr ""
 msgid "Retirement %{date_text} set to %{rdate}"
 msgstr ""
 
+msgid "Retirement Date"
+msgstr ""
+
+msgid "Retirement Entry Point"
+msgstr ""
+
+msgid "Retirement Warning"
+msgstr ""
+
 msgid "Retrieve log returned: "
+msgstr ""
+
+msgid "Retrieve the current SmartProxy log"
 msgstr ""
 
 msgid "Right Size Recommendation for %{model} \"%{name}\""
 msgstr ""
 
+msgid "Right-Sizing (Aggressive - derived from Average NORM)"
+msgstr ""
+
+msgid "Right-Sizing (Conservative - derived from Absolute Maximum)"
+msgstr ""
+
+msgid "Right-Sizing (Moderate - derived from High NORM)"
+msgstr ""
+
+msgid "Roll Up Daily Performance"
+msgstr ""
+
+msgid "Roll Up Performance"
+msgstr ""
+
+msgid "Row Count"
+msgstr ""
+
+msgid "Rr pending change"
+msgstr ""
+
+msgid "Rr sync state"
+msgstr ""
+
+msgid "RrPendingChange|Change key"
+msgstr ""
+
+msgid "RrPendingChange|Change new key"
+msgstr ""
+
+msgid "RrPendingChange|Change table"
+msgstr ""
+
+msgid "RrPendingChange|Change time"
+msgstr ""
+
+msgid "RrPendingChange|Change type"
+msgstr ""
+
+msgid "RrSyncState|State"
+msgstr ""
+
+msgid "RrSyncState|Table name"
+msgstr ""
+
+msgid "Rss feed"
+msgstr ""
+
+msgid "RssFeed|Created on"
+msgstr ""
+
+msgid "RssFeed|Description"
+msgstr ""
+
+msgid "RssFeed|Link"
+msgstr ""
+
+msgid "RssFeed|Name"
+msgstr ""
+
+msgid "RssFeed|Title"
+msgstr ""
+
+msgid "RssFeed|Updated on"
+msgstr ""
+
+msgid "RssFeed|Yml file mtime"
+msgstr ""
+
+msgid "Run On"
+msgstr ""
+
+msgid "Running"
+msgstr ""
+
+msgid "SNMP Trap"
+msgstr ""
+
+msgid "SNMP Trap Settings"
+msgstr ""
+
+msgid "SSO Log In"
+msgstr ""
+
+msgid "SSO Login"
+msgstr ""
+
+msgid "Sample"
+msgstr ""
+
 msgid "Sample %{model} \"%{name}\" can not be edited"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "Saved Report \"%s\" not found, Schedule may have failed"
 msgstr ""
 
+msgid "Savings"
+msgstr ""
+
+msgid "Scan history"
+msgstr ""
+
+msgid "Scan item"
+msgstr ""
+
+msgid "Scan item set"
+msgstr ""
+
+msgid "ScanHistory|Created on"
+msgstr ""
+
+msgid "ScanHistory|Finished on"
+msgstr ""
+
+msgid "ScanHistory|Message"
+msgstr ""
+
+msgid "ScanHistory|Started on"
+msgstr ""
+
+msgid "ScanHistory|Status"
+msgstr ""
+
+msgid "ScanHistory|Status code"
+msgstr ""
+
+msgid "ScanHistory|Updated on"
+msgstr ""
+
+msgid "ScanItemSet|Created on"
+msgstr ""
+
+msgid "ScanItemSet|Description"
+msgstr ""
+
+msgid "ScanItemSet|Guid"
+msgstr ""
+
+msgid "ScanItemSet|Mode"
+msgstr ""
+
+msgid "ScanItemSet|Name"
+msgstr ""
+
+msgid "ScanItemSet|Owner type"
+msgstr ""
+
+msgid "ScanItemSet|Read only"
+msgstr ""
+
+msgid "ScanItemSet|Set data"
+msgstr ""
+
+msgid "ScanItemSet|Set type"
+msgstr ""
+
+msgid "ScanItemSet|Updated on"
+msgstr ""
+
+msgid "ScanItemSet|Userid"
+msgstr ""
+
+msgid "ScanItem|Created on"
+msgstr ""
+
+msgid "ScanItem|Definition"
+msgstr ""
+
+msgid "ScanItem|Description"
+msgstr ""
+
+msgid "ScanItem|File mtime"
+msgstr ""
+
+msgid "ScanItem|Filename"
+msgstr ""
+
+msgid "ScanItem|Guid"
+msgstr ""
+
+msgid "ScanItem|Item type"
+msgstr ""
+
+msgid "ScanItem|Mode"
+msgstr ""
+
+msgid "ScanItem|Name"
+msgstr ""
+
+msgid "ScanItem|Prod default"
+msgstr ""
+
+msgid "ScanItem|Updated on"
+msgstr ""
+
+msgid "Schedule Info"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Schema for %{model} \"%{name}\" was saved"
 msgstr ""
 
+msgid "Scope"
+msgstr ""
+
+msgid "Scope (Choose an element of the Policy scope to edit)"
+msgstr ""
+
+msgid "Scope (Choose an element of the scope to edit)"
+msgstr ""
+
+msgid "Scope (Press the \"Edit\" button to edit the scope)"
+msgstr ""
+
+msgid "Scopes / Expressions"
+msgstr ""
+
+msgid "Script"
+msgstr ""
+
+msgid "Search by Name within results"
+msgstr ""
+
+msgid "Security"
+msgstr ""
+
+msgid "Security group"
+msgstr ""
+
+msgid "SecurityGroup|Description"
+msgstr ""
+
+msgid "SecurityGroup|Ems ref"
+msgstr ""
+
+msgid "SecurityGroup|Name"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Select Alerts to be Evaluated"
+msgstr ""
+
+msgid "Select Server:"
+msgstr ""
+
+msgid "Select SmartProxy Host"
+msgstr ""
+
+msgid "Select Tags to apply"
+msgstr ""
+
+msgid "Select a Tag to Apply"
+msgstr ""
+
+msgid "Select a VM to Submit the Simulation Options"
+msgstr ""
+
+msgid "Select a node on the left to view Bottlenecks report."
+msgstr ""
+
+msgid "Select a node on the left to view Bottlenecks timeline."
+msgstr ""
+
+msgid "Select a node on the left to view Utilization information."
+msgstr ""
+
+msgid "Select a node on the left to view Utilization report."
+msgstr ""
+
+msgid "Select a reference VM or Manual Input source to Submit the Planning Options"
+msgstr ""
+
 msgid "Select an expression element type"
+msgstr ""
+
+msgid "Select domain you wish to import from:"
+msgstr ""
+
+msgid "Select existing domain to import into:"
+msgstr ""
+
+msgid "Select namespaces you wish to import:"
 msgstr ""
 
 msgid "Select only one or consecutive %s to move down"
@@ -1014,10 +9103,97 @@ msgstr ""
 msgid "Select only one or consecutive %s to move up"
 msgstr ""
 
+msgid "Selected"
+msgstr ""
+
 msgid "Selected %s Report no longer exists"
 msgstr ""
 
 msgid "Selected %s no longer exists"
+msgstr ""
+
+msgid "Selected Day"
+msgstr ""
+
+msgid "Selected Resources"
+msgstr ""
+
+msgid "Selected Template Contents"
+msgstr ""
+
+msgid "Selected VM"
+msgstr ""
+
+msgid "Selected:"
+msgstr ""
+
+msgid "Selections"
+msgstr ""
+
+msgid "Self Update Frequency"
+msgstr ""
+
+msgid "Send E-mail"
+msgstr ""
+
+msgid "Send Management Event"
+msgstr ""
+
+msgid "Send SNMP Trap"
+msgstr ""
+
+msgid "Send a Management Event"
+msgstr ""
+
+msgid "Send an SNMP Trap"
+msgstr ""
+
+msgid "Send&#160;Ctrl-Alt-Delete"
+msgstr ""
+
+msgid "Server License"
+msgstr ""
+
+msgid "Server Name"
+msgstr ""
+
+msgid "Server role"
+msgstr ""
+
+msgid "ServerRole|Created on"
+msgstr ""
+
+msgid "ServerRole|Description"
+msgstr ""
+
+msgid "ServerRole|External failover"
+msgstr ""
+
+msgid "ServerRole|License required"
+msgstr ""
+
+msgid "ServerRole|Max concurrent"
+msgstr ""
+
+msgid "ServerRole|Name"
+msgstr ""
+
+msgid "ServerRole|Role scope"
+msgstr ""
+
+msgid "ServerRole|Updated on"
+msgstr ""
+
+msgid "Servers"
+msgstr ""
+
+msgid "Service"
+msgstr ""
+
+msgid "Service Catalogs"
+msgstr ""
+
+msgid "Service Selection"
 msgstr ""
 
 msgid "Service dialog import cancelled"
@@ -1026,10 +9202,136 @@ msgstr ""
 msgid "Service dialogs imported successfully"
 msgstr ""
 
+msgid "Service resource"
+msgstr ""
+
+msgid "Service template"
+msgstr ""
+
+msgid "Service template catalog"
+msgstr ""
+
+msgid "ServiceResource|Group idx"
+msgstr ""
+
+msgid "ServiceResource|Name"
+msgstr ""
+
+msgid "ServiceResource|Provision index"
+msgstr ""
+
+msgid "ServiceResource|Resource type"
+msgstr ""
+
+msgid "ServiceResource|Scaling max"
+msgstr ""
+
+msgid "ServiceResource|Scaling min"
+msgstr ""
+
+msgid "ServiceResource|Source type"
+msgstr ""
+
+msgid "ServiceResource|Start action"
+msgstr ""
+
+msgid "ServiceResource|Start delay"
+msgstr ""
+
+msgid "ServiceResource|Stop action"
+msgstr ""
+
+msgid "ServiceResource|Stop delay"
+msgstr ""
+
+msgid "ServiceTemplateCatalog|Description"
+msgstr ""
+
+msgid "ServiceTemplateCatalog|Name"
+msgstr ""
+
+msgid "ServiceTemplate|Description"
+msgstr ""
+
+msgid "ServiceTemplate|Display"
+msgstr ""
+
+msgid "ServiceTemplate|Guid"
+msgstr ""
+
+msgid "ServiceTemplate|Long description"
+msgstr ""
+
+msgid "ServiceTemplate|Name"
+msgstr ""
+
+msgid "ServiceTemplate|Options"
+msgstr ""
+
+msgid "ServiceTemplate|Prov type"
+msgstr ""
+
+msgid "ServiceTemplate|Provision cost"
+msgstr ""
+
+msgid "ServiceTemplate|Service type"
+msgstr ""
+
+msgid "Services"
+msgstr ""
+
+msgid "Service|Description"
+msgstr ""
+
+msgid "Service|Display"
+msgstr ""
+
+msgid "Service|Guid"
+msgstr ""
+
+msgid "Service|Name"
+msgstr ""
+
+msgid "Service|Options"
+msgstr ""
+
+msgid "Service|Retired"
+msgstr ""
+
+msgid "Service|Retirement last warn"
+msgstr ""
+
+msgid "Service|Retirement state"
+msgstr ""
+
+msgid "Service|Retirement warn"
+msgstr ""
+
+msgid "Service|Retires on"
+msgstr ""
+
+msgid "Session Information"
+msgstr ""
+
 msgid "Session was timed out due to inactivity. Please log in again."
 msgstr ""
 
+msgid "Set Custom Attribute Settings"
+msgstr ""
+
 msgid "Set Ownership for %s"
+msgstr ""
+
+msgid "Set filters to default"
+msgstr ""
+
+msgid "Set selected Actions to Asynchronous"
+msgstr ""
+
+msgid "Set selected Actions to Synchronous"
+msgstr ""
+
+msgid "Set/Remove Retirement Date"
 msgstr ""
 
 msgid "Set/Remove retirement date for %s"
@@ -1038,10 +9340,73 @@ msgstr ""
 msgid "Setting priority is not allowed for the selected item"
 msgstr ""
 
+msgid "Setting tracing to true may cause excessive log lines to be written"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
 msgid "Settings activation returned: "
 msgstr ""
 
+msgid "Settings and Operations"
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Show %s Quadrants"
+msgstr ""
+
+msgid "Show Host Events"
+msgstr ""
+
+msgid "Show Input Parameters"
+msgstr ""
+
+msgid "Show Past Dates"
+msgstr ""
+
+msgid "Show Refresh Button"
+msgstr ""
+
+msgid "Show at Login"
+msgstr ""
+
+msgid "Show on Timeline"
+msgstr ""
+
+msgid "Show out of scope items:"
+msgstr ""
+
+msgid "Show policies:"
+msgstr ""
+
+msgid "Shutdown"
+msgstr ""
+
 msgid "Simulation unavailable: Required Class \"System/Process\" is missing"
+msgstr ""
+
+msgid "Single Select"
+msgstr ""
+
+msgid "Single VM"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Size (GB)"
+msgstr ""
+
+msgid "Small Trees"
+msgstr ""
+
+msgid "Smart Management"
+msgstr ""
+
+msgid "SmartProxies"
 msgstr ""
 
 msgid ""
@@ -1052,16 +9417,403 @@ msgstr ""
 msgid "SmartProxy default settings saved"
 msgstr ""
 
+msgid "Snapshot"
+msgstr ""
+
+msgid "Snapshot Age Settings"
+msgstr ""
+
+msgid "Snapshot Information"
+msgstr ""
+
+msgid "Snapshot Name"
+msgstr ""
+
+msgid "Snapshot Settings"
+msgstr ""
+
+msgid "Snapshot VM memory"
+msgstr ""
+
+msgid "Snapshot|Create time"
+msgstr ""
+
+msgid "Snapshot|Created on"
+msgstr ""
+
+msgid "Snapshot|Current"
+msgstr ""
+
+msgid "Snapshot|Description"
+msgstr ""
+
+msgid "Snapshot|Disks"
+msgstr ""
+
+msgid "Snapshot|Ems ref"
+msgstr ""
+
+msgid "Snapshot|Ems ref obj"
+msgstr ""
+
+msgid "Snapshot|Filename"
+msgstr ""
+
+msgid "Snapshot|Name"
+msgstr ""
+
+msgid "Snapshot|Parent uid"
+msgstr ""
+
+msgid "Snapshot|Total size"
+msgstr ""
+
+msgid "Snapshot|Uid"
+msgstr ""
+
+msgid "Snapshot|Uid ems"
+msgstr ""
+
+msgid "Snapshot|Updated on"
+msgstr ""
+
 msgid "Sorry, the username or password you entered is incorrect."
+msgstr ""
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Sort Order"
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Start Page"
+msgstr ""
+
+msgid "Start the Host Discovery"
+msgstr ""
+
+msgid "Starting Message"
+msgstr ""
+
+msgid "Starting Time (%s)"
+msgstr ""
+
+msgid "Starting process must be specified"
+msgstr ""
+
+msgid "State"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Storage"
+msgstr ""
+
+msgid "Storage Managers"
+msgstr ""
+
+msgid "Storage Relationships"
+msgstr ""
+
+msgid "Storage file"
+msgstr ""
+
+msgid "Storage manager"
+msgstr ""
+
+msgid "Storage metrics metadata"
+msgstr ""
+
+msgid "StorageFile|Base name"
+msgstr ""
+
+msgid "StorageFile|Ext name"
+msgstr ""
+
+msgid "StorageFile|Mtime"
+msgstr ""
+
+msgid "StorageFile|Name"
+msgstr ""
+
+msgid "StorageFile|Rsc type"
+msgstr ""
+
+msgid "StorageFile|Size"
+msgstr ""
+
+msgid "StorageManager|Agent type"
+msgstr ""
+
+msgid "StorageManager|Hostname"
+msgstr ""
+
+msgid "StorageManager|Ipaddress"
+msgstr ""
+
+msgid "StorageManager|Last update status"
+msgstr ""
+
+msgid "StorageManager|Name"
+msgstr ""
+
+msgid "StorageManager|Port"
+msgstr ""
+
+msgid "StorageManager|Type spec data"
+msgstr ""
+
+msgid "StorageManager|Vendor"
+msgstr ""
+
+msgid "StorageManager|Version"
+msgstr ""
+
+msgid "StorageMetricsMetadata|Counter info"
+msgstr ""
+
+msgid "Storage|Created on"
+msgstr ""
+
+msgid "Storage|Directory hierarchy supported"
+msgstr ""
+
+msgid "Storage|Ems ref"
+msgstr ""
+
+msgid "Storage|Ems ref obj"
+msgstr ""
+
+msgid "Storage|Free space"
+msgstr ""
+
+msgid "Storage|Last perf capture on"
+msgstr ""
+
+msgid "Storage|Last scan on"
+msgstr ""
+
+msgid "Storage|Location"
+msgstr ""
+
+msgid "Storage|Master"
+msgstr ""
+
+msgid "Storage|Multiplehostaccess"
+msgstr ""
+
+msgid "Storage|Name"
+msgstr ""
+
+msgid "Storage|Raw disk mappings supported"
+msgstr ""
+
+msgid "Storage|Storage domain type"
+msgstr ""
+
+msgid "Storage|Store type"
+msgstr ""
+
+msgid "Storage|Thin provisioning supported"
+msgstr ""
+
+msgid "Storage|Total space"
+msgstr ""
+
+msgid "Storage|Uncommitted"
+msgstr ""
+
+msgid "Storage|Updated on"
+msgstr ""
+
+msgid "String"
+msgstr ""
+
+msgid "Styling for '%s', first value is in error: "
+msgstr ""
+
+msgid "Styling for '%s', second value is in error: "
+msgstr ""
+
+msgid "Styling for '%s', third value is in error: "
+msgstr ""
+
+msgid "Sub"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Submit Automation Simulation with the specified options"
+msgstr ""
+
+msgid "Submit Planning options"
+msgstr ""
+
+msgid "Submit this Create Datastore request"
+msgstr ""
+
+msgid "Submit this Create Logical Disk request"
+msgstr ""
+
+msgid "Submit this provisioning request"
+msgstr ""
+
+msgid "Submit this reconfigure request"
+msgstr ""
+
+msgid "Subnet Mask"
+msgstr ""
+
+msgid "Subscribe to this feed"
+msgstr ""
+
+msgid "Substitution:"
 msgstr ""
 
 msgid "Successfully deleted %s from the CFME Database"
 msgstr ""
 
+msgid "Summary"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Suspend"
+msgstr ""
+
+msgid "Switch"
+msgstr ""
+
+msgid "Switch|Allow promiscuous"
+msgstr ""
+
+msgid "Switch|Created on"
+msgstr ""
+
+msgid "Switch|Forged transmits"
+msgstr ""
+
+msgid "Switch|Mac changes"
+msgstr ""
+
+msgid "Switch|Name"
+msgstr ""
+
+msgid "Switch|Ports"
+msgstr ""
+
+msgid "Switch|Uid ems"
+msgstr ""
+
+msgid "Switch|Updated on"
+msgstr ""
+
+msgid "Synchronous"
+msgstr ""
+
 msgid "Sysprep \"%s\" upload was successful"
 msgstr ""
 
+msgid "System service"
+msgstr ""
+
+msgid "SystemService|Depend on group"
+msgstr ""
+
+msgid "SystemService|Depend on service"
+msgstr ""
+
+msgid "SystemService|Description"
+msgstr ""
+
+msgid "SystemService|Disable run levels"
+msgstr ""
+
+msgid "SystemService|Display name"
+msgstr ""
+
+msgid "SystemService|Enable run levels"
+msgstr ""
+
+msgid "SystemService|Image path"
+msgstr ""
+
+msgid "SystemService|Name"
+msgstr ""
+
+msgid "SystemService|Object name"
+msgstr ""
+
+msgid "SystemService|Running"
+msgstr ""
+
+msgid "SystemService|Start"
+msgstr ""
+
+msgid "SystemService|Svc type"
+msgstr ""
+
+msgid "SystemService|Typename"
+msgstr ""
+
+msgid "Tab Information"
+msgstr ""
+
+msgid "Tag"
+msgstr ""
+
+msgid "Tag Category"
+msgstr ""
+
 msgid "Tag edits were successfully saved"
+msgstr ""
+
+msgid "Tag to Apply:"
+msgstr ""
+
+msgid "Tagging"
+msgstr ""
+
+msgid "Tagging|Taggable type"
+msgstr ""
+
+msgid "Tag|Name"
+msgstr ""
+
+msgid "Target Options / Limits"
+msgstr ""
+
+msgid "Target Options/Limits"
+msgstr ""
+
+msgid "Task State:"
+msgstr ""
+
+msgid "Task Status:"
+msgstr ""
+
+msgid "Template"
+msgstr ""
+
+msgid "Templates"
+msgstr ""
+
+msgid "Templates & Images"
+msgstr ""
+
+msgid "The %s theme is currently selected"
 msgstr ""
 
 msgid ""
@@ -1070,8 +9822,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"The CFME Server is still starting.  If this message persists, please contact y"
-"our CFME administrator."
+"The CFME Server is still starting. If this message persists, please contact yo"
+"ur CFME administrator."
 msgstr ""
 
 msgid ""
@@ -1089,18 +9841,30 @@ msgid ""
 "inistrator"
 msgstr ""
 
+msgid "The Enterprise"
+msgstr ""
+
 msgid ""
 "The Host Default VNC Port Range ending port must be equal to or higher than th"
 "e starting point"
+msgstr ""
+
+msgid "The Remote Console is connecting"
+msgstr ""
+
+msgid "The SmartProxy log must be retrieved before it can be downloaded"
+msgstr ""
+
+msgid ""
+"The VM has been suspended, powered off or the connection to the server has bee"
+"n lost. \n"
+"This console window will now close."
 msgstr ""
 
 msgid "The check count value must be an integer to commit this expression element"
 msgstr ""
 
 msgid "The current search details have been reset"
-msgstr ""
-
-msgid "The delete for selected %s was initiated"
 msgstr ""
 
 msgid "The selected %s is not in the current region"
@@ -1112,6 +9876,12 @@ msgstr ""
 msgid "The selected %s were deleted"
 msgstr ""
 
+msgid "The selected %s were disabled"
+msgstr ""
+
+msgid "The selected %s were enabled"
+msgstr ""
+
 msgid "The selected %{model} were marked as %{action}"
 msgstr ""
 
@@ -1119,6 +9889,12 @@ msgid "The selected Filter can not be set as Default because it requires user in
 msgstr ""
 
 msgid "The selected Filter record was not found"
+msgstr ""
+
+msgid "The selected Schedule has been queued to run"
+msgstr ""
+
+msgid "The selected Schedules have been queued to run"
 msgstr ""
 
 msgid "The selected SmartProxy can not be managed because the Host is not powered on"
@@ -1144,17 +9920,240 @@ msgid ""
 "or edited manually."
 msgstr ""
 
+msgid "This Action is not assigned to any Policies."
+msgstr ""
+
+msgid "This Alert is not assigned to any Alert Profiles."
+msgstr ""
+
+msgid "This Alert is not referenced by any Actions."
+msgstr ""
+
+msgid "This Condition is not assigned to any Policies."
+msgstr ""
+
+msgid "This Event has no false Actions."
+msgstr ""
+
+msgid "This Event has no true Actions."
+msgstr ""
+
+msgid "This Event is not assigned to any Policies."
+msgstr ""
+
+msgid "This Policy is not assigned to any Profiles."
+msgstr ""
+
 msgid ""
 "This element should be removed and recreated or you can report the error to yo"
 "ur CFME administrator."
 msgstr ""
 
+msgid "This page requires the VMware MKS plugin. Install the plugin and try again."
+msgstr ""
+
+msgid "This policy does not currently respond to any Events."
+msgstr ""
+
+msgid ""
+"This will show the chart and the entire report (all rows) in your browser. Do "
+"you want to proceed?"
+msgstr ""
+
+msgid ""
+"This will show the entire report (all rows) in your browser. Do you want to pr"
+"oceed?"
+msgstr ""
+
+msgid "Thursday"
+msgstr ""
+
+msgid "Tile View"
+msgstr ""
+
+msgid "Time Profile"
+msgstr ""
+
+msgid "Time Profile Information"
+msgstr ""
+
+msgid "Time Zone"
+msgstr ""
+
+msgid "Time profile"
+msgstr ""
+
+msgid "TimeProfile|Created on"
+msgstr ""
+
+msgid "TimeProfile|Description"
+msgstr ""
+
+msgid "TimeProfile|Profile"
+msgstr ""
+
+msgid "TimeProfile|Profile key"
+msgstr ""
+
+msgid "TimeProfile|Profile type"
+msgstr ""
+
+msgid "TimeProfile|Rollup daily metrics"
+msgstr ""
+
+msgid "TimeProfile|Updated on"
+msgstr ""
+
+msgid "Timeline Event"
+msgstr ""
+
 msgid "Timelines for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Timezone"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "To Domain"
+msgstr ""
+
+msgid "To E-mail Address"
+msgstr ""
+
+msgid "To Generate a Chargeback Report"
 msgstr ""
 
 msgid ""
 "To configure the Host Default VNC Port Range, both start and end ports are req"
 "uired"
+msgstr ""
+
+msgid "Toggle All/None"
+msgstr ""
+
+msgid "Total number of VMs that can fit on all of the above %s: %s"
+msgstr ""
+
+msgid "Totals for Hosts"
+msgstr ""
+
+msgid "Totals for Service VMs"
+msgstr ""
+
+msgid "Totals for VMs"
+msgstr ""
+
+msgid "Trap Number"
+msgstr ""
+
+msgid "Trap Object ID"
+msgstr ""
+
+msgid "Tree View"
+msgstr ""
+
+msgid "Trend Options"
+msgstr ""
+
+msgid "Trend for Past"
+msgstr ""
+
+msgid "Trends for past"
+msgstr ""
+
+msgid "True"
+msgstr ""
+
+msgid "Truncate Long Text"
+msgstr ""
+
+msgid "Tuesday"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Type one or more tags to create and press \"Enter\":"
+msgstr ""
+
+msgid "Type:"
+msgstr ""
+
+msgid "URI"
+msgstr ""
+
+msgid "Ui task"
+msgstr ""
+
+msgid "Ui task set"
+msgstr ""
+
+msgid "UiTaskSet|Created on"
+msgstr ""
+
+msgid "UiTaskSet|Description"
+msgstr ""
+
+msgid "UiTaskSet|Guid"
+msgstr ""
+
+msgid "UiTaskSet|Mode"
+msgstr ""
+
+msgid "UiTaskSet|Name"
+msgstr ""
+
+msgid "UiTaskSet|Owner type"
+msgstr ""
+
+msgid "UiTaskSet|Read only"
+msgstr ""
+
+msgid "UiTaskSet|Set data"
+msgstr ""
+
+msgid "UiTaskSet|Set type"
+msgstr ""
+
+msgid "UiTaskSet|Updated on"
+msgstr ""
+
+msgid "UiTaskSet|Userid"
+msgstr ""
+
+msgid "UiTask|Area"
+msgstr ""
+
+msgid "UiTask|Created on"
+msgstr ""
+
+msgid "UiTask|Name"
+msgstr ""
+
+msgid "UiTask|Task"
+msgstr ""
+
+msgid "UiTask|Typ"
+msgstr ""
+
+msgid "UiTask|Updated on"
+msgstr ""
+
+msgid "Unassigned"
+msgstr ""
+
+msgid "Unassigned:"
+msgstr ""
+
+msgid "Unattended GUI"
+msgstr ""
+
+msgid "Unknown"
 msgstr ""
 
 msgid "Unknown error has occurred"
@@ -1163,8 +10162,37 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
+#, fuzzy
+msgid "Update Password"
+msgstr "Jelszó megváltoztatása"
+
 msgid "Update password"
 msgstr "Jelszó megváltoztatása"
+
+#, fuzzy
+msgid "Update this entry"
+msgstr "Jelszó megváltoztatása"
+
+msgid "Updated"
+msgstr ""
+
+msgid "Updated On"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Upload File"
+msgstr ""
+
+msgid "Uploaded File '%s'"
+msgstr ""
+
+msgid "Use CTRL-ALT-Enter to toggle full screen"
+msgstr ""
+
+msgid "Use CTRL-ALT-INS for CTRL-ALT-DEL"
+msgstr ""
 
 msgid "Use the Browse button to locate %s file"
 msgstr ""
@@ -1178,7 +10206,17 @@ msgstr ""
 msgid "Use the Browse button to locate an Upload file"
 msgstr ""
 
+msgid "User"
+msgstr ""
+
+#, fuzzy
+msgid "User Data"
+msgstr "Felhasználónév"
+
 msgid "User Group Sequence was saved"
+msgstr ""
+
+msgid "User ID"
 msgstr ""
 
 msgid "User ID must be entered if Password is entered"
@@ -1190,16 +10228,87 @@ msgstr ""
 msgid "User Interface settings saved for this session"
 msgstr ""
 
-msgid "User Un-Assignment initiated"
+#, fuzzy
+msgid "User Name"
+msgstr "Felhasználónév"
+
+#, fuzzy
+msgid "User Role"
+msgstr "Felhasználónév"
+
+msgid "User:"
 msgstr ""
 
 msgid "Username"
 msgstr "Felhasználónév"
 
-msgid "VDI User import from LDAP was cancelled by the user"
+msgid "User|Created on"
 msgstr ""
 
-msgid "VDI Users successfully imported from LDAP"
+msgid "User|Email"
+msgstr ""
+
+msgid "User|Filters"
+msgstr ""
+
+msgid "User|First name"
+msgstr ""
+
+msgid "User|Icon"
+msgstr ""
+
+msgid "User|Last name"
+msgstr ""
+
+msgid "User|Lastlogoff"
+msgstr ""
+
+msgid "User|Lastlogon"
+msgstr ""
+
+msgid "User|Name"
+msgstr ""
+
+msgid "User|Password digest"
+msgstr ""
+
+msgid "User|Region"
+msgstr ""
+
+msgid "User|Settings"
+msgstr ""
+
+msgid "User|Updated on"
+msgstr ""
+
+msgid "User|Userid"
+msgstr ""
+
+msgid "VC Custom Attributes"
+msgstr ""
+
+msgid "VM"
+msgstr ""
+
+msgid "VM %s Remote Console"
+msgstr ""
+
+msgid "VM Counts per %s"
+msgstr ""
+
+msgid "VM Hardware"
+msgstr ""
+
+msgid "VM Item"
+msgstr ""
+
+msgid "VM Limits"
+msgstr ""
+
+msgid "VM Number"
+msgstr ""
+
+msgid "VM Options"
 msgstr ""
 
 msgid "VM Reconfigure Request was cancelled by the user"
@@ -1208,15 +10317,534 @@ msgstr ""
 msgid "VM Reconfigure Request was saved"
 msgstr ""
 
+msgid "VM Reservations"
+msgstr ""
+
+msgid "VM Selection"
+msgstr ""
+
+msgid "VM and Instance Items"
+msgstr ""
+
 msgid "VM successfully removed from service \"%s\""
+msgstr ""
+
+msgid "VMs"
+msgstr ""
+
+msgid "VMs & Instances"
+msgstr ""
+
+msgid "VMsafe"
+msgstr ""
+
+msgid "Validator Rule"
+msgstr ""
+
+msgid "Validator Type"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Value Type"
+msgstr ""
+
+msgid "Value to Set"
+msgstr ""
+
+msgid "Variable Object ID"
+msgstr ""
+
+msgid "Variables"
 msgstr ""
 
 msgid "Verify Password"
 msgstr "Jelszó megerősítése"
 
+msgid "Version"
+msgstr ""
+
+msgid "Version Info"
+msgstr ""
+
+msgid "Version to Deploy"
+msgstr ""
+
+msgid "View %s Folder"
+msgstr ""
+
+msgid "View '%s' Folder"
+msgstr ""
+
+msgid "View Compute Rates"
+msgstr ""
+
+msgid "View Condition"
+msgstr ""
+
+msgid "View Examples (read only)' Folder"
+msgstr ""
+
+msgid "View Storage Rates"
+msgstr ""
+
+msgid "View This Alert"
+msgstr ""
+
+msgid "View the %s Guide"
+msgstr ""
+
+msgid "View this %s Policy"
+msgstr ""
+
+msgid "View this Action"
+msgstr ""
+
+msgid "View this Alert"
+msgstr ""
+
+msgid "View this Alert Profile"
+msgstr ""
+
+msgid "View this Condition"
+msgstr ""
+
+msgid "View this Event Action"
+msgstr ""
+
+msgid "View this ISO Image"
+msgstr ""
+
+msgid "View this PXE Image"
+msgstr ""
+
+msgid "View this Policy Event"
+msgstr ""
+
+msgid "View this Profile"
+msgstr ""
+
+msgid "View this Report"
+msgstr ""
+
+msgid "View this Windows Image"
+msgstr ""
+
+msgid "Vim performance operating range"
+msgstr ""
+
+msgid "Vim performance state"
+msgstr ""
+
+msgid "Vim performance tag value"
+msgstr ""
+
+msgid "VimPerformanceOperatingRange|Days"
+msgstr ""
+
+msgid "VimPerformanceOperatingRange|Resource type"
+msgstr ""
+
+msgid "VimPerformanceOperatingRange|Values"
+msgstr ""
+
+msgid "VimPerformanceState|Capture interval"
+msgstr ""
+
+msgid "VimPerformanceState|Resource type"
+msgstr ""
+
+msgid "VimPerformanceState|State data"
+msgstr ""
+
+msgid "VimPerformanceState|Timestamp"
+msgstr ""
+
+msgid "VimPerformanceTagValue|Assoc ids"
+msgstr ""
+
+msgid "VimPerformanceTagValue|Association type"
+msgstr ""
+
+msgid "VimPerformanceTagValue|Category"
+msgstr ""
+
+msgid "VimPerformanceTagValue|Column name"
+msgstr ""
+
+msgid "VimPerformanceTagValue|Metric type"
+msgstr ""
+
+msgid "VimPerformanceTagValue|Tag name"
+msgstr ""
+
+msgid "VimPerformanceTagValue|Value"
+msgstr ""
+
+msgid "Vm or template"
+msgstr ""
+
+msgid "VmOrTemplate|Autostart"
+msgstr ""
+
+msgid "VmOrTemplate|Blackbox exists"
+msgstr ""
+
+msgid "VmOrTemplate|Blackbox validated"
+msgstr ""
+
+msgid "VmOrTemplate|Boot time"
+msgstr ""
+
+msgid "VmOrTemplate|Busy"
+msgstr ""
+
+msgid "VmOrTemplate|Cloud"
+msgstr ""
+
+msgid "VmOrTemplate|Config xml"
+msgstr ""
+
+msgid "VmOrTemplate|Connection state"
+msgstr ""
+
+msgid "VmOrTemplate|Cpu affinity"
+msgstr ""
+
+msgid "VmOrTemplate|Cpu limit"
+msgstr ""
+
+msgid "VmOrTemplate|Cpu reserve"
+msgstr ""
+
+msgid "VmOrTemplate|Cpu reserve expand"
+msgstr ""
+
+msgid "VmOrTemplate|Cpu shares"
+msgstr ""
+
+msgid "VmOrTemplate|Cpu shares level"
+msgstr ""
+
+msgid "VmOrTemplate|Created on"
+msgstr ""
+
+msgid "VmOrTemplate|Description"
+msgstr ""
+
+msgid "VmOrTemplate|Ems created on"
+msgstr ""
+
+msgid "VmOrTemplate|Ems ref"
+msgstr ""
+
+msgid "VmOrTemplate|Ems ref obj"
+msgstr ""
+
+msgid "VmOrTemplate|Fault tolerance"
+msgstr ""
+
+msgid "VmOrTemplate|Format"
+msgstr ""
+
+msgid "VmOrTemplate|Guid"
+msgstr ""
+
+msgid "VmOrTemplate|Last perf capture on"
+msgstr ""
+
+msgid "VmOrTemplate|Last scan attempt on"
+msgstr ""
+
+msgid "VmOrTemplate|Last scan on"
+msgstr ""
+
+msgid "VmOrTemplate|Last sync on"
+msgstr ""
+
+msgid "VmOrTemplate|Linked clone"
+msgstr ""
+
+msgid "VmOrTemplate|Location"
+msgstr ""
+
+msgid "VmOrTemplate|Memory limit"
+msgstr ""
+
+msgid "VmOrTemplate|Memory reserve"
+msgstr ""
+
+msgid "VmOrTemplate|Memory reserve expand"
+msgstr ""
+
+msgid "VmOrTemplate|Memory shares"
+msgstr ""
+
+msgid "VmOrTemplate|Memory shares level"
+msgstr ""
+
+msgid "VmOrTemplate|Name"
+msgstr ""
+
+msgid "VmOrTemplate|Power state"
+msgstr ""
+
+msgid "VmOrTemplate|Previous state"
+msgstr ""
+
+msgid "VmOrTemplate|Publicly available"
+msgstr ""
+
+msgid "VmOrTemplate|Raw power state"
+msgstr ""
+
+msgid "VmOrTemplate|Registered"
+msgstr ""
+
+msgid "VmOrTemplate|Retired"
+msgstr ""
+
+msgid "VmOrTemplate|Retirement last warn"
+msgstr ""
+
+msgid "VmOrTemplate|Retirement state"
+msgstr ""
+
+msgid "VmOrTemplate|Retirement warn"
+msgstr ""
+
+msgid "VmOrTemplate|Retires on"
+msgstr ""
+
+msgid "VmOrTemplate|Smart"
+msgstr ""
+
+msgid "VmOrTemplate|Standby action"
+msgstr ""
+
+msgid "VmOrTemplate|State changed on"
+msgstr ""
+
+msgid "VmOrTemplate|Template"
+msgstr ""
+
+msgid "VmOrTemplate|Tools status"
+msgstr ""
+
+msgid "VmOrTemplate|Uid ems"
+msgstr ""
+
+msgid "VmOrTemplate|Updated on"
+msgstr ""
+
+msgid "VmOrTemplate|Vendor"
+msgstr ""
+
+msgid "VmOrTemplate|Version"
+msgstr ""
+
+msgid "VmOrTemplate|Vnc port"
+msgstr ""
+
+msgid "Vmdb database"
+msgstr ""
+
+msgid "Vmdb database metric"
+msgstr ""
+
+msgid "Vmdb index"
+msgstr ""
+
+msgid "Vmdb metric"
+msgstr ""
+
+msgid "Vmdb table"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Active connections"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Capture interval name"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Disk free bytes"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Disk free inodes"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Disk total bytes"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Disk total inodes"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Disk used bytes"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Disk used inodes"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Running processes"
+msgstr ""
+
+msgid "VmdbDatabaseMetric|Timestamp"
+msgstr ""
+
+msgid "VmdbDatabase|Data directory"
+msgstr ""
+
+msgid "VmdbDatabase|Data disk"
+msgstr ""
+
+msgid "VmdbDatabase|Ipaddress"
+msgstr ""
+
+msgid "VmdbDatabase|Last start time"
+msgstr ""
+
+msgid "VmdbDatabase|Name"
+msgstr ""
+
+msgid "VmdbDatabase|Vendor"
+msgstr ""
+
+msgid "VmdbDatabase|Version"
+msgstr ""
+
+msgid "VmdbIndex|Name"
+msgstr ""
+
+msgid "VmdbIndex|Prior raw metrics"
+msgstr ""
+
+msgid "VmdbMetric|Capture interval name"
+msgstr ""
+
+msgid "VmdbMetric|Index rows fetched"
+msgstr ""
+
+msgid "VmdbMetric|Index scans"
+msgstr ""
+
+msgid "VmdbMetric|Last analyze date"
+msgstr ""
+
+msgid "VmdbMetric|Last autoanalyze date"
+msgstr ""
+
+msgid "VmdbMetric|Last autovacuum date"
+msgstr ""
+
+msgid "VmdbMetric|Last vacuum date"
+msgstr ""
+
+msgid "VmdbMetric|Otta"
+msgstr ""
+
+msgid "VmdbMetric|Pages"
+msgstr ""
+
+msgid "VmdbMetric|Percent bloat"
+msgstr ""
+
+msgid "VmdbMetric|Resource type"
+msgstr ""
+
+msgid "VmdbMetric|Rows"
+msgstr ""
+
+msgid "VmdbMetric|Rows dead"
+msgstr ""
+
+msgid "VmdbMetric|Rows deleted"
+msgstr ""
+
+msgid "VmdbMetric|Rows hot updated"
+msgstr ""
+
+msgid "VmdbMetric|Rows inserted"
+msgstr ""
+
+msgid "VmdbMetric|Rows live"
+msgstr ""
+
+msgid "VmdbMetric|Rows updated"
+msgstr ""
+
+msgid "VmdbMetric|Sequential rows read"
+msgstr ""
+
+msgid "VmdbMetric|Size"
+msgstr ""
+
+msgid "VmdbMetric|Table scans"
+msgstr ""
+
+msgid "VmdbMetric|Timestamp"
+msgstr ""
+
+msgid "VmdbMetric|Wasted bytes"
+msgstr ""
+
+msgid "VmdbTable|Name"
+msgstr ""
+
+msgid "VmdbTable|Prior raw metrics"
+msgstr ""
+
+msgid "Volume"
+msgstr ""
+
+msgid "Volume|Created on"
+msgstr ""
+
+msgid "Volume|Filesystem"
+msgstr ""
+
+msgid "Volume|Free space"
+msgstr ""
+
+msgid "Volume|Name"
+msgstr ""
+
+msgid "Volume|Size"
+msgstr ""
+
+msgid "Volume|Typ"
+msgstr ""
+
+msgid "Volume|Uid"
+msgstr ""
+
+msgid "Volume|Updated on"
+msgstr ""
+
+msgid "Volume|Used space"
+msgstr ""
+
+msgid "Volume|Volume group"
+msgstr ""
+
+msgid "WINS Server"
+msgstr ""
+
+msgid "Warn"
+msgstr ""
+
 msgid ""
 "Warning: This 'Run Once' timer is in the past and will never run as currently "
 "configured"
+msgstr ""
+
+msgid "Web Services Listen Port"
+msgstr ""
+
+msgid "Wednesday"
+msgstr ""
+
+msgid "What to Evaluate"
 msgstr ""
 
 msgid "When configuring a VNC Proxy, both Address and Port are required"
@@ -1231,10 +10859,85 @@ msgstr ""
 msgid "Widgets imported successfully"
 msgstr ""
 
-#, fuzzy
-#, fuzzy
+msgid "Windows Boot Env"
+msgstr ""
+
+msgid "Windows Boot Environment"
+msgstr ""
+
+msgid "Windows Images"
+msgstr ""
+
+msgid "Windows Images Directory"
+msgstr ""
+
+msgid "Windows Options"
+msgstr ""
+
+msgid "Windows image"
+msgstr ""
+
+msgid "WindowsImage|Description"
+msgstr ""
+
+msgid "WindowsImage|Index"
+msgstr ""
+
+msgid "WindowsImage|Name"
+msgstr ""
+
+msgid "WindowsImage|Path"
+msgstr ""
+
+msgid "Workgroup Information"
+msgstr ""
+
+msgid "XML View"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid ""
+"You are about to enter fullscreen mode. Press Ctl+Alt to return to windowed mo"
+"de."
+msgstr ""
+
+msgid "You are not authorized to view %s"
+msgstr ""
+
+msgid "You must select at least one namespace to import"
+msgstr ""
+
+msgid "Zone"
+msgstr "Zóna"
+
 msgid "Zone:"
-msgstr "Zóna:"
+msgstr "Zóna"
+
+msgid "Zone|Created on"
+msgstr ""
+
+msgid "Zone|Description"
+msgstr ""
+
+msgid "Zone|Name"
+msgstr ""
+
+msgid "Zone|Settings"
+msgstr ""
+
+msgid "Zone|Updated on"
+msgstr ""
+
+msgid "Zoom in on this chart"
+msgstr ""
+
+msgid "at"
+msgstr ""
+
+msgid "available"
+msgstr ""
 
 msgid "avg_read_size"
 msgstr ""
@@ -1242,10 +10945,19 @@ msgstr ""
 msgid "avg_write_size"
 msgstr ""
 
+msgid "choose"
+msgstr ""
+
 msgid "cpu_affinity"
 msgstr ""
 
+msgid "do not change the outcome of the scope or expression"
+msgstr ""
+
 msgid "fqname"
+msgstr ""
+
+msgid "instances"
 msgstr ""
 
 msgid "interval"
@@ -1260,7 +10972,13 @@ msgstr ""
 msgid "k_bytes_written_per_sec"
 msgstr ""
 
+msgid "locale_name"
+msgstr "Magyar"
+
 msgid "memory_cpu"
+msgstr ""
+
+msgid "not specified"
 msgstr ""
 
 msgid "numvcpus"
@@ -1284,7 +11002,13 @@ msgstr ""
 msgid "read_ios_per_sec"
 msgstr ""
 
+msgid "red italics"
+msgstr ""
+
 msgid "response_time_sec"
+msgstr ""
+
+msgid "selected to copy"
 msgstr ""
 
 msgid "service_time_sec"
@@ -1293,10 +11017,25 @@ msgstr ""
 msgid "statistic_time"
 msgstr ""
 
+msgid "that match the entered search string"
+msgstr ""
+
 msgid "total_ios_per_sec"
 msgstr ""
 
 msgid "utilization"
+msgstr ""
+
+msgid "vCPU Count"
+msgstr ""
+
+msgid "vCPU per Core"
+msgstr ""
+
+msgid "vCPUs per Core"
+msgstr ""
+
+msgid "vcpus"
 msgstr ""
 
 msgid "wait_time_sec"
@@ -1307,7 +11046,3 @@ msgstr ""
 
 msgid "write_ios_per_sec"
 msgstr ""
-
-#. Provide locale name in native language (e.g. English, Deutsch or Português)
-msgid "locale_name"
-msgstr "Magyar"
