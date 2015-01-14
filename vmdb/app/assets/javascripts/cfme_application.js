@@ -800,7 +800,7 @@ function miqDropComplete(event, ui) {
   var url = "/" + miq_widget_dd_url + "?" + el.sortable('serialize', {key:el.attr('id') + "[]"}).toString();
   //Adding id of record being edited to be used by load_edit call
   if(typeof miq_record_id != "undefined") url += "&id=" + miq_record_id
-  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  miqJqueryRequest(url);
 }
 
 // Attach a calendar control to all text boxes that start with miq_date_
@@ -1013,11 +1013,19 @@ function miqObserveCheckboxes() {
     var el = $j(this);
     el.unbind('change')
     el.change(function() {
-      miqJqueryRequest(url, {beforeSend: true,
-        complete: true,
-        data:el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
-        no_encoding: true
-      });
+      if (el.attr('data-miq_sparkle_on')){
+        miqJqueryRequest(url, {
+          beforeSend: true,
+          complete: true,
+          data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
+          no_encoding: true
+        });
+      } else {
+        miqJqueryRequest(url, {
+          data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
+          no_encoding: true
+        });
+      }
     })
   })
 }
