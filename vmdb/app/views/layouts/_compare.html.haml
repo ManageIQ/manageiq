@@ -1,0 +1,13 @@
+= render :partial => "layouts/flash_msg"
+- if @compare.nil?
+  _("No Records Found!")
+- else
+  #compare_grid_div{:style => "width: #{@winW - 250}px; height:auto; cursor:hand;"}
+    = render :partial => 'layouts/slickgrid',
+             :locals  => { :grid_id        => "compare_grid_div",
+                           :grid_name      => "compare_grid",
+                           :grid_rows_json => @temp[:grid_rows_json],
+                           :grid_cols_json => @temp[:grid_cols_json],
+                           :autosize       => true,
+                           :set_sizes      => true,
+                           :skin           => "miq" }
