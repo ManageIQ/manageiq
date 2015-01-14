@@ -9,10 +9,7 @@ class EventLog < ActiveRecord::Base
 
   def self.add_missing_elements(parent, xmlNode)
     hashes = xml_to_hashes(xmlNode)
-    return if hashes.nil?
-
-    os = parent.operating_system
-    EmsRefresh.save_event_logs_inventory(os, hashes)
+    EmsRefresh.save_event_logs_inventory(parent.operating_system, hashes) if hashes
   end
 
   def self.xml_to_hashes(xmlNode)

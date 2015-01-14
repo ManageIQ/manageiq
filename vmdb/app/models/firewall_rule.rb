@@ -22,8 +22,7 @@ class FirewallRule < ActiveRecord::Base
     return if parent.operating_system.nil?
 
     hashes = xml_to_hashes(xmlNode, findPath)
-    return if hashes.nil?
-    EmsRefresh.save_firewall_rules_inventory(parent.operating_system, hashes, :scan)
+    EmsRefresh.save_firewall_rules_inventory(parent.operating_system, hashes, :scan) if hashes
   end
 
   def self.xml_to_hashes(xmlNode, findPath)

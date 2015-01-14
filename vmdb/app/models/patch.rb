@@ -20,8 +20,7 @@ class Patch < ActiveRecord::Base
   end
 
   def self.process_array(parent, hashes)
-    return if hashes.blank?
-    EmsRefresh.save_patches_inventory(parent, hashes)
+    EmsRefresh.save_patches_inventory(parent, hashes) unless hashes.blank?
   end
 
   def self.highest_patch_level(target)

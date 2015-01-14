@@ -1524,7 +1524,7 @@ class Host < ActiveRecord::Base
     begin
       sp = HostScanProfiles.new(ScanItem.get_profile("host default"))
       files = sp.parse_data_files(ssu)
-      EmsRefresh.save_filesystems_inventory(self, files)
+      EmsRefresh.save_filesystems_inventory(self, files) if files
     rescue
       #$log.log_backtrace($!)
     end

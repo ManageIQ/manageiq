@@ -36,8 +36,7 @@ class SystemService < ActiveRecord::Base
 
   def self.add_missing_elements(parent, xmlNode, findPath)
     hashes = xml_to_hashes(xmlNode, findPath)
-    return if hashes.nil?
-    EmsRefresh.save_system_services_inventory(parent, hashes, :scan)
+    EmsRefresh.save_system_services_inventory(parent, hashes, :scan) if hashes
   end
 
   def self.xml_to_hashes(xmlNode, findPath, typeName=nil)

@@ -232,25 +232,21 @@ module EmsRefresh::SaveInventory
   end
 
   def save_guest_applications_inventory(parent, hashes)
-    return if hashes.nil?
     deletes = parent.guest_applications(true).dup
     self.save_inventory_multi(:guest_applications, GuestApplication, parent, hashes, deletes, [:arch, :typename, :name, :version])
   end
 
   def save_advanced_settings_inventory(parent, hashes)
-    return if hashes.nil?
     deletes = parent.advanced_settings(true).dup
     self.save_inventory_multi(:advanced_settings, AdvancedSetting, parent, hashes, deletes, :name)
   end
 
   def save_patches_inventory(parent, hashes)
-    return if hashes.nil?
     deletes = parent.patches(true).dup
     self.save_inventory_multi(:patches, Patch, parent, hashes, deletes, :name)
   end
 
   def save_os_processes_inventory(os, hashes)
-    return if hashes.nil?
     deletes = os.processes(true).dup
     self.save_inventory_multi(:processes, OsProcess, os, hashes, deletes, :pid)
   end
@@ -286,7 +282,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_filesystems_inventory(parent, hashes)
-    return if hashes.nil?
     deletes = parent.filesystems(true).dup
     self.save_inventory_multi(:filesystems, Filesystem, parent, hashes, deletes, :name)
   end
@@ -309,7 +304,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_event_logs_inventory(os, hashes)
-    return if hashes.nil?
     deletes = os.event_logs(true).dup
     self.save_inventory_multi(:event_logs, EventLog, os, hashes, deletes, :uid)
   end

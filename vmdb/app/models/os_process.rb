@@ -11,8 +11,7 @@ class OsProcess < ActiveRecord::Base
     return if parent.operating_system.nil?
 
     hashes = xml_to_hashes(xmlNode, findPath)
-    return if hashes.nil?
-    EmsRefresh.save_os_processes_inventory(parent.operating_system, hashes)
+    EmsRefresh.save_os_processes_inventory(parent.operating_system, hashes) if hashes
   end
 
   def self.xml_to_hashes(xmlNode, findPath)

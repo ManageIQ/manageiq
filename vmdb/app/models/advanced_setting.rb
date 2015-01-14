@@ -9,8 +9,7 @@ class AdvancedSetting < ActiveRecord::Base
 
   def self.add_missing_elements(parent, xmlNode, findPath)
     hashes = xml_to_hashes(xmlNode, findPath)
-    return if hashes.nil?
-    EmsRefresh.save_advanced_settings_inventory(parent, hashes)
+    EmsRefresh.save_advanced_settings_inventory(parent, hashes) if hashes
   end
 
   def self.xml_to_hashes(xmlNode, findPath)
