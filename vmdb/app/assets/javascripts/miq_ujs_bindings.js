@@ -60,22 +60,17 @@ $j(document).ready(function(){
 		}
 	});
 
-	// Bind click support for checkboxes, seems only click event works in FF/IE/Chrome
-	// TODO: This binding is commented out because it doesn't work under dhtmlx tabs, may use later
-//	$j('[data-miq_observe_checkbox]').live('click', function() {
-//		var parms = $j.parseJSON(this.getAttribute('data-miq_observe_checkbox'));
-//		var url = parms.url;
-//		var sparkleOn = this.getAttribute('data-miq_sparkle_on');	// Grab miq_sparkle settings
-//		var sparkleOff = this.getAttribute('data-miq_sparkle_off');
-//		new $j.ajax(url,
-//										{
-//											dataType: 'script',
-//											beforeSend: function() {if (sparkleOn) miqSparkle(true);},
-//											complete: function() {if (sparkleOff) miqSparkle(false);},
-//											parameters:this.id + '=' + encodeURIComponent(this.checked ? this.value : 'null')
-//										}
-//		);
-//	});
+  $j('[data-miq_observe_checkbox]').live('click', function() {
+    var el = $j(this);
+    var parms = $j.parseJSON(el.attr('data-miq_observe_checkbox'));
+    var url = parms.url;
+    var options = {
+      data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? el.val() : 'null'),
+    };
+    if (el.attr('data-miq_sparkle_on')) options['beforeSend'] = true
+    if (el.attr('data-miq_sparkle_on')) options['complete'] = true
+    miqJqueryRequest(url, options);
+  });
 
 // Following example code from http://www.alfajango.com/blog/rails-3-remote-links-and-forms/
 //

@@ -81,10 +81,6 @@
                           options_for_select(Array.new(@edit[:new][:rsc_groups].length) { |j| j + 1 }, (i + 1).to_s),
                           "data-miq_sparkle_on" => true,
                           "data-miq_observe"    => {:url => url}.to_json)
-    - # Need this to bind checkbox observers when under DHTMLX tabs
-    - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
-    :javascript
-      miqObserveCheckboxes();
   - elsif @edit[:new][:service_type] == "atomic"
     %dl.col1
       %dd

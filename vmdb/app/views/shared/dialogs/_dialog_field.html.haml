@@ -183,6 +183,3 @@
           - value = wf.value(field.name) || ''
           - classification_ids = value.split(',')
           = h(Classification.where(:id => classification_ids).collect(&:description).join(', '))
-
-%script
-  miqObserveCheckboxes();

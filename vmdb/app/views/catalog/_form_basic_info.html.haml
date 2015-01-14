@@ -109,8 +109,3 @@
         %td
           = text_field_tag("provision_cost", @edit[:new][:provision_cost], :maxlength => MAX_NAME_LEN,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-
-  - # Need this to bind checkbox observers when under DHTMLX tabs
-  - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
-  :javascript
-    miqObserveCheckboxes();

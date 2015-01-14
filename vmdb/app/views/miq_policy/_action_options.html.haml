@@ -269,8 +269,3 @@
                   %td{:align => "left", :valign => "top", :nowrap => 1}
                     = check_box_tag("cat_#{cat.first}", "1", checked, "data-miq_observe_checkbox" => observe)
                   = h(cat.last)
-
-- # Need this to bind checkbox observers when under DHTMLX tabs
-- # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
-:javascript
-  miqObserveCheckboxes();

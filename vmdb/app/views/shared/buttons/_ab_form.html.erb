@@ -94,7 +94,4 @@
              :locals  => {:rec_id  => "#{@custom_button.id || "new"}",
                           :action  => "automate_button_field_changed"}
   %>
-  <%# Need this to bind checkbox observers when under DHTMLX tabs %>
-  <%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
-  <script>miqObserveCheckboxes();</script>
 </div>
