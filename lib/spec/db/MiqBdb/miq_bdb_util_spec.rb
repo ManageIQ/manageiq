@@ -1,13 +1,13 @@
 require "spec_helper"
 
 require 'db/MiqBdb/MiqBdbUtil'
+require "#{__dir__}/test_files"
 
 describe MiqBerkeleyDB::MiqBdbUtil do
-  MIQ_BDB_RPM_NAME_FILENAME = File.expand_path(File.join(File.dirname(__FILE__), %w{data rpm Name}))
 
   it "#getkeys" do
     bdbUtil = described_class.new()
-    keys = bdbUtil.getkeys(MIQ_BDB_RPM_NAME_FILENAME)
+    keys = bdbUtil.getkeys(MiqBdb::TestFiles::RPM_NAME)
     keys.size.should == 690
   end
 

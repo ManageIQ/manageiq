@@ -1,12 +1,12 @@
 require "spec_helper"
 
 require 'db/MiqBdb/MiqBdb'
+require "#{__dir__}/test_files"
 
 describe MiqBerkeleyDB::MiqBdbPage do
-  MIQ_BDB_RPM_PROVIDE_VERSION_FILENAME = File.expand_path(File.join(File.dirname(__FILE__), %w{data rpm Provideversion}))
 
   before do
-    bdb = MiqBerkeleyDB::MiqBdb.new(MIQ_BDB_RPM_PROVIDE_VERSION_FILENAME)
+    bdb = MiqBerkeleyDB::MiqBdb.new(MiqBdb::TestFiles::RPM_PROVIDE_VERSION)
     bdb.pages { |p| @page = p }
   end
 
