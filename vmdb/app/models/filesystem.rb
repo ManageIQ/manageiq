@@ -20,8 +20,7 @@ class Filesystem < ActiveRecord::Base
     options[:scan_item_id] = scan_item.id unless scan_item.nil?
 
     hashes = xml_to_hashes(xmlNode, options)
-    return if hashes.nil?
-    EmsRefresh.save_filesystems_inventory(parent, hashes)
+    EmsRefresh.save_filesystems_inventory(parent, hashes) if hashes
   end
 
   def self.xml_to_hashes(xmlNode, options = {})
