@@ -14,24 +14,28 @@ module Vmdb::Logging
       severity >= mirror_level
     end
 
-    def add_with_mirror(severity, message = nil, progname = nil, &block)
-      if mirror_logger && mirror?(severity)
-        # The following lines of code are copied from VMDBLogger#add (which is copied from Logger#add)
-        mirror_progname = progname || @progname
-        if message.nil?
-          if block_given?
-            mirror_message = yield
-          else
-            mirror_message = mirror_progname
-            mirror_progname = @progname
-          end
-        end
-
-        mirror_logger.add(severity, "#{mirror_prefix}#{mirror_message}", mirror_progname)
-      end
-      add_without_mirror(severity, message, progname, &block)
+    def add(*args, &block)
+      add_to_mirror(*args, &block)
+      super
     end
-    alias add_without_mirror add
-    alias add add_with_mirror
+
+    private
+
+    def add_to_mirror(severity, message = nil, progname = nil, &block)
+      return unless mirror_logger && mirror?(severity)
+
+      # The following lines of code are copied from Logger#add
+      mirror_progname = progname || @progname
+      if message.nil?
+        if block_given?
+          mirror_message = yield
+        else
+          mirror_message = mirror_progname
+          mirror_progname = @progname
+        end
+      end
+
+      mirror_logger.add(severity, "#{mirror_prefix}#{mirror_message}", mirror_progname)
+    end
   end
 end

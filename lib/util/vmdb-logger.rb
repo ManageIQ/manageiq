@@ -1,65 +1,20 @@
 require 'logger'
 
 class VMDBLogger < Logger
-  def initialize(logdev, shift_age = 0, shift_size = 1048576)
+  def initialize(*args)
     super
-    @level = INFO
+    self.level = INFO
 
     # HACK: ActiveSupport monkey patches the standard Ruby Logger#initialize
     # method to set @formatter to a SimpleFormatter.
-    # 
+    #
     # The ActiveSupport Logger patches are deprecated in Rails 3.1.1 in favor of
     # ActiveSupport::BufferedLogger, so this hack may not be needed in future
     # version of Rails.
-    @formatter = Formatter.new
+    self.formatter = Formatter.new
   end
 
-  def add(severity, message = nil, progname = nil)
-    severity ||= UNKNOWN
-    if @logdev.nil? or severity < @level
-      return true
-    end
-    progname ||= @progname
-    if message.nil?
-      if block_given?
-        message = yield
-      else
-        message = progname
-        progname = @progname
-      end
-    end
-    @logdev.write(format_message(format_severity(severity), Time.now.utc, progname, message))
-    true
-  end
-  alias log add
-
-  def debug(progname = nil, &block)
-    add(DEBUG, nil, progname, &block)
-  end
-
-  def info(progname = nil, &block)
-    add(INFO, nil, progname, &block)
-  end
-
-  def warn(progname = nil, &block)
-    add(WARN, nil, progname, &block)
-  end
-
-  def error(progname = nil, &block)
-    add(ERROR, nil, progname, &block)
-  end
-
-  def fatal(progname = nil, &block)
-    add(FATAL, nil, progname, &block)
-  end
-
-  def unknown(progname = nil, &block)
-    add(UNKNOWN, nil, progname, &block)
-  end
-
-  def logdev
-    @logdev
-  end
+  attr_reader :logdev # Expose logdev
 
   def logdev=(logdev)
     if @logdev
@@ -75,7 +30,7 @@ class VMDBLogger < Logger
   end
 
   def filename
-    @logdev.filename if @logdev
+    logdev.try(:filename)
   end
 
   alias filename= logdev=
@@ -171,12 +126,8 @@ class VMDBLogger < Logger
 
   private
 
-  def format_message(severity, datetime, progname, msg)
-    @formatter.call(severity, datetime, progname, msg)
-  end
-
   class Formatter < Logger::Formatter
-    Format = "[----] %s, [%s#%d:%x] %5s -- %s: %s\n"
+    FORMAT = "[----] %s, [%s#%d:%x] %5s -- %s: %s\n"
 
     def call(severity, time, progname, msg)
       msg = msg2str(msg)
@@ -187,7 +138,7 @@ class VMDBLogger < Logger
         msg = "#{prefix} #{msg}" unless msg.include?(prefix)
       end
 
-      Format % [severity[0..0], format_datetime(time), $$, Thread.current.object_id, severity, progname, msg]
+      FORMAT % [severity[0..0], format_datetime(time), $$, Thread.current.object_id, severity, progname, msg]
     end
   end
 end
