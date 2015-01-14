@@ -1241,13 +1241,13 @@ function miqJqueryRequest(url, options) {
   options = options || {};
   ajax_options = {};
 
-  if (options['dataType']) ajax_options['dataType'] = options['dataType'] || 'script';
-
-  if (options['data']) ajax_options['data'] = options['data'];
-
+  if (options['dataType'] === undefined) {
+    ajax_options['accepts']  = { script: '*/*;q=0.5, ' + $j.ajaxSettings.accepts.script };
+    ajax_options['dataType'] = 'script';
+  }
+  if (options['data'])       ajax_options['data']       = options['data'];
   if (options['beforeSend']) ajax_options['beforeSend'] = function(request) { miqSparkle(true); };
-
-  if (options['complete']) ajax_options['complete'] = function(request) { miqSparkle(false); };
+  if (options['complete'])   ajax_options['complete']   = function(request) { miqSparkle(false); };
 
   new $j.ajax(options['no_encoding'] ? url : encodeURI(url), ajax_options);
 }
