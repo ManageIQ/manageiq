@@ -63,9 +63,7 @@ module EmsRefresh::SaveInventoryCloud
     ]
 
     # Save and link other subsections
-    child_keys.each do |k|
-      send("save_#{k}_inventory", ems, hashes[k], target) if hashes.key?(k)
-    end
+    save_child_inventory(ems, hashes, child_keys, target)
 
     link_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
 

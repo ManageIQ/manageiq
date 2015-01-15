@@ -52,9 +52,7 @@ module EmsRefresh::SaveInventoryInfra
     child_keys = [:storages, :clusters, :hosts, :vms, :folders, :resource_pools, :customization_specs]
 
     # Save and link other subsections
-    child_keys.each do |k|
-      send("save_#{k}_inventory", ems, hashes[k], target) if hashes.key?(k)
-    end
+    save_child_inventory(ems, hashes, child_keys, target)
 
     ems.save!
     hashes[:id] = ems.id
