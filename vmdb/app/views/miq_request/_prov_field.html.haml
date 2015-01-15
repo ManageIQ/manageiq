@@ -135,12 +135,13 @@
           - elsif @edit && field_hash[:display] == :edit && field_hash[:values] && !@edit[:stamp_typ]
             - # Allow editing of the text field
             - if field_hash[:values].blank?
-              - opts = [["<#{_('No Choices Available')}>", nil]] + (Array(field_hash[:values].invert).sort_by { |a| a.first.to_i })
+              - opts = [["<#{_('No Choices Available')}>", nil]]
             - else
               - if field_hash[:default]
                 - opts = []
               - else
                 - opts = [["<#{_('Choose')}>", nil]]
+              - opts += (Array(field_hash[:values].invert).sort_by { |a| a.first.to_i })
             = select_tag(field_id,
               options_for_select(opts, options[field].is_a?(Array) ? options[field].first : options[field]),
               :disabled              => disabled,
@@ -190,10 +191,6 @@
             - # Allow editing of this pulldown field
             - if field_hash[:values].blank?
               - opts = [["<#{_('No Choices Available')}>", nil]]
-              - if field_hash[:data_type] == :integer
-                - opts += Array(field_hash[:values].invert).sort_by(&:first)
-              - else
-                - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
             - else
               - if field_hash[:required]
                 - if field_hash[:default]
@@ -202,6 +199,10 @@
                   - opts = [["<#{_('Choose')}>", nil]]
               - else
                 - opts = [["<#{_('None')}>", nil]]
+              - if field_hash[:data_type] == :integer
+                - opts += Array(field_hash[:values].invert).sort_by(&:first)
+              - else
+                - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
             = select_tag(field_id,
               options_for_select(opts, options[field].is_a?(Array) ? options[field].first : options[field]),
               :disabled              => disabled,
@@ -226,10 +227,6 @@
             - # Allow editing of this pulldown field
             - if field_hash[:values].blank?
               - opts = [["<#{_('No Choices Available')}>", nil]]
-              - if field_hash[:data_type] == :integer
-                - opts += Array(field_hash[:values].invert).sort_by(&:last)
-              - else
-                - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
             - else
               - if field_hash[:required]
                 - if field_hash[:default]
@@ -238,7 +235,10 @@
                   - opts = [["<#{_('Choose')}>", nil]]
               - else
                 - opts = [["<#{_('None')}>", nil]]
-            
+              - if field_hash[:data_type] == :integer
+                - opts += Array(field_hash[:values].invert).sort_by(&:last)
+              - else
+                - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
             = select_tag(field_id,
               options_for_select(opts, (options[field].is_a?(Array) && !multiple) ? options[field].first : options[field]),
               :multiple              => multiple,
@@ -321,7 +321,7 @@
               = render :partial => "#{pfx}prov_windows_image_grid", :locals => {:field_id => field_id}
             - else
               - if field_hash[:values].blank?
-                - opts = [["<#{_('No Choices Available')}>", nil]] + Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
+                - opts = [["<#{_('No Choices Available')}>", nil]]
               - else
                 - if field_hash[:required]
                   - if field_hash[:default]
@@ -330,6 +330,7 @@
                     - opts = [["<#{_('Choose')}>", nil]]
                 - else
                   - opts = [["<#{_('None')}>", nil]]
+                - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
               = select_tag(field_id,
                 options_for_select(opts, options[field].is_a?(Array) ? options[field].first : options[field]),
                 :style                 => "width: auto;",
@@ -357,15 +358,15 @@
             - # Allow editing of this pulldown field
             - if field_hash[:values].blank?
               - opts = [["<#{_('No Choices Available')}>", nil]]
-              - if field_hash[:data_type] == :integer
-                - opts += Array(field_hash[:values].invert).sort_by(&:last)
-              - else
-                - opts += Array(field_hash[:values].invert).sort_by(&:first)
             - else
               - if field_hash[:default]
                 - opts = []
               - else
                 - opts = [["<#{_('Choose')}>", nil]]
+              - if field_hash[:data_type] == :integer
+                - opts += Array(field_hash[:values].invert).sort_by(&:last)
+              - else
+                - opts += Array(field_hash[:values].invert).sort_by(&:first)
             = select_tag(field_id,
               options_for_select(opts, options[field].is_a?(Array) ? options[field].first : options[field]),
               :disabled              => disabled,
@@ -390,7 +391,7 @@
               - # Description is in the second, last, array element
             - else
               - if field_hash[:values].blank?
-                - opts = [["<#{_('No Choices Available')}>", nil]] + field_hash[:values]
+                - opts = [["<#{_('No Choices Available')}>", nil]]
               - else
                 - if field_hash[:required]
                   - if field_hash[:default]
@@ -399,6 +400,7 @@
                     - opts = [["<#{_('Choose')}>", nil]]
                 - else
                   - opts = [["<#{_('None')}>", nil]]
+                - opts += field_hash[:values]
               = select_tag(field_id,
                 options_for_select(opts, options[field].is_a?(Array) ? options[field].first : options[field]),
                 :disabled              => disabled,
