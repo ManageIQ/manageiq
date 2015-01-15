@@ -6,6 +6,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsMetricsCollectorWorkerRedhat
     MiqEmsMetricsCollectorWorkerVmware
     MiqEmsMetricsCollectorWorkerOpenstack
+    MiqEmsMetricsCollectorWorkerOpenstackInfra
     MiqEmsMetricsProcessorWorker
     MiqEmsRefreshCoreWorker
     MiqEmsRefreshWorkerAmazon
@@ -40,6 +41,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsMetricsCollectorWorkerRedhat
     MiqEmsMetricsCollectorWorkerVmware
     MiqEmsMetricsCollectorWorkerOpenstack
+    MiqEmsMetricsCollectorWorkerOpenstackInfra
     MiqReportingWorker
     MiqSmartProxyWorker
     MiqReplicationWorker

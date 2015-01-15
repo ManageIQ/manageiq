@@ -1,6 +1,8 @@
 module Metric::CiMixin::Targets
   def perf_capture_always?
     case self
+    # For now allowing capturing for all OpesntackInfra hosts
+    when HostOpenstackInfra                ; true
     # going to treat an availability_zone like a host wrt perf_capture settings
     when Host, EmsCluster, AvailabilityZone; Metric::Targets.perf_capture_always[:host_and_cluster]
     when Storage;                            Metric::Targets.perf_capture_always[:storage]

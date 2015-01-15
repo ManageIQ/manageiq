@@ -2,14 +2,17 @@ module Metric::CiMixin::Capture
   include_concern 'Vim'
   include_concern 'Rhevm'
   include_concern 'Amazon'
+  include_concern 'OpenstackBase'
   include_concern 'Openstack'
+  include_concern 'OpenstackInfra'
 
   def perf_collect_metrics(*args)
     case self
-    when HostVmware, VmVmware; perf_collect_metrics_vim(*args)
-    when HostRedhat, VmRedhat; perf_collect_metrics_rhevm(*args)
-    when VmAmazon;             perf_collect_metrics_amazon(*args)
-    when VmOpenstack;          perf_collect_metrics_openstack(*args)
+    when HostVmware, VmVmware then perf_collect_metrics_vim(*args)
+    when HostRedhat, VmRedhat then perf_collect_metrics_rhevm(*args)
+    when VmAmazon             then perf_collect_metrics_amazon(*args)
+    when VmOpenstack          then perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
+    when HostOpenstackInfra   then perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
     else raise "Unsupported type #{self.class.name} (id: #{self.id})"
     end
   end
