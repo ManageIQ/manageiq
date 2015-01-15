@@ -1,13 +1,8 @@
-require 'open3'
-
-class PortInUse < StandardError; end
-
 class WsProxy
   attr_accessor :host, :host_port, :password, :timeout, :idle_timeout, :ssl_target
   attr_reader :proxy_port
 
-  # Allowed ports to communicate with our web sockets proxy
-  PORTS = 5900..5999
+  PORT_RANGE = 5900..5999
 
   def initialize(attributes)
     # setup all attributes.
@@ -16,42 +11,63 @@ class WsProxy
     end
   end
 
-  def self.start attributes
+  def self.start(attributes)
     proxy = WsProxy.new(attributes)
     proxy.start_proxy
   end
 
   def start_proxy
+    (PORT_RANGE).each do |port|
+      result = try_run_proxy(port)
 
-    # try to execute our web sockets proxy
-    port = PORTS.first
-    begin
-      cmd  = "#{ws_proxy} --daemon --idle-timeout=#{idle_timeout} --timeout=#{timeout} #{port} #{host}:#{host_port}"
-      cmd += " --ssl-target" if ssl_target
-      # might need this?
-      # VMDB::Config.new("vmdb").config[:server][:websocket_encrypt]
-      if get_vmdb_config.fetch_path(:server, :websocket_encrypt)
-        cmd += " --cert #{Rails.root + get_vmdb_config.fetch_path(:server, :websocket_cert)}" if File.file?("#{Rails.root + get_vmdb_config.fetch_path(:server, :websocket_cert)}")
-        cmd += " --key #{Rails.root + get_vmdb_config.fetch_path(:server, :websocket_key)}" if File.file?("#{Rails.root + get_vmdb_config.fetch_path(:server, :websocket_key)}")
+      if result.failure?
+        # detect port in use
+        next if result.exit_status == 1 && result.error =~ /socket.error: \[Errno 98\] Address already in use/
+        Rails.logger.error("error running websocket proxy: '#{result.commandline}' " +
+                           "returned #{result.exit_status}, stderr: #{result.error}, stdout: #{result.output}")
       end
-      execute(cmd)
-      # if the port is already in use, try another one from the pool
-      # this is not ideal, as it would try all ports in order
-      # but it avoids any threading issues etc.
-      # TODO: try to select a port from a pool randomly, so we always hit all active connections.
-    rescue PortInUse
-      port += 1
-      retry if port <= PORTS.last
-    end
-    @proxy_port = port
 
-    { :host => host, :port => host_port, :password => password, :proxy_port => proxy_port }
+      @proxy_port = port
+      break
+    end
+
+    {:host => host, :port => host_port, :password => password, :proxy_port => proxy_port}
   end
 
   private
 
+  def common_run_options
+    @common_run_options ||= (
+      run_options = {
+        :daemon        => nil,
+        :idle_timeout= => idle_timeout,
+        :timeout=      => timeout,
+      }
+      run_options[:'ssl-target'] = nil if ssl_target
+
+      if vmdb_config.fetch_path(:server, :websocket_encrypt) && false # FIXME
+        cert_file = File.join(Rails.root, vmdb_config.fetch_path(:server, :websocket_cert))
+        key_file  = File.join(Rails.root, vmdb_config.fetch_path(:server, :websocket_key))
+
+        run_options[:cert] = cert_file if File.file?(cert_file)
+        run_options[:key]  = key_file  if File.file?(key_file)
+      end
+
+      run_options
+    )
+  end
+
+  def try_run_proxy(port)
+    run_options = common_run_options.update(nil => [port, "#{host}:#{host_port}"])
+    AwesomeSpawn.run(ws_proxy, :params => run_options)
+  end
+
+  def vmdb_config
+    @vmdb_config ||= VMDB::Config.new("vmdb").config
+  end
+
   def ws_proxy
-    "#{Rails.root}/extras/noVNC/websockify/websocket.py"
+    "#{Rails.root}/extras/noVNC/websockify/websocketproxy.py"
   end
 
   def defaults
@@ -62,23 +78,4 @@ class WsProxy
       :host         => "0.0.0.0",
     }
   end
-
-  def logger
-    Rails.logger
-  end
-
-  def execute cmd
-
-    logger.debug "Starting VNC Proxy: #{cmd}"
-    Open3::popen3(cmd) do |stdin, stdout, stderr|
-      stdout.each do |line|
-        logger.debug "[#{line}"
-      end
-      stderr.each do |line|
-        logger.debug "VNCProxy Error: #{line}"
-        raise PortInUse if line["socket.error: [Errno 98] Address already in use"]
-      end
-    end
-  end
-
 end
