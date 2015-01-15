@@ -55,9 +55,7 @@ module Menu
           Menu::Item.new('ontap_logical_disk',   ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
           Menu::Item.new('ontap_storage_volume', ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
           Menu::Item.new('ontap_file_share',     ui_lookup(:tables => 'ontap_file_share'),     'ontap_file_share',     {:feature => 'ontap_file_share_show_list'},     '/ontap_file_share'),
-          # Menu::Item.new('cim_base_storage_extent', _('Base Extents'),                    'cim_base_storage_extent', {:feature => 'cim_base_storage_extent_show_list'}, '/cim_base_storage_extent'), # -if false
           Menu::Item.new('storage_manager',      _('Storage Managers'),                        'storage_manager',      {:feature => 'storage_manager_show_list'}, '/storage_manager')
-          # FIXME: removed feature snia_local_file_system
         ])
       end
 
