@@ -44,7 +44,7 @@ module MiqAeMethodService
       object_send(:set_folder, folder_path)
     end
 
-    def status
+    def statemachine_task_status
       ar_method do
         if ['finished', 'provisioned'].include?(@object.state)
           if @object.status.to_s.downcase == 'error' || @object.vm.nil?
