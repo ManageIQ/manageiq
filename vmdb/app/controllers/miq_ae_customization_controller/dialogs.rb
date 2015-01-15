@@ -869,7 +869,7 @@ module MiqAeCustomizationController::Dialogs
       @edit[:field_default_value] = key[:default_value] = nil
     end
 
-      @edit[:field_values] ||= key[:values] = []
+    @edit[:field_values] ||= key[:values] = []
 
     copy_field_param.call(:entry_point)
     copy_checkbox_field_param.call(:load_on_init)

@@ -13,11 +13,8 @@ class DialogFieldTextBox < DialogField
   end
 
   def values
-    if dynamic
-      @values = values_from_automate
-    else
-      @values
-    end
+    @values = values_from_automate if dynamic
+    @values
   end
 
   def initial_values

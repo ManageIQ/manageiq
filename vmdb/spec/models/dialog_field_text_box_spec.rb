@@ -3,7 +3,7 @@ require "spec_helper"
 describe DialogFieldTextBox do
   context "dialog field text box without options hash" do
     before(:each) do
-      @df = FactoryGirl.create(:dialog_field_text_box, :label => 'test field', :name => 'test field')
+      @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field')
     end
 
     it "#protected?" do
@@ -27,7 +27,7 @@ describe DialogFieldTextBox do
 
   context "dialog field text box without protected field" do
     before(:each) do
-      @df = FactoryGirl.create(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false} )
+      @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false} )
     end
 
     it "#protected?" do
@@ -41,7 +41,7 @@ describe DialogFieldTextBox do
 
   context "dialog field text box with protected field" do
     before(:each) do
-      @df = FactoryGirl.create(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => true} )
+      @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => true} )
     end
 
     it "#protected?" do
@@ -140,8 +140,12 @@ describe DialogFieldTextBox do
     end
   end
 
-  describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => "test") }
+  describe "#values" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+
+    before do
+      dialog_field.update_values("test")
+    end
 
     context "when the dialog field is dynamic" do
       let(:dynamic) { true }
@@ -151,7 +155,7 @@ describe DialogFieldTextBox do
       end
 
       it "returns the values from the value processor" do
-        expect(dialog_field.value).to eq("processor")
+        expect(dialog_field.values).to eq("processor")
       end
     end
 
@@ -159,7 +163,7 @@ describe DialogFieldTextBox do
       let(:dynamic) { false }
 
       it "returns the current value" do
-        expect(dialog_field.value).to eq("test")
+        expect(dialog_field.values).to eq("test")
       end
     end
   end

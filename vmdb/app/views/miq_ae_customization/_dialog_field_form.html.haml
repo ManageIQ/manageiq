@@ -40,7 +40,7 @@
         %tr
           %td.key=_('Dynamic')
           %td
-            = check_box_tag('field_dynamic', '1', @edit[:field_dynamic], "data-miq_observe" => {:url => url}.to_json)
+            = check_box_tag('field_dynamic', '1', @edit[:field_dynamic], "data-miq_observe_checkbox" => {:url => url}.to_json)
 
   - unless @edit[:field_typ].nil?
     %fieldset
