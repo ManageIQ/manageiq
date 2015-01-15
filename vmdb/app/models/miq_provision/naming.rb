@@ -3,6 +3,7 @@ module MiqProvision::Naming
 
   NAME_VIA_AUTOMATE = true
   NAME_SEQUENCE_REGEX = /\$n\{(\d+)\}/
+  SOURCE_IDENTIFIER = "provisioning"  # a unique name for the source column in custom_attributes table
 
   module ClassMethods
     def get_next_vm_name(prov_obj, determine_index=true)
@@ -51,28 +52,20 @@ module MiqProvision::Naming
       # if we are just building a sample of what the vm_name will look like use '#' inplace of actual number.
       return "#{name[:prefix]}#{'#' * name[:index_length]}#{name[:suffix]}" if determine_index == false
 
-      # Determine starting index based on already assigned names in miq_provision table.
-      start_idx = 0
-      reg_val = Regexp.new("(#{name[:prefix]})(\\d{#{name[:index_length]}})(#{name[:suffix]})")
-
-      MiqProvision.find(:all).each do |p|
-        if p.options[:vm_target_name].to_s.strip =~ reg_val
-          name_prefix, name_idx, name_suffix = $1.to_s, $2.to_i, $3
-          # If the name prefix and suffix match record the highest index number
-          if name[:prefix].downcase == name_prefix.downcase && name[:suffix].to_s.downcase == name_suffix.to_s.downcase
-            start_idx = name_idx if name_idx > start_idx
-          end
+      index_length = name[:index_length]
+      loop do
+        next_number = MiqRegion.my_region.next_naming_sequence(unresolved_vm_name, SOURCE_IDENTIFIER)
+        idx_str  = "%0#{index_length}d" % next_number
+        if idx_str.length > index_length
+          index_length += 1
+          unresolved_vm_name = "#{name[:prefix]}$n{#{index_length}}#{name[:suffix]}"
+          next
         end
-      end
-      start_idx += 1
 
-      start_idx.upto(9999) do |x|
-        idx_str  = format("%0#{name[:index_length]}d", x)
         fullname = "#{name[:prefix]}#{idx_str}#{name[:suffix]}"
         vm       = check_vm_name_uniqueness(fullname, prov_obj)
         return fullname if vm.nil?
       end
-      return nil
     end
 
     def check_vm_name_uniqueness(fullname, prov_obj)
@@ -86,7 +79,4 @@ module MiqProvision::Naming
   def get_next_vm_name()
     self.class.get_next_vm_name(self)
   end
-
-
-
 end

@@ -19,7 +19,7 @@ class MiqRegion < ActiveRecord::Base
   acts_as_miq_taggable
   include ReportableMixin
   include UuidMixin
-
+  include NamingSequenceMixin
   include AggregationMixin
   # Since we've overridden the implementation of methods from AggregationMixin,
   # we must also override the :uses portion of the virtual columns.
