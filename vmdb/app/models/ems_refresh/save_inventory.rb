@@ -146,8 +146,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_operating_system_inventory(parent, hash)
-    return if hash.nil?
-
     # Only set a value if we do not have one and we have not collected scan metadata.
     # Otherwise an ems may not contain the proper value and we do not want to overwrite
     # the value collected during our metadata scan.
@@ -157,14 +155,11 @@ module EmsRefresh::SaveInventory
   end
 
   def save_hardware_inventory(parent, hash)
-    return if hash.nil?
     save_inventory_single(:hardware, parent, hash, [:disks, :guest_devices, :networks])
     parent.save!
   end
 
   def save_guest_devices_inventory(hardware, hashes)
-    return if hashes.nil?
-
     # Update the associated ids
     hashes.each do |h|
       h[:switch_id] = h.fetch_path(:switch, :id)
@@ -174,6 +169,10 @@ module EmsRefresh::SaveInventory
         # Save the hardware to force an id if not found
         hardware.save! if hardware.id.nil?
         h[:network][:hardware_id] = hardware.id
+      else
+        # ensure save_network_inventory gets called
+        # it will be deleted
+        h[:network] = {}
       end
     end
 
@@ -183,8 +182,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_disks_inventory(hardware, hashes)
-    return if hashes.nil?
-
     # Update the associated ids
     hashes.each do |h|
       h[:storage_id] = h.fetch_path(:storage, :id)
@@ -196,7 +193,7 @@ module EmsRefresh::SaveInventory
   end
 
   def save_network_inventory(guest_device, hash)
-    if hash.nil?
+    if hash.blank?
       guest_device.network = nil
     else
       save_inventory_single(:network, guest_device, hash, nil, :guest_device)
@@ -205,8 +202,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_networks_inventory(hardware, hashes, mode = :refresh)
-    return if hashes.nil?
-
     deletes = hardware.networks(true).dup
 
     case mode
@@ -222,8 +217,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_system_services_inventory(parent, hashes, mode = :refresh)
-    return if hashes.nil?
-
     deletes = case mode
     when :refresh then nil
     when :scan    then parent.system_services(true).dup
@@ -253,8 +246,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_firewall_rules_inventory(parent, hashes, mode = :refresh)
-    return if hashes.nil?
-
     find_key =
       case mode
       when :refresh
@@ -277,7 +268,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_custom_attributes_inventory(parent, hashes)
-    return if hashes.nil?
     deletes = parent.ems_custom_attributes(true).dup
     save_inventory_multi(:ems_custom_attributes, parent, hashes, deletes, [:section, :name])
   end
@@ -288,8 +278,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_snapshots_inventory(vm, hashes)
-    return if hashes.nil?
-
     hashes.each { |h| h[:parent_id] = nil } # Delink all snapshots
 
     deletes = vm.snapshots(true).dup
