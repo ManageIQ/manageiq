@@ -1,5 +1,5 @@
 class WsProxy
-  attr_accessor :host, :host_port, :password, :timeout, :idle_timeout, :ssl_target
+  attr_accessor :host, :host_port, :password, :timeout, :idle_timeout, :ssl_target, :encrypt
   attr_reader :proxy_port
 
   PORT_RANGE = 5900..5999
@@ -17,21 +17,27 @@ class WsProxy
   end
 
   def start_proxy
+    @proxy_port = nil
     (PORT_RANGE).each do |port|
       result = try_run_proxy(port)
 
       if result.failure?
-        # detect port in use
         next if result.exit_status == 1 && result.error =~ /socket.error: \[Errno 98\] Address already in use/
-        Rails.logger.error("error running websocket proxy: '#{result.commandline}' " +
+
+        Rails.logger.error("error running websocket proxy: '#{result.commandline}' " \
                            "returned #{result.exit_status}, stderr: #{result.error}, stdout: #{result.output}")
+        return nil
       end
 
       @proxy_port = port
       break
     end
 
-    {:host => host, :port => host_port, :password => password, :proxy_port => proxy_port}
+    if @proxy_port.nil?
+      Rails.logger.error("error running websocket proxy: 'No TCP ports available'")
+      return nil
+    end
+    {:host => host, :port => host_port, :password => password, :proxy_port => proxy_port, :encrypt => encrypt}
   end
 
   private

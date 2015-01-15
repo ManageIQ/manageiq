@@ -87,11 +87,7 @@ module VmCommon
   # Launch a VM console
   def console
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
-    unless params[:task_id]
-      console_before_task(console_type)
-    else
-      console_after_task(console_type)
-    end
+    params[:task_id] ? console_after_task(console_type) : console_before_task(console_type)
   end
   alias vmrc_console console  # VMRC needs its own URL for RBAC checking
   alias vnc_console console   # VNC needs its own URL for RBAC checking
@@ -99,36 +95,35 @@ module VmCommon
   def launch_vmware_console
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
     @vm = @record = identify_record(params[:id], VmOrTemplate)
-    proxy_options = { :console_type => console_type.to_sym }
-    case console_type
-    when "mks"
-      options = @sb[:mks]
-      options['version'] = get_vmdb_config[:server][:mks_version]
-    when "vmrc"
-      options = {
-        :host        => @record.ext_management_system.ipaddress || @record.ext_management_system.hostname,
-        :vmid        => @record.ems_ref,
-        :ticket      => @sb[:vmrc_ticket],
-        :api_version => @record.ext_management_system.api_version.to_s,
-        :os          => browser_info(:os).downcase,
-        :name        => @record.name
-      }
-    end
-    render :template => "vm_common/console_#{proxy_options[:console_type]}",
+    options = case console_type
+              when "mks"
+                @sb[:mks].update(
+                  'version' => get_vmdb_config[:server][:mks_version]
+                )
+              when "vmrc"
+                {
+                  :host        => @record.ext_management_system.ipaddress ||
+                                  @record.ext_management_system.hostname,
+                  :vmid        => @record.ems_ref,
+                  :ticket      => @sb[:vmrc_ticket],
+                  :api_version => @record.ext_management_system.api_version.to_s,
+                  :os          => browser_info(:os).downcase,
+                  :name        => @record.name
+                }
+              end
+    render :template => "vm_common/console_#{console_type}",
            :layout   => false,
            :locals   => options
   end
 
   def launch_novnc_console
     password, host, host_port = @sb[:vnc]
+    encrypt = false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
     proxy_options = WsProxy.start(
-      :host         => host,
-      :host_port    => host_port,
-      :password     => password,
-      :encrypt      => false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
-    ).merge(
-      :console_type => 'vnc',
-      :encrypt      => false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
+      :host      => host,
+      :host_port => host_port,
+      :password  => password,
+      :encrypt   => encrypt
     )
 
     proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
@@ -136,7 +131,7 @@ module VmCommon
 
     Rails.logger.error("PROXY options: #{proxy_options}")
 
-    render :template => "vm_common/console_#{proxy_options[:console_type]}",
+    render :template => "vm_common/console_vnc",
            :layout   => false,
            :locals   => proxy_options
   end
