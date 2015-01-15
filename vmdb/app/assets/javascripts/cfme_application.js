@@ -319,8 +319,8 @@ function toggleConvertButtonToLink(button, url, toggle) {
 // parms: button_div=<id of div with buttons to update>, override=<forced state>
 function miqUpdateAllCheckboxes(button_div,override) {
   miqSparkle(true);
-  if ($('masterToggle')) {
-    var state = $('masterToggle').checked;
+  if ($j('#masterToggle').length > 0) {
+    var state = $j('#masterToggle').prop('checked');
     if ( override != null ) state = override;
     if (typeof gtl_list_grid == "undefined" && ($$('input[id=listcheckbox]').length>0)) {             // No dhtmlx grid on the screen
       cbs = $$('input[id=listcheckbox]');

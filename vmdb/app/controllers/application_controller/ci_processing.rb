@@ -290,11 +290,11 @@ module ApplicationController::CiProcessing
       if session[:retire_date].blank?
         session[:retire_warn] = ""
         page << javascript_hide("remove_button")
-        page << "$('retirement_warn').disable();"
+        page << javascript_disable_field('retirement_warn')
         page << "$('retirement_warn').value = '';"
       else
         page << javascript_show("remove_button")
-        page << "$('retirement_warn').enable();"
+        page << javascript_enable_field('retirement_warn')
       end
       page << "miqSparkle(false);"
     end
