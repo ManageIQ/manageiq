@@ -62,10 +62,10 @@ module JobProxyDispatcherSpec
           it "should have #{NUM_COS_PROXIES} active cos based proxies on hosts" do
             NUM_COS_PROXIES.should == @proxies.length
             #miqServers = self.class.miq_servers_for_scan.find_all { |svr| !svr.has_vm_scan_affinity? }
-            host_proxies = @hosts.find_all {|h| h.is_a_proxy?}.length
+            host_proxies = @hosts.find_all(&:is_a_proxy?).length
             NUM_COS_PROXIES.should == host_proxies
 
-            active_host_proxies = @hosts.find_all {|h| h.is_proxy_active?}.length
+            active_host_proxies = @hosts.find_all(&:is_proxy_active?).length
             NUM_COS_PROXIES.should == active_host_proxies
           end
 
@@ -110,7 +110,7 @@ module JobProxyDispatcherSpec
               cfg.config.store_path(:repository_scanning, :defaultsmartproxy, @repo_proxy.id)
               VMDB::Config.stub(:new).and_return(cfg)
             end
-            @jobs = (@vms + @repo_vms).collect { |vm| vm.scan }
+            @jobs = (@vms + @repo_vms).collect(&:scan)
 
             MiqProxy.any_instance.stub(:state).and_return("on")
             #TODO: Create real contexts out of this

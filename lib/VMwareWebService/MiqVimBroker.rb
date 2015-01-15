@@ -294,7 +294,7 @@ class MiqVimBroker
             @broker.releaseSession(sessionId)
         else
 			$vim_log.info "Server releaseSession: #{sessionId}"
-			$miqBrokerObjRegistry[sessionId].dup.each { |o| o.release }
+			$miqBrokerObjRegistry[sessionId].dup.each(&:release)
 		end
 	end
 	
@@ -443,7 +443,7 @@ class MiqVimBroker
 		end
 		
 		vim.shutdownConnection
-		$miqBrokerObjRegistryByConn[key].dup.each { |o| o.release }
+		$miqBrokerObjRegistryByConn[key].dup.each(&:release)
 		@connectionHash.delete(key)
 		vim.connectionRemoved
 

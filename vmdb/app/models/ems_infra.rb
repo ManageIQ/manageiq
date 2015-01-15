@@ -8,7 +8,7 @@ class EmsInfra < ExtManagementSystem
   }
 
   def self.types
-    self.subclasses.collect { |c| c.ems_type }
+    self.subclasses.collect(&:ems_type)
   end
 
   def self.supported_subclasses
@@ -16,7 +16,7 @@ class EmsInfra < ExtManagementSystem
   end
 
   def self.supported_types
-    self.supported_subclasses.collect { |c| c.ems_type }
+    self.supported_subclasses.collect(&:ems_type)
   end
 
   #

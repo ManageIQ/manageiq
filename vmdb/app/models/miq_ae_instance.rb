@@ -111,7 +111,7 @@ class MiqAeInstance < ActiveRecord::Base
   end
 
   def field_names
-    fields = ae_values.collect { |v| v.field_id }
+    fields = ae_values.collect(&:field_id)
     ae_class.ae_fields.select { |x| fields.include?(x.id) }.collect { |f| f.name.downcase }
   end
 

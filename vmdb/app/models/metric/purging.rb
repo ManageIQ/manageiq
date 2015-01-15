@@ -84,7 +84,7 @@ module Metric::Purging
         end
         break if batch.empty?
 
-        ids = batch.collect { |b| b.id }
+        ids = batch.collect(&:id)
         ids = ids[0, limit - total] if limit && total + ids.length > limit
 
         $log.info("#{log_header} Purging #{ids.length} #{interval} metrics.")

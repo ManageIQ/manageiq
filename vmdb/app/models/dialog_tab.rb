@@ -21,7 +21,7 @@ class DialogTab < ActiveRecord::Base
   end
 
   def dialog_fields
-    self.dialog_groups.collect {|dg| dg.dialog_fields}.flatten!
+    self.dialog_groups.collect(&:dialog_fields).flatten!
   end
 
   def dialog_resources

@@ -46,7 +46,7 @@ class FileDepotFtp < FileDepot
   end
 
   def verify_credentials(_auth_type = nil)
-    with_connection { |c| c.last_response }
+    with_connection(&:last_response)
   rescue
     false
   end

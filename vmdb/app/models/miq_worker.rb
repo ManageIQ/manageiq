@@ -172,7 +172,7 @@ class MiqWorker < ActiveRecord::Base
   # Grab all the classes in the hierarchy but ActiveRecord::Base and Object (and BasicObject on 1.9)
   def self.path_to_my_worker_settings
     excluded = %w(ActiveRecord::Base Object BasicObject)
-    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect {|c| c.corresponding_helper }
+    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect(&:corresponding_helper)
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})
@@ -223,11 +223,11 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.stop_workers(server_id = nil)
-    self.server_scope(server_id).each { |w| w.stop }
+    self.server_scope(server_id).each(&:stop)
   end
 
   def self.restart_workers(server_id = nil)
-    self.find_current(server_id).each { |w| w.restart }
+    self.find_current(server_id).each(&:restart)
   end
 
   def self.clean_workers
@@ -242,7 +242,7 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.status_update
-    self.find_current.each { |w| w.status_update }
+    self.find_current.each(&:status_update)
   end
 
   def self.log_status(level = :info)

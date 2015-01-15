@@ -133,23 +133,17 @@ module VmOrTemplate::RightSizing
 
   def max_mem_usage_absolute_average_max_over_time_period
     perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
-    perfs.collect do |p|
-      p.abs_max_mem_usage_absolute_average_value
-    end.compact.max
+    perfs.collect(&:abs_max_mem_usage_absolute_average_value).compact.max
   end
 
   def cpu_usagemhz_rate_average_max_over_time_period
     perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
-    perfs.collect do |p|
-      p.cpu_usagemhz_rate_average
-    end.compact.max
+    perfs.collect(&:cpu_usagemhz_rate_average).compact.max
   end
 
   def derived_memory_used_max_over_time_period
     perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
-    perfs.collect do |p|
-      p.derived_memory_used
-    end.compact.max
+    perfs.collect(&:derived_memory_used).compact.max
   end
 
   private

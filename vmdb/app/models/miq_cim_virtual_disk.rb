@@ -61,7 +61,7 @@ class MiqCimVirtualDisk < MiqCimInstance
   end
 
   def storage_systems
-    datastore_backing.collect { |cdb| cdb.storage_system }.flatten.compact.uniq
+    datastore_backing.collect(&:storage_system).flatten.compact.uniq
   end
 
   def file_share
@@ -85,7 +85,7 @@ class MiqCimVirtualDisk < MiqCimInstance
   end
 
   def base_storage_extents
-    datastore_backing.collect { |cdb| cdb.base_storage_extents }.flatten.compact.uniq
+    datastore_backing.collect(&:base_storage_extents).flatten.compact.uniq
   end
 
 end

@@ -85,7 +85,7 @@ module AggregationMixin
   def all_storages
     hosts = self.all_hosts
     MiqPreloader.preload(hosts, :storages)
-    hosts.collect { |h| h.storages }.flatten.compact.uniq
+    hosts.collect(&:storages).flatten.compact.uniq
   end
 
   def aggregate_hardware(from, field, targets = nil)

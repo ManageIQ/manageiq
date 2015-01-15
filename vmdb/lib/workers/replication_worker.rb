@@ -37,7 +37,7 @@ class ReplicationWorker < WorkerBase
     dest_conf[:adapter] ||= "postgresql"
     region = MiqRegion.my_region
     host_user_pass = dest_conf.values_at(:host, :port, :username, :password, :database, :adapter)
-    return host_user_pass.none? { |c| c.blank? } && MiqRegionRemote.region_valid?(region.guid, region.region, *host_user_pass)
+    return host_user_pass.none?(&:blank?) && MiqRegionRemote.region_valid?(region.guid, region.region, *host_user_pass)
   end
 
   def log_status_interval

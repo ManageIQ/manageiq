@@ -61,7 +61,7 @@ class Zone < ActiveRecord::Base
   end
 
   def assigned_roles
-    self.miq_servers.collect { |s| s.assigned_roles }.flatten.uniq.compact
+    self.miq_servers.collect(&:assigned_roles).flatten.uniq.compact
   end
 
   def role_active?(role_name)
@@ -73,7 +73,7 @@ class Zone < ActiveRecord::Base
   end
 
   def active_role_names
-    self.miq_servers.collect {|s| s.active_role_names}.flatten.uniq
+    self.miq_servers.collect(&:active_role_names).flatten.uniq
   end
 
   def self.default_zone
@@ -105,7 +105,7 @@ class Zone < ActiveRecord::Base
   end
 
   def log_collection_active?
-    self.miq_servers.any? { |s| s.log_collection_active? }
+    self.miq_servers.any?(&:log_collection_active?)
   end
 
   def log_collection_active_recently?(since = nil)
@@ -125,27 +125,27 @@ class Zone < ActiveRecord::Base
   end
 
   def host_ids
-    hosts.collect { |h| h.id }
+    hosts.collect(&:id)
   end
 
   def hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect { |e| e.hosts }.flatten
+    self.ext_management_systems.collect(&:hosts).flatten
   end
 
   def non_clustered_hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect { |e| e.non_clustered_hosts }.flatten
+    self.ext_management_systems.collect(&:non_clustered_hosts).flatten
   end
 
   def clustered_hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect { |e| e.clustered_hosts }.flatten
+    self.ext_management_systems.collect(&:clustered_hosts).flatten
   end
 
   def ems_clusters
     MiqPreloader.preload(self, :ext_management_systems => :ems_clusters)
-    self.ext_management_systems.collect { |e| e.ems_clusters }.flatten
+    self.ext_management_systems.collect(&:ems_clusters).flatten
   end
 
   def ems_infras
@@ -158,7 +158,7 @@ class Zone < ActiveRecord::Base
 
   def availability_zones
     MiqPreloader.preload(self.ems_clouds, :availability_zones)
-    self.ems_clouds.collect { |e| e.availability_zones }.flatten
+    self.ems_clouds.collect(&:availability_zones).flatten
   end
 
   def vms_without_availability_zone
@@ -170,38 +170,38 @@ class Zone < ActiveRecord::Base
 
   def vms_and_templates
     MiqPreloader.preload(self, :ext_management_systems => :vms_and_templates)
-    self.ext_management_systems.collect { |e| e.vms_and_templates }.flatten
+    self.ext_management_systems.collect(&:vms_and_templates).flatten
   end
 
   def vms
     MiqPreloader.preload(self, :ext_management_systems => :vms)
-    self.ext_management_systems.collect { |e| e.vms }.flatten
+    self.ext_management_systems.collect(&:vms).flatten
   end
 
   def miq_templates
     MiqPreloader.preload(self, :ext_management_systems => :miq_templates)
-    self.ext_management_systems.collect { |e| e.miq_templates }.flatten
+    self.ext_management_systems.collect(&:miq_templates).flatten
   end
 
   def vm_or_template_ids
-    vms_and_templates.collect { |v| v.id }
+    vms_and_templates.collect(&:id)
   end
 
   def vm_ids
-    vms.collect { |v| v.id }
+    vms.collect(&:id)
   end
 
   def miq_template_ids
-    miq_templates.collect { |t| t.id }
+    miq_templates.collect(&:id)
   end
 
   def storages
     MiqPreloader.preload(self, :ext_management_systems => {:hosts => :storages})
-    self.ext_management_systems.collect { |e| e.storages }.flatten.uniq
+    self.ext_management_systems.collect(&:storages).flatten.uniq
   end
 
   def miq_proxies
-    ems_ids = self.ext_management_systems.collect {|e| e.id }
+    ems_ids = self.ext_management_systems.collect(&:id)
     MiqProxy.includes(:host).where("hosts.ems_id in (?)", ems_ids).to_a
   end
 

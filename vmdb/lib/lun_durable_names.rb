@@ -11,7 +11,7 @@ class LunDurableName
 
     @namespace    = vimDn.namespace.to_s
     @namespace_id = vimDn.namespaceId.to_i
-    @data     = vimDn.data.collect { |d| d.to_i }.pack("C" * vimDn.data.length) unless vimDn.data.nil?
+    @data     = vimDn.data.collect(&:to_i).pack("C" * vimDn.data.length) unless vimDn.data.nil?
   end
 
   def ==(other)

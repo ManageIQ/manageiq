@@ -9,9 +9,9 @@ if klass == Vm
   vm_ids = ids
 else
   vm_ids = []
-  meth = klass.instance_methods.collect { |m| m.to_s }.include?("all_vms") ? :all_vms : :vms
+  meth = klass.instance_methods.collect(&:to_s).include?("all_vms") ? :all_vms : :vms
   klass.find_all_by_id(ids).each do |obj|
-    vm_ids += obj.send(meth).collect {|v| v.id}
+    vm_ids += obj.send(meth).collect(&:id)
   end
 end
 vm_ids.uniq!
@@ -25,21 +25,21 @@ vm_perf_recs = MetricRollup.all(
   :select => "id, resource_type, resource_id, resource_name, parent_host_id"
 )
 
-vm_perf_recs.group_by {|p| p.resource_id}.sort.each do |resource_id,perfs|
+vm_perf_recs.group_by(&:resource_id).sort.each do |resource_id,perfs|
   puts "Updating tags in performance data for VM: ID: #{resource_id} => #{perfs.first.resource_name}"
   MetricRollup.update_all(
     {:tag_names => VimPerformanceState.capture_tag_names(perfs.first.vm)},
-    {:id        => perfs.collect {|p| p.id}}
+    {:id        => perfs.collect(&:id)}
   )
 end
 
-host_ids = vm_perf_recs.collect {|p| p.parent_host_id}.compact.uniq
+host_ids = vm_perf_recs.collect(&:parent_host_id).compact.uniq
 Host.find_all_by_id(host_ids, :order => :id).each do |host|
   puts "Updating performance breakdown by tags for VMs under Host: ID: #{host.id} => #{host.name}"
 
   host.preload_vim_performance_state_for_ts(time_cond)
   perf_recs = host.metric_rollups.all(:conditions => time_cond.merge(:capture_interval_name=>'hourly'))
-  VimPerformanceTagValue.delete_all(:metric_type => "Host", :metric_id => perf_recs.collect {|p| p.id})
+  VimPerformanceTagValue.delete_all(:metric_type => "Host", :metric_id => perf_recs.collect(&:id))
   perf_recs.each do |perf|
     perf.resource.target = host
     VimPerformanceTagValue.build_from_performance_record(perf)

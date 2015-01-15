@@ -86,7 +86,7 @@ class EvmApplication
   end
 
   def self.output_workers_status(workers)
-    data = workers.sort_by { |w| w.type }.collect do |w|
+    data = workers.sort_by(&:type).collect do |w|
       [ w.type,
         w.status,
         w.id,

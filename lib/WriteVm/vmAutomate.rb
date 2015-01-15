@@ -63,8 +63,6 @@ rescue => err
 	$log.error err.backtrace.join("\n")
 	$log.error "MIQ VM UPDATE FAILED"
 ensure
-	rootTrees.each do |r|
-		r.umount
-	end if rootTrees
+	rootTrees.each(&:umount) if rootTrees
 	$log.info "MIQ VM UPDATE END - " + (lo.partialLog ? "partial log" : "full log")
 end

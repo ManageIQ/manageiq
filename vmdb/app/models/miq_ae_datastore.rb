@@ -126,7 +126,7 @@ module MiqAeDatastore
 
   def self.reset
     $log.info("MIQ(MiqAeDatastore) Clearing datastore") if $log
-    [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each { |k| k.delete_all }
+    [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each(&:delete_all)
   end
 
   def self.reset_default_namespace

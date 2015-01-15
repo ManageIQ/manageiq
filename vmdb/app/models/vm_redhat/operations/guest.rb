@@ -4,7 +4,7 @@ module VmRedhat::Operations::Guest
   end
 
   def raw_shutdown_guest
-    with_provider_object { |rhevm_vm| rhevm_vm.shutdown }
+    with_provider_object(&:shutdown)
   rescue Ovirt::VmIsNotRunning
   end
 end

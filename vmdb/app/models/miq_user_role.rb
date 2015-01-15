@@ -27,7 +27,7 @@ class MiqUserRole < ActiveRecord::Base
   }
 
   def feature_identifiers
-    self.miq_product_features.collect {|f| f.identifier}
+    self.miq_product_features.collect(&:identifier)
   end
 
   def allows?(options={})

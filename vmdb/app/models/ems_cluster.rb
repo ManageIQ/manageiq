@@ -192,7 +192,7 @@ class EmsCluster < ActiveRecord::Base
   def resource_pools
     # Look for only the resource_pools at the second depth (default depth + 1)
     rels = self.descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect { |r| r.depth }.min
+    min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth == min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
   end
@@ -200,7 +200,7 @@ class EmsCluster < ActiveRecord::Base
   def resource_pools_with_default
     # Look for only the resource_pools up to the second depth (default depth + 1)
     rels = self.descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect { |r| r.depth }.min
+    min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth <= min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
   end
@@ -231,19 +231,19 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def base_storage_extents
-    all_hosts.collect { |h| h.base_storage_extents }.flatten.uniq
+    all_hosts.collect(&:base_storage_extents).flatten.uniq
   end
 
   def storage_systems
-    all_hosts.collect { |h| h.storage_systems }.flatten.uniq
+    all_hosts.collect(&:storage_systems).flatten.uniq
   end
 
   def storage_volumes
-    all_hosts.collect { |h| h.storage_volumes }.flatten.uniq
+    all_hosts.collect(&:storage_volumes).flatten.uniq
   end
 
   def file_shares
-    all_hosts.collect { |h| h.file_shares }.flatten.uniq
+    all_hosts.collect(&:file_shares).flatten.uniq
   end
 
   def event_where_clause(assoc=:ems_events)
@@ -326,7 +326,7 @@ class EmsCluster < ActiveRecord::Base
     cl_hash.each do |k,v|
       hosts = hosts_by_id.values_at(*v[:ho_ids]).compact
       unless hosts.empty?
-        v[:ho_enabled], v[:ho_disabled] = hosts.partition { |h| h.perf_capture_enabled? }
+        v[:ho_enabled], v[:ho_disabled] = hosts.partition(&:perf_capture_enabled?)
       else
         v[:ho_enabled] = v[:ho_disabled] = []
       end
@@ -346,7 +346,7 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def hosts_enabled_for_perf_capture
-    self.hosts(:include => [:taggings, :tags]).select { |h| h.perf_capture_enabled? }
+    self.hosts(:include => [:taggings, :tags]).select(&:perf_capture_enabled?)
   end
 
   # Vmware specific

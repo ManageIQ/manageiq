@@ -404,7 +404,7 @@ describe Storage do
           miq_task.name.should    == "SmartState Analysis for All Storages"
           miq_task.state.should   == MiqTask::STATE_QUEUED
           cdata = miq_task.context_data
-          cdata[:targets].should  match_array Storage.scan_eligible_storages.collect { |s| s.id }
+          cdata[:targets].should  match_array Storage.scan_eligible_storages.collect(&:id)
           cdata[:complete].should be_empty
           cdata[:pending].should  be_empty
         end
@@ -412,7 +412,7 @@ describe Storage do
         it "#scan_timer(zone)" do
           miq_task = Storage.scan_timer(@zone.name)
           miq_task.name.should == "SmartState Analysis for All Storages in Zone \"#{@zone.name}\""
-          miq_task.context_data[:targets].should match_array Storage.scan_eligible_storages(@zone.name).collect { |s| s.id }
+          miq_task.context_data[:targets].should match_array Storage.scan_eligible_storages(@zone.name).collect(&:id)
         end
 
       end

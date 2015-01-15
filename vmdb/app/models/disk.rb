@@ -50,7 +50,7 @@ class Disk < ActiveRecord::Base
   end
 
   def volumes
-    self.partitions.collect { |p| p.volumes }.flatten.uniq
+    self.partitions.collect(&:volumes).flatten.uniq
   end
 
   def used_percent_of_provisioned
@@ -65,7 +65,7 @@ class Disk < ActiveRecord::Base
     return "Not Applicable" if self.rdm_disk?
     plist = self.partitions
     return "Unknown" if plist.empty?
-    return "True"    if plist.all? {|p| p.aligned?}
+    return "True"    if plist.all?(&:aligned?)
     return "False"   if plist.any? {|p| p.aligned? == false}
     return "Unknown"
   end

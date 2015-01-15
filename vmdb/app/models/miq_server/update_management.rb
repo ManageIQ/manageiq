@@ -5,16 +5,16 @@ module MiqServer::UpdateManagement
 
   module ClassMethods
     def queue_update_registration_status(*ids)
-      servers = self.where(:id => ids.flatten).each { |s| s.queue_update_registration_status }
+      servers = self.where(:id => ids.flatten).each(&:queue_update_registration_status)
     end
 
     def queue_check_updates(*ids)
       ids     = [MiqServer.my_server.id] if ids.blank?
-      servers = self.where(:id => ids.flatten).each { |s| s.queue_check_updates }
+      servers = self.where(:id => ids.flatten).each(&:queue_check_updates)
     end
 
     def queue_apply_updates(*ids)
-      self.where(:id => ids.flatten).each { |s| s.queue_apply_updates }
+      self.where(:id => ids.flatten).each(&:queue_apply_updates)
     end
   end
 

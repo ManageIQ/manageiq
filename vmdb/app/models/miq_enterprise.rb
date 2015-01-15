@@ -90,7 +90,7 @@ class MiqEnterprise < ActiveRecord::Base
   end
 
   def perf_capture_enabled
-    @perf_capture_enabled ||= self.ext_management_systems.any? { |ems| ems.perf_capture_enabled? }
+    @perf_capture_enabled ||= self.ext_management_systems.any?(&:perf_capture_enabled?)
   end
   alias perf_capture_enabled? perf_capture_enabled
 end #class MiqEnterprise

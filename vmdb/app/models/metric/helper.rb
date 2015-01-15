@@ -40,7 +40,7 @@ module Metric::Helper
     start_time = Time.parse(start_time)
     end_time = Time.parse(self.nearest_realtime_timestamp(end_time))
 
-    (start_time..end_time).step_value(20.seconds).collect! { |t| t.iso8601 }
+    (start_time..end_time).step_value(20.seconds).collect!(&:iso8601)
   end
 
   def self.hours_from_range(start_time, end_time = nil)
@@ -50,7 +50,7 @@ module Metric::Helper
     start_time = Time.parse(start_time)
     end_time = Time.parse(self.nearest_hourly_timestamp(end_time))
 
-    (start_time..end_time).step_value(1.hour).collect! { |t| t.iso8601 }
+    (start_time..end_time).step_value(1.hour).collect!(&:iso8601)
   end
 
   def self.nearest_daily_timestamp(ts, tz = nil)

@@ -95,5 +95,5 @@ diskFiles.each do |vmdk|
     break
 end
 
-vDisks.each { |vDisk| vDisk.close }
+vDisks.each(&:close)
 connection.disconnect

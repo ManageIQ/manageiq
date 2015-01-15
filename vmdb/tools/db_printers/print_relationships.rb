@@ -6,7 +6,7 @@ def print_rels(subtree, indent = '')
   end
 end
 
-roots = Relationship.roots.sort_by { |rel| rel.resource_pair }
+roots = Relationship.roots.sort_by(&:resource_pair)
 roots.each do |root|
   print_rels(root.subtree.arrange)
   puts; puts

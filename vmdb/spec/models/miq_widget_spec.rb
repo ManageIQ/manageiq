@@ -682,7 +682,7 @@ describe MiqWidget do
       end
 
       it "wdiget content" do
-        MiqQueue.all.each { |q| q.deliver }
+        MiqQueue.all.each(&:deliver)
 
         MiqWidgetContent.count.should eq(1)
         MiqWidgetContent.all.each do |content|
@@ -693,7 +693,7 @@ describe MiqWidget do
       end
 
       it "when group is deleted" do
-        MiqQueue.all.each { |q| q.deliver }
+        MiqQueue.all.each(&:deliver)
         MiqWidgetContent.count.should eq(1)
 
         @group2.users.destroy_all
@@ -702,7 +702,7 @@ describe MiqWidget do
       end
 
       it "when user is deleted" do
-        MiqQueue.all.each { |q| q.deliver }
+        MiqQueue.all.each(&:deliver)
         MiqWidgetContent.count.should eq(1)
 
         @user1.destroy

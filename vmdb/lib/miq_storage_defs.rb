@@ -26,7 +26,7 @@ module MiqStorageDefs
 
   def self.classes_based_on
     cbo = Hash.new
-    hier_arrays = CIM_CLASS_HIER.values.collect { |a| a.dup }
+    hier_arrays = CIM_CLASS_HIER.values.collect(&:dup)
 
     more = true
     while more do

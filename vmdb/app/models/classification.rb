@@ -195,7 +195,7 @@ class Classification < ActiveRecord::Base
   def self.find_assigned_entries(obj, ns=DEFAULT_NAMESPACE)
     raise "Class '#{obj.class}' is not eligible for classification" unless obj.respond_to?("tag_with")
 
-    tag_ids = obj.tagged_with(:ns => ns).collect {|tag| tag.id}
+    tag_ids = obj.tagged_with(:ns => ns).collect(&:id)
     self.find_all_by_tag_id(tag_ids) rescue []
   end
 
@@ -367,7 +367,7 @@ class Classification < ActiveRecord::Base
     h["name"] = self.name
     if category?
       ["id", "tag_id", "reserved"].each { |k| h.delete(k) }
-      h["entries"] = self.entries.collect { |e| e.export_to_array }.flatten
+      h["entries"] = self.entries.collect(&:export_to_array).flatten
     else
       ["id", "tag_id", "reserved", "parent_id"].each { |k| h.delete(k) }
     end

@@ -658,15 +658,15 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def hosts
-    self.storages.collect {|s| s.hosts}.flatten.compact.push(self.host).uniq
+    self.storages.collect(&:hosts).flatten.compact.push(self.host).uniq
   end
 
   def vms
-    self.storages.collect {|s| s.vms}.flatten.compact.uniq
+    self.storages.collect(&:vms).flatten.compact.uniq
   end
 
   def miq_templates
-    self.storages.collect {|s| s.miq_templates}.flatten.compact.uniq
+    self.storages.collect(&:miq_templates).flatten.compact.uniq
   end
 
   def storages

@@ -38,9 +38,7 @@ class ChargebackRate < ActiveRecord::Base
     #cb_rates = [{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
     #cb_rates.each {|rate| rate[:cb_rate].remove_all_assigned_tos}
     self.validate_rate_type(type)
-    ChargebackRate.find(:all, :conditions => {:rate_type => type.to_s.capitalize}).each do |rate|
-      rate.remove_all_assigned_tos
-    end
+    ChargebackRate.find(:all, :conditions => {:rate_type => type.to_s.capitalize}).each(&:remove_all_assigned_tos)
 
     cb_rates.each do |rate|
       rate[:cb_rate].assign_to_objects(rate[:object]) if rate.has_key?(:object)

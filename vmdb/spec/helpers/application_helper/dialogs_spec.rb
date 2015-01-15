@@ -7,7 +7,7 @@ describe ApplicationHelper do
 
       before do
         val_array = [["cat", "Cat"], ["dog", "Dog"]]
-        @val_array_reversed = val_array.collect{|v| v.reverse}
+        @val_array_reversed = val_array.collect(&:reverse)
         @field = DialogFieldDropDownList.new(:values => val_array)
       end
 

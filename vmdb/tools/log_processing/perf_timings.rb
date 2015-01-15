@@ -24,7 +24,7 @@ def dump_csv(type, hashes)
 
     keys = hashes[0].keys
     keys.delete_if { |k, v| [:time, :total_time].include?(k) }
-    keys = keys.sort_by { |k| k.to_s }
+    keys = keys.sort_by(&:to_s)
     keys = keys.unshift(:time)
     keys += [:unaccounted, :total_time]
 

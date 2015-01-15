@@ -15,7 +15,7 @@ describe EmsRefresh::MetadataRelats do
       @cluster.add_resource_pool(@rp)
       @rp.add_vm(@vm)
 
-      [@ems, @folder, @cluster, @rp, @host, @vm].each { |o| o.reload }
+      [@ems, @folder, @cluster, @rp, @host, @vm].each(&:reload)
       MiqQueue.delete_all
     end
 
@@ -47,7 +47,7 @@ describe EmsRefresh::MetadataRelats do
         @host.set_child(@rp2)
         @folder.add_host(@host)
 
-        [@folder, @host, @rp2].each { |o| o.reload }
+        [@folder, @host, @rp2].each(&:reload)
         MiqQueue.delete_all
       end
 

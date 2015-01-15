@@ -204,7 +204,7 @@ module EmsRefresh::SaveInventoryInfra
         $log.warn("#{log_header} Since failures occurred, not disconnecting for Hosts #{self.log_format_deletes(disconnects)}")
       else
         $log.info("#{log_header} Disconnecting Hosts #{self.log_format_deletes(disconnects)}")
-        disconnects.each { |h| h.disconnect_inv }
+        disconnects.each(&:disconnect_inv)
       end
     end
   end

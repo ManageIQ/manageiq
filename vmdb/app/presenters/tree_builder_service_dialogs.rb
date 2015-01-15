@@ -18,7 +18,7 @@ class TreeBuilderServiceDialogs  < TreeBuilderAeCustomization
       if options[:count_only]
         objects = object.dialog_resources
       else
-        objects = object.ordered_dialog_resources.collect {|a| a.resource}.compact
+        objects = object.ordered_dialog_resources.collect(&:resource).compact
       end
     end
     count_only_or_objects(options[:count_only], objects, nil)

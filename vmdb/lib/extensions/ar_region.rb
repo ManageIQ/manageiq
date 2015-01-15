@@ -121,7 +121,7 @@ module ArRegion
 
     # Partition the passed AR objects into local and remote sets
     def partition_objs_by_remote_region(objs)
-      objs.partition { |o| o.in_current_region? }
+      objs.partition(&:in_current_region?)
     end
 
     # Partition the passed ids into local and remote sets

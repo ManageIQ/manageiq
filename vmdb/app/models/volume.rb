@@ -54,7 +54,7 @@ class Volume < ActiveRecord::Base
 
         # Handle duplicate partition names (Generally only in the case of Windows with blank partition names)
         if found.length > 1
-          dup_partitions[name] = found.collect { |f| f.id } if dup_partitions[name].nil?
+          dup_partitions[name] = found.collect(&:id) if dup_partitions[name].nil?
           found_id = dup_partitions[name].shift
           found = found.detect { |f| f.id == found_id }
         else
@@ -72,7 +72,7 @@ class Volume < ActiveRecord::Base
 
         # Handle duplicate volume names (Generally only in the case of Windows with blank volume names)
         if found.length > 1
-          dup_volumes[name] = found.collect { |f| f.id } if dup_volumes[name].nil?
+          dup_volumes[name] = found.collect(&:id) if dup_volumes[name].nil?
           found_id = dup_volumes[name].shift
           found = found.detect { |f| f.id == found_id }
         else

@@ -51,7 +51,7 @@ class ActsAsArModel
   end
 
   def self.column_names_symbols
-    @column_names_symbols ||= self.column_names.collect { |c| c.to_sym }
+    @column_names_symbols ||= self.column_names.collect(&:to_sym)
   end
 
   def self.set_columns_hash(hash)

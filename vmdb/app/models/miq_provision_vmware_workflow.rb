@@ -106,7 +106,7 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
   ]
 
   def get_timezones(options={})
-    SYSPREP_TIMEZONES.collect {|t| t.reverse}
+    SYSPREP_TIMEZONES.collect(&:reverse)
   end
 
   def self.allowed_templates_vendor

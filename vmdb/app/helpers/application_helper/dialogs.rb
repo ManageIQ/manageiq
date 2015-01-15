@@ -8,7 +8,7 @@ module ApplicationHelper::Dialogs
       values.push(["<Choose>", nil])
     end
     if field.type.include?("DropDown")
-      values += field.values.collect{|v| v.reverse}
+      values += field.values.collect(&:reverse)
     elsif field.type.include?("TagControl")
       values += category_tags
     end

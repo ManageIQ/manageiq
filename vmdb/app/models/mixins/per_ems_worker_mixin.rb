@@ -20,7 +20,7 @@ module PerEmsWorkerMixin
     end
 
     def all_valid_ems_in_zone
-      self.all_ems_in_zone.select { |e| e.authentication_valid? }
+      self.all_ems_in_zone.select(&:authentication_valid?)
     end
 
     def desired_queue_names
@@ -30,7 +30,7 @@ module PerEmsWorkerMixin
 
     def sync_workers
       ws      = self.find_current_or_starting
-      current = ws.collect { |w| w.queue_name }.sort
+      current = ws.collect(&:queue_name).sort
       desired = self.has_required_role? ? self.desired_queue_names.sort : []
       result  = { :adds => [], :deletes => [] }
 

@@ -233,7 +233,7 @@ class MiqServer < ActiveRecord::Base
     if svr.vm_id.nil?
       vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddr)
       if vms.length > 1
-        $log.warn "Found multiple Vms that may represent this MiqServer: #{vms.collect { |v| v.id }.sort.inspect}"
+        $log.warn "Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}"
       elsif vms.length == 1
         svr_hash[:vm_id] = vms.first.id
       end

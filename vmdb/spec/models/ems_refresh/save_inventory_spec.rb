@@ -19,7 +19,7 @@ describe EmsRefresh::SaveInventory do
 
         vms = Vm.all
         vms.length.should == 2
-        v1, v2 = vms.sort_by { |v| v.id }
+        v1, v2 = vms.sort_by(&:id)
 
         v1.id.should      == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
@@ -40,7 +40,7 @@ describe EmsRefresh::SaveInventory do
         connected.length.should    == 2
 
         d      = disconnected.first
-        c1, c2 = connected.sort_by { |c| c.id }
+        c1, c2 = connected.sort_by(&:id)
 
         d.id.should      == @vm2.id
         d.uid_ems.should == @vm2.uid_ems
@@ -73,7 +73,7 @@ describe EmsRefresh::SaveInventory do
         connected.length.should    == 2
 
         d      = disconnected.first
-        c1, c2 = connected.sort_by { |c| c.id }
+        c1, c2 = connected.sort_by(&:id)
 
         d.id.should           == @vm2.id
         d.uid_ems.should      == @vm2.uid_ems
@@ -92,7 +92,7 @@ describe EmsRefresh::SaveInventory do
 
         vms = Vm.all
         vms.length.should == 2
-        v1, v2 = vms.sort_by { |v| v.id }
+        v1, v2 = vms.sort_by(&:id)
 
         v1.id.should      == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
@@ -121,7 +121,7 @@ describe EmsRefresh::SaveInventory do
         connected.length.should    == 2
 
         d      = disconnected.first
-        c1, c2 = connected.sort_by { |c| c.id }
+        c1, c2 = connected.sort_by(&:id)
 
         d.id.should           == @vm2.id
         d.uid_ems.should      == @vm2.uid_ems
@@ -140,7 +140,7 @@ describe EmsRefresh::SaveInventory do
 
         vms = Vm.all
         vms.length.should == 2
-        v1, v2 = vms.sort_by { |v| v.id }
+        v1, v2 = vms.sort_by(&:id)
 
         v1.id.should      == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
@@ -165,7 +165,7 @@ describe EmsRefresh::SaveInventory do
 
         vms = Vm.all
         vms.length.should == 2
-        v1, v2 = vms.sort_by { |v| v.id }
+        v1, v2 = vms.sort_by(&:id)
 
         v1.id.should      == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
@@ -218,7 +218,7 @@ describe EmsRefresh::SaveInventory do
 
         vms = Vm.all
         vms.length.should == 2
-        v1, v2 = vms.sort_by { |v| v.id }
+        v1, v2 = vms.sort_by(&:id)
 
         v1.id.should      == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
@@ -241,7 +241,7 @@ describe EmsRefresh::SaveInventory do
         connected.length.should    == 2
 
         d      = disconnected.first
-        c1, c2 = connected.sort_by { |c| c.id }
+        c1, c2 = connected.sort_by(&:id)
 
         d.id.should       == @vm2.id
         d.uid_ems.should  == @vm2.uid_ems
@@ -282,7 +282,7 @@ describe EmsRefresh::SaveInventory do
     puts "**VMS BEFORE"
     puts Vm.all.collect { |v| [v.id, v.name, v.uid_ems, v.ems_ref_obj, v.ems_ref, v.ems_id].inspect }.join("\n")
     puts "**DATA"
-    puts data.collect   { |d| d.inspect }.join("\n")
+    puts data.collect(&:inspect).join("\n")
   end
 
   def dump_after

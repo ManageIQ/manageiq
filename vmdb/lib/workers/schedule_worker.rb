@@ -464,7 +464,7 @@ class ScheduleWorker < WorkerBase
   end
 
   def rufus_remove_stale_schedules
-    active_tags = MiqSchedule.in_zone(MiqServer.my_zone).collect {|s| s.tag }
+    active_tags = MiqSchedule.in_zone(MiqServer.my_zone).collect(&:tag)
     @user_scheduler.find_jobs(CLASS_TAG).each do |rufus_job|
       if (active_tags & rufus_job.tags).empty?
         $log.info("MIQ(Schedule.rufus_remove_stale_schedules) Unscheduling Tag: #{rufus_job.tags.inspect}")
@@ -476,7 +476,7 @@ class ScheduleWorker < WorkerBase
   def rufus_remove_schedules_by_tag(tag)
     rufus_jobs = @user_scheduler.find_jobs(tag)
     $log.info("MIQ(Schedule.rufus_remove_schedules_by_tag) Unscheduling #{rufus_jobs.length} jobs with tag: #{tag}") unless rufus_jobs.empty?
-    rufus_jobs.each {|rufus_job| rufus_job.unschedule}
+    rufus_jobs.each(&:unschedule)
   end
 
   def after_sync_active_roles

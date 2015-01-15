@@ -711,7 +711,7 @@ module VmdbwsOps
     t0 = Time.now
     vm = FindVmByGuid(vmGuid)
 
-    ids = customAttrs.collect {|ca| ca.id}.compact
+    ids = customAttrs.collect(&:id).compact
     vm.custom_attributes.each do |ca|
       if (ids.include?(ca.id.to_s))
         # Check if we need to update the EMS
@@ -834,7 +834,7 @@ module VmdbwsOps
     $log.info "#{log_header}: enter"
     raise "No list provided for Find#{klass}ByList " if list.nil?
 
-    guids = list.to_miq_a.collect {|ci| ci.guid}
+    guids = list.to_miq_a.collect(&:guid)
     findCIsByGuid(klass, guids)
   end
 
@@ -844,7 +844,7 @@ module VmdbwsOps
     $log.info "#{log_header}: enter"
     raise "No list provided for Find#{klass}ByListId  " if list.nil?
 
-    ids = list.to_miq_a.collect {|ci| ci.id}
+    ids = list.to_miq_a.collect(&:id)
     findCIsById(klass, ids)
   end
 

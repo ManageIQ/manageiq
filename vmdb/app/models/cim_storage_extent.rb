@@ -92,11 +92,11 @@ class CimStorageExtent < MiqCimInstance
   end
 
   def file_systems
-    logical_disks.collect { |cld| cld.file_system }.compact.uniq
+    logical_disks.collect(&:file_system).compact.uniq
   end
 
   def file_shares
-    file_systems.collect { |cfs| cfs.file_shares }.flatten.compact.uniq
+    file_systems.collect(&:file_shares).flatten.compact.uniq
   end
 
   #########################

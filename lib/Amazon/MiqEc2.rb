@@ -33,7 +33,7 @@ class MiqEc2
     return if bucket.nil?
 
     # Find the latest timestamp for this ami_location, and get the xml data there
-    objs = bucket.objects.find_all { |o| o.key =~ /\/#{ami_location.gsub('/', '-')}\// }.sort_by { |o| o.key }
+    objs = bucket.objects.find_all { |o| o.key =~ /\/#{ami_location.gsub('/', '-')}\// }.sort_by(&:key)
     return if objs.empty?
 
     error_obj = objs.find { |o| o.key[-5..-1] == "ERROR" }

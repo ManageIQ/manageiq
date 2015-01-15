@@ -26,7 +26,7 @@ module MiqReport::Search
       ids      = ids[offset..offset + limit - 1]
     end
     data         = self.db_class.find_all_by_id(ids, :include => includes)
-    targets_hash = data.index_by { |obj| obj.id } if options[:targets_hash]
+    targets_hash = data.index_by(&:id) if options[:targets_hash]
     self.build_table(data, self.db, options)
     return self.table, self.extras[:attrs_for_paging].merge(:paged_read_from_cache => true, :targets_hash => targets_hash)
   end
@@ -77,10 +77,10 @@ module MiqReport::Search
     assoc ||= self.db_class.base_model.to_s.pluralize.underscore  # Derive association from base model
     ref = parent.class.reflections_with_virtual[assoc.to_sym]
     if ref.nil? || ref.kind_of?(VirtualReflection)
-      targets = parent.send(assoc).collect {|t| t.id} # assoc is either a virtual reflection or a method so just call the association and collect the ids
+      targets = parent.send(assoc).collect(&:id) # assoc is either a virtual reflection or a method so just call the association and collect the ids
     else
       #TODO: Can we use the pre-built _ids methods that come with Rails?
-      targets = parent.send(assoc).send(:find, :all, :select => 'id').collect {|t| t.id}
+      targets = parent.send(assoc).send(:find, :all, :select => 'id').collect(&:id)
     end
     return targets
   end

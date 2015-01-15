@@ -6,7 +6,7 @@ module VmOrTemplate::VmwareShared::RefreshOnScan
   def refresh_advanced_settings
     return if self.ext_management_system.nil?
 
-    extra_config = self.with_provider_object { |vim_vm| vim_vm.extraConfig }
+    extra_config = self.with_provider_object(&:extraConfig)
     return if extra_config.nil?
 
     hashes = extra_config.collect do |k, v|

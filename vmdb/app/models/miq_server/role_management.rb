@@ -111,7 +111,7 @@ module MiqServer::RoleManagement
   end
 
   def server_role_names
-    self.server_roles.collect { |r| r.name }.sort
+    self.server_roles.collect(&:name).sort
   end
   alias my_roles            server_role_names
   alias assigned_role_names server_role_names
@@ -162,11 +162,11 @@ module MiqServer::RoleManagement
   end
 
   def inactive_role_names
-    self.inactive_roles.collect { |r| r.name }.sort
+    self.inactive_roles.collect(&:name).sort
   end
 
   def active_role_names
-    self.active_roles.collect { |r| r.name }.sort
+    self.active_roles.collect(&:name).sort
   end
 
   def active_role
@@ -183,7 +183,7 @@ module MiqServer::RoleManagement
   end
 
   def licensed_role_names
-    self.licensed_roles.collect { |r| r.name }.sort
+    self.licensed_roles.collect(&:name).sort
   end
 
   def licensed_role
@@ -211,7 +211,7 @@ module MiqServer::RoleManagement
       }
     end
 
-    assigned_roles = servers.collect { |s| s.assigned_roles }.flatten.uniq.compact
+    assigned_roles = servers.collect(&:assigned_roles).flatten.uniq.compact
     assigned_roles.each do |r|
       next unless roles_to_sync.include?(r)
       role_name = r.name

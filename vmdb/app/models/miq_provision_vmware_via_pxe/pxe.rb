@@ -7,7 +7,7 @@ module MiqProvisionVmwareViaPxe::Pxe
     result = vm.hardware.nics.detect {|n| n.address && n.lan.try(:name) == network_name}.try(:address)
     if result.blank?
       # Sort by device name to control return order.  VMware names nics like: Network adapter 1, Network adapter 2
-      nics = vm.hardware.nics.select {|n| n.address}.sort_by {|n| n.device_name}
+      nics = vm.hardware.nics.select(&:address).sort_by(&:device_name)
       unless nics.blank?
         mac_addresses = nics.collect {|n| [n.device_name, n.address]}
         $log.info("MIQ(#{self.class.name}#get_mac_address_of_nic_on_requested_vlan) Vlan lookup did not return a matching MAC address.  Returning first available address from: <#{mac_addresses.inspect}>")

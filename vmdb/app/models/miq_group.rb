@@ -83,7 +83,7 @@ class MiqGroup < ActiveRecord::Base
         ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
 
         role_map = YAML.load_file(role_map_file)
-        order = role_map.collect {|h| h.keys}.flatten
+        order = role_map.collect(&:keys).flatten
         groups_to_roles = role_map.inject({}) {|h, g| h[g.keys.first] = g[g.keys.first]; h}
         seq = 1
         order.each do |g|

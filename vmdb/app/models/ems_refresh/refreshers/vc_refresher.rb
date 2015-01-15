@@ -337,7 +337,7 @@ module EmsRefresh::Refreshers
           begin
             get_vc_data_by_mor(:vm, vm.ems_ref_obj)
             get_vc_data_by_mor(:host, vm.host.ems_ref_obj)
-            get_vc_data_by_mor(:storage, vm.host.storages.collect { |s| s.ems_ref_obj })
+            get_vc_data_by_mor(:storage, vm.host.storages.collect(&:ems_ref_obj))
           ensure
             disconnect_from_ems
           end

@@ -121,7 +121,7 @@ class MiqDisk
     
     def close
         $log.debug "MiqDisk<#{self.object_id}> close, #{@logName}" if $log
-        @partitions.each { |p| p.close } if @partitions
+        @partitions.each(&:close) if @partitions
         @partitions = nil
         d_close
     end

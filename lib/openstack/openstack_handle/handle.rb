@@ -216,7 +216,7 @@ module OpenstackHandle
     end
 
     def tenant_names
-      @tenant_names ||= tenants.collect { |t| t.name }
+      @tenant_names ||= tenants.collect(&:name)
     end
 
     def accessible_tenants
@@ -235,7 +235,7 @@ module OpenstackHandle
     end
 
     def accessible_tenant_names
-      @accessible_tenant_names ||= accessible_tenants.collect { |t| t.name }
+      @accessible_tenant_names ||= accessible_tenants.collect(&:name)
     end
 
     def default_tenant_name

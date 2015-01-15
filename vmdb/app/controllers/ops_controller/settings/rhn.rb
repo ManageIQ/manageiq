@@ -19,7 +19,7 @@ module OpsController::Settings::RHN
   end
 
   def rhn_subscription_map
-    @rhn_subscription_map ||= Hash[rhn_subscription_types.map{|pair| pair.reverse}]
+    @rhn_subscription_map ||= Hash[rhn_subscription_types.map(&:reverse)]
   end
 
   included do

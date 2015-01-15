@@ -11,7 +11,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       self.clean_worker_records(class_name)
     end
 
-    return true if self.miq_workers.all? { |w| w.is_stopped? }
+    return true if self.miq_workers.all?(&:is_stopped?)
 
     if self.quiesce_workers_loop_timeout?
       killed_workers = []
@@ -51,7 +51,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
 
     # Mark all messages currently being worked on by the not responding server's workers as error
     $log.info("#{log_prefix} Cleaning all active messages being processed by MiqServer")
-    self.miq_workers.each { |w| w.clean_active_messages }
+    self.miq_workers.each(&:clean_active_messages)
   end
 
   def quiesce_workers_loop_timeout?

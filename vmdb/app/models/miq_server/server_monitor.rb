@@ -13,7 +13,7 @@ module MiqServer::ServerMonitor
 
     # Mark all messages currently being worked on by the not responding server's workers as error
     $log.info("#{log_prefix} Cleaning all active messages being processed by #{self.format_full_log_msg}")
-    self.miq_workers.each {|w| w.clean_active_messages}
+    self.miq_workers.each(&:clean_active_messages)
   end
 
   def make_master_server(last_master)
@@ -24,7 +24,7 @@ module MiqServer::ServerMonitor
       all_servers = parent.miq_servers
 
       $log.debug "#{log_prefix} Double checking that nothing has changed"
-      master = all_servers.detect { |s| s.is_master? }
+      master = all_servers.detect(&:is_master?)
       if (last_master.nil? && !master.nil?) || (!last_master.nil? && !master.nil? && last_master.id != master.id)
         $log.info "#{log_prefix} Aborting master server takeover as another server has taken control first."
         return nil
@@ -53,7 +53,7 @@ module MiqServer::ServerMonitor
     # Check all of the other servers and see if we have new servers, servers have stopped, or servers have stopped responding
     all_servers = self.find_other_started_servers_in_region
 
-    current_ids = all_servers.collect { |s| s.id }
+    current_ids = all_servers.collect(&:id)
     last_ids    = @last_servers.keys
     added       = current_ids - last_ids
     removed     = last_ids - current_ids

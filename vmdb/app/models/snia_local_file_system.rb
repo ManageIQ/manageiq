@@ -94,7 +94,7 @@ class SniaLocalFileSystem < MiqCimInstance
   end
 
   def cim_virtual_disks
-    cim_datastores.collect { |cds| cds.cim_virtual_disks }.flatten.compact.uniq
+    cim_datastores.collect(&:cim_virtual_disks).flatten.compact.uniq
   end
 
   ##################

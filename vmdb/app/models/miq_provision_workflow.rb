@@ -207,8 +207,8 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       set_or_default_hardware_field_values(vm)
 
       # Record the nic/lan setting on the template for validation checks at provision time.
-      @values[:src_vm_nics] = vm.hardware.nil? ? nil : vm.hardware.nics.collect {|n| n.device_name}.compact
-      @values[:src_vm_lans] = vm.lans.collect {|n| n.name}.compact
+      @values[:src_vm_nics] = vm.hardware.nil? ? nil : vm.hardware.nics.collect(&:device_name).compact
+      @values[:src_vm_lans] = vm.lans.collect(&:name).compact
       vlan = @values[:src_vm_lans].first
       vm_description = vm.description
       case vm.platform
@@ -680,7 +680,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
 
     run_search = true
     unless options[:tag_filters].blank?
-      tag_filters = options[:tag_filters].collect {|t| t.to_s}
+      tag_filters = options[:tag_filters].collect(&:to_s)
       selected_tags = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).uniq
       tag_conditions = []
 
@@ -752,7 +752,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     template_msg =  "User: <#{@owner_id}>"
     template_msg += " Role: <#{user.current_group.nil? ? "none" : user.current_group.miq_user_role.name}>  Group: <#{user.current_group.nil? ? "none" : user.current_group.description}>" unless user.blank?
     template_msg += "  VM Filter: <#{@values[:vm_filter].inspect}>"
-    template_msg += "  Passing inital template IDs: <#{vms.collect{|v| v.id}.inspect}>" unless vms.blank?
+    template_msg += "  Passing inital template IDs: <#{vms.collect(&:id).inspect}>" unless vms.blank?
     $log.info "#{log_header} Checking for allowed templates for #{template_msg}"
     unless filter_id.zero?
       result = MiqSearch.find(filter_id).search(vms, search_options).first
@@ -839,7 +839,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     result = @customization_specs[ems_id].dup
     source_platform = src[:vm].platform.capitalize
     result.delete_if {|cs| source_platform != cs.typ}
-    result.delete_if {|cs| cs.is_sysprep_spec? }  if customization_type == 'file'
+    result.delete_if(&:is_sysprep_spec?)  if customization_type == 'file'
     result.delete_if {|cs| !cs.is_sysprep_spec? } if customization_type == 'fields'
     return result
   end
@@ -1258,7 +1258,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     unless placement_cluster_name.blank?
       data[:placement_cluster_name] = placement_cluster_name.to_s.downcase
       $log.info "#{log_header} placement_cluster_name:<#{data[:placement_cluster_name].inspect}>"
-      data[:data_centers] = EmsCluster.where("lower(name) = ?", data[:placement_cluster_name]).collect { |c| c.v_parent_datacenter }
+      data[:data_centers] = EmsCluster.where("lower(name) = ?", data[:placement_cluster_name]).collect(&:v_parent_datacenter)
     end
     $log.info "#{log_header} data:<#{data.inspect}>"
 
@@ -1406,7 +1406,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
         elsif key_names.length == 1
           item[key_names[0].to_sym] = v
         elsif key_names.length > 1
-          item.store_path(*(key_names.collect{|key| key.to_sym} << v))
+          item.store_path(*(key_names.collect(&:to_sym) << v))
         end
       end
     end

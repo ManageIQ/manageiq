@@ -126,7 +126,7 @@ module MiqOptionParser
     rescue ParseError, OptionParser::ParseError => e
       raise if @handle_exceptions == false
       puts "Error while parsing command line:\n    #{e.message}\n"
-      help.execute(command.parents.reverse.collect {|c| c.name}) unless help.nil?
+      help.execute(command.parents.reverse.collect(&:name)) unless help.nil?
       exit
     end
     

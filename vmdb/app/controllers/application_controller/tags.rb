@@ -417,7 +417,7 @@ module ApplicationController::Tags
     @edit[:new][:assignments] =
       Classification.find_assigned_entries(@tagitems[0]).collect{|e| e.id unless e.parent.read_only?}
     @tagitems.each do |item|
-      itemassign = Classification.find_assigned_entries(item).collect{|e| e.id} # Get each items assignments
+      itemassign = Classification.find_assigned_entries(item).collect(&:id) # Get each items assignments
       @edit[:new][:assignments].delete_if { |a| !itemassign.include?(a) } # Remove any assignments that are not in the new items assignments
       break if @edit[:new][:assignments].length == 0                      # Stop looking if no assignments are left
     end

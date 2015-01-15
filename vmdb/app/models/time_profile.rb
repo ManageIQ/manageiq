@@ -18,11 +18,11 @@ class TimeProfile < ActiveRecord::Base
   after_save   :rebuild_daily_metrics_on_save
 
   def self.find_all_with_entire_tz(*args)
-    self.all(*args).select { |tp| tp.entire_tz? }
+    self.all(*args).select(&:entire_tz?)
   end
 
   def self.all_timezones(*args)
-    self.all(*args).collect { |tp| tp.tz }.uniq
+    self.all(*args).collect(&:tz).uniq
   end
 
   def self.seed
@@ -81,7 +81,7 @@ class TimeProfile < ActiveRecord::Base
   end
 
   def days=(arr)
-    arr = arr.collect {|d| d.to_i}
+    arr = arr.collect(&:to_i)
     self.profile_will_change! if self.profile[:days] != arr
     self.profile[:days] = arr
   end
@@ -91,7 +91,7 @@ class TimeProfile < ActiveRecord::Base
   end
 
   def hours=(arr)
-    arr = arr.collect {|d| d.to_i}
+    arr = arr.collect(&:to_i)
     self.profile_will_change! if self.profile[:hours] != arr
     self.profile[:hours] = arr
   end

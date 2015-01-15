@@ -113,7 +113,7 @@ module RhevmDescriptor
   # Close all disks.
   def d_close
     @parent.close if @parent != nil
-    @disks.each {|disk| disk.close}
+    @disks.each(&:close)
   end
 
   # Return size in sectors.

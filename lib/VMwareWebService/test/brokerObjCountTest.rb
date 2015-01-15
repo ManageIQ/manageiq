@@ -40,7 +40,7 @@ begin
 	puts "Object counts:"
 	broker.objectCounts.each { |k, v| puts "\t#{k}: #{v}"}
 	
-	objs.each { |o| o.release }
+	objs.each(&:release)
 	
 	puts
 	puts "Object counts:"

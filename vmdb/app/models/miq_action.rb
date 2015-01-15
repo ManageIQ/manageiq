@@ -102,7 +102,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def miq_policies
-    self.miq_policy_contents.collect {|pe| pe.miq_policy}.uniq
+    self.miq_policy_contents.collect(&:miq_policy).uniq
   end
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)

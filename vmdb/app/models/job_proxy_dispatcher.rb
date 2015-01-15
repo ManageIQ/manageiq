@@ -24,7 +24,7 @@ class JobProxyDispatcher
         Benchmark.realtime_block(:busy_proxies) { self.busy_proxies }
         Benchmark.realtime_block(:busy_resources_for_embedded_scanning) { self.busy_resources_for_embedded_scanning }
 
-        vms_for_jobs = jobs_to_dispatch.collect {|j| j.target_id}
+        vms_for_jobs = jobs_to_dispatch.collect(&:target_id)
         @vms_for_dispatch_jobs, = Benchmark.realtime_block(:vm_find) do
           VmOrTemplate.where(:id => vms_for_jobs)
             .includes(:ext_management_system => :zone, :storage => {:hosts => :miq_proxy})
@@ -215,7 +215,7 @@ class JobProxyDispatcher
         .where(:agent_class      => "MiqServer")
         .where(:target_class     => "VmOrTemplate")
         .where("state != ?", "finished")
-        .select("target_id").collect { |ji| ji.target_id }.compact.uniq
+        .select("target_id").collect(&:target_id).compact.uniq
     return @busy_resources_for_embedded_scanning_hash if vms_in_embedded_scanning.blank?
 
     embedded_scans_by_resource = Hash.new {|h,k| h[k] = 0}

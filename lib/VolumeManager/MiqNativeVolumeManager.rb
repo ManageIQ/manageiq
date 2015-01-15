@@ -63,7 +63,7 @@ class MiqNativeVolumeManager
     end
     
     def closeAll
-        @wholeDisks.each { |d| d.close }
+        @wholeDisks.each(&:close)
         @logicalVolumes     = Array.new
         @physicalVolumes    = Array.new
         @hiddenVolumes      = Array.new

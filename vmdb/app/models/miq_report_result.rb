@@ -97,7 +97,7 @@ class MiqReportResult < ActiveRecord::Base
     end
     self.update_attribute(:last_accessed_on, Time.now.utc)
     self.purge_for_user
-    self.html_details.all(options.merge(:order => "id asc")).collect { |h| h.data }
+    self.html_details.all(options.merge(:order => "id asc")).collect(&:data)
   end
 
   def save_for_user(userid)

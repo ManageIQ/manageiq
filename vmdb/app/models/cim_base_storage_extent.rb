@@ -18,7 +18,7 @@ class CimBaseStorageExtent < ActsAsArModel
   end
 
   def self.base_storage_extent_ids
-    CimComputerSystem.all.collect { |cs| cs.base_storage_extents }.flatten.compact.uniq.collect { |bse| bse.id }
+    CimComputerSystem.all.collect(&:base_storage_extents).flatten.compact.uniq.collect(&:id)
   end
 
   def self.reflections

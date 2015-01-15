@@ -18,7 +18,7 @@ module ActsAsTaggable
     elsif tags.is_a?(String)
       tag_names.push((separator.is_a?(Proc) ? separator.call(tags) : tags.split(separator)))
     end
-    tag_names.flatten.map { |name| name.strip }.uniq.compact
+    tag_names.flatten.map(&:strip).uniq.compact
   end
 
   module ClassMethods

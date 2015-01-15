@@ -5,7 +5,7 @@ class EmsCloud < ExtManagementSystem
   }
 
   def self.types
-    self.subclasses.collect { |c| c.ems_type }
+    self.subclasses.collect(&:ems_type)
   end
 
   def self.supported_subclasses

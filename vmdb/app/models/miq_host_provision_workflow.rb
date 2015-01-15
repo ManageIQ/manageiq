@@ -75,7 +75,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_ws_hosts(options={})
-    Host.where("mac_address is not NULL").select { |h| h.ipmi_enabled }
+    Host.where("mac_address is not NULL").select(&:ipmi_enabled)
   end
 
   def allowed_ems(options={})
@@ -108,7 +108,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   # This is for summary screen display purposes only
   def update_selected_storage_names(values)
-    values[:attached_ds_names] = Storage.find_all_by_id(values[:attached_ds], :select => "name").collect {|h| h.name}
+    values[:attached_ds_names] = Storage.find_all_by_id(values[:attached_ds], :select => "name").collect(&:name)
   end
 
   def ws_template_fields(values, fields)

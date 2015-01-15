@@ -120,7 +120,7 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def vms
-    self.miq_provisions.collect {|p| p.vm}.compact
+    self.miq_provisions.collect(&:vm).compact
   end
 end
 

@@ -16,7 +16,7 @@ describe ServerRole do
     end
 
     it "should return all names" do
-      @server_roles.collect {|s| s.name}.sort.should == ServerRole.all_names.sort
+      @server_roles.collect(&:name).sort.should == ServerRole.all_names.sort
     end
 
     it "should respond to master_supported? properly" do

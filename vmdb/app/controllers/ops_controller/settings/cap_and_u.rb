@@ -158,7 +158,7 @@ module OpsController::Settings::CapAndU
       cid, cl_hash = h
       c = cl_hash[:cl_rec]
       enabled = cl_hash[:ho_enabled]
-      enabled_host_ids = enabled.collect {|e| e.id}
+      enabled_host_ids = enabled.collect(&:id)
       hosts = (cl_hash[:ho_enabled] + cl_hash[:ho_disabled]).sort {|a,b| a.name.downcase <=> b.name.downcase}
       cl_enabled = enabled_host_ids.length == hosts.length
       if cl_enabled && !enabled.empty?

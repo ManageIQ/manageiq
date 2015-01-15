@@ -126,7 +126,7 @@ class BottleneckEvent < ActiveRecord::Base
       recs = obj.send(r)
       next if recs.blank?
 
-      result[recs.first.class.name] = recs.collect {|rec| rec.id}
+      result[recs.first.class.name] = recs.collect(&:id)
       recs.each do |child|
         self.child_types_and_ids(child).each do |k,v|
           result[k] ||= []

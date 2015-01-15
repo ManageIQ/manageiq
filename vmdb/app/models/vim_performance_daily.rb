@@ -54,8 +54,8 @@ class VimPerformanceDaily < MetricRollup
     # all the regions in the database. We only want one match from each region
     # otherwise we'll end up with duplicate daily rows.
     tp     = ext_options[:time_profile]
-    tps    = TimeProfile.rollup_daily_metrics.all.select { |p| p.profile == tp.profile }.group_by {|t| t.region_id}.values.flatten if tp
-    tp_ids = tps.nil? ? [] : tps.collect {|t| t.id}
+    tps    = TimeProfile.rollup_daily_metrics.all.select { |p| p.profile == tp.profile }.group_by(&:region_id).values.flatten if tp
+    tp_ids = tps.nil? ? [] : tps.collect(&:id)
     #
 
     klass = ext_options[:class] || MetricRollup
@@ -263,12 +263,12 @@ class VimPerformanceDaily < MetricRollup
 
   def self.process_only_cols(options)
     unless options[:only_cols].nil?
-      options[:only_cols] =  options[:only_cols].collect {|c| c.to_sym} if options[:only_cols]
+      options[:only_cols] =  options[:only_cols].collect(&:to_sym) if options[:only_cols]
       options[:only_cols] += options[:only_cols].collect {|c| c.to_s[4..-1].to_sym if c.to_s.starts_with?("min_") || c.to_s.starts_with?("max_")}.compact
       options[:only_cols] += options[:only_cols].collect {|c| c.to_s.split("_")[2..-2].join("_").to_sym if c.to_s.starts_with?("abs_")}.compact
       options[:only_cols] += [:cpu_ready_delta_summation, :cpu_wait_delta_summation, :cpu_used_delta_summation] if options[:only_cols].find {|c| c.to_s.starts_with?("v_pct_")}
       options[:only_cols] += [:derived_storage_total, :derived_storage_free] if options[:only_cols].include?(:v_derived_storage_used)
-      options[:only_cols] += Metric::BASE_COLS.collect {|c| c.to_sym}
+      options[:only_cols] += Metric::BASE_COLS.collect(&:to_sym)
     end
   end
 

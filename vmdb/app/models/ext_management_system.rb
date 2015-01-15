@@ -1,18 +1,18 @@
 class ExtManagementSystem < ActiveRecord::Base
   def self.types
-    [EmsInfra, EmsCloud].collect { |c| c.types }.flatten
+    [EmsInfra, EmsCloud].collect(&:types).flatten
   end
 
   def self.supported_types
-    [EmsInfra, EmsCloud].collect { |c| c.supported_types }.flatten
+    [EmsInfra, EmsCloud].collect(&:supported_types).flatten
   end
 
   def self.leaf_subclasses
-    [EmsInfra, EmsCloud].collect { |c| c.subclasses }.flatten
+    [EmsInfra, EmsCloud].collect(&:subclasses).flatten
   end
 
   def self.supported_subclasses
-    [EmsInfra, EmsCloud].collect { |c| c.supported_subclasses }.flatten
+    [EmsInfra, EmsCloud].collect(&:supported_subclasses).flatten
   end
 
   def self.supported_types_and_descriptions_hash
@@ -351,8 +351,8 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def perf_capture_enabled
     return @perf_capture_enabled unless @perf_capture_enabled.nil?
-    return @perf_capture_enabled = true if self.ems_clusters.any? { |c| c.perf_capture_enabled? }
-    return @perf_capture_enabled = true if self.hosts.any?        { |h| h.perf_capture_enabled? }
+    return @perf_capture_enabled = true if self.ems_clusters.any?(&:perf_capture_enabled?)
+    return @perf_capture_enabled = true if self.hosts.any?(&:perf_capture_enabled?)
     return @perf_capture_enabled = false
   end
   alias perf_capture_enabled? perf_capture_enabled

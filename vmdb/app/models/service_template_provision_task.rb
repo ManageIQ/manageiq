@@ -91,7 +91,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       $log.info("#{log_header} #{message}")
       update_and_notify_parent(:state => 'provisioned', :message => message)
     else
-      self.miq_request_tasks.each {|task| task.deliver_to_automate}
+      self.miq_request_tasks.each(&:deliver_to_automate)
       message = "Service Provision started"
       $log.info("#{log_header} #{message}")
       update_and_notify_parent(:message => message)

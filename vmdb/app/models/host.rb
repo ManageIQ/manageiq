@@ -997,7 +997,7 @@ class Host < ActiveRecord::Base
   def resource_pools
     # Look for only the resource_pools at the second depth (default depth + 1)
     rels = self.descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect { |r| r.depth }.min
+    min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth == min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
   end
@@ -1005,7 +1005,7 @@ class Host < ActiveRecord::Base
   def resource_pools_with_default
     # Look for only the resource_pools up to the second depth (default depth + 1)
     rels = self.descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect { |r| r.depth }.min
+    min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth <= min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
   end
@@ -1606,7 +1606,7 @@ class Host < ActiveRecord::Base
   def self.ready_for_provisioning?(ids)
     errors = ActiveModel::Errors.new(self)
     hosts = self.find_all_by_id(ids)
-    missing = ids - hosts.collect {|v| v.id}
+    missing = ids - hosts.collect(&:id)
     errors.add(:missing_ids, "Unable to find Hosts with the following ids #{missing.inspect}") unless missing.empty?
 
     hosts.each do |host|
@@ -1944,7 +1944,7 @@ class Host < ActiveRecord::Base
   end
 
   def service_names
-    self.system_services.collect {|s| s.name}.uniq.sort
+    self.system_services.collect(&:name).uniq.sort
   end
 
   def enabled_run_level_0_services

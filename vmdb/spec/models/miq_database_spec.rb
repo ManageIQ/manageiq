@@ -93,7 +93,7 @@ describe MiqDatabase do
 
       it "will fetch initial tables" do
         tables = @db.vmdb_tables
-        tables.collect {|t| t.name }.should match_array @expected_tables
+        tables.collect(&:name).should match_array @expected_tables
       end
 
       it "will create tables once" do

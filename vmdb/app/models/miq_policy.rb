@@ -117,12 +117,12 @@ class MiqPolicy < ActiveRecord::Base
   end
 
   def miq_events
-    self.miq_policy_contents.collect {|e| e.miq_event}.uniq
+    self.miq_policy_contents.collect(&:miq_event).uniq
   end
   alias events miq_events
 
   def miq_actions
-    self.miq_policy_contents.collect {|e| e.miq_action}.compact.uniq
+    self.miq_policy_contents.collect(&:miq_action).compact.uniq
   end
   alias actions miq_actions
 

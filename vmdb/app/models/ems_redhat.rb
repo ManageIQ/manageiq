@@ -137,7 +137,7 @@ class EmsRedhat < EmsInfra
     if @version_3_0.nil?
       @version_3_0 =
         if self.api_version.nil?
-          self.with_provider_connection { |rhevm| rhevm.version_3_0? }
+          self.with_provider_connection(&:version_3_0?)
         else
           self.api_version.starts_with?("3.0")
         end
@@ -159,7 +159,7 @@ class EmsRedhat < EmsInfra
     link_path = File.join(base_rhevm_path, datacenter.uid_ems)
 
     # Find the storages we need to mount to access this VM
-    storages = [vm.storage, vm.storage.hosts.first.storages.detect {|s| s.master?}].uniq.compact
+    storages = [vm.storage, vm.storage.hosts.first.storages.detect(&:master?)].uniq.compact
 
     result = {:mount_points => [], :symlinks => [], :base_dir => base_path, :link_path => link_path}
     storages.each do |s|

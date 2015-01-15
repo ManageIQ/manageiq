@@ -48,7 +48,7 @@ module MiqPolicyController::Policies
       when "conditions"
         mems = @edit[:new][:conditions].invert                  # Get the ids from the member list box
         policy.conditions.collect{|pc|pc}.each{|c| policy.conditions.delete(c) unless mems.keys.include?(c.id) }  # Remove any conditions no longer in members
-        mems.each_key {|m| policy.conditions.push(Condition.find(m)) unless policy.conditions.collect{|c|c.id}.include?(m) }    # Add any new conditions
+        mems.each_key {|m| policy.conditions.push(Condition.find(m)) unless policy.conditions.collect(&:id).include?(m) }    # Add any new conditions
       end
       if policy.valid? && !@flash_array && policy.save
         if @policy.id.blank? && policy.mode == "compliance"   # New compliance policy

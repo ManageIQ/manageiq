@@ -105,7 +105,7 @@ module ApplicationController::DialogRunner
 
                   elsif field.type.include?("DropDown") && field.required
                      url = url_for(:action => 'dialog_field_changed', :id=>"#{@edit[:rec_id] || "new"}")
-                     page.replace("#{field.name}", :text => "#{select_tag(field.name, options_for_select(field.values.collect{|v| v.reverse}, p[1]), 'data-miq_sparkle_on' => true, 'data-miq_sparkle_off'=> true, 'data-miq_observe'=>{:url=>url}.to_json)}")
+                     page.replace("#{field.name}", :text => "#{select_tag(field.name, options_for_select(field.values.collect(&:reverse), p[1]), 'data-miq_sparkle_on' => true, 'data-miq_sparkle_off'=> true, 'data-miq_observe'=>{:url=>url}.to_json)}")
 
                   elsif field.type.include?("TagControl") && field.single_value? && field.required
                     category_tags = DialogFieldTagControl.category_tags(field.category).map {|cat| [cat[:description], cat[:id]]}

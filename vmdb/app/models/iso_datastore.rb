@@ -48,7 +48,7 @@ class IsoDatastore < ActiveRecord::Base
       end
     end
 
-    db_image_hash.each_value { |image| image.destroy }
+    db_image_hash.each_value(&:destroy)
 
     clear_association_cache
     self.update_attribute(:last_refresh_on, Time.now.utc)
