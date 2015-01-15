@@ -16,7 +16,7 @@
     %tbody
       - cls = @edit[:new][:customization_template_id] && @edit[:new][:customization_template_id][0].nil? ? "row3" : cycle('row0', 'row1')
       %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__TEMPLATE__NONE__&id=#{id}');", :nowrap => 1}
-        %td{onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+        %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
           = "<#{_('None')}>"
         %td
         %td
