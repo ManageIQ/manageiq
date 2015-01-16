@@ -33,12 +33,15 @@
         - @id = row.id
         - if options[:wf].class.to_s == "MiqHostProvisionWorkflow"
           %tr{:class => cycle('row0', 'row1'), :nowrap => 1}
+            - options[:host_columns].each do |col|
+              %td{:align => "left", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+                = h(row.send(col))
         - else
           - cls = @edit[:new][:placement_host_name] && @edit[:new][:placement_host_name][0] == @id ? "row3" : cycle('row0', 'row1')
           %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');", :nowrap => 1}
-        - options[:host_columns].each do |col|
-          %td{:align => "left", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
-            = h(row.send(col))
+            - options[:host_columns].each do |col|
+              %td{:align => "left", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+                = h(row.send(col))
     %tfoot
       %tr
         %td{:colspan => "40"}
